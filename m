@@ -2,112 +2,85 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5F0C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D9120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="WqRlriy0"
+	by mail.kernel.org (Postfix) with ESMTP id 9279220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577111479;
+	bh=rKlmP8qCOreILakRYVKDlU4TZ4C5i5QpLwBHZqwKiVs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=owvs+hV1mY/IMtkQN+NL9gznFC91n4av9MiT0eLjGEuyKwuIpY/QjXaXq/wH3RVuN
+	 8vClSyYq+bFXr/UeD9M5GroncesC4a7sji4+4NVvPI09QsLYidF0tBqiayB5wWaf7E
+	 dfsPIPl1smmC1ZTZ3O8XMPlTdR2/7dE5WD2Sisvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfLWObP (ORCPT
+        id S1727217AbfLWObS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:31:15 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:14019 "EHLO pegase1.c-s.fr"
+        Mon, 23 Dec 2019 09:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbfLWObI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:31:08 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hMGY4PS8z9txhl;
-        Mon, 23 Dec 2019 15:31:01 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=WqRlriy0; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lyyav2mt8lCR; Mon, 23 Dec 2019 15:31:01 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hMGY3DMLz9txhg;
-        Mon, 23 Dec 2019 15:31:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577111461; bh=4HlVdfb/m2bnebYsqTVj7kFlC+Ng414ig/AZSZp6k7s=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=WqRlriy0DqcZh60SDjoGMQijbqFO68IO3uompTe3PTUn5JPopZMKehw9+2nPSPIZP
-         hwfYncZjR/MLSaTvHfyl3A0w9elV2k2/xL/eg8+TK6KKCyFx1bzcUuK7n2o2YsIyfr
-         HAsfky9f/aUORYv0A9P41kc9Lg3ATeICFVaYId54=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8959D8B7AB;
-        Mon, 23 Dec 2019 15:31:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id pPU4VC3HWwT0; Mon, 23 Dec 2019 15:31:06 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5CBAE8B7A1;
-        Mon, 23 Dec 2019 15:31:06 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 66892637D4; Mon, 23 Dec 2019 14:31:06 +0000 (UTC)
-Message-Id: <d0f8dfb26c025d3e3eee1b5f610161ca19b942df.1577111367.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1577111363.git.christophe.leroy@c-s.fr>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v2 05/10] lib: vdso: inline do_hres()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-Date:   Mon, 23 Dec 2019 14:31:06 +0000 (UTC)
+        id S1727183AbfLWObQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:31:16 -0500
+Received: from vkoul-mobl.Dlink (unknown [106.51.110.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48EC220709;
+        Mon, 23 Dec 2019 14:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577111475;
+        bh=rKlmP8qCOreILakRYVKDlU4TZ4C5i5QpLwBHZqwKiVs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Iv+aWzTH8e+kLR0srzVQxgtvQG/L5+1MkVpbPa6869c4GPMk1y2VyMQdaj6XxwQ97
+         5inRhWzyGxLAEHdYZExPIjrAt1gU4Ba2GNqH9UhIFHtInYML4MYXEBaSLkOgRgzMPV
+         bTqg6sXolOglqqfIQ44c2O+9EuyMm9GHN0+aIY3k=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Can Guo <cang@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/4] phy: qcom-qmp: Add SW reset register
+Date:   Mon, 23 Dec 2019 20:00:46 +0530
+Message-Id: <20191223143046.3376299-5-vkoul@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191223143046.3376299-1-vkoul@kernel.org>
+References: <20191223143046.3376299-1-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_hres() is called from several places, so GCC doesn't inline
-it at first.
+For V4 QMP UFS Phy, we need to assert reset bits, configure the phy and
+then deassert it, so add the QPHY_SW_RESET register which does this.
 
-do_hres() takes a struct __kernel_timespec * parameter for
-passing the result. In the 32 bits case, this parameter corresponds
-to a local var in the caller. In order to provide a pointer
-to this structure, the caller has to put it in its stack and
-do_hres() has to write the result in the stack. This is suboptimal,
-especially on RISC processor like powerpc.
-
-By making GCC inline the function, the struct __kernel_timespec
-remains a local var using registers, avoiding the need to write and
-read stack.
-
-The improvement is significant on powerpc.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- lib/vdso/gettimeofday.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 24e1ba838260..86d5b1c8796b 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -34,8 +34,8 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
- }
- #endif
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index ce5e18f188c3..7db2a94f7a99 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -168,6 +168,7 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+ static const unsigned int sm8150_ufsphy_regs_layout[] = {
+ 	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
+ 	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_READY_STATUS,
++	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
+ };
  
--static int do_hres(const struct vdso_data *vd, clockid_t clk,
--		   struct __kernel_timespec *ts)
-+static inline int do_hres(const struct vdso_data *vd, clockid_t clk,
-+			  struct __kernel_timespec *ts)
- {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
- 	u64 cycles, last, sec, ns;
+ static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
 -- 
-2.13.3
+2.23.0
 
