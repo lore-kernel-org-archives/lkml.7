@@ -2,94 +2,127 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A03C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CBBC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6EA20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B625320715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577102672;
-	bh=vqOz333XcUpVViuOrdBVCgE2uG8ahOJUCqixAmKA3Tg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hfgo955UIYQgN0yEaHGHLKlPH+mq6jxt49U6jg9w81neEMN8/9nU0IR04EGpia9tx
-	 OcixpMg0ArUaY40ePtuBzob9ip24850ugWGsmD2dsQBDIumpD3jhck8eJUPp88l7TO
-	 B7ZTZ1wB1zf76QDW0BLzE6GDsgFx89E5EAlEa5gk=
+	s=default; t=1577102717;
+	bh=643+8OqJGkN5lYu6b/GeiWmeHObLmCIXuAc/BgX5Y84=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=o3gwEeX4MMx21aHtu6GEDD+F1oKcvj3D2iuqOtu90wQAnSP45DE346RCKKNVqjkMV
+	 HdCaambrMHVRWeX2L//IbRNYtCMaD2zTKIwAeuludqFFuk0kkh8StSTzOs6/wk+pka
+	 14YSkvtH7tQCHKntJ6BwPF0sy9zXN4e+qRqH8aac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLWMEa (ORCPT
+        id S1726861AbfLWMFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:04:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfLWMEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:04:30 -0500
-Received: from localhost (50-198-241-253-static.hfc.comcastbusiness.net [50.198.241.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F8A20709;
-        Mon, 23 Dec 2019 12:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577102670;
-        bh=vqOz333XcUpVViuOrdBVCgE2uG8ahOJUCqixAmKA3Tg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PP3Sh8ubh48fkuc5aTmqk2o+R2cjxLpWJIg2mIbr1NOL838UsBUAQ9XMXIBcBzFhq
-         51cQqlfQkRwTVyvj/TJwr1Jdx4xPvaa8IjKDjzAsJrlcfodNeH4auuRVAxhp0rrEmB
-         anlEtoUZgq0eSeFnUDDXtNQ6ok7Bhi7MQiJiFv+s=
-Date:   Mon, 23 Dec 2019 07:04:28 -0500
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
-        vincent.whitchurch@axis.com, alexios.zavras@intel.com,
-        tglx@linutronix.de, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        up2wing@gmail.com, wang.liang82@zte.com.cn,
-        Huang Zijiang <huang.zijiang@zte.com.cn>
-Subject: Re: [PATCH] misc: Use kzalloc() instead of kmalloc() with flag
- GFP_ZERO.
-Message-ID: <20191223120428.GB114474@kroah.com>
-References: <1577065918-25513-1-git-send-email-wang.yi59@zte.com.cn>
+        Mon, 23 Dec 2019 07:05:16 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50961 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbfLWMFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 07:05:16 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ijMSW-0003P7-RT; Mon, 23 Dec 2019 13:05:12 +0100
+To:     Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 11/18] KVM: arm64: don't trap Statistical Profiling  controls to EL2
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577065918-25513-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 12:05:12 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20191223115651.GA42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-12-andrew.murray@arm.com>
+ <86bls0iqv6.wl-maz@kernel.org>
+ <20191223115651.GA42593@e119886-lin.cambridge.arm.com>
+Message-ID: <1bb190091362262021dbaf41b5fe601e@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: andrew.murray@arm.com, catalin.marinas@arm.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 09:51:58AM +0800, Yi Wang wrote:
-> From: Huang Zijiang <huang.zijiang@zte.com.cn>
-> 
-> Use kzalloc instead of manually setting kmalloc
-> with flag GFP_ZERO since kzalloc sets allocated memory
-> to zero.
-> 
-> Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
->  drivers/misc/mic/host/mic_boot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/mic/host/mic_boot.c b/drivers/misc/mic/host/mic_boot.c
-> index 7335759..c1f87a4 100644
-> --- a/drivers/misc/mic/host/mic_boot.c
-> +++ b/drivers/misc/mic/host/mic_boot.c
-> @@ -137,7 +137,7 @@ static void *__mic_dma_alloc(struct device *dev, size_t size,
->      struct scif_hw_dev *scdev = dev_get_drvdata(dev);
->      struct mic_device *mdev = scdev_to_mdev(scdev);
->      dma_addr_t tmp;
-> -    void *va = kmalloc(size, gfp | __GFP_ZERO);
-> +void *va = kzalloc(size, gfp);
+On 2019-12-23 11:56, Andrew Murray wrote:
+> On Sun, Dec 22, 2019 at 10:42:05AM +0000, Marc Zyngier wrote:
+>> On Fri, 20 Dec 2019 14:30:18 +0000,
+>> Andrew Murray <andrew.murray@arm.com> wrote:
+>> >
+>> > As we now save/restore the profiler state there is no need to trap
+>> > accesses to the statistical profiling controls. Let's unset the
+>> > _TPMS bit.
+>> >
+>> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+>> > ---
+>> >  arch/arm64/kvm/debug.c | 2 --
+>> >  1 file changed, 2 deletions(-)
+>> >
+>> > diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+>> > index 43487f035385..07ca783e7d9e 100644
+>> > --- a/arch/arm64/kvm/debug.c
+>> > +++ b/arch/arm64/kvm/debug.c
+>> > @@ -88,7 +88,6 @@ void kvm_arm_reset_debug_ptr(struct kvm_vcpu 
+>> *vcpu)
+>> >   *  - Performance monitors (MDCR_EL2_TPM/MDCR_EL2_TPMCR)
+>> >   *  - Debug ROM Address (MDCR_EL2_TDRA)
+>> >   *  - OS related registers (MDCR_EL2_TDOSA)
+>> > - *  - Statistical profiler (MDCR_EL2_TPMS/MDCR_EL2_E2PB)
+>> >   *
+>> >   * Additionally, KVM only traps guest accesses to the debug 
+>> registers if
+>> >   * the guest is not actively using them (see the 
+>> KVM_ARM64_DEBUG_DIRTY
+>> > @@ -111,7 +110,6 @@ void kvm_arm_setup_debug(struct kvm_vcpu 
+>> *vcpu)
+>> >  	 */
+>> >  	vcpu->arch.mdcr_el2 = __this_cpu_read(mdcr_el2) & 
+>> MDCR_EL2_HPMN_MASK;
+>> >  	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+>> > -				MDCR_EL2_TPMS |
+>>
+>> No. This is an *optional* feature (the guest could not be presented
+>> with the SPE feature, or the the support simply not be compiled in).
+>>
+>> If the guest is not allowed to see the feature, for whichever 
+>> reason,
+>> the traps *must* be enabled and handled.
+>
+> I'll update this (and similar) to trap such registers when we don't 
+> support
+> SPE in the guest.
+>
+> My original concern in the cover letter was in how to prevent the 
+> guest
+> from attempting to use these registers in the first place - I think 
+> the
+> solution I was looking for is to trap-and-emulate ID_AA64DFR0_EL1 
+> such that
+> the PMSVer bits indicate that SPE is not emulated.
 
-Odd indation :(
+That, and active trapping of the SPE system registers resulting in 
+injection
+of an UNDEF into the offending guest.
 
-Always use checkpatch.pl on your patches to ensure you do not add new
-problems.
+Thanks,
 
-How did this get past 2 different people???
-
-greg k-h
+         M.
+-- 
+Jazz is not dead. It just smells funny...
