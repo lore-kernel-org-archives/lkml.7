@@ -2,52 +2,83 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97CAC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD13C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B126E20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B110720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577081292;
+	bh=xitB7Uxlr5aAl6thltmi4p159DpV5GUfq4yLTiIQP5g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1Vdp7t7WXm6PwxB8m8fTW2sv3BuZ9PyHHQXJICJ+nBIjf0U0c+JQDEVGtAZq7pkKN
+	 KtltUl/CCDyJf9uEiayXZagxaq4FV6G+b3yR+8m/dB3HQ+yc/0aWr7GDDdL6q+rGer
+	 Ja5DbeX8lqMYnfsI0fkMwQ+SdveFFABPyK3kWSWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbfLWGFK (ORCPT
+        id S1726150AbfLWGIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:05:10 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42544 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfLWGFJ (ORCPT
+        Mon, 23 Dec 2019 01:08:11 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53989 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfLWGIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:05:09 -0500
-Received: by mail-io1-f72.google.com with SMTP id e7so10855477iog.9
-        for <linux-kernel@vger.kernel.org>; Sun, 22 Dec 2019 22:05:08 -0800 (PST)
+        Mon, 23 Dec 2019 01:08:11 -0500
+Received: by mail-pj1-f68.google.com with SMTP id n96so6981737pjc.3;
+        Sun, 22 Dec 2019 22:08:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N3CM13jo62axLkrf6XuA97Thp4ETYRb/qw3VqpYsyHo=;
+        b=T2gAhlQQjMq2WijcpADuqCm3cSn3t8PjmhRVMClIZ9Vu8sBLFCNRi7eei0WYYUlkIL
+         dsPK7fT2pzzpDqlMrniUbK5ptWt2ZlAVZ7BgdZQ6X/ULpdyqD1YwMISg9l1C5mqoEt6a
+         YSn8UzIx0pnPSy8e1WOikULjAx/0lBDmL7VacZNCaJNOsBaKwCB3HEfKdkLTEhZ7Obso
+         FRj0xqgOwZDZui8je5Qbyl0YdovmSOauHYoA0Xr/Ppz0uZKOpI4bvkXqcExtZBIFxdm8
+         rYxvuHivQ4uvVBCRh9IgiJKHMaELe4mVIvmhasi03QM8a/VwosUdgXtOqP+W4OeEMjXR
+         S53g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bus90OUtBJWBEdGpr5RY+BHlMyaHBzVjxVfmacaJDgc=;
-        b=WA3ko7Gajy/+XdAaQFsPrn4WrdRUNWq2UmNs2KhmMPq7D/Iv6Qz7C9MbgyMnBGQqek
-         fra1wfA47t24AhGJs9CHFm1/d6WNQ96VM56nWuWBGRI4yYz7w/vuC0mmQ/p2/NroJWgi
-         Yzd0srkrks9u4KbpJeamqNzvXPS9PxXNcQjvqBDwAZZibrq3BUH+MtaUdipg5EBL2l9i
-         SA0Ch6wsGdhAE/WM5ZD11luV5Fc33ndyGTqNXHutcSkpw8ze9pmyEQW2iVbZ33OFIKsg
-         cID0zuzlHA2Jh22rEMw68asKSGkHVYH18r1K5tItRQOa6hF3LyyH2/3qJbuqQ3IjhqOH
-         PXXg==
-X-Gm-Message-State: APjAAAWvh2FJGOGMk36EAYvNRq1dhDmbCiV4zPVtKR52vJARacSsw2XH
-        H67qWHCTjhYwtckzYEfuR9HjWKRpmBRdjKsva5NsvldeSyxi
-X-Google-Smtp-Source: APXvYqzmB2RkEhBxMOAvbI77wO1r7EJetG+SCaDbWAxGFJjrY57Qy6zkDeZmpnbXDn8w92kj9qDLrf1TZzbrN3hYvLjHS12SDMmb
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=N3CM13jo62axLkrf6XuA97Thp4ETYRb/qw3VqpYsyHo=;
+        b=Pch5ev7mIHSPBQ0ZP4nswibW0BxD/JKljIxAnTzqLOFdcMegCC+jDrPMvEtNVrxVN3
+         YHnbIfW3WLzY+RYGajQffzWtUfeTvfCFO8ezyaRyLOqbOZ5eg9Il8k7SJUoww1MQt2I2
+         IkRcCWrlCSHr67nhW/tftsHl5uKYn4HroeXnSw8WOLnMHmJhmokTQ0UbSUmnNgsAfiR7
+         kqvcVbJwkm5tjXLznFIY1GgQuFm5UsxkCXbdUUwIKb4eHZUgbpIiQy+MMS5RTH1ACOLQ
+         qz4f/mhDVPJ//VKCK7Keqscw7Vr8Xpn8c1daGoOSH0fqc3deUO4NIOvFRYCQNUBCYml3
+         26Iw==
+X-Gm-Message-State: APjAAAW4vmJNoxjX5VA4/Yp3yEmIRmOI3DVJSHUGpROST9jYcEp+keLq
+        KvdTa2RaBgHNb9H5P1Bn/38=
+X-Google-Smtp-Source: APXvYqw2OFWhLDcpVHImXFAd0TAiTyq74l1AaaSx/t+ZIl+m5Lnh8Uh7IBqZEqdGG6Fue9qSReO7Fg==
+X-Received: by 2002:a17:902:6bcc:: with SMTP id m12mr27969307plt.272.1577081290159;
+        Sun, 22 Dec 2019 22:08:10 -0800 (PST)
+Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
+        by smtp.gmail.com with ESMTPSA id p185sm22978212pfg.61.2019.12.22.22.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 22:08:09 -0800 (PST)
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCHSET 0/9] perf: Improve cgroup profiling (v3)
+Date:   Mon, 23 Dec 2019 15:07:50 +0900
+Message-Id: <20191223060759.841176-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-X-Received: by 2002:a5d:964e:: with SMTP id d14mr18401819ios.193.1577081108578;
- Sun, 22 Dec 2019 22:05:08 -0800 (PST)
-Date:   Sun, 22 Dec 2019 22:05:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000424dbf059a58cf39@google.com>
-Subject: INFO: rcu detected stall in bad_area
-From:   syzbot <syzbot+79fe77a41f0f085ece70@syzkaller.appspotmail.com>
-To:     christian@brauner.io, ebiederm@xmission.com,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,108 +86,288 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot found the following crash on:
+This work is to improve cgroup profiling in perf.  Currently it only
+supports profiling tasks in a specific cgroup and there's no way to
+identify which cgroup the current sample belongs to.  So I added
+PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+integer having file handle of the cgroup.  And kernel also generates
+PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+cgroup name (path in the cgroup filesystem).  The cgroup id can be
+read from userspace by name_to_handle_at() system call so it can
+synthesize the CGROUP event for existing groups.
 
-HEAD commit:    2187f215 Merge tag 'for-5.5-rc2-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1207cafee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ab2ae0615387ef78
-dashboard link: https://syzkaller.appspot.com/bug?extid=79fe77a41f0f085ece70
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cd2951e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144655b6e00000
+So why do we want this?  Systems running a large number of jobs in
+different cgroups want to profiling such jobs precisely. This includes
+container hosting systems widely used today. Currently perf supports
+namespace tracking but the systems may not use (cgroup) namespace for
+their jobs. Also it'd be more intuitive to see cgroup names (as
+they're given by user or sysadmin) rather than numeric
+cgroup/namespace id even if they use the namespaces.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+From Stephane Eranian:
+> In data centers you care about attributing samples to a job not such
+> much to a process.  A job may have multiple processes which may come
+> and go. The cgroup on the other hand stays around for the entire
+> lifetime of the job. It is much easier to map a cgroup name to a
+> particular job than it is to map a pid back to a job name,
+> especially for offline post-processing.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16efc199e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15efc199e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11efc199e00000
+Note that this only works for "perf_event" cgroups (obviously) so if
+users are still using cgroup-v1 interface, they need to have same
+hierarchy for subsystem(s) want to profile with it.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+79fe77a41f0f085ece70@syzkaller.appspotmail.com
+ * Changes from v2:
+  - remove path_len from cgroup_event
+  - bail out if kernel doesn't support cgroup sampling
+  - add some description in the Kconfig
 
-hrtimer: interrupt took 59918 ns
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-	(detected by 1, t=10502 jiffies, g=9705, q=83)
-rcu: All QSes seen, last rcu_preempt kthread activity 10502  
-(4295004244-4294993742), jiffies_till_next_fqs=1, root ->qsmask 0x0
-syz-executor069 R  running task    28568 10245  10207 0x80000004
-Call Trace:
-  <IRQ>
-  sched_show_task kernel/sched/core.c:5954 [inline]
-  sched_show_task.cold+0x2ee/0x35d kernel/sched/core.c:5929
-  print_other_cpu_stall kernel/rcu/tree_stall.h:410 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:538 [inline]
-  rcu_pending kernel/rcu/tree.c:2827 [inline]
-  rcu_sched_clock_irq.cold+0xaf4/0xc02 kernel/rcu/tree.c:2271
-  update_process_times+0x2d/0x70 kernel/time/timer.c:1726
-  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1310
-  __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
-  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1135
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752  
-[inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
-[inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x90/0xe0  
-kernel/locking/spinlock.c:191
-Code: 48 c7 c0 d8 34 93 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c  
-10 00 75 39 48 83 3d 3f f1 ca 01 00 74 24 48 89 df 57 9d <0f> 1f 44 00 00  
-bf 01 00 00 00 e8 e1 77 88 f9 65 8b 05 d2 da 39 78
-RSP: 0000:ffffc90001fe7ca8 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff132669b RBX: 0000000000000286 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000006 RDI: 0000000000000286
-RBP: ffffc90001fe7cb8 R08: ffff8880914ba100 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888083a2ac00
-R13: ffff8880914ba820 R14: 000000000000000a R15: 000000000000000b
-  spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
-  force_sig_info_to_task+0x2a2/0x340 kernel/signal.c:1329
-  force_sig_fault_to_task kernel/signal.c:1671 [inline]
-  force_sig_fault+0xbe/0x100 kernel/signal.c:1678
-  __bad_area_nosemaphore+0x32e/0x420 arch/x86/mm/fault.c:904
-  __bad_area arch/x86/mm/fault.c:933 [inline]
-  bad_area+0x69/0x80 arch/x86/mm/fault.c:939
-  do_user_addr_fault arch/x86/mm/fault.c:1404 [inline]
-  __do_page_fault+0x9eb/0xd80 arch/x86/mm/fault.c:1506
-  do_page_fault+0x38/0x590 arch/x86/mm/fault.c:1530
-  page_fault+0x39/0x40 arch/x86/entry/entry_64.S:1203
-RIP: 0033:0x401515
-Code: 00 00 00 be b4 fe 4a 00 e8 38 ee ff ff 48 85 c0 0f 85 d2 fe ff ff e9  
-4a ff ff ff e8 55 d9 04 00 48 6b 44 24 28 18 8b 7c 24 38 <48> 8b 88 50 00  
-00 20 48 8b 90 48 00 00 20 48 8b b0 40 00 00 20 e8
-RSP: 002b:00007f35767f7b20 EFLAGS: 00010206
-RAX: 0000000002ed3b50 RBX: 00000000006dcc28 RCX: 0000000000406cd7
-RDX: 1482b7b55b3372eb RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 00000000006dcc20 R08: 00007f35767f7b20 R09: 00000000006dcc20
-R10: 0000000000000000 R11: 0000000000000000 R12: 00000000006dcc2c
-R13: 00007ffc626d62cf R14: 00007f35767f89c0 R15: 00000000006dcc20
-rcu: rcu_preempt kthread starved for 10502 jiffies! g9705 f0x2  
-RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     R  running task    29272    10      2 0x80004000
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1895
-  rcu_gp_fqs_loop kernel/rcu/tree.c:1661 [inline]
-  rcu_gp_kthread+0x9b2/0x18d0 kernel/rcu/tree.c:1821
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+ * Changes from v1:
+  - use new cgroup id (= file handle)
+
+The testing result looks something like this:
+
+  [root@qemu build]# ./perf record --all-cgroups ./cgtest
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.009 MB perf.data (150 samples) ]
+  
+  [root@qemu build]# ./perf report -s cgroup,comm --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 150  of event 'cpu-clock:pppH'
+  # Event count (approx.): 37500000
+  #
+  # Overhead  cgroup      Command
+  # ........  ..........  .......
+  #
+      32.00%  /sub/cgrp2  looper2
+      28.00%  /sub/cgrp1  looper1
+      25.33%  /sub        looper0
+       4.00%  /           cgtest 
+       4.00%  /sub        cgtest 
+       3.33%  /sub/cgrp2  cgtest 
+       2.67%  /sub/cgrp1  cgtest 
+       0.67%  /           looper0
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+The test program (cgtest) follows.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Namhyung
+
+
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+
+
+-------8<-----------------------------------------8<----------------
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sched.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/prctl.h>
+#include <sys/mount.h>
+
+char cgbase[] = "/sys/fs/cgroup/perf_event";
+
+void mkcgrp(char *name) {
+  char buf[256];
+
+  snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+  if (mkdir(buf, 0755) < 0)
+    perror("mkdir");
+}
+
+void rmcgrp(char *name) {
+  char buf[256];
+
+  snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+  if (rmdir(buf) < 0)
+    perror("rmdir");
+}
+
+void setcgrp(char *name) {
+  char buf[256];
+  int fd;
+
+  snprintf(buf, sizeof(buf), "%s%s/tasks", cgbase, name);
+
+  fd = open(buf, O_WRONLY);
+  if (fd > 0) {
+    if (write(fd, "0\n", 2) != 2)
+      perror("write");
+    close(fd);
+  }
+}
+
+void create_sub_cgroup(int idx) {
+  char buf[128];
+
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  mkcgrp(buf);
+}
+
+void remove_sub_cgroup(int idx) {
+  char buf[128];
+
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  rmcgrp(buf);
+}
+
+void set_sub_cgroup(int idx) {
+  char buf[128];
+
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  setcgrp(buf);
+}
+
+void set_task_name(int idx) {
+  char buf[16];
+
+  snprintf(buf, sizeof(buf), "looper%d", idx);
+  prctl(PR_SET_NAME, buf, 0, 0, 0);
+}
+
+void loop(unsigned max) {
+  volatile unsigned int count = 1;
+
+  while (count++ != max) {
+    asm volatile ("pause");
+  }
+}
+
+void worker(int idx, unsigned cnt, int new_ns) {
+  int oldns;
+
+  create_sub_cgroup(idx);
+  set_sub_cgroup(idx);
+
+  if (new_ns) {
+    if (unshare(CLONE_NEWCGROUP) < 0)
+      perror("unshare");
+
+#if 0  /* FIXME */
+    if (unshare(CLONE_NEWNS) < 0)
+      perror("unshare");
+
+    if (mount("none", "/sys", NULL, MS_REMOUNT | MS_REC | MS_SLAVE, NULL) < 0)
+      perror("mount --make-rslave");
+
+    sleep(1);
+    if (umount("/sys/fs/cgroup/perf_event") < 0)
+      perror("umount");
+
+    if (mount("cgroup", "/sys/fs/cgroup/perf_event", "cgroup",
+              MS_NODEV | MS_NOEXEC | MS_NOSUID, "perf_event") < 0)
+      perror("mount again");
+#endif
+  }
+
+  if (fork() == 0) {
+    set_task_name(idx);
+    loop(cnt);
+    exit(0);
+  }
+  wait(NULL);
+}
+
+int main(int argc, char *argv[])
+{
+  int i, nr = 2;
+  int new_ns = 1;
+  unsigned cnt = 1000000;
+  int fd;
+
+  if (argc > 1)
+    nr = atoi(argv[1]);
+  if (argc > 2)
+    cnt = atoi(argv[2]);
+  if (argc > 3)
+    new_ns = atoi(argv[3]);
+
+  mkcgrp("/sub");
+  setcgrp("/sub");
+
+  for (i = 0; i < nr; i++) {
+    if (fork() == 0) {
+      worker(i+1, cnt, new_ns);
+      exit(0);
+    }
+  }
+
+  set_task_name(0);
+  loop(cnt);
+
+  for (i = 0; i < nr; i++)
+    wait(NULL);
+
+  for (i = 0; i < nr; i++)
+    remove_sub_cgroup(i+1);
+
+  setcgrp("/");
+  rmcgrp("/sub");
+
+  return 0;
+}
+-------8<-----------------------------------------8<----------------
+
+
+Namhyung Kim (9):
+  perf/core: Add PERF_RECORD_CGROUP event
+  perf/core: Add PERF_SAMPLE_CGROUP feature
+  perf tools: Basic support for CGROUP event
+  perf tools: Maintain cgroup hierarchy
+  perf report: Add 'cgroup' sort key
+  perf record: Support synthesizing cgroup events
+  perf record: Add --all-cgroups option
+  perf top: Add --all-cgroups option
+  perf script: Add --show-cgroup-events option
+
+ include/linux/perf_event.h                |   1 +
+ include/uapi/linux/perf_event.h           |  16 ++-
+ init/Kconfig                              |   3 +-
+ kernel/events/core.c                      | 133 ++++++++++++++++++++++
+ tools/include/uapi/linux/perf_event.h     |  16 ++-
+ tools/perf/Documentation/perf-record.txt  |   5 +-
+ tools/perf/Documentation/perf-report.txt  |   1 +
+ tools/perf/Documentation/perf-script.txt  |   3 +
+ tools/perf/Documentation/perf-top.txt     |   4 +
+ tools/perf/builtin-diff.c                 |   1 +
+ tools/perf/builtin-record.c               |  10 ++
+ tools/perf/builtin-report.c               |   1 +
+ tools/perf/builtin-script.c               |  41 +++++++
+ tools/perf/builtin-top.c                  |   9 ++
+ tools/perf/lib/include/perf/event.h       |   7 ++
+ tools/perf/util/cgroup.c                  |  75 +++++++++++-
+ tools/perf/util/cgroup.h                  |  16 ++-
+ tools/perf/util/event.c                   |  19 ++++
+ tools/perf/util/event.h                   |   6 +
+ tools/perf/util/evsel.c                   |  17 ++-
+ tools/perf/util/evsel.h                   |   1 +
+ tools/perf/util/hist.c                    |   7 ++
+ tools/perf/util/hist.h                    |   1 +
+ tools/perf/util/machine.c                 |  19 ++++
+ tools/perf/util/machine.h                 |   3 +
+ tools/perf/util/perf_event_attr_fprintf.c |   2 +
+ tools/perf/util/record.h                  |   1 +
+ tools/perf/util/session.c                 |   8 ++
+ tools/perf/util/sort.c                    |  31 +++++
+ tools/perf/util/sort.h                    |   2 +
+ tools/perf/util/synthetic-events.c        | 119 +++++++++++++++++++
+ tools/perf/util/synthetic-events.h        |   1 +
+ tools/perf/util/tool.h                    |   2 +
+ 33 files changed, 568 insertions(+), 13 deletions(-)
+
+-- 
+2.24.1.735.g03f4e72817-goog
+
