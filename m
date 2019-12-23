@@ -2,82 +2,97 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D48CC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CE8C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0FC206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367F4206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 01:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uynViSAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfLWBwd (ORCPT
+        id S1726786AbfLWBxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 20:52:33 -0500
-Received: from mxhk.zte.com.cn ([63.217.80.70]:64188 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfLWBwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 20:52:32 -0500
-Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id 8EF11587128DA7A88804;
-        Mon, 23 Dec 2019 09:52:30 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id xBN1q0Wb032782;
-        Mon, 23 Dec 2019 09:52:00 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019122309520245-1467735 ;
-          Mon, 23 Dec 2019 09:52:02 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     sudeep.dutt@intel.com
-Cc:     ashutosh.dixit@intel.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, vincent.whitchurch@axis.com,
-        alexios.zavras@intel.com, tglx@linutronix.de, allison@lohutok.net,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, up2wing@gmail.com, wang.liang82@zte.com.cn,
-        Huang Zijiang <huang.zijiang@zte.com.cn>
-Subject: [PATCH] misc: Use kzalloc() instead of kmalloc() with flag GFP_ZERO.
-Date:   Mon, 23 Dec 2019 09:51:58 +0800
-Message-Id: <1577065918-25513-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-12-23 09:52:02,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-12-23 09:52:01,
-        Serialize complete at 2019-12-23 09:52:01
-X-MAIL: mse-fl2.zte.com.cn xBN1q0Wb032782
+        Sun, 22 Dec 2019 20:53:45 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:57211 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfLWBxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 20:53:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577066024; x=1608602024;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=+wko5RT25RxW2zeycjxSO5Xakzc/zM0/ZUap54jab14=;
+  b=uynViSAktnp2WPcHnZCDRveb7lE3Si6+CLRmTGzYuTs9kgNzePsZKR9V
+   /ANwZmXjJfIyOziJ+NDN3fdZouLKHgpT1OeyfyeBrjIRRb/3a8OzztcMH
+   OJsE7p6yV/PCyvEtz7G21QRJ9sLM7g7m1ihxLf4jlCO+g5oyxd0hwAB+2
+   A=;
+IronPort-SDR: 7ryDAeCaJipu6dr1NaTh+ZQLiiweTV1ev5z/mCxhwEP8xXivmZ2jz53XmcMjjVnp4eJofiUsxM
+ 2R2IthzTw2WQ==
+X-IronPort-AV: E=Sophos;i="5.69,346,1571702400"; 
+   d="scan'208";a="9713435"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 23 Dec 2019 01:53:42 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id A8E2CA23BF;
+        Mon, 23 Dec 2019 01:53:41 +0000 (UTC)
+Received: from EX13D11UWB003.ant.amazon.com (10.43.161.206) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Dec 2019 01:53:41 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13D11UWB003.ant.amazon.com (10.43.161.206) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 23 Dec 2019 01:53:40 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1367.000;
+ Mon, 23 Dec 2019 01:53:40 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "=linux-block@vger.kernel.org" <=linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Sangaraju, Someswarudu" <ssomesh@amazon.com>
+Subject: Re: [RFC PATCH 1/5] block/genhd: Notify udev about capacity change
+Thread-Topic: [RFC PATCH 1/5] block/genhd: Notify udev about capacity change
+Thread-Index: AQHVuTIQS2D+6UASEUSut4lHWyy8r6fG9TQA
+Date:   Mon, 23 Dec 2019 01:53:40 +0000
+Message-ID: <e452f6a638fe09f065b9e4cd1c25d5d3a2f29e5a.camel@amazon.com>
+References: <20191223014056.17318-1-sblbir@amazon.com>
+In-Reply-To: <20191223014056.17318-1-sblbir@amazon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.78]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B7D314F84E432C468D7F28186EDB3776@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Zijiang <huang.zijiang@zte.com.cn>
-
-Use kzalloc instead of manually setting kmalloc
-with flag GFP_ZERO since kzalloc sets allocated memory
-to zero.
-
-Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- drivers/misc/mic/host/mic_boot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/misc/mic/host/mic_boot.c b/drivers/misc/mic/host/mic_boot.c
-index 7335759..c1f87a4 100644
---- a/drivers/misc/mic/host/mic_boot.c
-+++ b/drivers/misc/mic/host/mic_boot.c
-@@ -137,7 +137,7 @@ static void *__mic_dma_alloc(struct device *dev, size_t size,
-     struct scif_hw_dev *scdev = dev_get_drvdata(dev);
-     struct mic_device *mdev = scdev_to_mdev(scdev);
-     dma_addr_t tmp;
--    void *va = kmalloc(size, gfp | __GFP_ZERO);
-+void *va = kzalloc(size, gfp);
- 
-     if (va) {
-         tmp = mic_map_single(mdev, va, size);
--- 
-1.9.1
-
+T24gTW9uLCAyMDE5LTEyLTIzIGF0IDAxOjQwICswMDAwLCBCYWxiaXIgU2luZ2ggd3JvdGU6DQo+
+IEFsbG93IGJsb2NrL2dlbmhkIHRvIG5vdGlmeSB1c2VyIHNwYWNlICh2aWEgdWRldikgYWJvdXQg
+ZGlzayBzaXplIGNoYW5nZXMNCj4gdXNpbmcgYSBuZXcgaGVscGVyIGRpc2tfc2V0X2NhcGFjaXR5
+KCksIHdoaWNoIGlzIGEgd3JhcHBlciBvbiB0b3ANCj4gb2Ygc2V0X2NhcGFjaXR5KCkuIGRpc2tf
+c2V0X2NhcGFjaXR5KCkgd2lsbCBvbmx5IG5vdGlmeSB2aWEgdWRldiBpZg0KPiB0aGUgY3VycmVu
+dCBjYXBhY2l0eSBvciB0aGUgdGFyZ2V0IGNhcGFjaXR5IGlzIG5vdCB6ZXJvLg0KPiANCj4gQmFj
+a2dyb3VuZDoNCj4gDQo+IEFzIGEgcGFydCBvZiBhIHBhdGNoIHRvIGFsbG93IHNlbmRpbmcgdGhl
+IFJFU0laRSBldmVudCBvbiBkaXNrIGNhcGFjaXR5DQo+IGNoYW5nZSwgQ2hyaXN0b3BoIChoY2hA
+bHN0LmRlKSByZXF1ZXN0ZWQgdGhhdCB0aGUgcGF0Y2ggYmUgbWFkZSBnZW5lcmljDQo+IGFuZCB0
+aGUgaGFja3MgZm9yIHZpcnRpbyBibG9jayBhbmQgeGVuIGJsb2NrIGRldmljZXMgYmUgcmVtb3Zl
+ZCBhbmQNCj4gbWVyZ2VkIHZpYSBhIGdlbmVyaWMgaGVscGVyLg0KPiANCj4gDQoNCkkgbWVzc2Vk
+IHVwIHdpdGggbGludXgtYmxvY2sgTUwgYWRkcmVzcywgSSBjYW4gcmVzZW5kIHdpdGggdGhlIHJp
+Z2h0IGFkZHJlc3MNCmlmIG5lZWRlZC4gTXkgYXBvbG9naWVzDQoNCkJhbGJpciBTaW5naC4NCg==
