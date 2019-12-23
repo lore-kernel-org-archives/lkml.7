@@ -2,157 +2,198 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEB3C2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B55C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EF02081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aG1zyt/Z"
+	by mail.kernel.org (Postfix) with ESMTP id 0EF09206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 03:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfLWDbg (ORCPT
+        id S1726744AbfLWDcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 22:31:36 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34495 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfLWDbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 22:31:36 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so1634684pfc.1;
-        Sun, 22 Dec 2019 19:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wDk9eb7F2WxO7x5adDBGN43VlmnnZ5rDg1TMYWO8AcU=;
-        b=aG1zyt/Z2Phm31nUAnlEmVfeRFW3Z+k9xOf+fSEYyBZY5LrxUHcY1bS+MCadB8+8/x
-         bIz+JJ6jlbNazR81bTamAfPf8AvcG/vg9haZ0nqQi7ZcCyFEpSNbf43VKITHz/Ae3KIa
-         bgC/v0FvhIx9PpJaMX7kD9md5juR0gh/DArWT6JjlqzISemtbE/me29ooDk6cE559fb9
-         /G/ZK/GHaAwvTEmqfQ8S1yGFNjRHJdT46P8DAFKrF250/5i1h5bxPbaY1glSndVYRLmf
-         ikDSmZpSS9H6vxURj2gM6gJvJQu6mJhkLNroEuzuaPSbWfmVYBj20NDqrHvsfwbZ7o18
-         bqVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wDk9eb7F2WxO7x5adDBGN43VlmnnZ5rDg1TMYWO8AcU=;
-        b=geBKH095oLAzVEb3utvN2tQYtwfoGWiiXwH8JoJAYjMVTNDGB95S3p40b/qefzDmzn
-         A36VXod+QPKJqGT/xEgEXsHSYMCmRKens8Jc9pdavI5bzpFMUms42U66PCC+crEftNwI
-         lKaor8QDfQIFRqS6jDdddxnb2y46eZUIeB7JzZR19MYX4yMnDDhmz8aVgls4D/WbHA5Q
-         wfpSLXsi8pze9OIOfszmsUUk4kN63/jNGAqEihRzCmrVhn0sdBpMOCspDemEpeDjkvwo
-         1C6K7VUaCY8R0C9V/RFlCThpcVPl0/UpQ2iM0+zxmS2RBjTlKQ1kJXyupMgL6+vuSHHJ
-         BY+w==
-X-Gm-Message-State: APjAAAXkKD917Wty7q3OQR9U9mKox3pU+OKIIrFGRc+f5WT8dwlStDDr
-        NE92eFmV9jMgQS0jrIOyXzw=
-X-Google-Smtp-Source: APXvYqw6cYeESIHewXsTj5ZOMfVsL360DyEGQXE+t1uEQIKtnZ5cv7gAEB6mPAUShLtobJ5UD0k7Gw==
-X-Received: by 2002:a63:4f54:: with SMTP id p20mr29174948pgl.246.1577071895412;
-        Sun, 22 Dec 2019 19:31:35 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id f30sm19932481pga.20.2019.12.22.19.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 19:31:34 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, corbet@lwn.net
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] Documentation: boot.rst: fix warnings
-Date:   Mon, 23 Dec 2019 00:31:21 -0300
-Message-Id: <20191223033121.1584930-1-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Sun, 22 Dec 2019 22:32:21 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42376 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726539AbfLWDcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 22:32:20 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 405A5E37A462FA301091;
+        Mon, 23 Dec 2019 11:32:19 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 23 Dec
+ 2019 11:32:14 +0800
+Subject: Re: [RFC PATCH v5] f2fs: support data compression
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20191216062806.112361-1-yuchao0@huawei.com>
+ <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
+Date:   Mon, 23 Dec 2019 11:32:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Hi Jaegeuk,
 
-Fix WARNING: Inline emphasis start-string without end-string.
-This warning was due to wrong syntax being used.
+Sorry for the delay.
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+On 2019/12/19 5:46, Jaegeuk Kim wrote:
+> Hi Chao,
+> 
+> I still see some diffs from my latest testing version, so please check anything
+> that you made additionally from here.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev&id=25d18e19a91e60837d36368ee939db13fd16dc64
+
+I've checked the diff and picked up valid parts, could you please check and
+comment on it?
+
 ---
- Documentation/x86/boot.rst | 40 +++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ fs/f2fs/compress.c |  8 ++++----
+ fs/f2fs/data.c     | 18 +++++++++++++++---
+ fs/f2fs/f2fs.h     |  3 +++
+ fs/f2fs/file.c     |  1 -
+ 4 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-index 90bb8f5ab384..94c2a2775a31 100644
---- a/Documentation/x86/boot.rst
-+++ b/Documentation/x86/boot.rst
-@@ -834,14 +834,14 @@ Protocol:	2.09+
-   chunks of memory are occupied by kernel data.
- 
-   Thus setup_indirect struct and SETUP_INDIRECT type were introduced in
--  protocol 2.15.
-+  protocol 2.15::
- 
--  struct setup_indirect {
--    __u32 type;
--    __u32 reserved;  /* Reserved, must be set to zero. */
--    __u64 len;
--    __u64 addr;
--  };
-+    struct setup_indirect {
-+      __u32 type;
-+      __u32 reserved;  /* Reserved, must be set to zero. */
-+      __u64 len;
-+      __u64 addr;
-+    };
- 
-   The type member is a SETUP_INDIRECT | SETUP_* type. However, it cannot be
-   SETUP_INDIRECT itself since making the setup_indirect a tree structure
-@@ -849,19 +849,19 @@ Protocol:	2.09+
-   and stack space can be limited in boot contexts.
- 
-   Let's give an example how to point to SETUP_E820_EXT data using setup_indirect.
--  In this case setup_data and setup_indirect will look like this:
--
--  struct setup_data {
--    __u64 next = 0 or <addr_of_next_setup_data_struct>;
--    __u32 type = SETUP_INDIRECT;
--    __u32 len = sizeof(setup_data);
--    __u8 data[sizeof(setup_indirect)] = struct setup_indirect {
--      __u32 type = SETUP_INDIRECT | SETUP_E820_EXT;
--      __u32 reserved = 0;
--      __u64 len = <len_of_SETUP_E820_EXT_data>;
--      __u64 addr = <addr_of_SETUP_E820_EXT_data>;
-+  In this case setup_data and setup_indirect will look like this::
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index af23ed6deffd..1bc86a54ad71 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -593,7 +593,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 							fgp_flag, GFP_NOFS);
+ 		if (!page) {
+ 			ret = -ENOMEM;
+-			goto unlock_pages;
++			goto release_pages;
+ 		}
+
+ 		if (PageUptodate(page))
+@@ -608,13 +608,13 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 		ret = f2fs_read_multi_pages(cc, &bio, cc->cluster_size,
+ 						&last_block_in_bio, false);
+ 		if (ret)
+-			goto release_pages;
++			goto unlock_pages;
+ 		if (bio)
+ 			f2fs_submit_bio(sbi, bio, DATA);
+
+ 		ret = f2fs_init_compress_ctx(cc);
+ 		if (ret)
+-			goto release_pages;
++			goto unlock_pages;
+ 	}
+
+ 	for (i = 0; i < cc->cluster_size; i++) {
+@@ -762,7 +762,7 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 	if (err)
+ 		goto out_unlock_op;
+
+-	psize = (cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
++	psize = (loff_t)(cc->rpages[last_index]->index + 1) << PAGE_SHIFT;
+
+ 	err = f2fs_get_node_info(fio.sbi, dn.nid, &ni);
+ 	if (err)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 19cd03450066..f1f5c701228d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -184,13 +184,18 @@ static void f2fs_decompress_work(struct bio_post_read_ctx *ctx)
+ }
+
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
++void f2fs_verify_pages(struct page **rpages, unsigned int cluster_size)
++{
++	f2fs_decompress_end_io(rpages, cluster_size, false, true);
++}
 +
-+    struct setup_data {
-+      __u64 next = 0 or <addr_of_next_setup_data_struct>;
-+      __u32 type = SETUP_INDIRECT;
-+      __u32 len = sizeof(setup_data);
-+      __u8 data[sizeof(setup_indirect)] = struct setup_indirect {
-+        __u32 type = SETUP_INDIRECT | SETUP_E820_EXT;
-+        __u32 reserved = 0;
-+        __u64 len = <len_of_SETUP_E820_EXT_data>;
-+        __u64 addr = <addr_of_SETUP_E820_EXT_data>;
-+      }
-     }
--  }
- 
- .. note::
-      SETUP_INDIRECT | SETUP_NONE objects cannot be properly distinguished
-@@ -964,7 +964,7 @@ expected to copy into a setup_data chunk.
- All kernel_info data should be part of this structure. Fixed size data have to
- be put before kernel_info_var_len_data label. Variable size data have to be put
- after kernel_info_var_len_data label. Each chunk of variable size data has to
--be prefixed with header/magic and its size, e.g.:
-+be prefixed with header/magic and its size, e.g.::
- 
-   kernel_info:
-           .ascii  "LToP"          /* Header, Linux top (structure). */
--- 
-2.24.1
+ static void f2fs_verify_bio(struct bio *bio)
+ {
+ 	struct page *page = bio_first_page_all(bio);
+ 	struct decompress_io_ctx *dic =
+ 			(struct decompress_io_ctx *)page_private(page);
 
+-	f2fs_decompress_end_io(dic->rpages, dic->cluster_size, false, true);
++	f2fs_verify_pages(dic->rpages, dic->cluster_size);
+ 	f2fs_free_dic(dic);
+ }
+ #endif
+@@ -507,10 +512,16 @@ static bool __has_merged_page(struct bio *bio, struct inode *inode,
+ 	bio_for_each_segment_all(bvec, bio, iter_all) {
+ 		struct page *target = bvec->bv_page;
+
+-		if (fscrypt_is_bounce_page(target))
++		if (fscrypt_is_bounce_page(target)) {
+ 			target = fscrypt_pagecache_page(target);
+-		if (f2fs_is_compressed_page(target))
++			if (IS_ERR(target))
++				continue;
++		}
++		if (f2fs_is_compressed_page(target)) {
+ 			target = f2fs_compress_control_page(target);
++			if (IS_ERR(target))
++				continue;
++		}
+
+ 		if (inode && inode == target->mapping->host)
+ 			return true;
+@@ -2039,6 +2050,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 	if (ret)
+ 		goto out;
+
++	/* cluster was overwritten as normal cluster */
+ 	if (dn.data_blkaddr != COMPRESS_ADDR)
+ 		goto out;
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5d55cef66410..17d2af4eeafb 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2719,6 +2719,7 @@ static inline void set_compress_context(struct inode *inode)
+ 			1 << F2FS_I(inode)->i_log_cluster_size;
+ 	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
+ 	set_inode_flag(inode, FI_COMPRESSED_FILE);
++	stat_inc_compr_inode(inode);
+ }
+
+ static inline unsigned int addrs_per_inode(struct inode *inode)
+@@ -3961,6 +3962,8 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+ 		return true;
+ 	if (f2fs_is_multi_device(sbi))
+ 		return true;
++	if (f2fs_compressed_file(inode))
++		return true;
+ 	/*
+ 	 * for blkzoned device, fallback direct IO to buffered IO, so
+ 	 * all IOs can be serialized by log-structured write.
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index bde5612f37f5..9aeadf14413c 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1828,7 +1828,6 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 				return -EINVAL;
+
+ 			set_compress_context(inode);
+-			stat_inc_compr_inode(inode);
+ 		}
+ 	}
+ 	if ((iflags ^ fi->i_flags) & F2FS_NOCOMP_FL) {
+-- 
+2.18.0.rc1
+
+Thanks,
