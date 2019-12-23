@@ -2,117 +2,127 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2349BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1E7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7466206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKvS60xx"
+	by mail.kernel.org (Postfix) with ESMTP id 3442A206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 07:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfLWHUu (ORCPT
+        id S1725947AbfLWHZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:20:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36756 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725855AbfLWHUt (ORCPT
+        Mon, 23 Dec 2019 02:25:32 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56688 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfLWHZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:20:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577085648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MW6YhL+RcyQYvYpj5YrVwXN8MDvDRWOnMuiAt/nHw6w=;
-        b=BKvS60xxrDyGPxcHtlBgjcjNqD9a/6K/bFjDzZxTegfUrLvKN4Tvx8Mn1KYdyDiNMts4+c
-        apJnNY9wDigX95BU6Kwoe/V9wYH0g7rOw2TeO9h4/0JJB+XqADkXVZxR7gL0+5ec02hGEq
-        R1lLAfOA1TsXVXv3x+cQL9YVRUZ3PY8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-KC-JDB_cOcm-mTCqJAK6MA-1; Mon, 23 Dec 2019 02:20:45 -0500
-X-MC-Unique: KC-JDB_cOcm-mTCqJAK6MA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63424800D48;
-        Mon, 23 Dec 2019 07:20:44 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-202.pek2.redhat.com [10.72.12.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD95A808F5;
-        Mon, 23 Dec 2019 07:20:38 +0000 (UTC)
-Subject: Re: [4/5] drm/i915: Auto detect DPCD backlight support by default
-To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20191122231616.2574-5-lyude@redhat.com>
-From:   Perr Yuan <pyuan@redhat.com>
-Message-ID: <3ba84125-ab4c-e1a7-cb74-b65638f1c2d5@redhat.com>
-Date:   Mon, 23 Dec 2019 02:20:36 -0500
+        Mon, 23 Dec 2019 02:25:32 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 45ED1283E6C
+Subject: Re: [PATCH v4 2/2] mfd: cros_ec: Add cros-usbpd-notify subdevice
+To:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20191220193843.47182-1-pmalani@chromium.org>
+ <20191220193843.47182-2-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <7eecafb2-4686-b448-2837-4181188365b1@collabora.com>
+Date:   Mon, 23 Dec 2019 08:25:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191122231616.2574-5-lyude@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191220193843.47182-2-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/22/19 6:16 PM, Lyude Paul wrote:
-> Turns out we actually already have some companies, such as Lenovo,
-> shipping machines with AMOLED screens that don't allow controlling the
-> backlight through the usual PWM interface and only allow controlling it
-> through the standard EDP DPCD interface. One example of one of these
-> laptops is the X1 Extreme 2nd Generation.
+Hi Prashant,
+
+On 20/12/19 20:38, Prashant Malani wrote:
+> Add the cros-usbpd-notify driver as a subdevice on non-ACPI platforms
+> that support the EC_FEATURE_USB_PD EC feature flag.
 > 
-> Since we've got systems that need this turned on by default now to have
-> backlight controls working out of the box, let's start auto-detecting it
-> for systems by default based on what the VBT tells us. We do this by
-> changing the default value for the enable_dpcd_backlight module param
-> from 0 to -1.
+> This driver allows other cros-ec devices to receive PD event
+> notifications from the Chrome OS Embedded Controller (EC) via a
+> notification chain.
 > 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 > ---
->   drivers/gpu/drm/i915/i915_params.c | 2 +-
->   drivers/gpu/drm/i915/i915_params.h | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/i915/i915_params.c b/drivers/gpu/drm/i915/i915_params.c
-> index 1dd1f3652795..31eed60c167e 100644
-> --- a/drivers/gpu/drm/i915/i915_params.c
-> +++ b/drivers/gpu/drm/i915/i915_params.c
-> @@ -172,7 +172,7 @@ i915_param_named_unsafe(inject_probe_failure, uint, 0400,
->   
->   i915_param_named(enable_dpcd_backlight, int, 0600,
->   	"Enable support for DPCD backlight control"
-> -	"(-1=use per-VBT LFP backlight type setting, 0=disabled [default], 1=enabled)");
-> +	"(-1=use per-VBT LFP backlight type setting [default], 0=disabled, 1=enabled)");
->   
->   #if IS_ENABLED(CONFIG_DRM_I915_GVT)
->   i915_param_named(enable_gvt, bool, 0400,
-> diff --git a/drivers/gpu/drm/i915/i915_params.h b/drivers/gpu/drm/i915/i915_params.h
-> index 31b88f297fbc..a79d0867f77a 100644
-> --- a/drivers/gpu/drm/i915/i915_params.h
-> +++ b/drivers/gpu/drm/i915/i915_params.h
-> @@ -64,7 +64,7 @@ struct drm_printer;
->   	param(int, reset, 3) \
->   	param(unsigned int, inject_probe_failure, 0) \
->   	param(int, fastboot, -1) \
-> -	param(int, enable_dpcd_backlight, 0) \
-> +	param(int, enable_dpcd_backlight, -1) \
->   	param(char *, force_probe, CONFIG_DRM_I915_FORCE_PROBE) \
->   	param(unsigned long, fake_lmem_start, 0) \
->   	/* leave bools at the end to not create holes */ \
+> Changes in v4:
+> - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
+>   mfd_cell and used an IS_ENABLED() check.
+> - Changed commit title and description slightly to reflect change in
+>   code.
 > 
+>  drivers/mfd/cros_ec_dev.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index c4b977a5dd966..da198abe2b0a6 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -5,6 +5,7 @@
+>   * Copyright (C) 2014 Google, Inc.
+>   */
+>  
+> +#include <linux/kconfig.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+> @@ -87,6 +88,10 @@ static const struct mfd_cell cros_usbpd_charger_cells[] = {
+>  	{ .name = "cros-usbpd-logger", },
+>  };
+>  
+> +static const struct mfd_cell cros_usbpd_notify_cells[] = {
+> +	{ .name = "cros-usbpd-notify", },
+> +};
+> +
+>  static const struct cros_feature_to_cells cros_subdevices[] = {
+>  	{
+>  		.id		= EC_FEATURE_CEC,
+> @@ -202,6 +207,22 @@ static int ec_device_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * The PD notifier driver cell is separate since it only needs to be
+> +	 * explicitly added on non-ACPI platforms.
 
-Tested-by:Perry Yuan <pyuan@redhat.com>
 
+Sorry to not catch this before, but a worry arose. Is non-ACPI platforms or
+non-X86 platforms or on OF platforms?
+
+ARM64 for example has the CONFIG_ACPI symbol set to yes, with the below
+condition condition will not work on Kevin for example and IIUC this is not what
+we want, I think we want IS_ENABLED(CONFIG_OF)?
+
+Thanks,
+ Enric
+
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_ACPI)) {
+> +		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+> +			retval = mfd_add_hotplug_devices(ec->dev,
+> +					cros_usbpd_notify_cells,
+> +					ARRAY_SIZE(cros_usbpd_notify_cells));
+> +			if (retval)
+> +				dev_err(ec->dev,
+> +					"failed to add PD notify devices: %d\n",
+> +					retval);
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * The following subdevices cannot be detected by sending the
+>  	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
+> 
