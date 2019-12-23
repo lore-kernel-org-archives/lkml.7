@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E65C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63571C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6D5206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E92206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfLWP1a (ORCPT
+        id S1727234AbfLWP1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:27:30 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57908 "EHLO huawei.com"
+        Mon, 23 Dec 2019 10:27:33 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57858 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726828AbfLWP13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:27:29 -0500
+        id S1726936AbfLWP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:27:30 -0500
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E941AE2CA5765FA2C7DE;
+        by Forcepoint Email with ESMTP id E232833A261A59EE3E5A;
         Mon, 23 Dec 2019 23:27:24 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 23 Dec 2019 23:27:16 +0800
+ 14.3.439.0; Mon, 23 Dec 2019 23:27:18 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <tglx@linutronix.de>, <mingo@redhat.com>,
         <catalin.marinas@arm.com>, <will@kernel.org>,
@@ -33,9 +33,9 @@ CC:     <horms@verge.net.au>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
         <linux-doc@vger.kernel.org>, <xiexiuqi@huawei.com>,
         <chenzhou10@huawei.com>
-Subject: [PATCH v7 2/4] arm64: kdump: reserve crashkenel above 4G for crash dump kernel
-Date:   Mon, 23 Dec 2019 23:23:47 +0800
-Message-ID: <20191223152349.180172-3-chenzhou10@huawei.com>
+Subject: [PATCH v7 3/4] arm64: kdump: add memory for devices by DT property, low-memory-range
+Date:   Mon, 23 Dec 2019 23:23:48 +0800
+Message-ID: <20191223152349.180172-4-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191223152349.180172-1-chenzhou10@huawei.com>
 References: <20191223152349.180172-1-chenzhou10@huawei.com>
@@ -49,89 +49,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Crashkernel=X tries to reserve memory for the crash dump kernel under
-4G. If crashkernel=X,low is specified simultaneously, reserve spcified
-size low memory for crash kdump kernel devices firstly and then reserve
-memory above 4G.
+If we want to reserve crashkernel above 4G, we could use parameters
+"crashkernel=X crashkernel=Y,low", in this case, specified size low
+memory is reserved for crash dump kernel devices and never mapped by
+the first kernel. This memory range is advertised to crash dump kernel
+via DT property under /chosen,
+	linux,low-memory-range=<BASE SIZE>
+
+Crash dump kernel reads this property at boot time and call
+memblock_add() after memblock_cap_memory_range() has been called.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/arm64/kernel/setup.c |  8 +++++++-
- arch/arm64/mm/init.c      | 31 +++++++++++++++++++++++++++++--
- 2 files changed, 36 insertions(+), 3 deletions(-)
+ arch/arm64/mm/init.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 56f6645..04d1c87 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -238,7 +238,13 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		/*
-+		 * Userspace will find "Crash kernel" region in /proc/iomem.
-+		 * Note: the low region is renamed as Crash kernel (low).
-+		 */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+				crashk_low_res.end <= res->end)
-+			request_resource(res, &crashk_low_res);
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
 diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index b65dffd..0d7afd5 100644
+index 0d7afd5..1c4a6ad 100644
 --- a/arch/arm64/mm/init.c
 +++ b/arch/arm64/mm/init.c
-@@ -80,6 +80,7 @@ static void __init reserve_crashkernel(void)
+@@ -322,6 +322,26 @@ static int __init early_mem(char *p)
+ }
+ early_param("mem", early_mem);
+ 
++static int __init early_init_dt_scan_lowmem(unsigned long node,
++		const char *uname, int depth, void *data)
++{
++	struct memblock_region *lowmem = data;
++	const __be32 *reg;
++	int len;
++
++	if (depth != 1 || strcmp(uname, "chosen") != 0)
++		return 0;
++
++	reg = of_get_flat_dt_prop(node, "linux,low-memory-range", &len);
++	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
++		return 1;
++
++	lowmem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++	lowmem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++	return 1;
++}
++
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
  {
- 	unsigned long long crash_base, crash_size;
- 	int ret;
-+	phys_addr_t crash_max = arm64_dma32_phys_limit;
+@@ -352,13 +372,21 @@ static void __init fdt_enforce_memory_region(void)
  
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base);
-@@ -87,12 +88,38 @@ static void __init reserve_crashkernel(void)
- 	if (ret || !crash_size)
- 		return;
- 
-+	ret = reserve_crashkernel_low();
-+	if (!ret && crashk_low_res.end) {
-+		/*
-+		 * If crashkernel=X,low specified, there may be two regions,
-+		 * we need to make some changes as follows:
-+		 *
-+		 * 1. rename the low region as "Crash kernel (low)"
-+		 * In order to distinct from the high region and make no effect
-+		 * to the use of existing kexec-tools, rename the low region as
-+		 * "Crash kernel (low)".
-+		 *
-+		 * 2. change the upper bound for crash memory
-+		 * Set MEMBLOCK_ALLOC_ACCESSIBLE upper bound for crash memory.
-+		 *
-+		 * 3. mark the low region as "nomap"
-+		 * The low region is intended to be used for crash dump kernel
-+		 * devices, just mark the low region as "nomap" simply.
-+		 */
-+		const char *rename = "Crash kernel (low)";
+ 	if (reg.size)
+ 		memblock_cap_memory_range(reg.base, reg.size);
 +
-+		crashk_low_res.name = rename;
-+		crash_max = MEMBLOCK_ALLOC_ACCESSIBLE;
-+		memblock_mark_nomap(crashk_low_res.start,
-+				    resource_size(&crashk_low_res));
-+	}
++	of_scan_flat_dt(early_init_dt_scan_lowmem, &reg);
 +
- 	crash_size = PAGE_ALIGN(crash_size);
++	if (reg.size)
++		memblock_add(reg.base, reg.size);
+ }
  
- 	if (crash_base == 0) {
- 		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
--				crash_size, SZ_2M);
-+		crash_base = memblock_find_in_range(0, crash_max, crash_size,
-+				SZ_2M);
- 		if (crash_base == 0) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
+ void __init arm64_memblock_init(void)
+ {
+ 	const s64 linear_region_size = BIT(vabits_actual - 1);
+ 
+-	/* Handle linux,usable-memory-range property */
++	/*
++	 * Handle linux,usable-memory-range and linux,low-memory-range
++	 * properties.
++	 */
+ 	fdt_enforce_memory_region();
+ 
+ 	/* Remove memory above our supported physical address size */
 -- 
 2.7.4
 
