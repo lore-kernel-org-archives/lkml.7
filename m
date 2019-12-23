@@ -2,120 +2,110 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BB9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43159206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZlDgbEMs"
+	by mail.kernel.org (Postfix) with ESMTP id 3D45D2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfLWR1m (ORCPT
+        id S1726893AbfLWR2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:27:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24040 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726754AbfLWR1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:27:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577122061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2FQpGKHqmKgP8roRbgRwKHYu0GCskB3t0E3YVUxgG0w=;
-        b=ZlDgbEMsk/Z8Zas4xcpQE7OkH2+XW4TGyCqJ5E8cmFqgPqsUvA6a2zLnCVBVqKngelaSvo
-        MTvIHSxy7eGgTGWkGNgQZ+wv22SZbSj+V2FhZHuoTR7bXLA9O3SNWE6bTTLXpuNZy943QX
-        n/9DQZm7kwJQ4v4DLaHK0u8i5bIDUDI=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-hq4f1rARP_WixaF5Awi55g-1; Mon, 23 Dec 2019 12:27:40 -0500
-X-MC-Unique: hq4f1rARP_WixaF5Awi55g-1
-Received: by mail-qt1-f199.google.com with SMTP id g21so8852325qtq.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:27:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2FQpGKHqmKgP8roRbgRwKHYu0GCskB3t0E3YVUxgG0w=;
-        b=cDCMk9TuhLc11dnF5rTvJaZLI9TPxvK+l5ztqn0RjtoApjsZq4GCUzXi2K9MKkf8W9
-         YBC2CPa/0vNDj3JSAGJnRYDuRq5A+R4n5kWw2HtzC0RjO/G3URtxf/M1mXnlTuYBruHR
-         7g9qbgr0PqFabyh7+R88HOQoyB3RDcdj/DRRApncu3gT84esyMqTucijgV/vxbVy/T5o
-         uFsM8GFaVqaxtDMKSv/lvGStfRG3nMcfo+RNd9YOmRMnYdKN1YwkLX+fccr0i+xCrp96
-         MdTjdYb1vk8d18In6ogw1rqfe7unKuMY82jES/oNcTqdb5sucvGKSSwg2wnZ4l7fyBg7
-         YCwg==
-X-Gm-Message-State: APjAAAXQtq3Yyx800uc5cY3UeGIrq58R203KJOHAQHwaxjpIAaUved/p
-        b4YV7hBgJ4Way54rxtrZrl3QP1OTYnQtAjr9xBYMeFUo+0uQJMsnjXMouoZYfeGNrhVQz+fx+Lk
-        BjEn2OSdMC3JpRleyEY7LvHed
-X-Received: by 2002:a37:a70c:: with SMTP id q12mr15555620qke.484.1577122059614;
-        Mon, 23 Dec 2019 09:27:39 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyYzt7+Hss5QmOIfwnIr/JMapF2vhOFE7agaZrdLdvNu9aXaC3w6bEL5ww3BUrHUWO1SQNPIw==
-X-Received: by 2002:a37:a70c:: with SMTP id q12mr15555594qke.484.1577122059322;
-        Mon, 23 Dec 2019 09:27:39 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id l4sm422045qkb.37.2019.12.23.09.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 09:27:38 -0800 (PST)
-Date:   Mon, 23 Dec 2019 12:27:37 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
- KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
-Message-ID: <20191223172737.GA81196@xz-x1>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-4-peterx@redhat.com>
- <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
+        Mon, 23 Dec 2019 12:28:24 -0500
+Received: from mga02.intel.com ([134.134.136.20]:56050 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfLWR2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:28:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 09:28:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,348,1571727600"; 
+   d="scan'208";a="211622847"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by orsmga008.jf.intel.com with ESMTP; 23 Dec 2019 09:28:18 -0800
+Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 23 Dec 2019 09:28:17 -0800
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.30]) by
+ ORSMSX157.amr.corp.intel.com ([169.254.9.213]) with mapi id 14.03.0439.000;
+ Mon, 23 Dec 2019 09:28:17 -0800
+From:   "Andersen, John S" <john.s.andersen@intel.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>
+CC:     "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+Thread-Topic: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+Thread-Index: AQHVt2uK2a8jsyPFKUGPuWHWZO4ZBqfFJR4AgANfSYA=
+Date:   Mon, 23 Dec 2019 17:28:17 +0000
+Message-ID: <a066ebf4bbfa5c01791499d91faf4ff9cfab6c0f.camel@intel.com>
+References: <20191220192701.23415-1-john.s.andersen@intel.com>
+         <0f42e52a-6a16-69f4-41da-06e53d8025d2@redhat.com>
+In-Reply-To: <0f42e52a-6a16-69f4-41da-06e53d8025d2@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.19.9.42]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A0CB504C9D939549A339BB9638F0C4DF@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 02:51:52PM +0100, Paolo Bonzini wrote:
-> On 21/12/19 02:49, Peter Xu wrote:
-> > Originally, we have three code paths that can dirty a page without
-> > vcpu context for X86:
-> > 
-> >   - init_rmode_identity_map
-> >   - init_rmode_tss
-> >   - kvmgt_rw_gpa
-> > 
-> > init_rmode_identity_map and init_rmode_tss will be setup on
-> > destination VM no matter what (and the guest cannot even see them), so
-> > it does not make sense to track them at all.
-> > 
-> > To do this, a new parameter is added to kvm_[write|clear]_guest_page()
-> > to show whether we would like to track dirty bits for the operations.
-> > With that, pass in "false" to this new parameter for any guest memory
-> > write of the ioctls (KVM_SET_TSS_ADDR, KVM_SET_IDENTITY_MAP_ADDR).
-> 
-> We can also return the hva from x86_set_memory_region and
-> __x86_set_memory_region.
-
-Yes.  Though it is a bit tricky in that then we'll also need to make
-sure to take slots_lock or srcu to protect that hva (say, we must drop
-that hva reference before we release the locks, otherwise the hva
-could gone under us, iiuc).  So if we want to do that we'd better
-comment on that hva value very explicitly, just in case some future
-callers of __x86_set_memory_region could cache it somewhere.
-
-(Side topic: I feel like the srcu_read_lock() pair in
- init_rmode_identity_map() is redundant..)
-
--- 
-Peter Xu
-
+T24gU2F0LCAyMDE5LTEyLTIxIGF0IDE0OjU5ICswMTAwLCBQYW9sbyBCb256aW5pIHdyb3RlOg0K
+PiBPbiAyMC8xMi8xOSAyMDoyNiwgSm9obiBBbmRlcnNlbiB3cm90ZToNCj4gPiBQYXJhdmlydHVh
+bGl6ZWQgQ1IgcGlubmluZyB3aWxsIGxpa2VseSBiZSBpbmNvbXBhdGlibGUgd2l0aCBrZXhlYw0K
+PiA+IGZvcg0KPiA+IHRoZSBmb3Jlc2VlYWJsZSBmdXR1cmUuIEVhcmx5IGJvb3QgY29kZSBjb3Vs
+ZCBwb3NzaWJseSBiZSBjaGFuZ2VkDQo+ID4gdG8NCj4gPiBub3QgY2xlYXIgcHJvdGVjdGVkIGJp
+dHMuIEhvd2V2ZXIsIGEga2VybmVsIHRoYXQgcmVxdWVzdHMgQ1IgYml0cw0KPiA+IGJlDQo+ID4g
+cGlubmVkIGNhbid0IGtub3cgaWYgdGhlIGtlcm5lbCBpdCdzIGtleGVjaW5nIGhhcyBiZWVuIHVw
+ZGF0ZWQgdG8NCj4gPiBub3QNCj4gPiBjbGVhciBwcm90ZWN0ZWQgYml0cy4gVGhpcyB3b3VsZCBy
+ZXN1bHQgaW4gdGhlIGtlcm5lbCBiZWluZyBrZXhlYydkDQo+ID4gYWxtb3N0IGltbWVkaWF0ZWx5
+IHJlY2VpdmluZyBhIGdlbmVyYWwgcHJvdGVjdGlvbiBmYXVsdC4NCj4gPiANCj4gPiBTZWN1cml0
+eSBjb25zY2lvdXMga2VybmVsIGNvbmZpZ3VyYXRpb25zIGRpc2FibGUga2V4ZWMgYWxyZWFkeSwg
+cGVyDQo+ID4gS1NQUA0KPiA+IGd1aWRlbGluZXMuIFByb2plY3RzIHN1Y2ggYXMgS2F0YSBDb250
+YWluZXJzLCBBV1MgTGFtYmRhLCBDaHJvbWVPUw0KPiA+IFRlcm1pbmEsIGFuZCBvdGhlcnMgdXNp
+bmcgS1ZNIHRvIHZpcnR1YWxpemUgTGludXggd2lsbCBiZW5lZml0IGZyb20NCj4gPiB0aGlzIHBy
+b3RlY3Rpb24uDQo+ID4gDQo+ID4gVGhlIHVzYWdlIG9mIFNNTSBpbiBTZWFCSU9TIHdhcyBleHBs
+b3JlZCBhcyBhIHdheSB0byBjb21tdW5pY2F0ZSB0bw0KPiA+IEtWTQ0KPiA+IHRoYXQgYSByZWJv
+b3QgaGFzIG9jY3VycmVkIGFuZCBpdCBzaG91bGQgemVybyB0aGUgcGlubmVkIGJpdHMuIFdoZW4N
+Cj4gPiB1c2luZyBRRU1VIGFuZCBTZWFCSU9TLCBTTU0gaW5pdGlhbGl6YXRpb24gb2NjdXJzIG9u
+IHJlYm9vdC4NCj4gPiBIb3dldmVyLA0KPiA+IHByaW9yIHRvIFNNTSBpbml0aWFsaXphdGlvbiwg
+QklPUyB3cml0ZXMgemVybyB2YWx1ZXMgdG8gQ1IwLA0KPiA+IGNhdXNpbmcgYQ0KPiA+IGdlbmVy
+YWwgcHJvdGVjdGlvbiBmYXVsdCB0byBiZSBzZW50IHRvIHRoZSBndWVzdCBiZWZvcmUgU01NIGNh
+bg0KPiA+IHNpZ25hbA0KPiA+IHRoYXQgdGhlIG1hY2hpbmUgaGFzIGJvb3RlZC4NCj4gDQo+IFNN
+TSBpcyBvcHRpb25hbDsgSSB0aGluayBpdCBtYWtlcyBzZW5zZSB0byBsZWF2ZSBpdCB0byB1c2Vy
+c3BhY2UgdG8NCj4gcmVzZXQgcGlubmluZyAoaW5jbHVkaW5nIGZvciB0aGUgY2FzZSBvZiB0cmlw
+bGUgZmF1bHRzKSwgd2hpbGUgSU5JVA0KPiB3aGljaCBpcyBoYW5kbGVkIHdpdGhpbiBLVk0gd291
+bGQga2VlcCBpdCBhY3RpdmUuDQo+IA0KPiA+IFBpbm5pbmcgb2Ygc2Vuc2l0aXZlIENSIGJpdHMg
+aGFzIGFscmVhZHkgYmVlbiBpbXBsZW1lbnRlZCB0bw0KPiA+IHByb3RlY3QNCj4gPiBhZ2FpbnN0
+IGV4cGxvaXRzIGRpcmVjdGx5IGNhbGxpbmcgbmF0aXZlX3dyaXRlX2NyKigpLiBUaGUgY3VycmVu
+dA0KPiA+IHByb3RlY3Rpb24gY2Fubm90IHN0b3AgUk9QIGF0dGFja3Mgd2hpY2gganVtcCBkaXJl
+Y3RseSB0byBhIE1PViBDUg0KPiA+IGluc3RydWN0aW9uLiBHdWVzdHMgcnVubmluZyB3aXRoIHBh
+cmF2aXJ0dWFsaXplZCBDUiBwaW5uaW5nIGFyZSBub3cNCj4gPiBwcm90ZWN0ZWQgYWdhaW5zdCB0
+aGUgdXNlIG9mIFJPUCB0byBkaXNhYmxlIENSIGJpdHMuIFRoZSBzYW1lIGJpdHMNCj4gPiB0aGF0
+DQo+ID4gYXJlIGJlaW5nIHBpbm5lZCBuYXRpdmVseSBtYXkgYmUgcGlubmVkIHZpYSB0aGUgQ1Ig
+cGlubmVkIE1TUnMuDQo+ID4gVGhlc2UNCj4gPiBiaXRzIGFyZSBXUCBpbiBDUjAsIGFuZCBTTUVQ
+LCBTTUFQLCBhbmQgVU1JUCBpbiBDUjQuDQo+ID4gDQo+ID4gRnV0dXJlIHBhdGNoZXMgY291bGQg
+cHJvdGVjdCBiaXRzIGluIE1TUnMgaW4gYSBzaW1pbGFyIGZhc2hpb24uIFRoZQ0KPiA+IE5YRQ0K
+PiA+IGJpdCBvZiB0aGUgRUZFUiBNU1IgaXMgYSBwcmltZSBjYW5kaWRhdGUuDQo+IA0KPiBQbGVh
+c2UgaW5jbHVkZSBwYXRjaGVzIGZvciBlaXRoZXIga3ZtLXVuaXQtdGVzdHMgb3INCj4gdG9vbHMv
+dGVzdGluZy9zZWxmdGVzdHMva3ZtIHRoYXQgdGVzdCB0aGUgZnVuY3Rpb25hbGl0eS4NCj4gDQoN
+CldpbGwgZG8NCg==
