@@ -2,103 +2,141 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E78C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1323FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02904207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577107990;
-	bh=cPU+3xhCuAHX7FdaESpumX6rksm9tNTNRV04YImy5vU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/X8dIT23iGdHff0LxDQmXE6i/39vVl2CwAtiVsXtKsTMpqpC+DU8eCTtIIpga3oI
-	 3vqRVL4QQv4Ge2q17I/5xrhUieI3C5u/yBS9phezHOA7orgvw9rXdgabv1pGNuEZek
-	 xdBq3RVHjse1vYwSu/cblWsnfeBXtNNtGbXUMy3U=
+	by mail.kernel.org (Postfix) with ESMTP id D902F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=asmblr.net header.i=@asmblr.net header.b="L3iVEpM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfLWNdI (ORCPT
+        id S1726834AbfLWNgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:33:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbfLWNdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:33:04 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E047E2075B;
-        Mon, 23 Dec 2019 13:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577107984;
-        bh=cPU+3xhCuAHX7FdaESpumX6rksm9tNTNRV04YImy5vU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+l4VTGglt+rju+uY4wvo7It7HzNxfyp43iwbjpBaDB3cHYDej1DSMuhX5MUpYvxz
-         R6gLBUmw0ve+UxlUJHXOSOY2O5vNK+EEwpvUxXNM+Q73seyfDoMl9k+HNs9n0HSn6C
-         dIM2q/IUXMT9EUiWMXpczpeRXyskmUJGRjzwBbhM=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Yuya Fujita <fujita.yuya@fujitsu.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4/4] perf hists: Fix variable name's inconsistency in hists__for_each() macro
-Date:   Mon, 23 Dec 2019 10:32:41 -0300
-Message-Id: <20191223133241.8578-5-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20191223133241.8578-1-acme@kernel.org>
-References: <20191223133241.8578-1-acme@kernel.org>
+        Mon, 23 Dec 2019 08:36:54 -0500
+Received: from srv2.anyservers.com ([77.79.239.202]:42888 "EHLO
+        srv2.anyservers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfLWNgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 08:36:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=asmblr.net;
+         s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+        In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=l61DeGK3BkqjzGKNaOFYIoM8Y8lsebt3uRDkDKao42Y=; b=L3iVEpM+RKzR6Uwd1ZhDln1HZi
+        WQzJMupsvPta3z6aB7OaLPSHEQVWlZdRJD9M28P8nfnYOvs6k8c76jgWQ6rUtS5oG2qxvhtteOUaj
+        GEqOS0weYng6dJojs/QvpBJCRorhHJiM7fQsDOzlMnBDm/O3ZReHiMrHNiJFsO/S5qGmn0yXqTmrx
+        TKPMG8g/awzniR5zolKZHrN4Q+aa66Q1ASd5zQ6SXay5US62rAzc0urqW2F4xqOfISwYU7drC9R+4
+        0sZzcRRowK7SYA5lLqwiCKlHRMuZCRqBlEGxDuRPY23oXl3qqQtejKKSdW82xlVc3R1v+pxszRK/M
+        PxcxhpjQ==;
+Received: from 89-64-37-27.dynamic.chello.pl ([89.64.37.27]:49046 helo=milkyway.galaxy)
+        by srv2.anyservers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <amade@asmblr.net>)
+        id 1ijMxQ-00Gi5o-Nv; Mon, 23 Dec 2019 13:37:08 +0100
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
+Subject: [PATCH 7/9] rtlwifi: rtl8723ae: Make functions static & rm sw.h
+Date:   Mon, 23 Dec 2019 13:37:13 +0100
+Message-Id: <20191223123715.7177-8-amade@asmblr.net>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191223123715.7177-1-amade@asmblr.net>
+References: <20191223123715.7177-1-amade@asmblr.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - srv2.anyservers.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - asmblr.net
+X-Get-Message-Sender-Via: srv2.anyservers.com: authenticated_id: amade@asmblr.net
+X-Authenticated-Sender: srv2.anyservers.com: amade@asmblr.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuya Fujita <fujita.yuya@fujitsu.com>
+Some of functions which were exposed in sw.h, are only used in sw.c, so
+just make them static. This makes sw.h unnecessary, so remove it.
 
-Variable names are inconsistent in hists__for_each macro().
-
-Due to this inconsistency, the macro replaces its second argument with
-"fmt" regardless of its original name.
-
-So far it works because only "fmt" is passed to the second argument.
-However, this behavior is not expected and should be fixed.
-
-Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
-Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
-Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Amadeusz Sławiński <amade@asmblr.net>
 ---
- tools/perf/util/hist.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c |  7 +++----
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.h | 13 -------------
+ 2 files changed, 3 insertions(+), 17 deletions(-)
+ delete mode 100644 drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.h
 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 45286900aacb..0aa63aeb58ec 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -339,10 +339,10 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
- 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
+index 5702ac6deebf..ea86d5bf33d2 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.c
+@@ -11,7 +11,6 @@
+ #include "fw.h"
+ #include "../rtl8723com/fw_common.h"
+ #include "hw.h"
+-#include "sw.h"
+ #include "trx.h"
+ #include "led.h"
+ #include "table.h"
+@@ -67,7 +66,7 @@ static void rtl8723e_init_aspm_vars(struct ieee80211_hw *hw)
+ 	rtlpci->const_support_pciaspm = rtlpriv->cfg->mod_params->aspm_support;
+ }
  
- #define hists__for_each_format(hists, format) \
--	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
-+	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+-int rtl8723e_init_sw_vars(struct ieee80211_hw *hw)
++static int rtl8723e_init_sw_vars(struct ieee80211_hw *hw)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
+@@ -166,7 +165,7 @@ int rtl8723e_init_sw_vars(struct ieee80211_hw *hw)
+ 	return 0;
+ }
  
- #define hists__for_each_sort_list(hists, format) \
--	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
-+	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+-void rtl8723e_deinit_sw_vars(struct ieee80211_hw *hw)
++static void rtl8723e_deinit_sw_vars(struct ieee80211_hw *hw)
+ {
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
  
- extern struct perf_hpp_fmt perf_hpp__format[];
+@@ -177,7 +176,7 @@ void rtl8723e_deinit_sw_vars(struct ieee80211_hw *hw)
+ }
  
+ /* get bt coexist status */
+-bool rtl8723e_get_btc_status(void)
++static bool rtl8723e_get_btc_status(void)
+ {
+ 	return true;
+ }
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.h b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.h
+deleted file mode 100644
+index 200ce39a0dd7..000000000000
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/sw.h
++++ /dev/null
+@@ -1,13 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/* Copyright(c) 2009-2012  Realtek Corporation.*/
+-
+-#ifndef __RTL8723E_SW_H__
+-#define __RTL8723E_SW_H__
+-
+-int rtl8723e_init_sw_vars(struct ieee80211_hw *hw);
+-void rtl8723e_deinit_sw_vars(struct ieee80211_hw *hw);
+-void rtl8723e_init_var_map(struct ieee80211_hw *hw);
+-bool rtl8723e_get_btc_status(void);
+-
+-
+-#endif
 -- 
-2.21.1
+2.24.1
 
