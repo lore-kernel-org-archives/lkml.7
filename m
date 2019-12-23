@@ -2,383 +2,147 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DB3C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AA7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40849207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C73206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fkN4t/TO";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Own4OAoJ"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YEUH0V9E";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="TLkbtHqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfLWLhF (ORCPT
+        id S1727500AbfLWLhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:37:05 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:55017 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfLWLhE (ORCPT
+        Mon, 23 Dec 2019 06:37:10 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:63798 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726791AbfLWLhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:37:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1577101023; x=1608637023;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=n75wBJmUdHSzn+tdIAtpDotncTFsyJkJNtCOn3AuFKM=;
-  b=fkN4t/TOKtUMTfE0DcaeHrv28jryr0Ym8rTPjqr5h1LBx4kmsdYgB8LU
-   ybO+SP3sycm1goxLaYylFv/Pk1uBkZf8IiikubpLsg2qTZF2+l97gMQhX
-   HTqpDXCImFZMWlmuEwZZecal7g5eDbr4BTxlDolQtgyw01uYPGkbIn7ZG
-   nmVGqABPI3HqRCrjt74LVVxB69BurP01KRufQ1EQbcKvie0dfJhuje+bf
-   dDUba6t6O1SbDLVdVjt7FbK1J/hjLbvwvVdTaJgvx18GUWxhmVwKrU8jc
-   M7Z58KHVek9j8iZjxvn50Dq6HRgaTCCKSygNZA+BYL05FNVKzBZkyH2Ed
-   g==;
-IronPort-SDR: aBo2Nmio3ugwDzmgVMfOY2QXIqR4lwol9lGnWzgySItJfpH7whBZXpe9e3OmNGWh1ufr/+U6xJ
- FdxPi9vFnO9GNZMG9DHjWLF46+MhSBQmRmou+lPDiLdmbpylbMc9wMEGOxXeFSseZPs8Lk+SQS
- cGQwfr+mKEA9EUEtgtR4m6RoRLfbD8P8eG5+MWdfYtDpPf+YHUP4BWvjJmrppxsOYG8EKtikWT
- 2bP5OSnh3+e4QgH3YBdxeZB/VwzpunIRJ/XI6MRmpneMKP2PGjhDuosRToyrNpT9dxRQRGgAli
- S5k=
-X-IronPort-AV: E=Sophos;i="5.69,347,1571673600"; 
-   d="scan'208";a="125956227"
-Received: from mail-mw2nam12lp2042.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.42])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Dec 2019 19:37:01 +0800
+        Mon, 23 Dec 2019 06:37:08 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNBUIB3032559;
+        Mon, 23 Dec 2019 03:36:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
+ b=YEUH0V9EKNWTsCZrpw0PdLTsgnpJ7AdhWJZBHF30O1VFELHM9bnYuMCkiJN8VCAkolIz
+ riTviJ7/Fw1Y6tk7FnnGfGpX/GgSBwR73QQNP46Nfd4HSlPi5VH0chZWylXfsGDxs2w0
+ M0TS8ObWk0wjzI8L6Fp0bEQGwTJifo33zAMi9aL2DougPVwmZ0K+fiiL+kxiIeB4JK3a
+ 9VYYKfNUX2s69JbTGeCdxwkjMQBFbn+lEwOyYfSl/XNXG1EVtI6e+d3SmnXRwX+3dAMw
+ BTnFnG1b+2LQwt49q0vh9g6MVQzALndevF0eb+wJE20MAJyQOD3zV9dyL/+uw62w0u0P /w== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2x1hmv4vpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 23 Dec 2019 03:36:51 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Dec
+ 2019 03:36:50 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.107)
+ by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Mon, 23 Dec 2019 03:36:50 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QARPZxa2uHv/hACiZDJzHHMQ8yOF82JgLG8ZXM0Ad6jbsPrkrLiToktOzkT1vetTIgSpDNs0cC/E+Mdw0E2Gx9Iv2vdYbfnz5eDEt9SkQGqAbVELCUaiGGgcaqn3wOHs3TYMWflEQS7LamppjNhmIKx9WQ/ir9yCTXer9DrxIvT/v9AIwE3SK3cX5ICuPkdn0lm/+c3MurcgX5MdmKRqVwr1llW1S+yRlRfBfnz/AOdXD/vOYD8+UR0WwqZGf6BcGCXC7ZuBhNG34q2BsQTSBsuQgf5SZ1JTxs3/Ijn7ixALtoqqpiN/utJlEzwX2MtFVOF+pjtPpNut3LGZOLHKjQ==
+ b=fjjedbSkouQXBjSfE8GBr9Ie8EnGTnFrDeNvWSTb0Y+urc+Wje/cJxPZDqmgiyzNZUU3w8hqI4hIhNwkOrtTP60ZNn8TYuNYJk39V74suz8SJw3c+GOe07vn7RjKo+TT3ToUjhofQSdJ/uF8W44Hqz9PeQXv3k8emCHPzzpT4tyCNMtlE+/DDKTpSeG0iZjN4nl3gOusIAjcEbJ8lFMwXpWS4PutuG5jxiGg7vm1N+z0NFw/vZ/R09YrvIrapGVJPkbj7gw4G5ijTuX1UmE1wWVXPFeFX5+PnX1v4h6UK8G6JR0cpOEG30bhKPIYAXq0cL3fbmhRAQ4bzjtkh31Ikw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BclezZQQZc81op4vpUZfGg1UCnUK3u3u2SkvXCK4Txg=;
- b=ZaQ46rD8xOOBi5gZ3+I9BYldEyfZeHdBQTwZWvKMYh5zpSlD3RT2lfyA0TMMSEP1ErrZVQzwV8Jc6LtEB96hTSTYaYBFFeNAf9UTl9SUZd6TQftmtWRP9dGwEng6dJ3cTyhWirWqn4+S5UX5regTXlYbNLcAA7c+sYKZbqI5jnHUBhkAdc878TzPBukSRJ4JHQU6RHujU6UZtU/Pb93vI/rrhWlDlJb+HZVvXd2eDYAJuojBH7YAFv0FEzraV3WJpkXLmUxp5oSrCe+vFjeAkImVaTnyGQ9SPD7fbrlr9T5GO0A4WIrTw+PQbpfa9q2fSba/5+C9Bgg9qNILXCHUOA==
+ bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
+ b=SketMkPSUrk1jKA+ZL+TL9DD8N1/QtQEVhxD+93fX8V0Ld/Xn2MWXclSctYO1DSBYGZd1epSCpjuhMQG72rI2yJdTquCNNWVT3G/E+yznl0H+tH6zWCRpi8FfDfdKszFIoLSb1rJWmvM9nX/i8KX90jAgUAJ0+ZpvtmfTgie28ucFTjZxh7UJRLuBz2Uy1cDzmEjJqU+qBv1shT2kY8k5Pr2lzojUYAiNFQIzhiJ0uzP/WqoH6bFRNlmvl+l6y4lAjAW6Q6m8I+EO5tsTGblcuHVKz/6wR9Av+eMdfephXfCTTE7Cw6w22AnSFLjzSCoMHcL0czvjpzSF6BNkFZb6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BclezZQQZc81op4vpUZfGg1UCnUK3u3u2SkvXCK4Txg=;
- b=Own4OAoJzOwGE8YZ2r+nkQoIsrKG5SAT/KKBvp5uLas1byQ2G47GljB5ncgfMx8aaUKHAlA52JGHIB1DqmQH3rJPn5sDrwUk/HmrC6v4qr8gmPHXh+XCr3XD7FCtiUe4s6wj9NoKSoTl6nLgUAT3VZAIFcOgNu+llUykdQKb+CM=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6480.namprd04.prod.outlook.com (52.132.171.74) with Microsoft SMTP
+ bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
+ b=TLkbtHqeuJ8aWC363qq+KYzKQQNoCxol1II1OA5bHvIC/lkbSgSSZJs+rPJQZD70IyF9tVfF6f83CFx1EHpQQc7I1xVJr6GyhXV+daPXl4TiPRAC3AdlH9n3lCIYZY4D2cqio3n5o3ry+h/rUwQOYPwbMuHdXSxqliv9oruanjQ=
+Received: from MN2PR18MB2638.namprd18.prod.outlook.com (20.179.84.25) by
+ MN2PR18MB3406.namprd18.prod.outlook.com (10.255.236.28) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Mon, 23 Dec 2019 11:37:00 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a9a0:3ffa:371f:ad89]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a9a0:3ffa:371f:ad89%7]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 11:37:00 +0000
-Received: from wdc.com (106.51.20.238) by MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 23 Dec 2019 11:36:54 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ 15.20.2559.14; Mon, 23 Dec 2019 11:36:48 +0000
+Received: from MN2PR18MB2638.namprd18.prod.outlook.com
+ ([fe80::54ca:9908:4108:f0a6]) by MN2PR18MB2638.namprd18.prod.outlook.com
+ ([fe80::54ca:9908:4108:f0a6%6]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 11:36:48 +0000
+From:   Igor Russkikh <irusskikh@marvell.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "sd@queasysnail.net" <sd@queasysnail.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v10 13/19] RISC-V: KVM: Implement MMU notifiers
-Thread-Topic: [PATCH v10 13/19] RISC-V: KVM: Implement MMU notifiers
-Thread-Index: AQHVuYVJYu0b9jWJBkmdj4hSYTJGDg==
-Date:   Mon, 23 Dec 2019 11:37:00 +0000
-Message-ID: <20191223113443.68969-14-anup.patel@wdc.com>
-References: <20191223113443.68969-1-anup.patel@wdc.com>
-In-Reply-To: <20191223113443.68969-1-anup.patel@wdc.com>
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        "Dmitry Bogdanov" <dbogdanov@marvell.com>,
+        Mark Starovoytov <mstarovoitov@marvell.com>
+Subject: Re: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
+ offloading to the MAC
+Thread-Topic: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
+ offloading to the MAC
+Thread-Index: AQIsumBpaQv0fT17tb+gRgQd0efq8ALR+7c2Ad4MoeQ=
+Date:   Mon, 23 Dec 2019 11:36:48 +0000
+Message-ID: <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
+References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
+ <20191219105515.78400-16-antoine.tenart@bootlin.com>
+In-Reply-To: <20191219105515.78400-16-antoine.tenart@bootlin.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17)
- To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [106.51.20.238]
+x-originating-ip: [95.79.108.179]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5f8f80f2-09fc-47d5-9dfb-08d7879c6c55
-x-ms-traffictypediagnostic: MN2PR04MB6480:
+x-ms-office365-filtering-correlation-id: a06fc9cd-9506-4668-823d-08d7879c659b
+x-ms-traffictypediagnostic: MN2PR18MB3406:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB648006D038F760CA493120F08D2E0@MN2PR04MB6480.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-microsoft-antispam-prvs: <MN2PR18MB340616D84A061E22356C3E55B72E0@MN2PR18MB3406.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
 x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(199004)(189003)(36756003)(2616005)(956004)(478600001)(44832011)(2906002)(55016002)(7416002)(52116002)(7696005)(66446008)(66556008)(64756008)(66476007)(4326008)(6666004)(1006002)(66946007)(8936002)(26005)(1076003)(54906003)(110136005)(186003)(8676002)(71200400001)(81166006)(81156014)(55236004)(86362001)(16526019)(8886007)(5660300002)(316002)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6480;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(376002)(396003)(39850400004)(199004)(189003)(9686003)(54906003)(110136005)(33656002)(316002)(71200400001)(8676002)(81166006)(81156014)(8936002)(7416002)(478600001)(4326008)(186003)(55016002)(107886003)(66556008)(64756008)(66446008)(2906002)(66476007)(6506007)(66946007)(4744005)(26005)(86362001)(52536014)(7696005)(76116006)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3406;H:MN2PR18MB2638.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H24M8w2/fWgBhZE7dwydDq1ut1M0MgwJQ74m3KtONe+BSOtby78dM4Jya7ihGF/toudZtOepYh5lT7qeWFR87AFiNCddlkRuVte1P3vRcr0McEd5wg9Mpa80e85fbogaNuhVRGx/hkce3VDip6zF3O/clxOrzt3GlxeagfWTjPL3gdbautqUUl24y01xSTHbGxM3PzcCBDo31UXX1VMMflPoLks+VhMqxLwg7np0KNJ4M03xzEdNPpzfRExdweI7NuKvKpu8nCvlOh7KdJIUxvdhR1lfdklDJp+bZOQ/wWzJXUidQm6fSA+q1en/yuRjHPzMYL8qabBzxQWQsqWwbM/FurWkaz4RKLykw2ePUEhIn0GgTgY9F1mzWDAwMD8pih/STv5P2Me+LjIQdBd77Kl0vCU5+jnFfJtHP/lizK9X4Z76eXdaLgqZXUrek9MwkA1Oeo6Pua8QG1oEvkJqQEc9QwrnrgcqTzT8cJ6de7wjA3+i9aMGrnhTqXBTsLC8
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 7RgH2P3+1SoPtJDeJSGfXAmyilpUquZq9c4laMvtLRxgXRl+IO1KGCN2gF9qWRtPVNl7gqFBnr6ZsekZsT6xPDrtU1Cmhh3DHkbKS7qac7jk2j4XXU9hWXYEKGLzKZdujsxFoXxbF2LfjCi2VXBCHC+3zDwMC2X+9QhFYF3Q1BaaqFn9kHcuc92lcdQVkjkcilVCmNHPjluBsGwC6Gd5emLQICa/XUCIv/x76Cp0ptLVB50kiMfRHC0J1Xb+LfTcRZiiZI81PoqBF5EGy7RUohSVSw3XnKOhbufA9cWXm4KZ823/V5/IYGxYV3+7sbEBw8Y2JaJSon2XLbzquF082RIAVnGM9YilNvW/QfKS23zhdOKyFdAl8mas34lWQWD2mPYe1I0Yhp33MNaim1XjdXB8spQWm2n3E9cnUTQNm3Ga0yp7/ihZSObIFRkdajef
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f8f80f2-09fc-47d5-9dfb-08d7879c6c55
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 11:37:00.0941
+X-MS-Exchange-CrossTenant-Network-Message-Id: a06fc9cd-9506-4668-823d-08d7879c659b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 11:36:48.5003
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IbqYSO/WyM7GNwgPztDosC6roA1D0EK5o6sY/43meJgwV2uzoErxqecPhb5jukZ8WLoz3ltR1M5n0+A3/QS3Bw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6480
+X-MS-Exchange-CrossTenant-userprincipalname: q/Jaf9Euiwd63E5QJypKvpYMyvv9MOLh+4Xs/wAlTJTO+pOFdI0LhRcP5jBjiMxV+Q715xlfHd1mR04JAiLPww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3406
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-23_05:2019-12-23,2019-12-23 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements MMU notifiers for KVM RISC-V so that Guest
-physical address space is in-sync with Host physical address space.
-
-This will allow swapping, page migration, etc to work transparently
-with KVM RISC-V.
-
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- arch/riscv/include/asm/kvm_host.h |   7 ++
- arch/riscv/kvm/Kconfig            |   1 +
- arch/riscv/kvm/mmu.c              | 129 +++++++++++++++++++++++++++++-
- arch/riscv/kvm/vm.c               |   1 +
- 4 files changed, 137 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
-_host.h
-index dd1acb011fff..cc0b09918431 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -190,6 +190,13 @@ static inline void kvm_arch_vcpu_uninit(struct kvm_vcp=
-u *vcpu) {}
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-=20
-+#define KVM_ARCH_WANT_MMU_NOTIFIER
-+int kvm_unmap_hva_range(struct kvm *kvm,
-+			unsigned long start, unsigned long end);
-+int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
-+int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
-+int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
-+
- void __kvm_riscv_hfence_gvma_vmid_gpa(unsigned long vmid,
- 				      unsigned long gpa);
- void __kvm_riscv_hfence_gvma_vmid(unsigned long vmid);
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 88edd477b3a8..2356dc52ebb3 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -20,6 +20,7 @@ if VIRTUALIZATION
- config KVM
- 	tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTAL)"
- 	depends on RISCV_SBI && MMU
-+	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
- 	select ANON_INODES
- 	select KVM_MMIO
-diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-index f491c6aa4502..d88a50cde750 100644
---- a/arch/riscv/kvm/mmu.c
-+++ b/arch/riscv/kvm/mmu.c
-@@ -369,6 +369,38 @@ int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_ad=
-dr_t hpa,
-=20
- }
-=20
-+static int handle_hva_to_gpa(struct kvm *kvm,
-+			     unsigned long start,
-+			     unsigned long end,
-+			     int (*handler)(struct kvm *kvm,
-+					    gpa_t gpa, u64 size,
-+					    void *data),
-+			     void *data)
-+{
-+	struct kvm_memslots *slots;
-+	struct kvm_memory_slot *memslot;
-+	int ret =3D 0;
-+
-+	slots =3D kvm_memslots(kvm);
-+
-+	/* we only care about the pages that the guest sees */
-+	kvm_for_each_memslot(memslot, slots) {
-+		unsigned long hva_start, hva_end;
-+		gfn_t gpa;
-+
-+		hva_start =3D max(start, memslot->userspace_addr);
-+		hva_end =3D min(end, memslot->userspace_addr +
-+					(memslot->npages << PAGE_SHIFT));
-+		if (hva_start >=3D hva_end)
-+			continue;
-+
-+		gpa =3D hva_to_gfn_memslot(hva_start, memslot) << PAGE_SHIFT;
-+		ret |=3D handler(kvm, gpa, (u64)(hva_end - hva_start), data);
-+	}
-+
-+	return ret;
-+}
-+
- void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
- 			   struct kvm_memory_slot *dont)
- {
-@@ -501,6 +533,95 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 	return ret;
- }
-=20
-+static int kvm_unmap_hva_handler(struct kvm *kvm,
-+				 gpa_t gpa, u64 size, void *data)
-+{
-+	stage2_unmap_range(kvm, gpa, size);
-+	return 0;
-+}
-+
-+int kvm_unmap_hva_range(struct kvm *kvm,
-+			unsigned long start, unsigned long end)
-+{
-+	if (!kvm->arch.pgd)
-+		return 0;
-+
-+	handle_hva_to_gpa(kvm, start, end,
-+			  &kvm_unmap_hva_handler, NULL);
-+	return 0;
-+}
-+
-+static int kvm_set_spte_handler(struct kvm *kvm,
-+				gpa_t gpa, u64 size, void *data)
-+{
-+	pte_t *pte =3D (pte_t *)data;
-+
-+	WARN_ON(size !=3D PAGE_SIZE);
-+	stage2_set_pte(kvm, 0, NULL, gpa, pte);
-+
-+	return 0;
-+}
-+
-+int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte)
-+{
-+	unsigned long end =3D hva + PAGE_SIZE;
-+	kvm_pfn_t pfn =3D pte_pfn(pte);
-+	pte_t stage2_pte;
-+
-+	if (!kvm->arch.pgd)
-+		return 0;
-+
-+	stage2_pte =3D pfn_pte(pfn, PAGE_WRITE_EXEC);
-+	handle_hva_to_gpa(kvm, hva, end,
-+			  &kvm_set_spte_handler, &stage2_pte);
-+
-+	return 0;
-+}
-+
-+static int kvm_age_hva_handler(struct kvm *kvm,
-+				gpa_t gpa, u64 size, void *data)
-+{
-+	pte_t *ptep;
-+	u32 ptep_level =3D 0;
-+
-+	WARN_ON(size !=3D PAGE_SIZE && size !=3D PMD_SIZE && size !=3D PGDIR_SIZE=
-);
-+
-+	if (!stage2_get_leaf_entry(kvm, gpa, &ptep, &ptep_level))
-+		return 0;
-+
-+	return ptep_test_and_clear_young(NULL, 0, ptep);
-+}
-+
-+int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end)
-+{
-+	if (!kvm->arch.pgd)
-+		return 0;
-+
-+	return handle_hva_to_gpa(kvm, start, end, kvm_age_hva_handler, NULL);
-+}
-+
-+static int kvm_test_age_hva_handler(struct kvm *kvm,
-+				    gpa_t gpa, u64 size, void *data)
-+{
-+	pte_t *ptep;
-+	u32 ptep_level =3D 0;
-+
-+	WARN_ON(size !=3D PAGE_SIZE && size !=3D PMD_SIZE);
-+	if (!stage2_get_leaf_entry(kvm, gpa, &ptep, &ptep_level))
-+		return 0;
-+
-+	return pte_young(*ptep);
-+}
-+
-+int kvm_test_age_hva(struct kvm *kvm, unsigned long hva)
-+{
-+	if (!kvm->arch.pgd)
-+		return 0;
-+
-+	return handle_hva_to_gpa(kvm, hva, hva,
-+				 kvm_test_age_hva_handler, NULL);
-+}
-+
- int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long h=
-va,
- 			 bool is_write)
- {
-@@ -512,7 +633,7 @@ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t g=
-pa, unsigned long hva,
- 	struct vm_area_struct *vma;
- 	struct kvm *kvm =3D vcpu->kvm;
- 	struct kvm_mmu_page_cache *pcache =3D &vcpu->arch.mmu_page_cache;
--	unsigned long vma_pagesize;
-+	unsigned long vma_pagesize, mmu_seq;
-=20
- 	down_read(&current->mm->mmap_sem);
-=20
-@@ -545,6 +666,8 @@ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t g=
-pa, unsigned long hva,
- 		return ret;
- 	}
-=20
-+	mmu_seq =3D kvm->mmu_notifier_seq;
-+
- 	hfn =3D gfn_to_pfn_prot(kvm, gfn, is_write, &writeable);
- 	if (hfn =3D=3D KVM_PFN_ERR_HWPOISON) {
- 		if (is_vm_hugetlb_page(vma))
-@@ -563,6 +686,9 @@ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t g=
-pa, unsigned long hva,
-=20
- 	spin_lock(&kvm->mmu_lock);
-=20
-+	if (mmu_notifier_retry(kvm, mmu_seq))
-+		goto out_unlock;
-+
- 	if (writeable) {
- 		kvm_set_pfn_dirty(hfn);
- 		ret =3D stage2_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
-@@ -575,6 +701,7 @@ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t g=
-pa, unsigned long hva,
- 	if (ret)
- 		kvm_err("Failed to map in stage2\n");
-=20
-+out_unlock:
- 	spin_unlock(&kvm->mmu_lock);
- 	kvm_set_pfn_accessed(hfn);
- 	kvm_release_pfn_clean(hfn);
-diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-index c5aab5478c38..fd84b4d914dc 100644
---- a/arch/riscv/kvm/vm.c
-+++ b/arch/riscv/kvm/vm.c
-@@ -54,6 +54,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ex=
-t)
- 	switch (ext) {
- 	case KVM_CAP_DEVICE_CTRL:
- 	case KVM_CAP_USER_MEMORY:
-+	case KVM_CAP_SYNC_MMU:
- 	case KVM_CAP_DESTROY_MEMORY_REGION_WORKS:
- 	case KVM_CAP_ONE_REG:
- 	case KVM_CAP_READONLY_MEM:
---=20
-2.17.1
-
+DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvaWZfbGluay5oIGIvaW5jbHVkZS91
+YXBpL2xpbnV4L2lmX2xpbmsuaA0KPiBpbmRleCAwMjRhZjJkMWQwYWYuLjc3MTM3MWQ1Yjk5NiAx
+MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L2lmX2xpbmsuaA0KPiArKysgYi9pbmNs
+dWRlL3VhcGkvbGludXgvaWZfbGluay5oDQo+IEBAIC00ODksNiArNDg5LDcgQEAgZW51bSBtYWNz
+ZWNfdmFsaWRhdGlvbl90eXBlIHsNCj4gIGVudW0gbWFjc2VjX29mZmxvYWQgew0KPiAgCU1BQ1NF
+Q19PRkZMT0FEX09GRiA9IDAsDQo+ICAJTUFDU0VDX09GRkxPQURfUEhZID0gMSwNCj4gKwlNQUNT
+RUNfT0ZGTE9BRF9NQUMgPSAyLA0KPiAgCV9fTUFDU0VDX09GRkxPQURfRU5ELA0KPiAgCU1BQ1NF
+Q19PRkZMT0FEX01BWCA9IF9fTUFDU0VDX09GRkxPQURfRU5EIC0gMSwNCg0KSGkgQW50b2luZSwN
+Cg0KU28gZnJvbSB1YXBpIHBlcnNwZWN0aXZlIHVzZXIgaGF2ZSB0byBleHBsaWNpdGx5IHNwZWNp
+ZnkgIm9mZmxvYWQgbWFjIg0Kb3IgIm9mZmxvYWQgcGh5Ij8gQW5kIGZyb20gbm9uIGV4cGVyaWVu
+Y2VkIHVzZXIgcGVyc3BlY3RpdmUgaGUgYWx3YXlzDQpoYXZlIHRvIHRyeSB0aGVzZSB0d28gYmVm
+b3JlIHJvbGxpbmcgYmFjayB0byAib2ZmbG9hZCBub25lIiA/DQoNCkknbSBub3Qgc2F5aW5nIHRo
+aXMgaXMgd3JvbmcsIGp1c3QgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgaWYgdGhlcmUgYW55DQptb3Jl
+IHN0cmVhbWxpbmVkIHdheSB0byBkbyB0aGlzLi4NCg0KUmVnYXJkcywNCiAgSWdvcg0K
