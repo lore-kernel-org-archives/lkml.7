@@ -2,110 +2,133 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDF8C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B618DC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F3220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3C6206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLWRgq (ORCPT
+        id S1726847AbfLWRjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:36:46 -0500
-Received: from mga06.intel.com ([134.134.136.31]:7779 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfLWRgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:36:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 09:36:45 -0800
-X-IronPort-AV: E=Sophos;i="5.69,348,1571727600"; 
-   d="scan'208";a="211625969"
-Received: from unknown (HELO localhost) ([10.249.35.31])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 09:36:42 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     ville.syrjala@linux.intel.com, swati2.sharma@intel.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Mon, 23 Dec 2019 12:39:22 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11738 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726783AbfLWRjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:39:22 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNHbAW1133840
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:39:21 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x21hku419-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:39:20 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 23 Dec 2019 17:39:18 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 23 Dec 2019 17:39:13 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBNHdDqT55902236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 17:39:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F069E5204F;
+        Mon, 23 Dec 2019 17:39:12 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.238.12])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id F253852051;
+        Mon, 23 Dec 2019 17:39:11 +0000 (GMT)
+Subject: Re: [PATCH] ima: add the ability to query ima for the hash of a
+ given file.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Florent Revest <revest@chromium.org>,
+        linux-integrity@vger.kernel.org
+Cc:     kpsingh@chromium.org, mjg59@google.com,
         linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v2] drm/i915: Re-init lspcon after HPD if lspcon probe failed
-In-Reply-To: <20191223171310.21192-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191223171310.21192-1-kai.heng.feng@canonical.com>
-Date:   Mon, 23 Dec 2019 19:36:39 +0200
-Message-ID: <87o8vzrljs.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Date:   Mon, 23 Dec 2019 12:39:11 -0500
+In-Reply-To: <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
+References: <20191220163136.25010-1-revest@chromium.org>
+         <8f4d9c4e-735d-8ba9-b84a-4f341030e0cf@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19122317-0020-0000-0000-0000039AF936
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122317-0021-0000-0000-000021F22FF1
+Message-Id: <1577122751.5241.144.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-23_07:2019-12-23,2019-12-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912230150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Dec 2019, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
-> becomes useless and never responds to cable hotplugging:
-> [    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
-> [    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
->
-> Seems like the lspcon chip on the system in question only gets powered
-> after the cable is plugged.
->
-> So let's call lspcon_init() dynamically to properly initialize the
-> lspcon chip and make HDMI port work.
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2: 
->   - Move lspcon_init() inside of intel_dp_hpd_pulse().
->
->  drivers/gpu/drm/i915/display/intel_dp.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index fe31bbfd6c62..eb395b45527e 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -6573,6 +6573,7 @@ enum irqreturn
->  intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
->  {
->  	struct intel_dp *intel_dp = &intel_dig_port->dp;
-> +	struct drm_i915_private *dev_priv = dp_to_i915(intel_dp);
->  
->  	if (long_hpd && intel_dig_port->base.type == INTEL_OUTPUT_EDP) {
->  		/*
-> @@ -6592,11 +6593,14 @@ intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
->  		      intel_dig_port->base.base.name,
->  		      long_hpd ? "long" : "short");
->  
-> -	if (long_hpd) {
-> +	if (long_hpd && intel_dig_port->base.type != INTEL_OUTPUT_DDI) {
+On Fri, 2019-12-20 at 08:48 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/20/2019 8:31 AM, Florent Revest wrote:
+> 
+> >   
+> > +/**
+> > + * ima_file_hash - return the stored measurement if a file has been hashed.
+> > + * @file: pointer to the file
+> > + * @buf: buffer in which to store the hash
+> > + * @buf_size: length of the buffer
+> > + *
+> > + * On success, output the hash into buf and return the hash algorithm (as
+> > + * defined in the enum hash_algo).
+> 
+> > + * If the hash is larger than buf, then only size bytes will be copied. It
+> > + * generally just makes sense to pass a buffer capable of holding the largest
+> > + * possible hash: IMA_MAX_DIGEST_SIZE
+> 
+> If the given buffer is smaller than the hash length, wouldn't it be 
+> better to return the required size and a status indicating the buffer is 
+> not enough. The caller can then call back with the required buffer.
+> 
+> If the hash is truncated the caller may not know if the hash is partial 
+> or not.
 
-With this change, long hpd handling for DDI on platforms that do not
-have LSPCON, or has an active LSPCON, falls through to the short hpd
-handling. That's not what you're after, is it?
+Based on the hash algorithm, the caller would know if the buffer
+provided was too small and was truncated.
 
+> 
+> > + *
+> > + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
+> > + * If the parameters are incorrect, return -EINVAL.
+> > + */
+> > +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> > +{
+> > +	struct inode *inode;
+> > +	struct integrity_iint_cache *iint;
+> > +	size_t copied_size;
+> > +
+> > +	if (!file || !buf)
+> > +		return -EINVAL;
+> > +
 
-BR,
-Jani.
+Other kernel functions provide a means of determining the needed
+buffer size by passing a NULL field.  Instead of failing here, if buf
+is NULL, how about returning the hash algorithm?
 
+Mimi
 
->  		intel_dp->reset_link_params = true;
->  		return IRQ_NONE;
->  	}
->  
-> +	if (long_hpd && HAS_LSPCON(dev_priv) && !intel_dig_port->lspcon.active)
-> +		lspcon_init(intel_dig_port);
-> +
->  	if (intel_dp->is_mst) {
->  		if (intel_dp_check_mst_status(intel_dp) == -EINVAL) {
->  			/*
+> > +	if (!ima_policy_flag)
+> > +		return -EOPNOTSUPP;
+> > +
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
