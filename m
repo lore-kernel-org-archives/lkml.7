@@ -2,308 +2,133 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CB6C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46E8C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9301E20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577104127;
-	bh=fLR8nvn1z2WhRt/moIrvx0gU3O9dnS60oAA269hDS4k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dm2MVaXFwx+Y22my3FlrULjiqlrOhK3YEaV3Vfv5o3PPaOiBGHzV04LHwclKldEFQ
-	 Vw33Bu0FCATtko3Cw/qDN7GsX9W2qukLpOLYz6UlhcPo6vWYII9GvaT1uBjxP7Vf9J
-	 oeQpKiH2ONi9v5iPQOVUSNILtHMpEFa0cqfzoagc=
+	by mail.kernel.org (Postfix) with ESMTP id A6993206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tFEObTs8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfLWM2q (ORCPT
+        id S1726802AbfLWMcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:28:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfLWM2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:28:45 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D448B206D3;
-        Mon, 23 Dec 2019 12:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577104123;
-        bh=fLR8nvn1z2WhRt/moIrvx0gU3O9dnS60oAA269hDS4k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jckcFd8SNjhH/ndzUNmWNe5AvRF6ZB+yYPmnBKooeDt8OssgoOfq+uDaP59UUrh4X
-         GK4HTRr0VZCEB4KWhZ43IxL8isqllRzfBoXUR+qDIlBJh+jYsEcQDMPwfSGAKgkn/N
-         uLfEKFgAhB4B4r00GWfLVuJtX0XUNNjotptICMjs=
-Date:   Mon, 23 Dec 2019 12:28:38 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH 08/10] iio: adc: at91-sama5d2_adc: implement RTC
- triggering
-Message-ID: <20191223122838.4732120a@archlinux>
-In-Reply-To: <1576686157-11939-9-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-        <1576686157-11939-9-git-send-email-eugen.hristev@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Dec 2019 07:32:54 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43850 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLWMcx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 07:32:53 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so12574911qtj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 04:32:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=5v07SKyPaqffC8bgmTpkEvagnuvh7nvXwKsl6Tz/hL8=;
+        b=tFEObTs8/qK+YCCxq6rd2xWJLb5qMY6jSRETUikApl3wF4s8YwsthzwPkk00RUqNtr
+         xOCi/4YeetxUNLJnaraqe3fwNfeZKzdKrChvEvNTtP03YyTkE8tHw+wOzFwl6wBl1p3s
+         2+IQSvguDAoWtrFVTiM97pUGw5XT6nNATFDl6p4oy1mSGFckJaYUyvOboMoh6iBReLeg
+         Tc27pAPYvWPCX7BRmlq/6OFpFr3PuQjNlP6+5QbzdL3LnRSxkl6Lko+doqfT1dtT0Lfz
+         SHJsVSvmKeJuyVQhq/EkIbLdYO+MBMAup+l49cmargA+jDKlef0FoOfphoiLBLEqc4+K
+         9ZBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=5v07SKyPaqffC8bgmTpkEvagnuvh7nvXwKsl6Tz/hL8=;
+        b=gT9NWo1rB78HrQUtyyjvEeSl9leasDiFU/QDBtcYEHl/dYKWtHEMCd6BWTbOvnB8vo
+         z+nn1VwcRMj+eCNyKryjmTLGSMhwnHFqKy2XryPiYNrN4WxXckyy+tVXwaBUHW6OUEXZ
+         834xbKr9OmiVonFcUqfooTUvk2398kw+pr5ajqy+g4EzCqZSg+J4SUpsl8mf2h0wXKwv
+         F1SxmHSe5mzUQfDgWUiNzM0CiTLoE4zkZnLL56ANz2iPVTa9LDKrMRVNClnLk2XMia1i
+         jUpDLf9OgiQj0SgHFAx0e2IylmlVt97O128gVRfVishixOPRgJ3a+yNfGhqy0LqrZ5HA
+         O2LA==
+X-Gm-Message-State: APjAAAWtmmt3/7E2PeGclzoUPBijehYRMPfcO8VNdpQSSkbImcFY5SCH
+        5NK99ZI5/uSB3dxVI1Sc7IuRvbb+c38=
+X-Google-Smtp-Source: APXvYqzomcqE0md8Wui8VaPZ7yD3QLDSggZQbK8fs17J1q5ZqSVle38Zt4wXVU70LiGdk2yXOhAAJA==
+X-Received: by 2002:aed:22c8:: with SMTP id q8mr23370747qtc.133.1577104372593;
+        Mon, 23 Dec 2019 04:32:52 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v5sm6253417qth.70.2019.12.23.04.32.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 04:32:51 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/page_owner: print largest memory consumer when OOM panic occurs
+Date:   Mon, 23 Dec 2019 07:32:50 -0500
+Message-Id: <2B938D94-FFBB-4A3D-AD07-D7D04A4D4161@lca.pw>
+References: <20191223113326.13828-1-miles.chen@mediatek.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com
+In-Reply-To: <20191223113326.13828-1-miles.chen@mediatek.com>
+To:     Miles Chen <miles.chen@mediatek.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 16:24:02 +0000
-<Eugen.Hristev@microchip.com> wrote:
 
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Implement the property atmel,rtc-trigger which provides a phandle
-> to a RTC trigger.
-> To make it work, one has to check at buffer_postenable if the trigger
-> the device is using is the one we provide using the phandle link.
-> The trigger mode must be selected accordingly in the trigger mode selection
-> register.
-> The RTC trigger will use our IRQ. Dedicated hardware line inside the SoC
-> will actually trigger the ADC to make the conversion, and EOC irqs are fired
-> when conversion is done.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Minor points inline.
 
-Thanks,
+> On Dec 23, 2019, at 6:33 AM, Miles Chen <miles.chen@mediatek.com> wrote:
+>=20
+> Motivation:
+> -----------
+>=20
+> When debug with a OOM kernel panic, it is difficult to know the
+> memory allocated by kernel drivers of vmalloc() by checking the
+> Mem-Info or Node/Zone info. For example:
+>=20
+>  Mem-Info:
+>  active_anon:5144 inactive_anon:16120 isolated_anon:0
+>   active_file:0 inactive_file:0 isolated_file:0
+>   unevictable:0 dirty:0 writeback:0 unstable:0
+>   slab_reclaimable:739 slab_unreclaimable:442469
+>   mapped:534 shmem:21050 pagetables:21 bounce:0
+>   free:14808 free_pcp:3389 free_cma:8128
+>=20
+>  Node 0 active_anon:20576kB inactive_anon:64480kB active_file:0kB
+>  inactive_file:0kB unevictable:0kB isolated(anon):0kB isolated(file):0kB
+>  mapped:2136kB dirty:0kB writeback:0kB shmem:84200kB shmem_thp: 0kB
+>  shmem_pmdmapped: 0kB anon_thp: 0kB writeback_tmp:0kB unstable:0kB
+>  all_unr eclaimable? yes
+>=20
+>  Node 0 DMA free:14476kB min:21512kB low:26888kB high:32264kB
+>  reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+>  active_file: 0kB inactive_file:0kB unevictable:0kB writepending:0kB
+>  present:1048576kB managed:952736kB mlocked:0kB kernel_stack:0kB
+>  pagetables:0kB bounce:0kB free_pcp:2716kB local_pcp:0kB free_cma:0kB
+>=20
+> The information above tells us the memory usage of the known memory
+> categories and we can check the abnormal large numbers. However, if a
+> memory leakage cannot be observed in the categories above, we need to
+> reproduce the issue with CONFIG_PAGE_OWNER.
+>=20
+> It is possible to read the page owner information from coredump files.
+> However, coredump files may not always be available, so my approach is
+> to print out the largest page consumer when OOM kernel panic occurs.
 
-Jonathan
+Many of those patches helping debugging special cases had been shot down in t=
+he past. I don=E2=80=99t see much difference this time. If you worry about m=
+emory leak, enable kmemleak and then to reproduce. Otherwise, we will end up=
+ with too many heuristics just for debugging.
 
-> ---
->  drivers/iio/adc/at91-sama5d2_adc.c | 109 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 104 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-> index ccffa48..ac97f4a 100644
-> --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> @@ -58,6 +58,8 @@
->  #define	AT91_SAMA5D2_MR_TRGSEL_TRIG6	6
->  /* RTCOUT0 */
->  #define	AT91_SAMA5D2_MR_TRGSEL_TRIG7	7
-> +/* TRGSEL mask */
-> +#define AT91_SAMA5D2_MR_TRGSEL_MASK	GENMASK(3, 1)
->  /* Sleep Mode */
->  #define	AT91_SAMA5D2_MR_SLEEP		BIT(5)
->  /* Fast Wake Up */
-> @@ -195,6 +197,8 @@
->  #define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL 2
->  /* Trigger Mode external trigger any edge */
->  #define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY 3
-> +/* Trigger Mode RTC - must be any of the above 3 values */
-> +#define AT91_SAMA5D2_TRGR_TRGMOD_RTC AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE
->  /* Trigger Mode internal periodic */
->  #define AT91_SAMA5D2_TRGR_TRGMOD_PERIODIC 5
->  /* Trigger Mode - trigger period mask */
-> @@ -407,6 +411,8 @@ struct at91_adc_state {
->  	struct mutex			lock;
->  	struct work_struct		workq;
->  	s64				timestamp;
-> +	struct device			*rtc_trig_dev;
-> +	bool				rtc_triggered;
->  };
->  
->  static const struct at91_adc_trigger at91_adc_trigger_list[] = {
-> @@ -737,6 +743,42 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
->  	/* set/unset hw trigger */
->  	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
->  
-> +	status = at91_adc_readl(st, AT91_SAMA5D2_MR);
-> +
-> +	status &= ~AT91_SAMA5D2_MR_TRGSEL_MASK;
-> +
-> +	/* set/unset TRGSEL to ADTRG */
-> +	if (state)
-> +		status |= AT91_SAMA5D2_MR_TRGSEL(AT91_SAMA5D2_MR_TRGSEL_TRIG0);
-> +
-> +	at91_adc_writel(st, AT91_SAMA5D2_MR, status);
-> +
-> +	return 0;
-> +}
-> +
-> +static int at91_adc_rtc_configure_trigger(struct at91_adc_state *st, bool state)
-> +{
-> +	u32 status = at91_adc_readl(st, AT91_SAMA5D2_TRGR);
-> +
-> +	/* clear TRGMOD */
-> +	status &= ~AT91_SAMA5D2_TRGR_TRGMOD_MASK;
-> +
-> +	if (state)
-> +		status |= AT91_SAMA5D2_TRGR_TRGMOD_RTC;
-> +
-> +	/* set/unset hw trigger */
-> +	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
-> +
-> +	status = at91_adc_readl(st, AT91_SAMA5D2_MR);
-> +
-> +	status &= ~AT91_SAMA5D2_MR_TRGSEL_MASK;
-> +
-> +	/* set/unset TRGSEL to RTCOUT0 */
-> +	if (state)
-> +		status |= AT91_SAMA5D2_MR_TRGSEL(AT91_SAMA5D2_MR_TRGSEL_TRIG7);
-> +
-> +	at91_adc_writel(st, AT91_SAMA5D2_MR, status);
-> +
->  	return 0;
->  }
->  
-> @@ -866,7 +908,8 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
->  	if (st->dma_st.dma_chan) \
->  		use_irq = false; \
->  	/* if the trigger is not ours, then it has its own IRQ */ \
-> -	if (iio_trigger_validate_own_device(indio->trig, indio)) \
-> +	if (iio_trigger_validate_own_device(indio->trig, indio) && \
-
-This increasingly feels like it should be a function with clearly
-passed parameters rather than macro fun.
-
-> +		!st->rtc_triggered) \
->  		use_irq = false; \
->  	}
->  
-> @@ -884,6 +927,18 @@ static int at91_adc_buffer_postenable(struct iio_dev *indio)
->  		/* touchscreen enabling */
->  		return at91_adc_configure_touch(st, true);
->  	}
-> +
-> +	/*
-> +	 * If our rtc trigger link is identical to the current trigger,
-> +	 * then we are rtc-triggered.
-> +	 * Configure accordingly.
-> +	 */
-> +	if (!IS_ERR_OR_NULL(st->rtc_trig_dev) &&
-> +	    st->rtc_trig_dev == indio->trig->dev.parent) {
-> +		at91_adc_rtc_configure_trigger(st, true);
-> +		st->rtc_triggered = true;
-> +	}
-> +
->  	/* if we are not in triggered mode, we cannot enable the buffer. */
->  	if (!(indio->currentmode & INDIO_ALL_TRIGGERED_MODES))
->  		return -EINVAL;
-> @@ -947,6 +1002,17 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio)
->  	if (!(indio->currentmode & INDIO_ALL_TRIGGERED_MODES))
->  		return -EINVAL;
->  
-> +	/*
-> +	 * If our rtc trigger link is identical to the current trigger,
-> +	 * then we are rtc-triggered.
-> +	 * Unconfigure accordingly.
-> +	 */
-> +	if (!IS_ERR_OR_NULL(st->rtc_trig_dev) &&
-> +	    st->rtc_trig_dev == indio->trig->dev.parent) {
-> +		at91_adc_rtc_configure_trigger(st, false);
-> +		st->rtc_triggered = false;
-> +	}
-> +
->  	AT91_ADC_BUFFER_CHECK_USE_IRQ(use_irq);
->  	/*
->  	 * For each enable channel we must disable it in hardware.
-> @@ -1153,8 +1219,15 @@ static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
->  	else
->  		ret = at91_adc_trigger_handler_nodma(indio_dev, pf);
->  
-> -	if (!ret)
-> +	if (!ret) {
->  		iio_trigger_notify_done(indio_dev->trig);
-> +		/*
-> +		 * RTC trigger does not know how to reenable our IRQ.
-> +		 * So, we must do it.
-> +		 */
-> +		if (st->rtc_triggered)
-> +			enable_irq(st->irq);
-
-Hmm. This is a bit nasty but I guess we can't avoid it.
-
-> +	}
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -1166,10 +1239,13 @@ irqreturn_t at91_adc_pollfunc(int irq, void *p)
->  	struct at91_adc_state *st = iio_priv(indio_dev);
->  
->  	/*
-> -	 * If it's not our trigger, start a conversion now, as we are
-> -	 * actually polling the trigger now.
-> +	 * We need to start a software trigger if we are not using a trigger
-> +	 * that uses our own IRQ.
-> +	 * External trigger and RTC trigger do not not need software start
-
-External trigger is a bit of a generic name - sounds like one coming from
-'somewhere else'.  Perhaps "External trigger in the ADC .." or similar?
-
-> +	 * However the other triggers do.
->  	 */
-> -	if (iio_trigger_validate_own_device(indio_dev->trig, indio_dev))
-> +	if (iio_trigger_validate_own_device(indio_dev->trig, indio_dev) &&
-> +	    !st->rtc_triggered)
->  		at91_adc_writel(st, AT91_SAMA5D2_CR, AT91_SAMA5D2_CR_START);
->  
->  	return iio_pollfunc_store_time(irq, p);
-> @@ -1307,6 +1383,12 @@ static void at91_adc_workq_handler(struct work_struct *workq)
->  
->  		at91_adc_read_and_push_channels(indio_dev, st->timestamp);
->  		iio_trigger_notify_done(indio_dev->trig);
-> +		/*
-> +		 * RTC trigger does not know how to reenable our IRQ.
-> +		 * So, we must do it.
-> +		 */
-> +		if (st->rtc_triggered)
-> +			enable_irq(st->irq);
->  	} else {
->  		iio_push_to_buffers(indio_dev, st->buffer);
->  	}
-> @@ -1712,6 +1794,7 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	struct iio_dev *indio_dev;
->  	struct at91_adc_state *st;
->  	struct resource	*res;
-> +	struct device_node *rtc_trig_np;
->  	int ret, i;
->  	u32 edge_type = IRQ_TYPE_NONE;
->  
-> @@ -1737,6 +1820,8 @@ static int at91_adc_probe(struct platform_device *pdev)
->  
->  	st->oversampling_ratio = AT91_OSR_1SAMPLES;
->  
-> +	st->rtc_trig_dev = ERR_PTR(-EINVAL);
-> +
->  	ret = of_property_read_u32(pdev->dev.of_node,
->  				   "atmel,min-sample-rate-hz",
->  				   &st->soc_info.min_sample_rate);
-> @@ -1784,6 +1869,20 @@ static int at91_adc_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	rtc_trig_np = of_parse_phandle(pdev->dev.of_node, "atmel,rtc-trigger",
-> +				       0);
-> +	if (rtc_trig_np) {
-> +		struct platform_device *rtc_trig_plat_dev;
-> +
-> +		rtc_trig_plat_dev = of_find_device_by_node(rtc_trig_np);
-> +		if (rtc_trig_plat_dev) {
-> +			st->rtc_trig_dev = &rtc_trig_plat_dev->dev;
-> +			dev_info(&pdev->dev,
-> +				 "RTC trigger link set-up with %s\n",
-> +				 dev_name(st->rtc_trig_dev));
-> +		}
-> +	}
-> +
->  	init_waitqueue_head(&st->wq_data_available);
->  	mutex_init(&st->lock);
->  	INIT_WORK(&st->workq, at91_adc_workq_handler);
-
+>=20
+> The heuristic approach assumes that the OOM kernel panic is caused by
+> a single backtrace. The assumption is not always true but it works in
+> many cases during our test.
+>=20
+> We have tested this heuristic approach since 2019/5 on android devices.
+> In 38 internal OOM kernel panic reports:
+>=20
+> 31/38: can be analyzed by using existing information
+> 7/38: need page owner formatino and the heuristic approach in this patch
+> prints the correct backtraces of abnormal memory allocations. No need to
+> reproduce the issues.
