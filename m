@@ -2,96 +2,107 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FB3C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3D3C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA7520709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cU77YKvN"
+	by mail.kernel.org (Postfix) with ESMTP id 2124920882
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLWVcm (ORCPT
+        id S1726874AbfLWVfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:32:42 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:57934 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfLWVcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:32:41 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47hXd161hnz5Y;
-        Mon, 23 Dec 2019 22:32:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1577136758; bh=O/d828ISA+n1x4IWaq8yeucNGGNrooHV7Ka+PXufgYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cU77YKvNJgICtrxQwdrkuA3dQmlcb8JweNlMyWAgunfnFPBDztMQ9mNZutXs3wY0M
-         bLepP0vcFy4lhzj/XoAAmsd5S2fEKwaUVVHKoD5L+2LAQYWwtGxsJTnKpu8dBVcNuO
-         a4tabsxU6iYFP6vH2NSeZiCtuKhUmC1LXFzUjc9cNfJNkEDsipFwo6d+Lr1R0DYzYp
-         OD6ckcGPRmWjduIsXOGp1CCLTcKAOkOoJuBTBFzeQM0es/zNTJmcoL94jPigS60mKB
-         O9ZTMghJZmA/x/NhP5wUuQ+Li65bpKqxnmGCbUd/uT4Z38ZzVekALoxobVpKIGMDBe
-         4md82MjUvOVAw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 23 Dec 2019 22:32:34 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Peter Chen <peter.chen@nxp.com>, Rob Herring <robh-dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
- to driver's dependencies
-Message-ID: <20191223213234.GA28786@qmqm.qmqm.pl>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-11-digetx@gmail.com>
- <20191220035650.GC19921@b29397-desktop>
- <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
+        Mon, 23 Dec 2019 16:35:24 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38395 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWVfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 16:35:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ijVMB-0007BG-TF; Mon, 23 Dec 2019 22:35:16 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 871741C2BAA;
+        Mon, 23 Dec 2019 22:35:14 +0100 (CET)
+Date:   Mon, 23 Dec 2019 21:35:14 -0000
+From:   "tip-bot2 for Yuya Fujita" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf hists: Fix variable name's inconsistency in
+ hists__for_each() macro
+Cc:     Yuya Fujita <fujita.yuya@fujitsu.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3COSAPR01MB1588E1C47AC22043175DE1B2E8520=40OSAPR01MB?=
+ =?utf-8?q?1588=2Ejpnprd01=2Eprod=2Eoutlook=2Ecom=3E?=
+References: =?utf-8?q?=3COSAPR01MB1588E1C47AC22043175DE1B2E8520=40OSAPR01M?=
+ =?utf-8?q?B1588=2Ejpnprd01=2Eprod=2Eoutlook=2Ecom=3E?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157713691440.30329.16673529531445455880.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 07:31:08AM +0300, Dmitry Osipenko wrote:
-> 20.12.2019 06:56, Peter Chen пишет:
-> > On 19-12-20 04:52:38, Dmitry Osipenko wrote:
-[...]
-> >> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
-> >>  	struct tegra_udc *udc;
-> >>  	int err;
-> >>  
-> >> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
-> >> +		err = request_module("phy_tegra_usb");
-> >> +		if (err)
-> >> +			return err;
-> >> +	}
-> >> +
-> > 
-> > Why you do this dependency, if this controller driver can't
-> > get USB PHY, it should return error. What's the return value
-> > after calling below:
-> > 
-> > 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
-> 
-> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
+The following commit has been merged into the perf/urgent branch of tip:
 
-How are other driver modules autoloaded? Isn't there an appropriate
-MODALIAS or MODULE_DEVICE_TABLE in there?
+Commit-ID:     55347ec340af401437680fd0e88df6739a967f9f
+Gitweb:        https://git.kernel.org/tip/55347ec340af401437680fd0e88df6739a967f9f
+Author:        Yuya Fujita <fujita.yuya@fujitsu.com>
+AuthorDate:    Thu, 19 Dec 2019 08:08:32 
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Fri, 20 Dec 2019 18:58:13 -03:00
 
-Best Regards,
-Michał Mirosław
+perf hists: Fix variable name's inconsistency in hists__for_each() macro
+
+Variable names are inconsistent in hists__for_each macro().
+
+Due to this inconsistency, the macro replaces its second argument with
+"fmt" regardless of its original name.
+
+So far it works because only "fmt" is passed to the second argument.
+However, this behavior is not expected and should be fixed.
+
+Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
+Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
+Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/hist.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4528690..0aa63ae 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -339,10 +339,10 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
+ 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
+ 
+ #define hists__for_each_format(hists, format) \
+-	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+ 
+ #define hists__for_each_sort_list(hists, format) \
+-	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
++	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+ 
+ extern struct perf_hpp_fmt perf_hpp__format[];
+ 
