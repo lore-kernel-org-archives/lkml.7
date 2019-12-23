@@ -2,292 +2,81 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6004DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8638C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA86220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="UfrRnp+M";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Oqotrf2X"
+	by mail.kernel.org (Postfix) with ESMTP id 8098A207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:55:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577084122;
+	bh=39ehGZ6TuL922vgrdz2h/bRu6TOJa3ZY3hJJ2N9KD9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mtDfy82YnnWwuuW/WkPsVYumf+FihnDhR4QuoK/5269Mrq/ns+Yu0Gvk57MgaFDHv
+	 l/c3jMHFSFQ2O3wG2Gxen4EWX9sQ98KEjCfuvAvuwteUf6rPiYv0WYxBovYGnWTUFz
+	 H9ua1E+Dlv6zkZfuFnZApf7sAthFmyBt6EroWY2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfLWGyp (ORCPT
+        id S1726633AbfLWGzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:54:45 -0500
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:49488 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbfLWGyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:54:45 -0500
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBN6s9WW016861;
-        Sun, 22 Dec 2019 22:54:39 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=G3ZOysoNj1YzA2w8Gl32kvSKzSx7gT1C/D7qVq9YsJM=;
- b=UfrRnp+MZ+sdeig/AKE0iyTShYIu4MHAyQZELZHNqivF6RWsqOhNXNEdS7wJNzLmB9Jr
- OFiBS/u0WrzTYpTC3ExdcFOTWPKU5IG2I7ekkhNS7Cg+NJ/qhRnlHUexk7LTpXXmJJbI
- f6WDiAOxRrNH8JOEtIQgNLhtj9Yt0VZI6q677RamGwyCkH4vkVTZ0beg0n9d3HTLSyc5
- ig6QiKVF49DMUFQ6kxGSv8RWkLNRwQoAStpySDfRBZJ62Lt8xl1k19tjPL3/4syM7NLb
- cBBbGDjBkTcbqI6b4UsPBmNtNL/SVT5kjRJCj2lbEinORs4wVb27cfrIXquEZejrAWac bg== 
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2174.outbound.protection.outlook.com [104.47.58.174])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2x1fv3mdj1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 22 Dec 2019 22:54:39 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XCP6s/hGc7b53Flff+gMDcnv5RK076JIPGvt8CStSgRH8Fk9DuVY0Rvht+ExpJfWSMuadOxObDQF3cytraSEUSqbqxD0ijGqkaeKuXyreHyAtetxHIXEg9cdRFUZpPvtc1LLEHq7STbbYjZ+UswFmil1notSywPXDKrT4Itx8/3Y8XqVfSvCzJXdEoZxUX4tyzJYx1R5T8qz4P0oSDBEuq2ync1HhuORrNRXD693zRPcq5F/SJahZOOshthm1qrVoL3BYa4xtFWpCHok+0oYi4mQnnPLRdDUtNEouAJNnbcrbHYwmp5U/isPpH9nToWIF2BXgyrd7Nwj8qy4s9z/QA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G3ZOysoNj1YzA2w8Gl32kvSKzSx7gT1C/D7qVq9YsJM=;
- b=nGJmf2e7vb9hqU7LP6lObwrr2XldWhz8507wQf375iHLjXo4efG79GPiLObfh/9f07dURTQyPLMsMqVhnyHEOqGzfT/EM1dGXG78cEU1JFpr2mwGmna25Kp6z5lMsUe2Yc/zd8XRnQbupW5YpVw5g/tRxkpvCldHQ9An2nDv8v+f9jVYtu6d6BSr1wqAqBxS5ar0kg5qTGlfYyk9zfCv22NVPs67vJDhfOgs6eUzxKtcoDhByvCS5i+DJxr6FbPTL6AyzLtojE6jT8uIdwFDwzbTERP52OqlxF2kJthywxGzcr1ntGvBIQ+q0O5R67+qwW/rX5hGNWRXL6N2nCHFqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.243) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G3ZOysoNj1YzA2w8Gl32kvSKzSx7gT1C/D7qVq9YsJM=;
- b=Oqotrf2XTJybsESqNuRdHhmILuF8pnfBAqAphEXu7KT8GFRnxg9uhlIXgMEDrweE4otNBGNFhVHxyxu65sFpmz1dtbk4IhtAo/PuWFLlAuSMymz05nRph8NY54qiqczSNkRfnl1mJqLkakfuQJ7kpQqE8ralmU3DJujxjT2hRus=
-Received: from DM5PR07CA0088.namprd07.prod.outlook.com (2603:10b6:4:ae::17) by
- BY5PR07MB7203.namprd07.prod.outlook.com (2603:10b6:a03:20e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.16; Mon, 23 Dec
- 2019 06:54:36 +0000
-Received: from BN8NAM12FT059.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe5b::202) by DM5PR07CA0088.outlook.office365.com
- (2603:10b6:4:ae::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.14 via Frontend
- Transport; Mon, 23 Dec 2019 06:54:36 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
- BN8NAM12FT059.mail.protection.outlook.com (10.13.183.55) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16 via Frontend Transport; Mon, 23 Dec 2019 06:54:36 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id xBN6sWjV067998
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Sun, 22 Dec 2019 22:54:34 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 23 Dec 2019 07:54:32 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 23 Dec 2019 07:54:32 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id xBN6sWkB005457;
-        Mon, 23 Dec 2019 07:54:32 +0100
-Received: (from yamonkar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id xBN6sVQS005434;
-        Mon, 23 Dec 2019 07:54:31 +0100
-From:   Yuti Amonkar <yamonkar@cadence.com>
-To:     <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <kishon@ti.com>
-CC:     <praneeth@ti.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
-        <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>
-Subject: [PATCH v1] phy: Add DisplayPort configuration options
-Date:   Mon, 23 Dec 2019 07:54:31 +0100
-Message-ID: <1577084071-5332-1-git-send-email-yamonkar@cadence.com>
-X-Mailer: git-send-email 2.4.5
+        Mon, 23 Dec 2019 01:55:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfLWGzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 01:55:21 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9620B20663;
+        Mon, 23 Dec 2019 06:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577084120;
+        bh=39ehGZ6TuL922vgrdz2h/bRu6TOJa3ZY3hJJ2N9KD9A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HW+GJS5OxSVhugdZ53LcIsfKTacGVpg6i8VPohFdkaXvBTZZ5Gft/aTeytg9wPTQw
+         qC0xltbypWCL5MPPInkZw5WdA/K0miyj1St6t+XwQyHSW9o//mvtbP81SnAKQ5LA1W
+         okYlXQFuzM2+Zuu5b/dE0xSVXprh64vRDs1D4FmA=
+Date:   Mon, 23 Dec 2019 14:54:59 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, xiaobo.xie@nxp.com,
+        jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: ls1028a: fix little-big endian issue
+ for dcfg
+Message-ID: <20191223065458.GO11523@dragon>
+References: <20191213021839.23517-1-yinbo.zhu@nxp.com>
+ <20191213021839.23517-2-yinbo.zhu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(36092001)(199004)(189003)(36756003)(2906002)(86362001)(2616005)(70586007)(70206006)(478600001)(336012)(426003)(356004)(186003)(316002)(107886003)(54906003)(42186006)(110136005)(36906005)(26005)(4326008)(81166006)(8936002)(8676002)(81156014)(966005)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB7203;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:unused.mynethost.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 34a66fbb-2670-4421-06a2-08d78774f961
-X-MS-TrafficTypeDiagnostic: BY5PR07MB7203:
-X-Microsoft-Antispam-PRVS: <BY5PR07MB7203A2CCF3B110E42802AFB7D22E0@BY5PR07MB7203.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0260457E99
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1oZILF3Fn05+A71NCn4t+pW7uQmXBES1IPl7GiLe6PH46ge8AsdNsRieJB+KFnP16BSQEkwfDJv7RnmO/KjMg7oXpn73aK6q094+lyEVdUOdZiP9f4akiUT2lqK92vFeniBep2pQ0UbJoyweK4QwOr7dZOhRC6YVaQZA1cJv593aqExviwHt/C3ec5kpzS/52iC92Xig0wT1aeU8uSR5axzPMqwonts/dKP9LX4ms4oAyhuCrJggJGZFIVffrMrUd/uKDP3R/JxzOjjrgQwHwCJh6ktXBFBcBUpE4PsPJL2X0eR+b/VVTc1WNDEdSVQRzUDEGOBzUH25pOZCWLc9/OCN8uEbX9qPvdJhlE8bd2qDxUCWOdiGYrQOCjJsc5yLhH+9WOKiWuYvSZt7LsmXvGS+NYMf0Zz9uP/MdtzWYNOuBhWJLN41PZt3mDarngDhO8nAaLlzAYf4MCnTSeN1LN/EXqavCxWp3yrspwZNFKcRshNgt4lnYaUAQlHg2PGgCmj6CXSxna0Eox5QggIZrlr2uhaaZ5GQvssk3AhW2tc=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2019 06:54:36.4535
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34a66fbb-2670-4421-06a2-08d78774f961
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB7203
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-23_03:2019-12-17,2019-12-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 priorityscore=1501 phishscore=0 bulkscore=0 impostorscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912230059
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191213021839.23517-2-yinbo.zhu@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow DisplayPort PHYs to be configured through the generic
-functions through a custom structure added to the generic union.
-The configuration structure is used for reconfiguration of
-DisplayPort PHYs during link training operation.
+On Fri, Dec 13, 2019 at 10:18:39AM +0800, Yinbo Zhu wrote:
+> dcfg use little endian that SoC register value will be correct
+> 
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Acked-by: Shawn Guo <shawnguo@kernel.org>
+> Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-The parameters added here are the ones defined in the DisplayPort
-spec which include link rate, number of lanes, voltage swing
-and pre-emphasis.
+I reworded the subject and commit log a little, added Fixes tag and
+applied a fix.
 
-This patch was a part of [1] series earlier but we think that it needs
-to have a separate attention of the reviewers. Also as both [1] & [2] are
-dependent on this patch, our sincere request to reviewers to have a
-faster review of this patch.
-
-[1]
-
-https://lkml.org/lkml/2019/12/11/455
-
-[2]
-
-https://patchwork.kernel.org/cover/11271191/
-
-Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
----
- include/linux/phy/phy-dp.h | 95 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/phy/phy.h    |  4 ++
- 2 files changed, 99 insertions(+)
- create mode 100644 include/linux/phy/phy-dp.h
-
-diff --git a/include/linux/phy/phy-dp.h b/include/linux/phy/phy-dp.h
-new file mode 100644
-index 0000000..18cad23
---- /dev/null
-+++ b/include/linux/phy/phy-dp.h
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2019 Cadence Design Systems Inc.
-+ */
-+
-+#ifndef __PHY_DP_H_
-+#define __PHY_DP_H_
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct phy_configure_opts_dp - DisplayPort PHY configuration set
-+ *
-+ * This structure is used to represent the configuration state of a
-+ * DisplayPort phy.
-+ */
-+struct phy_configure_opts_dp {
-+	/**
-+	 * @link_rate:
-+	 *
-+	 * Link Rate, in Mb/s, of the main link.
-+	 *
-+	 * Allowed values: 1620, 2160, 2430, 2700, 3240, 4320, 5400, 8100 Mb/s
-+	 */
-+	unsigned int link_rate;
-+
-+	/**
-+	 * @lanes:
-+	 *
-+	 * Number of active, consecutive, data lanes, starting from
-+	 * lane 0, used for the transmissions on main link.
-+	 *
-+	 * Allowed values: 1, 2, 4
-+	 */
-+	unsigned int lanes;
-+
-+	/**
-+	 * @voltage:
-+	 *
-+	 * Voltage swing levels, as specified by DisplayPort specification,
-+	 * to be used by particular lanes. One value per lane.
-+	 * voltage[0] is for lane 0, voltage[1] is for lane 1, etc.
-+	 *
-+	 * Maximum value: 3
-+	 */
-+	unsigned int voltage[4];
-+
-+	/**
-+	 * @pre:
-+	 *
-+	 * Pre-emphasis levels, as specified by DisplayPort specification, to be
-+	 * used by particular lanes. One value per lane.
-+	 *
-+	 * Maximum value: 3
-+	 */
-+	unsigned int pre[4];
-+
-+	/**
-+	 * @ssc:
-+	 *
-+	 * Flag indicating, whether or not to enable spread-spectrum clocking.
-+	 *
-+	 */
-+	u8 ssc : 1;
-+
-+	/**
-+	 * @set_rate:
-+	 *
-+	 * Flag indicating, whether or not reconfigure link rate and SSC to
-+	 * requested values.
-+	 *
-+	 */
-+	u8 set_rate : 1;
-+
-+	/**
-+	 * @set_lanes:
-+	 *
-+	 * Flag indicating, whether or not reconfigure lane count to
-+	 * requested value.
-+	 *
-+	 */
-+	u8 set_lanes : 1;
-+
-+	/**
-+	 * @set_voltages:
-+	 *
-+	 * Flag indicating, whether or not reconfigure voltage swing
-+	 * and pre-emphasis to requested values. Only lanes specified
-+	 * by "lanes" parameter will be affected.
-+	 *
-+	 */
-+	u8 set_voltages : 1;
-+};
-+
-+#endif /* __PHY_DP_H_ */
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 15032f14..ba0aab5 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -16,6 +16,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- 
-+#include <linux/phy/phy-dp.h>
- #include <linux/phy/phy-mipi-dphy.h>
- 
- struct phy;
-@@ -46,9 +47,12 @@ enum phy_mode {
-  *
-  * @mipi_dphy:	Configuration set applicable for phys supporting
-  *		the MIPI_DPHY phy mode.
-+ * @dp:		Configuration set applicable for phys supporting
-+ *		the DisplayPort protocol.
-  */
- union phy_configure_opts {
- 	struct phy_configure_opts_mipi_dphy	mipi_dphy;
-+	struct phy_configure_opts_dp		dp;
- };
- 
- /**
--- 
-2.7.4
-
+    arm64: dts: ls1028a: fix endian setting for dcfg
+    
+    DCFG block uses little endian.  Fix it so that register access becomes
+    correct.
+    
+    Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+    Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
+    Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+    Signed-off-by: Shawn Guo <shawnguo@kernel.org>
