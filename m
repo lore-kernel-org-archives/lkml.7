@@ -6,135 +6,80 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B6CC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E696C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 013A72053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EB62053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfLWKBP (ORCPT
+        id S1726828AbfLWKD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:01:15 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:43469 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfLWKBP (ORCPT
+        Mon, 23 Dec 2019 05:03:27 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:51944 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfLWKD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:01:15 -0500
-X-Originating-IP: 176.184.22.51
-Received: from localhost (did75-h03-176-184-22-51.dsl.sta.abo.bbox.fr [176.184.22.51])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id AEEF1C000F;
-        Mon, 23 Dec 2019 10:01:12 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2] rtc: rv3029: remove useless error messages
-Date:   Mon, 23 Dec 2019 11:01:08 +0100
-Message-Id: <20191223100108.1083078-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 23 Dec 2019 05:03:27 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id hN3N2100P5USYZQ01N3N9r; Mon, 23 Dec 2019 11:03:24 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ijKYc-0000eh-Kh; Mon, 23 Dec 2019 11:03:22 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ijKYc-0001vV-I6; Mon, 23 Dec 2019 11:03:22 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] of: mdio: Add missing inline to of_mdiobus_child_is_phy() dummy
+Date:   Mon, 23 Dec 2019 11:03:21 +0100
+Message-Id: <20191223100321.7364-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant messages or messages that would not add any value because
-the information is already conveyed properly using errno.
+If CONFIG_OF_MDIO=n:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+    drivers/net/phy/mdio_bus.c:23:
+    include/linux/of_mdio.h:58:13: warning: ‘of_mdiobus_child_is_phy’ defined but not used [-Wunused-function]
+     static bool of_mdiobus_child_is_phy(struct device_node *child)
+		 ^~~~~~~~~~~~~~~~~~~~~~~
+
+Fix this by adding the missing "inline" keyword.
+
+Fixes: 0aa4d016c043d16a ("of: mdio: export of_mdiobus_child_is_phy")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- drivers/rtc/rtc-rv3029c2.c | 35 +++++++++--------------------------
- 1 file changed, 9 insertions(+), 26 deletions(-)
+ include/linux/of_mdio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
-index 6f1c7790a6a2..483faa4f66d4 100644
---- a/drivers/rtc/rtc-rv3029c2.c
-+++ b/drivers/rtc/rtc-rv3029c2.c
-@@ -318,10 +318,8 @@ static int rv3029_read_time(struct device *dev, struct rtc_time *tm)
- 
- 	ret = regmap_bulk_read(rv3029->regmap, RV3029_W_SEC, regs,
- 			       RV3029_WATCH_SECTION_LEN);
--	if (ret < 0) {
--		dev_err(dev, "%s: reading RTC section failed\n", __func__);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	tm->tm_sec = bcd2bin(regs[RV3029_W_SEC - RV3029_W_SEC]);
- 	tm->tm_min = bcd2bin(regs[RV3029_W_MINUTES - RV3029_W_SEC]);
-@@ -357,21 +355,16 @@ static int rv3029_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 
- 	ret = regmap_bulk_read(rv3029->regmap, RV3029_A_SC, regs,
- 			       RV3029_ALARM_SECTION_LEN);
--	if (ret < 0) {
--		dev_err(dev, "%s: reading alarm section failed\n", __func__);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	ret = regmap_read(rv3029->regmap, RV3029_IRQ_CTRL, &controls);
--	if (ret) {
--		dev_err(dev, "Read IRQ Control Register error %d\n", ret);
-+	if (ret)
- 		return ret;
--	}
-+
- 	ret = regmap_read(rv3029->regmap, RV3029_IRQ_FLAGS, &flags);
--	if (ret < 0) {
--		dev_err(dev, "Read IRQ Flags Register error %d\n", ret);
-+	if (ret < 0)
- 		return ret;
--	}
- 
- 	tm->tm_sec = bcd2bin(regs[RV3029_A_SC - RV3029_A_SC] & 0x7f);
- 	tm->tm_min = bcd2bin(regs[RV3029_A_MN - RV3029_A_SC] & 0x7f);
-@@ -802,11 +795,8 @@ static int rv3029_i2c_probe(struct i2c_client *client,
- 	}
- 
- 	regmap = devm_regmap_init_i2c(client, &config);
--	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "%s: regmap allocation failed: %ld\n",
--			__func__, PTR_ERR(regmap));
-+	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
--	}
- 
- 	return rv3029_probe(&client->dev, regmap, client->irq, client->name);
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 79bc82e30c02333d..491a2b7e77c1e906 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -55,7 +55,7 @@ static inline int of_mdio_parse_addr(struct device *dev,
  }
-@@ -863,11 +853,8 @@ static int rv3049_probe(struct spi_device *spi)
- 	struct regmap *regmap;
  
- 	regmap = devm_regmap_init_spi(spi, &config);
--	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "%s: regmap allocation failed: %ld\n",
--			__func__, PTR_ERR(regmap));
-+	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
--	}
- 
- 	return rv3029_probe(&spi->dev, regmap, spi->irq, "rv3049");
- }
-@@ -907,16 +894,12 @@ static int __init rv30x9_init(void)
- 	int ret;
- 
- 	ret = rv3029_register_driver();
--	if (ret) {
--		pr_err("Failed to register rv3029 driver: %d\n", ret);
-+	if (ret)
- 		return ret;
--	}
- 
- 	ret = rv3049_register_driver();
--	if (ret) {
--		pr_err("Failed to register rv3049 driver: %d\n", ret);
-+	if (ret)
- 		rv3029_unregister_driver();
--	}
- 
- 	return ret;
+ #else /* CONFIG_OF_MDIO */
+-static bool of_mdiobus_child_is_phy(struct device_node *child)
++static inline bool of_mdiobus_child_is_phy(struct device_node *child)
+ {
+ 	return false;
  }
 -- 
-2.23.0
+2.17.1
 
