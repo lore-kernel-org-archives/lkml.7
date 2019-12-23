@@ -4,655 +4,587 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E072FC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EAAC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC48A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4864E206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLWPuV (ORCPT
+        id S1726861AbfLWPwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:50:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:52257 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfLWPuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:50:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 07:50:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,348,1571727600"; 
-   d="scan'208";a="207306264"
-Received: from spandruv-mobl3.jf.intel.com ([10.252.128.230])
-  by orsmga007.jf.intel.com with ESMTP; 23 Dec 2019 07:50:19 -0800
-Message-ID: <fde1d128eb4502a5ae9e2a7d98674f4ebd038732.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform/x86: Add support for Uncore frequency
- control
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Date:   Mon, 23 Dec 2019 07:50:19 -0800
-In-Reply-To: <CAHp75VfS-cxvKshw4M3KggU8HWTtU0B1CEcGFEzxhb4V=Hak5w@mail.gmail.com>
-References: <20191214001408.4878-1-srinivas.pandruvada@linux.intel.com>
-         <CAHp75VfS-cxvKshw4M3KggU8HWTtU0B1CEcGFEzxhb4V=Hak5w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
+        Mon, 23 Dec 2019 10:52:02 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34032 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfLWPwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:52:02 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A8693289B90
+Subject: Re: [PATCH v22 2/2] drm/bridge: Add I2C based driver for ps8640
+ bridge
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Ulrich Hecht <uli@fpond.eu>,
+        linux-arm-kernel@lists.infradead.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191223143538.20327-1-enric.balletbo@collabora.com>
+ <20191223143538.20327-3-enric.balletbo@collabora.com>
+Message-ID: <7840b18d-39de-dd8a-eca8-6dc0cc23116c@collabora.com>
+Date:   Mon, 23 Dec 2019 16:51:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191223143538.20327-3-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-18 at 18:51 +0200, Andy Shevchenko wrote:
-> On Sat, Dec 14, 2019 at 2:15 AM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> > 
-> > Some server users set limits on the uncore frequency using MSR
-> > 620H, while
-> > running latency sensitive workloads. Here uncore frequency controls
-> > RING/LLC(last-level cache) clocks.
-> > 
-> > But MSR control is not always possible from the user space, so this
-> > driver
-> > provides a sysfs interface to set max and min frequency limits.
-> > This MSR
-> > 620H is a die scoped in multi-die system or package scoped in non
-> > multi-die
-> > systems.
-> > 
-> > When this driver is loaded, a new directory is created under
-> >  /sys/devices/system/cpu.
-> > 
-> > For example on a two package Skylake server:
-> > $cd /sys/devices/system/cpu/intel_uncore_frequency
-> > 
-> > $ls
-> > package_00_die_00 package_01_die_00
-> > 
-> > $ls package_00_die_00
-> > max_freq_khz  min_freq_khz  power_up_max_freq_khz
-> > power_up_min_freq_khz
-> > 
-> > $grep . *
-> >     max_freq_khz:2400000
-> >     min_freq_khz:1200000
-> >     power_up_max_freq_khz:2400000
-> >     power_up_min_freq_khz:1200000
-> > 
-> > Here, power_up_max_freq_khz and power_up_min_freq_khz are read only
-> > attributes to show power up values of max and min frequencies
-> > respectively.
-> > Other attributes are read-write, so that users can modify.
-> > 
+Hi Laurent,
+
+On 23/12/19 15:35, Enric Balletbo i Serra wrote:
+> From: Jitao Shi <jitao.shi@mediatek.com>
 > 
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> in case it goes thru different (doc?) tree.
-I can submit separate patches for the documentation, so that these
-patches can be submitted via two different trees.
+> This patch adds drm_bridge driver for parade DSI to eDP bridge chip.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> [uli: followed API changes, removed FW update feature]
+> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> One of the reviews from Laurent was to use 'i2c_new_ancillary_device'. I
+> didn't change this for two reasons.
+> 1) It doesn't have a devm version, so the remove path is more simple
+> using the devm_i2c_new_dummy_device family.
+> 2) IIUC the ancillary function is useful when you want to retrieve the
+> address from the firmware or DT, that's not really the case here, as we
+> have a base address and fixed offset to the base address which I think
+> is not configurable.
+> 
+> Let me know if you still think that I should use the ancillary call.
+> 
+> Changes in v23:
+> - Merge mute/unmute functions into one (Nicolas Boichat)
+> - Use enum for ENABLE/DISABLE instead of bool (Ezequiel Garcia)
+> - Rename mute/unmute to vdo_control and fix error messages (Nicolas Boichat and Enric)
+> - Add space between address and address parameter 'address%02x' (Nicolas Boichat)
+> - Add Tested-by Hsin-Yi
+> - Added me as author after the refactor
+> 
+> Changes in v22:
+> - Remove sysfs attributes because are not really used (Enric Balletbo)
+> - Use enum for address page offsets (Ezequiel Garcia)
+> - Remove enable tracking (Enric Balletbo)
+> - Use panel_bridge API (Laurent Pinchart)
+> - Do not use kernel-doc format for non kernel-doc formatted commands (Enric Balletbo)
+> - Remove verbose message for PAGE1_VSTART command (Ezequiel Garcia)
+> - Use time_is_after_jiffies idiom (Ezequiel Garcia)
+> - Remove unused macros (Ezequiel Garcia)
+> - Fix weird alignment in dsi->mode_flags (Laurent Pinchart)
+> - Use drm_of_find_panel_or_bridge helper (Laurent Pinchart)
+> - Remove mode-sel-gpios as is not used (Laurent Pinchart)
+> - Remove error messages to get gpios as the core will already report it (Enric Balletbo)
+> - Remove redundant message getting the regulators (Laurent Pinchart)
+> - Rename sleep-gpios to powerdown-gpios (Laurent Pinchart)
+> - Use ARRAY_SIZE(ps_bridge->page) instead of MAX_DEV when possible (Laurent Pinchart)
+> - Fix race with userspace accessing the sysfs attributes (Laurent Pinchart)
+> - Remove id_table as is only used on DR platforms (Laurent Pinchart)
+> - Convert to new i2c device probe() (Laurent Pinchart)
+> - Use i2c_smbus_read/write helpers instead of open coding it (Laurent Pinchart)
+> - Remove unnused global variables (Laurent Pinchart)
+> - Remove unnused fields in ps8640 struct (Laurent Pinchart)
+> - Remove commented-out headers (Laurent Pinchart)
+> 
+> Changes in v21:
+>  - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+>  - Fix build issue due missing drm_bridge.h
+>  - Do not remove in ps8640_remove device managed resources
+> 
+> Changes in v19:
+>  - fixed return value of ps8640_probe() when no panel is found
+> 
+> Changes in v18:
+>  - followed DRM API changes
+>  - use DEVICE_ATTR_RO()
+>  - remove firmware update code
+>  - add SPDX identifier
+> 
+> Changes in v17:
+>  - remove some unused head files.
+>  - add macros for ps8640 pages.
+>  - remove ddc_i2c client
+>  - add mipi_dsi_device_register_full
+>  - remove the manufacturer from the name and i2c_device_id
+> 
+> Changes in v16:
+>  - Disable ps8640 DSI MCS Function.
+>  - Rename gpios name more clearly.
+>  - Tune the ps8640 power on sequence.
+> 
+> Changes in v15:
+>  - Drop drm_connector_(un)register calls from parade ps8640.
+>    The main DRM driver mtk_drm_drv now calls
+>    drm_connector_register_all() after drm_dev_register() in the
+>    mtk_drm_bind() function. That function should iterate over all
+>    connectors and call drm_connector_register() for each of them.
+>    So, remove drm_connector_(un)register calls from parade ps8640.
+> 
+> Changes in v14:
+>  - update copyright info.
+>  - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+>  - fix some coding style.
+>  - use sizeof as array counter.
+>  - use drm_get_edid when read edid.
+>  - add mutex when firmware updating.
+> 
+> Changes in v13:
+>  - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+>  - fix PAGE2_SW_REST tyro.
+>  - move the buf[3] init to entrance of the function.
+> 
+> Changes in v12:
+>  - fix hw_chip_id build warning
+> 
+> Changes in v11:
+>  - Remove depends on I2C, add DRM depends
+>  - Reuse ps8640_write_bytes() in ps8640_write_byte()
+>  - Use timer check for polling like the routines in <linux/iopoll.h>
+>  - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+>  - Check the ps8640 hardware id in ps8640_validate_firmware
+>  - Remove fw_version check
+>  - Move ps8640_validate_firmware before ps8640_enter_bl
+>  - Add ddc_i2c unregister when probe fail and ps8640_remove
+> 
+>  drivers/gpu/drm/bridge/Kconfig         |  11 +
+>  drivers/gpu/drm/bridge/Makefile        |   1 +
+>  drivers/gpu/drm/bridge/parade-ps8640.c | 348 +++++++++++++++++++++++++
+>  3 files changed, 360 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 4734f6993858..3e0a63011723 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -101,6 +101,17 @@ config DRM_PARADE_PS8622
+>  	---help---
+>  	  Parade eDP-LVDS bridge chip driver.
+>  
+> +config DRM_PARADE_PS8640
+> +	tristate "Parade PS8640 MIPI DSI to eDP Converter"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	select DRM_MIPI_DSI
+> +	select DRM_PANEL
+> +	help
+> +	  Choose this option if you have PS8640 for display
+> +	  The PS8640 is a high-performance and low-power
+> +	  MIPI DSI to eDP converter
+> +
+>  config DRM_SIL_SII8620
+>  	tristate "Silicon Image SII8620 HDMI/MHL bridge"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 1c0c92667ac4..91490c595b38 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
+>  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+>  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+> +obj-$(CONFIG_DRM_PARADE_PS8640) += parade-ps8640.o
+>  obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+>  obj-$(CONFIG_DRM_SII902X) += sii902x.o
+>  obj-$(CONFIG_DRM_SII9234) += sii9234.o
+> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
+> new file mode 100644
+> index 000000000000..646ac649d175
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+> @@ -0,0 +1,348 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2016 MediaTek Inc.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_of.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +
+> +#define PAGE2_GPIO_H		0xa7
+> +#define PS_GPIO9		BIT(1)
+> +#define PAGE2_I2C_BYPASS	0xea
+> +#define I2C_BYPASS_EN		0xd0
+> +#define PAGE2_MCS_EN		0xf3
+> +#define MCS_EN			BIT(0)
+> +#define PAGE3_SET_ADD		0xfe
+> +#define VDO_CTL_ADD		0x13
+> +#define VDO_DIS			0x18
+> +#define VDO_EN			0x1c
+> +
+> +/*
+> + * PS8640 uses multiple addresses:
+> + * page[0]: for DP control
+> + * page[1]: for VIDEO Bridge
+> + * page[2]: for control top
+> + * page[3]: for DSI Link Control1
+> + * page[4]: for MIPI Phy
+> + * page[5]: for VPLL
+> + * page[6]: for DSI Link Control2
+> + * page[7]: for SPI ROM mapping
+> + */
+> +enum page_addr_offset {
+> +	PAGE0_DP_CNTL = 0,
+> +	PAGE1_VDO_BDG,
+> +	PAGE2_TOP_CNTL,
+> +	PAGE3_DSI_CNTL1,
+> +	PAGE4_MIPI_PHY,
+> +	PAGE5_VPLL,
+> +	PAGE6_DSI_CNTL2,
+> +	PAGE7_SPI_CNTL,
+> +	MAX_DEVS
+> +};
+> +
+> +enum ps8640_vdo_control {
+> +	DISABLE = VDO_DIS,
+> +	ENABLE = VDO_EN,
+> +};
+> +
+> +struct ps8640 {
+> +	struct drm_bridge bridge;
+> +	struct drm_bridge *panel_bridge;
+> +	struct mipi_dsi_device *dsi;
+> +	struct i2c_client *page[MAX_DEVS];
+> +	struct regulator_bulk_data supplies[2];
+> +	struct gpio_desc *gpio_reset;
+> +	struct gpio_desc *gpio_powerdown;
+> +};
+> +
+> +static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
+> +{
+> +	return container_of(e, struct ps8640, bridge);
+> +}
+> +
+> +static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
+> +				     const enum ps8640_vdo_control ctrl)
+> +{
+> +	struct i2c_client *client = ps_bridge->page[PAGE3_DSI_CNTL1];
+> +	u8 vdo_ctrl_buf[] = { VDO_CTL_ADD, ctrl };
+> +	int ret;
+> +
+> +	ret = i2c_smbus_write_i2c_block_data(client, PAGE3_SET_ADD,
+> +					     sizeof(vdo_ctrl_buf),
+> +					     vdo_ctrl_buf);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
+> +	unsigned long timeout;
+> +	int ret, status;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
+> +				    ps_bridge->supplies);
+> +	if (ret < 0) {
+> +		DRM_ERROR("cannot enable regulators %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
+> +	gpiod_set_value(ps_bridge->gpio_reset, 0);
+> +	usleep_range(2000, 2500);
+> +	gpiod_set_value(ps_bridge->gpio_reset, 1);
+> +
+> +	/*
+> +	 * Wait for the ps8640 embedded MCU to be ready
+> +	 * First wait 200ms and then check the MCU ready flag every 20ms
+> +	 */
+> +	msleep(200);
+> +
+> +	timeout = jiffies + msecs_to_jiffies(200) + 1;
+> +
+> +	while (time_is_after_jiffies(timeout)) {
+> +		status = i2c_smbus_read_byte_data(client, PAGE2_GPIO_H);
+> +		if (status < 0) {
+> +			DRM_ERROR("failed read PAGE2_GPIO_H: %d\n", status);
+> +			goto err_regulators_disable;
+> +		}
+> +		if ((status & PS_GPIO9) == PS_GPIO9)
+> +			break;
+> +
+> +		msleep(20);
+> +	}
+> +
+> +	msleep(50);
+> +
+> +	/*
+> +	 * The Manufacturer Command Set (MCS) is a device dependent interface
+> +	 * intended for factory programming of the display module default
+> +	 * parameters. Once the display module is configured, the MCS shall be
+> +	 * disabled by the manufacturer. Once disabled, all MCS commands are
+> +	 * ignored by the display interface.
+> +	 */
+> +	status = i2c_smbus_read_byte_data(client, PAGE2_MCS_EN);
+> +	if (status < 0) {
+> +		DRM_ERROR("failed read PAGE2_MCS_EN: %d\n", status);
+> +		goto err_regulators_disable;
+> +	}
+> +
+> +	ret = i2c_smbus_write_byte_data(client, PAGE2_MCS_EN,
+> +					status & ~MCS_EN);
+> +	if (ret < 0) {
+> +		DRM_ERROR("failed write PAGE2_MCS_EN: %d\n", ret);
+> +		goto err_regulators_disable;
+> +	}
+> +
+> +	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
+> +	if (ret) {
+> +		DRM_ERROR("failed to enable VDO: %d\n", ret);
+> +		goto err_regulators_disable;
+> +	}
+> +
+> +	/* Switch access edp panel's edid through i2c */
+> +	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
+> +					I2C_BYPASS_EN);
+> +	if (ret < 0) {
+> +		DRM_ERROR("failed write PAGE2_I2C_BYPASS: %d\n", ret);
+> +		goto err_regulators_disable;
+> +	}
+> +
+> +	return;
+> +
+> +err_regulators_disable:
+> +	regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
+> +			       ps_bridge->supplies);
+> +}
+> +
+> +static void ps8640_post_disable(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	int ret;
+> +
+> +	ret = ps8640_bridge_vdo_control(ps_bridge, DISABLE);
+> +	if (ret < 0)
+> +		DRM_ERROR("failed to disable VDO: %d\n", ret);
+> +
+> +	gpiod_set_value(ps_bridge->gpio_reset, 0);
+> +	gpiod_set_value(ps_bridge->gpio_powerdown, 0);
+> +	ret = regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
+> +				     ps_bridge->supplies);
+> +	if (ret < 0)
+> +		DRM_ERROR("cannot disable regulators %d\n", ret);
+> +}
+> +
+> +int ps8640_bridge_attach(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	struct device *dev = &ps_bridge->page[0]->dev;
+> +	struct device_node *in_ep, *dsi_node;
+> +	struct mipi_dsi_device *dsi;
+> +	struct mipi_dsi_host *host;
+> +	int ret;
+> +	const struct mipi_dsi_device_info info = { .type = "ps8640",
+> +						   .channel = 0,
+> +						   .node = NULL,
+> +						 };
+> +	/* port@0 is ps8640 dsi input port */
+> +	in_ep = of_graph_get_endpoint_by_regs(dev->of_node, 0, -1);
+> +	if (!in_ep)
+> +		return -ENODEV;
+> +
+> +	dsi_node = of_graph_get_remote_port_parent(in_ep);
+> +	of_node_put(in_ep);
+> +	if (!dsi_node)
+> +		return -ENODEV;
+> +
+> +	host = of_find_mipi_dsi_host_by_node(dsi_node);
+> +	of_node_put(dsi_node);
+> +	if (!host)
+> +		return -ENODEV;
+> +
+> +	dsi = mipi_dsi_device_register_full(host, &info);
+> +	if (IS_ERR(dsi)) {
+> +		dev_err(dev, "failed to create dsi device\n");
+> +		ret = PTR_ERR(dsi);
+> +		return ret;
+> +	}
+> +
+> +	ps_bridge->dsi = dsi;
+> +
+> +	dsi->host = host;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
+> +			  MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->lanes = 4;
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret)
+> +		goto err_dsi_attach;
+> +
+> +	/* Attach the panel-bridge to the dsi bridge */
+> +	return drm_bridge_attach(bridge->encoder, ps_bridge->panel_bridge,
+> +				 &ps_bridge->bridge);
+> +
+> +err_dsi_attach:
+> +	mipi_dsi_device_unregister(dsi);
+> +	return ret;
+> +}
+> +
+> +static const struct drm_bridge_funcs ps8640_bridge_funcs = {
+> +	.attach = ps8640_bridge_attach,
+> +	.post_disable = ps8640_post_disable,
+> +	.pre_enable = ps8640_pre_enable,
+> +};
+> +
+> +static int ps8640_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct ps8640 *ps_bridge;
+> +	struct drm_panel *panel;
+> +	int ret;
+> +	u32 i;
+> +
+> +	ps_bridge = devm_kzalloc(dev, sizeof(*ps_bridge), GFP_KERNEL);
+> +	if (!ps_bridge)
+> +		return -ENOMEM;
+> +
+> +	/* port@1 is ps8640 output port */
+> +	ret = drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (!panel)
+> +		return -ENODEV;
+> +
+> +	panel->connector_type = DRM_MODE_CONNECTOR_eDP;
+> +
+> +	ps_bridge->panel_bridge = devm_drm_panel_bridge_add(dev, panel);
+> +	if (IS_ERR(ps_bridge->panel_bridge))
+> +		return PTR_ERR(ps_bridge->panel_bridge);
+> +
+> +	ps_bridge->supplies[0].supply = "vdd33";
+> +	ps_bridge->supplies[1].supply = "vdd12";
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ps_bridge->supplies),
+> +				      ps_bridge->supplies);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ps_bridge->gpio_powerdown = devm_gpiod_get(&client->dev, "powerdown",
+> +						   GPIOD_OUT_LOW);
+> +	if (IS_ERR(ps_bridge->gpio_powerdown))
+> +		return PTR_ERR(ps_bridge->gpio_powerdown);
+> +
+> +	/*
+> +	 * Request the reset pin low to avoid the bridge being
+> +	 * initialized prematurely
+
+Ezequiel made me realise that I didn't address one of your comments from the
+beginning.
+
+"The polarity is wrong in DT then. Requesting the GPIO low should
+deassert reset, in drivers all GPIO descriptors should be handled as
+active high. Same for the sleep GPIO."
+
+
+I fixed my DT and I'll fix this in next version I send. I'll just wait a bit for
+if I receive more feedback to no flood more the ML with these patches. Let me
+know if you have more comments.
 
 Thanks,
-Srinivas
+ Enric
 
 
+> +	 */
+> +	ps_bridge->gpio_reset = devm_gpiod_get(&client->dev, "reset",
+> +					       GPIOD_OUT_LOW);
+> +	if (IS_ERR(ps_bridge->gpio_reset))
+> +		return PTR_ERR(ps_bridge->gpio_reset);
+> +
+> +	ps_bridge->bridge.funcs = &ps8640_bridge_funcs;
+> +	ps_bridge->bridge.of_node = dev->of_node;
+> +
+> +	ps_bridge->page[PAGE0_DP_CNTL] = client;
+> +
+> +	for (i = 1; i < ARRAY_SIZE(ps_bridge->page); i++) {
+> +		ps_bridge->page[i] = devm_i2c_new_dummy_device(&client->dev,
+> +							     client->adapter,
+> +							     client->addr + i);
+> +		if (IS_ERR(ps_bridge->page[i])) {
+> +			dev_err(dev, "failed i2c dummy device, address %02x\n",
+> +				client->addr + i);
+> +			return PTR_ERR(ps_bridge->page[i]);
+> +		}
+> +	}
+> +
+> +	i2c_set_clientdata(client, ps_bridge);
+> +
+> +	drm_bridge_add(&ps_bridge->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ps8640_remove(struct i2c_client *client)
+> +{
+> +	struct ps8640 *ps_bridge = i2c_get_clientdata(client);
+> +
+> +	drm_bridge_remove(&ps_bridge->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ps8640_match[] = {
+> +	{ .compatible = "parade,ps8640" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ps8640_match);
+> +
+> +static struct i2c_driver ps8640_driver = {
+> +	.probe_new = ps8640_probe,
+> +	.remove = ps8640_remove,
+> +	.driver = {
+> +		.name = "ps8640",
+> +		.of_match_table = ps8640_match,
+> +	},
+> +};
+> +module_i2c_driver(ps8640_driver);
+> +
+> +MODULE_AUTHOR("Jitao Shi <jitao.shi@mediatek.com>");
+> +MODULE_AUTHOR("CK Hu <ck.hu@mediatek.com>");
+> +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
+> +MODULE_DESCRIPTION("PARADE ps8640 DSI-eDP converter driver");
+> +MODULE_LICENSE("GPL v2");
 > 
-> > Signed-off-by: Srinivas Pandruvada <
-> > srinivas.pandruvada@linux.intel.com>
-> > ---
-> >  drivers/platform/x86/Kconfig                  |  11 +
-> >  drivers/platform/x86/Makefile                 |   1 +
-> >  drivers/platform/x86/intel-uncore-frequency.c | 434
-> > ++++++++++++++++++
-> >  3 files changed, 446 insertions(+)
-> >  create mode 100644 drivers/platform/x86/intel-uncore-frequency.c
-> > 
-> > diff --git a/drivers/platform/x86/Kconfig
-> > b/drivers/platform/x86/Kconfig
-> > index 27d5b40fb717..6013c3b96cfd 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1337,6 +1337,17 @@ config PCENGINES_APU2
-> >           To compile this driver as a module, choose M here: the
-> > module
-> >           will be called pcengines-apuv2.
-> > 
-> > +config INTEL_UNCORE_FREQ_CONTROL
-> > +       tristate "Intel Uncore frequency control driver"
-> > +       depends on X86_64
-> > +       help
-> > +         This driver allows control of uncore frequency limits on
-> > +         supported server platforms.
-> > +         Uncore frequency controls RING/LLC (last-level cache)
-> > clocks.
-> > +
-> > +         To compile this driver as a module, choose M here: the
-> > module
-> > +         will be called intel-uncore-frequency.
-> > +
-> >  source "drivers/platform/x86/intel_speed_select_if/Kconfig"
-> > 
-> >  config SYSTEM76_ACPI
-> > diff --git a/drivers/platform/x86/Makefile
-> > b/drivers/platform/x86/Makefile
-> > index 42d85a00be4e..3747b1f07cf1 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -105,3 +105,4 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)     +=
-> > intel_atomisp2_pm.o
-> >  obj-$(CONFIG_PCENGINES_APU2)   += pcengines-apuv2.o
-> >  obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) +=
-> > intel_speed_select_if/
-> >  obj-$(CONFIG_SYSTEM76_ACPI)    += system76_acpi.o
-> > +obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)        += intel-uncore-
-> > frequency.o
-> > diff --git a/drivers/platform/x86/intel-uncore-frequency.c
-> > b/drivers/platform/x86/intel-uncore-frequency.c
-> > new file mode 100644
-> > index 000000000000..82ee5a3107cf
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel-uncore-frequency.c
-> > @@ -0,0 +1,434 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Intel Uncore Frequency Setting
-> > + * Copyright (c) 2019, Intel Corporation.
-> > + * All rights reserved.
-> > + *
-> > + * Provide interface to set MSR 620 at a granularity of per die.
-> > On CPU online,
-> > + * one control CPU is identified per die to read/write limit. This
-> > control CPU
-> > + * is changed, if the CPU state is changed to offline. When the
-> > last CPU is
-> > + * offline in a die then remove the sysfs object for that die.
-> > + * The majority of actual code is related to sysfs create and
-> > read/write
-> > + * attributes.
-> > + *
-> > + * Author: Srinivas Pandruvada <
-> > srinivas.pandruvada@linux.intel.com>
-> > + */
-> > +
-> > +#include <linux/cpu.h>
-> > +#include <linux/module.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/suspend.h>
-> > +#include <asm/cpu_device_id.h>
-> > +#include <asm/intel-family.h>
-> > +
-> > +#define MSR_UNCORE_RATIO_LIMIT                 0x620
-> > +#define UNCORE_FREQ_KHZ_MULTIPLIER             100000
-> > +
-> > +/**
-> > + * struct uncore_data -        Encapsulate all uncore data
-> > + * @stored_uncore_data:        Last user changed MSR 620 value,
-> > which will be restored
-> > + *                     on system resume.
-> > + * @power_up_min_freq_khz: Sampled minimum uncore frequency at
-> > driver init
-> > + * @power_up_max_freq_khz: Sampled maximum uncore frequency at
-> > driver init
-> > + * @control_cpu:       Designated CPU for a die to read/write
-> > + * @valid:             Mark the data valid/invalid
-> > + *
-> > + * This structure is used to encapsulate all data related to
-> > uncore sysfs
-> > + * settings for a die/package.
-> > + */
-> > +struct uncore_data {
-> > +       struct kobject kobj;
-> > +       u64 stored_uncore_data;
-> > +       u32 power_up_min_freq_khz;
-> > +       u32 power_up_max_freq_khz;
-> > +       int control_cpu;
-> > +       bool valid;
-> > +};
-> > +
-> > +#define to_uncore_data(a) container_of(a, struct uncore_data,
-> > kobj)
-> > +
-> > +/* Max instances for uncore data, one for each die */
-> > +static int uncore_max_entries __read_mostly;
-> > +/* Storage for uncore data for all instances */
-> > +static struct uncore_data *uncore_instances;
-> > +/* Root of the all uncore sysfs kobjs */
-> > +struct kobject uncore_root_kobj;
-> > +/* Stores the CPU mask of the target CPUs to use during uncore
-> > read/write */
-> > +static cpumask_t uncore_cpu_mask;
-> > +/* CPU online callback register instance */
-> > +static enum cpuhp_state uncore_hp_state __read_mostly;
-> > +/* Mutex to control all mutual exclusions */
-> > +static DEFINE_MUTEX(uncore_lock);
-> > +
-> > +struct uncore_attr {
-> > +       struct attribute attr;
-> > +       ssize_t (*show)(struct kobject *kobj,
-> > +                       struct attribute *attr, char *buf);
-> > +       ssize_t (*store)(struct kobject *kobj,
-> > +                        struct attribute *attr, const char *c,
-> > ssize_t count);
-> > +};
-> > +
-> > +#define define_one_uncore_ro(_name) \
-> > +static struct uncore_attr _name = \
-> > +__ATTR(_name, 0444, show_##_name, NULL)
-> > +
-> > +#define define_one_uncore_rw(_name) \
-> > +static struct uncore_attr _name = \
-> > +__ATTR(_name, 0644, show_##_name, store_##_name)
-> > +
-> > +#define
-> > show_uncore_data(member_name)                                  \
-> > +       static ssize_t show_##member_name(struct kobject
-> > *kobj,         \
-> > +                                         struct attribute
-> > *attr,       \
-> > +                                         char
-> > *buf)                    \
-> > +       {                                                          
-> >      \
-> > +               struct uncore_data *data =
-> > to_uncore_data(kobj);        \
-> > +               return scnprintf(buf, PAGE_SIZE,
-> > "%u\n",                \
-> > +                                data-
-> > >member_name);                    \
-> > +       }                                                          
-> >      \
-> > +       define_one_uncore_ro(member_name)
-> > +
-> > +show_uncore_data(power_up_min_freq_khz);
-> > +show_uncore_data(power_up_max_freq_khz);
-> > +
-> > +/* Common function to read MSR 0x620 and read min/max */
-> > +static int uncore_read_ratio(struct uncore_data *data, unsigned
-> > int *min,
-> > +                            unsigned int *max)
-> > +{
-> > +       u64 cap;
-> > +       int ret;
-> > +
-> > +       ret = rdmsrl_on_cpu(data->control_cpu,
-> > MSR_UNCORE_RATIO_LIMIT, &cap);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       *max = (cap & 0x7F) * UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +       *min = ((cap & GENMASK(14, 8)) >> 8) *
-> > UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/* Common function to set min/max ratios to be used by sysfs
-> > callbacks */
-> > +static int uncore_write_ratio(struct uncore_data *data, unsigned
-> > int input,
-> > +                             int set_max)
-> > +{
-> > +       int ret;
-> > +       u64 cap;
-> > +
-> > +       mutex_lock(&uncore_lock);
-> > +
-> > +       input /= UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +       if (!input || input > 0x7F) {
-> > +               ret = -EINVAL;
-> > +               goto finish_write;
-> > +       }
-> > +
-> > +       rdmsrl(MSR_UNCORE_RATIO_LIMIT, cap);
-> > +       if (set_max) {
-> > +               cap &= ~0x7F;
-> > +               cap |= input;
-> > +       } else  {
-> > +               cap &= ~GENMASK(14, 8);
-> > +               cap |= (input << 8);
-> > +       }
-> > +
-> > +       ret = wrmsrl_on_cpu(data->control_cpu,
-> > MSR_UNCORE_RATIO_LIMIT, cap);
-> > +       if (ret)
-> > +               goto finish_write;
-> > +
-> > +       data->stored_uncore_data = cap;
-> > +
-> > +finish_write:
-> > +       mutex_unlock(&uncore_lock);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static ssize_t store_min_max_freq_khz(struct kobject *kobj,
-> > +                                     struct attribute *attr,
-> > +                                     const char *buf, ssize_t
-> > count,
-> > +                                     int min_max)
-> > +{
-> > +       struct uncore_data *data = to_uncore_data(kobj);
-> > +       unsigned int input;
-> > +
-> > +       if (kstrtouint(buf, 10, &input))
-> > +               return -EINVAL;
-> > +
-> > +       uncore_write_ratio(data, input, min_max);
-> > +
-> > +       return count;
-> > +}
-> > +
-> > +static ssize_t show_min_max_freq_khz(struct kobject *kobj,
-> > +                                    struct attribute *attr,
-> > +                                    char *buf, int min_max)
-> > +{
-> > +       struct uncore_data *data = to_uncore_data(kobj);
-> > +       unsigned int min, max;
-> > +       int ret;
-> > +
-> > +       mutex_lock(&uncore_lock);
-> > +       ret = uncore_read_ratio(data, &min, &max);
-> > +       mutex_unlock(&uncore_lock);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       if (min_max)
-> > +               return sprintf(buf, "%u\n", max);
-> > +
-> > +       return sprintf(buf, "%u\n", min);
-> > +}
-> > +
-> > +#define store_uncore_min_max(name,
-> > min_max)                            \
-> > +       static ssize_t store_##name(struct kobject
-> > *kobj,               \
-> > +                                   struct attribute
-> > *attr,             \
-> > +                                   const char *buf, ssize_t
-> > count)     \
-> > +       {                                                          
-> >      \
-> > +                                                                  
-> >      \
-> > +               return store_min_max_freq_khz(kobj, attr, buf,
-> > count,   \
-> > +                                             min_max);            
-> >      \
-> > +       }
-> > +
-> > +#define show_uncore_min_max(name,
-> > min_max)                             \
-> > +       static ssize_t show_##name(struct kobject
-> > *kobj,                \
-> > +                                  struct attribute *attr, char
-> > *buf)   \
-> > +       {                                                          
-> >      \
-> > +                                                                  
-> >      \
-> > +               return show_min_max_freq_khz(kobj, attr, buf,
-> > min_max); \
-> > +       }
-> > +
-> > +store_uncore_min_max(min_freq_khz, 0);
-> > +store_uncore_min_max(max_freq_khz, 1);
-> > +
-> > +show_uncore_min_max(min_freq_khz, 0);
-> > +show_uncore_min_max(max_freq_khz, 1);
-> > +
-> > +define_one_uncore_rw(min_freq_khz);
-> > +define_one_uncore_rw(max_freq_khz);
-> > +
-> > +static struct attribute *uncore_attrs[] = {
-> > +       &power_up_min_freq_khz.attr,
-> > +       &power_up_max_freq_khz.attr,
-> > +       &max_freq_khz.attr,
-> > +       &min_freq_khz.attr,
-> > +       NULL
-> > +};
-> > +
-> > +static struct kobj_type uncore_ktype = {
-> > +       .sysfs_ops = &kobj_sysfs_ops,
-> > +       .default_attrs = uncore_attrs,
-> > +};
-> > +
-> > +static struct kobj_type uncore_root_ktype = {
-> > +       .sysfs_ops = &kobj_sysfs_ops,
-> > +};
-> > +
-> > +/* Caller provides protection */
-> > +static struct uncore_data *uncore_get_instance(unsigned int cpu)
-> > +{
-> > +       int id = topology_logical_die_id(cpu);
-> > +
-> > +       if (id >= 0 && id < uncore_max_entries)
-> > +               return &uncore_instances[id];
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> > +static void uncore_add_die_entry(int cpu)
-> > +{
-> > +       struct uncore_data *data;
-> > +
-> > +       mutex_lock(&uncore_lock);
-> > +       data = uncore_get_instance(cpu);
-> > +       if (!data) {
-> > +               mutex_unlock(&uncore_lock);
-> > +               return;
-> > +       }
-> > +
-> > +       if (data->valid) {
-> > +               /* control cpu changed */
-> > +               data->control_cpu = cpu;
-> > +       } else {
-> > +               char str[64];
-> > +               int ret;
-> > +
-> > +               memset(data, 0, sizeof(*data));
-> > +               sprintf(str, "package_%02d_die_%02d",
-> > +                       topology_physical_package_id(cpu),
-> > +                       topology_die_id(cpu));
-> > +
-> > +               uncore_read_ratio(data, &data-
-> > >power_up_min_freq_khz,
-> > +                                 &data->power_up_max_freq_khz);
-> > +
-> > +               ret = kobject_init_and_add(&data->kobj,
-> > &uncore_ktype,
-> > +                                          &uncore_root_kobj, str);
-> > +               if (!ret) {
-> > +                       data->control_cpu = cpu;
-> > +                       data->valid = true;
-> > +               }
-> > +       }
-> > +       mutex_unlock(&uncore_lock);
-> > +}
-> > +
-> > +/* Last CPU in this die is offline, so remove sysfs entries */
-> > +static void uncore_remove_die_entry(int cpu)
-> > +{
-> > +       struct uncore_data *data;
-> > +
-> > +       mutex_lock(&uncore_lock);
-> > +       data = uncore_get_instance(cpu);
-> > +       if (data) {
-> > +               kobject_put(&data->kobj);
-> > +               data->control_cpu = -1;
-> > +               data->valid = false;
-> > +       }
-> > +       mutex_unlock(&uncore_lock);
-> > +}
-> > +
-> > +static int uncore_event_cpu_online(unsigned int cpu)
-> > +{
-> > +       int target;
-> > +
-> > +       /* Check if there is an online cpu in the package for
-> > uncore MSR */
-> > +       target = cpumask_any_and(&uncore_cpu_mask,
-> > topology_die_cpumask(cpu));
-> > +       if (target < nr_cpu_ids)
-> > +               return 0;
-> > +
-> > +       /* Use this CPU on this die as a control CPU */
-> > +       cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > +       uncore_add_die_entry(cpu);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int uncore_event_cpu_offline(unsigned int cpu)
-> > +{
-> > +       int target;
-> > +
-> > +       /* Check if existing cpu is used for uncore MSRs */
-> > +       if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
-> > +               return 0;
-> > +
-> > +       /* Find a new cpu to set uncore MSR */
-> > +       target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
-> > +
-> > +       if (target < nr_cpu_ids) {
-> > +               cpumask_set_cpu(target, &uncore_cpu_mask);
-> > +               uncore_add_die_entry(target);
-> > +       } else {
-> > +               uncore_remove_die_entry(cpu);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int uncore_pm_notify(struct notifier_block *nb, unsigned
-> > long mode,
-> > +                           void *_unused)
-> > +{
-> > +       int cpu;
-> > +
-> > +       switch (mode) {
-> > +       case PM_POST_HIBERNATION:
-> > +       case PM_POST_RESTORE:
-> > +       case PM_POST_SUSPEND:
-> > +               for_each_cpu(cpu, &uncore_cpu_mask) {
-> > +                       struct uncore_data *data;
-> > +                       int ret;
-> > +
-> > +                       data = uncore_get_instance(cpu);
-> > +                       if (!data || !data->valid || !data-
-> > >stored_uncore_data)
-> > +                               continue;
-> > +
-> > +                       ret = wrmsrl_on_cpu(cpu,
-> > MSR_UNCORE_RATIO_LIMIT,
-> > +                                           data-
-> > >stored_uncore_data);
-> > +                       if (ret)
-> > +                               return ret;
-> > +               }
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +       return 0;
-> > +}
-> > +
-> > +static struct notifier_block uncore_pm_nb = {
-> > +       .notifier_call = uncore_pm_notify,
-> > +};
-> > +
-> > +#define ICPU(model)     { X86_VENDOR_INTEL, 6, model,
-> > X86_FEATURE_ANY, }
-> > +
-> > +static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
-> > +       ICPU(INTEL_FAM6_BROADWELL_G),
-> > +       ICPU(INTEL_FAM6_BROADWELL_X),
-> > +       ICPU(INTEL_FAM6_BROADWELL_D),
-> > +       ICPU(INTEL_FAM6_SKYLAKE_X),
-> > +       ICPU(INTEL_FAM6_ICELAKE_X),
-> > +       ICPU(INTEL_FAM6_ICELAKE_D),
-> > +       {}
-> > +};
-> > +
-> > +static int __init intel_uncore_init(void)
-> > +{
-> > +       const struct x86_cpu_id *id;
-> > +       int ret;
-> > +
-> > +       id = x86_match_cpu(intel_uncore_cpu_ids);
-> > +       if (!id)
-> > +               return -ENODEV;
-> > +
-> > +       uncore_max_entries = topology_max_packages() *
-> > +                                       topology_max_die_per_packag
-> > e();
-> > +       uncore_instances = kcalloc(uncore_max_entries,
-> > +                                  sizeof(*uncore_instances),
-> > GFP_KERNEL);
-> > +       if (!uncore_instances)
-> > +               return -ENOMEM;
-> > +
-> > +       ret = kobject_init_and_add(&uncore_root_kobj,
-> > &uncore_root_ktype,
-> > +                                  &cpu_subsys.dev_root->kobj,
-> > +                                  "intel_uncore_frequency");
-> > +       if (ret)
-> > +               goto err_free;
-> > +
-> > +       ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-> > +                               "platform/x86/uncore-freq:online",
-> > +                               uncore_event_cpu_online,
-> > +                               uncore_event_cpu_offline);
-> > +       if (ret < 0)
-> > +               goto err_rem_kobj;
-> > +
-> > +       uncore_hp_state = ret;
-> > +
-> > +       ret = register_pm_notifier(&uncore_pm_nb);
-> > +       if (ret)
-> > +               goto err_rem_state;
-> > +
-> > +       return 0;
-> > +
-> > +err_rem_state:
-> > +       cpuhp_remove_state(uncore_hp_state);
-> > +err_rem_kobj:
-> > +       kobject_put(&uncore_root_kobj);
-> > +err_free:
-> > +       kfree(uncore_instances);
-> > +
-> > +       return ret;
-> > +}
-> > +module_init(intel_uncore_init)
-> > +
-> > +static void __exit intel_uncore_exit(void)
-> > +{
-> > +       int i;
-> > +
-> > +       unregister_pm_notifier(&uncore_pm_nb);
-> > +       cpuhp_remove_state(uncore_hp_state);
-> > +       for (i = 0; i < uncore_max_entries; ++i) {
-> > +               if (uncore_instances[i].valid)
-> > +                       kobject_put(&uncore_instances[i].kobj);
-> > +       }
-> > +       kobject_put(&uncore_root_kobj);
-> > +       kfree(uncore_instances);
-> > +}
-> > +module_exit(intel_uncore_exit)
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_DESCRIPTION("Intel Uncore Frequency Limits Driver");
-> > --
-> > 2.17.2
-> > 
-> 
-> 
-
