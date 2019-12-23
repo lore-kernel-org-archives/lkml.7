@@ -2,83 +2,105 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7485FC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2651C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3335220715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577101928;
-	bh=fW6/Ba/3jwXrnTwtP/ZVvHq5lvrpzfvzOmqjNbapGoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EobEKFGC90Ny3AeGzTSkUJlkZHTzreSEHECBHWwLIJ1pQHjIIMtBPgZQb+exhc7/4
-	 LHA4GQ01ndsAirJEe85Lwa4bwIfnaCttgDPWM+m2/S1XOcrnPpbuNNwtS0g0+Nd8ZA
-	 alHDYO0kBj218lrIJK5JQapZqWnAkdnD2ct5Mprc=
+	by mail.kernel.org (Postfix) with ESMTP id B7A6220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfLWLwH (ORCPT
+        id S1726802AbfLWL4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:52:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32882 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 06:56:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:43766 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbfLWLwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:52:07 -0500
-Received: from localhost (50-198-241-253-static.hfc.comcastbusiness.net [50.198.241.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3E620709;
-        Mon, 23 Dec 2019 11:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577101926;
-        bh=fW6/Ba/3jwXrnTwtP/ZVvHq5lvrpzfvzOmqjNbapGoQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c65IAMtHmg2Wxi6bNFNbtuTXaruTdQlSsfKj6fqb9PewVLimIy3sGQCNHX5GtXSoH
-         8ZaX5ayKT6zaq/nm3zO0vlF4TD7cgpJPqZnr7Y5E0J5L3ychEV+u/nQ6YVXvFWb3uy
-         wUb7CnYygrZ9egGnTRth3Zuibbm1OshNo/Wsfsqg=
-Date:   Mon, 23 Dec 2019 06:52:04 -0500
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] thunderbolt: fix memory leak of object sw
-Message-ID: <20191223115204.GA107995@kroah.com>
-References: <20191220220526.11307-1-colin.king@canonical.com>
- <20191223101317.GF2628@lahna.fi.intel.com>
+        id S1726679AbfLWL4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 06:56:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BEFA1FB;
+        Mon, 23 Dec 2019 03:56:54 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5C7F3F68F;
+        Mon, 23 Dec 2019 03:56:53 -0800 (PST)
+Date:   Mon, 23 Dec 2019 11:56:52 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 11/18] KVM: arm64: don't trap Statistical Profiling
+ controls to EL2
+Message-ID: <20191223115651.GA42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-12-andrew.murray@arm.com>
+ <86bls0iqv6.wl-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191223101317.GF2628@lahna.fi.intel.com>
+In-Reply-To: <86bls0iqv6.wl-maz@kernel.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:13:17PM +0200, Mika Westerberg wrote:
-> On Fri, Dec 20, 2019 at 10:05:26PM +0000, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
+On Sun, Dec 22, 2019 at 10:42:05AM +0000, Marc Zyngier wrote:
+> On Fri, 20 Dec 2019 14:30:18 +0000,
+> Andrew Murray <andrew.murray@arm.com> wrote:
 > > 
-> > In the case where the call tb_switch_exceeds_max_depth is true
-> > the error reurn path leaks memory in sw.  Fix this by setting
-> > the return error code to -EADDRNOTAVAIL and returning via the
-> > error exit path err_free_sw_ports to free sw. sw has been kzalloc'd
-> > so the free of the NULL sw->ports is fine.
-> >
-> > Addresses-Coverity: ("Resource leak")
-> > Fixes: b04079837b20 ("thunderbolt: Add initial support for USB4")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > As we now save/restore the profiler state there is no need to trap
+> > accesses to the statistical profiling controls. Let's unset the
+> > _TPMS bit.
+> > 
+> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > ---
+> >  arch/arm64/kvm/debug.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> > index 43487f035385..07ca783e7d9e 100644
+> > --- a/arch/arm64/kvm/debug.c
+> > +++ b/arch/arm64/kvm/debug.c
+> > @@ -88,7 +88,6 @@ void kvm_arm_reset_debug_ptr(struct kvm_vcpu *vcpu)
+> >   *  - Performance monitors (MDCR_EL2_TPM/MDCR_EL2_TPMCR)
+> >   *  - Debug ROM Address (MDCR_EL2_TDRA)
+> >   *  - OS related registers (MDCR_EL2_TDOSA)
+> > - *  - Statistical profiler (MDCR_EL2_TPMS/MDCR_EL2_E2PB)
+> >   *
+> >   * Additionally, KVM only traps guest accesses to the debug registers if
+> >   * the guest is not actively using them (see the KVM_ARM64_DEBUG_DIRTY
+> > @@ -111,7 +110,6 @@ void kvm_arm_setup_debug(struct kvm_vcpu *vcpu)
+> >  	 */
+> >  	vcpu->arch.mdcr_el2 = __this_cpu_read(mdcr_el2) & MDCR_EL2_HPMN_MASK;
+> >  	vcpu->arch.mdcr_el2 |= (MDCR_EL2_TPM |
+> > -				MDCR_EL2_TPMS |
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> No. This is an *optional* feature (the guest could not be presented
+> with the SPE feature, or the the support simply not be compiled in).
 > 
-> Greg, can you take this to your usb-next branch where the rest of the
-> USB4 stuff is?
+> If the guest is not allowed to see the feature, for whichever reason,
+> the traps *must* be enabled and handled.
 
-Will do, thanks.
+I'll update this (and similar) to trap such registers when we don't support
+SPE in the guest.
 
-greg k-h
+My original concern in the cover letter was in how to prevent the guest
+from attempting to use these registers in the first place - I think the
+solution I was looking for is to trap-and-emulate ID_AA64DFR0_EL1 such that
+the PMSVer bits indicate that SPE is not emulated.
+
+Thanks,
+
+Andrew Murray
+
+
+> 
+> 	M.
+> 
+> -- 
+> Jazz is not dead, it just smells funny.
