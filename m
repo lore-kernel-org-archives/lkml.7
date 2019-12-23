@@ -2,254 +2,83 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5D0C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0F6C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF9E206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7741206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfLWKa1 (ORCPT
+        id S1726860AbfLWKbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:30:27 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:36920 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbfLWKa1 (ORCPT
+        Mon, 23 Dec 2019 05:31:03 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:39243 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbfLWKbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:30:27 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id hNWP2100E5USYZQ06NWPRd; Mon, 23 Dec 2019 11:30:23 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ijKyl-0000x0-C6; Mon, 23 Dec 2019 11:30:23 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ijKyl-0002RX-Ad; Mon, 23 Dec 2019 11:30:23 +0100
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-m68k@lists.linux-m68k.org
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: defconfig: Update defconfigs for v5.5-rc3
-Date:   Mon, 23 Dec 2019 11:30:22 +0100
-Message-Id: <20191223103022.9350-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 23 Dec 2019 05:31:03 -0500
+Received: by mail-il1-f197.google.com with SMTP id n6so14047150ile.6
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 02:31:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=dqTElktPjJ2Vq8ttJgKuJA9Bl554Cdxgp9MbKD3t3zo=;
+        b=R+asB4as90j8xADcuopzZg2JLrzbnG2FBeb2boU953GRxANc97GO/MduJi64D4+e9X
+         t1LjIFNdxMSswx9y2MMsgN4LuZ/548BFLHwlc5pi0gDDTGPY4FfQcBn6NbGRRyAtVRLe
+         LGAeCWMPE++x7te7gws3TyQuA2IYZO1P9XzQDH1Q2pwYLePdPD2q0V7GQwi6OOWlf8+m
+         omwMBDX+c5dq7KMTMN0dgBKGAp7DBbSiyblZKIgSjbzsE+udIcvua4ydYWEpZuFTpyox
+         glRG0Ms7EidqsnQOf8IcD9/3OuceYVcsoz85xcs7NjietfogPlXusYcw2i7McwY4xSDK
+         fbAw==
+X-Gm-Message-State: APjAAAXgQ9ozaVe7XXjyOOicNgGEsyZt9toLWmVvB3KMHtOruhHGbQGn
+        bZAy3m+/0hZpRFVWYWeKpXyhDOY5bg7SA2kmiGdtVO8raiVJ
+X-Google-Smtp-Source: APXvYqxEBMubw04vHq957mYKngz32+OjAQ3cw+9AYwNkakf/69ewcoi2c7rjqs7UBeIlpsKYjtAm+5xfxmOXI3E52HSsX0TrkLqS
+MIME-Version: 1.0
+X-Received: by 2002:a02:7086:: with SMTP id f128mr22175027jac.12.1577097061494;
+ Mon, 23 Dec 2019 02:31:01 -0800 (PST)
+Date:   Mon, 23 Dec 2019 02:31:01 -0800
+In-Reply-To: <00000000000082b80f059a56da1f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002074ef059a5c86e2@google.com>
+Subject: Re: INFO: task hung in fb_release
+From:   syzbot <syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com>
+To:     Rex.Zhu@amd.com, airlied@linux.ie, alexander.deucher@amd.com,
+        amd-gfx@lists.freedesktop.org, b.zolnierkie@samsung.com,
+        christian.koenig@amd.com, daniel.vetter@ffwll.ch,
+        david1.zhou@amd.com, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, rex.zhu@amd.com,
+        sam@ravnborg.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  - Move CONFIG_EARLY_PRINTK.
+syzbot has bisected this bug to:
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-To be combined with "m68k: defconfig: Update defconfigs for v5.5-rc1"
-and "m68k: defconfig: Update defconfigs for v5.5-rc2".
----
- arch/m68k/configs/amiga_defconfig    | 2 +-
- arch/m68k/configs/apollo_defconfig   | 2 +-
- arch/m68k/configs/atari_defconfig    | 2 +-
- arch/m68k/configs/bvme6000_defconfig | 2 +-
- arch/m68k/configs/hp300_defconfig    | 2 +-
- arch/m68k/configs/mac_defconfig      | 2 +-
- arch/m68k/configs/multi_defconfig    | 2 +-
- arch/m68k/configs/mvme147_defconfig  | 2 +-
- arch/m68k/configs/mvme16x_defconfig  | 2 +-
- arch/m68k/configs/q40_defconfig      | 2 +-
- arch/m68k/configs/sun3x_defconfig    | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+commit e3933f26b657c341055443103bad331f4537b113
+Author: Rex Zhu <Rex.Zhu@amd.com>
+Date:   Tue Jan 16 10:35:15 2018 +0000
 
-diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
-index 0a6ba8e5a39ac342..e1134c3e0b69d5d3 100644
---- a/arch/m68k/configs/amiga_defconfig
-+++ b/arch/m68k/configs/amiga_defconfig
-@@ -624,6 +624,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -655,4 +656,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
-index 6d9fa08ef6d0e35c..484cb1643df1719d 100644
---- a/arch/m68k/configs/apollo_defconfig
-+++ b/arch/m68k/configs/apollo_defconfig
-@@ -580,6 +580,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -611,4 +612,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
-index 65bd096f89e7ee04..c372f00c4a1f0797 100644
---- a/arch/m68k/configs/atari_defconfig
-+++ b/arch/m68k/configs/atari_defconfig
-@@ -614,6 +614,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -645,4 +646,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
-index 789cad50f64ab334..bee9263a409c4e18 100644
---- a/arch/m68k/configs/bvme6000_defconfig
-+++ b/arch/m68k/configs/bvme6000_defconfig
-@@ -573,6 +573,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -604,4 +605,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
-index aa4a8e0a18389b35..c8847a8bcbd6d23f 100644
---- a/arch/m68k/configs/hp300_defconfig
-+++ b/arch/m68k/configs/hp300_defconfig
-@@ -582,6 +582,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -613,4 +614,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
-index 5172398c38047f1e..303ffafd9cad0d60 100644
---- a/arch/m68k/configs/mac_defconfig
-+++ b/arch/m68k/configs/mac_defconfig
-@@ -604,6 +604,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -635,4 +636,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
-index 14c31ca056417625..89a704226cd9e4e5 100644
---- a/arch/m68k/configs/multi_defconfig
-+++ b/arch/m68k/configs/multi_defconfig
-@@ -690,6 +690,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -721,4 +722,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
-index f68287e5c0d83f3e..f62c1f4d03a0330e 100644
---- a/arch/m68k/configs/mvme147_defconfig
-+++ b/arch/m68k/configs/mvme147_defconfig
-@@ -572,6 +572,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -603,4 +604,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
-index da79ec7b77ae1fe1..58dcad26a7513222 100644
---- a/arch/m68k/configs/mvme16x_defconfig
-+++ b/arch/m68k/configs/mvme16x_defconfig
-@@ -573,6 +573,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -604,4 +605,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
-index d93bd23d0e735e41..5d3c28d1d545b4a0 100644
---- a/arch/m68k/configs/q40_defconfig
-+++ b/arch/m68k/configs/q40_defconfig
-@@ -591,6 +591,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -622,4 +623,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
-diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
-index bf96a6a15ec4d684..22e1accc60a3e110 100644
---- a/arch/m68k/configs/sun3x_defconfig
-+++ b/arch/m68k/configs/sun3x_defconfig
-@@ -574,6 +574,7 @@ CONFIG_STRING_SELFTEST=m
- # CONFIG_SECTION_MISMATCH_WARN_ONLY is not set
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_WW_MUTEX_SELFTEST=m
-+CONFIG_EARLY_PRINTK=y
- CONFIG_TEST_LIST_SORT=m
- CONFIG_TEST_SORT=m
- CONFIG_REED_SOLOMON_TEST=m
-@@ -605,4 +606,3 @@ CONFIG_TEST_KMOD=m
- CONFIG_TEST_MEMCAT_P=m
- CONFIG_TEST_STACKINIT=m
- CONFIG_TEST_MEMINIT=m
--CONFIG_EARLY_PRINTK=y
--- 
-2.17.1
+     drm/amd/pp: Add edit/commit/show OD clock/voltage support in sysfs
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b5a799e00000
+start commit:   c6017471 Merge tag 'xfs-5.5-fixes-2' of git://git.kernel.o..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11b5a799e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b5a799e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
+dashboard link: https://syzkaller.appspot.com/bug?extid=d130c4a0890561cfac5b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b1925e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b9623ee00000
+
+Reported-by: syzbot+d130c4a0890561cfac5b@syzkaller.appspotmail.com
+Fixes: e3933f26b657 ("drm/amd/pp: Add edit/commit/show OD clock/voltage  
+support in sysfs")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
