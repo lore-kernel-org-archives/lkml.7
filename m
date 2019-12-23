@@ -2,88 +2,86 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A59C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06627C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1314B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q98VjP1I"
+	by mail.kernel.org (Postfix) with ESMTP id C83B120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577102814;
+	bh=UJGipIs3R0eAFs/+vxP9hO/yM5VYdXO2adysSDweAhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QMWSlFQ9bCLYp5Iuorj0tVJVwkR587LuHkAQP7G6l9gyfACVLc0BaBiRHI6kj+esC
+	 qSK9I1hlM8yEU9pD+cZhj/PyB6hdVCUTaibhkwRD0FIgTpq4wpBkdD8J3EJhMmf3Se
+	 eC5WloHvy742AxS0liOlyaCP1HAFfuvJAdGUI7xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLWMGd (ORCPT
+        id S1726889AbfLWMGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:06:33 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:58820 "EHLO mail.skyhub.de"
+        Mon, 23 Dec 2019 07:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfLWMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:06:32 -0500
-Received: from zn.tnic (p200300EC2F0ED6007C3BCB4901AE3123.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:d600:7c3b:cb49:1ae:3123])
+        id S1726798AbfLWMGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 07:06:53 -0500
+Received: from localhost (50-198-241-253-static.hfc.comcastbusiness.net [50.198.241.253])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A35131EC0391;
-        Mon, 23 Dec 2019 13:06:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577102790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Eujr/vAbQ2+cnbA/Y/6VFm+E4rkaCIhGe6e2vcZvass=;
-        b=Q98VjP1I9b3remsMyKwJzpRUKaHZAGkbkSljIct6MbXJSaxbb/Zr2/0DAvMFaDOtdO0cJ2
-        8skqG+iJpT//VlShtc9qkPMGbl6+gkVrMILWj8nHb/Hg3OVvInUZoAy5St4UzTF3/TWey9
-        w84WUwbP9AWTpFtlXBLnJA4uSYQ0urk=
-Date:   Mon, 23 Dec 2019 13:06:22 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     John Andersen <john.s.andersen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Subject: Re: [RESEND RFC 2/2] X86: Use KVM CR pin MSRs
-Message-ID: <20191223120622.GC16710@zn.tnic>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
- <20191220192701.23415-3-john.s.andersen@intel.com>
- <CALCETrV1nOpc3mqyXTXOzw-8Aa3zFpGi1cY7oc_2pz2-JVyH8Q@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 963112063A;
+        Mon, 23 Dec 2019 12:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577102812;
+        bh=UJGipIs3R0eAFs/+vxP9hO/yM5VYdXO2adysSDweAhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fz2yc8cDetWe4VFTEb9zU418nJ8+h2ixEHwK4M1+tCvv5q0EELvft/sEOBf9OgdBR
+         g0fKDmEZbkFl2tFeMH9BQ1G7px1JKNKQDztlyAmvqszPwo/LkD3g/nqrzqTVfXE/rK
+         hrYisPKy4oJF9GfEm80pUeULbSfvMr+fxK55XIWY=
+Date:   Mon, 23 Dec 2019 07:06:51 -0500
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [GIT PULL] TTY/Serial driver fixes for 5.5-rc3
+Message-ID: <20191223120651.GC114474@kroah.com>
+References: <20191220070747.GA2190169@kroah.com>
+ <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrV1nOpc3mqyXTXOzw-8Aa3zFpGi1cY7oc_2pz2-JVyH8Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 22, 2019 at 11:39:19PM -0800, Andy Lutomirski wrote:
-> FWIW, I think that handling these details through Kconfig is the wrong
-> choice.  Distribution kernels should enable this, and they're not
-> going to turn off kexec.
+On Fri, Dec 20, 2019 at 10:08:03AM -0800, Linus Torvalds wrote:
+> On Thu, Dec 19, 2019 at 11:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > The last tty core fix should resolve a long-standing bug with a race
+> > at port creation time that some people would see, and Sudip finally
+> > tracked down.
+> 
+> Hmm, looks good. But it makes me wonder if we should now try to remove
+> the second call to tty_port_link_device()?
+> 
+> Now we have a number of helpers that do that tty_port_link_device()
+> call for the driver (eg tty_port_register_device_attr_serdev(),
+> tty_port_register_device_attr(), and the just added
+> uart_add_one_port()).
+> 
+> But we also have drivers doing it by hand, and presumably we now have
+> drivers that do it through multiple paths? I guess it's harmless, but
+> it feels a bit odd. No?
 
-Nope, the other way around is way likely.
+It does.  I'll try to look at this after the holidays unless Sudip beats
+me to it.
 
-> Arguably kexec should be made to work -- there is no fundamental
-> reason that kexec should need to fiddle with CR0.WP, for example. But
-> a boot option could also work as a short-term option.
+thanks,
 
-The problem with short-term solutions is that they become immutable
-once people start using them. So it better be done right from the very
-beginning, before it gets exposed.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
