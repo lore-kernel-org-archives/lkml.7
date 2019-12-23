@@ -2,88 +2,112 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5722C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E81C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B224D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEACD20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577115756;
+	bh=W7dVTbz3atfdVAhEErfOc/0Hk/lMKKZVb4bYQnWDj2A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FFAvf2Ngxp7/ONSCjYeU8nLQEybrFnvjPnmXnbh54M3he+cdmKgZ3tFO9AlSSuDqa
+	 IUoVN59U7E5GxP25IumPHbHCwQ2BnF+80n0+N8S2BAUf3Z4AvN7lNcUG6RftmFEogP
+	 XqdbrN7g6b5MbgvOpJ+/mxw5FrmUYUtMb7ur9KsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfLWPjO (ORCPT
+        id S1726879AbfLWPmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:39:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:46964 "EHLO foss.arm.com"
+        Mon, 23 Dec 2019 10:42:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726824AbfLWPjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:39:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C9491FB;
-        Mon, 23 Dec 2019 07:39:13 -0800 (PST)
-Received: from [10.37.12.81] (unknown [10.37.12.81])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA2613F6CF;
-        Mon, 23 Dec 2019 07:39:11 -0800 (PST)
-Subject: Re: [PATCH 1/2] include: trace: Add SCMI header with trace events
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rostedt@goodmis.org
-References: <20191216161650.21844-1-lukasz.luba@arm.com>
- <20191218120900.GA28599@bogus>
- <7b59a2f1-0786-d24f-a653-76a60c15a8ae@broadcom.com>
- <CA+-6iNxn29WpUrbc9gL4EMTJfZj7FRCeO-_QaUqbjJYd1JAEKA@mail.gmail.com>
- <7fe599d3-1ce2-1fde-2911-9516a26090b6@arm.com>
- <9befbc13-ba00-094d-0064-0d97c1ccbb63@broadcom.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <abad5f94-ce0d-99c9-bb9a-754c56849aee@arm.com>
-Date:   Mon, 23 Dec 2019 15:39:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726795AbfLWPmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:42:35 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE0520409;
+        Mon, 23 Dec 2019 15:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577115754;
+        bh=W7dVTbz3atfdVAhEErfOc/0Hk/lMKKZVb4bYQnWDj2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s//tC+nTdBusmIDHh3w/JHuWKUr8WZVN0KLC+5/wqYR78n9MAxMnp6XKUU4AC657c
+         U14znr1zujKNxf6wQUO+8FMnp7RkFlmi3LhRux36l3jmUeE1S5MfamQvscwQPE3N9f
+         V1cD1j/T75J6/4t7OPNogFXjcHgnMBW3Nc+c3bpQ=
+Date:   Mon, 23 Dec 2019 15:42:30 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <vkoul@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH] iio: adc: stm32-adc: Use dma_request_chan() instead
+ dma_request_slave_channel()
+Message-ID: <20191223154230.7fb2a988@archlinux>
+In-Reply-To: <20191217075153.23766-1-peter.ujfalusi@ti.com>
+References: <20191217075153.23766-1-peter.ujfalusi@ti.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9befbc13-ba00-094d-0064-0d97c1ccbb63@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 17 Dec 2019 09:51:53 +0200
+Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-On 12/20/19 4:24 PM, Jim Quinlan wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
 > 
->> Thank you for sharing your experiments and thoughts. I have probably
->> similar setup for stressing the communication channel, but I do also
->> some wired things in the firmware. That's why I need to measure these
->> delays. I am happy that it is useful for you also.
->>
->> I don't know if your firmware supports 'fast channel', but please keep
->> in mind that it is not tracked in this 'transfer_id'.
->> This transfer_id in v2 version does not show the real transfers
->> to the firmware since there is another path called 'fast channel' or
->> 'fast_switch' in the CPUfreq. It is in drivers/firmware/arm_scmi/perf.c
->> and the atomic variable is not incremented in that path. Adding it also
->> there just for atomic_inc() probably would add delays in the fast_switch
->> and also brings little value.
->> For the normal channel, where we have spinlocks and other stuff, this
->> atomic_inc() could stay in my opinion.
->>
->> Regards,
->> Lukasz
-> Hi Lukasz,
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
 > 
-> We currently do not use "fast channels" - although it is possible we might someday.
-> I find the transfer_id useful per your v2 even if it doesn't cover FC.  Thanks for
-> submitting and discussing this!
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Hi Peter,
 
-Thank you for cooperation.
+Change looks sensible to me, but I'd like to leave a little longer
+for others to look at this.
 
-Regards,
-Lukasz
+Give me a poke if I seem to have lost it by the end of the first
+week in Jan.
 
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/stm32-adc.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> Regards,
-> Jim Quinlan
-> 
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 3b291d72701c..5dab23f1fdee 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1746,9 +1746,15 @@ static int stm32_adc_dma_request(struct iio_dev *indio_dev)
+>  	struct dma_slave_config config;
+>  	int ret;
+>  
+> -	adc->dma_chan = dma_request_slave_channel(&indio_dev->dev, "rx");
+> -	if (!adc->dma_chan)
+> +	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
+> +	if (IS_ERR(adc->dma_chan)) {
+> +		if (PTR_ERR(adc->dma_chan) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		/* Ignore errors to fall back to IRQ mode */
+> +		adc->dma_chan = NULL;
+>  		return 0;
+> +	}
+>  
+>  	adc->rx_buf = dma_alloc_coherent(adc->dma_chan->device->dev,
+>  					 STM32_DMA_BUFFER_SIZE,
+
