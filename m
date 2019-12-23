@@ -2,207 +2,121 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5517BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F77C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F01C206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hmsl3JEt"
+	by mail.kernel.org (Postfix) with ESMTP id 15A5D2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfLWKn1 (ORCPT
+        id S1726828AbfLWKq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:43:27 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38401 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfLWKn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:43:26 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so14900253edr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 02:43:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uk7naUju2+XbutO3mWqlPuK0fzl6xEjormjMxI+qpl8=;
-        b=hmsl3JEtm3nmnkhumYmwRTOC19hA7BaLhnTRrHH1S5/z6VywLyGNHuRCFtG1Mps340
-         JwYL7ixxMa0X7G2Jm3Hbe0G+GMf5CvjC87tfxTfU5fi9xbr9RbIWy5ssft3S/ZKDkXue
-         xL9+tlHsEP4+yN7KvLQPnTALQTZovIKws3LeFG99J2xTTe4+glksinN5Rtt4ZS3y8IBm
-         P1YkWz5BGkv+S1p2LxDFQucAxMCL+uxaM7k8+EGcaQNHh1Dg0K8MwsSmmk8+eI43KJ+G
-         7NDv/0LWEs2kmgYl3gEC6VHrnudvOypshfYxFWln18a0JCKOmUWciBKgd9d8CQeohHoW
-         THhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uk7naUju2+XbutO3mWqlPuK0fzl6xEjormjMxI+qpl8=;
-        b=nxKu8ziuROCG2EzFGlKR2HIk93SbBbEWfUTMJ/Z2knWcOLP9hn/01OLh58/rCpHZd+
-         4XQePea1MxiReQWWICbaxGzjyAuFSx3z1Mz8LeL38anuUNyXZcVNIgz0slvBC1aeR6mK
-         M2ewVg4iWGpBWQknN+wwX6i2qzXN7lRWkTMhWVhEHBYohtRKz+A/ycaV3KjvYnSaNJ+F
-         WHU/5O2otMkpKJfWM9fyqZS0iVn4H2IDg3ueK3C4NIToYPjN+0ljktTFLivdaqYmOFSd
-         /m5Nbq0nBXhdUve9mOQAW+5Ou42IDPJ4g7y5JhPMeWuHX/1JLNzZzzxktjK4V/UI8t69
-         RTjQ==
-X-Gm-Message-State: APjAAAWf5wvj64uVMJFpdGSFVxjElx/fhMZc3OhxC+pJ0yRdIOMgna6n
-        pMFy6cYC/8TAcx3yfPo9HpOUOw==
-X-Google-Smtp-Source: APXvYqyWEpmt29x0qQj5AT9WoLd0KyIuXpzp58GzNrpJ0iW9CCWNUHZbp3UHiIf4zluasnKm5DBz5Q==
-X-Received: by 2002:a05:6402:12d2:: with SMTP id k18mr31420757edx.253.1577097803403;
-        Mon, 23 Dec 2019 02:43:23 -0800 (PST)
-Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id z22sm2200251edq.79.2019.12.23.02.43.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 02:43:22 -0800 (PST)
-Subject: Re: [PATCH 3/3] venus: core: add sc7180 DT compatible and resource
- struct
-To:     dikshita@codeaurora.org
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
- <1576828760-13176-4-git-send-email-dikshita@codeaurora.org>
- <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
- <98c83352cae3a5e38a3711f81dc28df5@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <bf25039f-f9de-69f9-0e18-305f39c3eb9d@linaro.org>
-Date:   Mon, 23 Dec 2019 12:43:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 23 Dec 2019 05:46:28 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39904 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbfLWKq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 05:46:27 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 218214BBEA90FFFFFDB1;
+        Mon, 23 Dec 2019 18:46:25 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 23 Dec 2019 18:46:16 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <edumazet@google.com>, <willemb@google.com>,
+        <maximmi@mellanox.com>, <maowenan@huawei.com>, <pabeni@redhat.com>,
+        <yuehaibing@huawei.com>, <nhorman@tuxdriver.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        <willemdebruijn.kernel@gmail.com>
+Subject: [PATCH net-next v2] af_packet: refactoring code for prb_calc_retire_blk_tmo
+Date:   Mon, 23 Dec 2019 18:42:57 +0800
+Message-ID: <20191223104257.132354-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
+References: <CA+FuTScgWi905_NhGNsRzpwaQ+OPwahj6NtKgPjLZRjuqJvhXQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <98c83352cae3a5e38a3711f81dc28df5@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dikshita,
+If __ethtool_get_link_ksettings() is failed and with
+non-zero value, prb_calc_retire_blk_tmo() should return
+DEFAULT_PRB_RETIRE_TOV firstly. 
 
-On 12/23/19 12:04 PM, dikshita@codeaurora.org wrote:
-> Hi Stan,
-> 
-> Thanks for the review!
-> 
-> On 2019-12-20 15:03, Stanimir Varbanov wrote:
->> Hi Dikshita,
->>
->> Thanks for the patch!
->>
->> On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
->>> This add DT compatible string and resource structure for sc7180.
->>>
->>> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c | 58
->>> +++++++++++++++++++++++++++++++-
->>>  1 file changed, 57 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/media/platform/qcom/venus/core.c
->>> b/drivers/media/platform/qcom/venus/core.c
->>> index c7525d9..e8c8b28 100644
->>> --- a/drivers/media/platform/qcom/venus/core.c
->>> +++ b/drivers/media/platform/qcom/venus/core.c
->>> @@ -469,7 +469,7 @@ static __maybe_unused int
->>> venus_runtime_resume(struct device *dev)
->>>      { 2073600, 3929000, 0, 5551000, 0 },    /* 4096x2160@60 */
->>>      { 1036800, 1987000, 0, 2797000, 0 },    /* 4096x2160@30 */
->>>      {  489600, 1040000, 0, 1298000, 0 },    /* 1920x1080@60 */
->>> -    {  244800,  530000, 0,  659000, 0 },    /* 1920x1080@30 */
->>> +    {  244800,  442000, 0,  659000, 0 },    /* 1920x1080@30 */
->>
->> unrelated change, please drop it
-> Sure, I will address this in next version.
->>
->>>  };
->>>
->>>  static const struct venus_resources sdm845_res = {
->>> @@ -521,11 +521,67 @@ static __maybe_unused int
->>> venus_runtime_resume(struct device *dev)
->>>      .fwname = "qcom/venus-5.2/venus.mdt",
->>>  };
->>>
->>> +static const struct freq_tbl sc7180_freq_table[] = {
->>> +    {  0, 380000000 },
->>> +    {  0, 340000000 },
->>> +    {  0, 270000000 },
->>> +    {  0, 150000000 },
->>
->> why .load is zero?
-> .load is not being used any longer to calculate load and is a dummy value.
-> So keeping it 0.
+This patch is to refactory code and make it more readable.
 
-Hmm, ok I forgot about that fact. I suppose it is fine then.
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ v2: delete 'Fixes' tag, do not initialize some variable, 
+ and delete two variable as Willem de Bruijn proposal.
+ net/packet/af_packet.c | 30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-I found some other issue. Looking into [1], for sc7180 we have two more
-clock-controller frequencies, could you add them too in the table. And
-last, in the same patch we have 19.2MHz do you think such frequency
-makes any sense?
-
-[1] https://lkml.org/lkml/2019/11/15/361
-> 
->>
->>> +};
->>> +
->>> +static struct codec_freq_data sc7180_codec_freq_data[] =  {
->>> +    { V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> +    { V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> +    { V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
->>> +    { V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>> +    { V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>> +    { V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>> +    { V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>> +    { V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
->>> +};
->>
->> the table is exactly the same as sdm845 one, please reuse it.
-> Sure, I will address this in next version.
->>
->>> +
->>> +static const struct bw_tbl sc7180_bw_table_enc[] = {
->>> +    {  972000,  750000, 0, 0, 0 },    /* 3840x2160@30 */
->>> +    {  489600,  451000, 0, 0, 0 },    /* 1920x1080@60 */
->>> +    {  244800,  234000, 0, 0, 0 },    /* 1920x1080@30 */
->>> +};
->>> +
->>> +static const struct bw_tbl sc7180_bw_table_dec[] = {
->>> +    { 1036800, 1386000, 0, 1875000, 0 },    /* 4096x2160@30 */
->>> +    {  489600,  865000, 0, 1146000, 0 },    /* 1920x1080@60 */
->>> +    {  244800,  530000, 0,  583000, 0 },    /* 1920x1080@30 */
->>> +};
->>> +
->>> +static const struct venus_resources sc7180_res = {
->>> +    .freq_tbl = sc7180_freq_table,
->>> +    .freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
->>> +    .bw_tbl_enc = sc7180_bw_table_enc,
->>> +    .bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
->>> +    .bw_tbl_dec = sc7180_bw_table_dec,
->>> +    .bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
->>> +    .codec_freq_data = sc7180_codec_freq_data,
->>> +    .codec_freq_data_size = ARRAY_SIZE(sc7180_codec_freq_data),
->>> +    .clks = {"core", "iface", "bus" },
->>> +    .clks_num = 3,
->>> +    .vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
->>> +    .vcodec_clks_num = 2,
->>> +    .vcodec_pmdomains = { "venus", "vcodec0" },
->>> +    .vcodec_pmdomains_num = 2,
->>> +    .vcodec_num = 1,
->>> +    .max_load = 3110400,    /* 4096x2160@90 */
->>
->> Looking into above bandwidth tables I can guess that the maximimum load
->> is reached at 4096x2160@30? If so you have to change it here.
-> 
-> After checking further on this I see that max_load can be removed since
-> it is not being used now to determine if H/W is overloaded or not.
-> What do you suggest?
-
-Lets have it just for informational reasons.
-
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 118cd66b7516..3bec515ccde3 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -520,7 +520,7 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
+ 				int blk_size_in_bytes)
+ {
+ 	struct net_device *dev;
+-	unsigned int mbits = 0, msec = 0, div = 0, tmo = 0;
++	unsigned int mbits, div;
+ 	struct ethtool_link_ksettings ecmd;
+ 	int err;
+ 
+@@ -532,31 +532,25 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
+ 	}
+ 	err = __ethtool_get_link_ksettings(dev, &ecmd);
+ 	rtnl_unlock();
+-	if (!err) {
+-		/*
+-		 * If the link speed is so slow you don't really
+-		 * need to worry about perf anyways
+-		 */
+-		if (ecmd.base.speed < SPEED_1000 ||
+-		    ecmd.base.speed == SPEED_UNKNOWN) {
+-			return DEFAULT_PRB_RETIRE_TOV;
+-		} else {
+-			msec = 1;
+-			div = ecmd.base.speed / 1000;
+-		}
+-	} else
++	if (err)
+ 		return DEFAULT_PRB_RETIRE_TOV;
+ 
++	/* If the link speed is so slow you don't really
++	 * need to worry about perf anyways
++	 */
++	if (ecmd.base.speed < SPEED_1000 ||
++	    ecmd.base.speed == SPEED_UNKNOWN)
++		return DEFAULT_PRB_RETIRE_TOV;
++
++	div = ecmd.base.speed / 1000;
+ 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+ 
+ 	if (div)
+ 		mbits /= div;
+ 
+-	tmo = mbits * msec;
+-
+ 	if (div)
+-		return tmo+1;
+-	return tmo;
++		return mbits + 1;
++	return mbits;
+ }
+ 
+ static void prb_init_ft_ops(struct tpacket_kbdq_core *p1,
 -- 
-regards,
-Stan
+2.20.1
+
