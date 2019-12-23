@@ -2,243 +2,308 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05E9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CB6C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE6920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9301E20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577104127;
+	bh=fLR8nvn1z2WhRt/moIrvx0gU3O9dnS60oAA269hDS4k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dm2MVaXFwx+Y22my3FlrULjiqlrOhK3YEaV3Vfv5o3PPaOiBGHzV04LHwclKldEFQ
+	 Vw33Bu0FCATtko3Cw/qDN7GsX9W2qukLpOLYz6UlhcPo6vWYII9GvaT1uBjxP7Vf9J
+	 oeQpKiH2ONi9v5iPQOVUSNILtHMpEFa0cqfzoagc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfLWM2m (ORCPT
+        id S1726867AbfLWM2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:28:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37620 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLWM2l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:28:41 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ijMou-0002FA-Ui; Mon, 23 Dec 2019 13:28:21 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 76C311C0105;
-        Mon, 23 Dec 2019 13:28:20 +0100 (CET)
-Date:   Mon, 23 Dec 2019 12:28:20 -0000
-From:   "tip-bot2 for Omar Sandoval" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/kdump] x86/crash: Define arch_crash_save_vmcoreinfo() if
- CONFIG_CRASH_CORE=y
-Cc:     Omar Sandoval <osandov@fb.com>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kairui Song <kasong@redhat.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com>
-References: <0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com>
+        Mon, 23 Dec 2019 07:28:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726257AbfLWM2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 07:28:45 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D448B206D3;
+        Mon, 23 Dec 2019 12:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577104123;
+        bh=fLR8nvn1z2WhRt/moIrvx0gU3O9dnS60oAA269hDS4k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jckcFd8SNjhH/ndzUNmWNe5AvRF6ZB+yYPmnBKooeDt8OssgoOfq+uDaP59UUrh4X
+         GK4HTRr0VZCEB4KWhZ43IxL8isqllRzfBoXUR+qDIlBJh+jYsEcQDMPwfSGAKgkn/N
+         uLfEKFgAhB4B4r00GWfLVuJtX0XUNNjotptICMjs=
+Date:   Mon, 23 Dec 2019 12:28:38 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     <Eugen.Hristev@microchip.com>
+Cc:     <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>
+Subject: Re: [PATCH 08/10] iio: adc: at91-sama5d2_adc: implement RTC
+ triggering
+Message-ID: <20191223122838.4732120a@archlinux>
+In-Reply-To: <1576686157-11939-9-git-send-email-eugen.hristev@microchip.com>
+References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
+        <1576686157-11939-9-git-send-email-eugen.hristev@microchip.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Message-ID: <157710410032.30329.7180720417870538436.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/kdump branch of tip:
+On Wed, 18 Dec 2019 16:24:02 +0000
+<Eugen.Hristev@microchip.com> wrote:
 
-Commit-ID:     8757dc970f550dc399f899be0e7a2c00b7e82e8f
-Gitweb:        https://git.kernel.org/tip/8757dc970f550dc399f899be0e7a2c00b7e82e8f
-Author:        Omar Sandoval <osandov@fb.com>
-AuthorDate:    Fri, 20 Dec 2019 08:22:49 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 23 Dec 2019 12:58:41 +01:00
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Implement the property atmel,rtc-trigger which provides a phandle
+> to a RTC trigger.
+> To make it work, one has to check at buffer_postenable if the trigger
+> the device is using is the one we provide using the phandle link.
+> The trigger mode must be selected accordingly in the trigger mode selection
+> register.
+> The RTC trigger will use our IRQ. Dedicated hardware line inside the SoC
+> will actually trigger the ADC to make the conversion, and EOC irqs are fired
+> when conversion is done.
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Minor points inline.
 
-x86/crash: Define arch_crash_save_vmcoreinfo() if CONFIG_CRASH_CORE=y
+Thanks,
 
-On x86 kernels configured with CONFIG_PROC_KCORE=y and
-CONFIG_KEXEC_CORE=n, the vmcoreinfo note in /proc/kcore is incomplete.
+Jonathan
 
-Specifically, it is missing arch-specific information like the KASLR
-offset and whether 5-level page tables are enabled. This breaks
-applications like drgn [1] and crash [2], which need this information
-for live debugging via /proc/kcore.
+> ---
+>  drivers/iio/adc/at91-sama5d2_adc.c | 109 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 104 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+> index ccffa48..ac97f4a 100644
+> --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> @@ -58,6 +58,8 @@
+>  #define	AT91_SAMA5D2_MR_TRGSEL_TRIG6	6
+>  /* RTCOUT0 */
+>  #define	AT91_SAMA5D2_MR_TRGSEL_TRIG7	7
+> +/* TRGSEL mask */
+> +#define AT91_SAMA5D2_MR_TRGSEL_MASK	GENMASK(3, 1)
+>  /* Sleep Mode */
+>  #define	AT91_SAMA5D2_MR_SLEEP		BIT(5)
+>  /* Fast Wake Up */
+> @@ -195,6 +197,8 @@
+>  #define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_FALL 2
+>  /* Trigger Mode external trigger any edge */
+>  #define AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_ANY 3
+> +/* Trigger Mode RTC - must be any of the above 3 values */
+> +#define AT91_SAMA5D2_TRGR_TRGMOD_RTC AT91_SAMA5D2_TRGR_TRGMOD_EXT_TRIG_RISE
+>  /* Trigger Mode internal periodic */
+>  #define AT91_SAMA5D2_TRGR_TRGMOD_PERIODIC 5
+>  /* Trigger Mode - trigger period mask */
+> @@ -407,6 +411,8 @@ struct at91_adc_state {
+>  	struct mutex			lock;
+>  	struct work_struct		workq;
+>  	s64				timestamp;
+> +	struct device			*rtc_trig_dev;
+> +	bool				rtc_triggered;
+>  };
+>  
+>  static const struct at91_adc_trigger at91_adc_trigger_list[] = {
+> @@ -737,6 +743,42 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
+>  	/* set/unset hw trigger */
+>  	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
+>  
+> +	status = at91_adc_readl(st, AT91_SAMA5D2_MR);
+> +
+> +	status &= ~AT91_SAMA5D2_MR_TRGSEL_MASK;
+> +
+> +	/* set/unset TRGSEL to ADTRG */
+> +	if (state)
+> +		status |= AT91_SAMA5D2_MR_TRGSEL(AT91_SAMA5D2_MR_TRGSEL_TRIG0);
+> +
+> +	at91_adc_writel(st, AT91_SAMA5D2_MR, status);
+> +
+> +	return 0;
+> +}
+> +
+> +static int at91_adc_rtc_configure_trigger(struct at91_adc_state *st, bool state)
+> +{
+> +	u32 status = at91_adc_readl(st, AT91_SAMA5D2_TRGR);
+> +
+> +	/* clear TRGMOD */
+> +	status &= ~AT91_SAMA5D2_TRGR_TRGMOD_MASK;
+> +
+> +	if (state)
+> +		status |= AT91_SAMA5D2_TRGR_TRGMOD_RTC;
+> +
+> +	/* set/unset hw trigger */
+> +	at91_adc_writel(st, AT91_SAMA5D2_TRGR, status);
+> +
+> +	status = at91_adc_readl(st, AT91_SAMA5D2_MR);
+> +
+> +	status &= ~AT91_SAMA5D2_MR_TRGSEL_MASK;
+> +
+> +	/* set/unset TRGSEL to RTCOUT0 */
+> +	if (state)
+> +		status |= AT91_SAMA5D2_MR_TRGSEL(AT91_SAMA5D2_MR_TRGSEL_TRIG7);
+> +
+> +	at91_adc_writel(st, AT91_SAMA5D2_MR, status);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -866,7 +908,8 @@ static int at91_adc_dma_start(struct iio_dev *indio_dev)
+>  	if (st->dma_st.dma_chan) \
+>  		use_irq = false; \
+>  	/* if the trigger is not ours, then it has its own IRQ */ \
+> -	if (iio_trigger_validate_own_device(indio->trig, indio)) \
+> +	if (iio_trigger_validate_own_device(indio->trig, indio) && \
 
-This happens because:
+This increasingly feels like it should be a function with clearly
+passed parameters rather than macro fun.
 
-1. CONFIG_PROC_KCORE selects CONFIG_CRASH_CORE.
-2. kernel/crash_core.c (compiled if CONFIG_CRASH_CORE=y) calls
-   arch_crash_save_vmcoreinfo() to get the arch-specific parts of
-   vmcoreinfo. If it is not defined, then it uses a no-op fallback.
-3. x86 defines arch_crash_save_vmcoreinfo() in
-   arch/x86/kernel/machine_kexec_*.c, which is only compiled if
-   CONFIG_KEXEC_CORE=y.
+> +		!st->rtc_triggered) \
+>  		use_irq = false; \
+>  	}
+>  
+> @@ -884,6 +927,18 @@ static int at91_adc_buffer_postenable(struct iio_dev *indio)
+>  		/* touchscreen enabling */
+>  		return at91_adc_configure_touch(st, true);
+>  	}
+> +
+> +	/*
+> +	 * If our rtc trigger link is identical to the current trigger,
+> +	 * then we are rtc-triggered.
+> +	 * Configure accordingly.
+> +	 */
+> +	if (!IS_ERR_OR_NULL(st->rtc_trig_dev) &&
+> +	    st->rtc_trig_dev == indio->trig->dev.parent) {
+> +		at91_adc_rtc_configure_trigger(st, true);
+> +		st->rtc_triggered = true;
+> +	}
+> +
+>  	/* if we are not in triggered mode, we cannot enable the buffer. */
+>  	if (!(indio->currentmode & INDIO_ALL_TRIGGERED_MODES))
+>  		return -EINVAL;
+> @@ -947,6 +1002,17 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio)
+>  	if (!(indio->currentmode & INDIO_ALL_TRIGGERED_MODES))
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * If our rtc trigger link is identical to the current trigger,
+> +	 * then we are rtc-triggered.
+> +	 * Unconfigure accordingly.
+> +	 */
+> +	if (!IS_ERR_OR_NULL(st->rtc_trig_dev) &&
+> +	    st->rtc_trig_dev == indio->trig->dev.parent) {
+> +		at91_adc_rtc_configure_trigger(st, false);
+> +		st->rtc_triggered = false;
+> +	}
+> +
+>  	AT91_ADC_BUFFER_CHECK_USE_IRQ(use_irq);
+>  	/*
+>  	 * For each enable channel we must disable it in hardware.
+> @@ -1153,8 +1219,15 @@ static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
+>  	else
+>  		ret = at91_adc_trigger_handler_nodma(indio_dev, pf);
+>  
+> -	if (!ret)
+> +	if (!ret) {
+>  		iio_trigger_notify_done(indio_dev->trig);
+> +		/*
+> +		 * RTC trigger does not know how to reenable our IRQ.
+> +		 * So, we must do it.
+> +		 */
+> +		if (st->rtc_triggered)
+> +			enable_irq(st->irq);
 
-Therefore, an x86 kernel with CONFIG_CRASH_CORE=y and
-CONFIG_KEXEC_CORE=n uses the no-op fallback and gets incomplete
-vmcoreinfo data. This isn't relevant to kdump, which requires
-CONFIG_KEXEC_CORE. It only affects applications which read vmcoreinfo at
-runtime, like the ones mentioned above.
+Hmm. This is a bit nasty but I guess we can't avoid it.
 
-Fix it by moving arch_crash_save_vmcoreinfo() into two new
-arch/x86/kernel/crash_core_*.c files, which are gated behind
-CONFIG_CRASH_CORE.
+> +	}
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -1166,10 +1239,13 @@ irqreturn_t at91_adc_pollfunc(int irq, void *p)
+>  	struct at91_adc_state *st = iio_priv(indio_dev);
+>  
+>  	/*
+> -	 * If it's not our trigger, start a conversion now, as we are
+> -	 * actually polling the trigger now.
+> +	 * We need to start a software trigger if we are not using a trigger
+> +	 * that uses our own IRQ.
+> +	 * External trigger and RTC trigger do not not need software start
 
-1: https://github.com/osandov/drgn/blob/73dd7def1217e24cc83d8ca95c995decbd9ba24c/libdrgn/program.c#L385
-2: https://github.com/crash-utility/crash/commit/60a42d709280cdf38ab06327a5b4fa9d9208ef86
+External trigger is a bit of a generic name - sounds like one coming from
+'somewhere else'.  Perhaps "External trigger in the ADC .." or similar?
 
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kairui Song <kasong@redhat.com>
-Cc: Lianbo Jiang <lijiang@redhat.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/0589961254102cca23e3618b96541b89f2b249e2.1576858905.git.osandov@fb.com
----
- arch/x86/kernel/Makefile           |  1 +
- arch/x86/kernel/crash_core_32.c    | 17 +++++++++++++++++
- arch/x86/kernel/crash_core_64.c    | 24 ++++++++++++++++++++++++
- arch/x86/kernel/machine_kexec_32.c | 12 ------------
- arch/x86/kernel/machine_kexec_64.c | 19 -------------------
- 5 files changed, 42 insertions(+), 31 deletions(-)
- create mode 100644 arch/x86/kernel/crash_core_32.c
- create mode 100644 arch/x86/kernel/crash_core_64.c
+> +	 * However the other triggers do.
+>  	 */
+> -	if (iio_trigger_validate_own_device(indio_dev->trig, indio_dev))
+> +	if (iio_trigger_validate_own_device(indio_dev->trig, indio_dev) &&
+> +	    !st->rtc_triggered)
+>  		at91_adc_writel(st, AT91_SAMA5D2_CR, AT91_SAMA5D2_CR_START);
+>  
+>  	return iio_pollfunc_store_time(irq, p);
+> @@ -1307,6 +1383,12 @@ static void at91_adc_workq_handler(struct work_struct *workq)
+>  
+>  		at91_adc_read_and_push_channels(indio_dev, st->timestamp);
+>  		iio_trigger_notify_done(indio_dev->trig);
+> +		/*
+> +		 * RTC trigger does not know how to reenable our IRQ.
+> +		 * So, we must do it.
+> +		 */
+> +		if (st->rtc_triggered)
+> +			enable_irq(st->irq);
+>  	} else {
+>  		iio_push_to_buffers(indio_dev, st->buffer);
+>  	}
+> @@ -1712,6 +1794,7 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  	struct iio_dev *indio_dev;
+>  	struct at91_adc_state *st;
+>  	struct resource	*res;
+> +	struct device_node *rtc_trig_np;
+>  	int ret, i;
+>  	u32 edge_type = IRQ_TYPE_NONE;
+>  
+> @@ -1737,6 +1820,8 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  
+>  	st->oversampling_ratio = AT91_OSR_1SAMPLES;
+>  
+> +	st->rtc_trig_dev = ERR_PTR(-EINVAL);
+> +
+>  	ret = of_property_read_u32(pdev->dev.of_node,
+>  				   "atmel,min-sample-rate-hz",
+>  				   &st->soc_info.min_sample_rate);
+> @@ -1784,6 +1869,20 @@ static int at91_adc_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	rtc_trig_np = of_parse_phandle(pdev->dev.of_node, "atmel,rtc-trigger",
+> +				       0);
+> +	if (rtc_trig_np) {
+> +		struct platform_device *rtc_trig_plat_dev;
+> +
+> +		rtc_trig_plat_dev = of_find_device_by_node(rtc_trig_np);
+> +		if (rtc_trig_plat_dev) {
+> +			st->rtc_trig_dev = &rtc_trig_plat_dev->dev;
+> +			dev_info(&pdev->dev,
+> +				 "RTC trigger link set-up with %s\n",
+> +				 dev_name(st->rtc_trig_dev));
+> +		}
+> +	}
+> +
+>  	init_waitqueue_head(&st->wq_data_available);
+>  	mutex_init(&st->lock);
+>  	INIT_WORK(&st->workq, at91_adc_workq_handler);
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 6175e37..9b294c1 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -94,6 +94,7 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace_$(BITS).o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
- obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
- obj-$(CONFIG_X86_TSC)		+= trace_clock.o
-+obj-$(CONFIG_CRASH_CORE)	+= crash_core_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
- obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
-diff --git a/arch/x86/kernel/crash_core_32.c b/arch/x86/kernel/crash_core_32.c
-new file mode 100644
-index 0000000..c0159a7
---- /dev/null
-+++ b/arch/x86/kernel/crash_core_32.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/crash_core.h>
-+
-+#include <asm/pgtable.h>
-+#include <asm/setup.h>
-+
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+#ifdef CONFIG_NUMA
-+	VMCOREINFO_SYMBOL(node_data);
-+	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
-+#endif
-+#ifdef CONFIG_X86_PAE
-+	VMCOREINFO_CONFIG(X86_PAE);
-+#endif
-+}
-diff --git a/arch/x86/kernel/crash_core_64.c b/arch/x86/kernel/crash_core_64.c
-new file mode 100644
-index 0000000..845a57e
---- /dev/null
-+++ b/arch/x86/kernel/crash_core_64.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/crash_core.h>
-+
-+#include <asm/pgtable.h>
-+#include <asm/setup.h>
-+
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+	u64 sme_mask = sme_me_mask;
-+
-+	VMCOREINFO_NUMBER(phys_base);
-+	VMCOREINFO_SYMBOL(init_top_pgt);
-+	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
-+			      pgtable_l5_enabled());
-+
-+#ifdef CONFIG_NUMA
-+	VMCOREINFO_SYMBOL(node_data);
-+	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
-+#endif
-+	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
-+	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
-+	VMCOREINFO_NUMBER(sme_mask);
-+}
-diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-index 7b45e8d..02bddfc 100644
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -250,15 +250,3 @@ void machine_kexec(struct kimage *image)
- 
- 	__ftrace_enabled_restore(save_ftrace_enabled);
- }
--
--void arch_crash_save_vmcoreinfo(void)
--{
--#ifdef CONFIG_NUMA
--	VMCOREINFO_SYMBOL(node_data);
--	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
--#endif
--#ifdef CONFIG_X86_PAE
--	VMCOREINFO_CONFIG(X86_PAE);
--#endif
--}
--
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 16e125a..ad5cdd6 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -398,25 +398,6 @@ void machine_kexec(struct kimage *image)
- 	__ftrace_enabled_restore(save_ftrace_enabled);
- }
- 
--void arch_crash_save_vmcoreinfo(void)
--{
--	u64 sme_mask = sme_me_mask;
--
--	VMCOREINFO_NUMBER(phys_base);
--	VMCOREINFO_SYMBOL(init_top_pgt);
--	vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
--			pgtable_l5_enabled());
--
--#ifdef CONFIG_NUMA
--	VMCOREINFO_SYMBOL(node_data);
--	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
--#endif
--	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
--			      kaslr_offset());
--	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
--	VMCOREINFO_NUMBER(sme_mask);
--}
--
- /* arch-dependent functionality related to kexec file-based syscall */
- 
- #ifdef CONFIG_KEXEC_FILE
