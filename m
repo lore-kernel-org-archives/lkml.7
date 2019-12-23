@@ -2,168 +2,143 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CEEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A41C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B17B2206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED38720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LDuKe9//"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBDmb6ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLWOuH (ORCPT
+        id S1726899AbfLWOxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:50:07 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:52606 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfLWOuH (ORCPT
+        Mon, 23 Dec 2019 09:53:15 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38042 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfLWOxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:50:07 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNEiIml169711;
-        Mon, 23 Dec 2019 14:48:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=g1lVZdT0RoWUN9y8SokwmqP2SGuxF5i/i86SBNZiQds=;
- b=LDuKe9//v4ay+bf3g1FibZG9un9+hdeH/0RDEu6jW++K2YiQRUsG/7YldJb5Ih0+5+gt
- TfuIxUEYRP3EgKUNvzAPqITeKBm7Aqbqug7dY/Ib3FcJvGOC4HvdXdvo3IOriyqZCPGZ
- T3xS6nW4vfXZn6otPrw7MSndxzq2HpxEI9BNXkTl3pY11NKvm2CaSDcw468g0IBHSJgM
- 6V0NWLfV9xu0emV1SakUnqFZaWcrYZEP9vtgXmKgB/ZZsSlOLGjkKs0Xk79rrZQFMQpT
- aOdUXt0r0pYLGB+nMBVaXwU+5fFQ1hKooBreXN+8WdHyzUsjn5cdjl4qv93ESJ0oOJrQ GQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2x1bbpq876-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Dec 2019 14:48:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNEiZnk116250;
-        Mon, 23 Dec 2019 14:48:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2x1wh3cvg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Dec 2019 14:48:39 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBNEmc1C003148;
-        Mon, 23 Dec 2019 14:48:38 GMT
-Received: from [192.168.14.112] (/109.64.214.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 23 Dec 2019 06:48:38 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20191220192701.23415-1-john.s.andersen@intel.com>
-Date:   Mon, 23 Dec 2019 16:48:33 +0200
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        pbonzini@redhat.com, hpa@zytor.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
-To:     John Andersen <john.s.andersen@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9479 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=817
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912230127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9479 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=883 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912230127
+        Mon, 23 Dec 2019 09:53:15 -0500
+Received: by mail-pj1-f68.google.com with SMTP id l35so7603289pje.3;
+        Mon, 23 Dec 2019 06:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
+        b=FBDmb6akcXnRiy4gGu86k3JBWheD7EF8ZJShoGDQKnd3gH9eVeNeCLS+juVOdYYUeg
+         ekcNjKvoqGR/iKqvpVI5Ba8BIJBqBQETnGcgBo/+I7yrkgJSbAZwDcLnGRRBCNA8DXJJ
+         YfuTY+j/6oYNlDceqx4BTi7rf8PQZcqeUKu0jbhhAFiF1QaqXwp72vLZ145sZ46vO6et
+         5Pnini8/3ndy41lpqZuJFA8M8drxuawVrfQ5xAfOfO5m+9YVnyDROoTsjXH8zmWzS5oI
+         PgxXThJ8xlzK9gCPE0i+YP1I4ZPgXqgd4e49VJuJhtQSus03DHvOUVFML/6gImeLZlOv
+         GgXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
+        b=eb+sKqrByP9qFsTgyJ4HtFq/KKvqgOFOMC0CwFZBCIJhVoWKrEi7XhyFaWBAdep1JT
+         tINJqx406dFO0REo72VqWoQyskzer6imKSR+P7QI8y3rfLQuhdNUyG6v3lbSbBseg3O9
+         DT+ni3NBt3gx3DwaXcHgej79azBuqzSKpmJy5FEnHHyPsbBfdG1P50FVZMhVgMsaAeTf
+         Q/6UnmGtl7GZgLguCmbkGtF0pGMW06gJgmerySZ5mBTk77Pop3cOHCWuJmpEwGgmSMOf
+         LUm7f3HOWnKEjLQcOahVqWnlRdD5UMIzyqQ8U0C82jntMdsCUS80qZ1GlcgRXiYhqNFv
+         zc7w==
+X-Gm-Message-State: APjAAAWIWQ9Elxrz+H2uUOdgTVwJs88HrAn36FxbXESvcZGJdmIJhSD1
+        K/iGW5sMrokd3NecWVGORcQ=
+X-Google-Smtp-Source: APXvYqxcDbt12KSYdO549nYw+DSqKGA6Tdn3bVL7y1mSg9juQo+yboExHfaY7Nv7BuzAG8wiOUqI7w==
+X-Received: by 2002:a17:902:8d8c:: with SMTP id v12mr9725188plo.336.1577112794685;
+        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
+Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
+        by smtp.gmail.com with ESMTPSA id 100sm20590383pjo.17.2019.12.23.06.53.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
+Date:   Mon, 23 Dec 2019 22:53:11 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] usb: phy: tegra: Use u32 for hardware register
+ variables
+Message-ID: <20191223145311.GA9183@nuc8i5>
+References: <20191220015238.9228-1-digetx@gmail.com>
+ <20191220015238.9228-9-digetx@gmail.com>
+ <20191222132227.GA7096@nuc8i5>
+ <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 23, 2019 at 12:48:09AM +0300, Dmitry Osipenko wrote:
+> 22.12.2019 16:24, Dejin Zheng пишет:
+> > On Fri, Dec 20, 2019 at 04:52:36AM +0300, Dmitry Osipenko wrote:
+> >> There is a mix of u32/ULONG usage in the driver's code. Let's switch to
+> >> u32 uniformly, for consistency.
+> >>
+> >> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
+> >>  1 file changed, 15 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+> >> index d5739b6e0b6c..551c94e3877a 100644
+> >> --- a/drivers/usb/phy/phy-tegra-usb.c
+> >> +++ b/drivers/usb/phy/phy-tegra-usb.c
+> >> @@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
+> >>  static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+> >>  {
+> >>  	void __iomem *base = phy->regs;
+> >> -	unsigned long val;
+> >> +	u32 val;
+> >>  
+> >>  	if (phy->soc_config->has_hostpc) {
+> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> >> @@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+> >>  static void set_phcd(struct tegra_usb_phy *phy, bool enable)
+> >>  {
+> >>  	void __iomem *base = phy->regs;
+> >> -	unsigned long val;
+> >> +	u32 val;
+> >>  
+> >>  	if (phy->soc_config->has_hostpc) {
+> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> >> @@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+> >>  {
+> >>  	struct tegra_utmip_config *config = phy->config;
+> >>  	void __iomem *base = phy->pad_regs;
+> >> -	unsigned long val, flags;
+> >> +	unsigned long flags;
+> >> +	u32 val;
+> > Why are you still using unsigned long here?
+> 
+> Please take a look at [1][2], the types are matching callees.
+> 
+> [1]
+> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/linux/spinlock.h#L249
+> 
+> [2]
+> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/asm-generic/io.h#L297
 
+Okay, thanks for your explanation.
 
-> On 20 Dec 2019, at 21:26, John Andersen <john.s.andersen@intel.com> =
-wrote:
->=20
-> Pinning is not active when running in SMM. Entering SMM disables =
-pinned
-> bits, writes to control registers within SMM would therefore trigger
-> general protection faults if pinning was enforced.
-
-For compatibility reasons, it=E2=80=99s reasonable that pinning won=E2=80=99=
-t be active when running in SMM.
-However, I do think we should not allow vSMM code to change pinned =
-values when returning back from SMM.
-This would prevent a vulnerable vSMI handler from modifying vSMM =
-state-area to modify CR4 when running outside of vSMM.
-I believe in this case it=E2=80=99s legit to just forcibly restore =
-original CR0/CR4 pinned values. Ignoring vSMM changes.
-
->=20
-> The guest may never read pinned bits. If an attacker were to read the
-> CR pinned MSRs, they might decide to preform another attack which =
-would
-> not cause a general protection fault.
-
-I disagree with this statement.
-An attacker knows what is the system it is attacking and can deduce by =
-that which bits it pinned=E2=80=A6
-Therefore, protecting from guest reading these is not important at all.
-
->=20
-> Should userspace expose the CR pining CPUID feature bit, it must zero =
-CR
-> pinned MSRs on reboot. If it does not, it runs the risk of having the
-> guest enable pinning and subsequently cause general protection faults =
-on
-> next boot due to early boot code setting control registers to values
-> which do not contain the pinned bits.
-
-Why reset CR pinned MSRs by userspace instead of KVM INIT handling?
-
->=20
-> When running with KVM guest support and paravirtualized CR pinning
-> enabled, paravirtualized and existing pinning are setup at the same
-> point on the boot CPU. Non-boot CPUs setup pinning upon =
-identification.
->=20
-> Guests using the kexec system call currently do not support
-> paravirtualized control register pinning. This is due to early boot
-> code writing known good values to control registers, these values do
-> not contain the protected bits. This is due to CPU feature
-> identification being done at a later time, when the kernel properly
-> checks if it can enable protections.
->=20
-> Most distributions enable kexec. However, kexec could be made boot =
-time
-> disableable. In this case if a user has disabled kexec at boot time
-> the guest will request that paravirtualized control register pinning
-> be enabled. This would expand the userbase to users of major
-> distributions.
->=20
-> Paravirtualized CR pinning will likely be incompatible with kexec for
-> the foreseeable future. Early boot code could possibly be changed to
-> not clear protected bits. However, a kernel that requests CR bits be
-> pinned can't know if the kernel it's kexecing has been updated to not
-> clear protected bits. This would result in the kernel being kexec'd
-> almost immediately receiving a general protection fault.
-
-Instead of disabling kexec entirely, I think it makes more sense to =
-invent
-some generic mechanism in which new kernel can describe to old kernel
-a set of flags that specifies which features hand-over it supports. One =
-of them
-being pinned CRs.
-
-For example, isn=E2=80=99t this also relevant for IOMMU DMA protection?
-i.e. Doesn=E2=80=99t old kernel need to know if it should disable or =
-enable IOMMU DMAR
-before kexec to new kernel? Similar to EDK2 IOMMU DMA protection =
-hand-over?
-
--Liran
-
+Dejin
