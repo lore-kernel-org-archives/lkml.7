@@ -2,84 +2,115 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A87C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0968420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Uw7IDaRh"
+	by mail.kernel.org (Postfix) with ESMTP id D72CA20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfLWOiH (ORCPT
+        id S1726903AbfLWOjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:38:07 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36884 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLWOiG (ORCPT
+        Mon, 23 Dec 2019 09:39:49 -0500
+Received: from www62.your-server.de ([213.133.104.62]:41776 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfLWOjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:38:06 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so6550167ljg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 06:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ny04lhAVNIULrfBpZhO5VcAHqzBDDJ5pBM6lI84KV5I=;
-        b=Uw7IDaRh+nOcy8K9buBuxba9lOBogk/ws5fb3LJBttaDslNFXVLKQKRaY31iAiZu0h
-         cErijldB8ypl+n3xrCR31wOmFYFl5MlxZucRoLaqhjXtbWsEYVRoMwFeK7WVQ2dzcs8a
-         20ixjkfh6Wpf+PyCbVJVSyOMs40rMxDFW6GTLaeZ+f5i/dHMZF7vGmhc5aprOtSWtz0Q
-         G15eyMIj20zxMirmEFCwmIhmNOtw1O9SdULHdW4h1DNwYbyQzIh0ncDvvPDv0jKVV2v8
-         PbCCtO7BXM+cjETAlKEcT4xkWfOPrW9CXFdnIC4U80Apv6A36F3dVPWkMhiOQg0r26HS
-         C2/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ny04lhAVNIULrfBpZhO5VcAHqzBDDJ5pBM6lI84KV5I=;
-        b=V2ymxaSWA4MX3P5X+B96e/nVsQeM1xu+rsTmRC7+ZHvWdn34ZNDzuKpujygoB33Llv
-         aoRrM2JK+nGp1HciX8pdrwRhp9noexZ6AG4hFCeRTp+GANnnhw7GFFU2LSMgd9bDnoHN
-         imBMjiDkP5BWdDKXBncCfSLwi3J1WjvC36eH/UHtaqOKqXwS45mDcFLTOtUT+enjt7Q/
-         ouvMP4QPs19ivwOqB/sBqv85UFAGSmhki1uJUsBIktMG3VULaa4O592DLqq3W6knpLxw
-         K5Ewv4EA083BKq+mOHvT6fKsYvpuGLGjI43CliJxzAiFFcLj1PIqK/KnV3ioUC9lgqgf
-         ICUQ==
-X-Gm-Message-State: APjAAAW3qSHfbyx8DsId348Z89OnZ4cKQ9PofOUu+aje5b8j8u3OfWjo
-        KjOnfWbbGFEmxVnpN8+SpT/lGtOX4QBzyvldgGaw
-X-Google-Smtp-Source: APXvYqyFlRwV4FD8ips+n7kQ7dPz3Uevw54PJr2E4X4dV9/id4+HDR5MJFciz6tXbFmHHaqu33YEYNWX9fliLPqk15k=
-X-Received: by 2002:a2e:8188:: with SMTP id e8mr11474700ljg.57.1577111884984;
- Mon, 23 Dec 2019 06:38:04 -0800 (PST)
+        Mon, 23 Dec 2019 09:39:48 -0500
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ijOs2-0006DU-Ro; Mon, 23 Dec 2019 15:39:42 +0100
+Received: from [185.105.41.126] (helo=linux-9.fritz.box)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1ijOs2-000Dco-CN; Mon, 23 Dec 2019 15:39:42 +0100
+Subject: Re: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf <bpf@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
+ <20191223061326.843366-1-namhyung@kernel.org>
+ <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2d6767c6-ff4c-8f88-f186-23cddbb4969a@iogearbox.net>
+Date:   Mon, 23 Dec 2019 15:39:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191223091512.GL2760@shao2-debian>
-In-Reply-To: <20191223091512.GL2760@shao2-debian>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 23 Dec 2019 09:37:53 -0500
-Message-ID: <CAHC9VhQfCmWbd7Yt0Jcz-QpSqXidri5PNgb_514+sfah5w3K6g@mail.gmail.com>
-Subject: Re: [selinux] 66f8e2f03c: RIP:sidtab_hash_stats
-To:     Jeff Vander Stoep <jeffv@google.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Jovana Knezevic <jovanak@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, selinux@vger.kernel.org,
-        lkp@lists.01.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25672/Mon Dec 23 10:53:10 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 4:15 AM kernel test robot <lkp@intel.com> wrote:
-> FYI, we noticed the following commit (built with gcc-7):
->
-> commit: 66f8e2f03c02e812002f8e9e465681cc62edda5b ("selinux: sidtab reverse lookup hash table")
-> https://git.kernel.org/cgit/linux/kernel/git/pcmoore/selinux.git next
->
-> ...
+On 12/23/19 7:29 AM, Andrii Nakryiko wrote:
+> On Sun, Dec 22, 2019 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> I got the following error when I tried to build perf on a read-only
+>> filesystem with O=dir option.
+>>
+>>    $ cd /some/where/ro/linux/tools/perf
+>>    $ make O=$HOME/build/perf
+>>    ...
+>>      CC       /home/namhyung/build/perf/lib.o
+>>    /bin/sh: bpf_helper_defs.h: Read-only file system
+>>    make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
+>>    make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
+>>    make[2]: *** Waiting for unfinished jobs....
+>>      LD       /home/namhyung/build/perf/libperf-in.o
+>>      AR       /home/namhyung/build/perf/libperf.a
+>>      PERF_VERSION = 5.4.0
+>>    make[1]: *** [Makefile.perf:225: sub-make] Error 2
+>>    make: *** [Makefile:70: all] Error 2
+>>
+>> It was becaused bpf_helper_defs.h was generated in current directory.
+>> Move it to OUTPUT directory.
+>>
+>> Tested-by: Andrii Nakryiko <andriin@fb.com>
+>> Acked-by: Andrii Nakryiko <andriin@fb.com>
+>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>>   tools/lib/bpf/Makefile                 | 15 ++++++++-------
+>>   tools/testing/selftests/bpf/.gitignore |  1 +
+>>   tools/testing/selftests/bpf/Makefile   |  6 +++---
+>>   3 files changed, 12 insertions(+), 10 deletions(-)
+>>
+> 
+> [...]
+> 
+>> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+>> index 419652458da4..1ff0a9f49c01 100644
+>> --- a/tools/testing/selftests/bpf/.gitignore
+>> +++ b/tools/testing/selftests/bpf/.gitignore
+>> @@ -40,3 +40,4 @@ xdping
+>>   test_cpp
+>>   /no_alu32
+>>   /bpf_gcc
+>> +bpf_helper_defs.h
+> 
+> looks good, thanks!
 
-Jeff, please look into this.  I suspect we may need to check
-state->initialized in security_sidtab_hash_stats(...) (or similar).
-
--- 
-paul moore
-www.paul-moore.com
+Applied, thanks!
