@@ -1,77 +1,182 @@
 Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764DCC2D0D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B24C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A499206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577067025;
-	bh=IP8jrLcMX+FKOOup0LQ7X+9yrMN/Bg1Te1ZjcEOE5SA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=avT1ShGPfqfQwPdEyNfNonZAIjDyII3hcrOoRu4eGizIBpFORyzaEPTDCT7GdJT7d
-	 LWcF4gUShw4kLpnDo/9xg/5Rcl99+vC5+lgQ1sfAhktwYmsLCxYO5ZthoI+K6Nc83/
-	 gOQ9jJH9rdRBrG9SolldnleatRGRGRRexTTeywSU=
+	by mail.kernel.org (Postfix) with ESMTP id B2901205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 02:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfLWCKY (ORCPT
+        id S1726663AbfLWCUz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 21:10:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 21:20:55 -0500
+Received: from mg.richtek.com ([220.130.44.152]:35942 "EHLO mg.richtek.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfLWCKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 21:10:24 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 703E8206B7;
-        Mon, 23 Dec 2019 02:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577067023;
-        bh=IP8jrLcMX+FKOOup0LQ7X+9yrMN/Bg1Te1ZjcEOE5SA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yYVxAX3TAylTNpTa/K6tJTOmBFPWzkqHdSuzfj81IJvlXnKaY53ug72iFEyp6w/EH
-         Jvp1HF5udbqXXoOHd+C6/SkMrEoNA409Ts2J6MrsjJ+c7ggAiT1gFlD8/biPtxY+BH
-         Y12bRsVm6C63qv3UWFDL+4Oj/H2wwsvixH++fG2o=
-Date:   Mon, 23 Dec 2019 10:10:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: dts: lx2160a: add EMDIO1 and phy nodes
-Message-ID: <20191223021003.GD11523@dragon>
-References: <20191204165828.29893-1-ioana.ciornei@nxp.com>
+        id S1726564AbfLWCUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 22 Dec 2019 21:20:55 -0500
+X-Greylist: delayed 576 seconds by postgrey-1.27 at vger.kernel.org; Sun, 22 Dec 2019 21:20:54 EST
+X-MailGates: (compute_score:DELIVER,40,3)
+Received: from 192.168.8.21
+        by mg.richtek.com with MailGates ESMTP Server V3.0(24505:0:AUTH_RELAY)
+        (envelope-from <prvs=1259CAF996=jeff_chang@richtek.com>); Mon, 23 Dec 2019 10:13:51 +0800 (CST)
+X-MailGates: (compute_score:DELIVER,40,3)
+Received: from 192.168.8.44
+        by mg.richtek.com with MailGates ESMTP Server V5.0(11235:0:AUTH_RELAY)
+        (envelope-from <jeff_chang@richtek.com>); Mon, 23 Dec 2019 10:10:13 +0800 (CST)
+Received: from ex1.rt.l (192.168.8.44) by ex1.rt.l (192.168.8.44) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Dec 2019 10:10:12 +0800
+Received: from ex1.rt.l ([fe80::557d:30f0:a3f8:3efc]) by ex1.rt.l
+ ([fe80::557d:30f0:a3f8:3efc%15]) with mapi id 15.00.1497.000; Mon, 23 Dec
+ 2019 10:10:12 +0800
+From:   =?iso-2022-jp?B?amVmZl9jaGFuZygbJEJEJUAkMkIbKEIp?= 
+        <jeff_chang@richtek.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Jeff Chang <richtek.jeff.chang@gmail.com>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+Thread-Topic: [PATCH] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+Thread-Index: AQHVtx5xY4OlmY1OS02nOllbj/O4KqfCaPoAgAST0kA=
+Date:   Mon, 23 Dec 2019 02:10:12 +0000
+Message-ID: <7a9bcf5d414c4a74ae8e101c54c9e46f@ex1.rt.l>
+References: <1576836934-5370-1-git-send-email-richtek.jeff.chang@gmail.com>
+ <20191220121152.GC4790@sirena.org.uk>
+In-Reply-To: <20191220121152.GC4790@sirena.org.uk>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.95.168]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191204165828.29893-1-ioana.ciornei@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ioana,
+Dear Mark:
 
-On Wed, Dec 04, 2019 at 06:58:26PM +0200, Ioana Ciornei wrote:
-> This patch set adds the External MDIO1 node and the two
-> RGMII PHYs connected to it.
-> 
-> Changes in v2:
->  - added a newline between nodes in 2/2
->  - moved the WRIOP node (sorted by unit address) in 1/2
-> 
-> Ioana Ciornei (2):
->   arm64: dts: lx2160a: add emdio1 node
->   arm64: dts: lx2160a: add RGMII phy nodes
+Thanks for your replying.
 
-I was just reminded by people who want to search the patch on
-linux-arm-kernel@lists.infradead.org, that you should copy that list as
-well.  Generally you should use scripts/get_maintainer.pl to find
-recipients when sending patches.
+I have a question about this
 
-Shawn
+> +++ b/sound/soc/codecs/mt6660.c
+> @@ -0,0 +1,653 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+
+Please make the entire comment a C++ one so things look more intentional.
+
+--> When I check other driver at sound/soc/codecs/ folder, I just follow what others do.
+It seems in .h --> /* SPDX-Liencese-Identifier: GPL-2.0 */
+   In .c --> // SPDK-Liencese-Identifier: GPL-2.0
+
+Is it correct?
+
+
+Thanks & BRs
+Jeff Chang
+Tel 886-3-5526789 Ext 2357
+14F, No. 8, Taiyuen 1st st., Zhubei City,
+Hsinchu County, Taiwan 30288
+
+
+
+-----Original Message-----
+From: Mark Brown [mailto:broonie@kernel.org]
+Sent: Friday, December 20, 2019 8:12 PM
+To: Jeff Chang <richtek.jeff.chang@gmail.com>
+Cc: lgirdwood@gmail.com; perex@perex.cz; tiwai@suse.com; matthias.bgg@gmail.com; alsa-devel@alsa-project.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; jeff_chang(張世佳) <jeff_chang@richtek.com>
+Subject: Re: [PATCH] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+
+On Fri, Dec 20, 2019 at 06:15:34PM +0800, Jeff Chang wrote:
+
+> +++ b/sound/soc/codecs/mt6660.c
+> @@ -0,0 +1,653 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
+
+Please make the entire comment a C++ one so things look more intentional.
+
+> +{ MT6660_REG_DEVID, 2},
+> +{ MT6660_REG_TDM_CFG3, 2},
+> +{ MT6660_REG_HCLIP_CTRL, 2},
+> +{ MT6660_REG_DA_GAIN, 2},
+
+Missing space before the } (the same thing happens in some of the other tables).
+
+> +static int mt6660_component_get_volsw(struct snd_kcontrol *kcontrol,
+> +  struct snd_ctl_elem_value *ucontrol) {
+> +struct snd_soc_component *component =
+> +snd_soc_kcontrol_component(kcontrol);
+> +struct mt6660_chip *chip = (struct mt6660_chip *)
+> +snd_soc_component_get_drvdata(component);
+> +int ret = -EINVAL;
+> +
+> +if (!strcmp(kcontrol->id.name, "Chip_Rev")) {
+
+Why would this be used on a different control?
+
+> +SOC_SINGLE_EXT("BoostMode", MT6660_REG_BST_CTRL, 0, 3, 0,
+> +       snd_soc_get_volsw, snd_soc_put_volsw),
+
+Boost Mode.  You've also got a lot of these controls that are _EXT but you then just use standard operations so it's not clear why you're using _EXT.
+
+> +SOC_SINGLE_EXT("audio input selection", MT6660_REG_DATAO_SEL, 6, 3, 0,
+> +       snd_soc_get_volsw, snd_soc_put_volsw),
+
+Audio Input Selection, but this looks like it should be a DAPM control if it's controlling audio routing.  A simple numerical setting definitely doesn't seem like the right thing.
+
+> +SOC_SINGLE_EXT("AUD LOOP BACK Switch", MT6660_REG_PATH_BYPASS, 4, 1, 0,
+> +       snd_soc_get_volsw, snd_soc_put_volsw),
+
+This sounds like it should be a DAPM thing too.
+
+> +static int mt6660_component_probe(struct snd_soc_component
+> +*component) {
+> +struct mt6660_chip *chip = snd_soc_component_get_drvdata(component);
+> +int ret = 0;
+> +
+> +dev_info(component->dev, "%s\n", __func__);
+
+dev_dbg() at most but probably better to remove this and the other similar dev_info()s.
+
+> +static inline int _mt6660_chip_id_check(struct mt6660_chip *chip) {
+> +u8 id[2] = {0};
+> +int ret = 0;
+> +
+> +ret = i2c_smbus_read_i2c_block_data(chip->i2c, MT6660_REG_DEVID, 2, id);
+> +if (ret < 0)
+> +return ret;
+> +ret = (id[0] << 8) + id[1];
+> +ret &= 0x0ff0;
+> +if (ret != 0x00e0 && ret != 0x01e0)
+> +return -ENODEV;
+
+It'd be better to print an error message saying we don't recognize the device to help people doing debugging.
+
+> +if (of_property_read_u32(np, "rt,init_setting_num", &val)) {
+> +dev_info(dev, "no init setting\n");
+> +chip->plat_data.init_setting_num = 0;
+
+You should be adding a DT binding document for any new DT bindings.
+************* Email Confidentiality Notice ********************
+
+The information contained in this e-mail message (including any attachments) may be confidential, proprietary, privileged, or otherwise exempt from disclosure under applicable laws. It is intended to be conveyed only to the designated recipient(s). Any use, dissemination, distribution, printing, retaining or copying of this e-mail (including its attachments) by unintended recipient(s) is strictly prohibited and may be unlawful. If you are not an intended recipient of this e-mail, or believe that you have received this e-mail in error, please notify the sender immediately (by replying to this e-mail), delete any and all copies of this e-mail (including any attachments) from your system, and do not disclose the content of this e-mail to any other person. Thank you!
