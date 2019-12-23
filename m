@@ -7,104 +7,104 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8550C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E2C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763FB20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9FB20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 00:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BeqgRthA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gPoUhs6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfLWAlU (ORCPT
+        id S1726729AbfLWAoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 22 Dec 2019 19:41:20 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:48274 "EHLO
+        Sun, 22 Dec 2019 19:44:06 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:49609 "EHLO
         mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbfLWAlT (ORCPT
+        with ESMTP id S1726166AbfLWAoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 22 Dec 2019 19:41:19 -0500
+        Sun, 22 Dec 2019 19:44:05 -0500
 Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191223004116epoutp034ec4c7c0e70a174ec12226160f6111b0~i2T0iYEeU2783227832epoutp03G
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 00:41:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191223004116epoutp034ec4c7c0e70a174ec12226160f6111b0~i2T0iYEeU2783227832epoutp03G
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191223004402epoutp03f6e0f9e41494a78599ed52b79205b7fe~i2WP6ubq52916929169epoutp03I
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 00:44:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191223004402epoutp03f6e0f9e41494a78599ed52b79205b7fe~i2WP6ubq52916929169epoutp03I
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577061676;
-        bh=hfxb9FOBtElm++yJSXU9+y6s3nokJd85p/wnbCA7/UA=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=BeqgRthAn7xyDHJ+pPZLn35WtaFt/iMDgIesKzs+8MI/e8/udTJ/tUQp33nwzI9//
-         KaHGXHh04vhttZ+8Y2jlMJf1sdVt0jhkz+VWR+1QloKtVCKxTmlo/UQiW1y6/rWZHs
-         TDLAdkbjQHl8KTOgpyW1VIAiAFBVBGmruqKDd5tQ=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        s=mail20170921; t=1577061843;
+        bh=/BYkN24xnlw6UcBJ3nGEmW3fcezz9fsfM7fQCxL25MI=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=gPoUhs6frtIcD+7d7/E/6Q1NW+PvgxOr17icvOtaYrdieku+SomQfzf7bTIdO2kWU
+         E9/IgiEhDJgMtioAokI73ogjVUaE5qhaQmsj2vqJP4kLnDecYGB/pfS0CESqQAXRnX
+         yaR+GPxLi3yuH2Va/Sb0emIo56CAtSekHMKk5OoU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
         epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20191223004115epcas1p3d0e18be02c3650b125600ae0d77531ab~i2T0LFzS61722617226epcas1p3x;
-        Mon, 23 Dec 2019 00:41:15 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47h0rw1WQ6zMqYkb; Mon, 23 Dec
-        2019 00:41:04 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C2.4A.48498.A1D000E5; Mon, 23 Dec 2019 09:40:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191223004058epcas1p21cbd51d53345b21a8737fc6e08feac24~i2Tjqqr_c2954529545epcas1p2L;
-        Mon, 23 Dec 2019 00:40:58 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191223004057epsmtrp15671f4ce27c4b03c7e6491f7c725de16~i2Tjp36AA3041230412epsmtrp1p;
-        Mon, 23 Dec 2019 00:40:57 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-de-5e000d1aad2f
+        20191223004402epcas1p343eefff764d4d9fa500a0d4773279fa3~i2WPpJhut2358123581epcas1p3V;
+        Mon, 23 Dec 2019 00:44:02 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47h0wK4N0pzMqYkY; Mon, 23 Dec
+        2019 00:44:01 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.CF.51241.1DD000E5; Mon, 23 Dec 2019 09:44:01 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191223004400epcas1p1da1c5a6c74351f319b1c9fe2e6a614e6~i2WOCx4zM2973729737epcas1p1V;
+        Mon, 23 Dec 2019 00:44:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191223004400epsmtrp262631a0367ab5f98f3e6c7f1f2fc9992~i2WOCJLzC1430114301epsmtrp2E;
+        Mon, 23 Dec 2019 00:44:00 +0000 (GMT)
+X-AuditID: b6c32a39-163ff7000001c829-12-5e000dd1ed2f
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        09.5E.06569.91D000E5; Mon, 23 Dec 2019 09:40:57 +0900 (KST)
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D3.DC.10238.0DD000E5; Mon, 23 Dec 2019 09:44:00 +0900 (KST)
 Received: from [10.113.221.102] (unknown [10.113.221.102]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191223004057epsmtip1bc50f03921a346acf8352a324b94b2f3~i2Tjek2bG2788127881epsmtip1m;
-        Mon, 23 Dec 2019 00:40:57 +0000 (GMT)
+        20191223004400epsmtip1cdf80b5c76e0692add1279731b1b55ba~i2WN2Qixb2894928949epsmtip1S;
+        Mon, 23 Dec 2019 00:44:00 +0000 (GMT)
 Subject: Re: [PATCH v2 2/2] PM / devfreq: exynos-bus: Disable devfreq-event
  device when fails
+From:   Chanwoo Choi <cw00.choi@samsung.com>
 To:     Yangtao Li <tiny.windzz@gmail.com>, myungjoo.ham@samsung.com,
         kyungmin.park@samsung.com, kgene@kernel.org, krzk@kernel.org,
         linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
 Organization: Samsung Electronics
-Message-ID: <ca7f5eb8-d549-a170-f952-90e5882b233d@samsung.com>
-Date:   Mon, 23 Dec 2019 09:47:43 +0900
+Message-ID: <52c458b0-cc85-fd2d-7c89-39f2bbd39bda@samsung.com>
+Date:   Mon, 23 Dec 2019 09:50:46 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
         Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <20191222174132.3701-2-tiny.windzz@gmail.com>
+In-Reply-To: <ca7f5eb8-d549-a170-f952-90e5882b233d@samsung.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmrq4UL0OcwfznvBb9j18zW5w/v4Hd
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNJsWRmVeSWpSXmKPExsWy7bCmnu5FXoY4gzNT5C36H79mtjh/fgO7
+        xdmmN+wWmx5fY7W4vGsOm8Xn3iOMFjPO72OyuN24gs1i7u8JbA6cHjtn3WX32LSqk81j85J6
+        j74tqxg9Pm+SC2CNyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy
+        8QnQdcvMAbpHSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNgWaBXnJhbXJqXrpec
+        n2tlaGBgZApUmJCd8ft5VcFy7ooD/auZGxgnc3YxcnBICJhIzJla0MXIxSEksINR4umtWcwQ
+        zidGiZdbT7FDON8YJd73z2TrYuQE67h89SxUYi+jxLa+/WwQzntGiYMd81hBqoQF4iWav89g
+        AbHZBLQk9r+4AVYkItDKJLF+ywSwBL+AosTVH48ZQQ7hFbCT2Pc/HyTMIqAqcfnQB3YQW1Qg
+        TOLkthZGEJtXQFDi5MwnYK2cAvYSG15OANvFLCAucevJfCYIW15i+9s5zBCXfmeTuHM7BOJP
+        F4nla1UgwsISr45vYYewpSQ+v9sL9Vi1xMqTR8DOlBDoYJTYsv8CK0TCWGL/0slMIHOYBTQl
+        1u/ShwgrSuz8PZcRYi2fxLuvPawQq3glOtqEIEqUJS4/uMsEYUtKLG7vhFrlIfHpczvbBEbF
+        WUgem4XkmVlInpmFsHgBI8sqRrHUguLc9NRiwwJT5KjexAhOqFqWOxiPnfM5xCjAwajEw5sw
+        53+sEGtiWXFl7iFGCQ5mJRHe3bV/Y4V4UxIrq1KL8uOLSnNSiw8xmgLDfSKzlGhyPjDZ55XE
+        G5oaGRsbW5gYmpkaGiqJ83L8uBgrJJCeWJKanZpakFoE08fEwSnVwGi8wfH+u1dMgicX3g+d
+        3rbzzdkMaw7h7zVVLTw1U3b89d90eVpo/7nfZ47OtL7h+KNBfbM29/HCYiaRzzzHV+/kn+tl
+        8rtoz4fTvQVWV8XPatUuq7GK2a15/x6r+W7Zkp1PcmS4j942/7juTU4pY6tD2NEdi1sqEq4+
+        cHL+2hfTKNTGco53n7oSS3FGoqEWc1FxIgDmaxv+vgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTvcCL0Ocwf2tphb9j18zW5w/v4Hd
         4mzTG3aLTY+vsVpc3jWHzeJz7xFGixnn9zFZ3G5cwWYx9/cENgdOj52z7rJ7bFrVyeaxeUm9
-        R9+WVYwenzfJBbBGZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5
-        +AToumXmAN2jpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vO
-        z7UyNDAwMgUqTMjOWH/yFWPBE86Kj439TA2Mb9m7GDk5JARMJDb/38/cxcjFISSwg1Hi4+RT
-        UM4nRom3U/awQDjfgJyGB6wwLd8v9bJDJPYySrz79Q6q5T2jxP1GkBZODmGBeInm7zPA2kUE
-        Wpkk1m+ZAJZgE9CS2P/iBhuIzS+gKHH1x2PGLkYODl4BO4mmdcYgYRYBVYn5K6cyg9iiAmES
-        J7e1MILYvAKCEidnPgEbwylgJdHUdRjsImYBcYlbT+YzQdjyEtvfzgE7SELgM5vEsicTmEDm
-        Swi4SLxaHQbxgbDEq+NboAEgJfGyvw3KrpZYefIIG0RvB6PElv0XoF42lti/dDLYHGYBTYn1
-        u/QhwooSO3/PZYTYyyfx7msPK8QqXomONiGIEmWJyw/uMkHYkhKL2zvZIGwPiU+f29kmMCrO
-        QvLZLCTfzELyzSyExQsYWVYxiqUWFOempxYbFhghx/YmRnBa1TLbwbjonM8hRgEORiUeXo5Z
-        /2OFWBPLiitzDzFKcDArifDurv0bK8SbklhZlVqUH19UmpNafIjRFBjwE5mlRJPzgSk/ryTe
-        0NTI2NjYwsTQzNTQUEmcl+PHxVghgfTEktTs1NSC1CKYPiYOTqkGxp0/3t1b+vPqI64fUn/e
-        Xf+e3ZYvyM62P2Amk1hu6f8zOlPYZ2r8uR2lcPXpyt3Lfc8vb338kknsRg238CO2Z3JBfDJt
-        ThdYfz0K3JATbRqwKmrC1zrjpXPly+fsvdTv037pzF2Wb+c/Hbdv1u3Kzdykderg11drzvNu
-        SX5zXpB9ecWDdfFdWwqVWIozEg21mIuKEwG+DUovwQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42LZdlhJTleSlyHOYOZSC4v+x6+ZLc6f38Bu
-        cbbpDbvFpsfXWC0u75rDZvG59wijxYzz+5gsbjeuYLOY+3sCmwOnx85Zd9k9Nq3qZPPYvKTe
-        o2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDLWn3zFWPCEs+JjYz9TA+Nb9i5GTg4JAROJ75d6
-        gWwuDiGB3YwSLxp3MEMkJCWmXTwKZHMA2cIShw8XQ9S8ZZT4NGsJWI2wQLxE8/cZLCAJEYFW
-        JomFN+awQlTtZZR49LefFaSKTUBLYv+LG2wgNr+AosTVH48ZQabyCthJNK0zBgmzCKhKzF85
-        FWyoqECYxM4lj5lAbF4BQYmTM5+wgNicAlYSTV2HwUYyC6hL/Jl3iRnCFpe49WQ+E4QtL7H9
-        7RzmCYxCs5C0z0LSMgtJyywkLQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRH
-        kpbWDsYTJ+IPMQpwMCrx8HLM+h8rxJpYVlyZe4hRgoNZSYR3d+3fWCHelMTKqtSi/Pii0pzU
-        4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2M7hXb5pVENRj8P66avz61WPnas9i9
-        ra5nZ0sk6Qa9DXtzzWLDao5TXKdlnbnZbG6E8ohumMo5vehhh+Mr/kjLIrlZslW5Ta80RJNa
-        uBw+Per71681e6YB4y73K1LvA2QPFMx+Me/zF7kmt9DHt4PeHWA1vuh1Z9MNL7/na2Iau3yn
-        2j7SOPBfiaU4I9FQi7moOBEA+RjZH6ACAAA=
-X-CMS-MailID: 20191223004058epcas1p21cbd51d53345b21a8737fc6e08feac24
+        R9+WVYwenzfJBbBGcdmkpOZklqUW6dslcGX8fl5VsJy74kD/auYGxsmcXYycHBICJhKXr55l
+        72Lk4hAS2M0ocb1hNgtEQlJi2sWjzF2MHEC2sMThw8UQNW8ZJdbv/8UGUiMsEC/R/H0GWD2b
+        gJbE/hc32ECKRARamSQW3pjDCtHxiVHiwcZXTCBV/AKKEld/PGYEmcorYCex738+SJhFQFXi
+        8qEP7CC2qECYxM4lj8HKeQUEJU7OfAK2gFPAXmLDywmsIDazgLrEn3mXmCFscYlbT+YzQdjy
+        EtvfzmGewCg0C0n7LCQts5C0zELSsoCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4m
+        RnAcaWnuYLy8JP4QowAHoxIPL8es/7FCrIllxZW5hxglOJiVRHh31/6NFeJNSaysSi3Kjy8q
+        zUktPsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNTqoExhn2Lu8c1w0M28pa60lEp4V/Z
+        1bL5k91MnbeHrDnid8yFZfuCd/53jU5O7J5wO/e15573c2ZEiTeceJJTbX7o8O9Lx1p6dx05
+        +uhBxqf9q/dzLL0Zoc9T3fv/65MD3kJGOpnL2dRmJ99YstSdt5Fbt73X8+WCB/3tVW9Uebkc
+        ItZN+D3D3vWAEktxRqKhFnNRcSIAvQk3R58CAAA=
+X-CMS-MailID: 20191223004400epcas1p1da1c5a6c74351f319b1c9fe2e6a614e6
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
@@ -115,51 +115,58 @@ X-CMS-RootMailID: 20191222174142epcas1p4ad50cacad72ab368b07ee0ebc680c9b3
 References: <20191222174132.3701-1-tiny.windzz@gmail.com>
         <CGME20191222174142epcas1p4ad50cacad72ab368b07ee0ebc680c9b3@epcas1p4.samsung.com>
         <20191222174132.3701-2-tiny.windzz@gmail.com>
+        <ca7f5eb8-d549-a170-f952-90e5882b233d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/23/19 2:41 AM, Yangtao Li wrote:
-> The exynos_bus_profile_init process may fail, but the devfreq event device
-> remains enabled. Call devfreq_event_disable_edev on the error return path.
+On 12/23/19 9:47 AM, Chanwoo Choi wrote:
+> On 12/23/19 2:41 AM, Yangtao Li wrote:
+>> The exynos_bus_profile_init process may fail, but the devfreq event device
+>> remains enabled. Call devfreq_event_disable_edev on the error return path.
+>>
+>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>> ---
+>> v2:
+>> -change subject
+>> -rename lable to err_edev
+>> -add return value check
+>> ---
+>>  drivers/devfreq/exynos-bus.c | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>> index 7f5917d59072..948e9340f91c 100644
+>> --- a/drivers/devfreq/exynos-bus.c
+>> +++ b/drivers/devfreq/exynos-bus.c
+>> @@ -335,10 +335,17 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
+>>  	ret = exynos_bus_set_event(bus);
+>>  	if (ret < 0) {
+>>  		dev_err(dev, "failed to set event to devfreq-event devices\n");
+>> -		return ret;
+>> +		goto err_edev;
+>>  	}
+>>  
+>>  	return 0;
+>> +
+>> +err_edev:
+>> +	ret = exynos_bus_disable_edev(bus);
+>> +	if (ret < 0)
+>> +		dev_warn(dev, "failed to disable the devfreq-event devices\n");
+>> +
+>> +	return ret;
+>>  }
+>>  
+>>  static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>>
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
-> v2:
-> -change subject
-> -rename lable to err_edev
-> -add return value check
-> ---
->  drivers/devfreq/exynos-bus.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index 7f5917d59072..948e9340f91c 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -335,10 +335,17 @@ static int exynos_bus_profile_init(struct exynos_bus *bus,
->  	ret = exynos_bus_set_event(bus);
->  	if (ret < 0) {
->  		dev_err(dev, "failed to set event to devfreq-event devices\n");
-> -		return ret;
-> +		goto err_edev;
->  	}
->  
->  	return 0;
-> +
-> +err_edev:
-> +	ret = exynos_bus_disable_edev(bus);
-> +	if (ret < 0)
-> +		dev_warn(dev, "failed to disable the devfreq-event devices\n");
-> +
-> +	return ret;
->  }
->  
->  static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+> Applied it.
 > 
 
-Applied it.
+I'm sorry. I applied the v3[1] patch instead of this.
+[1] https://patchwork.kernel.org/patch/11307721/
+
 
 -- 
 Best Regards,
