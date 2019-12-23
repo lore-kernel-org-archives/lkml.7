@@ -2,84 +2,120 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9974C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D7C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AD9206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43159206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZlDgbEMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLWR1G (ORCPT
+        id S1726871AbfLWR1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:27:06 -0500
-Received: from mga09.intel.com ([134.134.136.24]:15605 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfLWR1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:27:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 09:27:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,348,1571727600"; 
-   d="scan'208";a="223058323"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Dec 2019 09:27:05 -0800
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.30]) by
- ORSMSX109.amr.corp.intel.com ([169.254.11.176]) with mapi id 14.03.0439.000;
- Mon, 23 Dec 2019 09:27:04 -0800
-From:   "Andersen, John S" <john.s.andersen@intel.com>
-To:     "liran.alon@oracle.com" <liran.alon@oracle.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>
-CC:     "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>, "bp@alien8.de" <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-Thread-Topic: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-Thread-Index: AQHVt2uK2a8jsyPFKUGPuWHWZO4ZBqfIV12AgAAnYgCAAAVQgA==
-Date:   Mon, 23 Dec 2019 17:27:04 +0000
-Message-ID: <26f2b7e58fd45eede50f845a57761d1f01aff3f7.camel@intel.com>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
-         <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
-         <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
-In-Reply-To: <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.19.9.42]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B040A5A2AB5A1E48A05E92B1630C4E15@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 23 Dec 2019 12:27:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24040 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726754AbfLWR1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:27:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577122061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2FQpGKHqmKgP8roRbgRwKHYu0GCskB3t0E3YVUxgG0w=;
+        b=ZlDgbEMsk/Z8Zas4xcpQE7OkH2+XW4TGyCqJ5E8cmFqgPqsUvA6a2zLnCVBVqKngelaSvo
+        MTvIHSxy7eGgTGWkGNgQZ+wv22SZbSj+V2FhZHuoTR7bXLA9O3SNWE6bTTLXpuNZy943QX
+        n/9DQZm7kwJQ4v4DLaHK0u8i5bIDUDI=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-hq4f1rARP_WixaF5Awi55g-1; Mon, 23 Dec 2019 12:27:40 -0500
+X-MC-Unique: hq4f1rARP_WixaF5Awi55g-1
+Received: by mail-qt1-f199.google.com with SMTP id g21so8852325qtq.18
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:27:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2FQpGKHqmKgP8roRbgRwKHYu0GCskB3t0E3YVUxgG0w=;
+        b=cDCMk9TuhLc11dnF5rTvJaZLI9TPxvK+l5ztqn0RjtoApjsZq4GCUzXi2K9MKkf8W9
+         YBC2CPa/0vNDj3JSAGJnRYDuRq5A+R4n5kWw2HtzC0RjO/G3URtxf/M1mXnlTuYBruHR
+         7g9qbgr0PqFabyh7+R88HOQoyB3RDcdj/DRRApncu3gT84esyMqTucijgV/vxbVy/T5o
+         uFsM8GFaVqaxtDMKSv/lvGStfRG3nMcfo+RNd9YOmRMnYdKN1YwkLX+fccr0i+xCrp96
+         MdTjdYb1vk8d18In6ogw1rqfe7unKuMY82jES/oNcTqdb5sucvGKSSwg2wnZ4l7fyBg7
+         YCwg==
+X-Gm-Message-State: APjAAAXQtq3Yyx800uc5cY3UeGIrq58R203KJOHAQHwaxjpIAaUved/p
+        b4YV7hBgJ4Way54rxtrZrl3QP1OTYnQtAjr9xBYMeFUo+0uQJMsnjXMouoZYfeGNrhVQz+fx+Lk
+        BjEn2OSdMC3JpRleyEY7LvHed
+X-Received: by 2002:a37:a70c:: with SMTP id q12mr15555620qke.484.1577122059614;
+        Mon, 23 Dec 2019 09:27:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYzt7+Hss5QmOIfwnIr/JMapF2vhOFE7agaZrdLdvNu9aXaC3w6bEL5ww3BUrHUWO1SQNPIw==
+X-Received: by 2002:a37:a70c:: with SMTP id q12mr15555594qke.484.1577122059322;
+        Mon, 23 Dec 2019 09:27:39 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id l4sm422045qkb.37.2019.12.23.09.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 09:27:38 -0800 (PST)
+Date:   Mon, 23 Dec 2019 12:27:37 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RESEND v2 03/17] KVM: X86: Don't track dirty for
+ KVM_SET_[TSS_ADDR|IDENTITY_MAP_ADDR]
+Message-ID: <20191223172737.GA81196@xz-x1>
+References: <20191221014938.58831-1-peterx@redhat.com>
+ <20191221014938.58831-4-peterx@redhat.com>
+ <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cf232ce8-bc07-0192-580f-d08736980273@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEyLTIzIGF0IDE4OjA5ICswMTAwLCBQYW9sbyBCb256aW5pIHdyb3RlOg0K
-PiBPbiAyMy8xMi8xOSAxNTo0OCwgTGlyYW4gQWxvbiB3cm90ZToNCj4gPiA+IFNob3VsZCB1c2Vy
-c3BhY2UgZXhwb3NlIHRoZSBDUiBwaW5pbmcgQ1BVSUQgZmVhdHVyZSBiaXQsIGl0IG11c3QNCj4g
-PiA+IHplcm8gQ1INCj4gPiA+IHBpbm5lZCBNU1JzIG9uIHJlYm9vdC4gSWYgaXQgZG9lcyBub3Qs
-IGl0IHJ1bnMgdGhlIHJpc2sgb2YgaGF2aW5nDQo+ID4gPiB0aGUNCj4gPiA+IGd1ZXN0IGVuYWJs
-ZSBwaW5uaW5nIGFuZCBzdWJzZXF1ZW50bHkgY2F1c2UgZ2VuZXJhbCBwcm90ZWN0aW9uDQo+ID4g
-PiBmYXVsdHMgb24NCj4gPiA+IG5leHQgYm9vdCBkdWUgdG8gZWFybHkgYm9vdCBjb2RlIHNldHRp
-bmcgY29udHJvbCByZWdpc3RlcnMgdG8NCj4gPiA+IHZhbHVlcw0KPiA+ID4gd2hpY2ggZG8gbm90
-IGNvbnRhaW4gdGhlIHBpbm5lZCBiaXRzLg0KPiA+IA0KPiA+IFdoeSByZXNldCBDUiBwaW5uZWQg
-TVNScyBieSB1c2Vyc3BhY2UgaW5zdGVhZCBvZiBLVk0gSU5JVCBoYW5kbGluZz8NCj4gDQo+IE1v
-c3QgTVNScyBhcmUgbm90IHJlc2V0IGJ5IElOSVQsIGFyZSB0aGV5Pw0KPiANCg0KQXMgZmFyIGFz
-IEkgY2FuIHRlbGwsIEtWTSBkb2Vzbid0IGtub3cgaWYgdGhlIGd1ZXN0IGlzIHJlYm9vdGVkLg0K
-VXNlcnNwYWNlIHVzZXMgdGhlIHNyZWdzIGFuZCBzZXQgTVNScyBpb2N0bHMgdG8gcmVzZXQgc3Rh
-dGUuDQprdm1fdmNwdV9yZXNldCBpcyBjYWxsZWQgb24gbm9uLWJvb3QgQ1BVcy4ga3ZtX3ZjcHVf
-aW5pdCBpc24ndCBjYWxsZWQNCm9uIHJlYm9vdC4NCg==
+On Sat, Dec 21, 2019 at 02:51:52PM +0100, Paolo Bonzini wrote:
+> On 21/12/19 02:49, Peter Xu wrote:
+> > Originally, we have three code paths that can dirty a page without
+> > vcpu context for X86:
+> > 
+> >   - init_rmode_identity_map
+> >   - init_rmode_tss
+> >   - kvmgt_rw_gpa
+> > 
+> > init_rmode_identity_map and init_rmode_tss will be setup on
+> > destination VM no matter what (and the guest cannot even see them), so
+> > it does not make sense to track them at all.
+> > 
+> > To do this, a new parameter is added to kvm_[write|clear]_guest_page()
+> > to show whether we would like to track dirty bits for the operations.
+> > With that, pass in "false" to this new parameter for any guest memory
+> > write of the ioctls (KVM_SET_TSS_ADDR, KVM_SET_IDENTITY_MAP_ADDR).
+> 
+> We can also return the hva from x86_set_memory_region and
+> __x86_set_memory_region.
+
+Yes.  Though it is a bit tricky in that then we'll also need to make
+sure to take slots_lock or srcu to protect that hva (say, we must drop
+that hva reference before we release the locks, otherwise the hva
+could gone under us, iiuc).  So if we want to do that we'd better
+comment on that hva value very explicitly, just in case some future
+callers of __x86_set_memory_region could cache it somewhere.
+
+(Side topic: I feel like the srcu_read_lock() pair in
+ init_rmode_identity_map() is redundant..)
+
+-- 
+Peter Xu
+
