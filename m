@@ -2,147 +2,85 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2708CC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E64C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF33B21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Qj9FKBHM"
+	by mail.kernel.org (Postfix) with ESMTP id 7E55122522
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577111472;
+	bh=3cUpT0mny7tfDIGYn2V0LDUiAbt2ffFJwm4dcoAsQww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mEPAUpgIiHOBUJfYl/fw21h2FCtSd+vCuZmtzorp6mOyjMEKu9JdoULeg+9I8jpf9
+	 TqR+ug7B2bN+gHaen27kuKBOK5awSQ7FI+89kbEpEmbsu0VbMQr6e7KvHzEeXW9+WM
+	 vp+0TvJMX7n2kuCtAplfB76GeZ2S6ZIjUcphnfH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfLWObJ (ORCPT
+        id S1727106AbfLWObL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:31:09 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:38665 "EHLO pegase1.c-s.fr"
+        Mon, 23 Dec 2019 09:31:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbfLWObG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:31:06 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hMGW3VmLz9txhj;
-        Mon, 23 Dec 2019 15:30:59 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Qj9FKBHM; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LIL9pRTQWaO2; Mon, 23 Dec 2019 15:30:59 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hMGW2Hnkz9txhg;
-        Mon, 23 Dec 2019 15:30:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577111459; bh=o7emI0agsMOH48CbNwosCV8op5LYe8FM1Ks4MgVPYns=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=Qj9FKBHMuY0RRfNbOXsqQ8E+KL1fR3ZgxUrpNf3HarY3lPxPrTAfqokClU23/DkIj
-         U5B85uRpLkPs/m0bEq1zPcTwgymtrDiClZV+z532uMrnb7SHTgTKxeG1X83M5w47Aw
-         IJvQYAXDAzMKevrTvvGquV1w/aN9xnyKpSIRUU7Q=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BB178B7AB;
-        Mon, 23 Dec 2019 15:31:04 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id cwh0CNl0fPeX; Mon, 23 Dec 2019 15:31:04 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 441C48B7A1;
-        Mon, 23 Dec 2019 15:31:04 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 4E61A637D4; Mon, 23 Dec 2019 14:31:04 +0000 (UTC)
-Message-Id: <481907f7211425380ba1637a978c8a12143d2705.1577111366.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1577111363.git.christophe.leroy@c-s.fr>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v2 03/10] lib: vdso: Change
- __cvdso_clock_gettime/getres_common() to __cvdso_clock_gettime/getres()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-Date:   Mon, 23 Dec 2019 14:31:04 +0000 (UTC)
+        id S1726997AbfLWObI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:31:08 -0500
+Received: from vkoul-mobl.Dlink (unknown [106.51.110.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14F52073A;
+        Mon, 23 Dec 2019 14:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577111467;
+        bh=3cUpT0mny7tfDIGYn2V0LDUiAbt2ffFJwm4dcoAsQww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mP71U7+bwHXCPh8kzD4jtLNTeggnElMia699oF1a+KgUrxT0I/ZkvNkzZWxyw2MwB
+         Mt3RoYgMTmLkEzqWaPl2pHoBacKGcFqHK4tZ+Dzborinh8XjyHY8IiM8U5Qf0T/cJF
+         ljin2oev0Bk/UOk5D2/4dB0KK1Cg3d76l7+nYBQ8=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Can Guo <cang@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/4] phy: qcom-qmp: remove duplicate powerdown write
+Date:   Mon, 23 Dec 2019 20:00:44 +0530
+Message-Id: <20191223143046.3376299-3-vkoul@kernel.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191223143046.3376299-1-vkoul@kernel.org>
+References: <20191223143046.3376299-1-vkoul@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__cvdso_clock_getres() just calls __cvdso_clock_getres_common().
-__cvdso_clock_gettime() just calls __cvdso_clock_getres_common().
+We already write to QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_com_init()
+before invoking qcom_qmp_phy_configure() so remove the duplicate write.
 
-Drop __cvdso_clock_getres() and __cvdso_clock_gettime()
-Rename __cvdso_clock_gettime_common() into __cvdso_clock_gettime()
-Rename __cvdso_clock_getres_common() into __cvdso_clock_getres()
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- lib/vdso/gettimeofday.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 4618e274f1d5..c6eeeb47f446 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -79,7 +79,7 @@ static void do_coarse(const struct vdso_data *vd, clockid_t clk,
- }
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 1196c85aa023..4f2e65c7cf45 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -885,7 +885,6 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
+ };
  
- static __maybe_unused int
--__cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
-+__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
- {
- 	const struct vdso_data *vd = __arch_get_vdso_data();
- 	u32 msk;
-@@ -105,16 +105,10 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
- }
- 
- static __maybe_unused int
--__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
--{
--	return __cvdso_clock_gettime_common(clock, ts);
--}
--
--static __maybe_unused int
- __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
- {
- 	struct __kernel_timespec ts;
--	int ret = __cvdso_clock_gettime_common(clock, &ts);
-+	int ret = __cvdso_clock_gettime(clock, &ts);
- 
- 	if (likely(!ret)) {
- 		res->tv_sec = ts.tv_sec;
-@@ -161,7 +155,7 @@ static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time
- 
- #ifdef VDSO_HAS_CLOCK_GETRES
- static __maybe_unused
--int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
-+int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
- {
- 	const struct vdso_data *vd = __arch_get_vdso_data();
- 	u64 hrtimer_res;
-@@ -204,16 +198,11 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 	return 0;
- }
- 
--int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
--{
--	return __cvdso_clock_getres_common(clock, res);
--}
--
- static __maybe_unused int
- __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
- {
- 	struct __kernel_timespec ts;
--	int ret = __cvdso_clock_getres_common(clock, &ts);
-+	int ret = __cvdso_clock_getres(clock, &ts);
- 
- 	if (likely(!ret && res)) {
- 		res->tv_sec = ts.tv_sec;
+ static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
+-	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+ 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
+ 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
+ 	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
 -- 
-2.13.3
+2.23.0
 
