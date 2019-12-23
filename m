@@ -2,179 +2,133 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00351C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBDBC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BB2206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4521206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 20:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFotFt+k"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WdhTbqUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfLWUWK (ORCPT
+        id S1727034AbfLWU17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 15:22:10 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37163 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfLWUWJ (ORCPT
+        Mon, 23 Dec 2019 15:27:59 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54079 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfLWU16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 15:22:09 -0500
-Received: by mail-ua1-f66.google.com with SMTP id f9so6083040ual.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:22:08 -0800 (PST)
+        Mon, 23 Dec 2019 15:27:58 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n96so233732pjc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 12:27:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yA4u7gp9B/6NRMaekhn2PBnz5CQhfso1HFtJ7dePbwg=;
-        b=jFotFt+ki8Cm57pYfqclAl00IYjzHjFBGCLJXAwFIEkF8SyuB0w4m8uQOsHxXP7frc
-         mvuODyXcXZjeZ7XgC6CvZ10vupf9kLRjW/kN/iWDhJpUfim46K4/T0QU+vgJN6RakAxX
-         0yKjYAwfDNqntkkanBu8eJDxDMdFHLnUpYbYyMvqoiEGOLYD+wf0dCHJY0NxMvg7LMkL
-         Iwr7UuCHuaaB/ddl+Z8ia1ueQIkspJNomczBL75wno+6nStfN3BuZenDW/ncPzPWepXV
-         eT/mlEthNec1nHdz8Y19p8Fzg6Sexszg0khyoUFxoquoKOdk50EIhE+fn4rFKo/nEIss
-         3pCw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0CpDSOHl4OB3Bl/8MPwGobF9HXf9d9LqUIFLz9HC5Pg=;
+        b=WdhTbqUDds7nyFaC9p71RME7G0VwPZ9ZDH6V0nR6o0rqKzuerooiAls4fT/9Ui5t4x
+         wqS8AZCEr60/tsFY+EP6KnlDlbpM7Ye/QWsI9YZ2CDiGa/AhTR2lk6KjF0FkwJu6EiA8
+         tn7W8fxAFagZMlpEKbUVSCsIJdos/MnZvsA78QX1wer/aITw7vIE6qxGUvq9gJpG8zk3
+         OYykfoWDypbvlEn6Uq6U9DLEGtUwaWcwEHgFXUeNq9klbkCGfpHGfazk+qeJESdOTu3A
+         RilDvmQCO+nmvJ0BDvSyQvvqP7kPvmF3uKs8It21GkuvazsDqx+h6uHJoESP1noQXx8d
+         3bEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yA4u7gp9B/6NRMaekhn2PBnz5CQhfso1HFtJ7dePbwg=;
-        b=NOoIwedvnXPHPFCAsIOxHV7DeCDiVoY3032Bwe94QmpUgn3KwIKhYc2I2uYtDRJN7O
-         pBMLPShvFmncd/IAZUMK0dmCzvqwKGC2OFtVdUkfTRoISDjNkZDrhApf41E6/6QkXVMn
-         fBnnRxKWRgSYru8dhZBJquxIe1LlzkcP/Muurnsue1PKir9M5dg8dZ1r/YsFxjlMe8yj
-         YtTkKofkknI9CbAaYinA9LWPWB/TDsavTpxds7qvfjW/Gzfi83o90VcC4tZOBjV0rHbt
-         MzxWiZX08G6p9zuHYPkuhxgAagwiqRc4MFUKXKLQKOvRGoaSAPLGnFSVjDvJ04xVltBu
-         bpTw==
-X-Gm-Message-State: APjAAAUXoPXl0RdhA6xsyouzTyzGM4dQSN5ZbfX7H9ZpYfN5fbRGYTIS
-        fcqaOsSPsv3WQ41o+/9bNo9VqlftIUWJ1vSJLUr1+A==
-X-Google-Smtp-Source: APXvYqyuI83QwyFNxns5DVfH/XuFb1gn4xwX1leW2xqvloPp9zajO/40ovNU+0rLGyFcofQLZrj01xD1H1VgXw9OTzE=
-X-Received: by 2002:ab0:1101:: with SMTP id e1mr17083200uab.123.1577132527752;
- Mon, 23 Dec 2019 12:22:07 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0CpDSOHl4OB3Bl/8MPwGobF9HXf9d9LqUIFLz9HC5Pg=;
+        b=DCjXiUfRjP75ufd1U5+0WuYsUqSFYPH6/jJQbrk6nQRJDj1+LtIqqWe/PL+uw+o5+z
+         tdbm/v3mYTHG1/VH5Q6xnK73RT7LhiB2G0edoYu0xuIiode1TYst/3JF36Wr9xYYCYbb
+         w474jJueoW3rM+3GYY0rZq5qzCJ0d0geMOik4d+Vc+oQvMILkUEO0OQ1p/UFCcUVG34x
+         naiHBp68hGjHh6GcgH+HjeCYHow9CcFmref9AjQ117KvMHPgp4xMPVX74/W3YTb4omdb
+         o0JXPQAcxN8Zug2t2p9mF7L/3d1ELz130ZaPx2X54Tsc9izWwXgtGVyRSGQe5cCsg+yM
+         Bb+Q==
+X-Gm-Message-State: APjAAAWh2kXrBHb27B4G8U0OjbZXdZYF6Us4wFfQYF7J0cU3ZNRSaQfD
+        pGuKorhxaIeW/ag/j3v/quYj+Q==
+X-Google-Smtp-Source: APXvYqxbImqtxcivG20ioyyeelsS5eDCA5kPWmfhNdOu+pRVWG/5srb/+ywEPdeZXOlh7WPZS+T52Q==
+X-Received: by 2002:a17:90b:3115:: with SMTP id gc21mr1095410pjb.54.1577132877922;
+        Mon, 23 Dec 2019 12:27:57 -0800 (PST)
+Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
+        by smtp.googlemail.com with ESMTPSA id m6sm328478pjv.23.2019.12.23.12.27.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 12:27:57 -0800 (PST)
+Subject: Re: [PATCH 1/3] iommu/vt-d: skip RMRR entries that fail the sanity
+ check
+To:     "Chen, Yian" <yian.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sohil Mehta <sohil.mehta@intel.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        x86@kernel.org
+References: <20191211194606.87940-1-brho@google.com>
+ <20191211194606.87940-2-brho@google.com>
+ <99a294a0-444e-81f9-19a2-216aef03f356@intel.com>
+ <93820c21-8a37-d8f0-dacb-29cee694a91d@google.com>
+ <4c24f2d2-03fd-a6cb-f950-391f3f7837cb@intel.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <14ccbc00-7451-bd2e-d861-01c422cad53a@google.com>
+Date:   Mon, 23 Dec 2019 15:27:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191223140322.20013-1-mst@redhat.com> <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
- <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com> <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
-In-Reply-To: <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
-From:   Alistair Delva <adelva@google.com>
-Date:   Mon, 23 Dec 2019 12:21:56 -0800
-Message-ID: <CANDihLFv+DJYOD1m_Z3CKuxoXG-z4zPy_Tc2eoggq1KRo+GeWw@mail.gmail.com>
-Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4c24f2d2-03fd-a6cb-f950-391f3f7837cb@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:12 PM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> On Mon, Dec 23, 2019 at 2:56 PM Willem de Bruijn
-> <willemdebruijn.kernel@gmail.com> wrote:
-> >
-> > 00fffe0ff0 DR7: 0000000000000400
-> > > > Call Trace:
-> > > >  ? preempt_count_add+0x58/0xb0
-> > > >  ? _raw_spin_lock_irqsave+0x36/0x70
-> > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
-> > > >  ? __wake_up+0x70/0x190
-> > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
-> > > >  __netdev_update_features+0x271/0x980
-> > > >  ? nlmsg_notify+0x5b/0xa0
-> > > >  dev_disable_lro+0x2b/0x190
-> > > >  ? inet_netconf_notify_devconf+0xe2/0x120
-> > > >  devinet_sysctl_forward+0x176/0x1e0
-> > > >  proc_sys_call_handler+0x1f0/0x250
-> > > >  proc_sys_write+0xf/0x20
-> > > >  __vfs_write+0x3e/0x190
-> > > >  ? __sb_start_write+0x6d/0xd0
-> > > >  vfs_write+0xd3/0x190
-> > > >  ksys_write+0x68/0xd0
-> > > >  __ia32_sys_write+0x14/0x20
-> > > >  do_fast_syscall_32+0x86/0xe0
-> > > >  entry_SYSENTER_compat+0x7c/0x8e
-> > > >
-> > > > A similar crash will likely trigger when enabling XDP.
-> > > >
-> > > > Reported-by: Alistair Delva <adelva@google.com>
-> > > > Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > > Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-> > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > ---
-> > > >
-> > > > Lightly tested.
-> > > >
-> > > > Alistair, could you please test and confirm that this resolves the
-> > > > crash for you?
-> > >
-> > > This patch doesn't work. The reason is that NETIF_F_LRO is also turned
-> > > on by TSO4/TSO6, which your patch didn't check for. So it ends up
-> > > going through the same path and crashing in the same way.
-> > >
-> > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
-> > >             virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
-> > >                 dev->features |= NETIF_F_LRO;
-> > >
-> > > It sounds like this patch is fixing something slightly differently to
-> > > my patch fixed. virtnet_set_features() doesn't care about
-> > > GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads"
-> > > is zero, it will call virtnet_set_guest_offloads(), which triggers the
-> > > crash.
-> >
-> >
-> > Interesting. It's surprising that it is trying to configure a flag
-> > that is not configurable, i.e., absent from dev->hw_features
-> > after Michael's change.
-> >
-> > > So either we need to ensure NETIF_F_LRO is never set, or
-> >
-> > LRO might be available, just not configurable. Indeed this was what I
-> > observed in the past.
->
-> dev_disable_lro expects that NETIF_F_LRO is always configurable. Which
-> I guess is a reasonable assumption, just not necessarily the case in
-> virtio_net.
->
-> So I think we need both patches. Correctly mark the feature as fixed
-> by removing from dev->hw_features and also ignore the request from
-> dev_disable_lro, which does not check for this.
+On 12/17/19 2:19 PM, Chen, Yian wrote:
+>> Regardless, I have two other patches in this series that could resolve 
+>> the problem for me and probably other people.  I'd just like at least 
+>> one of the three patches to get merged so that my machine boots when 
+>> the original commit f036c7fa0ab6 ("iommu/vt-d: Check VT-d RMRR region 
+>> in BIOS is reported as reserved") gets released.
+>>
+> when a firmware bug appears, the potential problem may beyond the scope 
+> of its visible impacts so that introducing a workaround in official 
+> implementation should be considered very carefully.
 
-Something like this maybe:
+Agreed.  I think that in the RMRR case, it wouldn't surprise me if these 
+problems are already occurring, and we just didn't know about it, so I'd 
+like to think about sane workarounds.  I only noticed it on a kexec. 
+Not sure how many people with similarly-broken firmware are kexecing 
+kernels on linus/master kernels yet.
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 4d7d5434cc5d..0556f42b0fb5 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
-        u64 offloads;
-        int err;
+Specifically, my firmware reports an RMRR with start == 0 and end == 0 
+(end should be page-aligned-minus-one).  The only reason commit 
+f036c7fa0ab6 didn't catch it on a full reboot is that trim_bios_range() 
+reserved the first page, assuming that the BIOS meant to reserve it but 
+just didn't tell us in the e820 map.  My firmware didn't mark that first 
+page E820_RESERVED.  On a kexec, the range that got trimmed was 
+0x100-0xfff instead of 0x000-0xfff.  In both cases, the kernel won't use 
+the region the broken RMRR points to, but in the kexec case, it wasn't 
+E820_RESERVED, so the new commit aborted the DMAR setup.
 
-+       if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
-+               return 0;
-+
-        if ((dev->features ^ features) & NETIF_F_LRO) {
-                if (vi->xdp_queue_pairs)
-                        return -EBUSY;
-@@ -2971,6 +2974,15 @@ static int virtnet_validate(struct virtio_device *vdev)
-        if (!virtnet_validate_features(vdev))
-                return -EINVAL;
+> If the workaround is really needed at this point, I would recommend 
+> adding a WARN_TAINT with TAINT_FIRMWARE_WORKAROUND, to tell the 
+> workaround is in the place.
 
-+       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-+        * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
-+        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-+        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-+        * not the former.
-+        */
-+       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-+               __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
-+
-        if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
-                int mtu = virtio_cread16(vdev,
-                                         offsetof(struct virtio_net_config,
+Sounds good.  I can rework the patchset so that whenever I skip an RMRR 
+entry or whatnot, I'll put in a WARN_TAINT.  I see a few other examples 
+in dmar.c to work from.
+
+If any of the three changes are too aggressive, I'm OK with you all 
+taking just one of them.  I'd like to be able to kexec with the new 
+kernel.  I'm likely not the only one with bad firmware, and any bug that 
+only shows up on a kexec often a pain to detect.
+
+Thanks,
+
+Barret
+
