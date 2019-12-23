@@ -2,101 +2,92 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5162DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AF5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D48D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E22A2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 17:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PCmUkhYf"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="b94t2WZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfLWRJ3 (ORCPT
+        id S1726890AbfLWRKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:09:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48161 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726718AbfLWRJ3 (ORCPT
+        Mon, 23 Dec 2019 12:10:42 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35729 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfLWRKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:09:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577120967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EdGWVlIuDUVd73iaM6l6M5W4eKbIMhKZ4IFEX++PL4k=;
-        b=PCmUkhYfq8P4P4nIIYZjUt+dvmvFeJdVq6QL6NLIOQB5KVI9YB7p/l0+iw1s4hSL9rcgOR
-        42n5jCh84Spbqd0i/7UANz00RWtHUxyDNtkg8HB93SrS1tbeANxFOwMo+GBTaWWVZVsaAP
-        JJwWGV95wtpPa3LetGw/nnD/L807soc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-Mr-KwgBDMiKudJaWd8o_Xg-1; Mon, 23 Dec 2019 12:09:26 -0500
-X-MC-Unique: Mr-KwgBDMiKudJaWd8o_Xg-1
-Received: by mail-wr1-f71.google.com with SMTP id k18so7216965wrw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:09:26 -0800 (PST)
+        Mon, 23 Dec 2019 12:10:42 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j1so11030176lja.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 09:10:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O43v4gAwFNhQh6twMJkj8FpETaSb8yNo4kWKl5MF01c=;
+        b=b94t2WZBmxCa1Ucz5goh4DwvMSvPLfCpKKNRGjA9SwKdlJKd1w8tUlYmhl0qJAHBtX
+         /jahl9e1R7AQFi7SzEU2xhx1B5XNbSowt/SfwzGRemYGVAzvvV609ncSzJsdbEgCNfY2
+         vmDY6iSw6jYLV532SVBPW4SmPAaCH02ptUiDLx8EjlXPsoWuWiQxhVOndQi/1oqaTEoL
+         rDMnJR0QCj/vx+tLBtE/iXjKtYkbIbbIrAIpWta4uDdwCrKCGvao64o2wMufMdFYfiRy
+         OXx/7eVI+mgGpbBDbnKiacwqjOeafSVvm3VjQjI1Cxg+ut7YEXyu0Z7CmSNCbXRUvbKZ
+         3Ytw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EdGWVlIuDUVd73iaM6l6M5W4eKbIMhKZ4IFEX++PL4k=;
-        b=lqWwofJYBgIRIY3uiC8nxxgrf10FDjzvfIcCkZdWQU2M1bsQMG88wJFeb4J3rli0+d
-         W44tb4t70K1mzwuel3lfb0H20HRt0erk4/AuNZ6ZoTNvdU2/I2ucMrjsIb0JYDnXXKzE
-         IyqZ1uHQ1Q3fOHH6K/ngGmHnUvbGu8KcSbGieCRTjkB+FUW2V0g/FcvzORupZlJO7bjA
-         fv138l7iycCrEDwRBftbPJNwSpfBiDJVJTfL4Y3vPUfq+8k7LvTMG3SEti/CxiqI4mxd
-         pC4cPxwtfuqqtgryyvan6DWMw6XMcSIuQOJCP6nQ0V8EgdU5d/MfI+E2VZuJ5cAaA7gc
-         eEng==
-X-Gm-Message-State: APjAAAXtHrgx8ckcq/j+93oDfbK+rR3k4WrommWHQ6EsriQ20OAXflI5
-        9Wmr0uCGaLNsg/Bw2MsRMppjHbKb/9oHznTfDcOmPwIq/mEUXGaIXFQcsFlCbdxUelf19cj75iw
-        ZOq28oZuNQp6HRtjzILWjP2I8
-X-Received: by 2002:adf:e6d2:: with SMTP id y18mr32226457wrm.262.1577120965617;
-        Mon, 23 Dec 2019 09:09:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxNQPfEA2sNTGfQFSEHBoWItWIFd4rul0NNEzD8hlA+lN7HwX5wQlhvAll+fQlF/OOeNqywhw==
-X-Received: by 2002:adf:e6d2:: with SMTP id y18mr32226438wrm.262.1577120965441;
-        Mon, 23 Dec 2019 09:09:25 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:ac09:bce1:1c26:264c? ([2001:b07:6468:f312:ac09:bce1:1c26:264c])
-        by smtp.gmail.com with ESMTPSA id p18sm52547wmg.4.2019.12.23.09.09.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 09:09:24 -0800 (PST)
-Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-To:     Liran Alon <liran.alon@oracle.com>,
-        John Andersen <john.s.andersen@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
- <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
-Date:   Mon, 23 Dec 2019 18:09:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O43v4gAwFNhQh6twMJkj8FpETaSb8yNo4kWKl5MF01c=;
+        b=dBCh6S48600vVO8g8hr1dPCV9CY+yqIBD5gscTF5qASQK4MPy+JLFXWGbLgK1Cbc0b
+         xZyceYWrvGY4cvaS+guzw/QW5psdqpFOW8JCy2Tqyly4WQOprhtwM2XUDVABJDnaD4fK
+         TXpGAq2uEYJTdno4wLRT+Q9/YYrYCBCaHpS5tJWd0Dg/v7+mxagALKlqBo8KBTSU7/qO
+         Hd8Wv2U7ath8VCxBpquV2eu8AybOz3RTk65r4gW41mfRsraeTji11if4lbTWksj/clQO
+         hsONQa/WNUJ6nfIqMPXlfkHC6Ssm0pVgfycul31bwyspynpMQl9QyilobqqZpM5xgFj2
+         DGHA==
+X-Gm-Message-State: APjAAAVThGQSvsFOxuVV7eEcyUkN7QC1lsVI81dweg2oLofEgQIH9K0t
+        92QAKaZlXfGo805me4E+dQ9Sxw==
+X-Google-Smtp-Source: APXvYqytP8y6Jy/gzEfUdcWUxLsy4ScRqWoB0/kts7VDWNphTZEOfK430IYrtbFFwI7iHXvUgyVW3A==
+X-Received: by 2002:a2e:8916:: with SMTP id d22mr18460565lji.19.1577121039918;
+        Mon, 23 Dec 2019 09:10:39 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id m21sm8627563lfh.53.2019.12.23.09.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 09:10:38 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 75A1F10133D; Mon, 23 Dec 2019 20:10:43 +0300 (+03)
+Date:   Mon, 23 Dec 2019 20:10:43 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Khem Raj <raj.khem@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] x86/boot/compressed/64: Define __force_order only when
+ CONFIG_RANDOMIZE_BASE is unset
+Message-ID: <20191223171043.g54secptjtqkhuve@box>
+References: <20191221151813.1573450-1-raj.khem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191221151813.1573450-1-raj.khem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/12/19 15:48, Liran Alon wrote:
->> Should userspace expose the CR pining CPUID feature bit, it must zero CR
->> pinned MSRs on reboot. If it does not, it runs the risk of having the
->> guest enable pinning and subsequently cause general protection faults on
->> next boot due to early boot code setting control registers to values
->> which do not contain the pinned bits.
-> 
-> Why reset CR pinned MSRs by userspace instead of KVM INIT handling?
+On Sat, Dec 21, 2019 at 07:18:13AM -0800, Khem Raj wrote:
+> Since arch/x86/boot/compressed/Makefile overrides global CFLAGS it loses
+> -fno-common option which would have caught this
 
-Most MSRs are not reset by INIT, are they?
+If this doesn't cause any visible problems, why bother?
 
-Paolo
+Hopefully, we will be able to drop it altogether once we ditch GCC 4.X
+support.
 
+-- 
+ Kirill A. Shutemov
