@@ -2,122 +2,111 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16072C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B18BC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFBA206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716482073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7FN0ncL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLWNFZ (ORCPT
+        id S1726884AbfLWNHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:05:25 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22004 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbfLWNFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:05:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 05:05:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="223018527"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.215.45]) ([10.254.215.45])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Dec 2019 05:05:23 -0800
-Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIXSBpb21tdS92dC1kOiBEb24ndCByZWpl?=
- =?UTF-8?Q?ct_nvme_host_due_to_scope_mismatch?=
-To:     "Jim,Yan" <jimyan@baidu.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1576825674-18022-1-git-send-email-jimyan@baidu.com>
- <20191220092327.do34gtk3lcafzr6q@cantor>
- <606767b54ad4410abbdd9d053552074a@baidu.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <bbff34ed-1c47-3eed-0bc9-30cfdd3ee90d@linux.intel.com>
-Date:   Mon, 23 Dec 2019 21:05:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 23 Dec 2019 08:07:54 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34613 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbfLWNHy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 08:07:54 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so4409015lfc.1;
+        Mon, 23 Dec 2019 05:07:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5eJH2So2Y3KqY/K1ixMNRpaPpKx0b38bhcNlkypecC0=;
+        b=N7FN0ncLXb065P3FN14ZDLucMWMpNKGbWPL84vdRLA17Kc3XtT8pnSKLjbseUPj918
+         b9yDdgKBeG55jltDFLk9cDzyCHWPNVXrw4qoKL0NK/RoO24MAp8q04nFdEJcZpgaT5BF
+         Q15J2JBVrmMrQx4zFr9FLZw/VeElcbpyV3hIkGOi1aH3of4W5V7Pz5pv99zVfEeU/F0K
+         SoqCCo4ejdPWZ5XPiDBHIxGsbm8jsgy1f4YZ0a2rDR8r1ttquMOBRfzWSCRjKNS9W/oB
+         PELHjv9r8rJchpunfS3Od1m02nbafGGlA5trUX/4PLKhVRONJM6uv5xUiPD//ox37mFL
+         dK4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5eJH2So2Y3KqY/K1ixMNRpaPpKx0b38bhcNlkypecC0=;
+        b=PWdt69KWzpEnD7AY/7sODWcRHrQjmvZQqUo9v3BCfB6qr7YNZvk+29EOm3Ua821tJ+
+         BE+CG8YXe1VVGx4DVPZli06E/rRWBmmnwsaAxsQZ1q5xtOeYGMTKVfQ1tmsa9NQRTy87
+         vQuEIQCuS1XP+lSHNQ7L43sgNayRHsqrRkOTgPbeaznDsnfADIDpq45myeI49hpL5F2f
+         yjvW73cZ63P8XXcYS/SeFSjXVyIoU363G60MdJ7Yt0EHX0ejCpAjW3cM5tYpHyUhvXsC
+         3wah0m5ZeFz/yKZxJ+QknTvg/tCMwJ5qBnPmvwEkElYfYYy5XBaJBZzCW11U4TjLykvl
+         FtFA==
+X-Gm-Message-State: APjAAAVvB1MMveyg0c/S7qajWwsCOm8QX/dEnxbxul/mgvRJvqaX4ssi
+        8/Ov7Gy+lrdjfOVWPfsLNz4FAomiyjRseJKc2Wo=
+X-Google-Smtp-Source: APXvYqx35NtG2msl9BoMH2SPDevhyYA9MZsbmqBAxBohTRg/NXhM9CHIaYC1N0ZR9f0Dh28z9OhNSEDQtt4irLWQGH0=
+X-Received: by 2002:ac2:4a89:: with SMTP id l9mr16617018lfp.121.1577106471345;
+ Mon, 23 Dec 2019 05:07:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <606767b54ad4410abbdd9d053552074a@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1576386975-7941-1-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1576386975-7941-1-git-send-email-akinobu.mita@gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Mon, 23 Dec 2019 22:07:39 +0900
+Message-ID: <CAC5umygqpmb0s8zHC+TFEFffQmsU4N1hUs_XWGDLtqkJEccfBw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] add header file for kelvin to/from Celsius
+ conversion helpers
+To:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Andrew,
 
-On 2019/12/23 15:59, Jim,Yan wrote:
->> -----邮件原件-----
->> 发件人: Jerry Snitselaar [mailto:jsnitsel@redhat.com]
->> 发送时间: 2019年12月20日 17:23
->> 收件人: Jim,Yan <jimyan@baidu.com>
->> 抄送: joro@8bytes.org; iommu@lists.linux-foundation.org;
->> linux-kernel@vger.kernel.org
->> 主题: Re: [PATCH] iommu/vt-d: Don't reject nvme host due to scope mismatch
->>
->> On Fri Dec 20 19, jimyan wrote:
->>> On a system with an Intel PCIe port configured as a nvme host device,
->>> iommu initialization fails with
->>>
->>>     DMAR: Device scope type does not match for 0000:80:00.0
->>>
->>> This is because the DMAR table reports this device as having scope 2
->>> (ACPI_DMAR_SCOPE_TYPE_BRIDGE):
->>>
->>
->> Isn't that a problem to be fixed in the DMAR table then?
->>
->>> but the device has a type 0 PCI header:
->>> 80:00.0 Class 0600: Device 8086:2020 (rev 06)
->>> 00: 86 80 20 20 47 05 10 00 06 00 00 06 10 00 00 00
->>> 10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>> 20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
->>> 30: 00 00 00 00 90 00 00 00 00 00 00 00 00 01 00 00
->>>
->>> VT-d works perfectly on this system, so there's no reason to bail out
->>> on initialization due to this apparent scope mismatch. Add the class
->>> 0x600 ("PCI_CLASS_BRIDGE_HOST") as a heuristic for allowing DMAR
->>> initialization for non-bridge PCI devices listed with scope bridge.
->>>
->>> Signed-off-by: jimyan <jimyan@baidu.com>
->>> ---
->>> drivers/iommu/dmar.c | 1 +
->>> 1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c index
->>> eecd6a421667..9faf2f0e0237 100644
->>> --- a/drivers/iommu/dmar.c
->>> +++ b/drivers/iommu/dmar.c
->>> @@ -244,6 +244,7 @@ int dmar_insert_dev_scope(struct
->> dmar_pci_notify_info *info,
->>> 		     info->dev->hdr_type != PCI_HEADER_TYPE_NORMAL) ||
->>> 		    (scope->entry_type == ACPI_DMAR_SCOPE_TYPE_BRIDGE &&
->>> 		     (info->dev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
->>> +			  info->dev->class >> 8 != PCI_CLASS_BRIDGE_HOST &&
->>> 		      info->dev->class >> 8 != PCI_CLASS_BRIDGE_OTHER))) {
->>> 			pr_warn("Device scope type does not match for %s\n",
->>> 				pci_name(info->dev));
->>> --
->>> 2.11.0
->>>
->>> _______________________________________________
->>> iommu mailing list
->>> iommu@lists.linux-foundation.org
->>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>>
-> Actually this patch is similar to the commit: ffb2d1eb88c3("iommu/vt-d: Don't reject NTB devices due to scope mismatch"). Besides, modifying DMAR table need OEM update BIOS. It is hard to implement.
+Could you take a look at this series, and consider including into -mm tree?
+
+2019=E5=B9=B412=E6=9C=8815=E6=97=A5(=E6=97=A5) 14:16 Akinobu Mita <akinobu.=
+mita@gmail.com>:
 >
-
-For both cases, a quirk flag seems to be more reasonable, so that
-unrelated devices will not be impacted.
-
-Best regards,
-baolu
+> There are several helper macros to convert kelvin to/from Celsius in
+> <linux/thermal.h> for thermal drivers.  These are useful for any other
+> drivers or subsystems, but it's odd to include <linux/thermal.h> just for
+> the helpers.
+>
+> This adds a new <linux/units.h> that provides the equivalent inline
+> functions for any drivers or subsystems, and switches all the users of
+> conversion helpers in <linux/thermal.h> to use <linux/units.h>
+> helpers.
