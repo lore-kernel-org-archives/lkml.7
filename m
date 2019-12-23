@@ -2,128 +2,208 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F025DC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD54C2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B807F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V5Ui3vQn"
+	by mail.kernel.org (Postfix) with ESMTP id E5F8321655
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577081627;
+	bh=5Sr5N5Oj+edZMrxiBUF8D9m1/nKsWNsHYkWp9c6AXbA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BCxKF3kgvkGIDC43VR2hOTunPobRKOnAjqGRffkVhsbgwAp3u9C6ZgBT1N7yZJSLH
+	 7QO3XXQmA8m/xsTC0y8poKoi9BOc0cU8o6S4MIylIcerIUzaAAZJaBjzjmnaFDdwll
+	 CiqVtZBOP5/gNwUAimi9cW//eTUynwBb888Mo6Rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbfLWGMh (ORCPT
+        id S1726211AbfLWGNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:12:37 -0500
-Received: from mail-eopbgr00056.outbound.protection.outlook.com ([40.107.0.56]:10358
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725811AbfLWGMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:12:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SYSaUl8VC1z5fBwjkzyi006VM/xEPnBIwHP0d4/3iYfUHJKeBDSep0vqI2cGcmOqNBawqwK/FQamYRHKEf6hgOu9RbQk2SpgOFm6mLnhme5Y/KkDYj24wQp6VcrXDVhJa3wQuT4siem1E+z30jHZRll4oZjp/LBA2g/UPYYxRy7gxuAE5W6MbXKF1PeaXiacUVyyGhs1nEgIPATLbamiyVsHJFosdEgKswtqSA5+W5TA76jvY/bG5Akq58bVPnfVcOHgiRvj8aYKU9xvZ7axITWp0n68WH6KaVLv5i1CAF7Ig/ivI2O3T6KFTDIf6Mc0sIrgAD8zKJYfIsYTN8OcIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
- b=mb+29tBUKcxl+Db2vCaTe6ylrY0wyx2eATUI5L1mEQeRhl75R+hmpapB0ZMj84d64I0NvyFJLpS/XP62T2TKTshWM2VqZyNmrCG3TROSXX+wmh9gy0+cSjsxKDUFA5md2EQd94xWOQTmD1pGgXVuNgc6FI6SbkRb5z+swQtYm5Zf7OHDXtkqHPC9QuV65AJjYvFIGCmGjrACUFXaXMfFeLLpUcQAO3wuiwijElfdarWLPYkIipFYcMmBgLyHj8gF4NN7Z0CmFeXghYNRixXQhZZuQxFwh0snTGhtKEmJ4FX0QwEitMTcgaB0Af7j1gLRjkLvzimyEURncRMCX1GQsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
- b=V5Ui3vQnjokTNYgVEmtnFz7vOBVOpUxiZIByAxYyu1FyJldD2K3LkGp5ZzcioJ3e+psFVcjFuNLAL+yOkVCGdqM4jQKMvNAKVcpLSYlg5gAMaR0iqKlIH8zI1i2UftZwUu7SRgrUEv6owCvwNhBDS0BwTyGfj7d0Kfc8NvG9EdY=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB7152.eurprd04.prod.outlook.com (10.186.158.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Mon, 23 Dec 2019 06:12:32 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 06:12:32 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
- QorIQ LS1028A platform
-Thread-Topic: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
- QorIQ LS1028A platform
-Thread-Index: AQHVsJ2TZ/jVyH6lNkyvcDWZa1lfcae/dvcAgAAYxuCAAhhbAIABQiJg
-Date:   Mon, 23 Dec 2019 06:12:32 +0000
-Message-ID: <VI1PR04MB4431671A81F87AB20A0313E6ED2E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20191212033714.4090-1-peng.ma@nxp.com>
- <20191218062636.GS2536@vkoul-mobl>
- <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <20191219155458.GY2536@vkoul-mobl>
-In-Reply-To: <20191219155458.GY2536@vkoul-mobl>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66c26685-71e5-450f-0213-08d7876f18eb
-x-ms-traffictypediagnostic: VI1PR04MB7152:|VI1PR04MB7152:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB71527827608529BD68AE8D90ED2E0@VI1PR04MB7152.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(186003)(64756008)(44832011)(71200400001)(8936002)(2906002)(52536014)(76116006)(26005)(7696005)(66446008)(86362001)(5660300002)(66476007)(66946007)(6506007)(66556008)(33656002)(316002)(9686003)(55016002)(478600001)(81166006)(6916009)(8676002)(81156014)(54906003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7152;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: B/pZPHoIAo1qaKJarAa6XA5TYPfTvyxq44ge1c++Et+b/VFJV9qJ5U6THDFvMJ2XJWVE63Lc29b5p9wGx6CmlZPSRhI93E56uDP7E3K35pCGeZDhi7GhButDxT1M95YbBwLiHJmir0w4aRWJBbVboZZrGgSzZelt77h2bA5CGv3hUDjIYMXZEnrHhHpXjs39q2Q8cbeX4k5WVK2A18mv5xMvplzV0dhQkKH7QJssowjz+uv5jghVsymesupz1NiQGEK7pSJqz0WtgGjeI/rRpbd45Ne0PYB/aALCNs4crHymtlOt3l8vHNFSSPC9FmuKGTzaoT+NMXZXEc3PXvyNxqTIQL/2UqD9R2mUuKfQU1lTQMDEYsce22fsLozjgFP+w34IEr4d143MNaUoiI0LzcyFoEMaHT+np3cmn+yaHqhMgrdsGN5H3M7g2osDt9ZBfdgl3OXc6UnN5vj4Tw6NIkgGLjW488zw+uMkDRZ0h6L7PIXnOJGJ1dwaAQl9VsTp
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 23 Dec 2019 01:13:46 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41996 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfLWGNp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 01:13:45 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so8653058pfz.9;
+        Sun, 22 Dec 2019 22:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FzLLXgScNK2NFx9W8K4Xo6N6LSZ1F5SXbeG183QdbNg=;
+        b=Yp3Wht3Ac9Yt2DIxrFs7shTnzEQKcWgBYSx9P94e5PpDHmBuDYREbTmuRLkgFXP+37
+         IVavDSNpKCaXRSF1HHEq4J6LgdCPmeC6QTHy7sxI+d0BRstHXjNWLbgHV+FAI4ELSjnh
+         L8tvlfwbVZ5NVT3KI0TTyMuyoKBixjkpzGwnogm1c/5Fax58Xr080AID7cookuQ/0xo3
+         KHQ8ezLSZi1FxTOT/DLUrennQyGeGy+x+5pqTqD1WdNfoGBt5cOXM7itrHNMfpq84zsm
+         rYEVFx4U+pfckXxmIQSzb40VMMSbtaCkNU2fO/08vGT0Fd+j/tleH1U2XoCDnSTbskG1
+         Rf5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=FzLLXgScNK2NFx9W8K4Xo6N6LSZ1F5SXbeG183QdbNg=;
+        b=aMPyYoM9gSOA+SiQfgOsem4cn/csfW03TdqJ3cBBKZYV0zYEW3bBFpgd1iwqp8Snbn
+         ScbD76wvbfRIENQWFO8FikHCfU23ml8LDynAu/uII7r8DpcKaMbb/dBoXT5ADCsffKME
+         I3YJ2GUILb6Wsy4wlXp1YtG+q7a1ivlrXy+auojga7bXAZjj0Jxw0J/7KvcYWRGSWa61
+         fuzKZilQt7QQSzW3X/m35pQ1gcVYfcTKjNMzTqw97M+gtHqm3EuDFqlNwpQEcbWSZ+Is
+         5TbstaUB11mZL9KVK/uztw8mH+hmcpqBIf+p2/T72CSk0ICBSBVJXaIyekG+9nwPymUU
+         ERkA==
+X-Gm-Message-State: APjAAAX0jeME0Al2UQZMuZBB10qAFxa/wELaKae4/YBX205g0pAKSYRz
+        SrjMhpQtMEQ9ZmyOAgC+ft4=
+X-Google-Smtp-Source: APXvYqx7UJZD+6h38WSob/AxeFIUEhgC3GQuS6W0Avi0J8jeHbCLMZg5JkHhbZYBolf0OQaPZcM1tQ==
+X-Received: by 2002:a63:d40d:: with SMTP id a13mr15949396pgh.9.1577081624762;
+        Sun, 22 Dec 2019 22:13:44 -0800 (PST)
+Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
+        by smtp.gmail.com with ESMTPSA id u7sm21622191pfh.128.2019.12.22.22.13.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 22:13:44 -0800 (PST)
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
+Date:   Mon, 23 Dec 2019 15:13:26 +0900
+Message-Id: <20191223061326.843366-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+In-Reply-To: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
+References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66c26685-71e5-450f-0213-08d7876f18eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 06:12:32.3509
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: suFb/ZoT7jamvtc+Tqk4MHxi4wCKL8wtAuqRNV7XW9m/GYezczLzPo2GOmDefAAL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7152
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
-QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOcTqMTLUwjE5yNUgMjM6NTUNCj5UbzogUGVuZyBNYSA8
-cGVuZy5tYUBueHAuY29tPg0KPkNjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
-cm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8NCj5MaSA8bGVveWFuZy5saUBueHAuY29t
-PjsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBSb2JpbiBHb25nDQo+PHlpYmluLmdvbmdAbnhw
-LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnDQo+U3ViamVjdDogUmU6IFtFWFRdIFJlOiBbdjUgMS8zXSBkbWFl
-bmdpbmU6IGZzbC1lZG1hOiBBZGQgZURNQSBzdXBwb3J0IGZvcg0KPlFvcklRIExTMTAyOEEgcGxh
-dGZvcm0NCj4NCj5DYXV0aW9uOiBFWFQgRW1haWwNCj4NCj5PbiAxOC0xMi0xOSwgMDg6MDgsIFBl
-bmcgTWEgd3JvdGU6DQo+ID5CdHcgcGxzIHNlbmQgYmluZGluZ3MgYXMgcGF0Y2gxIGFuZCBkcml2
-ZXIgY2hhbmdlcyBhcyBwYXRjaDIuDQo+PiBbUGVuZyBNYV0gSSBkb24ndCB1bmRlcnN0YW5kIHRo
-aXMgc2VudGVuY2UsIFBsZWFzZSBnaXZlIG1lIG1vcmUNCj5pbmZvcm1hdGlvbi4NCj4+IEFzIEkg
-a25vdyBwYXRjaDEgaXMgZHJpdmVyIGNoYW5nZXMsIHBhdGNoMiBpcyBkdHMgY2hhbmdlcywgcGF0
-Y2gzIGlzIGJpbmRpbmcNCj5jaGFuZ2VzLg0KPj4gWW91IGFjY2VwdGVkIHBhdGNoMSBhbmQgcGF0
-Y2gzLCBJIGFtIHB1enpsZWQgZm9yIHBhdGNoMiBhbmQgeW91cg0KPmNvbW1lbnRzLg0KPg0KPlRo
-ZSBvcmRlciBvZiBwYXRjaGVzIHNob3VsZCBhbHdheXMgYmUgZHQtYmluZGluZ3MgZmlyc3QsIGZv
-bGxvd2VyZCBieSBkcml2ZXINCj5jaGFuZ2UgYW5kIHRoZSBkdHMgY2hhbmdlcyBhcyB0aGUgbGFz
-dCBvbmUgaW4gdGhlIHNlcmllcy4NCj4NCltQZW5nIE1hXSBPS6OsR290IGl0Lg0KVGhhbmtzIHZl
-cnkgbXVjaCENCg0KQmVzdCBSZWdhcmRzLA0KUGVuZw0KPi0tDQo+flZpbm9kDQo=
+I got the following error when I tried to build perf on a read-only
+filesystem with O=dir option.
+
+  $ cd /some/where/ro/linux/tools/perf
+  $ make O=$HOME/build/perf
+  ...
+    CC       /home/namhyung/build/perf/lib.o
+  /bin/sh: bpf_helper_defs.h: Read-only file system
+  make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
+  make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
+  make[2]: *** Waiting for unfinished jobs....
+    LD       /home/namhyung/build/perf/libperf-in.o
+    AR       /home/namhyung/build/perf/libperf.a
+    PERF_VERSION = 5.4.0
+  make[1]: *** [Makefile.perf:225: sub-make] Error 2
+  make: *** [Makefile:70: all] Error 2
+
+It was becaused bpf_helper_defs.h was generated in current directory.
+Move it to OUTPUT directory.
+
+Tested-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/bpf/Makefile                 | 15 ++++++++-------
+ tools/testing/selftests/bpf/.gitignore |  1 +
+ tools/testing/selftests/bpf/Makefile   |  6 +++---
+ 3 files changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index defae23a0169..97830e46d1a0 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -138,6 +138,7 @@ STATIC_OBJDIR	:= $(OUTPUT)staticobjs/
+ BPF_IN_SHARED	:= $(SHARED_OBJDIR)libbpf-in.o
+ BPF_IN_STATIC	:= $(STATIC_OBJDIR)libbpf-in.o
+ VERSION_SCRIPT	:= libbpf.map
++BPF_HELPER_DEFS	:= $(OUTPUT)bpf_helper_defs.h
+ 
+ LIB_TARGET	:= $(addprefix $(OUTPUT),$(LIB_TARGET))
+ LIB_FILE	:= $(addprefix $(OUTPUT),$(LIB_FILE))
+@@ -159,7 +160,7 @@ all: fixdep
+ 
+ all_cmd: $(CMD_TARGETS) check
+ 
+-$(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
++$(BPF_IN_SHARED): force elfdep bpfdep $(BPF_HELPER_DEFS)
+ 	@(test -f ../../include/uapi/linux/bpf.h -a -f ../../../include/uapi/linux/bpf.h && ( \
+ 	(diff -B ../../include/uapi/linux/bpf.h ../../../include/uapi/linux/bpf.h >/dev/null) || \
+ 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'" >&2 )) || true
+@@ -177,12 +178,12 @@ $(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
+ 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h' differs from latest version at 'include/uapi/linux/if_xdp.h'" >&2 )) || true
+ 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(SHARED_OBJDIR) CFLAGS="$(CFLAGS) $(SHLIB_FLAGS)"
+ 
+-$(BPF_IN_STATIC): force elfdep bpfdep bpf_helper_defs.h
++$(BPF_IN_STATIC): force elfdep bpfdep $(BPF_HELPER_DEFS)
+ 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
+ 
+-bpf_helper_defs.h: $(srctree)/tools/include/uapi/linux/bpf.h
++$(BPF_HELPER_DEFS): $(srctree)/tools/include/uapi/linux/bpf.h
+ 	$(Q)$(srctree)/scripts/bpf_helpers_doc.py --header 		\
+-		--file $(srctree)/tools/include/uapi/linux/bpf.h > bpf_helper_defs.h
++		--file $(srctree)/tools/include/uapi/linux/bpf.h > $(BPF_HELPER_DEFS)
+ 
+ $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+ 
+@@ -243,7 +244,7 @@ install_lib: all_cmd
+ 		$(call do_install_mkdir,$(libdir_SQ)); \
+ 		cp -fpR $(LIB_FILE) $(DESTDIR)$(libdir_SQ)
+ 
+-install_headers: bpf_helper_defs.h
++install_headers: $(BPF_HELPER_DEFS)
+ 	$(call QUIET_INSTALL, headers) \
+ 		$(call do_install,bpf.h,$(prefix)/include/bpf,644); \
+ 		$(call do_install,libbpf.h,$(prefix)/include/bpf,644); \
+@@ -251,7 +252,7 @@ install_headers: bpf_helper_defs.h
+ 		$(call do_install,libbpf_util.h,$(prefix)/include/bpf,644); \
+ 		$(call do_install,xsk.h,$(prefix)/include/bpf,644); \
+ 		$(call do_install,bpf_helpers.h,$(prefix)/include/bpf,644); \
+-		$(call do_install,bpf_helper_defs.h,$(prefix)/include/bpf,644); \
++		$(call do_install,$(BPF_HELPER_DEFS),$(prefix)/include/bpf,644); \
+ 		$(call do_install,bpf_tracing.h,$(prefix)/include/bpf,644); \
+ 		$(call do_install,bpf_endian.h,$(prefix)/include/bpf,644); \
+ 		$(call do_install,bpf_core_read.h,$(prefix)/include/bpf,644);
+@@ -271,7 +272,7 @@ install: install_lib install_pkgconfig
+ clean:
+ 	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS) \
+ 		*.o *~ *.a *.so *.so.$(LIBBPF_MAJOR_VERSION) .*.d .*.cmd \
+-		*.pc LIBBPF-CFLAGS bpf_helper_defs.h \
++		*.pc LIBBPF-CFLAGS $(BPF_HELPER_DEFS) \
+ 		$(SHARED_OBJDIR) $(STATIC_OBJDIR)
+ 	$(call QUIET_CLEAN, core-gen) $(RM) $(OUTPUT)FEATURE-DUMP.libbpf
+ 
+diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+index 419652458da4..1ff0a9f49c01 100644
+--- a/tools/testing/selftests/bpf/.gitignore
++++ b/tools/testing/selftests/bpf/.gitignore
+@@ -40,3 +40,4 @@ xdping
+ test_cpp
+ /no_alu32
+ /bpf_gcc
++bpf_helper_defs.h
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index e0fe01d9ec33..e2fd6f8d579c 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -120,9 +120,9 @@ $(OUTPUT)/test_cgroup_attach: cgroup_helpers.c
+ $(BPFOBJ): force
+ 	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
+ 
+-BPF_HELPERS := $(BPFDIR)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
+-$(BPFDIR)/bpf_helper_defs.h:
+-	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ bpf_helper_defs.h
++BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
++$(OUTPUT)/bpf_helper_defs.h:
++	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
+ 
+ # Get Clang's default includes on this system, as opposed to those seen by
+ # '-target bpf'. This fixes "missing" files on some architectures/distros,
+-- 
+2.24.1.735.g03f4e72817-goog
+
