@@ -2,165 +2,68 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD5C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC29C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A795220709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ntqb31N+"
+	by mail.kernel.org (Postfix) with ESMTP id EC50D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLWQJD (ORCPT
+        id S1726860AbfLWQXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:09:03 -0500
-Received: from mout.web.de ([212.227.17.12]:46981 "EHLO mout.web.de"
+        Mon, 23 Dec 2019 11:23:24 -0500
+Received: from smtp.inetstar.ru ([5.188.112.44]:38425 "EHLO smtp.inetstar.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfLWQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 11:09:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1577117273;
-        bh=9YMBNcB/MerfA3aFKIx0vO2X3UMH82iLUaeuatZAT2Q=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=Ntqb31N+EjieIVCesFBBUQs4PzKLD8U+0Ih+QZABXyKToLuG2JbTaSyl16z0jE2B3
-         OVMwMs8UGTYUUewvMJnnXhn1bvOz9NkmK9/ykS9cd1+uh7dN0pVeuWW/ubU7QsytLA
-         XajN9Jn4R4wu2SbOaK+Xnyz6Ic06Xw4PVaOe3EJc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.136.132]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LaTid-1jVNOI1kX1-00mHXL; Mon, 23
- Dec 2019 17:07:53 +0100
-To:     Yi Wang <wang.yi59@zte.com.cn>,
-        Huang Zijiang <huang.zijiang@zte.com.cn>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, up2wing@gmail.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Wang Liang <wang.liang82@zte.com.cn>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>
-References: <1577065949-25631-1-git-send-email-wang.yi59@zte.com.cn>
-Subject: Re: [PATCH] sched: Use kmem_cache_zalloc() instead of
- kmem_cache_alloc() with flag GFP_ZERO.
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e880ee66-2d7f-be97-5600-a8a459a39feb@web.de>
-Date:   Mon, 23 Dec 2019 17:07:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1726744AbfLWQXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 11:23:23 -0500
+X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Dec 2019 11:23:22 EST
+Received: from [10.0.0.2] ([193.107.193.43])
+  (AUTH: LOGIN work2017, SSL: TLS1.2,128bits,ECDHE_RSA_AES_128_GCM_SHA256)
+  by smtp.inetstar.ru with ESMTPSA; Mon, 23 Dec 2019 19:18:20 +0300
+  id 00000000009E2F72.000000005E00E8CC.00007E13
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?B?0KHQtdGA0LPQtdC5INCa0LDQvNC10L3QtdCy?= 
+        <nilfs19@inetstar.ru>
+Subject: RE: BUG: unable to handle kernel NULL pointer dereference at
+ 00000000000000a8 in nilfs_segctor_do_constr
+Message-ID: <b979e974-93a0-f418-6bfb-95b600769953@inetstar.ru>
+Date:   Mon, 23 Dec 2019 19:18:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1577065949-25631-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1251; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fqHgrmnrTggCEpx4e2qn3OP9D9dGm8bqvt4wfExRqaK8KPyMaV9
- N6yEKl8yrKFz598TMBc2jb6dMvHmN3QRSa16ofVxbEqBmOwWBsBODnaPATpjKFW99DmlFNc
- WpRReNbmUq06qAYBiNzIUcQDPufGNTRJ4X6xVpPL+nHDzrWZxLU6O5GuOhg2ypRsI+QWnIP
- uKrhssU4x8PF2PCjrTccg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TXV8vRi3JIM=:9mOymmhjF5ZirLwnoH68Ls
- ioVX94JDhpurW9x6zHccq/tbdk9jiozhyPG1sMetcRaWR9Q5hjyrEEyIoUirc/qXOH1FSfUXw
- iX2wShbXjGN41pnyvtnzVI+jHQ5mFWPGviSDGr4xMnloiBywsTVd0eOGZf5bu+vEMgLnu6Zb8
- qnqZAz7/oKnV2LhWI4SVS8qVArwBK1f3+wOPaWlAWblerwja8FN9tWutLD0QaXHs6cCFOgoly
- KPa0oBHe2l/nWVWigltDO2MXpEdFxshs+Hb1pjVrdYNnoUjawV+7u8U/13WDc+VHoMM6f/o9r
- LWCPPhOSxhl2/CNOGRj34U7ZncEsbxkFc6YliJGN625ZvXylYkD2K+45gK/vyYM0SQe8Elssc
- nS20C1ReD3acidwKcpAPYbhvs3hxU0mQdigJcdnCOvJKqk11jLQNspI+aV0bPWEPeosPjy7lX
- 50M7QO9R1EWJ+IUulKXAup/XLw5q3AP8e8YDh0C0iWsUHfgQxite5cNbTy43lbu+xMQxVRvPK
- BKiabtHmjzmuqjnsBdRvkj0TfWxN7sCA1C+hG9PvUZhASggn96X8hbRfjbc8ror9fiIP5EMsU
- ydlmVh9xM7tzKXRsUd1uXNq/52ejr5PKp3JURaHmU9phvZfzz3OYR0T45iDx9ZKlFTcmGM5+g
- RHNYrTELemnwVFmmypGcZNLEXEVbjI7K4hOn5D89NczuoiaxoBERR4IzRyylREiM5TudO3doK
- NmF6ZmBexVHd3tGOEApjIK57eWheAkaB45zG5UPjybCDNuiO4kJ8w6/594hK9S6Swne+e0Gqk
- cx7wuK4CEHO+ONYNwqbUuXVOtnhDQ42VUBEBB0b/vqYH9VAfqa9LiVuflaD2qAqFD1oZrC7YD
- C4Ai5pJhtehokQi0T9EWiaZg44xe8q/Q/5IlmelFLdDrYReD2t97Sr0GLoYaz/Elho8ltbpCv
- RDuoio8CRzhhY5v9Z0jdJkK5JIvaQIuDIpXL9cc7EuD4Ku0p5epqj1fL1ltpMk5GyZlboYv3s
- DYAxJH2gdfAUzyA5XVAmDbDpQ8uy1iIfsyyILk4BIrANLMb0Q8sXZhM4NUdKEMFlUs3IuFFyb
- tINhrGnIUUb4zZcI14G7x6YbYPZFBwCTPdRfI0CGfIN/IXPzaIb9sNug6CP0nvcMZQrIw2p2/
- il6XdVI/EisLqnKMeK2m5u8rZZPMflJogS8Pz0hWK+vLKQHzyLCKxnxgqgUYBaye/XDr0S2Lh
- /9p9VX1Kxz7Z+3OSgONTRPrXMT08QtGfHiEQQpbltOCXI6hw9gPnJWJNyu+E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/kernel/sched/core.c
-> @@ -6939,7 +6939,7 @@ struct task_group *sched_create_group(struct task_=
-group *parent)
-=E2=80=A6
-> -    tg =3D kmem_cache_alloc(task_group_cache, GFP_KERNEL | __GFP_ZERO);
-> +tg =3D kmem_cache_zalloc(task_group_cache, GFP_KERNEL);
->      if (!tg)
-=E2=80=A6
+Hi all!
 
-Please fix the indentation.
+I also found a similar error in kernel
+4.19.85
+4.19.88
+5.4.6
 
-Would you like to apply a script for the semantic patch language
-like the following?
+I generally can not use NILFS2 partitions for more than 2 minutes.
 
-@replacement@
-expression gfp, x;
-@@
- x =3D
-(
--    kmalloc
-+    kzalloc
-|
--    kmem_cache_alloc
-+    kmem_cache_zalloc
-)
-            (...,
-             gfp
--            | __GFP_ZERO
-            )
+Which I try write to partition I see:
 
+BUG: kernel NULL pointer dereference
 
-Regards,
-Markus
+Call trace:
+__test_set_page_writeback+0x2d6/0x300
+nilfs_segstor_do_construct+0xcc9/0x1220 [nilfs2]
+
+Screenshot:
+
+https://hsto.org/webt/87/md/lc/87mdlc4jqvxucjon7jai4pcwy34.jpeg
+https://hsto.org/webt/sf/rs/uk/sfrsukkoq60liw0btmikpzwrpom.jpeg
+
+https://hsto.org/webt/g7/cw/fx/g7cwfxijgykq43tjc3-vx48cpui.jpeg
+https://hsto.org/webt/ft/i4/wy/fti4wyofwz1iiqkfhlwrghc-jtk.jpeg
+
