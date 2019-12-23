@@ -2,108 +2,298 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1231BC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F216C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C7E2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C03620715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 13:09:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Rt2oBm5E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7XeO1ic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLWNIu (ORCPT
+        id S1726905AbfLWNJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:08:50 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:54811 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbfLWNIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:08:49 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id aa521add;
-        Mon, 23 Dec 2019 12:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
-        :subject:message-id:mime-version:content-type
-        :content-transfer-encoding; s=mail; bh=wTgMZEUZRBvg+FUoKnmV0TjLF
-        8I=; b=Rt2oBm5E2RxTXUBuozP/1P1v98X3S9goVj0mzdIcdw4ytPXNbMEI0baOY
-        yct2I4vk2Q73mG49juZG8pVeRTX+TTovyfItnVqEmsYD/fttWcBWVlOiAF/M1Wnk
-        mEpwyggN4aHlDwVcilPwEwtdQIh2U16L/S474tLtAMFPZekPMrHxuabD4eeZrd91
-        25joYEuzf044lXgEiW5l3nDXtXaOvVquiwWhryjhBecegGWfnEJUmrsYkFFlMoco
-        HbHLW6rZEKijZBug3Sr5aOV48F+fvemwmyrzHDZESNbA/cgCqdd/tR1MaPWJ9Q9o
-        GzPAOpOkH1K7oYRlGBEs+ppCMl4wA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 3fc974c8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 23 Dec 2019 12:11:34 +0000 (UTC)
-Date:   Mon, 23 Dec 2019 14:08:34 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, paulburton@kernel.org
-Subject: vdso-related userspace crashes on 5.5 mips64
-Message-ID: <20191223130834.GA102399@zx2c4.com>
+        Mon, 23 Dec 2019 08:09:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37694 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726680AbfLWNJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 08:09:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577106537;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WDhMiuvfU137RixvZJ0tAKSCIy4bdz0SOh6pNb5p+Ik=;
+        b=C7XeO1icm3DsTMxXy6phUaOGsSe4CflJJDEcgKhbkcIIjGEUvSB4bJiLoDrNhGeWgqEBTp
+        Gaxlfk+nznXoEmvx4EK4bn/HyQlnlr5SEqDgQO14uiS+6/XC4Z5NQJv41oEN0M0538anBs
+        ROEU6hDWr6mZ4NiFPqXJd40CnS1e7FI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-edISJ7qrMNyu_VthTGFgoA-1; Mon, 23 Dec 2019 08:08:49 -0500
+X-MC-Unique: edISJ7qrMNyu_VthTGFgoA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BECEC107ACC5;
+        Mon, 23 Dec 2019 13:08:45 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CF5461364;
+        Mon, 23 Dec 2019 13:08:33 +0000 (UTC)
+Date:   Mon, 23 Dec 2019 21:08:28 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Andrea Vai <andrea.vai@unipv.it>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191223130828.GA25948@ming.t460p>
+References: <20191203022337.GE25002@ming.t460p>
+ <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
+ <20191210080550.GA5699@ming.t460p>
+ <20191211024137.GB61323@mit.edu>
+ <20191211040058.GC6864@ming.t460p>
+ <20191211160745.GA129186@mit.edu>
+ <20191211213316.GA14983@ming.t460p>
+ <f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it>
+ <20191218094830.GB30602@ming.t460p>
+ <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Dec 23, 2019 at 12:22:45PM +0100, Andrea Vai wrote:
+> Il giorno mer, 18/12/2019 alle 17.48 +0800, Ming Lei ha scritto:
+> > On Wed, Dec 18, 2019 at 09:25:02AM +0100, Andrea Vai wrote:
+> > > Il giorno gio, 12/12/2019 alle 05.33 +0800, Ming Lei ha scritto:
+> > > > On Wed, Dec 11, 2019 at 11:07:45AM -0500, Theodore Y. Ts'o
+> > wrote:
+> > > > > On Wed, Dec 11, 2019 at 12:00:58PM +0800, Ming Lei wrote:
+> > > > > > I didn't reproduce the issue in my test environment, and
+> > follows
+> > > > > > Andrea's test commands[1]:
+> > > > > > 
+> > > > > >   mount UUID=$uuid /mnt/pendrive 2>&1 |tee -a $logfile
+> > > > > >   SECONDS=0
+> > > > > >   cp $testfile /mnt/pendrive 2>&1 |tee -a $logfile
+> > > > > >   umount /mnt/pendrive 2>&1 |tee -a $logfile
+> > > > > > 
+> > > > > > The 'cp' command supposes to open/close the file just once,
+> > > > however
+> > > > > > ext4_release_file() & write pages is observed to run for
+> > 4358
+> > > > times
+> > > > > > when executing the above 'cp' test.
+> > > > > 
+> > > > > Why are we sure the ext4_release_file() / _fput() is coming
+> > from
+> > > > the
+> > > > > cp command, as opposed to something else that might be running
+> > on
+> > > > the
+> > > > > system under test?  _fput() is called by the kernel when the
+> > last
+> > > > 
+> > > > Please see the log:
+> > > > 
+> > > > 
+> > https://lore.kernel.org/linux-scsi/3af3666920e7d46f8f0c6d88612f143ffabc743c.camel@unipv.it/2-log_ming.zip
+> > > > 
+> > > > Which is collected by:
+> > > > 
+> > > > #!/bin/sh
+> > > > MAJ=$1
+> > > > MIN=$2
+> > > > MAJ=$(( $MAJ << 20 ))
+> > > > DEV=$(( $MAJ | $MIN ))
+> > > > 
+> > > > /usr/share/bcc/tools/trace -t -C \
+> > > >     't:block:block_rq_issue (args->dev == '$DEV') "%s %d %d",
+> > args-
+> > > > >rwbs, args->sector, args->nr_sector' \
+> > > >     't:block:block_rq_insert (args->dev == '$DEV') "%s %d %d",
+> > args-
+> > > > >rwbs, args->sector, args->nr_sector'
+> > > > 
+> > > > $MAJ:$MIN points to the USB storage disk.
+> > > > 
+> > > > From the above IO trace, there are two write paths, one is from
+> > cp,
+> > > > another is from writeback wq.
+> > > > 
+> > > > The stackcount trace[1] is consistent with the IO trace log
+> > since it
+> > > > only shows two IO paths, that is why I concluded that the write
+> > done
+> > > > via
+> > > > ext4_release_file() is from 'cp'.
+> > > > 
+> > > > [1] 
+> > > > 
+> > https://lore.kernel.org/linux-scsi/320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it/2-log_ming_20191129_150609.zip
+> > > > 
+> > > > > reference to a struct file is released.  (Specifically, if you
+> > > > have a
+> > > > > fd which is dup'ed, it's only when the last fd corresponding
+> > to
+> > > > the
+> > > > > struct file is closed, and the struct file is about to be
+> > > > released,
+> > > > > does the file system's f_ops->release function get called.)
+> > > > > 
+> > > > > So the first question I'd ask is whether there is anything
+> > else
+> > > > going
+> > > > > on the system, and whether the writes are happening to the USB
+> > > > thumb
+> > > > > drive, or to some other storage device.  And if there is
+> > something
+> > > > > else which is writing to the pendrive, maybe that's why no one
+> > > > else
+> > > > > has been able to reproduce the OP's complaint....
+> > > > 
+> > > > OK, we can ask Andrea to confirm that via the following trace,
+> > which
+> > > > will add pid/comm info in the stack trace:
+> > > > 
+> > > > /usr/share/bcc/tools/stackcount blk_mq_sched_request_inserted
+> > > > 
+> > > > Andrew, could you collect the above log again when running
+> > new/bad
+> > > > kernel for confirming if the write done by ext4_release_file()
+> > is
+> > > > from
+> > > > the 'cp' process?
+> > > 
+> > > You can find the stackcount log attached. It has been produced by:
+> > > 
+> > > - /usr/share/bcc/tools/stackcount blk_mq_sched_request_inserted >
+> > trace.log
+> > > - wait some seconds
+> > > - run the test (1 copy trial), wait for the test to finish, wait
+> > some seconds
+> > > - stop the trace (ctrl+C)
+> > 
+> > Thanks for collecting the log, looks your 'stackcount' doesn't
+> > include
+> > comm/pid info, seems there is difference between your bcc and
+> > my bcc in fedora 30.
+> > 
+> > Could you collect above log again via the following command?
+> > 
+> > /usr/share/bcc/tools/stackcount -P -K t:block:block_rq_insert
+> > 
+> > which will show the comm/pid info.
+> 
+> ok, attached (trace_20191219.txt), the test (1 trial) took 3684
+> seconds.
 
-I'm experiencing VDSO-related crashes on 5.5 with MIPS64. The MIPS64
-builders on build.wireguard.com are all red at the moment.
+From the above trace:
 
-It looks like libc is crashing with a null pointer dereference when
-doing any work after returning from clock_gettime. This manifests
-itself, for me, with calls to clock_gettime(CLOCK_PROCESS_CPUTIME_ID),
-because CLOCK_PROCESS_CPUTIME_ID is not in the VDSO. It looks in the
-VDSO, doesn't find it, and then proceeds to make the real syscall, when
-it crashes. I can simulate the same crash by simply adding a printf
-after a successful call to the vdso before returning. For example:
+  b'blk_mq_sched_request_inserted'
+  b'blk_mq_sched_request_inserted'
+  b'dd_insert_requests'
+  b'blk_mq_sched_insert_requests'
+  b'blk_mq_flush_plug_list'
+  b'blk_flush_plug_list'
+  b'io_schedule_prepare'
+  b'io_schedule'
+  b'rq_qos_wait'
+  b'wbt_wait'
+  b'__rq_qos_throttle'
+  b'blk_mq_make_request'
+  b'generic_make_request'
+  b'submit_bio'
+  b'ext4_io_submit'
+  b'ext4_writepages'
+  b'do_writepages'
+  b'__filemap_fdatawrite_range'
+  b'ext4_release_file'
+  b'__fput'
+  b'task_work_run'
+  b'exit_to_usermode_loop'
+  b'do_syscall_64'
+  b'entry_SYSCALL_64_after_hwframe'
+    b'cp' [19863]
+    4400
 
-int __clock_gettime(clockid_t clk, struct timespec *ts)
-{
-  int r;
+So this write is clearly from 'cp' process, and it should be one
+ext4 fs issue.
 
-#ifdef VDSO_CGT_SYM
-  int (*f)(clockid_t, struct timespec *) =
-    (int (*)(clockid_t, struct timespec *))vdso_func;
-  printf("vdso %p\n", f); // <-- this line does NOT crash.
-  if (f) {
-    r = f(clk, ts);
-    if (!r) {
-      printf("ret %d\n", r); // <-- this line DOES crash.
-      return r;
-    }
-    if (r == -EINVAL)
-      return __syscall_ret(r);
-  }
-#endif
-  printf("falling through\n"); // <--- this line DOES crash.
-  r = __syscall(SYS_clock_gettime, clk, ts); // <-- also, this line will crash too
-  if (r == -ENOSYS) {
-    if (clk == CLOCK_REALTIME) {
-      __syscall(SYS_gettimeofday, ts, 0);
-      ts->tv_nsec = (int)ts->tv_nsec * 1000;
-      return 0;
-    }
-    r = -EINVAL;
-  }
-  return __syscall_ret(r);
-}
+Ted, can you take a look at this issue?
 
-It seems like somehow the stack frame is corrupted/unusable after a call
-to the vdso. But, returning immediately from clock_gettime after a call
-to the vdso allows the program to continue. Thus, this problem only
-manifests itself when using clocks that aren't handled by the vdso.
+> 
+> > > I also tried the usual test with btrfs and xfs. Btrfs behavior
+> > looks
+> > > "good". xfs seems sometimes better, sometimes worse, I would say.
+> > I
+> > > don't know if it matters, anyway you can also find the results of
+> > the
+> > > two tests (100 trials each). Basically, btrfs is always between 68
+> > and
+> > > 89 seconds, with a cyclicity (?) with "period=2 trials". xfs looks
+> > > almost always very good (63-65s), but sometimes "bad" (>300s).
+> > 
+> > If you are interested in digging into this one, the following trace
+> > should be helpful:
+> > 
+> > https://lore.kernel.org/linux-scsi/f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it/T/#m5aa008626e07913172ad40e1eb8e5f2ffd560fc6
+> > 
+> 
+> Attached:
+> - trace_xfs_20191223.txt (7 trials, then aborted while doing the 8th),
+> times to complete:
+> 64s
+> 63s
+> 64s
+> 833s
+> 1105s
+> 63s
+> 64s
 
-It's possible this is due to some compiler ABI mismatch situation
-between userspace and kernelspace. However, I've only started seeing
-this happen with 5.5 and not on 5.4.
+oops, looks we have to collect io insert trace with the following bcc script
+on xfs for confirming if there is similar issue with ext4, could you run
+it again on xfs? And only post the trace done in case of slow 'cp'.
 
-Does the above description immediately point to some recognizable
-change? If not, I'll keep debugging.
+
+#!/bin/sh
+
+MAJ=$1
+MIN=$2
+MAJ=$(( $MAJ << 20 ))
+DEV=$(( $MAJ | $MIN ))
+
+/usr/share/bcc/tools/trace -t -C \
+    't:block:block_rq_issue (args->dev == '$DEV') "%s %d %d", args->rwbs, args->sector, args->nr_sector' \
+    't:block:block_rq_insert (args->dev == '$DEV') "%s %d %d", args->rwbs, args->sector, args->nr_sector'
+
 
 Thanks,
-Jason
+Ming
+
