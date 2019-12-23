@@ -2,154 +2,100 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D23C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D93C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55AB206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5108206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NWkMI6rv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfLWIlO (ORCPT
+        id S1726150AbfLWInh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:41:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41523 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfLWIlO (ORCPT
+        Mon, 23 Dec 2019 03:43:37 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:59585 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbfLWInh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:41:14 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so21194602otc.8;
-        Mon, 23 Dec 2019 00:41:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cDv9UaL4HKxCZwOpeNm1xbtf2cmQl4fg1wQxfmqaPlY=;
-        b=f2zAyaDXwgl4tc6L5OljcVFXROCwReDChWEOjREH3Ho857KqigiMUBkYVvSd9Tj21t
-         T6dDGuVTd4kwkAz9j8VTiyi9MdhvwvMV6WyJgMB8w/jXVz9q0SgmWbn3WaH7m1/x3BDV
-         QjUAnUJh+aL56YOlwDH6jE/T+OTqKsGzF5cbWnWN3s1gyBmhWOuoFK+6YNpwqCwj4p9u
-         en0NQGwgdDcdJy3WAiW4/UeYffsh96tljoF1cLZINldvnRPnD3fEwlQ0mzWYKHDh37wQ
-         bp3Gky2wuhiLt+mUrw1cxYleKMSomU8EstGezn5MiT5fQTNleS7xVoNF83vl/1scPhUa
-         4moQ==
-X-Gm-Message-State: APjAAAUTg841JTkrunoyV5cnT2VNz6KEm8sHHrGmN7htgWkekBzEtLAs
-        JXD/cOcWB1E4rM3nud9ZzJI81cSR6rABozRRZ5Dolbfo
-X-Google-Smtp-Source: APXvYqx2KCiv7cxuDdzBfA2c2NhXkW2xa7BGOvhzkGGauQ0VJ6aD6A5SkDirLFnjAg8AJrwmGlawMoHMEhNiYeHVBR4=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr31479287ots.250.1577090473314;
- Mon, 23 Dec 2019 00:41:13 -0800 (PST)
+        Mon, 23 Dec 2019 03:43:37 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577090617; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=DBAwlHo4z9mxlOrvHQaCfIjZ0sNHg6zZbxKTPb32waE=;
+ b=NWkMI6rvOD/R7SrLzyl2O9+w7WMrpyNyUPZnZlWozp0XLq6HjHKyVU+EwJ0b/eS5B2VOfs/I
+ RnuxBX0fprandLJWF4K290H/U1YfYb9IYDXQbqvDN3Qc6/Wn5igqCldNSOREpx6VbEOA9WWt
+ ylWfu0CufPF7MkvUe3HNadIS/dA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e007e31.7f5339308378-smtp-out-n01;
+ Mon, 23 Dec 2019 08:43:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59B31C4479D; Mon, 23 Dec 2019 08:43:28 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D29BC43383;
+        Mon, 23 Dec 2019 08:43:27 +0000 (UTC)
 MIME-Version: 1.0
-References: <20191223040020.109570-1-yuchao0@huawei.com>
-In-Reply-To: <20191223040020.109570-1-yuchao0@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 23 Dec 2019 09:41:02 +0100
-Message-ID: <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 16:43:27 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] phy: qcom-qmp: Use register defines
+In-Reply-To: <20191220101719.3024693-3-vkoul@kernel.org>
+References: <20191220101719.3024693-1-vkoul@kernel.org>
+ <20191220101719.3024693-3-vkoul@kernel.org>
+Message-ID: <341446449242684d4b5a0296d3331b0c@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-CC linux-fsdevel
-
-On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
-> As Geert Uytterhoeven reported:
->
-> for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
->
-> On some platforms, HZ can be less than 50, then unexpected 0 timeout
-> jiffies will be set in congestion_wait().
->
-> This patch introduces a macro DEFAULT_IO_TIMEOUT_JIFFIES to limit
-> mininum value of timeout jiffies.
->
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks for your patch!
-
+On 2019-12-20 18:17, Vinod Koul wrote:
+> We already define register offsets so use them in register layout.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 > ---
->  fs/f2fs/compress.c |  3 ++-
->  fs/f2fs/data.c     |  5 +++--
->  fs/f2fs/f2fs.h     |  2 ++
->  fs/f2fs/gc.c       |  3 ++-
->  fs/f2fs/inode.c    |  3 ++-
->  fs/f2fs/node.c     |  3 ++-
->  fs/f2fs/recovery.c |  6 ++++--
->  fs/f2fs/segment.c  | 12 ++++++++----
->  fs/f2fs/super.c    |  6 ++++--
->  9 files changed, 29 insertions(+), 14 deletions(-)
->
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index 1bc86a54ad71..ee4fe8e644aa 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -945,7 +945,8 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
->                         } else if (ret == -EAGAIN) {
->                                 ret = 0;
->                                 cond_resched();
-> -                               congestion_wait(BLK_RW_ASYNC, HZ/50);
-> +                               congestion_wait(BLK_RW_ASYNC,
-> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->                                 lock_page(cc->rpages[i]);
->                                 clear_page_dirty_for_io(cc->rpages[i]);
->                                 goto retry_write;
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index f1f5c701228d..78b5c0b0287e 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2320,7 +2320,8 @@ int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
->                 /* flush pending IOs and wait for a while in the ENOMEM case */
->                 if (PTR_ERR(fio->encrypted_page) == -ENOMEM) {
->                         f2fs_flush_merged_writes(fio->sbi);
-> -                       congestion_wait(BLK_RW_ASYNC, HZ/50);
-> +                       congestion_wait(BLK_RW_ASYNC,
-> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->                         gfp_flags |= __GFP_NOFAIL;
->                         goto retry_encrypt;
->                 }
-> @@ -2900,7 +2901,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->                                         if (wbc->sync_mode == WB_SYNC_ALL) {
->                                                 cond_resched();
->                                                 congestion_wait(BLK_RW_ASYNC,
-> -                                                               HZ/50);
-> +                                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->                                                 goto retry_write;
->                                         }
->                                         goto next;
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 16edbf4e05e8..4bdc20a94185 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -559,6 +559,8 @@ enum {
->
->  #define DEFAULT_RETRY_IO_COUNT 8       /* maximum retry read IO count */
->
-> +#define        DEFAULT_IO_TIMEOUT_JIFFIES      (max_t(long, HZ/50, 1))
-> +
->  /* maximum retry quota flush count */
->  #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT                8
->
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 66f91726b8b2..1196c85aa023 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -166,8 +166,8 @@ static const unsigned int 
+> sdm845_ufsphy_regs_layout[] = {
+>  };
+> 
+>  static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> -	[QPHY_START_CTRL]		= 0x00,
+> -	[QPHY_PCS_READY_STATUS]		= 0x180,
+> +	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
+> +	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_READY_STATUS,
 
-Seeing other file systems (ext4, xfs) and even core MM code suffers from
-the same issue, perhaps it makes sense to move this into congestion_wait(),
-i.e. increase the timeout to 1 if it's zero in the latter function?
+Missed QPHY_SW_RESET?
 
-Gr{oetje,eeting}s,
+Regards,
+Can Guo.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  };
+> 
+>  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
