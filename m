@@ -2,375 +2,239 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE003C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9778EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738EF206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C0A206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 21:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="H+aNYaDU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wl5+xrlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLWVJX (ORCPT
+        id S1726878AbfLWVZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:09:23 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38222 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfLWVJV (ORCPT
+        Mon, 23 Dec 2019 16:25:07 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44610 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWVZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:09:21 -0500
-Received: by mail-il1-f194.google.com with SMTP id f5so15027801ilq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 13:09:21 -0800 (PST)
+        Mon, 23 Dec 2019 16:25:07 -0500
+Received: by mail-io1-f68.google.com with SMTP id b10so17405267iof.11;
+        Mon, 23 Dec 2019 13:25:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=bPqgNMTJzQmzrywWwoE8PfxRJUCLVkppnZuFF1F78Ng=;
-        b=H+aNYaDUPZ5Q9XgsW5I6/jy4ExFxrxB9LKiZIQDaeMJsVx0tR7TCm/svKWbOvZfFo4
-         8XFO19CwyO5h8BHzAW2Kxc3PAP8pn/d+1lqUGV0Kmw797GWYBiRZfu5vaJ2OY0QYbPYX
-         2qgbUYrRXSgSc5v9+u9/Uwt6cI1xAEOGfTaD4=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z+IJjZvvHtC9PAvUtdm8hS7l9OXtbifWK1RLCc5V4WY=;
+        b=Wl5+xrlKbGFGYnthfIO9SHO5ApUh8vQWBXmcGMpRRvVuB6gs6PqMQFBVIm/g2t8AzK
+         HXEUiMYnxZvIvcWroHkNpZbP87mF3AKa3F4dhAArDILGclHkus2foICoVsnnjdh9kQ0B
+         Kvz4YAX6d4C0RphuDrTUinbVZ4jU52oiEiOIHnouP7JhNx7+sjzKP5MqUsf26z4RimwC
+         5EsvlIzce1ZdPtelTNqBjkePl3sfxY3jGXhcSxmkKAmFii5W/+iMZRxHXE8qIzSn+cdx
+         bvqr8UtVQQulT9sVH3v7URDcYRxkJ0iGZfPHWRxnwVaSgNVCC0d3KbvaYepi9LxUY3Ix
+         tf+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bPqgNMTJzQmzrywWwoE8PfxRJUCLVkppnZuFF1F78Ng=;
-        b=V3l8XOuDXokJ8llDQ+lPNHOdeuBHw41bQCX16+OTwF1dSv16M82+9yoD4u3YC3/3fJ
-         TT/bQnmLAKYBfNPW9YF2EOvggsFgf3jifhL4G2Eio7ADkHF9URh/ns1JFAyl4jS759Xy
-         chbBCBgZ8+o8TQQ0SPan0t+CWzbGCGg3Q7Rpzaqthtnb4YP+AdQh0lNTo5EZP+iIJ8TG
-         rUfDiIGq7Qkw9yWqNyOxj32X4FtfZ01iwrRgecLj1c/K6bQXV+Bfa8Ba9kUPphvHuFzV
-         3ilf+Sa8VYscVTq0pOlGhFekr+3gnwHK6yKgfOCXQj+gGk+q7EsABBw4WoJ/WhYHwlrd
-         dHAg==
-X-Gm-Message-State: APjAAAWuwK5Mn2YkUCvjbZpGPGfwF/5f4StyDpvGkaUUN9FX49S1DINE
-        beoqY5tsZVa9h68q6NnM6SOy4MCkAn53nQ==
-X-Google-Smtp-Source: APXvYqzj8K5Ah5gJvpePoAUtbePAnpylCZRLdEVBNsKWUdVJ99cgevNTiirCbE/hOE9wraofKqWH7A==
-X-Received: by 2002:a92:9603:: with SMTP id g3mr27607060ilh.231.1577135360539;
-        Mon, 23 Dec 2019 13:09:20 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id x10sm6467036ioh.11.2019.12.23.13.09.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 23 Dec 2019 13:09:19 -0800 (PST)
-Date:   Mon, 23 Dec 2019 21:09:18 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     tycho@tycho.ws, jannh@google.com, cyphar@cyphar.com,
-        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
-        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
-        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
-        arnd@arndb.de
-Subject: [PATCH v6 3/3] test: Add test for pidfd getfd
-Message-ID: <20191223210916.GA25119@ircssh-2.c.rugged-nimbus-611.internal>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z+IJjZvvHtC9PAvUtdm8hS7l9OXtbifWK1RLCc5V4WY=;
+        b=bWxt29DAd8ntnjA5GRNBGE4MrLxjInfx9DOjNTAuvjCoG9uZgICpRIeFEYxox7/bj/
+         Nw2XJ9eNsfWMxL5pBrui89mHPFxZuRATlFlAAhSkjSyR70cF2cgwnqdOfYOMGStK3vYR
+         6veKbT/7CtKEZGn4HYJ6FVSrjn+4saBBnVDrYwQHrnL+d1DJ3zXOYvwkAFfxkrydNFMZ
+         gX/dq4qLBdS5GXLoRzQ7wDyry5LRd4YWBOfzKthUMGtYNZWuVAydM3NkITYLiGskn8oJ
+         AuQk4JUujmfNnbRjykidKKVlqc2xCebzlet+SV9xsEUh0o4ahZzotCbZE4QMLpoJvZke
+         PLXQ==
+X-Gm-Message-State: APjAAAU7FK/9Bwr0qBkIwT7bYJCRicaFBV1doeZAw2+fZwDOZDDPrfC6
+        G3w0z0p0TWbwVx/ElWtblIfxcp9PQ4/1nPllFXY=
+X-Google-Smtp-Source: APXvYqzKyI9ZqbATSTk7ykfFNhYpDDFOPlSEMmy0+nFSKVR+kGNuoVrsnD6uD8iSavnFvFP9qEXLqW4RaQHmQQfaGKM=
+X-Received: by 2002:a6b:b20a:: with SMTP id b10mr21990461iof.87.1577136306071;
+ Mon, 23 Dec 2019 13:25:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191210003135.32427-1-jassisinghbrar@gmail.com> <87eexclkj0.fsf@gmail.com>
+In-Reply-To: <87eexclkj0.fsf@gmail.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 23 Dec 2019 15:24:54 -0600
+Message-ID: <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
+Subject: Re: [PATCHv1 2/2] usb: gadget: add udc driver for max3420
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds four tests:
-  * Fetch FD, and then compare via kcmp
-  * Read data from FD to make sure it works
-  * Make sure getfd can be blocked by blocking ptrace_may_access
-  * Making sure fetching bad FDs fails
-  * Make sure trying to set flags to non-zero results in an
-    EINVAL
+Hi Felipe,
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
----
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   2 +-
- .../selftests/pidfd/pidfd_getfd_test.c        | 253 ++++++++++++++++++
- 3 files changed, 255 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd_getfd_test.c
+On Tue, Dec 10, 2019 at 1:13 AM Felipe Balbi <balbi@kernel.org> wrote:
 
-diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
-index 8d069490e17b..3a779c084d96 100644
---- a/tools/testing/selftests/pidfd/.gitignore
-+++ b/tools/testing/selftests/pidfd/.gitignore
-@@ -2,3 +2,4 @@ pidfd_open_test
- pidfd_poll_test
- pidfd_test
- pidfd_wait
-+pidfd_getfd_test
-diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-index 43db1b98e845..75a545861375 100644
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS += -g -I../../../../usr/include/ -pthread
- 
--TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait
-+TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-new file mode 100644
-index 000000000000..376eace726c3
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
-@@ -0,0 +1,253 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <sys/socket.h>
-+#include <linux/kcmp.h>
-+#include <linux/capability.h>
-+
-+#include "pidfd.h"
-+#include "../kselftest.h"
-+
-+#define WELL_KNOWN_CHILD_FD	100
-+#define UNKNOWN_FD		111
-+#define SECRET_MESSAGE		"secret"
-+
-+static int kcmp(pid_t pid1, pid_t pid2, int type, unsigned long idx1,
-+		unsigned long idx2)
-+{
-+	errno = 0;
-+	return syscall(SYS_kcmp, pid1, pid2, type, idx1, idx2);
-+}
-+
-+static int pidfd_getfd(int pidfd, int fd)
-+{
-+	errno = 0;
-+	return syscall(__NR_pidfd_getfd, pidfd, fd, 0);
-+}
-+
-+static int child(bool disable_ptrace, int sk)
-+{
-+	char buf[1024];
-+	int ret, fd;
-+
-+	ret = prctl(PR_SET_PDEATHSIG, SIGKILL);
-+	if (ret)
-+		ksft_exit_fail_msg("%s: Child could not set DEATHSIG\n",
-+				   strerror(errno));
-+
-+	fd = syscall(SYS_memfd_create, "test", 0);
-+	if (fd < 0)
-+		ksft_exit_fail_msg("%s: Child could not create memfd\n",
-+				   strerror(errno));
-+
-+	ret = write(fd, SECRET_MESSAGE, sizeof(SECRET_MESSAGE));
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: Child could not write secret message\n",
-+				   strerror(errno));
-+
-+	ret = dup2(fd, WELL_KNOWN_CHILD_FD);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: Could not dup fd into well-known FD\n",
-+				   strerror(errno));
-+
-+	ret = close(fd);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: Child could close old fd\n",
-+				   strerror(errno));
-+
-+	if (disable_ptrace) {
-+		ret = prctl(PR_SET_DUMPABLE, 0);
-+		if (ret < 0)
-+			ksft_exit_fail_msg("%s: Child failed to disable ptrace\n",
-+					   strerror(errno));
-+	}
-+	ret = send(sk, "L", 1, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: Child failed to send launched message\n",
-+				   strerror(errno));
-+	if (ret == 0)
-+		ksft_exit_fail_msg("Failed to send launch message; other side is closed\n");
-+
-+	close(sk);
-+	pause();
-+
-+	return EXIT_SUCCESS;
-+}
-+
-+static int start_child(bool disable_ptrace, pid_t *childpid)
-+{
-+	int pidfd, ret, sk_pair[2];
-+	char buf[1];
-+
-+	if (socketpair(PF_LOCAL, SOCK_SEQPACKET, 0, sk_pair) < 0)
-+		ksft_exit_fail_msg("%s: failed to create socketpair\n",
-+				   strerror(errno));
-+	*childpid = fork();
-+	if (*childpid < 0)
-+		ksft_exit_fail_msg("%s: failed to fork a child process\n",
-+				   strerror(errno));
-+
-+	if (*childpid == 0)
-+		exit(child(disable_ptrace, sk_pair[1]));
-+
-+	close(sk_pair[1]);
-+
-+	pidfd = sys_pidfd_open(*childpid, 0);
-+	if (pidfd < 0)
-+		ksft_exit_fail_msg("%s: failed to pidfd_open\n",
-+				   strerror(errno));
-+
-+	ret = recv(sk_pair[0], &buf, 1, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: failed read from launch socket\n",
-+				   strerror(errno));
-+	if (ret == 0)
-+		ksft_exit_fail_msg("Failed to read from launch socket, child failed\n");
-+
-+	return pidfd;
-+}
-+
-+static void test_kcmp_and_fetch_fd(void)
-+{
-+	char buf[sizeof(SECRET_MESSAGE)];
-+	int fd, pidfd, ret;
-+	pid_t child_pid;
-+
-+	pidfd = start_child(false, &child_pid);
-+
-+	fd = pidfd_getfd(pidfd, WELL_KNOWN_CHILD_FD);
-+	if (fd < 0)
-+		ksft_exit_fail_msg("%s: getfd failed\n", strerror(errno));
-+
-+	ret = kcmp(getpid(), child_pid, KCMP_FILE, fd, WELL_KNOWN_CHILD_FD);
-+	if (ret != 0)
-+		ksft_exit_fail_msg("Our FD not equal to child FD\n");
-+
-+	ksft_test_result_pass("kcmp\n");
-+
-+	ret = lseek(fd, 0, SEEK_SET);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: seek failed\n", strerror(errno));
-+	if (ret != 0)
-+		ksft_exit_fail_msg("%d: unexpected seek position\n", ret);
-+
-+	ret = read(fd, buf, sizeof(buf));
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: failed to read secret message\n",
-+				   strerror(errno));
-+
-+	if (strncmp(SECRET_MESSAGE, buf, sizeof(buf)) != 0)
-+		ksft_exit_fail_msg("%s: Secret message not correct\n", buf);
-+
-+	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
-+	close(pidfd);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: failed to send kill to child\n",
-+				   strerror(errno));
-+
-+	ksft_test_result_pass("fetch_and_read\n");
-+}
-+
-+static void test_no_ptrace(void)
-+{
-+	int fd, pidfd, ret, uid;
-+	pid_t child_pid;
-+
-+	/* turn into nobody if we're root, to avoid CAP_SYS_PTRACE */
-+	uid = getuid();
-+	if (uid == 0)
-+		seteuid(USHRT_MAX);
-+
-+	pidfd = start_child(true, &child_pid);
-+
-+	fd = pidfd_getfd(pidfd, WELL_KNOWN_CHILD_FD);
-+	if (fd != -1)
-+		ksft_exit_fail_msg("%s: getfd succeeded when ptrace blocked\n",
-+				   strerror(errno));
-+	if (errno != EPERM)
-+		ksft_exit_fail_msg("%s: getfd did not get EPERM\n",
-+				   strerror(errno));
-+
-+	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
-+	close(pidfd);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: failed to send kill to child\n",
-+				   strerror(errno));
-+
-+	if (uid == 0)
-+		seteuid(0);
-+
-+	ksft_test_result_pass("no_ptrace\n");
-+}
-+
-+static void test_unknown_fd(void)
-+{
-+	int fd, pidfd, ret;
-+	pid_t child_pid;
-+
-+	pidfd = start_child(false, &child_pid);
-+
-+	fd = pidfd_getfd(pidfd, UNKNOWN_FD);
-+	if (fd != -1)
-+		ksft_exit_fail_msg("%s: getfd succeeded when fetching unknown FD\n",
-+				   strerror(errno));
-+	if (errno != EBADF)
-+		ksft_exit_fail_msg("%s: getfd did not get EBADF\n",
-+				   strerror(errno));
-+
-+	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
-+	close(pidfd);
-+	if (ret < 0)
-+		ksft_exit_fail_msg("%s: failed to send kill to child\n",
-+				   strerror(errno));
-+
-+	ksft_test_result_pass("unknown_fd\n");
-+}
-+
-+static void test_flags_set(void)
-+{
-+	int ret;
-+
-+	errno = 0;
-+	ret = syscall(__NR_pidfd_getfd, 0, 1, 1);
-+	if (ret != -1)
-+		ksft_exit_fail_msg("getfd succeeded with invalid flags\n");
-+	if (errno != EINVAL)
-+		ksft_exit_fail_msg("%s: getfd did not get EINVAL\n",
-+				   strerror(errno));
-+
-+	ksft_test_result_pass("flags_set\n");
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	char buf[sizeof(SECRET_MESSAGE)];
-+	int ret, status, fd, pidfd;
-+	pid_t child_pid;
-+
-+	ksft_print_header();
-+	ksft_set_plan(5);
-+
-+	test_kcmp_and_fetch_fd();
-+	test_unknown_fd();
-+	test_no_ptrace();
-+	test_flags_set();
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.20.1
+> > +#define MAX3420_MAX_EPS              4
+> > +#define EP_MAX_PACKET                64  /* Same for all Endpoints */
+> > +#define EPNAME_SIZE          16  /* Buffer size for endpoint name */
+> > +
+> > +#define ACKSTAT              BIT(0)
+>
+> Let's prepend everything with MAX3420_.
+>
+OK
 
+> > +
+> > +#define MAX3420_REG_EPSTALLS 9
+> > +     #define bACKSTAT        BIT(6)
+>
+> let's avoid CaMeLcAsE :-)
+>
+ok
+
+> > +#define field(val, bit)      ((val) << (bit))
+>
+> The kernel has a bunch of helpers for this. Look at BIT() and GENMASK()
+> for example.
+>
+ok
+
+> > +struct max3420_req {
+> > +     struct usb_request usb_req;
+> > +     struct list_head queue;
+> > +     struct max3420_ep *ep;
+> > +};
+> > +
+> > +struct max3420_ep {
+> > +     struct max3420_udc *udc;
+> > +     struct list_head queue;
+> > +     char name[EPNAME_SIZE];
+> > +     unsigned int maxpacket;
+> > +     struct usb_ep ep_usb;
+>
+> considering you'll run container_of() on this ep_usb field, it's wise to
+> put it as the first field in the struct. That way, compiler can optimize
+> container_of() into a simple type cast.
+>
+ok
+
+> > +struct max3420_udc {
+> > +     struct max3420_ep ep[MAX3420_MAX_EPS];
+> > +     struct usb_gadget_driver *driver;
+> > +     struct task_struct *thread_task;
+> > +     int remote_wkp, is_selfpowered;
+> > +     bool vbus_active, softconnect;
+> > +     struct usb_ctrlrequest setup;
+> > +     struct mutex spi_bus_mutex;
+> > +     struct max3420_req ep0req;
+> > +     struct usb_gadget gadget;
+>
+> likewise with gadget field.
+>
+ok
+
+>> +     spi_message_add_tail(&transfer, &msg);
+>> +     spi_sync(spi, &msg);
+> Not checking return code?
+ok.
+
+> > +     if (todo == ENABLE) {
+> > +             epdis &= ~BIT(ep->id + 4);
+> > +             epien |= BIT(ep->id + 1);
+> > +     } else {
+> > +             epdis |= BIT(ep->id + 4);
+> > +             epien &= ~BIT(ep->id + 1);
+> > +     }
+> > +
+> > +     spi_wr8(udc, MAX3420_REG_CLRTOGS, epdis);
+> > +     spi_wr8(udc, MAX3420_REG_EPIEN, epien);
+> > +
+> > +     return 1;
+>
+> Usually we return 0 on success and a negative errno on failure. What do
+> you mean here by return 1?
+>
+ok
+
+
+> > +             ep->halted = 0;
+> > +             epstalls &= ~BIT(ep->id + 1);
+> > +             clrtogs = spi_rd8(udc, MAX3420_REG_CLRTOGS);
+> > +             clrtogs |= BIT(ep->id + 1);
+> > +             spi_wr8(udc, MAX3420_REG_CLRTOGS, clrtogs);
+> > +     }
+> > +     spi_wr8(udc, MAX3420_REG_EPSTALLS, epstalls | bACKSTAT);
+> > +
+> > +     return 1;
+>
+> and here?
+>
+ok
+
+
+> > +
+> > +     /* Clear Remote-WkUp Signal*/
+> > +     usbctl = spi_rd8(udc, MAX3420_REG_USBCTL);
+> > +     usbctl &= ~bSIGRWU;
+> > +     spi_wr8(udc, MAX3420_REG_USBCTL, usbctl);
+> > +
+> > +     udc->suspended = false;
+> > +
+> > +     return 1;
+>
+> here?
+>
+ok
+
+
+> > +
+> > +static void __max3420_start(struct max3420_udc *udc)
+> > +{
+> > +     u8 val;
+> > +
+> > +     /* Need this delay if bus-powered */
+> > +     msleep_interruptible(250);
+>
+> should you check if you're bus powered?
+>
+for some reason, even for self-powered, it helped reliability.
+
+
+> > +
+> > +static int do_data(struct max3420_udc *udc, int ep_id, int in)
+>
+> add a max3420_ prefix like all other functions
+>
+ok
+
+
+> > +
+> > +static int max3420_thread(void *dev_id)
+>
+> Why do you need this thread? Sure you can't live without it?
+>
+All the slow spi-bus transfers are handled at one place here without
+blocking any api call. IMO it is cleaner and easier to manage.
+
+
+> > +static struct usb_request *max3420_alloc_request(struct usb_ep *_ep,
+> > +                                                 gfp_t gfp_flags)
+> > +{
+> > +     struct max3420_ep *ep = to_max3420_ep(_ep);
+> > +     struct max3420_req *req;
+> > +
+> > +     req = kzalloc(sizeof(*req), gfp_flags);
+> > +     if (!req)
+> > +             return NULL;
+> > +
+> > +     req->ep = ep;
+> > +     INIT_LIST_HEAD(&req->queue);
+>
+> unnecessary list initialization
+>
+ok.
+
+Thank you!
