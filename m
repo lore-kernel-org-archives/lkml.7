@@ -2,147 +2,659 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AA7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E23C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C73206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5A8207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YEUH0V9E";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="TLkbtHqe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="XkbGF23k";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="si5LmgdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfLWLhK (ORCPT
+        id S1727514AbfLWLhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:37:10 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:63798 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726791AbfLWLhI (ORCPT
+        Mon, 23 Dec 2019 06:37:13 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:30113 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfLWLhL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:37:08 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNBUIB3032559;
-        Mon, 23 Dec 2019 03:36:51 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
- b=YEUH0V9EKNWTsCZrpw0PdLTsgnpJ7AdhWJZBHF30O1VFELHM9bnYuMCkiJN8VCAkolIz
- riTviJ7/Fw1Y6tk7FnnGfGpX/GgSBwR73QQNP46Nfd4HSlPi5VH0chZWylXfsGDxs2w0
- M0TS8ObWk0wjzI8L6Fp0bEQGwTJifo33zAMi9aL2DougPVwmZ0K+fiiL+kxiIeB4JK3a
- 9VYYKfNUX2s69JbTGeCdxwkjMQBFbn+lEwOyYfSl/XNXG1EVtI6e+d3SmnXRwX+3dAMw
- BTnFnG1b+2LQwt49q0vh9g6MVQzALndevF0eb+wJE20MAJyQOD3zV9dyL/+uw62w0u0P /w== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2x1hmv4vpy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 23 Dec 2019 03:36:51 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 23 Dec
- 2019 03:36:50 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.107)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Mon, 23 Dec 2019 03:36:50 -0800
+        Mon, 23 Dec 2019 06:37:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577101089; x=1608637089;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TDw+6T7Q3AVGnriEPRXcZGr8uKL+7+ckTTGKhHZL9G0=;
+  b=XkbGF23kfSQzIjR9JocRIPU56MGHEGCXX/LOM3hPw4JWpKxOwt2dZcIc
+   PjYhez4DFTeiS0fZ39BojqNbSixP+Wx5u5B1610IaL+thmLkxq4hgnffd
+   d1VbUOzpsjmMVDyJc7ZOwC6qqHsIm5UdgOXa8KJAmW8VMaxeEJjF511LV
+   432Xpq/67x9U5TVDXZF9b4IeScRsUycbroJdYZpBbcVXtnKO1rrOGnFOV
+   0wq9+KhKomQhElgarJ5MZvEM+flqMcDhT1bl7MpTv7kPn9GsYFhKXGY8f
+   LS679qPIHSiF5NGBXGCkeIzXps1NBM84/yF96CXuYCrhXJB2W/oGFRWDH
+   g==;
+IronPort-SDR: w6jL37pOgNf/i1/eKfUoZnDnsFAe0A1AfEgQaTUXjnxu7Ybli5G1Os9Ss8MXYGnQb+JRKsbkgK
+ pbIj6Xu8ikjTeEIo1zc6JDqqJyV+bhDjj9N8aVlllkZ0Ty/3NETe2DQsLO/ct/nbdr+5yQtWrk
+ Mr4P+i6cBCpehithB+sfSqEjLUGaSyiPrNJ89aXdDObfQMbEN/8I753oLzODPDm954CV0qn1M9
+ XnJOWBoxN9AXmf4m7PB1xDNPS4fyxbkIJFWsJfaaNqKb/WpdZ3uTmtouDVVLh+ZZzdGw4N7j1v
+ Gr4=
+X-IronPort-AV: E=Sophos;i="5.69,347,1571673600"; 
+   d="scan'208";a="227595223"
+Received: from mail-mw2nam12lp2045.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.45])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Dec 2019 19:38:05 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fjjedbSkouQXBjSfE8GBr9Ie8EnGTnFrDeNvWSTb0Y+urc+Wje/cJxPZDqmgiyzNZUU3w8hqI4hIhNwkOrtTP60ZNn8TYuNYJk39V74suz8SJw3c+GOe07vn7RjKo+TT3ToUjhofQSdJ/uF8W44Hqz9PeQXv3k8emCHPzzpT4tyCNMtlE+/DDKTpSeG0iZjN4nl3gOusIAjcEbJ8lFMwXpWS4PutuG5jxiGg7vm1N+z0NFw/vZ/R09YrvIrapGVJPkbj7gw4G5ijTuX1UmE1wWVXPFeFX5+PnX1v4h6UK8G6JR0cpOEG30bhKPIYAXq0cL3fbmhRAQ4bzjtkh31Ikw==
+ b=gjFagHLsFk5c2qo1TTdi5SY5JH93r8bsHleihf+pf+tD/g7bp6buYM4C7W+2pdEsbf/VIevLHrJeftVBwfDqXmlBkyISJkSINtmlJcgbm57w66xY8SPynveuxPBXAazqm1GPRl6hUlREIA0bvAp1jzLP7w7b74KZwJQcL0LCjXg3OEgXvzVtTN556Q0yp3xfKjUsYFQ3b0BSDmmyYcYGugTpBE+1v7A1WRkHte/Ia33CxxRr827CRFsVOaNA5p5jTa3ozog2p9RF5zGlCUzIhaDKP/ow03M5mpSbKJi07odhGDPZIDn4tUFl9ksflaZ1aTfMYLgmsq+kX1215ofHtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
- b=SketMkPSUrk1jKA+ZL+TL9DD8N1/QtQEVhxD+93fX8V0Ld/Xn2MWXclSctYO1DSBYGZd1epSCpjuhMQG72rI2yJdTquCNNWVT3G/E+yznl0H+tH6zWCRpi8FfDfdKszFIoLSb1rJWmvM9nX/i8KX90jAgUAJ0+ZpvtmfTgie28ucFTjZxh7UJRLuBz2Uy1cDzmEjJqU+qBv1shT2kY8k5Pr2lzojUYAiNFQIzhiJ0uzP/WqoH6bFRNlmvl+l6y4lAjAW6Q6m8I+EO5tsTGblcuHVKz/6wR9Av+eMdfephXfCTTE7Cw6w22AnSFLjzSCoMHcL0czvjpzSF6BNkFZb6g==
+ bh=SoXf02/UFcsIh7Fw0wH3eXz0REPLRNOTpO0ojyZhCWw=;
+ b=ic17S43OdvNy5aINiCfmuV5JCrQc3D9CltRd1/eMzB7g+BBsUt4BaRjCDL+dgWrkQMbuulcotX94Ec1Oj+LHZHv4apC+E1Ueumw4xd5cQGHDRuc78XKJqlllz0WgXO7XZuZz7etYVsbS/So8xxi44C5Si7JN8n6ywZIbspALXFjGftsTChRMtH6ARBGawXGa1LvcaY2NJIt1+gpGSCWfQTAoFuWD6Cgs87bnUbbMLBQP9O8sojMufrzy4hYurVEEtmbBLF0isnufl9QgRT9b6uQbmQkVHHRpL8JwsG3ehSRp5iUZI7MaWXAYJhvdJFfEtmWKekiQI9q5QEblgaGlqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=umG6pZY64B5MYmOuvzhQTpX6kesataCEMSkVU+rzUtA=;
- b=TLkbtHqeuJ8aWC363qq+KYzKQQNoCxol1II1OA5bHvIC/lkbSgSSZJs+rPJQZD70IyF9tVfF6f83CFx1EHpQQc7I1xVJr6GyhXV+daPXl4TiPRAC3AdlH9n3lCIYZY4D2cqio3n5o3ry+h/rUwQOYPwbMuHdXSxqliv9oruanjQ=
-Received: from MN2PR18MB2638.namprd18.prod.outlook.com (20.179.84.25) by
- MN2PR18MB3406.namprd18.prod.outlook.com (10.255.236.28) with Microsoft SMTP
+ bh=SoXf02/UFcsIh7Fw0wH3eXz0REPLRNOTpO0ojyZhCWw=;
+ b=si5LmgdCvrpLCWvqVgH86/+yDGsL9fTQlfvkvyRxMxwg58oHbAPy8lj83lEWseYg9HHBJ6Dg86N5OYmWLOUvjrIFpP95QGY5TWQD0QK8GmtVFNOpGBx+0UyeCRD24ZkeSNDHw0M3+8/lrjjoqqYAEFPQyKhkYq1YxF9/dzz4YJ0=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB6480.namprd04.prod.outlook.com (52.132.171.74) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Mon, 23 Dec 2019 11:36:48 +0000
-Received: from MN2PR18MB2638.namprd18.prod.outlook.com
- ([fe80::54ca:9908:4108:f0a6]) by MN2PR18MB2638.namprd18.prod.outlook.com
- ([fe80::54ca:9908:4108:f0a6%6]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 11:36:48 +0000
-From:   Igor Russkikh <irusskikh@marvell.com>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "sd@queasysnail.net" <sd@queasysnail.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ 15.20.2559.15; Mon, 23 Dec 2019 11:37:06 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a9a0:3ffa:371f:ad89]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a9a0:3ffa:371f:ad89%7]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 11:37:06 +0000
+Received: from wdc.com (106.51.20.238) by MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 23 Dec 2019 11:37:01 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        "Simon.Edelhaus@aquantia.com" <Simon.Edelhaus@aquantia.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        "Dmitry Bogdanov" <dbogdanov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>
-Subject: Re: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
- offloading to the MAC
-Thread-Topic: [EXT] [PATCH net-next v4 15/15] net: macsec: add support for
- offloading to the MAC
-Thread-Index: AQIsumBpaQv0fT17tb+gRgQd0efq8ALR+7c2Ad4MoeQ=
-Date:   Mon, 23 Dec 2019 11:36:48 +0000
-Message-ID: <MN2PR18MB26387BD6B59565D21F936FE5B72E0@MN2PR18MB2638.namprd18.prod.outlook.com>
-References: <20191219105515.78400-1-antoine.tenart@bootlin.com>
- <20191219105515.78400-16-antoine.tenart@bootlin.com>
-In-Reply-To: <20191219105515.78400-16-antoine.tenart@bootlin.com>
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v10 14/19] RISC-V: KVM: Add timer functionality
+Thread-Topic: [PATCH v10 14/19] RISC-V: KVM: Add timer functionality
+Thread-Index: AQHVuYVNMWwZXuKVCk2AktgUSLchQQ==
+Date:   Mon, 23 Dec 2019 11:37:06 +0000
+Message-ID: <20191223113443.68969-15-anup.patel@wdc.com>
+References: <20191223113443.68969-1-anup.patel@wdc.com>
+In-Reply-To: <20191223113443.68969-1-anup.patel@wdc.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [95.79.108.179]
+x-clientproxiedby: MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [106.51.20.238]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a06fc9cd-9506-4668-823d-08d7879c659b
-x-ms-traffictypediagnostic: MN2PR18MB3406:
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 32cf335c-3e86-400d-e3d7-08d7879c702d
+x-ms-traffictypediagnostic: MN2PR04MB6480:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB340616D84A061E22356C3E55B72E0@MN2PR18MB3406.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-microsoft-antispam-prvs: <MN2PR04MB648027900EC4D5C0892A26588D2E0@MN2PR04MB6480.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:862;
 x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(346002)(376002)(396003)(39850400004)(199004)(189003)(9686003)(54906003)(110136005)(33656002)(316002)(71200400001)(8676002)(81166006)(81156014)(8936002)(7416002)(478600001)(4326008)(186003)(55016002)(107886003)(66556008)(64756008)(66446008)(2906002)(66476007)(6506007)(66946007)(4744005)(26005)(86362001)(52536014)(7696005)(76116006)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3406;H:MN2PR18MB2638.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(199004)(189003)(36756003)(2616005)(956004)(478600001)(44832011)(2906002)(55016002)(7416002)(52116002)(7696005)(66446008)(66556008)(64756008)(66476007)(4326008)(1006002)(66946007)(8936002)(26005)(1076003)(54906003)(110136005)(186003)(8676002)(71200400001)(81166006)(81156014)(55236004)(86362001)(16526019)(8886007)(30864003)(5660300002)(316002)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6480;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7RgH2P3+1SoPtJDeJSGfXAmyilpUquZq9c4laMvtLRxgXRl+IO1KGCN2gF9qWRtPVNl7gqFBnr6ZsekZsT6xPDrtU1Cmhh3DHkbKS7qac7jk2j4XXU9hWXYEKGLzKZdujsxFoXxbF2LfjCi2VXBCHC+3zDwMC2X+9QhFYF3Q1BaaqFn9kHcuc92lcdQVkjkcilVCmNHPjluBsGwC6Gd5emLQICa/XUCIv/x76Cp0ptLVB50kiMfRHC0J1Xb+LfTcRZiiZI81PoqBF5EGy7RUohSVSw3XnKOhbufA9cWXm4KZ823/V5/IYGxYV3+7sbEBw8Y2JaJSon2XLbzquF082RIAVnGM9YilNvW/QfKS23zhdOKyFdAl8mas34lWQWD2mPYe1I0Yhp33MNaim1XjdXB8spQWm2n3E9cnUTQNm3Ga0yp7/ihZSObIFRkdajef
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: SvYW4pPGKKbpezcc/ml8Aqe0dYIF6ZkIyci9lU3Xwe1BaimPuqFBGK3U0iJ1b/Z/e7XPJBMrZ3ijvxHnORpdQdN/HVTTrI55vrw9k7j17mbxYf+/MKGzltQZUXI2G/0Qse227LTA66vR4tPgioHqHlxtfP18RXfFBCN5559Ze3OQyV+sPfhJYVVmo5tfN5rW6a+7cagK6UF9JD85yPQhEX3h+iw6XjcyWE3e0VZFpv7gN+Mxo2ydHx016CPH9/ANDGFURVuLcjZoWtd3PnyPBRRJqASNnWhPJkVID8evWzDVwAdsa5m2UVH7YRIH1xk1ELALHX8jh/ZSDPDxhYs4oKD2FIsbkEzhGUGuZlC3wHQ5FiJUlhiY5A8uKR41i+sv9Tl+zB/u3ZAWNjVy3BFZPgHW6Hbqkej265j+OCi876J2eyfrONiZor1OBCSKp919zd1mlCzKgBMBsuzvmvJd0K27I6lov+99AS/6tjiuYLopTHN13T6XDAsAL2t565Iv
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a06fc9cd-9506-4668-823d-08d7879c659b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 11:36:48.5003
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32cf335c-3e86-400d-e3d7-08d7879c702d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 11:37:06.5906
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q/Jaf9Euiwd63E5QJypKvpYMyvv9MOLh+4Xs/wAlTJTO+pOFdI0LhRcP5jBjiMxV+Q715xlfHd1mR04JAiLPww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3406
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-23_05:2019-12-23,2019-12-23 signatures=0
+X-MS-Exchange-CrossTenant-userprincipalname: d0EqHIeV5V8AG3K38lPqG8JhJs8+JsTwBwUogi+pyRYUkPupcDxX6pkCUXYN4Q0EvjOAr531g/eNP2H7urjN5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6480
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvaWZfbGluay5oIGIvaW5jbHVkZS91
-YXBpL2xpbnV4L2lmX2xpbmsuaA0KPiBpbmRleCAwMjRhZjJkMWQwYWYuLjc3MTM3MWQ1Yjk5NiAx
-MDA2NDQNCj4gLS0tIGEvaW5jbHVkZS91YXBpL2xpbnV4L2lmX2xpbmsuaA0KPiArKysgYi9pbmNs
-dWRlL3VhcGkvbGludXgvaWZfbGluay5oDQo+IEBAIC00ODksNiArNDg5LDcgQEAgZW51bSBtYWNz
-ZWNfdmFsaWRhdGlvbl90eXBlIHsNCj4gIGVudW0gbWFjc2VjX29mZmxvYWQgew0KPiAgCU1BQ1NF
-Q19PRkZMT0FEX09GRiA9IDAsDQo+ICAJTUFDU0VDX09GRkxPQURfUEhZID0gMSwNCj4gKwlNQUNT
-RUNfT0ZGTE9BRF9NQUMgPSAyLA0KPiAgCV9fTUFDU0VDX09GRkxPQURfRU5ELA0KPiAgCU1BQ1NF
-Q19PRkZMT0FEX01BWCA9IF9fTUFDU0VDX09GRkxPQURfRU5EIC0gMSwNCg0KSGkgQW50b2luZSwN
-Cg0KU28gZnJvbSB1YXBpIHBlcnNwZWN0aXZlIHVzZXIgaGF2ZSB0byBleHBsaWNpdGx5IHNwZWNp
-ZnkgIm9mZmxvYWQgbWFjIg0Kb3IgIm9mZmxvYWQgcGh5Ij8gQW5kIGZyb20gbm9uIGV4cGVyaWVu
-Y2VkIHVzZXIgcGVyc3BlY3RpdmUgaGUgYWx3YXlzDQpoYXZlIHRvIHRyeSB0aGVzZSB0d28gYmVm
-b3JlIHJvbGxpbmcgYmFjayB0byAib2ZmbG9hZCBub25lIiA/DQoNCkknbSBub3Qgc2F5aW5nIHRo
-aXMgaXMgd3JvbmcsIGp1c3QgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgaWYgdGhlcmUgYW55DQptb3Jl
-IHN0cmVhbWxpbmVkIHdheSB0byBkbyB0aGlzLi4NCg0KUmVnYXJkcywNCiAgSWdvcg0K
+From: Atish Patra <atish.patra@wdc.com>
+
+The RISC-V hypervisor specification doesn't have any virtual timer
+feature.
+
+Due to this, the guest VCPU timer will be programmed via SBI calls.
+The host will use a separate hrtimer event for each guest VCPU to
+provide timer functionality. We inject a virtual timer interrupt to
+the guest VCPU whenever the guest VCPU hrtimer event expires.
+
+This patch adds guest VCPU timer implementation along with ONE_REG
+interface to access VCPU timer state from user space.
+
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ arch/riscv/include/asm/kvm_host.h       |   7 +
+ arch/riscv/include/asm/kvm_vcpu_timer.h |  44 +++++
+ arch/riscv/include/uapi/asm/kvm.h       |  17 ++
+ arch/riscv/kvm/Makefile                 |   2 +-
+ arch/riscv/kvm/vcpu.c                   |  12 ++
+ arch/riscv/kvm/vcpu_timer.c             | 225 ++++++++++++++++++++++++
+ arch/riscv/kvm/vm.c                     |   2 +-
+ drivers/clocksource/timer-riscv.c       |   8 +
+ include/clocksource/timer-riscv.h       |  16 ++
+ 9 files changed, 331 insertions(+), 2 deletions(-)
+ create mode 100644 arch/riscv/include/asm/kvm_vcpu_timer.h
+ create mode 100644 arch/riscv/kvm/vcpu_timer.c
+ create mode 100644 include/clocksource/timer-riscv.h
+
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm=
+_host.h
+index cc0b09918431..b547f79c2e49 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -12,6 +12,7 @@
+ #include <linux/types.h>
+ #include <linux/kvm.h>
+ #include <linux/kvm_types.h>
++#include <asm/kvm_vcpu_timer.h>
+=20
+ #ifdef CONFIG_64BIT
+ #define KVM_MAX_VCPUS			(1U << 16)
+@@ -64,6 +65,9 @@ struct kvm_arch {
+ 	/* stage2 page table */
+ 	pgd_t *pgd;
+ 	phys_addr_t pgd_phys;
++
++	/* Guest Timer */
++	struct kvm_guest_timer timer;
+ };
+=20
+ struct kvm_mmio_decode {
+@@ -168,6 +172,9 @@ struct kvm_vcpu_arch {
+ 	unsigned long irqs_pending;
+ 	unsigned long irqs_pending_mask;
+=20
++	/* VCPU Timer */
++	struct kvm_vcpu_timer timer;
++
+ 	/* MMIO instruction details */
+ 	struct kvm_mmio_decode mmio_decode;
+=20
+diff --git a/arch/riscv/include/asm/kvm_vcpu_timer.h b/arch/riscv/include/a=
+sm/kvm_vcpu_timer.h
+new file mode 100644
+index 000000000000..375281eb49e0
+--- /dev/null
++++ b/arch/riscv/include/asm/kvm_vcpu_timer.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
++ *
++ * Authors:
++ *	Atish Patra <atish.patra@wdc.com>
++ */
++
++#ifndef __KVM_VCPU_RISCV_TIMER_H
++#define __KVM_VCPU_RISCV_TIMER_H
++
++#include <linux/hrtimer.h>
++
++struct kvm_guest_timer {
++	/* Mult & Shift values to get nanoseconds from cycles */
++	u32 nsec_mult;
++	u32 nsec_shift;
++	/* Time delta value */
++	u64 time_delta;
++};
++
++struct kvm_vcpu_timer {
++	/* Flag for whether init is done */
++	bool init_done;
++	/* Flag for whether timer event is configured */
++	bool next_set;
++	/* Next timer event cycles */
++	u64 next_cycles;
++	/* Underlying hrtimer instance */
++	struct hrtimer hrt;
++};
++
++int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu, u64 ncycles);
++int kvm_riscv_vcpu_get_reg_timer(struct kvm_vcpu *vcpu,
++				 const struct kvm_one_reg *reg);
++int kvm_riscv_vcpu_set_reg_timer(struct kvm_vcpu *vcpu,
++				 const struct kvm_one_reg *reg);
++int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu);
++int kvm_riscv_vcpu_timer_deinit(struct kvm_vcpu *vcpu);
++int kvm_riscv_vcpu_timer_reset(struct kvm_vcpu *vcpu);
++void kvm_riscv_vcpu_timer_restore(struct kvm_vcpu *vcpu);
++int kvm_riscv_guest_timer_init(struct kvm *kvm);
++
++#endif
+diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/as=
+m/kvm.h
+index 3a20327242f1..8f15eee35a1e 100644
+--- a/arch/riscv/include/uapi/asm/kvm.h
++++ b/arch/riscv/include/uapi/asm/kvm.h
+@@ -73,6 +73,18 @@ struct kvm_riscv_csr {
+ 	unsigned long satp;
+ };
+=20
++/* TIMER registers for KVM_GET_ONE_REG and KVM_SET_ONE_REG */
++struct kvm_riscv_timer {
++	u64 frequency;
++	u64 time;
++	u64 compare;
++	u64 state;
++};
++
++/* Possible states for kvm_riscv_timer */
++#define KVM_RISCV_TIMER_STATE_OFF	0
++#define KVM_RISCV_TIMER_STATE_ON	1
++
+ #define KVM_REG_SIZE(id)		\
+ 	(1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+=20
+@@ -95,6 +107,11 @@ struct kvm_riscv_csr {
+ #define KVM_REG_RISCV_CSR_REG(name)	\
+ 		(offsetof(struct kvm_riscv_csr, name) / sizeof(unsigned long))
+=20
++/* Timer registers are mapped as type 4 */
++#define KVM_REG_RISCV_TIMER		(0x04 << KVM_REG_RISCV_TYPE_SHIFT)
++#define KVM_REG_RISCV_TIMER_REG(name)	\
++		(offsetof(struct kvm_riscv_timer, name) / sizeof(u64))
++
+ #endif
+=20
+ #endif /* __LINUX_KVM_RISCV_H */
+diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
+index c0f57f26c13d..3e0c7558320d 100644
+--- a/arch/riscv/kvm/Makefile
++++ b/arch/riscv/kvm/Makefile
+@@ -9,6 +9,6 @@ ccflags-y :=3D -Ivirt/kvm -Iarch/riscv/kvm
+ kvm-objs :=3D $(common-objs-y)
+=20
+ kvm-objs +=3D main.o vm.o vmid.o tlb.o mmu.o
+-kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o
++kvm-objs +=3D vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
+=20
+ obj-$(CONFIG_KVM)	+=3D kvm.o
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 807fd05aa9a4..a49e1695f11b 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -51,6 +51,8 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+=20
+ 	memcpy(cntx, reset_cntx, sizeof(*cntx));
+=20
++	kvm_riscv_vcpu_timer_reset(vcpu);
++
+ 	WRITE_ONCE(vcpu->arch.irqs_pending, 0);
+ 	WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
+ }
+@@ -105,6 +107,9 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+ 	cntx->hstatus |=3D HSTATUS_SP2P;
+ 	cntx->hstatus |=3D HSTATUS_SPV;
+=20
++	/* Setup VCPU timer */
++	kvm_riscv_vcpu_timer_init(vcpu);
++
+ 	/* Reset VCPU */
+ 	kvm_riscv_reset_vcpu(vcpu);
+=20
+@@ -113,6 +118,7 @@ int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
+=20
+ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ {
++	kvm_riscv_vcpu_timer_deinit(vcpu);
+ 	kvm_riscv_stage2_flush_cache(vcpu);
+ 	kmem_cache_free(kvm_vcpu_cache, vcpu);
+ }
+@@ -363,6 +369,8 @@ static int kvm_riscv_vcpu_set_reg(struct kvm_vcpu *vcpu=
+,
+ 		return kvm_riscv_vcpu_set_reg_core(vcpu, reg);
+ 	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_CSR)
+ 		return kvm_riscv_vcpu_set_reg_csr(vcpu, reg);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_TIMER)
++		return kvm_riscv_vcpu_set_reg_timer(vcpu, reg);
+=20
+ 	return -EINVAL;
+ }
+@@ -376,6 +384,8 @@ static int kvm_riscv_vcpu_get_reg(struct kvm_vcpu *vcpu=
+,
+ 		return kvm_riscv_vcpu_get_reg_core(vcpu, reg);
+ 	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_CSR)
+ 		return kvm_riscv_vcpu_get_reg_csr(vcpu, reg);
++	else if ((reg->id & KVM_REG_RISCV_TYPE_MASK) =3D=3D KVM_REG_RISCV_TIMER)
++		return kvm_riscv_vcpu_get_reg_timer(vcpu, reg);
+=20
+ 	return -EINVAL;
+ }
+@@ -608,6 +618,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+=20
+ 	kvm_riscv_stage2_update_hgatp(vcpu);
+=20
++	kvm_riscv_vcpu_timer_restore(vcpu);
++
+ 	vcpu->cpu =3D cpu;
+ }
+=20
+diff --git a/arch/riscv/kvm/vcpu_timer.c b/arch/riscv/kvm/vcpu_timer.c
+new file mode 100644
+index 000000000000..5fb9fe378800
+--- /dev/null
++++ b/arch/riscv/kvm/vcpu_timer.c
+@@ -0,0 +1,225 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
++ *
++ * Authors:
++ *     Atish Patra <atish.patra@wdc.com>
++ */
++
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/kvm_host.h>
++#include <linux/uaccess.h>
++#include <clocksource/timer-riscv.h>
++#include <asm/csr.h>
++#include <asm/delay.h>
++#include <asm/kvm_vcpu_timer.h>
++
++static u64 kvm_riscv_current_cycles(struct kvm_guest_timer *gt)
++{
++	return get_cycles64() + gt->time_delta;
++}
++
++static u64 kvm_riscv_delta_cycles2ns(u64 cycles,
++				     struct kvm_guest_timer *gt,
++				     struct kvm_vcpu_timer *t)
++{
++	unsigned long flags;
++	u64 cycles_now, cycles_delta, delta_ns;
++
++	local_irq_save(flags);
++	cycles_now =3D kvm_riscv_current_cycles(gt);
++	if (cycles_now < cycles)
++		cycles_delta =3D cycles - cycles_now;
++	else
++		cycles_delta =3D 0;
++	delta_ns =3D (cycles_delta * gt->nsec_mult) >> gt->nsec_shift;
++	local_irq_restore(flags);
++
++	return delta_ns;
++}
++
++static enum hrtimer_restart kvm_riscv_vcpu_hrtimer_expired(struct hrtimer =
+*h)
++{
++	u64 delta_ns;
++	struct kvm_vcpu_timer *t =3D container_of(h, struct kvm_vcpu_timer, hrt);
++	struct kvm_vcpu *vcpu =3D container_of(t, struct kvm_vcpu, arch.timer);
++	struct kvm_guest_timer *gt =3D &vcpu->kvm->arch.timer;
++
++	if (kvm_riscv_current_cycles(gt) < t->next_cycles) {
++		delta_ns =3D kvm_riscv_delta_cycles2ns(t->next_cycles, gt, t);
++		hrtimer_forward_now(&t->hrt, ktime_set(0, delta_ns));
++		return HRTIMER_RESTART;
++	}
++
++	t->next_set =3D false;
++	kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_VS_TIMER);
++
++	return HRTIMER_NORESTART;
++}
++
++static int kvm_riscv_vcpu_timer_cancel(struct kvm_vcpu_timer *t)
++{
++	if (!t->init_done || !t->next_set)
++		return -EINVAL;
++
++	hrtimer_cancel(&t->hrt);
++	t->next_set =3D false;
++
++	return 0;
++}
++
++int kvm_riscv_vcpu_timer_next_event(struct kvm_vcpu *vcpu, u64 ncycles)
++{
++	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
++	struct kvm_guest_timer *gt =3D &vcpu->kvm->arch.timer;
++	u64 delta_ns;
++
++	if (!t->init_done)
++		return -EINVAL;
++
++	kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_VS_TIMER);
++
++	delta_ns =3D kvm_riscv_delta_cycles2ns(ncycles, gt, t);
++	t->next_cycles =3D ncycles;
++	hrtimer_start(&t->hrt, ktime_set(0, delta_ns), HRTIMER_MODE_REL);
++	t->next_set =3D true;
++
++	return 0;
++}
++
++int kvm_riscv_vcpu_get_reg_timer(struct kvm_vcpu *vcpu,
++				 const struct kvm_one_reg *reg)
++{
++	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
++	struct kvm_guest_timer *gt =3D &vcpu->kvm->arch.timer;
++	u64 __user *uaddr =3D (u64 __user *)(unsigned long)reg->addr;
++	unsigned long reg_num =3D reg->id & ~(KVM_REG_ARCH_MASK |
++					    KVM_REG_SIZE_MASK |
++					    KVM_REG_RISCV_TIMER);
++	u64 reg_val;
++
++	if (KVM_REG_SIZE(reg->id) !=3D sizeof(u64))
++		return -EINVAL;
++	if (reg_num >=3D sizeof(struct kvm_riscv_timer) / sizeof(u64))
++		return -EINVAL;
++
++	switch (reg_num) {
++	case KVM_REG_RISCV_TIMER_REG(frequency):
++		reg_val =3D riscv_timebase;
++		break;
++	case KVM_REG_RISCV_TIMER_REG(time):
++		reg_val =3D kvm_riscv_current_cycles(gt);
++		break;
++	case KVM_REG_RISCV_TIMER_REG(compare):
++		reg_val =3D t->next_cycles;
++		break;
++	case KVM_REG_RISCV_TIMER_REG(state):
++		reg_val =3D (t->next_set) ? KVM_RISCV_TIMER_STATE_ON :
++					  KVM_RISCV_TIMER_STATE_OFF;
++		break;
++	default:
++		return -EINVAL;
++	};
++
++	if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
++		return -EFAULT;
++
++	return 0;
++}
++
++int kvm_riscv_vcpu_set_reg_timer(struct kvm_vcpu *vcpu,
++				 const struct kvm_one_reg *reg)
++{
++	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
++	struct kvm_guest_timer *gt =3D &vcpu->kvm->arch.timer;
++	u64 __user *uaddr =3D (u64 __user *)(unsigned long)reg->addr;
++	unsigned long reg_num =3D reg->id & ~(KVM_REG_ARCH_MASK |
++					    KVM_REG_SIZE_MASK |
++					    KVM_REG_RISCV_TIMER);
++	u64 reg_val;
++	int ret =3D 0;
++
++	if (KVM_REG_SIZE(reg->id) !=3D sizeof(u64))
++		return -EINVAL;
++	if (reg_num >=3D sizeof(struct kvm_riscv_timer) / sizeof(u64))
++		return -EINVAL;
++
++	if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
++		return -EFAULT;
++
++	switch (reg_num) {
++	case KVM_REG_RISCV_TIMER_REG(frequency):
++		ret =3D -ENOTSUPP;
++		break;
++	case KVM_REG_RISCV_TIMER_REG(time):
++		gt->time_delta =3D reg_val - get_cycles64();
++		break;
++	case KVM_REG_RISCV_TIMER_REG(compare):
++		t->next_cycles =3D reg_val;
++		break;
++	case KVM_REG_RISCV_TIMER_REG(state):
++		if (reg_val =3D=3D KVM_RISCV_TIMER_STATE_ON)
++			ret =3D kvm_riscv_vcpu_timer_next_event(vcpu, reg_val);
++		else
++			ret =3D kvm_riscv_vcpu_timer_cancel(t);
++		break;
++	default:
++		ret =3D -EINVAL;
++		break;
++	};
++
++	return ret;
++}
++
++int kvm_riscv_vcpu_timer_init(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_timer *t =3D &vcpu->arch.timer;
++
++	if (t->init_done)
++		return -EINVAL;
++
++	hrtimer_init(&t->hrt, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	t->hrt.function =3D kvm_riscv_vcpu_hrtimer_expired;
++	t->init_done =3D true;
++	t->next_set =3D false;
++
++	return 0;
++}
++
++int kvm_riscv_vcpu_timer_deinit(struct kvm_vcpu *vcpu)
++{
++	int ret;
++
++	ret =3D kvm_riscv_vcpu_timer_cancel(&vcpu->arch.timer);
++	vcpu->arch.timer.init_done =3D false;
++
++	return ret;
++}
++
++int kvm_riscv_vcpu_timer_reset(struct kvm_vcpu *vcpu)
++{
++	return kvm_riscv_vcpu_timer_cancel(&vcpu->arch.timer);
++}
++
++void kvm_riscv_vcpu_timer_restore(struct kvm_vcpu *vcpu)
++{
++	struct kvm_guest_timer *gt =3D &vcpu->kvm->arch.timer;
++
++#ifdef CONFIG_64BIT
++	csr_write(CSR_HTIMEDELTA, gt->time_delta);
++#else
++	csr_write(CSR_HTIMEDELTA, (u32)(gt->time_delta));
++	csr_write(CSR_HTIMEDELTAH, (u32)(gt->time_delta >> 32));
++#endif
++}
++
++int kvm_riscv_guest_timer_init(struct kvm *kvm)
++{
++	struct kvm_guest_timer *gt =3D &kvm->arch.timer;
++
++	riscv_cs_get_mult_shift(&gt->nsec_mult, &gt->nsec_shift);
++	gt->time_delta =3D -get_cycles64();
++
++	return 0;
++}
+diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+index fd84b4d914dc..4f2498198cb5 100644
+--- a/arch/riscv/kvm/vm.c
++++ b/arch/riscv/kvm/vm.c
+@@ -32,7 +32,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 		return r;
+ 	}
+=20
+-	return 0;
++	return kvm_riscv_guest_timer_init(kvm);
+ }
+=20
+ void kvm_arch_destroy_vm(struct kvm *kvm)
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-=
+riscv.c
+index 4e54856ce2a5..df5ad56e1f24 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -12,6 +12,7 @@
+ #include <linux/cpu.h>
+ #include <linux/delay.h>
+ #include <linux/irq.h>
++#include <linux/module.h>
+ #include <linux/sched_clock.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <asm/smp.h>
+@@ -86,6 +87,13 @@ static int riscv_timer_dying_cpu(unsigned int cpu)
+ 	return 0;
+ }
+=20
++void riscv_cs_get_mult_shift(u32 *mult, u32 *shift)
++{
++	*mult =3D riscv_clocksource.mult;
++	*shift =3D riscv_clocksource.shift;
++}
++EXPORT_SYMBOL_GPL(riscv_cs_get_mult_shift);
++
+ /* called directly from the low-level interrupt handler */
+ void riscv_timer_interrupt(void)
+ {
+diff --git a/include/clocksource/timer-riscv.h b/include/clocksource/timer-=
+riscv.h
+new file mode 100644
+index 000000000000..e94e4feecbe8
+--- /dev/null
++++ b/include/clocksource/timer-riscv.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
++ *
++ * Authors:
++ *	Atish Patra <atish.patra@wdc.com>
++ */
++
++#ifndef __TIMER_RISCV_H
++#define __TIMER_RISCV_H
++
++#include <linux/types.h>
++
++void riscv_cs_get_mult_shift(u32 *mult, u32 *shift);
++
++#endif
+--=20
+2.17.1
+
