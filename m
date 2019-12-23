@@ -2,142 +2,112 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2753C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D151C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C3A20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E961220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="jX9LJcjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfLWLlr convert rfc822-to-8bit (ORCPT
+        id S1726832AbfLWLoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:41:47 -0500
-Received: from mga11.intel.com ([192.55.52.93]:49453 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfLWLlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:41:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 03:41:45 -0800
-X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="211530914"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 03:41:35 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>, Tom Murphy <murphyt7@tcd.ie>,
-        iommu@lists.linux-foundation.org
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Mon, 23 Dec 2019 06:44:39 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:47076 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfLWLoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 06:44:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1577101475; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uVdlO9cJhU3uZR9PsalU+9sk35dl6Zqn8751jyDz6hE=;
+        b=jX9LJcjWIqPnnuyZly5BdZOoj2/inQqbVjiES4HFwhniV6JNaGO+ALAE433xhQmOf7hoHr
+        74R9G8HAr3LeKzr0sbxjFJVOggyg28MPxpD0DHH9YfttM3lvpC+gmVq6n3+Ac/2Iy0eHBk
+        VXMTWUiAs8EHGfFQgFmRp6lvylZSZUE=
+Date:   Mon, 23 Dec 2019 12:44:26 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/9] memory: jz4780_nemc: convert to
+ devm_platform_ioremap_resource
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     ssantosh@kernel.org, matthias.bgg@gmail.com, rogerq@ti.com,
+        tony@atomide.com, lukasz.luba@arm.com, kgene@kernel.org,
+        krzk@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        allison@lohutok.net, tglx@linutronix.de, yong.wu@mediatek.com,
+        jroedel@suse.de, evgreen@chromium.org, rfontana@redhat.com,
+        digetx@gmail.com, pdeschrijver@nvidia.com, john@phrozen.org,
+        alexios.zavras@intel.com, sboyd@kernel.org,
+        kstewart@linuxfoundation.org, info@metux.net,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-In-Reply-To: <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <87blrzwcn8.fsf@intel.com> <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com>
-Date:   Mon, 23 Dec 2019 13:41:33 +0200
-Message-ID: <87o8vzuv4i.fsf@intel.com>
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Message-Id: <1577101466.3.0@crapouillou.net>
+In-Reply-To: <20191222185034.4665-2-tiny.windzz@gmail.com>
+References: <20191222185034.4665-1-tiny.windzz@gmail.com>
+        <20191222185034.4665-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2019-12-23 10:37 am, Jani Nikula wrote:
->> On Sat, 21 Dec 2019, Tom Murphy <murphyt7@tcd.ie> wrote:
->>> This patchset converts the intel iommu driver to the dma-iommu api.
->>>
->>> While converting the driver I exposed a bug in the intel i915 driver
->>> which causes a huge amount of artifacts on the screen of my
->>> laptop. You can see a picture of it here:
->>> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
->>>
->>> This issue is most likely in the i915 driver and is most likely caused
->>> by the driver not respecting the return value of the
->>> dma_map_ops::map_sg function. You can see the driver ignoring the
->>> return value here:
->>> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
->>>
->>> Previously this didn’t cause issues because the intel map_sg always
->>> returned the same number of elements as the input scatter gather list
->>> but with the change to this dma-iommu api this is no longer the
->>> case. I wasn’t able to track the bug down to a specific line of code
->>> unfortunately.
->>>
->>> Could someone from the intel team look at this?
->> 
->> Let me get this straight. There is current API that on success always
->> returns the same number of elements as the input scatter gather
->> list. You propose to change the API so that this is no longer the case?
->
-> No, the API for dma_map_sg() has always been that it may return fewer 
-> DMA segments than nents - see Documentation/DMA-API.txt (and otherwise, 
-> the return value would surely be a simple success/fail condition). 
-> Relying on a particular implementation behaviour has never been strictly 
-> correct, even if it does happen to be a very common behaviour.
->
->> A quick check of various dma_map_sg() calls in the kernel seems to
->> indicate checking for 0 for errors and then ignoring the non-zero return
->> is a common pattern. Are you sure it's okay to make the change you're
->> proposing?
->
-> Various code uses tricks like just iterating the mapped list until the 
-> first segment with zero sg_dma_len(). Others may well simply have bugs.
+Hi,
 
-Thanks for the clarification.
 
-BR,
-Jani.
+Le dim., d=E9c. 22, 2019 at 18:50, Yangtao Li <tiny.windzz@gmail.com> a=20
+=E9crit :
+> Use devm_platform_ioremap_resource() to simplify code.
+>=20
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
->
-> Robin.
->
->> Anyway, due to the time of year and all, I'd like to ask you to file a
->> bug against i915 at [1] so this is not forgotten, and please let's not
->> merge the changes before this is resolved.
->> 
->> 
->> Thanks,
->> Jani.
->> 
->> 
->> [1] https://gitlab.freedesktop.org/drm/intel/issues/new
->> 
->> 
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Cheers,
+-Paul
+
+
+> ---
+>  drivers/memory/jz4780-nemc.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/memory/jz4780-nemc.c=20
+> b/drivers/memory/jz4780-nemc.c
+> index b232ed279fc3..857a9fa5cba5 100644
+> --- a/drivers/memory/jz4780-nemc.c
+> +++ b/drivers/memory/jz4780-nemc.c
+> @@ -269,7 +269,6 @@ static int jz4780_nemc_probe(struct=20
+> platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+>  	struct jz4780_nemc *nemc;
+> -	struct resource *res;
+>  	struct device_node *child;
+>  	const __be32 *prop;
+>  	unsigned int bank;
+> @@ -287,8 +286,7 @@ static int jz4780_nemc_probe(struct=20
+> platform_device *pdev)
+>  	spin_lock_init(&nemc->lock);
+>  	nemc->dev =3D dev;
+>=20
+> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	nemc->base =3D devm_ioremap_resource(dev, res);
+> +	nemc->base =3D devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(nemc->base)) {
+>  		dev_err(dev, "failed to get I/O memory\n");
+>  		return PTR_ERR(nemc->base);
+> --
+> 2.17.1
+>=20
+
+=
+
