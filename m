@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6734C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE28EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8522220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D68D2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 16:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="rRJNtwwR"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JueXquKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfLWQf4 (ORCPT
+        id S1726925AbfLWQgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:35:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37971 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfLWQfy (ORCPT
+        Mon, 23 Dec 2019 11:36:00 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35778 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLWQf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 11:35:54 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so17222672wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 08:35:52 -0800 (PST)
+        Mon, 23 Dec 2019 11:35:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id g17so17197709wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 08:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0HQesosprpGmVlh0zbgZtCGyxB3GA8LKvF8lU1VAedI=;
-        b=rRJNtwwRx+5RzgqTLIxJG6UsSQ6gC0jzvHt+rlkuEFTfdQiebonMWF/GFe43r2a5TX
-         8gS7lH2OyXAleCyvXlW/U8KGovJ7a6Ruy+MdG8swhWoCeySn2ygRfRX5ZpbwC7UKm4+G
-         lQtna3/Y/EyFQLrVGGEIENU6I7wDUF67zrhGQ=
+        bh=bJVh8WsGr3CI8B2tc3c0W8dsIPUnbHIuVomMDM1yxMw=;
+        b=JueXquKjYAzw369ZDgQeg6ZhcnZzvfjoaA0K89EUCS5KZ0VFh33wOgTKQKFjRDrT8u
+         uwLAIQAUrO0DJF9nHIG7QmYYzGtyZLp5RZa+E5M2OHTUFpeexZn+22NAZZrBer4mMVqp
+         vh/k08bEwUZtdUSciU5JyDJZNPc1V9oj5wqD0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0HQesosprpGmVlh0zbgZtCGyxB3GA8LKvF8lU1VAedI=;
-        b=WY2uN/ibuqp7cbAG3q/a05J5FjS1pd85OhKuK1FhcEIxGYJSZAA6/Bd44aKLnwfkbK
-         ulkSBewjtqX5ceHsR310SNEiaJmb7+Tu9h+QfebKgZUfpmWF97c0PK6b8fliyviVJ91n
-         psaYqOBuaL8UY9KFISdrHOSF8/vmNEd9jPu5UzX7FA2JYHJbnJ38m2312T2qa98AVnkb
-         PBq05YBFXrNhtq3q4HN7kBk1zCGed6ZTqWwwMaRIARFIoYdNEsSLplXjgGGulnsIjymc
-         t8zs1+68E6r/H9ndC8TOCC36Vyko/sbrMPwcTogiepX9LjRQm7nDmc9OrMYw0ToBtcUm
-         VzEg==
-X-Gm-Message-State: APjAAAX+lj3Yhd2rU21gvD2cYGAiPeHP6xbhRehu2Dfso5jPSl/cuou4
-        63WTBVG8zF9QA6nLK4eMPOQhGQ==
-X-Google-Smtp-Source: APXvYqz/MMNcrLqV4ANXvIxeIGXp4d50q4NXH/qBL523lAObZh+tywV09Z1VDphXKfwDb4wdAqaN6w==
-X-Received: by 2002:a5d:558d:: with SMTP id i13mr31306772wrv.364.1577118951849;
-        Mon, 23 Dec 2019 08:35:51 -0800 (PST)
+        bh=bJVh8WsGr3CI8B2tc3c0W8dsIPUnbHIuVomMDM1yxMw=;
+        b=Wn2RK/o4BJWfTazuq7r8vhjQHJDOjwceR58yvqIVhWrHT24GyyAS/BGwygDlGb9Mfn
+         lUlMd3a6NMNLJnLJ9IYYzdAdavvlqjO5S5Fjh7wKeYu4TOA+Q1SVxcSJ5qKfTZtRDLHO
+         Kps7v/CUE82+Jv0gXv4k+pZUXQ75ucQsvEKwHcIwalI+qSs+CsYJaTSM8fijhtCMWSw9
+         YayLO4+xc1U8oFaGiTkVyXT6Z4ldUpe3b3QH+aRcjsLIlERsOpK7noewOzzaMkOK4/OK
+         euNq4VLF4reko1dL7REFfNPXElbo0QFluvOKro4UjyU2eArgmIaO5+tOukrACdCuOl8J
+         tFww==
+X-Gm-Message-State: APjAAAUXSzX7OPthGEnRfX1KaUM3xnMjNuPmasJUn8dlosi+DABA3zVa
+        +D4ljzIeXLT/m35foybW3/ZUpA==
+X-Google-Smtp-Source: APXvYqxZtuqE8FktXe/h2KgteDfao2o2HcXVpMbTU/NwW++DbgqIE8sZSmcm+xFmkLeBYG+AcTmJZA==
+X-Received: by 2002:a5d:4281:: with SMTP id k1mr32062692wrq.72.1577118954457;
+        Mon, 23 Dec 2019 08:35:54 -0800 (PST)
 Received: from localhost.localdomain ([37.160.152.81])
-        by smtp.gmail.com with ESMTPSA id s8sm20412498wrt.57.2019.12.23.08.35.50
+        by smtp.gmail.com with ESMTPSA id s8sm20412498wrt.57.2019.12.23.08.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 08:35:51 -0800 (PST)
+        Mon, 23 Dec 2019 08:35:54 -0800 (PST)
 From:   Michael Trimarchi <michael@amarulasolutions.com>
 To:     Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org
 Cc:     Fabio Estevam <festevam@gmail.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/3] ARM: dts: imx6dl: Fix typo in i.CoreM6 1.5 Dual MIPI starter kit
-Date:   Mon, 23 Dec 2019 17:35:44 +0100
-Message-Id: <20191223163546.29637-2-michael@amarulasolutions.com>
+Subject: [PATCH 3/3] arm: dts: imx6qdl: Move the phy reset at device level
+Date:   Mon, 23 Dec 2019 17:35:46 +0100
+Message-Id: <20191223163546.29637-4-michael@amarulasolutions.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191223163546.29637-1-michael@amarulasolutions.com>
 References: <20191223163546.29637-1-michael@amarulasolutions.com>
@@ -68,27 +68,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the file to be included in dual mipi starter kit. This
-fix ethernet probing
+LAN8720 needs a reset of every clock enable. The reset needs
+to be done at device level, due the flag PHY_RST_AFTER_CLK_EN
 
 Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 ---
- arch/arm/boot/dts/imx6dl-icore-mipi.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-mipi.dts b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-index e43bccb78ab2..d8f3821a0ffd 100644
---- a/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-@@ -8,7 +8,7 @@
- /dts-v1/;
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 7814f1ef0804..756f3a9f1b4f 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -150,10 +150,23 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	clocks = <&clks IMX6QDL_CLK_ENET>, <&clks IMX6QDL_CLK_ENET>, <&rmii_clk>;
+ 	phy-mode = "rmii";
++	phy-handle = <&eth_phy>;
+ 	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++			reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <4000>;
++			reset-deassert-us = <4000>;
++		};
++	};
+ };
  
- #include "imx6dl.dtsi"
--#include "imx6qdl-icore.dtsi"
-+#include "imx6qdl-icore-1.5.dtsi"
- 
- / {
- 	model = "Engicam i.CoreM6 DualLite/Solo MIPI Starter Kit";
+ &gpmi {
 -- 
 2.17.1
 
