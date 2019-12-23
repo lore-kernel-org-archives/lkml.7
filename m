@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7CDC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C093CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91CA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979CB2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577089266;
-	bh=j9mpvD2vwVqJgqgRO1huDRjRF97+pmAiqRJqpb4yQWo=;
+	s=default; t=1577089274;
+	bh=yhFKFV2M8IVRdKt/jk/YAVP+IDJiL/eZhJKGWL/fJmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVIyekXM//6RzPu3PVQpLNQSABgH7lqxta+YByee3KOh7hRYdxfpA7rMubiq8uqen
-	 dECaDSiqLQnwDx+030TyUP1PRUm75fIIjXkFZYW9GbN9YA4HUaNGLAF5RUW2flUSRt
-	 8JY5LPYzf/oJjmL1a4UgoZ2SelfCRZGkgIEo7aq0=
+	b=axNAaVoDBpvYWDj9B0PFv3zfXJ95cL3NABdCCFwaBRtpZn35TOqyCc158H6n6fbiz
+	 VymY3ylkzdVRW39w3FFV5ZrYI2Ggv1ECgwXdRauHzMsGLVe8Ub5RHOsIsn2VxPek9g
+	 VNgMSX96b4QcwzKWat3/5CSAvUjhQuZpZJm7K8Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfLWIVD (ORCPT
+        id S1726802AbfLWIVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:21:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38654 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 03:21:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfLWIVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:21:02 -0500
+        id S1726680AbfLWIVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:21:09 -0500
 Received: from localhost (36-236-5-169.dynamic-ip.hinet.net [36.236.5.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11FE320709;
-        Mon, 23 Dec 2019 08:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53A862073A;
+        Mon, 23 Dec 2019 08:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577089261;
-        bh=j9mpvD2vwVqJgqgRO1huDRjRF97+pmAiqRJqpb4yQWo=;
+        s=default; t=1577089268;
+        bh=yhFKFV2M8IVRdKt/jk/YAVP+IDJiL/eZhJKGWL/fJmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgMk4fE0EfdHV0JXNpb2TasyUXF7PfAmCOc7uF/6HodTzMkS1oOJjyz//vZONpMPF
-         CTxunEVo9DvwQ02weloIIbupCnBwGA2dP8GRrF3HJoITmTCK1dM8t6X+jj+e5Wq0Vp
-         roYfVLl0NQiC3iKV9M78+5ehKLdjrHlMmLrzYxno=
+        b=LP5/95pzggJ/fF7QjTRyw5EkeWW7uhGq0dh2s7OfKwpm/EeAeFyGB5OMU7pV6R38Y
+         2gt10UaeFCR7EMKrE8YVRQD3hAH+1sJPwDUtyaj0AXM88mEs2+2Pe9uYh3mqSmn0pZ
+         5XAchGRv2tYQa+cSRdo/+ChDo9tzZkDGgAWbca0A=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     Ted Ts'o <tytso@mit.edu>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -56,9 +56,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-man <linux-man@vger.kernel.org>,
         Stephan Mueller <smueller@chronox.de>,
         Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 1/8] random: Don't wake crng_init_wait when crng_init == 1
-Date:   Mon, 23 Dec 2019 00:20:44 -0800
-Message-Id: <6fbc0bfcbfc1fa2c76fd574f5b6f552b11be7fde.1577088521.git.luto@kernel.org>
+Subject: [PATCH v3 3/8] random: Add GRND_INSECURE to return best-effort non-cryptographic bytes
+Date:   Mon, 23 Dec 2019 00:20:46 -0800
+Message-Id: <d5473b56cf1fa900ca4bd2b3fc1e5b8874399919.1577088521.git.luto@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1577088521.git.luto@kernel.org>
 References: <cover.1577088521.git.luto@kernel.org>
@@ -69,27 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-crng_init_wait is only used to wayt for crng_init to be set to 2, so
-there's no point to waking it when crng_init is set to 1.  Remove the
-unnecessary wake_up_interruptible() call.
-
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/char/random.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/char/random.c       | 11 +++++++++--
+ include/uapi/linux/random.h |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/char/random.c b/drivers/char/random.c
-index cda12933a17d..c6252a3a4aec 100644
+index 7b46751772e5..675b8a48e18a 100644
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -946,7 +946,6 @@ static int crng_fast_load(const char *cp, size_t len)
- 	if (crng_init_cnt >= CRNG_INIT_CNT_THRESH) {
- 		invalidate_batched_entropy();
- 		crng_init = 1;
--		wake_up_interruptible(&crng_init_wait);
- 		pr_notice("random: fast init done\n");
- 	}
- 	return 1;
+@@ -2193,7 +2193,14 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ {
+ 	int ret;
+ 
+-	if (flags & ~(GRND_NONBLOCK|GRND_RANDOM))
++	if (flags & ~(GRND_NONBLOCK|GRND_RANDOM|GRND_INSECURE))
++		return -EINVAL;
++
++	/*
++	 * Requesting insecure and blocking randomness at the same time makes
++	 * no sense.
++	 */
++	if ((flags & (GRND_INSECURE|GRND_RANDOM)) == (GRND_INSECURE|GRND_RANDOM))
+ 		return -EINVAL;
+ 
+ 	if (count > INT_MAX)
+@@ -2202,7 +2209,7 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ 	if (flags & GRND_RANDOM)
+ 		return _random_read(flags & GRND_NONBLOCK, buf, count);
+ 
+-	if (!crng_ready()) {
++	if (!(flags & GRND_INSECURE) && !crng_ready()) {
+ 		if (flags & GRND_NONBLOCK)
+ 			return -EAGAIN;
+ 		ret = wait_for_random_bytes();
+diff --git a/include/uapi/linux/random.h b/include/uapi/linux/random.h
+index 26ee91300e3e..c092d20088d3 100644
+--- a/include/uapi/linux/random.h
++++ b/include/uapi/linux/random.h
+@@ -49,8 +49,10 @@ struct rand_pool_info {
+  *
+  * GRND_NONBLOCK	Don't block and return EAGAIN instead
+  * GRND_RANDOM		Use the /dev/random pool instead of /dev/urandom
++ * GRND_INSECURE	Return non-cryptographic random bytes
+  */
+ #define GRND_NONBLOCK	0x0001
+ #define GRND_RANDOM	0x0002
++#define GRND_INSECURE	0x0004
+ 
+ #endif /* _UAPI_LINUX_RANDOM_H */
 -- 
 2.23.0
 
