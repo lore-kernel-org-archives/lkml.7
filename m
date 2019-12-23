@@ -2,249 +2,173 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15807C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C87C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E173520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCF320709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:09:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYAk4+BE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfLWOHv (ORCPT
+        id S1726861AbfLWOJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:07:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:46152 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbfLWOHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:07:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A57411FB;
-        Mon, 23 Dec 2019 06:07:49 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B1FA3F534;
-        Mon, 23 Dec 2019 06:07:47 -0800 (PST)
-Date:   Mon, 23 Dec 2019 14:07:44 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Mel Gorman' <mgorman@techsingularity.net>,
-        'Matt Fleming' <matt@codeblueprint.co.uk>,
-        'Viresh Kumar' <viresh.kumar@linaro.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Paul Turner' <pjt@google.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Quentin Perret' <qperret@qperret.net>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Message-ID: <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
-References: <20191113124654.18122-1-ggherdovich@suse.cz>
- <20191113124654.18122-2-ggherdovich@suse.cz>
- <000001d5a29b$c944fd70$5bcef850$@net>
- <1574697961.16378.5.camel@suse.cz>
- <000801d5a41e$a7fce2c0$f7f6a840$@net>
- <1574781600.7677.2.camel@suse.cz>
- <001d01d5a4f4$d96b21b0$8c416510$@net>
- <003d01d5a63d$f6ab3950$e401abf0$@net>
- <20191219104813.6fr34qavpaplecoz@e107158-lin>
- <000701d5b965$361b6c60$a2524520$@net>
+        Mon, 23 Dec 2019 09:09:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726682AbfLWOJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:09:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577110191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=8wSK42OvcMSYxzTS5duA9YklNAevUjxL3z2LLorLBbc=;
+        b=RYAk4+BEsTgWspWjk2V3NFAHC8x7d8cbTaumrJQcZ01YCmOYj69WKx+1uBbkuzE0iEReTL
+        s0gNcLX6bE6IJlnzjQgFeMpN5fThRowdoh+dGuBbUePzyArpqVXYjm9D4wm+KjqzwWuXs3
+        9bYAQ9jubRwdaiFudT5XbaYgsCk9NuE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-70-7X_xW9nqOb-YA84ISajjTw-1; Mon, 23 Dec 2019 09:09:40 -0500
+X-MC-Unique: 7X_xW9nqOb-YA84ISajjTw-1
+Received: by mail-wr1-f69.google.com with SMTP id u12so8037204wrt.15
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 06:09:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=8wSK42OvcMSYxzTS5duA9YklNAevUjxL3z2LLorLBbc=;
+        b=rC099l4zekcEe5PYZ594veqIvthMpYa8RRpZbq1kIkvG92FoOfYt6OSgOCfMsIkMYN
+         EoGgkGekVC4icZZ+iT7SHB4sIv9zOio4Kh6vrx9s8I9ZPFOSu0WIkB1/5TGZtqlUDCo9
+         6ITEzRg00Lddgh0LkkKrB9gRug2tpjzqa3EHFufZJDprhlj6PttOjiXlqd/PDkjQ2HJK
+         wYHR/spByi//PPcWdYijVulel3NIwodFVufJS+WqKSAlMcjcK4uT0P4Y/qydKOsagxgq
+         aosWQm0cDPQ5i2tySZNpvTkCzaOW1JrX36AzPgF0dlY2eQbVEXwsReyNp3UzSsgUUGta
+         EOYQ==
+X-Gm-Message-State: APjAAAV9v7rjPTsVGAftGXex2p1hqOvOAI/IlIWsX1UCcPhZKKDnBrGD
+        cz9u/hcqovkZbErge/n2MbwMMiYTQlgPxr0EtX3bcBlkliBlITsmmHhfQIqQKykkSmi6jHk5cxQ
+        LRwL1F4s5eSDtwnyPB5WDFPni
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr30639416wrw.289.1577110178507;
+        Mon, 23 Dec 2019 06:09:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyXPlHQPWOIs3ZB1650CiD1GjAVkKpoGAxT4H78hPBH+Xf/qPuoSksNwmAZoix5LwHVpqbXpA==
+X-Received: by 2002:a5d:6b03:: with SMTP id v3mr30639395wrw.289.1577110178271;
+        Mon, 23 Dec 2019 06:09:38 -0800 (PST)
+Received: from redhat.com (bzq-109-64-31-13.red.bezeqint.net. [109.64.31.13])
+        by smtp.gmail.com with ESMTPSA id u14sm20878457wrm.51.2019.12.23.06.09.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 06:09:37 -0800 (PST)
+Date:   Mon, 23 Dec 2019 09:09:35 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alistair Delva <adelva@google.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
+Message-ID: <20191223140322.20013-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000701d5b965$361b6c60$a2524520$@net>
-User-Agent: NeoMutt/20171215
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/22/19 23:47, Doug Smythies wrote:
-> Hi Qais,
-> 
-> Thank you for your follow up.
+The only way for guest to control offloads (as enabled by
+VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
+through CTRL_VQ. So it does not make sense to
+acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
+VIRTIO_NET_F_CTRL_VQ.
 
-Thanks for the detailed info!
+The spec does not outlaw devices with such a configuration,
+but Linux assumed that with VIRTIO_NET_F_CTRL_GUEST_OFFLOADS
+control vq is always there, resulting in the following crash
+when configuring LRO:
 
-> 
-> On 2019.12.19 02:48 Qais Yousef wrote:
-> > On 11/28/19 14:48, Doug Smythies wrote:
-> >> Summary: There never was an issue here.
-> >> 
-> >> Sorry for the noise of this thread, and the resulting waste of time.
-> >> 
-> >> On 2019.11.26 23:33 Doug Smythies wrote:
-> >>> On 2019.11.26 07:20 Giovanni Gherdovich wrote:
-> >>>> On Mon, 2019-11-25 at 21:59 -0800, Doug Smythies wrote:
-> >>>>> [...]
-> >>>>> The issue with the schedutil governor not working properly in the 5.4 RC series
-> >>>>> appears to be hardware dependant.
-> >> 
-> >> No it 's not.
-> >> 
-> >> Issues with my Sandy Bridge, i7-2600K, test computer and kernel 5.4
-> >> seem to be because it is running an older Ubuntu server version,
-> >> apparently somewhat dependant on cgroup V1 and their cgmanager package.
-> >> I am unable to remove the package to test further because I do use VMs
-> >> that seem to depend on it.
-> >> 
-> >> In the kernel configuration when CONFIG_UCLAMP_TASK_GROUP=y
-> >> the computer behaves as though the new parameter "cpu.uclamp.min"
-> >> is set to max rather than 0, but I can not prove it.
-> >
-> > I just noticed this. This option shouldn't cause any problem, if it does there
-> > might be a bug that we need to fix.
-> >
-> > So cpu.uclamp.min reads 0 but you think it's not taking effect, correct?
-> 
-> Actually, on the i7-2600K older distro test computer, I couldn't find
-> cpu.uclamp.min to read its setting. However, yes the behaviour of the governor
-> was as though that value was set to maximum (read on).
+kernel BUG at drivers/net/virtio_net.c:1591!
+invalid opcode: 0000 [#1] PREEMPT SMP PTI
+CPU: 1 PID: 483 Comm: Binder:330_1 Not tainted 5.4.5-01326-g19463e9acaac #1
+Hardware name: ChromiumOS crosvm, BIOS 0
+RIP: 0010:virtnet_send_command+0x15d/0x170 [virtio_net]
+Code: d8 00 00 00 80 78 02 00 0f 94 c0 65 48 8b 0c 25 28 00 00 00 48 3b 4c 24 70 75 11 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d
++c3 <0f> 0b e8 ec a4 12 c8 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+RSP: 0018:ffffb97940e7bb50 EFLAGS: 00010246
+RAX: ffffffffc0596020 RBX: ffffa0e1fc8ea840 RCX: 0000000000000017
+RDX: ffffffffc0596110 RSI: 0000000000000011 RDI: 000000000000000d
+RBP: ffffb97940e7bbf8 R08: ffffa0e1fc8ea0b0 R09: ffffa0e1fc8ea0b0
+R10: ffffffffffffffff R11: ffffffffc0590940 R12: 0000000000000005
+R13: ffffa0e1ffad2c00 R14: ffffb97940e7bc08 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffffa0e1fd100000(006b) knlGS:00000000e5ef7494
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 00000000e5eeb82c CR3: 0000000079b06001 CR4: 0000000000360ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ ? preempt_count_add+0x58/0xb0
+ ? _raw_spin_lock_irqsave+0x36/0x70
+ ? _raw_spin_unlock_irqrestore+0x1a/0x40
+ ? __wake_up+0x70/0x190
+ virtnet_set_features+0x90/0xf0 [virtio_net]
+ __netdev_update_features+0x271/0x980
+ ? nlmsg_notify+0x5b/0xa0
+ dev_disable_lro+0x2b/0x190
+ ? inet_netconf_notify_devconf+0xe2/0x120
+ devinet_sysctl_forward+0x176/0x1e0
+ proc_sys_call_handler+0x1f0/0x250
+ proc_sys_write+0xf/0x20
+ __vfs_write+0x3e/0x190
+ ? __sb_start_write+0x6d/0xd0
+ vfs_write+0xd3/0x190
+ ksys_write+0x68/0xd0
+ __ia32_sys_write+0x14/0x20
+ do_fast_syscall_32+0x86/0xe0
+ entry_SYSENTER_compat+0x7c/0x8e
 
-Sorry, silly question. Did you verify both cgroup v1 and v2 mount points?
+A similar crash will likely trigger when enabling XDP.
 
-If the cpu controller is mounted in v1, it can't be seen in v2. And vice versa.
+Reported-by: Alistair Delva <adelva@google.com>
+Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
 
-> 
-> >
-> > In the quotes above I see 5.4 RC, if you haven't tried this against the final
-> > 5.4 release, do you mind trying to see if you can reproduce? Trying 5.5-rc2
-> > would be helpful too if 5.4 fails.
-> 
-> My test setup and baseline distribution versions have changed since November,
-> when I did those tests. However, I was able to rig up a bootable old ssd
-> and was able to reproduce the issue with kernel 5.5-rc2. More importantly,
-> I was to reproduce the issue with the current i7-2600K test computer
-> (Ubuntu server 20.04 development, upgraded version) and kernel 5.5-rc2.
-> Note that I have access to another i5-9600K based test computer (Ubuntu
-> server 20.04 development, fresh install), that does not show this issue.
-> 
-> Detail:
-> 
-> If formatting gets messed up in this e-mail, then the content,
-> and links to more details, is also here:
-> http://www.smythies.com/~doug/linux/single-threaded/k54regression/qais.html
+Lightly tested.
 
-I see here:
+Alistair, could you please test and confirm that this resolves the
+crash for you?
 
-	"kernel configuration differences between Ubuntu mainline PPA and
-	local"
+Dave, after testing confirms the fix, pls queue up for stable.
 
-Does this mean you're using Ubuntu's mainline tree not Linus'?
 
-> 
-> CPU frequency scaling driver: intel_pstate, in passive (intel-cpufreq) mode.
-> CPU frequency scaling governor: various.
-> CPU Idle driver: intel_idle; Governor: teo.
-> 
-> kernels ("stock", "notset" and "nocgv1"):
-> stock: CONFIG_UCLAMP_TASK_GROUP=y
-> notset: # CONFIG_UCLAMP_TASK_GROUP is not set
-> nocgv1: is "stock" booted with "cgroup_no_v1=all" on the grub kernel command line.
+ drivers/net/virtio_net.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-So I looked at the code and I can't see how to connect the dots.
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index 4d7d5434cc5d..7b8805b47f0d 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -2971,6 +2971,15 @@ static int virtnet_validate(struct virtio_device *vdev)
+ 	if (!virtnet_validate_features(vdev))
+ 		return -EINVAL;
+ 
++	/* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
++	 * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
++	 * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
++	 * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
++	 * not the former.
++	 */
++	if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
++			__virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
++
+ 	if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
+ 		int mtu = virtio_cread16(vdev,
+ 					 offsetof(struct virtio_net_config,
+-- 
+MST
 
-By default, all CFS tasks has a uclamp_min value of 0, and uclamp_max value of
-1024.
-
-RT tasks by default are boosted to max only, from uclamp+schedutil perspective.
-
-Similarly all child group should have cpu.uclamp.{min, max} = (0, 1024) by
-default unless changed.
-
-I'm wondering if forcing cgroup_v1 off is just has the side effect of allowing
-you to mount and use the cpu controller in v2.
-
-> 
-> Linux s15 5.5.0-rc2-stock #768 SMP PREEMPT Fri Dec 20 16:19:44 PST 2019 x86_64 x86_64 x86_64 GNU/Linux
-> Linux s18 5.5.0-rc2-notset #769 SMP PREEMPT Fri Dec 20 18:43:59 PST 2019 x86_64 x86_64 x86_64 GNU/Linux
-> 
-> kernel configuration differences:
-> 
-> doug@s15:~/temp-k-git/linux$ scripts/diffconfig /boot/config-5.5.0-rc2-stock /boot/config-5.5.0-rc2-notset
->  UCLAMP_TASK_GROUP y -> n
-> doug@s15:~/temp-k-git/linux$
-> 
-> Test methods used herein are greatly sped up, by switching
-> to just a couple of PID per seconds samples, instead of
-> a great many. Also disk I/O is not used, eliminating any
-> access time related non-repeatability, and saving thrashing
-> my SSD. Note that several governors had CPU frequency variations
-> with time, resulting in variability in the PIDs per second number.
-> 
-> There are two tests, the performance metric being
-> the number of PIDs per second consumed:
-> 
-
-[...]
-
-> i7-2600K computer booted with Ubuntu server 20.04 dev, test 2:
-> 
-> Governor	kernel
-> 		stock			notset		nocgv1
-> 		PID/S ratio		PID/S ratio	PID/S ratio
-> schedutil	405 1.1 FAIL	177 2.4		405 1.1 FAIL
-> ondemand	371 1.1		371 1.1		371 1.1
-> performance	408 1.0		405 1.0		405 1.0
-> conservative362 1.2		365 1.2		365 1.2
-> powersave	177 2.4		177 2.4		177 2.4
-> reference	423 1.0		423 1.0		423 1.0
-> 
-> The "nocgv1" (cgroup_no_v1=all) kernel is of particular interest because
-> now uclamp variables are available:
-> 
-> root@s15:/sys/fs/cgroup/user.slice# echo "+cpu" > cgroup.subtree_control
-
-This is v2 syntax. It's worth checking the mount point of the cpu controller in
-cgroup v1.
-
-> root@s15:/sys/fs/cgroup/user.slice# cat cgroup.subtree_control
-> cpu memory pids
-> root@s15:/sys/fs/cgroup/user.slice# grep . cpu\.uclamp*
-> cpu.uclamp.max:max
-> cpu.uclamp.min:0.00
-> 
-> This is repeatable:
-> To make the schedutil governor respond as expected thereafter
-> and until the next re-boot, do this:
-> 
-> # echo 0 > cpu.uclamp.min
-> 
-> Attempts to kick the schedutil governor response via
-> /sys/devices/system/cpu/intel_pstate/max_perf_pct and
-> /sys/devices/system/cpu/intel_pstate/min_perf_pct didn't.
-> Other modifications of the cpu.uclamp.min and max variables also
-> kick the schedutil governor out of whatever state it was in.
-> 
-> This test was done 5 times:
-> 
-> Re-boot to the nocgv1 (stock + cgroup_no_v1=all) kernel.
-> set the schedutil governor.
-> launch test 2 and related monitoring tools.
-> verify performance governor like behavior.
-
-So as stated above, by default uclamp_{min, max} = (0, 1024). So it wouldn't
-act as performance governor by default unless you explicitly write 1024 to
-uclamp.min.
-
-Let me go find Ubuntu mainline tree to see if they applied anything extra in
-there. If they modified the default behavior that could explain what you see.
-
-Thanks!
-
---
-Qais Yousef
-
-> echo 0 > /sys/fs/cgroup/user.slice/cpu.uclamp.min 
-> verify schedutil governor like behaviour.
-> 
-> ... Doug
-> 
-> 
