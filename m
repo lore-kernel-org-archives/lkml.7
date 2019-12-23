@@ -3,131 +3,168 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831C2C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08D2C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563532063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9C12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 11:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAq2cysK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="l2Kq1AU8";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bUBsfa0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfLWLei (ORCPT
+        id S1727190AbfLWLfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:34:38 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46376 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfLWLdt (ORCPT
+        Mon, 23 Dec 2019 06:35:21 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:54845 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbfLWLfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:33:49 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m26so14979900ljc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 03:33:48 -0800 (PST)
+        Mon, 23 Dec 2019 06:35:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577100920; x=1608636920;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wuU43oZgM5pi7IW3seFwkRJcfftUaolqELEvKyIjWj8=;
+  b=l2Kq1AU8UG1zGRsuPFBM4cgD+Sj4+tJlmyBC97DXgDMZxM1o08MDjQC8
+   AyCOxXVYuj+FDjglTuvWpifHQFVIZaoEC7oq2CwpKCxoDWBjM/pRxV2qa
+   lZ2CWWW/eOKZ8GyUUJa1dZqWWZRpRAAnTYQM37Q1uVRDnSIcEoXSQwJxm
+   rYuMMlWoi/ZLfZm+3WV2A8dj5xGPv5UYDHRjGr0NWFdhexCPp8wNrpyql
+   Tj7flCAJCS7QHvIyhJaWqvUJy/hc/dE6IKvKDM602h+/7+VXIzXF8hdZa
+   hqVcudrC6hS6C/whKZc2nbv1v7UQJe584+dWq/AI4JLn/z//uXs/ctkjf
+   g==;
+IronPort-SDR: me8dGJimnf1wfr4rQvBQK08QmPGugfcuYsHPcOBC3tN4bQozXieYzkWBd3+oXYVZEYfDSBhY9J
+ /k76Inc7NVE88BKmVK24PMvFGVHJ8aCLzITb/VmEu74IoHJ8Szrd+MV36UYHy0tUbSSqufdocB
+ aC1HU+WjzHfGpRzlWzT7Dh69oPmYgFCH7zXhWE/FVH5Tv8CSQdQOvJoZAToRjoK5FhlyhTtEgP
+ mIeW34uNEzlW+ESJukBkdRmBudlFRw3vnN/i46aNcoDYwQvleCQzX73XwtSZsfIP/oka1bxQ5O
+ ikI=
+X-IronPort-AV: E=Sophos;i="5.69,347,1571673600"; 
+   d="scan'208";a="125956073"
+Received: from mail-bn7nam10lp2100.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.100])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Dec 2019 19:35:19 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kFe1kx8mMriJCmXuX1ArOJrfd6lBo1D5Zskv3hA1jLouA8MGibFehpp4SXV74otQ6CYvmHkpMyfQqM3GBKSkmuuRujFHI7VrICbKnXCq8s1rsqam2ZmngnONNvv61pcRycaD79604LSFiOmtrQSbCbQ9EkhzihVF4/nUXNe6oyOizxv/uzuQqvCzm3lJ95GxGyeM0DO7tdHlv2zZSp2yP3v82j6w8XcsQ4Umbh8pTCSypvMQnr6OMYyEBjLHd2OcJguPqDXE+5+s3l/GohVttUkpTM4yXa+EcVqDTknUjx/LmvWX6dWlbecVIMpeqO+MFC2s+/OJRHLDWeayNyXXmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A0SQlhDbgkw71L1UeaM2aFp01+V1VKFPbfHDGYfhDMg=;
+ b=kufhpdF3XGTBlomt70W7nDe20YaWj+alu7HyrqmNDTdB9ZLgPdjK561FEZqrtPQsosdla1pORZTMmmwwUCA7PL6p904eerx89pfO7MwCNQVTaWGMTVJ0tV7ur/gO23W8mT9yhXjfziuqDDlzlh1ttocq93ONgOvpe+RqMt4ET5OQAeErZw4bmfmSc64aPY73zGEvuzAmyD36zHK1kyoszr95iJzMKSCgIUrqadmXg5Hrvi3yqLAACCTV1/F8ZPDjwBeJqZbj9pSdFJZkVGE5PE02DhN2dCgN0qxZUWytZ7GWrQTqm6dhEE6j1ogwwZvl749LX8TGz4owM0uYD7xu6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
-        b=gAq2cysKYZZfj4Q8zAemwVqnt5m0oC3iqy37p1iR40SVb+N7zvSbX9h4shinQdiimL
-         tcxtDJadBJ572tOx6WeL2xYwiCMx8viFF8fASfQGgBD2DvK+oAEv/Tm4fFeM/0uNl9In
-         yXxqZkCfQErbq/BfvBOTW1KvoLHsf4p5MhC3QbBHuq5aUHykWh3sdJPDku6WotC5We2G
-         6WoQzNoV2XMM5l6YLzdDQYY0EuQZIyH6J5K6J0Y0dMdUFwrbyAWlfkoW/9+I6O76NlWP
-         cPT5B7ENvofMc1Wl6O1nUmL3VVrPqG6XRnkBejagryZ3Z/H/VpAVEJ+BvOPOObB7rSuK
-         oQbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
-        b=qCP+goA8D5W01j28rPDLH7oWcF26w3kfAdavmmHP0iQAk59mKGf2/jxMw+S/3HLvaG
-         POl8JooQMLERCqRPjijd4gZRBe+2Ls3EOWlEYy40GIJnHdkHR2rSaQXk5QyvLo8pJZds
-         EJdGXhlbCXE2r22agmohETj5cAS7UM0KJHNPcr9tSUJtmhVx8DsgjOtRQnesjS/M2h9v
-         DQvdLM1590Ze/kl4HA9StOISAwtvd9U9yuSYdWyYkY8N5GW8ksHbBGR1p+ROSyCykB5Y
-         nLfnkobZpidZrEgGtnPIz4M+q2UGKRndrRhp297Fq+OSX0QoyYQjmpf46GBRzpvIHOHj
-         Ha3A==
-X-Gm-Message-State: APjAAAV77DZlo6CwGs8SQerncYARlGa0n/71brwYp8SbmBQ1B4DRI9ji
-        kZI2NEXya7cg27OFpZbkAWJyyg==
-X-Google-Smtp-Source: APXvYqwOZpdpPPDJHLpxGOc/ElhqDZAYStQCW2QgMpCSboNbWVcXL8In/iZ+hCKvUAladS2LuxozXA==
-X-Received: by 2002:a2e:6c13:: with SMTP id h19mr8124037ljc.221.1577100827132;
-        Mon, 23 Dec 2019 03:33:47 -0800 (PST)
-Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id g15sm8381500ljk.8.2019.12.23.03.33.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 03:33:46 -0800 (PST)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v3 04/12] v4l: Add source event change for bit-depth
-Date:   Mon, 23 Dec 2019 13:33:03 +0200
-Message-Id: <20191223113311.20602-5-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191223113311.20602-1-stanimir.varbanov@linaro.org>
-References: <20191223113311.20602-1-stanimir.varbanov@linaro.org>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A0SQlhDbgkw71L1UeaM2aFp01+V1VKFPbfHDGYfhDMg=;
+ b=bUBsfa0xgOGnERnQesXf3x6Zhfmh3mhT5vNPFJ+d98mi6LabETY2j9dA7gRA/WZ9UKY1rKcUQqtlYWIVGPpAM5If8b9OaesFw+IFg68drrsYjkihjHGeTLgnx31VUFNQIlEs+lDw8X2CDsVWHmp3ST98kV0iTB3RnpViHNxxie4=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB7072.namprd04.prod.outlook.com (10.186.146.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Mon, 23 Dec 2019 11:35:19 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a9a0:3ffa:371f:ad89]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::a9a0:3ffa:371f:ad89%7]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 11:35:19 +0000
+Received: from wdc.com (106.51.20.238) by MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 23 Dec 2019 11:35:12 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v10 01/19] RISC-V: Export riscv_cpuid_to_hartid_mask() API
+Thread-Topic: [PATCH v10 01/19] RISC-V: Export riscv_cpuid_to_hartid_mask()
+ API
+Thread-Index: AQHVuYUNsIc/I9RtAkGhAPMN++8CLw==
+Date:   Mon, 23 Dec 2019 11:35:19 +0000
+Message-ID: <20191223113443.68969-2-anup.patel@wdc.com>
+References: <20191223113443.68969-1-anup.patel@wdc.com>
+In-Reply-To: <20191223113443.68969-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0077.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::17)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [106.51.20.238]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 642ecd67-0b53-4d7b-5228-08d7879c3007
+x-ms-traffictypediagnostic: MN2PR04MB7072:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB70721C26597B86E620593A768D2E0@MN2PR04MB7072.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0260457E99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(396003)(346002)(39860400002)(199004)(189003)(8886007)(4744005)(478600001)(52116002)(316002)(16526019)(2906002)(8936002)(1076003)(7696005)(36756003)(66946007)(66476007)(86362001)(66446008)(26005)(64756008)(66556008)(4326008)(5660300002)(8676002)(186003)(7416002)(81156014)(2616005)(956004)(71200400001)(55016002)(44832011)(55236004)(81166006)(1006002)(54906003)(110136005)(32040200004);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB7072;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZfXvDjXqL3w+D+CSuozi+bAvtBFwFox+LXunTOMH//OMnVnPOy5cXH6S8Y58N+OzoBdvUnJb3gZV0QIuSu+9tayKihygjOnQhTzgILJd+AstyCSnDg3ZatJZz8GEDj03ACNuZqwdraEZVdvTp5tZIx+T5rj+x66RC1sZgx29uhkxcixG0uPV+cxtB9PuJtjNnoN19Bp/khiX54Xrf8GUTYSARRE1vqkz+mk5DUb5eHKXsMUDBI221v1GJyOW/WUszAbrvIIuwqShFyDS9PQ09kqQ3lGrmg+OdNGLdOuYQDmStaVclsmwPqKyC6HqVLaKf3aNG+lUk+t8KXkyjukJCeUX5cvFyRdP/tvupKChT+m/1UYHsKmIUGuCUZ88i7S0QliVXKqU19lXNAYyvrLxzz7+KyeG7WCDDlk8amhx21DOAOOaJxqlmSj+EGvmKyF+PR6QCBNmLL3ljdUl2uznCO8U/uuiMxfUV80TMtPXlOMZJoEUOPMF1kp2XhhYAOZq
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 642ecd67-0b53-4d7b-5228-08d7879c3007
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 11:35:19.1366
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wQQJszAzQ+/avRCNOFa5gezE6xOMwLzkTa5Oj3kAsJ78W5m9ETz6eyKAirLZL3D55X4ASMVoJI/mbiLBso92kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB7072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This event indicate that the source color bit-depth is changed
-during run-time. The client must get the new format and re-allocate
-buffers for it. This can usually happens with video decoder (encoders)
-when the bit-stream color bit-depth is changed from 8 to 10bits
-or vice versa.
+The riscv_cpuid_to_hartid_mask() API should be exported to allow
+building KVM RISC-V as loadable module.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
 ---
- Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
- Documentation/media/videodev2.h.rst.exceptions  | 1 +
- include/uapi/linux/videodev2.h                  | 1 +
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/smp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-index 42659a3d1705..fad853d440cf 100644
---- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-@@ -402,7 +402,13 @@ call.
- 	that many Video Capture devices are not able to recover from a temporary
- 	loss of signal and so restarting streaming I/O is required in order for
- 	the hardware to synchronize to the video signal.
--
-+    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
-+      - 0x0002
-+      - This event gets triggered when color bit-depth change is detected
-+	from a video decoder. Applications will have to query the new pixel
-+	format and re-negotiate the queue. In most cases the streaming must be
-+	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
-+	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
- 
- Return Value
- ============
-diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-index cb6ccf91776e..209709114378 100644
---- a/Documentation/media/videodev2.h.rst.exceptions
-+++ b/Documentation/media/videodev2.h.rst.exceptions
-@@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
- replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
- 
- replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
-+replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
- 
- replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
- 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 04481c717fee..2a5138ac6d25 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -2307,6 +2307,7 @@ struct v4l2_event_frame_sync {
- };
- 
- #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
-+#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
- 
- struct v4l2_event_src_change {
- 	__u32 changes;
--- 
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index eb878abcaaf8..6fc7828d41e4 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -10,6 +10,7 @@
+=20
+ #include <linux/cpu.h>
+ #include <linux/interrupt.h>
++#include <linux/module.h>
+ #include <linux/profile.h>
+ #include <linux/smp.h>
+ #include <linux/sched.h>
+@@ -63,6 +64,7 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in,=
+ struct cpumask *out)
+ 	for_each_cpu(cpu, in)
+ 		cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
+ }
++EXPORT_SYMBOL_GPL(riscv_cpuid_to_hartid_mask);
+=20
+ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+ {
+--=20
 2.17.1
 
