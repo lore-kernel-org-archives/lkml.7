@@ -2,258 +2,125 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC771C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D2BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB6B206D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588B420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 09:38:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nYMEY3Zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfLWJhY (ORCPT
+        id S1726691AbfLWJie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:37:24 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35890 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfLWJhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:37:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 01:37:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="299630945"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 23 Dec 2019 01:37:21 -0800
-Subject: Re: USB devices on Dell TB16 dock stop working after resuming
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
-        Anthony Wong <anthony.wong@canonical.com>
-References: <20191104154446.GH2552@lahna.fi.intel.com>
- <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
- <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
- <20191104162103.GI2552@lahna.fi.intel.com>
- <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
- <20191120105048.GY11621@lahna.fi.intel.com>
- <20191122105012.GD11621@lahna.fi.intel.com>
- <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
- <20191122112921.GF11621@lahna.fi.intel.com>
- <ae67c377-4763-4648-a91c-b9351e3b1cf1@molgen.mpg.de>
- <20191122114108.GG11621@lahna.fi.intel.com>
- <cf4140c8-5b92-f1e5-c9e4-e362ab06d6f8@linux.intel.com>
- <e5e3df06-4ddd-aadb-f1ad-6dd24fa2a5c2@molgen.mpg.de>
- <4b25e707-d2b5-11d1-4b16-48122828fde7@linux.intel.com>
- <a9e12353-6f88-edeb-0d78-15c1ac75666b@molgen.mpg.de>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <87670037-8af5-c209-cbf8-70042e0a8fc5@linux.intel.com>
-Date:   Mon, 23 Dec 2019 11:39:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <a9e12353-6f88-edeb-0d78-15c1ac75666b@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Mon, 23 Dec 2019 04:38:34 -0500
+Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:6152
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726211AbfLWJid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 04:38:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VMh7YmjJuJGHcNsb2UslqPsKpdmTVLn6xEY2mVM7ADmZOvVUKSOno0A7boGAIUIdHXDQnO2cslOq9pXgFArYm9zFnv97w0Mtw9i3T2bvQxsDLv+BI+p8yW869E5nQxmz5DLgNWfQNE1pc4iFMv9UEbaeRTwexMdqV4mQbQwPhP3huNPn+Vv5HVq8JJNuBwk3FSYBU1I+rLjP6eJ2P04Cx+pUf7l5FgkpULa3zRzwwEE7Gpg7hqhqQb0K974uZUzW2dwRKzRh+EeunZ3ASZH3uUvyOzHN6BXXpjKWur2K0DgLLDkY0UDyrFn5li55pi5VQR3hXKVbUZ2bgJ1/nOqFGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1LSJHjfTePHXqnX7FZjQjWWgmFiXeod42eBEYMbvss=;
+ b=E6zSW06dv9oqAlN+bz7LtkGX24atOMYb8aqY/a8m6ZbFyhK+UPQRPanW5iUGKeJa9VJ6WsPilwZvX8HO5XOuAAL0jHwy8y3F6s0qjzYlhYO5zHUZf563QawvWN9LTfI2VN/i9V7j+dlSZA/e7MSuVawaZA7ZmRfbFu2D3trppWjt8y4im2LQFS1WT+XEg7iLQGTXp8zrl37OEKDwAZirFwyTKul9fBAxmuzOw5MPAVjc1ujTuwytKB0E1K0BtJYo2wbt6w8DDgSx8BZWLwEsScVmeLYK7MHJJg7mJ3NHXK+uR2B8hk+Tg9/60YW+zchz+GtnZTNgWvBlRwmkSxsCcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W1LSJHjfTePHXqnX7FZjQjWWgmFiXeod42eBEYMbvss=;
+ b=nYMEY3ZzMBTe1k0UGsrU+0yd5KdNY6EOIaldaCxGhk8WDc/JfZC6oesr6BKIwrSP7guj/AD3c13dVOz0CZ06tmLzBkxPwQmTzbeIzwfH0GjaYXtyW0w/e6Z32C2/mngcyqGFPbZ2UYMp6ig5DkhDPr8vNsV1uAAxmT/Kt7a2Xtg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Akshu.Agrawal@amd.com; 
+Received: from MN2PR12MB2878.namprd12.prod.outlook.com (20.179.80.143) by
+ MN2PR12MB2925.namprd12.prod.outlook.com (20.179.81.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.16; Mon, 23 Dec 2019 09:38:30 +0000
+Received: from MN2PR12MB2878.namprd12.prod.outlook.com
+ ([fe80::c97e:d4c0:bfaf:5edf]) by MN2PR12MB2878.namprd12.prod.outlook.com
+ ([fe80::c97e:d4c0:bfaf:5edf%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 09:38:30 +0000
+Subject: Re: [alsa-devel] [PATCH] ASoC: rt5682: Add option to select pulse IRQ
+ in jack detect
+To:     =?UTF-8?B?U2h1bWluZyBb6IyD5pu46YqYXQ==?= <shumingf@realtek.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Oder Chiou <oder_chiou@realtek.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        "yuhsuan@chromium.org" <yuhsuan@chromium.org>,
+        "Flove(HsinFu)" <flove@realtek.com>
+References: <20191220061220.229679-1-akshu.agrawal@amd.com>
+ <55cbcef1d09e43e0aac057b680c25e17@realtek.com>
+From:   "Agrawal, Akshu" <aagrawal2@amd.com>
+Message-ID: <21ae77ee-c0d1-838f-56e6-a931451b0f6e@amd.com>
+Date:   Mon, 23 Dec 2019 15:08:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <55cbcef1d09e43e0aac057b680c25e17@realtek.com>
+Content-Type: text/plain; charset=big5; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: MAXPR0101CA0001.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::11) To MN2PR12MB2878.namprd12.prod.outlook.com
+ (2603:10b6:208:aa::15)
+MIME-Version: 1.0
+Received: from [10.136.129.209] (165.204.157.251) by MAXPR0101CA0001.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::11) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Mon, 23 Dec 2019 09:38:27 +0000
+X-Originating-IP: [165.204.157.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a5043dce-137c-4e00-44e1-08d7878bde64
+X-MS-TrafficTypeDiagnostic: MN2PR12MB2925:|MN2PR12MB2925:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB2925D5194CA29D32DB2EF1C8F82E0@MN2PR12MB2925.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0260457E99
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(478600001)(4744005)(16576012)(31696002)(81156014)(81166006)(8676002)(5660300002)(31686004)(66476007)(66556008)(66946007)(110136005)(8936002)(2616005)(316002)(6636002)(6666004)(2906002)(5009610100001)(956004)(186003)(54906003)(36756003)(16526019)(53546011)(26005)(6486002)(4326008)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2925;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5m3/GapROT+ve+w1aJSet1VTtTQ+pnZDTVPbQKUvtIhEWYwlHhKYUjZkKa8IoD+ytGokOw6zEhdA18up2DtMfoaBxN++TvsQcHHajiLAjDZzrTuL2WrkApFIiBscoNcG7TMtCWHyVtY2pNPIghVbYDdx1WPIs6+o0pSkLTOM+A+u6ViGrjT6OOAAkOyM0ZmpVN3Ledor2wGW4OaLNXPJ1Y2+VO2y3gQcl85NLSV6i0141mmuZm3ee3lhNy8Odacx+T+lFC96Ck1E+Z4gIjKx5hrQ4dp8YCCwRSR71aK4Kd+a2zZCri8ujOALGlKeBYMEsqYKYvoGu7FXgLoTrI8W39d1dmENCEzD0PL27L/CeRyqvEUragc67HHKFAu5Tb3raqzKfi+BCtoV8mSxagZRS0WjJtPitgc+J/3fVMUZ4Z49EfdNmSljj7A7kiFOtcGH
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5043dce-137c-4e00-44e1-08d7878bde64
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Dec 2019 09:38:30.1909
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Q3VjlKc7DKehM9FTBxmhXlWGYmkoiRRELIXeSD7gG89occTGKaEezDbr9GoKDuvN51svDoYYz1aoTgxgBKIAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.12.2019 16.25, Paul Menzel wrote:
-> Dear Mathias,
-> 
-> 
-> On 2019-11-26 13:44, Mathias Nyman wrote:
->> On 26.11.2019 13.33, Paul Menzel wrote:
-> 
->>> On 2019-11-25 10:20, Mathias Nyman wrote:
->>>> On 22.11.2019 13.41, Mika Westerberg wrote:
->>>>> On Fri, Nov 22, 2019 at 12:33:44PM +0100, Paul Menzel wrote:
->>>
->>>>>> On 2019-11-22 12:29, Mika Westerberg wrote:
->>>>>>> On Fri, Nov 22, 2019 at 12:05:13PM +0100, Paul Menzel wrote:
->>>>>>
->>>>>>>> On 2019-11-22 11:50, Mika Westerberg wrote:
->>>>>>>>> On Wed, Nov 20, 2019 at 12:50:53PM +0200, Mika Westerberg wrote:
->>>>>>>>>> On Tue, Nov 19, 2019 at 05:55:43PM +0100, Paul Menzel wrote:
->>>>>>>>
->>>>>>>>>>> On 2019-11-04 17:21, Mika Westerberg wrote:
->>>>>>>>>>>> On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
->>>>>>>>>>>
->>>>>>>>>>>>> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
->>>>>>>>>>>>>
->>>>>>>>>>>>>>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
->>>>>>>>>>>>>>> Sent: Monday, November 4, 2019 9:45 AM
->>>>>>>>>>>>>
->>>>>>>>>>>>>>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
->>>>>>>>>>>>>>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
->>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
->>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
->>>>>>>>>>>>>>>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
->>>>>>>>>>>>>>>>>> dock connected, the USB input devices, keyboard and mouse,
->>>>>>>>>>>>>>>>>> connected to the TB16 stop working. They work for a few seconds
->>>>>>>>>>>>>>>>>> (mouse cursor can be moved), but then stop working. The laptop
->>>>>>>>>>>>>>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
->>>>>>>>>>>>>>>>>> according to `fwupdmgr`.
->>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>> What are the exact steps to reproduce? Just "echo mem >
->>>>>>>>>>>>>>>>> /sys/power/state" and then resume by pressing power button?
->>>>>>>>>>>>>
->>>>>>>>>>>>> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
->>>>>>>>>>>>> display. So more than `echo mem > /sys/power/state` is done. What
->>>>>>>>>>>>> distribution do you use?
->>>>>>>>>>>>
->>>>>>>>>>>> I have buildroot based "distro" so there is no UI running.
->>>>>>>>>>>
->>>>>>>>>>> Hmm, this is quite different from the “normal” use-case of the these devices.
->>>>>>>>>>> That way you won’t hit the bugs of the normal users. ;-)
->>>>>>>>>>
->>>>>>>>>> Well, I can install some distro to that thing also :) I suppose Debian
->>>>>>>>>> 10.2 does have this issue, no?
->>>>>>>>>>
->>>>>>>>>>>>>>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
->>>>>>>>>>>>>>>> suspend/resume cycles (to s2idle) but I don't see any issues.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> I may have older/different firmware than you, though.
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
->>>>>>>>>>>>>>> on my system :/
->>>>>>>>>>>>>
->>>>>>>>>>>>> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
->>>>>>>>>>>>> Updating to the recent version (I got the logs with) did not fix the issue.
->>>>>>>>>>>>
->>>>>>>>>>>> I also tried v40 (that was originally on that system) but I was not able
->>>>>>>>>>>> to reproduce it.
->>>>>>>>>>>>
->>>>>>>>>>>> Do you know if the user changed any BIOS settings?
->>>>>>>>>>>
->>>>>>>>>>> We had to disable the Thunderbolt security settings as otherwise the USB
->>>>>>>>>>> devices wouldn’t work at cold boot either.
->>>>>>>>>>
->>>>>>>>>> That does not sound right at all. There is the preboot ACL that allows
->>>>>>>>>> you to use TBT dock aready on boot. Bolt takes care of this.
->>>>>>>>>>
->>>>>>>>>> Are you talking about USB devices connected to the TB16 dock?
->>>>>>>>>>
->>>>>>>>>> Also are you connecting the TB16 dock to the Thunderbolt ports (left
->>>>>>>>>> side of the system marked with small lightning logo) or to the normal
->>>>>>>>>> Type-C ports (right side)?
->>>>>>>>>>
->>>>>>>>>>> So, I built Linux 5.4-rc8 (`make bindeb-pkg -j8`), but unfortunately the
->>>>>>>>>>> error is still there. Sometimes, re-plugging the dock helped, and sometimes
->>>>>>>>>>> it did not.
->>>>>>>>>>>
->>>>>>>>>>> Please find the logs attached. The strange thing is, the Linux kernel detects
->>>>>>>>>>> the devices and I do not see any disconnect events. But, `lsusb` does not list
->>>>>>>>>>> the keyboard and the mouse. Is that expected.
->>>>>>>>>>
->>>>>>>>>> I'm bit confused. Can you describe the exact steps what you do (so I can
->>>>>>>>>> replicate them).
->>>>>>>>>
->>>>>>>>> I managed to reproduce following scenario.
->>>>>>>>>
->>>>>>>>> 1. Boot the system up to UI
->>>>>>>>> 2. Connect TB16 dock (and see that it gets authorized by bolt)
->>>>>>>>> 3. Connect keyboard and mouse to the TB16 dock
->>>>>>>>> 4. Both mouse and keyboard are functional
->>>>>>>>> 5. Enter s2idle by closing laptop lid
->>>>>>>>> 6. Exit s2idle by opening the laptop lid
->>>>>>>>> 7. After ~10 seconds or so the mouse or keyboard or both do not work
->>>>>>>>>       anymore. They do not respond but they are still "present".
->>>>>>>>>
->>>>>>>>> The above does not happen always but from time to time.
->>>>>>>>>
->>>>>>>>> Is this the scenario you see as well?
->>>>>>>>
->>>>>>>> Yes, it is. Though I’d say it’s only five seconds or so.
->>>>>>>>
->>>>>>>>> This is on Ubuntu 19.10 with the 5.3 stock kernel.
->>>>>>>>
->>>>>>>> “stock” in upstream’s or Ubuntu’s?
->>>>>>>
->>>>>>> It is Ubuntu's.
->>>>>>>
->>>>>>>>> I can get them work again by unplugging them and plugging back (leaving
->>>>>>>>> the TBT16 dock connected). Also if you run lspci when the problem
->>>>>>>>> occurs it still shows the dock so PCIe link stays up.
->>>>>>>>
->>>>>>>> Re-connecting the USB devices does not help here, but I still suspect it’s
->>>>>>>> the same issue.
->>>>>>>
->>>>>>> Yeah, sounds like so. Did you try to connect the device (mouse,
->>>>>>> keyboard) to another USB port?
->>>>>>
->>>>>> I do not think I did, but I can’t remember. Next week would be the next chance
->>>>>> to test this.
->>>>>>
->>>>>>>> Yesterday, I had my hand on a Dell XPS 13 7390 (10th Intel generation) and
->>>>>>>> tried it with the shipped Ubuntu 18.04 LTS. There, the problem was not
->>>>>>>> always reproducible, but it still happened. Sometimes, only one of the USB
->>>>>>>> device (either keyboard or mouse) stopped working.
->>>>>>>
->>>>>>> I suppose this is also with the TB16 dock connected, correct?
->>>>>>
->>>>>> Correct.
->>>>>>
->>>>>> Can I ask again, how the USB devices connected to the dock can be listed on
->>>>>> the command line? lsusb needs to be adapted for that or is a different
->>>>>> mechanism needed?
->>>>>
->>>>> The TB16 dock has ASMEDIA xHCI controller, which is PCIe device so you
->>>>> can see it by running lsusb and looking at the devices under that
->>>>> controller. I think maybe 'lsusb -t' is helpful.
->>>>>
->>>>> The xHCI controller itself you can see by running lspci.
->>>>
->>>> I got traces from the ASMedia xHC controller in the TB16 dock.
->>>
->>> Nice. Thank you for looking into that. How can these traces be captured?
->>
->> The Linux tracepoints added to the xhci driver can be enabled by:
->>
->> mount -t debugfs none /sys/kernel/debug
->> echo 81920 > /sys/kernel/debug/tracing/buffer_size_kb
->> echo 1 > /sys/kernel/debug/tracing/events/xhci-hcd/enable
->> < Trigger the issue >
->>
->> Copy traces found in /sys/kernel/debug/tracing/trace
->>
->> Trace file grows fast.
-> 
->>>> There are issues with split transactions between the ASMedia host and the 7 port
->>>> High speed hub built in to the dock.
->>>>
->>>> host reports a split transaction error for mouse or keyboard full-speed/low-speed
->>>> interrupt transactions. Endpoint doesn't recover after resetting it.
->>>>
->>>> Split transaction allows full- and low-speed devices to be attached to high-speed
->>>> hubs, and are used only between the host and the HS hub. A transaction translator (TT)
->>>> in the HS hub will translate the high-speed split transactions on its upstream port to
->>>> low/full speed transactions on the downstream port.
->>>>
->>>> I'll see if there are any xHC parameters driver is setting that trigger these
->>>> split transaction errors to trigger more easy.
->>>
->>> I always wonder how Microsoft Windows driver do it.
->>>
->>> Mario, should I contact the Dell support regarding this issue?
-> Sorry for bothering, but were you able to find some workaround for this issue?
-> 
 
-Unfortunately no, I couldn't find any workaround.
-xhci slot and endpoint context values for both the HS hub, and the full/low speed device seem correct.
+On 12/23/2019 1:28 PM, Shuming [�S�ѻ�] wrote:
+>> Subject: [alsa-devel] [PATCH] ASoC: rt5682: Add option to select pulse IRQ in
+>> jack detect
+>>
+>> Some SoC need to set IRQ type as pulse along with other JD1 options.
+> Could you configure GPIO IRQ by edge trigger(both rising/falling) and try again?
+> BTW, the modification doesn't make sense to name JD2.
 
-I was able to reproduce the issue with an external HS hub as well, so  this issue
-appears to be more related to ASMedia host than the built in HS hub in TB16
+Thanks Shuming, was about to send a mail to abandon this patch request.
 
--Mathias
+The GPIO connected to codec is not a traditional one, but a wake event. 
+Hence, it took us time to figure out the way to set it active on both 
+the edges.
+
+
+Regards,
+
+Akshu
+
