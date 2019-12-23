@@ -2,200 +2,138 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB476C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE0C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D2020709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="W7SgfJGU"
+	by mail.kernel.org (Postfix) with ESMTP id 620F020709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 15:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfLWP0h (ORCPT
+        id S1726928AbfLWP1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 10:26:37 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:49052 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726890AbfLWP0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 10:26:14 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hNV76KKKz9vJyr;
-        Mon, 23 Dec 2019 16:26:07 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=W7SgfJGU; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id uBkPgpjjLKGe; Mon, 23 Dec 2019 16:26:07 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hNV75JZfz9vJyn;
-        Mon, 23 Dec 2019 16:26:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577114767; bh=KTrdL1MpYjw3SKZf3TvRf76WtXnCC4CV0j92AK8y8Fw=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=W7SgfJGUE7yQSHzMgsEsSUtqMKrXmHkBCaqW6J/B/xJIOCdNaqLywiSricvj4mFOG
-         kuH0PmX7ZWEwg+nlUxqzoLDznH7mAiEA+LcrlmKCGyK6/ks0C0J6gFdh/4k1cenCI6
-         mNMi4Drzj2gc5Titv5ApxeCxRzHwnZyUwuPXDDKQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E555C8B7AB;
-        Mon, 23 Dec 2019 16:26:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id dxyHmnVTVHn5; Mon, 23 Dec 2019 16:26:12 +0100 (CET)
-Received: from po16098vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C104C8B7A1;
-        Mon, 23 Dec 2019 16:26:12 +0100 (CET)
-Received: by po16098vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id CBAD2637D8; Mon, 23 Dec 2019 15:26:12 +0000 (UTC)
-Message-Id: <075b56d1ef9ff0556916684029e8006123a1ca09.1577114567.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1577114567.git.christophe.leroy@c-s.fr>
-References: <cover.1577114567.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH 2/8] powerpc/irq: inline call_do_irq() and
- call_do_softirq() on PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 23 Dec 2019 15:26:12 +0000 (UTC)
+        Mon, 23 Dec 2019 10:27:23 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8165 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726795AbfLWP1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 10:27:22 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D2057C95DE330A81C437;
+        Mon, 23 Dec 2019 23:27:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 23 Dec 2019 23:27:11 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <dyoung@redhat.com>, <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <xiexiuqi@huawei.com>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH v7 0/4] support reserving crashkernel above 4G on arm64 kdump
+Date:   Mon, 23 Dec 2019 23:23:45 +0800
+Message-ID: <20191223152349.180172-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-call_do_irq() and call_do_softirq() are simple enough to be
-worth inlining.
+This patch series enable reserving crashkernel above 4G in arm64.
 
-Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
-It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
+There are following issues in arm64 kdump:
+1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
+when there is no enough low memory.
+2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
+in this case, if swiotlb or DMA buffers are required, crash dump kernel
+will boot failure because there is no low memory available for allocation.
 
-This is inspired from S390 arch. Several other arches do more or
-less the same. The way sparc arch does seems odd thought.
+To solve these issues, introduce crashkernel=X,low to reserve specified
+size low memory.
+Crashkernel=X tries to reserve memory for the crash dump kernel under
+4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
+size low memory for crash kdump kernel devices firstly and then reserve
+memory above 4G.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+When crashkernel is reserved above 4G in memory, that is, crashkernel=X,low
+is specified simultaneously, kernel should reserve specified size low memory
+for crash dump kernel devices. So there may be two crash kernel regions, one
+is below 4G, the other is above 4G.
+In order to distinct from the high region and make no effect to the use of
+kexec-tools, rename the low region as "Crash kernel (low)", and add DT property
+"linux,low-memory-range" to crash dump kernel's dtb to pass the low region.
 
----
-v2: no change.
-v3: no change.
-v4:
-- comment reminding the purpose of the inline asm block.
-- added r2 as clobbered reg
-v5:
-- Limiting the change to PPC32 for now.
-- removed r2 from the clobbered regs list (on PPC32 r2 points to current all the time)
-- Removed patch 1 and merged ksp_limit handling in here.
-v6:
-- rebased after removal of ksp_limit
----
- arch/powerpc/include/asm/irq.h |  2 ++
- arch/powerpc/kernel/irq.c      | 34 ++++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/misc_32.S  | 25 -------------------------
- 3 files changed, 36 insertions(+), 25 deletions(-)
+Besides, we need to modify kexec-tools:
+arm64: kdump: add another DT property to crash dump kernel's dtb(see [1])
 
-diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-index 814dfab7e392..e4a92f0b4ad4 100644
---- a/arch/powerpc/include/asm/irq.h
-+++ b/arch/powerpc/include/asm/irq.h
-@@ -56,8 +56,10 @@ extern void *mcheckirq_ctx[NR_CPUS];
- extern void *hardirq_ctx[NR_CPUS];
- extern void *softirq_ctx[NR_CPUS];
- 
-+#ifdef CONFIG_PPC64
- void call_do_softirq(void *sp);
- void call_do_irq(struct pt_regs *regs, void *sp);
-+#endif
- extern void do_IRQ(struct pt_regs *regs);
- extern void __init init_IRQ(void);
- extern void __do_irq(struct pt_regs *regs);
-diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
-index add67498c126..4690e5270806 100644
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -611,6 +611,40 @@ static inline void check_stack_overflow(void)
- #endif
- }
- 
-+#ifdef CONFIG_PPC32
-+static inline void call_do_softirq(const void *sp)
-+{
-+	register unsigned long ret asm("r3");
-+
-+	/* Temporarily switch r1 to sp, call __do_softirq() then restore r1. */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"=r"(ret) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_softirq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+}
-+
-+static inline void call_do_irq(struct pt_regs *regs, void *sp)
-+{
-+	register unsigned long r3 asm("r3") = (unsigned long)regs;
-+
-+	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
-+	asm volatile(
-+		"	"PPC_STLU"	1, %2(%1);\n"
-+		"	mr		1, %1;\n"
-+		"	bl		%3;\n"
-+		"	"PPC_LL"	1, 0(1);\n" :
-+		"+r"(r3) :
-+		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
-+		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
-+		"r0", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
-+}
-+#endif
-+
- void __do_irq(struct pt_regs *regs)
- {
- 	unsigned int irq;
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index bb5995fa6884..341a3cd199cb 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -27,31 +27,6 @@
- 
- 	.text
- 
--_GLOBAL(call_do_softirq)
--	mflr	r0
--	stw	r0,4(r1)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
--	mr	r1,r3
--	bl	__do_softirq
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	mtlr	r0
--	blr
--
--/*
-- * void call_do_irq(struct pt_regs *regs, void *sp);
-- */
--_GLOBAL(call_do_irq)
--	mflr	r0
--	stw	r0,4(r1)
--	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
--	mr	r1,r4
--	bl	__do_irq
--	lwz	r1,0(r1)
--	lwz	r0,4(r1)
--	mtlr	r0
--	blr
--
- /*
-  * This returns the high 64 bits of the product of two 64-bit numbers.
-  */
+The previous changes and discussions can be retrieved from:
+
+Changes since [v6]
+- Fix build errors reported by kbuild test robot.
+
+Changes since [v5]
+- Move reserve_crashkernel_low() into kernel/crash_core.c.
+- Delete crashkernel=X,high.
+- Modify crashkernel=X,low.
+If crashkernel=X,low is specified simultaneously, reserve spcified size low
+memory for crash kdump kernel devices firstly and then reserve memory above 4G.
+In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
+pass to crash dump kernel by DT property "linux,low-memory-range".
+- Update Documentation/admin-guide/kdump/kdump.rst.
+
+Changes since [v4]
+- Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+
+Changes since [v3]
+- Add memblock_cap_memory_ranges back for multiple ranges.
+- Fix some compiling warnings.
+
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+patch.
+
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+in fdt_enforce_memory_region().
+There are at most two crash kernel regions, for two crash kernel regions
+case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+and then remove the memory range in the middle.
+
+[1]: http://lists.infradead.org/pipermail/kexec/2019-August/023569.html
+[v1]: https://lkml.org/lkml/2019/4/2/1174
+[v2]: https://lkml.org/lkml/2019/4/9/86
+[v3]: https://lkml.org/lkml/2019/4/9/306
+[v4]: https://lkml.org/lkml/2019/4/15/273
+[v5]: https://lkml.org/lkml/2019/5/6/1360
+[v6]: https://lkml.org/lkml/2019/8/30/142
+
+Chen Zhou (4):
+  x86: kdump: move reserve_crashkernel_low() into crash_core.c
+  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+  arm64: kdump: add memory for devices by DT property, low-memory-range
+  kdump: update Documentation about crashkernel on arm64
+
+ Documentation/admin-guide/kdump/kdump.rst       | 13 +++-
+ Documentation/admin-guide/kernel-parameters.txt | 12 +++-
+ arch/arm64/kernel/setup.c                       |  8 ++-
+ arch/arm64/mm/init.c                            | 61 ++++++++++++++++-
+ arch/x86/kernel/setup.c                         | 62 ++----------------
+ include/linux/crash_core.h                      |  3 +
+ include/linux/kexec.h                           |  2 -
+ kernel/crash_core.c                             | 87 +++++++++++++++++++++++++
+ kernel/kexec_core.c                             | 17 -----
+ 9 files changed, 183 insertions(+), 82 deletions(-)
+
 -- 
-2.13.3
+2.7.4
 
