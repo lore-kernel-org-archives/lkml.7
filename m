@@ -2,100 +2,97 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4FBC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C11AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A7B20709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30DF2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 23:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sgHy6VMU"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="TZUnywbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLWXLY (ORCPT
+        id S1726873AbfLWXQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 18:11:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43744 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfLWXLY (ORCPT
+        Mon, 23 Dec 2019 18:16:36 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34540 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfLWXQg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 18:11:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8UqunE6pGKgBFGh/0KYtTzCv0Na6jyRZMicJ6zr2gBA=; b=sgHy6VMUuDdjbg+SJ7kYPqOGz
-        vLZWV459e0hnwluTTXSS5VfDCzpVrRLfVsgNgsv+w9N9ENuylDt+3ucrxUKChU9AvbLZaUa7ndKS/
-        RGTTkZblZFEkSICjCEKQzZaYefus3p4q0abDkiB/w8PHoCmGVKrUvvWX7tt9GS3sSUSmeJ+fmH0eU
-        Gm6Jm29U3VrH1gT+AJ6RALKWbtO/m8zFMlyvMjlHKUeV0k1YGNlEDGCjrly0iAyfrkU7vUYqgSAt/
-        tyasLxK80fWnF8sJsOEtDqOfGKpBv/xbH/jpEd+6a550XR4j1pUoUdn4PdeKIv1aon6Is9OnGxB/N
-        g9v+NisMg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ijWrB-0003my-0m; Mon, 23 Dec 2019 23:11:21 +0000
-Date:   Mon, 23 Dec 2019 15:11:20 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20191223231120.GA31820@bombadil.infradead.org>
-References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
+        Mon, 23 Dec 2019 18:16:36 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z22so14401150ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 15:16:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RoE5/OcfUMqvYyq95XjCkJqhMPq46yuirP3fwbPzXkk=;
+        b=TZUnywbpYpJnmNeF8wEDAA/9B1nNgbBWThg4h6zAxtn2SBwMjv4uwI2NvhzER3d0N4
+         Zf8Rf7sAzbZxK0mJ5ns3hlih9b9BksluzGgOMzDPIjUnxtF2CkIBR6WQqZiVB21loCmC
+         9v/sFprorJnwshRvyli8axSiw3Tq0kbVZVY0fqugSULHUt1om7ecBcaAqAaFxp/zRPKM
+         tIYAYooq4XIboM3KDhHg1Rw74cIvHAEBB1X0KFEaxh9Ywjrq0sM4o9ndUHB7pn5qabM8
+         hQptYbihh7t0w2kNqQlZsRhlIgodmM/1LHSSjqeWXKaOUkTRi9aXpvSl20bno16zLPCI
+         gFcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RoE5/OcfUMqvYyq95XjCkJqhMPq46yuirP3fwbPzXkk=;
+        b=RNWUWWpt9jS5U5buKI2P6yfdqn6tGz4UyVM4AIUkRkUXY9Vmm81kuXwvs2sPHtcPtZ
+         iCs3GOavQ6qo1MF4A/VLpd8yVikTOOvRMKHb0FJ658rPNOJvpvhn2dzeHYwtmGbXDAU8
+         RjkrSXTOofRXuWk9c/MyrcIBM7tPAa5dKyb+B6BC6SDK4XmTjtr6KnrhiEYUlMAnHVIg
+         tbxgGwuEQBgqhUMHNOmsHi7WKsrlI0Gf+U5z1XfFeQKGzqQCpyodIRYMR7KOYXS3S+Jw
+         Hyc1+cch3+6f59+smdfQOhhhmFk4dRnqDln0jh+BMA92RaCT1B/fRtxOhcbAdbhsUzx8
+         3ePQ==
+X-Gm-Message-State: APjAAAX806A0eiVDN58jp/OvOExtr7nB+qMZLn/JklIAWpxt3YNBper6
+        vWxUXOgmCepIDynX4Xd5Qd4XtA==
+X-Google-Smtp-Source: APXvYqx7vQRGntrjaj/kks/rT2vwYm5pG1Bn5EiSp2noEsjO5oLj/jz1rco+Dj/Q0TzdLk25D7Y8Pg==
+X-Received: by 2002:a2e:9592:: with SMTP id w18mr19004630ljh.98.1577142994369;
+        Mon, 23 Dec 2019 15:16:34 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 195sm7645959ljj.55.2019.12.23.15.16.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 15:16:33 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 9B08C10133D; Tue, 24 Dec 2019 02:16:38 +0300 (+03)
+Date:   Tue, 24 Dec 2019 02:16:38 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Willhalm, Thomas" <thomas.willhalm@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 0/2] Fix two above-47bit hint address vs. THP bugs
+Message-ID: <20191223231638.cbewgy7lfx74txde@box>
+References: <20191220142548.7118-1-kirill.shutemov@linux.intel.com>
+ <20191223142552.d9bd85e588196d17fb90ee2e@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191223222856.7189-1-richardw.yang@linux.intel.com>
+In-Reply-To: <20191223142552.d9bd85e588196d17fb90ee2e@linux-foundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
-> When page is not NULL, function is called by try_to_unmap_one() with
-> TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
-> with TTU_SPLIT_HUGE_PMD set:
+On Mon, Dec 23, 2019 at 02:25:52PM -0800, Andrew Morton wrote:
+> On Fri, 20 Dec 2019 17:25:46 +0300 "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
 > 
->   * unmap_page()
->   * shrink_page_list()
+> > The two get_unmapped_area() implementations have to be fixed to provide
+> > THP-friendly mappings if above-47bit hint address is specified.
+> > 
 > 
-> In both case, the page passed to try_to_unmap_one() is PageHead() of the
-> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
-> aligned, this means the THP is not mapped as PMD THP in this process.
-> This could happen when we do mremap() a PMD size range to an un-aligned
-> address.
-> 
-> Currently, this case is handled by following check in __split_huge_pmd()
-> luckily.
-> 
->   page != pmd_page(*pmd)
-> 
-> This patch checks the address to skip some work.
+> Do we need a cc:stable for these?
 
-The description here is confusing to me.
+Yes, please. Otherwise users that use above-47bit hint would regress on
+number of PMD-mapped THPs.
 
-> +	/*
-> +	 * When page is not NULL, function is called by try_to_unmap_one()
-> +	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
-> +	 * TTU_SPLIT_HUGE_PMD
-> +	 *
-> +	 *     unmap_page()
-> +	 *     shrink_page_list()
-> +	 *
-> +	 * In both cases, the "page" here is the PageHead() of a THP.
-> +	 *
-> +	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
-> +	 * is not necessary to split it.
-> +	 */
-> +	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
-> +		return;
+But it's not urgent. It's okay to cook it up in linux-next for a while.
 
-Repeating 75% of it as comments doesn't make it any less confusing.  And
-it feels like we're digging a pothole for someone to fall into later.
-Why not make it make sense ...
-
-	if (page && !IS_ALIGNED(address, page_size(page))
-		return;
-
+-- 
+ Kirill A. Shutemov
