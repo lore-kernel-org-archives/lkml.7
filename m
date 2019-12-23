@@ -2,115 +2,176 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D22C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB04C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F76420709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577140484;
-	bh=j8a30uKBFpUoS+kQpAO4xSXpzCOq7JiQ5JV9DxclKWA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dGUTLtALOL6xpSv03TvV0wWdltkc6wV93AZAzyuS51laulzdcKWryzSBmwJxLHhnW
-	 fV1yJI61R5UMt/03+w2TrdPxcSdFcbvDy+RsWWU1qRmbAQ7/9Dj6+xk2HqT39b/YbB
-	 hINHI85BNBIk53SWRW03mgto52WG4MwZuul99Jgk=
+	by mail.kernel.org (Postfix) with ESMTP id 7BAA7206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 22:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V5QhnzHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLWWen (ORCPT
+        id S1726893AbfLWWuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 17:34:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfLWWem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 17:34:42 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0509D206CB;
-        Mon, 23 Dec 2019 22:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577140482;
-        bh=j8a30uKBFpUoS+kQpAO4xSXpzCOq7JiQ5JV9DxclKWA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hr5gCpX42uVTaiblB+Bfoal6gLIaxariS4egoyL+iBb+XHZcr0tzDHaLeCzdlgDOU
-         HRI6QaMGoQ7qNf6L6plJkPd3QaplPS1+N4TVRYZEd9LdzXOoqiQ7tFcBJ3u+Es7+0P
-         WC/F2V273Qdwx2+20nZXtt2YIiZqq554kkwk5QNg=
-Date:   Mon, 23 Dec 2019 14:34:41 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Thomas =?ISO-8859-1?Q?Hellstr=F6m?= (VMware) 
-        <thomas_os@shipmail.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Michal Hocko <mhocko@suse.com>,
-        pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Subject: Re: Ack to merge through DRM tree? WAS [PATCH v4 0/2] mm, drm/ttm:
- Fix pte insertion with customized protection
-Message-Id: <20191223143441.38bca86132378a801094c0cc@linux-foundation.org>
-In-Reply-To: <cc7e153d-84ff-d1f8-484f-614eafac1864@shipmail.org>
-References: <20191212084741.9251-1-thomas_os@shipmail.org>
-        <cc7e153d-84ff-d1f8-484f-614eafac1864@shipmail.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+        Mon, 23 Dec 2019 17:50:54 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:49520 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfLWWuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 17:50:54 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNMnZkG133840;
+        Mon, 23 Dec 2019 22:49:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=MG6/+eOFC/gL/G3lyv/CZY2BToEa9KjPjUs7viw5xuA=;
+ b=V5QhnzHwuIBSkKeibqwaq3fXNN9JY1hav6Sh539PpM/efcfbPjm3xY0g80nLiIXUI6YU
+ PQeqYjn1iV24EEmJNsriCSeb6iFv67G9ffynjpHZsJ63iJ0FRY3E2sI4ajaztdpTizFp
+ NtcFi2ggNpQnaUqiicimJH0j0gV8Y7X104Fxzt/Uv6WoVtmblU2PCf40xZlMKGfEpU3i
+ qXvqfRHWYHVnFJFQLxqTDjepZrmUspjMy7Jin1t+s/+InW/GitrHKJTe+A6vqmn0fQNB
+ Jw6LDAtu6jG4aiVjINEn4avHNio6VGJNNAJhqMvFh/8bMlxzG0jVG1n60QKmenOzniDp 0A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x1c1qs1ac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 22:49:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBNMnYIp149531;
+        Mon, 23 Dec 2019 22:49:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2x1wj9jy9b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 22:49:34 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBNMnSvA002736;
+        Mon, 23 Dec 2019 22:49:28 GMT
+Received: from [192.168.14.112] (/109.64.214.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Dec 2019 14:49:28 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <f4d3d392-8edf-54b2-1b90-417447240e22@redhat.com>
+Date:   Tue, 24 Dec 2019 00:49:22 +0200
+Cc:     John Andersen <john.s.andersen@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <7E2D4616-83B6-41E8-8904-407F7DB33EB4@oracle.com>
+References: <20191220192701.23415-1-john.s.andersen@intel.com>
+ <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
+ <15b57d6b-0f46-01f5-1f75-b9b55db0611a@redhat.com>
+ <03F5FE31-E769-4497-922B-C8613F0951FA@oracle.com>
+ <f4d3d392-8edf-54b2-1b90-417447240e22@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9480 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912230199
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9480 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912230199
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019 09:06:08 +0100 Thomas Hellstr=F6m (VMware) <thomas_os@s=
-hipmail.org> wrote:
 
-> Andrew,
+
+> On 23 Dec 2019, at 19:46, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >=20
-> On 12/12/19 9:47 AM, Thomas Hellstr=F6m (VMware) wrote:
-> > From: Thomas Hellstrom <thellstrom@vmware.com>
-> >
-> > The drm/ttm module is using a modified on-stack copy of the
-> > struct vm_area_struct to be able to set a page protection with customiz=
-ed
-> > caching. Fix that by adding a vmf_insert_mixed_prot() function similar
-> > to the existing vmf_insert_pfn_prot() for use with drm/ttm.
-> >
-> > I'd like to merge this through a drm tree.
-> >
-> > Changes since v1:
-> > *) Formatting fixes in patch 1
-> > *) Updated commit message of patch 2.
-> > Changes since v2:
-> > *) Moved vmf_insert_mixed_prot() export to patch 2 (Michal Hocko)
-> > *) Documented under which conditions it's safe to use a page protection
-> >     different from struct vm_area_struct::vm_page_prot. (Michal Hocko)
-> > Changes since v3:
-> > *) More documentation regarding under which conditions it's safe to use=
- a
-> >     page protection different from struct vm_area_struct::vm_page_prot.=
- This
-> >     time also in core vm. (Michal Hocko)
-> >
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > Cc: Ralph Campbell <rcampbell@nvidia.com>
-> > Cc: "J=E9r=F4me Glisse" <jglisse@redhat.com>
-> > Cc: "Christian K=F6nig" <christian.koenig@amd.com>
-> >
-> Seems all concerns with this series have been addressed. Could I have an=
-=20
-> ack to merge this through a DRM tree?
+> On 23/12/19 18:28, Liran Alon wrote:
+>>>> Why reset CR pinned MSRs by userspace instead of KVM INIT
+>>>> handling?
+>>> Most MSRs are not reset by INIT, are they?
+>>>=20
+>>> Paolo
+>>>=20
+>> MSR_KVM_SYSTEM_TIME saved in vcpu->arch.time is reset at
+>> kvmclock_reset() which is called by kvm_vcpu_reset() (KVM INIT
+>> handler). In addition, vmx_vcpu_reset(), called from
+>> kvm_vcpu_reset(), also resets multiple MSRs such as:
+>> MSR_IA32_SPEC_CTRL (vmx->spec_ctrl) and MSR_IA32_UMWAIT_CONTROL
+>> (msr_ia32_umwait_control).
+>=20
+> These probably can be removed, since they are zero at startup and at
+> least SPEC_CTRL is documented[1] to be unaffected by INIT.  However, I
+> couldn't find information about UMWAIT_CONTROL.
+>=20
+>> Having said that, I see indeed that most of MSRs are being set by
+>> QEMU in kvm_put_msrs() when level >=3D KVM_PUT_RESET_STATE. When is
+>> triggered by qemu_system_reset() -> cpu_synchronize_all_post_reset ->
+>> cpu_synchronize_post_reset() -> kvm_cpu_synchronize_post_reset().
+>>=20
+>> So given current design, OK I agree with you that CR pinned MSRs
+>> should be zeroed by userspace VMM.
+>>=20
+>> It does though seems kinda weird to me that part of CPU state is
+>> initialised on KVM INIT handler and part of it in userspace VMM. It
+>> could lead to inconsistent (i.e. diverging from spec) CPU behaviour.
+>=20
+> The reason for that is the even on real hardware INIT does not touch
+> most MSRs:
+>=20
+>  9.1 Initialization overview
+>=20
+>  Asserting the INIT# pin on the processor invokes a similar response =
+to
+>  a hardware reset. The major difference is that during an INIT, the
+>  internal caches, MSRs, MTRRs, and x87 FPU state are left unchanged
+>  (although, the TLBs and BTB are invalidated as with a hardware =
+reset).
+>  An INIT provides a method for switching from protected to =
+real-address
+>  mode while maintaining the contents of the internal caches.
+>=20
+> Paolo
+>=20
+> [1]
+> =
+https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__software.intel.com_=
+security-2Dsoftware-2Dguidance_api-2Dapp_sites_default_files_336996-2DSpec=
+ulative-2DExecution-2DSide-2DChannel-2DMitigations.pdf&d=3DDwICaQ&c=3DRoP1=
+YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr=
+-yKXPNGZbpTx0&m=3DMRhvCoZcvqLvHMhI3y3iSkpiAfitrNoCgPtWaTXhzNQ&s=3D66DAue_O=
+jp-a_msxZ2W9bLtQWJB4W1p9F9GrBBQ8dnw&e=3D=20
 >=20
 
-Yes, please do that.
+Oh right. That=E2=80=99s true.
+There is a difference between power-up and asserting RESET# pin to =
+asserting INIT# pin or receiving INIT IPI.
+The first does reset all the processor state while the latter reset only =
+part of it as indeed Intel SDM section 9.1 describes.
 
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
+So basically because KVM is only aware of INIT IPI but not on power-up =
+and asserting RESET# pin events,
+then the job of emulating the latter events is currently implemented in =
+userspace VMM.
 
-for both.
+Having said that, one could argue that because KVM implements the vCPU, =
+it should just expose a relevant ioctl
+for userspace VMM to trigger =E2=80=9Cfull vCPU state reset=E2=80=9D on =
+power-up or asserting RESET# pin events.
+i.e. Making userspace VMM only the one which emulates the peripheral =
+hardware that triggers the event,
+but not implementing the vCPU emulation that responds to this event. I =
+think this would have resulted in a cleaner design.
+
+But we are diverting from original patch-series discussion so if we want =
+to discuss this further, let=E2=80=99s open a separate email thread on =
+that. :)
+
+-Liran
+
