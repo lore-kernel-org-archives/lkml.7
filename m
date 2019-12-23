@@ -4,43 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ABDC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F356E206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8432206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 12:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=asmblr.net header.i=@asmblr.net header.b="sEsZJ/rS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=asmblr.net header.i=@asmblr.net header.b="rX6KxPMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfLWMwX (ORCPT
+        id S1726890AbfLWMw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:52:23 -0500
-Received: from srv2.anyservers.com ([77.79.239.202]:55508 "EHLO
+        Mon, 23 Dec 2019 07:52:29 -0500
+Received: from srv2.anyservers.com ([77.79.239.202]:55646 "EHLO
         srv2.anyservers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbfLWMwW (ORCPT
+        with ESMTP id S1726680AbfLWMw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:52:22 -0500
-X-Greylist: delayed 910 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Dec 2019 07:52:21 EST
+        Mon, 23 Dec 2019 07:52:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=asmblr.net;
          s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
         In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=TLqg7R3jiAbboCxIr9XpYz0wUhGH6v2NcmJFHYXH/20=; b=sEsZJ/rSrNdjM6flxOdnpBpywL
-        tLV2cHw7GiQs7x+oImUsQ5d37iNNiKPPhdm2qidIuXpT/mfi0C7QknTUlhYiW27EfO/g0sQF3yXnO
-        Sj3JZCmXjN29wcx7yBldx5P2XK39leCUaWbFOa4MYCXucLFQO/CvketM93KPaMFsNERe9Ci9VsJrE
-        E9AvTA4C1PSLnZv0f5fzzS7ghuuD5OBe1YKo7ZNmi9eZx/vBbYzK8KqQwIVabgsf29VhrYzzSgSyU
-        Kb5IotCEqGiQTjf6tgCHwsZiI7IUGyb71kSCl8WcIujGcdgAF6qScktIvA8U/TAarmkUSX/t0H4bv
-        NkzF4Mng==;
+        bh=TjhyZtVGXeZiT/7ziQoThyRywRWC9b0F5fUg+oxiM5Y=; b=rX6KxPMVrkp6MBh3aQqgueT0Nf
+        MlMdBwLJeOXAtFX1QO5P4C6iTT0ASsbIZPNqE7WQg44BbWrGQ/Hjsa605y8yDF4zmzRrUdhwtUnLn
+        ayLfW7q9raV8TaZVI495E0ERkQBh91JzZITMADzFXZwhHoeuEo3AWmunbE9IZ466FjdyhZcs+JWuH
+        G6kJ53tarH53zTmik6/3LAtXkaANYEJ0gDzo7LaIi0CAQxB/Ly7q8uGchgX5KoqlioFaPDnmpDw4c
+        Eai3/KpVK6CnXo49D0kfDUITuN8i2EAtvWjXqfbDsxB98nwzSxLtRoNE2Byh0ABSJiDUIUFejQIJb
+        KDocwIOg==;
 Received: from 89-64-37-27.dynamic.chello.pl ([89.64.37.27]:49046 helo=milkyway.galaxy)
         by srv2.anyservers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <amade@asmblr.net>)
-        id 1ijMxP-00Gi5o-FB; Mon, 23 Dec 2019 13:37:07 +0100
+        id 1ijMxP-00Gi5o-61; Mon, 23 Dec 2019 13:37:07 +0100
 From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
 To:     Ping-Ke Shih <pkshih@realtek.com>,
         Kalle Valo <kvalo@codeaurora.org>
@@ -49,9 +48,9 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org,
         =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
-Subject: [PATCH 2/9] rtlwifi: rtl8188ee: Make functions static & rm sw.h
-Date:   Mon, 23 Dec 2019 13:37:08 +0100
-Message-Id: <20191223123715.7177-3-amade@asmblr.net>
+Subject: [PATCH 1/9] rtlwifi: rtl8192cu: Fix typo
+Date:   Mon, 23 Dec 2019 13:37:07 +0100
+Message-Id: <20191223123715.7177-2-amade@asmblr.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191223123715.7177-1-amade@asmblr.net>
 References: <20191223123715.7177-1-amade@asmblr.net>
@@ -70,73 +69,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of functions which were exposed in sw.h, are only used in sw.c, so
-just make them static. This makes sw.h unnecessary, so remove it.
+Replace USB_VENDER_ID_REALTEK with USB_VENDOR_ID_REALTEK.
 
 Signed-off-by: Amadeusz Sławiński <amade@asmblr.net>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c |  7 +++----
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.h | 12 ------------
- 2 files changed, 3 insertions(+), 16 deletions(-)
- delete mode 100644 drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.h
+ .../wireless/realtek/rtlwifi/rtl8192cu/sw.c   | 34 +++++++++----------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-index a0eda51e833c..4865639ac9ea 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.c
-@@ -9,7 +9,6 @@
- #include "phy.h"
- #include "dm.h"
- #include "hw.h"
--#include "sw.h"
- #include "trx.h"
- #include "led.h"
- #include "table.h"
-@@ -59,7 +58,7 @@ static void rtl88e_init_aspm_vars(struct ieee80211_hw *hw)
- 	rtlpci->const_support_pciaspm = rtlpriv->cfg->mod_params->aspm_support;
- }
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
+index ab3e4aebad39..6b954059e830 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/sw.c
+@@ -252,45 +252,45 @@ static struct rtl_hal_cfg rtl92cu_hal_cfg = {
+ 	.maps[RTL_RC_HT_RATEMCS15] = DESC_RATEMCS15,
+ };
  
--int rtl88e_init_sw_vars(struct ieee80211_hw *hw)
-+static int rtl88e_init_sw_vars(struct ieee80211_hw *hw)
- {
- 	int err = 0;
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
-@@ -173,7 +172,7 @@ int rtl88e_init_sw_vars(struct ieee80211_hw *hw)
- 	return err;
- }
+-#define USB_VENDER_ID_REALTEK		0x0bda
++#define USB_VENDOR_ID_REALTEK		0x0bda
  
--void rtl88e_deinit_sw_vars(struct ieee80211_hw *hw)
-+static void rtl88e_deinit_sw_vars(struct ieee80211_hw *hw)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ /* 2010-10-19 DID_USB_V3.4 */
+ static const struct usb_device_id rtl8192c_usb_ids[] = {
  
-@@ -189,7 +188,7 @@ void rtl88e_deinit_sw_vars(struct ieee80211_hw *hw)
- }
+ 	/*=== Realtek demoboard ===*/
+ 	/* Default ID */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8191, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8191, rtl92cu_hal_cfg)},
  
- /* get bt coexist status */
--bool rtl88e_get_btc_status(void)
-+static bool rtl88e_get_btc_status(void)
- {
- 	return false;
- }
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.h b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.h
-deleted file mode 100644
-index 1407151503f8..000000000000
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/sw.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/* Copyright(c) 2009-2013  Realtek Corporation.*/
--
--#ifndef __RTL92CE_SW_H__
--#define __RTL92CE_SW_H__
--
--int rtl88e_init_sw_vars(struct ieee80211_hw *hw);
--void rtl88e_deinit_sw_vars(struct ieee80211_hw *hw);
--bool rtl88e_get_btc_status(void);
--
--
--#endif
+ 	/****** 8188CU ********/
+ 	/* RTL8188CTV */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x018a, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x018a, rtl92cu_hal_cfg)},
+ 	/* 8188CE-VAU USB minCard */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8170, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8170, rtl92cu_hal_cfg)},
+ 	/* 8188cu 1*1 dongle */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8176, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8176, rtl92cu_hal_cfg)},
+ 	/* 8188cu 1*1 dongle, (b/g mode only) */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8177, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8177, rtl92cu_hal_cfg)},
+ 	/* 8188cu Slim Solo */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817a, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817a, rtl92cu_hal_cfg)},
+ 	/* 8188cu Slim Combo */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817b, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817b, rtl92cu_hal_cfg)},
+ 	/* 8188RU High-power USB Dongle */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817d, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817d, rtl92cu_hal_cfg)},
+ 	/* 8188CE-VAU USB minCard (b/g mode only) */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817e, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817e, rtl92cu_hal_cfg)},
+ 	/* 8188RU in Alfa AWUS036NHR */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817f, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817f, rtl92cu_hal_cfg)},
+ 	/* RTL8188CUS-VL */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x818a, rtl92cu_hal_cfg)},
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x819a, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x818a, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x819a, rtl92cu_hal_cfg)},
+ 	/* 8188 Combo for BC4 */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8754, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8754, rtl92cu_hal_cfg)},
+ 
+ 	/****** 8192CU ********/
+ 	/* 8192cu 2*2 */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x8178, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x8178, rtl92cu_hal_cfg)},
+ 	/* 8192CE-VAU USB minCard */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x817c, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x817c, rtl92cu_hal_cfg)},
+ 
+ 	/*=== Customer ID ===*/
+ 	/****** 8188CU ********/
+@@ -329,7 +329,7 @@ static const struct usb_device_id rtl8192c_usb_ids[] = {
+ 
+ 	/****** 8188 RU ********/
+ 	/* Netcore */
+-	{RTL_USB_DEVICE(USB_VENDER_ID_REALTEK, 0x317f, rtl92cu_hal_cfg)},
++	{RTL_USB_DEVICE(USB_VENDOR_ID_REALTEK, 0x317f, rtl92cu_hal_cfg)},
+ 
+ 	/****** 8188CUS Slim Solo********/
+ 	{RTL_USB_DEVICE(0x04f2, 0xaff7, rtl92cu_hal_cfg)}, /*Xavi*/
 -- 
 2.24.1
 
