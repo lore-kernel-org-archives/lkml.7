@@ -4,143 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52266C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADFC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B7920709
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8EA20709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577110017;
-	bh=Cbual4ehB2Zz84mgi4lJ0W18gNgG1GLTDzrUJDxiHqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yVanGfJfN8+bU1AS81ns8uRtGZikwED7Uas+yGOKsw5dbZ2DgefHuuHpAcx7+qZ2H
-	 MTBtNaa3ftvPqf5qoWk8qy65o5lue+sjTIjZO45MAsKNFdmGWJR1CwLHRxvvcYTIuk
-	 5NkS9NNw76bUysZuS68qm0UAXCfpox4iUvEUYH3Y=
+	s=default; t=1577110048;
+	bh=5ZdMPyONpsn+aRFmlCXTEHarfDJUHETjn2QABN9mOfw=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=rEXQ9W5xInE3rfANtRdnWFZtRHPlolI0e3g30bssCNOf6jy0nYCLxTJSS1ThyP1Pf
+	 cNK/9aXAcFPFKW3Gbmzcx6rmRWHq/B9jyMD73hRp/yWQxB20hNOrXU71QvfRfvzZFW
+	 tvi2nC5XeXvedp1xLLFbItefKjnY4mTy0TGU5B+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLWOG4 (ORCPT
+        id S1726928AbfLWOH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfLWOG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:06:56 -0500
-Received: from localhost (unknown [106.51.110.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E82620709;
-        Mon, 23 Dec 2019 14:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577110015;
-        bh=Cbual4ehB2Zz84mgi4lJ0W18gNgG1GLTDzrUJDxiHqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CY4gc8xS6rLzYfPE0ErrDYtGywpDKEXzrMIKKhPEBALM9uCQA675Dc0+YZ3N7EnbB
-         ePf49u5rigB7mKL5ShjrkKQ2KrK9+IO+u2q0B7tGBGeZrI4KY6PwEm/+2RhID6H2C0
-         geyRfdKEVouA0UtJak9q+ZeyglZgXrw6JZv8pROM=
-Date:   Mon, 23 Dec 2019 19:36:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Manu Gautam <mgautam@codeaurora.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Can Guo <cang@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] phy: qcom-qmp: Add optional SW reset
-Message-ID: <20191223140650.GG2536@vkoul-mobl>
-References: <20191220101719.3024693-1-vkoul@kernel.org>
- <20191220101719.3024693-4-vkoul@kernel.org>
- <5dc55690-61cc-de35-2e02-ec812f086bf5@codeaurora.org>
+        Mon, 23 Dec 2019 09:07:27 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:50280 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726682AbfLWOH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:07:26 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ijOMh-0006s5-8h; Mon, 23 Dec 2019 15:07:19 +0100
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle =?UTF-8?Q?GICR=5FPENDBAS?=  =?UTF-8?Q?ER=2EPTZ=20filed=20as=20RAZ?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dc55690-61cc-de35-2e02-ec812f086bf5@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Dec 2019 14:07:19 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <andre.przywara@arm.com>, <eric.auger@redhat.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+In-Reply-To: <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+ <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+Message-ID: <c084aa29c029f97cdfb1b5dc9e6b29ac@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, andre.przywara@arm.com, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manu,
+Hi Zenghui,
 
-On 23-12-19, 14:38, Manu Gautam wrote:
-> 
-> On 12/20/2019 3:47 PM, Vinod Koul wrote:
-> > For V4 QMP UFS Phy, we need to assert reset bits, configure the phy and
-> > then deassert it, so add optional has_sw_reset flag and use that to
-> > configure the QPHY_SW_RESET register.
-> >
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/phy/qualcomm/phy-qcom-qmp.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > index 1196c85aa023..47a66d55107d 100644
-> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > @@ -168,6 +168,7 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
-> >  static const unsigned int sm8150_ufsphy_regs_layout[] = {
-> >  	[QPHY_START_CTRL]		= QPHY_V4_PHY_START,
-> >  	[QPHY_PCS_READY_STATUS]		= QPHY_V4_PCS_READY_STATUS,
-> > +	[QPHY_SW_RESET]			= QPHY_V4_SW_RESET,
-> >  };
-> >  
-> >  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
-> > @@ -1023,6 +1024,9 @@ struct qmp_phy_cfg {
-> >  
-> >  	/* true, if PCS block has no separate SW_RESET register */
-> >  	bool no_pcs_sw_reset;
-> > +
-> > +	/* true if sw reset needs to be invoked */
-> > +	bool has_sw_reset;
-> 
-> 
-> There is no need to add new flag. Existing code will take care of it for UFS once you
-> clear no_pcs_sw_reset flag.
-> 
-> >  };
-> >  
-> >  /**
-> > @@ -1391,6 +1395,7 @@ static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
-> >  
-> >  	.is_dual_lane_phy	= true,
-> >  	.no_pcs_sw_reset	= true,
-> > +	.has_sw_reset		= true,
-> >  };
-> >  
-> >  static void qcom_qmp_phy_configure(void __iomem *base,
-> > @@ -1475,6 +1480,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
-> >  			     SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-> >  	}
-> >  
-> > +	if (cfg->has_sw_reset)
-> > +		qphy_setbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> > +
-> 
-> Not needed. POR value of the bit is '1'.
-> 
-> 
-> >  	if (cfg->has_phy_com_ctrl)
-> >  		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
-> >  			     SW_PWRDN);
-> > @@ -1651,6 +1659,9 @@ static int qcom_qmp_phy_enable(struct phy *phy)
-> >  	if (cfg->has_phy_dp_com_ctrl)
-> >  		qphy_clrbits(dp_com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
-> >  
-> > +	if (cfg->has_sw_reset)
-> > +		qphy_clrbits(pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> > +
-> 
-> There is no need to add UFS specific change here as existing PHY driver can
-> handle PCS based PHY sw_reset and already does it for USB and PCIe.
+On 2019-12-23 13:43, Zenghui Yu wrote:
+> On 2019/12/20 19:18, Zenghui Yu wrote:
+>> Although guest will hardly read and use the PTZ (Pending Table Zero)
+>> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+>> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>> ---
+>> Noticed when checking all fields of GICR_PENDBASER register.
+>> But _not_ sure whether it's worth a fix, as Linux never sets
+>> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+>> And I wonder under which scenarios can this bit be written as 1.
+>> It seems difficult for software to determine whether the pending
+>> table contains all zeros when writing this bit.
+>> virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
+>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> index 7dfd15dbb308..ebc218840fc2 100644
+>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>> @@ -414,8 +414,11 @@ static unsigned long 
+>> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>>   					     gpa_t addr, unsigned int len)
+>>   {
+>>   	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+>> +	u64 value = vgic_cpu->pendbaser;
+>>   -	return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+>> +	value &= ~GICR_PENDBASER_PTZ;
+>> +
+>> +	return extract_bytes(value, addr & 7, len);
+>>   }
+>>   static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
+>>
+>
+> I noticed there is no userspace access callbacks for GICR_PENDBASER,
+> so this patch will make the PTZ field also 'Read As Zero' by 
+> userspace.
+> Should we consider adding a uaccess_read callback for GICR_PENDBASER
+> which just returns the unchanged vgic_cpu->pendbaser to userspace?
+> (Though this is really not a big deal. We now always emulate the PTZ
+> field to guest as RAZ. And 'vgic_cpu->pendbaser & GICR_PENDBASER_PTZ'
+> only indicates whether KVM will optimize the LPI enabling process,
+> where Read As Zero indicates never optimize..)
 
-Thanks for the explanation in this and previous version.
+I don't think adding a userspace accessor would help much. All this
+bit tells userspace is that the guest has programmed a zero filled
+table. On restore, we'd avoid a rescan of the table if there was
+no LPI mapped.
 
-I confirm that adding sw_reset and clearing .no_pcs_sw_reset does make
-it work for me on UFS on SM8150.
+And thinking of it, this fixes a bug for non-Linux guests: If you write
+PTZ=1, we never clear it. Which means that if userspace saves and 
+restores
+PENDBASER with PTZ set, we'll never restore the pending bits, which is
+pretty bad (see vgic_enable_lpis()).
 
-I will drop this patch and send the update in v3
+This patch on its own fixes more than one bug!
 
+Thanks,
+
+         M.
 -- 
-~Vinod
+Jazz is not dead. It just smells funny...
