@@ -2,121 +2,128 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF84C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F025DC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9197F2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577081378;
-	bh=gV6O3xjZebz9zbb1+/2MYYJ9wbcOz2y0CPQmbO4RdyA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fzoBwlG+T/fhVxizgGepkJcyV2zm/rGUOegm7TyGyXid25k50Q5sgc33bI52hQ6Z/
-	 v8ucSYty9Hlvqq5piK4Al95EqdLqxu0qJvyiGv66Y+10FP4mhfUTPg5JIJ9wWNlK6P
-	 7hqhT6cJcob3XeD3HE5IWWSwFC80FbrncS80FZgE=
+	by mail.kernel.org (Postfix) with ESMTP id B807F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V5Ui3vQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfLWGJh (ORCPT
+        id S1726007AbfLWGMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 01:09:37 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38619 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfLWGJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:09:37 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so15088251wmc.3;
-        Sun, 22 Dec 2019 22:09:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kBek2qMpkl76XzsVkCJQfX3XYSAhe9VKKtzp8ddYINw=;
-        b=QLqFEjkxit+AHR2YIaqlGQBzXeEdZNYEsnovuK8u1VnQuJ9YuuMu2HHVwyzXFH4Qaa
-         iEsSAIdwrDakK5vffy94ciajrYMEqezGrO7jbn8M/3W6By2TxsumAwwN5cA60BUBvXvb
-         Kl4FPZXm4U6/avPEal/PbEaSps8EXzsmVxT1E3j1bpI6AZACqQ0XTfnJ44Kyiz2qo08h
-         rxyy4GKRyVsMLxM+U46w+f38Wfa620SD0MP4IhxPjXVRLCcLVi3Q89PNjQIt5A2+3tHp
-         63yDzFFHW+45pPCOMk7q/XQ/3rRVAZFB0fohk04ca13bW3LmN+F9W8uJ89fG2rQJoqcf
-         Qh3w==
-X-Gm-Message-State: APjAAAXEpXNc+5xTrfVYn7xj98rRsMLwPSRLjazkcGqN0qIGZO0HmSj0
-        L2IXSNDYEl25nO0KmosF7ahO1oiFXn0VyU/PVlU=
-X-Google-Smtp-Source: APXvYqzduGzxW0Eq8AtIuTC/t2Jdrao10koS+96PhhcRz3RUy8glgGTBnhBhSnilH6eoF1DYQito+ijf/Sp8rKfGPwY=
-X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr28455099wmk.124.1577081374906;
- Sun, 22 Dec 2019 22:09:34 -0800 (PST)
+        Mon, 23 Dec 2019 01:12:37 -0500
+Received: from mail-eopbgr00056.outbound.protection.outlook.com ([40.107.0.56]:10358
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfLWGMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 01:12:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SYSaUl8VC1z5fBwjkzyi006VM/xEPnBIwHP0d4/3iYfUHJKeBDSep0vqI2cGcmOqNBawqwK/FQamYRHKEf6hgOu9RbQk2SpgOFm6mLnhme5Y/KkDYj24wQp6VcrXDVhJa3wQuT4siem1E+z30jHZRll4oZjp/LBA2g/UPYYxRy7gxuAE5W6MbXKF1PeaXiacUVyyGhs1nEgIPATLbamiyVsHJFosdEgKswtqSA5+W5TA76jvY/bG5Akq58bVPnfVcOHgiRvj8aYKU9xvZ7axITWp0n68WH6KaVLv5i1CAF7Ig/ivI2O3T6KFTDIf6Mc0sIrgAD8zKJYfIsYTN8OcIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
+ b=mb+29tBUKcxl+Db2vCaTe6ylrY0wyx2eATUI5L1mEQeRhl75R+hmpapB0ZMj84d64I0NvyFJLpS/XP62T2TKTshWM2VqZyNmrCG3TROSXX+wmh9gy0+cSjsxKDUFA5md2EQd94xWOQTmD1pGgXVuNgc6FI6SbkRb5z+swQtYm5Zf7OHDXtkqHPC9QuV65AJjYvFIGCmGjrACUFXaXMfFeLLpUcQAO3wuiwijElfdarWLPYkIipFYcMmBgLyHj8gF4NN7Z0CmFeXghYNRixXQhZZuQxFwh0snTGhtKEmJ4FX0QwEitMTcgaB0Af7j1gLRjkLvzimyEURncRMCX1GQsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
+ b=V5Ui3vQnjokTNYgVEmtnFz7vOBVOpUxiZIByAxYyu1FyJldD2K3LkGp5ZzcioJ3e+psFVcjFuNLAL+yOkVCGdqM4jQKMvNAKVcpLSYlg5gAMaR0iqKlIH8zI1i2UftZwUu7SRgrUEv6owCvwNhBDS0BwTyGfj7d0Kfc8NvG9EdY=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
+ VI1PR04MB7152.eurprd04.prod.outlook.com (10.186.158.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Mon, 23 Dec 2019 06:12:32 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 06:12:32 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Thread-Topic: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Thread-Index: AQHVsJ2TZ/jVyH6lNkyvcDWZa1lfcae/dvcAgAAYxuCAAhhbAIABQiJg
+Date:   Mon, 23 Dec 2019 06:12:32 +0000
+Message-ID: <VI1PR04MB4431671A81F87AB20A0313E6ED2E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20191212033714.4090-1-peng.ma@nxp.com>
+ <20191218062636.GS2536@vkoul-mobl>
+ <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20191219155458.GY2536@vkoul-mobl>
+In-Reply-To: <20191219155458.GY2536@vkoul-mobl>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 66c26685-71e5-450f-0213-08d7876f18eb
+x-ms-traffictypediagnostic: VI1PR04MB7152:|VI1PR04MB7152:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB71527827608529BD68AE8D90ED2E0@VI1PR04MB7152.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0260457E99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(186003)(64756008)(44832011)(71200400001)(8936002)(2906002)(52536014)(76116006)(26005)(7696005)(66446008)(86362001)(5660300002)(66476007)(66946007)(6506007)(66556008)(33656002)(316002)(9686003)(55016002)(478600001)(81166006)(6916009)(8676002)(81156014)(54906003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7152;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B/pZPHoIAo1qaKJarAa6XA5TYPfTvyxq44ge1c++Et+b/VFJV9qJ5U6THDFvMJ2XJWVE63Lc29b5p9wGx6CmlZPSRhI93E56uDP7E3K35pCGeZDhi7GhButDxT1M95YbBwLiHJmir0w4aRWJBbVboZZrGgSzZelt77h2bA5CGv3hUDjIYMXZEnrHhHpXjs39q2Q8cbeX4k5WVK2A18mv5xMvplzV0dhQkKH7QJssowjz+uv5jghVsymesupz1NiQGEK7pSJqz0WtgGjeI/rRpbd45Ne0PYB/aALCNs4crHymtlOt3l8vHNFSSPC9FmuKGTzaoT+NMXZXEc3PXvyNxqTIQL/2UqD9R2mUuKfQU1lTQMDEYsce22fsLozjgFP+w34IEr4d143MNaUoiI0LzcyFoEMaHT+np3cmn+yaHqhMgrdsGN5H3M7g2osDt9ZBfdgl3OXc6UnN5vj4Tw6NIkgGLjW488zw+uMkDRZ0h6L7PIXnOJGJ1dwaAQl9VsTp
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191221162158.rw6xqqktubozg6fg@ast-mbp.dhcp.thefacebook.com>
- <20191223030530.725937-1-namhyung@kernel.org> <CAEf4BzaGfsF352kWu1zZe+yXSRm4c9LQ0U57VnRq2EdtjeQutw@mail.gmail.com>
- <CAEf4BzbyBgDN5svEcfpyjoViixhn2iGBs1j+jyvNhfjPp_1E=w@mail.gmail.com>
-In-Reply-To: <CAEf4BzbyBgDN5svEcfpyjoViixhn2iGBs1j+jyvNhfjPp_1E=w@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 23 Dec 2019 15:09:23 +0900
-Message-ID: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
-Subject: Re: [PATCH bpf] libbpf: Fix build on read-only filesystems
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66c26685-71e5-450f-0213-08d7876f18eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 06:12:32.3509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: suFb/ZoT7jamvtc+Tqk4MHxi4wCKL8wtAuqRNV7XW9m/GYezczLzPo2GOmDefAAL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Mon, Dec 23, 2019 at 2:55 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Sun, Dec 22, 2019 at 9:45 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sun, Dec 22, 2019 at 7:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > I got the following error when I tried to build perf on a read-only
-> > > filesystem with O=dir option.
-> > >
-> > >   $ cd /some/where/ro/linux/tools/perf
-> > >   $ make O=$HOME/build/perf
-> > >   ...
-> > >     CC       /home/namhyung/build/perf/lib.o
-> > >   /bin/sh: bpf_helper_defs.h: Read-only file system
-> > >   make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-> > >   make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-> > >   make[2]: *** Waiting for unfinished jobs....
-> > >     LD       /home/namhyung/build/perf/libperf-in.o
-> > >     AR       /home/namhyung/build/perf/libperf.a
-> > >     PERF_VERSION = 5.4.0
-> > >   make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> > >   make: *** [Makefile:70: all] Error 2
-> > >
-> > > It was becaused bpf_helper_defs.h was generated in current directory.
-> > > Move it to OUTPUT directory.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> >
-> > Looks good, thanks!
->
-> just one minor thing: bpf_helper_defs.h has to be added to .gitignore
-> under selftests/bpf now
->
-> >
-> > Tested-by: Andrii Nakryiko <andriin@fb.com>
-> > Acked-by: Andrii Nakryiko <andriin@fb.com>
-
-Thanks a lot for the review, I'll send v3 soon
-
-Thanks
-Namhyung
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
+QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOcTqMTLUwjE5yNUgMjM6NTUNCj5UbzogUGVuZyBNYSA8
+cGVuZy5tYUBueHAuY29tPg0KPkNjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
+cm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8NCj5MaSA8bGVveWFuZy5saUBueHAuY29t
+PjsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBSb2JpbiBHb25nDQo+PHlpYmluLmdvbmdAbnhw
+LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnDQo+U3ViamVjdDogUmU6IFtFWFRdIFJlOiBbdjUgMS8zXSBkbWFl
+bmdpbmU6IGZzbC1lZG1hOiBBZGQgZURNQSBzdXBwb3J0IGZvcg0KPlFvcklRIExTMTAyOEEgcGxh
+dGZvcm0NCj4NCj5DYXV0aW9uOiBFWFQgRW1haWwNCj4NCj5PbiAxOC0xMi0xOSwgMDg6MDgsIFBl
+bmcgTWEgd3JvdGU6DQo+ID5CdHcgcGxzIHNlbmQgYmluZGluZ3MgYXMgcGF0Y2gxIGFuZCBkcml2
+ZXIgY2hhbmdlcyBhcyBwYXRjaDIuDQo+PiBbUGVuZyBNYV0gSSBkb24ndCB1bmRlcnN0YW5kIHRo
+aXMgc2VudGVuY2UsIFBsZWFzZSBnaXZlIG1lIG1vcmUNCj5pbmZvcm1hdGlvbi4NCj4+IEFzIEkg
+a25vdyBwYXRjaDEgaXMgZHJpdmVyIGNoYW5nZXMsIHBhdGNoMiBpcyBkdHMgY2hhbmdlcywgcGF0
+Y2gzIGlzIGJpbmRpbmcNCj5jaGFuZ2VzLg0KPj4gWW91IGFjY2VwdGVkIHBhdGNoMSBhbmQgcGF0
+Y2gzLCBJIGFtIHB1enpsZWQgZm9yIHBhdGNoMiBhbmQgeW91cg0KPmNvbW1lbnRzLg0KPg0KPlRo
+ZSBvcmRlciBvZiBwYXRjaGVzIHNob3VsZCBhbHdheXMgYmUgZHQtYmluZGluZ3MgZmlyc3QsIGZv
+bGxvd2VyZCBieSBkcml2ZXINCj5jaGFuZ2UgYW5kIHRoZSBkdHMgY2hhbmdlcyBhcyB0aGUgbGFz
+dCBvbmUgaW4gdGhlIHNlcmllcy4NCj4NCltQZW5nIE1hXSBPS6OsR290IGl0Lg0KVGhhbmtzIHZl
+cnkgbXVjaCENCg0KQmVzdCBSZWdhcmRzLA0KUGVuZw0KPi0tDQo+flZpbm9kDQo=
