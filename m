@@ -2,89 +2,149 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F4C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5579C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C202206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7211120709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jK1Aj3CV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfLWOkt (ORCPT
+        id S1726984AbfLWOlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:40:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:46622 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbfLWOkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:40:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2EDA1FB;
-        Mon, 23 Dec 2019 06:40:48 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2493F534;
-        Mon, 23 Dec 2019 06:40:46 -0800 (PST)
-Date:   Mon, 23 Dec 2019 14:40:44 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Mel Gorman' <mgorman@techsingularity.net>,
-        'Matt Fleming' <matt@codeblueprint.co.uk>,
-        'Viresh Kumar' <viresh.kumar@linaro.org>,
-        'Juri Lelli' <juri.lelli@redhat.com>,
-        'Paul Turner' <pjt@google.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Vincent Guittot' <vincent.guittot@linaro.org>,
-        'Quentin Perret' <qperret@qperret.net>,
-        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
-        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Ingo Molnar' <mingo@redhat.com>,
-        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
-        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
-Message-ID: <20191223144043.ticfxfgbolsqk74i@e107158-lin.cambridge.arm.com>
-References: <20191113124654.18122-2-ggherdovich@suse.cz>
- <000001d5a29b$c944fd70$5bcef850$@net>
- <1574697961.16378.5.camel@suse.cz>
- <000801d5a41e$a7fce2c0$f7f6a840$@net>
- <1574781600.7677.2.camel@suse.cz>
- <001d01d5a4f4$d96b21b0$8c416510$@net>
- <003d01d5a63d$f6ab3950$e401abf0$@net>
- <20191219104813.6fr34qavpaplecoz@e107158-lin>
- <000701d5b965$361b6c60$a2524520$@net>
- <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
+        Mon, 23 Dec 2019 09:41:06 -0500
+Received: from mail-dm6nam10on2132.outbound.protection.outlook.com ([40.107.93.132]:59360
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726873AbfLWOlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:41:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MPr2gjPdocBSUASX3P79nnY6QMUznMkVibT19MJiHRVmNnslmoTiWLUYfBxm47i9rqcCaCxVjvlcN9tRO33OkkL/kbymj67YL2ML9OsD0OEvF1I/sP8lH1AyKbmP84kKq7sBc9EhQZSs4uI79zk8yC7QbnyXDiNPIjs06bihMd5egkYt6tHtsa7TgzmF5u0VQkcgSJSD/pCD8e1alSK6CXG21mAlKtW3LqyOVXUr/6RmunRVoDfNaW9TRyVS9bxS8ovofXspIAOtzTiGVBCubouw6eZ27XAmCheDmtiJ8X0bF8L71nGND14XdbENozpdoSXOg8isRqpSdOyG2BxIvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7wPvYbRSu0My075KAeCkKk/RWFtCmcE5R/qJlwHZPc=;
+ b=apNgtmpyVZ3h1ngjzu6FtCanhyxhYDYrU52YVnwiQWfjds44bfUZCjOCncvEVDlsTkNgsllynfSVZ0w/oLSw1yyeVs3q/i+BgYCouyx5qdXSf18xSGu2jherPhMF2yuPojuTy9NTX9zCKaBJQjSNAdfMhSve9N1mpCWFgwP+We+TfsLevNuq/0F5WpHKCJJVepWBKQ7bvI4cHMmMxBU3tx7DGtCwe4eyTcsUce8KhsUhzaHomsoraUay+NiOBP4qMF/TIDR9bNlF87ogIq1SVlyDrTiAsh0OJ93oasALWFQUfFrNxFF4G1JK5q0izNIc8VtA7deyNQJJvuwqEs/gPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y7wPvYbRSu0My075KAeCkKk/RWFtCmcE5R/qJlwHZPc=;
+ b=jK1Aj3CVMeWR86A0Mjk4mfr+rC9ecJ51Aqts+ApTD3+6gI6ufO5/S24uRIPC7/Dk/uFQwNOUqglMI8OQyW7Dj2SwB557951/kviyNuvJbrSh4DA9Db/MfEcE6oY57hmUKDuOlAXMkfk2mhagjh7VyXNnpLDC9hP+9/H0+MHW6HQ=
+Received: from DM5PR21MB0634.namprd21.prod.outlook.com (10.175.111.141) by
+ DM5PR21MB0284.namprd21.prod.outlook.com (10.173.174.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.6; Mon, 23 Dec 2019 14:41:03 +0000
+Received: from DM5PR21MB0634.namprd21.prod.outlook.com
+ ([fe80::b913:76bd:45a2:146d]) by DM5PR21MB0634.namprd21.prod.outlook.com
+ ([fe80::b913:76bd:45a2:146d%10]) with mapi id 15.20.2602.006; Mon, 23 Dec
+ 2019 14:41:03 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] x86/hyper-v: add "polling" bit to hv_synic_sint
+Thread-Topic: [PATCH] x86/hyper-v: add "polling" bit to hv_synic_sint
+Thread-Index: AQHVuSBPBL98biB330GIQMjLFcbKuKfHy4pA
+Date:   Mon, 23 Dec 2019 14:41:03 +0000
+Message-ID: <DM5PR21MB06344320DCF4D3F0CC996BD1D72E0@DM5PR21MB0634.namprd21.prod.outlook.com>
+References: <20191222233404.1629-1-wei.liu@kernel.org>
+In-Reply-To: <20191222233404.1629-1-wei.liu@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-23T14:41:01.4468103Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=be08f4c7-c4a8-4793-80c0-62c5773ff3cb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1b3e0414-3444-40f3-8c3a-08d787b622b8
+x-ms-traffictypediagnostic: DM5PR21MB0284:|DM5PR21MB0284:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB028460CA65409671318C185CD72E0@DM5PR21MB0284.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0260457E99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(39860400002)(346002)(376002)(366004)(189003)(199004)(10290500003)(6506007)(66946007)(33656002)(86362001)(478600001)(53546011)(4326008)(26005)(2906002)(76116006)(55016002)(186003)(9686003)(66476007)(66556008)(64756008)(66446008)(8990500004)(7696005)(81166006)(8936002)(110136005)(52536014)(8676002)(54906003)(316002)(81156014)(71200400001)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0284;H:DM5PR21MB0634.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LCunbkzV56H2NUX8DMuw5YqvYdQXHWqoiPSrRWhRKT5C4Tp47lKT2RrYPVBQgC2S6aWvPMVKakqzg/wfsHHp1Ibg1REl/reayOVcCeDE+J/HVyGphZ4DQlDHE5MKapL8sa/7ldgSTqX2cAjEJrF+e1j3+Md6X2+iK50fALIjaVwKsLs+AhG+QsoF8teLs/Y+ANdscq2qM7EzMlvqU+Cs9V056AMWVHwhiVYVuhnjppaXoLStYikG1+gnhzP+Fu900NYE6oqS+mIu5HGBIqBEj/eKBN1sVrPRBM6F25UbzhQJY598SwPmfnfOys7TMbHcC+c3vEJcTnEyLguo7ZCtB0eMT+s0DA6K8EHSWUM8TC2Gw8D8rIUcQIcEjr4exVnirzEP8rXRD4eQe/EbCASII16X8r0z2L0NJ3tvjxLoxgPvNq7HHcJu9Iu4Aadjx/bP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20171215
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b3e0414-3444-40f3-8c3a-08d787b622b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 14:41:03.1252
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gViVUbZ22qSSQK7f5zdGyB0M7I+X+G3bi4c5IYJZHAVFBXbA9MAyi/QOHlFlGYMfxepzcZGZGwrDEeR1ruAmxOK5rAtFFZYt3bh9jG5Yk3o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0284
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/23/19 14:07, Qais Yousef wrote:
-> > Re-boot to the nocgv1 (stock + cgroup_no_v1=all) kernel.
-> > set the schedutil governor.
-> > launch test 2 and related monitoring tools.
-> > verify performance governor like behavior.
-> 
-> So as stated above, by default uclamp_{min, max} = (0, 1024). So it wouldn't
-> act as performance governor by default unless you explicitly write 1024 to
-> uclamp.min.
-> 
-> Let me go find Ubuntu mainline tree to see if they applied anything extra in
-> there. If they modified the default behavior that could explain what you see.
+From: Wei Liu <wei.liu@kernel.org> Sent: Sunday, December 22, 2019 3:34 PM
+> To: linux-hyperv@vger.kernel.org
+> Cc: sashal@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> x86@kernel.org; Michael Kelley <mikelley@microsoft.com>; linux-kernel@vge=
+r.kernel.org;
+> Wei Liu <wei.liu@kernel.org>
+> Subject: [PATCH] x86/hyper-v: add "polling" bit to hv_synic_sint
+>=20
+> That bit is documented in TLFS 5.0c as follows:
+>=20
+>   Setting the polling bit will have the effect of unmasking an
+>   interrupt source, except that an actual interrupt is not generated.
+>=20
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hy=
+perv-tlfs.h
+> index 5f10f7f2098d..92abc1e42bfc 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -809,7 +809,8 @@ union hv_synic_sint {
+>  		u64 reserved1:8;
+>  		u64 masked:1;
+>  		u64 auto_eoi:1;
+> -		u64 reserved2:46;
+> +		u64 polling:1;
+> +		u64 reserved2:45;
+>  	} __packed;
+>  };
+>=20
+> --
+> 2.20.1
 
-Actually I see what you were saying now that you copy the config. So I think
-I misunderstood and you are running Linus' 5.5-rc2 + Ubuntu PPA config.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-I'm trying to to reproduce the issue at my end.
-
-Cheers
-
---
-Qais Yousef
