@@ -2,72 +2,103 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F7C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85298C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CBE206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67214206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 10:14:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfLWKNW (ORCPT
+        id S1726943AbfLWKOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:13:22 -0500
-Received: from mga11.intel.com ([192.55.52.93]:44066 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfLWKNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:13:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 02:13:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="222995369"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 23 Dec 2019 02:13:18 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 23 Dec 2019 12:13:17 +0200
-Date:   Mon, 23 Dec 2019 12:13:17 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] thunderbolt: fix memory leak of object sw
-Message-ID: <20191223101317.GF2628@lahna.fi.intel.com>
-References: <20191220220526.11307-1-colin.king@canonical.com>
+        Mon, 23 Dec 2019 05:14:39 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:50263 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfLWKOi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 05:14:38 -0500
+X-Originating-IP: 176.184.22.51
+Received: from localhost (did75-h03-176-184-22-51.dsl.sta.abo.bbox.fr [176.184.22.51])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 38ADD240003;
+        Mon, 23 Dec 2019 10:14:35 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2] rtc: rv3029: annotate init and exit functions
+Date:   Mon, 23 Dec 2019 11:14:30 +0100
+Message-Id: <20191223101430.1091572-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191220220526.11307-1-colin.king@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 10:05:26PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> In the case where the call tb_switch_exceeds_max_depth is true
-> the error reurn path leaks memory in sw.  Fix this by setting
-> the return error code to -EADDRNOTAVAIL and returning via the
-> error exit path err_free_sw_ports to free sw. sw has been kzalloc'd
-> so the free of the NULL sw->ports is fine.
->
-> Addresses-Coverity: ("Resource leak")
-> Fixes: b04079837b20 ("thunderbolt: Add initial support for USB4")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+rv30{2,4}9_register_driver and rv30{2,4}9_unregister_driver are only called
+from the init and exit functions of the module. Annotate them properly.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-rv3029c2.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Greg, can you take this to your usb-next branch where the rest of the
-USB4 stuff is?
+diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
+index 220ea91bf86a..62718231731b 100644
+--- a/drivers/rtc/rtc-rv3029c2.c
++++ b/drivers/rtc/rtc-rv3029c2.c
+@@ -823,7 +823,7 @@ static struct i2c_driver rv3029_driver = {
+ 	.id_table	= rv3029_id,
+ };
+ 
+-static int rv3029_register_driver(void)
++static int __init rv3029_register_driver(void)
+ {
+ 	return i2c_add_driver(&rv3029_driver);
+ }
+@@ -835,7 +835,7 @@ static void rv3029_unregister_driver(void)
+ 
+ #else
+ 
+-static int rv3029_register_driver(void)
++static int __init rv3029_register_driver(void)
+ {
+ 	return 0;
+ }
+@@ -866,24 +866,24 @@ static struct spi_driver rv3049_driver = {
+ 	.probe   = rv3049_probe,
+ };
+ 
+-static int rv3049_register_driver(void)
++static int __init rv3049_register_driver(void)
+ {
+ 	return spi_register_driver(&rv3049_driver);
+ }
+ 
+-static void rv3049_unregister_driver(void)
++static void __exit rv3049_unregister_driver(void)
+ {
+ 	spi_unregister_driver(&rv3049_driver);
+ }
+ 
+ #else
+ 
+-static int rv3049_register_driver(void)
++static int __init rv3049_register_driver(void)
+ {
+ 	return 0;
+ }
+ 
+-static void rv3049_unregister_driver(void)
++static void __exit rv3049_unregister_driver(void)
+ {
+ }
+ 
+-- 
+2.23.0
 
-Thanks!
