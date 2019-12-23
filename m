@@ -2,137 +2,154 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881CFC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D23C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A56206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577089302;
-	bh=XeFchNmcZbVFLTtXDEHSwMt1Lj3xsRNy7aafhPPE0z4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i483Wgf8PXBP/H3Ru26+ppxWaXQ/po+tfDB9KUBJ/yGmadez01BpqgvNXRG9kRgXi
-	 XlLQK/IDt7E8QZbtcxAJO7oEs1b42w2UHqTULQrplE9ZW/mOzLBoHRUdpzFVV9hktY
-	 kPBqk5Ad5CwBd5OfASM6wxKvMeniQQVk3W++Z04w=
+	by mail.kernel.org (Postfix) with ESMTP id D55AB206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 08:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLWIVL (ORCPT
+        id S1726063AbfLWIlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:21:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfLWIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:21:05 -0500
-Received: from localhost (36-236-5-169.dynamic-ip.hinet.net [36.236.5.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E3520715;
-        Mon, 23 Dec 2019 08:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577089265;
-        bh=XeFchNmcZbVFLTtXDEHSwMt1Lj3xsRNy7aafhPPE0z4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xkiXLYCKS8ogBXsb7jvhMKmp3BCxIBxS0e3TpXACkT7lZonNTgQUgMuaO9OXvrzF7
-         j8oGlGiWxKUQtKZfzv2qOTqOrfa/K31DVSDq11rL6kaHaBWfxECCMTeT9y3UtITqvf
-         ByBhlDIIFoFBCZgcwQlq18VV+2Z8NYJwCd1ObSfc=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     Ted Ts'o <tytso@mit.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>,
-        Stephan Mueller <smueller@chronox.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 2/8] random: Add a urandom_read_nowait() for random APIs that don't warn
-Date:   Mon, 23 Dec 2019 00:20:45 -0800
-Message-Id: <c87ab200588de746431d9f916501ef11e5242b13.1577088521.git.luto@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1577088521.git.luto@kernel.org>
-References: <cover.1577088521.git.luto@kernel.org>
+        Mon, 23 Dec 2019 03:41:14 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41523 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfLWIlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 03:41:14 -0500
+Received: by mail-ot1-f66.google.com with SMTP id r27so21194602otc.8;
+        Mon, 23 Dec 2019 00:41:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cDv9UaL4HKxCZwOpeNm1xbtf2cmQl4fg1wQxfmqaPlY=;
+        b=f2zAyaDXwgl4tc6L5OljcVFXROCwReDChWEOjREH3Ho857KqigiMUBkYVvSd9Tj21t
+         T6dDGuVTd4kwkAz9j8VTiyi9MdhvwvMV6WyJgMB8w/jXVz9q0SgmWbn3WaH7m1/x3BDV
+         QjUAnUJh+aL56YOlwDH6jE/T+OTqKsGzF5cbWnWN3s1gyBmhWOuoFK+6YNpwqCwj4p9u
+         en0NQGwgdDcdJy3WAiW4/UeYffsh96tljoF1cLZINldvnRPnD3fEwlQ0mzWYKHDh37wQ
+         bp3Gky2wuhiLt+mUrw1cxYleKMSomU8EstGezn5MiT5fQTNleS7xVoNF83vl/1scPhUa
+         4moQ==
+X-Gm-Message-State: APjAAAUTg841JTkrunoyV5cnT2VNz6KEm8sHHrGmN7htgWkekBzEtLAs
+        JXD/cOcWB1E4rM3nud9ZzJI81cSR6rABozRRZ5Dolbfo
+X-Google-Smtp-Source: APXvYqx2KCiv7cxuDdzBfA2c2NhXkW2xa7BGOvhzkGGauQ0VJ6aD6A5SkDirLFnjAg8AJrwmGlawMoHMEhNiYeHVBR4=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr31479287ots.250.1577090473314;
+ Mon, 23 Dec 2019 00:41:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191223040020.109570-1-yuchao0@huawei.com>
+In-Reply-To: <20191223040020.109570-1-yuchao0@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 23 Dec 2019 09:41:02 +0100
+Message-ID: <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/dev/random and getrandom() never warn.  Split the meat of
-urandom_read() into urandom_read_nowarn() and leave the warning code
-in urandom_read().
+Hi,
 
-This has no effect on kernel behavior, but it makes subsequent
-patches more straightforward.  It also makes the fact that
-getrandom() never warns more obvious.
+CC linux-fsdevel
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- drivers/char/random.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
+> As Geert Uytterhoeven reported:
+>
+> for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+>
+> On some platforms, HZ can be less than 50, then unexpected 0 timeout
+> jiffies will be set in congestion_wait().
+>
+> This patch introduces a macro DEFAULT_IO_TIMEOUT_JIFFIES to limit
+> mininum value of timeout jiffies.
+>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index c6252a3a4aec..7b46751772e5 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2018,12 +2018,23 @@ random_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 	return _random_read(file->f_flags & O_NONBLOCK, buf, nbytes);
- }
- 
-+static ssize_t
-+urandom_read_nowarn(struct file *file, char __user *buf, size_t nbytes,
-+		    loff_t *ppos)
-+{
-+	int ret;
-+
-+	nbytes = min_t(size_t, nbytes, INT_MAX >> (ENTROPY_SHIFT + 3));
-+	ret = extract_crng_user(buf, nbytes);
-+	trace_urandom_read(8 * nbytes, 0, ENTROPY_BITS(&input_pool));
-+	return ret;
-+}
-+
- static ssize_t
- urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- {
- 	unsigned long flags;
- 	static int maxwarn = 10;
--	int ret;
- 
- 	if (!crng_ready() && maxwarn > 0) {
- 		maxwarn--;
-@@ -2035,10 +2046,8 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 		crng_init_cnt = 0;
- 		spin_unlock_irqrestore(&primary_crng.lock, flags);
- 	}
--	nbytes = min_t(size_t, nbytes, INT_MAX >> (ENTROPY_SHIFT + 3));
--	ret = extract_crng_user(buf, nbytes);
--	trace_urandom_read(8 * nbytes, 0, ENTROPY_BITS(&input_pool));
--	return ret;
-+
-+	return urandom_read_nowarn(file, buf, nbytes, ppos);
- }
- 
- static __poll_t
-@@ -2200,7 +2209,7 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
- 		if (unlikely(ret))
- 			return ret;
- 	}
--	return urandom_read(NULL, buf, count, NULL);
-+	return urandom_read_nowarn(NULL, buf, count, NULL);
- }
- 
- /********************************************************************
+Thanks for your patch!
+
+> ---
+>  fs/f2fs/compress.c |  3 ++-
+>  fs/f2fs/data.c     |  5 +++--
+>  fs/f2fs/f2fs.h     |  2 ++
+>  fs/f2fs/gc.c       |  3 ++-
+>  fs/f2fs/inode.c    |  3 ++-
+>  fs/f2fs/node.c     |  3 ++-
+>  fs/f2fs/recovery.c |  6 ++++--
+>  fs/f2fs/segment.c  | 12 ++++++++----
+>  fs/f2fs/super.c    |  6 ++++--
+>  9 files changed, 29 insertions(+), 14 deletions(-)
+>
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 1bc86a54ad71..ee4fe8e644aa 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -945,7 +945,8 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+>                         } else if (ret == -EAGAIN) {
+>                                 ret = 0;
+>                                 cond_resched();
+> -                               congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +                               congestion_wait(BLK_RW_ASYNC,
+> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
+>                                 lock_page(cc->rpages[i]);
+>                                 clear_page_dirty_for_io(cc->rpages[i]);
+>                                 goto retry_write;
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index f1f5c701228d..78b5c0b0287e 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2320,7 +2320,8 @@ int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
+>                 /* flush pending IOs and wait for a while in the ENOMEM case */
+>                 if (PTR_ERR(fio->encrypted_page) == -ENOMEM) {
+>                         f2fs_flush_merged_writes(fio->sbi);
+> -                       congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +                       congestion_wait(BLK_RW_ASYNC,
+> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
+>                         gfp_flags |= __GFP_NOFAIL;
+>                         goto retry_encrypt;
+>                 }
+> @@ -2900,7 +2901,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>                                         if (wbc->sync_mode == WB_SYNC_ALL) {
+>                                                 cond_resched();
+>                                                 congestion_wait(BLK_RW_ASYNC,
+> -                                                               HZ/50);
+> +                                                       DEFAULT_IO_TIMEOUT_JIFFIES);
+>                                                 goto retry_write;
+>                                         }
+>                                         goto next;
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 16edbf4e05e8..4bdc20a94185 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -559,6 +559,8 @@ enum {
+>
+>  #define DEFAULT_RETRY_IO_COUNT 8       /* maximum retry read IO count */
+>
+> +#define        DEFAULT_IO_TIMEOUT_JIFFIES      (max_t(long, HZ/50, 1))
+> +
+>  /* maximum retry quota flush count */
+>  #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT                8
+>
+
+Seeing other file systems (ext4, xfs) and even core MM code suffers from
+the same issue, perhaps it makes sense to move this into congestion_wait(),
+i.e. increase the timeout to 1 if it's zero in the latter function?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
