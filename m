@@ -2,222 +2,181 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7CCC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A51C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B5E206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7E620709
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sbcFqhQS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhXXQ7VW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfLWOYL (ORCPT
+        id S1726873AbfLWOZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:24:11 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45580 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLWOYK (ORCPT
+        Mon, 23 Dec 2019 09:25:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31871 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726763AbfLWOZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:24:10 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNENxdb127514;
-        Mon, 23 Dec 2019 08:23:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577111039;
-        bh=+On56O2Tc/wog1z+VbvgCVcTNDNaeeIWmkKlZWUSHDg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sbcFqhQSYaxf42gfHtCuGmYayRIDQ6g9/8AhIfJsVtbo5qIjWGNM4VQbao6iG+Ktb
-         dXbzbnN6aPrN/1DiE8p9dh8EE0RKnIVMXxoL4hvwM2CwPpZAqDhnNGPeuFJaiqOQmi
-         CIJJB3mIDmbpz2rNiWGKuLV4Z4+kzG30kINHIYSA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNENxQ9056841
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 08:23:59 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 08:23:59 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 08:23:59 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNENtNM074112;
-        Mon, 23 Dec 2019 08:23:56 -0600
-Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
- devices
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
-        <tony@atomide.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
- <20191210095151.15441-3-faiz_abbas@ti.com>
- <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
- <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
- <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <eee34228-117e-02fe-4c77-d6b316a20819@ti.com>
-Date:   Mon, 23 Dec 2019 19:55:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 23 Dec 2019 09:25:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577111147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nTyEDFusLKumYW0h03qshyTMkbaeVnlSIDHnGUWtv+s=;
+        b=VhXXQ7VWfTY1g5I5vAvKSVfaf07BwiCpmrL4/vV/o8Kjc6qAkwlVRzG0e/yT9+5m1XruQL
+        fPc7h43StF4Urk9HB6TAdYDQ73q0jmQHOPoqizpKxLGY800HzT4+xN8ZlKHOB4++KJGd7x
+        rWry44MErpple9KQVrkpA69WXvhPBCE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-49-eooe5S9dObea5djAYhn2sA-1; Mon, 23 Dec 2019 09:25:43 -0500
+X-MC-Unique: eooe5S9dObea5djAYhn2sA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D36A11005502;
+        Mon, 23 Dec 2019 14:25:41 +0000 (UTC)
+Received: from [10.36.116.117] (ovpn-116-117.ams2.redhat.com [10.36.116.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54E7860BF4;
+        Mon, 23 Dec 2019 14:25:37 +0000 (UTC)
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+From:   Auger Eric <eric.auger@redhat.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>, maz@kernel.org
+Cc:     andre.przywara@arm.com, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+ <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+ <fd6ec914-0940-a4bd-fc06-f1c211eba5ee@redhat.com>
+Message-ID: <4817b05f-1822-7fc7-99a5-e7d5deae1055@redhat.com>
+Date:   Mon, 23 Dec 2019 15:25:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <fd6ec914-0940-a4bd-fc06-f1c211eba5ee@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-On 16/12/19 7:15 pm, Adrian Hunter wrote:
-> On 16/12/19 10:27 am, Faiz Abbas wrote:
->> Hi Adrian,
+Hi Zenghui, Marc,
+On 12/23/19 3:19 PM, Auger Eric wrote:
+> Hi Zenghui,
+>=20
+> On 12/23/19 2:43 PM, Zenghui Yu wrote:
+>> On 2019/12/20 19:18, Zenghui Yu wrote:
+>>> Although guest will hardly read and use the PTZ (Pending Table Zero)
+>>> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+>>> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+>>>
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>> ---
+>>>
+>>> Noticed when checking all fields of GICR_PENDBASER register.
+>>> But _not_ sure whether it's worth a fix, as Linux never sets
+>>> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+>>>
+>>> And I wonder under which scenarios can this bit be written as 1.
+>>> It seems difficult for software to determine whether the pending
+>>> table contains all zeros when writing this bit.
+>>>
+>>> =C2=A0 virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>>> =C2=A0 1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> index 7dfd15dbb308..ebc218840fc2 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> @@ -414,8 +414,11 @@ static unsigned long
+>>> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 gpa_t addr, unsigned int len)
+>>> =C2=A0 {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct vgic_cpu *vgic_cpu =3D &vcpu->a=
+rch.vgic_cpu;
+>>> +=C2=A0=C2=A0=C2=A0 u64 value =3D vgic_cpu->pendbaser;
+>>> =C2=A0 -=C2=A0=C2=A0=C2=A0 return extract_bytes(vgic_cpu->pendbaser, =
+addr & 7, len);
+>>> +=C2=A0=C2=A0=C2=A0 value &=3D ~GICR_PENDBASER_PTZ;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return extract_bytes(value, addr & 7, len);
+>>> =C2=A0 }
+>>> =C2=A0 =C2=A0 static void vgic_mmio_write_pendbase(struct kvm_vcpu *v=
+cpu,
+>>>
 >>
->> On 12/12/19 6:25 pm, Adrian Hunter wrote:
->>> On 10/12/19 11:51 am, Faiz Abbas wrote:
->>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>>
->>>> Some standard SD host controllers can support both external dma
->>>> controllers as well as ADMA/SDMA in which the SD host controller
->>>> acts as DMA master. TI's omap controller is the case as an example.
->>>>
->>>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->>>> the host controller but does not have any support for external DMA
->>>> controllers implemented using dmaengine, meaning that custom code is
->>>> needed for any systems that use an external DMA controller with SDHCI.
->>>>
->>>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->>>> 1. Map scatterlists before dmaengine_prep_slave_sg()
->>>> 2. Use dma_async() functions inside of the send_command() path and call
->>>> terminate_sync() in non-atomic context in case of an error.
->>>>
->>>> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
->>>>  	if (host->flags & SDHCI_REQ_USE_DMA) {
->>>>  		struct mmc_data *data = mrq->data;
->>>>  
->>>> +		spin_unlock_irqrestore(&host->lock, flags);
->>>> +
->>>> +		/* Terminate and synchronize dma in case of an error */
->>>> +		if (data && (mrq->cmd->error || data->error) &&
->>>> +		    host->use_external_dma) {
->>>> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
->>>> +									  data);
->>>> +			dmaengine_terminate_sync(chan);
->>>> +		}
->>>> +
->>>> +		spin_lock_irqsave(&host->lock, flags);
->>>> +
->>>
->>> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
->>> and put it back again to be consistent with the remaining code. Also put
->>> host->use_external_dma as the first condition i.e.
->>>
->>> 		if (host->use_external_dma && data &&
->>> 		    (mrq->cmd->error || data->error)) {
->>> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
->>>
->>> 			host->mrqs_done[i] = NULL;
->>> 			spin_unlock_irqrestore(&host->lock, flags);
->>> 			dmaengine_terminate_sync(chan);
->>> 			spin_lock_irqsave(&host->lock, flags);
->>> 			sdhci_set_mrq_done(host, mrq);
->>> 		}
->>>
->>> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
->>>
->>> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->>> {
->>> 	int i;
->>>
->>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->>> 		if (host->mrqs_done[i] == mrq) {
->>> 			WARN_ON(1);
->>> 			return;
->>> 		}
->>> 	}
->>>
->>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->>> 		if (!host->mrqs_done[i]) {
->>> 			host->mrqs_done[i] = mrq;
->>> 			break;
->>> 		}
->>> 	}
->>>
->>> 	WARN_ON(i >= SDHCI_MAX_MRQS);
->>> }
->>>
->>> sdhci_set_mrq_done() can be made in the refactoring patch.
->> Haven't we already done the sdhci_set_mrq_done() part in
->> __sdhci_finish_mrq()?
+>> I noticed there is no userspace access callbacks for GICR_PENDBASER,
+>> so this patch will make the PTZ field also 'Read As Zero' by userspace=
+.
+>> Should we consider adding a uaccess_read callback for GICR_PENDBASER
+>> which just returns the unchanged vgic_cpu->pendbaser to userspace?
+>> (Though this is really not a big deal. We now always emulate the PTZ
+>> field to guest as RAZ. And 'vgic_cpu->pendbaser & GICR_PENDBASER_PTZ'
+>> only indicates whether KVM will optimize the LPI enabling process,
+>> where Read As Zero indicates never optimize..)
+> You're right. If we start a migration when the PTZ has just been set by
+> the SW, then we will miss it on the destination side.
+>=20
+> So for instance in the last KVM unit test of my series
+> (https://lore.kernel.org/kvmarm/20191216140235.10751-17-eric.auger@redh=
+at.com/),
+> in test_its_pending_migration(), if you kick the migration before
+> enabling LPI's at redist level, you shouldn't see any LPI hitting on th=
+e
+> target which is theoretically wrong. So implementing a uaccess_read()
+> would be better I think.
+>=20
+> Thanks
+>=20
+> Eric
+>=20
+> +	ptr =3D gicv3_data.redist_base[nr_cpus - 1] + GICR_PENDBASER;
+> +	pendbaser =3D readq(ptr);
+> +	writeq(pendbaser & ~GICR_PENDBASER_PTZ, ptr);
+> +
+> +	ptr =3D gicv3_data.redist_base[nr_cpus - 2] + GICR_PENDBASER;
+> +	pendbaser =3D readq(ptr);
+> +	writeq(pendbaser & ~GICR_PENDBASER_PTZ, ptr);
+That's a clear actually. So Marc is right, forget what I have just said.
+This will work on destination size as we will write 0.
+
+Sorry for the noise
+
+Hopefully Christmas break is coming ;-)
+
+Best Regards
+
+Eric
+>=20
+> +	puts("Now migrate the VM, then press a key to continue...\n");
+> +	(void)getchar();
+> +	report(true, "Migration complete");
+> +
+> +	gicv3_rdist_ctrl_lpi(nr_cpus - 1, true);
+> +	gicv3_rdist_ctrl_lpi(nr_cpus - 2, true);
+> +
 >>
->> We are picking up an already "done" mrq, looking at whether it had any
->> error and then sychronizing with external dma. Or at least that is my
->> understanding.
-> 
-> sdhci supports having 2 requests (1 data, 1 cmd) at a time, so there is an
-> error case where 1 request will wait for the 2nd request before doing a
-> reset.  That logic is further down in sdhci_request_done() so you have to
-> put the mrq back into host->mrqs_done[] to make it work.
-
-Sorry for the late response. I had to spend some time figuring out how
-the mrqs_done handling works. Will add the new function above.
-
-> 
 >>
->>>
->>>>  		if (data && data->host_cookie == COOKIE_MAPPED) {
->>>>  			if (host->bounce_buffer) {
->>>>  				/*
->>>> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>>  		       mmc_hostname(mmc), host->version);
->>>>  	}
->>>>  
->>>> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
->>>> +	if (host->use_external_dma) {
->>>> +		ret = sdhci_external_dma_init(host);
->>>> +		if (ret == -EPROBE_DEFER)
->>>> +			goto unreg;
->>>> +
->>>> +		/*
->>>> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
->>>> +		 * instead of external DMA devices.
->>>> +		 */
->>>> +		if (ret)
->>>> +			sdhci_switch_external_dma(host, false);
->>>> +	}
->>>> +
->>>> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
->>>>  		host->flags |= SDHCI_USE_SDMA;
->>>> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
->>>> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
->>>>  		DBG("Controller doesn't have SDMA capability\n");
->>>> -	else
->>>> +	} else if (host->use_external_dma) {
->>>> +		/* Using dma-names to detect external dma capability */
->>>
->>> What is this change for?  Do you expect for SDHCI_USE_SDMA and
->>> SDHCI_USE_ADMA flags to be clear?
+>> Thanks,
+>> Zenghui
 >>
->> Yes. Today the code enables SDMA by default (in the else part below
->> this). I want it to not enable SDMA in the external dma case.
-> 
-> What about moving the "if (host->use_external_dma) {" clause and explicitly
-> clearing SDHCI_USE_SDMA and SDHCI_USE_ADMA?
-> 
-
-I am ok with this as well. Sending a new version.
-
-Thanks,
-Faiz
-
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
 
