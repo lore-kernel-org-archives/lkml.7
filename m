@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF10C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815D5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B3D21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C6721775
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfLWOSC (ORCPT
+        id S1727437AbfLWOSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:18:02 -0500
-Received: from mga11.intel.com ([192.55.52.93]:59423 "EHLO mga11.intel.com"
+        Mon, 23 Dec 2019 09:18:06 -0500
+Received: from mga03.intel.com ([134.134.136.65]:47078 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfLWORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727132AbfLWORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 23 Dec 2019 09:17:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:29 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 06:17:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="268164237"
+   d="scan'208";a="223029914"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Dec 2019 06:17:26 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 23 Dec 2019 06:17:25 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 7F5D31602; Mon, 23 Dec 2019 16:17:18 +0200 (EET)
+        id 3CC89DE3; Mon, 23 Dec 2019 16:17:18 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -43,9 +43,9 @@ Cc:     Zha Qipeng <qipeng.zha@intel.com>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 31/37] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date:   Mon, 23 Dec 2019 17:17:10 +0300
-Message-Id: <20191223141716.13727-32-mika.westerberg@linux.intel.com>
+Subject: [PATCH 23/37] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+Date:   Mon, 23 Dec 2019 17:17:02 +0300
+Message-Id: <20191223141716.13727-24-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
@@ -56,46 +56,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+There is no point including headers that are not needed in the driver so
+drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
- }
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 83b106f66fa6..8527327d88c7 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -12,23 +12,13 @@
+  */
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
-+
- #else /* !CONFIG_X86_INTEL_MID */
+ #include <linux/acpi.h>
+-#include <linux/atomic.h>
+-#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+-#include <linux/pm_qos.h>
+-#include <linux/sched.h>
+-#include <linux/spinlock.h>
+-#include <linux/suspend.h>
  
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
+ #include <asm/intel_pmc_ipc.h>
  
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
-+
- #endif /* !CONFIG_X86_INTEL_MID */
- 
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
--
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
 -- 
 2.24.0
 
