@@ -2,115 +2,89 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F4C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72CA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C202206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 14:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfLWOjt (ORCPT
+        id S1726943AbfLWOkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:39:49 -0500
-Received: from www62.your-server.de ([213.133.104.62]:41776 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfLWOjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 09:39:48 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1ijOs2-0006DU-Ro; Mon, 23 Dec 2019 15:39:42 +0100
-Received: from [185.105.41.126] (helo=linux-9.fritz.box)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1ijOs2-000Dco-CN; Mon, 23 Dec 2019 15:39:42 +0100
-Subject: Re: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        bpf <bpf@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
- <20191223061326.843366-1-namhyung@kernel.org>
- <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <2d6767c6-ff4c-8f88-f186-23cddbb4969a@iogearbox.net>
-Date:   Mon, 23 Dec 2019 15:39:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 23 Dec 2019 09:40:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:46622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726733AbfLWOkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:40:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2EDA1FB;
+        Mon, 23 Dec 2019 06:40:48 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C2493F534;
+        Mon, 23 Dec 2019 06:40:46 -0800 (PST)
+Date:   Mon, 23 Dec 2019 14:40:44 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     'Giovanni Gherdovich' <ggherdovich@suse.cz>, x86@kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Mel Gorman' <mgorman@techsingularity.net>,
+        'Matt Fleming' <matt@codeblueprint.co.uk>,
+        'Viresh Kumar' <viresh.kumar@linaro.org>,
+        'Juri Lelli' <juri.lelli@redhat.com>,
+        'Paul Turner' <pjt@google.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Vincent Guittot' <vincent.guittot@linaro.org>,
+        'Quentin Perret' <qperret@qperret.net>,
+        'Dietmar Eggemann' <dietmar.eggemann@arm.com>,
+        'Srinivas Pandruvada' <srinivas.pandruvada@linux.intel.com>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@suse.de>, 'Len Brown' <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+Message-ID: <20191223144043.ticfxfgbolsqk74i@e107158-lin.cambridge.arm.com>
+References: <20191113124654.18122-2-ggherdovich@suse.cz>
+ <000001d5a29b$c944fd70$5bcef850$@net>
+ <1574697961.16378.5.camel@suse.cz>
+ <000801d5a41e$a7fce2c0$f7f6a840$@net>
+ <1574781600.7677.2.camel@suse.cz>
+ <001d01d5a4f4$d96b21b0$8c416510$@net>
+ <003d01d5a63d$f6ab3950$e401abf0$@net>
+ <20191219104813.6fr34qavpaplecoz@e107158-lin>
+ <000701d5b965$361b6c60$a2524520$@net>
+ <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25672/Mon Dec 23 10:53:10 2019)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/23/19 7:29 AM, Andrii Nakryiko wrote:
-> On Sun, Dec 22, 2019 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> I got the following error when I tried to build perf on a read-only
->> filesystem with O=dir option.
->>
->>    $ cd /some/where/ro/linux/tools/perf
->>    $ make O=$HOME/build/perf
->>    ...
->>      CC       /home/namhyung/build/perf/lib.o
->>    /bin/sh: bpf_helper_defs.h: Read-only file system
->>    make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
->>    make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
->>    make[2]: *** Waiting for unfinished jobs....
->>      LD       /home/namhyung/build/perf/libperf-in.o
->>      AR       /home/namhyung/build/perf/libperf.a
->>      PERF_VERSION = 5.4.0
->>    make[1]: *** [Makefile.perf:225: sub-make] Error 2
->>    make: *** [Makefile:70: all] Error 2
->>
->> It was becaused bpf_helper_defs.h was generated in current directory.
->> Move it to OUTPUT directory.
->>
->> Tested-by: Andrii Nakryiko <andriin@fb.com>
->> Acked-by: Andrii Nakryiko <andriin@fb.com>
->> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->> ---
->>   tools/lib/bpf/Makefile                 | 15 ++++++++-------
->>   tools/testing/selftests/bpf/.gitignore |  1 +
->>   tools/testing/selftests/bpf/Makefile   |  6 +++---
->>   3 files changed, 12 insertions(+), 10 deletions(-)
->>
+On 12/23/19 14:07, Qais Yousef wrote:
+> > Re-boot to the nocgv1 (stock + cgroup_no_v1=all) kernel.
+> > set the schedutil governor.
+> > launch test 2 and related monitoring tools.
+> > verify performance governor like behavior.
 > 
-> [...]
+> So as stated above, by default uclamp_{min, max} = (0, 1024). So it wouldn't
+> act as performance governor by default unless you explicitly write 1024 to
+> uclamp.min.
 > 
->> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
->> index 419652458da4..1ff0a9f49c01 100644
->> --- a/tools/testing/selftests/bpf/.gitignore
->> +++ b/tools/testing/selftests/bpf/.gitignore
->> @@ -40,3 +40,4 @@ xdping
->>   test_cpp
->>   /no_alu32
->>   /bpf_gcc
->> +bpf_helper_defs.h
-> 
-> looks good, thanks!
+> Let me go find Ubuntu mainline tree to see if they applied anything extra in
+> there. If they modified the default behavior that could explain what you see.
 
-Applied, thanks!
+Actually I see what you were saying now that you copy the config. So I think
+I misunderstood and you are running Linus' 5.5-rc2 + Ubuntu PPA config.
+
+I'm trying to to reproduce the issue at my end.
+
+Cheers
+
+--
+Qais Yousef
