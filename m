@@ -2,209 +2,195 @@ Return-Path: <SRS0=RKSG=2N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9480C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A78C2D0D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD15F20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B3D206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 23 Dec 2019 18:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="1xfOpsDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLWSmz (ORCPT
+        id S1726847AbfLWSqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 13:42:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:13784 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbfLWSmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 13:42:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 10:42:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,348,1571727600"; 
-   d="scan'208";a="268223854"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Dec 2019 10:42:51 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ijSfK-000AEj-IR; Tue, 24 Dec 2019 02:42:50 +0800
-Date:   Tue, 24 Dec 2019 02:42:25 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     kbuild-all@lists.01.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
-        rtanwar <rahul.tanwar@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
-Message-ID: <201912240240.HCfwzN11%lkp@intel.com>
-References: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+        Mon, 23 Dec 2019 13:46:05 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:41376 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbfLWSqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 13:46:03 -0500
+Received: by mail-wr1-f45.google.com with SMTP id c9so17606390wrw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 10:46:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version;
+        bh=w5CMUkOgI9O50Lpl1QlGs5TpfGYKinCiTcdt0eBfYEo=;
+        b=1xfOpsDewZMEL8VURraPRYQC54Kr6g5gmBmvHkk+Wa4T+65VVoUvl5uQUYkQUlfjER
+         RTOMeycBczuwQiFOj0Ndy053ltaRrVXZzEIGIJmTL0hltq3d1RAUcf46EZ0KTlVG8mRI
+         oxVE2yNmnimz+Rw6yr4DtRKQtvSesKe7g8O628dbIs9zx8M6NPoZCXzYc01paKsZEcKK
+         5byZFlT947iY2xIYKNNORSOlMd4y+GDvuk7gaRasO0Gyh0Qr1ZKTtDmGGoMWC5t3oziu
+         gry34a4C+QIeIieVjX33VL8TUBlXws33je4Byo03PMQSLfqMB2VT0NdLTjWpWUazkg6z
+         Wm4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=w5CMUkOgI9O50Lpl1QlGs5TpfGYKinCiTcdt0eBfYEo=;
+        b=lXXOBlbbMZBdW1G7eyJORcm7V8fmktTBBrUhklR5uniyqkhKXhG5uSeXMVyggQMMAq
+         zXGr1BcFSmWGL300n25NdsAKI/tb3HVEwlizZJ35EHIfaq84JbtgiVj7tBfa+k035Uyx
+         lW/Vi0H6z6HziEc5fGM33gWIsmbvhoRAik7PuVctG9veh6uEqbtH2ePzbP+hbZTjwFxg
+         Z6YHnqY5eQ59himDWr71T6x0wRCcXempPMdRHMbNQYPboVuRFVQNXqVFVwbTMOAVluPg
+         FWgjK3cAXxsISpfI40sK/K489KCJFkWZqse16KwV+QTfEh47hLxDkdPn328+tVLK9+Wm
+         aHYQ==
+X-Gm-Message-State: APjAAAU9kvrwVlBMpwE5yLuOqLguO/yQ0rDI5Krdx4S7z2eiKSceuqC+
+        ZMCj1tJJ3JTDfFOJuEExLLaZNw==
+X-Google-Smtp-Source: APXvYqyNnBk0/fE1k94km79FHzdxuXoFKLWnVDf7fsGDlDpvpLkztIYGych+tWyoVBZAKZfzOmxCSQ==
+X-Received: by 2002:a05:6000:1241:: with SMTP id j1mr33177089wrx.26.1577126759640;
+        Mon, 23 Dec 2019 10:45:59 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id k8sm21275041wrl.3.2019.12.23.10.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 10:45:58 -0800 (PST)
+Message-ID: <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Mon, 23 Dec 2019 19:45:57 +0100
+In-Reply-To: <20191223172257.GB3282@mit.edu>
+References: <20191211024137.GB61323@mit.edu>
+         <20191211040058.GC6864@ming.t460p> <20191211160745.GA129186@mit.edu>
+         <20191211213316.GA14983@ming.t460p>
+         <f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it>
+         <20191218094830.GB30602@ming.t460p>
+         <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
+         <20191223130828.GA25948@ming.t460p> <20191223162619.GA3282@mit.edu>
+         <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
+         <20191223172257.GB3282@mit.edu>
+Content-Type: multipart/mixed; boundary="=-weAblMnQ5amPpzK4jcZ1"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rahul,
 
-Thank you for the patch! Perhaps something to improve:
+--=-weAblMnQ5amPpzK4jcZ1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on robh/for-next v5.5-rc3 next-20191220]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Il giorno lun, 23/12/2019 alle 12.22 -0500, Theodore Y. Ts'o ha
+scritto:
+> On Mon, Dec 23, 2019 at 05:29:27PM +0100, Andrea Vai wrote:
+> > I run the cp command from a bash script, or from a bash shell. I
+> don't
+> > know if this answer your question, otherwise feel free to tell me
+> a
+> > way to find the answer to give you.
+> 
+> What distro are you using, and/or what package is the cp command
+> coming from, and what is the package name and version?
 
-url:    https://github.com/0day-ci/linux/commits/Rahul-Tanwar/clk-intel-Add-a-new-driver-for-a-new-clock-controller-IP/20191223-110300
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-129-g341daf20-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Fedora 30
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+$ rpm -qf `which cp`
+coreutils-8.31-6.fc30.x86_64
+
+> 
+> Also, can you remind me what the bash script is and how many files
+> you are copying?
+
+basically, it's:
+
+  mount UUID=$uuid /mnt/pendrive
+  SECONDS=0
+  cp $testfile /mnt/pendrive
+  umount /mnt/pendrive
+  tempo=$SECONDS
+
+and it copies one file only. Anyway, you can find the whole script
+attached.
 
 
-sparse warnings: (new ones prefixed by >>)
+> 
+> Can you change the script so that the cp command is prefixed by:
+> 
+> "strace -tTf -o /tmp/st "
+> 
+> e.g.,
+> 
+> 	strace -tTf -o /tmp/st cp <args>
+> 
+> And then send me
+btw, please tell me if "me" means only you or I cc: all the
+recipients, as usual
 
->> drivers/clk/x86/clk-cgu.c:32:32: sparse: sparse: incorrect type in argument 1 (different address spaces)
->> drivers/clk/x86/clk-cgu.c:32:32: sparse:    expected void const volatile [noderef] <asn:2> *addr
->> drivers/clk/x86/clk-cgu.c:32:32: sparse:    got void *
-   drivers/clk/x86/clk-cgu.c:34:32: sparse: sparse: incorrect type in argument 2 (different address spaces)
->> drivers/clk/x86/clk-cgu.c:34:32: sparse:    expected void volatile [noderef] <asn:2> *addr
-   drivers/clk/x86/clk-cgu.c:34:32: sparse:    got void *
-   drivers/clk/x86/clk-cgu.c:41:29: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:41:29: sparse:    expected void const volatile [noderef] <asn:2> *addr
-   drivers/clk/x86/clk-cgu.c:41:29: sparse:    got void *
-   drivers/clk/x86/clk-cgu.c:61:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
->> drivers/clk/x86/clk-cgu.c:61:36: sparse:    expected void *membase
->> drivers/clk/x86/clk-cgu.c:61:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:78:34: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:78:34: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:78:34: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:91:28: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:91:28: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:91:28: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:155:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:155:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:155:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:170:38: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:170:38: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:170:38: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:202:32: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:202:32: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:202:32: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:260:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:260:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:260:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:282:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:282:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:282:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:307:29: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:307:29: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:307:29: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:333:29: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:333:29: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:333:29: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:354:35: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:354:35: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:354:35: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:409:37: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:409:37: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:409:37: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:466:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:466:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:466:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:468:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:468:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:468:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu.c:470:37: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu.c:470:37: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu.c:470:37: sparse:    got void [noderef] <asn:2> *membase
---
->> drivers/clk/x86/clk-cgu-pll.c:49:42: sparse: sparse: incorrect type in argument 1 (different address spaces)
->> drivers/clk/x86/clk-cgu-pll.c:49:42: sparse:    expected void *membase
->> drivers/clk/x86/clk-cgu-pll.c:49:42: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:69:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:69:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:69:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:70:35: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:70:35: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:70:35: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:71:36: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:71:36: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:71:36: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:94:34: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:94:34: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:94:34: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:106:28: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:106:28: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:106:28: sparse:    got void [noderef] <asn:2> *membase
-   drivers/clk/x86/clk-cgu-pll.c:118:28: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/clk/x86/clk-cgu-pll.c:118:28: sparse:    expected void *membase
-   drivers/clk/x86/clk-cgu-pll.c:118:28: sparse:    got void [noderef] <asn:2> *membase
+>  the /tmp/st file.  This will significantly change the
+> time, so don't do this for measuring performance.  I just want to
+> see
+> what the /bin/cp command is *doing*.
 
-vim +32 drivers/clk/x86/clk-cgu.c
+I will do it, but I have a doubt. Since the problem doesn't happen
+every time, is it useful to give you a trace of a "fast" run? And, if
+it's not, I think I should measure performance with the trace command
+prefix, to identify a "slow" run to report you. Does it make sense?
 
-    25	
-    26	void lgm_set_clk_val(void *membase, u32 reg,
-    27			     u8 shift, u8 width, u32 set_val)
-    28	{
-    29		u32 mask = (GENMASK(width - 1, 0) << shift);
-    30		u32 regval;
-    31	
-  > 32		regval = readl(membase + reg);
-    33		regval = (regval & ~mask) | ((set_val << shift) & mask);
-  > 34		writel(regval, membase + reg);
-    35	}
-    36	
-    37	u32 lgm_get_clk_val(void *membase, u32 reg, u8 shift, u8 width)
-    38	{
-    39		u32 val;
-    40	
-    41		val = readl(membase + reg);
-    42		val = (val >> shift) & (BIT(width) - 1);
-    43	
-    44		return val;
-    45	}
-    46	
-    47	void lgm_clk_add_lookup(struct lgm_clk_provider *ctx,
-    48				struct clk_hw *hw, unsigned int id)
-    49	{
-    50		if (ctx->clk_data.hws)
-    51			ctx->clk_data.hws[id] = hw;
-    52	}
-    53	
-    54	static struct clk_hw *lgm_clk_register_fixed(struct lgm_clk_provider *ctx,
-    55						     const struct lgm_clk_branch *list)
-    56	{
-    57		unsigned long flags;
-    58	
-    59		if (list->div_flags & CLOCK_FLAG_VAL_INIT) {
-    60			raw_spin_lock_irqsave(&ctx->lock, flags);
-  > 61			lgm_set_clk_val(ctx->membase, list->div_off, list->div_shift,
-    62					list->div_width, list->div_val);
-    63			raw_spin_unlock_irqrestore(&ctx->lock, flags);
-    64		}
-    65	
-    66		return clk_hw_register_fixed_rate(NULL, list->name,
-    67						  list->parent_names[0],
-    68						  list->flags, list->mux_flags);
-    69	}
-    70	
+Thanks,
+Andrea
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+--=-weAblMnQ5amPpzK4jcZ1
+Content-Type: application/x-shellscript; name="test"
+Content-Disposition: attachment; filename="test"
+Content-Transfer-Encoding: base64
+
+IyEvYmluL2Jhc2gKCnRlc3RmaWxlPS9Ob0JhY2t1cC90ZXN0ZmlsZQpsb2dmaWxlPS9ob21lL2Fu
+ZHJlYS90cm91Ymxlc2hvb3RpbmcvMjAxOTA0MThfbGVudGV6emFEYXIvMjAxOTA0MThfbGVudGV6
+emFEYXIudHh0Cm5Ucmllcz0kMSAjIE51bWJlciBvZiB0cmllcyB3ZSBkbwoKIyB1dWlkPSI2YTlk
+M2MwNS02NzU4LTQ5YzAtYTQ2ZS02Y2UyMjE0NzhlYjMiICNPREQKIyB1dWlkPSI2OGNiYzQxMi1l
+N2MzLTQwN2MtODNjMS1jNzE4NTgwZTkzMGQiICNFVkVOCiMgdXVpZD0iNTcxNjM2ODAtYWI4NS00
+YzQzLWE5ZGEtODYxMzMyNjJmODE1IiAjIEVWRU4gYnRyZnMKdXVpZD0iYWE3ZWVjNTItY2I5NS00
+YWIzLTg1NTctZjBjZWNiYzFjMTBmIiAjIEVWRU4geGZzCiMgdXVpZD0iY2NiN2VlNmMtY2Y4ZC00
+Yjg3LWFlOWYtYTJlMTNmNWMwMGU4IiAjIFNTRAojIHV1aWQ9ImY4NzU0MWYwLWZjNzItNDU0NC05
+ZjFjLWUzZWU1MjEyZGFmOSIgI0czIGJpYW5jYQoKZWNobyAiU3RhcnRpbmcgJG5UcmllcyB0cmll
+cyB3aXRoOiIgfCB0ZWUgLWEgJGxvZ2ZpbGUKdW5hbWUgLWEgfCB0ZWUgLWEgJGxvZ2ZpbGUKbHMg
+LWxoICR0ZXN0ZmlsZSAyPiYxIHwgdGVlIC1hICRsb2dmaWxlCmJsa2lkIDI+JjEgfCB0ZWUgLWEg
+JGxvZ2ZpbGUKZWNobyAidXVpZD0kdXVpZCIKZWNobyAtbiAiY2F0IC9zeXMvYmxvY2svc2RmL3F1
+ZXVlL3NjaGVkdWxlciAtLT4gIiB8IHRlZSAtYSAkbG9nZmlsZQpjYXQgL3N5cy9ibG9jay9zZGYv
+cXVldWUvc2NoZWR1bGVyIDI+JjEgfCB0ZWUgLWEgJGxvZ2ZpbGUKZm9yICgoIGs9MTsgazw9JG5U
+cmllczsgaysrICkpOyBkbyAKICBlY2hvIC1uICJJbml6aW86ICIgfCB0ZWUgLWEgJGxvZ2ZpbGUK
+ICBkYXRlIHwgdHIgLWQgIlxuIiB8IHRlZSAtYSAkbG9nZmlsZQogIHRvdWNoIGluaXppbyAyPiYx
+IHx0ZWUgLWEgJGxvZ2ZpbGUKICBtb3VudCBVVUlEPSR1dWlkIC9tbnQvcGVuZHJpdmUgMj4mMSB8
+dGVlIC1hICRsb2dmaWxlCiAgU0VDT05EUz0wCiAgY3AgJHRlc3RmaWxlIC9tbnQvcGVuZHJpdmUg
+Mj4mMSB8dGVlIC1hICRsb2dmaWxlCiMgIGRkIGlmPSR0ZXN0ZmlsZSBvZj0vbW50L3BlbmRyaXZl
+L3Rlc3RmaWxlIGJzPTFNIG9mbGFnPWRpcmVjdAojICBkZCBpZj0kdGVzdGZpbGUgb2Y9L21udC9w
+ZW5kcml2ZS90ZXN0ZmlsZSBicz0xTQogIHVtb3VudCAvbW50L3BlbmRyaXZlIDI+JjEgfHRlZSAt
+YSAkbG9nZmlsZQogIHRlbXBvPSRTRUNPTkRTCiAgdG91Y2ggZmluZSAyPiYxIHx0ZWUgLWEgJGxv
+Z2ZpbGUKICBlY2hvIC1uICIuLi5maW5lOiAiIHwgdGVlIC1hICRsb2dmaWxlCiAgZGF0ZSB8IHRy
+IC1kICJcbiIgfCB0ZWUgLWEgJGxvZ2ZpbGUKICBlY2hvICIgLS0+IGNpIGhvIG1lc3NvICR0ZW1w
+byBzZWNvbmRpISIgfCB0ZWUgLWEgJGxvZ2ZpbGUKZG9uZQo=
+
+
+--=-weAblMnQ5amPpzK4jcZ1--
+
