@@ -2,106 +2,159 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6445C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB55C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C3020722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4526120730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="jYec26/e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LROux0RQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfLXJVb (ORCPT
+        id S1726183AbfLXJ21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:21:31 -0500
-Received: from mail.inango-systems.com ([178.238.230.57]:37754 "EHLO
-        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfLXJVb (ORCPT
+        Tue, 24 Dec 2019 04:28:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51404 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726091AbfLXJ20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 04:21:31 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id 69B2A1080783;
-        Tue, 24 Dec 2019 11:21:29 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 1fxzy3dGzunS; Tue, 24 Dec 2019 11:21:28 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id DE3D9108078E;
-        Tue, 24 Dec 2019 11:21:28 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com DE3D9108078E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1577179288;
-        bh=CAmI7apeyL7jZ6co+qwW6zsFPTjggPHOPX6bTaAoTBQ=;
-        h=From:To:Date:Message-Id;
-        b=jYec26/eP5rkBjgKag80Q62vw95TEj1y+Cs11iTw2xYKxUdpAqnI1mkOqARJm/YFL
-         JOwhfcR7m56oX2R0jCchrumekxx2qvoRS/D3Yb2qsKSR+r/AWquos/6GhLVv7xbLT+
-         3cbi4gPunzbfWPZTPi3s4UN31yBoWaC9DH5e0PhslvdmNH7EZw7JwQcYO7Pnq+KhQe
-         PB6BbYt6+i66zx9XL6vVMxLmzdKR6k4aPwAAvdEGJkAySQfQ1N1HF3GuQYRVw+PVna
-         mDN8Et9jKR6+LGkc51+HBgXuHHqW7tCJz8fwyjBPSL5BeHf4C7PKbEmqd0FevXMUuG
-         Bl+UamaTZxy9A==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VoL7VamDXbEy; Tue, 24 Dec 2019 11:21:28 +0200 (IST)
-Received: from nmerinov.inango.loc (unknown [194.60.247.123])
-        by mail.inango-sw.com (Postfix) with ESMTPSA id 22D7B108023C;
-        Tue, 24 Dec 2019 11:21:28 +0200 (IST)
-From:   Nikolai Merinov <n.merinov@inango-systems.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
-        linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nikolai Merinov <n.merinov@inango-systems.com>
-Subject: [PATCH v2] partitions/efi: Fix partition name parsing in GUID partition entry
-Date:   Tue, 24 Dec 2019 14:21:19 +0500
-Message-Id: <20191224092119.4581-1-n.merinov@inango-systems.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20181124162123.21300-1-n.merinov@inango-systems.com>
-References: <20181124162123.21300-1-n.merinov@inango-systems.com>
+        Tue, 24 Dec 2019 04:28:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577179704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sdq63IePYHAZah7URn5zkx4Y6XBmFNMvwu4Q1uK3z8k=;
+        b=LROux0RQd1gbYcTyt5TDT0z3yxS+2u00Tl7CDNt9LXYZXo34nCybMM7u/ra+MDVV66H+JA
+        ZHbWNKzpQB1V+ozTTQys7SntdkyGXaVJgF2qLY1+lcIsIt3zX7/rG4IV0EaxS1qdGdIMBp
+        1cYO5SfqPhNxeBou/cWcEOkkBcXuwms=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-Xyk7uFcUOKWIW8_8ir6xgg-1; Tue, 24 Dec 2019 04:28:22 -0500
+X-MC-Unique: Xyk7uFcUOKWIW8_8ir6xgg-1
+Received: by mail-wr1-f71.google.com with SMTP id r2so7135063wrp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 01:28:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=sdq63IePYHAZah7URn5zkx4Y6XBmFNMvwu4Q1uK3z8k=;
+        b=BoKuGbClrvnS+38vnrYosqPSPqAyG4Zt41jwW1L6OZjCtrr6RqcKzYNTia0uYq5OoC
+         s8ha7AkaZd77PqiSH9yYa8ucwoyLwuze32PKacIqFtDAPMNFJDHybv16bOo9gu8zY4Re
+         tK7uBX/3yCyDU8pDR2Zt04O6yHV+cHDRi9pgwY5vzWnqB+fsPtWk8kpdUOhmIYOcKsGp
+         yu0kfhfOWa70Nr3ww6fYWGDLxxUzNcLYDVKsMgvl+XR/Mrc8ETSwF6BerGmQVZmSlSaU
+         tTA7mHsjDu91tYCSP/obaAJtv7sEN5XKblyA3+XaNMr5JtuKfsexYy2mKFjqZq7lM5tD
+         U5ng==
+X-Gm-Message-State: APjAAAUbgjNEO437h1ZMVhPRCoFgk5fvjWeM2PPJWvchsF4p4XLS8xHM
+        cAp3tericBKEYoDP4NWdMTMa+MWeH/OcPZJfQojeIpj48rk694SQvdEP/WCIxKrlvdhiH32PchI
+        a13r1GPriVFhIa6QPQRwN4lG+
+X-Received: by 2002:a5d:4b47:: with SMTP id w7mr35990712wrs.276.1577179701822;
+        Tue, 24 Dec 2019 01:28:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw9/TSLj5c5X1JnE2/hzqVf4qICkFRn7uD3XRturCTmvjkz0LR8yv7IDInsAtlJzkhhu/UF3g==
+X-Received: by 2002:a5d:4b47:: with SMTP id w7mr35990685wrs.276.1577179701626;
+        Tue, 24 Dec 2019 01:28:21 -0800 (PST)
+Received: from ?IPv6:2003:d8:2f31:4c00:d9fc:8de:fc42:5adc? (p200300D82F314C00D9FC08DEFC425ADC.dip0.t-ipconnect.de. [2003:d8:2f31:4c00:d9fc:8de:fc42:5adc])
+        by smtp.gmail.com with ESMTPSA id s3sm2070447wmh.25.2019.12.24.01.28.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Dec 2019 01:28:21 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
+Date:   Tue, 24 Dec 2019 10:28:20 +0100
+Message-Id: <2828152B-D0EB-4802-A304-4A90CA5C4B6C@redhat.com>
+References: <91ED8152-61FC-4E87-9F7B-44CD05C77279@linux.alibaba.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+In-Reply-To: <91ED8152-61FC-4E87-9F7B-44CD05C77279@linux.alibaba.com>
+To:     teawater <teawaterz@linux.alibaba.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GUID partition entry defined to have a partition name as 36 UTF-16LE
-code units. This means that on big-endian platforms ASCII symbols
-would be read with 0xXX00 efi_char16_t character code. In order to
-correctly extract ASCII characters from a partition name field we
-should be converted from 16LE to CPU architecture.
 
-The problem exists on all big endian platforms.
 
-Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
+> Am 24.12.2019 um 08:04 schrieb teawater <teawaterz@linux.alibaba.com>:
+>=20
+> =EF=BB=BFHi David,
+>=20
+> Thanks for your work.
+>=20
+> I Got following build fail if X86_64_ACPI_NUMA is n with rfc3 and rfc4:
+> make -j8 bzImage
+>  GEN     Makefile
+>  DESCEND  objtool
+>  CALL    /home/teawater/kernel/linux-upstream3/scripts/atomic/check-atomic=
+s.sh
+>  CALL    /home/teawater/kernel/linux-upstream3/scripts/checksyscalls.sh
+>  CHK     include/generated/compile.h
+>  CC      drivers/virtio/virtio_mem.o
+> /home/teawater/kernel/linux-upstream3/drivers/virtio/virtio_mem.c: In func=
+tion =E2=80=98virtio_mem_translate_node_id=E2=80=99:
+> /home/teawater/kernel/linux-upstream3/drivers/virtio/virtio_mem.c:478:10: e=
+rror: implicit declaration of function =E2=80=98pxm_to_node=E2=80=99 [-Werro=
+r=3Dimplicit-function-declaration]
+>   node =3D pxm_to_node(node_id);
+>          ^~~~~~~~~~~
+> cc1: some warnings being treated as errors
+> /home/teawater/kernel/linux-upstream3/scripts/Makefile.build:265: recipe f=
+or target 'drivers/virtio/virtio_mem.o' failed
+> make[3]: *** [drivers/virtio/virtio_mem.o] Error 1
+> /home/teawater/kernel/linux-upstream3/scripts/Makefile.build:503: recipe f=
+or target 'drivers/virtio' failed
+> make[2]: *** [drivers/virtio] Error 2
+> /home/teawater/kernel/linux-upstream3/Makefile:1649: recipe for target 'dr=
+ivers' failed
+> make[1]: *** [drivers] Error 2
+> /home/teawater/kernel/linux-upstream3/Makefile:179: recipe for target 'sub=
+-make' failed
+> make: *** [sub-make] Error 2
+>=20
 
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index db2fef7dfc47..51287a8a3bea 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -715,7 +715,7 @@ int efi_partition(struct parsed_partitions *state)
- 				ARRAY_SIZE(ptes[i].partition_name));
- 		info->volname[label_max] = 0;
- 		while (label_count < label_max) {
--			u8 c = ptes[i].partition_name[label_count] & 0xff;
-+			u8 c = le16_to_cpu(ptes[i].partition_name[label_count]) & 0xff;
- 			if (c && !isprint(c))
- 				c = '!';
- 			info->volname[label_count] = c;
-diff --git a/block/partitions/efi.h b/block/partitions/efi.h
-index 3e8576157575..0b6d5b7be111 100644
---- a/block/partitions/efi.h
-+++ b/block/partitions/efi.h
-@@ -88,7 +88,7 @@ typedef struct _gpt_entry {
- 	__le64 starting_lba;
- 	__le64 ending_lba;
- 	gpt_entry_attributes attributes;
--	efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
-+	__le16 partition_name[72 / sizeof (__le16)];
- } __packed gpt_entry;
- 
- typedef struct _gpt_mbr_record {
--- 
-2.17.1
+Thanks Hui,
+
+So it has to be wrapped in an ifdef, thanks!
+
+Cheers!=
 
