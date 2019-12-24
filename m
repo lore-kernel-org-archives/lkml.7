@@ -2,170 +2,98 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194FC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F19C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D310F20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C5C20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P2vg8CL1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="leJ4yRzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfLXNXj (ORCPT
+        id S1726325AbfLXNYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:23:39 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46773 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfLXNXi (ORCPT
+        Tue, 24 Dec 2019 08:24:40 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:26931 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726271AbfLXNYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:23:38 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so19757272wrl.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 05:23:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nnK8AmCREBZiLwdQohIzHI5+LpSDbONArxxxpbozOY8=;
-        b=P2vg8CL1/9vKgCAtlMCJ7NcHOgUjL2WSLaaYIaQS4KR5qJeIx+pZdPxMc4xGFxB6aL
-         n9UK/EpKbgfGjCMSQhNSV0AYRAWxDL1MmZX2nY0vj50EG72uE+xLHMqG8PX99qlubM/y
-         VlguwLjxa+0I0NT/V0kCBmfLfXlqLIjGhRUu1mJRKx4R4tc2FxBodpuN6x/kEuabDEI0
-         U3aSlEF0ExZ8bI+KKKNtgZLxuh9YVXuIFDegfjR3PwOIx2MqdNqZh4O3H3Nyf4GOIN7/
-         FnVN9ojSguuqxmfuePCqKhQ5sNv7QX7MZB5kY1mfwIsaZzMpxBPulXBVE2uLIbyYYMQk
-         1Aqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nnK8AmCREBZiLwdQohIzHI5+LpSDbONArxxxpbozOY8=;
-        b=E/e/PysAaIfJ58dJV3K80V6mJbzA4cVAmRuNAVkCbTreKx25o/+pPPGYeZaLsnnPUl
-         vZWUAKpUWwLI+nA+jPiL4ap5LSx8jSwJAASkTD4l3DhX+kBGVsHHywcQI506xE1vJgSH
-         7a0DI2Wk0N6KrXUaAhsT6bSGGgT7Qi9yODk2fitQaqN8YRjVSdYZbeU1xBq6kF/TGWbk
-         4prVuZBG8vYt1rMD80XYK6lgFF/yftAeYaFPmpJjkS0gh4CRc7GsseC+28S7rtAEHg/b
-         bQhRP1ppi0p/h5UG/7WOFDtKCftVuhDM1bwiYilvV56Ojcgyn23QHcQ8ZhD4rxUOlPpz
-         V49g==
-X-Gm-Message-State: APjAAAWBolB+NECT1vuX5vchj+UXqxju9+usx2m8orDqrUh4rwnuwQAa
-        W18e8a5pNpIKj2YYbR6JgR3qa+kPpPk=
-X-Google-Smtp-Source: APXvYqyqK701fOS7mAFm4DpEz2O20Xf21px7/gpmrwvDdgJsB4at6exrx6dX5PK3x768n6palgFBrA==
-X-Received: by 2002:adf:f052:: with SMTP id t18mr34491459wro.192.1577193814882;
-        Tue, 24 Dec 2019 05:23:34 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:205b:58c3:be42:8997? ([2a01:e34:ed2f:f020:205b:58c3:be42:8997])
-        by smtp.googlemail.com with ESMTPSA id t125sm2707446wmf.17.2019.12.24.05.23.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Dec 2019 05:23:33 -0800 (PST)
-Subject: Re: [PATCH v8 1/7] thermal: sun8i: add thermal driver for
- H6/H5/H3/A64/A83T/R40
-To:     Vasily Khoruzhick <anarsoul@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        linux-kernel@vger.kernel.org
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <20191219172823.1652600-2-anarsoul@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6e270a06-acd4-5a87-6b84-13d987991e8a@linaro.org>
-Date:   Tue, 24 Dec 2019 14:23:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 24 Dec 2019 08:24:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577193879; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KZJmxQ9/BKrr0o/yv/IT63pjYnCfOPQgFptyHdRsL60=;
+ b=leJ4yRzXeBWhuyoexuSkAGAkzCQHb7k+yvBOIbYmkzdKHMuZkBuNg79kYxBeEDhuwhDViGyM
+ 5DbEIBNzOyVX3WG7fPOjIpRroIjiokI6qomTYeuat5Gr62WSaUvs2V3o89YjE0FFF3l1c/mm
+ 9otZftXEkczJ0NlOedTsYYSQCxw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e021193.7fe86c4b40d8-smtp-out-n02;
+ Tue, 24 Dec 2019 13:24:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C51F6C433CB; Tue, 24 Dec 2019 13:24:35 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D517BC43383;
+        Tue, 24 Dec 2019 13:24:34 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20191219172823.1652600-2-anarsoul@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 24 Dec 2019 18:54:34 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vgarodia@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
+In-Reply-To: <8a43b13d0cd4a7bcb18e0f1f8259ec72@codeaurora.org>
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
+ <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+ <8a43b13d0cd4a7bcb18e0f1f8259ec72@codeaurora.org>
+Message-ID: <953ee377ad3968f9df5d5677bb3bf82a@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/2019 18:28, Vasily Khoruzhick wrote:
-> From: Yangtao Li <tiny.windzz@gmail.com>
+Hi Stan,
+
+On 2019-12-24 17:42, Sai Prakash Ranjan wrote:
+> Hi Stan,
 > 
-> This patch adds the support for allwinner thermal sensor, within
-> allwinner SoC. It will register sensors for thermal framework
-> and use device tree to bind cooling device.
+> On 2019-12-20 15:04, Stanimir Varbanov wrote:
+>> 
+>> This subnode should be in sc7180-idp.dts, because we assume that by
+>> default the qcom platforms have TZ.
+>> 
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> ---
+> sc7180.dtsi will not be used on TZ based platforms which was the case 
+> for SDM845
+> where sdm845.dtsi was common for TZ (dragonboards) and non TZ(cheza
+> boards) based platforms.
+> So in order to avoid duplicating this node in other board specific dts 
+> files, it
+> would be better to have it here itself.
+> 
 
-Applied, thanks.
+Sorry, please ignore my previous comment.
+sc7180 will be used for compute platforms and some would be TZ based.
 
-
+Thanks,
+Sai
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
