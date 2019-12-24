@@ -2,230 +2,136 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2647C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72215C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5A62063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="OK11mFGH"
+	by mail.kernel.org (Postfix) with ESMTP id 517B920730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLXRAa (ORCPT
+        id S1726256AbfLXRV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 12:00:30 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40962 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfLXRAa (ORCPT
+        Tue, 24 Dec 2019 12:21:28 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:47696 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfLXRV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 12:00:30 -0500
-Received: by mail-lf1-f67.google.com with SMTP id m30so15475619lfp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 09:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fMlqiUykmo16Z9pg3WBxmVvNi2niQ348Njp7IT+vbho=;
-        b=OK11mFGHAvMV+VshqPr29zmkfLsHdHcrFCWRTqi8KliQvT/irVVhbSPhfQXMou+Wyh
-         JYTobjcq4YuqpvJkBSoQA29mR00WKRc2Q3+HgKREx8lvjsnuTaBxXrWWPyamrlCrnRVr
-         HqRbg7r2EMdOdj69RILBR51XF0es+V2Mtd2yrWVG1NeYhsPtkVMWuv6+NIwfFQJMI0ys
-         Sk9EQyw0XyN5UEnot7DTrbXD2x+cBI35KMJZlDGSx1cMKg3HieCFK7ucTDETOwyLS37m
-         UV+UjwBQMB20AxwH5TXyZCuiGqZh/Nl5etVXIjKrKd+8Nj54A+CFXy2WO/ZijcGG1Aak
-         fCBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fMlqiUykmo16Z9pg3WBxmVvNi2niQ348Njp7IT+vbho=;
-        b=fW4y/dG3vVMFesqjgbsf+F9FnJ/zXu/B+W3oUCTE+3JJeM8e+enQ8Id2Ddtkn4qTmt
-         ciAskLKOvhAIpAmaFJO+K11av8xpm7sFBXMh4NaiqW9HtZxF9wdDyNJcBQFju7IwfZpB
-         j8zUlgEtrso9mIEv/hD/msSRSf1qs+FeQrcYlddAUaxu0zxji9TcU1XT3fQpt+XWD3KV
-         IDaqLYrX8wDV/+qcnND1eNy3VgmeQObgtIYKXu3Ko0mYPISMyBbygOjqZM4X7s0OVz1a
-         oq0TMk/orn3+/39+lL1iVUxLgJGJMRZlZI2rPft0CnOXUN8qr9wbAvyT4IIdWjZ4llPc
-         mq5g==
-X-Gm-Message-State: APjAAAUTyED1GW7Ad4fPMFj0+BH1PcdLGRH+jOPpqOLGf/6hIbQMMnHP
-        qtmlKZ56nB6qGBb82O9QesdAckbb2Bef+8qXYLHXJ+o7KcU=
-X-Google-Smtp-Source: APXvYqzSCX5pL66KeljfjKBh7VCYL0DVwOnzKSyy3ogGnsARfuOIZt4O5eeNolR5mZQ960hRu4vXQskzGLTVnkazEbc=
-X-Received: by 2002:a19:84d:: with SMTP id 74mr20107748lfi.122.1577206826723;
- Tue, 24 Dec 2019 09:00:26 -0800 (PST)
+        Tue, 24 Dec 2019 12:21:28 -0500
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 75A3772CCD5;
+        Tue, 24 Dec 2019 20:21:24 +0300 (MSK)
+Received: from beacon.altlinux.org (unknown [185.6.174.98])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 3B2204A4AE7;
+        Tue, 24 Dec 2019 20:21:24 +0300 (MSK)
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Vitaly Chikunov <vt@altlinux.org>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>
+Subject: [PATCH v3] tools lib: Fix builds when glibc contains strlcpy
+Date:   Tue, 24 Dec 2019 20:20:29 +0300
+Message-Id: <20191224172029.19690-1-vt@altlinux.org>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-References: <20191224121210.29713-1-r@hev.cc>
-In-Reply-To: <20191224121210.29713-1-r@hev.cc>
-From:   Hev <r@hev.cc>
-Date:   Wed, 25 Dec 2019 01:00:15 +0800
-Message-ID: <CAHirt9hnKdyCnJhdVaw1vt40tZm_3F7LTCw4Ng4Svi_=LVecCg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] selftests: add rbtree selftests
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michel Lespinasse <walken@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Disable a couple of compilation warning (which are treated as errors) on
+strlcpy definition and declaration, allow users to compile perf and
+kernel (objtool).
 
-On Tue, Dec 24, 2019 at 8:12 PM Heiher <r@hev.cc> wrote:
->
-> This adds the selftest for rbtree. It will reproduce the crash at earsing.
->
-> Signed-off-by: hev <r@hev.cc>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michel Lespinasse <walken@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> ---
->  tools/testing/selftests/Makefile              |  1 +
->  tools/testing/selftests/lib/rbtree/.gitignore |  1 +
->  tools/testing/selftests/lib/rbtree/Makefile   | 29 ++++++++
->  .../selftests/lib/rbtree/rbtree_test.c        | 70 +++++++++++++++++++
->  4 files changed, 101 insertions(+)
->  create mode 100644 tools/testing/selftests/lib/rbtree/.gitignore
->  create mode 100644 tools/testing/selftests/lib/rbtree/Makefile
->  create mode 100644 tools/testing/selftests/lib/rbtree/rbtree_test.c
->
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index b001c602414b..0e84ca3f207f 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -25,6 +25,7 @@ TARGETS += kcmp
->  TARGETS += kexec
->  TARGETS += kvm
->  TARGETS += lib
-> +TARGETS += lib/rbtree
->  TARGETS += livepatch
->  TARGETS += membarrier
->  TARGETS += memfd
-> diff --git a/tools/testing/selftests/lib/rbtree/.gitignore b/tools/testing/selftests/lib/rbtree/.gitignore
-> new file mode 100644
-> index 000000000000..4c9f82761fad
-> --- /dev/null
-> +++ b/tools/testing/selftests/lib/rbtree/.gitignore
-> @@ -0,0 +1 @@
-> +rbtree_test
-> diff --git a/tools/testing/selftests/lib/rbtree/Makefile b/tools/testing/selftests/lib/rbtree/Makefile
-> new file mode 100644
-> index 000000000000..68fa9dad24a1
-> --- /dev/null
-> +++ b/tools/testing/selftests/lib/rbtree/Makefile
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +CFLAGS += -I../../../../include/
-> +
-> +include ../../lib.mk
-> +
-> +# lib.mk TEST_CUSTOM_PROGS var is for custom tests that need special
-> +# build rules. lib.mk will run and install them.
-> +
-> +TEST_CUSTOM_PROGS := $(OUTPUT)/rbtree_test
-> +all: $(TEST_CUSTOM_PROGS)
-> +
-> +OBJS = rbtree_test.o
-> +
-> +LIBS = ../../../../lib/rbtree.o
-> +
-> +OBJS := $(patsubst %,$(OUTPUT)/%,$(OBJS))
-> +LIBS := $(patsubst %,$(OUTPUT)/%,$(LIBS))
-> +
-> +$(TEST_CUSTOM_PROGS): $(LIBS) $(OBJS)
-> +       $(CC) -o $(TEST_CUSTOM_PROGS) $(OBJS) $(LIBS) $(CFLAGS) $(LDFLAGS)
-> +
-> +$(OBJS): $(OUTPUT)/%.o: %.c
-> +       $(CC) -c $^ -o $@ $(CFLAGS)
-> +
-> +$(LIBS): $(OUTPUT)/%.o: %.c
-> +       $(CC) -c $^ -o $@ $(CFLAGS)
-> +
-> +EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(OBJS) $(LIBS)
-> diff --git a/tools/testing/selftests/lib/rbtree/rbtree_test.c b/tools/testing/selftests/lib/rbtree/rbtree_test.c
-> new file mode 100644
-> index 000000000000..11420541071a
-> --- /dev/null
-> +++ b/tools/testing/selftests/lib/rbtree/rbtree_test.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <stdlib.h>
-> +#include <linux/rbtree.h>
-> +#include "../../kselftest_harness.h"
-> +
-> +struct node {
-> +       struct rb_node node;
-> +       int key;
-> +};
-> +
-> +static int _insert(struct rb_root *tree, int key)
-> +{
-> +       struct rb_node **new = &tree->rb_node, *parent = NULL;
-> +       struct node *node;
-> +
-> +       while (*new) {
-> +               struct node *this = container_of(*new, struct node, node);
-> +
-> +               if (key < this->key)
-> +                       new = &((*new)->rb_left);
-> +               else if (key > this->key)
-> +                       new = &((*new)->rb_right);
-> +               else
-> +                       return 0;
-> +       }
-> +
-> +       node = malloc(sizeof(struct node));
-> +       if (!node)
-> +               return 0;
-> +
-> +       node->key = key;
-> +       rb_link_node(&node->node, parent, new);
-> +       rb_insert_color(&node->node, tree);
-> +
-> +       return 1;
-> +}
-> +
-> +static void _remove(struct rb_root *tree, int key)
-> +{
-> +       struct rb_node **node = &tree->rb_node;
-> +
-> +       while (*node) {
-> +               struct node *this = container_of(*node, struct node, node);
-> +
-> +               if (key < this->key) {
-> +                       node = &((*node)->rb_left);
-> +               } else if (key > this->key) {
-> +                       node = &((*node)->rb_right);
-> +               } else {
-> +                       rb_erase(&this->node, tree);
-> +                       free(this);
-> +                       return;
-> +               }
-> +       }
-> +}
-> +
-> +TEST(rbtree)
-> +{
-> +       struct rb_root tree = { 0 };
-> +
-> +       _insert(&tree, 2);
-> +       _insert(&tree, 1);
-> +       _insert(&tree, 4);
-> +       _insert(&tree, 3);
-> +
-> +       _remove(&tree, 2);
-> +}
-> +
-> +TEST_HARNESS_MAIN
-> --
-> 2.24.1
->
+1. When glibc have strlcpy (such as in ALT Linux since 2004) objtool and
+perf build fails with this (in gcc):
 
-Sorry, recall these patches.
-It was my mistake. I forget to update the parent pointer at inserting. :(
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
 
+2. Clang ignores `-Wredundant-decls', but produces another warning when
+building perf:
+
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
+Cc: Dmitry V. Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: stable@vger.kernel.org
+---
+Changes since v2:
+- v2 was failing to compile on gcc-4.9, because there was no `-Wignored-attributes'.
+  Make this pragma only efficient for Clang.
+Reported-by: kbuild test robot <lkp@intel.com>
+
+Changes since v1:
+- Fix compiling with clang due to __weak triggering `-Wignored-attributes'.
+
+ tools/include/linux/string.h | 3 +++
+ tools/lib/string.c           | 7 +++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+index 980cb9266718..99ede7f5dfb8 100644
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#pragma GCC diagnostic pop
+ #endif
+ 
+ char *str_error_r(int errnum, char *buf, size_t buflen);
+diff --git a/tools/lib/string.c b/tools/lib/string.c
+index f2ae1b87c719..f645343815de 100644
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -96,6 +96,10 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
+  */
++#ifdef __clang__
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wignored-attributes"
++#endif
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+ {
+ 	size_t ret = strlen(src);
+@@ -107,6 +111,9 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+ 	}
+ 	return ret;
+ }
++#ifdef __clang__
++#pragma clang diagnostic pop
++#endif
+ 
+ /**
+  * skip_spaces - Removes leading whitespace from @str.
 -- 
-Best regards!
-Hev
-https://hev.cc
+2.11.0
+
