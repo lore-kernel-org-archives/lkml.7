@@ -2,182 +2,206 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D97C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995CC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19EE206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lYmJlwXj"
+	by mail.kernel.org (Postfix) with ESMTP id 6B54E206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577187712;
+	bh=dwSRaO/cSGe4qBW7eBSN2GeTAW/zRA6lNgg1Uo/acc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S0YyB1TEFy6zRlKDB6hr9qOWcP6FOX1BFeDJ0V1otIot50xsYkWn/nidduuR17JyN
+	 cHgiTgnc8JLhRRVqwsjdm61zL9EY5GNKHrgouXqRgm8M9T3tMzP2zWKuZ2jPM7yRTH
+	 owV8/o2A4RyjjwULinGu6HySxvUdRZUOJ6x/tET8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfLXLlr (ORCPT
+        id S1727183AbfLXLlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:47 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:51551 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbfLXLlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:46 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hvSk5rlxz9tvqq;
-        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=lYmJlwXj; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WeNRdbd7lgXn; Tue, 24 Dec 2019 12:41:42 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hvSk41pRz9tvqp;
-        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577187702; bh=zVvs2ouna/B/Vb/2RfZVUK0x0665UncRbgfLeAdSnnY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lYmJlwXjs+sVC+Oy+w8vyY3OjRXZBsUlCFzkOcAtGzQv8VGRTjvaBltJ8BvY0yncd
-         kvWtk3/4+I6R+C35vHzjesQG3ZepSfG0mV/VjcD+JMGNw5tKirhTpTWaYsm2DosM1j
-         4yvJ9P1cylNo9xPKKIo9g95EUbXTD0fvHykyHi40=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1F0C8B783;
-        Tue, 24 Dec 2019 12:41:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id EbbqCE6Lvv3b; Tue, 24 Dec 2019 12:41:43 +0100 (CET)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACB038B782;
-        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
-Subject: Re: [RFC PATCH v2 02/10] lib: vdso: move call to fallback out of
- common code.
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Tue, 24 Dec 2019 06:41:51 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:57163 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726183AbfLXLlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:41:50 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iji5u-000169-1R; Tue, 24 Dec 2019 12:11:18 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
- <de073962c1a5911343e13c183fbbdef0fe95449e.1577111365.git.christophe.leroy@c-s.fr>
- <CALCETrXWHk9J-pYm+eopMuW3x7Jr_LnzRjr94gq8g66xOO6SBg@mail.gmail.com>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <36f1ce73-d8bc-9c46-8a2a-b6514d4a1ba0@c-s.fr>
-Date:   Tue, 24 Dec 2019 12:41:41 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: [PATCH v3 10/32] irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
+Date:   Tue, 24 Dec 2019 11:10:33 +0000
+Message-Id: <20191224111055.11836-11-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
+References: <20191224111055.11836-1-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrXWHk9J-pYm+eopMuW3x7Jr_LnzRjr94gq8g66xOO6SBg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 191223-0, 23/12/2019), Outbound message
-X-Antivirus-Status: Not-Tested
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+masking/unmasking doorbells on GICv4.1 relies on a new INVDB command,
+which broadcasts the invalidation to all RDs.
 
+Implement the new command as well as the masking callbacks, and plug
+the whole thing into the v4.1 VPE irqchip.
 
-Le 24/12/2019 à 03:24, Andy Lutomirski a écrit :
-> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->>
->> On powerpc, VDSO functions and syscalls cannot be implemented in C
->> because the Linux kernel ABI requires that CR[SO] bit is set in case
->> of error and cleared when no error.
->>
->> As this cannot be done in C, C VDSO functions and syscall'based
->> fallback need a trampoline in ASM.
->>
->> By moving the fallback calls out of the common code, arches like
->> powerpc can implement both the call to C VDSO and the fallback call
->> in a single trampoline function.
-> 
-> Maybe the issue is that I'm not a powerpc person, but I don't
-> understand this.  The common vDSO code is in C.  Presumably this means
-> that you need an asm trampoline no matter what to call the C code.  Is
-> the improvement that, with this change, you can have the asm
-> trampoline do a single branch, so it's logically:
-> 
-> ret = [call the C code];
-> if (ret == 0) {
->   set success bit;
-> } else {
->   ret = fallback;
->   if (ret == 0)
->    set success bit;
-> else
->    set failure bit;
-> }
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3-its.c   | 73 ++++++++++++++++++++++++++++++
+ include/linux/irqchip/arm-gic-v3.h |  3 +-
+ 2 files changed, 75 insertions(+), 1 deletion(-)
 
-More simple than above, in fact it is:
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 157f51398850..0da6baa48153 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -334,6 +334,10 @@ struct its_cmd_desc {
+ 			u16 seq_num;
+ 			u16 its_list;
+ 		} its_vmovp_cmd;
++
++		struct {
++			struct its_vpe *vpe;
++		} its_invdb_cmd;
+ 	};
+ };
+ 
+@@ -832,6 +836,21 @@ static struct its_vpe *its_build_vclear_cmd(struct its_node *its,
+ 	return valid_vpe(its, map->vpe);
+ }
+ 
++static struct its_vpe *its_build_invdb_cmd(struct its_node *its,
++					   struct its_cmd_block *cmd,
++					   struct its_cmd_desc *desc)
++{
++	if (WARN_ON(!is_v4_1(its)))
++		return NULL;
++
++	its_encode_cmd(cmd, GITS_CMD_INVDB);
++	its_encode_vpeid(cmd, desc->its_invdb_cmd.vpe->vpe_id);
++
++	its_fixup_cmd(cmd);
++
++	return valid_vpe(its, desc->its_invdb_cmd.vpe);
++}
++
+ static u64 its_cmd_ptr_to_offset(struct its_node *its,
+ 				 struct its_cmd_block *ptr)
+ {
+@@ -1240,6 +1259,14 @@ static void its_send_vclear(struct its_device *dev, u32 event_id)
+ 	its_send_single_vcommand(dev->its, its_build_vclear_cmd, &desc);
+ }
+ 
++static void its_send_invdb(struct its_node *its, struct its_vpe *vpe)
++{
++	struct its_cmd_desc desc;
++
++	desc.its_invdb_cmd.vpe = vpe;
++	its_send_single_vcommand(its, its_build_invdb_cmd, &desc);
++}
++
+ /*
+  * irqchip functions - assumes MSI, mostly.
+  */
+@@ -3554,6 +3581,50 @@ static struct irq_chip its_vpe_irq_chip = {
+ 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
+ };
+ 
++static struct its_node *find_4_1_its(void)
++{
++	static struct its_node *its = NULL;
++
++	if (!its) {
++		list_for_each_entry(its, &its_nodes, entry) {
++			if (is_v4_1(its))
++				return its;
++		}
++
++		/* Oops? */
++		its = NULL;
++	}
++
++	return its;
++}
++
++static void its_vpe_4_1_send_inv(struct irq_data *d)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_node *its;
++
++	/*
++	 * GICv4.1 wants doorbells to be invalidated using the
++	 * INVDB command in order to be broadcast to all RDs. Send
++	 * it to the first valid ITS, and let the HW do its magic.
++	 */
++	its = find_4_1_its();
++	if (its)
++		its_send_invdb(its, vpe);
++}
++
++static void its_vpe_4_1_mask_irq(struct irq_data *d)
++{
++	lpi_write_config(d->parent_data, LPI_PROP_ENABLED, 0);
++	its_vpe_4_1_send_inv(d);
++}
++
++static void its_vpe_4_1_unmask_irq(struct irq_data *d)
++{
++	lpi_write_config(d->parent_data, 0, LPI_PROP_ENABLED);
++	its_vpe_4_1_send_inv(d);
++}
++
+ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+ {
+ 	struct its_cmd_info *info = vcpu_info;
+@@ -3575,6 +3646,8 @@ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+ 
+ static struct irq_chip its_vpe_4_1_irq_chip = {
+ 	.name			= "GICv4.1-vpe",
++	.irq_mask		= its_vpe_4_1_mask_irq,
++	.irq_unmask		= its_vpe_4_1_unmask_irq,
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_set_affinity	= its_vpe_set_affinity,
+ 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index df3b7cb50956..33519b7c96cf 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -486,8 +486,9 @@
+ #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
+ #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
+ #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
+-/* VMOVP is the odd one, as it doesn't have a physical counterpart */
++/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
+ #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
++#define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
+ 
+ /*
+  * ITS error numbers
+-- 
+2.20.1
 
-ret = [call the C code];
-if (ret == 0) {
-  set success bit;
-} else {
-  ret = fallback [ which sets the success/failure bit];
-}
-return ret
-
-
-> 
-> return ret;
-> 
-> instead of:
-> 
-> ret = [call the C code, which includes the fallback];
-
-C code cannot handle the success/failure bit so we need to do something 
-which does:
-
-int assembly_to_fallback()
-{
-	ret = [syscall the fallback]
-	if (success bit set)
-		return ret;
-	else
-		return -ret;
-}
-
-Also means going back and forth between the success bit and negative return.
-
-> if (ret == 0)
->    set success bit;
-> else
->    set failure bit;
-> 
-> It's not obvious to me that the former ought to be faster.
-> 
->>
->> The two advantages are:
->> - No need play back and forth with CR[SO] and negative return value.
->> - No stack frame is required in VDSO C functions for the fallbacks.
-> 
-> How is no stack frame required?  Do you mean that the presence of the
-> fallback causes worse code generation?  Can you improve the fallback
-> instead?
-> 
-
-When function F1 calls function F2 (with BL insn), the link register 
-(LR) is set with the return address in F1, so that at the end of F2, F2 
-branches to LR (with BLR insn), that's how you return from functions.
-
-When F2 calls function F3, the same happens, LR is set to the return of 
-F3 into F2. It means that F2 has to save LR in order to be able to 
-return to F1, otherwise the return address from F2 into F1 is lost.
-
-But ... thinking about it once more, indeed fallback means doing a 
-syscall, and in fact I realise that syscalls won't clobber LR, so it 
-should be possible to do something. Let me try it.
-
-Christophe
