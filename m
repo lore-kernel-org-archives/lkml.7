@@ -2,167 +2,146 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89716C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBB9C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0F4206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852572070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW+/QrRx"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="CtvNc+4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLXBBt (ORCPT
+        id S1727021AbfLXBQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 20:01:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24735 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726865AbfLXBBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 20:01:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577149307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lNR8caCFuSaW15vNt0X+BCpE9Gkglp0py4B5ycCfZsA=;
-        b=SW+/QrRxuCf4KQBuNKWNtmXv3tgZJYXmOU90+Xk1E2ugHHvKCGtb7Su473yMBpnLa24aMy
-        I9EdgRxXX/ZKYIWHFxKAYJTbn+d0bspjFz4CGjccChKhW7L9Nz67+XXpB0zR6zYx2wTrEd
-        GqB18o7xipYkjZ1FeZzJn0Mtb541KLI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-DgFydOTnNqqiw7IVc8qHMg-1; Mon, 23 Dec 2019 20:01:46 -0500
-X-MC-Unique: DgFydOTnNqqiw7IVc8qHMg-1
-Received: by mail-wr1-f70.google.com with SMTP id z14so8861691wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 17:01:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lNR8caCFuSaW15vNt0X+BCpE9Gkglp0py4B5ycCfZsA=;
-        b=qZP+38/oNIrgg/gI4Tt7zxCZTj0nMoBv5wliMhtjLT5zXWXDGQy0SuChmeJNvu/hYM
-         3ppzpcNyrBIabBE3XUUCvaD9aP08xvR21oprKutk9o/njI+IugrWBOhWLjI1QcMCQ1s2
-         dMqkAVz/1TbgYa+GrkqXd/17ovSN9SIAnJCUmKpa7W+UDCu+JCaUQthUASinQxg+MMsg
-         yzstU4PBDxIjt0ngTljQjve0RVPxhESmljiTRkcoW5eBaSzCRTaRXHBD6o0TsmvZf1CB
-         wN4nDxGcYQ+2JbyAQKs3Y7qvVY0jWRy6HCr+Du+edz6o42Vrk18WZIdLkTjr3CVwOuMI
-         Bp4g==
-X-Gm-Message-State: APjAAAWBmMsUzzEPGu+X0HDQXi90GqodSSpffuJx+2icc6ok9tklX3Yy
-        p68H2CRMlRxQxQJBbsU7mB+5FRDgSEUHdD+r0dKTFZtvg6gpUEZJjBGkJcdctckv2UbzeQAxx9Q
-        W8YNOZCAfwB/+Pw6+/zmcVvg0
-X-Received: by 2002:a1c:a543:: with SMTP id o64mr1343957wme.108.1577149304965;
-        Mon, 23 Dec 2019 17:01:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwLbp9ysb39KhPxYI6LO1wfaY27/OAdRJojrU1rwE2sB5KzOrsO0TbdDO9yelLn37HkmqW28w==
-X-Received: by 2002:a1c:a543:: with SMTP id o64mr1343939wme.108.1577149304792;
-        Mon, 23 Dec 2019 17:01:44 -0800 (PST)
-Received: from mcroce-redhat.homenet.telecomitalia.it (host213-32-dynamic.19-79-r.retail.telecomitalia.it. [79.19.32.213])
-        by smtp.gmail.com with ESMTPSA id e18sm22330532wrw.70.2019.12.23.17.01.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 17:01:44 -0800 (PST)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: [RFC net-next 2/2] mvpp2: memory accounting
-Date:   Tue, 24 Dec 2019 02:01:03 +0100
-Message-Id: <20191224010103.56407-3-mcroce@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191224010103.56407-1-mcroce@redhat.com>
-References: <20191224010103.56407-1-mcroce@redhat.com>
+        Mon, 23 Dec 2019 20:16:50 -0500
+Received: from cmta17.telus.net ([209.171.16.90]:53797 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbfLXBQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 20:16:49 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id jYoTi09cHbg38jYoUiySaO; Mon, 23 Dec 2019 18:16:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1577150207; bh=ODYwhfPt6MsqQtLICXCUgpmiQneAod/Apsuhk4WGCHo=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=CtvNc+4euCofzl27ngb+DtU6etJm2HqxrArEbNO9p/SsOH4jAWvGCkRBG4SmmwXex
+         bOqnuOGE9DuyoD3Z/dyFz6UrWqxWwgvsQVk9adjIzqAJ/E6AV0Wbu/swFDdIgPBIoP
+         D27el1CaI2WlYdk5vu8m5yeHReS7zeXmM/jfL18lB6SzGcriU/j8xp6BOuWrZf3Bax
+         bEZ92idlEpeN5xUcOhqF899cdrcAlBW94c8fCEYICWusj4kkyNg7aRGtxSPRZfT/HX
+         ehLPauagEBiEbKjlr3YppaZn+i2oTXnOaKShqlVVQSVZ5ckSIaY3TjosVThM+0Olud
+         2iNZKNDmDufig==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=njV4EcZ6lGp_ohjWBiQA:9 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Qais Yousef'" <qais.yousef@arm.com>
+Cc:     "'Giovanni Gherdovich'" <ggherdovich@suse.cz>, <x86@kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "'Mel Gorman'" <mgorman@techsingularity.net>,
+        "'Matt Fleming'" <matt@codeblueprint.co.uk>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Juri Lelli'" <juri.lelli@redhat.com>,
+        "'Paul Turner'" <pjt@google.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Vincent Guittot'" <vincent.guittot@linaro.org>,
+        "'Quentin Perret'" <qperret@qperret.net>,
+        "'Dietmar Eggemann'" <dietmar.eggemann@arm.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Borislav Petkov'" <bp@suse.de>, "'Len Brown'" <lenb@kernel.org>,
+        "'Rafael J . Wysocki'" <rjw@rjwysocki.net>
+References: <1574697961.16378.5.camel@suse.cz> <000801d5a41e$a7fce2c0$f7f6a840$@net> <1574781600.7677.2.camel@suse.cz> <001d01d5a4f4$d96b21b0$8c416510$@net> <003d01d5a63d$f6ab3950$e401abf0$@net> <20191219104813.6fr34qavpaplecoz@e107158-lin> <000701d5b965$361b6c60$a2524520$@net> <20191223140743.o2wfoqtf56g4yrk5@e107158-lin.cambridge.arm.com> <20191223144043.ticfxfgbolsqk74i@e107158-lin.cambridge.arm.com> <000301d5b9ae$cd8f5b30$68ae1190$@net> <20191223191014.g7lnxafuadwtcqub@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20191223191014.g7lnxafuadwtcqub@e107158-lin.cambridge.arm.com>
+Subject: RE: [PATCH v4 1/6] x86,sched: Add support for frequency invariance
+Date:   Mon, 23 Dec 2019 17:16:39 -0800
+Message-ID: <000401d5b9f7$cf3782c0$6da68840$@net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdW5xJ+eVDznPQtVRyqEVUJp7cpgLgAL7hNA
+X-CMAE-Envelope: MS4wfLW1bqXgFcdCQxme3c2zQBvwtsoXAea/u7GIOR0AXN1Dm0TTtTWQTweIHX/qoLPu7TPCRdrMp/L2qPXAHdVYEDHjx1Jqqf7B7BU/kw/ccL1WClkg+rHe
+ NIWpDKAAu0MqwJfpLHQcMXzFOaGwsIIyoJWbIeHxQTLH5fWEQp5AofX9bYTPt24DuA3dRZpQMgpYj0H9IFEZ/qLuggfik6hr/FryUt0M8QqznWCu6scf1/U5
+ IyKh93PBMcglSb5DVqdzBMWnhd3uAlXLa3w6/4squhasyTfTPDgszgpE4gp1PdIpzWjy6Vrv9yeV1Oh8njlcsJR5qzZhqawDTIyov1BYZRVpgtjkSJf5tY2P
+ lC4iA2oDDOcQQP4u2r77e+imoigouFUw1O7wcNTPBaH78w7SU49KSqB+rshCFUbigJyfpZxzJ/znXvZb3Dmsb14csFyD39g0TnOUzK5HjsemRu4ep0bsIXHZ
+ avemi0pbySKy/oPcUCWEoA25AsiiR99vZdMwnmx0GFPM9UFT6mgzjneXG4E0xtAA9CgaHUUdotTjFPJvJPyLyOrX2QVrpZT0fqpfIjxaGP3zua1fVjAnlKQ2
+ LOLeFpD2Xxe4vWW7WV1xqyzLY1a99P56qhittRqjdSL/1PNsoVowycwai4pFZ4yNpihY1TXZEx+N8TByyYk70cZ7wDUU8q3aAKQK1wP7MpIaDS2KSoDZ7pqZ
+ 3BZpvqxfKRgTSf5AVOu9ySyJtOJPH3LucsagPERMy35X+OQeDckhqF703p7NQ4EBj4kH8eV0AqU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the XDP API for memory accounting.
+On 2019.12.23 11:10 Qais Yousef wrote:
+> On 12/23/19 08:34, Doug Smythies wrote:
+>> On 2019.12.23 06:41 Qais Yousef wrote:
+>>> On 12/23/19 14:07, Qais Yousef wrote:
+>>>>> Re-boot to the nocgv1 (stock + cgroup_no_v1=all) kernel.
+>>>>> set the schedutil governor.
+>>>>> launch test 2 and related monitoring tools.
+>>>>> verify performance governor like behavior.
+>>>> 
+>>>> So as stated above, by default uclamp_{min, max} = (0, 1024). So it wouldn't
+>>>> act as performance governor by default unless you explicitly write 1024 to
+>>>> uclamp.min.
+>>>> 
+>>>> Let me go find Ubuntu mainline tree to see if they applied anything extra in
+>>>> there. If they modified the default behavior that could explain what you see.
+>>>
+>>> Actually I see what you were saying now that you copy the config. So I think
+>>>  I misunderstood and you are running Linus' 5.5-rc2 + Ubuntu PPA config.
+>> 
+>> Yes, exactly.
+>> I have a clone of the main Linus git branch, but steal the kernel
+>> configuration from the Ubuntu mainline PPA.
+>
+> I think I managed to reproduce it. The below seems to fix it for me, can you
+> try it out please?
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  3 ++
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 31 ++++++++++++++++++-
- 2 files changed, 33 insertions(+), 1 deletion(-)
+Yes, it fixes the schedutil governor behaving like the performance governor
+problem on my i7-2600K test system.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 67b3bf0d3c8b..ffd633e0a3be 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -1165,6 +1165,9 @@ struct mvpp2_rx_queue {
- 
- 	/* Port's logic RXQ number to which physical RXQ is mapped */
- 	int logic_rxq;
-+
-+	/* XDP memory accounting */
-+	struct xdp_rxq_info xdp_rxq;
- };
- 
- struct mvpp2_bm_pool {
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 4edb81c8941f..3b0aac66ac52 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -2405,10 +2405,11 @@ static int mvpp2_aggr_txq_init(struct platform_device *pdev,
- /* Create a specified Rx queue */
- static int mvpp2_rxq_init(struct mvpp2_port *port,
- 			  struct mvpp2_rx_queue *rxq)
--
- {
-+	struct mvpp2 *priv = port->priv;
- 	unsigned int thread;
- 	u32 rxq_dma;
-+	int err;
- 
- 	rxq->size = port->rx_ring_size;
- 
-@@ -2446,7 +2447,35 @@ static int mvpp2_rxq_init(struct mvpp2_port *port,
- 	/* Add number of descriptors ready for receiving packets */
- 	mvpp2_rxq_status_update(port, rxq->id, 0, rxq->size);
- 
-+	err = xdp_rxq_info_reg(&rxq->xdp_rxq, port->dev, rxq->id);
-+	if (err < 0)
-+		goto err_free_dma;
-+
-+	if (priv->percpu_pools) {
-+		/* Every RXQ has a pool for short and another for long packets */
-+		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq,
-+						 MEM_TYPE_PAGE_POOL,
-+						 priv->page_pool[rxq->logic_rxq]);
-+		if (err < 0)
-+			goto err_unregister_rxq;
-+
-+		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq,
-+						 MEM_TYPE_PAGE_POOL,
-+						 priv->page_pool[rxq->logic_rxq +
-+								 port->nrxqs]);
-+		if (err < 0)
-+			goto err_unregister_rxq;
-+	}
-+
- 	return 0;
-+
-+err_unregister_rxq:
-+	xdp_rxq_info_unreg(&rxq->xdp_rxq);
-+err_free_dma:
-+	dma_free_coherent(port->dev->dev.parent,
-+			  rxq->size * MVPP2_DESC_ALIGNED_SIZE,
-+			  rxq->descs, rxq->descs_dma);
-+	return err;
- }
- 
- /* Push packets received by the RXQ to BM pool */
--- 
-2.24.1
+I re-ran the tests several times, and re-booted back to the stock (problem)
+kernel to verify incorrect schedutil governor performance (i.e. I toggled
+back and forth, 2 times for each of 2 kernels, tests 1 and 2, total 8 tests).
+Kernel 5.5-rc2: 4 tests FAILED (as expected).
+Kernel 5.5-rc2 + this patch: 4 tests PASSED.
+
+Accidentally tested:
+Kernel 5.5-rc2 + this patch + command line "cgroup_no_v1=all": 1 test PASS.
+
+> I think what's going on is that the child group default util_min value isn't
+> propagated correctly after it's created, so we end up using the root_task_group
+> values which is 1024 for both min and max.
+
+O.K. thanks.
+
+> ---
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 90e4b00ace89..cf9d9106d1b5 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7100,6 +7100,11 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+>
+>        if (parent)
+>                sched_online_group(tg, parent);
+> +
+> +#ifdef CONFIG_UCLAMP_TASK_GROUP
+> +       cpu_util_update_eff(css);
+> +#endif
+> +
+>        return 0;
+>  }
+
+... Doug
+
 
