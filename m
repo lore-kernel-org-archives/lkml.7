@@ -2,117 +2,151 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB8FC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06F2C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446F820706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6CB206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="AQugnPU1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Qz/h66Ir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfLXMEi (ORCPT
+        id S1726261AbfLXMHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:04:38 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36056 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfLXMEh (ORCPT
+        Tue, 24 Dec 2019 07:07:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46563 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfLXMHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:04:37 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so7668261plm.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:04:37 -0800 (PST)
+        Tue, 24 Dec 2019 07:07:19 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so19587028wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:07:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=VHzH6WH6Y51Hv8qWhxgK6vx35XDhgJUQtiy7D9VMqAM=;
-        b=AQugnPU1j3l+UliZJ1cFDWfn1gfoQcO/nzfL11rOcYeTLX/P87iqPaaJmBaMlSz7f1
-         /DhGazm2NTR2ZIaiN+mUvEAnOZrI7Ge0Mg1zI2ZlVdeTi0aTgDWcWRqSCId8E113LX3m
-         6HCYlixeRMc9TaLMlaAzwKbLAUzigX1Ncl8C866LmmeME3vMRc45SQjPLyr6MHX+L6Cw
-         vv52P5dueRyUQBwwusD+tHpoqoHbOj8XjhE0q9U9hlqCHn27d/gBrcaQanBO29ITAp34
-         bn7tzg79vFow2UHY2TlVVezhuLVq4rXQXKJzfTff9415HHT3maptkAcWgSZsizcHzud6
-         8efg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Abw3Db9iMH8wWhh+IDkbLs69tg1ME9SDU22oNHYrzR8=;
+        b=Qz/h66IrLIF4Fcmb3e1ODN/0yYQzwSQH++GHM9fEx84pbRAAkPKg4xKocbT3ujlTLY
+         naDpqvGbZGj3rQLy0I2I9D2HK36T/PYPuWCs15fkIhUohM2V/L3CNlLnxM0QgjQ74KIs
+         lo48jThm4y1Vrlr+KznVyh6YhvV2a1tR15v90voBwKfI4Yq992aH5fvzQTij5GxdVVoB
+         lR3ckRCSK8yUylM7gUREp6y6lO8MMU/tB2RUz/b8hMZbK0rjRdlm7IIkLwrBDxs3t+Qo
+         SnUnuibRTtO71RDkrq4q7igz215l0XNhGIrP7NsVy4DqKp9kEYRtP4OqrB4c8Loes1hC
+         xukg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=VHzH6WH6Y51Hv8qWhxgK6vx35XDhgJUQtiy7D9VMqAM=;
-        b=qZ6jw0fR2Jp8BINT1XgnIq9yXFJXpnI+a1IcBnhsmLXTuJr3xKIf0OsarH58A/ku3P
-         mUSJOrO9toF45jlT/S8VVoT2pr22/Bdr5vaGfL9gBCszmFzt2zfM55fCv111E2IMy+/0
-         slIXJM4fRHSdg+2/m+s/mr9Sk0kogzca4VCsb5QxFlvMXlMVVbExgM+5NhKUOClETcHs
-         +bOmLmCAGNwQCR62l++0h/lJa8XjpnvVY+1ASmNEPDCV2yP3KO9YOvkrZCH8TLd+jF79
-         b2ZVUqU0Z685TY0WShFfmeOtMk3vIyc4GW1yYOQ5E3lo+bTDjBvn7FSDitR3Ie9hx7qs
-         /9Zg==
-X-Gm-Message-State: APjAAAWmsDy2WUy+hT+RHGvpJ+fnUYJRU2JVlv2JqGV4eTg6PY+h/AQL
-        Gn5kJsxN37DYjnfFv0WTBXzOsw==
-X-Google-Smtp-Source: APXvYqyJXa2dY59EyR45IM7PX4/Dja/wo48oiNHNLhyt3TL1GWpIJ61wHLTCUZ3QRkI0SvFitogUkA==
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr34182926pll.341.1577189076952;
-        Tue, 24 Dec 2019 04:04:36 -0800 (PST)
-Received: from [192.168.0.9] (111-255-104-19.dynamic-ip.hinet.net. [111.255.104.19])
-        by smtp.gmail.com with ESMTPSA id k21sm14926039pfa.63.2019.12.24.04.04.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Dec 2019 04:04:36 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v2 07/10] lib: vdso: don't use READ_ONCE() in __c_kernel_time()
-Date:   Tue, 24 Dec 2019 20:04:33 +0800
-Message-Id: <98C1F790-7647-4203-9B31-4B8FED8CCA12@amacapital.net>
-References: <abc4b4a6-d355-4dfd-a207-603e877b2b23@c-s.fr>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-In-Reply-To: <abc4b4a6-d355-4dfd-a207-603e877b2b23@c-s.fr>
-To:     christophe leroy <christophe.leroy@c-s.fr>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Abw3Db9iMH8wWhh+IDkbLs69tg1ME9SDU22oNHYrzR8=;
+        b=OpC6hdxwjoMW8A5pz2n5RKtpJJp6NmV6vvL5xC3ohOBjtvkHt/N/A/Zc63vdyt1vja
+         htawE1H2O12M8/FvWKorrZktlgDkUVFR1lMyYVP4sfuEhLwTkp6+p82NCOZPspJdNoTd
+         HxDj4MAg2/sleOsjhFdBBWe5nKzJsxXtFkfLe+virslXMGO0a9kGDmxEJaDFkUfzF0KZ
+         AuS/9iiPT79dLk/Ij23f6XKWA2uZ0P0tPGBFHQWYTmKiPlM9witLnUKzKYZBDjzLH877
+         yROveydxspvgnpLt8SriHsQUlHz7TLvFi2hHCW2ujjpTvxIjDrvYCv49VwGcYyqGQeZC
+         796A==
+X-Gm-Message-State: APjAAAVMYElURCw7ikS8Q28Sn1Muedwzad7EW+9i9KVnJ8G6cgwwOfpS
+        d1/1Q8BIwmc19H1/dNBUpyiNYg==
+X-Google-Smtp-Source: APXvYqwkFPfJnprWc1Wds4pqUWoD8acoWyG6lTAat+TgSv1F582jJnbbnZs0wAh1s1krF5zNe+sUrw==
+X-Received: by 2002:adf:ef49:: with SMTP id c9mr34448875wrp.292.1577189236920;
+        Tue, 24 Dec 2019 04:07:16 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id s10sm23829210wrw.12.2019.12.24.04.07.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 04:07:16 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Tue, 24 Dec 2019 13:06:56 +0100
+Message-Id: <20191224120709.18247-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> On Dec 24, 2019, at 7:12 PM, christophe leroy <christophe.leroy@c-s.fr> wr=
-ote:
->=20
-> =EF=BB=BF
->=20
->> Le 24/12/2019 =C3=A0 02:58, Andy Lutomirski a =C3=A9crit :
->>> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
->>> <christophe.leroy@c-s.fr> wrote:
->>>=20
->>> READ_ONCE() forces the read of the 64 bit value of
->>> vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec allthough
->>> only the lower part is needed.
->> Seems reasonable and very unlikely to be harmful.  That being said,
->> this function really ought to be considered deprecated -- 32-bit
->> time_t is insufficient.
->> Do you get even better code if you move the read into the if statement?
->=20
-> Euh ...
->=20
-> How can you return t when time pointer is NULL if you read t only when tim=
-e pointer is not NULL ?
->=20
->=20
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-Duh, never mind.
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-But this means your patch may be buggy: you need to make sure the compiler r=
-eturns the *same* value it stores. Maybe you=E2=80=99re saved by the potenti=
-al aliasing between the data page and the passed parameter and the value you=
- read, but that=E2=80=99sa bad thing to rely on.
+This series also includes a variety of minor tweaks & fixes for problems
+discovered during development. For instance it addresses a race-condition
+in current line event fifo.
 
-Try barrier() after the read.=
+v1: https://lkml.org/lkml/2019/11/27/327
+
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
+
+v2 -> v3:
+- added patches providing new implementation for some kfifo macros
+- fixed a regression in the patch reworking the line event fifo: reading
+  multiple events is now still possible
+- reworked the structure for new ioctl: it's now padded such that there
+  be no alignment issues if running a 64-bit kernel on 32-bit userspace
+- fixed a bug where one process could disable the status watch of another
+- use kstrtoul() instead of atoi() in gpio-watch for string validation
+
+v3 -> v4:
+- removed a binary file checked in by mistake
+- drop __func__ from debug messages
+- restructure the code in the notifier call
+- add comments about the alignment of the new uAPI structure
+- remove a stray new line that doesn't belong in this series
+- tested the series on 32-bit user-space with 64-bit kernel
+
+Bartosz Golaszewski (13):
+  gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
+  gpiolib: have a single place of calling set_config()
+  gpiolib: convert the type of hwnum to unsigned int in
+    gpiochip_get_desc()
+  gpiolib: use gpiochip_get_desc() in linehandle_create()
+  gpiolib: use gpiochip_get_desc() in lineevent_create()
+  gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+  kfifo: provide noirqsave variants of spinlocked in and out helpers
+  kfifo: provide kfifo_is_empty_spinlocked()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
+
+ drivers/gpio/gpiolib.c      | 397 +++++++++++++++++++++++++++---------
+ drivers/gpio/gpiolib.h      |   4 +-
+ include/linux/gpio/driver.h |   3 +-
+ include/linux/kfifo.h       |  73 +++++++
+ include/uapi/linux/gpio.h   |  30 +++
+ tools/gpio/.gitignore       |   1 +
+ tools/gpio/Build            |   1 +
+ tools/gpio/Makefile         |  11 +-
+ tools/gpio/gpio-watch.c     |  99 +++++++++
+ 9 files changed, 515 insertions(+), 104 deletions(-)
+ create mode 100644 tools/gpio/gpio-watch.c
+
+-- 
+2.23.0
+
