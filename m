@@ -2,147 +2,70 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F6C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC82CC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375E02071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0fI68b6"
+	by mail.kernel.org (Postfix) with ESMTP id 93FBD206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577169463;
+	bh=ON0QdqQ+wjgFyA7W2CtWIRLA64ZOjDQt5hzeb32O6V4=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=pPWlZmfNT/nVBMsnC7olCVMi7cdesL5siEj/taM5nr3tbL/xxSrfqgmVGf84O5ckT
+	 bNSeScyDsK4/Tlxo924ywBkPSMt27FP621/cRgFY0uS8nAi+6bY45fqH7vc394beP0
+	 Wy3+F2UdZ3i48SmSq6XyI8ECJEyDTyzzYjpmOBIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLXGgV (ORCPT
+        id S1726234AbfLXGhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:36:21 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34756 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfLXGgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:36:21 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j9so15764595qkk.1;
-        Mon, 23 Dec 2019 22:36:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9f49rZjJKxHQwfDaONd7CPvs6B/LdSmBjADe//pqNas=;
-        b=Q0fI68b6Cz4xabYadXmuPHobPKvFG2OM8qtvz8n0gm8iaRy3QkQsf70C667oqYKFz7
-         BbI26kf9LSBYxPmQNBrn3mVmcj6aafUbeda7TeVJXEF0yUbnnrR9UyW1fKM9D1Vv9IFV
-         cx5hM2YiJ8YArAo+JKOqpVlxtmu3Iu1/Lxg2MXOUfKWnPp/g55P6tl8qjLvfZCKRWkyF
-         FN1T92sjrgi6Kr6aaAFRvrwLM68W468QdIfSmsqidLKwQtPfX1yaJ9qT0Hls3JA/VeRf
-         77/Ye1FIneqm2xNioqZXdt0RY6nOm1WHooixyQIarWb4B5BdsAml5GnIII/wXZLXLna9
-         Uuug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9f49rZjJKxHQwfDaONd7CPvs6B/LdSmBjADe//pqNas=;
-        b=IdeS6jf0k4mQaC4TPVx1Ha/ecDPmIl8D+yYqC9CrvUI4uZ3V3/dzW9UcKYvYaSdHcx
-         QUF2TY6mVrXXIBMWqj2y4zeQy0Ogauiu7mXdfl64yQXVGuKB1M1mgHljyS0DbV1NYnA/
-         m81KDHly/ASdJb+sOsDWA6oZqTo9+fHzvPTbU4v4i1a7bk9jP+pWfGWLr4sJYiRgBC5n
-         30tVapHMC9WdALyZ30cM2+ZKlaaHNIVKNsNbnQNElnnog6olhVrH3mmck1Q3pV23Wptu
-         j92lt8J3HNsMzuTaAGueIOImzqcd58btWR5PtSEX/GdAu/x/Xsv14WShfehyOLJh/a7P
-         F1Sw==
-X-Gm-Message-State: APjAAAVD3C/ZxhAUmDj06Ca6m+QD6NZ+jI3T2p+ioExi2NUHCQKitKoJ
-        fgNqfhCWC8w6gHLyLzIgFPWGjEq0SScYI9RJA4c=
-X-Google-Smtp-Source: APXvYqzAaS5x91eisBrBiUd9yh3gyBoa1BMy6JI4p5M2rCh8P5rjFxKBEJ84ucdaMez0uun3rPsL8FDjllogmrn39ZM=
-X-Received: by 2002:a37:a685:: with SMTP id p127mr30971238qke.449.1577169379912;
- Mon, 23 Dec 2019 22:36:19 -0800 (PST)
+        Tue, 24 Dec 2019 01:37:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbfLXGhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 01:37:41 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A2BB206B7;
+        Tue, 24 Dec 2019 06:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577169461;
+        bh=ON0QdqQ+wjgFyA7W2CtWIRLA64ZOjDQt5hzeb32O6V4=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=lWZx/U9u+vy7OwSIikON6FT0bCHntn0XiTdyqYN+5ZYdYlUUy6p+Y6zv6iwwVa7Wz
+         yJ3c67UcgeooKtp0JlSla/v0fyBckAivXtj/f1BYfW71YwUGd/Hzq2HMmRJDDVIDAt
+         p3vBi1o3AfwGwRf0klfEuGIErKNjAV38b5GgyI74=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-10-kpsingh@chromium.org>
-In-Reply-To: <20191220154208.15895-10-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Dec 2019 22:36:08 -0800
-Message-ID: <CAEf4BzYgcez2G1qJW9saJmzfeYirGdH58aAcUk-+YTJF6vyOuQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 09/13] bpf: lsm: Add a helper function bpf_lsm_event_output
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573812304-24074-2-git-send-email-tdas@codeaurora.org>
+References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-2-git-send-email-tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 1/8] clk: qcom: alpha-pll: Remove useless read from set rate
+User-Agent: alot/0.8.1
+Date:   Mon, 23 Dec 2019 22:37:40 -0800
+Message-Id: <20191224063741.1A2BB206B7@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> This helper is similar to bpf_perf_event_output except that
-> it does need a ctx argument which is more usable in the
-> BTF based LSM programs where the context is converted to
-> the signature of the attacthed BTF type.
->
-> An example usage of this function would be:
->
-> struct {
->          __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
->          __uint(key_size, sizeof(int));
->          __uint(value_size, sizeof(u32));
-> } perf_map SEC(".maps");
->
-> BPF_TRACE_1(bpf_prog1, "lsm/bprm_check_security,
->             struct linux_binprm *, bprm)
-> {
->         char buf[BUF_SIZE];
->         int len;
->         u64 flags = BPF_F_CURRENT_CPU;
->
->         /* some logic that fills up buf with len data */
->         len = fill_up_buf(buf);
->         if (len < 0)
->                 return len;
->         if (len > BU)
->                 return 0;
->
->         bpf_lsm_event_output(&perf_map, flags, buf, len);
-
-This seems to be generally useful and not LSM-specific, so maybe name
-it more generically as bpf_event_output instead?
-
-I'm also curious why we needed both bpf_perf_event_output and
-bpf_perf_event_output_raw_tp, if it could be done as simply as you did
-it here. What's different between those three and why your
-bpf_lsm_event_output doesn't need pt_regs passed into them?
-
->         return 0;
-> }
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
+Quoting Taniya Das (2019-11-15 02:04:57)
+> PLL_MODE read in fabia set rate is not required, thus remove the same.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  include/uapi/linux/bpf.h       | 10 +++++++++-
->  kernel/bpf/verifier.c          |  1 +
->  security/bpf/ops.c             | 21 +++++++++++++++++++++
->  tools/include/uapi/linux/bpf.h | 10 +++++++++-
->  4 files changed, 40 insertions(+), 2 deletions(-)
->
 
-[...]
+Applied to clk-next
+
