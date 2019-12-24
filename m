@@ -2,142 +2,138 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6CAC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E5CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09532075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368CE21D7E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HAp1Gnn3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ml6PTl96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfLXB7z (ORCPT
+        id S1727015AbfLXCGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 20:59:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39162 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727008AbfLXB7w (ORCPT
+        Mon, 23 Dec 2019 21:06:19 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:53366 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfLXCGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 20:59:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577152790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Zwkq1OMYRFcOoNV3ORj1tDVlAaogqmYkae4w0Mmho3U=;
-        b=HAp1Gnn32jZ/9B/eqKEPSCvaQEq9e76Tl8oNvZbBR8CgR3WkJPzPYZb6z61QJZJH9lo0cx
-        cjlY/FB8AYKBiB1ISXILw4Lo7JcdpR6BCb+tXdcQQ+SEC2ys4Qjd1PHB4GpMl6Tn98q3jL
-        7QfmsF1MO76ah+Y9713vY0gAOf9MrWA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-4qPfLq_-N8CABWrZGZ8gLg-1; Mon, 23 Dec 2019 20:59:49 -0500
-X-MC-Unique: 4qPfLq_-N8CABWrZGZ8gLg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C875800EBF;
-        Tue, 24 Dec 2019 01:59:47 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6631968888;
-        Tue, 24 Dec 2019 01:59:32 +0000 (UTC)
-Date:   Tue, 24 Dec 2019 09:59:26 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, tglx@linutronix.de,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>, bigeasy@linutronix.de,
-        linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de,
-        axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org,
-        mingo@redhat.com, Zhang Yi <yi.zhang@redhat.com>
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
-  for managed interrupt
-Message-ID: <20191224015926.GC13083@ming.t460p>
-References: <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
- <68058fd28c939b8e065524715494de95@www.loen.fr>
- <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
- <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
- <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
- <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
- <20191220233138.GB12403@ming.t460p>
- <fffcd23dd8286615b6e2c99620836cb1@www.loen.fr>
- <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
- <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
+        Mon, 23 Dec 2019 21:06:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577153180; x=1608689180;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rJyFssg2r/VXKtVcX1vzyYSq44mKspPdAlg9fnzFV8E=;
+  b=Ml6PTl96/EhHdZnoAZAzWd69l+6UQCdYAFCXG/VzdRClA1d3cHR4srDS
+   lD/fnM/KBdeaE1V5hYMMbNAOTBkvLQbpsDxWByI9Q6TEOXtCKF/VGiH17
+   rY6/u8LPUVel7I5rgfQpa4mu8HHA8GKjHQF5cWjPWybmMtOr5LmGnhsrn
+   0XPSKcQDXsXBZSCsj30GhKV2NfZcFaSTjmWLHhbBlUcS6nB4WTbckH5V+
+   X4IcTAkRfDI5KscrLEQEDQ5Ts3C0t1pIvG1gj19KCUqyRb7feinTE6ELs
+   D8cW1oh3Qo8FsW5/Gqaswp8W1t+Y9OL3PwPHC5+dEj/d+anmItygmNnJq
+   A==;
+IronPort-SDR: w2d3fvTuzMgB0CcpZ8dreoaF+cqpKTQmmyZxTxwY4T07HO2IZdk24Crvihl4+yl/08vvmSKavE
+ K9cFObOz3lGcR9dwSCjg4+YTc1jQa9m8doVg6a7MnhTgk64ydXPjCp56TwnskhGXx85RHWK/mM
+ u08VrWo3AHX3pUvX9OzS7v+TNio+oRen/nPPtkeaYxEEfgtPz0+i5V2gpQHCif2dc8698zbMfw
+ Ivd37MyJeqyVPfMyjmYpLMoyMH343QXM6MkdQ0lnykhOo2XenhgInCYcmSGTq08Cpn9CtxfW5V
+ LGI=
+X-IronPort-AV: E=Sophos;i="5.69,349,1571673600"; 
+   d="scan'208";a="227655365"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Dec 2019 10:06:20 +0800
+IronPort-SDR: ELObOa0HkakgkAWaGpVHiiqQTNKU3t0qdw3e9gbK12ZoKvDxWlJCFOsjg6JsP+mZ9QfjO8Cc5x
+ szxQvTaMRs7guHXANViTFzC2DyKyZi8siiorkoppdCUfiLLW1DVnp6M4cA19yqR44211XJqhmk
+ Fyr+tLt2IC5aGjjj2qV7Pi78pcf8Ec46yUBUSYQiXyw5JX4GjWoFY5j3XkkzSJdOG2JgbmBTWD
+ TBht8RPkdQMqMgsbB8zY/O56pRiE52hKOjsTlxOTb1BkgkWSrnBzrWYCCb6z/UFZFRQfsKHPKX
+ cdzcHwOJO4Ad47aKIBY9jZoR
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 18:00:10 -0800
+IronPort-SDR: yAD7UckSSHKpGggA95egBfqrmtfFFE1xmyOfIYjrZD8l4yKeD94PaKyQz4UxUOzo/US1JlChyV
+ 4PdVDxpoM9354mGD82og6YPUF+hiQIUSuPzfmBQg8ThH6O3nZxOSplUp7YrYIYFhC3NChW+Njw
+ mtuedUzQFOYKWSuuny9t6josxX3f087VqZvydrtHO25HZUKIC7rRc9Fvu3RMXvnIJNM5Q1wiRZ
+ XzdEKbaoWlWtBm8r3BVK3OU+qtVEKnGRcI99iQRNRirJZfqkURrLoAsKT1JMikwUMTfvYoaq0H
+ zSM=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip01.wdc.com with ESMTP; 23 Dec 2019 18:06:17 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v3 0/2] New zonefs file system
+Date:   Tue, 24 Dec 2019 11:06:13 +0900
+Message-Id: <20191224020615.134668-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 10:47:07AM +0000, Marc Zyngier wrote:
-> On 2019-12-23 10:26, John Garry wrote:
-> > > > > > I've also managed to trigger some of them now that I have
-> > > > > access to
-> > > > > > a decent box with nvme storage.
-> > > > > 
-> > > > > I only have 2x NVMe SSDs when this occurs - I should not be
-> > > > > hitting this...
-> > > > > 
-> > > > > Out of curiosity, have you tried
-> > > > > > with the SMMU disabled? I'm wondering whether we hit some
-> > > > > livelock
-> > > > > > condition on unmapping buffers...
-> > > > > 
-> > > > > No, but I can give it a try. Doing that should lower the CPU
-> > > > > usage, though,
-> > > > > so maybe masks the issue - probably not.
-> > > > 
-> > > > Lots of CPU lockup can is performance issue if there isn't
-> > > > obvious bug.
-> > > > 
-> > > > I am wondering if you may explain it a bit why enabling SMMU may
-> > > > save
-> > > > CPU a it?
-> > > The other way around. mapping/unmapping IOVAs doesn't comes for
-> > > free.
-> > > I'm trying to find out whether the NVMe map/unmap patterns trigger
-> > > something unexpected in the SMMU driver, but that's a very long
-> > > shot.
-> > 
-> > So I tested v5.5-rc3 with and without the SMMU enabled, and without
-> > the SMMU enabled I don't get the lockup.
-> 
-> OK, so my hunch wasn't completely off... At least we have something
-> to look into.
-> 
-> [...]
-> 
-> > Obviously this is not conclusive, especially with such limited
-> > testing - 5 minute runs each. The CPU load goes up when disabling the
-> > SMMU, but that could be attributed to extra throughput (1183K ->
-> > 1539K) loading.
-> > 
-> > I do notice that since we complete the NVMe request in irq context,
-> > we also do the DMA unmap, i.e. talk to the SMMU, in the same context,
-> > which is less than ideal.
-> 
-> It depends on how much overhead invalidating the TLB adds to the
-> equation, but we should be able to do some tracing and find out.
-> 
-> > I need to finish for the Christmas break today, so can't check this
-> > much further ATM.
-> 
-> No worries. May I suggest creating a new thread in the new year, maybe
-> involving Robin and Will as well?
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-Zhang Yi has observed the CPU lockup issue once when running heavy IO on
-single nvme drive, and please CC him if you have new patch to try.
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Then looks the DMA unmap cost is too big on aarch64 if SMMU is involved.
+zonefs IO management implementation uses the new iomap generic code.
 
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
 
-Thanks,
-Ming
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  215 +++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1166 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1576 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.24.1
 
