@@ -2,165 +2,147 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BE7C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44EEC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D58B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD972071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577191324;
+	bh=xWNWJ8I9fxHntwfPGgiUpJJyIhLQ1SeEPpEpuaGohNs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vSz50YZ/ekk9QVnPDjXSxk+5tL/9sm+stpXDw8drKB1dAmXq8f4V6UgmfHQiUpgSX
+	 hGFQthsAKNe2PCzCOSIeyeVPoXtIRcInahlmtcwtcsOcVup+g8kWcr1+HhiKJQ2vsZ
+	 GNk/SxQQ7Sh0NqSwD0hWFYiUF7p58ABDcKzUT8t0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLXMf6 (ORCPT
+        id S1726259AbfLXMmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:35:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:51810 "EHLO foss.arm.com"
+        Tue, 24 Dec 2019 07:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfLXMf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:35:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C6A51FB;
-        Tue, 24 Dec 2019 04:35:57 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7BE13F534;
-        Tue, 24 Dec 2019 04:35:56 -0800 (PST)
-Date:   Tue, 24 Dec 2019 12:35:55 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 13/18] perf: arm_spe: Add KVM structure for obtaining
- IRQ info
-Message-ID: <20191224123554.GK42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-14-andrew.murray@arm.com>
- <868sn4iowy.wl-maz@kernel.org>
+        id S1726224AbfLXMmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 07:42:03 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF2F20722
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 12:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577191322;
+        bh=xWNWJ8I9fxHntwfPGgiUpJJyIhLQ1SeEPpEpuaGohNs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mbhzlqrFOTd5D0VnwK8uZ6zmm6un9WEQBuC+SsW/vNr4zmirMRl3Ie03Hti+oSKnq
+         jWL+FYDrP86b5jRs0x0aSDRUVDijhRUPxNal17nD3tvwFIHL1sEqrGQp833aEf8LTp
+         5Sfx49XQkhGKpNMeG65TqgqaLju0XthGjvsfdWd0=
+Received: by mail-wr1-f43.google.com with SMTP id y17so19759787wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:42:01 -0800 (PST)
+X-Gm-Message-State: APjAAAW1V7tRz8jIE/B7ZpiDe492bn0xDujAhMNMu/aEeAIM/n/vidcI
+        mdfZDx+KrVErso2pyPsDKSxcmZ0dROs6dD6VR5k/FA==
+X-Google-Smtp-Source: APXvYqwdNLgm/8CaMUR6XukS3F5ntUzE/BsJd5vEuNBWA9P9kZsIX/K2aEVbOOWPEOSGyhiF4uqEjDSBVC/HOxryAY4=
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr36777598wrn.61.1577191320403;
+ Tue, 24 Dec 2019 04:42:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <868sn4iowy.wl-maz@kernel.org>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <de5273aa-69dc-8e37-c917-44708257d2ba@c-s.fr> <D2614EC4-5B80-4846-994D-22730ACD44A1@amacapital.net>
+In-Reply-To: <D2614EC4-5B80-4846-994D-22730ACD44A1@amacapital.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 24 Dec 2019 04:41:48 -0800
+X-Gmail-Original-Message-ID: <CALCETrUR-NgVMeTPh3TmgNSTsA=2xE03_KBeO9DSk0P-JxD_fQ@mail.gmail.com>
+Message-ID: <CALCETrUR-NgVMeTPh3TmgNSTsA=2xE03_KBeO9DSk0P-JxD_fQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/10] lib: vdso: get pointer to vdso data from the arch
+To:     christophe leroy <christophe.leroy@c-s.fr>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 22, 2019 at 11:24:13AM +0000, Marc Zyngier wrote:
-> On Fri, 20 Dec 2019 14:30:20 +0000,
-> Andrew Murray <andrew.murray@arm.com> wrote:
-> > 
-> > KVM requires knowledge of the physical SPE IRQ number such that it can
-> > associate it with any virtual IRQ for guests that require SPE emulation.
-> 
-> This is at best extremely odd. The only reason for KVM to obtain this
-> IRQ number is if it has exclusive access to the device.  This
-> obviously isn't the case, as this device is shared between host and
-> guest.
+On Tue, Dec 24, 2019 at 4:15 AM Andy Lutomirski <luto@amacapital.net> wrote=
+:
+>
+>
+>
+> > On Dec 24, 2019, at 7:53 PM, christophe leroy <christophe.leroy@c-s.fr>=
+ wrote:
+> >
+> > =EF=BB=BF
+> >
+> >> Le 24/12/2019 =C3=A0 03:27, Andy Lutomirski a =C3=A9crit :
+> >>> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
+> >>> <christophe.leroy@c-s.fr> wrote:
+> >>>
+> >>> On powerpc, __arch_get_vdso_data() clobbers the link register,
+> >>> requiring the caller to set a stack frame in order to save it.
+> >>>
+> >>> As the parent function already has to set a stack frame and save
+> >>> the link register to call the C vdso function, retriving the
+> >>> vdso data pointer there is lighter.
+> >> I'm confused.  Can't you inline __arch_get_vdso_data()?  Or is the
+> >> issue that you can't retrieve the program counter on power without
+> >> clobbering the link register?
+> >
+> > Yes it can be inlined (I did it in V1 https://patchwork.ozlabs.org/patc=
+h/1180571/), but you can't do it without clobbering the link register, beca=
+use the only way to get the program counter is to do to as if you were call=
+ing another function but you call to the address which just follows where y=
+ou are, so that it sets LR which the simulated return address which corresp=
+onds to the address following the branch.
+> >
+> > static __always_inline
+> > const struct vdso_data *__arch_get_vdso_data(void)
+> > {
+> >    void *ptr;
+> >
+> >    asm volatile(
+> >        "    bcl    20, 31, .+4;\n"
+> >        "    mflr    %0;\n"
+> >        "    addi    %0, %0, __kernel_datapage_offset - (.-4);\n"
+> >        : "=3Db"(ptr) : : "lr");
+> >
+> >    return ptr + *(unsigned long *)ptr;
+> > }
+> >
+> >> I would imagine that this patch generates worse code on any
+> >> architecture with PC-relative addressing modes (which includes at
+> >> least x86_64, and I would guess includes most modern architectures).
+> >
+> > Why ? Powerpc is also using PC-relative addressing for all calls but in=
+direct calls.
+>
+> I mean PC-relative access for data.  The data page is at a constant, know=
+n offset from the vDSO text.
+>
+> I haven=E2=80=99t checked how much x86_64 benefits from this, but at leas=
+t the non-array fields ought to be accessible with a PC-relative access.
+>
+> It should be possible to refactor a little bit so that the compiler can s=
+till see what=E2=80=99s going on.  Maybe your patch actually does this. I=
+=E2=80=99d want to look at the assembly.  This also might not matter much o=
+n x86_64 in particular, since x86_64 can convert a PC-relative address to a=
+n absolute address with a single instruction with no clobbers.
+>
+> Does power have PC-relative data access?  If so, I wonder if the code can=
+ be arranged so that even the array accesses don=E2=80=99t require computin=
+g an absolute address at any point.
 
-This was an attempt to set the interrupt as active such that host SPE driver
-doesn't get spurious interrupts due to guest SPE activity. Though let's save
-the discussion to patch 14.
-
-
-> 
-> > Let's create a structure to hold this information and an accessor that
-> > KVM can use to retrieve this information.
-> > 
-> > We expect that each SPE device will have the same physical PPI number
-> > and thus will warn when this is not the case.
-> > 
-> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > ---
-> >  drivers/perf/arm_spe_pmu.c | 23 +++++++++++++++++++++++
-> >  include/kvm/arm_spe.h      |  6 ++++++
-> >  2 files changed, 29 insertions(+)
-> > 
-> > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> > index 4e4984a55cd1..2d24af4cfcab 100644
-> > --- a/drivers/perf/arm_spe_pmu.c
-> > +++ b/drivers/perf/arm_spe_pmu.c
-> > @@ -34,6 +34,9 @@
-> >  #include <linux/smp.h>
-> >  #include <linux/vmalloc.h>
-> >  
-> > +#include <linux/kvm_host.h>
-> > +#include <kvm/arm_spe.h>
-> > +
-> >  #include <asm/barrier.h>
-> >  #include <asm/cpufeature.h>
-> >  #include <asm/mmu.h>
-> > @@ -1127,6 +1130,24 @@ static void arm_spe_pmu_dev_teardown(struct arm_spe_pmu *spe_pmu)
-> >  	free_percpu_irq(spe_pmu->irq, spe_pmu->handle);
-> >  }
-> >  
-> > +#ifdef CONFIG_KVM_ARM_SPE
-> > +static struct arm_spe_kvm_info arm_spe_kvm_info;
-> > +
-> > +struct arm_spe_kvm_info *arm_spe_get_kvm_info(void)
-> > +{
-> > +	return &arm_spe_kvm_info;
-> > +}
-> 
-> How does this work when SPE is built as a module?
-> 
-> > +
-> > +static void arm_spe_populate_kvm_info(struct arm_spe_pmu *spe_pmu)
-> > +{
-> > +	WARN_ON_ONCE(arm_spe_kvm_info.physical_irq != 0 &&
-> > +		     arm_spe_kvm_info.physical_irq != spe_pmu->irq);
-> > +	arm_spe_kvm_info.physical_irq = spe_pmu->irq;
-> 
-> What does 'physical' means here? It's an IRQ in the Linux sense, so
-> it's already some random number that bears no relation to anything
-> 'physical'.
-
-It's some random number relating to the SPE device as opposed to the virtual
-SPE device.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> > +}
-> > +#else
-> > +static void arm_spe_populate_kvm_info(struct arm_spe_pmu *spe_pmu) {}
-> > +#endif
-> > +
-> >  /* Driver and device probing */
-> >  static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
-> >  {
-> > @@ -1149,6 +1170,8 @@ static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
-> >  	}
-> >  
-> >  	spe_pmu->irq = irq;
-> > +	arm_spe_populate_kvm_info(spe_pmu);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-> > index d1f3c564dfd0..9c65130d726d 100644
-> > --- a/include/kvm/arm_spe.h
-> > +++ b/include/kvm/arm_spe.h
-> > @@ -17,6 +17,12 @@ struct kvm_spe {
-> >  	bool irq_level;
-> >  };
-> >  
-> > +struct arm_spe_kvm_info {
-> > +	int physical_irq;
-> > +};
-> > +
-> > +struct arm_spe_kvm_info *arm_spe_get_kvm_info(void);
-> > +
-> >  #ifdef CONFIG_KVM_ARM_SPE
-> >  #define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
-> >  #define kvm_arm_spe_irq_initialized(v)		\
-> 
-> 	M.
-> 
-> -- 
-> Jazz is not dead, it just smells funny.
+Indeed the x86 code is also suboptimal, but at least the unnecessary
+absolute address calculation is cheap on x86_64.  Ideally we'd pass
+around offsets into the vdso data instead of passing pointers, and
+maybe the compiler will figure it out.  I can try to play with this in
+the morning.
