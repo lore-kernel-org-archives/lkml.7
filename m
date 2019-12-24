@@ -2,187 +2,86 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB0C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1841EC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4BA206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187665;
-	bh=5Kgp3dvNufnxKwCnOK0y12hSVLiGPnojOgWcb7yvsCM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fa1y1tZXRLMb4pPdpsFiBzd4DEh4ia33zaJR42rlKVi7JNFr4IJ2bwuzFpQgxur3W
-	 AYDhNBoF3f5Gc81MXr6SjpRo7h4aX1U21F21W3fArGZi0PuXHIADzkLZnoKe4Rqfgr
-	 5gWpo1q72nbQJML1qlal4b7gp25zeyOAVGnRC4EU=
+	by mail.kernel.org (Postfix) with ESMTP id E99C9206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLXLlE (ORCPT
+        id S1727008AbfLXLlK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:04 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:51669 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726157AbfLXLlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:04 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iji66-000169-DZ; Tue, 24 Dec 2019 12:11:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 21/32] irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
-Date:   Tue, 24 Dec 2019 11:10:44 +0000
-Message-Id: <20191224111055.11836-22-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
-References: <20191224111055.11836-1-maz@kernel.org>
+        Tue, 24 Dec 2019 06:41:10 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:43186 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfLXLlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:41:10 -0500
+X-Greylist: delayed 328 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Dec 2019 06:41:10 EST
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 198A945CC4;
+        Tue, 24 Dec 2019 11:35:39 +0000 (UTC)
+Date:   Tue, 24 Dec 2019 19:35:36 +0800
+In-Reply-To: <CAFBinCCDmCHQW+nBHzsodz0R=GKoqv1EEzB=UY=ypFs4Q6MFmQ@mail.gmail.com>
+References: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com> <20191216154803.GA3921@kevin> <CAFBinCCDmCHQW+nBHzsodz0R=GKoqv1EEzB=UY=ypFs4Q6MFmQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [Lima] [RFC v1 0/1] drm: lima: devfreq and cooling device support
+To:     lima@lists.freedesktop.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+CC:     robh@kernel.org, tomeu.vizoso@collabora.com, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        steven.price@arm.com, linux-rockchip@lists.infradead.org,
+        wens@csie.org, yuq825@gmail.com, daniel@ffwll.ch,
+        linux-amlogic@lists.infradead.org
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <54FE8BA3-BB70-4411-9FD9-4AE460097A95@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To implement the get/set_irqchip_state callbacks (limited to the
-PENDING state), we have to use a particular set of hacks:
 
-- Reading the pending state is done by using a pair of new redistributor
-  registers (GICR_VSGIR, GICR_VSGIPENDR), which allow the 16 interrupts
-  state to be retrieved.
-- Setting the pending state is done by generating it as we'd otherwise do
-  for a guest (writing to GITS_SGIR)
-- Clearing the pending state is done by emiting a VSGI command with the
-  "clear" bit set.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c   | 56 ++++++++++++++++++++++++++++++
- include/linux/irqchip/arm-gic-v3.h | 14 ++++++++
- 2 files changed, 70 insertions(+)
+于 2019年12月24日 GMT+08:00 下午7:28:41, Martin Blumenstingl <martin.blumenstingl@googlemail.com> 写到:
+>Hi Alyssa,
+>
+>On Mon, Dec 16, 2019 at 4:48 PM Alyssa Rosenzweig
+><alyssa.rosenzweig@collabora.com> wrote:
+>>
+>> If so much code is being duplicated over, I'm wondering if it makes
+>> sense for us to move some of the common devfreq code to core DRM
+>> helpers?
+>if you have any recommendation where to put it then please let me know
+>(I am not familiar with the DRM subsystem at all)
+>
+>my initial idea was that the devfreq logic needs the same information
+>that the scheduler needs (whether we're submitting something to be
+>executed, there was a timeout, ...).
+>however, looking at drivers/gpu/drm/scheduler/ this seems pretty
+>stand-alone so I'm not sure it should go there
+>also the Mali-4x0 GPUs have some "PMU" which *may* be used instead of
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index c13c889553c5..47d63a5b43ff 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3832,11 +3832,67 @@ static int its_sgi_set_affinity(struct irq_data *d,
- 	return -EINVAL;
- }
- 
-+static int its_sgi_set_irqchip_state(struct irq_data *d,
-+				     enum irqchip_irq_state which,
-+				     bool state)
-+{
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	if (state) {
-+		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+		struct its_node *its = find_4_1_its();
-+		u64 val;
-+
-+		val  = FIELD_PREP(GITS_SGIR_VPEID, vpe->vpe_id);
-+		val |= FIELD_PREP(GITS_SGIR_VINTID, d->hwirq);
-+		writeq_relaxed(val, its->sgir_base + GITS_SGIR - SZ_128K);
-+	} else {
-+		its_configure_sgi(d, true);
-+	}
-+
-+	return 0;
-+}
-+
-+static int its_sgi_get_irqchip_state(struct irq_data *d,
-+				     enum irqchip_irq_state which, bool *val)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+	void __iomem *base = gic_data_rdist_cpu(vpe->col_idx)->rd_base + SZ_128K;
-+	u32 count = 1000000;	/* 1s! */
-+	u32 status;
-+
-+	if (which != IRQCHIP_STATE_PENDING)
-+		return -EINVAL;
-+
-+	writel_relaxed(vpe->vpe_id, base + GICR_VSGIR);
-+	do {
-+		status = readl_relaxed(base + GICR_VSGIPENDR);
-+		if (!(status & GICR_VSGIPENDR_BUSY))
-+			goto out;
-+
-+		count--;
-+		if (!count) {
-+			pr_err_ratelimited("Unable to get SGI status\n");
-+			goto out;
-+		}
-+		cpu_relax();
-+		udelay(1);
-+	} while(count);
-+
-+out:
-+	*val = !!(status & (1 << d->hwirq));
-+
-+	return 0;
-+}
-+
- static struct irq_chip its_sgi_irq_chip = {
- 	.name			= "GICv4.1-sgi",
- 	.irq_mask		= its_sgi_mask_irq,
- 	.irq_unmask		= its_sgi_unmask_irq,
- 	.irq_set_affinity	= its_sgi_set_affinity,
-+	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
-+	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
- };
- 
- static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 64818ed4c238..a0566bd5516e 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -345,6 +345,15 @@
- #define GICR_VPENDBASER_4_1_VGRP1EN	(1ULL << 58)
- #define GICR_VPENDBASER_4_1_VPEID	GENMASK_ULL(15, 0)
- 
-+#define GICR_VSGIR			0x0080
-+
-+#define GICR_VSGIR_VPEID		GENMASK(15, 0)
-+
-+#define GICR_VSGIPENDR			0x0088
-+
-+#define GICR_VSGIPENDR_BUSY		(1U << 31)
-+#define GICR_VSGIPENDR_PENDING		GENMASK(15, 0)
-+
- /*
-  * ITS registers, offsets from ITS_base
-  */
-@@ -368,6 +377,11 @@
- 
- #define GITS_TRANSLATER			0x10040
- 
-+#define GITS_SGIR			0x20020
-+
-+#define GITS_SGIR_VPEID			GENMASK_ULL(47, 32)
-+#define GITS_SGIR_VINTID		GENMASK_ULL(7, 0)
-+
- #define GITS_CTLR_ENABLE		(1U << 0)
- #define GITS_CTLR_ImDe			(1U << 1)
- #define	GITS_CTLR_ITS_NUMBER_SHIFT	4
+It's optional. We cannot promise its existance on a given
+hardware, and I heard that at least on Allwinner H5 Mali PMU
+is broken.
+
+>polling the statistics internally
+>so this is where I realize that with my current knowledge I don't know
+>enough about lima, panfrost, DRM or the devfreq subsystem to get a
+>good idea where to put the code.
+>
+>
+>Martin
+>_______________________________________________
+>lima mailing list
+>lima@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/lima
+
 -- 
-2.20.1
-
+使用 K-9 Mail 发送自我的Android设备。
