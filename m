@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B612CC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A836EC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C38B2063A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE03206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187599;
-	bh=76LeYx5ATgK4RI2xSo0Bw3zrxNom4RO62S0t04dneWY=;
+	s=default; t=1577187622;
+	bh=JnkgxepdjxdrRmFpIc3nf6/D+CDNPr99CWMmiM/NM2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4tnB0YghmhshSfO+oXOIOQYKn+7lBxM87wUgBqeMJNLQuzExSbWt6AC4tEfHv41B
-	 RLkqplomGj8fFmKegCj0wfbF3ytBvFb7YDAhucPgkQKV+Rk9wFUl2ck47IIdF8c3wj
-	 /lq3allKavQ9zChnqqKWqGbgyRj24DODnvYs/AC4=
+	b=IQdAbGlBylFlRAnsfNtFjDtspaIq51SkqxR9hBpwtS8ednYG/MBwZkHK/FfG8tLW+
+	 D/Vu2hpsZ/AWEwLEgpVF5LZWb+3by2qXt5I4s18y5aeU1zw04pRcuCLmZF+3IsQiQF
+	 oiU1WADvR0p2RUAz11mLkbYeq/MXA+T2OWtWOLYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLXLj4 (ORCPT
+        id S1726250AbfLXLkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:39:56 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:40549 "EHLO
+        Tue, 24 Dec 2019 06:40:12 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37550 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbfLXLj4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726102AbfLXLkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:39:56 -0500
+        Tue, 24 Dec 2019 06:40:12 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji6B-000169-Fg; Tue, 24 Dec 2019 12:11:36 +0100
+        id 1iji6C-000169-Na; Tue, 24 Dec 2019 12:11:37 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 26/32] irqchip/gic-v4.1: Eagerly vmap vPEs
-Date:   Tue, 24 Dec 2019 11:10:49 +0000
-Message-Id: <20191224111055.11836-27-maz@kernel.org>
+Subject: [PATCH v3 27/32] KVM: arm64: GICv4.1: Let doorbells be auto-enabled
+Date:   Tue, 24 Dec 2019 11:10:50 +0000
+Message-Id: <20191224111055.11836-28-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,92 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have HW-accelerated SGIs being delivered to VPEs, it
-becomes required to map the VPEs on all ITSs instead of relying
-on the lazy approach that we would use when using the ITS-list
-mechanism.
+As GICv4.1 understands the life cycle of doorbells (instead of
+just randomly firing them at the most inconvenient time), just
+enable them at irq_request time, and be done with it.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 39 +++++++++++++++++++++++++-------
- 1 file changed, 31 insertions(+), 8 deletions(-)
+ virt/kvm/arm/vgic/vgic-v4.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 5126bdcfe079..3234bb9fbdbe 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1554,12 +1554,31 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
- 	return 0;
- }
+diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+index 1eb0f8c76219..c2fcde104ea2 100644
+--- a/virt/kvm/arm/vgic/vgic-v4.c
++++ b/virt/kvm/arm/vgic/vgic-v4.c
+@@ -141,6 +141,7 @@ int vgic_v4_init(struct kvm *kvm)
  
-+/*
-+ * Two favourable cases:
-+ *
-+ * (a) Either we have a GICv4.1, and all vPEs have to be mapped at all times
-+ *     for vSGI delivery
-+ *
-+ * (b) Or the ITSs do not use a list map, meaning that VMOVP is cheap enough
-+ *     and we're better off mapping all VPEs always
-+ *
-+ * If neither (a) nor (b) is true, then we map vPEs on demand.
-+ *
-+ */
-+static bool gic_requires_eager_mapping(void)
-+{
-+	if (!its_list_map || gic_rdists->has_rvpeid)
-+		return true;
+ 	kvm_for_each_vcpu(i, vcpu, kvm) {
+ 		int irq = dist->its_vm.vpes[i]->irq;
++		unsigned long irq_flags = DB_IRQ_FLAGS;
+ 
+ 		/*
+ 		 * Don't automatically enable the doorbell, as we're
+@@ -148,8 +149,14 @@ int vgic_v4_init(struct kvm *kvm)
+ 		 * blocked. Also disable the lazy disabling, as the
+ 		 * doorbell could kick us out of the guest too
+ 		 * early...
++		 *
++		 * On GICv4.1, the doorbell is managed in HW and must
++		 * be left enabled.
+ 		 */
+-		irq_set_status_flags(irq, DB_IRQ_FLAGS);
++		if (kvm_vgic_global_state.has_gicv4_1)
++			irq_flags &= ~IRQ_NOAUTOEN;
++		irq_set_status_flags(irq, irq_flags);
 +
-+	return false;
-+}
-+
- static void its_map_vm(struct its_node *its, struct its_vm *vm)
- {
- 	unsigned long flags;
- 
--	/* Not using the ITS list? Everything is always mapped. */
--	if (!its_list_map)
-+	if (gic_requires_eager_mapping())
- 		return;
- 
- 	raw_spin_lock_irqsave(&vmovp_lock, flags);
-@@ -1593,7 +1612,7 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
- 	unsigned long flags;
- 
- 	/* Not using the ITS list? Everything is always mapped. */
--	if (!its_list_map)
-+	if (gic_requires_eager_mapping())
- 		return;
- 
- 	raw_spin_lock_irqsave(&vmovp_lock, flags);
-@@ -4109,8 +4128,12 @@ static int its_vpe_irq_domain_activate(struct irq_domain *domain,
- 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
- 	struct its_node *its;
- 
--	/* If we use the list map, we issue VMAPP on demand... */
--	if (its_list_map)
-+	/*
-+	 * If we use the list map, we issue VMAPP on demand... Unless
-+	 * we're on a GICv4.1 and we eagerly map the VPE on all ITSs
-+	 * so that VSGIs can work.
-+	 */
-+	if (!gic_requires_eager_mapping())
- 		return 0;
- 
- 	/* Map the VPE to the first possible CPU */
-@@ -4136,10 +4159,10 @@ static void its_vpe_irq_domain_deactivate(struct irq_domain *domain,
- 	struct its_node *its;
- 
- 	/*
--	 * If we use the list map, we unmap the VPE once no VLPIs are
--	 * associated with the VM.
-+	 * If we use the list map on GICv4.0, we unmap the VPE once no
-+	 * VLPIs are associated with the VM.
- 	 */
--	if (its_list_map)
-+	if (!gic_requires_eager_mapping())
- 		return;
- 
- 	list_for_each_entry(its, &its_nodes, entry) {
+ 		ret = request_irq(irq, vgic_v4_doorbell_handler,
+ 				  0, "vcpu", vcpu);
+ 		if (ret) {
 -- 
 2.20.1
 
