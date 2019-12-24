@@ -2,102 +2,173 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E9EC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA21C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 18:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E920F20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DFE20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 18:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="m1C17E2O"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P4buFDsZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfLXR6E (ORCPT
+        id S1726287AbfLXSBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 12:58:04 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:45264 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfLXR6D (ORCPT
+        Tue, 24 Dec 2019 13:01:19 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:35318 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfLXSBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 12:58:03 -0500
-Received: by mail-vs1-f65.google.com with SMTP id b4so12432253vsa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 09:58:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4E/2wqIKz28ubvLgIUjPVPO4AakvBg1lZqS8m4r8eSs=;
-        b=m1C17E2OCbrBxPWsStlDbBdxv+Mec3R9l1v327xokY5ED1DsMOOK5Puqfo1rAJTOYm
-         Qv+GbzC84M/Fl4FVcW3NqxTf5o9Gm/ciKO3/Txg5Me67QoBfkjJajoqAHfh+J5lYt//X
-         bv2LS3Jp4l5BmIS0gaHsmGJSQ/j64VnwwQKh6R4ZuFyJIUgkfdBqCbjyXCRY7MiHj9gK
-         TsQcs1bYWMksDA26ht5eGZLzm+844Cm5Usn/3UtwD+xJURHE4k+C7LUBD/n2iAjwsZkQ
-         Rh8nL6dDXlLsto4b0BG8LxT6txv4OG1PPtHF8gfr0iv6GwYxwrGkwz19BBYK+pIETIv4
-         vBow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4E/2wqIKz28ubvLgIUjPVPO4AakvBg1lZqS8m4r8eSs=;
-        b=H/6UOvuxYhUu3NXjT1p72RqltgH0GK5ThYaKLQJL4yw4T1BgE4yopR7Xc2KXg4Ef9F
-         PEZozn707V2ZGMtMK5638q4mpOVM9XlS3HOmM7FkL79RR4jiwTWGKxlTImtwZpuK0uPR
-         /kPTjJyOGM+x8ONoTs1sOTXntUeNaaUAU7W1E+HWHSAWsHf2cRCYUhOYiHPuWspsuQgu
-         /hgQ8QLv075f4sniKle3hu0cfn3THKWJZr5nMTGLRQcnv75Z2oI4/lmkqwWZu45gx+4S
-         in9X+NXSkNrr8wCE69uPf6wQMNWVwh5Ub+vZjDs52uEOBLDWumZvf/GBYhSSZ2y1VOHt
-         fHCg==
-X-Gm-Message-State: APjAAAXkTwSaztUmqZT6kqN/seUYlNGhE8ODw3Uo3/W6g/s6r7sdSdGd
-        YOYGbfxss3jjp/YXO5siEf6fhg==
-X-Google-Smtp-Source: APXvYqzQ5q0W/JmxBU9sfGZwjw/cQSHLYkcHenfYpw5U/6kJszxvgxeQoHzU5nDQ4T5fkdRmvTc2Cw==
-X-Received: by 2002:a05:6102:52e:: with SMTP id m14mr20331835vsa.25.1577210280987;
-        Tue, 24 Dec 2019 09:58:00 -0800 (PST)
-Received: from frank-laptop ([172.97.41.74])
-        by smtp.gmail.com with ESMTPSA id w125sm7079066vkh.50.2019.12.24.09.58.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 09:58:00 -0800 (PST)
-Date:   Tue, 24 Dec 2019 12:58:00 -0500
-From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org,
-        nachukannan@gmail.com
-Subject: [PATCH 3/3] docs: ftrace: Fix small notation mistake
-Message-ID: <9624d6fb140cf4a6752f37590cdf670eff68a18e.1577209218.git.frank@generalsoftwareinc.com>
-References: <cover.1577209218.git.frank@generalsoftwareinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1577209218.git.frank@generalsoftwareinc.com>
-User-Agent: NeoMutt/20171215
+        Tue, 24 Dec 2019 13:01:19 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5C6F92010C1F;
+        Tue, 24 Dec 2019 10:01:18 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C6F92010C1F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1577210478;
+        bh=hARDNHdrOC+f0zmQ+8VxLENOrZaiKvUkWHp/sX3DUFk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P4buFDsZbKB8uhE8F6oI96tK1AavZFAXI7q5+INEYwJRn4Pm6GqtO25wXuhhNJ6Ug
+         fpi8AuhEUyQlApSffFSxG/TwIXsLeFBSOtYr+Cpmprd80qw2qmr1Zw05f6ty/mHvJq
+         1yOBw1Oq9tl77Q/plOA3c9kwy9dwDLzWPVtPt0c4=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Subject: [PATCH v2] IMA: Defined timer to free queued keys
+Date:   Tue, 24 Dec 2019 10:01:14 -0800
+Message-Id: <20191224180114.2772-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of iff ("if and only if") notation is not accurate in this case.
+keys queued for measurement should be freed if a custom IMA policy
+was not loaded. Otherwise, the keys will remain queued forever
+consuming kernel memory.
 
-Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
+This patch defines a timer to handle the above scenario. The timer
+is setup to expire 5 minutes after IMA initialization is completed.
+
+If a custom IMA policy is loaded before the timer expires, the timer
+is removed and any queued keys are processed for measurement.
+But if a custom policy was not loaded, on timer expiration
+queued keys are just freed.
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- Documentation/trace/ring-buffer-design.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/integrity/ima/ima.h                 |  2 +
+ security/integrity/ima/ima_asymmetric_keys.c | 42 ++++++++++++++++++--
+ security/integrity/ima/ima_init.c            |  8 +++-
+ 3 files changed, 48 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/trace/ring-buffer-design.txt b/Documentation/trace/ring-buffer-design.txt
-index ff747b6fa39b..2d53c6f25b91 100644
---- a/Documentation/trace/ring-buffer-design.txt
-+++ b/Documentation/trace/ring-buffer-design.txt
-@@ -37,7 +37,7 @@ commit_page - a pointer to the page with the last finished non-nested write.
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 97f8a4078483..c483215a9ee5 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -216,8 +216,10 @@ struct ima_key_entry {
+ 	char *keyring_name;
+ };
+ void ima_process_queued_keys(void);
++void ima_init_key_queue(void);
+ #else
+ static inline void ima_process_queued_keys(void) {}
++static inline void ima_init_key_queue(void) {}
+ #endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
  
- cmpxchg - hardware-assisted atomic transaction that performs the following:
+ /* LIM API function definitions */
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index 4124f10ff0c2..9ea2233c911a 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -11,6 +11,7 @@
  
--   A = B iff previous A == C
-+   A = B if previous A == C
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
-    R = cmpxchg(A, C, B) is saying that we replace A with B if and only if
-       current A is equal to C, and we put the old (current) A into R
++#include <linux/timer.h>
+ #include <keys/asymmetric-type.h>
+ #include "ima.h"
+ 
+@@ -26,6 +27,36 @@ static bool ima_process_keys;
+ static DEFINE_MUTEX(ima_keys_mutex);
+ static LIST_HEAD(ima_keys);
+ 
++/*
++ * If custom IMA policy is not loaded then keys queued up
++ * for measurement should be freed. This timer is used
++ * for handling this scenario.
++ */
++static long ima_key_queue_timeout = 300000; /* 5 Minutes */
++static struct timer_list ima_key_queue_timer;
++static bool timer_expired;
++
++/*
++ * This timer callback function frees keys that may still be
++ * queued up in case custom IMA policy was not loaded.
++ */
++static void ima_timer_handler(struct timer_list *timer)
++{
++	timer_expired = true;
++	ima_process_queued_keys();
++}
++
++/*
++ * This function sets up a timer to free queued keys in case
++ * custom IMA policy was never loaded.
++ */
++void ima_init_key_queue(void)
++{
++	timer_setup(&ima_key_queue_timer, ima_timer_handler, 0);
++	mod_timer(&ima_key_queue_timer,
++		  jiffies + msecs_to_jiffies(ima_key_queue_timeout));
++}
++
+ static void ima_free_key_entry(struct ima_key_entry *entry)
+ {
+ 	if (entry) {
+@@ -120,10 +151,15 @@ void ima_process_queued_keys(void)
+ 	if (!process)
+ 		return;
+ 
++	del_timer(&ima_key_queue_timer);
++
+ 	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
+-		process_buffer_measurement(entry->payload, entry->payload_len,
+-					   entry->keyring_name, KEY_CHECK, 0,
+-					   entry->keyring_name);
++		if (!timer_expired)
++			process_buffer_measurement(entry->payload,
++						   entry->payload_len,
++						   entry->keyring_name,
++						   KEY_CHECK, 0,
++						   entry->keyring_name);
+ 		list_del(&entry->list);
+ 		ima_free_key_entry(entry);
+ 	}
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 5d55ade5f3b9..195cb4079b2b 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -131,5 +131,11 @@ int __init ima_init(void)
+ 
+ 	ima_init_policy();
+ 
+-	return ima_fs_init();
++	rc = ima_fs_init();
++	if (rc != 0)
++		return rc;
++
++	ima_init_key_queue();
++
++	return rc;
+ }
 -- 
 2.17.1
 
