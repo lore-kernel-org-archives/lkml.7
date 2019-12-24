@@ -4,280 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916D8C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA4C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AAC20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA6420643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfLXQWt (ORCPT
+        id S1726559AbfLXQXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:22:49 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40671 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfLXQWt (ORCPT
+        Tue, 24 Dec 2019 11:23:00 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45428 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726168AbfLXQW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 11:22:49 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2BD96E0007;
-        Tue, 24 Dec 2019 16:22:44 +0000 (UTC)
-Date:   Tue, 24 Dec 2019 17:30:49 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
-Message-ID: <20191224163049.GD7304@voidbox>
-References: <20191223214529.20377-1-repk@triplefau.lt>
- <20191223214529.20377-2-repk@triplefau.lt>
- <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
+        Tue, 24 Dec 2019 11:22:59 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBOGGx8V132004
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:22:58 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2x21kh1ew1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:22:58 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Tue, 24 Dec 2019 16:22:56 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Dec 2019 16:22:53 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBOGMqP353805150
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Dec 2019 16:22:52 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4F6911C050;
+        Tue, 24 Dec 2019 16:22:52 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7232111C058;
+        Tue, 24 Dec 2019 16:22:51 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 24 Dec 2019 16:22:51 +0000 (GMT)
+Date:   Tue, 24 Dec 2019 21:52:50 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     pauld@redhat.com, longman@redhat.com, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/shared: include correct header for static key
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <xagsmtp2.20191223133223.8837@vmsdvm3.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <xagsmtp2.20191223133223.8837@vmsdvm3.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19122416-0016-0000-0000-000002D7DCCF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122416-0017-0000-0000-0000333A328F
+Message-Id: <20191224162250.GA1781@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-24_04:2019-12-24,2019-12-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 adultscore=0 mlxscore=0 clxscore=1015 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912240142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 03:40:20PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 24/12/19 3:15 AM, Remi Pommarel wrote:
-> > This adds support for the MIPI PHY also needed for PCIE found in the
-> > Amlogic AXG SoC Family.
-> > 
-> > MIPI or PCIE selection is done by the #phy-cells, making the mode
-> > static and exclusive.
-> > 
-> > For now only PCIE fonctionality is supported.
-> > 
-> > This PHY will be used to replace the mipi_enable clock gating logic
-> > which was mistakenly added in the clock subsystem. This also activate
-> > a non documented band gap bit in those registers that allows reliable
-> > PCIE clock signal generation on AXG platforms.
-> > 
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> >  drivers/phy/amlogic/Kconfig                   |  11 ++
-> >  drivers/phy/amlogic/Makefile                  |   1 +
-> >  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
-> >  3 files changed, 188 insertions(+)
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> > 
-> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> > index af774ac2b934..1eeb75d018e3 100644
-> > --- a/drivers/phy/amlogic/Kconfig
-> > +++ b/drivers/phy/amlogic/Kconfig
-> > @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
-> >  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
-> >  	  in Meson G12A SoCs.
-> >  	  If unsure, say N.
-> > +
-> > +config PHY_MESON_AXG_MIPI_PCIE
-> > +	tristate "Meson AXG MIPI + PCIE PHY driver"
-> > +	default ARCH_MESON
-> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> > +	select GENERIC_PHY
-> > +	select MFD_SYSCON
-> > +	help
-> > +	  Enable this to support the Meson MIPI + PCIE PHY found
-> > +	  in Meson AXG SoCs.
-> > +	  If unsure, say N.
-> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> > index 11d1c42ac2be..2167330a0ae8 100644
-> > --- a/drivers/phy/amlogic/Makefile
-> > +++ b/drivers/phy/amlogic/Makefile
-> > @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-> > +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
-> > diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> > new file mode 100644
-> > index 000000000000..006aa8cdfc47
-> > --- /dev/null
-> > +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> > @@ -0,0 +1,176 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Amlogic AXG MIPI + PCIE PHY driver
-> > + *
-> > + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
-> > + */
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/platform_device.h>
-> > +#include <dt-bindings/phy/phy.h>
-> > +
-> > +#define HHI_MIPI_CNTL0 0x00
-> > +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-> > +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-> > +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-> > +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-> > +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
-> > +
-> > +#define HHI_MIPI_CNTL1 0x01
-> > +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-> > +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-> > +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-> > +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-> > +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-> > +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
-> > +
-> > +#define HHI_MIPI_CNTL2 0x02
-> > +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-> > +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-> > +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-> > +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-> > +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-> > +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-> > +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-> > +
-> > +struct phy_axg_mipi_pcie_priv {
-> > +	struct phy *phy;
-> > +	unsigned int mode;
-> > +	struct regmap *regmap;
-> > +};
-> > +
-> > +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.max_register = HHI_MIPI_CNTL2,
-> > +};
-> > +
-> > +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
-> > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> > +
-> > +	/* MIPI not supported yet */
-> > +	if (priv->mode != PHY_TYPE_PCIE)
-> > +		return 0;
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
-> > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> > +
-> > +	/* MIPI not supported yet */
-> > +	if (priv->mode != PHY_TYPE_PCIE)
-> > +		return 0;
-> > +
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_BANDGAP, 0);
-> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> > +			   HHI_MIPI_CNTL0_ENABLE, 0);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_init(struct phy *phy)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_exit(struct phy *phy)
-> > +{
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct phy_ops phy_axg_mipi_pcie_ops = {
-> > +	.init = phy_axg_mipi_pcie_init,
-> > +	.exit = phy_axg_mipi_pcie_exit,
-> > +	.power_on = phy_axg_mipi_pcie_power_on,
-> > +	.power_off = phy_axg_mipi_pcie_power_off,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
-> > +					   struct of_phandle_args *args)
-> > +{
-> > +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
-> > +	unsigned int mode;
-> > +
-> > +	if (args->args_count != 1) {
-> > +		dev_err(dev, "invalid number of arguments\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	mode = args->args[0];
-> > +
-> > +	/* MIPI mode is not supported yet */
-> > +	if (mode != PHY_TYPE_PCIE) {
-> > +		dev_err(dev, "invalid phy mode select argument\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	priv->mode = mode;
-> > +	return priv->phy;
-> > +}
-> > +
-> > +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_provider *pphy;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy_axg_mipi_pcie_priv *priv;
-> > +	struct device_node *np = dev->of_node;
-> > +	int ret;
-> > +
-> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	/* Get the hhi system controller node */
-> > +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
-> > +	if (IS_ERR(priv->regmap)) {
-> > +		dev_err(dev, "failed to get HHI regmap\n");
-> > +		return PTR_ERR(priv->regmap);
-> > +	}
-> > +
-> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_ops);
-> > +	if (IS_ERR(priv->phy)) {
-> > +		ret = PTR_ERR(priv->phy);
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(dev, "failed to create PHY\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	phy_set_drvdata(priv->phy, priv);
-> > +	dev_set_drvdata(dev, priv);
-> > +	pphy = devm_of_phy_provider_register(dev, phy_axg_mipi_pcie_xlate);
-> > +
-> > +	return PTR_ERR_OR_ZERO(pphy);
-> > +}
-> > +
-> > +static const struct of_device_id phy_axg_mipi_pcie_of_match[] = {
-> > +	{
-> > +		.compatible = "amlogic,axg-mipi-pcie-phy",
-> 
-> Is there a dt-binding documentation for this?
+* Jason A. Donenfeld <Jason@zx2c4.com> [2019-12-23 14:31:47]:
 
-There is binding documentation updates for this whole serie but I thought
-they were supposed to be sent in separate serie, which is not the case
-apparently.
+> Recently, the spinlock implementation grew a static key optimization,
+> but the jump_label.h header include was left out, leading to build
+> errors:
+> 
+> linux/arch/powerpc/include/asm/spinlock.h:44:7: error: implicit declaration of function ???static_branch_unlikely??? [-Werror=implicit-function-declaration]
+>    44 |  if (!static_branch_unlikely(&shared_processor))
+> 
+> This commit adds the missing header.
 
-Thanks,
+Right, This was in v4 version of the patchset
+(http://lkml.kernel.org/r/20191212085344.17357-1-srikar@linux.vnet.ibm.com)
+but we missed it in the final v5 version.
+
+Thanks for noticing and fixing it.
+
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+
+> 
+> Fixes: 656c21d6af5d ("powerpc/shared: Use static key to detect shared processor")
+> Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+>  arch/powerpc/include/asm/spinlock.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+> index 1b55fc08f853..860228e917dc 100644
+> --- a/arch/powerpc/include/asm/spinlock.h
+> +++ b/arch/powerpc/include/asm/spinlock.h
+> @@ -15,6 +15,7 @@
+>   *
+>   * (the type definitions are in asm/spinlock_types.h)
+>   */
+> +#include <linux/jump_label.h>
+>  #include <linux/irqflags.h>
+>  #ifdef CONFIG_PPC64
+>  #include <asm/paca.h>
+> -- 
+> 2.24.1
+> 
 
 -- 
-Remi
+Thanks and Regards
+Srikar Dronamraju
+
