@@ -2,104 +2,144 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F42C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C871DC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC2F206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9112C20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4fJE31Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJSWRglU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLXGvI (ORCPT
+        id S1726201AbfLXGwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:51:08 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45150 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726047AbfLXGvH (ORCPT
+        Tue, 24 Dec 2019 01:52:00 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:41505 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfLXGwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:51:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577170265;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=egW37jyR5y3OPQMHtqUo17115j/TrlvZWF1f6KXPyvo=;
-        b=H4fJE31ZZ+71RM8Zoo/R34ThN8QQiNh4VW+o3DZviqwTQtdBtOj3QF30bVFszUKtbfMR8b
-        Ox08TpNsawBh4BLt6PgJeiuiiUNeBuC1znuvEUjrOVEX9eVYB383HzjOIfO5ndSk4Uy/DN
-        IulkTvEVFWyvTwSVsGuNGrcqjgjgG5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-QuKkB-hxNOinjTfGhtrxTg-1; Tue, 24 Dec 2019 01:51:02 -0500
-X-MC-Unique: QuKkB-hxNOinjTfGhtrxTg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05906800D53;
-        Tue, 24 Dec 2019 06:51:01 +0000 (UTC)
-Received: from [10.72.12.236] (ovpn-12-236.pek2.redhat.com [10.72.12.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFC5060C05;
-        Tue, 24 Dec 2019 06:50:49 +0000 (UTC)
-Subject: Re: [PATCH RESEND v2 15/17] KVM: selftests: Add dirty ring buffer
- test
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dr David Alan Gilbert <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191221020445.60476-1-peterx@redhat.com>
- <20191221020445.60476-5-peterx@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b0dc3d30-7fa5-3896-6905-9b1cb51d8d6c@redhat.com>
-Date:   Tue, 24 Dec 2019 14:50:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Dec 2019 01:52:00 -0500
+Received: by mail-qv1-f68.google.com with SMTP id x1so7165943qvr.8;
+        Mon, 23 Dec 2019 22:52:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FiFs5c//TsPMpAtCEnFYceuoC6j/d/tXyUmG5GN0MI=;
+        b=RJSWRglUT8sjanJ6gOTOiSGTeN28TU8bhPDg44fzSvrbSNTeNQRCUltg6gXVCJHEDB
+         PaXMWRk/kd6CVUfS6bhL35GSDTFn/z6xiZ69kqT9Bt31JBELPNbiesGmrBRltEmqyFwl
+         GnGbPAhIyrWIgiPc5aBj5wGk1tSEdmLJklHE09mY7q4tDCFo8vZ2xgO8gxwEoaT4Q0Ac
+         6THgzf1HXYVM4KtKNVsbpCSyKLJ38MppiqgMvx69i57kSm2PLglHyDWfU/LR+QhXfjfN
+         UA/UL7xVLxA9yNDGkexyv5Gm+77k807l8sYR9/95dX2GKG8HhWaF5GD8khF2605AsSRu
+         HKTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FiFs5c//TsPMpAtCEnFYceuoC6j/d/tXyUmG5GN0MI=;
+        b=LWfJKa6nc02uhrNt8nPSfSU8Y/AbYYsHZMDRGT4w8djfLwMCLGKZjyKkq98LXZi6Mz
+         +o+Q3a5ypV2uHbKL0XHP9g6T9lL06FTDiqepXwhCcbZZaz3LdY54E4TASe9phmrX3yBc
+         gZwH4B9KTuIhCbHgOWMlKyE4R+pOp6iFFjGj4ZjNvTs+gL1tKJx8JsnF+Tb7TzL+VVeh
+         0fPbWfhotqu9JyCsxieU0ax30RmXS/bROldCLmw8L+vDDCebXh6LqY+z36/5XDiZNlHF
+         YGvvfOyjSrY8Vio9xcEnF/zGavwzk8ltctXvU4Mc8I5g2R5FLT3ji518Fd9zAHQH1+Fc
+         HYMQ==
+X-Gm-Message-State: APjAAAWrElITEVZsjdaDx3+jSHGYHra22nP2p2zImSozBE98lEu99kfn
+        Yit3ywQAgaUWhD51ngZUvhl++TL584sVOGEMsjg=
+X-Google-Smtp-Source: APXvYqxLV+P+/PLkhwN2nIhsav78E8rWy2Nk3RBdEOJrEJa5lB2tOH8SP21hDONloLtiK778n0nM49S9sbc3W2eXjYg=
+X-Received: by 2002:a05:6214:38c:: with SMTP id l12mr27595725qvy.224.1577170319418;
+ Mon, 23 Dec 2019 22:51:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191221020445.60476-5-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+References: <20191220154208.15895-1-kpsingh@chromium.org>
+In-Reply-To: <20191220154208.15895-1-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Dec 2019 22:51:48 -0800
+Message-ID: <CAEf4BzYiUZtSJKh-UBL0jwyo6d=Cne2YtEyGU8ONykmSUSsuNA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/12/21 =E4=B8=8A=E5=8D=8810:04, Peter Xu wrote:
-> Add the initial dirty ring buffer test.
+On Fri, Dec 20, 2019 at 7:42 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> The current test implements the userspace dirty ring collection, by
-> only reaping the dirty ring when the ring is full.
+> From: KP Singh <kpsingh@google.com>
 >
-> So it's still running asynchronously like this:
+> This patch series is a continuation of the KRSI RFC
+> (https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/)
+>
 
+[...]
 
-I guess you meant "synchronously" here.
+> # Usage Examples
+>
+> A simple example and some documentation is included in the patchset.
+>
+> In order to better illustrate the capabilities of the framework some
+> more advanced prototype code has also been published separately:
+>
+> * Logging execution events (including environment variables and arguments):
+> https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
+> * Detecting deletion of running executables:
+> https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+> * Detection of writes to /proc/<pid>/mem:
+> https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
 
-Thanks
-
+Are you planning on submitting these examples for inclusion into
+samples/bpf or selftests/bpf? It would be great to have more examples
+and we can review and suggest nicer ways to go about writing them
+(e.g., BPF skeleton and global data Alexei mentioned earlier).
 
 >
->              vcpu                             main thread
+> We have updated Google's internal telemetry infrastructure and have
+> started deploying this LSM on our Linux Workstations. This gives us more
+> confidence in the real-world applications of such a system.
 >
->    1. vcpu dirties pages
->    2. vcpu gets dirty ring full
->       (userspace exit)
+> KP Singh (13):
+>   bpf: Refactor BPF_EVENT context macros to its own header.
+>   bpf: lsm: Add a skeleton and config options
+>   bpf: lsm: Introduce types for eBPF based LSM
+>   bpf: lsm: Allow btf_id based attachment for LSM hooks
+>   tools/libbpf: Add support in libbpf for BPF_PROG_TYPE_LSM
+>   bpf: lsm: Init Hooks and create files in securityfs
+>   bpf: lsm: Implement attach, detach and execution.
+>   bpf: lsm: Show attached program names in hook read handler.
+>   bpf: lsm: Add a helper function bpf_lsm_event_output
+>   bpf: lsm: Handle attachment of the same program
+>   tools/libbpf: Add bpf_program__attach_lsm
+>   bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+>   bpf: lsm: Add Documentation
 >
->                                         3. main thread waits until full
->                                            (so hardware buffers flushed=
-)
->                                         4. main thread collects
->                                         5. main thread continues vcpu
->
->    6. vcpu continues, goes back to 1
 
+[...]
