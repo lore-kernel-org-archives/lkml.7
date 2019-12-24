@@ -2,219 +2,415 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCACDC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B01C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F09120643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:34:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PU9V7y49"
+	by mail.kernel.org (Postfix) with ESMTP id 491BA206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfLXNes (ORCPT
+        id S1726272AbfLXNgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:34:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41593 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726124AbfLXNes (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:34:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577194486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z2q4OL9ihk4Apd9lWWlPYliz8UTcK7dTTZ5u7f9/tL8=;
-        b=PU9V7y49DQkriYrbHtszXDtFLOdCfsoeL+Gs+yjQOCBN9utDBPXj5ysRlsa3+Bi8Bears9
-        agLVwpd3WOf3E2aGAi/TrkA6yMjXQInjbpGo4dap6aXUqNYjQtxRKEch2q1Cp5Ar/OnYhy
-        SUimtKOsPmYSqTxlJTSf0hMJLcZ9kqY=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-5XnNfgvLNou6CYZSM3nf8w-1; Tue, 24 Dec 2019 08:34:45 -0500
-X-MC-Unique: 5XnNfgvLNou6CYZSM3nf8w-1
-Received: by mail-lj1-f199.google.com with SMTP id w9so739652ljj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 05:34:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z2q4OL9ihk4Apd9lWWlPYliz8UTcK7dTTZ5u7f9/tL8=;
-        b=th26PRjUGZpyH3dFJLgv5//WQHilABo1DJExVol3njRQ01b6ZAa1SDhM2yM1GPEtwU
-         LP+0o6Q08qWdXJxumS8tOIufD3c24qhXah3qk0811dZweJq52Bm3tMWLdbbvFVI5qg7h
-         kQS9NJqBbKw48LhPmYW29kqtPjCYReYW7p6cV33S8xVbcZ3fJem+QZ6iTGfyTkZ8A3Jx
-         K5KQe0jNIiXhXOX/x6i67fMpSufbAghslgHSMcQSiospDNY51pBoitZ81Wa2fDVnxPXC
-         7OkQTy0yVMKTMFHOjtdLQFga4aEcZ1VJzrhnGjOazYlKuPTs3k0qfGL75y/q++PUAgUk
-         m2/g==
-X-Gm-Message-State: APjAAAX4M3jdY9fQ87mNntPOsgQ3qzul4Ems0g42p99QLC1t3i1BqMDo
-        OKZa9AOg0x6bNtEenXGl62/uperlgBK4zLY45MVyCiy2qiAdLBkfGdeJyzTNYtv07HnG5yscuQu
-        K4kSsvfxghs7EJuzxV303yEBmHXURcATU4fpcZYU/
-X-Received: by 2002:a2e:a486:: with SMTP id h6mr13293940lji.235.1577194483275;
-        Tue, 24 Dec 2019 05:34:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzA5nHrwNIXn8vl0vtcv0E5G8M12QmEmWl4uoe5YycqgbHMKvn+tixpF5hsd1XduLn1ToxUO/W02+T/ll8x6EQ=
-X-Received: by 2002:a2e:a486:: with SMTP id h6mr13293926lji.235.1577194483020;
- Tue, 24 Dec 2019 05:34:43 -0800 (PST)
+        Tue, 24 Dec 2019 08:36:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:52188 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfLXNgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 08:36:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 097AA1FB;
+        Tue, 24 Dec 2019 05:36:50 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 700043F534;
+        Tue, 24 Dec 2019 05:36:49 -0800 (PST)
+Date:   Tue, 24 Dec 2019 13:36:47 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 14/18] KVM: arm64: spe: Provide guest virtual
+ interrupts for SPE
+Message-ID: <20191224133647.GO42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-15-andrew.murray@arm.com>
+ <867e2oimw9.wl-maz@kernel.org>
+ <20191224115031.GG42593@e119886-lin.cambridge.arm.com>
+ <1f3fbff6c9db0f14c92a6e3fb800fa0f@www.loen.fr>
+ <20191224130853.GN42593@e119886-lin.cambridge.arm.com>
+ <a2b8846377b3f5884feeb9728b16f826@www.loen.fr>
 MIME-Version: 1.0
-References: <20191224010103.56407-1-mcroce@redhat.com> <20191224095229.GA24310@apalos.home>
-In-Reply-To: <20191224095229.GA24310@apalos.home>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 24 Dec 2019 14:34:07 +0100
-Message-ID: <CAGnkfhzrSaVe3zJ+0rriqqELha554Gmv-zskrJbiBjhHdUG2uQ@mail.gmail.com>
-Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
-To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2b8846377b3f5884feeb9728b16f826@www.loen.fr>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 10:52 AM Ilias Apalodimas
-<ilias.apalodimas@linaro.org> wrote:
->
-> On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:
-> > This patches change the memory allocator of mvpp2 from the frag allocator to
-> > the page_pool API. This change is needed to add later XDP support to mvpp2.
-> >
-> > The reason I send it as RFC is that with this changeset, mvpp2 performs much
-> > more slower. This is the tc drop rate measured with a single flow:
-> >
-> > stock net-next with frag allocator:
-> > rx: 900.7 Mbps 1877 Kpps
-> >
-> > this patchset with page_pool:
-> > rx: 423.5 Mbps 882.3 Kpps
-> >
-> > This is the perf top when receiving traffic:
-> >
-> >   27.68%  [kernel]            [k] __page_pool_clean_page
->
-> This seems extremly high on the list.
->
-> >    9.79%  [kernel]            [k] get_page_from_freelist
-> >    7.18%  [kernel]            [k] free_unref_page
-> >    4.64%  [kernel]            [k] build_skb
-> >    4.63%  [kernel]            [k] __netif_receive_skb_core
-> >    3.83%  [mvpp2]             [k] mvpp2_poll
-> >    3.64%  [kernel]            [k] eth_type_trans
-> >    3.61%  [kernel]            [k] kmem_cache_free
-> >    3.03%  [kernel]            [k] kmem_cache_alloc
-> >    2.76%  [kernel]            [k] dev_gro_receive
-> >    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
-> >    2.68%  [kernel]            [k] page_frag_free
-> >    1.83%  [kernel]            [k] inet_gro_receive
-> >    1.74%  [kernel]            [k] page_pool_alloc_pages
-> >    1.70%  [kernel]            [k] __build_skb
-> >    1.47%  [kernel]            [k] __alloc_pages_nodemask
-> >    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
-> >    1.29%  [kernel]            [k] tcf_action_exec
-> >
-> > I tried Ilias patches for page_pool recycling, I get an improvement
-> > to ~1100, but I'm still far than the original allocator.
->
-> Can you post the recycling perf for comparison?
->
+On Tue, Dec 24, 2019 at 01:22:46PM +0000, Marc Zyngier wrote:
+> On 2019-12-24 13:08, Andrew Murray wrote:
+> > On Tue, Dec 24, 2019 at 12:42:02PM +0000, Marc Zyngier wrote:
+> > > On 2019-12-24 11:50, Andrew Murray wrote:
+> > > > On Sun, Dec 22, 2019 at 12:07:50PM +0000, Marc Zyngier wrote:
+> > > > > On Fri, 20 Dec 2019 14:30:21 +0000,
+> > > > > Andrew Murray <andrew.murray@arm.com> wrote:
+> > > > > >
+> > > > > > Upon the exit of a guest, let's determine if the SPE device
+> > > has
+> > > > > generated
+> > > > > > an interrupt - if so we'll inject a virtual interrupt to the
+> > > > > guest.
+> > > > > >
+> > > > > > Upon the entry and exit of a guest we'll also update the state
+> > > of
+> > > > > the
+> > > > > > physical IRQ such that it is active when a guest interrupt is
+> > > > > pending
+> > > > > > and the guest is running.
+> > > > > >
+> > > > > > Finally we map the physical IRQ to the virtual IRQ such that
+> > > the
+> > > > > guest
+> > > > > > can deactivate the interrupt when it handles the interrupt.
+> > > > > >
+> > > > > > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > > > > > ---
+> > > > > >  include/kvm/arm_spe.h |  6 ++++
+> > > > > >  virt/kvm/arm/arm.c    |  5 ++-
+> > > > > >  virt/kvm/arm/spe.c    | 71
+> > > > > +++++++++++++++++++++++++++++++++++++++++++
+> > > > > >  3 files changed, 81 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+> > > > > > index 9c65130d726d..91b2214f543a 100644
+> > > > > > --- a/include/kvm/arm_spe.h
+> > > > > > +++ b/include/kvm/arm_spe.h
+> > > > > > @@ -37,6 +37,9 @@ static inline bool
+> > > kvm_arm_support_spe_v1(void)
+> > > > > >  						      ID_AA64DFR0_PMSVER_SHIFT);
+> > > > > >  }
+> > > > > >
+> > > > > > +void kvm_spe_flush_hwstate(struct kvm_vcpu *vcpu);
+> > > > > > +inline void kvm_spe_sync_hwstate(struct kvm_vcpu *vcpu);
+> > > > > > +
+> > > > > >  int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
+> > > > > >  			    struct kvm_device_attr *attr);
+> > > > > >  int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
+> > > > > > @@ -49,6 +52,9 @@ int kvm_arm_spe_v1_enable(struct kvm_vcpu
+> > > > > *vcpu);
+> > > > > >  #define kvm_arm_support_spe_v1()	(false)
+> > > > > >  #define kvm_arm_spe_irq_initialized(v)	(false)
+> > > > > >
+> > > > > > +static inline void kvm_spe_flush_hwstate(struct kvm_vcpu
+> > > *vcpu)
+> > > > > {}
+> > > > > > +static inline void kvm_spe_sync_hwstate(struct kvm_vcpu
+> > > *vcpu) {}
+> > > > > > +
+> > > > > >  static inline int kvm_arm_spe_v1_set_attr(struct kvm_vcpu
+> > > *vcpu,
+> > > > > >  					  struct kvm_device_attr *attr)
+> > > > > >  {
+> > > > > > diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> > > > > > index 340d2388ee2c..a66085c8e785 100644
+> > > > > > --- a/virt/kvm/arm/arm.c
+> > > > > > +++ b/virt/kvm/arm/arm.c
+> > > > > > @@ -741,6 +741,7 @@ int kvm_arch_vcpu_ioctl_run(struct
+> > > kvm_vcpu
+> > > > > *vcpu, struct kvm_run *run)
+> > > > > >  		preempt_disable();
+> > > > > >
+> > > > > >  		kvm_pmu_flush_hwstate(vcpu);
+> > > > > > +		kvm_spe_flush_hwstate(vcpu);
+> > > > > >
+> > > > > >  		local_irq_disable();
+> > > > > >
+> > > > > > @@ -782,6 +783,7 @@ int kvm_arch_vcpu_ioctl_run(struct
+> > > kvm_vcpu
+> > > > > *vcpu, struct kvm_run *run)
+> > > > > >  		    kvm_request_pending(vcpu)) {
+> > > > > >  			vcpu->mode = OUTSIDE_GUEST_MODE;
+> > > > > >  			isb(); /* Ensure work in x_flush_hwstate is committed */
+> > > > > > +			kvm_spe_sync_hwstate(vcpu);
+> > > > > >  			kvm_pmu_sync_hwstate(vcpu);
+> > > > > >  			if (static_branch_unlikely(&userspace_irqchip_in_use))
+> > > > > >  				kvm_timer_sync_hwstate(vcpu);
+> > > > > > @@ -816,11 +818,12 @@ int kvm_arch_vcpu_ioctl_run(struct
+> > > kvm_vcpu
+> > > > > *vcpu, struct kvm_run *run)
+> > > > > >  		kvm_arm_clear_debug(vcpu);
+> > > > > >
+> > > > > >  		/*
+> > > > > > -		 * We must sync the PMU state before the vgic state so
+> > > > > > +		 * We must sync the PMU and SPE state before the vgic state
+> > > so
+> > > > > >  		 * that the vgic can properly sample the updated state of
+> > > the
+> > > > > >  		 * interrupt line.
+> > > > > >  		 */
+> > > > > >  		kvm_pmu_sync_hwstate(vcpu);
+> > > > > > +		kvm_spe_sync_hwstate(vcpu);
+> > > > >
+> > > > > The *HUGE* difference is that the PMU is purely a virtual
+> > > interrupt,
+> > > > > while you're trying to deal with a HW interrupt here.
+> > > > >
+> > > > > >
+> > > > > >  		/*
+> > > > > >  		 * Sync the vgic state before syncing the timer state
+> > > because
+> > > > > > diff --git a/virt/kvm/arm/spe.c b/virt/kvm/arm/spe.c
+> > > > > > index 83ac2cce2cc3..097ed39014e4 100644
+> > > > > > --- a/virt/kvm/arm/spe.c
+> > > > > > +++ b/virt/kvm/arm/spe.c
+> > > > > > @@ -35,6 +35,68 @@ int kvm_arm_spe_v1_enable(struct kvm_vcpu
+> > > > > *vcpu)
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >
+> > > > > > +static inline void set_spe_irq_phys_active(struct
+> > > > > arm_spe_kvm_info *info,
+> > > > > > +					   bool active)
+> > > > > > +{
+> > > > > > +	int r;
+> > > > > > +	r = irq_set_irqchip_state(info->physical_irq,
+> > > > > IRQCHIP_STATE_ACTIVE,
+> > > > > > +				  active);
+> > > > > > +	WARN_ON(r);
+> > > > > > +}
+> > > > > > +
+> > > > > > +void kvm_spe_flush_hwstate(struct kvm_vcpu *vcpu)
+> > > > > > +{
+> > > > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
+> > > > > > +	bool phys_active = false;
+> > > > > > +	struct arm_spe_kvm_info *info = arm_spe_get_kvm_info();
+> > > > > > +
+> > > > > > +	if (!kvm_arm_spe_v1_ready(vcpu))
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	if (irqchip_in_kernel(vcpu->kvm))
+> > > > > > +		phys_active = kvm_vgic_map_is_active(vcpu, spe->irq_num);
+> > > > > > +
+> > > > > > +	phys_active |= spe->irq_level;
+> > > > > > +
+> > > > > > +	set_spe_irq_phys_active(info, phys_active);
+> > > > >
+> > > > > So you're happy to mess with the HW interrupt state even when
+> > > you
+> > > > > don't have a HW irqchip? If you are going to copy paste the
+> > > timer
+> > > > > code
+> > > > > here, you'd need to support it all the way (no, don't).
+> > > > >
+> > > > > > +}
+> > > > > > +
+> > > > > > +void kvm_spe_sync_hwstate(struct kvm_vcpu *vcpu)
+> > > > > > +{
+> > > > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
+> > > > > > +	u64 pmbsr;
+> > > > > > +	int r;
+> > > > > > +	bool service;
+> > > > > > +	struct kvm_cpu_context *ctxt = &vcpu->arch.ctxt;
+> > > > > > +	struct arm_spe_kvm_info *info = arm_spe_get_kvm_info();
+> > > > > > +
+> > > > > > +	if (!kvm_arm_spe_v1_ready(vcpu))
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	set_spe_irq_phys_active(info, false);
+> > > > > > +
+> > > > > > +	pmbsr = ctxt->sys_regs[PMBSR_EL1];
+> > > > > > +	service = !!(pmbsr & BIT(SYS_PMBSR_EL1_S_SHIFT));
+> > > > > > +	if (spe->irq_level == service)
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	spe->irq_level = service;
+> > > > > > +
+> > > > > > +	if (likely(irqchip_in_kernel(vcpu->kvm))) {
+> > > > > > +		r = kvm_vgic_inject_irq(vcpu->kvm, vcpu->vcpu_id,
+> > > > > > +					spe->irq_num, service, spe);
+> > > > > > +		WARN_ON(r);
+> > > > > > +	}
+> > > > > > +}
+> > > > > > +
+> > > > > > +static inline bool kvm_arch_arm_spe_v1_get_input_level(int
+> > > > > vintid)
+> > > > > > +{
+> > > > > > +	struct kvm_vcpu *vcpu = kvm_arm_get_running_vcpu();
+> > > > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
+> > > > > > +
+> > > > > > +	return spe->irq_level;
+> > > > > > +}
+> > > > >
+> > > > > This isn't what such a callback is for. It is supposed to sample
+> > > the
+> > > > > HW, an nothing else.
+> > > > >
+> > > > > > +
+> > > > > >  static int kvm_arm_spe_v1_init(struct kvm_vcpu *vcpu)
+> > > > > >  {
+> > > > > >  	if (!kvm_arm_support_spe_v1())
+> > > > > > @@ -48,6 +110,7 @@ static int kvm_arm_spe_v1_init(struct
+> > > kvm_vcpu
+> > > > > *vcpu)
+> > > > > >
+> > > > > >  	if (irqchip_in_kernel(vcpu->kvm)) {
+> > > > > >  		int ret;
+> > > > > > +		struct arm_spe_kvm_info *info;
+> > > > > >
+> > > > > >  		/*
+> > > > > >  		 * If using the SPE with an in-kernel virtual GIC
+> > > > > > @@ -57,10 +120,18 @@ static int kvm_arm_spe_v1_init(struct
+> > > > > kvm_vcpu *vcpu)
+> > > > > >  		if (!vgic_initialized(vcpu->kvm))
+> > > > > >  			return -ENODEV;
+> > > > > >
+> > > > > > +		info = arm_spe_get_kvm_info();
+> > > > > > +		if (!info->physical_irq)
+> > > > > > +			return -ENODEV;
+> > > > > > +
+> > > > > >  		ret = kvm_vgic_set_owner(vcpu, vcpu->arch.spe.irq_num,
+> > > > > >  					 &vcpu->arch.spe);
+> > > > > >  		if (ret)
+> > > > > >  			return ret;
+> > > > > > +
+> > > > > > +		ret = kvm_vgic_map_phys_irq(vcpu, info->physical_irq,
+> > > > > > +					    vcpu->arch.spe.irq_num,
+> > > > > > +					    kvm_arch_arm_spe_v1_get_input_level);
+> > > > >
+> > > > > You're mapping the interrupt int the guest, and yet you have
+> > > never
+> > > > > forwarded the interrupt the first place. All this flow is only
+> > > going
+> > > > > to wreck the host driver as soon as an interrupt occurs.
+> > > > >
+> > > > > I think you should rethink the interrupt handling altogether. It
+> > > > > would
+> > > > > make more sense if the interrupt was actually completely
+> > > > > virtualized. If you can isolate the guest state and compute the
+> > > > > interrupt state in SW (and from the above, it seems that you
+> > > can),
+> > > > > then you shouldn't mess with the whole forwarding *at all*, as
+> > > it
+> > > > > isn't designed for devices shared between host and guests.
+> > > >
+> > > > Yes it's possible to read SYS_PMBSR_EL1_S_SHIFT and determine if
+> > > SPE
+> > > > wants
+> > > > service. If I understand correctly, you're suggesting on
+> > > entry/exit to
+> > > > the
+> > > > guest we determine this and inject an interrupt to the guest. As
+> > > well as
+> > > > removing the kvm_vgic_map_phys_irq mapping to the physical
+> > > interrupt?
+> > > 
+> > > The mapping only makes sense for devices that have their interrupt
+> > > forwarded to a vcpu, where the expected flow is that the interrupt
+> > > is taken on the host with a normal interrupt handler and then
+> > > injected in the guest (you still have to manage the active state
+> > > though). The basic assumption is that such a device is entirely
+> > > owned by KVM.
+> > 
+> > Though the mapping does mean that if the guest handles the guest SPE
+> > interrupt it doesn't have to wait for a guest exit before having the
+> > SPE interrupt evaluated again (i.e. another SPE interrupt won't cause
+> > a guest exit) - thus increasing the size of any black hole.
+> 
+> Sure. It still remains that your use case is outside of the scope of
+> this internal API.
+> 
+> > > Here, you're abusing the mapping interface: you don't have an
+> > > interrupt handler (the host SPE driver owns it), the interrupt
+> > > isn't forwarded, and yet you're messing with the active state.
+> > > None of that is expected, and you are in uncharted territory
+> > > as far as KVM is concerned.
+> > > 
+> > > What bothers me the most is that this looks a lot like a previous
+> > > implementation of the timers, and we had all the problems in the
+> > > world to keep track of the interrupt state *and* have a reasonable
+> > > level of performance (hitting the redistributor on the fast path
+> > > is a performance killer).
+> > > 
+> > > > My understanding was that I needed knowledge of the physical SPE
+> > > > interrupt
+> > > > number so that I could prevent the host SPE driver from getting
+> > > spurious
+> > > > interrupts due to guest use of the SPE.
+> > > 
+> > > You can't completely rule out the host getting interrupted. Even if
+> > > you set
+> > > PMBSR_EL1.S to zero, there is no guarantee that the host will not
+> > > observe
+> > > the interrupt anyway (the GIC architecture doesn't tell you how
+> > > quickly
+> > > it will be retired, if ever). The host driver already checks for
+> > > this
+> > > anyway.
+> > > 
+> > > What you need to ensure is that PMBSR_EL1.S being set on guest entry
+> > > doesn't immediately kick you out of the guest and prevent forward
+> > > progress. This is why you need to manage the active state.
+> > > 
+> > > The real question is: how quickly do you want to react to a SPE
+> > > interrupt firing while in a guest?
+> > > 
+> > > If you want to take it into account as soon as it fires, then you
+> > > need
+> > > to eagerly save/restore the active state together with the SPE state
+> > > on
+> > > each entry/exit, and performance will suffer. This is what you are
+> > > currently doing.
+> > > 
+> > > If you're OK with evaluating the interrupt status on exit, but
+> > > without
+> > > the interrupt itself causing an exit, then you can simply manage it
+> > > as a purely virtual interrupt, and just deal with the active state
+> > > in load/put (set the interrupt as active on load, clear it on put).
+> > 
+> > This does feel like the pragmatic approach - a larger black hole in
+> > exchange
+> > for performance. I imagine the blackhole would be naturally reduced on
+> > machines with high workloads.
+> 
+> Why? I don't see the relation between how busy the vcpu is and the size
+> of the blackhole. It is strictly a function of the frequency of exits.
 
-  12.00%  [kernel]                  [k] get_page_from_freelist
-   9.25%  [kernel]                  [k] free_unref_page
-   6.83%  [kernel]                  [k] eth_type_trans
-   5.33%  [kernel]                  [k] __netif_receive_skb_core
-   4.96%  [mvpp2]                   [k] mvpp2_poll
-   4.64%  [kernel]                  [k] kmem_cache_free
-   4.06%  [kernel]                  [k] __xdp_return
-   3.60%  [kernel]                  [k] kmem_cache_alloc
-   3.31%  [kernel]                  [k] dev_gro_receive
-   3.29%  [kernel]                  [k] __page_pool_clean_page
-   3.25%  [mvpp2]                   [k] mvpp2_bm_pool_put
-   2.73%  [kernel]                  [k] __page_pool_put_page
-   2.33%  [kernel]                  [k] __alloc_pages_nodemask
-   2.33%  [kernel]                  [k] inet_gro_receive
-   2.05%  [kernel]                  [k] __build_skb
-   1.95%  [kernel]                  [k] build_skb
-   1.89%  [cls_matchall]            [k] mall_classify
-   1.83%  [kernel]                  [k] page_pool_alloc_pages
-   1.80%  [kernel]                  [k] tcf_action_exec
-   1.70%  [mvpp2]                   [k] mvpp2_buf_alloc.isra.0
-   1.63%  [kernel]                  [k] free_unref_page_prepare.part.0
-   1.45%  [kernel]                  [k] page_pool_return_skb_page
-   1.42%  [act_gact]                [k] tcf_gact_act
-   1.16%  [kernel]                  [k] netif_receive_skb_list_internal
-   1.08%  [kernel]                  [k] kfree_skb
-   1.07%  [kernel]                  [k] skb_release_data
+Indeed, my assumption being that the busier a system is the more
+interrupts, thus leading to more exits and so an increased frequency of
+SPE interrupt evaluation and thus smaller black hole.
 
+Thanks,
 
-> >
-> > Any idea on why I get such bad numbers?
->
-> Nop but it's indeed strange
->
-> >
-> > Another reason to send it as RFC is that I'm not fully convinced on how to
-> > use the page_pool given the HW limitation of the BM.
->
-> I'll have a look right after holidays
->
+Andrew Murray
 
-Thanks
-
-> >
-> > The driver currently uses, for every CPU, a page_pool for short packets and
-> > another for long ones. The driver also has 4 rx queue per port, so every
-> > RXQ #1 will share the short and long page pools of CPU #1.
-> >
->
-> I am not sure i am following the hardware config here
->
-
-Never mind, it's quite a mess, I needed a lot of time to get it :)
-
-The HW put the packets in different buffer pools depending on the size:
-short: 64..128
-long: 128..1664
-jumbo: 1664..9856
-
-Let's skip the jumbo buffer for now and assume we have 4 CPU, the
-driver allocates 4 short and 4 long buffers.
-Each port has 4 RX queues, and each one uses a short and a long buffer.
-With the page_pool api, we have 8 struct page_pool, 4 for the short
-and 4 for the long buffers.
-
-
-> > This means that for every RX queue I call xdp_rxq_info_reg_mem_model() twice,
-> > on two different page_pool, can this be a problem?
-> >
-> > As usual, ideas are welcome.
-> >
-> > Matteo Croce (2):
-> >   mvpp2: use page_pool allocator
-> >   mvpp2: memory accounting
-> >
-> >  drivers/net/ethernet/marvell/Kconfig          |   1 +
-> >  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   7 +
-> >  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 142 +++++++++++++++---
-> >  3 files changed, 125 insertions(+), 25 deletions(-)
-> >
-> > --
-> > 2.24.1
-> >
-> Cheers
-> /Ilias
->
-
-Bye,
--- 
-Matteo Croce
-per aspera ad upstream
-
+> 
+>         M.
+> 
+> > 
+> > I'll refine the series to take this approach.
+> > 
+> > > 
+> > > Given that SPE interrupts always indicate that profiling has
+> > > stopped,
+> > 
+> > and faults :|
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > this only affects the size of the black hole, and I'm inclined to do
+> > > the latter.
+> > > 
+> > >         M.
+> > > --
+> > > Jazz is not dead. It just smells funny...
+> 
+> -- 
+> Jazz is not dead. It just smells funny...
