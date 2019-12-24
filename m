@@ -2,238 +2,175 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F69C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0386BC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2127206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE43C20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:56:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="EC6qJRqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfLXKte (ORCPT
+        id S1726201AbfLXK47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:49:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:51014 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfLXKtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 05:49:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9018331B;
-        Tue, 24 Dec 2019 02:49:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 046BC3F534;
-        Tue, 24 Dec 2019 02:49:31 -0800 (PST)
-Date:   Tue, 24 Dec 2019 10:49:30 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 08/18] arm64: KVM: add support to save/restore SPE
- profiling buffer controls
-Message-ID: <20191224104929.GE42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-9-andrew.murray@arm.com>
- <20191221135755.70a6e8df@why>
+        Tue, 24 Dec 2019 05:56:59 -0500
+Received: from mail-bn8nam12on2077.outbound.protection.outlook.com ([40.107.237.77]:6095
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726091AbfLXK46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:56:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KPPwBZyAGydGkSDfoR35iLAtU4vfwBuQETNGi6mW6ppBzOLUMChcMEKta8Om9SUv8EgWYHwcEK1cFGvWfvtXnnn26mlO/yoLTeoMXW1t/w1nz4PQEkrjzIL3iJi8xSFOuA0tnyeYbugAE/mzMb1ndLK1r4FzrP+sM5/yMa8/IRHyoRagkf/fy3lAldi6M3xVmZ/z9d4xnaEAFRX2iRU+bYyMHdrlDsbrK54FkNpVTYzQCZeufhpuWB54pqKkC6I0pPLs3xObAA3WRmj7D3SonlipBuKBlVh/Z+F5mVZ9u+/43yNclnLKKuIjgDmH7uKFHYWZ+uo4HPPkJe9JGo5HBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fSFrervQ0xvaIKWEzukmB7SKU3qHjBp/VALqj3r6EGo=;
+ b=juFTfCIKQHRc2Wl3OhMx6sq9fIDNy/DI32pYQZoQFq7Srbsrkvq6gJsOmeaZpvh1pg+gIfwkR9PdCPtaoROH25Xf1Feec2DypXGIeP08khFIU1uZCVTRl65fpYh7hIRCM8LrZIdzDyPu7KvvGP0+lHXYZnqpJTw6pssBqY74R3tTi9BEjdf8rVcbCOs8HbQtnJSgaYwaYK/AkZUt/wCU0TuNFpGqjOcCSw1NDP5OnF23WB55Qo3P3aUUpF7SElpr1bf8TUEptF3WaI4hqcid9vyZODhvecF6twc3J97arFZ+Obdv1HUa47lFlAaAQZfdRNH8hWnqLJNjkGtl9x1fXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fSFrervQ0xvaIKWEzukmB7SKU3qHjBp/VALqj3r6EGo=;
+ b=EC6qJRqg5Ja6zmC7jlKiRnTh6oq0FR3JU/gb8mVUJBgPVtoXc9BJqDdGyEBkv2VN1IvvBaKZTf/gbYCYf7BQ9jceYJd6oH4TS1l6ih8/CbGas8LStYWTEqiWmx4ewSHZ9zYp5LmqZstRPPEUF+wC9gqSiiuob2ukwxEns4hw6g0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1272.namprd12.prod.outlook.com (10.168.167.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Tue, 24 Dec 2019 10:56:14 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2559.017; Tue, 24 Dec 2019
+ 10:56:14 +0000
+Subject: Re: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure
+ Processor driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
+ <20191220070439.etvk73fedrijsrgm@gondor.apana.org.au>
+From:   "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
+Message-ID: <a0c7cbd0-2195-195b-d753-7cbadfd4a272@amd.com>
+Date:   Tue, 24 Dec 2019 16:25:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20191220070439.etvk73fedrijsrgm@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR0101CA0018.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:21::28) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191221135755.70a6e8df@why>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Received: from [10.138.134.82] (165.204.156.251) by MA1PR0101CA0018.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::28) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Tue, 24 Dec 2019 10:56:11 +0000
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 56c63924-8aa0-4942-14a9-08d7885fe4f0
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1272:|CY4PR12MB1272:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB12728A1B823078D039E788CDCF290@CY4PR12MB1272.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 0261CCEEDF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(396003)(136003)(376002)(189003)(199004)(81156014)(2906002)(81166006)(66946007)(186003)(5660300002)(26005)(16526019)(956004)(2616005)(66556008)(8676002)(66476007)(966005)(8936002)(36756003)(316002)(31696002)(86362001)(53546011)(16576012)(6916009)(52116002)(54906003)(6666004)(478600001)(31686004)(4326008)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1272;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NidpCj/cErx1l4mcfaWWXXUjKDEc93N8JcF4HuBm5K8C6ektTtPt5L0zo22IRmWkZvsevn9089o+OVlM22SmQqTtcIRIQSljDkMyTmaLbT8oGmfHy8p7cf2L3az9Yagln8bX0qxajPh6Tb2kZVbvUothXXhCJzogXD9KxhcsR1Wtbe7Plu2sc3i+pHs4afdKZ0cIpSphfrGd400JehrXQ9NV+EiCW9WszWDwq+5FNbmQ2875wC9XxiJz4Hrr2kNMwIysbslXSJQn7CnkdiK4viJOU78CTo9g048IFrsd9vdfhQn9WErABkEjRwDkWvB+oAbo+JcA/j6iKK4dz9pzWxQOseOjWrkGQJiewke2kPzRtDNHoRBm4lhTW3FFxjtuTTZusu91FMvpvWzgo3dbGP9Qo4Q1EBAO7gAT+mdZW3J9mAfkLs6P0YDaOO6Rkq93Eahysl0CTLGmeRqM8V3ytL1Po53pwId2o7wQ/GpRZ3Q=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56c63924-8aa0-4942-14a9-08d7885fe4f0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2019 10:56:14.2383
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FEG+WloH22A3PeG8N42LG4BPkaSEu8NX3ZE3rJfkFF6R0iMsyLTwxl42xArX9DHV8BH6UuPTdrz7Dtna/uMzug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1272
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 01:57:55PM +0000, Marc Zyngier wrote:
-> On Fri, 20 Dec 2019 14:30:15 +0000
-> Andrew Murray <andrew.murray@arm.com> wrote:
+Hi Herbert,
+
+On 20/12/19 12:34 pm, Herbert Xu wrote:
+> On Wed, Dec 04, 2019 at 11:48:57AM +0530, Rijo Thomas wrote:
+>> The goal of this patch series is to introduce TEE (Trusted Execution
+>> Environment) interface support to AMD Secure Processor driver. The
+>> TEE is a secure area of a processor which ensures that sensitive data
+>> is stored, processed and protected in an isolated and trusted
+>> environment. The Platform Security Processor (PSP) is a dedicated
+>> processor which provides TEE to enable HW platform security. It offers
+>> protection against software attacks generated in Rich Operating System
+>> (Rich OS) such as Linux running on x86.
+>>
+>> Based on the platform feature support, the PSP is capable of supporting
+>> either SEV (Secure Encrypted Virtualization) and/or TEE. The first three
+>> patches in this series is about moving SEV specific functions and data
+>> structures from PSP device driver file to a dedicated SEV interface
+>> driver file. The last two patches add TEE interface support to AMD
+>> Secure Processor driver. This TEE interface will be used by AMD-TEE
+>> driver to submit command buffers for processing in PSP Trusted Execution
+>> Environment.
+>>
+>> v3:
+>> * Rebased the patches onto cryptodev-2.6 tree with base commit
+>>   4ee812f6143d (crypto: vmx - Avoid weird build failures)
+>>
+>> v2:
+>> * Rebased the patches on cryptodev-2.6 tree with base commit
+>>   d158367682cd (crypto: atmel - Fix selection of CRYPTO_AUTHENC)
+>> * Regenerated patch with correct diff-stat to show file rename
+>> * Used Co-developed-by: tag to give proper credit to co-author
+>>
+>> Rijo Thomas (6):
+>>   crypto: ccp - rename psp-dev files to sev-dev
+>>   crypto: ccp - create a generic psp-dev file
+>>   crypto: ccp - move SEV vdata to a dedicated data structure
+>>   crypto: ccp - check whether PSP supports SEV or TEE before
+>>     initialization
+>>   crypto: ccp - add TEE support for Raven Ridge
+>>   crypto: ccp - provide in-kernel API to submit TEE commands
+>>
+>>  drivers/crypto/ccp/Makefile  |    4 +-
+>>  drivers/crypto/ccp/psp-dev.c | 1033 ++++------------------------------------
+>>  drivers/crypto/ccp/psp-dev.h |   51 +-
+>>  drivers/crypto/ccp/sev-dev.c | 1068 ++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/crypto/ccp/sev-dev.h |   63 +++
+>>  drivers/crypto/ccp/sp-dev.h  |   17 +-
+>>  drivers/crypto/ccp/sp-pci.c  |   43 +-
+>>  drivers/crypto/ccp/tee-dev.c |  364 ++++++++++++++
+>>  drivers/crypto/ccp/tee-dev.h |  110 +++++
+>>  include/linux/psp-tee.h      |   73 +++
+>>  10 files changed, 1842 insertions(+), 984 deletions(-)
+>>  create mode 100644 drivers/crypto/ccp/sev-dev.c
+>>  create mode 100644 drivers/crypto/ccp/sev-dev.h
+>>  create mode 100644 drivers/crypto/ccp/tee-dev.c
+>>  create mode 100644 drivers/crypto/ccp/tee-dev.h
+>>  create mode 100644 include/linux/psp-tee.h
 > 
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > Currently since we don't support profiling using SPE in the guests,
-> > we just save the PMSCR_EL1, flush the profiling buffers and disable
-> > sampling. However in order to support simultaneous sampling both in
+> All applied.  Thanks.
 > 
-> Is the sampling actually simultaneous? I don't believe so (the whole
-> series would be much simpler if it was).
 
-No the SPE is used by either the guest or host at any one time. I guess
-the term simultaneous was used to refer to illusion given to both guest
-and host that they are able to use it whenever they like. I'll update
-the commit message to drop the magic.
- 
+Thank you for pulling in the changes!
+Can you also pull in the patch series titled - TEE driver for AMD APUs? It is
+related to this patch series.
 
-> 
-> > the host and guests, we need to save and reatore the complete SPE
-> 
-> s/reatore/restore/
-
-Noted.
-
-
-> 
-> > profiling buffer controls' context.
-> > 
-> > Let's add the support for the same and keep it disabled for now.
-> > We can enable it conditionally only if guests are allowed to use
-> > SPE.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > [ Clear PMBSR bit when saving state to prevent spurious interrupts ]
-> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > ---
-> >  arch/arm64/kvm/hyp/debug-sr.c | 51 +++++++++++++++++++++++++++++------
-> >  1 file changed, 43 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-> > index 8a70a493345e..12429b212a3a 100644
-> > --- a/arch/arm64/kvm/hyp/debug-sr.c
-> > +++ b/arch/arm64/kvm/hyp/debug-sr.c
-> > @@ -85,7 +85,8 @@
-> >  	default:	write_debug(ptr[0], reg, 0);			\
-> >  	}
-> >  
-> > -static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
-> > +static void __hyp_text
-> > +__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-> 
-> nit: don't split lines like this if you can avoid it. You can put the
-> full_ctxt parameter on a separate line instead.
-
-Yes understood.
-
-
-> 
-> >  {
-> >  	u64 reg;
-> >  
-> > @@ -102,22 +103,46 @@ static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
-> >  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
-> >  		return;
-> >  
-> > -	/* No; is the host actually using the thing? */
-> > -	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
-> > -	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
-> > +	/* Save the control register and disable data generation */
-> > +	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
-> > +
-> > +	if (!ctxt->sys_regs[PMSCR_EL1])
-> 
-> Shouldn't you check the enable bits instead of relying on the whole
-> thing being zero?
-
-Yes that would make more sense (E1SPE and E0SPE).
-
-I feel that this check makes an assumption about the guest/host SPE
-driver... What happens if the SPE driver writes to some SPE registers
-but doesn't enable PMSCR? If the guest is also using SPE then those
-writes will be lost, when the host returns and the SPE driver enables
-SPE it won't work.
-
-With a quick look at the SPE driver I'm not sure this will happen, but
-even so it makes me nervous relying on these assumptions. I wonder if
-this risk is present in other devices?
-
-
-> 
-> >  		return;
-> >  
-> >  	/* Yes; save the control register and disable data generation */
-> > -	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
-> 
-> You've already saved the control register...
-
-I'll remove that.
-
-
-> 
-> >  	write_sysreg_el1(0, SYS_PMSCR);
-> >  	isb();
-> >  
-> >  	/* Now drain all buffered data to memory */
-> >  	psb_csync();
-> >  	dsb(nsh);
-> > +
-> > +	if (!full_ctxt)
-> > +		return;
-> > +
-> > +	ctxt->sys_regs[PMBLIMITR_EL1] = read_sysreg_s(SYS_PMBLIMITR_EL1);
-> > +	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
-> > +
-> > +	/*
-> > +	 * As PMBSR is conditionally restored when returning to the host we
-> > +	 * must ensure the service bit is unset here to prevent a spurious
-> > +	 * host SPE interrupt from being raised.
-> > +	 */
-> > +	ctxt->sys_regs[PMBSR_EL1] = read_sysreg_s(SYS_PMBSR_EL1);
-> > +	write_sysreg_s(0, SYS_PMBSR_EL1);
-> > +
-> > +	isb();
-> > +
-> > +	ctxt->sys_regs[PMSICR_EL1] = read_sysreg_s(SYS_PMSICR_EL1);
-> > +	ctxt->sys_regs[PMSIRR_EL1] = read_sysreg_s(SYS_PMSIRR_EL1);
-> > +	ctxt->sys_regs[PMSFCR_EL1] = read_sysreg_s(SYS_PMSFCR_EL1);
-> > +	ctxt->sys_regs[PMSEVFR_EL1] = read_sysreg_s(SYS_PMSEVFR_EL1);
-> > +	ctxt->sys_regs[PMSLATFR_EL1] = read_sysreg_s(SYS_PMSLATFR_EL1);
-> > +	ctxt->sys_regs[PMBPTR_EL1] = read_sysreg_s(SYS_PMBPTR_EL1);
-> >  }
-> >  
-> > -static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
-> > +static void __hyp_text
-> > +__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
-> >  {
-> >  	if (!ctxt->sys_regs[PMSCR_EL1])
-> >  		return;
-> > @@ -126,6 +151,16 @@ static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
-> >  	isb();
-> >  
-> >  	/* Re-enable data generation */
-> > +	if (full_ctxt) {
-> > +		write_sysreg_s(ctxt->sys_regs[PMBPTR_EL1], SYS_PMBPTR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMBLIMITR_EL1], SYS_PMBLIMITR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMSFCR_EL1], SYS_PMSFCR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMSEVFR_EL1], SYS_PMSEVFR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMSLATFR_EL1], SYS_PMSLATFR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMSIRR_EL1], SYS_PMSIRR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMSICR_EL1], SYS_PMSICR_EL1);
-> > +		write_sysreg_s(ctxt->sys_regs[PMBSR_EL1], SYS_PMBSR_EL1);
-> > +	}
-> >  	write_sysreg_el1(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
-> >  }
-> >  
-> > @@ -198,7 +233,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
-> >  	guest_ctxt = &vcpu->arch.ctxt;
-> >  
-> >  	if (!has_vhe())
-> > -		__debug_restore_spe_nvhe(host_ctxt);
-> > +		__debug_restore_spe_nvhe(host_ctxt, false);
-> >  
-> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
-> >  		return;
-> > @@ -222,7 +257,7 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
-> >  
-> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
-> >  	if (!has_vhe())
-> > -		__debug_save_spe_nvhe(host_ctxt);
-> > +		__debug_save_spe_nvhe(host_ctxt, false);
-> >  }
-> >  
-> >  void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
-> 
-> So all of this is for non-VHE. What happens in the VHE case?
-
-By the end of the series this ends up in __debug_save_host_context which is
-called for both VHE/nVHE - on the re-spin I'll make it not look so confusing.
+Jens who is the TEE subsystem maintainer has given an Acked-by for the
+patch series. Please refer link: https://lkml.org/lkml/2019/12/16/608
 
 Thanks,
-
-Andrew Murray
-
-> 
-> 	M.
-> -- 
-> Jazz is not dead. It just smells funny...
+Rijo
