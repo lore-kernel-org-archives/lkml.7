@@ -2,231 +2,565 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC961C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73753C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8837920409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307272073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="V1zIOvaU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="B3nFyoMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfLXQPx (ORCPT
+        id S1726251AbfLXQWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:15:53 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39175 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfLXQPw (ORCPT
+        Tue, 24 Dec 2019 11:22:37 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:20121 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfLXQWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 11:15:52 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b137so10578726pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 08:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v8ZFhLPXLlBJL8SSlH+PM7okGlCh7sQWWNQWWlaQ7fE=;
-        b=V1zIOvaUHX0GmK3y0T7nNIiIMcW+RSvFSND44+hviy8C4Fc4kkoAkou07TjMHMy74r
-         Cu89rD7oGqMKYg5Q1+iROijn90IzsGrwvdimCoVfzzmdZxrn6IIc/pUuoAsBKpHzmBfa
-         cD1ji9S2N0prmDASwZmhaMXWrFn6WKwMWIx+mF9OVwbV1xwadQQoSatFRzBU3DODWCFo
-         QlJgatEpe9onWHgi1U9gRkWd/bd6SSMQBMpHYoZfQkHlu5ehc51YU8C+BLvuSNUUuXaM
-         KpiuCmuENZuKcqijktxDCuMD9LDsMWeBCQ/VM8EbbiIiQ4bC5nyRcFZIyFVt3FDQDkKb
-         Ci/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v8ZFhLPXLlBJL8SSlH+PM7okGlCh7sQWWNQWWlaQ7fE=;
-        b=UgD39emY3ELQoai2P5l93D9hL3X6hSiRexD8TIkjj9unO7RqpFSXinqu9Dc5+OM60k
-         grRfzplC+IWLQXJc219T14WAxBAwbW/LYwrk9pwTVNSZQLUltZHV0WoDPzDOjOuLM4lH
-         MhMTdZfdXRnjFsAH4KNPZU29rN/umMFjkMaiw3JwuZcInhhp35Xq9viKFvFx19HyubTa
-         z1/S7QCrwgkmAr3ItuPxw5rXRGJruZxTt18DYo0CfZzNd0qRTZ+Xmz8yBiekKwDmb9ke
-         hzDffmjZ2IGrK5QRotYv2KBgxy4R23AtrAhAW/i4MdyuZ4ewirbthSsyxwSDHG/9jjM+
-         Ul/A==
-X-Gm-Message-State: APjAAAXhZkov0malxNKQhk++N/P2X2hrSQPGhzl03UCn1cwwpXynS1Tp
-        1M6V8YBjzpJUaL2vhPEzU6ZTwg==
-X-Google-Smtp-Source: APXvYqw6g6gplyQ1hHNRJ73slacOCfaonn8zAyu4KmDsSe34TWrzIB2Cny4kGA6Qg8vemm5X0Idahw==
-X-Received: by 2002:aa7:86ce:: with SMTP id h14mr36482045pfo.31.1577204151781;
-        Tue, 24 Dec 2019 08:15:51 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id a19sm4009190pju.11.2019.12.24.08.15.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Dec 2019 08:15:51 -0800 (PST)
-Subject: Re: KASAN: use-after-free Read in io_wq_flush (2)
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+8e7705a7ae1bdce77c07@syzkaller.appspotmail.com>,
-        viro@zeniv.linux.org.uk
-References: <20191221143036.1984-1-hdanton@sina.com>
- <20191224112822.8664-1-hdanton@sina.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <79cc8245-3f55-a100-099c-25f0cd9cffbe@kernel.dk>
-Date:   Tue, 24 Dec 2019 09:15:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 24 Dec 2019 11:22:36 -0500
+X-Greylist: delayed 710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Dec 2019 11:22:33 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577204552;
+        s=strato-dkim-0002; d=dawncrow.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=jd8HIQj/ubKtUx8YHbbLAuh5R4GnjEShJcHWuqyq1x0=;
+        b=B3nFyoMsxOOtYautXf/bK2TnowsynLWvAAFbL/IuiQIsawJ7xmRm4MGnQ59aH9NGSm
+        JimoBhK3V0K4EVwU1my/nG6lT0qdHcOu1cmTqxITgcgIKcZoRgnXTIa6M3qNRboEu5Tf
+        QzKMLr8ajPdPeEFClFv/fVY5X9zFNWkCzolGi7csMfd4HWPct266kiUebSYJcVAa0/Qd
+        VU0CjKdd3UTgQkbKQwZVnASRtnh5dlJCtvy7PlMnXtPrAiSggTV/Qar7ZcP6f/ychzqt
+        lKGpH+c9AquLp+29XvbOBRcFN7lu5ROvQ4qxwnkoWU3xbsW//Bw0QxnMu5QklClkOENy
+        36iQ==
+X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
+X-RZG-CLASS-ID: mo00
+Received: from tesla.fritz.box
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id I099d1vBOGAT3jc
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 24 Dec 2019 17:10:29 +0100 (CET)
+From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
+To:     webmaster@dawncrow.de, linux@arm.linux.org.uk, robh+dt@kernel.org,
+        mark.rutland@arm.com, bcousson@baylibre.com, tony@atomide.com,
+        linux-omap@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: Add omap3-echo
+Date:   Tue, 24 Dec 2019 17:10:05 +0100
+Message-Id: <20191224161005.28083-1-nerv@dawncrow.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191224112822.8664-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/24/19 4:28 AM, Hillf Danton wrote:
-> 
-> On Sat, 21 Dec 2019 07:37:42 -0700 Jens Axboe wrote:
->>
->> On 12/21/19 7:30 AM, Hillf Danton wrote:
->>>
->>> On Fri, 20 Dec 2019 23:58:08 -0800
->>>> Hello,
->>>>
->>>> syzbot found the following crash on:
->>>>
->>>> HEAD commit:    7ddd09fc Add linux-next specific files for 20191220
->>>> git tree:       linux-next
->>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12e1823ee00000
->>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=f183b01c3088afc6
->>>> dashboard link: https://syzkaller.appspot.com/bug?extid=8e7705a7ae1bdce77c07
->>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->>>>
->>>> Unfortunately, I don't have any reproducer for this crash yet.
->>>>
->>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>> Reported-by: syzbot+8e7705a7ae1bdce77c07@syzkaller.appspotmail.com
->>>>
->>>> ==================================================================
->>>> BUG: KASAN: use-after-free in io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
->>>> Read of size 8 at addr ffff8880a8453d00 by task kworker/0:1/12
->>>>
->>>> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted  
->>>> 5.5.0-rc2-next-20191220-syzkaller #0
->>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
->>>> Google 01/01/2011
->>>> Workqueue: events io_ring_file_ref_switch
->>>> Call Trace:
->>>>   __dump_stack lib/dump_stack.c:77 [inline]
->>>>   dump_stack+0x197/0x210 lib/dump_stack.c:118
->>>>   print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->>>>   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->>>>   kasan_report+0x12/0x20 mm/kasan/common.c:639
->>>>   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
->>>>   io_wq_flush+0x1f7/0x210 fs/io-wq.c:1009
->>>>   io_destruct_skb+0x8e/0xc0 fs/io_uring.c:4668
->>>>   skb_release_head_state+0xeb/0x260 net/core/skbuff.c:652
->>>>   skb_release_all+0x16/0x60 net/core/skbuff.c:663
->>>>   __kfree_skb net/core/skbuff.c:679 [inline]
->>>>   kfree_skb net/core/skbuff.c:697 [inline]
->>>>   kfree_skb+0x101/0x420 net/core/skbuff.c:691
->>>>   io_ring_file_put fs/io_uring.c:4836 [inline]
->>>>   io_ring_file_ref_switch+0x68a/0xac0 fs/io_uring.c:4881
->>>>   process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
->>>>   worker_thread+0x98/0xe40 kernel/workqueue.c:2410
->>>>   kthread+0x361/0x430 kernel/kthread.c:255
->>>>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->>>>
->>>> Allocated by task 9937:
->>>>   save_stack+0x23/0x90 mm/kasan/common.c:72
->>>>   set_track mm/kasan/common.c:80 [inline]
->>>>   __kasan_kmalloc mm/kasan/common.c:513 [inline]
->>>>   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
->>>>   kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
->>>>   kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
->>>>   kmalloc include/linux/slab.h:555 [inline]
->>>>   kzalloc include/linux/slab.h:669 [inline]
->>>>   io_wq_create+0x52/0xa40 fs/io-wq.c:1024
->>>>   io_sq_offload_start fs/io_uring.c:5244 [inline]
->>>>   io_uring_create fs/io_uring.c:6002 [inline]
->>>>   io_uring_setup+0xf4a/0x2080 fs/io_uring.c:6062
->>>>   __do_sys_io_uring_setup fs/io_uring.c:6075 [inline]
->>>>   __se_sys_io_uring_setup fs/io_uring.c:6072 [inline]
->>>>   __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:6072
->>>>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
->>>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>
->>>> Freed by task 9935:
->>>>   save_stack+0x23/0x90 mm/kasan/common.c:72
->>>>   set_track mm/kasan/common.c:80 [inline]
->>>>   kasan_set_free_info mm/kasan/common.c:335 [inline]
->>>>   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
->>>>   kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
->>>>   __cache_free mm/slab.c:3426 [inline]
->>>>   kfree+0x10a/0x2c0 mm/slab.c:3757
->>>>   io_wq_destroy+0x2ce/0x3c0 fs/io-wq.c:1116
->>>>   io_finish_async+0x128/0x1b0 fs/io_uring.c:4657
->>>>   io_ring_ctx_free fs/io_uring.c:5569 [inline]
->>>>   io_ring_ctx_wait_and_kill+0x330/0x9a0 fs/io_uring.c:5644
->>>>   io_uring_release+0x42/0x50 fs/io_uring.c:5652
->>>>   __fput+0x2ff/0x890 fs/file_table.c:280
->>>>   ____fput+0x16/0x20 fs/file_table.c:313
->>>>   task_work_run+0x145/0x1c0 kernel/task_work.c:113
->>>>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->>>>   exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
->>>>   prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
->>>>   syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
->>>>   do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
->>>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>
->>>> The buggy address belongs to the object at ffff8880a8453d00
->>>>   which belongs to the cache kmalloc-192 of size 192
->>>> The buggy address is located 0 bytes inside of
->>>>   192-byte region [ffff8880a8453d00, ffff8880a8453dc0)
->>>> The buggy address belongs to the page:
->>>> page:ffffea0002a114c0 refcount:1 mapcount:0 mapping:ffff8880aa400000  
->>>> index:0x0
->>>> raw: 00fffe0000000200 ffffea0002644808 ffffea0002482f08 ffff8880aa400000
->>>> raw: 0000000000000000 ffff8880a8453000 0000000100000010 0000000000000000
->>>> page dumped because: kasan: bad access detected
->>>>
->>>> Memory state around the buggy address:
->>>>   ffff8880a8453c00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>>>   ffff8880a8453c80: 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc
->>>>> ffff8880a8453d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>                     ^
->>>>   ffff8880a8453d80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->>>>   ffff8880a8453e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>> ==================================================================
->>>
->>> Erase ctx's io_wq before destroying.
->>>
->>> --- a/fs/io_uring.c
->>> +++ b/fs/io_uring.c
->>> @@ -4651,12 +4651,13 @@ static void io_sq_thread_stop(struct io_
->>>  
->>>  static void io_finish_async(struct io_ring_ctx *ctx)
->>>  {
->>> +	struct io_wq *io_wq;
->>> +
->>>  	io_sq_thread_stop(ctx);
->>>  
->>> -	if (ctx->io_wq) {
->>> -		io_wq_destroy(ctx->io_wq);
->>> -		ctx->io_wq = NULL;
->>> -	}
->>> +	io_wq = xchg(&ctx->io_wq, NULL);
->>> +	if (io_wq)
->>> +		io_wq_destroy(io_wq);
->>>  }
->>>  
->>>  #if defined(CONFIG_UNIX)
->>
->> I actually think we can just kill the flush off the skb put path, it's
->> not needed.
->>
-> Hi Jens
-> 
-> I want to fix the race if it's still out there.
+This is the first generation Amazon Echo from 2016.
+Audio support is not yet implemented.
 
-Can you check the current tree? I killed the flush from the skb destruct,
-it's not needed.
+Signed-off-by: André Hentschel <nerv@dawncrow.de>
+---
 
+I have local patches for the microphone array, but cleaning that up will take some time.
+Audio output seems to be even harder work...
+You can find a tutorial on how to boot the Echo here:
+https://labs.f-secure.com/archive/alexa-are-you-listening/
+
+ arch/arm/boot/dts/Makefile       |   1 +
+ arch/arm/boot/dts/omap3-echo.dts | 466 +++++++++++++++++++++++++++++++
+ 2 files changed, 467 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-echo.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b21b3a64641a..923dabc09203 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -685,6 +685,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
+ 	omap3-devkit8000.dtb \
+ 	omap3-devkit8000-lcd43.dtb \
+ 	omap3-devkit8000-lcd70.dtb \
++	omap3-echo.dtb \
+ 	omap3-evm.dtb \
+ 	omap3-evm-37xx.dtb \
+ 	omap3-gta04a3.dtb \
+diff --git a/arch/arm/boot/dts/omap3-echo.dts b/arch/arm/boot/dts/omap3-echo.dts
+new file mode 100644
+index 000000000000..751560b18f79
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-echo.dts
+@@ -0,0 +1,466 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
++ */
++/dts-v1/;
++
++#include "omap36xx.dtsi"
++
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Amazon Echo (first generation)";
++	compatible = "amazon,omap3-echo", "ti,omap3630", "ti,omap3";
++
++	cpus {
++		cpu@0 {
++			cpu0-supply = <&vdd1_reg>;
++		};
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0xc600000>; /* 198 MB */
++	};
++
++	vcc5v: fixedregulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vcc3v3: fixedregulator1 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vcc1v8: fixedregulator2 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
++		post-power-on-delay-ms = <40>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&button_pins>;
++
++		mute-button {
++			label = "mute";
++			linux,code = <KEY_MUTE>;
++			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;	/* GPIO_70 */
++			wakeup-source;
++		};
++
++		help-button {
++			label = "help";
++			linux,code = <KEY_HELP>;
++			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;	/* GPIO_72 */
++			wakeup-source;
++		};
++	};
++
++	rotary: rotary-encoder {
++		compatible = "rotary-encoder";
++		gpios = <
++			&gpio3  5 GPIO_ACTIVE_HIGH /* GPIO_69 */
++			&gpio3 12 GPIO_ACTIVE_HIGH /* GPIO_76 */
++		>;
++		linux,axis = <REL_X>;
++		rotary-encoder,relative-axis;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++
++	tps: tps@2d {
++		reg = <0x2d>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++
++	lp5523A: lp5523A@32 {
++		compatible = "national,lp5523";
++		label = "q1";
++		reg = <0x32>;
++		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++		enable-gpio = <&gpio4 13 GPIO_ACTIVE_HIGH>; /* GPIO_109 */
++
++		chan0 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan1 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan2 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan3 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan4 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan5 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan6 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan7 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan8 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++	};
++
++	lp5523B: lp5523B@33 {
++		compatible = "national,lp5523";
++		label = "q3";
++		reg = <0x33>;
++		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++
++		chan0 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan1 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan2 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan3 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan4 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan5 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan6 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan7 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan8 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++	};
++
++	lp5523C: lp5523C@34 {
++		compatible = "national,lp5523";
++		label = "q4";
++		reg = <0x34>;
++		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++
++		chan0 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan1 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan2 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan3 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan4 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan5 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan6 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan7 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan8 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++	};
++
++	lp5523D: lp552D@35 {
++		compatible = "national,lp5523";
++		label = "q2";
++		reg = <0x35>;
++		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
++
++		chan0 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan1 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan2 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan3 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan4 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan5 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan6 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan7 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++		chan8 {
++			led-cur = /bits/ 8 <12>;
++			max-cur = /bits/ 8 <15>;
++		};
++	};
++};
++
++#include "tps65910.dtsi"
++
++&omap3_pmx_core {
++	tps_pins: pinmux_tps_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21e0, PIN_INPUT_PULLUP | PIN_OFF_INPUT_PULLUP | PIN_OFF_OUTPUT_LOW | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* sys_nirq.sys_nirq */ 
++		>;
++	};
++
++	button_pins: pinmux_button_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x20dc, PIN_INPUT | MUX_MODE4)	/* dss_data0.gpio_70 */
++			OMAP3_CORE1_IOPAD(0x20e0, PIN_INPUT | MUX_MODE4)	/* dss_data2.gpio_72 */
++		>;
++	};
++
++	mmc1_pins: pinmux_mmc1_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_clk.sdmmc1_clk */
++			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_cmd.sdmmc1_cmd */
++			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat0.sdmmc1_dat0 */
++			OMAP3_CORE1_IOPAD(0x214a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat1.sdmmc1_dat1 */
++			OMAP3_CORE1_IOPAD(0x214c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat2.sdmmc1_dat2 */
++			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat3.sdmmc1_dat3 */
++		>;
++	};
++
++	mmc2_pins: pinmux_mmc2_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_clk.sdmmc2_clk */
++			OMAP3_CORE1_IOPAD(0x215a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_cmd.sdmmc2_cmd */
++			OMAP3_CORE1_IOPAD(0x215c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat0.sdmmc2_dat0 */
++			OMAP3_CORE1_IOPAD(0x215e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat1.sdmmc2_dat1 */
++			OMAP3_CORE1_IOPAD(0x2160, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat2.sdmmc2_dat2 */
++			OMAP3_CORE1_IOPAD(0x2162, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat3.sdmmc2_dat3 */
++			OMAP3_CORE1_IOPAD(0x2164, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat4.sdmmc2_dat4 */
++			OMAP3_CORE1_IOPAD(0x2166, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat5.sdmmc2_dat5 */
++			OMAP3_CORE1_IOPAD(0x2168, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat6.sdmmc2_dat6 */
++			OMAP3_CORE1_IOPAD(0x216a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat7.sdmmc2_dat7 */
++		>;
++	};
++};
++
++&omap3_pmx_core2 {
++	mmc3_pins: pinmux_mmc3_pins {
++		pinctrl-single,pins = <
++			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
++			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
++			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
++			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
++			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
++			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
++		>;
++	};
++};
++
++&mmc1 {
++	status = "okay";
++	bus-width = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&vmmc_reg>;
++};
++
++&mmc2 {
++	status = "okay";
++	bus-width = <8>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_pins>;
++	vmmc-supply = <&vmmc_reg>;
++};
++
++&mmc3 {
++	status = "okay";
++	bus-width = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
++	non-removable;
++	disable-wp;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	vmmc-supply = <&vcc3v3>;
++	vqmmc-supply = <&vcc1v8>;
++};
++
++
++&tps {
++	pinctrl-names = "default";
++	pinctrl-0 = <&tps_pins>;
++
++	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++	interrupt-parent = <&intc>;
++
++	ti,en-ck32k-xtal;
++	ti,system-power-controller;
++
++	vcc1-supply = <&vcc5v>;
++	vcc2-supply = <&vcc5v>;
++	vcc3-supply = <&vcc5v>;
++	vcc4-supply = <&vcc5v>;
++	vcc5-supply = <&vcc5v>;
++	vcc6-supply = <&vcc5v>;
++	vcc7-supply = <&vcc5v>;
++	vccio-supply = <&vcc5v>;
++
++	regulators {
++
++		vio_reg: regulator@1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vdd1_reg: regulator@2 {
++			regulator-name = "vdd_mpu";
++			regulator-min-microvolt = <600000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		vdd2_reg: regulator@3 {
++			regulator-name = "vdd_dsp";
++			regulator-min-microvolt = <600000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-always-on;
++		};
++
++		vdd3_reg: regulator@4 {
++			regulator-name = "vdd_core";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++
++		vdig1_reg: regulator@5 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <2700000>;
++			regulator-always-on;
++		};
++
++		vdig2_reg: regulator@6 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vpll_reg: regulator@7 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <2500000>;
++			regulator-always-on;
++		};
++
++		vdac_reg: regulator@8 {
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		vaux1_reg: regulator@9 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2850000>;
++			regulator-always-on;
++		};
++
++		vaux2_reg: regulator@10 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		vaux33_reg: regulator@11 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++
++		vmmc_reg: regulator@12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-always-on;
++		};
++	};
++};
++
++&sgx_module {
++	status = "disabled";
++};
 -- 
-Jens Axboe
+2.17.1
 
