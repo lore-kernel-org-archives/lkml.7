@@ -2,157 +2,132 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A612AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3FFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDA020718
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8912071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YvAPkjPM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTatrIDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfLXFce (ORCPT
+        id S1726124AbfLXFs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 00:32:34 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22606 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbfLXFce (ORCPT
+        Tue, 24 Dec 2019 00:48:27 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35645 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfLXFs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:32:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577165553; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=/zIvwtp8UO85ebHhHKbecVWYaBp9mm+ttOxLD7tikHo=; b=YvAPkjPMibPLRd04ti/+IfDF4rKr+cWaL7zAfTOkrSTEpI+wM0POVfJnQxxmQUJwTEZZqpQR
- sdKQOUa8YOrzwlA10S4hz2LaJA+HSoPaQipDwexQcvZ2PGh4HwUK/VIijNxCSeROdIokyjmN
- Ek02WULZq5h1NXqiEQARCmQyX08=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e01a2eb.7fc2925100a0-smtp-out-n01;
- Tue, 24 Dec 2019 05:32:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6E7C6C433CB; Tue, 24 Dec 2019 05:32:27 +0000 (UTC)
-Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C30D5C43383;
-        Tue, 24 Dec 2019 05:32:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C30D5C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
-From:   Shyam Kumar Thella <sthella@codeaurora.org>
-To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Date:   Tue, 24 Dec 2019 11:02:12 +0530
-Message-Id: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 24 Dec 2019 00:48:27 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so7066370qvi.2;
+        Mon, 23 Dec 2019 21:48:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=chyirdOESrcyZYls0O4S3CM7+3ie23NclpnHj9Q8TZ8=;
+        b=QTatrIDibvsfq4PIGOcDpegqvGeyTx/uyaEzHEx87OT9YjFBlXGYfYtaSXgB63vHsr
+         P7WkavE0s+JmgT+ohyprAJLIXh1/A4tDK7Z58DCZ1Oi/r0qlHzB+5oSEOCZLspyrj3tb
+         w7PZTpQxl+XtGtUjxC3nemQ8Oq+U5fql2TvIkoMBtU5HpKmfH65tsV8rRWmSa5fEst0A
+         rmM2uGFabc6Cm23pE79n7ePT3/LdX2tfKcSwtBJ7z/J2pa8meORoVjuiBGmEc4wlTSUn
+         xLDlsapm3n8DOGqBAGIf1Ksjw0VTGJytiNfJzq5vlSL156SFmVvQvkCNY1O4i9Ch7AMG
+         V9rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=chyirdOESrcyZYls0O4S3CM7+3ie23NclpnHj9Q8TZ8=;
+        b=MTPEIPuREeRkyKq+IMr66NfRBYzHM3LeQ9dl8EtVBJOYfLI96TMcoLwSSj22/o4Ncs
+         W3Y+M1BEXLMukkgVRXcNlwMZq6Er3QJ5f9HxgXrsP9cT8MFNog4VE3IkyTbIT03CTeur
+         aVhe3HXdib+P8GUZjdY4gGX2uDz+flXgJmJU+azltsAGLBcM9pH1vjPChG3ytVyzkuq5
+         EVw6WMJiKoT6ktAdP4psBrEg4o5VHjijawTJorQP6xc8fcMyahzqsCF+jOVxL2t5sx+N
+         cnTgu7bJWu9Ebf1uY1xZnlrvZbrcp3vs10zMhhCDuUpNPsixGRHtxdgVLRyk6sy01EIC
+         pOvg==
+X-Gm-Message-State: APjAAAX7kUJS6Q4pZTQ0xo2GvLXvjTZg49X2WZyN16PLNPf2Em5sfsrO
+        QEN453FS3mSE6gZoQL1NUupOxZIGWN4mNQHZofQ=
+X-Google-Smtp-Source: APXvYqyrl1A6qr+sRbltNuz0bedudNwNw9G+4NxHPfCUvFEVv0wsJxTDoCR7jgt8O1rGoz8FIm9AYLmdrDYss5hRiMw=
+X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr27799530qvb.163.1577166505897;
+ Mon, 23 Dec 2019 21:48:25 -0800 (PST)
+MIME-Version: 1.0
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-8-kpsingh@chromium.org>
+In-Reply-To: <20191220154208.15895-8-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Dec 2019 21:48:14 -0800
+Message-ID: <CAEf4BzZQYnSv+0nEkgt1kovXdtqMNv5hMhLdCWkJhUS-Lr3hyQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 07/13] bpf: lsm: Implement attach, detach and execution.
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QTI SDAM allows PMIC peripherals to access the shared memory that is
-available on QTI PMICs. Add documentation for it.
+On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> A user space program can attach an eBPF program by:
+>
+>   hook_fd = open("/sys/kernel/security/bpf/bprm_check_security",
+>                  O_RDWR|O_CLOEXEC)
+>   prog_fd = bpf(BPF_PROG_LOAD, ...)
+>   bpf(BPF_PROG_ATTACH, hook_fd, prog_fd)
+>
+> The following permissions are required to attach a program to a hook:
+>
+> - CAP_SYS_ADMIN to load eBPF programs
+> - CAP_MAC_ADMIN (to update the policy of an LSM)
+> - The securityfs file being a valid hook and writable (O_RDWR)
+>
+> When such an attach call is received, the attachment logic looks up the
+> dentry and appends the program to the bpf_prog_array.
+>
+> The BPF programs are stored in a bpf_prog_array and writes to the array
+> are guarded by a mutex. The eBPF programs are executed as a part of the
+> LSM hook they are attached to. If any of the eBPF programs return
+> an error (-ENOPERM) the action represented by the hook is denied.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
 
-Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
----
- .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-new file mode 100644
-index 0000000..8961a99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-+
-+maintainers:
-+  - Shyam Kumar Thella <sthella@codeaurora.org>
-+
-+description: |
-+  The SDAM provides scratch register space for the PMIC clients. This
-+  memory can be used by software to store information or communicate
-+  to/from the PBUS.
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,spmi-sdam
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description:
-+          Offset and size in bytes within the storage device.
-+
-+      bits:
-+        maxItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              maximum: 7
-+              description:
-+                Offset in bit within the address range specified by reg.
-+            - minimum: 1
-+              description:
-+                Size in bit within the address range specified by reg.
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+      sdam_1: nvram@b000 {
-+         #address-cells = <1>;
-+         #size-cells = <1>;
-+         compatible = "qcom,spmi-sdam";
-+          reg = <0xb000 0x100>;
-+
-+          /* Data cells */
-+          restart_reason: restart@50 {
-+              reg = <0x50 0x1>;
-+              bits = <7 2>;
-+          };
-+      };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+>  MAINTAINERS             |   1 +
+>  include/linux/bpf_lsm.h |  13 ++++
+>  kernel/bpf/syscall.c    |   5 +-
+>  security/bpf/lsm_fs.c   |  19 +++++-
+>  security/bpf/ops.c      | 134 ++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 169 insertions(+), 3 deletions(-)
+>
+
+[...]
