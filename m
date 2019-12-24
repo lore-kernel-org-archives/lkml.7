@@ -2,117 +2,161 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8B4C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CECC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B23206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3E7206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mvr4fmpi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5SwwLJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLXJvX (ORCPT
+        id S1726244AbfLXJwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:51:23 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43362 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfLXJvX (ORCPT
+        Tue, 24 Dec 2019 04:52:34 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38799 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfLXJwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 04:51:23 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so19325080wre.10
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 01:51:21 -0800 (PST)
+        Tue, 24 Dec 2019 04:52:34 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so19376559wrh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 01:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lDQYVJqwKy9VrlC0fN44xu7g3oqePLWya4mj982q/t4=;
-        b=Mvr4fmpiYrB+0nQxpkrmFTOnyzLDm840DZitghmn7r7y7CSSt7X1vRiUo5L2xBup/6
-         +EyhBuGG6GLwXTdN3CiDjOktiOf78SK0fEUhKSO8l7/JDkdleUySM72uJph3VC2cJMuw
-         PgSWE+B0Sn8oNhssbI5Ap2ToUa7Hq9zdKNVlBkZxTsKQ4Xc/pwAavtDBYNPq+FE9nvTf
-         Tv2+NVLe9D459gaDmlO30F9cB1am0spqDov+c0rs79iaRpzZQ3nClKjyF0xdXCyyOyab
-         SlaYHUg1jl3MyPim8SsrzIRMTXN40WDNcyysvb8LzTitvBMgSxIdaqYA/OZOuXcW2NTy
-         vYBw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=N3HBmWELJ09NCKU7N1TUdxqAH5rNCluFgs2bN3EZVaM=;
+        b=a5SwwLJ7wdPE0l7OEStq9kLfrybjTtNM9B2ahwATRWhdqk04fohhlIqkQG74hqA6Fz
+         +Aj3921DFogeuC7csDkXVEnZLXIELKVyi2PCE6kUhBRPU1MiHjAUkssRhn3TS+AD2OtF
+         yUC7UPi9dtY344RFgjAcsU1QApLLOGY88dg+5N4uAR7UVqv73CakDc+k23Mu6MHOerXd
+         nB4fUsX7i7c7BRFdJrolF1lFVqq1cTeoOCVtCFfw4L5KAXodgx7iT0vMznczToxy8fk6
+         cKbCZCKI13lqNKQJj4CbsWEdfWTyhIw/ddiJsj3sRRwU8VGE2TKbaJ56MNhVXJe2KhGG
+         RGug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lDQYVJqwKy9VrlC0fN44xu7g3oqePLWya4mj982q/t4=;
-        b=AwRE0PLYyZDthTgTYKSeT4W9rdXQJxZhn2LDwwxc2CZSCTFU1C0UMY2lQwcde9Skpj
-         JT9FQ/1bTsIWcqnaoL74sKJxv3faESyhbs9/D01zmF1eE+fikGWPmdY6HXbjwrssrnNl
-         JdtWGfTv7Y41pUi2z1/QS8ph8g1M45tzTjpOjKOeTGDUVHK3dyD354aw1tNmvvIpz3kG
-         M8igHLDAjU/hhCuIJi8ofomKXi9kxWEVPeJXUdJg3xCr3d7VfG7mQ1i/XdiwYUYHS6v6
-         YAlrrRGN7EVrlQhBtdYVIiiOIrora+P5l/DABIZko/pce/qdfNF4pANwodQJQAm6cZGb
-         WhDQ==
-X-Gm-Message-State: APjAAAV+g9PZoPvRCxCzceOXUPMvjlItWqZ+ZsY+r0nz2K9VedU5dZ5M
-        gxv53uyyVwtIPsyYQh77Mp0R3dQsVDbiHBrddCetoA==
-X-Google-Smtp-Source: APXvYqxwVWMpONljWnw5EGgAx/SITMEkK8kI+qNjb4UjMbNV3rRBVY5jpt3EBnJ8E32ORKOp8R4zVpp/fkJ0PumOA5U=
-X-Received: by 2002:a5d:43c7:: with SMTP id v7mr32288671wrr.32.1577181080636;
- Tue, 24 Dec 2019 01:51:20 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=N3HBmWELJ09NCKU7N1TUdxqAH5rNCluFgs2bN3EZVaM=;
+        b=Qwr5OIMsd2QNwAjBLoUo3/Ll1DUzXIakacWDNPpcGtyzy1WIVgOJgKLYUvODU/GPbW
+         DiTY+9yAq8sOyCudfsA8uWJVql82NdryZDrLUHWN7xtfjyeJScsE5jSJkpPeHkNXktUJ
+         kkgixgduOCgaHUuOcNj8ZamY723zYsezWVtA6OIGq0z+5yWdUFgKeDMojOJ9z7k0no1Q
+         +C3cZxGYFLnzhTp61CzCmAQs7wT3oqiuwURetormwAXVOZ23FsAjtO4L+Ufftc7559sT
+         nJqBOfS4rbwEi9w2NHWmqrG+ubHnatVYbrfLJsw43YDu7IJmM2BJiR/8FPKa6D43VflR
+         qJuQ==
+X-Gm-Message-State: APjAAAX5GArCQijiYDn/wxrCIALh9ns3Em5X1fOyufUz+VfkZBJHED7I
+        U4VWJbRbWoA0C0WnNAppgYW0qQ==
+X-Google-Smtp-Source: APXvYqx8OEXpOqgIwYiNou/aJcyi8NyZ0Zz3lhggLDmM2qFtxsFeWbTTbrXCsfnE1VKXx1IcnvMZoQ==
+X-Received: by 2002:adf:ee92:: with SMTP id b18mr36084857wro.281.1577181152190;
+        Tue, 24 Dec 2019 01:52:32 -0800 (PST)
+Received: from apalos.home (ppp-94-64-118-170.home.otenet.gr. [94.64.118.170])
+        by smtp.gmail.com with ESMTPSA id v14sm23394678wrm.28.2019.12.24.01.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 01:52:31 -0800 (PST)
+Date:   Tue, 24 Dec 2019 11:52:29 +0200
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Nadav Haklai <nadavh@marvell.com>
+Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
+Message-ID: <20191224095229.GA24310@apalos.home>
+References: <20191224010103.56407-1-mcroce@redhat.com>
 MIME-Version: 1.0
-References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com>
-In-Reply-To: <20191224092119.4581-1-n.merinov@inango-systems.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 24 Dec 2019 10:51:19 +0100
-Message-ID: <CAKv+Gu98Gi5Uvz7AZw4ky_-sxOZxJ4687jxyQsJU6d3TGkem1g@mail.gmail.com>
-Subject: Re: [PATCH v2] partitions/efi: Fix partition name parsing in GUID
- partition entry
-To:     Nikolai Merinov <n.merinov@inango-systems.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224010103.56407-1-mcroce@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Dec 2019 at 10:29, Nikolai Merinov
-<n.merinov@inango-systems.com> wrote:
->
-> GUID partition entry defined to have a partition name as 36 UTF-16LE
-> code units. This means that on big-endian platforms ASCII symbols
-> would be read with 0xXX00 efi_char16_t character code. In order to
-> correctly extract ASCII characters from a partition name field we
-> should be converted from 16LE to CPU architecture.
->
-> The problem exists on all big endian platforms.
->
-> Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
->
+On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:
+> This patches change the memory allocator of mvpp2 from the frag allocator to
+> the page_pool API. This change is needed to add later XDP support to mvpp2.
+> 
+> The reason I send it as RFC is that with this changeset, mvpp2 performs much
+> more slower. This is the tc drop rate measured with a single flow:
+> 
+> stock net-next with frag allocator:
+> rx: 900.7 Mbps 1877 Kpps
+> 
+> this patchset with page_pool:
+> rx: 423.5 Mbps 882.3 Kpps
+> 
+> This is the perf top when receiving traffic:
+> 
+>   27.68%  [kernel]            [k] __page_pool_clean_page
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+This seems extremly high on the list. 
 
-> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-> index db2fef7dfc47..51287a8a3bea 100644
-> --- a/block/partitions/efi.c
-> +++ b/block/partitions/efi.c
-> @@ -715,7 +715,7 @@ int efi_partition(struct parsed_partitions *state)
->                                 ARRAY_SIZE(ptes[i].partition_name));
->                 info->volname[label_max] = 0;
->                 while (label_count < label_max) {
-> -                       u8 c = ptes[i].partition_name[label_count] & 0xff;
-> +                       u8 c = le16_to_cpu(ptes[i].partition_name[label_count]) & 0xff;
->                         if (c && !isprint(c))
->                                 c = '!';
->                         info->volname[label_count] = c;
-> diff --git a/block/partitions/efi.h b/block/partitions/efi.h
-> index 3e8576157575..0b6d5b7be111 100644
-> --- a/block/partitions/efi.h
-> +++ b/block/partitions/efi.h
-> @@ -88,7 +88,7 @@ typedef struct _gpt_entry {
->         __le64 starting_lba;
->         __le64 ending_lba;
->         gpt_entry_attributes attributes;
-> -       efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
-> +       __le16 partition_name[72 / sizeof (__le16)];
->  } __packed gpt_entry;
->
->  typedef struct _gpt_mbr_record {
-> --
-> 2.17.1
->
+>    9.79%  [kernel]            [k] get_page_from_freelist
+>    7.18%  [kernel]            [k] free_unref_page
+>    4.64%  [kernel]            [k] build_skb
+>    4.63%  [kernel]            [k] __netif_receive_skb_core
+>    3.83%  [mvpp2]             [k] mvpp2_poll
+>    3.64%  [kernel]            [k] eth_type_trans
+>    3.61%  [kernel]            [k] kmem_cache_free
+>    3.03%  [kernel]            [k] kmem_cache_alloc
+>    2.76%  [kernel]            [k] dev_gro_receive
+>    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
+>    2.68%  [kernel]            [k] page_frag_free
+>    1.83%  [kernel]            [k] inet_gro_receive
+>    1.74%  [kernel]            [k] page_pool_alloc_pages
+>    1.70%  [kernel]            [k] __build_skb
+>    1.47%  [kernel]            [k] __alloc_pages_nodemask
+>    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
+>    1.29%  [kernel]            [k] tcf_action_exec
+> 
+> I tried Ilias patches for page_pool recycling, I get an improvement
+> to ~1100, but I'm still far than the original allocator.
+
+Can you post the recycling perf for comparison?
+
+> 
+> Any idea on why I get such bad numbers?
+
+Nop but it's indeed strange
+
+> 
+> Another reason to send it as RFC is that I'm not fully convinced on how to
+> use the page_pool given the HW limitation of the BM.
+
+I'll have a look right after holidays
+
+> 
+> The driver currently uses, for every CPU, a page_pool for short packets and
+> another for long ones. The driver also has 4 rx queue per port, so every
+> RXQ #1 will share the short and long page pools of CPU #1.
+> 
+
+I am not sure i am following the hardware config here
+
+> This means that for every RX queue I call xdp_rxq_info_reg_mem_model() twice,
+> on two different page_pool, can this be a problem?
+> 
+> As usual, ideas are welcome.
+> 
+> Matteo Croce (2):
+>   mvpp2: use page_pool allocator
+>   mvpp2: memory accounting
+> 
+>  drivers/net/ethernet/marvell/Kconfig          |   1 +
+>  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   7 +
+>  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 142 +++++++++++++++---
+>  3 files changed, 125 insertions(+), 25 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
+Cheers
+/Ilias
