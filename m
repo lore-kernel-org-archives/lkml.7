@@ -2,136 +2,97 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72215C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE10C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517B920730
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7CD2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfLXRV2 (ORCPT
+        id S1726271AbfLXRbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 12:21:28 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:47696 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbfLXRV2 (ORCPT
+        Tue, 24 Dec 2019 12:31:55 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:38419 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfLXRbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 12:21:28 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 75A3772CCD5;
-        Tue, 24 Dec 2019 20:21:24 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 3B2204A4AE7;
-        Tue, 24 Dec 2019 20:21:24 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Vitaly Chikunov <vt@altlinux.org>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: [PATCH v3] tools lib: Fix builds when glibc contains strlcpy
-Date:   Tue, 24 Dec 2019 20:20:29 +0300
-Message-Id: <20191224172029.19690-1-vt@altlinux.org>
-X-Mailer: git-send-email 2.11.0
+        Tue, 24 Dec 2019 12:31:55 -0500
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 82C4B240004;
+        Tue, 24 Dec 2019 17:31:51 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v3 0/5] PCI: amlogic: Make PCIe working reliably on AXG platforms
+Date:   Tue, 24 Dec 2019 18:39:37 +0100
+Message-Id: <20191224173942.18160-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable a couple of compilation warning (which are treated as errors) on
-strlcpy definition and declaration, allow users to compile perf and
-kernel (objtool).
+PCIe device probing failures have been seen on AXG platforms and were due
+to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit in
+MIPI's PHY registers solved the problem. This bit appears to control band
+gap reference.
 
-1. When glibc have strlcpy (such as in ALT Linux since 2004) objtool and
-perf build fails with this (in gcc):
+As discussed here [1] one of these shared MIPI/PCIE PHY register bits was
+mistakenly implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+a PHY driver to control this bit through syscon subsystem instead, as well
+as setting the band gap one in order to get reliable PCIE communication.
 
-  In file included from exec-cmd.c:3:
-  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
-     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+While at it adding this PHY make AXG code close to G12A one thus allowing
+to remove some specific platform handling in pci-meson driver.
 
-2. Clang ignores `-Wredundant-decls', but produces another warning when
-building perf:
+Please note that CLKID_MIPI_ENABLE removable will be done in a different
+serie.
 
-    CC       util/string.o
-  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
-  size_t __weak strlcpy(char *dest, const char *src, size_t size)
-  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
-  # define __weak                 __attribute__((weak))
-  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
-  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
-
-Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
-Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
-Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-Reviewed-by: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: stable@vger.kernel.org
----
 Changes since v2:
-- v2 was failing to compile on gcc-4.9, because there was no `-Wignored-attributes'.
-  Make this pragma only efficient for Clang.
-Reported-by: kbuild test robot <lkp@intel.com>
+ - Remove shared MIPI/PCIE device driver and use syscon to access register
+   in PCIE only driver instead
+ - Include devicetree documentation
 
-Changes since v1:
-- Fix compiling with clang due to __weak triggering `-Wignored-attributes'.
+Changes sinve v1:
+ - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+ - Add a PHY driver for PCIE_PHY registers
+ - Modify pci-meson.c to make use of both PHYs and remove specific
+   handling for AXG and G12A
 
- tools/include/linux/string.h | 3 +++
- tools/lib/string.c           | 7 +++++++
- 2 files changed, 10 insertions(+)
+[1] https://lkml.org/lkml/2019/12/16/119
 
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index 980cb9266718..99ede7f5dfb8 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -17,7 +17,10 @@ int strtobool(const char *s, bool *res);
-  * However uClibc headers also define __GLIBC__ hence the hack below
-  */
- #if defined(__GLIBC__) && !defined(__UCLIBC__)
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wredundant-decls"
- extern size_t strlcpy(char *dest, const char *src, size_t size);
-+#pragma GCC diagnostic pop
- #endif
- 
- char *str_error_r(int errnum, char *buf, size_t buflen);
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index f2ae1b87c719..f645343815de 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -96,6 +96,10 @@ int strtobool(const char *s, bool *res)
-  * If libc has strlcpy() then that version will override this
-  * implementation:
-  */
-+#ifdef __clang__
-+#pragma clang diagnostic push
-+#pragma clang diagnostic ignored "-Wignored-attributes"
-+#endif
- size_t __weak strlcpy(char *dest, const char *src, size_t size)
- {
- 	size_t ret = strlen(src);
-@@ -107,6 +111,9 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
- 	}
- 	return ret;
- }
-+#ifdef __clang__
-+#pragma clang diagnostic pop
-+#endif
- 
- /**
-  * skip_spaces - Removes leading whitespace from @str.
+Remi Pommarel (5):
+  phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+  PCI: amlogic: Use AXG PCIE PHY
+  arm64: dts: meson-axg: Add PCIE PHY node
+  dt-bindings: PCI: meson: Update PCIE bindings documentation
+  dt-bindings: Add AXG PCIE PHY bindings
+
+ .../bindings/pci/amlogic,meson-pcie.txt       |  22 +--
+ .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  51 +++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   9 +
+ drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+ drivers/phy/amlogic/Kconfig                   |  11 ++
+ drivers/phy/amlogic/Makefile                  |   1 +
+ drivers/phy/amlogic/phy-meson-axg-pcie.c      | 185 ++++++++++++++++++
+ 7 files changed, 287 insertions(+), 108 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+
 -- 
-2.11.0
+2.24.0
 
