@@ -2,122 +2,111 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34791C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3160C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068E92070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CD02070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLXB4E (ORCPT
+        id S1727140AbfLXB5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 20:56:04 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23701 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbfLXB4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 20:56:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 17:56:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,349,1571727600"; 
-   d="scan'208";a="211727785"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga008.jf.intel.com with ESMTP; 23 Dec 2019 17:56:02 -0800
-Date:   Tue, 24 Dec 2019 09:56:02 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20191224015602.GB7739@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
- <20191223231120.GA31820@bombadil.infradead.org>
+        Mon, 23 Dec 2019 20:57:39 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:44323 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfLXB5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 20:57:39 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBO1vEDr005591, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBO1vEDr005591
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Dec 2019 09:57:14 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Tue, 24 Dec 2019 09:57:14 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 24 Dec 2019 09:57:13 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Tue, 24 Dec 2019 09:57:13 +0800
+From:   Pkshih <pkshih@realtek.com>
+To:     "amade@asmblr.net" <amade@asmblr.net>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH 0/9] rtlwifi: Cleanups
+Thread-Topic: [PATCH 0/9] rtlwifi: Cleanups
+Thread-Index: AQHVuY20w+4l9icG/0ewZ8k4l2sdbKfIAbOA
+Date:   Tue, 24 Dec 2019 01:57:13 +0000
+Message-ID: <1577152633.3237.0.camel@realtek.com>
+References: <20191223123715.7177-1-amade@asmblr.net>
+In-Reply-To: <20191223123715.7177-1-amade@asmblr.net>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.69.95]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <ECB1C69587152244A915A668A1FAEA16@realtek.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223231120.GA31820@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 03:11:20PM -0800, Matthew Wilcox wrote:
->On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
->> When page is not NULL, function is called by try_to_unmap_one() with
->> TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
->> with TTU_SPLIT_HUGE_PMD set:
->> 
->>   * unmap_page()
->>   * shrink_page_list()
->> 
->> In both case, the page passed to try_to_unmap_one() is PageHead() of the
->> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
->> aligned, this means the THP is not mapped as PMD THP in this process.
->> This could happen when we do mremap() a PMD size range to an un-aligned
->> address.
->> 
->> Currently, this case is handled by following check in __split_huge_pmd()
->> luckily.
->> 
->>   page != pmd_page(*pmd)
->> 
->> This patch checks the address to skip some work.
->
->The description here is confusing to me.
->
-
-Sorry for the confusion.
-
-Below is my understanding, if not correct or proper, just let me know :-)
-
-According to current comment in __split_huge_pmd(), we check pmd_page with
-page for migration case. While actually, this check also helps in the
-following two cases when page already split-ed:
-
-   * page just split-ed in place
-   * page split-ed and moved to non-PMD aligned address
-
-In both cases, pmd_page() is pointing to the PTE level page table. That's why
-we don't split one already split-ed THP page.
-
-If current code really intend to cover these two cases, sorry for my poor
-understanding.
-
->> +	/*
->> +	 * When page is not NULL, function is called by try_to_unmap_one()
->> +	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
->> +	 * TTU_SPLIT_HUGE_PMD
->> +	 *
->> +	 *     unmap_page()
->> +	 *     shrink_page_list()
->> +	 *
->> +	 * In both cases, the "page" here is the PageHead() of a THP.
->> +	 *
->> +	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
->> +	 * is not necessary to split it.
->> +	 */
->> +	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
->> +		return;
->
->Repeating 75% of it as comments doesn't make it any less confusing.  And
->it feels like we're digging a pothole for someone to fall into later.
->Why not make it make sense ...
->
->	if (page && !IS_ALIGNED(address, page_size(page))
->		return;
-
-Hmm... Use HPAGE_PMD_SIZE here wants to emphasize we want the address to be
-PMD aligned. If just use page_size() here, may confuse the audience?
-
--- 
-Wei Yang
-Help you, Help me
+T24gTW9uLCAyMDE5LTEyLTIzIGF0IDEzOjM3ICswMTAwLCBBbWFkZXVzeiBTxYJhd2nFhHNraSB3
+cm90ZToNCj4gU3RhcnQgZnJvbSBmaXhpbmcgYSB0eXBvIGVycm9yLCB0aGVuIG1vdmUgb250byBt
+YWtpbmcgc2VyaWVzIG9mDQo+IGZ1bmN0aW9ucyBzdGF0aWMgYW5kIHJlbW92aW5nIHVubmVjZXNz
+YXJ5IGhlYWRlci4NCj4gDQo+IEFtYWRldXN6IFPFgmF3acWEc2tpICg5KToNCj4gwqAgcnRsd2lm
+aTogcnRsODE5MmN1OiBGaXggdHlwbw0KPiDCoCBydGx3aWZpOiBydGw4MTg4ZWU6IE1ha2UgZnVu
+Y3Rpb25zIHN0YXRpYyAmIHJtIHN3LmgNCj4gwqAgcnRsd2lmaTogcnRsODE5MmNlOiBNYWtlIGZ1
+bmN0aW9ucyBzdGF0aWMgJiBybSBzdy5oDQo+IMKgIHJ0bHdpZmk6IHJ0bDgxOTJjdTogUmVtb3Zl
+IHN3LmggaGVhZGVyDQo+IMKgIHJ0bHdpZmk6IHJ0bDgxOTJlZTogTWFrZSBmdW5jdGlvbnMgc3Rh
+dGljICYgcm0gc3cuaA0KPiDCoCBydGx3aWZpOiBydGw4MTkyc2U6IFJlbW92ZSBzdy5oIGhlYWRl
+cg0KPiDCoCBydGx3aWZpOiBydGw4NzIzYWU6IE1ha2UgZnVuY3Rpb25zIHN0YXRpYyAmIHJtIHN3
+LmgNCj4gwqAgcnRsd2lmaTogcnRsODcyM2JlOiBNYWtlIGZ1bmN0aW9ucyBzdGF0aWMgJiBybSBz
+dy5oDQo+IMKgIHJ0bHdpZmk6IHJ0bDg4MjFhZTogTWFrZSBmdW5jdGlvbnMgc3RhdGljICYgcm0g
+c3cuaA0KPiANCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxODhlZS9zdy5j
+wqDCoMKgfMKgwqA3ICsrLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgx
+ODhlZS9zdy5owqDCoMKgfCAxMiAtLS0tLS0tDQo+IMKgLi4uL3dpcmVsZXNzL3JlYWx0ZWsvcnRs
+d2lmaS9ydGw4MTkyY2Uvc3cuY8KgwqDCoHzCoMKgNSArKy0NCj4gwqAuLi4vd2lyZWxlc3MvcmVh
+bHRlay9ydGx3aWZpL3J0bDgxOTJjZS9zdy5owqDCoMKgfCAxNSAtLS0tLS0tLQ0KPiDCoC4uLi93
+aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MmN1L3N3LmPCoMKgwqB8IDM1ICsrKysrKysr
+Ky0tLS0tLS0tLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjdS9z
+dy5owqDCoMKgfCAyNyAtLS0tLS0tLS0tLS0tLQ0KPiDCoC4uLi93aXJlbGVzcy9yZWFsdGVrL3J0
+bHdpZmkvcnRsODE5MmVlL3N3LmPCoMKgwqB8wqDCoDcgKystLQ0KPiDCoC4uLi93aXJlbGVzcy9y
+ZWFsdGVrL3J0bHdpZmkvcnRsODE5MmVlL3N3LmjCoMKgwqB8IDExIC0tLS0tLQ0KPiDCoC4uLi93
+aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MnNlL3N3LmPCoMKgwqB8wqDCoDEgLQ0KPiDC
+oC4uLi93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MnNlL3N3LmjCoMKgwqB8IDEzIC0t
+LS0tLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDg3MjNhZS9zdy5jwqDC
+oMKgfMKgwqA3ICsrLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDg3MjNh
+ZS9zdy5owqDCoMKgfCAxMyAtLS0tLS0tDQo+IMKgLi4uL3dpcmVsZXNzL3JlYWx0ZWsvcnRsd2lm
+aS9ydGw4NzIzYmUvc3cuY8KgwqDCoHzCoMKgNyArKy0tDQo+IMKgLi4uL3dpcmVsZXNzL3JlYWx0
+ZWsvcnRsd2lmaS9ydGw4NzIzYmUvc3cuaMKgwqDCoHwgMTMgLS0tLS0tLQ0KPiDCoC4uLi93aXJl
+bGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODgyMWFlL3N3LmPCoMKgwqB8wqDCoDcgKystLQ0KPiDC
+oC4uLi93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODgyMWFlL3N3LmjCoMKgwqB8IDEyIC0t
+LS0tLS0NCj4gwqAxNiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCAxNTggZGVsZXRp
+b25zKC0pDQo+IMKgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0
+ZWsvcnRsd2lmaS9ydGw4MTg4ZWUvc3cuaA0KPiDCoGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MmNlL3N3LmgNCj4gwqBkZWxldGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJj
+dS9zdy5oDQo+IMKgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0
+ZWsvcnRsd2lmaS9ydGw4MTkyZWUvc3cuaA0KPiDCoGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MnNlL3N3LmgNCj4gwqBkZWxldGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDg3MjNh
+ZS9zdy5oDQo+IMKgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0
+ZWsvcnRsd2lmaS9ydGw4NzIzYmUvc3cuaA0KPiDCoGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODgyMWFlL3N3LmgNCj4gDQoNCkZvciBh
+bGwgcGF0Y2hlczrCoA0KQWNrZWQtYnk6IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29t
+Pg0KDQpUaGFua3MuDQoNCg0K
