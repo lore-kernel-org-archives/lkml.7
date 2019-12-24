@@ -2,172 +2,152 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90256C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF19C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD44206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F18F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CV5XJmeC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K9BhtTDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfLXGpG (ORCPT
+        id S1726203AbfLXGpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:45:06 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43297 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfLXGpG (ORCPT
+        Tue, 24 Dec 2019 01:45:35 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:59999 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726157AbfLXGpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:45:06 -0500
-Received: by mail-qk1-f196.google.com with SMTP id t129so15368716qke.10;
-        Mon, 23 Dec 2019 22:45:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rBwbpDsBTx0TBXWTathQ7eBqCJIKnOlRHIXajiSIAMk=;
-        b=CV5XJmeC5AhbgrwvDGaT3y2ih3+FWhLu1miFdFmpTnQ4hL3fABuC2zB2M5aVLg0bEK
-         8Z9pS4cBYe3rHNVK70fWYBoLkkc3bnEqIF8pw4OTlz/m7Imk3MkARYVKgQ40UvqKgRmt
-         Fyh+qBh4Wc+uytZWSDOuTPXoqGpRwKe6Ve1T6k60dxO/5m79IjFjbp333KwjOWq3cden
-         Cvpn9UdTqhUygXOEOm//DikMHNMBUshdunGaX8ZuE6/QRUVzdlZcLSzpWkK2HIJr/N3M
-         4R2Bs0wx1JXv8G8cADzS416vjKKSHfJdcVho0PiLKUT8OaPsHPMkmz2Or01d854a3afl
-         VQeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rBwbpDsBTx0TBXWTathQ7eBqCJIKnOlRHIXajiSIAMk=;
-        b=nskMdpAdmLSjNkrrkc4PtHg+bv5wUp0xXOvLrXxbmJ8/m9qLM8PXOR5hA7QlvgYDJL
-         hU8MAa64NgFDAApGNyKrSXCXOmKEPdTsJHbB1c/Zeh7C6nYhEOFTZB7KhWDhnZSISWHr
-         xRsxGajJIbwkss1dUE55vCH7HbABRljIa0U0oqSEQOgeXV0Z/BiDu96ks+t+2BzKqiBm
-         WFsm5puAC+OAe3RSZTOTrDb1LGUTRZueRKJzUETtk2ZfKNZkzqmk5/jGMmWMqeJdtcXc
-         sQxiO8ZtiqJlqQdOAhfPzLK6j4ZsRh0Z6HCLPOZL2MO/sk967mBt7WJWBAUC302DatL/
-         r0XQ==
-X-Gm-Message-State: APjAAAXLjnUE8XZEvGnae/38sblKFKXJUAj6UULzemhkmSefXEg1xTph
-        eXQVvG2AESmMV3D9j0nzk/aZCLrcytEQ1btm8h4=
-X-Google-Smtp-Source: APXvYqwprX+GZsxqu4aOiFRTl+Wg4TNP/ha2IvNFmVWrlVvYQbkPTvJO+OxYjhMk0oQjBaTTk6Pl33xM/mp65XF+p7M=
-X-Received: by 2002:a37:a685:: with SMTP id p127mr30990481qke.449.1577169905101;
- Mon, 23 Dec 2019 22:45:05 -0800 (PST)
+        Tue, 24 Dec 2019 01:45:35 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577169934; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=y1omERZmcgskIaqOr8CISIffUQ7b0HcT2oXAlwX2yc0=; b=K9BhtTDi91nsu09ls1aPqGaOlAxIRqw+Mcl5YQuEKsLAPAM+pzAZhcO3vOA7ZO/QkjO/ci2Z
+ An3y4rw5tRr9omZeBoul1QhV57MzplMkaLG9pel3MNmMeSmDZXvOOSWPpujkqJMdcAoP3uw8
+ h+P88kCbXU1GsqGLrMgmna4vf50=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e01b3fb.7fc3cd8a3228-smtp-out-n03;
+ Tue, 24 Dec 2019 06:45:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A8E95C4479D; Tue, 24 Dec 2019 06:45:15 +0000 (UTC)
+Received: from Pillair (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 278B0C433A2;
+        Tue, 24 Dec 2019 06:45:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 278B0C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Matthias Kaehlcke'" <mka@chromium.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1576741521-30102-1-git-send-email-pillair@codeaurora.org> <20191219174755.GY228856@google.com>
+In-Reply-To: <20191219174755.GY228856@google.com>
+Subject: RE: [PATCH v2] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Tue, 24 Dec 2019 12:15:10 +0530
+Message-ID: <01fc01d5ba25$b2b12dd0$18138970$@codeaurora.org>
 MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-12-kpsingh@chromium.org>
-In-Reply-To: <20191220154208.15895-12-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Dec 2019 22:44:54 -0800
-Message-ID: <CAEf4BzZFi_h_9t+u=BSOLA8KYxs2BsnFywLOrhvKckD2xDuLpg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 11/13] tools/libbpf: Add bpf_program__attach_lsm
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIjIEokzq12Ktb+lJAmDlq61u6HBQGTLv1bpyFwBpA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 7:42 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> Add functionality in libbpf to attach eBPF program to LSM hooks.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
->  tools/lib/bpf/libbpf.c   | 127 +++++++++++++++++++++++++++++++++++++--
->  tools/lib/bpf/libbpf.h   |   2 +
->  tools/lib/bpf/libbpf.map |   1 +
->  3 files changed, 126 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index b0b27d8e5a37..ab2b23b4f21f 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -5122,8 +5122,8 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
->         return -ESRCH;
->  }
->
-> -static inline int __btf__typdef_with_prefix(struct btf *btf, const char *name,
-> -                                           const char *prefix)
-> +static inline int __btf__type_with_prefix(struct btf *btf, const char *name,
-> +                                         const char *prefix)
+Hi MItthias,
 
-Please do this rename in a patch that introduced this function, there
-is no need to split such changes between two patches. See also my
-request to rename and generalize it a bit.
+> -----Original Message-----
+> From: Matthias Kaehlcke <mka@chromium.org>
+> Sent: Thursday, December 19, 2019 11:18 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; =
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+>=20
+> On Thu, Dec 19, 2019 at 01:15:21PM +0530, Rakesh Pillai wrote:
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+>=20
+> This does not apply cleanly against the current qcom/arm64-for-5.6
+> or for-next branch, looks like you need to rebase.
+>=20
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28
+> ++++++++++++++++++++++++++++
+> >  2 files changed, 33 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 189254f..b2ca143f 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -248,6 +248,11 @@
+> >  	status =3D "okay";
+> >  };
+> >
+> > +&wifi {
+> > +	status =3D "okay";
+> > +	qcom,msa_fixed_perm;
+>=20
+> What is the status of the patch adding this flag?
 
->  {
->
->         size_t prefix_len = strlen(prefix);
-> @@ -5149,9 +5149,9 @@ int libbpf_find_vmlinux_btf_id(const char *name,
->         }
->
+This patch is currently under review =
+(https://patchwork.kernel.org/patch/11236535/)
+It hasn=E2=80=99t been acked yet.
 
-[...]
+>=20
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qup_i2c2_default {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 666e9b9..ce2d2a5 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -42,6 +42,12 @@
+> >  			compatible =3D "qcom,cmd-db";
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@93900000 {
+> > +			compatible =3D "removed-dma-pool";
+> > +			no-map;
+> > +			reg =3D <0 0x93900000 0 0x200000>;
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -1119,6 +1125,28 @@
+> >  				#clock-cells =3D <1>;
+> >  			};
+> >  		};
+> > +
+> > +		wifi: wifi@18800000 {
+> > +			status =3D "disabled";
+>=20
+> nit: the convention seems to be to add this at the end of the node,
+> which IMO makes sense since most other fields provide more =
+'interesting'
+> information.
 
->
-> +
-> +static int bpf_link__destroy_lsm(struct bpf_link *link)
-> +{
-> +       struct bpf_link_lsm *ll = container_of(link, struct bpf_link_lsm, link);
+I will send out an updated patchset, moving "status=3Ddisabled" down
 
-struct bpf_link link being a first field is a requirement for
-bpf_link, so you don't need container_of, just cast link to your type.
-
-> +       char errmsg[STRERR_BUFSIZE];
-> +       int ret;
-> +
-> +       ret = bpf_prog_detach2(ll->prog_fd, ll->hook_fd, BPF_LSM_MAC);
-> +       if (ret < 0) {
-> +               ret = -errno;
-> +               pr_warn("failed to detach from hook: %s\n",
-> +                       libbpf_strerror_r(ret, errmsg, sizeof(errmsg)));
-> +               return ret;
-> +       }
-> +       close(ll->hook_fd);
-> +       return 0;
-> +}
-> +
-> +static const char *__lsm_hook_name(const char *title)
-> +{
-> +
-> +       int i;
-> +
-> +       if (!title)
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(section_names); i++) {
-
-section_names have been renamed to section_defs a while ago, please rebase
-
-> +               if (section_names[i].prog_type != BPF_PROG_TYPE_LSM)
-> +                       continue;
-> +
-
-[...]
