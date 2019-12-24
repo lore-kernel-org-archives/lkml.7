@@ -2,166 +2,94 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F24C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0252C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EEC206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjcNAuSz"
+	by mail.kernel.org (Postfix) with ESMTP id 82DEB2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfLXImE (ORCPT
+        id S1726213AbfLXInE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 03:42:04 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43483 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfLXImE (ORCPT
+        Tue, 24 Dec 2019 03:43:04 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55645 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfLXInE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 03:42:04 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 9so14581826lfq.10;
-        Tue, 24 Dec 2019 00:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BUrzHnGWsCvRbYqfGz7mzn9PEmCOLtCvRNjYsu70LCU=;
-        b=TjcNAuSz8FRQTvnBNT4Mi9cXoiQFY24AK+G4GnqivWsBRc+hcAcjF0A3IfXuDEqY35
-         NtSqIgKijH1yptSgKocyiQCokDpDd5N/TYH/Gtvf+Aw5L+2O2oN5CZo49aWTilo5Oz2Q
-         Pvmwue3yAnnujo0yC0u15A/1edzSiKDILNElGoHUG3niV0glvN7vlz/oxpLQ2iHP8lma
-         gOmohbFb4z/e6AAmLqNt6umtLb1RbfWoshLT7EOK6T68f9XlEx2c4X01/dYCx8kmp/x6
-         fMaWPVQLQob5SYiXl+xSdF6ZNnAatcs2y00iJEuHOXLNwHX3KdZksHi5x3Yyl+NdiwvY
-         emyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BUrzHnGWsCvRbYqfGz7mzn9PEmCOLtCvRNjYsu70LCU=;
-        b=th5H6H4orsxMLMyPrV5NXFm19rC+i4COiKvg0nUODEkSovWb34cm76VANJecnefGnK
-         Vv/vua41aLyt2OHTAWSNXJdYJE+jEDTjEkpKKH64/Dqbsz9RbPBN49PiSX5ltb6LdQlF
-         VSTmoUXCe6ERC71jh0aHVGA8lVlmqjCF0yV8X2S7qiKIwiS0A2g6xgGr0ufOiOXajfPH
-         rTJCjtPDHDxSClIjG5zoW+/ifBYN2uwsFhCpUKBfUO9ASC158jR7o+wiu5PqgFqYDkOh
-         BGBvSC7HFgQYzN+JZYjLVX/8MzFL/uMkSavwFxkA0dXieUG2nRcPROlhkPLOI8OaxhZl
-         boog==
-X-Gm-Message-State: APjAAAWbU8beCDTVJV9Vx/rx5kemolExt1hTGZJD7i6zXx5daFZISePH
-        bi20S7L1S54TFMvWwEs3EYrxXhUmxerAKWC25qw=
-X-Google-Smtp-Source: APXvYqwoEbinn89EIGoO3O5nrw330HICfs0OCkkHCQfpLzwsU20wYK120bA2s6sO6pnLIsha9ci8sXVRs9LNfi8JS7E=
-X-Received: by 2002:ac2:47e6:: with SMTP id b6mr18967553lfp.96.1577176921418;
- Tue, 24 Dec 2019 00:42:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20191217155102.46039-1-mcroce@redhat.com> <cf5b01f8-b4e4-90da-0ee7-b1d81ee6d342@cumulusnetworks.com>
- <CAGnkfhxaT9_WL4UR8qurjBTkkdkuZFbfTQucLjoKOP-1eDEoTw@mail.gmail.com>
-In-Reply-To: <CAGnkfhxaT9_WL4UR8qurjBTkkdkuZFbfTQucLjoKOP-1eDEoTw@mail.gmail.com>
-From:   Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Date:   Tue, 24 Dec 2019 16:41:25 +0800
-Message-ID: <CAMDZJNUQHR2zJwzbqKJWqMEYSKpz3-VHu4LTUzWKX94rQgMzxw@mail.gmail.com>
-Subject: Re: [ovs-dev] [PATCH net-next v2] openvswitch: add TTL decrement action
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        ovs dev <dev@openvswitch.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bindiya Kurle <bindiyakurle@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Dec 2019 03:43:04 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ijfmL-0001uj-7b; Tue, 24 Dec 2019 08:42:58 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     ville.syrjala@linux.intel.com, swati2.sharma@intel.com,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3] drm/i915: Re-init lspcon after HPD if lspcon probe failed
+Date:   Tue, 24 Dec 2019 16:42:51 +0800
+Message-Id: <20191224084251.28414-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matteo,
-Did you have plan to implement the TTL decrement action in userspace
-datapath(with dpdk),
-I am doing some research offloading about TTL decrement action, and
-may sent patch TTL decrement offload action,
-using dpdk rte_flow.
+On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
+becomes useless and never responds to cable hotplugging:
+[    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
+[    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
 
-On Fri, Dec 20, 2019 at 8:37 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Tue, Dec 17, 2019 at 5:30 PM Nikolay Aleksandrov
-> <nikolay@cumulusnetworks.com> wrote:
-> >
-> > On 17/12/2019 17:51, Matteo Croce wrote:
-> > > New action to decrement TTL instead of setting it to a fixed value.
-> > > This action will decrement the TTL and, in case of expired TTL, drop it
-> > > or execute an action passed via a nested attribute.
-> > > The default TTL expired action is to drop the packet.
-> > >
-> > > Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
-> > >
-> > > Tested with a corresponding change in the userspace:
-> > >
-> > >     # ovs-dpctl dump-flows
-> > >     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,1
-> > >     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1,2
-> > >     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
-> > >     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
-> > >
-> > >     # ping -c1 192.168.0.2 -t 42
-> > >     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
-> > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
-> > >     # ping -c1 192.168.0.2 -t 120
-> > >     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
-> > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
-> > >     # ping -c1 192.168.0.2 -t 1
-> > >     #
-> > >
-> > > Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> > > Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-> > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > > ---
-> > >  include/uapi/linux/openvswitch.h |  22 +++++++
-> > >  net/openvswitch/actions.c        |  71 +++++++++++++++++++++
-> > >  net/openvswitch/flow_netlink.c   | 105 +++++++++++++++++++++++++++++++
-> > >  3 files changed, 198 insertions(+)
-> > >
-> >
-> > Hi Matteo,
-> >
-> > [snip]
-> > > +}
-> > > +
-> > >  /* When 'last' is true, sample() should always consume the 'skb'.
-> > >   * Otherwise, sample() should keep 'skb' intact regardless what
-> > >   * actions are executed within sample().
-> > > @@ -1176,6 +1201,44 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
-> > >                            nla_len(actions), last, clone_flow_key);
-> > >  }
-> > >
-> > > +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-> > > +{
-> > > +     int err;
-> > > +
-> > > +     if (skb->protocol == htons(ETH_P_IPV6)) {
-> > > +             struct ipv6hdr *nh = ipv6_hdr(skb);
-> > > +
-> > > +             err = skb_ensure_writable(skb, skb_network_offset(skb) +
-> > > +                                       sizeof(*nh));
-> >
-> > skb_ensure_writable() calls pskb_may_pull() which may reallocate so nh might become invalid.
-> > It seems the IPv4 version below is ok as the ptr is reloaded.
-> >
->
-> Right
->
-> > One q as I don't know ovs that much - can this action be called only with
-> > skb->protocol ==  ETH_P_IP/IPV6 ? I.e. Are we sure that if it's not v6, then it must be v4 ?
-> >
->
-> I'm adding a check in validate_and_copy_dec_ttl() so only ipv4/ipv6
-> packet will pass.
->
-> Thanks,
->
-> --
-> Matteo Croce
-> per aspera ad upstream
->
-> _______________________________________________
-> dev mailing list
-> dev@openvswitch.org
-> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+Seems like the lspcon chip on the system in question only gets powered
+after the cable is plugged.
+
+So let's call lspcon_init() dynamically to properly initialize the
+lspcon chip and make HDMI port work.
+
+Closes: https://gitlab.freedesktop.org/drm/intel/issues/203
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Make sure it's handled under long HPD case.
+
+v2: 
+ - Move lspcon_init() inside of intel_dp_hpd_pulse().
+
+ drivers/gpu/drm/i915/display/intel_dp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index fe31bbfd6c62..a72c9c041c60 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -6573,6 +6573,7 @@ enum irqreturn
+ intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
+ {
+ 	struct intel_dp *intel_dp = &intel_dig_port->dp;
++	struct drm_i915_private *dev_priv = dp_to_i915(intel_dp);
+ 
+ 	if (long_hpd && intel_dig_port->base.type == INTEL_OUTPUT_EDP) {
+ 		/*
+@@ -6593,7 +6594,12 @@ intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
+ 		      long_hpd ? "long" : "short");
+ 
+ 	if (long_hpd) {
+-		intel_dp->reset_link_params = true;
++		if (intel_dig_port->base.type == INTEL_OUTPUT_DDI &&
++		    HAS_LSPCON(dev_priv) && !intel_dig_port->lspcon.active)
++			lspcon_init(intel_dig_port);
++		else
++			intel_dp->reset_link_params = true;
++
+ 		return IRQ_NONE;
+ 	}
+ 
+-- 
+2.17.1
+
