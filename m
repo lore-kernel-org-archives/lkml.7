@@ -2,37 +2,36 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A6CC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C1EC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4852520409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE8120409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577185881;
-	bh=WSSgV7qHToRyqFsNxZ/TREWMazF/7yQjsVKPWV336j8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RFdZp+Pfudny6N5JdA8BKLiVX4rNamdNfaFUzbnuGNBy2orlAOQXB+E/B2+sWrfY
-	 8Omb78QTpR+nfj2Fryq3KNuYBXLaiQXQ/mu9nU3ZZxnyvaboXJlPp3JQ62p7BAuUtN
-	 w0v0l8lzK+IjTMWDW88hFWL4QbO96/02zcYfO9U0=
+	s=default; t=1577185883;
+	bh=OxrNQ2gsibIn4jw7hR+CUTPYXhB9+uDPsB7VVD74JHQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ADyErR/iaqJec/u6+ce4ZFYUMD/O8onyiKeFtMUKdU4V8pCpcZGCOUsPWSQ5Zk1RP
+	 3HhJ9lRil0He6vw3jyfpdRkBj1+DIoPmnOL3gQG0M0u8NS1d2t7j8GSxqTvc+LMoYf
+	 +MfsXTPxjJtjpJoHI82K6A1hC+0Xzqfu0Ie3yFEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLXLLU (ORCPT
+        id S1727007AbfLXLLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:11:20 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:43577 "EHLO
+        Tue, 24 Dec 2019 06:11:22 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39644 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726091AbfLXLLO (ORCPT
+        by vger.kernel.org with ESMTP id S1726314AbfLXLLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:11:14 -0500
+        Tue, 24 Dec 2019 06:11:15 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji5n-000169-UG; Tue, 24 Dec 2019 12:11:12 +0100
+        id 1iji5l-000169-Tz; Tue, 24 Dec 2019 12:11:10 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,12 +44,10 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 03/32] irqchip/gic-v3: Workaround Cavium TX1 erratum when reading GICD_TYPER2
-Date:   Tue, 24 Dec 2019 11:10:26 +0000
-Message-Id: <20191224111055.11836-4-maz@kernel.org>
+Subject: [PATCH v3 00/32] irqchip/gic-v4: GICv4.1 architecture support
+Date:   Tue, 24 Dec 2019 11:10:23 +0000
+Message-Id: <20191224111055.11836-1-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
-References: <20191224111055.11836-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
@@ -62,113 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Despite the architecture spec being extremely clear about the fact
-that reserved registers in the GIC distributor memory map are RES0
-(and thus are not allowed to generate an exception), the Cavium
-ThunderX (aka TX1) SoC explodes as such:
+[All I want for Christmas is... another monster GIC series!]
 
-[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
-[    0.000000] GICv3: 128 SPIs implemented
-[    0.000000] GICv3: 0 Extended SPIs implemented
-[    0.000000] Internal error: synchronous external abort: 96000210 [#1] SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc4-00035-g3cf6a3d5725f #7956
-[    0.000000] Hardware name: cavium,thunder-88xx (DT)
-[    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO)
-[    0.000000] pc : __raw_readl+0x0/0x8
-[    0.000000] lr : gic_init_bases+0x110/0x560
-[    0.000000] sp : ffff800011243d90
-[    0.000000] x29: ffff800011243d90 x28: 0000000000000000
-[    0.000000] x27: 0000000000000018 x26: 0000000000000002
-[    0.000000] x25: ffff8000116f0000 x24: ffff000fbe6a2c80
-[    0.000000] x23: 0000000000000000 x22: ffff010fdc322b68
-[    0.000000] x21: ffff800010a7a208 x20: 00000000009b0404
-[    0.000000] x19: ffff80001124dad0 x18: 0000000000000010
-[    0.000000] x17: 000000004d8d492b x16: 00000000f67eb9af
-[    0.000000] x15: ffffffffffffffff x14: ffff800011249908
-[    0.000000] x13: ffff800091243ae7 x12: ffff800011243af4
-[    0.000000] x11: ffff80001126e000 x10: ffff800011243a70
-[    0.000000] x9 : 00000000ffffffd0 x8 : ffff80001069c828
-[    0.000000] x7 : 0000000000000059 x6 : ffff8000113fb4d1
-[    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
-[    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
-[    0.000000] x1 : 0000000000000000 x0 : ffff8000116f000c
-[    0.000000] Call trace:
-[    0.000000]  __raw_readl+0x0/0x8
-[    0.000000]  gic_of_init+0x188/0x224
-[    0.000000]  of_irq_init+0x200/0x3cc
-[    0.000000]  irqchip_init+0x1c/0x40
-[    0.000000]  init_IRQ+0x160/0x1d0
-[    0.000000]  start_kernel+0x2ec/0x4b8
-[    0.000000] Code: a8c47bfd d65f03c0 d538d080 d65f03c0 (b9400000)
+This rather long series expands the existing GICv4 support to deal with the
+new GICv4.1 architecture, which comes with a set of major improvements
+compared to v4.0:
 
-when reading the GICv4.1 GICD_TYPER2 register, which is unexpected...
+- One architectural doorbell per vcpu, instead of one doorbell per VLPI
 
-Work around it by adding a new quirk flagging all the A1 revisions
-of the distributor, but it remains unknown whether this could affect
-other revisions of this SoC (or even other SoCs from the same silicon
-vendor).
+- Doorbell entirely managed by the HW, with an "at most once" delivery
+  guarantee per non-residency phase and only when requested by the
+  hypervisor
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+- A shared memory scheme between ITSs and redistributors, allowing for an
+  optimised residency sequence (the use of VMOVP becomes less frequent)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 286f98222878..640d4db65b78 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -34,6 +34,7 @@
- #define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
- 
- #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
-+#define FLAGS_WORKAROUND_GICD_TYPER2_TX1	(1ULL << 1)
- 
- struct redist_region {
- 	void __iomem		*redist_base;
-@@ -1464,6 +1465,15 @@ static bool gic_enable_quirk_msm8996(void *data)
- 	return true;
- }
- 
-+static bool gic_enable_quirk_tx1(void *data)
-+{
-+	struct gic_chip_data *d = data;
-+
-+	d->flags |= FLAGS_WORKAROUND_GICD_TYPER2_TX1;
-+
-+	return true;
-+}
-+
- static bool gic_enable_quirk_hip06_07(void *data)
- {
- 	struct gic_chip_data *d = data;
-@@ -1502,6 +1512,12 @@ static const struct gic_quirk gic_quirks[] = {
- 		.mask	= 0xffffffff,
- 		.init	= gic_enable_quirk_hip06_07,
- 	},
-+	{
-+		.desc	= "GICv3: Cavium TX1 GICD_TYPER2 erratum",
-+		.iidr	= 0xa100034c,
-+		.mask	= 0xfff00fff,
-+		.init	= gic_enable_quirk_tx1,
-+	},
- 	{
- 	}
- };
-@@ -1577,7 +1593,12 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
- 	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
- 
--	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
-+	/*
-+	 * ThunderX1 explodes on reading GICD_TYPER2, in total violation
-+	 * of the spec (which says that reserved addresses are RES0).
-+	 */
-+	if (!(gic_data.flags & FLAGS_WORKAROUND_GICD_TYPER2_TX1))
-+		gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
- 
- 	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
- 						 &gic_data);
+- Support for direct virtual SGI delivery (the injection path still involves
+  the hypervisor), at the cost of losing the active state on SGIs. It
+  shouldn't be a big deal, but some guest operating systems might notice
+  (Linux definitely won't care).
+
+On the other hand, public documentation is not available yet, so that's a
+bit annoying...
+
+The series is roughly organised in 5 parts:
+
+(1) Feature detection, errata workaround for TX1
+(2) VPE table allocation, new flavours of VMAPP/VMOVP commands
+(3) v4.1 doorbell management
+(4) Virtual SGI support
+(5) Plumbing of virtual SGIs in KVM
+
+Ideally, I'd like to start merging some of this into 5.6.
+
+Notes:
+
+  - This series has uncovered a behaviour that looks like a HW bug on
+    the Cavium ThunderX (aka TX1) platform (see patch #3). I'd very
+    much welcome some clarification from the Marvell/Cavium folks on
+    Cc, as well as an official erratum number if this happens to be an
+    actual bug.
+
+    [v3 update]
+    People have ignored for two months now, and it is fairly obvious
+    that support for this machine is slowly bit-rotting. Maybe I'll
+    drop the patch and instead start the process of removing all TX1
+    support from the kernel (we'd certainly be better off without it).
+
+* From v2 [2]:
+  - Another bunch of fixes thanks to Zenghui Yu's very careful review
+  - HW-accelerated SGIs are now optional thanks to new architected
+    discovery/selection bits exposed by KVM and used by the guest kernel
+  - Rebased on v5.5-rc2
+
+* From v1 [1]:
+  - A bunch of minor reworks after Zenghui Yu's review
+  - A workaround for what looks like a new and unexpected TX1 bug
+  - A subtle reorder of the series so that some patches can go in early
+
+[1] https://lore.kernel.org/lkml/20190923182606.32100-1-maz@kernel.org/
+[2] https://lore.kernel.org/lkml/20191027144234.8395-1-maz@kernel.org/
+
+Marc Zyngier (32):
+  irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
+  irqchip/gic-v3: Add GICv4.1 VPEID size discovery
+  irqchip/gic-v3: Workaround Cavium TX1 erratum when reading GICD_TYPER2
+  irqchip/gic-v3: Use SGIs without active state if offered
+  irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation
+  irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
+  irqchip/gic-v4.1: Don't use the VPE proxy if RVPEID is set
+  irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP
+  irqchip/gic-v4.1: Plumb skeletal VPE irqchip
+  irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
+  irqchip/gic-v4.1: Add VPE residency callback
+  irqchip/gic-v4.1: Add VPE eviction callback
+  irqchip/gic-v4.1: Add VPE INVALL callback
+  irqchip/gic-v4.1: Suppress per-VLPI doorbell
+  irqchip/gic-v4.1: Allow direct invalidation of VLPIs
+  irqchip/gic-v4.1: Advertise support v4.1 to KVM
+  irqchip/gic-v4.1: Map the ITS SGIR register page
+  irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+  irqchip/gic-v4.1: Add initial SGI configuration
+  irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
+  irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
+  irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+  irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction
+    layer
+  irqchip/gic-v4.1: Add VSGI allocation/teardown
+  irqchip/gic-v4.1: Add VSGI property setup
+  irqchip/gic-v4.1: Eagerly vmap vPEs
+  KVM: arm64: GICv4.1: Let doorbells be auto-enabled
+  KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
+  KVM: arm64: GICv4.1: Allow SGIs to switch between HW and SW interrupts
+  KVM: arm64: GICv4.1: Plumb SGI implementation selection in the
+    distributor
+  KVM: arm64: GICv4.1: Reload VLPI configuration on distributor
+    enable/disable
+  KVM: arm64: GICv4.1: Expose HW-based SGIs in debugfs
+
+ arch/arm/include/asm/arch_gicv3.h      |   2 +
+ arch/arm64/include/asm/arch_gicv3.h    |   1 +
+ arch/arm64/include/asm/kvm_host.h      |   1 +
+ drivers/irqchip/irq-gic-v3-its.c       | 996 +++++++++++++++++++++++--
+ drivers/irqchip/irq-gic-v3.c           |  57 +-
+ drivers/irqchip/irq-gic-v4.c           | 134 +++-
+ include/kvm/arm_vgic.h                 |   4 +
+ include/linux/irqchip/arm-gic-common.h |   2 +
+ include/linux/irqchip/arm-gic-v3.h     |  76 +-
+ include/linux/irqchip/arm-gic-v4.h     |  43 +-
+ virt/kvm/arm/arm.c                     |   8 +
+ virt/kvm/arm/vgic/vgic-debug.c         |  14 +-
+ virt/kvm/arm/vgic/vgic-mmio-v3.c       |  68 +-
+ virt/kvm/arm/vgic/vgic-mmio.c          |  88 ++-
+ virt/kvm/arm/vgic/vgic-v3.c            |   3 +
+ virt/kvm/arm/vgic/vgic-v4.c            | 139 +++-
+ virt/kvm/arm/vgic/vgic.h               |   1 +
+ 17 files changed, 1522 insertions(+), 115 deletions(-)
+
 -- 
 2.20.1
 
