@@ -2,197 +2,79 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B5C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF63C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CAB20643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:15:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qlx5H5ZQ"
+	by mail.kernel.org (Postfix) with ESMTP id 773D42070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577153798;
+	bh=Xl1sl6qPOVuQHTaphbCgGtQrDI9M8MqK9eJ5gq7yL7g=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=X9ho8IVdC0cXeiB9eM/vj6kOCaCMN561wW0AL3CevwInI0Vv/e6IvYVkFKCI0B/g3
+	 ZgLxDGYOUaVSgueP+HMMuU6LZfJ0aNmjUre/wwjZUxEHgjOI7itPHwJCx3Eajq8bf0
+	 jb4NUEG5wIYn7oJ/rg8ZI2QbZRNsEDbsN+dL0klA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLXCOv (ORCPT
+        id S1727056AbfLXCQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 21:14:51 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39587 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfLXCOv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 21:14:51 -0500
-Received: by mail-qt1-f193.google.com with SMTP id e5so16987919qtm.6;
-        Mon, 23 Dec 2019 18:14:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mXoFmqw2vJeUhs1GIs2JTlEy1nHGN2qgfTl1gP/Lo+A=;
-        b=qlx5H5ZQO5QKJynv7TLWbTd3ZraXF/vFCdjn9duGW9JwZyB+m8+nI9iDliBwLynbDB
-         8swFw5xiuZIHmDt7XHx+nuIMi0GoFI9DskqcOv2C/vuKjXRyzOvuHd1pW0OtplKGGBbB
-         ZdlIePGJFnI+pIk67KdY6TL7AmnpVOHApUgxMsvUBo5ix/HWyg8SxoueUrYRU+h6Ic5d
-         2PRB8CYNprHBboI3Yb5Fguc6FdJh27hEnLbScWjfLQLcyuz2lHAFhx18CmE+QcqimFAX
-         zcSokQ9FSAsnQscLKDzqlTxycJRBIDMF5WH+IplkQjpRCruGxGc2qw6wfCz/JnaVgvCO
-         2zqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mXoFmqw2vJeUhs1GIs2JTlEy1nHGN2qgfTl1gP/Lo+A=;
-        b=AMm3an0vqLzmrIYxJ8vJx+RRLpyaElsG01P9rPSK29HAnnhU7uPJ1/vabIa5SP7sNn
-         h2ZkrD+LI69XmUcfIBiccaYzzJyLdSKngRLpjW0oQR1dGkfJwP/NUYZsn2be1hXDL/vT
-         42JZbm4uubIIKSPERIk6dsUZVsu1/ZWxuBVblUWwce+4jziGmrk0bcjPocjQ6iWp6Mkb
-         qZnX1TEWMXmfGf3PVodu1mpt4jJZja/ao6PVlmtnC9zR6mUWRdXyWYP45c3QKL+Mj4Ed
-         ooMeUAhoQ3E4RNpCMr/KCYBBHC82yIfT6gWM5dXlNa3UfvOYb5o6szuJb+a7ItdnS/eE
-         tWJA==
-X-Gm-Message-State: APjAAAWrqKrzHNZnpR4WWgSijbMB53osYwZFl0UT2aBajX7PkaJescF6
-        +voCYaTUTwOMIbXbn3gCLnhGJozpftRWMJtyopY=
-X-Google-Smtp-Source: APXvYqyN/g9RjJwDYi2yDKRvGxF6/O62Sp5RNIcsaiSG5y1QS+Kk13wibiipdUnXIjMiqdQbhQqZJR2Ucn/uyr7RaoI=
-X-Received: by 2002:ac8:5548:: with SMTP id o8mr26178455qtr.338.1577153690354;
- Mon, 23 Dec 2019 18:14:50 -0800 (PST)
+        Mon, 23 Dec 2019 21:16:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726871AbfLXCQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 21:16:37 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF47E20643;
+        Tue, 24 Dec 2019 02:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577153796;
+        bh=Xl1sl6qPOVuQHTaphbCgGtQrDI9M8MqK9eJ5gq7yL7g=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=mfmJvbEY/K1nmfa3j6qBL+0BM8/Y7DP+64wSIsLWY5un1ffy2ROeiF8kQDe7COrEF
+         G7QWKlmjCpHp/0kzJMoc+EbVzlzQcw+6zDDauEYCp2cI3hh2bgADo5JDu2oU6CGEoc
+         MyA4h0lqPxvzwSIIrYU77piEW9vGZ0kAB8+A6RMs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191223110004.2157-1-rppt@kernel.org> <20191223110004.2157-3-rppt@kernel.org>
-In-Reply-To: <20191223110004.2157-3-rppt@kernel.org>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Tue, 24 Dec 2019 10:14:13 +0800
-Message-ID: <CAEbi=3e0Bh__ROAx_HRD1EM25scPwTcVVwDa3eFrJnG8g3-5ag@mail.gmail.com>
-Subject: Re: [PATCH 2/2] nds32: fix build failure caused by page table folding updates
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191220175616.3wdslb7hm773zb22@flawful.org>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org> <20191125135910.679310-8-niklas.cassel@linaro.org> <20191219062339.DC0DE21582@mail.kernel.org> <20191220175616.3wdslb7hm773zb22@flawful.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Niklas Cassel <nks@flawful.org>
+Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to specify the parent
+User-Agent: alot/0.8.1
+Date:   Mon, 23 Dec 2019 18:16:35 -0800
+Message-Id: <20191224021636.CF47E20643@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike Rapoport <rppt@kernel.org> =E6=96=BC 2019=E5=B9=B412=E6=9C=8823=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:00=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> The commit 7c2763c42326 ("nds32: use pgtable-nopmd instead of
-> 4level-fixup") missed the pmd_off_k() macro which caused the following
-> build error:
->
->   CC      arch/nds32/mm/highmem.o
-> In file included from arch/nds32/include/asm/page.h:57,
->                  from include/linux/mm_types_task.h:16,
->                  from include/linux/mm_types.h:5,
->                  from include/linux/mmzone.h:21,
->                  from include/linux/gfp.h:6,
->                  from include/linux/xarray.h:14,
->                  from include/linux/radix-tree.h:18,
->                  from include/linux/fs.h:15,
->                  from include/linux/highmem.h:5,
->                  from arch/nds32/mm/highmem.c:5:
-> arch/nds32/mm/highmem.c: In function 'kmap_atomic':
-> arch/nds32/include/asm/pgtable.h:360:44: error: passing argument 1 of 'pm=
-d_offset' from incompatible pointer type [-Werror=3Dincompatible-pointer-ty=
-pes]
->  #define pgd_offset(mm, address) ((mm)->pgd + pgd_index(address))
->                                  ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-> arch/nds32/include/asm/memory.h:33:29: note: in definition of macro '__ph=
-ys_to_virt'
->  #define __phys_to_virt(x) ((x) - PHYS_OFFSET + PAGE_OFFSET)
->                              ^
-> arch/nds32/include/asm/pgtable.h:193:55: note: in expansion of macro '__v=
-a'
->  #define pmd_page_kernel(pmd)         ((unsigned long) __va(pmd_val(pmd) =
-& PAGE_MASK))
->                                                        ^~~~
-> include/asm-generic/pgtable-nop4d.h:41:24: note: in expansion of macro 'p=
-gd_val'
->  #define p4d_val(x)    (pgd_val((x).pgd))
->                         ^~~~~~~
-> include/asm-generic/pgtable-nopud.h:50:24: note: in expansion of macro 'p=
-4d_val'
->  #define pud_val(x)    (p4d_val((x).p4d))
->                         ^~~~~~~
-> include/asm-generic/pgtable-nopmd.h:49:24: note: in expansion of macro 'p=
-ud_val'
->  #define pmd_val(x)    (pud_val((x).pud))
->                         ^~~~~~~
-> arch/nds32/include/asm/pgtable.h:193:60: note: in expansion of macro 'pmd=
-_val'
->  #define pmd_page_kernel(pmd)         ((unsigned long) __va(pmd_val(pmd) =
-& PAGE_MASK))
->                                                             ^~~~~~~
-> arch/nds32/include/asm/pgtable.h:190:56: note: in expansion of macro 'pmd=
-_page_kernel'
->  #define pte_offset_kernel(dir, address)      ((pte_t *)pmd_page_kernel(*=
-(dir)) + pte_index(address))
->                                                         ^~~~~~~~~~~~~~~
-> arch/nds32/mm/highmem.c:52:9: note: in expansion of macro 'pte_offset_ker=
-nel'
->   ptep =3D pte_offset_kernel(pmd_off_k(vaddr), vaddr);
->          ^~~~~~~~~~~~~~~~~
-> arch/nds32/include/asm/pgtable.h:362:33: note: in expansion of macro 'pgd=
-_offset'
->  #define pgd_offset_k(addr)      pgd_offset(&init_mm, addr)
->                                  ^~~~~~~~~~
-> arch/nds32/include/asm/pgtable.h:198:39: note: in expansion of macro 'pgd=
-_offset_k'
->  #define pmd_off_k(address) pmd_offset(pgd_offset_k(address), address)
->                                        ^~~~~~~~~~~~
-> arch/nds32/mm/highmem.c:52:27: note: in expansion of macro 'pmd_off_k'
->   ptep =3D pte_offset_kernel(pmd_off_k(vaddr), vaddr);
->                            ^~~~~~~~~
-> In file included from arch/nds32/include/asm/pgtable.h:7,
->                  from include/linux/mm.h:99,
->                  from include/linux/highmem.h:8,
->                  from arch/nds32/mm/highmem.c:5:
-> include/asm-generic/pgtable-nopmd.h:44:42: note: expected 'pud_t *' {aka =
-'struct <anonymous> *'} but argument is of type 'pgd_t *' {aka 'long unsign=
-ed int *'}
->  static inline pmd_t * pmd_offset(pud_t * pud, unsigned long address)
->                                   ~~~~~~~~^~~
-> In file included from arch/nds32/include/asm/page.h:57,
->                  from include/linux/mm_types_task.h:16,
->                  from include/linux/mm_types.h:5,
->                  from include/linux/mmzone.h:21,
->                  from include/linux/gfp.h:6,
->                  from include/linux/xarray.h:14,
->                  from include/linux/radix-tree.h:18,
->                  from include/linux/fs.h:15,
->                  from include/linux/highmem.h:5,
->                  from arch/nds32/mm/highmem.c:5:
->
-> Updating the pmd_off_k() macro to use the correct page table unfolding
-> fixes the issue.
->
-> Fixes: 7c2763c42326 ("nds32: use pgtable-nopmd instead of 4level-fixup")
-> Link: https://lore.kernel.org/lkml/201912212139.yptX8CsV%25lkp@intel.com/
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/nds32/include/asm/pgtable.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pg=
-table.h
-> index 0214e4150539..6abc58ac406d 100644
-> --- a/arch/nds32/include/asm/pgtable.h
-> +++ b/arch/nds32/include/asm/pgtable.h
-> @@ -195,7 +195,7 @@ extern void paging_init(void);
->  #define pte_unmap(pte)         do { } while (0)
->  #define pte_unmap_nested(pte)  do { } while (0)
->
-> -#define pmd_off_k(address)     pmd_offset(pgd_offset_k(address), address=
-)
-> +#define pmd_off_k(address)     pmd_offset(pud_offset(p4d_offset(pgd_offs=
-et_k(address), (address)), (address)), (address))
->
->  #define set_pte_at(mm,addr,ptep,pteval) set_pte(ptep,pteval)
->  /*
+Quoting Niklas Cassel (2019-12-20 09:56:16)
+> On Wed, Dec 18, 2019 at 10:23:39PM -0800, Stephen Boyd wrote:
+> > This is odd. The clks could be registered with of_clk_hw_register() but
+> > then we lose the device provider information. Maybe we should search up
+> > one level to the parent node and if that has a DT node but the
+> > clk controller device doesn't we should use that instead?
+>=20
+> Hello Stephen,
+>=20
+> Having this in the clk core is totally fine with me,
+> since it solves my problem.
+>=20
+> Will you cook up a patch, or do you want me to do it?
+>=20
 
-Thank you, Mike.
-Reviewed-by: Greentime Hu <green.hu@gmail.com>
+Can you try the patch I appended to my previous mail? I can write
+something up more proper later this week.
+
