@@ -4,124 +4,307 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA4C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A151CC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA6420643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CFA20643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLXQXA (ORCPT
+        id S1726224AbfLXQdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:23:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726168AbfLXQW7 (ORCPT
+        Tue, 24 Dec 2019 11:33:21 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41687 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfLXQdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 11:22:59 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBOGGx8V132004
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:22:58 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2x21kh1ew1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:22:58 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Tue, 24 Dec 2019 16:22:56 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Dec 2019 16:22:53 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBOGMqP353805150
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Dec 2019 16:22:52 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4F6911C050;
-        Tue, 24 Dec 2019 16:22:52 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7232111C058;
-        Tue, 24 Dec 2019 16:22:51 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 24 Dec 2019 16:22:51 +0000 (GMT)
-Date:   Tue, 24 Dec 2019 21:52:50 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     pauld@redhat.com, longman@redhat.com, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/shared: include correct header for static key
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <xagsmtp2.20191223133223.8837@vmsdvm3.vnet.ibm.com>
+        Tue, 24 Dec 2019 11:33:21 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 831FE240004;
+        Tue, 24 Dec 2019 16:33:17 +0000 (UTC)
+Date:   Tue, 24 Dec 2019 17:41:22 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] PCI: amlogic: Use AXG PCIE and shared MIPI/PCIE
+ PHYs
+Message-ID: <20191224164122.GE7304@voidbox>
+References: <20191223214529.20377-1-repk@triplefau.lt>
+ <20191223214529.20377-4-repk@triplefau.lt>
+ <ce9e2f14-cadd-a977-75d7-402a7ee04c7b@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <xagsmtp2.20191223133223.8837@vmsdvm3.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19122416-0016-0000-0000-000002D7DCCF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19122416-0017-0000-0000-0000333A328F
-Message-Id: <20191224162250.GA1781@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-24_04:2019-12-24,2019-12-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 adultscore=0 mlxscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912240142
+In-Reply-To: <ce9e2f14-cadd-a977-75d7-402a7ee04c7b@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Jason A. Donenfeld <Jason@zx2c4.com> [2019-12-23 14:31:47]:
-
-> Recently, the spinlock implementation grew a static key optimization,
-> but the jump_label.h header include was left out, leading to build
-> errors:
+On Tue, Dec 24, 2019 at 03:44:41PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> linux/arch/powerpc/include/asm/spinlock.h:44:7: error: implicit declaration of function ???static_branch_unlikely??? [-Werror=implicit-function-declaration]
->    44 |  if (!static_branch_unlikely(&shared_processor))
+> On 24/12/19 3:15 AM, Remi Pommarel wrote:
+> > Now that PCIE PHY has been introduced for AXG, the whole has_shared_phy
+> > logic can be mutualized between AXG and G12A platforms.
+> > 
+> > This also makes use of the optional MIPI/PCIE shared fonctionality PHY
+> > found on AXG platforms, which need to be used in order to have reliable
+> > PCIE communications.
+> > 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> >  drivers/pci/controller/dwc/pci-meson.c | 140 ++++++++-----------------
+> >  1 file changed, 46 insertions(+), 94 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> > index 3772b02a5c55..3d12155c32f6 100644
+> > --- a/drivers/pci/controller/dwc/pci-meson.c
+> > +++ b/drivers/pci/controller/dwc/pci-meson.c
+> > @@ -66,7 +66,6 @@
+> >  #define PORT_CLK_RATE			100000000UL
+> >  #define MAX_PAYLOAD_SIZE		256
+> >  #define MAX_READ_REQ_SIZE		256
+> > -#define MESON_PCIE_PHY_POWERUP		0x1c
+> >  #define PCIE_RESET_DELAY		500
+> >  #define PCIE_SHARED_RESET		1
+> >  #define PCIE_NORMAL_RESET		0
+> > @@ -81,26 +80,19 @@ enum pcie_data_rate {
+> >  struct meson_pcie_mem_res {
+> >  	void __iomem *elbi_base;
+> >  	void __iomem *cfg_base;
+> > -	void __iomem *phy_base;
+> >  };
+> >  
+> >  struct meson_pcie_clk_res {
+> >  	struct clk *clk;
+> > -	struct clk *mipi_gate;
+> >  	struct clk *port_clk;
+> >  	struct clk *general_clk;
+> >  };
+> >  
+> >  struct meson_pcie_rc_reset {
+> > -	struct reset_control *phy;
+> >  	struct reset_control *port;
+> >  	struct reset_control *apb;
+> >  };
+> >  
+> > -struct meson_pcie_param {
+> > -	bool has_shared_phy;
+> > -};
+> > -
+> >  struct meson_pcie {
+> >  	struct dw_pcie pci;
+> >  	struct meson_pcie_mem_res mem_res;
+> > @@ -108,7 +100,7 @@ struct meson_pcie {
+> >  	struct meson_pcie_rc_reset mrst;
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct phy *phy;
+> > -	const struct meson_pcie_param *param;
+> > +	struct phy *shared_phy;
+> >  };
+> >  
+> >  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+> > @@ -130,13 +122,6 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+> >  {
+> >  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> >  
+> > -	if (!mp->param->has_shared_phy) {
+> > -		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> > -		if (IS_ERR(mrst->phy))
+> > -			return PTR_ERR(mrst->phy);
+> > -		reset_control_deassert(mrst->phy);
+> > -	}
+> > -
+> >  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+> >  	if (IS_ERR(mrst->port))
+> >  		return PTR_ERR(mrst->port);
+> > @@ -162,22 +147,6 @@ static void __iomem *meson_pcie_get_mem(struct platform_device *pdev,
+> >  	return devm_ioremap_resource(dev, res);
+> >  }
+> >  
+> > -static void __iomem *meson_pcie_get_mem_shared(struct platform_device *pdev,
+> > -					       struct meson_pcie *mp,
+> > -					       const char *id)
+> > -{
+> > -	struct device *dev = mp->pci.dev;
+> > -	struct resource *res;
+> > -
+> > -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, id);
+> > -	if (!res) {
+> > -		dev_err(dev, "No REG resource %s\n", id);
+> > -		return ERR_PTR(-ENXIO);
+> > -	}
+> > -
+> > -	return devm_ioremap(dev, res->start, resource_size(res));
+> > -}
+> > -
+> >  static int meson_pcie_get_mems(struct platform_device *pdev,
+> >  			       struct meson_pcie *mp)
+> >  {
+> > @@ -189,14 +158,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+> >  	if (IS_ERR(mp->mem_res.cfg_base))
+> >  		return PTR_ERR(mp->mem_res.cfg_base);
+> >  
+> > -	/* Meson AXG SoC has two PCI controllers use same phy register */
+> > -	if (!mp->param->has_shared_phy) {
+> > -		mp->mem_res.phy_base =
+> > -			meson_pcie_get_mem_shared(pdev, mp, "phy");
+> > -		if (IS_ERR(mp->mem_res.phy_base))
+> > -			return PTR_ERR(mp->mem_res.phy_base);
+> > -	}
+> > -
+> >  	return 0;
+> >  }
+> >  
+> > @@ -204,20 +165,40 @@ static int meson_pcie_power_on(struct meson_pcie *mp)
+> >  {
+> >  	int ret = 0;
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		ret = phy_init(mp->phy);
+> > -		if (ret)
+> > -			return ret;
+> > +	ret = phy_init(mp->phy);
+> > +	if (ret)
+> > +		goto err;
+> >  
+> > -		ret = phy_power_on(mp->phy);
+> > -		if (ret) {
+> > -			phy_exit(mp->phy);
+> > -			return ret;
+> > -		}
+> > -	} else
+> > -		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> > +	ret = phy_init(mp->shared_phy);
+> > +	if (ret)
+> > +		goto exit;
+> > +
+> > +	ret = phy_power_on(mp->phy);
+> > +	if (ret)
+> > +		goto shared_exit;
+> > +
+> > +	ret = phy_power_on(mp->shared_phy);
+> > +	if (ret)
+> > +		goto power_off;
+> >  
+> >  	return 0;
+> > +
+> > +power_off:
+> > +	phy_power_off(mp->phy);
+> > +shared_exit:
+> > +	phy_exit(mp->shared_phy);
+> > +exit:
+> > +	phy_exit(mp->phy);
+> > +err:
+> > +	return ret;
+> > +}
+> > +
+> > +static void meson_pcie_power_off(struct meson_pcie *mp)
+> > +{
+> > +	phy_power_off(mp->shared_phy);
+> > +	phy_power_off(mp->phy);
+> > +	phy_exit(mp->shared_phy);
+> > +	phy_exit(mp->phy);
+> >  }
+> >  
+> >  static int meson_pcie_reset(struct meson_pcie *mp)
+> > @@ -225,16 +206,13 @@ static int meson_pcie_reset(struct meson_pcie *mp)
+> >  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> >  	int ret = 0;
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		ret = phy_reset(mp->phy);
+> > -		if (ret)
+> > -			return ret;
+> > -	} else {
+> > -		reset_control_assert(mrst->phy);
+> > -		udelay(PCIE_RESET_DELAY);
+> > -		reset_control_deassert(mrst->phy);
+> > -		udelay(PCIE_RESET_DELAY);
+> > -	}
+> > +	ret = phy_reset(mp->phy);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = phy_reset(mp->shared_phy);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> >  	reset_control_assert(mrst->port);
+> >  	reset_control_assert(mrst->apb);
+> > @@ -286,12 +264,6 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+> >  	if (IS_ERR(res->port_clk))
+> >  		return PTR_ERR(res->port_clk);
+> >  
+> > -	if (!mp->param->has_shared_phy) {
+> > -		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> > -		if (IS_ERR(res->mipi_gate))
+> > -			return PTR_ERR(res->mipi_gate);
+> > -	}
+> > -
+> >  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+> >  	if (IS_ERR(res->general_clk))
+> >  		return PTR_ERR(res->general_clk);
+> > @@ -562,7 +534,6 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+> >  
+> >  static int meson_pcie_probe(struct platform_device *pdev)
+> >  {
+> > -	const struct meson_pcie_param *match_data;
+> >  	struct device *dev = &pdev->dev;
+> >  	struct dw_pcie *pci;
+> >  	struct meson_pcie *mp;
+> > @@ -576,18 +547,13 @@ static int meson_pcie_probe(struct platform_device *pdev)
+> >  	pci->dev = dev;
+> >  	pci->ops = &dw_pcie_ops;
+> >  
+> > -	match_data = of_device_get_match_data(dev);
+> > -	if (!match_data) {
+> > -		dev_err(dev, "failed to get match data\n");
+> > -		return -ENODEV;
+> > -	}
+> > -	mp->param = match_data;
+> > +	mp->phy = devm_phy_get(dev, "pcie");
+> > +	if (IS_ERR(mp->phy))
+> > +		return PTR_ERR(mp->phy);
+> >  
+> > -	if (mp->param->has_shared_phy) {
+> > -		mp->phy = devm_phy_get(dev, "pcie");
+> > -		if (IS_ERR(mp->phy))
+> > -			return PTR_ERR(mp->phy);
+> > -	}
+> > +	mp->shared_phy = devm_phy_optional_get(dev, "shared");
+> > +	if (IS_ERR(mp->phy))
+> > +		return PTR_ERR(mp->phy);
 > 
-> This commit adds the missing header.
+> This also requires dt-binding updation.Is PCIe connected to two
+> different PHYs here?
 
-Right, This was in v4 version of the patchset
-(http://lkml.kernel.org/r/20191212085344.17357-1-srikar@linux.vnet.ibm.com)
-but we missed it in the final v5 version.
+Not exactly, it is that the PCIE PHY is using some non documented bits
+from the range of the MIPI one. But now that I have read about syscon it
+seems that those registers are defined to be handled by syscon subsystem
+in the device tree.
 
-Thanks for noticing and fixing it.
+Thus I think It would make much more sense to remove the shared MIPI/PCIE
+PHY driver in patch 1/3 and set the appropriate bits in the PCIE PHY
+driver itself from patch 2/3 through syscon subsystem.
 
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Sorry for the noise, will send v3 with only 1 PHY driver and appropriate
+binding documentation.
 
-> 
-> Fixes: 656c21d6af5d ("powerpc/shared: Use static key to detect shared processor")
-> Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
->  arch/powerpc/include/asm/spinlock.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
-> index 1b55fc08f853..860228e917dc 100644
-> --- a/arch/powerpc/include/asm/spinlock.h
-> +++ b/arch/powerpc/include/asm/spinlock.h
-> @@ -15,6 +15,7 @@
->   *
->   * (the type definitions are in asm/spinlock_types.h)
->   */
-> +#include <linux/jump_label.h>
->  #include <linux/irqflags.h>
->  #ifdef CONFIG_PPC64
->  #include <asm/paca.h>
-> -- 
-> 2.24.1
-> 
+Thanks,
 
 -- 
-Thanks and Regards
-Srikar Dronamraju
-
+Remi
