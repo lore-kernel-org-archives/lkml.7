@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F559C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09444C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E1F206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B6A206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfLXBAf (ORCPT
+        id S1727240AbfLXBAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 20:00:35 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:56103 "EHLO
+        Mon, 23 Dec 2019 20:00:40 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:56094 "EHLO
         lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfLXBAd (ORCPT
+        with ESMTP id S1726860AbfLXBAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 20:00:33 -0500
+        Mon, 23 Dec 2019 20:00:32 -0500
 Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
         by lists.gateworks.com with esmtp (Exim 4.82)
         (envelope-from <rjones@gateworks.com>)
-        id 1ijYni-0007xM-Ju; Tue, 24 Dec 2019 01:15:54 +0000
+        id 1ijYng-0007xM-Sv; Tue, 24 Dec 2019 01:15:53 +0000
 From:   Robert Jones <rjones@gateworks.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -35,9 +35,9 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Robert Jones <rjones@gateworks.com>
-Subject: [PATCH v4 4/5] ARM: dts: imx: Add GW5913 board support
-Date:   Mon, 23 Dec 2019 17:00:19 -0800
-Message-Id: <20191224010020.15969-5-rjones@gateworks.com>
+Subject: [PATCH v4 2/5] ARM: dts: imx: Add GW5907 board support
+Date:   Mon, 23 Dec 2019 17:00:17 -0800
+Message-Id: <20191224010020.15969-3-rjones@gateworks.com>
 X-Mailer: git-send-email 2.9.2
 In-Reply-To: <20191224010020.15969-1-rjones@gateworks.com>
 References: <20191224010020.15969-1-rjones@gateworks.com>
@@ -46,56 +46,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Gateworks GW5913 is an IMX6 SoC based single board computer with:
+The Gateworks GW5907 is an IMX6 SoC based single board computer with:
  - IMX6Q or IMX6DL
  - 32bit DDR3 DRAM
- - FEC GbE RJ45 front-panel
- - 1x miniPCIe socket with PCI Gen2, USB2
- - 1x miniPCIe socket with PCI Gen2, USB2, nanoSIM
- - 6V to 60V DC input connector
- - GPS (ublox ZOE-M8Q)
+ - FEC GbE Phy
  - bi-color front-panel LED
  - 256MB NAND boot device
- - nanoSIM socket
- - user pushbutton
  - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
+ - Digital IO expander (pca9555)
+ - Joystick 12bit adc (ads1015)
 
 Signed-off-by: Robert Jones <rjones@gateworks.com>
 ---
  arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw5913.dts   |  14 ++
- arch/arm/boot/dts/imx6q-gw5913.dts    |  14 ++
- arch/arm/boot/dts/imx6qdl-gw5913.dtsi | 348 ++++++++++++++++++++++++++++++++++
- 4 files changed, 378 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw5913.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw5913.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+ arch/arm/boot/dts/imx6dl-gw5907.dts   |  14 ++
+ arch/arm/boot/dts/imx6q-gw5907.dts    |  14 ++
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 399 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 429 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 85e53cc..5b059fc 100644
+index 1e9e1af..9ee80e2 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -424,6 +424,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+@@ -422,6 +422,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw560x.dtb \
+ 	imx6dl-gw5903.dtb \
  	imx6dl-gw5904.dtb \
- 	imx6dl-gw5907.dtb \
- 	imx6dl-gw5910.dtb \
-+	imx6dl-gw5913.dtb \
++	imx6dl-gw5907.dtb \
  	imx6dl-hummingboard.dtb \
  	imx6dl-hummingboard-emmc-som-v15.dtb \
  	imx6dl-hummingboard-som-v15.dtb \
-@@ -497,6 +498,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+@@ -493,6 +494,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw560x.dtb \
+ 	imx6q-gw5903.dtb \
  	imx6q-gw5904.dtb \
- 	imx6q-gw5907.dtb \
- 	imx6q-gw5910.dtb \
-+	imx6q-gw5913.dtb \
++	imx6q-gw5907.dtb \
  	imx6q-h100.dtb \
  	imx6q-hummingboard.dtb \
  	imx6q-hummingboard-emmc-som-v15.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw5913.dts b/arch/arm/boot/dts/imx6dl-gw5913.dts
+diff --git a/arch/arm/boot/dts/imx6dl-gw5907.dts b/arch/arm/boot/dts/imx6dl-gw5907.dts
 new file mode 100644
-index 0000000..81475c1
+index 0000000..7d9fe47
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw5913.dts
++++ b/arch/arm/boot/dts/imx6dl-gw5907.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
@@ -105,17 +101,17 @@ index 0000000..81475c1
 +/dts-v1/;
 +
 +#include "imx6dl.dtsi"
-+#include "imx6qdl-gw5913.dtsi"
++#include "imx6qdl-gw5907.dtsi"
 +
 +/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5913";
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5907";
 +	compatible = "gw,ventana", "fsl,imx6dl";
 +};
-diff --git a/arch/arm/boot/dts/imx6q-gw5913.dts b/arch/arm/boot/dts/imx6q-gw5913.dts
+diff --git a/arch/arm/boot/dts/imx6q-gw5907.dts b/arch/arm/boot/dts/imx6q-gw5907.dts
 new file mode 100644
-index 0000000..09cf350
+index 0000000..63e0bef
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw5913.dts
++++ b/arch/arm/boot/dts/imx6q-gw5907.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
@@ -125,18 +121,18 @@ index 0000000..09cf350
 +/dts-v1/;
 +
 +#include "imx6q.dtsi"
-+#include "imx6qdl-gw5913.dtsi"
++#include "imx6qdl-gw5907.dtsi"
 +
 +/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW5913";
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW5907";
 +	compatible = "gw,ventana", "fsl,imx6q";
 +};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5913.dtsi b/arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
 new file mode 100644
-index 0000000..635c203
+index 0000000..0bdebdd
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw5913.dtsi
-@@ -0,0 +1,348 @@
++++ b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+@@ -0,0 +1,399 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright 2019 Gateworks Corporation
@@ -186,7 +182,7 @@ index 0000000..635c203
 +		compatible = "pps-gpio";
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&pinctrl_pps>;
-+		gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
 +		status = "okay";
 +	};
 +
@@ -205,18 +201,33 @@ index 0000000..635c203
 +		regulator-max-microvolt = <5000000>;
 +		regulator-always-on;
 +	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
 +};
 +
 +&fec {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_enet>;
 +	phy-mode = "rgmii-id";
++	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
 +	status = "okay";
 +};
 +
 +&gpmi {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
 +	status = "okay";
 +};
 +
@@ -275,6 +286,38 @@ index 0000000..635c203
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_i2c3>;
 +	status = "okay";
++
++	gpio@20 {
++		compatible = "nxp,pca9555";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	adc@48 {
++		compatible = "ti,ads1015";
++		reg = <0x48>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		channel@4 {
++			reg = <4>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@5 {
++			reg = <5>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@6 {
++			reg = <6>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++	};
 +};
 +
 +&pcie {
@@ -327,6 +370,7 @@ index 0000000..635c203
 +};
 +
 +&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_usbotg>;
 +	disable-over-current;
@@ -346,18 +390,18 @@ index 0000000..635c203
 +&iomuxc {
 +	pinctrl_enet: enetgrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
 +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
 +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
 +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
@@ -412,6 +456,8 @@ index 0000000..635c203
 +		fsl,pins = <
 +			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
 +			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
++			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0
 +		>;
 +	};
 +
@@ -423,7 +469,7 @@ index 0000000..635c203
 +
 +	pinctrl_pps: ppsgrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x1b0b1
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
 +		>;
 +	};
 +
@@ -476,6 +522,7 @@ index 0000000..635c203
 +	pinctrl_usbotg: usbotggrp {
 +		fsl,pins = <
 +			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
 +		>;
 +	};
 +
