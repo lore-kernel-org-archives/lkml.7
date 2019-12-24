@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE8C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C6C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7912071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8EC2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187679;
-	bh=6WiXidTPOxp5vM4laTEmrovfKwj7PiiVkCWrnFsRV6A=;
+	s=default; t=1577187685;
+	bh=Qn4kBNjQ0fNCUPS0AaeuIqmPAPhub5F1N9gYFFF9zZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RMca3uWY9ZTi3b7p71Y4ppFWEh9nB2oHJoj67mzX38ubI+Tgakh+Yb51Q5hRfC/n2
-	 p08uNRRVRfLua4DMorho7n60A4nV4na30JyZtg+DzD0L8yjBJ1WsCVSCgkwGWuKhcP
-	 7F1sMt28kxow0YNKfmgJxZtxZ9cden/jDTchTAII=
+	b=ugNRb1w31xSNixbfW+7q1Ev2oMCeaHrUgj41hWhq/bOb+c3UI+Py1lz+PDyFmB4uR
+	 koxxDCHm12+Bry/MYoC7LuCtsyepUsRudvySU4sr9jAjlh1UvTA1YHmgpp8bDppISC
+	 oWuKoMVWxSf9Rj7ZdnrL5cx7vvwqr0YSfvg4Dco0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLXLlS (ORCPT
+        id S1727071AbfLXLlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:18 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:38863 "EHLO
+        Tue, 24 Dec 2019 06:41:24 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:35881 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726184AbfLXLlR (ORCPT
+        by vger.kernel.org with ESMTP id S1726183AbfLXLlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:17 -0500
+        Tue, 24 Dec 2019 06:41:23 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji6F-000169-Am; Tue, 24 Dec 2019 12:11:40 +0100
+        id 1iji5x-000169-CB; Tue, 24 Dec 2019 12:11:21 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 30/32] KVM: arm64: GICv4.1: Plumb SGI implementation selection in the distributor
-Date:   Tue, 24 Dec 2019 11:10:53 +0000
-Message-Id: <20191224111055.11836-31-maz@kernel.org>
+Subject: [PATCH v3 13/32] irqchip/gic-v4.1: Add VPE INVALL callback
+Date:   Tue, 24 Dec 2019 11:10:36 +0000
+Message-Id: <20191224111055.11836-14-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,119 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GICv4.1 architecture gives the hypervisor the option to let
-the guest choose whether it wants the good old SGIs with an
-active state, or the new, HW-based ones that do not have one.
+GICv4.1 redistributors have a VPE-aware INVALL register. Progress!
+We can now emulate a guest-requested INVALL without emiting a
+VINVALL command.
 
-For this, plumb the configuration of SGIs into the GICv3 MMIO
-handling, present the GICD_TYPER2.nASSGIcap to the guest,
-and handle the GICD_CTLR.nASSGIreq setting.
-
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio-v3.c | 48 ++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 14 ++++++++++++++
+ include/linux/irqchip/arm-gic-v3.h |  6 ++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index d73f4ffd7d36..31ff8c7e09b0 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -3,6 +3,7 @@
-  * VGICv3 MMIO handling functions
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/irqchip/arm-gic-v3.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-@@ -70,6 +71,8 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
- 		if (vgic->enabled)
- 			value |= GICD_CTLR_ENABLE_SS_G1;
- 		value |= GICD_CTLR_ARE_NS | GICD_CTLR_DS;
-+		if (kvm_vgic_global_state.has_gicv4_1 && vgic->nassgireq)
-+			value |= GICD_CTLR_nASSGIreq;
- 		break;
- 	case GICD_TYPER:
- 		value = vgic->nr_spis + VGIC_NR_PRIVATE_IRQS;
-@@ -81,6 +84,10 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
- 			value |= (INTERRUPT_ID_BITS_SPIS - 1) << 19;
- 		}
- 		break;
-+	case GICD_TYPER2:
-+		if (kvm_vgic_global_state.has_gicv4_1)
-+			value = GICD_TYPER2_nASSGIcap;
-+		break;
- 	case GICD_IIDR:
- 		value = (PRODUCT_ID_KVM << GICD_IIDR_PRODUCT_ID_SHIFT) |
- 			(vgic->implementation_rev << GICD_IIDR_REVISION_SHIFT) |
-@@ -98,17 +105,43 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 				    unsigned long val)
- {
- 	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
--	bool was_enabled = dist->enabled;
- 
- 	switch (addr & 0x0c) {
--	case GICD_CTLR:
-+	case GICD_CTLR: {
-+		bool was_enabled, is_hwsgi;
-+
-+		mutex_lock(&vcpu->kvm->lock);
-+
-+		was_enabled = dist->enabled;
-+		is_hwsgi = dist->nassgireq;
-+
- 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
- 
-+		/* Not a GICv4.1? No HW SGIs */
-+		if (!kvm_vgic_global_state.has_gicv4_1)
-+			val &= ~GICD_CTLR_nASSGIreq;
-+
-+		/* Dist stays enabled? nASSGIreq is RO */
-+		if (was_enabled && dist->enabled) {
-+			val &= ~GICD_CTLR_nASSGIreq;
-+			val |= FIELD_PREP(GICD_CTLR_nASSGIreq, is_hwsgi);
-+		}
-+
-+		/* Switching HW SGIs? */
-+		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
-+		if (is_hwsgi != dist->nassgireq)
-+			vgic_v4_configure_vsgis(vcpu->kvm);
-+
- 		if (!was_enabled && dist->enabled)
- 			vgic_kick_vcpus(vcpu->kvm);
-+
-+		mutex_unlock(&vcpu->kvm->lock);
- 		break;
-+	}
- 	case GICD_TYPER:
-+	case GICD_TYPER2:
- 	case GICD_IIDR:
-+		/* This is at best for documentation purposes... */
- 		return;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index a5567d099a3e..403f5753e1ed 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3670,6 +3670,19 @@ static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
  	}
  }
-@@ -117,10 +150,21 @@ static int vgic_mmio_uaccess_write_v3_misc(struct kvm_vcpu *vcpu,
- 					   gpa_t addr, unsigned int len,
- 					   unsigned long val)
- {
-+	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
-+
- 	switch (addr & 0x0c) {
- 	case GICD_IIDR:
- 		if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
- 			return -EINVAL;
-+		return 0;
-+	case GICD_CTLR:
-+		/* Not a GICv4.1? No HW SGIs */
-+		if (!kvm_vgic_global_state.has_gicv4_1)
-+			val &= ~GICD_CTLR_nASSGIreq;
-+
-+		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
-+		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
-+		return 0;
- 	}
  
- 	vgic_mmio_write_v3_misc(vcpu, addr, len, val);
++static void its_vpe_4_1_invall(struct its_vpe *vpe)
++{
++	void __iomem *rdbase;
++	u64 val;
++
++	val  = GICR_INVALLR_V;
++	val |= FIELD_PREP(GICR_INVALLR_VPEID, vpe->vpe_id);
++
++	/* Target the redistributor this vPE is currently known on */
++	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
++	gic_write_lpir(val, rdbase + GICR_INVALLR);
++}
++
+ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+ {
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+@@ -3685,6 +3698,7 @@ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+ 		return 0;
+ 
+ 	case INVALL_VPE:
++		its_vpe_4_1_invall(vpe);
+ 		return 0;
+ 
+ 	default:
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 1c91dede7663..37b14fb82773 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -249,6 +249,12 @@
+ #define GICR_TYPER_COMMON_LPI_AFF	GENMASK_ULL(25, 24)
+ #define GICR_TYPER_AFFINITY		GENMASK_ULL(63, 32)
+ 
++#define GICR_INVLPIR_VPEID		GENMASK_ULL(47, 32)
++#define GICR_INVLPIR_V			GENMASK_ULL(63, 63)
++
++#define GICR_INVALLR_VPEID		GICR_INVLPIR_VPEID
++#define GICR_INVALLR_V			GICR_INVLPIR_V
++
+ #define GIC_V3_REDIST_SIZE		0x20000
+ 
+ #define LPI_PROP_GROUP1			(1 << 1)
 -- 
 2.20.1
 
