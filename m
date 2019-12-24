@@ -2,84 +2,64 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56D7C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 22:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED796C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 22:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5E8206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 22:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577227137;
-	bh=ceZe6wzbsWb7YfJCW2iWlROm560ptqJ0gDAZzE4x2lA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zV3kHAIG77Gwm1eCx9PCKvyuebLjjNEV1HrTE4G+895UDKzmDd5Jgos7Yda5F03gO
-	 w3AIdG7bUByBsPGR18xz9c/3OMguY6BxePe59yqrIcOofQz7kFpl9KsUcrcmTrax0h
-	 tRR3hKQHpPSE50/KT7uEKhAjW+fU1fW9HD3bFvEI=
+	by mail.kernel.org (Postfix) with ESMTP id B142420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 22:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfLXWi4 (ORCPT
+        id S1726283AbfLXWyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 17:38:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbfLXWi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 17:38:56 -0500
-Received: from zzz.localdomain (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA28206CB;
-        Tue, 24 Dec 2019 22:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577227135;
-        bh=ceZe6wzbsWb7YfJCW2iWlROm560ptqJ0gDAZzE4x2lA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U2ginxI6Gddm3gNHE0cVgJuDbWTAJNNVOwtSy65sIerTXwyxqXe6p7DbFRneug/fe
-         GQ2j4xtjMmh6Fdz4hUhO/QrqUBEzgHL/LKwddhUnF+7ExMxRBmQxNzGm6bTfcD+wdP
-         srIQ4YLgfoX7sKQFBEzbviKeoKjk/e6OihgphRSk=
-Date:   Tue, 24 Dec 2019 16:38:52 -0600
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        linux-fscrypt@vger.kernel.org
-Subject: Re: [v3 PATCH] fscrypt: Allow modular crypto algorithms
-Message-ID: <20191224223852.GA178036@zzz.localdomain>
-References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
- <20191221234428.GA551@zzz.localdomain>
- <20191222084155.n4mbomsw6pl4c7kv@gondor.apana.org.au>
- <20191222164545.GA157733@zzz.localdomain>
- <20191223074623.you4ivf2yuxk4ad2@gondor.apana.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223074623.you4ivf2yuxk4ad2@gondor.apana.org.au>
+        Tue, 24 Dec 2019 17:54:47 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:57250 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfLXWyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 17:54:47 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6E0CB154C8767;
+        Tue, 24 Dec 2019 14:54:46 -0800 (PST)
+Date:   Tue, 24 Dec 2019 14:54:43 -0800 (PST)
+Message-Id: <20191224.145443.2006645470880449664.davem@davemloft.net>
+To:     amessina@google.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] udp: fix integer overflow while computing available
+ space in sk_rcvbuf
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191219140803.135164-1-amessina@google.com>
+References: <20191219140803.135164-1-amessina@google.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 24 Dec 2019 14:54:46 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 03:46:23PM +0800, Herbert Xu wrote:
-> diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
-> index ef42ab040905..930793456d3a 100644
-> --- a/fs/ext4/Kconfig
-> +++ b/fs/ext4/Kconfig
-> @@ -10,6 +10,7 @@ config EXT3_FS
->  	select CRC16
->  	select CRYPTO
->  	select CRYPTO_CRC32C
-> +	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
->  	help
->  	  This config option is here only for backward compatibility. ext3
->  	  filesystem is now handled by the ext4 driver.
+From: Antonio Messina <amessina@google.com>
+Date: Thu, 19 Dec 2019 15:08:03 +0100
 
-This needs to be under EXT4_FS, not EXT3_FS.  That should address the kbuild
-test robot error.
+> When the size of the receive buffer for a socket is close to 2^31 when
+> computing if we have enough space in the buffer to copy a packet from
+> the queue to the buffer we might hit an integer overflow.
+> 
+> When an user set net.core.rmem_default to a value close to 2^31 UDP
+> packets are dropped because of this overflow. This can be visible, for
+> instance, with failure to resolve hostnames.
+> 
+> This can be fixed by casting sk_rcvbuf (which is an int) to unsigned
+> int, similarly to how it is done in TCP.
+> 
+> Signed-off-by: Antonio Messina <amessina@google.com>
 
-(The fact that EXT3_FS selects options other than just EXT4_FS is unnecessary
-and misleading; I'll send a separate patch to clean that up.)
-
-- Eric
+Applied and queued up for -stable, thanks.
