@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CF9C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6DDC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D29B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B5F20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577185885;
-	bh=wB2q8V6IWHe43lIsYJ1AEimImJriYZRMoU1uE02yDas=;
+	s=default; t=1577185891;
+	bh=3z4MQcHLa+WzjTXkbHYxND77a70cWKYpmSWvemVjD0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUl2a2AzF0q/SmRLG8KLEkYbAfYP4FnF1+FhrvfKdEp0dPbuNJpp1mFF99dwEMH30
-	 XueIlWu0Cu4Dn+B1EjUjcGsjMZDNkWJfcfukP5nZTrLjyjtvnJqpub+ZXrOE3IioUO
-	 cL36jYG5JizD1webN6KhVKHAtC0Twn/+rj9CRm5c=
+	b=fVqH2HWfPBRwwCcd/WD24gSARQa2nZVbnAh9nSTFgzl/2QTMd1eEvvEbutZXpetqw
+	 +pR0DV2uurH41Dk0H4WtkFEJymFfQu8uff8/hOaKaVr7I5CS9u0gP07xq3xJexz3Cn
+	 kAIjQ48nSAeBhvuayeeaLy/0zkjUTSiptXunmbsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfLXLLY (ORCPT
+        id S1726942AbfLXLLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:11:24 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:37476 "EHLO
+        Tue, 24 Dec 2019 06:11:19 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:32846 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726298AbfLXLLS (ORCPT
+        by vger.kernel.org with ESMTP id S1726317AbfLXLLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:11:18 -0500
+        Tue, 24 Dec 2019 06:11:14 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji5s-000169-GZ; Tue, 24 Dec 2019 12:11:16 +0100
+        id 1iji5m-000169-It; Tue, 24 Dec 2019 12:11:10 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 08/32] irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP
-Date:   Tue, 24 Dec 2019 11:10:31 +0000
-Message-Id: <20191224111055.11836-9-maz@kernel.org>
+Subject: [PATCH v3 01/32] irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
+Date:   Tue, 24 Dec 2019 11:10:24 +0000
+Message-Id: <20191224111055.11836-2-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,94 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With GICv4.1, VMOVP is extended to allow a default doorbell to be
-specified, as well as a validity bit for this doorbell. As an added
-bonus, VMOVP isn't required anymore of moving a VPE between
-redistributors that share the same affinity.
+GICv4.1 supports the RVPEID ("Residency per vPE ID"), which allows for
+a much efficient way of making virtual CPUs resident (to allow direct
+injection of interrupts).
 
-Let's add this support to the VMOVP builder, and make sure we don't
-issue the command if we don't really need to.
+The functionnality needs to be discovered on each and every redistributor
+in the system, and disabled if the settings are inconsistent.
 
 Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 40 ++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+ drivers/irqchip/irq-gic-v3.c       | 21 ++++++++++++++++++---
+ include/linux/irqchip/arm-gic-v3.h |  2 ++
+ 2 files changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 86c69b5cc156..fd9d3b6bb465 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -471,6 +471,17 @@ static void its_encode_vmapp_default_db(struct its_cmd_block *cmd,
- 	its_mask_encode(&cmd->raw_cmd[1], vpe_db_lpi, 31, 0);
- }
- 
-+static void its_encode_vmovp_default_db(struct its_cmd_block *cmd,
-+					u32 vpe_db_lpi)
-+{
-+	its_mask_encode(&cmd->raw_cmd[3], vpe_db_lpi, 31, 0);
-+}
-+
-+static void its_encode_db(struct its_cmd_block *cmd, bool db)
-+{
-+	its_mask_encode(&cmd->raw_cmd[2], db, 63, 63);
-+}
-+
- static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d6218012097b..ffcb018395ed 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -858,8 +858,21 @@ static int __gic_update_rdist_properties(struct redist_region *region,
+ 					 void __iomem *ptr)
  {
- 	/* Let's fixup BE commands */
-@@ -757,6 +768,11 @@ static struct its_vpe *its_build_vmovp_cmd(struct its_node *its,
- 	its_encode_vpeid(cmd, desc->its_vmovp_cmd.vpe->vpe_id);
- 	its_encode_target(cmd, target);
- 
-+	if (is_v4_1(its)) {
-+		its_encode_db(cmd, true);
-+		its_encode_vmovp_default_db(cmd, desc->its_vmovp_cmd.vpe->vpe_db_lpi);
+ 	u64 typer = gic_read_typer(ptr + GICR_TYPER);
++
+ 	gic_data.rdists.has_vlpis &= !!(typer & GICR_TYPER_VLPIS);
+-	gic_data.rdists.has_direct_lpi &= !!(typer & GICR_TYPER_DirectLPIS);
++
++	/* RVPEID implies some form of DirectLPI, no matter what the doc says... :-/ */
++	gic_data.rdists.has_rvpeid &= !!(typer & GICR_TYPER_RVPEID);
++	gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
++					   gic_data.rdists.has_rvpeid);
++
++	/* Detect non-sensical configurations */
++	if (WARN_ON_ONCE(gic_data.rdists.has_rvpeid && !gic_data.rdists.has_vlpis)) {
++		gic_data.rdists.has_direct_lpi = false;
++		gic_data.rdists.has_vlpis = false;
++		gic_data.rdists.has_rvpeid = false;
 +	}
 +
- 	its_fixup_cmd(cmd);
+ 	gic_data.ppi_nr = min(GICR_TYPER_NR_PPIS(typer), gic_data.ppi_nr);
  
- 	return valid_vpe(its, desc->its_vmovp_cmd.vpe);
-@@ -3328,7 +3344,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 				bool force)
- {
- 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
--	int cpu = cpumask_first(mask_val);
-+	int from, cpu = cpumask_first(mask_val);
+ 	return 1;
+@@ -872,9 +885,10 @@ static void gic_update_rdist_properties(void)
+ 	if (WARN_ON(gic_data.ppi_nr == UINT_MAX))
+ 		gic_data.ppi_nr = 0;
+ 	pr_info("%d PPIs implemented\n", gic_data.ppi_nr);
+-	pr_info("%sVLPI support, %sdirect LPI support\n",
++	pr_info("%sVLPI support, %sdirect LPI support, %sRVPEID support\n",
+ 		!gic_data.rdists.has_vlpis ? "no " : "",
+-		!gic_data.rdists.has_direct_lpi ? "no " : "");
++		!gic_data.rdists.has_direct_lpi ? "no " : "",
++		!gic_data.rdists.has_rvpeid ? "no " : "");
+ }
  
- 	/*
- 	 * Changing affinity is mega expensive, so let's be as lazy as
-@@ -3336,14 +3352,24 @@ static int its_vpe_set_affinity(struct irq_data *d,
- 	 * into the proxy device, we need to move the doorbell
- 	 * interrupt to its new location.
- 	 */
--	if (vpe->col_idx != cpu) {
--		int from = vpe->col_idx;
-+	if (vpe->col_idx == cpu)
-+		goto out;
+ /* Check whether it's single security state view */
+@@ -1566,6 +1580,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 						 &gic_data);
+ 	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
+ 	gic_data.rdists.rdist = alloc_percpu(typeof(*gic_data.rdists.rdist));
++	gic_data.rdists.has_rvpeid = true;
+ 	gic_data.rdists.has_vlpis = true;
+ 	gic_data.rdists.has_direct_lpi = true;
  
--		vpe->col_idx = cpu;
--		its_send_vmovp(vpe);
--		its_vpe_db_proxy_move(vpe, from, cpu);
--	}
-+	from = vpe->col_idx;
-+	vpe->col_idx = cpu;
-+
-+	/*
-+	 * GICv4.1 allows us to skip VMOVP if moving to a cpu whose RD
-+	 * is sharing its VPE table with the current one.
-+	 */
-+	if (gic_data_rdist_cpu(cpu)->vpe_table_mask &&
-+	    cpumask_test_cpu(from, gic_data_rdist_cpu(cpu)->vpe_table_mask))
-+		goto out;
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index de991d6633a5..9a5f85d30701 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -234,6 +234,7 @@
+ #define GICR_TYPER_VLPIS		(1U << 1)
+ #define GICR_TYPER_DirectLPIS		(1U << 3)
+ #define GICR_TYPER_LAST			(1U << 4)
++#define GICR_TYPER_RVPEID		(1U << 7)
  
-+	its_send_vmovp(vpe);
-+	its_vpe_db_proxy_move(vpe, from, cpu);
-+
-+out:
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ #define GIC_V3_REDIST_SIZE		0x20000
  
- 	return IRQ_SET_MASK_OK_DONE;
+@@ -615,6 +616,7 @@ struct rdists {
+ 	u64			flags;
+ 	u32			gicd_typer;
+ 	bool			has_vlpis;
++	bool			has_rvpeid;
+ 	bool			has_direct_lpi;
+ };
+ 
 -- 
 2.20.1
 
