@@ -2,206 +2,95 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995CC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1499CC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B54E206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187712;
-	bh=dwSRaO/cSGe4qBW7eBSN2GeTAW/zRA6lNgg1Uo/acc4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0YyB1TEFy6zRlKDB6hr9qOWcP6FOX1BFeDJ0V1otIot50xsYkWn/nidduuR17JyN
-	 cHgiTgnc8JLhRRVqwsjdm61zL9EY5GNKHrgouXqRgm8M9T3tMzP2zWKuZ2jPM7yRTH
-	 owV8/o2A4RyjjwULinGu6HySxvUdRZUOJ6x/tET8=
+	by mail.kernel.org (Postfix) with ESMTP id D54BC206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Rw70dVZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfLXLlv (ORCPT
+        id S1726885AbfLXLmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:51 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:57163 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726183AbfLXLlu (ORCPT
+        Tue, 24 Dec 2019 06:42:25 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35446 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfLXLmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:50 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iji5u-000169-1R; Tue, 24 Dec 2019 12:11:18 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 10/32] irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
-Date:   Tue, 24 Dec 2019 11:10:33 +0000
-Message-Id: <20191224111055.11836-11-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
-References: <20191224111055.11836-1-maz@kernel.org>
+        Tue, 24 Dec 2019 06:42:21 -0500
+Received: by mail-lj1-f193.google.com with SMTP id j1so13220448lja.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 03:42:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A9+/jlzxejOXGqGuMphO+K4YrVBFVrGdSz2snKyj29o=;
+        b=Rw70dVZwXrsRRVRfmfqeZsX4G9Fe2idWs1COznV7TftE3Sdg2noDkvaR6TNS4tp2Py
+         oF2SFqrXaXhzpukBAhGPD50KAYYuds2zmrISXOsJasPJrVe3gPW7MAQR4Wx7UQuabpBK
+         BRvoY5XLKvxNR6y5KGgjH7p2zYP7likMnikIKNzniGQ84wYy3oRsjZpNqUzvam6Q626m
+         U/q4E9UYL4uR+UjIozFFKQmEz46638H+GE/Ar7KCWlqfciRYciRakNciti21cgjJS7vx
+         9m9jZz7VOA4Vix89Y0wLo39cLE9rSTyy3qyeG1Iku4GtH3CgTM7giADWRr5uNr5SeU0r
+         CamA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=A9+/jlzxejOXGqGuMphO+K4YrVBFVrGdSz2snKyj29o=;
+        b=un+oZMu+lTA121pl9EcxmbFkPgFkfh0w1MuEcBXcfrgmU5pwDuFGAkD9FmKkI2DN+l
+         5cAqxapQaHbRhiPT9qHtg0fnEMUc3xh1Jyzgj+hGxLSOKThn0QYZHPmW40nebhmaQwGY
+         KzvGMN2ml8OLmKEbjtHU3OBVl2zJL+0QqLdCWR2TDyje9CXw4TynI7uDdZGVb20QpGx9
+         qxOL/G1RzZYgtWEKs/uL4MXBMhNDX1kgZj9seKieii61eRR0ijNzzn/jM2pL65/MWe7f
+         uGjF/EiKu02+dm3GWVeE9w7/3UDtiF4L967epl4mN6xbkbG+bpqQjSvQuZnwihGvHkY3
+         PWCQ==
+X-Gm-Message-State: APjAAAUXzy0Jq7ns37C3vOusMyPrth0js6qh+Wbm6LoFOM6WFmgA9DkJ
+        TGXENchWZrvHMKD6JIU92RrHKtrhkKg=
+X-Google-Smtp-Source: APXvYqy7dcoXvIYCuzCyChcVd9xAZaFC/RTj2+GYvm2Sv92TzoZuNlWedBq9tndQdoBgWXppPLhMvw==
+X-Received: by 2002:a2e:2d11:: with SMTP id t17mr20102628ljt.177.1577187739239;
+        Tue, 24 Dec 2019 03:42:19 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:441d:5f5:f336:feb9:305c:b1aa])
+        by smtp.gmail.com with ESMTPSA id r20sm9818028lfi.91.2019.12.24.03.42.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Dec 2019 03:42:18 -0800 (PST)
+Subject: Re: [PATCH] ppp: Remove redundant BUG_ON() check in ppp_pernet
+To:     Xu Wang <vulab@iscas.ac.cn>, paulus@samba.org
+Cc:     davem@davemloft.net, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1577180224-16405-1-git-send-email-vulab@iscas.ac.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <d3b4fbce-3349-d51d-4a2c-220ccadac506@cogentembedded.com>
+Date:   Tue, 24 Dec 2019 14:42:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <1577180224-16405-1-git-send-email-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-masking/unmasking doorbells on GICv4.1 relies on a new INVDB command,
-which broadcasts the invalidation to all RDs.
+Hello!
 
-Implement the new command as well as the masking callbacks, and plug
-the whole thing into the v4.1 VPE irqchip.
+On 12/24/2019 12:37 PM, Xu Wang wrote:
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c   | 73 ++++++++++++++++++++++++++++++
- include/linux/irqchip/arm-gic-v3.h |  3 +-
- 2 files changed, 75 insertions(+), 1 deletion(-)
+> Passing NULL to ppp_pernet causes a crash via BUG_ON.
+> Dereferencing net in net_generici() also has the same effect.
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 157f51398850..0da6baa48153 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -334,6 +334,10 @@ struct its_cmd_desc {
- 			u16 seq_num;
- 			u16 its_list;
- 		} its_vmovp_cmd;
-+
-+		struct {
-+			struct its_vpe *vpe;
-+		} its_invdb_cmd;
- 	};
- };
- 
-@@ -832,6 +836,21 @@ static struct its_vpe *its_build_vclear_cmd(struct its_node *its,
- 	return valid_vpe(its, map->vpe);
- }
- 
-+static struct its_vpe *its_build_invdb_cmd(struct its_node *its,
-+					   struct its_cmd_block *cmd,
-+					   struct its_cmd_desc *desc)
-+{
-+	if (WARN_ON(!is_v4_1(its)))
-+		return NULL;
-+
-+	its_encode_cmd(cmd, GITS_CMD_INVDB);
-+	its_encode_vpeid(cmd, desc->its_invdb_cmd.vpe->vpe_id);
-+
-+	its_fixup_cmd(cmd);
-+
-+	return valid_vpe(its, desc->its_invdb_cmd.vpe);
-+}
-+
- static u64 its_cmd_ptr_to_offset(struct its_node *its,
- 				 struct its_cmd_block *ptr)
- {
-@@ -1240,6 +1259,14 @@ static void its_send_vclear(struct its_device *dev, u32 event_id)
- 	its_send_single_vcommand(dev->its, its_build_vclear_cmd, &desc);
- }
- 
-+static void its_send_invdb(struct its_node *its, struct its_vpe *vpe)
-+{
-+	struct its_cmd_desc desc;
-+
-+	desc.its_invdb_cmd.vpe = vpe;
-+	its_send_single_vcommand(its, its_build_invdb_cmd, &desc);
-+}
-+
- /*
-  * irqchip functions - assumes MSI, mostly.
-  */
-@@ -3554,6 +3581,50 @@ static struct irq_chip its_vpe_irq_chip = {
- 	.irq_set_vcpu_affinity	= its_vpe_set_vcpu_affinity,
- };
- 
-+static struct its_node *find_4_1_its(void)
-+{
-+	static struct its_node *its = NULL;
-+
-+	if (!its) {
-+		list_for_each_entry(its, &its_nodes, entry) {
-+			if (is_v4_1(its))
-+				return its;
-+		}
-+
-+		/* Oops? */
-+		its = NULL;
-+	}
-+
-+	return its;
-+}
-+
-+static void its_vpe_4_1_send_inv(struct irq_data *d)
-+{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+	struct its_node *its;
-+
-+	/*
-+	 * GICv4.1 wants doorbells to be invalidated using the
-+	 * INVDB command in order to be broadcast to all RDs. Send
-+	 * it to the first valid ITS, and let the HW do its magic.
-+	 */
-+	its = find_4_1_its();
-+	if (its)
-+		its_send_invdb(its, vpe);
-+}
-+
-+static void its_vpe_4_1_mask_irq(struct irq_data *d)
-+{
-+	lpi_write_config(d->parent_data, LPI_PROP_ENABLED, 0);
-+	its_vpe_4_1_send_inv(d);
-+}
-+
-+static void its_vpe_4_1_unmask_irq(struct irq_data *d)
-+{
-+	lpi_write_config(d->parent_data, 0, LPI_PROP_ENABLED);
-+	its_vpe_4_1_send_inv(d);
-+}
-+
- static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
- {
- 	struct its_cmd_info *info = vcpu_info;
-@@ -3575,6 +3646,8 @@ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
- 
- static struct irq_chip its_vpe_4_1_irq_chip = {
- 	.name			= "GICv4.1-vpe",
-+	.irq_mask		= its_vpe_4_1_mask_irq,
-+	.irq_unmask		= its_vpe_4_1_unmask_irq,
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_set_affinity	= its_vpe_set_affinity,
- 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index df3b7cb50956..33519b7c96cf 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -486,8 +486,9 @@
- #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
- #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
- #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
--/* VMOVP is the odd one, as it doesn't have a physical counterpart */
-+/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
- #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
-+#define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
- 
- /*
-  * ITS error numbers
--- 
-2.20.1
+   s/generici/generic/. :-)
 
+> This patch removes the redundant BUG_ON check on the same parameter.
+> 
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+[...]
+
+MBR, Sergei
