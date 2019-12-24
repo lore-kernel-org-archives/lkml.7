@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED5C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 23:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CA7C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 23:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2E820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 23:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250CC206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 23:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="wAjz7cgz"
+	dkim=pass (2048-bit key) header.d=generalsoftwareinc-com.20150623.gappssmtp.com header.i=@generalsoftwareinc-com.20150623.gappssmtp.com header.b="rNUdDPYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfLXXvQ (ORCPT
+        id S1726359AbfLXXwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 18:51:16 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36713 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfLXXvQ (ORCPT
+        Tue, 24 Dec 2019 18:52:04 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:42607 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfLXXwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 18:51:16 -0500
-Received: by mail-vs1-f68.google.com with SMTP id u14so13246148vsu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 15:51:15 -0800 (PST)
+        Tue, 24 Dec 2019 18:52:03 -0500
+Received: by mail-ua1-f65.google.com with SMTP id u17so6206983uap.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 15:52:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=generalsoftwareinc-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6JkYU0nutAHI9fyqNTIL32WnpIq1wjmijBcPApKYOGg=;
-        b=wAjz7cgzlGz0o31FJ6Vx7n5Ba/oOxKvrF7Srl0whxYZ6FhhfaX4I7psp34BLJgG4cx
-         aFCHEUPK5An291BAIsIsuBoEKB/13f3d0wNHxVnJQcbXbTg0JurOs7xiXCr1IcWx1o+8
-         cgEzDy5G1E5ideBv1ZhIrcYHz97Z4z94dUMMfYb7JfklJGvdeuTBuC4cCl2crBKwzxOp
-         AsYC7mHUeaqbVsbAixvMC8y44W9w2EMON7TmltQccq/5IKqaFR5pxJ3DmAA0OGmZVZFV
-         Kpr34ORmfmiSTW36BxKKKGD8NhsOM8zDf30pBKzSOP+5B0fJWJQZtTeCnXdYfAAyfcbc
-         kpmg==
+        bh=Idc35g1w0/GlmcsF+XXoVkvDVls2Q3kl8rta/LhgxNI=;
+        b=rNUdDPYiCzhEgMM1U8c8mrjmiMCjqJFPZ+r2DygvtQ78GHZ/4jmOx6Fzkg48+U4wtR
+         wypDZgaLCWWo0aLI3AMt66KI45rDKW01/1eVrwLdi9dIFXveceCrwoz+lhCMTmULVGqR
+         nPaIALs/FT6v2LmL6PjjDO9mQyXliibiHakeDVTNvzxplhANkR+q8v5j7qFEDP062Icr
+         CdM+GRjdxuZu9X9gDa5zJ8rTMZISVaD+Fv235eGN1SiUinNFDtRt/0rTUrRPqOoNbfCc
+         haD8AoKJ6JfVdofWHxXjfLvWEJG/Sy6sfQo2yxRgbs2jnVm8K/y8Jnjr8hbdPsCS/Sz7
+         EZxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6JkYU0nutAHI9fyqNTIL32WnpIq1wjmijBcPApKYOGg=;
-        b=cxS110hIorSB2wUSPXQYrgbCqsZDXuAs7/w8ijeVRmq++qH5NeiPAbOjhKdKLBEqKH
-         9wLwJEg0FUVZYl+vXwDJSdsUjJUapxRxQoh88Z0Ppf8Piwv41E2uKoHqPhs5vwpTEqxB
-         N3Zd3uQJlEjKzJoMbIaaxEomrHKkf5hp7srAZHQDIEj3nXJ1SwaAURg9OsTzuI6BCbmP
-         Y0xolA/Af+9iI4Erm50RO17p5QEA2RbSi2H6zHz1mFG8zrFark8NOQf88qzj1AblOEns
-         L6vFj92uKJxjS5yjryKUSPbusiLamYfWUujBL6tIHkjLgDEsV+II3y7EEOBBAWyE8WiI
-         2caw==
-X-Gm-Message-State: APjAAAVdhGtl9lJJG0yTNy0Y4V7meo5rDIL1aUGzY8giZngwgFliXgeS
-        158Z8jxUtUy4NRCE8cKh9w8P3RSzzpb+RQ==
-X-Google-Smtp-Source: APXvYqzPvCHvEG/Y8jIr0SbNCu4DTRUyZvK/m55ySu73VoP7xw1w3PpS1SIAdEknpbK+UKNaDyai5A==
-X-Received: by 2002:a05:6102:52e:: with SMTP id m14mr21120368vsa.25.1577231475315;
-        Tue, 24 Dec 2019 15:51:15 -0800 (PST)
+        bh=Idc35g1w0/GlmcsF+XXoVkvDVls2Q3kl8rta/LhgxNI=;
+        b=DQOGqvYxHsUMDK/u+QbC3KSfBiTNtAERBqqju6mM+OLLJg3QZo7VgED+dqS4QI/tnB
+         ZPHB4UqDmqh7JhWF7tjiXZlVckb75Ce/QINAGpMNKk6SIxLfURy0u6RgPs0GguOgsoiD
+         9AqMGAXn5bXp99aRZIMaS6t6xkLptztEzvBv9vU0Gf/udxZwcelIuRrlh5k4xaIgtuUr
+         Fw6tN8qMcRXDG4zdlbaYECTBFHGkmQ+iPhrOtY4Ctx1TNf9xo1s1QkQtatGDGQbPm3tH
+         X2gIlEW4cs6K0H/3Lm9m6jjqRH+/CEskL6Z+AdQGoMGwNsMaKoFmsCM06gf2weIurIGd
+         Hhtw==
+X-Gm-Message-State: APjAAAX+c95Wl5Xh3mTYRy7kj3Pbv4B3IwSf3YTuTJkEAAPa5o9OGg2P
+        WS/sxuYEqA6leoRlomATTXzhYQ==
+X-Google-Smtp-Source: APXvYqxv7vc0KCp6Bc1Na95c3RUTHz1zfLjCxHUHEjfKcA2EG8fbxxU0Hx+YsyrqqsRde9cDed4fYQ==
+X-Received: by 2002:ab0:5c8:: with SMTP id e66mr23539394uae.120.1577231522820;
+        Tue, 24 Dec 2019 15:52:02 -0800 (PST)
 Received: from frank-laptop ([172.97.41.74])
-        by smtp.gmail.com with ESMTPSA id 111sm6290812uae.17.2019.12.24.15.51.14
+        by smtp.gmail.com with ESMTPSA id w125sm7331085vkh.50.2019.12.24.15.52.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 15:51:14 -0800 (PST)
-Date:   Tue, 24 Dec 2019 18:51:14 -0500
+        Tue, 24 Dec 2019 15:52:02 -0800 (PST)
+Date:   Tue, 24 Dec 2019 18:52:01 -0500
 From:   "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -64,8 +64,8 @@ To:     Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
 Cc:     joel@joelfernandes.org, saiprakash.ranjan@codeaurora.org,
         nachukannan@gmail.com, rdunlap@infradead.org
-Subject: [PATCH 1/3] docs: ftrace: Clarify the RAM impact of buffer_size_kb
-Message-ID: <6f33be5f3d60e5ffc061d8d2b329d3d3ccf22a8c.1577230982.git.frank@generalsoftwareinc.com>
+Subject: [PATCH 2/3] docs: ftrace: Fix typos
+Message-ID: <9ef705d0208a4ca0852fed69bc0838a589a4df85.1577230982.git.frank@generalsoftwareinc.com>
 References: <cover.1577230982.git.frank@generalsoftwareinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -77,34 +77,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current text could mislead the user into believing that the number
-of pages allocated by each CPU ring buffer is calculated by the round
-up of the division: buffer_size_kb / PAGE_SIZE.
+Fix minor typos in the doc.
 
-Clarifies that a few extra pages may be allocated to accommodate buffer
-management meta-data.
-
-Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Suggested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Frank A. Cancio Bello <frank@generalsoftwareinc.com>
 ---
- Documentation/trace/ftrace.rst | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/trace/ftrace.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index d2b5657ed33e..5a037bedbf6a 100644
+index 5a037bedbf6a..1f6e0a794b1c 100644
 --- a/Documentation/trace/ftrace.rst
 +++ b/Documentation/trace/ftrace.rst
-@@ -185,7 +185,8 @@ of ftrace. Here is a list of some of the key files:
- 	CPU buffer and not total size of all buffers. The
- 	trace buffers are allocated in pages (blocks of memory
- 	that the kernel uses for allocation, usually 4 KB in size).
--	If the last page allocated has room for more bytes
-+	A few extra pages may be allocated to accommodate buffer management
-+	meta-data. If the last page allocated has room for more bytes
- 	than requested, the rest of the page will be used,
- 	making the actual allocation bigger than requested or shown.
- 	( Note, the size may not be a multiple of the page size
+@@ -236,7 +236,7 @@ of ftrace. Here is a list of some of the key files:
+ 	This interface also allows for commands to be used. See the
+ 	"Filter commands" section for more details.
+ 
+-	As a speed up, since processing strings can't be quite expensive
++	As a speed up, since processing strings can be quite expensive
+ 	and requires a check of all functions registered to tracing, instead
+ 	an index can be written into this file. A number (starting with "1")
+ 	written will instead select the same corresponding at the line position
+@@ -383,7 +383,7 @@ of ftrace. Here is a list of some of the key files:
+ 
+ 	By default, 128 comms are saved (see "saved_cmdlines" above). To
+ 	increase or decrease the amount of comms that are cached, echo
+-	in a the number of comms to cache, into this file.
++	the number of comms to cache into this file.
+ 
+   saved_tgids:
+ 
+@@ -3325,7 +3325,7 @@ directories after it is created.
+ 
+ As you can see, the new directory looks similar to the tracing directory
+ itself. In fact, it is very similar, except that the buffer and
+-events are agnostic from the main director, or from any other
++events are agnostic from the main directory, or from any other
+ instances that are created.
+ 
+ The files in the new directory work just like the files with the
 -- 
 2.17.1
 
