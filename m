@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4E2C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDB7C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275F52075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE59D20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577200267;
-	bh=1SQCSvwuUVG8z96AKDBLUtCClBuvohWAIyRuGQEl9G8=;
+	s=default; t=1577200271;
+	bh=Fd8DTgE0OxArHcVWRJCDHAkcmB5mK4a18uzWO/MtnAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFM+2NC+W9FSx2FFUGr8TdEGU9Pt5FI7YzVheJ1qAwXIBp0F5XwN9M7YRVXlo4c9h
-	 fblGuwiQHSGa7bnuhvdfmdq4IsTRMsDAHVwNcLwizrC3nbrcLMfJeOk2eOPkmQQSIJ
-	 T8yIu5GqZQMUD9QynXKIFeZFWUk2iqK2TrkMjDs0=
+	b=Q/kCAtjzhubqFr5I4eMeuYNlKDJGSymuffGk5ZGR1KNh3XvaWvQVGhndVWkhN3VXn
+	 OzPbbNUL11HreSDx9JDhFEctAJfGC87WzA+xGu1EcVSRKBna4peibKHOl+WuHqLJci
+	 KPjvQZgdjNQ0S65n491P9f7G5JsPIDdh36xwtjPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLXPLG (ORCPT
+        id S1727189AbfLXPLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 10:11:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
+        Tue, 24 Dec 2019 10:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfLXPLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 10:11:03 -0500
+        id S1727132AbfLXPLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 10:11:07 -0500
 Received: from localhost.localdomain (aaubervilliers-681-1-7-6.w90-88.abo.wanadoo.fr [90.88.129.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FF820706;
-        Tue, 24 Dec 2019 15:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F169A206D3;
+        Tue, 24 Dec 2019 15:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577200263;
-        bh=1SQCSvwuUVG8z96AKDBLUtCClBuvohWAIyRuGQEl9G8=;
+        s=default; t=1577200266;
+        bh=Fd8DTgE0OxArHcVWRJCDHAkcmB5mK4a18uzWO/MtnAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LmfB0Fdy7af84kGnqCjYoG1RqwkWaaSEjHwrrvGr/xMIIWWHiR/WvBLtQQEQ5YQzZ
-         VY1V7H6757xvi9p+D70ZGmUqcR8B7KAifZ48oNIAdcvEylZc5niXE4J6khOnth1wX1
-         Lf3BmbSGGZ2oLQYwMzAIv783V6RcKKiCqa6teHj8=
+        b=zvvwoJplubvo/n8N2yXnnEBtDvjFk8ZGhYB020crSKL3IAThWPlDe9GIOj1b/gkJM
+         neQ8RP8WoBX3jXa8qPGPlcNi0e9vmXk1H/1+3xhl1rEj098ICNsyscEaO7KmZi6WrH
+         SzSAgL8sMPm2Usi3ZsgqeBVO2xOjeRvwpDuPYxl8=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [PATCH 11/25] efi/libstub: use stricter typing for firmware function pointers
-Date:   Tue, 24 Dec 2019 16:10:11 +0100
-Message-Id: <20191224151025.32482-12-ardb@kernel.org>
+Subject: [PATCH 13/25] efi/libstub/x86: avoid thunking for native firmware calls
+Date:   Tue, 24 Dec 2019 16:10:13 +0100
+Message-Id: <20191224151025.32482-14-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224151025.32482-1-ardb@kernel.org>
 References: <20191224151025.32482-1-ardb@kernel.org>
@@ -57,200 +57,336 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will soon remove another level of pointer casting, so let's make
-sure all type handling involving firmware calls at boot time is correct.
+We use special wrapper routines to invoke firmware services in the
+native case as well as the mixed mode case. For mixed mode, the need
+is obvious, but for the native cases, we can simply rely on the
+compiler to generate the indirect call, given that GCC now has
+support for the MS calling convention (and has had it for quite some
+time now). Note that on i386, the decompressor and the EFI stub are not
+built with -mregparm=3 like the rest of the i386 kernel, so we can
+safely allow the compiler to emit the indirect calls here as well.
+
+So drop all the wrappers and indirection, and switch to either native
+calls, or direct calls into the thunk routine for mixed mode.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/eboot.c               | 10 ++++++----
- arch/x86/boot/compressed/eboot.h               |  9 ++++++---
- arch/x86/platform/efi/efi.c                    |  4 ++--
- arch/x86/xen/efi.c                             |  2 +-
- drivers/firmware/efi/libstub/efi-stub-helper.c |  5 +++--
- drivers/firmware/efi/libstub/tpm.c             |  4 ++--
- include/linux/efi.h                            | 12 ++++++++----
- 7 files changed, 28 insertions(+), 18 deletions(-)
+ arch/x86/boot/compressed/Makefile      |  2 +-
+ arch/x86/boot/compressed/eboot.c       |  3 +-
+ arch/x86/boot/compressed/efi_stub_32.S | 87 --------------------------
+ arch/x86/boot/compressed/efi_stub_64.S |  5 --
+ arch/x86/boot/compressed/head_32.S     |  6 --
+ arch/x86/boot/compressed/head_64.S     | 23 +------
+ arch/x86/include/asm/efi.h             | 34 +++++-----
+ arch/x86/platform/efi/efi_64.c         |  2 -
+ 8 files changed, 24 insertions(+), 138 deletions(-)
+ delete mode 100644 arch/x86/boot/compressed/efi_stub_32.S
+ delete mode 100644 arch/x86/boot/compressed/efi_stub_64.S
 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index aa976adb7094..a20f55c59753 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -89,7 +89,7 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+ 
+ $(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar -mno-red-zone
+ 
+-vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o $(obj)/efi_stub_$(BITS).o \
++vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o \
+ 	$(objtree)/drivers/firmware/efi/libstub/lib.a
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+ 
 diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 990b93379965..2733bc263c04 100644
+index 2733bc263c04..36a26d6e2af0 100644
 --- a/arch/x86/boot/compressed/eboot.c
 +++ b/arch/x86/boot/compressed/eboot.c
-@@ -70,7 +70,8 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- 
- 	size = romsize + sizeof(*rom);
- 
--	status = efi_call_early(allocate_pool, EFI_LOADER_DATA, size, &rom);
-+	status = efi_call_early(allocate_pool, EFI_LOADER_DATA, size,
-+				(void **)&rom);
- 	if (status != EFI_SUCCESS) {
- 		efi_printk(sys_table, "Failed to allocate memory for 'rom'\n");
- 		return status;
-@@ -195,9 +196,9 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 	struct setup_data *data, *new;
- 	efi_status_t status;
- 	u32 size = 0;
--	void *p;
-+	apple_properties_protocol_t *p;
- 
--	status = efi_call_early(locate_protocol, &guid, NULL, &p);
-+	status = efi_call_early(locate_protocol, &guid, NULL, (void **)&p);
- 	if (status != EFI_SUCCESS)
- 		return;
- 
-@@ -212,7 +213,8 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 
- 	do {
- 		status = efi_call_early(allocate_pool, EFI_LOADER_DATA,
--					size + sizeof(struct setup_data), &new);
-+					size + sizeof(struct setup_data),
-+					(void **)&new);
- 		if (status != EFI_SUCCESS) {
- 			efi_printk(sys_table, "Failed to allocate memory for 'properties'\n");
- 			return;
-diff --git a/arch/x86/boot/compressed/eboot.h b/arch/x86/boot/compressed/eboot.h
-index de13865dc7d2..b8d11928f528 100644
---- a/arch/x86/boot/compressed/eboot.h
-+++ b/arch/x86/boot/compressed/eboot.h
-@@ -12,9 +12,12 @@
- 
- #define DESC_TYPE_CODE_DATA	(1 << 0)
- 
--typedef union {
-+typedef union efi_uga_draw_protocol efi_uga_draw_protocol_t;
-+
-+union efi_uga_draw_protocol {
- 	struct {
--		void *get_mode;
-+		efi_status_t (*get_mode)(efi_uga_draw_protocol_t *,
-+					 u32*, u32*, u32*, u32*);
- 		void *set_mode;
- 		void *blt;
- 	};
-@@ -23,6 +26,6 @@ typedef union {
- 		u32 set_mode;
- 		u32 blt;
- 	} mixed_mode;
--} efi_uga_draw_protocol_t;
-+};
- 
- #endif /* BOOT_COMPRESSED_EBOOT_H */
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index e188b7ce0796..d96953d9d4e7 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -385,7 +385,7 @@ static int __init efi_systab_init(void *phys)
- 		tmp |= systab64->con_in;
- 		efi_systab.con_out_handle = systab64->con_out_handle;
- 		tmp |= systab64->con_out_handle;
--		efi_systab.con_out = systab64->con_out;
-+		efi_systab.con_out = (void *)(unsigned long)systab64->con_out;
- 		tmp |= systab64->con_out;
- 		efi_systab.stderr_handle = systab64->stderr_handle;
- 		tmp |= systab64->stderr_handle;
-@@ -427,7 +427,7 @@ static int __init efi_systab_init(void *phys)
- 		efi_systab.con_in_handle = systab32->con_in_handle;
- 		efi_systab.con_in = systab32->con_in;
- 		efi_systab.con_out_handle = systab32->con_out_handle;
--		efi_systab.con_out = systab32->con_out;
-+		efi_systab.con_out = (void *)(unsigned long)systab32->con_out;
- 		efi_systab.stderr_handle = systab32->stderr_handle;
- 		efi_systab.stderr = systab32->stderr;
- 		efi_systab.runtime = (void *)(unsigned long)systab32->runtime;
-diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
-index a04551ee5568..1abe455d926a 100644
---- a/arch/x86/xen/efi.c
-+++ b/arch/x86/xen/efi.c
-@@ -31,7 +31,7 @@ static efi_system_table_t efi_systab_xen __initdata = {
- 	.con_in_handle	= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
- 	.con_in		= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
- 	.con_out_handle	= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
--	.con_out	= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
-+	.con_out	= NULL, 		  /* Not used under Xen. */
- 	.stderr_handle	= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
- 	.stderr		= EFI_INVALID_TABLE_ADDR, /* Not used under Xen. */
- 	.runtime	= (efi_runtime_services_t *)EFI_INVALID_TABLE_ADDR,
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 1a814dc235ba..f91f4fdbe553 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -413,12 +413,13 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
- 	return status;
- }
- 
--static efi_status_t efi_file_read(void *handle, unsigned long *size, void *addr)
-+static efi_status_t efi_file_read(efi_file_handle_t *handle,
-+				  unsigned long *size, void *addr)
+@@ -44,7 +44,8 @@ BOOT_SERVICES(64);
+ void efi_char16_printk(efi_system_table_t *table, efi_char16_t *str)
  {
- 	return efi_call_proto(efi_file_handle, read, handle, size, addr);
+ 	efi_call_proto(efi_simple_text_output_protocol, output_string,
+-		       efi_early->text_output, str);
++		       ((efi_simple_text_output_protocol_t *)(unsigned long)
++				efi_early->text_output), str);
  }
  
--static efi_status_t efi_file_close(void *handle)
-+static efi_status_t efi_file_close(efi_file_handle_t *handle)
- {
- 	return efi_call_proto(efi_file_handle, close, handle);
- }
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index eb9af83e4d59..d270acd43de8 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -69,11 +69,11 @@ void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
- 	size_t log_size, last_entry_size;
- 	efi_bool_t truncated;
- 	int version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
--	void *tcg2_protocol = NULL;
-+	efi_tcg2_protocol_t *tcg2_protocol = NULL;
- 	int final_events_size = 0;
- 
- 	status = efi_call_early(locate_protocol, &tcg2_guid, NULL,
--				&tcg2_protocol);
-+				(void **)&tcg2_protocol);
- 	if (status != EFI_SUCCESS)
- 		return;
- 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index d8e987910853..880077639113 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -382,7 +382,11 @@ union efi_pci_io_protocol {
- 		void *allocate_buffer;
- 		void *free_buffer;
- 		void *flush;
--		void *get_location;
-+		efi_status_t (*get_location)(efi_pci_io_protocol_t *,
-+					     unsigned long *segment_nr,
-+					     unsigned long *bus_nr,
-+					     unsigned long *device_nr,
-+					     unsigned long *function_nr);
- 		void *attributes;
- 		void *get_bar_attributes;
- 		void *set_bar_attributes;
-@@ -730,6 +734,8 @@ typedef struct {
- 	u32 tables;
- } efi_system_table_32_t;
- 
-+typedef union efi_simple_text_output_protocol efi_simple_text_output_protocol_t;
-+
- typedef union {
- 	struct {
- 		efi_table_hdr_t hdr;
-@@ -738,7 +744,7 @@ typedef union {
- 		unsigned long con_in_handle;
- 		unsigned long con_in;
- 		unsigned long con_out_handle;
--		unsigned long con_out;
-+		efi_simple_text_output_protocol_t *con_out;
- 		unsigned long stderr_handle;
- 		unsigned long stderr;
- 		efi_runtime_services_t *runtime;
-@@ -1337,8 +1343,6 @@ struct efivar_entry {
- 	bool deleting;
- };
- 
--typedef union efi_simple_text_output_protocol efi_simple_text_output_protocol_t;
+ static efi_status_t
+diff --git a/arch/x86/boot/compressed/efi_stub_32.S b/arch/x86/boot/compressed/efi_stub_32.S
+deleted file mode 100644
+index ed6c351d34ed..000000000000
+--- a/arch/x86/boot/compressed/efi_stub_32.S
++++ /dev/null
+@@ -1,87 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * EFI call stub for IA32.
+- *
+- * This stub allows us to make EFI calls in physical mode with interrupts
+- * turned off. Note that this implementation is different from the one in
+- * arch/x86/platform/efi/efi_stub_32.S because we're _already_ in physical
+- * mode at this point.
+- */
 -
- union efi_simple_text_output_protocol {
- 	struct {
- 		void *reset;
+-#include <linux/linkage.h>
+-#include <asm/page_types.h>
+-
+-/*
+- * efi_call_phys(void *, ...) is a function with variable parameters.
+- * All the callers of this function assure that all the parameters are 4-bytes.
+- */
+-
+-/*
+- * In gcc calling convention, EBX, ESP, EBP, ESI and EDI are all callee save.
+- * So we'd better save all of them at the beginning of this function and restore
+- * at the end no matter how many we use, because we can not assure EFI runtime
+- * service functions will comply with gcc calling convention, too.
+- */
+-
+-.text
+-SYM_FUNC_START(efi_call_phys)
+-	/*
+-	 * 0. The function can only be called in Linux kernel. So CS has been
+-	 * set to 0x0010, DS and SS have been set to 0x0018. In EFI, I found
+-	 * the values of these registers are the same. And, the corresponding
+-	 * GDT entries are identical. So I will do nothing about segment reg
+-	 * and GDT, but change GDT base register in prelog and epilog.
+-	 */
+-
+-	/*
+-	 * 1. Because we haven't been relocated by this point we need to
+-	 * use relative addressing.
+-	 */
+-	call	1f
+-1:	popl	%edx
+-	subl	$1b, %edx
+-
+-	/*
+-	 * 2. Now on the top of stack is the return
+-	 * address in the caller of efi_call_phys(), then parameter 1,
+-	 * parameter 2, ..., param n. To make things easy, we save the return
+-	 * address of efi_call_phys in a global variable.
+-	 */
+-	popl	%ecx
+-	movl	%ecx, saved_return_addr(%edx)
+-	/* get the function pointer into ECX*/
+-	popl	%ecx
+-	movl	%ecx, efi_rt_function_ptr(%edx)
+-
+-	/*
+-	 * 3. Call the physical function.
+-	 */
+-	call	*%ecx
+-
+-	/*
+-	 * 4. Balance the stack. And because EAX contain the return value,
+-	 * we'd better not clobber it. We need to calculate our address
+-	 * again because %ecx and %edx are not preserved across EFI function
+-	 * calls.
+-	 */
+-	call	1f
+-1:	popl	%edx
+-	subl	$1b, %edx
+-
+-	movl	efi_rt_function_ptr(%edx), %ecx
+-	pushl	%ecx
+-
+-	/*
+-	 * 10. Push the saved return address onto the stack and return.
+-	 */
+-	movl	saved_return_addr(%edx), %ecx
+-	pushl	%ecx
+-	ret
+-SYM_FUNC_END(efi_call_phys)
+-.previous
+-
+-.data
+-saved_return_addr:
+-	.long 0
+-efi_rt_function_ptr:
+-	.long 0
+diff --git a/arch/x86/boot/compressed/efi_stub_64.S b/arch/x86/boot/compressed/efi_stub_64.S
+deleted file mode 100644
+index 99494dff2113..000000000000
+--- a/arch/x86/boot/compressed/efi_stub_64.S
++++ /dev/null
+@@ -1,5 +0,0 @@
+-#include <asm/segment.h>
+-#include <asm/msr.h>
+-#include <asm/processor-flags.h>
+-
+-#include "../../platform/efi/efi_stub_64.S"
+diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+index f2dfd6d083ef..0b03dc7bba12 100644
+--- a/arch/x86/boot/compressed/head_32.S
++++ b/arch/x86/boot/compressed/head_32.S
+@@ -161,9 +161,7 @@ SYM_FUNC_START(efi_pe_entry)
+ 	popl	%ecx
+ 	movl	%ecx, efi32_config+8(%esi)	/* EFI System table pointer */
+ 
+-	/* Relocate efi_config->call() */
+ 	leal	efi32_config(%esi), %eax
+-	add	%esi, 40(%eax)
+ 	pushl	%eax
+ 
+ 	call	make_boot_params
+@@ -188,9 +186,7 @@ SYM_FUNC_START(efi32_stub_entry)
+ 	movl	%ecx, efi32_config(%esi)	/* Handle */
+ 	movl	%edx, efi32_config+8(%esi)	/* EFI System table pointer */
+ 
+-	/* Relocate efi_config->call() */
+ 	leal	efi32_config(%esi), %eax
+-	add	%esi, 40(%eax)
+ 	pushl	%eax
+ 2:
+ 	call	efi_main
+@@ -266,8 +262,6 @@ SYM_FUNC_END(.Lrelocated)
+ 	.data
+ efi32_config:
+ 	.fill 5,8,0
+-	.long efi_call_phys
+-	.long 0
+ 	.byte 0
+ #endif
+ 
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index ee60b81944a7..ad57edeaeeb3 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -459,15 +459,6 @@ SYM_FUNC_START(efi_pe_entry)
+ 	leaq	efi64_config(%rip), %rax
+ 	movq	%rax, efi_config(%rip)
+ 
+-	call	1f
+-1:	popq	%rbp
+-	subq	$1b, %rbp
+-
+-	/*
+-	 * Relocate efi_config->call().
+-	 */
+-	addq	%rbp, efi64_config+40(%rip)
+-
+ 	movq	%rax, %rdi
+ 	call	make_boot_params
+ 	cmpq	$0,%rax
+@@ -475,20 +466,10 @@ SYM_FUNC_START(efi_pe_entry)
+ 	mov	%rax, %rsi
+ 	leaq	startup_32(%rip), %rax
+ 	movl	%eax, BP_code32_start(%rsi)
+-	jmp	2f		/* Skip the relocation */
+ 
+ handover_entry:
+-	call	1f
+-1:	popq	%rbp
+-	subq	$1b, %rbp
+-
+-	/*
+-	 * Relocate efi_config->call().
+-	 */
+-	movq	efi_config(%rip), %rax
+-	addq	%rbp, 40(%rax)
+-2:
+ 	movq	efi_config(%rip), %rdi
++	and	$~0xf, %rsp			/* realign the stack */
+ 	call	efi_main
+ 	movq	%rax,%rsi
+ 	cmpq	$0,%rax
+@@ -688,14 +669,12 @@ SYM_DATA_LOCAL(efi_config, .quad 0)
+ #ifdef CONFIG_EFI_MIXED
+ SYM_DATA_START(efi32_config)
+ 	.fill	5,8,0
+-	.quad	efi64_thunk
+ 	.byte	0
+ SYM_DATA_END(efi32_config)
+ #endif
+ 
+ SYM_DATA_START(efi64_config)
+ 	.fill	5,8,0
+-	.quad	efi_call
+ 	.byte	1
+ SYM_DATA_END(efi64_config)
+ #endif /* CONFIG_EFI_STUB */
+diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
+index c27323cb49e5..001905daa110 100644
+--- a/arch/x86/include/asm/efi.h
++++ b/arch/x86/include/asm/efi.h
+@@ -152,6 +152,7 @@ struct efi_setup_data {
+ extern u64 efi_setup;
+ 
+ #ifdef CONFIG_EFI
++extern efi_status_t efi64_thunk(u32, ...);
+ 
+ static inline bool efi_is_mixed(void)
+ {
+@@ -205,7 +206,6 @@ struct efi_config {
+ 	u64 runtime_services;
+ 	u64 boot_services;
+ 	u64 text_output;
+-	efi_status_t (*call)(unsigned long, ...);
+ 	bool is64;
+ } __packed;
+ 
+@@ -235,30 +235,36 @@ static inline bool efi_is_native(void)
+ 			(unsigned long)(attr), (attr))
+ 
+ #define efi_table_attr(table, attr, instance) ({			\
+-	__typeof__(((table##_t *)0)->attr) __ret;			\
++	__typeof__(instance->attr) __ret;				\
+ 	if (efi_is_native()) {						\
+-		__ret = ((table##_t *)(unsigned long)instance)->attr;	\
++		__ret = instance->attr;					\
+ 	} else {							\
+-		__ret = (__typeof__(__ret))efi_mixed_mode_cast(		\
+-		((table##_t *)(unsigned long)instance)->mixed_mode.attr);\
++		__ret = (__typeof__(__ret))				\
++			efi_mixed_mode_cast(instance->mixed_mode.attr);	\
+ 	}								\
+ 	__ret;								\
+ })
+ 
+ #define efi_call_proto(protocol, f, instance, ...)			\
+-	__efi_early()->call((unsigned long)				\
+-				efi_table_attr(protocol, f, instance),	\
+-		instance, ##__VA_ARGS__)
++	(efi_is_native()						\
++		? instance->f(instance, ##__VA_ARGS__)			\
++		: efi64_thunk(instance->mixed_mode.f, instance,	##__VA_ARGS__))
+ 
+ #define efi_call_early(f, ...)						\
+-	__efi_early()->call((unsigned long)				\
+-				efi_table_attr(efi_boot_services, f,	\
+-		__efi_early()->boot_services), __VA_ARGS__)
++	(efi_is_native()						\
++		? ((efi_boot_services_t *)(unsigned long)		\
++			__efi_early()->boot_services)->f(__VA_ARGS__)	\
++		: efi64_thunk(((efi_boot_services_t *)(unsigned long)	\
++			__efi_early()->boot_services)->mixed_mode.f,	\
++			__VA_ARGS__))
+ 
+ #define efi_call_runtime(f, ...)					\
+-	__efi_early()->call((unsigned long)				\
+-				efi_table_attr(efi_runtime_services, f,	\
+-		__efi_early()->runtime_services), __VA_ARGS__)
++	(efi_is_native()						\
++		? ((efi_runtime_services_t *)(unsigned long)		\
++			__efi_early()->runtime_services)->f(__VA_ARGS__)\
++		: efi64_thunk(((efi_runtime_services_t *)(unsigned long)\
++			__efi_early()->runtime_services)->mixed_mode.f,	\
++			__VA_ARGS__))
+ 
+ extern bool efi_reboot_required(void);
+ extern bool efi_is_table_address(unsigned long phys_addr);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 885e50a707a6..03c2ed3c645c 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -635,8 +635,6 @@ void efi_switch_mm(struct mm_struct *mm)
+ }
+ 
+ #ifdef CONFIG_EFI_MIXED
+-extern efi_status_t efi64_thunk(u32, ...);
+-
+ static DEFINE_SPINLOCK(efi_runtime_lock);
+ 
+ #define runtime_service32(func)						 \
 -- 
 2.20.1
 
