@@ -2,163 +2,181 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1366C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E927C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B262D20643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648352075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="JuSs0+9T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="iBUc0x4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfLXA0P (ORCPT
+        id S1726985AbfLXA1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 19:26:15 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45666 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfLXA0P (ORCPT
+        Mon, 23 Dec 2019 19:27:17 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:47550 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfLXA1Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 19:26:15 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so9916431pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 16:26:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=qy1djmafina09Wk+tvxb8eHELyj8veiP7NWYiOp28HE=;
-        b=JuSs0+9TTFciYyeSdgEJZmy6i1PQkY8Z7m1fk+cugf1/N5gw+Bqpl10Z8kw28+fHu4
-         iGj0HaYc9WlCAs3C3U0dbFh28vFsmj9KWI+M5fo+ZVKhFx3chicHBmnb5yYErxXfgOc/
-         6snM0TpoxGIOJBm+27fgKzfacZoXkniAfBy84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=qy1djmafina09Wk+tvxb8eHELyj8veiP7NWYiOp28HE=;
-        b=RW29OeRKWXDd03fux0SQApJPbcBuWIP1c66DR8uo2VHzSi19PhFHsAMTXEbbUFLFbS
-         dgF+y0N2UHSEGWEbpnnmd9qKRn3sx9N52sOEFqZ8LA6V2G1hgySBcR71ugKpG+UQ2Bku
-         lVXlKjfxX3rhq4GqMO+S4IaldQVA3PbVRHaSGurybdMuSyFgkDSydesSzz7Ngo59i6iT
-         0ePngUcslEHrgO9hMU4VQoN71hkxIj74BdPdRAELmrH3KgzmJfu4sQ9voSUPd47sgwyt
-         w3z3cluWLVEGk9RvkTPIRJIkRWQNOFHGL37NcPDDb7GL3/KQiODDIOnrgSpELWkiN5Hx
-         lNyA==
-X-Gm-Message-State: APjAAAVCL93uRCTcWzZQHZnXt2WDQvCcRgpI7uYj/+WpQRVI2Bm2VTqh
-        K04IBNDFOaxTk+8Ay2ibZGQAz4AGILk=
-X-Google-Smtp-Source: APXvYqxuLAAFeBAxttugpfL86SnEnhyy6j+VI8Djf9c+j5lCoGXK4k6kRel8bR8UP14ADxXvvm0muA==
-X-Received: by 2002:a63:2063:: with SMTP id r35mr33946563pgm.69.1577147174351;
-        Mon, 23 Dec 2019 16:26:14 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
-        by smtp.gmail.com with ESMTPSA id bo19sm655572pjb.25.2019.12.23.16.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 16:26:13 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        akash.goel@intel.com, ajd@linux.ibm.com,
-        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
-        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
-        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
-        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Subject: Re: [PATCH] relay: handle alloc_percpu returning NULL in relay_open
-In-Reply-To: <20191223163610.GA32267@roeck-us.net>
-References: <20191129013745.7168-1-dja@axtens.net> <20191223163610.GA32267@roeck-us.net>
-Date:   Tue, 24 Dec 2019 11:26:09 +1100
-Message-ID: <87woamsh5q.fsf@dja-thinkpad.axtens.net>
+        Mon, 23 Dec 2019 19:27:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1577147234; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=fNIZfTznwRicv1L3tfCg8DVacLlI9bpQ8BJN1yvLWCU=;
+        b=iBUc0x4vbq+4lSji13z2d+saT7tVMXDrBcYb1Mj1lT1mD7lBmiXT5dbD4coZWZLN/2PWdb
+        w5xk54yGkUIvZyEz/v/FeI0qcWGwXmgBT5EVS6R8tMR+lEPmUpxPPuUtUDIuuotgfLHta2
+        ZVYMPE6m2L9hpT4daVCC9TWV7Wgj9Cw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     od@zcrc.me, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: sound: Convert jz47*-codec doc to YAML
+Date:   Tue, 24 Dec 2019 01:27:07 +0100
+Message-Id: <20191224002708.1207884-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> writes:
+Convert ingenic,jz4740-codec.txt and ingenic,jz4725b-codec.txt to one
+single ingenic,codec.yaml file, since they share the same binding.
 
-> On Fri, Nov 29, 2019 at 12:37:45PM +1100, Daniel Axtens wrote:
->> alloc_percpu() may return NULL, which means chan->buf may be set to
->> NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
->> dereference an invalid pointer:
->> 
->> BUG: Unable to handle kernel data access at 0x7dae0000
->> Faulting instruction address: 0xc0000000003f3fec
->> ...
->> NIP [c0000000003f3fec] relay_open+0x29c/0x600
->> LR [c0000000003f3fc0] relay_open+0x270/0x600
->> Call Trace:
->> [c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
->> [c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
->> [c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
->> [c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
->> [c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
->> [c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
->> [c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
->> [c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
->> 
->> Check if alloc_percpu returns NULL. Because we can readily catch and
->> handle this situation, switch to alloc_cpu_gfp and pass in __GFP_NOWARN.
->> 
->> This was found by syzkaller both on x86 and powerpc, and the reproducer
->> it found on powerpc is capable of hitting the issue as an unprivileged
->> user.
->> 
->> Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
->> Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
->> Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
->> Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
->> Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
->> Cc: Akash Goel <akash.goel@intel.com>
->> Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
->> Cc: stable@vger.kernel.org # v4.10+
->> Signed-off-by: Daniel Axtens <dja@axtens.net>
->> 
->
-> So there is a CVE now, but it appears that the patch went nowhere.
-> Are there any plans to actually apply it ?
+Add the ingenic,jz4770-codec compatible string in the process.
 
-I sent a v2 that addresses some review comments, I guess if anything is
-applied it will be that.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/sound/ingenic,codec.yaml         | 55 +++++++++++++++++++
+ .../bindings/sound/ingenic,jz4725b-codec.txt  | 20 -------
+ .../bindings/sound/ingenic,jz4740-codec.txt   | 20 -------
+ 3 files changed, 55 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
+ delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
 
-Daniel
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,codec.yaml b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+new file mode 100644
+index 000000000000..eb4be86464bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ingenic,codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic JZ47xx internal codec DT bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: '^audio-codec@.*'
++
++  compatible:
++    oneOf:
++      - const: ingenic,jz4770-codec
++      - const: ingenic,jz4725b-codec
++      - const: ingenic,jz4740-codec
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: aic
++
++  '#sound-dai-cells':
++    const: 0
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#sound-dai-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4740-cgu.h>
++    codec: audio-codec@10020080 {
++      compatible = "ingenic,jz4740-codec";
++      reg = <0x10020080 0x8>;
++      #sound-dai-cells = <0>;
++      clocks = <&cgu JZ4740_CLK_AIC>;
++      clock-names = "aic";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
+deleted file mode 100644
+index 05adc0d47b13..000000000000
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Ingenic JZ4725B codec controller
+-
+-Required properties:
+-- compatible : "ingenic,jz4725b-codec"
+-- reg : codec registers location and length
+-- clocks : phandle to the AIC clock.
+-- clock-names: must be set to "aic".
+-- #sound-dai-cells: Must be set to 0.
+-
+-Example:
+-
+-codec: audio-codec@100200a4 {
+-	compatible = "ingenic,jz4725b-codec";
+-	reg = <0x100200a4 0x8>;
+-
+-	#sound-dai-cells = <0>;
+-
+-	clocks = <&cgu JZ4725B_CLK_AIC>;
+-	clock-names = "aic";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+deleted file mode 100644
+index 1ffcade87e7b..000000000000
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Ingenic JZ4740 codec controller
+-
+-Required properties:
+-- compatible : "ingenic,jz4740-codec"
+-- reg : codec registers location and length
+-- clocks : phandle to the AIC clock.
+-- clock-names: must be set to "aic".
+-- #sound-dai-cells: Must be set to 0.
+-
+-Example:
+-
+-codec: audio-codec@10020080 {
+-	compatible = "ingenic,jz4740-codec";
+-	reg = <0x10020080 0x8>;
+-
+-	#sound-dai-cells = <0>;
+-
+-	clocks = <&cgu JZ4740_CLK_AIC>;
+-	clock-names = "aic";
+-};
+-- 
+2.24.0
 
->
-> Thanks,
-> Guenter
->
->> --
->> 
->> There's a syz reproducer on the powerpc syzbot that eventually hits
->> the bug, but it can take up to an hour or so before it keels over on a
->> kernel with all the syzkaller debugging on, and even longer on a
->> production kernel. I have been able to reproduce it once on a stock
->> Ubuntu 5.0 ppc64le kernel.
->> 
->> I will ask MITRE for a CVE - while only the process doing the syscall
->> gets killed, it gets killed while holding the relay_channels_mutex,
->> so it blocks all future relay activity.
->> ---
->>  kernel/relay.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->> 
->> diff --git a/kernel/relay.c b/kernel/relay.c
->> index ade14fb7ce2e..a376cc6b54ec 100644
->> --- a/kernel/relay.c
->> +++ b/kernel/relay.c
->> @@ -580,7 +580,13 @@ struct rchan *relay_open(const char *base_filename,
->>  	if (!chan)
->>  		return NULL;
->>  
->> -	chan->buf = alloc_percpu(struct rchan_buf *);
->> +	chan->buf = alloc_percpu_gfp(struct rchan_buf *,
->> +				     GFP_KERNEL | __GFP_NOWARN);
->> +	if (!chan->buf) {
->> +		kfree(chan);
->> +		return NULL;
->> +	}
->> +
->>  	chan->version = RELAYFS_CHANNEL_VERSION;
->>  	chan->n_subbufs = n_subbufs;
->>  	chan->subbuf_size = subbuf_size;
->> -- 
->> 2.20.1
->> 
