@@ -2,96 +2,122 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E28AC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34791C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF312075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pix1lhPd"
+	by mail.kernel.org (Postfix) with ESMTP id 068E92070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 01:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfLXBvM (ORCPT
+        id S1727066AbfLXB4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 20:51:12 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40508 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbfLXBvM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 20:51:12 -0500
-Received: by mail-lf1-f68.google.com with SMTP id i23so13984452lfo.7;
-        Mon, 23 Dec 2019 17:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+zzZW9C2gvFiTdhaS90LTZiz7GaVSNQiHEc9bjcauWA=;
-        b=pix1lhPd6xmGCLfnzJR0LLpnNF77nOSmKK7Ho9Wy5BLeM2lnzWhA/i7XocKz1lMOyi
-         bqCmCdc0Hh9sYTFBMGWc2a8Ti3WqACB8W8RV+kQbZxBgaX3xcMSHN1Ncn1M1df7t+54l
-         u0HVu0N2eA7JnVf99+2aD6WAA15VIAML4sC+dGqmeGiCL5zi1IbM21h7PjtNIdgExkLC
-         lAjvdtV5IbcQHox6ETPoNcRMRH0qFYFj35b/9uswSgIiFqaJtNn/8RBxA3qJIzOVvFAP
-         qu2JfmwHPUuLtBcF7bytScnDy1G5YTtRE/PTaNqNGuWurHb2znuFknc7xFCcrzg5sVGb
-         vUuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+zzZW9C2gvFiTdhaS90LTZiz7GaVSNQiHEc9bjcauWA=;
-        b=UErWLbyUhfRL+eH8WbrFH9Dak9/Cy3xmTpZfTpKFb6/T4Yt5Za+p8Kw19g9wgfZsS3
-         COAHEWEqc4lVUFmJt2ByPKNB5JNDd9wWe3tUS+CgqeGkRDTXIIXpD0wpqqQOzwSURF4X
-         LL1TcS1inLN+ADbI6Cj+2w//02XpFcz4VH1DqVEI+t/pMjkfFwQoZGOHCwf2eewMjxRV
-         hD39LL8PGy2wqPGKJw5z5xt31NOCPhzxvEf7I+wE3MHAc7AGusAQLukWS7+mFVtcwAHw
-         2akSnB4UUn++1fxuzhnOJgBW86Kz4pc0SX5Hpf5y8KP6qScZIwF66EAGGIiQqpafia6N
-         lXcg==
-X-Gm-Message-State: APjAAAVIlW1NftXH3OigvwCM8h0dbpMCLY1f063YtRn8TZ3MXrg3qZ87
-        6M2vktSoOvbNf5EranHmy2ezGrDU+SHBkhlAI1E=
-X-Google-Smtp-Source: APXvYqxmJhbEhjtuyN8MSRNzv+M402lsv/DixBtC62/FDtYoJGTAVkjPwYHdcNzAsb8Gx0pPuX8e5saKlrb95arptAo=
-X-Received: by 2002:ac2:4194:: with SMTP id z20mr18731670lfh.20.1577152270133;
- Mon, 23 Dec 2019 17:51:10 -0800 (PST)
+        Mon, 23 Dec 2019 20:56:04 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23701 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726976AbfLXB4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 20:56:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 17:56:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,349,1571727600"; 
+   d="scan'208";a="211727785"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 23 Dec 2019 17:56:02 -0800
+Date:   Tue, 24 Dec 2019 09:56:02 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
+Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
+Message-ID: <20191224015602.GB7739@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
+ <20191223231120.GA31820@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20191223214412.12259-1-rjones@gateworks.com> <20191223214412.12259-2-rjones@gateworks.com>
- <CAOMZO5CLfyZjuz3c+Xr9v0D5h+r83PGgi8BrMnQZOOZSM-iGGw@mail.gmail.com> <CALAE=UAok8dazxPj16TAV7rQ_6EZvLBp3t5J2CjweMyECkZAHA@mail.gmail.com>
-In-Reply-To: <CALAE=UAok8dazxPj16TAV7rQ_6EZvLBp3t5J2CjweMyECkZAHA@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 23 Dec 2019 22:50:57 -0300
-Message-ID: <CAOMZO5AG+bPd+3h6VanBfJcGxVhVC=RkvpD1FzZ4tfgLYkiz0g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] ARM: dts: imx: Add GW5907 board support
-To:     Bobby Jones <rjones@gateworks.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Tim Harvey <tharvey@gateworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191223231120.GA31820@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 7:55 PM Bobby Jones <rjones@gateworks.com> wrote:
-
-> Original author for all but the GW5910 patch was myself. It's probably
-> not clear here but Tim reviewed the patches prior to submission and
-> had me add him as a Signed-off-by.
-
-You can add Tim's Reviewed-by tag below your Signed-off-by tag in this case.
-
-> So I was planning on just adding an enum line for "gw,ventana" under
-> the i.MX6DL and i.MX6Q based Boards sections. Would that be
-> sufficient?
+On Mon, Dec 23, 2019 at 03:11:20PM -0800, Matthew Wilcox wrote:
+>On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
+>> When page is not NULL, function is called by try_to_unmap_one() with
+>> TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
+>> with TTU_SPLIT_HUGE_PMD set:
+>> 
+>>   * unmap_page()
+>>   * shrink_page_list()
+>> 
+>> In both case, the page passed to try_to_unmap_one() is PageHead() of the
+>> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
+>> aligned, this means the THP is not mapped as PMD THP in this process.
+>> This could happen when we do mremap() a PMD size range to an un-aligned
+>> address.
+>> 
+>> Currently, this case is handled by following check in __split_huge_pmd()
+>> luckily.
+>> 
+>>   page != pmd_page(*pmd)
+>> 
+>> This patch checks the address to skip some work.
 >
-> We have a lot of individual custom boards and it doesn't seem correct
-> to add individual strings for every one in both sections.
+>The description here is confusing to me.
+>
 
-You should add all Ventana dtbs into fsl.yaml.
+Sorry for the confusion.
+
+Below is my understanding, if not correct or proper, just let me know :-)
+
+According to current comment in __split_huge_pmd(), we check pmd_page with
+page for migration case. While actually, this check also helps in the
+following two cases when page already split-ed:
+
+   * page just split-ed in place
+   * page split-ed and moved to non-PMD aligned address
+
+In both cases, pmd_page() is pointing to the PTE level page table. That's why
+we don't split one already split-ed THP page.
+
+If current code really intend to cover these two cases, sorry for my poor
+understanding.
+
+>> +	/*
+>> +	 * When page is not NULL, function is called by try_to_unmap_one()
+>> +	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
+>> +	 * TTU_SPLIT_HUGE_PMD
+>> +	 *
+>> +	 *     unmap_page()
+>> +	 *     shrink_page_list()
+>> +	 *
+>> +	 * In both cases, the "page" here is the PageHead() of a THP.
+>> +	 *
+>> +	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
+>> +	 * is not necessary to split it.
+>> +	 */
+>> +	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
+>> +		return;
+>
+>Repeating 75% of it as comments doesn't make it any less confusing.  And
+>it feels like we're digging a pothole for someone to fall into later.
+>Why not make it make sense ...
+>
+>	if (page && !IS_ALIGNED(address, page_size(page))
+>		return;
+
+Hmm... Use HPAGE_PMD_SIZE here wants to emphasize we want the address to be
+PMD aligned. If just use page_size() here, may confuse the audience?
+
+-- 
+Wei Yang
+Help you, Help me
