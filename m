@@ -2,76 +2,218 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD6CC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1828C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE6F206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577163010;
-	bh=UL9b/SbX1WZ6RedDEtgQXJCpnmdECOSxErzvE+HN1eQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KlKdHOJJ7/aRCgA32vRyUXChNVeOfOAXvty/2wjNgZBVtE7YpAyfRs1XmutgivkaA
-	 SA9F84RhEImIsJAZVLjPWgJsfwLeA0BXDEist45negclSj5xWIGvNGuZylNHCC+oJ3
-	 p7T6NfpzMz54wsmm3tYLtEemxhcUSLzIspHd0/tI=
+	by mail.kernel.org (Postfix) with ESMTP id A2A0C20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:53:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C3heL7nl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfLXEuJ (ORCPT
+        id S1726893AbfLXExc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 23:50:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbfLXEuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 23:50:09 -0500
-Received: from localhost (unknown [122.167.68.227])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE39206CB;
-        Tue, 24 Dec 2019 04:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577163008;
-        bh=UL9b/SbX1WZ6RedDEtgQXJCpnmdECOSxErzvE+HN1eQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1DahhM3gJcOt286sQXsr1sihpHCDy9BrmnkilCr459a+rW6phc8h+yMCqkrQ6VARu
-         r/4GgRBjblHRn4zZyQ63v2oQwg4DkurXppGe6yGm3XKrPWi/QRXaH83M/HzKrmEcpu
-         brCn4XTUGYl9aVy+ud5wFFaZXAkrX2c4/CokRk/8=
-Date:   Tue, 24 Dec 2019 10:20:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Kit Chow <kchow@gigaio.com>
-Subject: Re: [PATCH 0/5] Support hot-unbind in IOAT
-Message-ID: <20191224045004.GI2536@vkoul-mobl>
-References: <20191216190120.21374-1-logang@deltatee.com>
+        Mon, 23 Dec 2019 23:53:32 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:56275 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfLXExc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 23:53:32 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191224045329epoutp04c610fc39b14b890fe082674aac3fb8a3~jNZU9BRUp0213402134epoutp048
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:53:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191224045329epoutp04c610fc39b14b890fe082674aac3fb8a3~jNZU9BRUp0213402134epoutp048
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1577163209;
+        bh=+MavX6V0fSjJ2hx2U3IVU9tdN5bV0kJVEfSN65G9Bag=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=C3heL7nl4UxijwnhEm1TPnHxnNf4iNHNYDkqqobLrMyt1gNY5OEI5lVOVXChtndHC
+         0AMRy+Y7HZgrelIaJ9I8Xa6rlwPF/ZqxvXW/Fn71Ml4iSHYU63Y+hFY5g3VY5dfdJu
+         HLDPzkw5YtQ9vNiheljskseuLp9isEvMyGBixfQE=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191224045329epcas1p42a371233a0b53f54f5646bd87c540bda~jNZUfho-80985109851epcas1p4F;
+        Tue, 24 Dec 2019 04:53:29 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47hkPV5kBrzMqYks; Tue, 24 Dec
+        2019 04:53:18 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CF.ED.48019.CB9910E5; Tue, 24 Dec 2019 13:53:16 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191224045316epcas1p4b27534f3200f57fad70cf52c8c867f48~jNZIpAXjO0962409624epcas1p4X;
+        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191224045316epsmtrp1aafafc08d5ce3dc89e9b3781b14c4840~jNZIoK0vQ2686226862epsmtrp1h;
+        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-eb-5e0199bc809e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9F.83.06569.CB9910E5; Tue, 24 Dec 2019 13:53:16 +0900 (KST)
+Received: from [10.113.221.211] (unknown [10.113.221.211]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191224045316epsmtip23aeb6e6c62cf0571538c300231d08c55~jNZIXRGaY2283022830epsmtip25;
+        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
+Subject: Re: [RFC PATCH v3 7/7] drm: exynos: mixer: Add interconnect support
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, cw00.choi@samsung.com,
+        myungjoo.ham@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org
+From:   Inki Dae <inki.dae@samsung.com>
+Message-ID: <6e8aa13a-c831-a7ee-70d3-f6b08fe6fbc3@samsung.com>
+Date:   Tue, 24 Dec 2019 13:56:51 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216190120.21374-1-logang@deltatee.com>
+In-Reply-To: <20191220115653.6487-8-a.swigon@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHve/1vT6MdW8V5cgShUdMJkmxD6i7qDCXGfOyEanxn2XJwBf6
+        Bg39lb4WlJj4E2Q4RbJsQjfUEOM6KoqFGcDKHOKvEamdhjEGQtQwQS3xR9GoUVseRv77nHO+
+        J/d7zr2XIbU36ETGbHNJTpto4ei5qjMXlut0gXqUrz/RpsMjhysQPl13isL/PP2fwkd6+ih8
+        MzJJ40Pn/DQOBlvU2Dv8iML+O/0UvtH5C42f7O9BuC7YReDmnmE1/m+nl8Z1P4zTaz8Q/E3f
+        0cJQf4AWRvZdJoTWY9uF0+F2QjjQ1oSEJ/4lRvXXJWuKJdEkOZMkW6HdZLYVZXNfbir4vMCw
+        Us/r+Cz8CZdkE61SNrcu16hbb7ZEfXNJpaLFHU0ZRVnmVuSscdrdLimp2C67sjnJYbI4shxp
+        smiV3baitEK7dRWv16cbosLNJcUVD4KUo2fxlq6LncQOdCu+GjEMsJkwETBVo7mMlm1HcP5K
+        iFaCxwhGx5uQEkwhqAqfVFWjuOmOszUvZgrnEPj3t8y0TCJ49WMHiqkWsLlQuatFFSvEs28Q
+        9B7/jYoFJDuIIFDTS8VUNLsMar0jdIw1bA48O+xXx1gVzXc/7KVjDheyX0FvRFQkH8LV+rvT
+        NuLYLLjy9P60nGQTYPDuEULhpbD7959JxepxNXSNfabwOhh4MEUovAAmLrepFU6E8ZrKGS6D
+        sfCYSlnMNphq2KJgBoS8phiS7HI41blCESdDx8sGpBw6H8KR7ylFrYGqSq0i4eBSaAApDHD9
+        WC2tsACNzQfUB1GyZ9ZYnlmjeGaN4nl/8FGkakKLJIdsLZJk3pE5+6r9aPpBp+J2FOjL7UYs
+        g7h5mpYLc/K1lFgqb7V2I2BILl7jc6J8rcYkbi2XnPYCp9siyd3IEF16LZm4sNAe/R42VwFv
+        SM/IyMCZ/EoDz3MJGuZ56BstWyS6pBJJckjOd30EE5e4A6FGo1jliu9I8/17sGFjDt+3wVK5
+        rTDPeHF9sneIeHHoo9Hb9QnPfjVH8KtLPsOYr7zaMLBp6tuPF0+klD8Knv9Dur3azCy6lpfi
+        GW5Nj5A3q/ZUDGz+dPSnOaVtIS5/8OoXfw+7BTaUpReHyppfT5rHy+75wnv/DBA1f+X1m0vm
+        cSq5WORTSacsvgUkAgvi5gMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCSvO6emYxxBi92CVjcn9fKaLFxxnpW
+        i+tfnrNazD9yjtXiytf3bBbT925iszh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
+        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
+        HsVlk5Kak1mWWqRvl8CV0frmPGvBEcmKfUd3MTUw3hPpYuTkkBAwkdjd/4uxi5GLQ0hgN6NE
+        98rXQA4HUEJCYstWDghTWOLw4WKIkreMEo8bPzCC9AoL+Ei0NW1gAUmICPxnlHjYdgxsELPA
+        LUaJpl1TwKrApj7q0wGx2QRUJSauuM8GYvMK2El8n7eJHcRmAYofensaLC4qECHxfPsNRoga
+        QYmTM5+wgNicApYSJ768BqtnFlCX+DPvEjOELS5x68l8JghbXqJ562zmCYxCs5C0z0LSMgtJ
+        yywkLQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRHppbWDsYTJ+IPMQpwMCrx
+        8EYcZIgTYk0sK67MPcQowcGsJMK7uogxTog3JbGyKrUoP76oNCe1+BCjNAeLkjivfP6xSCGB
+        9MSS1OzU1ILUIpgsEwenVAOj390VKjyVmi86DMsul3snq1wsDXZda7WLUcsi6+jjuON/VdzC
+        ODuktSfW/3DonWsmyHedx5i9Yn/atn8xxapLHQ60BuaZVRp2WrzbWW49cXtv+9JnzBXZ7Rq3
+        d7SsWMl42Lwk4Lef9LNNaSy9UkueL+qS+heaKsqYrSASPMUmS/PuoU4XKyWW4oxEQy3mouJE
+        AAReOPzIAgAA
+X-CMS-MailID: 20191224045316epcas1p4b27534f3200f57fad70cf52c8c867f48
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+        <CGME20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7@eucas1p2.samsung.com>
+        <20191220115653.6487-8-a.swigon@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-12-19, 12:01, Logan Gunthorpe wrote:
-> Hey,
-> 
-> This patchset creates some common infrastructure which I will use in the
-> next version of the PLX driver. It adds a reference count to the
-> dma_device struct which is taken and released every time a channel
-> is allocated or freed. A call back is used to allow the driver to
-> free the underlying memory and do any final cleanup.
-> 
-> For a use-case, I've adjusted the ioat driver to properly support
-> hot-unbind. The driver was already pretty close as it already had
-> a shutdown state; so it mostly only required freeing the memory
-> correctly and calling ioat_shutdown at the correct time.
+Hi,
 
-I didnt find anything else (apart from one change i pointed), so I have
-applied this and will fix the comment. No point in delaying this
+19. 12. 20. 오후 8:56에 Artur Świgoń 이(가) 쓴 글:
+> From: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> This patch adds interconnect support to exynos-mixer. The mixer works
+> the same as before when CONFIG_INTERCONNECT is 'n'.
+> 
+> Co-developed-by: Artur Świgoń <a.swigon@samsung.com>
+> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_mixer.c | 71 +++++++++++++++++++++++++--
+>  1 file changed, 66 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
+> index 6cfdb95fef2f..a7e7240a055f 100644
+> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/component.h>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/kernel.h>
+> @@ -97,6 +98,7 @@ struct mixer_context {
+>  	struct exynos_drm_crtc	*crtc;
+>  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
+>  	unsigned long		flags;
+> +	struct icc_path		*soc_path;
+>  
+>  	int			irq;
+>  	void __iomem		*mixer_regs;
+> @@ -931,6 +933,40 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
+>  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
+>  }
+>  
+> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
+> +{
+> +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
+> +	struct mixer_context *ctx = crtc->ctx;
+> +	unsigned long bw, bandwidth = 0;
+> +	int i, j, sub;
+> +
+> +	if (!ctx->soc_path)
+> +		return;
+> +
+> +	for (i = 0; i < MIXER_WIN_NR; i++) {
+> +		struct drm_plane *plane = &ctx->planes[i].base;
+> +		const struct drm_format_info *format;
+> +
+> +		if (plane->state && plane->state->crtc && plane->state->fb) {
+> +			format = plane->state->fb->format;
+> +			bw = mode->hdisplay * mode->vdisplay *
+> +							drm_mode_vrefresh(mode);
+> +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> +				bw /= 2;
+> +			for (j = 0; j < format->num_planes; j++) {
+> +				sub = j ? (format->vsub * format->hsub) : 1;
+> +				bandwidth += format->cpp[j] * bw / sub;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* add 20% safety margin */
+> +	bandwidth = bandwidth / 4 * 5;
+> +
+> +	dev_dbg(ctx->dev, "exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
+> +	icc_set_bw(ctx->soc_path, Bps_to_icc(bandwidth), 0);
+> +}
+> +
+>  static void mixer_atomic_begin(struct exynos_drm_crtc *crtc)
+>  {
+>  	struct mixer_context *ctx = crtc->ctx;
+> @@ -982,6 +1018,7 @@ static void mixer_atomic_flush(struct exynos_drm_crtc *crtc)
+>  	if (!test_bit(MXR_BIT_POWERED, &mixer_ctx->flags))
+>  		return;
+>  
+> +	mixer_set_memory_bandwidth(crtc);
+>  	mixer_enable_sync(mixer_ctx);
+>  	exynos_crtc_handle_event(crtc);
+>  }
+> @@ -1029,6 +1066,7 @@ static void mixer_disable(struct exynos_drm_crtc *crtc)
+>  	for (i = 0; i < MIXER_WIN_NR; i++)
+>  		mixer_disable_plane(crtc, &ctx->planes[i]);
+>  > +	mixer_set_memory_bandwidth(crtc);
 
--- 
-~Vinod
+Your intention is to set peak and average bandwidth to 0 at disabling mixer device?
+
+Thanks,
+Inki Dae
