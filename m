@@ -2,238 +2,163 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B2DC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1366C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5C206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B262D20643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 00:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cyu37PyL"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="JuSs0+9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfLXAJc (ORCPT
+        id S1726943AbfLXA0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 19:09:32 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33420 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfLXAJb (ORCPT
+        Mon, 23 Dec 2019 19:26:15 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45666 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfLXA0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 19:09:31 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d71so7018862qkc.0;
-        Mon, 23 Dec 2019 16:09:30 -0800 (PST)
+        Mon, 23 Dec 2019 19:26:15 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so9916431pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 16:26:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pu5L+bxTE30ryYIOBF83rHNPUsWCI2dbAcOYhYtXBw0=;
-        b=Cyu37PyLyS5hhxm1elgprP9KOsSQl3RuQfogWOF5+EiHiD2u4Pqpwvou54PxHJIJ32
-         I9DmfUQBLGoRZUSZAAY708JKYEO1xFfKZh58wAa2zEPGvel1s2lDWsjFLClVtzNoIvnB
-         kriTCnledocn8pe5xJNCHHMQEihHL5PIhlg1htlCcdIImqkgnZkqCdB3dcsz++9czLm2
-         PKetWR5zlHpamP0Bo7xVl8lz/gXwRhGGBfdrHILWFnmpKrAyYfLd8c7k2byOoa3/+kc9
-         k4tJcQ81pVbrHQ23s2jbL9PatqpYoRxsoLsiyXeLpuA5VQSOy2A3nBfrvUF0/voxu1Na
-         7kWw==
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=qy1djmafina09Wk+tvxb8eHELyj8veiP7NWYiOp28HE=;
+        b=JuSs0+9TTFciYyeSdgEJZmy6i1PQkY8Z7m1fk+cugf1/N5gw+Bqpl10Z8kw28+fHu4
+         iGj0HaYc9WlCAs3C3U0dbFh28vFsmj9KWI+M5fo+ZVKhFx3chicHBmnb5yYErxXfgOc/
+         6snM0TpoxGIOJBm+27fgKzfacZoXkniAfBy84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pu5L+bxTE30ryYIOBF83rHNPUsWCI2dbAcOYhYtXBw0=;
-        b=ij1JLgZ3zKHQni/Daz2n/HJPDbcHFrPVlk2QCBUsAXtwMDre5eBQzkTAHmnZfK4oFQ
-         aYmn9IDhp8XUL3JhDGKJefjdWR0+djMJkj1tNkoFUgfG9s+07OIItwsJPY+XXaMwpCis
-         DVGrLA6fUCpHXTUF94QtpA0v63NyvGr+foDV5lusNOquvoTt4B2+R8BPjFh8wMmKOCsp
-         2SMHnvfAv/05tGdu4ldDEkq05vUDPCrMsHnLdh8M85A3K/dfhpzFKVayTy23gqwN+thh
-         1Tc5/sG7hFyUNUc9vhLZCi+vzl4X20JEkDqt4VkmRG3VZ52qr8LCr1qCSNEbWZlV79jv
-         0XIw==
-X-Gm-Message-State: APjAAAXDEjRS17izLZKvS3f3Ab4QIRFUXkqCAqI9fxhHDbMy+IWSUuFp
-        8JLEMy5Vc3jevoX6A0yUkvRhRdU8nP90ZWLOMbo=
-X-Google-Smtp-Source: APXvYqz63+VdPLFcx7mCtf4DjdEsJKLeMa3Gud8cm3sua6KMJNfDXAm3YJT68HbwTZIBeIe4+roY92UI4S/wb+JLBZA=
-X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr29113651qkj.36.1577146169824;
- Mon, 23 Dec 2019 16:09:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=qy1djmafina09Wk+tvxb8eHELyj8veiP7NWYiOp28HE=;
+        b=RW29OeRKWXDd03fux0SQApJPbcBuWIP1c66DR8uo2VHzSi19PhFHsAMTXEbbUFLFbS
+         dgF+y0N2UHSEGWEbpnnmd9qKRn3sx9N52sOEFqZ8LA6V2G1hgySBcR71ugKpG+UQ2Bku
+         lVXlKjfxX3rhq4GqMO+S4IaldQVA3PbVRHaSGurybdMuSyFgkDSydesSzz7Ngo59i6iT
+         0ePngUcslEHrgO9hMU4VQoN71hkxIj74BdPdRAELmrH3KgzmJfu4sQ9voSUPd47sgwyt
+         w3z3cluWLVEGk9RvkTPIRJIkRWQNOFHGL37NcPDDb7GL3/KQiODDIOnrgSpELWkiN5Hx
+         lNyA==
+X-Gm-Message-State: APjAAAVCL93uRCTcWzZQHZnXt2WDQvCcRgpI7uYj/+WpQRVI2Bm2VTqh
+        K04IBNDFOaxTk+8Ay2ibZGQAz4AGILk=
+X-Google-Smtp-Source: APXvYqxuLAAFeBAxttugpfL86SnEnhyy6j+VI8Djf9c+j5lCoGXK4k6kRel8bR8UP14ADxXvvm0muA==
+X-Received: by 2002:a63:2063:: with SMTP id r35mr33946563pgm.69.1577147174351;
+        Mon, 23 Dec 2019 16:26:14 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-b05d-cbfe-b2ee-de17.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b05d:cbfe:b2ee:de17])
+        by smtp.gmail.com with ESMTPSA id bo19sm655572pjb.25.2019.12.23.16.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 16:26:13 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        akash.goel@intel.com, ajd@linux.ibm.com,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Subject: Re: [PATCH] relay: handle alloc_percpu returning NULL in relay_open
+In-Reply-To: <20191223163610.GA32267@roeck-us.net>
+References: <20191129013745.7168-1-dja@axtens.net> <20191223163610.GA32267@roeck-us.net>
+Date:   Tue, 24 Dec 2019 11:26:09 +1100
+Message-ID: <87woamsh5q.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-6-kpsingh@chromium.org>
- <CAEf4BzYz6wswhr+byP_xabLoWyA2ah8P2a-STOgqXzuiNkHShw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYz6wswhr+byP_xabLoWyA2ah8P2a-STOgqXzuiNkHShw@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Dec 2019 16:09:18 -0800
-Message-ID: <CAEf4Bza2gpeQSy-Eo-DXk1UsVkhRXSq5NmL7ra-grWq5FJCmVQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 05/13] tools/libbpf: Add support in libbpf for BPF_PROG_TYPE_LSM
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 4:07 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > Update the libbpf library with functionality to load and
-> > attach a program type BPF_PROG_TYPE_LSM, currently with
-> > only one expected attach type BPF_LSM_MAC.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  tools/lib/bpf/bpf.c           |  2 +-
-> >  tools/lib/bpf/bpf.h           |  6 +++++
-> >  tools/lib/bpf/libbpf.c        | 44 +++++++++++++++++++++--------------
-> >  tools/lib/bpf/libbpf.h        |  2 ++
-> >  tools/lib/bpf/libbpf.map      |  6 +++++
-> >  tools/lib/bpf/libbpf_probes.c |  1 +
-> >  6 files changed, 43 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> > index 98596e15390f..9c6fb083f7de 100644
-> > --- a/tools/lib/bpf/bpf.c
-> > +++ b/tools/lib/bpf/bpf.c
-> > @@ -228,7 +228,7 @@ int bpf_load_program_xattr(const struct bpf_load_program_attr *load_attr,
-> >         memset(&attr, 0, sizeof(attr));
-> >         attr.prog_type = load_attr->prog_type;
-> >         attr.expected_attach_type = load_attr->expected_attach_type;
-> > -       if (attr.prog_type == BPF_PROG_TYPE_TRACING) {
-> > +       if (needs_btf_attach(attr.prog_type)) {
-> >                 attr.attach_btf_id = load_attr->attach_btf_id;
-> >                 attr.attach_prog_fd = load_attr->attach_prog_fd;
-> >         } else {
-> > diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-> > index 3c791fa8e68e..df2a00ff349f 100644
-> > --- a/tools/lib/bpf/bpf.h
-> > +++ b/tools/lib/bpf/bpf.h
-> > @@ -177,6 +177,12 @@ LIBBPF_API int bpf_task_fd_query(int pid, int fd, __u32 flags, char *buf,
-> >                                  __u32 *buf_len, __u32 *prog_id, __u32 *fd_type,
-> >                                  __u64 *probe_offset, __u64 *probe_addr);
-> >
-> > +static inline bool needs_btf_attach(enum bpf_prog_type prog_type)
-> > +{
-> > +       return (prog_type == BPF_PROG_TYPE_TRACING ||
-> > +               prog_type == BPF_PROG_TYPE_LSM);
-> > +}
-> > +
->
-> This doesn't have to be a public API, right? It also doesn't follow
-> naming conventions of libbpf APIs. Let's just move it into
-> libbpf_internal.h, given it's used in few files.
->
-> Also, Martin's patches add STRUCT_OPS, which do need btf_attach, but
-> don't set attach_prog_fd. So maybe something like
-> libbpf_need_attach_prog_btf() for a name to be a bit more specific?
->
->
-> >  #ifdef __cplusplus
-> >  } /* extern "C" */
-> >  #endif
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > index b20f82e58989..b0b27d8e5a37 100644
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> > @@ -3738,7 +3738,7 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
-> >         load_attr.insns = insns;
-> >         load_attr.insns_cnt = insns_cnt;
-> >         load_attr.license = license;
-> > -       if (prog->type == BPF_PROG_TYPE_TRACING) {
-> > +       if (needs_btf_attach(prog->type)) {
-> >                 load_attr.attach_prog_fd = prog->attach_prog_fd;
-> >                 load_attr.attach_btf_id = prog->attach_btf_id;
-> >         } else {
-> > @@ -3983,7 +3983,7 @@ __bpf_object__open(const char *path, const void *obj_buf, size_t obj_buf_sz,
-> >
-> >                 bpf_program__set_type(prog, prog_type);
-> >                 bpf_program__set_expected_attach_type(prog, attach_type);
-> > -               if (prog_type == BPF_PROG_TYPE_TRACING) {
-> > +               if (needs_btf_attach(prog_type)) {
-> >                         err = libbpf_find_attach_btf_id(prog->section_name,
-> >                                                         attach_type,
-> >                                                         attach_prog_fd);
-> > @@ -4933,6 +4933,7 @@ bool bpf_program__is_##NAME(const struct bpf_program *prog)       \
-> >  }                                                              \
-> >
-> >  BPF_PROG_TYPE_FNS(socket_filter, BPF_PROG_TYPE_SOCKET_FILTER);
-> > +BPF_PROG_TYPE_FNS(lsm, BPF_PROG_TYPE_LSM);
-> >  BPF_PROG_TYPE_FNS(kprobe, BPF_PROG_TYPE_KPROBE);
-> >  BPF_PROG_TYPE_FNS(sched_cls, BPF_PROG_TYPE_SCHED_CLS);
-> >  BPF_PROG_TYPE_FNS(sched_act, BPF_PROG_TYPE_SCHED_ACT);
-> > @@ -5009,6 +5010,8 @@ static const struct {
-> >         BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
-> >         BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
-> >         BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LOCAL),
-> > +       BPF_PROG_BTF("lsm/",                    BPF_PROG_TYPE_LSM,
-> > +                                               BPF_LSM_MAC),
->
-> Is is supposed to be attachable same as BPF_PROG_TYPE_TRACING
-> programs? If yes, please define auto-attaching function, similar to
-> SEC_DEF("raw_tp") few lines below this one.
->
+Guenter Roeck <linux@roeck-us.net> writes:
 
-ah, haven't gotten to patch 11 yet, disregard this.
+> On Fri, Nov 29, 2019 at 12:37:45PM +1100, Daniel Axtens wrote:
+>> alloc_percpu() may return NULL, which means chan->buf may be set to
+>> NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
+>> dereference an invalid pointer:
+>> 
+>> BUG: Unable to handle kernel data access at 0x7dae0000
+>> Faulting instruction address: 0xc0000000003f3fec
+>> ...
+>> NIP [c0000000003f3fec] relay_open+0x29c/0x600
+>> LR [c0000000003f3fc0] relay_open+0x270/0x600
+>> Call Trace:
+>> [c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
+>> [c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
+>> [c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
+>> [c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
+>> [c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
+>> [c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
+>> [c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
+>> [c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
+>> 
+>> Check if alloc_percpu returns NULL. Because we can readily catch and
+>> handle this situation, switch to alloc_cpu_gfp and pass in __GFP_NOWARN.
+>> 
+>> This was found by syzkaller both on x86 and powerpc, and the reproducer
+>> it found on powerpc is capable of hitting the issue as an unprivileged
+>> user.
+>> 
+>> Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+>> Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+>> Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+>> Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+>> Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+>> Cc: Akash Goel <akash.goel@intel.com>
+>> Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
+>> Cc: stable@vger.kernel.org # v4.10+
+>> Signed-off-by: Daniel Axtens <dja@axtens.net>
+>> 
+>
+> So there is a CVE now, but it appears that the patch went nowhere.
+> Are there any plans to actually apply it ?
 
-> >         BPF_APROG_SEC("cgroup_skb/ingress",     BPF_PROG_TYPE_CGROUP_SKB,
-> >                                                 BPF_CGROUP_INET_INGRESS),
-> >         BPF_APROG_SEC("cgroup_skb/egress",      BPF_PROG_TYPE_CGROUP_SKB,
-> > @@ -5119,32 +5122,39 @@ int libbpf_prog_type_by_name(const char *name, enum bpf_prog_type *prog_type,
-> >         return -ESRCH;
-> >  }
-> >
-> > -#define BTF_PREFIX "btf_trace_"
-> > +static inline int __btf__typdef_with_prefix(struct btf *btf, const char *name,
+I sent a v2 that addresses some review comments, I guess if anything is
+applied it will be that.
+
+Daniel
+
 >
-> typo: typdef -> typedef
+> Thanks,
+> Guenter
 >
-> But actually let's generalize it to pass BTF_KIND as another param, I
-> think I have a need for this (we might want to do that for structs,
-> not just typedef->func_proto).
-> Following btf__find_by_name_kind() naming, it probably should be
-> called btf__find_by_prefix_kind()?
->
-> > +                                           const char *prefix)
-> > +{
-> > +
-> > +       size_t prefix_len = strlen(prefix);
-> > +       char btf_type_name[128];
-> > +
-> > +       strcpy(btf_type_name, prefix);
-> > +       strncat(btf_type_name, name, sizeof(btf_type_name) - (prefix_len + 1));
->
-> at this point snprintf(btf_type_name, "%s%.*%s", prefix,
-> sizeof(btf_type_name) - prefix_len - 1, name) looks like a better and
-> cleaner alternative.
->
-> > +       return btf__find_by_name_kind(btf, btf_type_name, BTF_KIND_TYPEDEF);
-> > +}
-> > +
-> > +#define BTF_TRACE_PREFIX "btf_trace_"
-> > +#define BTF_LSM_PREFIX "lsm_btf_"
-> > +
->
-> [...]
+>> --
+>> 
+>> There's a syz reproducer on the powerpc syzbot that eventually hits
+>> the bug, but it can take up to an hour or so before it keels over on a
+>> kernel with all the syzkaller debugging on, and even longer on a
+>> production kernel. I have been able to reproduce it once on a stock
+>> Ubuntu 5.0 ppc64le kernel.
+>> 
+>> I will ask MITRE for a CVE - while only the process doing the syscall
+>> gets killed, it gets killed while holding the relay_channels_mutex,
+>> so it blocks all future relay activity.
+>> ---
+>>  kernel/relay.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/kernel/relay.c b/kernel/relay.c
+>> index ade14fb7ce2e..a376cc6b54ec 100644
+>> --- a/kernel/relay.c
+>> +++ b/kernel/relay.c
+>> @@ -580,7 +580,13 @@ struct rchan *relay_open(const char *base_filename,
+>>  	if (!chan)
+>>  		return NULL;
+>>  
+>> -	chan->buf = alloc_percpu(struct rchan_buf *);
+>> +	chan->buf = alloc_percpu_gfp(struct rchan_buf *,
+>> +				     GFP_KERNEL | __GFP_NOWARN);
+>> +	if (!chan->buf) {
+>> +		kfree(chan);
+>> +		return NULL;
+>> +	}
+>> +
+>>  	chan->version = RELAYFS_CHANNEL_VERSION;
+>>  	chan->n_subbufs = n_subbufs;
+>>  	chan->subbuf_size = subbuf_size;
+>> -- 
+>> 2.20.1
+>> 
