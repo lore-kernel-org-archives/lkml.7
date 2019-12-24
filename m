@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D02C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8EBC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A69920706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D84206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187758;
-	bh=DkdF+K8e5AB2vm5wuoyhVJlYf3woZceAykVnDIr4i28=;
+	s=default; t=1577187769;
+	bh=wNHZxD3WGVUx+/EkDn1pXaa7OB9w50i+HnmpHIbX+qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LddbFPXdz85/HiZZg3BecS3MBNABJ523oX+coS0rSz6jLNvD8sY2Q/g1xbTOal/Zg
-	 LtudtmTKmbDeKJBIWKQ3yiFxRmUbkwVc1XZucRUv16r9zwOQHfv6ZMhIIcVy7lF+48
-	 jNfbOmsuNLv0KZEyHw/9X7fvxYFVfZOl6L0RMWOA=
+	b=zYKLog+Lp/n4LoouxtwtGruvXL6HPKlkMYJqcWxkjCGXt13ujf+dCVUGamxvlQnvk
+	 puClUc06LBz6yXErauJRTd06nrKaeL70HohvPR/Pgsp/uA053WECdlxyL7lpNJ8vEi
+	 8i72yj7h5h8S8YnmugGs14xgLBxsnUqzBPO9qmK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLXLmh (ORCPT
+        id S1727015AbfLXLms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:42:37 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:33496 "EHLO
+        Tue, 24 Dec 2019 06:42:48 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:49827 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbfLXLmh (ORCPT
+        by vger.kernel.org with ESMTP id S1726237AbfLXLms (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:42:37 -0500
+        Tue, 24 Dec 2019 06:42:48 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji61-000169-6D; Tue, 24 Dec 2019 12:11:26 +0100
+        id 1iji67-000169-7U; Tue, 24 Dec 2019 12:11:31 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 17/32] irqchip/gic-v4.1: Map the ITS SGIR register page
-Date:   Tue, 24 Dec 2019 11:10:40 +0000
-Message-Id: <20191224111055.11836-18-maz@kernel.org>
+Subject: [PATCH v3 22/32] irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
+Date:   Tue, 24 Dec 2019 11:10:45 +0000
+Message-Id: <20191224111055.11836-23-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,74 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the new features of GICv4.1 is to allow virtual SGIs to be
-directly signaled to a VPE. For that, the ITS has grown a new
-64kB page containing only a single register that is used to
-signal a SGI to a given VPE.
+As for VLPIs, there is a number of configuration bits that cannot
+be directly communicated through the normal irqchip API, and we
+have to use our good old friend set_vcpu_affinity.
 
-Add a second mapping covering this new 64kB range, and take this
-opportunity to limit the original mapping to 64kB, which is enough
-to cover the span of the ITS registers.
+This is used to configure group and priority for a given vSGI.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 18 ++++++++++++++++++
+ include/linux/irqchip/arm-gic-v4.h |  5 +++++
+ 2 files changed, 23 insertions(+)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 48d7ee443544..2f94fae67dfd 100644
+index 47d63a5b43ff..5126bdcfe079 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -97,6 +97,7 @@ struct its_node {
- 	struct mutex		dev_alloc_lock;
- 	struct list_head	entry;
- 	void __iomem		*base;
-+	void __iomem		*sgir_base;
- 	phys_addr_t		phys_base;
- 	struct its_cmd_block	*cmd_base;
- 	struct its_cmd_block	*cmd_write;
-@@ -4325,7 +4326,7 @@ static int __init its_probe_one(struct resource *res,
- 	struct page *page;
- 	int err;
+@@ -3886,6 +3886,23 @@ static int its_sgi_get_irqchip_state(struct irq_data *d,
+ 	return 0;
+ }
  
--	its_base = ioremap(res->start, resource_size(res));
-+	its_base = ioremap(res->start, SZ_64K);
- 	if (!its_base) {
- 		pr_warn("ITS@%pa: Unable to map ITS registers\n", &res->start);
- 		return -ENOMEM;
-@@ -4376,6 +4377,13 @@ static int __init its_probe_one(struct resource *res,
- 
- 		if (is_v4_1(its)) {
- 			u32 svpet = FIELD_GET(GITS_TYPER_SVPET, typer);
++static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_cmd_info *info = vcpu_info;
 +
-+			its->sgir_base = ioremap(res->start + SZ_128K, SZ_64K);
-+			if (!its->sgir_base) {
-+				err = -ENOMEM;
-+				goto out_free_its;
-+			}
++	switch (info->cmd_type) {
++	case PROP_UPDATE_SGI:
++		vpe->sgi_config[d->hwirq].priority = info->priority;
++		vpe->sgi_config[d->hwirq].group = info->group;
++		its_configure_sgi(d, false);
++		return 0;
 +
- 			its->mpidr = readl_relaxed(its_base + GITS_MPIDR);
++	default:
++		return -EINVAL;
++	}
++}
++
+ static struct irq_chip its_sgi_irq_chip = {
+ 	.name			= "GICv4.1-sgi",
+ 	.irq_mask		= its_sgi_mask_irq,
+@@ -3893,6 +3910,7 @@ static struct irq_chip its_sgi_irq_chip = {
+ 	.irq_set_affinity	= its_sgi_set_affinity,
+ 	.irq_set_irqchip_state	= its_sgi_set_irqchip_state,
+ 	.irq_get_irqchip_state	= its_sgi_get_irqchip_state,
++	.irq_set_vcpu_affinity	= its_sgi_set_vcpu_affinity,
+ };
  
- 			pr_info("ITS@%pa: Using GICv4.1 mode %08x %08x\n",
-@@ -4389,7 +4397,7 @@ static int __init its_probe_one(struct resource *res,
- 				get_order(ITS_CMD_QUEUE_SZ));
- 	if (!page) {
- 		err = -ENOMEM;
--		goto out_free_its;
-+		goto out_unmap_sgir;
- 	}
- 	its->cmd_base = (void *)page_address(page);
- 	its->cmd_write = its->cmd_base;
-@@ -4456,6 +4464,9 @@ static int __init its_probe_one(struct resource *res,
- 	its_free_tables(its);
- out_free_cmd:
- 	free_pages((unsigned long)its->cmd_base, get_order(ITS_CMD_QUEUE_SZ));
-+out_unmap_sgir:
-+	if (its->sgir_base)
-+		iounmap(its->sgir_base);
- out_free_its:
- 	kfree(its);
- out_unmap:
+ static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 30b4855bf766..a1a9d40266f5 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -98,6 +98,7 @@ enum its_vcpu_info_cmd_type {
+ 	SCHEDULE_VPE,
+ 	DESCHEDULE_VPE,
+ 	INVALL_VPE,
++	PROP_UPDATE_SGI,
+ };
+ 
+ struct its_cmd_info {
+@@ -110,6 +111,10 @@ struct its_cmd_info {
+ 			bool		g0en;
+ 			bool		g1en;
+ 		};
++		struct {
++			u8		priority;
++			bool		group;
++		};
+ 	};
+ };
+ 
 -- 
 2.20.1
 
