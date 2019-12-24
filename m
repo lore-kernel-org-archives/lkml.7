@@ -2,170 +2,462 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A59C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A43C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE0C206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE9C206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Swnp1PFp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FQBbVDIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfLXEXu (ORCPT
+        id S1726899AbfLXE2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 23:23:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33599 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfLXEXu (ORCPT
+        Mon, 23 Dec 2019 23:28:10 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59408 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfLXE2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 23:23:50 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so9832265pgk.0;
-        Mon, 23 Dec 2019 20:23:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JX1EL/6eRwb5KtYiMYTIg46J0eLFw4FhTiS7oR9PV1A=;
-        b=Swnp1PFp30RQwDUwAejmlTu2qne3T3lQN/q8nUrlWxdofEZf6wwvW4Z2RiLICfSovN
-         x2yrImyRArfILBNnsK0h/VzotYllhKHrLaRiIWO098a5ToQQbWsohgOAZIHGqPMR4lne
-         XaTpA+vWv3HYJviVgvQHpwqZ+3Zx04eJJ+uH96m3mDqDRJr3fmYKw+puEL5cAis3ZVn/
-         nmly1IcNvaVoCT00HFh7kxmMbSIhH0jweN5JZhC+2mVZAUL8+y+ZxADgT+QpFCy3rMch
-         nKMvAqeEpu75b9+8WSfx6nbHdxbizEAR0/eAl0+ZfqJyay82P5Z9RK5DNMiteBS6MWth
-         Qc0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JX1EL/6eRwb5KtYiMYTIg46J0eLFw4FhTiS7oR9PV1A=;
-        b=m31jD3qqN5KBgsbuNTgb3h34JkvMz8FdhG26TsipvIk9SIQXb7R/9hedq7TmTYfWA5
-         cJc9+2sR32Idw/pZrbCbUU1yzou/Ex7my8DM17Fxm/1NyAxf0R9jeL9pmiVS1Jtlr+lq
-         t46kHcuCHn1pvCLGtpTW0Dlkd3dP0P1XcBXiZjYA4xPMNgn+1wihQq04MexP/s0TuZwY
-         bY7BzLUakrlIJ0XZS0cgzE3Rf1X4rKqZAWKUM9eNY6ZpqQkIdBXvjGwF0t7rr56bqnDE
-         UAW21vEJjMBpcLNelba0QA1Wn8BLP189Srv3G/5kxJGlLsAIJr10wVkw73S0riY6gikB
-         B9GA==
-X-Gm-Message-State: APjAAAUVpRaGP0YAJA9+q7ofl61PLgRHeDQosFjWP1+lsCId6x2Mtzj9
-        UGXaDtf+cV4V8A2Rr7A+UPqS0j50
-X-Google-Smtp-Source: APXvYqyyBzwkVAJ1MhIaI53BguBhvnsWMzG1nyg0tFnFE2KdKfpMNAK62yF8lfMhxlB2d8Wxp9aeuQ==
-X-Received: by 2002:a63:c20c:: with SMTP id b12mr34226979pgd.407.1577161428905;
-        Mon, 23 Dec 2019 20:23:48 -0800 (PST)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id 7sm16514706pfx.52.2019.12.23.20.23.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 20:23:48 -0800 (PST)
-Subject: Re: [PATCH net-next v8 05/14] ethtool: default handlers for GET
- requests
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-References: <cover.1577052887.git.mkubecek@suse.cz>
- <5db4d3bb1856e286a67d25ad02712b2bb2890524.1577052887.git.mkubecek@suse.cz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <499e7eab-c8dc-73ca-2475-0e9806210410@gmail.com>
-Date:   Mon, 23 Dec 2019 20:23:47 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 23 Dec 2019 23:28:10 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBO4Nx7q147490;
+        Tue, 24 Dec 2019 04:28:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=wuNV/sP23TRg+8wE//bFnE0AWal9hN1ujH8UEv/Un7I=;
+ b=FQBbVDIbZ5TQtWpFRgJi4ka9wO+MEDuxQnU7uWjIHaHk8J4RY+832K8qeS78hdniIpdC
+ VeRWJt089ccd0e8iyrmDno+s6YFV+oM9I71ygWDgmjr0d0G6AINR7rvfeiOfxtj/PU++
+ JUjAzSfZEkSY8Tr8neHdk620TTg0VvqbF54Ce4VL7hGx9XBnh6flGYYVjTScUHMs3N19
+ zv5U5sh5fq1qGSKI5ApmCpPIQ8/L2vKLFLZ2pn9qjm+2WswUrzBgMapz9zaIcx1hpiGF
+ 4NFOOIF0yrNmD0XLfjYBQVxjULEJoG9RaTtS6nd3vhacbtxibMXqfnY9KPqj2X9tpsuF +w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2x1c1qsrat-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Dec 2019 04:28:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBO4J8vI168223;
+        Tue, 24 Dec 2019 04:26:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2x37tdfqjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Dec 2019 04:26:01 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBO4Q0m3011852;
+        Tue, 24 Dec 2019 04:26:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Dec 2019 20:26:00 -0800
+Date:   Mon, 23 Dec 2019 20:25:57 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v2 1/2] fs: New zonefs file system
+Message-ID: <20191224042557.GW7489@magnolia>
+References: <20191220065528.317947-1-damien.lemoal@wdc.com>
+ <20191220065528.317947-2-damien.lemoal@wdc.com>
+ <20191220223624.GC7476@magnolia>
+ <BYAPR04MB581661F7C2103E8F35EEDAA0E72E0@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <5db4d3bb1856e286a67d25ad02712b2bb2890524.1577052887.git.mkubecek@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB581661F7C2103E8F35EEDAA0E72E0@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9480 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912240035
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9480 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912240036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Dec 23, 2019 at 01:33:30AM +0000, Damien Le Moal wrote:
+> On 2019/12/21 7:38, Darrick J. Wong wrote:
+> > On Fri, Dec 20, 2019 at 03:55:27PM +0900, Damien Le Moal wrote:
+> [...]>> +static int zonefs_inode_setattr(struct dentry *dentry, struct
+> iattr *iattr)
+> >> +{
+> >> +	struct inode *inode = d_inode(dentry);
+> >> +	int ret;
+> >> +
+> >> +	ret = setattr_prepare(dentry, iattr);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	if ((iattr->ia_valid & ATTR_UID &&
+> >> +	     !uid_eq(iattr->ia_uid, inode->i_uid)) ||
+> >> +	    (iattr->ia_valid & ATTR_GID &&
+> >> +	     !gid_eq(iattr->ia_gid, inode->i_gid))) {
+> >> +		ret = dquot_transfer(inode, iattr);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +	}
+> >> +
+> >> +	if (iattr->ia_valid & ATTR_SIZE) {
+> >> +		/* The size of conventional zone files cannot be changed */
+> >> +		if (ZONEFS_I(inode)->i_ztype == ZONEFS_ZTYPE_CNV)
+> >> +			return -EPERM;
+> >> +
+> >> +		ret = zonefs_seq_file_truncate(inode, iattr->ia_size);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +	}
+> > 
+> > /me wonders if you need to filter out ATTR_MODE changes here, at least
+> > so you can't make the zone file for a readonly zone writable?
+> 
+> Good point. Will add that to V3.
+> 
+> > I also wonder, does an O_TRUNC open reset the zone's write pointer to
+> > zero?
+> 
+> Yes, it does. That does not change from a regular FS behavior. This is
+> also consistent with the fact that a truncate(0) does exactly the same
+> thing.
 
+Ok, good, just checking. :)
 
-On 12/22/2019 3:45 PM, Michal Kubecek wrote:
-> Significant part of GET request processing is common for most request
-> types but unfortunately it cannot be easily separated from type specific
-> code as we need to alternate between common actions (parsing common request
-> header, allocating message and filling netlink/genetlink headers etc.) and
-> specific actions (querying the device, composing the reply). The processing
-> also happens in three different situations: "do" request, "dump" request
-> and notification, each doing things in slightly different way.
+> [...]
+> >> +static const struct vm_operations_struct zonefs_file_vm_ops = {
+> >> +	.fault		= zonefs_filemap_fault,
+> >> +	.map_pages	= filemap_map_pages,
+> >> +	.page_mkwrite	= zonefs_filemap_page_mkwrite,
+> >> +};
+> >> +
+> >> +static int zonefs_file_mmap(struct file *file, struct vm_area_struct *vma)
+> >> +{
+> >> +	/*
+> >> +	 * Conventional zone files can be mmap-ed READ/WRITE.
+> >> +	 * For sequential zone files, only readonly mappings are possible.
+> > 
+> > Hmm, but the code below looks like it allows private writable mmapings
+> > of sequential zones?
 > 
-> The request specific code is implemented in four or five callbacks defined
-> in an instance of struct get_request_ops:
+> It is my understanding that changes made to pages of a MAP_PRIVATE
+> mapping are not written back to the underlying file, so a
+> mmap(MAP_WRITE|MAP_PRIVATE) is essentially equivalent to a read only
+> mapping for the FS. Am I missing something ?
 > 
->   parse_request() - parse incoming message
->   prepare_data()  - retrieve data from driver or NIC
->   reply_size()    - estimate reply message size
->   fill_reply()    - compose reply message
->   cleanup_data()  - (optional) clean up additional data
-> 
-> Other members of struct get_request_ops describe the data structure holding
-> information from client request and data used to compose the message. The
-> default handlers ethnl_default_doit(), ethnl_default_dumpit(),
-> ethnl_default_start() and ethnl_default_done() can be then used in genl_ops
-> handler. Notification handler will be introduced in a later patch.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> Not sure if it make any sense at all to allow private writeable mappings
+> though, but if my assumption is correct, I do not see any reason to
+> prevent them either.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+<nod> You're correct, I was just checking that this is indeed the
+correct behavior for zonefs. :)
+
+> [...]
+> >> +static const struct iomap_dio_ops zonefs_dio_ops = {
+> >> +	.end_io			= zonefs_file_dio_write_end,
+> >> +};
+> >> +
+> >> +static ssize_t zonefs_file_dio_write(struct kiocb *iocb, struct iov_iter *from)
+> >> +{
+> >> +	struct inode *inode = file_inode(iocb->ki_filp);
+> >> +	struct zonefs_sb_info *sbi = ZONEFS_SB(inode->i_sb);
+> >> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> >> +	size_t count;
+> >> +	ssize_t ret;
+> >> +
+> >> +	if (iocb->ki_flags & IOCB_NOWAIT) {
+> >> +		if (!inode_trylock(inode))
+> >> +			return -EAGAIN;
+> >> +	} else {
+> >> +		inode_lock(inode);
+> >> +	}
+> >> +
+> >> +	ret = generic_write_checks(iocb, from);
+> >> +	if (ret <= 0)
+> >> +		goto out;
+> >> +
+> >> +	iov_iter_truncate(from, zi->i_max_size - iocb->ki_pos);
+> >> +	count = iov_iter_count(from);
+> >> +
+> >> +	/*
+> >> +	 * Direct writes must be aligned to the block size, that is, the device
+> >> +	 * physical sector size, to avoid errors when writing sequential zones
+> >> +	 * on 512e devices (512B logical sector, 4KB physical sectors).
+> >> +	 */
+> >> +	if ((iocb->ki_pos | count) & sbi->s_blocksize_mask) {
+> >> +		ret = -EINVAL;
+> >> +		goto out;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * Enforce sequential writes (append only) in sequential zones.
+> >> +	 */
+> > 
+> > I wonder, shouldn't zonefs require users to open sequential zones with
+> > O_APPEND?  I don't see anything in here that would suggest that it does,
+> > though maybe I missed something.
+> 
+> Yes, I thought about this too but decided against it for several reasons:
+> 1) Requiring O_APPEND breaks some shell command like tools such as
+> "truncate" which makes scripting (including tests) harder.
+
+Yeah, I realized right after I sent this that you can't usually truncate
+an append-only file so O_APPEND really doesn't apply here.
+
+> 2) Without enforcing O_APPEND, an application doing pwrite() or aios to
+> an incorrect offset will see an error instead of potential file data
+> corruption (due to the application bug, not the FS).
+> 3) Since sequential zone file size is updated only on completion of
+> direct IOs, O_APPEND would generate an incorrect offset for AIOs at
+> queue depth bigger than 1.
+
+ooh, good point. :)
+
+> Thoughts ?
+
+"Heh, that was a silly point to make on my part", or
+"Maybe it's good that we have these discussions on the mailing lists" :)
+
+> [...]
+> >> +static ssize_t zonefs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> >> +{
+> >> +	struct inode *inode = file_inode(iocb->ki_filp);
+> >> +
+> >> +	/*
+> >> +	 * Check that the write operation does not go beyond the zone size.
+> >> +	 */
+> >> +	if (iocb->ki_pos >= ZONEFS_I(inode)->i_max_size)
+> >> +		return -EFBIG;
+> >> +
+> >> +	if (iocb->ki_flags & IOCB_DIRECT)
+> >> +		return zonefs_file_dio_write(iocb, from);
+> >> +
+> >> +	return zonefs_file_buffered_write(iocb, from);
+> >> +}
+> >> +
+> >> +static const struct file_operations zonefs_file_operations = {
+> >> +	.open		= generic_file_open,
+> > 
+> > Hmm, ok, so there isn't any explicit O_APPEND requirement, even though
+> > it looks like the filesystem enforces one.
+> 
+> Yes, in purpose. See above for the reasons.
+> 
+> [...]
+> >> +static void zonefs_init_file_inode(struct inode *inode, struct blk_zone *zone)
+> >> +{
+> >> +	struct super_block *sb = inode->i_sb;
+> >> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> >> +	struct zonefs_inode_info *zi = ZONEFS_I(inode);
+> >> +	umode_t	perm = sbi->s_perm;
+> >> +
+> >> +	zi->i_ztype = zonefs_zone_type(zone);
+> >> +	zi->i_zsector = zone->start;
+> >> +
+> >> +	switch (zone->cond) {
+> >> +	case BLK_ZONE_COND_OFFLINE:
+> >> +		/*
+> >> +		 * Disable all accesses and set the file size to 0 for
+> >> +		 * offline zones.
+> >> +		 */
+> >> +		zi->i_wpoffset = 0;
+> >> +		zi->i_max_size = 0;
+> >> +		perm = 0;
+> >> +		break;
+> >> +	case BLK_ZONE_COND_READONLY:
+> >> +		/* Do not allow writes in read-only zones*/
+> >> +		perm &= ~(0222); /* S_IWUGO */
+> >> +		/* Fallthrough */
+> > 
+> > You might want to set S_IMMUTABLE in i_flags here, since (I assume)
+> > readonly zones are never, ever, going to be modifable in any way?
+> 
+> Good point. Will do.
+> 
+> > In which case, zonefs probably shouldn't let people run 'chmod a+w' on a
+> > readonly zone.  Either that or disallow mode changes via
+> > zonefs_inode_setattr.
+> 
+> Yes, will do.
+> 
+> [...]
+> >> +static int zonefs_create_zgroup(struct zonefs_zone_data *zd,
+> >> +				enum zonefs_ztype type)
+> >> +{
+> >> +	struct super_block *sb = zd->sb;
+> >> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> >> +	struct blk_zone *zone, *next, *end;
+> >> +	char name[ZONEFS_NAME_MAX];
+> >> +	struct dentry *dir;
+> >> +	unsigned int n = 0;
+> >> +
+> >> +	/* If the group is empty, there is nothing to do */
+> >> +	if (!zd->nr_zones[type])
+> >> +		return 0;
+> >> +
+> >> +	dir = zonefs_create_inode(sb->s_root, zgroups_name[type], NULL);
+> >> +	if (!dir)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	/*
+> >> +	 * The first zone contains the super block: skip it.
+> >> +	 */
+> >> +	end = zd->zones + blkdev_nr_zones(sb->s_bdev->bd_disk);
+> >> +	for (zone = &zd->zones[1]; zone < end; zone = next) {
+> >> +
+> >> +		next = zone + 1;
+> >> +		if (zonefs_zone_type(zone) != type)
+> >> +			continue;
+> >> +
+> >> +		/*
+> >> +		 * For conventional zones, contiguous zones can be aggregated
+> >> +		 * together to form larger files.
+> >> +		 * Note that this overwrites the length of the first zone of
+> >> +		 * the set of contiguous zones aggregated together.
+> >> +		 * Only zones with the same condition can be agreggated so that
+> >> +		 * offline zones are excluded and readonly zones are aggregated
+> >> +		 * together into a read only file.
+> >> +		 */
+> >> +		if (type == ZONEFS_ZTYPE_CNV &&
+> >> +		    sbi->s_features & ZONEFS_F_AGGRCNV) {
+> > 
+> > This probably needs parentheses around the flag check, e.g.
+> > 
+> > 		if (type == ZONEFS_ZTYPE_CNV &&
+> > 		    (sbi->s_features & ZONEFS_F_AGGRCNV)) {
+> 
+> gcc does not complain but I agree. It is cleaner and older gcc versions
+> will also probably be happier :)
+> 
+> [...]
+> >> +
+> >> +static int zonefs_get_zone_info(struct zonefs_zone_data *zd)
+> >> +{
+> >> +	struct block_device *bdev = zd->sb->s_bdev;
+> >> +	int ret;
+> >> +
+> >> +	zd->zones = kvcalloc(blkdev_nr_zones(bdev->bd_disk),
+> >> +			     sizeof(struct blk_zone), GFP_KERNEL);
+> > 
+> > Hmm, so one 64-byte blk_zone structure for each zone on the disk?
+> > 
+> > I have a 14TB SMR disk with ~459,000x 32M zones on it.  That's going to
+> > require a contiguous 30MB memory allocation to hold all the zone
+> > information.  Even your 15T drive from the commit message will need a
+> > contiguous 3.8MB memory allocation for all the zone info.
+> > 
+> > I wonder if each zone should really be allocated separately and then
+> > indexed with an xarray or something like that to reduce the chance of
+> > failure when memory is fragmented or tight.
+> > 
+> > That could be subsequent work though, since in the meantime that just
+> > makes zonefs mounts more likely to run out of memory and fail.  I
+> > suppose you don't hang on to the huge allocation for very long.
+> 
+> No, this memory allocation is only for mount. It is dropped as soon as
+> all the zone file inodes are created. Furthermore, this allocation is a
+> kvalloc, not a kmalloc. So there is no memory continuity requirement.
+> This is only an array of structures and that is not used to do IOs for
+> the report zone itself.
+> 
+> I debated trying to optimize (I mean reducing the mount temporary memory
+> use) by processing mount in small chunks of zones instead of all zones
+> in one go. I kept simple, but rather brutal, approach to keep the code
+> simple. This can be rewritten and optimized at any time if we see
+> problems appearing.
+
+<nod> vmalloc space is quite limited on 32-bit platforms, so that's the
+most likely place you'll get complaints.
+
+> > 
+> >> +	if (!zd->zones)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	/* Get zones information */
+> >> +	ret = blkdev_report_zones(bdev, 0, BLK_ALL_ZONES,
+> >> +				  zonefs_get_zone_info_cb, zd);
+> >> +	if (ret < 0) {
+> >> +		zonefs_err(zd->sb, "Zone report failed %d\n", ret);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	if (ret != blkdev_nr_zones(bdev->bd_disk)) {
+> >> +		zonefs_err(zd->sb, "Invalid zone report (%d/%u zones)\n",
+> >> +			   ret, blkdev_nr_zones(bdev->bd_disk));
+> >> +		return -EIO;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline void zonefs_cleanup_zone_info(struct zonefs_zone_data *zd)
+> >> +{
+> >> +	kvfree(zd->zones);
+> >> +}
+> >> +
+> >> +/*
+> >> + * Read super block information from the device.
+> >> + */
+> >> +static int zonefs_read_super(struct super_block *sb)
+> >> +{
+> >> +	struct zonefs_sb_info *sbi = ZONEFS_SB(sb);
+> >> +	struct zonefs_super *super;
+> >> +	u32 crc, stored_crc;
+> >> +	struct page *page;
+> >> +	struct bio_vec bio_vec;
+> >> +	struct bio bio;
+> >> +	int ret;
+> >> +
+> >> +	page = alloc_page(GFP_KERNEL);
+> >> +	if (!page)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	bio_init(&bio, &bio_vec, 1);
+> >> +	bio.bi_iter.bi_sector = 0;
+> >> +	bio_set_dev(&bio, sb->s_bdev);
+> >> +	bio_set_op_attrs(&bio, REQ_OP_READ, 0);
+> >> +	bio_add_page(&bio, page, PAGE_SIZE, 0);
+> >> +
+> >> +	ret = submit_bio_wait(&bio);
+> >> +	if (ret)
+> >> +		goto out;
+> >> +
+> >> +	super = page_address(page);
+> >> +
+> >> +	stored_crc = super->s_crc;
+> >> +	super->s_crc = 0;
+> >> +	crc = crc32_le(ZONEFS_MAGIC, (unsigned char *)super,
+> >> +		       sizeof(struct zonefs_super));
+> > 
+> > Unusual; usually crc32 computations are seeded with ~0U, but <shrug>.
+> 
+> No strong opinion on this one. I will change to ~0U to follow the
+> general convention.
+
+Ok.
+
+> > Anyway, this looks to be in decent shape now, modulo other comments.
+> 
+> Thank you for your comments. Sending a V3.
+
+Ok, I'll flip over to that thread now.
+
+--D
+
+> 
+> 
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
