@@ -2,108 +2,125 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AE8C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9315CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0261206D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C18206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577223124;
+	bh=PW26vJkEN6uyM1jLVMnYbaWn5MmZ8bT2hZKZaiAyDbQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uqpi121yn2mMRmi+Bn5J7T1SMiB0JX6RFn5k0/HuKbZ3JzubPuFwIQbH+XtBy/WtR
+	 MMYroeRn45xxEXIDJ7oHlds2xVobsZsejbdRDt5USaC+NRBpipmi8/XopTRTWsBfN3
+	 RcaxfC3ZAuzNcgDMPRAJ6T698dHAXyf+MZ/39Y0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfLXVS2 (ORCPT
+        id S1726271AbfLXVcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 16:18:28 -0500
-Received: from mga07.intel.com ([134.134.136.100]:47007 "EHLO mga07.intel.com"
+        Tue, 24 Dec 2019 16:32:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfLXVS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 16:18:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Dec 2019 13:18:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,353,1571727600"; 
-   d="scan'208";a="367422018"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga004.jf.intel.com with ESMTP; 24 Dec 2019 13:18:28 -0800
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.30]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.58]) with mapi id 14.03.0439.000;
- Tue, 24 Dec 2019 13:18:27 -0800
-From:   "Andersen, John S" <john.s.andersen@intel.com>
-To:     "luto@kernel.org" <luto@kernel.org>
-CC:     "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>, "bp@alien8.de" <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND RFC 2/2] X86: Use KVM CR pin MSRs
-Thread-Topic: [RESEND RFC 2/2] X86: Use KVM CR pin MSRs
-Thread-Index: AQHVt2uKu6eHdNQTz0i3fUdfaU+1QqfH33CAgAJ3m4A=
-Date:   Tue, 24 Dec 2019 21:18:27 +0000
-Message-ID: <19f3a3f98d259accf67a6c22c112bfa8f11513d4.camel@intel.com>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
-         <20191220192701.23415-3-john.s.andersen@intel.com>
-         <CALCETrV1nOpc3mqyXTXOzw-8Aa3zFpGi1cY7oc_2pz2-JVyH8Q@mail.gmail.com>
-In-Reply-To: <CALCETrV1nOpc3mqyXTXOzw-8Aa3zFpGi1cY7oc_2pz2-JVyH8Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.19.9.42]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD3D47AD34E9254197DE09827F1AF43B@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726216AbfLXVcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 16:32:03 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE42206D7;
+        Tue, 24 Dec 2019 21:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577223122;
+        bh=PW26vJkEN6uyM1jLVMnYbaWn5MmZ8bT2hZKZaiAyDbQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oHPyy4ePIKxjx+iXoUJKf+1O102P0tZM7ugK49hOGsy0ZK/THY8EMhs8SUdm8Cw7A
+         DcqjoW/LY/Brbfp7IbjClouB5vmuP3feeoZmJmPMOCgGc0bCvHODlqzKRWm43K/VYg
+         BCN9rD9OKk0zWtmdAeni78IZuDTYGJL9trpODlN8=
+Received: by mail-qt1-f170.google.com with SMTP id d5so19021016qto.0;
+        Tue, 24 Dec 2019 13:32:02 -0800 (PST)
+X-Gm-Message-State: APjAAAUCb2mLKUHWvJWudIHVGhjTuLkvdcwI5dPGCQlRRyJqVhWIwY1x
+        BFiCeJCTuJ6NyW88M222MFc9FFiKrHqwkS2BLQ==
+X-Google-Smtp-Source: APXvYqzX3sSA1eAxiKh9/g8KaclHH/nPU2IJsCXV3xdACeBNoxxmI/7PtcbsiV1p1DIQHcIU7ZHLTZ5iv0VhS2+39k0=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr14221841qtj.300.1577223121574;
+ Tue, 24 Dec 2019 13:32:01 -0800 (PST)
 MIME-Version: 1.0
+References: <cover.1575906694.git.jsarha@ti.com> <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
+ <20191219190833.GA16358@bogus> <3cf64e30-6b4d-a138-7164-54d1cdc8e05a@ti.com>
+In-Reply-To: <3cf64e30-6b4d-a138-7164-54d1cdc8e05a@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 24 Dec 2019 14:31:49 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com>
+Message-ID: <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ
+ (SERDES wrapper)
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Yuti Amonkar <yamonkar@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
+        Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDE5LTEyLTIyIGF0IDIzOjM5IC0wODAwLCBBbmR5IEx1dG9taXJza2kgd3JvdGU6
-DQo+IE9uIEZyaSwgRGVjIDIwLCAyMDE5IGF0IDExOjI3IEFNIEpvaG4gQW5kZXJzZW4NCj4gPGpv
-aG4ucy5hbmRlcnNlbkBpbnRlbC5jb20+IHdyb3RlOg0KPiA+IFN0cmVuZ3RoZW4gZXhpc3Rpbmcg
-Y29udHJvbCByZWdpc3RlciBwaW5uaW5nIHdoZW4gcnVubmluZw0KPiA+IHBhcmF2aXJ0dWFsaXpl
-ZCB1bmRlciBLVk0uIENoZWNrIHdoaWNoIGJpdHMgS1ZNIHN1cHBvcnRzIHBpbm5pbmcNCj4gPiBm
-b3INCj4gPiBlYWNoIGNvbnRyb2wgcmVnaXN0ZXIgYW5kIG9ubHkgcGluIHN1cHBvcnRlZCBiaXRz
-IHdoaWNoIGFyZSBhbHJlYWR5DQo+ID4gcGlubmVkIHZpYSB0aGUgZXhpc3RpbmcgbmF0aXZlIHBy
-b3RlY3Rpb24uIFdyaXRlIHRvIEtWTSBDUjAgYW5kIENSNA0KPiA+IHBpbm5lZCBNU1JzIHRvIGVu
-YWJsZSBwaW5uaW5nLg0KPiA+IA0KPiA+IEluaXRpYXRlIEtWTSBhc3Npc3RlZCBwaW5uaW5nIGRp
-cmVjdGx5IGZvbGxvd2luZyB0aGUgc2V0dXAgb2YNCj4gPiBuYXRpdmUNCj4gPiBwaW5uaW5nIG9u
-IGJvb3QgQ1BVLiBGb3Igbm9uLWJvb3QgQ1BVcyBpbml0aWF0ZSBwYXJhdmlydHVhbGl6ZWQNCj4g
-PiBwaW5uaW5nDQo+ID4gb24gQ1BVIGlkZW50aWZpY2F0aW9uLg0KPiA+IA0KPiA+IElkZW50aWZp
-Y2F0aW9uIG9mIG5vbi1ib290IENQVXMgdGFrZXMgcGxhY2UgYWZ0ZXIgdGhlIGJvb3QgQ1BVIGhh
-cw0KPiA+IHNldHVwDQo+ID4gbmF0aXZlIENSIHBpbm5pbmcuIFRoZXJlZm9yZSwgbm9uLWJvb3Qg
-Q1BVcyBhY2Nlc3MgcGlubmVkIGJpdHMNCj4gPiBzZXR1cCBieQ0KPiA+IHRoZSBib290IENQVSBh
-bmQgcmVxdWVzdCB0aGF0IHRob3NlIGJlIHBpbm5lZC4gQWxsIENQVXMgcmVxdWVzdA0KPiA+IHBh
-cmF2aXJ0dWFsaXplZCBwaW5uaW5nIG9mIHRoZSBzYW1lIGJpdHMgd2hpY2ggYXJlIGFscmVhZHkg
-cGlubmVkDQo+ID4gbmF0aXZlbHkuDQo+ID4gDQo+ID4gR3Vlc3RzIHVzaW5nIHRoZSBrZXhlYyBz
-eXN0ZW0gY2FsbCBjdXJyZW50bHkgZG8gbm90IHN1cHBvcnQNCj4gPiBwYXJhdmlydHVhbGl6ZWQg
-Y29udHJvbCByZWdpc3RlciBwaW5uaW5nLiBUaGlzIGlzIGR1ZSB0byBlYXJseSBib290DQo+ID4g
-Y29kZSB3cml0aW5nIGtub3duIGdvb2QgdmFsdWVzIHRvIGNvbnRyb2wgcmVnaXN0ZXJzLCB0aGVz
-ZSB2YWx1ZXMNCj4gPiBkbw0KPiA+IG5vdCBjb250YWluIHRoZSBwcm90ZWN0ZWQgYml0cy4gVGhp
-cyBpcyBkdWUgdG8gQ1BVIGZlYXR1cmUNCj4gPiBpZGVudGlmaWNhdGlvbiBiZWluZyBkb25lIGF0
-IGEgbGF0ZXIgdGltZSwgd2hlbiB0aGUga2VybmVsIHByb3Blcmx5DQo+ID4gY2hlY2tzIGlmIGl0
-IGNhbiBlbmFibGUgcHJvdGVjdGlvbnMuDQo+IA0KPiBJcyBoaWJlcm5hdGlvbiBzdXBwb3J0ZWQ/
-ICBIb3cgYWJvdXQgc3VzcGVuZC10by1SQU0/DQo+IA0KDQpTb21ldGhpbmcgaXMgd3JpdGluZyB0
-byBDUjQgZHVyaW5nIHJlc3VtZSB3aGljaCBpcyBicmVha2luZw0KaGliZXJuYXRpb24uIFVuZm9y
-dHVuYXRlbHkgSSBoYWRuJ3QgYmVlbiBhYmxlIHRvIGdldCBteSBoaWJlcm5hdGlvbg0KdGVzdCB3
-b3JraW5nIGJlZm9yZSBzZW5kaW5nIHRoaXMgb3V0LiBJIHdpbGwgaW52ZXN0aWdhdGUuDQoNCj4g
-RldJVywgSSB0aGluayB0aGF0IGhhbmRsaW5nIHRoZXNlIGRldGFpbHMgdGhyb3VnaCBLY29uZmln
-IGlzIHRoZQ0KPiB3cm9uZw0KPiBjaG9pY2UuICBEaXN0cmlidXRpb24ga2VybmVscyBzaG91bGQg
-ZW5hYmxlIHRoaXMsIGFuZCB0aGV5J3JlIG5vdA0KPiBnb2luZyB0byB0dXJuIG9mZiBrZXhlYy4g
-IEFyZ3VhYmx5IGtleGVjIHNob3VsZCBiZSBtYWRlIHRvIHdvcmsgLS0NCj4gdGhlcmUgaXMgbm8g
-ZnVuZGFtZW50YWwgcmVhc29uIHRoYXQga2V4ZWMgc2hvdWxkIG5lZWQgdG8gZmlkZGxlIHdpdGgN
-Cj4gQ1IwLldQLCBmb3IgZXhhbXBsZS4gIEJ1dCBhIGJvb3Qgb3B0aW9uIGNvdWxkIGFsc28gd29y
-ayBhcyBhDQo+IHNob3J0LXRlcm0gb3B0aW9uLg0KDQpHaXZlbiB0aGUgc2l0dWF0aW9uIHdpdGgg
-aGliZXJuYXRpb24uIEkgdGhpbmsgSSdsbCBpbXBsZW1lbnQgdGhlIGtleGVjDQpkaXNjb3Zlcnkg
-TGlyYW4gc3VnZ2VzdGVkLCBhbmQgdGhlbiBpbnZlc3RpZ2F0ZSB0aGUgaGliZXJuYXRlIHNpdHVh
-dGlvbg0KZnVydGhlci4NCg0KVGhhbmtzLA0KSm9obg0K
+On Fri, Dec 20, 2019 at 5:52 AM Jyri Sarha <jsarha@ti.com> wrote:
+>
+> On 19/12/2019 21:08, Rob Herring wrote:
+> > On Mon, Dec 09, 2019 at 06:22:11PM +0200, Jyri Sarha wrote:
+> >> Add property to indicate the usage of SERDES lane controlled by the
+> >> WIZ wrapper. The wrapper configuration has some variation depending on
+> >> how each lane is going to be used.
+> >>
+> >> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> >> ---
+> >>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
+> >>  1 file changed, 12 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> >> index 94e3b4b5ed8e..399725f65278 100644
+> >> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> >> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> >> @@ -97,6 +97,18 @@ patternProperties:
+> >>        Torrent SERDES should follow the bindings specified in
+> >>        Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> >>
+> >> +  "^lane[1-4]-mode$":
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +      - enum: [0, 1, 2, 3, 4, 5, 6]
+> >> +    description: |
+> >> +     Integer describing static lane usage for the lane indicated in
+> >> +     the property name. For Sierra there may be properties lane0 and
+> >> +     lane1, for Torrent all lane[1-4]-mode properties may be
+> >> +     there. The constants to indicate the lane usage are defined in
+> >> +     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
+> >> +     if its lane<n>-use property does not exist.
+> >
+> > The defines were intended to be in 'phys' cells. Does putting both lane
+> > and mode in the client 'phys' properties not work?
+> >
+>
+> Let me first check if I understood you. So you are suggesting something
+> like this:
+>
+> dp-phy {
+>         #phy-cells = <5>; /* 1 for phy-type and 4 for lanes = 5 */
+>         ...
+> };
+>
+> dp-bridge {
+>         ...
+>         phys = <&dp-phy PHY_TYPE_DP 1 1 0 0>; /* lanes 0 and 1 for DP */
+
+Yes, but I think the lanes can be a single cell mask. And I'd probably
+make that the first cell which is generally "which PHY" and make
+type/mode the 2nd cell. I'd look for other users of PHY_TYPE_ defines
+and match what they've done if possible.
+
+Rob
