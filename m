@@ -2,98 +2,89 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F19C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74753C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C5C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:24:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="leJ4yRzX"
+	by mail.kernel.org (Postfix) with ESMTP id 415332071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577194185;
+	bh=KZGSUwHmGeohaS5c+JhndSQNyEP4Qj6gg5SvZS25hXE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dOrnN3it+51sv4Fs8+cyAcvzCs5+tvtGa8fmVpHLqrPaA/y42nhbOi9jXh8ywlfEx
+	 wXetiONYl99/JTuHpuG3BWvtsbHct/UJ+cqJ5OkUiCvwodipTotS+FqMRLqbQBAc9s
+	 w4pLVUtgE1lTWpPYmE0DenPegKdkB5MoHAw+9Hg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfLXNYk (ORCPT
+        id S1726224AbfLXN3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:24:40 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:26931 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726271AbfLXNYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:24:39 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577193879; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KZJmxQ9/BKrr0o/yv/IT63pjYnCfOPQgFptyHdRsL60=;
- b=leJ4yRzXeBWhuyoexuSkAGAkzCQHb7k+yvBOIbYmkzdKHMuZkBuNg79kYxBeEDhuwhDViGyM
- 5DbEIBNzOyVX3WG7fPOjIpRroIjiokI6qomTYeuat5Gr62WSaUvs2V3o89YjE0FFF3l1c/mm
- 9otZftXEkczJ0NlOedTsYYSQCxw=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e021193.7fe86c4b40d8-smtp-out-n02;
- Tue, 24 Dec 2019 13:24:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C51F6C433CB; Tue, 24 Dec 2019 13:24:35 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 24 Dec 2019 08:29:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfLXN3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 08:29:44 -0500
+Received: from localhost.localdomain (91-167-84-221.subs.proxad.net [91.167.84.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D517BC43383;
-        Tue, 24 Dec 2019 13:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDD720643;
+        Tue, 24 Dec 2019 13:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577194183;
+        bh=KZGSUwHmGeohaS5c+JhndSQNyEP4Qj6gg5SvZS25hXE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1QC00Am48MJBZXQSWkj+/5MWCdVeOfvI2y7VuGjue3DbRm8qPqjD9MTpZecJvOiyZ
+         IbkamCbhlaKEzWcpeiww9Hi6wHzB8oOuB5xr5sdvFDtDiV0yZcrvXVGftJvK8wWBHY
+         5VJD+prImRPlLYuako6WKWX2oS9Sukpy7X97Q0bU=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL 0/3] EFI fixes for v5.5
+Date:   Tue, 24 Dec 2019 14:29:06 +0100
+Message-Id: <20191224132909.102540-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 18:54:34 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vgarodia@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
-In-Reply-To: <8a43b13d0cd4a7bcb18e0f1f8259ec72@codeaurora.org>
-References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
- <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
- <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
- <8a43b13d0cd4a7bcb18e0f1f8259ec72@codeaurora.org>
-Message-ID: <953ee377ad3968f9df5d5677bb3bf82a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stan,
+The following changes since commit a470552ee8965da0fe6fd4df0aa39c4cda652c7c:
 
-On 2019-12-24 17:42, Sai Prakash Ranjan wrote:
-> Hi Stan,
-> 
-> On 2019-12-20 15:04, Stanimir Varbanov wrote:
->> 
->> This subnode should be in sc7180-idp.dts, because we assume that by
->> default the qcom platforms have TZ.
->> 
-> 
-> sc7180.dtsi will not be used on TZ based platforms which was the case 
-> for SDM845
-> where sdm845.dtsi was common for TZ (dragonboards) and non TZ(cheza
-> boards) based platforms.
-> So in order to avoid duplicating this node in other board specific dts 
-> files, it
-> would be better to have it here itself.
-> 
+  efi: Don't attempt to map RCI2 config table if it doesn't exist (2019-12-10 12:13:02 +0100)
 
-Sorry, please ignore my previous comment.
-sc7180 will be used for compute platforms and some would be TZ based.
+are available in the Git repository at:
 
-Thanks,
-Sai
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+for you to fetch changes up to 77217fcc8e04f27127b32825376ed508705fd946:
+
+  x86/efistub: disable paging at mixed mode entry (2019-12-23 16:25:21 +0100)
+
+----------------------------------------------------------------
+Some more fixes for the EFI subsystem:
+- Ensure that the EFI framebuffer earlycon uses WC attributes on x86 (Arvind)
+- Another mixed mode fix from Hans, for the RNG code this time.
+- Fix mixed mode boot from OVMF, by disabling paging at entry.
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      x86/efistub: disable paging at mixed mode entry
+
+Arvind Sankar (1):
+      efi/earlycon: Fix write-combine mapping on x86
+
+Hans de Goede (1):
+      efi/libstub/random: Initialize pointer variables to zero for mixed mode
+
+ arch/x86/boot/compressed/head_64.S    |  5 +++++
+ drivers/firmware/efi/earlycon.c       | 16 +++++++---------
+ drivers/firmware/efi/libstub/random.c |  6 +++---
+ 3 files changed, 15 insertions(+), 12 deletions(-)
