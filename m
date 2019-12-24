@@ -2,163 +2,80 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D6DC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 14:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C41EC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 14:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142A8206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 14:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GGzyOZLz"
+	by mail.kernel.org (Postfix) with ESMTP id 0111E20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 14:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLXOE4 (ORCPT
+        id S1726407AbfLXOF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 09:04:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30943 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726124AbfLXOE4 (ORCPT
+        Tue, 24 Dec 2019 09:05:57 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:34447 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfLXOF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 09:04:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577196295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vvRXiKtq5vVX/kJwHADw+3uJ2vxDs7xEqZhQPOrBwI8=;
-        b=GGzyOZLzIXs4F+ykSj5ub0NdJT9fzbgZkB7hZFf0dTzFhXMYHfSOCijgr1oryeRU2gL+1v
-        DyB99rCZ22iTfwk5gUHx0Vtry9OsKHSaVXknuJXMB9giYyQb44AbzAQJkGvoFtfmkXeydB
-        NzPdP8uXN82OCyOqX5GJNZ2R8YJHL+c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-gWOpYcHqMzyMeoaF-xrf0g-1; Tue, 24 Dec 2019 09:04:54 -0500
-X-MC-Unique: gWOpYcHqMzyMeoaF-xrf0g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC8D71005502;
-        Tue, 24 Dec 2019 14:04:52 +0000 (UTC)
-Received: from carbon (ovpn-200-18.brq.redhat.com [10.40.200.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 930AF5456B;
-        Tue, 24 Dec 2019 14:04:46 +0000 (UTC)
-Date:   Tue, 24 Dec 2019 15:04:45 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Tue, 24 Dec 2019 09:05:56 -0500
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E9F04240007;
+        Tue, 24 Dec 2019 14:05:52 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Nadav Haklai <nadavh@marvell.com>, brouer@redhat.com
-Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
-Message-ID: <20191224150445.2d6ab982@carbon>
-In-Reply-To: <CAGnkfhzrSaVe3zJ+0rriqqELha554Gmv-zskrJbiBjhHdUG2uQ@mail.gmail.com>
-References: <20191224010103.56407-1-mcroce@redhat.com>
-        <20191224095229.GA24310@apalos.home>
-        <CAGnkfhzrSaVe3zJ+0rriqqELha554Gmv-zskrJbiBjhHdUG2uQ@mail.gmail.com>
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Satoz
+Date:   Tue, 24 Dec 2019 15:05:49 +0100
+Message-Id: <20191224140551.21227-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Dec 2019 14:34:07 +0100
-Matteo Croce <mcroce@redhat.com> wrote:
+Satoz is a Chinese TFT manufacturer.
+Website: http://www.sat-sz.com/English/index.html
 
-> On Tue, Dec 24, 2019 at 10:52 AM Ilias Apalodimas
-> <ilias.apalodimas@linaro.org> wrote:
-> >
-> > On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:  
-> > > This patches change the memory allocator of mvpp2 from the frag allocator to
-> > > the page_pool API. This change is needed to add later XDP support to mvpp2.
-> > >
-> > > The reason I send it as RFC is that with this changeset, mvpp2 performs much
-> > > more slower. This is the tc drop rate measured with a single flow:
-> > >
-> > > stock net-next with frag allocator:
-> > > rx: 900.7 Mbps 1877 Kpps
-> > >
-> > > this patchset with page_pool:
-> > > rx: 423.5 Mbps 882.3 Kpps
-> > >
-> > > This is the perf top when receiving traffic:
-> > >
-> > >   27.68%  [kernel]            [k] __page_pool_clean_page  
-> >
-> > This seems extremly high on the list.
-> >  
-> > >    9.79%  [kernel]            [k] get_page_from_freelist
-> > >    7.18%  [kernel]            [k] free_unref_page
-> > >    4.64%  [kernel]            [k] build_skb
-> > >    4.63%  [kernel]            [k] __netif_receive_skb_core
-> > >    3.83%  [mvpp2]             [k] mvpp2_poll
-> > >    3.64%  [kernel]            [k] eth_type_trans
-> > >    3.61%  [kernel]            [k] kmem_cache_free
-> > >    3.03%  [kernel]            [k] kmem_cache_alloc
-> > >    2.76%  [kernel]            [k] dev_gro_receive
-> > >    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
-> > >    2.68%  [kernel]            [k] page_frag_free
-> > >    1.83%  [kernel]            [k] inet_gro_receive
-> > >    1.74%  [kernel]            [k] page_pool_alloc_pages
-> > >    1.70%  [kernel]            [k] __build_skb
-> > >    1.47%  [kernel]            [k] __alloc_pages_nodemask
-> > >    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
-> > >    1.29%  [kernel]            [k] tcf_action_exec
-> > >
-> > > I tried Ilias patches for page_pool recycling, I get an improvement
-> > > to ~1100, but I'm still far than the original allocator.  
-> >
-> > Can you post the recycling perf for comparison?
-> >  
-> 
->   12.00%  [kernel]                  [k] get_page_from_freelist
->    9.25%  [kernel]                  [k] free_unref_page
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-Hmm, this indicate pages are not getting recycled.
+Changes since v1:
+* Added Rob's Ack.
 
->    6.83%  [kernel]                  [k] eth_type_trans
->    5.33%  [kernel]                  [k] __netif_receive_skb_core
->    4.96%  [mvpp2]                   [k] mvpp2_poll
->    4.64%  [kernel]                  [k] kmem_cache_free
->    4.06%  [kernel]                  [k] __xdp_return
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You do invoke __xdp_return() code, but it might find that the page
-cannot be recycled...
-
->    3.60%  [kernel]                  [k] kmem_cache_alloc
->    3.31%  [kernel]                  [k] dev_gro_receive
->    3.29%  [kernel]                  [k] __page_pool_clean_page
->    3.25%  [mvpp2]                   [k] mvpp2_bm_pool_put
->    2.73%  [kernel]                  [k] __page_pool_put_page
->    2.33%  [kernel]                  [k] __alloc_pages_nodemask
->    2.33%  [kernel]                  [k] inet_gro_receive
->    2.05%  [kernel]                  [k] __build_skb
->    1.95%  [kernel]                  [k] build_skb
->    1.89%  [cls_matchall]            [k] mall_classify
->    1.83%  [kernel]                  [k] page_pool_alloc_pages
->    1.80%  [kernel]                  [k] tcf_action_exec
->    1.70%  [mvpp2]                   [k] mvpp2_buf_alloc.isra.0
->    1.63%  [kernel]                  [k] free_unref_page_prepare.part.0
->    1.45%  [kernel]                  [k] page_pool_return_skb_page
->    1.42%  [act_gact]                [k] tcf_gact_act
->    1.16%  [kernel]                  [k] netif_receive_skb_list_internal
->    1.08%  [kernel]                  [k] kfree_skb
->    1.07%  [kernel]                  [k] skb_release_data
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 967e78c5ec0a..4894c5314b49 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -819,6 +819,8 @@ patternProperties:
+     description: Sancloud Ltd
+   "^sandisk,.*":
+     description: Sandisk Corporation
++  "^satoz,.*":
++    description: Satoz International Co., Ltd
+   "^sbs,.*":
+     description: Smart Battery System
+   "^schindler,.*":
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.20.1
 
