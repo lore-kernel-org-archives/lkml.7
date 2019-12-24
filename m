@@ -2,78 +2,145 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0664BC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 07:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F5BC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 07:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BEA2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 07:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577173744;
-	bh=GTiuJToEf1rYPyFg+M8KQHlG48XsZfpkE1FmUWz15rw=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=Uy7KXMggXvovm41XZpugse9B2TdLb705Ph7aU0FgazibTAwjxBj8+qij5Goh2wG0O
-	 zU25ZnuPAzWKVBv//RHk5jz4oA8/F7DmaWOe2w0JwOc21h9nwErx/lM9Scn1mAvDHb
-	 MhU1a9nKtIWWPn6zw504Wssg9EHiC6KJlFoTc5go=
+	by mail.kernel.org (Postfix) with ESMTP id E0D95206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 07:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zIOALSU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfLXHtD (ORCPT
+        id S1726168AbfLXHxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 02:49:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfLXHtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 02:49:03 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9CF620706;
-        Tue, 24 Dec 2019 07:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577173742;
-        bh=GTiuJToEf1rYPyFg+M8KQHlG48XsZfpkE1FmUWz15rw=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=LtYDFR5QH+rp40jWZrHpHHIfROItwwLlOpd1+T0oPEZYQQD8VyVLoeikFdTwtapxN
-         Fmwpw8nLFLqTN5794+J0FC5rz/Bdfektw2hYboggdM7vjugpp4ZEP/CLzvHEOdp1kB
-         oHDxRvHk+ROafWKtHk2qh4a6yopx1uDFfcTNxY3c=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 24 Dec 2019 02:53:03 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40478 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbfLXHxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 02:53:03 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBO7qtYc052132;
+        Tue, 24 Dec 2019 01:52:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577173975;
+        bh=DSo8vFknEpkbqtsUZO2oI7O1ZVzRTdXlM9IFNn0XQ4M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zIOALSU7Glp1Up6yJ2SaEixzMaS7zjnhr62PGT75Ky1cqtwTp06cGoCL2wXiSkv3T
+         U5IFY0Ufhv+2NUWrLLJGDNsvb6uKb2yl+N9Pp8t+WebSVXLzt3kKYNjKBJYKkjnH3w
+         bslsluiA/F1zrs3lBdIgiN/0/QncbxJ5WeZkdcyk=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBO7qtRf051832;
+        Tue, 24 Dec 2019 01:52:55 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
+ Dec 2019 01:52:45 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 24 Dec 2019 01:52:45 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBO7qgPl037101;
+        Tue, 24 Dec 2019 01:52:43 -0600
+Subject: Re: [PATCH] bus: ti-sysc: Implement quirk handling for CLKDM_NOAUTO
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191210161342.15142-1-tony@atomide.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <e209a2ce-c26e-d689-48d1-7920a3052438@ti.com>
+Date:   Tue, 24 Dec 2019 09:52:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191210145345.11616-13-sudeep.holla@arm.com>
-References: <20191210145345.11616-1-sudeep.holla@arm.com> <20191210145345.11616-13-sudeep.holla@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/15] clk: scmi: Match scmi device by both name and protocol id
-User-Agent: alot/0.8.1
-Date:   Mon, 23 Dec 2019 23:49:02 -0800
-Message-Id: <20191224074902.C9CF620706@mail.kernel.org>
+In-Reply-To: <20191210161342.15142-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sudeep Holla (2019-12-10 06:53:42)
-> The scmi bus now has support to match the driver with devices not only
-> based on their protocol id but also based on their device name if one is
-> available. This was added to cater the need to support multiple devices
-> and drivers for the same protocol.
->=20
-> Let us add the name "clocks" to scmi_device_id table in the driver so
-> that in matches only with device with the same name and protocol id
-> SCMI_PROTOCOL_CLOCK.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+
+On 10/12/2019 18:13, Tony Lindgren wrote:
+> For dra7 dcan and dwc3 instances we need to block clockdomain autoidle.
+> Let's do this with CLKDM_NOAUTO quirk flag and enable it for dcan and
+> dwc3.
+> 
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: Roger Quadros <rogerq@ti.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Acked-by: Roger Quadros <rogerq@ti.com>
+
 > ---
+>   drivers/bus/ti-sysc.c                 | 10 ++++++++--
+>   include/linux/platform_data/ti-sysc.h |  1 +
+>   2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -473,7 +473,7 @@ static void sysc_clkdm_deny_idle(struct sysc *ddata)
+>   {
+>   	struct ti_sysc_platform_data *pdata;
+>   
+> -	if (ddata->legacy_mode)
+> +	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
+>   		return;
+>   
+>   	pdata = dev_get_platdata(ddata->dev);
+> @@ -485,7 +485,7 @@ static void sysc_clkdm_allow_idle(struct sysc *ddata)
+>   {
+>   	struct ti_sysc_platform_data *pdata;
+>   
+> -	if (ddata->legacy_mode)
+> +	if (ddata->legacy_mode || (ddata->cfg.quirks & SYSC_QUIRK_CLKDM_NOAUTO))
+>   		return;
+>   
+>   	pdata = dev_get_platdata(ddata->dev);
+> @@ -1245,6 +1245,12 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>   	/* Quirks that need to be set based on detected module */
+>   	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff,
+>   		   SYSC_MODULE_QUIRK_AESS),
+> +	SYSC_QUIRK("dcan", 0x48480000, 0x20, -1, -1, 0xa3170504, 0xffffffff,
+> +		   SYSC_QUIRK_CLKDM_NOAUTO),
+> +	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
+> +		   SYSC_QUIRK_CLKDM_NOAUTO),
+> +	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -1, 0x500a0200, 0xffffffff,
+> +		   SYSC_QUIRK_CLKDM_NOAUTO),
+>   	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x00000006, 0xffffffff,
+>   		   SYSC_MODULE_QUIRK_HDQ1W),
+>   	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff,
+> diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+> --- a/include/linux/platform_data/ti-sysc.h
+> +++ b/include/linux/platform_data/ti-sysc.h
+> @@ -49,6 +49,7 @@ struct sysc_regbits {
+>   	s8 emufree_shift;
+>   };
+>   
+> +#define SYSC_QUIRK_CLKDM_NOAUTO		BIT(21)
+>   #define SYSC_QUIRK_FORCE_MSTANDBY	BIT(20)
+>   #define SYSC_MODULE_QUIRK_AESS		BIT(19)
+>   #define SYSC_MODULE_QUIRK_SGX		BIT(18)
+> 
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
