@@ -2,231 +2,115 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DD0C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A344C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0415420643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68ED8206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iqinEZpE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+MwYW7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfLXJfr (ORCPT
+        id S1726222AbfLXJpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:35:47 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30631 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726068AbfLXJfq (ORCPT
+        Tue, 24 Dec 2019 04:45:03 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46941 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfLXJpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 04:35:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577180145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=943Pz/D/HIG+v4WplxEFzfkChzLaRJpkT9zpxpHEQ2Y=;
-        b=iqinEZpEmG+SXjKTcOkFn5DIDHqLgEvG/j3LdgwbfeAg28m1vOJeCOMH9wQp3ANVdQ+pZ9
-        07VVb0IVyUEwTXKXfDlNfXQBQZ80cTtwzEPzNRhVuutpKjzhB017ulwVtpxVnxS5fT1Afj
-        LHhylEzEwjZZzh+x4QvZfM1jzzhZgLw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-cEvOQolmMravwZjn_NntzA-1; Tue, 24 Dec 2019 04:35:37 -0500
-X-MC-Unique: cEvOQolmMravwZjn_NntzA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BDF2D1800D42;
-        Tue, 24 Dec 2019 09:35:34 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-31.pek2.redhat.com [10.72.8.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C31046E96;
-        Tue, 24 Dec 2019 09:35:22 +0000 (UTC)
-Date:   Tue, 24 Dec 2019 17:35:19 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Andrea Vai <andrea.vai@unipv.it>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Message-ID: <20191224093519.GA32355@ming.t460p>
-References: <20191218094830.GB30602@ming.t460p>
- <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
- <20191223130828.GA25948@ming.t460p>
- <20191223162619.GA3282@mit.edu>
- <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
- <20191223172257.GB3282@mit.edu>
- <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
- <20191223195301.GC3282@mit.edu>
- <20191224012707.GA13083@ming.t460p>
- <0094198b6c3382ee2efbd4431e4ad1bfb8cef269.camel@unipv.it>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0094198b6c3382ee2efbd4431e4ad1bfb8cef269.camel@unipv.it>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 24 Dec 2019 04:45:03 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m26so17897658ljc.13;
+        Tue, 24 Dec 2019 01:45:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=P6IbNtAeZX26SPmEoOJPgBtk2mM++6U9PCnvdGJBX/k=;
+        b=e+MwYW7oNYxt3VheW4hLM/PG7DtRwDCUyVZEs6t0T7+8CE+Yl7MfenhngT0/OgHYUG
+         1lrshywM55Sw3A3VTCUPBRuE3JJbu1kuaAxioCZ7faxd1bBQIlZmcWnEG1Fj7RK+fOSt
+         2Lv23+L1v+oV4bsxI0R2inbM9Q1S93sv1Zh+5pjyczVpfhGPOg4d5esrH2SdkLPYLf3Z
+         xXvoKb5lmt2a7hFNWx7/qU8Nm4tBa7JfacilrwSEZroidCpRIy/6ApFJF9ziTBrxehx0
+         oPv7Fli/WO1dT6FbrP9AqdpphfO53BKok986EyjqmbOoXUxJuuAk9G/X5O0ohvp+lAaq
+         WbzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=P6IbNtAeZX26SPmEoOJPgBtk2mM++6U9PCnvdGJBX/k=;
+        b=qWh18sYGe09f47SOSAuNzBcPMhbviXZerIhfiT7F7ULPrD+fTJGCSbXP6BJnc52pV0
+         S5+7iJtsI9xkE50xfR2KyQaxnpwOf/1yy4QTxk9+L+b/4UR2aYCsxYrrr4MjPtqXWYJW
+         aOCMuhs8v7MNBReRCZAm0PBkJouH9ryWDwzGw88jilO/MW9JWABBx4FsLHfqrh5O5JAe
+         NBAf8F60jU20aQfm5xnxd11hJcl9L8j/ExD94RkL3gzdaXbPk6HAJ44mNav47SsWltf2
+         9UA6smL00RjbBGiWfAfkWDMXq82GOoLRPFvUXL+oFxdRfABLIDaqXFdNyVNDFNbL+U8v
+         Jp3Q==
+X-Gm-Message-State: APjAAAXabm8rX4IHWMWsfz45VeORNnI8S/cfW480adZIBnvoH8HgZFhH
+        t4vx+8usAWq31dFy3xfdwCA=
+X-Google-Smtp-Source: APXvYqyKB74FAyB/+SJCoryM883h5LTWtyijzg+2Mk4n5Qh+uy4iWs79Zblpjyc+J6oIVQxrgDw6DQ==
+X-Received: by 2002:a2e:2283:: with SMTP id i125mr20593893lji.244.1577180700841;
+        Tue, 24 Dec 2019 01:45:00 -0800 (PST)
+Received: from [172.16.20.20] ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id n30sm11591851lfi.54.2019.12.24.01.44.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Dec 2019 01:45:00 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
+From:   Christian Hewitt <christianshewitt@gmail.com>
+In-Reply-To: <3c42d6de-670d-fee8-aa81-99f44d447e87@broadcom.com>
+Date:   Tue, 24 Dec 2019 13:44:55 +0400
+Cc:     Soeren Moch <smoch@web.de>, Kalle Valo <kvalo@codeaurora.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F311713B-D7DC-4029-90F2-5E162648349D@gmail.com>
+References: <20191211235253.2539-1-smoch@web.de>
+ <D1B53CE9-E87C-4514-A2D7-0FE70A4D1A5D@gmail.com>
+ <cb3ac55f-4c8f-b0a0-41ee-f16b3232c87e@web.de>
+ <47DB71CE-ACC4-431D-9E66-D28A8C18C0A4@gmail.com>
+ <3c42d6de-670d-fee8-aa81-99f44d447e87@broadcom.com>
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 09:51:16AM +0100, Andrea Vai wrote:
-> Il giorno mar, 24/12/2019 alle 09.27 +0800, Ming Lei ha scritto:
-> > Hi Ted,
-> > 
-> > On Mon, Dec 23, 2019 at 02:53:01PM -0500, Theodore Y. Ts'o wrote:
-> > > On Mon, Dec 23, 2019 at 07:45:57PM +0100, Andrea Vai wrote:
-> > > > basically, it's:
-> > > > 
-> > > >   mount UUID=$uuid /mnt/pendrive
-> > > >   SECONDS=0
-> > > >   cp $testfile /mnt/pendrive
-> > > >   umount /mnt/pendrive
-> > > >   tempo=$SECONDS
-> > > > 
-> > > > and it copies one file only. Anyway, you can find the whole
-> > script
-> > > > attached.
-> > > 
-> > > OK, so whether we are doing the writeback at the end of cp, or
-> > when
-> > > you do the umount, it's probably not going to make any
-> > difference.  We
-> > > can get rid of the stack trace in question by changing the script
-> > to
-> > > be basically:
-> > > 
-> > > mount UUID=$uuid /mnt/pendrive
-> > > SECONDS=0
-> > > rm -f /mnt/pendrive/$testfile
-> > > cp $testfile /mnt/pendrive
-> > > umount /mnt/pendrive
-> > > tempo=$SECONDS
-> > > 
-> > > I predict if you do that, you'll see that all of the time is spent
-> > in
-> > > the umount, when we are trying to write back the file.
-> > > 
-> > > I really don't think then this is a file system problem at
-> > all.  It's
-> > > just that USB I/O is slow, for whatever reason.  We'll see a stack
-> > > trace in the writeback code waiting for the I/O to be completed,
-> > but
-> > > that doesn't mean that the root cause is in the writeback code or
-> > in
-> > > the file system which is triggering the writeback.
-> > 
-> > Wrt. the slow write on this usb storage, it is caused by two
-> > writeback
-> > path, one is the writeback wq, another is from ext4_release_file()
-> > which
-> > is triggered from exit_to_usermode_loop().
-> > 
-> > When the two write path is run concurrently, the sequential write
-> > order
-> > is broken, then write performance drops much on this particular usb
-> > storage.
-> > 
-> > The ext4_release_file() should be run from read() or write() syscall
-> > if
-> > Fedora 30's 'cp' is implemented correctly. IMO, it isn't expected
-> > behavior
-> > for ext4_release_file() to be run thousands of times when just
-> > running 'cp' once, see comment of ext4_release_file():
-> > 
-> > 	/*
-> > 	 * Called when an inode is released. Note that this is
-> > different
-> > 	 * from ext4_file_open: open gets called at every open, but
-> > release
-> > 	 * gets called only when /all/ the files are closed.
-> > 	 */
-> > 	static int ext4_release_file(struct inode *inode, struct file
-> > *filp)
-> > 
-> > > 
-> > > I suspect the next step is use a blktrace, to see what kind of I/O
-> > is
-> > > being sent to the USB drive, and how long it takes for the I/O to
-> > > complete.  You might also try to capture the output of "iostat -x
-> > 1"
-> > > while the script is running, and see what the difference might be
-> > > between a kernel version that has the problem and one that
-> > doesn't,
-> > > and see if that gives us a clue.
-> > 
-> > That isn't necessary, given we have concluded that the bad write
-> > performance is caused by broken write order.
-> > 
-> > > 
-> > > > > And then send me
-> > > > btw, please tell me if "me" means only you or I cc: all the
-> > > > recipients, as usual
-> > > 
-> > > Well, I don't think we know what the root cause is.  Ming is
-> > focusing
-> > > on that stack trace, but I think it's a red herring.....  And if
-> > it's
-> > > not a file system problem, then other people will be best suited
-> > to
-> > > debug the issue.
-> > 
-> > So far, the reason points to the extra writeback path from
-> > exit_to_usermode_loop().
-> > If it is not from close() syscall, the issue should be related with
-> > file reference
-> > count. If it is from close() syscall, the issue might be in 'cp''s
-> > implementation.
-> > 
-> > Andrea, please collect the following log or the strace log requested
-> > by Ted, then
-> > we can confirm if the extra writeback is from close() or
-> > read/write() syscall:
-> > 
-> > # pass PID of 'cp' to this script
-> > #!/bin/sh
-> > PID=$1
-> > /usr/share/bcc/tools/trace -P $PID  -t -C \
-> >     't:block:block_rq_insert "%s %d %d", args->rwbs, args->sector,
-> > args->nr_sector' \
-> >     't:syscalls:sys_exit_close ' \
-> >     't:syscalls:sys_exit_read ' \
-> >     't:syscalls:sys_exit_write '
-> 
-> Meanwhile, I tried to run the test and obtained an error (...usage:
-> trace [-h] [-b BUFFER_PAGES] [-p PID]...), so assumed the "-P" should
-> be "-p", corrected and obtained the attached log with ext4 and a slow
-> copy (2482 seconds) by doing:
-> 
-> - start the test
-> - look at the cp pid
-> - run the trace
-> - wait for the test to finish
-> - stop the trace.
 
-The log shows all io submission is from close() syscall, so fs code
-is fine, and I have provided the reason of this issue in last email:
 
-https://lore.kernel.org/linux-scsi/e3dc2a3e0221c0a0beb91172ba2bff1f6acc0cb7.camel@unipv.it/T/#m845caca2969da5676516c35dc0c3528a79beb886
+> On 24 Dec 2019, at 1:01 pm, Arend Van Spriel =
+<arend.vanspriel@broadcom.com> wrote:
+>=20
+> Can you elaborate on the "known SDIO issue"? Is it an issue with ADMA =
+or something else. I am asking because there is a workaround in brcmfmac =
+to avoid scatter-gather lists, which may or may not address the issue.
 
-Thanks, 
-Ming
+This describes the issue: https://patchwork.kernel.org/cover/10962975/
 
+Below is the current workaround I=E2=80=99m using, which restricts the =
+hack to Amlogic G12A and G12B devices that inherit =
+=E2=80=9Camlogic,dram-access-quirk=E2=80=9D from a common SoC dtsi.
+
+=
+https://github.com/chewitt/linux/commit/187527747861b047c835f494fe3267d9b4=
+959be1
+
+Testing by Khadas staff found the max_segs/max_blk_count values and =
+shows a performance impact (not a big surprise) but they appear to give =
+a stable connection, which is better than a very unstable one. I=E2=80=99v=
+e flagged things to linux-amlogic maintainer Neil Armstrong (on CC) and =
+I expect he or colleagues will take a more scientific look in January.
+
+NB: I=E2=80=99m happy to test other things. Just remember that I don=E2=80=
+=99t code so you need to spoon-feed me with patches not suggestions.
+
+Christian=
