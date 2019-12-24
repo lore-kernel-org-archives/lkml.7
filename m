@@ -2,136 +2,182 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46809C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D97C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A54D20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187705;
-	bh=bN25+fVwjDMOIj7UQboBtXt4bWh4xDMaKIOFLg0H81o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfiALrVQWZCiGsYipEUEqG/2VO5DDlV5Qa74pHFt9Aa6UVZqJPgcrt4zridlPA22n
-	 vrGaM0Uu+OWDVSxhITwmcz7RxMMqzTm56GsS2yjCBdNFf5L9Sid6yuRMKOZZjfImP9
-	 7UxgnH+qEPECrnUCo7m67S0rJjuZT/YWpkRT01Bs=
+	by mail.kernel.org (Postfix) with ESMTP id A19EE206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lYmJlwXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfLXLlo (ORCPT
+        id S1727161AbfLXLlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:44 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:48323 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726287AbfLXLln (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:43 -0500
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iji60-000169-9h; Tue, 24 Dec 2019 12:11:24 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tue, 24 Dec 2019 06:41:47 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:51551 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfLXLlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:41:46 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47hvSk5rlxz9tvqq;
+        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lYmJlwXj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id WeNRdbd7lgXn; Tue, 24 Dec 2019 12:41:42 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47hvSk41pRz9tvqp;
+        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1577187702; bh=zVvs2ouna/B/Vb/2RfZVUK0x0665UncRbgfLeAdSnnY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lYmJlwXjs+sVC+Oy+w8vyY3OjRXZBsUlCFzkOcAtGzQv8VGRTjvaBltJ8BvY0yncd
+         kvWtk3/4+I6R+C35vHzjesQG3ZepSfG0mV/VjcD+JMGNw5tKirhTpTWaYsm2DosM1j
+         4yvJ9P1cylNo9xPKKIo9g95EUbXTD0fvHykyHi40=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1F0C8B783;
+        Tue, 24 Dec 2019 12:41:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id EbbqCE6Lvv3b; Tue, 24 Dec 2019 12:41:43 +0100 (CET)
+Received: from [192.168.232.53] (unknown [192.168.232.53])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACB038B782;
+        Tue, 24 Dec 2019 12:41:42 +0100 (CET)
+Subject: Re: [RFC PATCH v2 02/10] lib: vdso: move call to fallback out of
+ common code.
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <Andrew.Murray@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 16/32] irqchip/gic-v4.1: Advertise support v4.1 to KVM
-Date:   Tue, 24 Dec 2019 11:10:39 +0000
-Message-Id: <20191224111055.11836-17-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
-References: <20191224111055.11836-1-maz@kernel.org>
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+References: <cover.1577111363.git.christophe.leroy@c-s.fr>
+ <de073962c1a5911343e13c183fbbdef0fe95449e.1577111365.git.christophe.leroy@c-s.fr>
+ <CALCETrXWHk9J-pYm+eopMuW3x7Jr_LnzRjr94gq8g66xOO6SBg@mail.gmail.com>
+From:   christophe leroy <christophe.leroy@c-s.fr>
+Message-ID: <36f1ce73-d8bc-9c46-8a2a-b6514d4a1ba0@c-s.fr>
+Date:   Tue, 24 Dec 2019 12:41:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
+In-Reply-To: <CALCETrXWHk9J-pYm+eopMuW3x7Jr_LnzRjr94gq8g66xOO6SBg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, rrichter@marvell.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-Antivirus: Avast (VPS 191223-0, 23/12/2019), Outbound message
+X-Antivirus-Status: Not-Tested
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tell KVM that we support v4.1. Nothing uses this information so far.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c       | 9 ++++++++-
- drivers/irqchip/irq-gic-v3.c           | 2 ++
- include/linux/irqchip/arm-gic-common.h | 2 ++
- 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 360ca2c1533f..48d7ee443544 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -4739,6 +4739,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 	struct device_node *of_node;
- 	struct its_node *its;
- 	bool has_v4 = false;
-+	bool has_v4_1 = false;
- 	int err;
- 
- 	gic_rdists = rdists;
-@@ -4759,8 +4760,14 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 	if (err)
- 		return err;
- 
--	list_for_each_entry(its, &its_nodes, entry)
-+	list_for_each_entry(its, &its_nodes, entry) {
- 		has_v4 |= is_v4(its);
-+		has_v4_1 |= is_v4_1(its);
-+	}
-+
-+	/* Don't bother with inconsistent systems */
-+	if (WARN_ON(!has_v4_1 && rdists->has_rvpeid))
-+		rdists->has_rvpeid = false;
- 
- 	if (has_v4 & rdists->has_vlpis) {
- 		if (its_init_vpe_domain() ||
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 624f351c0362..fcbd220c92b3 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1784,6 +1784,7 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
- 		gic_v3_kvm_info.vcpu = r;
- 
- 	gic_v3_kvm_info.has_v4 = gic_data.rdists.has_vlpis;
-+	gic_v3_kvm_info.has_v4_1 = gic_data.rdists.has_rvpeid;
- 	gic_set_kvm_info(&gic_v3_kvm_info);
- }
- 
-@@ -2094,6 +2095,7 @@ static void __init gic_acpi_setup_kvm_info(void)
- 	}
- 
- 	gic_v3_kvm_info.has_v4 = gic_data.rdists.has_vlpis;
-+	gic_v3_kvm_info.has_v4_1 = gic_data.rdists.has_rvpeid;
- 	gic_set_kvm_info(&gic_v3_kvm_info);
- }
- 
-diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
-index b9850f5f1906..fa8c0455c352 100644
---- a/include/linux/irqchip/arm-gic-common.h
-+++ b/include/linux/irqchip/arm-gic-common.h
-@@ -32,6 +32,8 @@ struct gic_kvm_info {
- 	struct resource vctrl;
- 	/* vlpi support */
- 	bool		has_v4;
-+	/* rvpeid support */
-+	bool		has_v4_1;
- };
- 
- const struct gic_kvm_info *gic_get_kvm_info(void);
--- 
-2.20.1
+Le 24/12/2019 à 03:24, Andy Lutomirski a écrit :
+> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>> On powerpc, VDSO functions and syscalls cannot be implemented in C
+>> because the Linux kernel ABI requires that CR[SO] bit is set in case
+>> of error and cleared when no error.
+>>
+>> As this cannot be done in C, C VDSO functions and syscall'based
+>> fallback need a trampoline in ASM.
+>>
+>> By moving the fallback calls out of the common code, arches like
+>> powerpc can implement both the call to C VDSO and the fallback call
+>> in a single trampoline function.
+> 
+> Maybe the issue is that I'm not a powerpc person, but I don't
+> understand this.  The common vDSO code is in C.  Presumably this means
+> that you need an asm trampoline no matter what to call the C code.  Is
+> the improvement that, with this change, you can have the asm
+> trampoline do a single branch, so it's logically:
+> 
+> ret = [call the C code];
+> if (ret == 0) {
+>   set success bit;
+> } else {
+>   ret = fallback;
+>   if (ret == 0)
+>    set success bit;
+> else
+>    set failure bit;
+> }
 
+More simple than above, in fact it is:
+
+ret = [call the C code];
+if (ret == 0) {
+  set success bit;
+} else {
+  ret = fallback [ which sets the success/failure bit];
+}
+return ret
+
+
+> 
+> return ret;
+> 
+> instead of:
+> 
+> ret = [call the C code, which includes the fallback];
+
+C code cannot handle the success/failure bit so we need to do something 
+which does:
+
+int assembly_to_fallback()
+{
+	ret = [syscall the fallback]
+	if (success bit set)
+		return ret;
+	else
+		return -ret;
+}
+
+Also means going back and forth between the success bit and negative return.
+
+> if (ret == 0)
+>    set success bit;
+> else
+>    set failure bit;
+> 
+> It's not obvious to me that the former ought to be faster.
+> 
+>>
+>> The two advantages are:
+>> - No need play back and forth with CR[SO] and negative return value.
+>> - No stack frame is required in VDSO C functions for the fallbacks.
+> 
+> How is no stack frame required?  Do you mean that the presence of the
+> fallback causes worse code generation?  Can you improve the fallback
+> instead?
+> 
+
+When function F1 calls function F2 (with BL insn), the link register 
+(LR) is set with the return address in F1, so that at the end of F2, F2 
+branches to LR (with BLR insn), that's how you return from functions.
+
+When F2 calls function F3, the same happens, LR is set to the return of 
+F3 into F2. It means that F2 has to save LR in order to be able to 
+return to F1, otherwise the return address from F2 into F1 is lost.
+
+But ... thinking about it once more, indeed fallback means doing a 
+syscall, and in fact I realise that syscalls won't clobber LR, so it 
+should be possible to do something. Let me try it.
+
+Christophe
