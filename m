@@ -2,180 +2,106 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23443C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6445C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED8B20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577179146;
-	bh=U56Tzl38Vn8Mk3NXJD3PXZX9BDUmTlyLCXERb+QoEE4=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=l+b/kTZOQPkhKtiPdoOx14E/I0Vy9N1zbkIMu38AiQw3ta4UoGD4XjKkDrJTdSS36
-	 vChztFaF2Borzko8KfZApiIxPwFQOyTHf9wUyHlcMzxME5vPsAF9uSfmElYRB3Upge
-	 0O+a9vjXYVQZPVFDGL603PCdHsX8Nc3KnEFDZXjk=
+	by mail.kernel.org (Postfix) with ESMTP id 70C3020722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:21:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="jYec26/e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfLXJTG (ORCPT
+        id S1726213AbfLXJVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:19:06 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:46908 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726065AbfLXJTF (ORCPT
+        Tue, 24 Dec 2019 04:21:31 -0500
+Received: from mail.inango-systems.com ([178.238.230.57]:37754 "EHLO
+        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfLXJVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 04:19:05 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ijgLE-0007yh-OI; Tue, 24 Dec 2019 10:19:00 +0100
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v2 11/36] irqchip/gic-v4.1: VPE table (aka  =?UTF-8?Q?GICR=5FVPROPBASER=29=20allocation?=
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 09:19:00 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jayachandran C <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        <tangnianyao@huawei.com>, <wangwudi@hisilicon.com>
-In-Reply-To: <61526052-aa00-0769-d5bb-3524161c5650@huawei.com>
-References: <20191027144234.8395-1-maz@kernel.org>
- <20191027144234.8395-12-maz@kernel.org>
- <61526052-aa00-0769-d5bb-3524161c5650@huawei.com>
-Message-ID: <7eb71594ac3617e1a2b58b7537cf3d64@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, andrew.murray@arm.com, jnair@marvell.com, rrichter@marvell.com, tangnianyao@huawei.com, wangwudi@hisilicon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Tue, 24 Dec 2019 04:21:31 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id 69B2A1080783;
+        Tue, 24 Dec 2019 11:21:29 +0200 (IST)
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1fxzy3dGzunS; Tue, 24 Dec 2019 11:21:28 +0200 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.inango-sw.com (Postfix) with ESMTP id DE3D9108078E;
+        Tue, 24 Dec 2019 11:21:28 +0200 (IST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com DE3D9108078E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
+        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1577179288;
+        bh=CAmI7apeyL7jZ6co+qwW6zsFPTjggPHOPX6bTaAoTBQ=;
+        h=From:To:Date:Message-Id;
+        b=jYec26/eP5rkBjgKag80Q62vw95TEj1y+Cs11iTw2xYKxUdpAqnI1mkOqARJm/YFL
+         JOwhfcR7m56oX2R0jCchrumekxx2qvoRS/D3Yb2qsKSR+r/AWquos/6GhLVv7xbLT+
+         3cbi4gPunzbfWPZTPi3s4UN31yBoWaC9DH5e0PhslvdmNH7EZw7JwQcYO7Pnq+KhQe
+         PB6BbYt6+i66zx9XL6vVMxLmzdKR6k4aPwAAvdEGJkAySQfQ1N1HF3GuQYRVw+PVna
+         mDN8Et9jKR6+LGkc51+HBgXuHHqW7tCJz8fwyjBPSL5BeHf4C7PKbEmqd0FevXMUuG
+         Bl+UamaTZxy9A==
+X-Virus-Scanned: amavisd-new at inango-sw.com
+Received: from mail.inango-sw.com ([127.0.0.1])
+        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id VoL7VamDXbEy; Tue, 24 Dec 2019 11:21:28 +0200 (IST)
+Received: from nmerinov.inango.loc (unknown [194.60.247.123])
+        by mail.inango-sw.com (Postfix) with ESMTPSA id 22D7B108023C;
+        Tue, 24 Dec 2019 11:21:28 +0200 (IST)
+From:   Nikolai Merinov <n.merinov@inango-systems.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>, Jens Axboe <axboe@kernel.dk>,
+        linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Nikolai Merinov <n.merinov@inango-systems.com>
+Subject: [PATCH v2] partitions/efi: Fix partition name parsing in GUID partition entry
+Date:   Tue, 24 Dec 2019 14:21:19 +0500
+Message-Id: <20191224092119.4581-1-n.merinov@inango-systems.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20181124162123.21300-1-n.merinov@inango-systems.com>
+References: <20181124162123.21300-1-n.merinov@inango-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
+GUID partition entry defined to have a partition name as 36 UTF-16LE
+code units. This means that on big-endian platforms ASCII symbols
+would be read with 0xXX00 efi_char16_t character code. In order to
+correctly extract ASCII characters from a partition name field we
+should be converted from 16LE to CPU architecture.
 
-On 2019-12-24 07:10, Zenghui Yu wrote:
-> Hi Marc,
->
-> [ +Wudi and Nianyao. As they spotted the following issue but
->  I forgot to send it out. ]
->
-> On 2019/10/27 22:42, Marc Zyngier wrote:
->> GICv4.1 defines a new VPE table that is potentially shared between
->> both the ITSs and the redistributors, following complicated affinity
->> rules.
->> To make things more confusing, the programming of this table at
->> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER 
->> register
->> for something completely different.
->> The code flow is somewhat complexified by the need to respect the
->> affinities required by the HW, meaning that tables can either be
->> inherited from a previously discovered ITS or redistributor.
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---[...]
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index 40912b3fb0e1..478d3678850c 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> [...]
->> @@ -2025,6 +2098,214 @@ static int its_alloc_tables(struct its_node 
->> *its)
->>   	return 0;
->>   }
->>   +static u64 inherit_vpe_l1_table_from_its(void)
->> +{
->> +	struct its_node *its;
->> +	u64 val;
->> +	u32 aff;
->> +
->> +	val = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
->> +	aff = compute_common_aff(val);
->> +
->> +	list_for_each_entry(its, &its_nodes, entry) {
->> +		u64 baser;
->> +
->> +		if (!is_v4_1(its))
->> +			continue;
->> +
->> +		if (!FIELD_GET(GITS_TYPER_SVPET, its->typer))
->> +			continue;
->> +
->> +		if (aff != compute_its_aff(its))
->> +			continue;
->> +
->> +		/* GICv4.1 guarantees that the vPE table is GITS_BASER2 */
->> +		baser = its->tables[2].val;
->> +		if (!(baser & GITS_BASER_VALID))
->> +			continue;
->> +
->> +		/* We have a winner! */
->> +		val  = GICR_VPROPBASER_4_1_VALID;
->> +		if (baser & GITS_BASER_INDIRECT)
->> +			val |= GICR_VPROPBASER_4_1_INDIRECT;
->> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
->> +				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
->> +		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
->> +				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
->
-> We've used GITS_BASER_ADDR_48_to_52() only in the KVM code where the
-> pagesize of ITS table is fixed to 64K.
-> It may not work when the pagesize is 4K or 16K?
+The problem exists on all big endian platforms.
 
-You're absolutely right, we shouldn't mess with the 52bit macros when
-PZ isn't set to 64k. I'm adding the following fix to this patch:
+Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index e1f8d5f9a0e3..3234bb9fbdbe 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2433,7 +2433,7 @@ static u64 inherit_vpe_l1_table_from_its(void)
-  	aff = compute_common_aff(val);
-
-  	list_for_each_entry(its, &its_nodes, entry) {
--		u64 baser;
-+		u64 baser, addr;
-
-  		if (!is_v4_1(its))
-  			continue;
-@@ -2455,8 +2455,15 @@ static u64 inherit_vpe_l1_table_from_its(void)
-  			val |= GICR_VPROPBASER_4_1_INDIRECT;
-  		val |= FIELD_PREP(GICR_VPROPBASER_4_1_PAGE_SIZE,
-  				  FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser));
--		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR,
--				  GITS_BASER_ADDR_48_to_52(baser) >> 12);
-+		switch (FIELD_GET(GITS_BASER_PAGE_SIZE_MASK, baser)) {
-+		case GIC_PAGE_SIZE_64K:
-+			addr = GITS_BASER_ADDR_48_to_52(baser);
-+			break;
-+		default:
-+			addr = baser & GENMASK_ULL(47, 12);
-+			break;
-+		}
-+		val |= FIELD_PREP(GICR_VPROPBASER_4_1_ADDR, addr >> 12);
-  		val |= FIELD_PREP(GICR_VPROPBASER_SHAREABILITY_MASK,
-  				  FIELD_GET(GITS_BASER_SHAREABILITY_MASK, baser));
-  		val |= FIELD_PREP(GICR_VPROPBASER_INNER_CACHEABILITY_MASK,
-
-
-Thanks again,
-
-         M.
+diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+index db2fef7dfc47..51287a8a3bea 100644
+--- a/block/partitions/efi.c
++++ b/block/partitions/efi.c
+@@ -715,7 +715,7 @@ int efi_partition(struct parsed_partitions *state)
+ 				ARRAY_SIZE(ptes[i].partition_name));
+ 		info->volname[label_max] = 0;
+ 		while (label_count < label_max) {
+-			u8 c = ptes[i].partition_name[label_count] & 0xff;
++			u8 c = le16_to_cpu(ptes[i].partition_name[label_count]) & 0xff;
+ 			if (c && !isprint(c))
+ 				c = '!';
+ 			info->volname[label_count] = c;
+diff --git a/block/partitions/efi.h b/block/partitions/efi.h
+index 3e8576157575..0b6d5b7be111 100644
+--- a/block/partitions/efi.h
++++ b/block/partitions/efi.h
+@@ -88,7 +88,7 @@ typedef struct _gpt_entry {
+ 	__le64 starting_lba;
+ 	__le64 ending_lba;
+ 	gpt_entry_attributes attributes;
+-	efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
++	__le16 partition_name[72 / sizeof (__le16)];
+ } __packed gpt_entry;
+ 
+ typedef struct _gpt_mbr_record {
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
