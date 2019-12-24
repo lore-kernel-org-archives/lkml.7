@@ -2,89 +2,90 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF5DC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14668C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5975E20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52BB2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GGe5+9Dq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kZQy1VFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLXMMo (ORCPT
+        id S1726903AbfLXMMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:12:44 -0500
-Received: from m12-17.163.com ([220.181.12.17]:36930 "EHLO m12-17.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbfLXMMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 07:12:42 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:45076 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726332AbfLXMMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Dec 2019 07:12:41 -0500
-X-Greylist: delayed 938 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Dec 2019 07:12:39 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=2PfFdn+GcUUgz9kOGP
-        vjod/qqNrrabIvrEJCD+uVTXM=; b=GGe5+9Dq18bbXMxDrS1I0EXYN00rVR5tkY
-        /ndRddEm30EXVr701RuxrHti/dJBFTWsSGqPH5w1X/NkYeKXRAy2/+1EUu/QVHpc
-        o/WKkDeJgOCqsSnw+fAmXCzDOWPukCwi78Ls78A3R4pu2aCKR1Awq3TSpkE4R9rZ
-        KM5Dywo/s=
-Received: from localhost (unknown [106.37.187.139])
-        by smtp13 (Coremail) with SMTP id EcCowACXtPj2_AFecBFYag--.27430S3;
-        Tue, 24 Dec 2019 19:56:38 +0800 (CST)
-From:   Geliang Tang <geliangtang@gmail.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Geliang Tang <geliangtang@gmail.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: xt_LOG: remove unused headers
-Date:   Tue, 24 Dec 2019 19:56:37 +0800
-Message-Id: <00755cb479aeafbc88c4f8b92e99ca9ada4b9af0.1577188409.git.geliangtang@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: EcCowACXtPj2_AFecBFYag--.27430S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKryDGw1kKr4xZr4xGFyUWrg_yoW3Wwb_Ca
-        s29r48G3WDXr17Aw1xJFs7A345K34xJFn3WrySva15ta1DJw40g397Xr1Yvr45Wwn8CryU
-        Z3WkG34xW345WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8SeHDUUUUU==
-X-Originating-IP: [106.37.187.139]
-X-CM-SenderInfo: 5jhoxtpqjwt0rj6rljoofrz/1tbiGRaVmVyPWWvBWgAAs5
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577189560; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=IFZOTR8XW9iOWd65uY/xT59CKc3w+pTje1cV3Wl7IOQ=;
+ b=kZQy1VFccg+bZNQvuyXGUkg8rBjorfVzaSmJ9xpK6XZaQ6HKFJgRfGwgVSe8Ook9UIH1WmPh
+ 3sqV9RpWZpCzdWehU8jouAdrJFIes9wirDlpbEY3H3hChsXvnW2DI5/Y72XfATxwz4xLZn/2
+ WdMD7ssZAZphSnAbMgTGjIHoxIY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0200b3.7f0160a8a2d0-smtp-out-n02;
+ Tue, 24 Dec 2019 12:12:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5C97CC4479D; Tue, 24 Dec 2019 12:12:34 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1D71C43383;
+        Tue, 24 Dec 2019 12:12:33 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 24 Dec 2019 17:42:33 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vgarodia@codeaurora.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: sc7180: Add Venus video codec DT node
+In-Reply-To: <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
+ <1576828760-13176-2-git-send-email-dikshita@codeaurora.org>
+ <17a371c0-d73a-75eb-34f2-c9afb51d46f5@linaro.org>
+Message-ID: <8a43b13d0cd4a7bcb18e0f1f8259ec72@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some headers are not used so remove them.
+Hi Stan,
 
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
----
- net/netfilter/xt_LOG.c | 8 --------
- 1 file changed, 8 deletions(-)
+On 2019-12-20 15:04, Stanimir Varbanov wrote:
+> 
+> This subnode should be in sc7180-idp.dts, because we assume that by
+> default the qcom platforms have TZ.
+> 
 
-diff --git a/net/netfilter/xt_LOG.c b/net/netfilter/xt_LOG.c
-index a1e79b517c01..f5086a6b700a 100644
---- a/net/netfilter/xt_LOG.c
-+++ b/net/netfilter/xt_LOG.c
-@@ -9,15 +9,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- #include <linux/module.h>
--#include <linux/spinlock.h>
- #include <linux/skbuff.h>
--#include <linux/if_arp.h>
--#include <linux/ip.h>
--#include <net/ipv6.h>
--#include <net/icmp.h>
--#include <net/udp.h>
--#include <net/tcp.h>
--#include <net/route.h>
- 
- #include <linux/netfilter.h>
- #include <linux/netfilter/x_tables.h>
+sc7180.dtsi will not be used on TZ based platforms which was the case 
+for SDM845
+where sdm845.dtsi was common for TZ (dragonboards) and non TZ(cheza 
+boards) based platforms.
+So in order to avoid duplicating this node in other board specific dts 
+files, it
+would be better to have it here itself.
+
+Thanks,
+Sai
+
 -- 
-2.17.1
-
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
