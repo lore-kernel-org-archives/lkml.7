@@ -2,144 +2,162 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81530C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F54C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558242071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B0O2k2Wr"
+	by mail.kernel.org (Postfix) with ESMTP id B89192071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577174739;
+	bh=q+4fNfvxwFfvm6ehxq3tf+yjKjbLqy3OGlMpvibfKhE=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=GgsKsRU4QiB+52MnI2pxKeqXu91aW+RblhKQ396QgDNeMotI0Vu2o5kcdVtxlHE7D
+	 BUMjsg+9oB/lmozPOO6USLHefHS/DBdG5FDjikcgaHxnt93P8GiMbStA3qi/UNYhxb
+	 Mj5W7WduUil4/Dil7nvj/HEv4Sq/GbDBBfvVK1Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfLXIEl (ORCPT
+        id S1726250AbfLXIFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 03:04:41 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48372 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfLXIEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 03:04:41 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBO84WQf044802;
-        Tue, 24 Dec 2019 02:04:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577174672;
-        bh=1Ded6pvuMA3oMdmazX4/A7l0KSskT0kDg81kNM68v+Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B0O2k2Wr9saFAaISz01NN4EwJZsrFCOh2m5F9hZDnD2YsjuYdtLRN5c+JPWn2R9sb
-         7wduya7EG5lefJZ5YCtVDMq/9+2PmotsaEVzTpfl2iQs6TOkPAZ79k9Otr+mTolvFM
-         iWnfa4fvzk4uA6k0A/r/u7b9XuQmWwyL9+WcsHEE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBO84WjW050928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Dec 2019 02:04:32 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Dec 2019 02:04:32 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Dec 2019 02:04:32 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBO84TMr013924;
-        Tue, 24 Dec 2019 02:04:30 -0600
-Subject: Re: [PATCH 09/13] dt-bindings: PCI: Add host mode dt-bindings for
- TI's J721E SoC
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20191209092147.22901-1-kishon@ti.com>
- <20191209092147.22901-10-kishon@ti.com> <20191219000841.GA4251@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <fc145cbc-88f2-5ccb-5c20-4be1ac81fe25@ti.com>
-Date:   Tue, 24 Dec 2019 13:36:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20191219000841.GA4251@bogus>
+        Tue, 24 Dec 2019 03:05:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfLXIFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 03:05:38 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0C99206CB;
+        Tue, 24 Dec 2019 08:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577174736;
+        bh=q+4fNfvxwFfvm6ehxq3tf+yjKjbLqy3OGlMpvibfKhE=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=pPvzsbBbP6MR6SnA/5X0FeGfkVY4CZ8izcoN8yDgHPCIZ8eCCPaoRCSPYhysvW6Pj
+         rrnvi6eQuNIpLyKF8r6SaTuPP8sI5VJLaO6ycV27jLxP02Mqmnj+kZY5u3hC+fxZAY
+         DaslL24dbHa06DyBXjvuKwkCPMl+7xcxIV0LkOVo=
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191209233305.18619-2-michael@walle.cc>
+References: <20191209233305.18619-1-michael@walle.cc> <20191209233305.18619-2-michael@walle.cc>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Walle <michael@walle.cc>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
+User-Agent: alot/0.8.1
+Date:   Tue, 24 Dec 2019 00:05:35 -0800
+Message-Id: <20191224080536.B0C99206CB@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Quoting Michael Walle (2019-12-09 15:33:05)
+> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
+> new file mode 100644
+> index 000000000000..b92054d15ab1
+> --- /dev/null
+> +++ b/drivers/clk/clk-fsl-sai.c
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Freescale SAI BCLK as a generic clock driver
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define I2S_CSR                0x00
+> +#define I2S_CR2                0x08
+> +#define CSR_BCE_BIT    28
+> +#define CR2_BCD                BIT(24)
+> +#define CR2_DIV_SHIFT  0
+> +#define CR2_DIV_WIDTH  8
+> +
+> +struct fsl_sai_clk {
+> +       struct clk_divider div;
+> +       struct clk_gate gate;
+> +       spinlock_t lock;
+> +};
+> +
+> +static void __init fsl_sai_clk_setup(struct device_node *node)
+> +{
+> +       const char *clk_name =3D node->name;
+> +       struct fsl_sai_clk *sai_clk;
+> +       unsigned int num_parents;
+> +       const char *parent_name;
+> +       void __iomem *base;
+> +       struct clk_hw *hw;
+> +
+> +       num_parents =3D of_clk_get_parent_count(node);
+> +       if (!num_parents) {
+> +               pr_err("%s: no parent found", clk_name);
+> +               return;
+> +       }
+> +
+> +       parent_name =3D of_clk_get_parent_name(node, 0);
 
-On 19/12/19 5:38 AM, Rob Herring wrote:
-> On Mon, Dec 09, 2019 at 02:51:43PM +0530, Kishon Vijay Abraham I wrote:
->> Add host mode dt-bindings for TI's J721E SoC.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/ti,j721e-pci-host.yaml       | 161 ++++++++++++++++++
->>  1 file changed, 161 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> new file mode 100644
->> index 000000000000..96184e1f419f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> @@ -0,0 +1,161 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-host.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI J721E PCI Host (PCIe Wrapper)
->> +
->> +maintainers:
->> +  - Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> There's now a PCI bus schema. Reference it here:
-> 
-> allOf:
->   - $ref: "/schemas/pci/pci-bus.yaml#"
-> 
->> +
->> +properties:
->> +  compatible:
->> +      enum:
->> +          - ti,j721e-pcie-host
-> 
-> Indentation.
-> 
->> +
->> +  reg:
->> +    maxItems: 4
->> +
->> +  reg-names:
->> +    items:
->> +      - const: intd_cfg
->> +      - const: user_cfg
->> +      - const: reg
->> +      - const: cfg
->> +
->> +  ti,syscon-pcie-ctrl:
->> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
->> +                 and link speed.
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> You can drop the 'allOf' here if there aren't more constraints.
+Could this use the new way of specifying clk parents so that we don't
+have to query DT for parent names and just let the core framework do it
+whenever it needs to?
 
-Do you mean I don't have to include phandle schema here? I don't seem to
-be able to include $ref without allOf.
+> +
+> +       sai_clk =3D kzalloc(sizeof(*sai_clk), GFP_KERNEL);
+> +       if (!sai_clk)
+> +               return;
+> +
+> +       base =3D of_iomap(node, 0);
+> +       if (base =3D=3D NULL) {
+> +               pr_err("%s: failed to map register space", clk_name);
+> +               goto err;
+> +       }
+> +
+> +       spin_lock_init(&sai_clk->lock);
+> +
+> +       sai_clk->gate.reg =3D base + I2S_CSR;
+> +       sai_clk->gate.bit_idx =3D CSR_BCE_BIT;
+> +       sai_clk->gate.lock =3D &sai_clk->lock;
+> +
+> +       sai_clk->div.reg =3D base + I2S_CR2;
+> +       sai_clk->div.shift =3D CR2_DIV_SHIFT;
+> +       sai_clk->div.width =3D CR2_DIV_WIDTH;
+> +       sai_clk->div.lock =3D &sai_clk->lock;
+> +
+> +       /* set clock direction, we are the BCLK master */
 
-Thanks
-Kishon
+Should this configuration come from DT somehow?
+
+> +       writel(CR2_BCD, base + I2S_CR2);
+> +
+> +       hw =3D clk_hw_register_composite(NULL, clk_name, &parent_name, 1,
+> +                                      NULL, NULL,
+> +                                      &sai_clk->div.hw, &clk_divider_ops,
+> +                                      &sai_clk->gate.hw, &clk_gate_ops,
+> +                                      CLK_SET_RATE_GATE);
+> +       if (IS_ERR(hw))
+> +               goto err;
+> +
+> +       of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
+> +
+> +       return;
+> +
+> +err:
+> +       kfree(sai_clk);
+> +}
+> +
+> +CLK_OF_DECLARE(fsl_sai_clk, "fsl,vf610-sai-clock", fsl_sai_clk_setup);
+
+Is there a reason this can't be a platform device driver?
+
