@@ -2,148 +2,191 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF95C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5D3C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB52071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="zDWD8XCA"
+	by mail.kernel.org (Postfix) with ESMTP id 3B547206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLXMPP (ORCPT
+        id S1726272AbfLXMPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:15:15 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38239 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfLXMPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:15:14 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x185so10690372pfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:15:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=cUl5gZioHf+9+6AN9dmbhGHLhNt8/shlwV1E7YstAts=;
-        b=zDWD8XCA/EeC40f+rqUuDAnCbmAAgAgN8grpTLGD/hu+c6oJ0ekyx9F6083vGsPNpB
-         IGrhdkZdQkxUJLQB7IC7MUBKdiAhvr42yCtnEmbLuDVhaVlWU50A+XXkfqUzCfKxLwYd
-         NcWZApcamRuoTETR8c7gHOWeAVehTsmseTXj6LnGvlE98ZW3YWEywJh2onhr62RKIN/O
-         QbWUv3VfPQ9hUaNXtaLLQYhY2txQ0sPDCgcRwZIrZh36FXuwhdnUh56nRBpE8VWMrHr3
-         eko3/wFRsyPKl+dK9FEf1/R7qWEszOxJvMCuzKzRvNgASrlCBXtD9TcieHqLYVVfd8P7
-         LnPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=cUl5gZioHf+9+6AN9dmbhGHLhNt8/shlwV1E7YstAts=;
-        b=CtsR2NPcrPNJe+OsdvuVZ0xJDILc8Mr4n05LqtGESX9a4FXbFcUv07Mw6bSuw+1agp
-         eF7guD4edd9kxLRxtzyXNHT9NJkHQn6MxyeblVnZWnyz9lQT9KXPXcYL3GLwBhD6z06q
-         0/rT4bO0gFebWR7VXRk4DdIb46ih0AlzL0bDHuhT1uaDiFeTr14/HyWwMdAGxmJbBzfj
-         2YXeIqvNQSgCysupQmG8suBWwECFuK2udbH7ZWv28rnvu9V/1Ab3o8wpfBcgbHBV+whN
-         5vnwogRsOeCfwC9+gOrCUcqkD25W0RURqOMpB34W+WIHt3RkoPAKRZFqYTi7aQHPYeei
-         LDuQ==
-X-Gm-Message-State: APjAAAWSG3FvOhy1WUBvf1Zuxj9u6dpUAxP6U823E+D3giHEkzFBBwxc
-        JTNXPnHjaLZxXKFOfhN4E7tmvw==
-X-Google-Smtp-Source: APXvYqxQw1UT4Rk2hWrXeLnplHcgXPOvZ2uVcW7HJIiySYb8+fVviH72PQISJdC4tjd4Z7zmNcXU4Q==
-X-Received: by 2002:a62:868f:: with SMTP id x137mr34816521pfd.228.1577189713974;
-        Tue, 24 Dec 2019 04:15:13 -0800 (PST)
-Received: from [192.168.0.9] (111-255-104-19.dynamic-ip.hinet.net. [111.255.104.19])
-        by smtp.gmail.com with ESMTPSA id j5sm11842535pfn.180.2019.12.24.04.15.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Dec 2019 04:15:13 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH v2 04/10] lib: vdso: get pointer to vdso data from the arch
-Date:   Tue, 24 Dec 2019 20:15:11 +0800
-Message-Id: <D2614EC4-5B80-4846-994D-22730ACD44A1@amacapital.net>
-References: <de5273aa-69dc-8e37-c917-44708257d2ba@c-s.fr>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-In-Reply-To: <de5273aa-69dc-8e37-c917-44708257d2ba@c-s.fr>
-To:     christophe leroy <christophe.leroy@c-s.fr>
-X-Mailer: iPhone Mail (17C54)
+        Tue, 24 Dec 2019 07:15:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:51694 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfLXMPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 07:15:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22D471FB;
+        Tue, 24 Dec 2019 04:15:45 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DB2D3F534;
+        Tue, 24 Dec 2019 04:15:44 -0800 (PST)
+Date:   Tue, 24 Dec 2019 12:15:42 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore
+ full SPE profiling buffer controls
+Message-ID: <20191224121542.GI42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-10-andrew.murray@arm.com>
+ <20191220180657.GD25258@lakrids.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220180657.GD25258@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 20, 2019 at 06:06:58PM +0000, Mark Rutland wrote:
+> On Fri, Dec 20, 2019 at 02:30:16PM +0000, Andrew Murray wrote:
+> > From: Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> > Now that we can save/restore the full SPE controls, we can enable it
+> > if SPE is setup and ready to use in KVM. It's supported in KVM only if
+> > all the CPUs in the system supports SPE.
+> > 
+> > However to support heterogenous systems, we need to move the check if
+> > host supports SPE and do a partial save/restore.
+> 
+> I don't think that it makes sense to support this for heterogeneous
+> systems, given their SPE capabilities and IMP DEF details will differ.
+> 
+> Is there some way we can limit this to homogeneous systems?
 
+No problem, I'll see how to limit this.
 
-> On Dec 24, 2019, at 7:53 PM, christophe leroy <christophe.leroy@c-s.fr> wr=
-ote:
->=20
-> =EF=BB=BF
->=20
->> Le 24/12/2019 =C3=A0 03:27, Andy Lutomirski a =C3=A9crit :
->>> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
->>> <christophe.leroy@c-s.fr> wrote:
->>>=20
->>> On powerpc, __arch_get_vdso_data() clobbers the link register,
->>> requiring the caller to set a stack frame in order to save it.
->>>=20
->>> As the parent function already has to set a stack frame and save
->>> the link register to call the C vdso function, retriving the
->>> vdso data pointer there is lighter.
->> I'm confused.  Can't you inline __arch_get_vdso_data()?  Or is the
->> issue that you can't retrieve the program counter on power without
->> clobbering the link register?
->=20
-> Yes it can be inlined (I did it in V1 https://patchwork.ozlabs.org/patch/1=
-180571/), but you can't do it without clobbering the link register, because t=
-he only way to get the program counter is to do to as if you were calling an=
-other function but you call to the address which just follows where you are,=
- so that it sets LR which the simulated return address which corresponds to t=
-he address following the branch.
->=20
-> static __always_inline
-> const struct vdso_data *__arch_get_vdso_data(void)
-> {
->    void *ptr;
->=20
->    asm volatile(
->        "    bcl    20, 31, .+4;\n"
->        "    mflr    %0;\n"
->        "    addi    %0, %0, __kernel_datapage_offset - (.-4);\n"
->        : "=3Db"(ptr) : : "lr");
->=20
->    return ptr + *(unsigned long *)ptr;
-> }
->=20
->> I would imagine that this patch generates worse code on any
->> architecture with PC-relative addressing modes (which includes at
->> least x86_64, and I would guess includes most modern architectures).
->=20
-> Why ? Powerpc is also using PC-relative addressing for all calls but indir=
-ect calls.
+Thanks,
 
-I mean PC-relative access for data.  The data page is at a constant, known o=
-ffset from the vDSO text.
+Andrew Murray
 
-I haven=E2=80=99t checked how much x86_64 benefits from this, but at least t=
-he non-array fields ought to be accessible with a PC-relative access.
-
-It should be possible to refactor a little bit so that the compiler can stil=
-l see what=E2=80=99s going on.  Maybe your patch actually does this. I=E2=80=
-=99d want to look at the assembly.  This also might not matter much on x86_6=
-4 in particular, since x86_64 can convert a PC-relative address to an absolu=
-te address with a single instruction with no clobbers.
-
-Does power have PC-relative data access?  If so, I wonder if the code can be=
- arranged so that even the array accesses don=E2=80=99t require computing an=
- absolute address at any point.
+> 
+> Thanks,
+> Mark.
+> 
+> > 
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > ---
+> >  arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
+> >  include/kvm/arm_spe.h         |  6 ++++++
+> >  2 files changed, 22 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+> > index 12429b212a3a..d8d857067e6d 100644
+> > --- a/arch/arm64/kvm/hyp/debug-sr.c
+> > +++ b/arch/arm64/kvm/hyp/debug-sr.c
+> > @@ -86,18 +86,13 @@
+> >  	}
+> >  
+> >  static void __hyp_text
+> > -__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> > +__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  {
+> >  	u64 reg;
+> >  
+> >  	/* Clear pmscr in case of early return */
+> >  	ctxt->sys_regs[PMSCR_EL1] = 0;
+> >  
+> > -	/* SPE present on this CPU? */
+> > -	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+> > -						  ID_AA64DFR0_PMSVER_SHIFT))
+> > -		return;
+> > -
+> >  	/* Yes; is it owned by higher EL? */
+> >  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
+> >  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+> > @@ -142,7 +137,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  }
+> >  
+> >  static void __hyp_text
+> > -__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> > +__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> >  {
+> >  	if (!ctxt->sys_regs[PMSCR_EL1])
+> >  		return;
+> > @@ -210,11 +205,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
+> >  	struct kvm_guest_debug_arch *host_dbg;
+> >  	struct kvm_guest_debug_arch *guest_dbg;
+> >  
+> > +	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > +	guest_ctxt = &vcpu->arch.ctxt;
+> > +
+> > +	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> > +
+> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+> >  		return;
+> >  
+> > -	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > -	guest_ctxt = &vcpu->arch.ctxt;
+> >  	host_dbg = &vcpu->arch.host_debug_state.regs;
+> >  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
+> >  
+> > @@ -232,8 +230,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> >  	guest_ctxt = &vcpu->arch.ctxt;
+> >  
+> > -	if (!has_vhe())
+> > -		__debug_restore_spe_nvhe(host_ctxt, false);
+> > +	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> >  
+> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+> >  		return;
+> > @@ -249,19 +246,21 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+> >  
+> >  void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+> >  {
+> > -	/*
+> > -	 * Non-VHE: Disable and flush SPE data generation
+> > -	 * VHE: The vcpu can run, but it can't hide.
+> > -	 */
+> >  	struct kvm_cpu_context *host_ctxt;
+> >  
+> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+> > -	if (!has_vhe())
+> > -		__debug_save_spe_nvhe(host_ctxt, false);
+> > +	if (cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
+> > +						 ID_AA64DFR0_PMSVER_SHIFT))
+> > +		__debug_save_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
+> >  }
+> >  
+> >  void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
+> >  {
+> > +	bool kvm_spe_ready = kvm_arm_spe_v1_ready(vcpu);
+> > +
+> > +	/* SPE present on this vCPU? */
+> > +	if (kvm_spe_ready)
+> > +		__debug_save_spe_context(&vcpu->arch.ctxt, kvm_spe_ready);
+> >  }
+> >  
+> >  u32 __hyp_text __kvm_get_mdcr_el2(void)
+> > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+> > index 48d118fdb174..30c40b1bc385 100644
+> > --- a/include/kvm/arm_spe.h
+> > +++ b/include/kvm/arm_spe.h
+> > @@ -16,4 +16,10 @@ struct kvm_spe {
+> >  	bool irq_level;
+> >  };
+> >  
+> > +#ifdef CONFIG_KVM_ARM_SPE
+> > +#define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
+> > +#else
+> > +#define kvm_arm_spe_v1_ready(v)		(false)
+> > +#endif /* CONFIG_KVM_ARM_SPE */
+> > +
+> >  #endif /* __ASM_ARM_KVM_SPE_H */
+> > -- 
+> > 2.21.0
+> > 
