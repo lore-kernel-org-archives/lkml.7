@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73039C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FDC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA67206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1A7206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577200302;
-	bh=vp4tPUJrPl7NR6sJEfPN8YgDSPqhs4AhjEo0AZjIFiQ=;
+	s=default; t=1577200305;
+	bh=OZpCklLPne7g1i5x7e1Z2ZKguigGZtO5Aw8mBZEF+2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOV0XvdT4hGCYRPYDqK540e9B/fevfCDjEn9vt9WHWwZaxjJ2JKdKLGqfUyWG5Uf2
-	 /wCAzTQpH6cInrWRZm7N6pdpYqdj+J3llP2nh1OQi1dX7VwIDKiV6Ofpkm6eqr3RZ6
-	 EPGdiY0CbQfYpZIDO06YjM3/kV8Cn0EZm6T0/Buw=
+	b=GlQjMFtF6xoIq0x5ow/HMqps8Xpyl73pi3hkqbUsMN61tswmJGQecVM+1YK1TOHWU
+	 5fo0dDmY+99x9azfeiLSScg1Asdf4wv8g4wCsIV7uGAZAIGZYQN6zw8hXP/HYMCPax
+	 /JnL5uVBTfSc5tp2qHBf1BbEWhps87u2p/6SZ6GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLXPLl (ORCPT
+        id S1727225AbfLXPLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 10:11:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
+        Tue, 24 Dec 2019 10:11:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727274AbfLXPLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 10:11:19 -0500
+        id S1727156AbfLXPLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 10:11:08 -0500
 Received: from localhost.localdomain (aaubervilliers-681-1-7-6.w90-88.abo.wanadoo.fr [90.88.129.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E9EE206D3;
-        Tue, 24 Dec 2019 15:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82ADE2071E;
+        Tue, 24 Dec 2019 15:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577200278;
-        bh=vp4tPUJrPl7NR6sJEfPN8YgDSPqhs4AhjEo0AZjIFiQ=;
+        s=default; t=1577200267;
+        bh=OZpCklLPne7g1i5x7e1Z2ZKguigGZtO5Aw8mBZEF+2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BB+CLt8eTfHwejokBwGemcuSggP7MUmPecC/591G0Zwu8TuHU7dRgeQ2mX/H1MXf3
-         MOvp2qzR2tkmYP+ZvK6HR7p21X97GBO25hZeWA2kYu7JquUPERBbRpJEqOYQv+MqYw
-         N1iVSWjPXwTl6X/O6Un55vFIy8QFgND5qlgTX8a0=
+        b=sTBlgmT7jaKABPeLJUUeVtb3/rUruPHBvSvnB1vg2ou9gV/vemhxWM95q3kyIuYpQ
+         igjeDraxk/3FZryhmBJrRfLvuGYwwWIRjFyCVfS4JbgHbvqx7iqvuQgiWhmz3Bqed8
+         Vhr3QEJkuEC1l2YylX2eVZufNkn3CUDdA+ZDJmEM=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [PATCH 21/25] efi/libstub: drop protocol argument from efi_call_proto() macro
-Date:   Tue, 24 Dec 2019 16:10:21 +0100
-Message-Id: <20191224151025.32482-22-ardb@kernel.org>
+Subject: [PATCH 14/25] efi/libstub: avoid protocol wrapper for file I/O routines
+Date:   Tue, 24 Dec 2019 16:10:14 +0100
+Message-Id: <20191224151025.32482-15-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224151025.32482-1-ardb@kernel.org>
 References: <20191224151025.32482-1-ardb@kernel.org>
@@ -57,208 +57,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After refactoring the mixed mode support code, efi_call_proto()
-no longer uses its protocol argument in any of its implementation,
-so let's remove it altogether.
+The EFI file I/O routines built on top of the file I/O firmware
+services are incompatible with mixed mode, so there is no need
+to obfuscate them by using protocol wrappers whose only purpose
+is to hide the mixed mode handling. So let's switch to plain
+indirect calls instead.
+
+This also means we can drop the mixed_mode aliases from the various
+types involved.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm/include/asm/efi.h                    |  3 +--
- arch/arm64/include/asm/efi.h                  |  3 +--
- arch/x86/boot/compressed/eboot.c              | 23 ++++++++-----------
- arch/x86/include/asm/efi.h                    |  6 ++---
- .../firmware/efi/libstub/efi-stub-helper.c    |  6 ++---
- drivers/firmware/efi/libstub/random.c         |  8 +++----
- drivers/firmware/efi/libstub/tpm.c            | 11 ++++-----
- 7 files changed, 25 insertions(+), 35 deletions(-)
+ .../firmware/efi/libstub/efi-stub-helper.c    |  17 ++-
+ include/linux/efi.h                           | 118 ++++++------------
+ 2 files changed, 46 insertions(+), 89 deletions(-)
 
-diff --git a/arch/arm/include/asm/efi.h b/arch/arm/include/asm/efi.h
-index 58e5acc424a0..bdc5288cc643 100644
---- a/arch/arm/include/asm/efi.h
-+++ b/arch/arm/include/asm/efi.h
-@@ -57,8 +57,7 @@ void efi_virtmap_unload(void);
- #define efi_table_attr(table, attr, instance)				\
- 	instance->attr
- 
--#define efi_call_proto(protocol, f, instance, ...)			\
--	instance->f(instance, ##__VA_ARGS__)
-+#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
- 
- struct screen_info *alloc_screen_info(void);
- void free_screen_info(struct screen_info *si);
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index d73693177f31..4bc1e89671ab 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -100,8 +100,7 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
- #define efi_table_attr(table, attr, instance)				\
- 	instance->attr
- 
--#define efi_call_proto(protocol, f, instance, ...)			\
--	instance->f(instance, ##__VA_ARGS__)
-+#define efi_call_proto(inst, func, ...) inst->func(inst, ##__VA_ARGS__)
- 
- #define alloc_screen_info(x...)		&screen_info
- 
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index ec92c4decc86..751fd5fc3367 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -69,27 +69,24 @@ preserve_pci_rom_image(efi_pci_io_protocol_t *pci, struct pci_setup_rom **__rom)
- 	rom->pcilen	= pci->romsize;
- 	*__rom = rom;
- 
--	status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
--				EfiPciIoWidthUint16, PCI_VENDOR_ID, 1,
--				&rom->vendor);
-+	status = efi_call_proto(pci, pci.read, EfiPciIoWidthUint16,
-+				PCI_VENDOR_ID, 1, &rom->vendor);
- 
- 	if (status != EFI_SUCCESS) {
- 		efi_printk("Failed to read rom->vendor\n");
- 		goto free_struct;
- 	}
- 
--	status = efi_call_proto(efi_pci_io_protocol, pci.read, pci,
--				EfiPciIoWidthUint16, PCI_DEVICE_ID, 1,
--				&rom->devid);
-+	status = efi_call_proto(pci, pci.read, EfiPciIoWidthUint16,
-+				PCI_DEVICE_ID, 1, &rom->devid);
- 
- 	if (status != EFI_SUCCESS) {
- 		efi_printk("Failed to read rom->devid\n");
- 		goto free_struct;
- 	}
- 
--	status = efi_call_proto(efi_pci_io_protocol, get_location, pci,
--				&rom->segment, &rom->bus, &rom->device,
--				&rom->function);
-+	status = efi_call_proto(pci, get_location, &rom->segment, &rom->bus,
-+				&rom->device, &rom->function);
- 
- 	if (status != EFI_SUCCESS)
- 		goto free_struct;
-@@ -191,7 +188,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 		return;
- 	}
- 
--	efi_call_proto(apple_properties_protocol, get_all, p, NULL, &size);
-+	efi_call_proto(p, get_all, NULL, &size);
- 	if (!size)
- 		return;
- 
-@@ -204,8 +201,7 @@ static void retrieve_apple_device_properties(struct boot_params *boot_params)
- 			return;
- 		}
- 
--		status = efi_call_proto(apple_properties_protocol, get_all, p,
--					new->data, &size);
-+		status = efi_call_proto(p, get_all, new->data, &size);
- 
- 		if (status == EFI_BUFFER_TOO_SMALL)
- 			efi_call_early(free_pool, new);
-@@ -280,8 +276,7 @@ setup_uga(struct screen_info *si, efi_guid_t *uga_proto, unsigned long size)
- 		pciio = NULL;
- 		efi_call_early(handle_protocol, handle, &pciio_proto, &pciio);
- 
--		status = efi_call_proto(efi_uga_draw_protocol, get_mode, uga,
--					&w, &h, &depth, &refresh);
-+		status = efi_call_proto(uga, get_mode, &w, &h, &depth, &refresh);
- 		if (status == EFI_SUCCESS && (!first_uga || pciio)) {
- 			width = w;
- 			height = h;
-diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-index 1817f350618e..b7cd14e3a634 100644
---- a/arch/x86/include/asm/efi.h
-+++ b/arch/x86/include/asm/efi.h
-@@ -227,10 +227,10 @@ static inline bool efi_is_native(void)
- 	__ret;								\
- })
- 
--#define efi_call_proto(protocol, f, instance, ...)			\
-+#define efi_call_proto(inst, func, ...)					\
- 	(efi_is_native()						\
--		? instance->f(instance, ##__VA_ARGS__)			\
--		: efi64_thunk(instance->mixed_mode.f, instance,	##__VA_ARGS__))
-+		? inst->func(inst, ##__VA_ARGS__)			\
-+		: efi64_thunk(inst->mixed_mode.func, inst, ##__VA_ARGS__))
- 
- #define efi_call_early(f, ...)						\
- 	(efi_is_native()						\
 diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index b715ac6a0c94..48eab7b9d066 100644
+index f91f4fdbe553..9bb74ad4b7fe 100644
 --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
 +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -953,9 +953,7 @@ void *get_efi_config_table(efi_guid_t guid)
+@@ -370,8 +370,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+ 	efi_guid_t info_guid = EFI_FILE_INFO_ID;
+ 	unsigned long info_sz;
  
- void efi_char16_printk(efi_char16_t *str)
+-	status = efi_call_proto(efi_file_handle, open, fh, &h, filename_16,
+-				EFI_FILE_MODE_READ, (u64)0);
++	status = fh->open(fh, &h, filename_16, EFI_FILE_MODE_READ, 0);
+ 	if (status != EFI_SUCCESS) {
+ 		efi_printk(sys_table_arg, "Failed to open file: ");
+ 		efi_char16_printk(sys_table_arg, filename_16);
+@@ -382,8 +381,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+ 	*handle = h;
+ 
+ 	info_sz = 0;
+-	status = efi_call_proto(efi_file_handle, get_info, h, &info_guid,
+-				&info_sz, NULL);
++	status = h->get_info(h, &info_guid, &info_sz, NULL);
+ 	if (status != EFI_BUFFER_TOO_SMALL) {
+ 		efi_printk(sys_table_arg, "Failed to get file info size\n");
+ 		return status;
+@@ -397,8 +395,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+ 		return status;
+ 	}
+ 
+-	status = efi_call_proto(efi_file_handle, get_info, h, &info_guid,
+-				&info_sz, info);
++	status = h->get_info(h, &info_guid, &info_sz, info);
+ 	if (status == EFI_BUFFER_TOO_SMALL) {
+ 		efi_call_early(free_pool, info);
+ 		goto grow;
+@@ -416,12 +413,12 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+ static efi_status_t efi_file_read(efi_file_handle_t *handle,
+ 				  unsigned long *size, void *addr)
  {
--	efi_call_proto(efi_simple_text_output_protocol,
--		       output_string,
--		       efi_table_attr(efi_system_table, con_out,
-+	efi_call_proto(efi_table_attr(efi_system_table, con_out,
- 				      efi_system_table()),
--		       str);
-+		       output_string, str);
- }
-diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
-index 9b30d953d13b..fbd5b5724b19 100644
---- a/drivers/firmware/efi/libstub/random.c
-+++ b/drivers/firmware/efi/libstub/random.c
-@@ -37,7 +37,7 @@ efi_status_t efi_get_random_bytes(unsigned long size, u8 *out)
- 	if (status != EFI_SUCCESS)
- 		return status;
- 
--	return efi_call_proto(efi_rng_protocol, get_rng, rng, NULL, size, out);
-+	return efi_call_proto(rng, get_rng, NULL, size, out);
+-	return efi_call_proto(efi_file_handle, read, handle, size, addr);
++	return handle->read(handle, size, addr);
  }
  
- /*
-@@ -173,7 +173,7 @@ efi_status_t efi_random_get_seed(void)
- 	if (status != EFI_SUCCESS)
+ static efi_status_t efi_file_close(efi_file_handle_t *handle)
+ {
+-	return efi_call_proto(efi_file_handle, close, handle);
++	return handle->close(handle);
+ }
+ 
+ static efi_status_t efi_open_volume(efi_system_table_t *sys_table_arg,
+@@ -432,7 +429,7 @@ static efi_status_t efi_open_volume(efi_system_table_t *sys_table_arg,
+ 	efi_file_handle_t *fh;
+ 	efi_guid_t fs_proto = EFI_FILE_SYSTEM_GUID;
+ 	efi_status_t status;
+-	void *handle = efi_table_attr(efi_loaded_image, device_handle, image);
++	efi_handle_t handle = image->device_handle;
+ 
+ 	status = efi_call_early(handle_protocol, handle,
+ 				&fs_proto, (void **)&io);
+@@ -441,7 +438,7 @@ static efi_status_t efi_open_volume(efi_system_table_t *sys_table_arg,
  		return status;
+ 	}
  
--	status = efi_call_proto(efi_rng_protocol, get_rng, rng, &rng_algo_raw,
-+	status = efi_call_proto(rng, get_rng, &rng_algo_raw,
- 				 EFI_RANDOM_SEED_SIZE, seed->bits);
- 
- 	if (status == EFI_UNSUPPORTED)
-@@ -181,8 +181,8 @@ efi_status_t efi_random_get_seed(void)
- 		 * Use whatever algorithm we have available if the raw algorithm
- 		 * is not implemented.
- 		 */
--		status = efi_call_proto(efi_rng_protocol, get_rng, rng, NULL,
--					 EFI_RANDOM_SEED_SIZE, seed->bits);
-+		status = efi_call_proto(rng, get_rng, NULL,
-+					EFI_RANDOM_SEED_SIZE, seed->bits);
- 
+-	status = efi_call_proto(efi_file_io_interface, open_volume, io, &fh);
++	status = io->open_volume(io, &fh);
  	if (status != EFI_SUCCESS)
- 		goto err_freepool;
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index f6fa1c9de77c..4a0017a181bf 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -77,15 +77,14 @@ void efi_retrieve_tpm2_eventlog(void)
- 	if (status != EFI_SUCCESS)
- 		return;
+ 		efi_printk(sys_table_arg, "Failed to open volume\n");
+ 	else
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 2074b737aa17..14dd08ecf8a7 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -806,40 +806,21 @@ struct efi_fdt_params {
+ 	u32 desc_ver;
+ };
  
--	status = efi_call_proto(efi_tcg2_protocol, get_event_log,
--				tcg2_protocol, version, &log_location,
--				&log_last_entry, &truncated);
-+	status = efi_call_proto(tcg2_protocol, get_event_log, version,
-+				&log_location, &log_last_entry, &truncated);
+-typedef union efi_loaded_image efi_loaded_image_t;
+-
+-union efi_loaded_image {
+-	struct {
+-		u32 revision;
+-		efi_handle_t parent_handle;
+-		efi_system_table_t *system_table;
+-		efi_handle_t device_handle;
+-		void *file_path;
+-		void *reserved;
+-		u32 load_options_size;
+-		void *load_options;
+-		void *image_base;
+-		__aligned_u64 image_size;
+-		unsigned int image_code_type;
+-		unsigned int image_data_type;
+-		efi_status_t ( __efiapi *unload)(efi_handle_t image_handle);
+-	};
+-	struct {
+-		u32 revision;
+-		u32 parent_handle;
+-		u32 system_table;
+-		u32 device_handle;
+-		u32 file_path;
+-		u32 reserved;
+-		u32 load_options_size;
+-		u32 load_options;
+-		u32 image_base;
+-		__aligned_u64 image_size;
+-		unsigned int image_code_type;
+-		unsigned int image_data_type;
+-		u32 unload;
+-	} mixed_mode;
+-};
++typedef struct {
++	u32 revision;
++	efi_handle_t parent_handle;
++	efi_system_table_t *system_table;
++	efi_handle_t device_handle;
++	void *file_path;
++	void *reserved;
++	u32 load_options_size;
++	void *load_options;
++	void *image_base;
++	__aligned_u64 image_size;
++	unsigned int image_code_type;
++	unsigned int image_data_type;
++	efi_status_t ( __efiapi *unload)(efi_handle_t image_handle);
++} efi_loaded_image_t;
  
- 	if (status != EFI_SUCCESS || !log_location) {
- 		version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
--		status = efi_call_proto(efi_tcg2_protocol, get_event_log,
--					tcg2_protocol, version, &log_location,
--					&log_last_entry, &truncated);
-+		status = efi_call_proto(tcg2_protocol, get_event_log, version,
-+					&log_location, &log_last_entry,
-+					&truncated);
- 		if (status != EFI_SUCCESS || !log_location)
- 			return;
+ typedef struct {
+ 	u64 size;
+@@ -852,54 +833,33 @@ typedef struct {
+ 	efi_char16_t filename[1];
+ } efi_file_info_t;
  
+-typedef union efi_file_handle efi_file_handle_t;
+-
+-union efi_file_handle {
+-	struct {
+-		u64 revision;
+-		efi_status_t (__efiapi *open)(efi_file_handle_t *,
+-					      efi_file_handle_t **,
+-					      efi_char16_t *, u64, u64);
+-		efi_status_t (__efiapi *close)(efi_file_handle_t *);
+-		void *delete;
+-		efi_status_t (__efiapi *read)(efi_file_handle_t *,
+-					      unsigned long *, void *);
+-		void *write;
+-		void *get_position;
+-		void *set_position;
+-		efi_status_t (__efiapi *get_info)(efi_file_handle_t *,
+-						  efi_guid_t *, unsigned long *,
+-						  void *);
+-		void *set_info;
+-		void *flush;
+-	};
+-	struct {
+-		u64 revision;
+-		u32 open;
+-		u32 close;
+-		u32 delete;
+-		u32 read;
+-		u32 write;
+-		u32 get_position;
+-		u32 set_position;
+-		u32 get_info;
+-		u32 set_info;
+-		u32 flush;
+-	} mixed_mode;
++typedef struct efi_file_handle efi_file_handle_t;
++
++struct efi_file_handle {
++	u64 revision;
++	efi_status_t (__efiapi *open)(efi_file_handle_t *,
++				      efi_file_handle_t **,
++				      efi_char16_t *, u64, u64);
++	efi_status_t (__efiapi *close)(efi_file_handle_t *);
++	void *delete;
++	efi_status_t (__efiapi *read)(efi_file_handle_t *,
++				      unsigned long *, void *);
++	void *write;
++	void *get_position;
++	void *set_position;
++	efi_status_t (__efiapi *get_info)(efi_file_handle_t *,
++					  efi_guid_t *, unsigned long *,
++					  void *);
++	void *set_info;
++	void *flush;
+ };
+ 
+-typedef union efi_file_io_interface efi_file_io_interface_t;
++typedef struct efi_file_io_interface efi_file_io_interface_t;
+ 
+-union efi_file_io_interface {
+-	struct {
+-		u64 revision;
+-		int (__efiapi *open_volume)(efi_file_io_interface_t *,
+-					    efi_file_handle_t **);
+-	};
+-	struct {
+-		u64 revision;
+-		u32 open_volume;
+-	} mixed_mode;
++struct efi_file_io_interface {
++	u64 revision;
++	int (__efiapi *open_volume)(efi_file_io_interface_t *,
++				    efi_file_handle_t **);
+ };
+ 
+ #define EFI_FILE_MODE_READ	0x0000000000000001
 -- 
 2.20.1
 
