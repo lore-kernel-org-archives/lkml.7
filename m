@@ -2,138 +2,96 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF49C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4BCC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AC920706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="N5E0i1vM"
+	by mail.kernel.org (Postfix) with ESMTP id 09A4C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfLXLxo (ORCPT
+        id S1726258AbfLXLy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:53:44 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35030 "EHLO pegase1.c-s.fr"
+        Tue, 24 Dec 2019 06:54:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:51516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfLXLxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:53:44 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47hvkY1zTbz9tyJk;
-        Tue, 24 Dec 2019 12:53:41 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=N5E0i1vM; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id i2LrwXcch1pS; Tue, 24 Dec 2019 12:53:41 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47hvkY0fjzz9tyJ9;
-        Tue, 24 Dec 2019 12:53:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1577188421; bh=rousui2xUHlcbFiKZoeJNXCVvYL8EIhitr3EE5iNsjU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=N5E0i1vMnuFkhimEvxDKS3DblFYQotEgh76DkZxU2ZMywBHeZ1wv1XGJkJ85Aq/zz
-         YdDhdfSK48oQ6/n/AeOXYl4PbVsfl3G9hf7FTwjwhHF5PJsMiXWubwtYq+yTiLb67r
-         of9z8utFkNutvRL1AHq56r3Ott4nHyaEOuTRYRe0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 510518B783;
-        Tue, 24 Dec 2019 12:53:42 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id FcS-Gk27Ac_t; Tue, 24 Dec 2019 12:53:42 +0100 (CET)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 677C68B782;
-        Tue, 24 Dec 2019 12:53:41 +0100 (CET)
-Subject: Re: [RFC PATCH v2 04/10] lib: vdso: get pointer to vdso data from the
- arch
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
- <02861d0a05c2d48db4e9ee9093e2e2598093c372.1577111366.git.christophe.leroy@c-s.fr>
- <CALCETrW9hsrVVzudvRY22AqakcsrVzqp=SdwOTwW2zRBK+kEaA@mail.gmail.com>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <de5273aa-69dc-8e37-c917-44708257d2ba@c-s.fr>
-Date:   Tue, 24 Dec 2019 12:53:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <CALCETrW9hsrVVzudvRY22AqakcsrVzqp=SdwOTwW2zRBK+kEaA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 191223-0, 23/12/2019), Outbound message
-X-Antivirus-Status: Not-Tested
+        id S1726102AbfLXLy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:54:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C16AF1FB;
+        Tue, 24 Dec 2019 03:54:24 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EA043F534;
+        Tue, 24 Dec 2019 03:54:23 -0800 (PST)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Tejun Heo <tj@kernel.org>, surenb@google.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Doug Smythies <dsmythies@telus.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH] sched/uclamp: Fix a bug in propagating uclamp value in new cgroups
+Date:   Tue, 24 Dec 2019 11:54:04 +0000
+Message-Id: <20191224115405.30622-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When a new cgroup is created, the effective uclamp value wasn't updated
+with a call to cpu_util_update_eff() that looks at the hierarchy and
+update to the most restrictive values.
 
+Fix it by ensuring to call cpu_util_update_eff() when a new cgroup
+becomes online.
 
-Le 24/12/2019 à 03:27, Andy Lutomirski a écrit :
-> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->>
->> On powerpc, __arch_get_vdso_data() clobbers the link register,
->> requiring the caller to set a stack frame in order to save it.
->>
->> As the parent function already has to set a stack frame and save
->> the link register to call the C vdso function, retriving the
->> vdso data pointer there is lighter.
-> 
-> I'm confused.  Can't you inline __arch_get_vdso_data()?  Or is the
-> issue that you can't retrieve the program counter on power without
-> clobbering the link register?
+Without this change, the newly created cgroup uses the default
+root_task_group uclamp values, which is 1024 for both uclamp_{min, max},
+which will cause the rq to to be clamped to max, hence cause the
+system to run at max frequency.
 
-Yes it can be inlined (I did it in V1 
-https://patchwork.ozlabs.org/patch/1180571/), but you can't do it 
-without clobbering the link register, because the only way to get the 
-program counter is to do to as if you were calling another function but 
-you call to the address which just follows where you are, so that it 
-sets LR which the simulated return address which corresponds to the 
-address following the branch.
+The problem was observed on Ubuntu server and was reproduced on Debian
+and Buildroot rootfs.
 
-static __always_inline
-const struct vdso_data *__arch_get_vdso_data(void)
-{
-	void *ptr;
+By default, Ubuntu and Debian create a cpu controller cgroup hierarchy
+and add all tasks to it - which creates enough noise to keep the rq
+uclamp value at max most of the time. Imitating this behavior makes the
+problem visible in Buildroot too which otherwise looks fine since it's a
+minimal userspace.
 
-	asm volatile(
-		"	bcl	20, 31, .+4;\n"
-		"	mflr	%0;\n"
-		"	addi	%0, %0, __kernel_datapage_offset - (.-4);\n"
-		: "=b"(ptr) : : "lr");
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Tested-by: Doug Smythies <dsmythies@telus.net>
+Fixes: 0b60ba2dd342 ("sched/uclamp: Propagate parent clamps")
+Link: https://lore.kernel.org/lkml/000701d5b965$361b6c60$a2524520$@net/
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+---
+ kernel/sched/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-	return ptr + *(unsigned long *)ptr;
-}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00ace89..bfe756dee129 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7100,6 +7100,12 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+ 
+ 	if (parent)
+ 		sched_online_group(tg, parent);
++
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++	/* Propagate the effective uclamp value for the new group */
++	cpu_util_update_eff(css);
++#endif
++
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
 
-> 
-> I would imagine that this patch generates worse code on any
-> architecture with PC-relative addressing modes (which includes at
-> least x86_64, and I would guess includes most modern architectures).
-
-Why ? Powerpc is also using PC-relative addressing for all calls but 
-indirect calls.
-
-As the other arch C VDSO callers are in C and written in such a way that 
-callee is inlined into callers, and as __arch_get_vdso_data() is 
-inlined, it should make no difference, shouldn't it ?
-
-Christophe
