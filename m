@@ -2,131 +2,138 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134ADC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36560C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC27520709
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577156572;
-	bh=4dZHptUocDTk3SMP2Sv3sZ8BavU3pNtaSpQenIapHsM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bEYPLQSMaX2ILt5X4fVl8VPzKK9SmWnSoA3e0Ns5EKwilxxS2mDGucxwz39Bht/tC
-	 BaIpWiCX2EsLE5KKqUdyA2oW0a8OioH69hdYAX8HJhzvKfZIKt60+NAe60UkvwW7Mp
-	 YidlQ1SRHBniMDPdKwwrk27IbTnMY5P4Ivc0mTMo=
+	by mail.kernel.org (Postfix) with ESMTP id 0629520709
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtqZ/SMO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLXDCw (ORCPT
+        id S1726911AbfLXDEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 22:02:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbfLXDCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 22:02:51 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B24206B7;
-        Tue, 24 Dec 2019 03:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577156571;
-        bh=4dZHptUocDTk3SMP2Sv3sZ8BavU3pNtaSpQenIapHsM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KIw6j9qg7Ahaw+bH3ikbPbfqAcxtMxiS2GED2BhbCiix+4T5HZu6btbxvQT/mZA7K
-         aJSd0SXB1C804B6pCGWWIrPoCNlYbzOZneiNYO5b9p29TD9RRVUkMDmA6MKRQTcer6
-         AtEV6BvJQUzoyo3P5v/Fr7Ru0qThqqQ4CL8ZdQQg=
-Received: by wens.tw (Postfix, from userid 1000)
-        id E77AF5FC87; Tue, 24 Dec 2019 11:02:47 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH RESEND v2] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
-Date:   Tue, 24 Dec 2019 11:02:39 +0800
-Message-Id: <20191224030239.5656-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 23 Dec 2019 22:04:23 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36953 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfLXDEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 22:04:23 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so9262495ioc.4;
+        Mon, 23 Dec 2019 19:04:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cYZhtmD+9NUOzLwE4DFDXgTJzhRtHeQxHMYH/iS7zTg=;
+        b=GtqZ/SMOo36thoZU+8R+cZitg8ycgYRxrL/6kquEe+itVLv6GaDb5VQsU3/P1YDwjp
+         QCCISU1WVoaJ43Cfd/tTKWlxLEGflSIbVzYl7GRlkofOZWL7Yz0oTl8XJeglS4PWJ/Dk
+         vmy0XuFySBPplrSQ9z/jxURdiX9f4IBn7oAX/CV7Z23Dq+CVnEcgVN9qBA9Q1lNW6EPa
+         vH4v1sxMW653eZZnVlaX8ZX0QltvW7YOHDsHRIfHMTFtx/46GthozQlIIBzjJqxVs6WO
+         6QgQgTCCYdvVJCEIbPajbdCzndjGcPMJymJfD1uyzC5vvh58wCdOaFyvKNQfFyroB3yF
+         nHxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYZhtmD+9NUOzLwE4DFDXgTJzhRtHeQxHMYH/iS7zTg=;
+        b=VnVLMyoofA3kclaNXGCaJUrm+wK9l+tmGiktep+NkxyDXsjz8X6SydDUWMpCmeSY2W
+         Qr+jBFw79dCB3R5Y7YQp2Kolid15H1thzjzr0zjzJCbYN/V+/yp90XZv+S6v0HhXwJ6r
+         FEjQVUDGM57HMB9rc8oaWv8k07luWYz6NmMpEbDOlWAAmutGsCAGZ1R4F1emJ1W6AMci
+         yozyniUlpCLzIt9G+gQZnU4ZoSj5cHWl2qEMMEaz+EzaV4Me91WIyXUCzRhM6hi1G6ZU
+         xTL/A9tj0vuh2aoUKuT57P0Gvsr4qGtQVu/r/rULGwtOu46S/4UpAxSWMo5sdC54uGHB
+         9Ssg==
+X-Gm-Message-State: APjAAAU7NMKdn4n5wwwhGen4x4L5ABU7vWW2E1SZKbHY4hIhjdgoQnPg
+        /KO6ajFGBKzwa+MfXg9HVhbBXwaeJrQqYmRvQBs=
+X-Google-Smtp-Source: APXvYqxNJpyvPf0M59389mxT+myYRm4xzwa48U6muH+RL2eRVXW4c6c+uQjL6n2XIeh+OAp91AJnAC/BvyEUaNL19HI=
+X-Received: by 2002:a6b:5904:: with SMTP id n4mr23268086iob.9.1577156662858;
+ Mon, 23 Dec 2019 19:04:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191220024936.GA380394@chrisdown.name> <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
+ <20191220121615.GB388018@chrisdown.name> <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
+ <20191220164632.GA26902@bombadil.infradead.org> <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
+ <20191220195025.GA9469@bombadil.infradead.org> <20191223204551.GA272672@chrisdown.name>
+In-Reply-To: <20191223204551.GA272672@chrisdown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 Dec 2019 05:04:11 +0200
+Message-ID: <CAOQ4uxjm5JMvfbi4xa3yaDwuM+XpNOSDrbVsHvJtkms00ZBnAg@mail.gmail.com>
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Hugh Dickins <hughd@google.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "zhengbin (A)" <zhengbin13@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+> The slab i_ino recycling approach works somewhat, but is unfortunately neutered
+> quite a lot by the fact that slab recycling is per-memcg. That is, replacing
+> with recycle_or_get_next_ino(old_ino)[0] for shmfs and a few other trivial
+> callsites only leads to about 10% slab reuse, which doesn't really stem the
+> bleeding of 32-bit inums on an affected workload:
+>
+>      # tail -5000 /sys/kernel/debug/tracing/trace | grep -o 'recycle_or_get_next_ino:.*' | sort | uniq -c
+>          4454 recycle_or_get_next_ino: not recycled
+>           546 recycle_or_get_next_ino: recycled
+>
 
-max_pfn, as set in arch/arm/mm/init.c:
+Too bad..
+Maybe recycled ino should be implemented all the same because it is simple
+and may improve workloads that are not so MEMCG intensive.
 
-    static void __init find_limits(unsigned long *min,
-				   unsigned long *max_low,
-				   unsigned long *max_high)
-    {
-	    *max_low = PFN_DOWN(memblock_get_current_limit());
-	    *min = PFN_UP(memblock_start_of_DRAM());
-	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
-    }
+> Roman (who I've just added to cc) tells me that currently we only have
+> per-memcg slab reuse instead of global when using CONFIG_MEMCG. This
+> contributes fairly significantly here since there are multiple tasks across
+> multiple cgroups which are contributing to the get_next_ino() thrash.
+>
+> I think this is a good start, but we need something of a different magnitude in
+> order to actually solve this problem with the current slab infrastructure. How
+> about something like the following?
+>
+> 1. Add get_next_ino_full, which uses whatever the full width of ino_t is
+> 2. Use get_next_ino_full in tmpfs (et al.)
 
-with memblock_end_of_DRAM() pointing to the next byte after DRAM. As
-such, max_pfn points to the PFN after the end of DRAM.
+I would prefer that filesystems making heavy use of get_next_ino, be converted
+to use a private ino pool per sb:
 
-Thus when using max_pfn to check DMA masks, we should subtract one
-when checking DMA ranges against it.
+ino_pool_create()
+ino_pool_get_next()
 
-Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
-__dma_supported()") fixed the same issue, but missed this spot.
+flags to ino_pool_create() can determine the desired ino range.
+Does the Facebook use case involve a single large tmpfs or many
+small ones? I would guess the latter and therefore we are trying to solve
+a problem that nobody really needs to solve (i.e. global efficient ino pool).
 
-This issue was found while working on the sun4i-csi v4l2 driver on the
-Allwinner R40 SoC. On Allwinner SoCs, DRAM is offset at 0x40000000,
-and we are starting to use of_dma_configure() with the "dma-ranges"
-property in the device tree to have the DMA API handle the offset.
+> 3. Add a mount option to tmpfs (et al.), say `32bit-inums`, which people can
+>     pass if they want the 32-bit inode numbers back. This would still allow
+>     people who want to make this tradeoff to use xino.
 
-In this particular instance, dma-ranges was set to the same range as
-the actual available (2 GiB) DRAM. The following error appeared when
-the driver attempted to allocate a buffer:
+inode32|inode64 (see man xfs(5)).
 
-    sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
-    covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
-    sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
+> 4. (If you like) Also add a CONFIG option to disable this at compile time.
+>
 
-Fixing the off-by-one error makes things work.
+I Don't know about disable, but the default mode for tmpfs (inode32|inode64)
+might me best determined by CONFIG option, so distro builders could decide
+if they want to take the risk of breaking applications on tmpfs.
 
-Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
-Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
-Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
+But if you implement per sb ino pool, maybe inode64 will no longer be
+required for your use case?
 
-It's been close to two weeks since I sent this. I wasn't sure if I
-reached the right maintainers, so I'm resending this to more people.
-
-Changes since v1:
-
-  - correct max_pfn offset in the correct place.
-
----
- arch/arm/mm/dma-mapping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index e822af0d9219..9414d72f664b 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -221,7 +221,7 @@ EXPORT_SYMBOL(arm_coherent_dma_ops);
- 
- static int __dma_supported(struct device *dev, u64 mask, bool warn)
- {
--	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
-+	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
- 
- 	/*
- 	 * Translate the device's DMA mask to a PFN limit.  This
--- 
-2.24.1
-
+Thanks,
+Amir.
