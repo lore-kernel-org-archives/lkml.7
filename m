@@ -2,226 +2,104 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A3EC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F42C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EF1206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC2F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="xo/+5mAt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H4fJE31Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfLXGtn (ORCPT
+        id S1726214AbfLXGvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:49:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36114 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbfLXGtm (ORCPT
+        Tue, 24 Dec 2019 01:51:08 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45150 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726047AbfLXGvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:49:42 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so19005688wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Dec 2019 22:49:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unipv-it.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Du3w8o4be0YrPPaCkoujjN4fjZHuiFhvUdHnNG8GiXA=;
-        b=xo/+5mAtkGrSMXmN3dzVYXFvFKdi79jVzFHyAR1q7tGeErbGpJuKOjy3KF53yUe6WP
-         wCtoeKrw+xm7PO+8U4jfxyCvO44yw1/TlLGPWZgW3q3JFzu81zqarZyAYielqlGlXIu7
-         iKqI2kw/JzsJ9vJVdlf7+L6IjAq+8PYGaqrefRz4tqHuMBbK0txIfWL0AQnExpOPoAQq
-         RbNSpnPWpirQY2QojFrv4SDseYki/2IEK0GgeF3gO3mrRrgRyY0IvZ0yFLKInyt4sF6W
-         JzFSykGv4RD5IAz2jqO45seMAre//6RSgEzy5ykeOs56jPa22uSjIAyzI19SRGTqTaB6
-         snzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Du3w8o4be0YrPPaCkoujjN4fjZHuiFhvUdHnNG8GiXA=;
-        b=G/JubrJLSOF3QgsI7fxyDXt+sldzAuhe0vcSzDwggWNFPPFR/2QY8Q6nJ8OxKdcZdo
-         Q85mOO4oDLbGSyF+8LFCX3KFUQsUOzN26i7IsHUQxOGJaOlxn/ngyEpR0YsOd4Qujyoo
-         dBWjK37Bf4VPRRoITF/1h2pncYrkECB55HNtjN95h3jPi/icDAumogqa+imAYTyGLXll
-         L0KqLhNpzI6TVcnOirO5Cy/WwjTFDVXuvOksmJ1pDm5SoXz/DPooROGjKOQm9Y4W3DdM
-         XYwrWfgp3Pm0FaKVmWi2x7gsXO3k5SDqhSyoliZ24jGHOUmdGgoxismb1pxEDV06gWix
-         cdTw==
-X-Gm-Message-State: APjAAAV4zdaU7RbXGjvMZVmmtQ9Rvfse+91STqhyD/2ZzUPkLLhSFMha
-        XCAgUEcdWNgE8J3tsAvm3RcuIQ==
-X-Google-Smtp-Source: APXvYqzK4i70c8JMuCt/z/08xxUl65emDBiqKV0XE4PJ2lO+Y0Oxfarqmn4UeP3nUVE4Oj2YCmqBYw==
-X-Received: by 2002:a5d:5307:: with SMTP id e7mr34577062wrv.146.1577170179120;
-        Mon, 23 Dec 2019 22:49:39 -0800 (PST)
-Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
-        by smtp.gmail.com with ESMTPSA id d16sm25168758wrg.27.2019.12.23.22.49.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 22:49:38 -0800 (PST)
-Message-ID: <e3dc2a3e0221c0a0beb91172ba2bff1f6acc0cb7.camel@unipv.it>
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-From:   Andrea Vai <andrea.vai@unipv.it>
-To:     Ming Lei <ming.lei@redhat.com>, "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Tue, 24 Dec 2019 07:49:37 +0100
-In-Reply-To: <20191224012707.GA13083@ming.t460p>
-References: <20191211213316.GA14983@ming.t460p>
-         <f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it>
-         <20191218094830.GB30602@ming.t460p>
-         <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
-         <20191223130828.GA25948@ming.t460p> <20191223162619.GA3282@mit.edu>
-         <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
-         <20191223172257.GB3282@mit.edu>
-         <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
-         <20191223195301.GC3282@mit.edu> <20191224012707.GA13083@ming.t460p>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 24 Dec 2019 01:51:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577170265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=egW37jyR5y3OPQMHtqUo17115j/TrlvZWF1f6KXPyvo=;
+        b=H4fJE31ZZ+71RM8Zoo/R34ThN8QQiNh4VW+o3DZviqwTQtdBtOj3QF30bVFszUKtbfMR8b
+        Ox08TpNsawBh4BLt6PgJeiuiiUNeBuC1znuvEUjrOVEX9eVYB383HzjOIfO5ndSk4Uy/DN
+        IulkTvEVFWyvTwSVsGuNGrcqjgjgG5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-QuKkB-hxNOinjTfGhtrxTg-1; Tue, 24 Dec 2019 01:51:02 -0500
+X-MC-Unique: QuKkB-hxNOinjTfGhtrxTg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05906800D53;
+        Tue, 24 Dec 2019 06:51:01 +0000 (UTC)
+Received: from [10.72.12.236] (ovpn-12-236.pek2.redhat.com [10.72.12.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFC5060C05;
+        Tue, 24 Dec 2019 06:50:49 +0000 (UTC)
+Subject: Re: [PATCH RESEND v2 15/17] KVM: selftests: Add dirty ring buffer
+ test
+To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dr David Alan Gilbert <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191221020445.60476-1-peterx@redhat.com>
+ <20191221020445.60476-5-peterx@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b0dc3d30-7fa5-3896-6905-9b1cb51d8d6c@redhat.com>
+Date:   Tue, 24 Dec 2019 14:50:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191221020445.60476-5-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il giorno mar, 24/12/2019 alle 09.27 +0800, Ming Lei ha scritto:
-> Hi Ted,
-> 
-> On Mon, Dec 23, 2019 at 02:53:01PM -0500, Theodore Y. Ts'o wrote:
-> > On Mon, Dec 23, 2019 at 07:45:57PM +0100, Andrea Vai wrote:
-> > > basically, it's:
-> > > 
-> > >   mount UUID=$uuid /mnt/pendrive
-> > >   SECONDS=0
-> > >   cp $testfile /mnt/pendrive
-> > >   umount /mnt/pendrive
-> > >   tempo=$SECONDS
-> > > 
-> > > and it copies one file only. Anyway, you can find the whole
-> script
-> > > attached.
-> > 
-> > OK, so whether we are doing the writeback at the end of cp, or
-> when
-> > you do the umount, it's probably not going to make any
-> difference.  We
-> > can get rid of the stack trace in question by changing the script
-> to
-> > be basically:
-> > 
-> > mount UUID=$uuid /mnt/pendrive
-> > SECONDS=0
-> > rm -f /mnt/pendrive/$testfile
-> > cp $testfile /mnt/pendrive
-> > umount /mnt/pendrive
-> > tempo=$SECONDS
-> > 
-> > I predict if you do that, you'll see that all of the time is spent
-> in
-> > the umount, when we are trying to write back the file.
-> > 
-> > I really don't think then this is a file system problem at
-> all.  It's
-> > just that USB I/O is slow, for whatever reason.  We'll see a stack
-> > trace in the writeback code waiting for the I/O to be completed,
-> but
-> > that doesn't mean that the root cause is in the writeback code or
-> in
-> > the file system which is triggering the writeback.
-> 
-> Wrt. the slow write on this usb storage, it is caused by two
-> writeback
-> path, one is the writeback wq, another is from ext4_release_file()
-> which
-> is triggered from exit_to_usermode_loop().
-> 
-> When the two write path is run concurrently, the sequential write
-> order
-> is broken, then write performance drops much on this particular usb
-> storage.
-> 
-> The ext4_release_file() should be run from read() or write() syscall
-> if
-> Fedora 30's 'cp' is implemented correctly. IMO, it isn't expected
-> behavior
-> for ext4_release_file() to be run thousands of times when just
-> running 'cp' once, see comment of ext4_release_file():
-> 
-> 	/*
-> 	 * Called when an inode is released. Note that this is
-> different
-> 	 * from ext4_file_open: open gets called at every open, but
-> release
-> 	 * gets called only when /all/ the files are closed.
-> 	 */
-> 	static int ext4_release_file(struct inode *inode, struct file
-> *filp)
-> 
-> > 
-> > I suspect the next step is use a blktrace, to see what kind of I/O
-> is
-> > being sent to the USB drive, and how long it takes for the I/O to
-> > complete.  You might also try to capture the output of "iostat -x
-> 1"
-> > while the script is running, and see what the difference might be
-> > between a kernel version that has the problem and one that
-> doesn't,
-> > and see if that gives us a clue.
-> 
-> That isn't necessary, given we have concluded that the bad write
-> performance is caused by broken write order.
-> 
-> > 
-> > > > And then send me
-> > > btw, please tell me if "me" means only you or I cc: all the
-> > > recipients, as usual
-> > 
-> > Well, I don't think we know what the root cause is.  Ming is
-> focusing
-> > on that stack trace, but I think it's a red herring.....  And if
-> it's
-> > not a file system problem, then other people will be best suited
-> to
-> > debug the issue.
-> 
-> So far, the reason points to the extra writeback path from
-> exit_to_usermode_loop().
-> If it is not from close() syscall, the issue should be related with
-> file reference
-> count. If it is from close() syscall, the issue might be in 'cp''s
-> implementation.
-> 
-> Andrea, please collect the following log or the strace log requested
-> by Ted, then
-> we can confirm if the extra writeback is from close() or
-> read/write() syscall:
-> 
-> # pass PID of 'cp' to this script
-> #!/bin/sh
-> PID=$1
-> /usr/share/bcc/tools/trace -P $PID  -t -C \
->     't:block:block_rq_insert "%s %d %d", args->rwbs, args->sector,
-> args->nr_sector' \
->     't:syscalls:sys_exit_close ' \
->     't:syscalls:sys_exit_read ' \
->     't:syscalls:sys_exit_write '
 
-Sorry if I am a bit confused, should I run it on ext4 or xfs, or
-doesn't matter? What if I get it on a "fast" run? Should I throw it
-away and try again until I get a slow one, or it doesn't matter?
+On 2019/12/21 =E4=B8=8A=E5=8D=8810:04, Peter Xu wrote:
+> Add the initial dirty ring buffer test.
+>
+> The current test implements the userspace dirty ring collection, by
+> only reaping the dirty ring when the ring is full.
+>
+> So it's still running asynchronously like this:
 
-Thanks,
-Andrea
+
+I guess you meant "synchronously" here.
+
+Thanks
+
+
+>
+>              vcpu                             main thread
+>
+>    1. vcpu dirties pages
+>    2. vcpu gets dirty ring full
+>       (userspace exit)
+>
+>                                         3. main thread waits until full
+>                                            (so hardware buffers flushed=
+)
+>                                         4. main thread collects
+>                                         5. main thread continues vcpu
+>
+>    6. vcpu continues, goes back to 1
 
