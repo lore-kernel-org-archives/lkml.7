@@ -6,157 +6,119 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CECC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13466C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3E7206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 09:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF056206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:01:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5SwwLJ7"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="f86ZQuCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLXJwe (ORCPT
+        id S1726178AbfLXKBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:52:34 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38799 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfLXJwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 04:52:34 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so19376559wrh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 01:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N3HBmWELJ09NCKU7N1TUdxqAH5rNCluFgs2bN3EZVaM=;
-        b=a5SwwLJ7wdPE0l7OEStq9kLfrybjTtNM9B2ahwATRWhdqk04fohhlIqkQG74hqA6Fz
-         +Aj3921DFogeuC7csDkXVEnZLXIELKVyi2PCE6kUhBRPU1MiHjAUkssRhn3TS+AD2OtF
-         yUC7UPi9dtY344RFgjAcsU1QApLLOGY88dg+5N4uAR7UVqv73CakDc+k23Mu6MHOerXd
-         nB4fUsX7i7c7BRFdJrolF1lFVqq1cTeoOCVtCFfw4L5KAXodgx7iT0vMznczToxy8fk6
-         cKbCZCKI13lqNKQJj4CbsWEdfWTyhIw/ddiJsj3sRRwU8VGE2TKbaJ56MNhVXJe2KhGG
-         RGug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N3HBmWELJ09NCKU7N1TUdxqAH5rNCluFgs2bN3EZVaM=;
-        b=Qwr5OIMsd2QNwAjBLoUo3/Ll1DUzXIakacWDNPpcGtyzy1WIVgOJgKLYUvODU/GPbW
-         DiTY+9yAq8sOyCudfsA8uWJVql82NdryZDrLUHWN7xtfjyeJScsE5jSJkpPeHkNXktUJ
-         kkgixgduOCgaHUuOcNj8ZamY723zYsezWVtA6OIGq0z+5yWdUFgKeDMojOJ9z7k0no1Q
-         +C3cZxGYFLnzhTp61CzCmAQs7wT3oqiuwURetormwAXVOZ23FsAjtO4L+Ufftc7559sT
-         nJqBOfS4rbwEi9w2NHWmqrG+ubHnatVYbrfLJsw43YDu7IJmM2BJiR/8FPKa6D43VflR
-         qJuQ==
-X-Gm-Message-State: APjAAAX5GArCQijiYDn/wxrCIALh9ns3Em5X1fOyufUz+VfkZBJHED7I
-        U4VWJbRbWoA0C0WnNAppgYW0qQ==
-X-Google-Smtp-Source: APXvYqx8OEXpOqgIwYiNou/aJcyi8NyZ0Zz3lhggLDmM2qFtxsFeWbTTbrXCsfnE1VKXx1IcnvMZoQ==
-X-Received: by 2002:adf:ee92:: with SMTP id b18mr36084857wro.281.1577181152190;
-        Tue, 24 Dec 2019 01:52:32 -0800 (PST)
-Received: from apalos.home (ppp-94-64-118-170.home.otenet.gr. [94.64.118.170])
-        by smtp.gmail.com with ESMTPSA id v14sm23394678wrm.28.2019.12.24.01.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 01:52:31 -0800 (PST)
-Date:   Tue, 24 Dec 2019 11:52:29 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
-Message-ID: <20191224095229.GA24310@apalos.home>
-References: <20191224010103.56407-1-mcroce@redhat.com>
+        Tue, 24 Dec 2019 05:01:40 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:57232 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfLXKBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:01:39 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 7C694160066
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:01:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1577181695; bh=y/0eB+P/HM8JllnIK/xIajMqq2tyxId8DnWHVfKJaT4=;
+        h=Subject:From:To:Cc:Date:From;
+        b=f86ZQuCicfvx6j+f1TNB4PD2uD/yjEXJHCHvNO8TQ6HnZmJWrr0KdH7xjtap/TM8Q
+         m3zsHOFaou9UEyCRX5QULbA2Rkb+kGj2Ts/+EdQizngounDTYwLOTvFhymLr8ETIPe
+         j3RfrRAstPrXWI6dR5nmrMmHR5iKOj4VFQPycj8in2JsJqlV5gPB+CdlVM/RNqIuBW
+         G2APoNtXHH3pIoWES0VfO6QYWAfG2sOe5+9661/jF9+8PhJd5AdvUM7qWVft30g81X
+         l+D3YAlNcJR2j1X+xBKfdclzzITtRHjYQJB0axC5g5t06+uO1hOq5CFTyyVlp/lDr1
+         yTBWw7wLtnGVA==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 47hsF907ZKz6tm7;
+        Tue, 24 Dec 2019 11:01:32 +0100 (CET)
+Message-ID: <1a322df842e0dc5646ef1198ea0bbe668d94646e.camel@posteo.de>
+Subject: Re: SCHED_DEADLINE with CPU affinity
+From:   Philipp Stanner <stanner@posteo.de>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Hagen Pfeifer <hagen@jauu.net>,
+        mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Date:   Tue, 24 Dec 2019 11:03:29 +0100
+In-Reply-To: <20191120085024.GB23227@localhost.localdomain>
+References: <1574202052.1931.17.camel@posteo.de>
+         <20191120085024.GB23227@localhost.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224010103.56407-1-mcroce@redhat.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:
-> This patches change the memory allocator of mvpp2 from the frag allocator to
-> the page_pool API. This change is needed to add later XDP support to mvpp2.
-> 
-> The reason I send it as RFC is that with this changeset, mvpp2 performs much
-> more slower. This is the tc drop rate measured with a single flow:
-> 
-> stock net-next with frag allocator:
-> rx: 900.7 Mbps 1877 Kpps
-> 
-> this patchset with page_pool:
-> rx: 423.5 Mbps 882.3 Kpps
-> 
-> This is the perf top when receiving traffic:
-> 
->   27.68%  [kernel]            [k] __page_pool_clean_page
+On Wed, 20.11.2019, 09:50 +0100 Juri Lelli wrote:
+> Hi Philipp,
 
-This seems extremly high on the list. 
+Hey Juri,
 
->    9.79%  [kernel]            [k] get_page_from_freelist
->    7.18%  [kernel]            [k] free_unref_page
->    4.64%  [kernel]            [k] build_skb
->    4.63%  [kernel]            [k] __netif_receive_skb_core
->    3.83%  [mvpp2]             [k] mvpp2_poll
->    3.64%  [kernel]            [k] eth_type_trans
->    3.61%  [kernel]            [k] kmem_cache_free
->    3.03%  [kernel]            [k] kmem_cache_alloc
->    2.76%  [kernel]            [k] dev_gro_receive
->    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
->    2.68%  [kernel]            [k] page_frag_free
->    1.83%  [kernel]            [k] inet_gro_receive
->    1.74%  [kernel]            [k] page_pool_alloc_pages
->    1.70%  [kernel]            [k] __build_skb
->    1.47%  [kernel]            [k] __alloc_pages_nodemask
->    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
->    1.29%  [kernel]            [k] tcf_action_exec
-> 
-> I tried Ilias patches for page_pool recycling, I get an improvement
-> to ~1100, but I'm still far than the original allocator.
+thanks so far; we indeed could make it work with exclusive CPU-sets.
 
-Can you post the recycling perf for comparison?
+On 19/11/19 23:20, Philipp Stanner wrote:
+> 
+> > from implementing our intended architecture.
+> > 
+> > Now, the questions we're having are:
+> > 
+> >    1. Why does the kernel do this, what is the problem with
+> > scheduling with
+> >       SCHED_DEADLINE on a certain core? In contrast, how is it
+> > handled when
+> >       you have single core systems etc.? Why this artificial
+> > limitation?
+> 
+> Please have also a look (you only mentioned manpage so, in case you
+> missed it) at
+> 
+> https://elixir.bootlin.com/linux/latest/source/Documentation/scheduler/sched-deadline.rst#L667
+> 
+> and the document in general should hopefully give you the answer
+> about
+> why we need admission control and current limitations regarding
+> affinities.
+> 
+> >    2. How can we possibly implement this? We don't want to use
+> > SCHED_FIFO,
+> >       because out-of-control tasks would freeze the entire
+> > container.
+> 
+> I experimented myself a bit with this kind of setup in the past and I
+> think I made it work by pre-configuring exclusive cpusets (similarly
+> as
+> what detailed in the doc above) and then starting containers inside
+> such
+> exclusive sets with podman run --cgroup-parent option.
+> 
+> I don't have proper instructions yet for how to do this (plan to put
+> them together soon-ish), but please see if you can make it work with
+> this hint.
 
-> 
-> Any idea on why I get such bad numbers?
+I fear I have not understood quite well yet why this
+"workaround" leads to (presumably) the same results as set_affinity
+would. From what I have read, I understand it as follows: For
+sched_dead, admission control tries to guarantee that the requested
+policy can be executed. To do so, it analyzes the current workload
+situation, taking especially the number of cores into account.
 
-Nop but it's indeed strange
+Now, with a pre-configured set, the kernel knows which tasks will run
+on which core, therefore it's able to judge wether a process can be
+deadline scheduled or not. But when using the default way, you could
+start your processes as SCHED_OTHER, set SCHED_DEADLINE as policy and
+later many of them could suddenly call set_affinity, desiring to run on
+the same core, therefore provoking collisions.
 
-> 
-> Another reason to send it as RFC is that I'm not fully convinced on how to
-> use the page_pool given the HW limitation of the BM.
+Is my understanding of the situation correct?
 
-I'll have a look right after holidays
+Merry Christmas,
+P.
 
-> 
-> The driver currently uses, for every CPU, a page_pool for short packets and
-> another for long ones. The driver also has 4 rx queue per port, so every
-> RXQ #1 will share the short and long page pools of CPU #1.
-> 
-
-I am not sure i am following the hardware config here
-
-> This means that for every RX queue I call xdp_rxq_info_reg_mem_model() twice,
-> on two different page_pool, can this be a problem?
-> 
-> As usual, ideas are welcome.
-> 
-> Matteo Croce (2):
->   mvpp2: use page_pool allocator
->   mvpp2: memory accounting
-> 
->  drivers/net/ethernet/marvell/Kconfig          |   1 +
->  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   7 +
->  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 142 +++++++++++++++---
->  3 files changed, 125 insertions(+), 25 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
-Cheers
-/Ilias
