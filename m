@@ -2,96 +2,123 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D09CC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7BFC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433F5206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:56:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D2s5SS70"
+	by mail.kernel.org (Postfix) with ESMTP id 69A2320706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfLXF4X (ORCPT
+        id S1726084AbfLXGOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 00:56:23 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44992 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbfLXF4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:56:22 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577166982; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=N78ejg9rqJGWEVBDpiZaJ8zMo/6RK3GuNyY8fajolbU=;
- b=D2s5SS70aEftc8TnUTzXCQL9MqB1afoEiLj7GyOkEgk2mU+gcKPIbkqiQeUMlFTrAndssDBc
- HXmHX09TUzhU6geBZ/82tjgD9zQcm3s/LZhAf7AqLAtgyUqyZgllUvC6Q3mj3xIUj/Iy3uBL
- guEIqTR4Ivaz1JJKEwR83a6H8ZI=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e01a882.7fc08109fbc8-smtp-out-n01;
- Tue, 24 Dec 2019 05:56:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CA6E0C4479F; Tue, 24 Dec 2019 05:56:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84677C433CB;
-        Tue, 24 Dec 2019 05:56:17 +0000 (UTC)
+        Tue, 24 Dec 2019 01:14:47 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8167 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726009AbfLXGOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 01:14:46 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A384698883F1BF9557CF;
+        Tue, 24 Dec 2019 14:14:42 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Dec 2019
+ 14:14:35 +0800
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+To:     Auger Eric <eric.auger@redhat.com>, Marc Zyngier <maz@kernel.org>
+CC:     <andre.przywara@arm.com>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+ <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+ <c084aa29c029f97cdfb1b5dc9e6b29ac@www.loen.fr>
+ <1225d839-3cf7-d513-778e-698e12e94875@huawei.com>
+ <12a1e25b-617d-6b04-6a5a-4c67a39565a5@redhat.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <5df2ebf7-f1e0-5d55-cdae-15b2fd1675d6@huawei.com>
+Date:   Tue, 24 Dec 2019 14:14:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <12a1e25b-617d-6b04-6a5a-4c67a39565a5@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 13:56:17 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] phy: qcom-qmp: remove duplicate powerdown write
-In-Reply-To: <20191223143046.3376299-3-vkoul@kernel.org>
-References: <20191223143046.3376299-1-vkoul@kernel.org>
- <20191223143046.3376299-3-vkoul@kernel.org>
-Message-ID: <e4de5d5bc0a1ddc9117055499b143bf3@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-23 22:30, Vinod Koul wrote:
-> We already write to QPHY_POWER_DOWN_CONTROL in qcom_qmp_phy_com_init()
-> before invoking qcom_qmp_phy_configure() so remove the duplicate write.
+On 2019/12/24 12:45, Auger Eric wrote:
+> Hi Zenghui,
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> On 12/24/19 3:52 AM, Zenghui Yu wrote:
+>> Hi Marc, Eric,
+>>
+>> On 2019/12/23 22:07, Marc Zyngier wrote:
+>>> Hi Zenghui,
+>>>
+>>> On 2019-12-23 13:43, Zenghui Yu wrote:
+>>>> I noticed there is no userspace access callbacks for GICR_PENDBASER,
+>>>> so this patch will make the PTZ field also 'Read As Zero' by userspace.
+>>>> Should we consider adding a uaccess_read callback for GICR_PENDBASER
+>>>> which just returns the unchanged vgic_cpu->pendbaser to userspace?
+>>>> (Though this is really not a big deal. We now always emulate the PTZ
+>>>> field to guest as RAZ. And 'vgic_cpu->pendbaser & GICR_PENDBASER_PTZ'
+>>>> only indicates whether KVM will optimize the LPI enabling process,
+>>>> where Read As Zero indicates never optimize..)
+>>>
+>>> I don't think adding a userspace accessor would help much. All this
+>>> bit tells userspace is that the guest has programmed a zero filled
+>>> table. On restore, we'd avoid a rescan of the table if there was
+>>> no LPI mapped.
+>>
+>> Yes, I agree.
+>>
+>>> And thinking of it, this fixes a bug for non-Linux guests: If you write
+>>> PTZ=1, we never clear it. Which means that if userspace saves and
+>>> restores
+>>> PENDBASER with PTZ set, we'll never restore the pending bits, which is
+>>> pretty bad (see vgic_enable_lpis()).
+>>
+>> But I'm afraid I can't follow this point. After reading the code (with
+>> Qemu) a bit further, the Redistributors are restored before the ITS.
+> 
+> This is also part of the kernel documentation:
+> Documentation/virt/kvm/devices/arm-vgic-its.txt (ITS restore sequence)
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+Yeah, I see. Thanks for the pointer, Eric!
 
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 1 -
->  1 file changed, 1 deletion(-)
+
+Zenghui
+
+>   So
+>> there should be _no_ LPI has been mapped when we're restoring GICR_CTLR
+>> and enabling LPI, which says we will not scan the whole pending table
+>> and restore pending by vgic_enable_lpis()/its_sync_lpi_pending_table(),
+>> regardless of what the PTZ is.
+>>
+>> Instead, vgic_its_restore_ite()/vgic_v3_lpi_sync_pending_status() is
+>> where we actually read the guest RAM and restore the LPI pending state.
+> yes the pending state is restored from
+> vgic_its_restore_ite/vgic_add_lpi/vgic_v3_lpi_sync_pending_status and
+> this path ignores the PTZ.
 > 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 1196c85aa023..4f2e65c7cf45 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -885,7 +885,6 @@ static const struct qmp_phy_init_tbl
-> msm8998_usb3_pcs_tbl[] = {
->  };
+> Thanks
 > 
->  static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
-> -	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
->  	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0xd9),
->  	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x11),
->  	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL, 0x00),
+> Eric
+>> Which means we will still do the right thing even for non-Linux guests.
+>> Not sure if I've got things correctly here.
+>>
+>> In the end, let's keep the patch as it is.
+>>
+>>>
+>>> This patch on its own fixes more than one bug!
+>>>
+>>
+>> If so, just by luck ;-)
+
