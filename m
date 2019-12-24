@@ -2,70 +2,78 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D348DC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87929C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06292070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC0E20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577155727;
+	bh=GDZHiwpYpPN2Oz81f+vptATrIiOpyVjE00BybrrHoww=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=SfOwGoBldxiY32jN2s0qMJOWd3c2tIICgVpvNLpvsv9q/XYLG9Cs4sNoS8+nbST/a
+	 1p6h0Egeonr689n7dy8UvPVCqhTdFZKSrj+1ZM43f7Aa2qrbOl18VCUBSmRjtu56Kq
+	 hXE54+Gw8nAoXAbX6ootFLqxbT3z0qi307yH3bQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfLXCoi (ORCPT
+        id S1727030AbfLXCsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 21:44:38 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726747AbfLXCoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 21:44:38 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4E948923AD52C7E06906;
-        Tue, 24 Dec 2019 10:44:34 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 24 Dec 2019 10:44:24 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
-        <f.fainelli@gmail.com>, <davem@davemloft.net>,
-        <linux@rempel-privat.de>, <maowenan@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH net-next] net: dsa: drop pointless static qualifier in ar9331_sw_mbus_init
-Date:   Tue, 24 Dec 2019 10:40:59 +0800
-Message-ID: <20191224024059.184847-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 23 Dec 2019 21:48:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbfLXCsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 21:48:46 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 445A92070E;
+        Tue, 24 Dec 2019 02:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577155725;
+        bh=GDZHiwpYpPN2Oz81f+vptATrIiOpyVjE00BybrrHoww=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=z9nfV09MMzOEluK/WrMZxT7JKKaRJPLFpw4iOxLjRXT7xq+aF9PpQZ3fOobbEMje8
+         ohoUrlCHniVm1aVt7fZgw9Lq/y9xcmK7r6cZB5oRyh3ohpc7sNu43ssFhOyKra0PbW
+         RPeO3zDe0ThxiXn0obt3CgoeCLnQAKVuEfHk+3NI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191207203603.2314424-2-bjorn.andersson@linaro.org>
+References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+User-Agent: alot/0.8.1
+Date:   Mon, 23 Dec 2019 18:48:44 -0800
+Message-Id: <20191224024845.445A92070E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to have the 'T *v' variable static
-since new value always be assigned before use it.
+Quoting Bjorn Andersson (2019-12-07 12:36:02)
+> The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
+> SoC. Update the definition of these clocks to allow this to be wired up
+> to the appropriate clock source.
+>=20
+> Retain "xo" as the global named parent to make the change a nop in the
+> event that DT doesn't carry the necessary clocks definition.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.yaml   |  6 ++--
+>  drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++----
+>  2 files changed, 32 insertions(+), 9 deletions(-)
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/net/dsa/qca/ar9331.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/qca/ar9331.c b/drivers/net/dsa/qca/ar9331.c
-index 0d1a7cd85fe8..da3bece75e21 100644
---- a/drivers/net/dsa/qca/ar9331.c
-+++ b/drivers/net/dsa/qca/ar9331.c
-@@ -266,7 +266,7 @@ static int ar9331_sw_mbus_read(struct mii_bus *mbus, int port, int regnum)
- static int ar9331_sw_mbus_init(struct ar9331_sw_priv *priv)
- {
- 	struct device *dev = priv->dev;
--	static struct mii_bus *mbus;
-+	struct mii_bus *mbus;
- 	struct device_node *np, *mnp;
- 	int ret;
- 
--- 
-2.20.1
+What is this patch based on? I think I'm missing some sort of 8996 yaml
+gcc binding patch.
 
