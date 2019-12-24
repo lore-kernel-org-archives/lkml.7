@@ -2,79 +2,74 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB11C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742CEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425AB20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BB12071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfLXKcs (ORCPT
+        id S1726195AbfLXKoO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:32:48 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:50680 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726076AbfLXKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 05:32:47 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-05 (Coremail) with SMTP id zQCowAAXHc1D3AFeEjTIBQ--.98S3;
-        Tue, 24 Dec 2019 17:37:08 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     paulus@samba.org
-Cc:     davem@davemloft.net, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ppp: Remove redundant BUG_ON() check in ppp_pernet
-Date:   Tue, 24 Dec 2019 09:37:04 +0000
-Message-Id: <1577180224-16405-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: zQCowAAXHc1D3AFeEjTIBQ--.98S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFW8Jr4UKFyrurWxAw4DXFb_yoW3Jrb_Cw
-        4fCFW3Aw1UAr1q9r4UCws8ZrZay3WkWr1kJrs2grZxX34ktFyrXr95ursrAr4kWrZ5CF9r
-        Ca47ZryrJrWYgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbFkYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2Iq
-        xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-        106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
-        xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWU
-        JVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcVWlDUUUU
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBAgNA102S0V3TwABse
+        Tue, 24 Dec 2019 05:44:14 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:42003 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfLXKoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:44:14 -0500
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D507A240007;
+        Tue, 24 Dec 2019 10:44:11 +0000 (UTC)
+Date:   Tue, 24 Dec 2019 11:44:10 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Rob Herring <robherring2@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the devicetree tree
+Message-ID: <20191224114410.0d72c72f@xps13>
+In-Reply-To: <20191221143211.47eea79d@canb.auug.org.au>
+References: <20191221143211.47eea79d@canb.auug.org.au>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing NULL to ppp_pernet causes a crash via BUG_ON.
-Dereferencing net in net_generici() also has the same effect.
-This patch removes the redundant BUG_ON check on the same parameter.
+Hi Stephen, Rob,
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/net/ppp/ppp_generic.c | 2 --
- 1 file changed, 2 deletions(-)
+Stephen Rothwell <sfr@canb.auug.org.au> wrote on Sat, 21 Dec 2019
+14:32:11 +1100:
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 3bf8a8b..22cc2cb 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -296,8 +296,6 @@ static struct class *ppp_class;
- /* per net-namespace data */
- static inline struct ppp_net *ppp_pernet(struct net *net)
- {
--	BUG_ON(!net);
--
- 	return net_generic(net, ppp_net_id);
- }
- 
--- 
-2.7.4
+> Hi all,
+> 
+> n commit
+> 
+>   13670c493ab8 ("dt-bindings: phy: Fix the PX30 DSI PHY compatible in the example")
+> 
+> Fixes tag
+> 
+>   Fixes: 3200df7fa1d6 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
+> 
+> has these problem(s):
+> 
+>   - Target SHA1 does not exist
+> 
+> Maybe you meant
+> 
+> Fixes: 3817c7961179 ("dt-bindings: phy: add yaml binding for rockchip,px30-dsi-dphy")
 
+Sorry for the mistake, I took the hash from Heiko's tree. This is
+indeed the right one.
+
+Thanks,
+Miquèl
