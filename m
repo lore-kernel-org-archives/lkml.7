@@ -2,100 +2,147 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CF6C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700F6C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B288206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375E02071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJIGYnMt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0fI68b6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfLXGfB (ORCPT
+        id S1726195AbfLXGgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:35:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31445 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726047AbfLXGfB (ORCPT
+        Tue, 24 Dec 2019 01:36:21 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34756 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfLXGgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:35:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577169300;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AX9wAqQweKNe2DojWeRurmYeWv9FWstsri4vT88f7Vw=;
-        b=aJIGYnMtmkxSrqz+BYGyeK0alx8Wqa73z8CJ8x1Lo9ebOVx5pt6i4m98qrfMey6x4gKccI
-        7iKp+p7tL0MxykoFAnoVmJbgbRbvIea2vaLIBQCuGA1pfX/FFOGhj6PwXxcsSZOYJc7rM5
-        b5RCqFcjkWBnyssUAO/aZm4hP/KmbMU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-P9nYY79oPJClDXW0IGOkqQ-1; Tue, 24 Dec 2019 01:34:58 -0500
-X-MC-Unique: P9nYY79oPJClDXW0IGOkqQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE056DB21;
-        Tue, 24 Dec 2019 06:34:57 +0000 (UTC)
-Received: from [10.72.12.236] (ovpn-12-236.pek2.redhat.com [10.72.12.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CA065C1B5;
-        Tue, 24 Dec 2019 06:34:47 +0000 (UTC)
-Subject: Re: [PATCH RESEND v2 00/17] KVM: Dirty ring interface
-To:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <5e859f76-96a2-634e-c26e-17421af7022a@redhat.com>
-Date:   Tue, 24 Dec 2019 14:34:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Dec 2019 01:36:21 -0500
+Received: by mail-qk1-f195.google.com with SMTP id j9so15764595qkk.1;
+        Mon, 23 Dec 2019 22:36:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9f49rZjJKxHQwfDaONd7CPvs6B/LdSmBjADe//pqNas=;
+        b=Q0fI68b6Cz4xabYadXmuPHobPKvFG2OM8qtvz8n0gm8iaRy3QkQsf70C667oqYKFz7
+         BbI26kf9LSBYxPmQNBrn3mVmcj6aafUbeda7TeVJXEF0yUbnnrR9UyW1fKM9D1Vv9IFV
+         cx5hM2YiJ8YArAo+JKOqpVlxtmu3Iu1/Lxg2MXOUfKWnPp/g55P6tl8qjLvfZCKRWkyF
+         FN1T92sjrgi6Kr6aaAFRvrwLM68W468QdIfSmsqidLKwQtPfX1yaJ9qT0Hls3JA/VeRf
+         77/Ye1FIneqm2xNioqZXdt0RY6nOm1WHooixyQIarWb4B5BdsAml5GnIII/wXZLXLna9
+         Uuug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9f49rZjJKxHQwfDaONd7CPvs6B/LdSmBjADe//pqNas=;
+        b=IdeS6jf0k4mQaC4TPVx1Ha/ecDPmIl8D+yYqC9CrvUI4uZ3V3/dzW9UcKYvYaSdHcx
+         QUF2TY6mVrXXIBMWqj2y4zeQy0Ogauiu7mXdfl64yQXVGuKB1M1mgHljyS0DbV1NYnA/
+         m81KDHly/ASdJb+sOsDWA6oZqTo9+fHzvPTbU4v4i1a7bk9jP+pWfGWLr4sJYiRgBC5n
+         30tVapHMC9WdALyZ30cM2+ZKlaaHNIVKNsNbnQNElnnog6olhVrH3mmck1Q3pV23Wptu
+         j92lt8J3HNsMzuTaAGueIOImzqcd58btWR5PtSEX/GdAu/x/Xsv14WShfehyOLJh/a7P
+         F1Sw==
+X-Gm-Message-State: APjAAAVD3C/ZxhAUmDj06Ca6m+QD6NZ+jI3T2p+ioExi2NUHCQKitKoJ
+        fgNqfhCWC8w6gHLyLzIgFPWGjEq0SScYI9RJA4c=
+X-Google-Smtp-Source: APXvYqzAaS5x91eisBrBiUd9yh3gyBoa1BMy6JI4p5M2rCh8P5rjFxKBEJ84ucdaMez0uun3rPsL8FDjllogmrn39ZM=
+X-Received: by 2002:a37:a685:: with SMTP id p127mr30971238qke.449.1577169379912;
+ Mon, 23 Dec 2019 22:36:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191221014938.58831-1-peterx@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-10-kpsingh@chromium.org>
+In-Reply-To: <20191220154208.15895-10-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Dec 2019 22:36:08 -0800
+Message-ID: <CAEf4BzYgcez2G1qJW9saJmzfeYirGdH58aAcUk-+YTJF6vyOuQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 09/13] bpf: lsm: Add a helper function bpf_lsm_event_output
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/12/21 =E4=B8=8A=E5=8D=889:49, Peter Xu wrote:
-> * Why not virtio?
+On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> There's already some discussion during v1 patchset on whether it's
-> good to use virtio for the data path of delivering dirty pages [1].
-> I'd confess the only thing that we might consider to use is the vring
-> layout (because virtqueue is tightly bound to devices, while we don't
-> have a device contet here), however it's a pity that even we only use
-> the most low-level vring api it'll be at least iov based which is
-> already an overkill for dirty ring (which is literally an array of
-> addresses).  So I just kept things easy.
+> From: KP Singh <kpsingh@google.com>
+>
+> This helper is similar to bpf_perf_event_output except that
+> it does need a ctx argument which is more usable in the
+> BTF based LSM programs where the context is converted to
+> the signature of the attacthed BTF type.
+>
+> An example usage of this function would be:
+>
+> struct {
+>          __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+>          __uint(key_size, sizeof(int));
+>          __uint(value_size, sizeof(u32));
+> } perf_map SEC(".maps");
+>
+> BPF_TRACE_1(bpf_prog1, "lsm/bprm_check_security,
+>             struct linux_binprm *, bprm)
+> {
+>         char buf[BUF_SIZE];
+>         int len;
+>         u64 flags = BPF_F_CURRENT_CPU;
+>
+>         /* some logic that fills up buf with len data */
+>         len = fill_up_buf(buf);
+>         if (len < 0)
+>                 return len;
+>         if (len > BU)
+>                 return 0;
+>
+>         bpf_lsm_event_output(&perf_map, flags, buf, len);
 
+This seems to be generally useful and not LSM-specific, so maybe name
+it more generically as bpf_event_output instead?
 
-If iov is the only reason, we can simple extend vringh helper to access=20
-the descriptor directly.
+I'm also curious why we needed both bpf_perf_event_output and
+bpf_perf_event_output_raw_tp, if it could be done as simply as you did
+it here. What's different between those three and why your
+bpf_lsm_event_output doesn't need pt_regs passed into them?
 
-For split ring, it has some redundant stuffs.
+>         return 0;
+> }
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  include/uapi/linux/bpf.h       | 10 +++++++++-
+>  kernel/bpf/verifier.c          |  1 +
+>  security/bpf/ops.c             | 21 +++++++++++++++++++++
+>  tools/include/uapi/linux/bpf.h | 10 +++++++++-
+>  4 files changed, 40 insertions(+), 2 deletions(-)
+>
 
-- dirty ring has simple assumption used_idx =3D last_avail_idx (which is=20
-fetch_index), so no need for having two rings
-- descriptor is self contained (dirty_gfns), no need to another=20
-indirection (but we can reuse vring descriptors for sure)
-
-For packed ring, it looks not, but I'm not sure it's worthwhile to try.
-
-Thanks
-
+[...]
