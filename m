@@ -2,185 +2,271 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F140C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22816C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B04B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62F520730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 17:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ZNt0E1Dd";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ZNt0E1Dd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8+D/g8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfLXRfi (ORCPT
+        id S1727476AbfLXRfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 12:35:38 -0500
-Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:10367
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727140AbfLXRfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 12:35:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nSddLAR0jflJWpR96m9UopNDehVW1WTXbYCakstnGSw=;
- b=ZNt0E1DdbOdir9Wr539J/nq9wkWrhKT13KJQbM71cMh9LmbNPcj1WIGMDAoURqxT48+2ix6OZNvo1rlJ4CSGLmKPI+Lgk5wder21nOKqfH2u0U6a6OuQYuKIEQaqOZzMNpaiCxMtyNx2WFmHEVuvD60qAgpqLgm048ziM+t1vYw=
-Received: from AM4PR08CA0064.eurprd08.prod.outlook.com (2603:10a6:205:2::35)
- by VI1PR0802MB2384.eurprd08.prod.outlook.com (2603:10a6:800:a0::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.20; Tue, 24 Dec
- 2019 17:35:29 +0000
-Received: from AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::206) by AM4PR08CA0064.outlook.office365.com
- (2603:10a6:205:2::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend
- Transport; Tue, 24 Dec 2019 17:35:29 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT017.mail.protection.outlook.com (10.152.16.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14 via Frontend Transport; Tue, 24 Dec 2019 17:35:29 +0000
-Received: ("Tessian outbound 1da651c29646:v40"); Tue, 24 Dec 2019 17:35:29 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: c5c057ceb54fda99
-X-CR-MTA-TID: 64aa7808
-Received: from 2398bdd0a748.3
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4C63363E-CD39-4084-AE0F-DC5D74A3041D.1;
-        Tue, 24 Dec 2019 17:35:23 +0000
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2398bdd0a748.3
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 24 Dec 2019 17:35:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BVm4S9XfB02kG7qv+RibhEC5JRCGJL1c36mX6xZA1gEvXNsziCjag1hF5uVDmuepoj2NF3igMR8I0q8CHRV/USbsPC/doQHPEpFz1DfwZ/g3Vq3/sQiPl+tvveimsVSCeyPLhJbubvCwdWnzHsUFd8ejduGzhpvInS7TXXAeN4NOVaFRUBVw/soBMMUax5XgAcRRTcQ0Tj433en007CDpuvwwRrBExVls1E0rLxwgcMYQNRJgkF/9zRnIykFd6Aals7Lld5XiQ7HAzOTFuyZxwxe4KQSviIQ5iBm/ZBYFOWfniBAgwRHAh6sEebMfRNuDPPi6I/8c21QrDDd5nxrsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nSddLAR0jflJWpR96m9UopNDehVW1WTXbYCakstnGSw=;
- b=Q9VE7aZ+5bV4HCVRPzV7+Da4b6DyEgpbaRae1++AVkhiyHJw65cRPmlXaJdMigi/16PCM8e4lklYoOqaIDBfyLU9Ho+X3ZX1d7AVW8acbDTzviIuTLapjXZ9O/i4LWlcEUKhs71W4l7Q/OpQLT1eGdF5fYOY0PrVRrauaDw2izl+zfUgv2M5mfIsPO52S5vW+4dWw5ahvtTjHFXElioVRy46enPusQH6yKpEPr/pEioyeS4SCRc/ufoAvEP9vgPPNwuTdbX9jR6JdwD4OCrBJRES8jEbb6DKcnpe0cUAkNu1XODCfQQuUg4KnxUhD8JP7f0BRFwADXKlvuMuhQsOLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nSddLAR0jflJWpR96m9UopNDehVW1WTXbYCakstnGSw=;
- b=ZNt0E1DdbOdir9Wr539J/nq9wkWrhKT13KJQbM71cMh9LmbNPcj1WIGMDAoURqxT48+2ix6OZNvo1rlJ4CSGLmKPI+Lgk5wder21nOKqfH2u0U6a6OuQYuKIEQaqOZzMNpaiCxMtyNx2WFmHEVuvD60qAgpqLgm048ziM+t1vYw=
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
- VI1PR08MB2672.eurprd08.prod.outlook.com (10.170.238.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.16; Tue, 24 Dec 2019 17:35:21 +0000
-Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::3d0a:7cde:7f1f:fe7c]) by VI1PR08MB4078.eurprd08.prod.outlook.com
- ([fe80::3d0a:7cde:7f1f:fe7c%7]) with mapi id 15.20.2559.017; Tue, 24 Dec 2019
- 17:35:21 +0000
-From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
-To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v3 31/35] drm/mcde: dsi: Use drm_bridge_init()
-Thread-Topic: [PATCH v3 31/35] drm/mcde: dsi: Use drm_bridge_init()
-Thread-Index: AQHVuoByEOZJRE0520qmoz8x9vCV0g==
-Date:   Tue, 24 Dec 2019 17:34:51 +0000
-Message-ID: <20191224173408.25624-32-mihail.atanassov@arm.com>
-References: <20191224173408.25624-1-mihail.atanassov@arm.com>
-In-Reply-To: <20191224173408.25624-1-mihail.atanassov@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.106.53]
-x-clientproxiedby: LNXP123CA0023.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::35) To VI1PR08MB4078.eurprd08.prod.outlook.com
- (2603:10a6:803:e5::28)
-x-mailer: git-send-email 2.24.0
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d3f0e421-5d1c-4b27-566e-08d78897ab87
-X-MS-TrafficTypeDiagnostic: VI1PR08MB2672:|VI1PR08MB2672:|VI1PR0802MB2384:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0802MB2384BF5D8CDBEADA8129EFC08F290@VI1PR0802MB2384.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:1360;OLM:1360;
-x-forefront-prvs: 0261CCEEDF
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(186003)(26005)(52116002)(6506007)(6486002)(81166006)(6512007)(81156014)(8676002)(8936002)(44832011)(54906003)(478600001)(316002)(6916009)(2906002)(4326008)(2616005)(36756003)(1076003)(66446008)(64756008)(66556008)(66476007)(66946007)(4744005)(5660300002)(6666004)(71200400001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB2672;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: RIlK0vxYm6M7TdWnoxPff4rBU6qP312fISfo5lEZJzMzS3BrREzuvMuZbnovXVwLs1r2Pbn2jmyqHWsxkSToBiMOFWzrNDg0Ba3cFifsu4ljVnaHZF3PHPb2iKH5SCUppxorwZdt5ionMtHTAfBk4CP/db21sqUDLLNGQgMcirNI5I1GaeDx32SkXYNlIVz/A/NSTCBQ4FFiv2rCetiiIw19iCiBh3UII4Gchw9B/y4iUAB1PG/p28VNim6wiuJs1eZhYZzmfFlRQ/EGWQo+gxhwEh/y4HVdygu+oobgbtBdZSAN+KuGHSWLPet7ng6WGC7JrxwriAIMiSQ+WboxXB7LkjxHgtqN0RncNsQxhUKnkIxK/hLoI2TbRy/sl8GbVuvWA1zXjLd47ZaQ9yiQKCeXkFW7/p8hmpzKm5HTUkcV3Ift7ZsakcOLxXUG7HZ4
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Dec 2019 12:35:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37133 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfLXRff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 12:35:35 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so7717273wru.4;
+        Tue, 24 Dec 2019 09:35:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=thPYP74qbpTfSIEtJkPX+tZWPselwUnvQUu7iAHzb54=;
+        b=O8+D/g8FcqX/LkeYuIsy+ruXY0I4cS1Ul1HZdK6k8qMhKFJYSj3IDQbmC3F1pFnddh
+         tjn3XKf5/A9+BsuWPro0+kvb6lNPnFiT+GS25q6Ezrt4EuQrLraoecN6WM2RWqURWO1T
+         Qnxfc7VieWDpzXb0sWzN2n7wXUT/aeSdkQSx2jFRV6wlkCzlPT7h5Ib/IXSgW4rbUaZG
+         rx1FyEvlpeX5GGwLcrwI5dXON3nti9nIGOroup+tWa9Gy513uJS8wJ13xOie8tZssfZC
+         +vuf1jl83Fu4USg2rsCLMtmBgi3ACYi2LUJD7MEK+2zc8MF7xuKIbIptzp1zkkxC07nj
+         gEJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=thPYP74qbpTfSIEtJkPX+tZWPselwUnvQUu7iAHzb54=;
+        b=ecARZPrIDGyLyebYJTpGQYuwmORt92j4hb2FR4u7iJczRGr1t49TSuSyRU368skNf9
+         oaisbo4CoOO+W0Nnudb0CexXFv3RNsmg673obuOkbTMs5WqgaKjxSyVHzBK0ZzApN8fW
+         L5sWFOsXaBj0UYgugK0vhDSfXXRRHg0FvuqAGOMOp47y7X2gjy0ie8f1DaAdOKUp13fF
+         G2k6WDldcIxx6SNV40aHXL3IP7Ie8MIaYwR8xMbcXEYI+6rL5objPRp4BgXM7muoMCtW
+         728nlV9ATyWqjvr8iMwl5R0YmOu0kMrBffAQHaUHi56PO95dBRRB3eYqsedRZOakXRuy
+         /Iqg==
+X-Gm-Message-State: APjAAAVBlbJ27uMrVqr5B9AeycHJMa5o2to3MurwJH36vgpSu2H6JID6
+        tLj8XHUq2F1IAwkQ6IfV/6c=
+X-Google-Smtp-Source: APXvYqwlvirQja/YJQpOg7b5jLcZMyFxGpBx5n6JJXI/HapRiiOqJbux4icgDM4DbTH9JVlnrOK60g==
+X-Received: by 2002:adf:ea88:: with SMTP id s8mr36449937wrm.293.1577208931723;
+        Tue, 24 Dec 2019 09:35:31 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id m21sm3122864wmi.27.2019.12.24.09.35.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Dec 2019 09:35:30 -0800 (PST)
+Date:   Tue, 24 Dec 2019 18:35:29 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Broken sata_nv since 4.19
+Message-ID: <20191224173529.zudlfsjvdqrbayqx@pali>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2672
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Mihail.Atanassov@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(199004)(189003)(6486002)(76130400001)(6512007)(2906002)(6862004)(5660300002)(4326008)(36756003)(70206006)(70586007)(54906003)(36906005)(316002)(4744005)(26826003)(2616005)(107886003)(336012)(356004)(6666004)(6506007)(81166006)(186003)(1076003)(86362001)(81156014)(8676002)(478600001)(8936002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0802MB2384;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: a9116a1e-db12-43bd-443c-08d7889794a8
-NoDisclaimer: True
-X-Forefront-PRVS: 0261CCEEDF
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l7j5b4qR+yqrH+YK6w32TjHlc/trOdWINWSQGjA/owXo2HESjL1cFV6naoKLonTYiWnSx1d7+9aWxaG2RFpZaIXmdyw4vWW4bhNLZxXEoMmwRXTRJlGfaBhoJMXZo5eYKpCqiML2FIiW7W/90KMT/rEyUpn9NB5J1sjwslJCMODFr6rt/n/NIuqRytPjiQNBDv5v1xoYuZ/wFECR+oJaqWgwNb7cz+1gtgeVcuF4vpIzgXgY6I1QYbuEjr1d2Vo5YE2tbbtWg29Rcy2TeHoo1n/XovtvRsijWO/NGqpvBlGO94OnNLk34Mq4vE9QPwXvZPgU/8q+x1OpRoq1EY8YAyPuO9ic3zWboj8ueLpUKNhNQ0mPeNk/8/GO4TYTqSoL6fKcOXLwyidycyNyoJghj5Dsl6rJhu+LrVX8I+li2hlY8PRcwMuYQwMydVnFR7xI
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2019 17:35:29.4806
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3f0e421-5d1c-4b27-566e-08d78897ab87
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2384
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vyk2wwh2i5mfqkgm"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change.
 
-v3:
- - drop driver_private argument (Laurent)
+--vyk2wwh2i5mfqkgm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
----
- drivers/gpu/drm/mcde/mcde_dsi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hello!
 
-diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_ds=
-i.c
-index 276a77c020c7..cf7ec4aaebd2 100644
---- a/drivers/gpu/drm/mcde/mcde_dsi.c
-+++ b/drivers/gpu/drm/mcde/mcde_dsi.c
-@@ -1098,8 +1098,7 @@ static int mcde_dsi_bind(struct device *dev, struct d=
-evice *master,
- 	d->bridge_out =3D bridge;
-=20
- 	/* Create a bridge for this DSI channel */
--	d->bridge.funcs =3D &mcde_dsi_bridge_funcs;
--	d->bridge.of_node =3D dev->of_node;
-+	drm_bridge_init(&d->bridge, dev, &mcde_dsi_bridge_funcs, NULL);
- 	drm_bridge_add(&d->bridge);
-=20
- 	/* TODO: first come first serve, use a list */
+I upgraded machine with NVIDIA SATA controller (nforce4 chipse) from
+Debian Stretch to Debian Buster and SATA disks started to have problems.
+I booted back to Debian Stretch kernel version (having userspace
+untouched in Buster) and everything was like before, so problem is 100%
+kernel related. Problematic is APM support (it does not work at all),
+HPA support (kernel show warnings at boot time) and whole booting is
+delayed by 10 seconds. Also broken is disk speed test.
+
+SATA controller is using sata_nv.ko kernel driver and in lspci is
+identified as:
+
+  00:07.0 IDE interface [0101]: NVIDIA Corporation CK804 Serial ATA Control=
+ler [10de:0054] (rev f3)
+  00:08.0 IDE interface [0101]: NVIDIA Corporation CK804 Serial ATA Control=
+ler [10de:0055] (rev f3)
+
+Debian Stretch has kernel version (which is working fine):
+
+  4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
+Debian Buster has kernel version (which is problematic):
+
+  4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u2 (2019-11-11) x86_64
+
+So kernel regression happened somewhere between 4.9 and 4.19 versions.
+
+APM on Stretch:
+
+  $ sudo hdparm -B /dev/sda
+
+  /dev/sda:
+   APM_level      =3D not supported
+
+  $ sudo hdparm -B /dev/sdb
+
+  /dev/sdb:
+   APM_level      =3D off
+
+APM on Buster:
+
+  $ sudo hdparm -B /dev/sda
+
+  /dev/sda:
+  SG_IO: bad/missing sense data, sb[]:  f0 00 05 00 00 00 00 0a 00 aa 55 40=
+ 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   APM_level      =3D not supported
+
+
+  $ sudo hdparm -B /dev/sdb
+
+  /dev/sdb:
+  SG_IO: bad/missing sense data, sb[]:  f0 00 05 00 00 00 00 0a 00 aa 55 40=
+ 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   APM_level      =3D not supported
+
+/dev/sda does not support APM, but /dev/sdb supports. I do not
+understand what above SG_IO error means, but because it works fine on
+older kernel version, it is not hardware problem.
+
+Disk speed test on Stretch:
+
+  $ sudo hdparm -Tt /dev/sda
+
+  /dev/sda:
+   Timing cached reads:   118 MB in  2.00 seconds =3D  58.91 MB/sec
+   Timing buffered disk reads: 116 MB in  3.09 seconds =3D  37.54 MB/sec
+
+  $ sudo hdparm -Tt /dev/sdb
+
+  /dev/sdb:
+   Timing cached reads:   1242 MB in  2.00 seconds =3D 620.93 MB/sec
+   Timing buffered disk reads: 388 MB in  3.00 seconds =3D 129.31 MB/sec
+
+Disk speed test on Buster:
+
+  $ sudo hdparm -Tt /dev/sda
+
+  /dev/sda:
+  read() hit EOF - device too small
+  SG_IO: bad/missing sense data, sb[]:  f0 00 05 00 00 00 00 0a 00 aa 55 40=
+ 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   Timing buffered disk reads: read() hit EOF - device too small
+
+  $ sudo hdparm -Tt /dev/sdb
+
+  /dev/sdb:
+  read() hit EOF - device too small
+  SG_IO: bad/missing sense data, sb[]:  f0 00 05 00 00 00 00 0a 00 aa 55 40=
+ 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   Timing buffered disk reads: read() hit EOF - device too small
+
+As can be seen disk speed test is completely broken on new kernel
+version and hdparm returns same error as for APM.
+
+dmesg output on Stretch:
+
+[    1.716970] sata_nv 0000:00:07.0: version 3.5
+[    1.717309] sata_nv 0000:00:07.0: Using ADMA mode
+[    1.717358] sata_nv 0000:00:07.0: Using MSI
+[    1.717810] scsi host0: sata_nv
+[    1.717954] scsi host1: sata_nv
+[    1.718016] ata1: SATA max UDMA/133 cmd 0x9f0 ctl 0xbf0 bmdma 0xd000 irq=
+ 20
+[    1.718024] ata2: SATA max UDMA/133 cmd 0x970 ctl 0xb70 bmdma 0xd008 irq=
+ 20
+[    1.718308] sata_nv 0000:00:08.0: Using ADMA mode
+[    1.718345] sata_nv 0000:00:08.0: Using MSI
+[    1.718757] scsi host2: sata_nv
+[    1.718886] scsi host3: sata_nv
+[    2.192111] ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    2.194691] ata1.00: HPA detected: current 976771055, native 976773168
+[    2.194701] ata1.00: ATA-8: WDC WD5000AADS-00S9B0, 01.00A01, max UDMA/133
+[    2.194709] ata1.00: 976771055 sectors, multi 16: LBA48 NCQ (depth 31/32)
+[    2.199241] ata1.00: configured for UDMA/133
+[    2.199501] ata1: DMA mask 0xFFFFFFFFFFFFFFFF, segment boundary 0xFFFFFF=
+FF, hw segs 61
+[    2.708030] ata2: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    2.710442] ata2.00: ATA-8: TOSHIBA HDWD110, MS2OA8J0, max UDMA/133
+[    2.710455] ata2.00: 1953525168 sectors, multi 16: LBA48 NCQ (depth 31/3=
+2)
+[    2.715066] ata2.00: configured for UDMA/133
+[    2.715333] ata2: DMA mask 0xFFFFFFFFFFFFFFFF, segment boundary 0xFFFFFF=
+FF, hw segs 61
+
+dmesg output on Buster:
+
+[    2.079293] sata_nv 0000:00:07.0: version 3.5
+[    2.133503] sata_nv 0000:00:07.0: Using ADMA mode
+[    2.137138] sata_nv 0000:00:07.0: Using MSI
+[    2.142043] scsi host0: sata_nv
+[    2.174745] scsi host2: sata_nv
+[    2.178329] ata1: SATA max UDMA/133 cmd 0x9f0 ctl 0xbf0 bmdma 0xd000 irq=
+ 20
+[    2.181675] ata2: SATA max UDMA/133 cmd 0x970 ctl 0xb70 bmdma 0xd008 irq=
+ 20
+[    2.188680] sata_nv 0000:00:08.0: Using ADMA mode
+[    2.215676] sata_nv 0000:00:08.0: Using MSI
+[    2.219649] scsi host4: sata_nv
+[    2.226626] scsi host5: sata_nv
+[    2.657732] ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    7.773692] ata1.00: qc timeout (cmd 0x27)
+[    7.773738] ata1.00: failed to read native max address (err_mask=3D0x4)
+[    7.773785] ata1.00: HPA support seems broken, skipping HPA handling
+[    8.245678] ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[    8.248009] ata1.00: ATA-8: WDC WD5000AADS-00S9B0, 01.00A01, max UDMA/133
+[    8.248065] ata1.00: 976771055 sectors, multi 16: LBA48 NCQ (depth 32)
+[    8.252593] ata1.00: configured for UDMA/133
+[    8.252964] ata1: DMA mask 0xFFFFFFFFFFFFFFFF, segment boundary 0xFFFFFF=
+FF, hw segs 61
+[    8.725693] ata2: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[   13.917688] ata2.00: qc timeout (cmd 0x27)
+[   13.920096] ata2.00: failed to read native max address (err_mask=3D0x4)
+[   13.922491] ata2.00: HPA support seems broken, skipping HPA handling
+[   14.393683] ata2: SATA link up 1.5 Gbps (SStatus 113 SControl 300)
+[   14.398360] ata2.00: ATA-8: TOSHIBA HDWD110, MS2OA8J0, max UDMA/133
+[   14.400813] ata2.00: 1953525168 sectors, multi 16: LBA48 NCQ (depth 32)
+[   14.407722] ata2.00: configured for UDMA/133
+[   14.412939] ata2: DMA mask 0xFFFFFFFFFFFFFFFF, segment boundary 0xFFFFFF=
+FF, hw segs 61
+
+As can be seen new kernel has problems with handling of both SATA
+controllers and disks HPA area. Plus before kernel prints
+"qc timeout (cmd 0x27)" there is nothing on output, seems that kernel
+waits until 5s timeout occur and it slow down booting by 10s.
+
+Do you have any idea what is happening there? What those SG_IO errors
+or dmesg errors means?
+
+I'm CCing all people who touched sata_nv.c file between 4.9 and 4.19
+versions, so maybe somebody would know anything about this problem.
+
+If you need more information or other outputs, please let me know and I
+can provide it.
+
 --=20
-2.24.0
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--vyk2wwh2i5mfqkgm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgJMXwAKCRCL8Mk9A+RD
+Urb3AKDLc6IPDlsDFe5kR4+GYsj9QXOu/ACfTOC1e4gZegC2rK8fAX6ZpsWsCQU=
+=v79B
+-----END PGP SIGNATURE-----
+
+--vyk2wwh2i5mfqkgm--
