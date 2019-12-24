@@ -2,136 +2,178 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB0CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A8AC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF67F206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY6Z8gse"
+	by mail.kernel.org (Postfix) with ESMTP id 40034206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbfLXVL0 (ORCPT
+        id S1726284AbfLXVRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 16:11:26 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34911 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfLXVL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 16:11:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so8846618plt.2;
-        Tue, 24 Dec 2019 13:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZiIq+ODPkbmk3OovkgYvNLseu4fXK344aj0AC+jChpw=;
-        b=RY6Z8gse4WXDdfZUdueg1YmV1qD/5ihmI7srcNXb/Yp7J/HxRn36oJWbCpXvJValW8
-         fX0pql5BS3/8FxAI0eTafuTOqUE2F2Pj/AfS/fjTSfJJ/xA/Qc5JCCWjv2NZpqvfp1R1
-         sh0HxjoxwLciBEgdmw9V8/K15LNahSLMjAzi28nSEbbPi3Mr0L8xbwtP/6MsK6q0Smsg
-         SsYBgEDd8V+o91ROgm5nfGt8Gfltntiz3OoM4/F55FXXbDOKUTaXcZMFaYzG/Nu3vTIj
-         H5XJA+lCN19m0kVswZuqNme/LBmDnjGQnT4FBEH9EZPxKPzMw104P3QGdDNKDqjlVp93
-         kEmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZiIq+ODPkbmk3OovkgYvNLseu4fXK344aj0AC+jChpw=;
-        b=rSw/NyvfRfLu2A8dgkRyciQJQbQXXmqxYElqWTZl+WleSPZDrV83wJkgyJWMBfDB+W
-         cxMSBPwvjreyvP09HUWfnucCmCxAXCs7J/FGQdkh79hEyq67+VJHVwysf/jfrQeRB4OJ
-         nENI/f+pjy5sAbFeWtOuZGOGm5AiGfu9iU+vsu6hKzxInZymb20g7wEu2Fc2Gyih2REJ
-         MxIsjPVGODlkZnX2GOWlJaa0WX3Ggz7t4U2AzZeKyPB5ob9vbn39EeDmLFs/p8Kky3cM
-         QcwBaAae/p5EnTSpXkT4lGNqZDml3lZLqI/wnDKMzKaE/tyrcfXrYVzBVUh2aELwMM3U
-         yj5A==
-X-Gm-Message-State: APjAAAUGPF+lCp41GxIAkbmetomw9Et6rJKb5j7WzruoaFZRzlREM79I
-        6UnO4kVEHpDFEG9dba7rDbYsoViw
-X-Google-Smtp-Source: APXvYqz/C+9WgC+V/KEVMJDIBQxjgDS5AWjMUU0pMEE5lxF1QcLlKmnkbJUos6rMHuo0uN5S7XR9Zw==
-X-Received: by 2002:a17:902:bb8c:: with SMTP id m12mr38370736pls.320.1577221885159;
-        Tue, 24 Dec 2019 13:11:25 -0800 (PST)
-Received: from localhost.localdomain ([211.243.117.64])
-        by smtp.gmail.com with ESMTPSA id r28sm27021199pgk.39.2019.12.24.13.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 13:11:24 -0800 (PST)
-From:   Hyunki Koo <hyunki00.koo@gmail.com>
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] irqchip: define EXYNOS_IRQ_COMBINER
-Date:   Wed, 25 Dec 2019 06:11:07 +0900
-Message-Id: <20191224211108.7128-1-hyunki00.koo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 24 Dec 2019 16:17:10 -0500
+Received: from mga14.intel.com ([192.55.52.115]:40569 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfLXVRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 16:17:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Dec 2019 13:17:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,353,1571727600"; 
+   d="scan'208";a="219878267"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga003.jf.intel.com with ESMTP; 24 Dec 2019 13:17:08 -0800
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.30]) by
+ ORSMSX101.amr.corp.intel.com ([169.254.8.147]) with mapi id 14.03.0439.000;
+ Tue, 24 Dec 2019 13:17:08 -0800
+From:   "Andersen, John S" <john.s.andersen@intel.com>
+To:     "liran.alon@oracle.com" <liran.alon@oracle.com>
+CC:     "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>, "bp@alien8.de" <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+Thread-Topic: [RESEND RFC 0/2] Paravirtualized Control Register pinning
+Thread-Index: AQHVt2uK2a8jsyPFKUGPuWHWZO4ZBqfIV12AgAHldQCAAA3fgIAAC/wA
+Date:   Tue, 24 Dec 2019 21:17:08 +0000
+Message-ID: <8bc0269722464eb227f959aeff33bfec1f71c63c.camel@intel.com>
+References: <20191220192701.23415-1-john.s.andersen@intel.com>
+         <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
+         <73950aff51bdf908f75ffa5e5cb629fc1d4ebbb6.camel@intel.com>
+         <91A51486-9CE8-4041-AAB2-0507D42C5A72@oracle.com>
+In-Reply-To: <91A51486-9CE8-4041-AAB2-0507D42C5A72@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.19.9.42]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <06305189DCCCFE4DA88245F129ABEDDA@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hyunki Koo <hyunki00.koo@samsung.com>
-
-This patch is written to clean up dependency of ARCH_EXYNOS
-Not all exynos device have IRQ_COMBINER, especially aarch64 EXYNOS
-but it is built for all exynos devices.
-Thus add the config for EXYNOS_IRQ_COMBINER
-remove direct dependency between ARCH_EXYNOS and exynos-combiner.c
-and only selected on the aarch32 devices
-
-Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
----
- arch/arm/mach-exynos/Kconfig | 1 +
- drivers/irqchip/Kconfig      | 7 +++++++
- drivers/irqchip/Makefile     | 2 +-
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 4ef56571145b..6e7f10c8098a 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -12,6 +12,7 @@ menuconfig ARCH_EXYNOS
- 	select ARCH_SUPPORTS_BIG_ENDIAN
- 	select ARM_AMBA
- 	select ARM_GIC
-+	select EXYNOS_IRQ_COMBINER
- 	select COMMON_CLK_SAMSUNG
- 	select EXYNOS_ASV
- 	select EXYNOS_CHIPID
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index ba152954324b..4c774d85375b 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -499,4 +499,11 @@ config SIFIVE_PLIC
- 
- 	   If you don't know what to do here, say Y.
- 
-+config EXYNOS_IRQ_COMBINER
-+	bool "Samsung Exynos IRQ combiner support" if COMPILE_TEST
-+	depends on (ARCH_EXYNOS && ARM) || COMPILE_TEST
-+	help
-+	  Say yes here to add support for the IRQ combiner devices embedded
-+	  in Samsung Exynos chips.
-+
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e806dda690ea..60d7c7260fc3 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -9,7 +9,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
- obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
--obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
-+obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
- obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
- obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
--- 
-2.17.1
-
+T24gVHVlLCAyMDE5LTEyLTI0IGF0IDIyOjM1ICswMjAwLCBMaXJhbiBBbG9uIHdyb3RlOg0KPiA+
+IE9uIDI0IERlYyAyMDE5LCBhdCAyMTo0NCwgQW5kZXJzZW4sIEpvaG4gUyA8DQo+ID4gam9obi5z
+LmFuZGVyc2VuQGludGVsLmNvbT4gd3JvdGU6DQo+ID4gSW4gZW1fcnNtIGNvdWxkIHdlIGp1c3Qg
+T1Igd2l0aCB0aGUgdmFsdWUgb2YgdGhlIFBJTk5FRCBNU1JzIHJpZ2h0DQo+ID4gYmVmb3JlIHRo
+ZSBmaW5hbCByZXR1cm4/DQo+IA0KPiBOb3QgZXhhY3RseS4NCj4gDQo+IElmIEkgdW5kZXJzdGFu
+ZCBjb3JyZWN0bHksIHRoZSBwcm9wb3NlZCBtZWNoYW5pc20gc2hvdWxkIGFsc28gYWxsb3cNCj4g
+cGlubmluZyBzcGVjaWZpYw0KPiBzeXN0ZW0gcmVnaXN0ZXJzIChlLmcuIENSMC9DUjQpIGJpdHMg
+dG8gZWl0aGVyIGJlaW5nIGNsZWFyZWQgb3IgYmVpbmcNCj4gc2V0LiBOb3QgbmVjZXNzYXJpbHkg
+YmVpbmcgc2V0Lg0KPiBBcyBrdm1fc2V0X2NyMCgpICYga3ZtX3NldF9jcjQoKSB3ZXJlIG1vZGlm
+aWVkIHRvIG9ubHkgY2hlY2sgaWYNCj4gcGlubmVkIGJpdCBjaGFuZ2VkIHZhbHVlLg0KPiANCj4g
+VGhlcmVmb3JlLCB5b3Ugc2hvdWxkIG1vZGlmeSBlbnRlcl9zbW0oKSB0byBzYXZlIGN1cnJlbnQg
+cGlubmVkIGJpdHMNCj4gdmFsdWVzDQo+IGFuZCB0aGVuIHNpbGVudGx5IHJlc3RvcmUgdGhlaXIg
+dmFsdWVzIG9uIGVtX3JzbSgpLg0KPiANCg0KVGhhdCdzIHRydWUuIFNvdW5kcyBnb29kLg0KDQo+
+ID4gDQo+ID4gTWFraW5nIGtleGVjIHdvcmsgd2lsbCByZXF1aXJlIGNoYW5nZXMgdG8gdGhlc2Ug
+ZmlsZXMgYW5kIG1heWJlDQo+ID4gbW9yZToNCj4gPiANCj4gPiBhcmNoL3g4Ni9ib290L2NvbXBy
+ZXNzZWQvaGVhZF82NC5TDQo+ID4gYXJjaC94ODYva2VybmVsL2hlYWRfNjQuUw0KPiA+IGFyY2gv
+eDg2L2tlcm5lbC9yZWxvY2F0ZV9rZXJuZWxfNjQuUw0KPiA+IA0KPiA+IFdoaWNoIG15IHByZXZp
+b3VzIGF0dGVtcHRzIHNob3dlZCBkaWZmZXJlbnQgcmVzdWx0cyB3aGVuIHJ1bm5pbmcNCj4gPiB2
+aXJ0dWFsaXplZCB2cy4gdW52aXJ0dWFsaXplZC4gU3BlY2lmaWNpdHkgZGlmZmVyZW50IGJlaGF2
+aW9yIHdpdGgNCj4gPiBTTUFQDQo+ID4gYW5kIFVNSVAgYml0cy4NCj4gDQo+IEkgZGlkbuKAmXQg
+dW5kZXJzdGFuZCB3aHkgdGhlcmUgc2hvdWxkIGJlIGRpZmZlcmVudCByZXN1bHRzIHdoZW4NCj4g
+cnVubmluZyB2aXJ0dWFsaXplZCBvciBub3QuDQo+IA0KDQpJIHRoaW5rIGl0J3MgZWl0aGVyIGEg
+YnVnIGluIEtWTSdzIGVuZm9yY2VtZW50IG9mIFNNQVAgYW5kIFVNSVAsIG9yIGENCmJ1ZyBpbiB0
+aGUgaGFyZHdhcmUgSSdtIG9uLiBJZiBJIGRvIHRoZSBzYW1lIGFzIGJlbGxvdyBidXQgd2l0aCBT
+TUFQDQphbmQgVU1JUCwgdGhlIHBoeXNpY2FsIGhvc3QgZG9lc24ndCBib290LCBidXQgdGhlIHZp
+cnR1YWxpemVkIGhvc3QNCmJvb3RzIGZpbmUgYW5kIGNhbiBrZXhlYyB3aXRob3V0IGlzc3VlLg0K
+DQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL2hlYWRfNjQuUw0KYi9hcmNo
+L3g4Ni9ib290L2NvbXByZXNzZWQvaGVhZF82NC5TDQppbmRleCA1MzdmN2QyYmZiMTdhLi5kYzUw
+NjM0ZmE2NzRlIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL2hlYWRfNjQu
+Uw0KKysrIGIvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL2hlYWRfNjQuUw0KQEAgLTEyNiw3ICsx
+MjYsNyBAQCBFTlRSWShzdGFydHVwXzMyKQ0KIA0KIAkvKiBFbmFibGUgUEFFIG1vZGUgKi8NCiAJ
+bW92bAklY3I0LCAlZWF4DQotCW9ybAkkWDg2X0NSNF9QQUUsICVlYXgNCisJb3JsCSQoWDg2X0NS
+NF9QQUUgfCBYODZfQ1I0X1NNRVApLCAlZWF4DQogCW1vdmwJJWVheCwgJWNyNA0KIA0KICAvKg0K
+QEAgLTYxNCwxMCArNjE0LDEwIEBAIEVOVFJZKHRyYW1wb2xpbmVfMzJiaXRfc3JjKQ0KIAlwb3Bs
+CSVlY3gNCiANCiAJLyogRW5hYmxlIFBBRSBhbmQgTEE1NyAoaWYgcmVxdWlyZWQpIHBhZ2luZyBt
+b2RlcyAqLw0KLQltb3ZsCSRYODZfQ1I0X1BBRSwgJWVheA0KKwltb3ZsCSQoWDg2X0NSNF9QQUUg
+fCBYODZfQ1I0X1NNRVApLCAlZWF4DQogCWNtcGwJJDAsICVlZHgNCiAJanoJMWYNCi0Jb3JsCSRY
+ODZfQ1I0X0xBNTcsICVlYXgNCisJb3JsCSQoWDg2X0NSNF9MQTU3IHwgWDg2X0NSNF9TTUVQKSwg
+JWVheA0KIDE6DQogCW1vdmwJJWVheCwgJWNyNA0KIA0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tl
+cm5lbC9oZWFkXzY0LlMgYi9hcmNoL3g4Ni9rZXJuZWwvaGVhZF82NC5TDQppbmRleCBmM2QzZTk2
+NDZhOTliLi5kNTdjZTQ4YTQwYjVmIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYva2VybmVsL2hlYWRf
+NjQuUw0KKysrIGIvYXJjaC94ODYva2VybmVsL2hlYWRfNjQuUw0KQEAgLTEyMiw3ICsxMjIsNyBA
+QCBFTlRSWShzZWNvbmRhcnlfc3RhcnR1cF82NCkNCiAxOg0KIA0KIAkvKiBFbmFibGUgUEFFIG1v
+ZGUsIFBHRSBhbmQgTEE1NyAqLw0KLQltb3ZsCSQoWDg2X0NSNF9QQUUgfCBYODZfQ1I0X1BHRSks
+ICVlY3gNCisJbW92bAkkKFg4Nl9DUjRfUEFFIHwgWDg2X0NSNF9QR0UgfCBYODZfQ1I0X1NNRVAp
+LCAlZWN4DQogI2lmZGVmIENPTkZJR19YODZfNUxFVkVMDQogCXRlc3RsCSQxLCBfX3BndGFibGVf
+bDVfZW5hYmxlZCglcmlwKQ0KIAlqegkxZg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9y
+ZWxvY2F0ZV9rZXJuZWxfNjQuUw0KYi9hcmNoL3g4Ni9rZXJuZWwvcmVsb2NhdGVfa2VybmVsXzY0
+LlMNCmluZGV4IGIwZTU1OGI0NzNmOWIuLjM4YWNkNTMwNjIyY2MgMTAwNjQ0DQotLS0gYS9hcmNo
+L3g4Ni9rZXJuZWwvcmVsb2NhdGVfa2VybmVsXzY0LlMNCisrKyBiL2FyY2gveDg2L2tlcm5lbC9y
+ZWxvY2F0ZV9rZXJuZWxfNjQuUw0KQEAgLTEyOSw3ICsxMjksNyBAQCBpZGVudGl0eV9tYXBwZWQ6
+DQogCSAqICAtIHBoeXNpY2FsIGFkZHJlc3MgZXh0ZW5zaW9uIGVuYWJsZWQNCiAJICogIC0gNS1s
+ZXZlbCBwYWdpbmcsIGlmIGl0IHdhcyBlbmFibGVkIGJlZm9yZQ0KIAkgKi8NCi0JbW92bAkkWDg2
+X0NSNF9QQUUsICVlYXgNCisJbW92bAkkKFg4Nl9DUjRfUEFFIHwgWDg2X0NSNF9TTUVQKSwgJWVh
+eA0KIAl0ZXN0cQkkWDg2X0NSNF9MQTU3LCAlcjEzDQogCWp6CTFmDQogCW9ybAkkWDg2X0NSNF9M
+QTU3LCAlZWF4DQoNCg0KSSByZWFsaXplIHRoaXMgaXNuJ3QgdGhlIHJpZ2h0IHdheSB0byBkbyB0
+aGlzLiBCdXQgaXQgd2FzIGp1c3QgbXkgZmlyc3QNCmF0dGVtcHQgYXQgaXQuIFdlIHNob3VsZCBw
+cm9iYWJseSBqdXN0IGNoYW5nZSBpdCB0byBiZSBzb21ldGhpbmcgYWxvbmcNCnRoZSBsaW5lcyBv
+ZiwgaWYgdGhlIGJpdCB3YXMgYWxyZWFkeSBzZXQsIGtlZXAgaXQgc2V0LiBJIHByb2JhYmx5IGp1
+c3QNCm5lZWQgdG8gZ28gZnVydGhlciBkb3duIHRoYXQgcm9hZC4NCg0KDQo+IFdoYXQgSSBzdWdn
+ZXN0ZWQgaXMgdG8ganVzdCBhZGQgbWV0YWRhdGEgaW4gYSB2bWxpbnV4IEVMRiBzZWN0aW9uDQo+
+IHRoYXQgd2lsbCBiZSBkZXNpZ25hdGVkIHRvDQo+IGRlc2NyaWJlIHZtbGludXggaGFuZG92ZXIg
+Y2FwYWJpbGl0aWVzLg0KPiANCj4gVGhlbiwga2V4ZWMgZnVuY3Rpb25hbGl0eSBjYW4gYmUgbW9k
+aWZpZWQgdG8gcmVhZCB0aGlzIHNlY3Rpb24gYmVmb3JlDQo+IGxvYWRpbmcgJiBqdW1waW5nDQo+
+IHRvIG5ldyBrZXJuZWwgdm1saW51eC4NCj4gDQo+IEluIHRoZSBjb250ZXh0IG9mIHRoaXMgcGF0
+Y2gtc2V0LCB0aGlzIHNlY3Rpb24gd2lsbCBzcGVjaWZ5IGEgZmxhZyBvZg0KPiBpZiBuZXcgdm1s
+aW51eCBzdXBwb3J0cw0KPiBDUjAvQ1I0IHBpbm5pbmcgaGFuZC1vdmVyLiBJZiBub3QgYW5kIGN1
+cnJlbnQga2VybmVsIGFscmVhZHkgcGlubmVkDQo+IHRoZXNlIHZhbHVlcywNCj4ga2V4ZWMgc2hv
+dWxkIGp1c3QgcmV0dXJuIGZhaWx1cmUuDQo+IA0KPiBKdXN0IGZvciBleGFtcGxlLCBpbiB0aGUg
+Y29udGV4dCBvZiBJT01NVSBETUEgcHJvdGVjdGlvbiBoYW5kLW92ZXIsDQo+IGtleGVjIHdpbGwN
+Cj4gdXNlIGFub3RoZXIgZmxhZyB0byBuZXcgb2YgbmV3IHZtbGludXggc3VwcG9ydHMgSU9NTVUg
+RE1BIHByb3RlY3Rpb24NCj4gaGFuZC1vdmVyLA0KPiBhbmQgaWYgbm90LCBtYWtlIHN1cmUgdG8g
+ZGlzYWJsZSBJT01NVSBiZWZvcmUganVtcGluZyB0byBuZXcgdm1saW51eC4NCj4gDQoNCkFoIG9r
+YXkgSSdtIHNvcnJ5IEkgbWlzdW5kZXJzdG9vZC4NCg0KPiA+IFRoaXMgd291bGQgYmUgYSBsb25n
+ZXIgcHJvY2VzcyB0aG91Z2guIEFzIHZhbGlkYXRpbmcgdGhhdA0KPiA+IGV2ZXJ5dGhpbmcNCj4g
+PiBzdGlsbCB3b3JrcyBpbiBib3RoIHRoZSBWTSBhbmQgb24gcGh5c2ljYWwgaG9zdHMgd2lsbCBi
+ZSByZXF1aXJlZC4NCj4gPiBBcw0KPiA+IGl0IHN0YW5kcyB0aGlzIHBhdGNoc2V0IGNvdWxkIHBp
+Y2sgdXAgYSBmYWlybHkgbGFyZ2UgdXNlcmJhc2UgdmlhDQo+ID4gdGhlDQo+ID4gdmlydHVhbGl6
+ZWQgY29udGFpbmVyIHByb2plY3RzLiBTaG91bGQgd2UgcHVyc3VlIGtleGVjIGluIHRoaXMNCj4g
+PiBwYXRjaHNldA0KPiA+IG9yIGEgbGF0ZXIgb25lPw0KPiANCj4gSW4gbXkgb3BpbmlvbiwgdGhp
+cyBzaG91bGQgYmUgaGFuZGxlZCBhcyBwYXJ0IG9mIHRoaXMgcGF0Y2gtc2VyaWVzLg0KPiBPdGhl
+cndpc2UsIHlvdSBiYXNpY2FsbHkgaW50cm9kdWNlIGEga2VybmVsIGNoYW5nZSB0aGF0IGJyZWFr
+cw0KPiBleGlzdGluZyBmdW5jdGlvbmFsaXR5DQo+IGluIHVucHJlZGljdGFibGUgbWFubmVyIHRv
+IHVzZXIuDQo+IA0KPiBpLmUuIEl04oCZcyBvayBvZiBrZXJuZWwgd291bGQgaGF2ZW7igJl0IGFs
+bG93ZWQgdG8gdXNlIHN5c3RlbSByZWdpc3RlcnMNCj4gcGlubmluZyBmdW5jdGlvbmFsaXR5DQo+
+IHVubGVzcyB1c2VyIGFsc28gY29uZmlndXJlZCBhdCBib290LXRpbWUgdGhhdCBpdCBkaXNhYmxl
+cyBrZXhlYy4gQnV0DQo+IGl04oCZcyBub3Qgb2sgZm9yDQo+IGtlcm5lbCBiZWhhdmlvdXIgdG8g
+Y2hhbmdlIHN1Y2ggdGhhdCBrZXhlYyBzdWRkZW5seSBjcmFzaGVzIGlmIGtlcm5lbA0KPiB3YXMg
+dXBncmFkZWQNCj4gdG8gbm93IHVzZSBzeXN0ZW0gcmVnaXN0ZXJzIHBpbm5pbmcuDQo+IA0KPiBN
+eSBwZXJzb25hbCBvcGluaW9uIHRob3VnaCBpcyB0aGF0IGtleGVjIHNob3VsZCBmaXJzdCBiZSBl
+bmhhbmNlZCB0bw0KPiByZWFkIGhhbmQtb3ZlciBtZXRhZGF0YQ0KPiBhcyBJIGRlc2NyaWJlZC4g
+QW5kIG9ubHkgdGhlbiBhcHBseSB0aGlzIHBhdGNoLXNlcmllcyB3aGljaCBhbHNvDQo+IG1vZGlm
+aWVzIGtleGVjIHRvIGRlZmluZSBhbmQgdXNlDQo+IG9uZSBvZiB0aGUgaGFuZC1vdmVyIGJpdHMg
+YXMgSSBtZW50aW9uZWQgYWJvdmUuIEJ1dCBJIHdvdWxkIGxpa2UgdG8NCj4gaGVhciBhZGRpdGlv
+bmFsIG9waW5pb25zIG9uIHRoaXMuDQo+IA0KDQpJIHdpbGwgY2hlY2sgdGhpcyBvdXQuIFRoYW5r
+cy4NCg0KPiBJbiBhZGRpdGlvbiwgSSB3b3VsZCBsaWtlIHRvIHVuZGVyc3RhbmQgTGludXggc2Vj
+dXJpdHkgbWFpbnRhaW5lcnMNCj4gcG9pbnQgb2YgdmlldyBvbiB0aGUgY29tbWVudA0KPiBJIG1l
+bnRpb25lZCBpbiBhbm90aGVyIHJlcGx5IHJlZ2FyZGluZyBob3cgdGhpcyBtZWNoYW5pc20gaXMN
+Cj4gaW1wbGVtZW50ZWQgaW4gSHlwZXItVi4NCj4gDQoNCkkgYWdyZWUuIEkgZGlkIHNlZSBIeXBl
+ci1WcyBpbnRlcmZhY2UgZGVmaW5pdGlvbnMgYW5kIGRpZG4ndCB1bmRlcnN0YW5kDQppdCB0byBi
+ZSB0aGF0IHNpbXBsZS4gSXQgc2VlbWVkIGxpa2UgdGhlcmUgd2FzIGEgc2lnbmlmaWNhbnQgYW1v
+dW50IG9mDQpwcmUtZXhpc3RpbmcgaHlwZXJjYWxsIGluZnJhc3RydWN0dXJlIHRoYXQgaXQgd2Fz
+IGEgcGFydCBvZi4gTXkNCnVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgd2UnZCBoYXZlIHRvIHJlcGxp
+Y2F0ZSB0aGF0LCBhbmQgdGhlbiBvbmx5DQppbXBsZW1lbnQgdGhlIHN1YnNldCB0aGF0IHdlIGNh
+cmUgYWJvdXQuIEl0IHNlZW1lZCBsaWtlIG92ZXJraWxsIHRvIGdldA0KdGhpcyBlbmFibGVkLiBU
+aGUgZ29hbCBoZXJlIGhhcyBiZWVuIHRvIGdldCB0aGlzIENSIHByb3RlY3Rpb24gaW4gYXMgYQ0K
+c2ltcGxlIGludGVyZmFjZS4gSXQgd291bGQgb2YgY291cnNlIGJlIG5pY2UgdG8gaGF2ZSBhbGwg
+dGhvc2UNCnByb3RlY3Rpb25zIGFzIHdlbGwgdGhvdWdoLg0KDQpUaGFua3MsDQpKb2huDQoNCg==
