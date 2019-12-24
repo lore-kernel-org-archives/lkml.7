@@ -2,287 +2,136 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96E8C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 20:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB0CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C321206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 20:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF67F206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 21:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fE4cc+UI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RY6Z8gse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfLXUhY (ORCPT
+        id S1726258AbfLXVL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 15:37:24 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:56358 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfLXUhY (ORCPT
+        Tue, 24 Dec 2019 16:11:26 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34911 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfLXVL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 15:37:24 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBOKY2Jb043693;
-        Tue, 24 Dec 2019 20:35:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=lNCF4RZKGjVUIUjuki0UL6qlAXZJd6vY+N1gl3J6aqM=;
- b=fE4cc+UILaBonFrEj8cDhuqR6xb7sykQY/opaEI1qmnFcuuMHC//LGkl+crrGKRtVaUG
- p+9BnsmO6MCCTxVCpUlXjrbk34iGUWbEFKoUxW2kxNMZE6uIZRmWpAiaJIsOOpYnoD/o
- ifRXup++98Bsm6K9o0ZDdsZkuRnR1QyyPTisz0Rjpy+vYtZ/7V8apolLCHse1lv3VTOo
- 0UwJuYBlzCH+CkfjbrsX62PhDBfWQnqZc+82AP4FAb+hnNnqzo98/UkDc0pIiwK5EYoK
- qMZ3SvaX8gzyDry+OQFCKFfsmdIyGT19FxBNpsylx84OlGSTSHKucf5z2s514XNRs5Mj PQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2x1c1qvur0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Dec 2019 20:35:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBOKTMWL151477;
-        Tue, 24 Dec 2019 20:35:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2x3amshsk7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Dec 2019 20:35:50 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBOKZnKJ019145;
-        Tue, 24 Dec 2019 20:35:49 GMT
-Received: from [192.168.14.112] (/109.64.214.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Dec 2019 12:35:49 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <73950aff51bdf908f75ffa5e5cb629fc1d4ebbb6.camel@intel.com>
-Date:   Tue, 24 Dec 2019 22:35:43 +0200
-Cc:     "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>, "bp@alien8.de" <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <91A51486-9CE8-4041-AAB2-0507D42C5A72@oracle.com>
-References: <20191220192701.23415-1-john.s.andersen@intel.com>
- <1EBCD42E-9109-47A1-B959-6363A509D48D@oracle.com>
- <73950aff51bdf908f75ffa5e5cb629fc1d4ebbb6.camel@intel.com>
-To:     "Andersen, John S" <john.s.andersen@intel.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9481 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912240180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9481 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912240181
+        Tue, 24 Dec 2019 16:11:26 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so8846618plt.2;
+        Tue, 24 Dec 2019 13:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZiIq+ODPkbmk3OovkgYvNLseu4fXK344aj0AC+jChpw=;
+        b=RY6Z8gse4WXDdfZUdueg1YmV1qD/5ihmI7srcNXb/Yp7J/HxRn36oJWbCpXvJValW8
+         fX0pql5BS3/8FxAI0eTafuTOqUE2F2Pj/AfS/fjTSfJJ/xA/Qc5JCCWjv2NZpqvfp1R1
+         sh0HxjoxwLciBEgdmw9V8/K15LNahSLMjAzi28nSEbbPi3Mr0L8xbwtP/6MsK6q0Smsg
+         SsYBgEDd8V+o91ROgm5nfGt8Gfltntiz3OoM4/F55FXXbDOKUTaXcZMFaYzG/Nu3vTIj
+         H5XJA+lCN19m0kVswZuqNme/LBmDnjGQnT4FBEH9EZPxKPzMw104P3QGdDNKDqjlVp93
+         kEmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZiIq+ODPkbmk3OovkgYvNLseu4fXK344aj0AC+jChpw=;
+        b=rSw/NyvfRfLu2A8dgkRyciQJQbQXXmqxYElqWTZl+WleSPZDrV83wJkgyJWMBfDB+W
+         cxMSBPwvjreyvP09HUWfnucCmCxAXCs7J/FGQdkh79hEyq67+VJHVwysf/jfrQeRB4OJ
+         nENI/f+pjy5sAbFeWtOuZGOGm5AiGfu9iU+vsu6hKzxInZymb20g7wEu2Fc2Gyih2REJ
+         MxIsjPVGODlkZnX2GOWlJaa0WX3Ggz7t4U2AzZeKyPB5ob9vbn39EeDmLFs/p8Kky3cM
+         QcwBaAae/p5EnTSpXkT4lGNqZDml3lZLqI/wnDKMzKaE/tyrcfXrYVzBVUh2aELwMM3U
+         yj5A==
+X-Gm-Message-State: APjAAAUGPF+lCp41GxIAkbmetomw9Et6rJKb5j7WzruoaFZRzlREM79I
+        6UnO4kVEHpDFEG9dba7rDbYsoViw
+X-Google-Smtp-Source: APXvYqz/C+9WgC+V/KEVMJDIBQxjgDS5AWjMUU0pMEE5lxF1QcLlKmnkbJUos6rMHuo0uN5S7XR9Zw==
+X-Received: by 2002:a17:902:bb8c:: with SMTP id m12mr38370736pls.320.1577221885159;
+        Tue, 24 Dec 2019 13:11:25 -0800 (PST)
+Received: from localhost.localdomain ([211.243.117.64])
+        by smtp.gmail.com with ESMTPSA id r28sm27021199pgk.39.2019.12.24.13.11.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 13:11:24 -0800 (PST)
+From:   Hyunki Koo <hyunki00.koo@gmail.com>
+Cc:     Hyunki Koo <hyunki00.koo@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] irqchip: define EXYNOS_IRQ_COMBINER
+Date:   Wed, 25 Dec 2019 06:11:07 +0900
+Message-Id: <20191224211108.7128-1-hyunki00.koo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hyunki Koo <hyunki00.koo@samsung.com>
 
+This patch is written to clean up dependency of ARCH_EXYNOS
+Not all exynos device have IRQ_COMBINER, especially aarch64 EXYNOS
+but it is built for all exynos devices.
+Thus add the config for EXYNOS_IRQ_COMBINER
+remove direct dependency between ARCH_EXYNOS and exynos-combiner.c
+and only selected on the aarch32 devices
 
-> On 24 Dec 2019, at 21:44, Andersen, John S <john.s.andersen@intel.com> =
-wrote:
->=20
-> On Mon, 2019-12-23 at 16:48 +0200, Liran Alon wrote:
->>> On 20 Dec 2019, at 21:26, John Andersen <john.s.andersen@intel.com>
->>> wrote:
->>>=20
->>> Pinning is not active when running in SMM. Entering SMM disables
->>> pinned
->>> bits, writes to control registers within SMM would therefore
->>> trigger
->>> general protection faults if pinning was enforced.
->>=20
->> For compatibility reasons, it=E2=80=99s reasonable that pinning =
-won=E2=80=99t be
->> active when running in SMM.
->> However, I do think we should not allow vSMM code to change pinned
->> values when returning back from SMM.
->> This would prevent a vulnerable vSMI handler from modifying vSMM
->> state-area to modify CR4 when running outside of vSMM.
->> I believe in this case it=E2=80=99s legit to just forcibly restore =
-original
->> CR0/CR4 pinned values. Ignoring vSMM changes.
->>=20
->=20
-> In em_rsm could we just OR with the value of the PINNED MSRs right
-> before the final return?
+Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+---
+ arch/arm/mach-exynos/Kconfig | 1 +
+ drivers/irqchip/Kconfig      | 7 +++++++
+ drivers/irqchip/Makefile     | 2 +-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-Not exactly.
-
-If I understand correctly, the proposed mechanism should also allow =
-pinning specific
-system registers (e.g. CR0/CR4) bits to either being cleared or being =
-set. Not necessarily being set.
-As kvm_set_cr0() & kvm_set_cr4() were modified to only check if pinned =
-bit changed value.
-
-Therefore, you should modify enter_smm() to save current pinned bits =
-values
-and then silently restore their values on em_rsm().
-
->=20
->>> The guest may never read pinned bits. If an attacker were to read
->>> the
->>> CR pinned MSRs, they might decide to preform another attack which
->>> would
->>> not cause a general protection fault.
->>=20
->> I disagree with this statement.
->> An attacker knows what is the system it is attacking and can deduce
->> by that which bits it pinned=E2=80=A6
->> Therefore, protecting from guest reading these is not important at
->> all.
->>=20
->=20
-> Sure, I'll make it readable.
->=20
->>> Should userspace expose the CR pining CPUID feature bit, it must
->>> zero CR
->>> pinned MSRs on reboot. If it does not, it runs the risk of having
->>> the
->>> guest enable pinning and subsequently cause general protection
->>> faults on
->>> next boot due to early boot code setting control registers to
->>> values
->>> which do not contain the pinned bits.
->>=20
->> Why reset CR pinned MSRs by userspace instead of KVM INIT handling?
->>=20
->>> When running with KVM guest support and paravirtualized CR pinning
->>> enabled, paravirtualized and existing pinning are setup at the same
->>> point on the boot CPU. Non-boot CPUs setup pinning upon
->>> identification.
->>>=20
->>> Guests using the kexec system call currently do not support
->>> paravirtualized control register pinning. This is due to early boot
->>> code writing known good values to control registers, these values
->>> do
->>> not contain the protected bits. This is due to CPU feature
->>> identification being done at a later time, when the kernel properly
->>> checks if it can enable protections.
->>>=20
->>> Most distributions enable kexec. However, kexec could be made boot
->>> time
->>> disableable. In this case if a user has disabled kexec at boot time
->>> the guest will request that paravirtualized control register
->>> pinning
->>> be enabled. This would expand the userbase to users of major
->>> distributions.
->>>=20
->>> Paravirtualized CR pinning will likely be incompatible with kexec
->>> for
->>> the foreseeable future. Early boot code could possibly be changed
->>> to
->>> not clear protected bits. However, a kernel that requests CR bits
->>> be
->>> pinned can't know if the kernel it's kexecing has been updated to
->>> not
->>> clear protected bits. This would result in the kernel being kexec'd
->>> almost immediately receiving a general protection fault.
->>=20
->> Instead of disabling kexec entirely, I think it makes more sense to
->> invent
->> some generic mechanism in which new kernel can describe to old kernel
->> a set of flags that specifies which features hand-over it supports.
->> One of them
->> being pinned CRs.
->>=20
->> For example, isn=E2=80=99t this also relevant for IOMMU DMA =
-protection?
->> i.e. Doesn=E2=80=99t old kernel need to know if it should disable or =
-enable
->> IOMMU DMAR
->> before kexec to new kernel? Similar to EDK2 IOMMU DMA protection
->> hand-over?
->=20
-> Great idea.
->=20
-> Making kexec work will require changes to these files and maybe more:
->=20
-> arch/x86/boot/compressed/head_64.S
-> arch/x86/kernel/head_64.S
-> arch/x86/kernel/relocate_kernel_64.S
->=20
-> Which my previous attempts showed different results when running
-> virtualized vs. unvirtualized. Specificity different behavior with =
-SMAP
-> and UMIP bits.
-
-I didn=E2=80=99t understand why there should be different results when =
-running virtualized or not.
-
-What I suggested is to just add metadata in a vmlinux ELF section that =
-will be designated to
-describe vmlinux handover capabilities.
-
-Then, kexec functionality can be modified to read this section before =
-loading & jumping
-to new kernel vmlinux.
-
-In the context of this patch-set, this section will specify a flag of if =
-new vmlinux supports
-CR0/CR4 pinning hand-over. If not and current kernel already pinned =
-these values,
-kexec should just return failure.
-
-Just for example, in the context of IOMMU DMA protection hand-over, =
-kexec will
-use another flag to new of new vmlinux supports IOMMU DMA protection =
-hand-over,
-and if not, make sure to disable IOMMU before jumping to new vmlinux.
-
->=20
-> This would be a longer process though. As validating that everything
-> still works in both the VM and on physical hosts will be required. As
-> it stands this patchset could pick up a fairly large userbase via the
-> virtualized container projects. Should we pursue kexec in this =
-patchset
-> or a later one?
-
-In my opinion, this should be handled as part of this patch-series.
-Otherwise, you basically introduce a kernel change that breaks existing =
-functionality
-in unpredictable manner to user.
-
-i.e. It=E2=80=99s ok of kernel would haven=E2=80=99t allowed to use =
-system registers pinning functionality
-unless user also configured at boot-time that it disables kexec. But =
-it=E2=80=99s not ok for
-kernel behaviour to change such that kexec suddenly crashes if kernel =
-was upgraded
-to now use system registers pinning.
-
-My personal opinion though is that kexec should first be enhanced to =
-read hand-over metadata
-as I described. And only then apply this patch-series which also =
-modifies kexec to define and use
-one of the hand-over bits as I mentioned above. But I would like to hear =
-additional opinions on this.
-
-In addition, I would like to understand Linux security maintainers point =
-of view on the comment
-I mentioned in another reply regarding how this mechanism is implemented =
-in Hyper-V.
-
--Liran
-
->=20
-> Thanks,
-> John
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 4ef56571145b..6e7f10c8098a 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -12,6 +12,7 @@ menuconfig ARCH_EXYNOS
+ 	select ARCH_SUPPORTS_BIG_ENDIAN
+ 	select ARM_AMBA
+ 	select ARM_GIC
++	select EXYNOS_IRQ_COMBINER
+ 	select COMMON_CLK_SAMSUNG
+ 	select EXYNOS_ASV
+ 	select EXYNOS_CHIPID
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index ba152954324b..4c774d85375b 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -499,4 +499,11 @@ config SIFIVE_PLIC
+ 
+ 	   If you don't know what to do here, say Y.
+ 
++config EXYNOS_IRQ_COMBINER
++	bool "Samsung Exynos IRQ combiner support" if COMPILE_TEST
++	depends on (ARCH_EXYNOS && ARM) || COMPILE_TEST
++	help
++	  Say yes here to add support for the IRQ combiner devices embedded
++	  in Samsung Exynos chips.
++
+ endmenu
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index e806dda690ea..60d7c7260fc3 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -9,7 +9,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+ obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
+ obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
+-obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
++obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
+ obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
+ obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
+ obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
+-- 
+2.17.1
 
