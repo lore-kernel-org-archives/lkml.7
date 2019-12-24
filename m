@@ -2,186 +2,262 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC50AC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B92C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F780206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30141206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 06:28:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjaOFGap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbfLXG1O (ORCPT
+        id S1726160AbfLXG2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:27:14 -0500
-Received: from mga07.intel.com ([134.134.136.100]:41025 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfLXG1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:27:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 22:27:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,350,1571727600"; 
-   d="scan'208";a="367253756"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.215.56]) ([10.254.215.56])
-  by orsmga004.jf.intel.com with ESMTP; 23 Dec 2019 22:27:12 -0800
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiBbUEFUQ0hdIGlvbW11L3Z0LWQ6IERv?=
- =?UTF-8?Q?n=27t_reject_nvme_host_due_to_scope_mismatch?=
-To:     "Jim,Yan" <jimyan@baidu.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4b77511069cb4fbc982eebaad941cd23@baidu.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <149a454d-96ea-1e25-74d1-04a08f8b261e@linux.intel.com>
-Date:   Tue, 24 Dec 2019 14:27:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Tue, 24 Dec 2019 01:28:45 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:36600 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfLXG2p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 01:28:45 -0500
+Received: by mail-qv1-f67.google.com with SMTP id m14so7174784qvl.3;
+        Mon, 23 Dec 2019 22:28:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y0GuElMuTFkehjy6FB6Db/tI9DDfpT2zdCzSc2Sc8R4=;
+        b=sjaOFGapq8vFjrdXnfskp/dnLNdOvtAGNA6pIDirEwqEMl43lnJsw9CMHeOBCA1RfT
+         VzsTRasZwhXQpbyy7iqR5sZzKMOMyAysOVcYhnkH1PHsgIPuVbz6vGXx1nNZk89b8WBB
+         01vBD2hXTvijsLVVeC0qMVkv2tcdqTmpV5mQ7cFwrNQRdz4FgSqIhgKJ0pUtRjwcbuMY
+         AqnCmDw4mQPxPj3ZFM7EJMUcTdfb701uf2uOwscZPW5zBGPQYOfLtXDLUrGVWR3Fpj0d
+         k8ZgZEHRcFo5aDWSnA9maQMKcCFGVE9pqNiXOK7TO3XotSuO+e+CYyImJTd8niBF7FPy
+         fJfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y0GuElMuTFkehjy6FB6Db/tI9DDfpT2zdCzSc2Sc8R4=;
+        b=A+zbeqgFRZ0cu48Y/UvdfqzKi96b9vR7LCPRoVbwq7coQkNQQNY9COyTEC+wz0KKpb
+         aZKn2q9d/iA6GXAL3SfAhC+74RZ+HN7WQk5vcY/vlLM3ke8Yeb1wS+mGR8vZprbRUzZ3
+         Vnlkv8B8ZYYFdspUQFgW/u5u+MQURYH1UNGgrIKyeRxeqUsYQo19QRA8Kk8sTgT1YlAC
+         foDpj+oXN51CSCrm6xnzLwmEDXUYhGr40UzvQpE20Nd1EigMP5EyTKAO3G8yJJWHbwnu
+         waL/hNytKGP/WbrZQYyp7X3blW05tEWQxHxBFWZLzkZUoc7PKDu5mCxUmmlLn/hxg16n
+         wQfg==
+X-Gm-Message-State: APjAAAXL/yIXjjVHGVMi5rVZsM0QWE3rzcTqI8RgfwmG94NYPGLmvVWN
+        I6vcO6BwPknT0n7qkpfe4axQfBq63KK3eTfahz9Q+obC
+X-Google-Smtp-Source: APXvYqxj/Kuh5GLp7e+RU0qvFVaVpbxcz/JXdZhPkZRKQALPCmzLefkTf1AgZIxbQiLUUfBtxFwPKub+9mtVy3BOrbw=
+X-Received: by 2002:ad4:514e:: with SMTP id g14mr27580830qvq.196.1577168923502;
+ Mon, 23 Dec 2019 22:28:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4b77511069cb4fbc982eebaad941cd23@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-7-kpsingh@chromium.org>
+In-Reply-To: <20191220154208.15895-7-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 23 Dec 2019 22:28:32 -0800
+Message-ID: <CAEf4BzZ+wMTjghpr4=e5AY9xeFjvm-Rc+JooJzJstBW1r73z4A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 06/13] bpf: lsm: Init Hooks and create files
+ in securityfs
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jim,
+On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> The LSM creates files in securityfs for each hook registered with the
+> LSM.
+>
+>     /sys/kernel/security/bpf/<h_name>
+>
+> The list of LSM hooks are maintained in an internal header "hooks.h"
+> Eventually, this list should either be defined collectively in
+> include/linux/lsm_hooks.h or auto-generated from it.
+>
+> * Creation of a file for the hook in the securityfs.
+> * Allocation of a bpf_lsm_hook data structure which stores
+>   a pointer to the dentry of the newly created file in securityfs.
+> * Creation of a typedef for the hook so that BTF information
+>   can be generated for the LSM hooks to:
+>
+>   - Make them "Compile Once, Run Everywhere".
+>   - Pass the right arguments when the attached programs are run.
+>   - Verify the accesses made by the program by using the BTF
+>     information.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  include/linux/bpf_lsm.h        |   12 +
+>  security/bpf/Makefile          |    4 +-
+>  security/bpf/include/bpf_lsm.h |   63 ++
+>  security/bpf/include/fs.h      |   23 +
+>  security/bpf/include/hooks.h   | 1015 ++++++++++++++++++++++++++++++++
+>  security/bpf/lsm.c             |  138 ++++-
+>  security/bpf/lsm_fs.c          |   82 +++
+>  7 files changed, 1333 insertions(+), 4 deletions(-)
+>  create mode 100644 include/linux/bpf_lsm.h
+>  create mode 100644 security/bpf/include/bpf_lsm.h
+>  create mode 100644 security/bpf/include/fs.h
+>  create mode 100644 security/bpf/include/hooks.h
+>  create mode 100644 security/bpf/lsm_fs.c
+>
 
-On 2019/12/24 11:24, Jim,Yan wrote:
->> -----邮件原件-----
->> 发件人: Lu Baolu [mailto:baolu.lu@linux.intel.com]
->> 发送时间: 2019年12月23日 21:05
->> 收件人: Jim,Yan <jimyan@baidu.com>; Jerry Snitselaar <jsnitsel@redhat.com>
->> 抄送: iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org
->> 主题: Re: 答复: [PATCH] iommu/vt-d: Don't reject nvme host due to scope
->> mismatch
->>
->> Hi,
->>
->> On 2019/12/23 15:59, Jim,Yan wrote:
->>>> -----邮件原件-----
->>>> 发件人: Jerry Snitselaar [mailto:jsnitsel@redhat.com]
->>>> 发送时间: 2019年12月20日 17:23
->>>> 收件人: Jim,Yan <jimyan@baidu.com>
->>>> 抄送: joro@8bytes.org; iommu@lists.linux-foundation.org;
->>>> linux-kernel@vger.kernel.org
->>>> 主题: Re: [PATCH] iommu/vt-d: Don't reject nvme host due to scope
->>>> mismatch
->>>>
->>>> On Fri Dec 20 19, jimyan wrote:
->>>>> On a system with an Intel PCIe port configured as a nvme host
->>>>> device, iommu initialization fails with
->>>>>
->>>>>      DMAR: Device scope type does not match for 0000:80:00.0
->>>>>
->>>>> This is because the DMAR table reports this device as having scope 2
->>>>> (ACPI_DMAR_SCOPE_TYPE_BRIDGE):
->>>>>
->>>>
->>>> Isn't that a problem to be fixed in the DMAR table then?
->>>>
->>>>> but the device has a type 0 PCI header:
->>>>> 80:00.0 Class 0600: Device 8086:2020 (rev 06)
->>>>> 00: 86 80 20 20 47 05 10 00 06 00 00 06 10 00 00 00
->>>>> 10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->>>>> 20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
->>>>> 30: 00 00 00 00 90 00 00 00 00 00 00 00 00 01 00 00
->>>>>
->>>>> VT-d works perfectly on this system, so there's no reason to bail
->>>>> out on initialization due to this apparent scope mismatch. Add the
->>>>> class
->>>>> 0x600 ("PCI_CLASS_BRIDGE_HOST") as a heuristic for allowing DMAR
->>>>> initialization for non-bridge PCI devices listed with scope bridge.
->>>>>
->>>>> Signed-off-by: jimyan <jimyan@baidu.com>
->>>>> ---
->>>>> drivers/iommu/dmar.c | 1 +
->>>>> 1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c index
->>>>> eecd6a421667..9faf2f0e0237 100644
->>>>> --- a/drivers/iommu/dmar.c
->>>>> +++ b/drivers/iommu/dmar.c
->>>>> @@ -244,6 +244,7 @@ int dmar_insert_dev_scope(struct
->>>> dmar_pci_notify_info *info,
->>>>> 		     info->dev->hdr_type != PCI_HEADER_TYPE_NORMAL) ||
->>>>> 		    (scope->entry_type == ACPI_DMAR_SCOPE_TYPE_BRIDGE
->> &&
->>>>> 		     (info->dev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
->>>>> +			  info->dev->class >> 8 != PCI_CLASS_BRIDGE_HOST &&
->>>>> 		      info->dev->class >> 8 != PCI_CLASS_BRIDGE_OTHER))) {
->>>>> 			pr_warn("Device scope type does not match for %s\n",
->>>>> 				pci_name(info->dev));
->>>>> --
->>>>> 2.11.0
->>>>>
->>>>> _______________________________________________
->>>>> iommu mailing list
->>>>> iommu@lists.linux-foundation.org
->>>>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>>>>
->>> Actually this patch is similar to the commit: ffb2d1eb88c3("iommu/vt-d: Don't
->> reject NTB devices due to scope mismatch"). Besides, modifying DMAR table
->> need OEM update BIOS. It is hard to implement.
->>>
->>
->> For both cases, a quirk flag seems to be more reasonable, so that unrelated
->> devices will not be impacted.
->>
->> Best regards,
->> baolu
-> 
-> Hi Baolu,
-> 	Thanks for your advice. And I modify the patch as follow.
+[...]
 
-I just posted a patch for both NTG and NVME cases. Can you please take a
-look? Does it work for you?
+> +
+> +/*
+> + * The hooks can have an int or void return type, these macros allow having a
+> + * single implementation of DEFINE_LSM_HOOK irrespective of the return type.
+> + */
+> +#define LSM_HOOK_RET(ret, x) LSM_HOOK_RET_##ret(x)
+> +#define LSM_HOOK_RET_int(x) x
+> +#define LSM_HOOK_RET_void(x)
+> +
+> +/*
+> + * This macro defines the body of a LSM hook which runs the eBPF programs that
+> + * are attached to the hook and returns the error code from the eBPF programs if
+> + * the return type of the hook is int.
+> + */
+> +#define DEFINE_LSM_HOOK(hook, ret, proto, args)                                \
+> +typedef ret (*lsm_btf_##hook)(proto);                                  \
+> +static ret bpf_lsm_##hook(proto)                                       \
+> +{                                                                      \
+> +       return LSM_HOOK_RET(ret, LSM_RUN_PROGS(hook##_type, args));     \
+>  }
 
-Best regards,
-baolu
+I'm probably missing something, but according to LSM_HOOK_RET
+definition for when ret==void, bpf_lsm_##hook will be a noop and won't
+call any BPF program. Did I miss some additional macro magic?
 
-> 
->      On a system with an Intel PCIe port configured as a nvme host device, iommu
->      initialization fails with
->      
->          DMAR: Device scope type does not match for 0000:80:00.0
->      
->      This is because the DMAR table reports this device as having scope 2
->      (ACPI_DMAR_SCOPE_TYPE_BRIDGE):
->      
->      but the device has a type 0 PCI header:
->      80:00.0 Class 0600: Device 8086:2020 (rev 06)
->      00: 86 80 20 20 47 05 10 00 06 00 00 06 10 00 00 00
->      10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->      20: 00 00 00 00 00 00 00 00 00 00 00 00 86 80 00 00
->      30: 00 00 00 00 90 00 00 00 00 00 00 00 00 01 00 00
->      
->      VT-d works perfectly on this system, so there's no reason to bail out
->      on initialization due to this apparent scope mismatch. Add the class
->      0x06 ("PCI_BASE_CLASS_BRIDGE") as a heuristic for allowing DMAR
->      initialization for non-bridge PCI devices listed with scope bridge.
->      
->      Signed-off-by: jimyan <jimyan@baidu.com>
-> 
-> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-> index eecd6a421667..50c92eb23ee4 100644
-> --- a/drivers/iommu/dmar.c
-> +++ b/drivers/iommu/dmar.c
-> @@ -244,7 +244,7 @@ int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
->                       info->dev->hdr_type != PCI_HEADER_TYPE_NORMAL) ||
->                      (scope->entry_type == ACPI_DMAR_SCOPE_TYPE_BRIDGE &&
->                       (info->dev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
-> -                     info->dev->class >> 8 != PCI_CLASS_BRIDGE_OTHER))) {
-> +                     info->dev->class >> 16 != PCI_BASE_CLASS_BRIDGE))) {
->                          pr_warn("Device scope type does not match for %s\n",
->                                  pci_name(info->dev));
->                          return -EINVAL;
-> 
-> 
-> Jim
-> 
+>
+> +/*
+> + * Define the body of each of the LSM hooks defined in hooks.h.
+> + */
+> +#define BPF_LSM_HOOK(hook, ret, args, proto) \
+> +       DEFINE_LSM_HOOK(hook, ret, BPF_LSM_ARGS(args), BPF_LSM_ARGS(proto))
+> +#include "hooks.h"
+> +#undef BPF_LSM_HOOK
+> +#undef DEFINE_LSM_HOOK
+> +
+> +/*
+> + * Initialize the bpf_lsm_hooks_list for each of the hooks defined in hooks.h.
+> + * The list contains information for each of the hook and can be indexed by the
+> + * its type to initialize security FS, attach, detach and execute eBPF programs
+> + * for the hook.
+> + */
+> +struct bpf_lsm_hook bpf_lsm_hooks_list[] = {
+> +       #define BPF_LSM_HOOK(h, ...)                                    \
+> +               [h##_type] = {                                          \
+> +                       .h_type = h##_type,                             \
+> +                       .mutex = __MUTEX_INITIALIZER(                   \
+> +                               bpf_lsm_hooks_list[h##_type].mutex),    \
+> +                       .name = #h,                                     \
+> +                       .btf_hook_func =                                \
+> +                               (void *)(lsm_btf_##h)(bpf_lsm_##h),     \
+
+this btf_hook_func, is it assigned just so that type information for
+bpf_lsm_xxx typedefs are preserved, is that right? It doesn't seem to
+be ever called or read. If I'm not missing anything, check out
+Martin's latest STRUCT_OPS patch set. He defines EMIT_TYPE_INFO(type)
+macro, which will ensure that BTF for specified type is emitted into
+vmlinux BTF, without actually using any extra space, defining extra
+fields or static variables, etc. I suggest using the same for the
+cleanest result.
+
+One more thing regarding lsm_bpf_ typedefs. Currently you are defining
+them as a pointer to func_proto, matching LSM hook. There is an
+alternative approach, which has few benefits over using func_proto. If
+instead you define a struct, where each argument of func prototype is
+represented as 8-byte aligned field, this will contain all the
+necessary information for BPF verifier to do its job (just like
+func_proto). But in addition to that, when vmlinux.h is generated, it
+will contain a nice struct bpf_lsm_<hook_name> with correct structure
+to be used **directly** in BPF program, as a single context argument.
+So with vmlinux.h, users won't have to re-define all the argument
+types and names in their BPF_TRACE_x definition. Let me provide
+concrete example from your cover letter. This is what you provide as
+an example:
+
+BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
+            struct vm_area_struct *, vma,
+            unsigned long, reqprot, unsigned long, prot) {...}
+
+on kernel side, you'll have:
+
+typedef int (*bpf_lsm_file_mprotect)(struct vm_area_struct *vma,
+                                     unsigned long reqprot,
+                                     unsigned long prot);
+
+So you can see that user has to go and copy/paste all the arguments
+and their types and paste them in this verbose BPF_TRACE_3 macro to
+define correct BPF program.
+
+Now, imagine that instead of typedef above, we define equivalent struct:
+
+struct bpf_lsm_file_mprotect {
+    struct vm_area_struct *vma;
+    unsigned long reqprot;
+    unsigned long prot;
+};
+
+This type will get dumped into vmlinux.h, which can be used from BPF
+user code as such:
+
+SEC("lsm/file_mprotect")
+int mprotect_audito(struct bpf_lsm_file_mprotect *ctx)
+{
+    ... here you can use ctx->vma, ctx->reqprot, ctx->prot ...
+}
+
+
+Meanwhile, there will be just minimal changes to BPF verifier to use
+such struct instead of func_proto for verification of LSM programs.
+
+We currently have similar issue with raw_tp programs and I've been
+thinking about switching that to structs instead of func_proto, so we
+might as well coordinate that and reuse the same logic in BPF
+verifier.
+
+Thoughts?
+
+
+
+> +               },
+> +       #include "hooks.h"
+> +       #undef BPF_LSM_HOOK
+> +};
+> +
+
+[...]
