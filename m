@@ -2,36 +2,37 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C1EC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CF9C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE8120409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D29B20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577185883;
-	bh=OxrNQ2gsibIn4jw7hR+CUTPYXhB9+uDPsB7VVD74JHQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ADyErR/iaqJec/u6+ce4ZFYUMD/O8onyiKeFtMUKdU4V8pCpcZGCOUsPWSQ5Zk1RP
-	 3HhJ9lRil0He6vw3jyfpdRkBj1+DIoPmnOL3gQG0M0u8NS1d2t7j8GSxqTvc+LMoYf
-	 +MfsXTPxjJtjpJoHI82K6A1hC+0Xzqfu0Ie3yFEY=
+	s=default; t=1577185885;
+	bh=wB2q8V6IWHe43lIsYJ1AEimImJriYZRMoU1uE02yDas=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bUl2a2AzF0q/SmRLG8KLEkYbAfYP4FnF1+FhrvfKdEp0dPbuNJpp1mFF99dwEMH30
+	 XueIlWu0Cu4Dn+B1EjUjcGsjMZDNkWJfcfukP5nZTrLjyjtvnJqpub+ZXrOE3IioUO
+	 cL36jYG5JizD1webN6KhVKHAtC0Twn/+rj9CRm5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfLXLLW (ORCPT
+        id S1727030AbfLXLLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:11:22 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:39644 "EHLO
+        Tue, 24 Dec 2019 06:11:24 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37476 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726314AbfLXLLP (ORCPT
+        by vger.kernel.org with ESMTP id S1726298AbfLXLLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:11:15 -0500
+        Tue, 24 Dec 2019 06:11:18 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji5l-000169-Tz; Tue, 24 Dec 2019 12:11:10 +0100
+        id 1iji5s-000169-GZ; Tue, 24 Dec 2019 12:11:16 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -44,10 +45,12 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 00/32] irqchip/gic-v4: GICv4.1 architecture support
-Date:   Tue, 24 Dec 2019 11:10:23 +0000
-Message-Id: <20191224111055.11836-1-maz@kernel.org>
+Subject: [PATCH v3 08/32] irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP
+Date:   Tue, 24 Dec 2019 11:10:31 +0000
+Message-Id: <20191224111055.11836-9-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
+References: <20191224111055.11836-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
@@ -59,123 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[All I want for Christmas is... another monster GIC series!]
+With GICv4.1, VMOVP is extended to allow a default doorbell to be
+specified, as well as a validity bit for this doorbell. As an added
+bonus, VMOVP isn't required anymore of moving a VPE between
+redistributors that share the same affinity.
 
-This rather long series expands the existing GICv4 support to deal with the
-new GICv4.1 architecture, which comes with a set of major improvements
-compared to v4.0:
+Let's add this support to the VMOVP builder, and make sure we don't
+issue the command if we don't really need to.
 
-- One architectural doorbell per vcpu, instead of one doorbell per VLPI
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 40 ++++++++++++++++++++++++++------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
-- Doorbell entirely managed by the HW, with an "at most once" delivery
-  guarantee per non-residency phase and only when requested by the
-  hypervisor
-
-- A shared memory scheme between ITSs and redistributors, allowing for an
-  optimised residency sequence (the use of VMOVP becomes less frequent)
-
-- Support for direct virtual SGI delivery (the injection path still involves
-  the hypervisor), at the cost of losing the active state on SGIs. It
-  shouldn't be a big deal, but some guest operating systems might notice
-  (Linux definitely won't care).
-
-On the other hand, public documentation is not available yet, so that's a
-bit annoying...
-
-The series is roughly organised in 5 parts:
-
-(1) Feature detection, errata workaround for TX1
-(2) VPE table allocation, new flavours of VMAPP/VMOVP commands
-(3) v4.1 doorbell management
-(4) Virtual SGI support
-(5) Plumbing of virtual SGIs in KVM
-
-Ideally, I'd like to start merging some of this into 5.6.
-
-Notes:
-
-  - This series has uncovered a behaviour that looks like a HW bug on
-    the Cavium ThunderX (aka TX1) platform (see patch #3). I'd very
-    much welcome some clarification from the Marvell/Cavium folks on
-    Cc, as well as an official erratum number if this happens to be an
-    actual bug.
-
-    [v3 update]
-    People have ignored for two months now, and it is fairly obvious
-    that support for this machine is slowly bit-rotting. Maybe I'll
-    drop the patch and instead start the process of removing all TX1
-    support from the kernel (we'd certainly be better off without it).
-
-* From v2 [2]:
-  - Another bunch of fixes thanks to Zenghui Yu's very careful review
-  - HW-accelerated SGIs are now optional thanks to new architected
-    discovery/selection bits exposed by KVM and used by the guest kernel
-  - Rebased on v5.5-rc2
-
-* From v1 [1]:
-  - A bunch of minor reworks after Zenghui Yu's review
-  - A workaround for what looks like a new and unexpected TX1 bug
-  - A subtle reorder of the series so that some patches can go in early
-
-[1] https://lore.kernel.org/lkml/20190923182606.32100-1-maz@kernel.org/
-[2] https://lore.kernel.org/lkml/20191027144234.8395-1-maz@kernel.org/
-
-Marc Zyngier (32):
-  irqchip/gic-v3: Detect GICv4.1 supporting RVPEID
-  irqchip/gic-v3: Add GICv4.1 VPEID size discovery
-  irqchip/gic-v3: Workaround Cavium TX1 erratum when reading GICD_TYPER2
-  irqchip/gic-v3: Use SGIs without active state if offered
-  irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation
-  irqchip/gic-v4.1: Implement the v4.1 flavour of VMAPP
-  irqchip/gic-v4.1: Don't use the VPE proxy if RVPEID is set
-  irqchip/gic-v4.1: Implement the v4.1 flavour of VMOVP
-  irqchip/gic-v4.1: Plumb skeletal VPE irqchip
-  irqchip/gic-v4.1: Add mask/unmask doorbell callbacks
-  irqchip/gic-v4.1: Add VPE residency callback
-  irqchip/gic-v4.1: Add VPE eviction callback
-  irqchip/gic-v4.1: Add VPE INVALL callback
-  irqchip/gic-v4.1: Suppress per-VLPI doorbell
-  irqchip/gic-v4.1: Allow direct invalidation of VLPIs
-  irqchip/gic-v4.1: Advertise support v4.1 to KVM
-  irqchip/gic-v4.1: Map the ITS SGIR register page
-  irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
-  irqchip/gic-v4.1: Add initial SGI configuration
-  irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
-  irqchip/gic-v4.1: Plumb get/set_irqchip_state SGI callbacks
-  irqchip/gic-v4.1: Plumb set_vcpu_affinity SGI callbacks
-  irqchip/gic-v4.1: Move doorbell management to the GICv4 abstraction
-    layer
-  irqchip/gic-v4.1: Add VSGI allocation/teardown
-  irqchip/gic-v4.1: Add VSGI property setup
-  irqchip/gic-v4.1: Eagerly vmap vPEs
-  KVM: arm64: GICv4.1: Let doorbells be auto-enabled
-  KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
-  KVM: arm64: GICv4.1: Allow SGIs to switch between HW and SW interrupts
-  KVM: arm64: GICv4.1: Plumb SGI implementation selection in the
-    distributor
-  KVM: arm64: GICv4.1: Reload VLPI configuration on distributor
-    enable/disable
-  KVM: arm64: GICv4.1: Expose HW-based SGIs in debugfs
-
- arch/arm/include/asm/arch_gicv3.h      |   2 +
- arch/arm64/include/asm/arch_gicv3.h    |   1 +
- arch/arm64/include/asm/kvm_host.h      |   1 +
- drivers/irqchip/irq-gic-v3-its.c       | 996 +++++++++++++++++++++++--
- drivers/irqchip/irq-gic-v3.c           |  57 +-
- drivers/irqchip/irq-gic-v4.c           | 134 +++-
- include/kvm/arm_vgic.h                 |   4 +
- include/linux/irqchip/arm-gic-common.h |   2 +
- include/linux/irqchip/arm-gic-v3.h     |  76 +-
- include/linux/irqchip/arm-gic-v4.h     |  43 +-
- virt/kvm/arm/arm.c                     |   8 +
- virt/kvm/arm/vgic/vgic-debug.c         |  14 +-
- virt/kvm/arm/vgic/vgic-mmio-v3.c       |  68 +-
- virt/kvm/arm/vgic/vgic-mmio.c          |  88 ++-
- virt/kvm/arm/vgic/vgic-v3.c            |   3 +
- virt/kvm/arm/vgic/vgic-v4.c            | 139 +++-
- virt/kvm/arm/vgic/vgic.h               |   1 +
- 17 files changed, 1522 insertions(+), 115 deletions(-)
-
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 86c69b5cc156..fd9d3b6bb465 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -471,6 +471,17 @@ static void its_encode_vmapp_default_db(struct its_cmd_block *cmd,
+ 	its_mask_encode(&cmd->raw_cmd[1], vpe_db_lpi, 31, 0);
+ }
+ 
++static void its_encode_vmovp_default_db(struct its_cmd_block *cmd,
++					u32 vpe_db_lpi)
++{
++	its_mask_encode(&cmd->raw_cmd[3], vpe_db_lpi, 31, 0);
++}
++
++static void its_encode_db(struct its_cmd_block *cmd, bool db)
++{
++	its_mask_encode(&cmd->raw_cmd[2], db, 63, 63);
++}
++
+ static inline void its_fixup_cmd(struct its_cmd_block *cmd)
+ {
+ 	/* Let's fixup BE commands */
+@@ -757,6 +768,11 @@ static struct its_vpe *its_build_vmovp_cmd(struct its_node *its,
+ 	its_encode_vpeid(cmd, desc->its_vmovp_cmd.vpe->vpe_id);
+ 	its_encode_target(cmd, target);
+ 
++	if (is_v4_1(its)) {
++		its_encode_db(cmd, true);
++		its_encode_vmovp_default_db(cmd, desc->its_vmovp_cmd.vpe->vpe_db_lpi);
++	}
++
+ 	its_fixup_cmd(cmd);
+ 
+ 	return valid_vpe(its, desc->its_vmovp_cmd.vpe);
+@@ -3328,7 +3344,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 				bool force)
+ {
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+-	int cpu = cpumask_first(mask_val);
++	int from, cpu = cpumask_first(mask_val);
+ 
+ 	/*
+ 	 * Changing affinity is mega expensive, so let's be as lazy as
+@@ -3336,14 +3352,24 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 	 * into the proxy device, we need to move the doorbell
+ 	 * interrupt to its new location.
+ 	 */
+-	if (vpe->col_idx != cpu) {
+-		int from = vpe->col_idx;
++	if (vpe->col_idx == cpu)
++		goto out;
+ 
+-		vpe->col_idx = cpu;
+-		its_send_vmovp(vpe);
+-		its_vpe_db_proxy_move(vpe, from, cpu);
+-	}
++	from = vpe->col_idx;
++	vpe->col_idx = cpu;
++
++	/*
++	 * GICv4.1 allows us to skip VMOVP if moving to a cpu whose RD
++	 * is sharing its VPE table with the current one.
++	 */
++	if (gic_data_rdist_cpu(cpu)->vpe_table_mask &&
++	    cpumask_test_cpu(from, gic_data_rdist_cpu(cpu)->vpe_table_mask))
++		goto out;
+ 
++	its_send_vmovp(vpe);
++	its_vpe_db_proxy_move(vpe, from, cpu);
++
++out:
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
 -- 
 2.20.1
 
