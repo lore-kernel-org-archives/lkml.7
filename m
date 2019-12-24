@@ -2,81 +2,130 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55D1C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57699C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84AC206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A944206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfLXMwH (ORCPT
+        id S1726328AbfLXMyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:52:07 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8175 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726157AbfLXMwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:52:07 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 85619855B3BBC02A0A71;
-        Tue, 24 Dec 2019 20:52:04 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Dec 2019
- 20:51:54 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <sameehj@amazon.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: ena: remove set but not used variable 'rx_ring'
-Date:   Tue, 24 Dec 2019 20:51:28 +0800
-Message-ID: <20191224125128.36680-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 24 Dec 2019 07:54:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:51908 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfLXMyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 07:54:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 171021FB;
+        Tue, 24 Dec 2019 04:54:52 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F5C43F534;
+        Tue, 24 Dec 2019 04:54:51 -0800 (PST)
+Date:   Tue, 24 Dec 2019 12:54:49 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] arm64: KVM: add SPE profiling support
+Message-ID: <20191224125449.GL42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220175524.GC25258@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220175524.GC25258@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/net/ethernet/amazon/ena/ena_netdev.c: In function ena_xdp_xmit_buff:
-drivers/net/ethernet/amazon/ena/ena_netdev.c:316:19: warning:
- variable rx_ring set but not used [-Wunused-but-set-variable]
+On Fri, Dec 20, 2019 at 05:55:25PM +0000, Mark Rutland wrote:
+> Hi Andrew,
+> 
+> On Fri, Dec 20, 2019 at 02:30:07PM +0000, Andrew Murray wrote:
+> > This series implements support for allowing KVM guests to use the Arm
+> > Statistical Profiling Extension (SPE).
+> > 
+> > It has been tested on a model to ensure that both host and guest can
+> > simultaneously use SPE with valid data. E.g.
+> > 
+> > $ perf record -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
+> >         dd if=/dev/zero of=/dev/null count=1000
+> > $ perf report --dump-raw-trace > spe_buf.txt
+> 
+> What happens if I run perf record on the VMM, or on the CPU(s) that the
+> VMM is running on? i.e.
+> 
+> $ perf record -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
+>         lkvm ${OPTIONS_FOR_GUEST_USING_SPE}
+> 
 
-commit 548c4940b9f1 ("net: ena: Implement XDP_TX action")
-left behind this unused variable.
+By default perf excludes the guest, so this works as expected, just recording
+activity of the process when it is outside the guest. (perf report appears
+to give valid output).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 081acf0..894e8c1 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -313,7 +313,6 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
- 	struct ena_com_tx_ctx ena_tx_ctx = {0};
- 	struct ena_tx_buffer *tx_info;
- 	struct ena_ring *xdp_ring;
--	struct ena_ring *rx_ring;
- 	u16 next_to_use, req_id;
- 	int rc;
- 	void *push_hdr;
-@@ -324,8 +323,6 @@ static int ena_xdp_xmit_buff(struct net_device *dev,
- 	req_id = xdp_ring->free_ids[next_to_use];
- 	tx_info = &xdp_ring->tx_buffer_info[req_id];
- 	tx_info->num_of_bufs = 0;
--	rx_ring = &xdp_ring->adapter->rx_ring[qid -
--		  xdp_ring->adapter->xdp_first_ring];
- 	page_ref_inc(rx_info->page);
- 	tx_info->xdp_rx_page = rx_info->page;
- 
--- 
-2.7.4
+Patch 15 currently prevents using perf to record inside the guest.
 
 
+> ... or:
+> 
+> $ perf record -a -c 0 -e arm_spe/ts_enable=1,pa_enable=1,pct_enable=1/ \
+>         sleep 1000 &
+> $ taskset -c 0 lkvm ${OPTIONS_FOR_GUEST_USING_SPE} &
+> 
+> > As we save and restore the SPE context, the guest can access the SPE
+> > registers directly, thus in this version of the series we remove the
+> > trapping and emulation.
+> > 
+> > In the previous series of this support, when KVM SPE isn't supported
+> > (e.g. via CONFIG_KVM_ARM_SPE) we were able to return a value of 0 to
+> > all reads of the SPE registers - as we can no longer do this there isn't
+> > a mechanism to prevent the guest from using SPE - thus I'm keen for
+> > feedback on the best way of resolving this.
+> 
+> When not providing SPE to the guest, surely we should be trapping the
+> registers and injecting an UNDEF?
+
+Yes we should, I'll update the series.
+
+
+> 
+> What happens today, without these patches?
+> 
+
+Prior to this series MDCR_EL2_TPMS is set and E2PB is unset resulting in all
+SPE registers being trapped (with NULL handlers).
+
+
+> > It appears necessary to pin the entire guest memory in order to provide
+> > guest SPE access - otherwise it is possible for the guest to receive
+> > Stage-2 faults.
+> 
+> AFAICT these patches do not implement this. I assume that's what you're
+> trying to point out here, but I just want to make sure that's explicit.
+
+That's right.
+
+
+> 
+> Maybe this is a reason to trap+emulate if there's something more
+> sensible that hyp can do if it sees a Stage-2 fault.
+
+Yes it's not really clear to me at the moment what to do about this.
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Thanks,
+> Mark.
