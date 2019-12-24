@@ -2,198 +2,281 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E445C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6968C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A95920643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577182164;
-	bh=OcYvU6R9hPJgmJg3UwAfVCin1mEXqh7FP8N9hsHQNeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fAl/xk5F4lrANl6I6Q2cXgvXS3PGJcqhfrtexDkuv9OnvqySlifkFcDpOxj07PtEy
-	 oBMFhQL0/Smv18GbCSKtGi+2jxDIy1vMQyxVcHNpDSUbBUhCKtUoc/vMWUO2OmTQvB
-	 WZkth1XIxVSiBa9a3XWbwFOmhI4CtyiQCfBykISw=
+	by mail.kernel.org (Postfix) with ESMTP id 8420920643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E89ih72F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfLXKJX (ORCPT
+        id S1726245AbfLXKK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:09:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfLXKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 05:09:23 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EAF72071A;
-        Tue, 24 Dec 2019 10:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577182161;
-        bh=OcYvU6R9hPJgmJg3UwAfVCin1mEXqh7FP8N9hsHQNeU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X8ogjSxmBHca5nsL5BInqifxvj7nOhyh902O2b0NIdrXPscb+r1ItHnf9hJoLzZAv
-         L9q7c04rXqWTvPYBsAVWDiyIXedtoYN+67rSjcq52yqNI50HL88+uCnLSaNFE3+I5Y
-         ztzJ8syVplerh7dv0AfnWbgdi+rci75L2/USw358=
-Date:   Tue, 24 Dec 2019 19:09:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v6] arm64: implement KPROBES_ON_FTRACE
-Message-Id: <20191224190916.2e47478445fb179e88f60cc3@kernel.org>
-In-Reply-To: <20191223153300.30281a93@xhacker.debian>
-References: <20191218140622.57bbaca5@xhacker.debian>
-        <20191218222550.51f0b681de7bbab7e49b09a9@kernel.org>
-        <20191223153300.30281a93@xhacker.debian>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 24 Dec 2019 05:10:29 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56368 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfLXKK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:10:29 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBOAA8eI096351;
+        Tue, 24 Dec 2019 04:10:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577182208;
+        bh=MzpQwSRlWp3D6Tohz9Pt7HsIANNx0KCV8CI4TAZS0DI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=E89ih72FMNkNcvLnDnPxbzowCmHlI1AeygJHwWr0WetMkmWNkoZLxPApB5jkYSgCs
+         r/09DEEFDO3LVIhduLY17F0ed0/GtNal9o4jWCPuUssJO3QXh2/gN/4ZsUi3y+LfP8
+         aYmSgAkdU8k357xym+RWhv5h6Nk3GKqWtXFEojs8=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBOAA8tQ115465
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Dec 2019 04:10:08 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
+ Dec 2019 04:10:08 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 24 Dec 2019 04:10:08 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBOAA4ei100519;
+        Tue, 24 Dec 2019 04:10:05 -0600
+Subject: Re: [PATCH v2 2/3] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+To:     Remi Pommarel <repk@triplefau.lt>, Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-amlogic@lists.infradead.org>
+References: <20191223214529.20377-1-repk@triplefau.lt>
+ <20191223214529.20377-3-repk@triplefau.lt>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <0bf30bee-500c-db91-6647-42ff09e9c8e0@ti.com>
+Date:   Tue, 24 Dec 2019 15:42:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20191223214529.20377-3-repk@triplefau.lt>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jisheng,
+Hi,
 
-On Mon, 23 Dec 2019 07:47:24 +0000
-Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-
-> Hi Masami,
+On 24/12/19 3:15 AM, Remi Pommarel wrote:
+> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+> This will allow to mutualize code in pci-meson.c between AXG and G12A
+> SoC.
 > 
-> On Wed, 18 Dec 2019 22:25:50 +0900 Masami Hiramatsu wrote:
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  drivers/phy/amlogic/Kconfig              |  11 ++
+>  drivers/phy/amlogic/Makefile             |   1 +
+>  drivers/phy/amlogic/phy-meson-axg-pcie.c | 163 +++++++++++++++++++++++
+>  3 files changed, 175 insertions(+)
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
 > 
-> 
-> > 
-> > 
-> > On Wed, 18 Dec 2019 06:21:35 +0000
-> > Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-> > 
-> > > KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
-> > > eliminates the need for a trap, as well as the need to emulate or
-> > > single-step instructions.
-> > >
-> > > Tested on berlin arm64 platform.
-> > >
-> > > ~ # mount -t debugfs debugfs /sys/kernel/debug/
-> > > ~ # cd /sys/kernel/debug/
-> > > /sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
-> > >
-> > > before the patch:
-> > >
-> > > /sys/kernel/debug # cat kprobes/list
-> > > ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
-> > >
-> > > after the patch:
-> > >
-> > > /sys/kernel/debug # cat kprobes/list
-> > > ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]  
-> > 
-> > BTW, it seems this automatically changes the offset without
-> > user's intention or any warnings. How would you manage if the user
-> > pass a new probe on _do_fork+0x4?
-> 
-> In current implementation, two probes at the same address _do_fork+0x4
+> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> index 1eeb75d018e3..2a3935169ef4 100644
+> --- a/drivers/phy/amlogic/Kconfig
+> +++ b/drivers/phy/amlogic/Kconfig
+> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
+>  	  in Meson G12A SoCs.
+>  	  If unsure, say N.
+>  
+> +config PHY_MESON_AXG_PCIE
+> +	tristate "Meson AXG PCIE PHY driver"
+> +	default ARCH_MESON
+> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	select REGMAP_MMIO
+> +	help
+> +	  Enable this to support the Meson MIPI + PCIE PHY found
+> +	  in Meson AXG SoCs.
+> +	  If unsure, say N.
+> +
+>  config PHY_MESON_AXG_MIPI_PCIE
+>  	tristate "Meson AXG MIPI + PCIE PHY driver"
+>  	default ARCH_MESON
+> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> index 2167330a0ae8..5fd3a6dca0a5 100644
+> --- a/drivers/phy/amlogic/Makefile
+> +++ b/drivers/phy/amlogic/Makefile
+> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
+>  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
+>  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+>  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
+> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)	+= phy-meson-axg-pcie.o
+>  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
+> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> new file mode 100644
+> index 000000000000..559c42c1524d
+> --- /dev/null
+> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> @@ -0,0 +1,163 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Amlogic AXG PCIE PHY driver
+> + *
+> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
+> + */
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/bitfield.h>
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +#define MESON_PCIE_REG0 0x00
+> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
+> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
+> +#define		MESON_PCIE_CLK		BIT(1)
+> +#define		MESON_PCIE_POWERDOWN	BIT(0)
+> +
+> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
+> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
+> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
+> +					 MESON_PCIE_COMMON_REF_CLK)
+> +#define MESON_PCIE_RESET_DELAY		500
+> +
+> +struct phy_axg_pcie_priv {
+> +	struct phy *phy;
+> +	struct regmap *regmap;
+> +	struct reset_control *reset;
+> +};
+> +
+> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
+> +	.reg_bits = 8,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.max_register = MESON_PCIE_REG0,
+> +};
+> +
+> +static int phy_axg_pcie_power_on(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> +			   MESON_PCIE_POWERDOWN, 0);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_pcie_power_off(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> +			   MESON_PCIE_POWERDOWN, 1);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_pcie_init(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
+> +	return reset_control_reset(priv->reset);
+> +}
+> +
+> +static int phy_axg_pcie_exit(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +
+> +	return reset_control_reset(priv->reset);
+> +}
+> +
+> +static int phy_axg_pcie_reset(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret = 0;
+> +
+> +	ret = reset_control_assert(priv->reset);
+> +	if (ret != 0)
+> +		goto out;
+> +	udelay(MESON_PCIE_RESET_DELAY);
+> +
+> +	ret = reset_control_deassert(priv->reset);
+> +	if (ret != 0)
+> +		goto out;
+> +	udelay(MESON_PCIE_RESET_DELAY);
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static const struct phy_ops phy_axg_pcie_ops = {
+> +	.init = phy_axg_pcie_init,
+> +	.exit = phy_axg_pcie_exit,
+> +	.power_on = phy_axg_pcie_power_on,
+> +	.power_off = phy_axg_pcie_power_off,
+> +	.reset = phy_axg_pcie_reset,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int phy_axg_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *pphy;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy_axg_pcie_priv *priv;
+> +	struct device_node *np = dev->of_node;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> +	if (IS_ERR(priv->phy)) {
+> +		ret = PTR_ERR(priv->phy);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to create PHY\n");
+> +		return ret;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	priv->regmap = devm_regmap_init_mmio(dev, base,
+> +					     &phy_axg_pcie_regmap_conf);
+> +	if (IS_ERR(priv->regmap))
+> +		return PTR_ERR(priv->regmap);
+> +
+> +	priv->reset = devm_reset_control_array_get(dev, false, false);
+> +	if (IS_ERR(priv->reset))
+> +		return PTR_ERR(priv->reset);
+> +
+> +	phy_set_drvdata(priv->phy, priv);
+> +	dev_set_drvdata(dev, priv);
+> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(pphy);
+> +}
+> +
+> +static const struct of_device_id phy_axg_pcie_of_match[] = {
+> +	{
+> +		.compatible = "amlogic,axg-pcie-phy",
 
-OK, that is my point.
+dt binding documentation for this too is missing in this series?
 
-> > IOW, it is still the question who really wants to probe on
-> > the _do_fork+"0", if kprobes modifies it automatically,
-> > no one can do that anymore.
-> > This can be happen if the user want to record LR or SP value
-> > at the function call for debug. If kprobe always modifies it,
-> > we will lose the way to do it.
-> 
-> arm64's DYNAMIC_FTRACE_WITH_REGS implementation makes use of GCC
-> -fpatchable-function-entry=2 option to insert two nops. When the function
-> is traced, the first nop will be modified to the LR saver, then the
-> second nop to "bl <ftrace-entry>", commit 3b23e4991fb6("
-> arm64: implement ftrace with regs") explains the mechanism.
-
-So both of the instruction at func+0 and func+4 are replaced.
-
-> So on arm64(in fact any arch makes use of -fpatchable-function-entry will
-> behave similarly), when DYNAMIC_FTRACE_WITH_REGS is enabled, the ftrace location
-> is always on the first 4 bytes offset.
-> 
-> I think when users want to register a kprobe on _do_fork+0, what he really want
-> is to kprobe on the patched(by -fpatchable-function-entry)_do_fork+4
-
-OK, in this case, kprobe should treat the first 2 instructions as a
-single virtual instruction. This means,
-
- - kprobes can probe func+0, but not func+4 if the function is ftraced.
-    (-EILSEQ must be returned)
- - both debugfs/kprobes/list and tracefs/kprobe_events should show the
-   probed address as func+0. Not func+4.
-
-Then, user can use kprobes as if there is one big (8-byte) instruction
-at the entry of the function. Since probing on func+4 is rejected and
-the call-site LR/SP is restored in ftrace, there should be no
-contradiction. It should work as if we put a breakpoint on the func + 0.
-
-> 
-> PS: per my understanding, powerpc's kprobes_on_ftrace also introduces an
-> extra automatic offset due to its implementation.
-
-Uh, that is also ugly.... must be fixed.
-
-
-> > 
-> > Could you remove below function at this moment?
-> > 
-> > > +kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset)
-> > > +{
-> > > +     unsigned long addr = kallsyms_lookup_name(name);
-> > > +
-> > > +     if (addr && !offset) {
-> > > +             unsigned long faddr;
-> > > +             /*
-> > > +              * with -fpatchable-function-entry=2, the first 4 bytes is the
-> > > +              * LR saver, then the actual call insn. So ftrace location is
-> > > +              * always on the first 4 bytes offset.
-> > > +              */
-> > > +             faddr = ftrace_location_range(addr,
-> > > +                                           addr + AARCH64_INSN_SIZE);
-> > > +             if (faddr)
-> > > +                     return (kprobe_opcode_t *)faddr;
-> > > +     }
-> > > +     return (kprobe_opcode_t *)addr;
-> > > +}
-> > > +
-> > > +bool arch_kprobe_on_func_entry(unsigned long offset)
-> > > +{
-> > > +     return offset <= AARCH64_INSN_SIZE;
-> > > +}  
-> > 
-> > 
-> > Without this automatic change, we still can change the offset
-> > in upper layer.
-> 
-> If remove the two functions, kprobe on  _do_fork can't ride on
-> ftrace infrastructure, but kprobe on _do_fork+4 can. I'm not sure
-> whether this is reasonable. Every kprobe users on arm64 will need to
-> remember to pass an extra offset +4 to make use of kprobe_on_ftrace, could
-> we hide the "+4"?
-
-Yes, OK, as I said above, please hide +4. We will see the virtual
-"call" instruction (= "mov x9, lr; br <addr>") at the entry of ftraced
-function. :)
-
-Thank you,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks
+Kishon
