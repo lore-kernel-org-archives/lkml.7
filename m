@@ -2,175 +2,153 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE7C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B1EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05F82073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA57206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 04:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z971ftgf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chG/Hm8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfLXEA2 (ORCPT
+        id S1726920AbfLXEBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 23:00:28 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:27513 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbfLXEA2 (ORCPT
+        Mon, 23 Dec 2019 23:01:14 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44862 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfLXEBN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 23:00:28 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191224040023epoutp04958f677656628c243b34e6be8eb45eba~jMq90HITe2220322203epoutp04i
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:00:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191224040023epoutp04958f677656628c243b34e6be8eb45eba~jMq90HITe2220322203epoutp04i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577160023;
-        bh=uQY0Ejr1lqxO3NWqbSaO04+QA2XF/w19ImMi7FAHKMo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Z971ftgfB69YtWGg0tqIu42m/zVgvZ1PXCvDV0EYDnjpyznUPHMJAIoTXQDe3+aIC
-         lyZunAIQw+SYamFYR6QRrjsGRwQGKRHSL42BFqJq1k3ZBoauPCXW+LH0V70bJPn4rI
-         WJtZ2dl+SeuOBnvwZTvhZll225yQz4BkrutMQd8k=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191224040022epcas1p48e4d6cb225f0cbdb5c607610ede80378~jMq88pPbX1759517595epcas1p49;
-        Tue, 24 Dec 2019 04:00:22 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47hjDN0B7KzMqYkZ; Tue, 24 Dec
-        2019 04:00:20 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.65.48498.35D810E5; Tue, 24 Dec 2019 13:00:19 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191224040018epcas1p45d9c176d204a753f410567406e6be508~jMq5TnVLL1598815988epcas1p4Q;
-        Tue, 24 Dec 2019 04:00:18 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191224040018epsmtrp1784239067cb376af17824518732bb54e~jMq5Sweos3130831308epsmtrp16;
-        Tue, 24 Dec 2019 04:00:18 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-03-5e018d53b1fa
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        96.BE.10238.25D810E5; Tue, 24 Dec 2019 13:00:18 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191224040018epsmtip2294363190d25eeb29d81905ab27d77a0~jMq5GSuJi2529525295epsmtip2r;
-        Tue, 24 Dec 2019 04:00:18 +0000 (GMT)
-Subject: Re: [PATCH] PM / devfreq: exynos-bus: Add error log when get event
- fails
-To:     Yangtao Li <tiny.windzz@gmail.com>, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, kgene@kernel.org, krzk@kernel.org
-Cc:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <7230b556-7a96-14d1-ed22-43b5a6cd5a71@samsung.com>
-Date:   Tue, 24 Dec 2019 13:07:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 23 Dec 2019 23:01:13 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x7so9789352pgl.11;
+        Mon, 23 Dec 2019 20:01:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DeTrWnPqj8Nu0CdJ5/wJNZRaWW5zoCsbwPb6RYQPwjk=;
+        b=chG/Hm8oiRcvSXd2Q20nxF9vcRBtr4Fl3gu+rTXYTcAJ77524ciDXdmRKvR2IrHX2W
+         3g9BbYCWKxE8GJN86Tqj8K6RGQWXrGRZp3iPls/9IpzGF+vxW32PfmUQf5LeIyDYZfB6
+         zTg1cRoDfKQx8O3pgIi80n+5ZZcmWfV4BhkmhnQEU3AJhrlPoblVHx7u8LrjpzyUV4Sm
+         3IGaoSyDZYNTyd/f3EEuHUpXffC/z0Z74AM0Vp1VlT2rv34RWpwLXlu0g83PenWbwYGA
+         3V9GeyrEmOYmccDngiUzNIJXevSfIwsg61w45Bfku+0bJdddv99IoA7UBBdFYna5w7Zf
+         Yzow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DeTrWnPqj8Nu0CdJ5/wJNZRaWW5zoCsbwPb6RYQPwjk=;
+        b=PezIQtrd9SnQ78xRnPUweiPtzhECD43498QrhMxARhEW4WmEKaIZcXiTO8jU5If3lX
+         6btMpohYkezKlJvSlkPJ67VJOPZvO7a73njAUfTXUu9M0WDQSfj4d/MLJFtSiOnK4t+x
+         mYKawy6gex2dDn3wRGRJeWZ+kdE/Sj122b1dxJ0xOVgHJYbvfSqHPGxPuc9iltg327BU
+         v8CXm4jx5pDZcFyqdXkqgdOPqfvsSSZNnZfsI5UEtlj0JV0+rlJyxFYEhnDTORtx6CW9
+         T5y1byDA3XONOWkHRJsKOhMVKkmsAn5bdadsnNUSRQV9JuJqcHFBOA1kxUnEQl8Yhte9
+         i/nQ==
+X-Gm-Message-State: APjAAAVMeSbQAdx5+D5IGEwiFiTBO0Ek1Z6z87gwbb92qomRON6W0ng6
+        /v/V4safDi4GpVUhnNr7Jat1mn/B
+X-Google-Smtp-Source: APXvYqwi5g6jWuhhhiX3pVqzcD1NF1jawz49mNqddXfOi5bQ5fTp6Vef1NJinDv7aCUsns1w4Y1WsQ==
+X-Received: by 2002:a63:ec0a:: with SMTP id j10mr35002497pgh.178.1577160072032;
+        Mon, 23 Dec 2019 20:01:12 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id l127sm24435511pgl.48.2019.12.23.20.01.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 20:01:11 -0800 (PST)
+Subject: Re: [PATCH net-next v8 01/14] ethtool: introduce ethtool netlink
+ interface
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+References: <cover.1577052887.git.mkubecek@suse.cz>
+ <580d57d8cef89dd2a84d63f1a78a0d9a9b3d458f.1577052887.git.mkubecek@suse.cz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <a3186490-9c7f-2b5d-245e-7972dc7c4e80@gmail.com>
+Date:   Mon, 23 Dec 2019 20:01:10 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191223191923.10450-1-tiny.windzz@gmail.com>
+In-Reply-To: <580d57d8cef89dd2a84d63f1a78a0d9a9b3d458f.1577052887.git.mkubecek@suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUcRTH++3szo7i1K/tem1RNtEleIzb2lhaQQdLSUhSUdTaoIO7uFcz
-        u9LxR3ba5RFR2JIdZlEWKCoeZRm2UYblRSGKYJhRVlZ2Sdu1s2Pkf5/f+37f7733+z2K0JWR
-        esrqcAuig7cxZKi6+v6CyMiUXGSOqe9P4PL73hJcS0u5lnuy/52Wq+h7ruE6bp0juc+5PsQV
-        ttxVcd37rpFckb+AXB5iqvP2aE0VpUdJU2XJXlNeVSkyfa6YkazZkplgEfh0QQwXHGnOdKsj
-        I5FZm5K6ItUYF8NGsvHcIibcwduFRGZlUnLkaqst0A8TnsXbPIFQMi9JTPTSBNHpcQvhFqfk
-        TmQEV7rNFe+Kkni75HFkRKU57YvZmJhYY8C4PdPSVdOmdQ3RO/9cfYCykS/0GAqhAC+Eyu5h
-        9TEUSulwLYKhwQ8q5TCEYKC5eUT5hqC48pP6X0rZlTZCZh2+g6A2L1oxfUBQ72/XyMIEnAIN
-        v7qRLEzE2QhKfvmCVxH4EIKiVn/QReIIaHjdSco8Ds+CZ8N9gQyKovFSqPkeL4fVeA5cHGpD
-        Mk/CG6Gp+mCQaTwems6+DHYUgpdATs+rIBN4CnS9vKBSeCbUvD9HyHUBH9DC19/5IyOshIO1
-        wyM8AQYeVmkV1sOb/MMjvAeuN/lIJfkIgqqGVo0iGKDhyimV3CiBF0DZrWglPAvq/EVIKTwW
-        Br+e0MgWwDQcOaxTLLOho7dHpfBUuJxzlCxAjHfUON5RI3hHjeD9X+wiUpeiyYJLsmcIEuuK
-        Hf3dFSi4rBFxtaj4aVIjwhRiwujy+2PMOg2fJe2yNyKgCGYifUNEZh2dzu/aLYjOVNFjE6RG
-        ZAy89klCPynNGVh9hzuVNcYaDAZuIRtnZFlmCk0Nt23T4QzeLWQKgksQ/+WpqBB9NlpXYtx8
-        XO1Z1uU/nTswds9t1bT8F68GzpbF21eTc27WrOkvmBm1Y9q28hwmqniyGHEvs/DRKnremUvH
-        k75/sXo6qgdTDFv1iWFnwtYX9JPW9o+9KC/W96OzaNPjn6cfbDT3L+4Js8xVn2ec68UD5vrS
-        x3nL6pqzet/Nn76hvevGhU23GbVk4dkIQpT4v0r0Cy/CAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvG5QL2OcQedGHYv+x6+ZLc6f38Bu
-        cbbpDbvFpsfXWC0u75rDZvG59wijxYzz+5gsbjeuYLOY+3sCmwOnx85Zd9k9Nq3qZPPYvKTe
-        o2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDJubb/IXvCJt+L/sqOMDYxHuLoYOTkkBEwk1i+9
-        yNzFyMUhJLCbUWLDs042iISkxLSLR4ESHEC2sMThw8UQNW8ZJX7c3cgMUiMsECyx/+9tRpCE
-        iEADo8Tsc+fAHGaBVkaJR9sXsEC09DFK/Fo2ix2khU1AS2L/ixtgK/gFFCWu/njMCLKCV8BO
-        Yvt3S5Awi4CqxIJPFxlBbFGBMImdSx4zgdi8AoISJ2c+YQGxOQWsJdrvPgOzmQXUJf7Mu8QM
-        YYtL3HoynwnClpfY/nYO8wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQsM81LL9YoT
-        c4tL89L1kvNzNzGCY0xLcwfj5SXxhxgFOBiVeHg3HGaIE2JNLCuuzD3EKMHBrCTCu7qIMU6I
-        NyWxsiq1KD++qDQntfgQozQHi5I479O8Y5FCAumJJanZqakFqUUwWSYOTilgSL5psjJK4b31
-        VOJQkcf/iN/Z09YkeTZ+KbPbZvh30ZreeOmHKnl2n+7JaLyf8vnekeuzrn15t9JI6fQXbatZ
-        4pFOrRnWZ6ouFZxn32Qt/8eyo+aVxd5A8fOhK9hLfNe2iGrtCyrmebBE5YPUNcu/n4waL2s+
-        zz2vt3X+lzVH9x5RWHmyfvusXUosxRmJhlrMRcWJAOkiIgytAgAA
-X-CMS-MailID: 20191224040018epcas1p45d9c176d204a753f410567406e6be508
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191223191928epcas1p128d39bb875b8654d61ae21364e466ec7
-References: <CGME20191223191928epcas1p128d39bb875b8654d61ae21364e466ec7@epcas1p1.samsung.com>
-        <20191223191923.10450-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-I think that you better to use 'devfreq-event' instead of just 'event'
-as following:
 
-PM / devfreq: exynos-bus: Add error log when fail to get devfreq-event
-
-On 12/24/19 4:19 AM, Yangtao Li wrote:
-> Adding an error log makes it easier to trace the function's error path.
-> Because the error code may be rewritten on return, print error code here.
+On 12/22/2019 3:45 PM, Michal Kubecek wrote:
+> Basic genetlink and init infrastructure for the netlink interface, register
+> genetlink family "ethtool". Add CONFIG_ETHTOOL_NETLINK Kconfig option to
+> make the build optional. Add initial overall interface description into
+> Documentation/networking/ethtool-netlink.rst, further patches will add more
+> detailed information.
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/devfreq/exynos-bus.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index 948e9340f91c..634d63fd00ea 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -126,6 +126,8 @@ static int exynos_bus_get_dev_status(struct device *dev,
->  
->  	ret = exynos_bus_get_event(bus, &edata);
->  	if (ret < 0) {
-> +		dev_err(dev, "failed to get event from devfreq-event devices %d\n",
-> +			ret);
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-Better to make it under 80 char as following:
-
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index f5d4c369c7fb..10f4fa1a0363 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -126,7 +126,8 @@ static int exynos_bus_get_dev_status(struct device *dev,
- 
-        ret = exynos_bus_get_event(bus, &edata);
-        if (ret < 0) {
--               dev_err(dev, "failed to get event from devfreq-event devices %d\n",
-+               dev_err(dev,
-+                       "failed to get event from devfreq-event devices %d\n",
-                        ret);
-                stat->total_time = stat->busy_time = 0;
-                goto err;
-
-
->  		stat->total_time = stat->busy_time = 0;
->  		goto err;
->  	}
-> 
-
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Florian
