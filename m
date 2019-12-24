@@ -2,195 +2,137 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10235C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453A4C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD3A2070E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:49:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VRmWxe3F"
+	by mail.kernel.org (Postfix) with ESMTP id 183CA20709
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 02:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfLXCt2 (ORCPT
+        id S1726882AbfLXCwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 21:49:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60394 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726832AbfLXCt2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 21:49:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577155766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wtq5rKsoH6y7TIQT6lpoljI1w2wwhhEx65ky24Nv240=;
-        b=VRmWxe3FstFewDNjfTpD2qSypDHSmqWkQU51NCx8ClvHn8sSx1XJrGBLha7F3n7+1Fk8IF
-        /u2QU5xNvsx7R8T9QlB+yXzgYaSgA+OCrL0cfteQuhgKzQxMOVUMqpuUXSn+QDBhDmvZqz
-        DkZ81XBSfGdUWC4EqffwljVhvcL9hvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-ypBO3qiaOsquqvPziG1gxQ-1; Mon, 23 Dec 2019 21:49:22 -0500
-X-MC-Unique: ypBO3qiaOsquqvPziG1gxQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97339477;
-        Tue, 24 Dec 2019 02:49:21 +0000 (UTC)
-Received: from [10.72.12.236] (ovpn-12-236.pek2.redhat.com [10.72.12.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FD6860BA0;
-        Tue, 24 Dec 2019 02:49:15 +0000 (UTC)
-Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     Alistair Delva <adelva@google.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Network Development <netdev@vger.kernel.org>
-References: <20191223140322.20013-1-mst@redhat.com>
- <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
- <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com>
- <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
- <CANDihLFv+DJYOD1m_Z3CKuxoXG-z4zPy_Tc2eoggq1KRo+GeWw@mail.gmail.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ea5131fc-cda6-c773-73fc-c862be6ecb7b@redhat.com>
-Date:   Tue, 24 Dec 2019 10:49:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 23 Dec 2019 21:52:38 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8166 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726832AbfLXCwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 21:52:37 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1582691D5E6EDCC03903;
+        Tue, 24 Dec 2019 10:52:35 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Dec 2019
+ 10:52:27 +0800
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Handle GICR_PENDBASER.PTZ filed as
+ RAZ
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <andre.przywara@arm.com>, <eric.auger@redhat.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>
+References: <20191220111833.1422-1-yuzenghui@huawei.com>
+ <3a729559-d0eb-e042-d6bd-b69bacb0dd23@huawei.com>
+ <c084aa29c029f97cdfb1b5dc9e6b29ac@www.loen.fr>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <1225d839-3cf7-d513-778e-698e12e94875@huawei.com>
+Date:   Tue, 24 Dec 2019 10:52:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <CANDihLFv+DJYOD1m_Z3CKuxoXG-z4zPy_Tc2eoggq1KRo+GeWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <c084aa29c029f97cdfb1b5dc9e6b29ac@www.loen.fr>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc, Eric,
 
-On 2019/12/24 =E4=B8=8A=E5=8D=884:21, Alistair Delva wrote:
-> On Mon, Dec 23, 2019 at 12:12 PM Willem de Bruijn
-> <willemdebruijn.kernel@gmail.com> wrote:
->> On Mon, Dec 23, 2019 at 2:56 PM Willem de Bruijn
->> <willemdebruijn.kernel@gmail.com> wrote:
->>> 00fffe0ff0 DR7: 0000000000000400
->>>>> Call Trace:
->>>>>   ? preempt_count_add+0x58/0xb0
->>>>>   ? _raw_spin_lock_irqsave+0x36/0x70
->>>>>   ? _raw_spin_unlock_irqrestore+0x1a/0x40
->>>>>   ? __wake_up+0x70/0x190
->>>>>   virtnet_set_features+0x90/0xf0 [virtio_net]
->>>>>   __netdev_update_features+0x271/0x980
->>>>>   ? nlmsg_notify+0x5b/0xa0
->>>>>   dev_disable_lro+0x2b/0x190
->>>>>   ? inet_netconf_notify_devconf+0xe2/0x120
->>>>>   devinet_sysctl_forward+0x176/0x1e0
->>>>>   proc_sys_call_handler+0x1f0/0x250
->>>>>   proc_sys_write+0xf/0x20
->>>>>   __vfs_write+0x3e/0x190
->>>>>   ? __sb_start_write+0x6d/0xd0
->>>>>   vfs_write+0xd3/0x190
->>>>>   ksys_write+0x68/0xd0
->>>>>   __ia32_sys_write+0x14/0x20
->>>>>   do_fast_syscall_32+0x86/0xe0
->>>>>   entry_SYSENTER_compat+0x7c/0x8e
->>>>>
->>>>> A similar crash will likely trigger when enabling XDP.
->>>>>
->>>>> Reported-by: Alistair Delva <adelva@google.com>
->>>>> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
->>>>> Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if =
-possible on XDP set")
->>>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>>>> ---
->>>>>
->>>>> Lightly tested.
->>>>>
->>>>> Alistair, could you please test and confirm that this resolves the
->>>>> crash for you?
->>>> This patch doesn't work. The reason is that NETIF_F_LRO is also turn=
-ed
->>>> on by TSO4/TSO6, which your patch didn't check for. So it ends up
->>>> going through the same path and crashing in the same way.
->>>>
->>>>          if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
->>>>              virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
->>>>                  dev->features |=3D NETIF_F_LRO;
->>>>
->>>> It sounds like this patch is fixing something slightly differently t=
-o
->>>> my patch fixed. virtnet_set_features() doesn't care about
->>>> GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads=
-"
->>>> is zero, it will call virtnet_set_guest_offloads(), which triggers t=
-he
->>>> crash.
+On 2019/12/23 22:07, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2019-12-23 13:43, Zenghui Yu wrote:
+>> On 2019/12/20 19:18, Zenghui Yu wrote:
+>>> Although guest will hardly read and use the PTZ (Pending Table Zero)
+>>> bit in GICR_PENDBASER, let us emulate the architecture strictly.
+>>> As per IHI 0069E 9.11.30, PTZ field is WO, and reads as 0.
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>> ---
+>>> Noticed when checking all fields of GICR_PENDBASER register.
+>>> But _not_ sure whether it's worth a fix, as Linux never sets
+>>> the PTZ bit before enabling LPI (set GICR_CTLR_ENABLE_LPIS).
+>>> And I wonder under which scenarios can this bit be written as 1.
+>>> It seems difficult for software to determine whether the pending
+>>> table contains all zeros when writing this bit.
+>>> virt/kvm/arm/vgic/vgic-mmio-v3.c | 5 ++++-
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c 
+>>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> index 7dfd15dbb308..ebc218840fc2 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> @@ -414,8 +414,11 @@ static unsigned long 
+>>> vgic_mmio_read_pendbase(struct kvm_vcpu *vcpu,
+>>>                            gpa_t addr, unsigned int len)
+>>>   {
+>>>       struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
+>>> +    u64 value = vgic_cpu->pendbaser;
+>>>   -    return extract_bytes(vgic_cpu->pendbaser, addr & 7, len);
+>>> +    value &= ~GICR_PENDBASER_PTZ;
+>>> +
+>>> +    return extract_bytes(value, addr & 7, len);
+>>>   }
+>>>   static void vgic_mmio_write_pendbase(struct kvm_vcpu *vcpu,
 >>>
->>> Interesting. It's surprising that it is trying to configure a flag
->>> that is not configurable, i.e., absent from dev->hw_features
->>> after Michael's change.
->>>
->>>> So either we need to ensure NETIF_F_LRO is never set, or
->>> LRO might be available, just not configurable. Indeed this was what I
->>> observed in the past.
->> dev_disable_lro expects that NETIF_F_LRO is always configurable. Which
->> I guess is a reasonable assumption, just not necessarily the case in
->> virtio_net.
 >>
->> So I think we need both patches. Correctly mark the feature as fixed
->> by removing from dev->hw_features and also ignore the request from
->> dev_disable_lro, which does not check for this.
-> Something like this maybe:
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 4d7d5434cc5d..0556f42b0fb5 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device=
- *dev,
->          u64 offloads;
->          int err;
->
-> +       if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLO=
-ADS))
-> +               return 0;
-> +
->          if ((dev->features ^ features) & NETIF_F_LRO) {
->                  if (vi->xdp_queue_pairs)
->                          return -EBUSY;
-> @@ -2971,6 +2974,15 @@ static int virtnet_validate(struct virtio_device=
- *vdev)
->          if (!virtnet_validate_features(vdev))
->                  return -EINVAL;
->
-> +       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-> +        * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
-> +        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-> +        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-> +        * not the former.
-> +        */
-> +       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-> +               __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOA=
-DS);
-> +
->          if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
->                  int mtu =3D virtio_cread16(vdev,
->                                           offsetof(struct virtio_net_co=
-nfig,
->
+>> I noticed there is no userspace access callbacks for GICR_PENDBASER,
+>> so this patch will make the PTZ field also 'Read As Zero' by userspace.
+>> Should we consider adding a uaccess_read callback for GICR_PENDBASER
+>> which just returns the unchanged vgic_cpu->pendbaser to userspace?
+>> (Though this is really not a big deal. We now always emulate the PTZ
+>> field to guest as RAZ. And 'vgic_cpu->pendbaser & GICR_PENDBASER_PTZ'
+>> only indicates whether KVM will optimize the LPI enabling process,
+>> where Read As Zero indicates never optimize..)
+> 
+> I don't think adding a userspace accessor would help much. All this
+> bit tells userspace is that the guest has programmed a zero filled
+> table. On restore, we'd avoid a rescan of the table if there was
+> no LPI mapped.
 
-We check feature dependency and fail the probe in=20
-virtnet_validate_features().
+Yes, I agree.
 
-Is it more straightforward to fail the probe there when=20
-CTRL_GUEST_OFFLOADS was set but CTRL_VQ wasn't?
+> And thinking of it, this fixes a bug for non-Linux guests: If you write
+> PTZ=1, we never clear it. Which means that if userspace saves and restores
+> PENDBASER with PTZ set, we'll never restore the pending bits, which is
+> pretty bad (see vgic_enable_lpis()).
 
-Thanks
+But I'm afraid I can't follow this point. After reading the code (with
+Qemu) a bit further, the Redistributors are restored before the ITS. So
+there should be _no_ LPI has been mapped when we're restoring GICR_CTLR
+and enabling LPI, which says we will not scan the whole pending table
+and restore pending by vgic_enable_lpis()/its_sync_lpi_pending_table(),
+regardless of what the PTZ is.
+
+Instead, vgic_its_restore_ite()/vgic_v3_lpi_sync_pending_status() is
+where we actually read the guest RAM and restore the LPI pending state.
+Which means we will still do the right thing even for non-Linux guests.
+Not sure if I've got things correctly here.
+
+In the end, let's keep the patch as it is.
+
+> 
+> This patch on its own fixes more than one bug!
+> 
+
+If so, just by luck ;-)
+
+
+Thanks,
+Zenghui
 
