@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1887C47409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE8C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E51206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7912071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577187674;
-	bh=6zK4UAv/vYfcn3bU4JaqOJ/7pjxB7S6f67TV3oAxIwk=;
+	s=default; t=1577187679;
+	bh=6WiXidTPOxp5vM4laTEmrovfKwj7PiiVkCWrnFsRV6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UBC4H0l+o4xAEuYPmItCEbgRN7SvN9QgZv4/PWpjHNAqUfnCrsEB1zAziFpCfo2Za
-	 GmZth1yk6PbMnOFDrcH83Q6wFEsqxAh2GkqjDJmuvPaUh1t+AjrAdI+MpdtBQrZ0GM
-	 WoImytntKV6eFwc2xxo6aOBx04RfHMBvL1kHKDEw=
+	b=RMca3uWY9ZTi3b7p71Y4ppFWEh9nB2oHJoj67mzX38ubI+Tgakh+Yb51Q5hRfC/n2
+	 p08uNRRVRfLua4DMorho7n60A4nV4na30JyZtg+DzD0L8yjBJ1WsCVSCgkwGWuKhcP
+	 7F1sMt28kxow0YNKfmgJxZtxZ9cden/jDTchTAII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfLXLlN (ORCPT
+        id S1727049AbfLXLlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:41:13 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:40775 "EHLO
+        Tue, 24 Dec 2019 06:41:18 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:38863 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726184AbfLXLlL (ORCPT
+        by vger.kernel.org with ESMTP id S1726184AbfLXLlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:41:11 -0500
+        Tue, 24 Dec 2019 06:41:17 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji5v-000169-JX; Tue, 24 Dec 2019 12:11:20 +0100
+        id 1iji6F-000169-Am; Tue, 24 Dec 2019 12:11:40 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 12/32] irqchip/gic-v4.1: Add VPE eviction callback
-Date:   Tue, 24 Dec 2019 11:10:35 +0000
-Message-Id: <20191224111055.11836-13-maz@kernel.org>
+Subject: [PATCH v3 30/32] KVM: arm64: GICv4.1: Plumb SGI implementation selection in the distributor
+Date:   Tue, 24 Dec 2019 11:10:53 +0000
+Message-Id: <20191224111055.11836-31-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,124 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When descheduling a VPE, special care must be taken to tell the GIC
-about whether we want to receive a doorbell or not. This is a
-major improvement on GICv4.0, where the doorbell had to be separately
-enabled/disabled.
+The GICv4.1 architecture gives the hypervisor the option to let
+the guest choose whether it wants the good old SGIs with an
+active state, or the new, HW-based ones that do not have one.
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+For this, plumb the configuration of SGIs into the GICv3 MMIO
+handling, present the GICD_TYPER2.nASSGIcap to the guest,
+and handle the GICD_CTLR.nASSGIreq setting.
+
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 53 +++++++++++++++++++++++++-------
- 1 file changed, 42 insertions(+), 11 deletions(-)
+ virt/kvm/arm/vgic/vgic-mmio-v3.c | 48 ++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 49850297fe56..a5567d099a3e 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2631,7 +2631,7 @@ static int __init allocate_lpi_tables(void)
- 	return 0;
- }
+diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+index d73f4ffd7d36..31ff8c7e09b0 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
++++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+@@ -3,6 +3,7 @@
+  * VGICv3 MMIO handling functions
+  */
  
--static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
-+static u64 its_clear_vpend_valid(void __iomem *vlpi_base, u64 clr, u64 set)
- {
- 	u32 count = 1000000;	/* 1s! */
- 	bool clean;
-@@ -2639,6 +2639,8 @@ static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
- 
- 	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
- 	val &= ~GICR_VPENDBASER_Valid;
-+	val &= ~clr;
-+	val |= set;
- 	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
- 
- 	do {
-@@ -2651,6 +2653,11 @@ static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
++#include <linux/bitfield.h>
+ #include <linux/irqchip/arm-gic-v3.h>
+ #include <linux/kvm.h>
+ #include <linux/kvm_host.h>
+@@ -70,6 +71,8 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
+ 		if (vgic->enabled)
+ 			value |= GICD_CTLR_ENABLE_SS_G1;
+ 		value |= GICD_CTLR_ARE_NS | GICD_CTLR_DS;
++		if (kvm_vgic_global_state.has_gicv4_1 && vgic->nassgireq)
++			value |= GICD_CTLR_nASSGIreq;
+ 		break;
+ 	case GICD_TYPER:
+ 		value = vgic->nr_spis + VGIC_NR_PRIVATE_IRQS;
+@@ -81,6 +84,10 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
+ 			value |= (INTERRUPT_ID_BITS_SPIS - 1) << 19;
  		}
- 	} while (!clean && count);
+ 		break;
++	case GICD_TYPER2:
++		if (kvm_vgic_global_state.has_gicv4_1)
++			value = GICD_TYPER2_nASSGIcap;
++		break;
+ 	case GICD_IIDR:
+ 		value = (PRODUCT_ID_KVM << GICD_IIDR_PRODUCT_ID_SHIFT) |
+ 			(vgic->implementation_rev << GICD_IIDR_REVISION_SHIFT) |
+@@ -98,17 +105,43 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
+ 				    unsigned long val)
+ {
+ 	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
+-	bool was_enabled = dist->enabled;
  
-+	if (unlikely(val & GICR_VPENDBASER_Dirty)) {
-+		pr_err_ratelimited("ITS virtual pending table not cleaning\n");
-+		val |= GICR_VPENDBASER_PendingLast;
-+	}
+ 	switch (addr & 0x0c) {
+-	case GICD_CTLR:
++	case GICD_CTLR: {
++		bool was_enabled, is_hwsgi;
 +
- 	return val;
- }
++		mutex_lock(&vcpu->kvm->lock);
++
++		was_enabled = dist->enabled;
++		is_hwsgi = dist->nassgireq;
++
+ 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
  
-@@ -2759,7 +2766,7 @@ static void its_cpu_init_lpis(void)
- 		 * ancient programming gets left in and has possibility of
- 		 * corrupting memory.
- 		 */
--		val = its_clear_vpend_valid(vlpi_base);
-+		val = its_clear_vpend_valid(vlpi_base, 0, 0);
- 		WARN_ON(val & GICR_VPENDBASER_Dirty);
++		/* Not a GICv4.1? No HW SGIs */
++		if (!kvm_vgic_global_state.has_gicv4_1)
++			val &= ~GICD_CTLR_nASSGIreq;
++
++		/* Dist stays enabled? nASSGIreq is RO */
++		if (was_enabled && dist->enabled) {
++			val &= ~GICD_CTLR_nASSGIreq;
++			val |= FIELD_PREP(GICD_CTLR_nASSGIreq, is_hwsgi);
++		}
++
++		/* Switching HW SGIs? */
++		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
++		if (is_hwsgi != dist->nassgireq)
++			vgic_v4_configure_vsgis(vcpu->kvm);
++
+ 		if (!was_enabled && dist->enabled)
+ 			vgic_kick_vcpus(vcpu->kvm);
++
++		mutex_unlock(&vcpu->kvm->lock);
+ 		break;
++	}
+ 	case GICD_TYPER:
++	case GICD_TYPER2:
+ 	case GICD_IIDR:
++		/* This is at best for documentation purposes... */
+ 		return;
+ 	}
+ }
+@@ -117,10 +150,21 @@ static int vgic_mmio_uaccess_write_v3_misc(struct kvm_vcpu *vcpu,
+ 					   gpa_t addr, unsigned int len,
+ 					   unsigned long val)
+ {
++	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
++
+ 	switch (addr & 0x0c) {
+ 	case GICD_IIDR:
+ 		if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
+ 			return -EINVAL;
++		return 0;
++	case GICD_CTLR:
++		/* Not a GICv4.1? No HW SGIs */
++		if (!kvm_vgic_global_state.has_gicv4_1)
++			val &= ~GICD_CTLR_nASSGIreq;
++
++		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
++		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
++		return 0;
  	}
  
-@@ -3439,16 +3446,10 @@ static void its_vpe_deschedule(struct its_vpe *vpe)
- 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
- 	u64 val;
- 
--	val = its_clear_vpend_valid(vlpi_base);
-+	val = its_clear_vpend_valid(vlpi_base, 0, 0);
- 
--	if (unlikely(val & GICR_VPENDBASER_Dirty)) {
--		pr_err_ratelimited("ITS virtual pending table not cleaning\n");
--		vpe->idai = false;
--		vpe->pending_last = true;
--	} else {
--		vpe->idai = !!(val & GICR_VPENDBASER_IDAI);
--		vpe->pending_last = !!(val & GICR_VPENDBASER_PendingLast);
--	}
-+	vpe->idai = !!(val & GICR_VPENDBASER_IDAI);
-+	vpe->pending_last = !!(val & GICR_VPENDBASER_PendingLast);
- }
- 
- static void its_vpe_invall(struct its_vpe *vpe)
-@@ -3640,6 +3641,35 @@ static void its_vpe_4_1_schedule(struct its_vpe *vpe,
- 	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
- }
- 
-+static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
-+				   struct its_cmd_info *info)
-+{
-+	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-+	u64 val;
-+
-+	if (info->req_db) {
-+		/*
-+		 * vPE is going to block: make the vPE non-resident with
-+		 * PendingLast clear and DB set. The GIC guarantees that if
-+		 * we read-back PendingLast clear, then a doorbell will be
-+		 * delivered when an interrupt comes.
-+		 */
-+		val = its_clear_vpend_valid(vlpi_base,
-+					    GICR_VPENDBASER_PendingLast,
-+					    GICR_VPENDBASER_4_1_DB);
-+		vpe->pending_last = !!(val & GICR_VPENDBASER_PendingLast);
-+	} else {
-+		/*
-+		 * We're not blocking, so just make the vPE non-resident
-+		 * with PendingLast set, indicating that we'll be back.
-+		 */
-+		val = its_clear_vpend_valid(vlpi_base,
-+					    0,
-+					    GICR_VPENDBASER_PendingLast);
-+		vpe->pending_last = true;
-+	}
-+}
-+
- static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
- {
- 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-@@ -3651,6 +3681,7 @@ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
- 		return 0;
- 
- 	case DESCHEDULE_VPE:
-+		its_vpe_4_1_deschedule(vpe, info);
- 		return 0;
- 
- 	case INVALL_VPE:
+ 	vgic_mmio_write_v3_misc(vcpu, addr, len, val);
 -- 
 2.20.1
 
