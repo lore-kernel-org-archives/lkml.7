@@ -2,87 +2,103 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,
-	URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1708C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D177C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1BB206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AD020730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577195178;
+	bh=cWGXGSQfWpo0lezE6WFGU+Fxc9XCO+Ww9It8x8AE1bU=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=Af44zVCRTBVKinPeUiXurGHJiZFhWOEW8q9arc9gauXALHEkSHGHBrzkvBIkDRefD
+	 L5fhMmntf6aloaF/jYFNbEONSea0DHdfCna4C1vWrM2oiowRN3c3/eSE+chhj1t0N0
+	 0UsCFajcpcuJoAoub3bCONsvjAXLIgUBoh10O0JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLXNl1 (ORCPT
+        id S1726246AbfLXNqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:41:27 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55603 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfLXNl1 (ORCPT
+        Tue, 24 Dec 2019 08:46:17 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:34561 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726124AbfLXNqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:41:27 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EFBDA240007;
-        Tue, 24 Dec 2019 13:41:24 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        <linux-rockchip@lists.infradead.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2] MAINTAINERS: Track Rockchip PMIC drivers
-Date:   Tue, 24 Dec 2019 14:41:22 +0100
-Message-Id: <20191224134122.20385-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 24 Dec 2019 08:46:17 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ijkVo-0003p4-RU; Tue, 24 Dec 2019 14:46:12 +0100
+To:     Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 14/18] KVM: arm64: spe: Provide guest virtual  interrupts for SPE
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 24 Dec 2019 13:46:12 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20191224133647.GO42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-15-andrew.murray@arm.com>
+ <867e2oimw9.wl-maz@kernel.org>
+ <20191224115031.GG42593@e119886-lin.cambridge.arm.com>
+ <1f3fbff6c9db0f14c92a6e3fb800fa0f@www.loen.fr>
+ <20191224130853.GN42593@e119886-lin.cambridge.arm.com>
+ <a2b8846377b3f5884feeb9728b16f826@www.loen.fr>
+ <20191224133647.GO42593@e119886-lin.cambridge.arm.com>
+Message-ID: <ddd39371e1aa95747d42efdb55f73b51@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: andrew.murray@arm.com, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current Rockchip section misses all the PMIC related drivers. They
-are all prefixed rk8* and are as wide as clks, regulators, pinctrl,
-RTCs, audio, etc.
+On 2019-12-24 13:36, Andrew Murray wrote:
+> On Tue, Dec 24, 2019 at 01:22:46PM +0000, Marc Zyngier wrote:
+>> On 2019-12-24 13:08, Andrew Murray wrote:
 
-Add a dedicated MAINTAINER's entry.
+[...]
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+>> > This does feel like the pragmatic approach - a larger black hole 
+>> in
+>> > exchange
+>> > for performance. I imagine the blackhole would be naturally 
+>> reduced on
+>> > machines with high workloads.
+>>
+>> Why? I don't see the relation between how busy the vcpu is and the 
+>> size
+>> of the blackhole. It is strictly a function of the frequency of 
+>> exits.
+>
+> Indeed, my assumption being that the busier a system is the more
+> interrupts, thus leading to more exits and so an increased frequency 
+> of
+> SPE interrupt evaluation and thus smaller black hole.
 
-Changes since v1:
-* Create a PMIC entry in MAINTAINERS.
-* Track files with rk8 and not rk80.
+On a GICv4-enabled system, this isn't true anymore. My bet is that
+people won't use SPE to optimize IO-oriented workloads, but more CPU
+intensive workloads (that don't necessarily exit at all).
 
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+But never mind. Let's start with this approach, as it is simple and 
+easy
+to verify. If the black hole aspect becomes problematic, we know how
+to reduce it (at the expense of entry/exit performance).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d3a5c54a41d..d3f814212ba8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13943,6 +13943,17 @@ S:	Maintained
- F:	drivers/staging/media/hantro/
- F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
- 
-+ROCKCHIP PMIC DRIVERS
-+M:	Heiko Stuebner <heiko@sntech.de>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-rockchip@lists.infradead.org
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/*/*rk8*
-+F:	include/*/*/rk8*
-+F:	include/*/*/*/rk8*
-+F:	drivers/*/*rk8*
-+
- ROCKER DRIVER
- M:	Jiri Pirko <jiri@resnulli.us>
- L:	netdev@vger.kernel.org
+         M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
