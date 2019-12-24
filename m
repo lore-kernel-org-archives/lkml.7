@@ -2,116 +2,173 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA2AC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A6CC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD04520409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4852520409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577185881;
+	bh=WSSgV7qHToRyqFsNxZ/TREWMazF/7yQjsVKPWV336j8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2RFdZp+Pfudny6N5JdA8BKLiVX4rNamdNfaFUzbnuGNBy2orlAOQXB+E/B2+sWrfY
+	 8Omb78QTpR+nfj2Fryq3KNuYBXLaiQXQ/mu9nU3ZZxnyvaboXJlPp3JQ62p7BAuUtN
+	 w0v0l8lzK+IjTMWDW88hFWL4QbO96/02zcYfO9U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfLXLLL (ORCPT
+        id S1726976AbfLXLLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:11:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:51126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfLXLLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:11:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7185A1FB;
-        Tue, 24 Dec 2019 03:11:08 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB9FD3F534;
-        Tue, 24 Dec 2019 03:11:07 -0800 (PST)
-Date:   Tue, 24 Dec 2019 11:11:06 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 10/18] arm64: KVM/debug: use EL1&0 stage 1 translation
- regime
-Message-ID: <20191224111105.GF42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-11-andrew.murray@arm.com>
- <86d0cgir74.wl-maz@kernel.org>
+        Tue, 24 Dec 2019 06:11:20 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:43577 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726091AbfLXLLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:11:14 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iji5n-000169-UG; Tue, 24 Dec 2019 12:11:12 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <Andrew.Murray@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: [PATCH v3 03/32] irqchip/gic-v3: Workaround Cavium TX1 erratum when reading GICD_TYPER2
+Date:   Tue, 24 Dec 2019 11:10:26 +0000
+Message-Id: <20191224111055.11836-4-maz@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
+References: <20191224111055.11836-1-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86d0cgir74.wl-maz@kernel.org>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, yuzenghui@huawei.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 22, 2019 at 10:34:55AM +0000, Marc Zyngier wrote:
-> On Fri, 20 Dec 2019 14:30:17 +0000,
-> Andrew Murray <andrew.murray@arm.com> wrote:
-> > 
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > Now that we have all the save/restore mechanism in place, lets enable
-> > the translation regime used by buffer from EL2 stage 1 to EL1 stage 1
-> > on VHE systems.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > [ Reword commit, don't trap to EL2 ]
-> 
-> Not trapping to EL2 for the case where we don't allow SPE in the
-> guest is not acceptable.
+Despite the architecture spec being extremely clear about the fact
+that reserved registers in the GIC distributor memory map are RES0
+(and thus are not allowed to generate an exception), the Cavium
+ThunderX (aka TX1) SoC explodes as such:
 
-Yes understood (because of this I had meant to send the series as RFC btw).
+[    0.000000] GICv3: GIC: Using split EOI/Deactivate mode
+[    0.000000] GICv3: 128 SPIs implemented
+[    0.000000] GICv3: 0 Extended SPIs implemented
+[    0.000000] Internal error: synchronous external abort: 96000210 [#1] SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-rc4-00035-g3cf6a3d5725f #7956
+[    0.000000] Hardware name: cavium,thunder-88xx (DT)
+[    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO)
+[    0.000000] pc : __raw_readl+0x0/0x8
+[    0.000000] lr : gic_init_bases+0x110/0x560
+[    0.000000] sp : ffff800011243d90
+[    0.000000] x29: ffff800011243d90 x28: 0000000000000000
+[    0.000000] x27: 0000000000000018 x26: 0000000000000002
+[    0.000000] x25: ffff8000116f0000 x24: ffff000fbe6a2c80
+[    0.000000] x23: 0000000000000000 x22: ffff010fdc322b68
+[    0.000000] x21: ffff800010a7a208 x20: 00000000009b0404
+[    0.000000] x19: ffff80001124dad0 x18: 0000000000000010
+[    0.000000] x17: 000000004d8d492b x16: 00000000f67eb9af
+[    0.000000] x15: ffffffffffffffff x14: ffff800011249908
+[    0.000000] x13: ffff800091243ae7 x12: ffff800011243af4
+[    0.000000] x11: ffff80001126e000 x10: ffff800011243a70
+[    0.000000] x9 : 00000000ffffffd0 x8 : ffff80001069c828
+[    0.000000] x7 : 0000000000000059 x6 : ffff8000113fb4d1
+[    0.000000] x5 : 0000000000000001 x4 : 0000000000000000
+[    0.000000] x3 : 0000000000000000 x2 : 0000000000000000
+[    0.000000] x1 : 0000000000000000 x0 : ffff8000116f000c
+[    0.000000] Call trace:
+[    0.000000]  __raw_readl+0x0/0x8
+[    0.000000]  gic_of_init+0x188/0x224
+[    0.000000]  of_irq_init+0x200/0x3cc
+[    0.000000]  irqchip_init+0x1c/0x40
+[    0.000000]  init_IRQ+0x160/0x1d0
+[    0.000000]  start_kernel+0x2ec/0x4b8
+[    0.000000] Code: a8c47bfd d65f03c0 d538d080 d65f03c0 (b9400000)
 
+when reading the GICv4.1 GICD_TYPER2 register, which is unexpected...
 
-> 
-> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > ---
-> >  arch/arm64/kvm/hyp/switch.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> > index 67b7c160f65b..6c153b79829b 100644
-> > --- a/arch/arm64/kvm/hyp/switch.c
-> > +++ b/arch/arm64/kvm/hyp/switch.c
-> > @@ -100,6 +100,7 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
-> >  
-> >  	write_sysreg(val, cpacr_el1);
-> >  
-> > +	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
-> >  	write_sysreg(kvm_get_hyp_vector(), vbar_el1);
-> >  }
-> >  NOKPROBE_SYMBOL(activate_traps_vhe);
-> > @@ -117,6 +118,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
-> >  		__activate_traps_fpsimd32(vcpu);
-> >  	}
-> >  
-> > +	write_sysreg(vcpu->arch.mdcr_el2 | 3 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
-> 
-> There is a _MASK macro that can replace this '3', and is in keeping
-> with the rest of the code.
+Work around it by adding a new quirk flagging all the A1 revisions
+of the distributor, but it remains unknown whether this could affect
+other revisions of this SoC (or even other SoCs from the same silicon
+vendor).
 
-OK.
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 286f98222878..640d4db65b78 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -34,6 +34,7 @@
+ #define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
+ 
+ #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
++#define FLAGS_WORKAROUND_GICD_TYPER2_TX1	(1ULL << 1)
+ 
+ struct redist_region {
+ 	void __iomem		*redist_base;
+@@ -1464,6 +1465,15 @@ static bool gic_enable_quirk_msm8996(void *data)
+ 	return true;
+ }
+ 
++static bool gic_enable_quirk_tx1(void *data)
++{
++	struct gic_chip_data *d = data;
++
++	d->flags |= FLAGS_WORKAROUND_GICD_TYPER2_TX1;
++
++	return true;
++}
++
+ static bool gic_enable_quirk_hip06_07(void *data)
+ {
+ 	struct gic_chip_data *d = data;
+@@ -1502,6 +1512,12 @@ static const struct gic_quirk gic_quirks[] = {
+ 		.mask	= 0xffffffff,
+ 		.init	= gic_enable_quirk_hip06_07,
+ 	},
++	{
++		.desc	= "GICv3: Cavium TX1 GICD_TYPER2 erratum",
++		.iidr	= 0xa100034c,
++		.mask	= 0xfff00fff,
++		.init	= gic_enable_quirk_tx1,
++	},
+ 	{
+ 	}
+ };
+@@ -1577,7 +1593,12 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
+ 	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
+ 
+-	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
++	/*
++	 * ThunderX1 explodes on reading GICD_TYPER2, in total violation
++	 * of the spec (which says that reserved addresses are RES0).
++	 */
++	if (!(gic_data.flags & FLAGS_WORKAROUND_GICD_TYPER2_TX1))
++		gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
+ 
+ 	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
+ 						 &gic_data);
+-- 
+2.20.1
 
-> 
-> It still remains that it looks like the wrong place to do this, and
-> vcpu_load seems much better. Why should you write to mdcr_el2 on each
-> entry to the guest, since you know whether it has SPE enabled at the
-> point where it gets scheduled?
-
-Yes OK, I'll move what I can to vcpu_load.
-
-Thanks,
-
-Andrew Murray
-
-
-> 
-> 	M.
-> 
-> -- 
-> Jazz is not dead, it just smells funny.
