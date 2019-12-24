@@ -2,138 +2,113 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36560C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5641CC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0629520709
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtqZ/SMO"
+	by mail.kernel.org (Postfix) with ESMTP id 2B68820709
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 03:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577156674;
+	bh=owfHBdwaORIK4L5asGXD/WbRybZzQGR4SY7hj7jRnks=;
+	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
+	b=BszG+ExgCM2YVP3Xt9m4zfiY62N1ppmKUbe5AlAIhTg0Q6KImhnSoPXjNUXV0ZO9O
+	 xS2ydaQa1HYS+bl9CwiI7M87tqP36DkC+kBZN9q5o4mPm95IsxOfVscjE7aASrpY6t
+	 473LdiM44m+SfJvgZ7pkAksOl4ZHdLjPYH7eb8E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLXDEX (ORCPT
+        id S1726946AbfLXDEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Dec 2019 22:04:23 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36953 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfLXDEX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Dec 2019 22:04:23 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so9262495ioc.4;
-        Mon, 23 Dec 2019 19:04:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cYZhtmD+9NUOzLwE4DFDXgTJzhRtHeQxHMYH/iS7zTg=;
-        b=GtqZ/SMOo36thoZU+8R+cZitg8ycgYRxrL/6kquEe+itVLv6GaDb5VQsU3/P1YDwjp
-         QCCISU1WVoaJ43Cfd/tTKWlxLEGflSIbVzYl7GRlkofOZWL7Yz0oTl8XJeglS4PWJ/Dk
-         vmy0XuFySBPplrSQ9z/jxURdiX9f4IBn7oAX/CV7Z23Dq+CVnEcgVN9qBA9Q1lNW6EPa
-         vH4v1sxMW653eZZnVlaX8ZX0QltvW7YOHDsHRIfHMTFtx/46GthozQlIIBzjJqxVs6WO
-         6QgQgTCCYdvVJCEIbPajbdCzndjGcPMJymJfD1uyzC5vvh58wCdOaFyvKNQfFyroB3yF
-         nHxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cYZhtmD+9NUOzLwE4DFDXgTJzhRtHeQxHMYH/iS7zTg=;
-        b=VnVLMyoofA3kclaNXGCaJUrm+wK9l+tmGiktep+NkxyDXsjz8X6SydDUWMpCmeSY2W
-         Qr+jBFw79dCB3R5Y7YQp2Kolid15H1thzjzr0zjzJCbYN/V+/yp90XZv+S6v0HhXwJ6r
-         FEjQVUDGM57HMB9rc8oaWv8k07luWYz6NmMpEbDOlWAAmutGsCAGZ1R4F1emJ1W6AMci
-         yozyniUlpCLzIt9G+gQZnU4ZoSj5cHWl2qEMMEaz+EzaV4Me91WIyXUCzRhM6hi1G6ZU
-         xTL/A9tj0vuh2aoUKuT57P0Gvsr4qGtQVu/r/rULGwtOu46S/4UpAxSWMo5sdC54uGHB
-         9Ssg==
-X-Gm-Message-State: APjAAAU7NMKdn4n5wwwhGen4x4L5ABU7vWW2E1SZKbHY4hIhjdgoQnPg
-        /KO6ajFGBKzwa+MfXg9HVhbBXwaeJrQqYmRvQBs=
-X-Google-Smtp-Source: APXvYqxNJpyvPf0M59389mxT+myYRm4xzwa48U6muH+RL2eRVXW4c6c+uQjL6n2XIeh+OAp91AJnAC/BvyEUaNL19HI=
-X-Received: by 2002:a6b:5904:: with SMTP id n4mr23268086iob.9.1577156662858;
- Mon, 23 Dec 2019 19:04:22 -0800 (PST)
+        Mon, 23 Dec 2019 22:04:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbfLXDEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Dec 2019 22:04:32 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E93206B7;
+        Tue, 24 Dec 2019 03:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577156672;
+        bh=owfHBdwaORIK4L5asGXD/WbRybZzQGR4SY7hj7jRnks=;
+        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
+        b=xgXHAq+ptsMMelxcsMUUqPbuXn1zmTj7/iNcPMvpG6Hy1tkCMrc+WHIgeR0319hKS
+         zJXQaEMezrBou8JR5ROMPXd3Cxsi1kvEWPcKHp87dYXb1SZgPqk6haPleYvzhqRu7/
+         K8SkF6tUK2OnlnEyNo9j8etnGpkBqvlz+svNBGNo=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191220024936.GA380394@chrisdown.name> <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
- <20191220121615.GB388018@chrisdown.name> <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
- <20191220164632.GA26902@bombadil.infradead.org> <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
- <20191220195025.GA9469@bombadil.infradead.org> <20191223204551.GA272672@chrisdown.name>
-In-Reply-To: <20191223204551.GA272672@chrisdown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 24 Dec 2019 05:04:11 +0200
-Message-ID: <CAOQ4uxjm5JMvfbi4xa3yaDwuM+XpNOSDrbVsHvJtkms00ZBnAg@mail.gmail.com>
-Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
- ino_t is 64 bit
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
-        Hugh Dickins <hughd@google.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "zhengbin (A)" <zhengbin13@huawei.com>,
-        Roman Gushchin <guro@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHp75VdtsXjW5kaWVspi-5u6ya5512Yk7VN4HJ4Tn34PWci5Og@mail.gmail.com>
+References: <cover.1566975410.git.rahul.tanwar@linux.intel.com> <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com> <20190828150951.GS2680@smile.fi.intel.com> <e4a1fd0a-b179-92dd-fb81-22d9d7465a33@linux.intel.com> <20190902122030.GE2680@smile.fi.intel.com> <20190902122454.GF2680@smile.fi.intel.com> <db9b8978-b9ae-d1bf-2477-78a99b82367a@linux.intel.com> <CAHp75VdtsXjW5kaWVspi-5u6ya5512Yk7VN4HJ4Tn34PWci5Og@mail.gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        robhkernel.org@smile.fi.intel.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+User-Agent: alot/0.8.1
+Date:   Mon, 23 Dec 2019 19:04:31 -0800
+Message-Id: <20191224030431.E0E93206B7@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The slab i_ino recycling approach works somewhat, but is unfortunately neutered
-> quite a lot by the fact that slab recycling is per-memcg. That is, replacing
-> with recycle_or_get_next_ino(old_ino)[0] for shmfs and a few other trivial
-> callsites only leads to about 10% slab reuse, which doesn't really stem the
-> bleeding of 32-bit inums on an affected workload:
->
->      # tail -5000 /sys/kernel/debug/tracing/trace | grep -o 'recycle_or_get_next_ino:.*' | sort | uniq -c
->          4454 recycle_or_get_next_ino: not recycled
->           546 recycle_or_get_next_ino: recycled
->
+Quoting Andy Shevchenko (2019-12-07 06:57:43)
+> On Fri, Dec 6, 2019 at 7:06 AM Tanwar, Rahul
+> <rahul.tanwar@linux.intel.com> wrote:
+> > On 2/9/2019 8:24 PM, Andy Shevchenko wrote:
+> > >>
+> > >>      div =3D val < 3 ? (val + 1) : (1 << ((val - 3) / 3));
+> > > It's not complete, but I think you got the idea.
+> > >
+> > >> So, can we eliminate table?
+> >
+> > In the desperation to eliminate table, below is what i can come up with:
+> >
+> >         struct clk_div_table div_table[16];
+>=20
+> But this is not an elimination, it's just a replacement from static to
+> dynamically calculated one.
+>=20
+> >         int i, j;
+> >
+> >         for (i =3D 0; i < 16; i++)
+> >                 div_table[i].val =3D i;
+> >
+> >         for (i =3D 0, j=3D0; i < 16; i+=3D3, j++) {
+> >                 div_table[i].div =3D (i =3D=3D 0) ? (1 << j) : (1 << (j=
+ + 1));
+> >                 if (i =3D=3D 15)
+> >                         break;
+> >
+> >                 div_table[i + 1].div =3D (i =3D=3D 0) ? ((1 << j) + 1) :
+> >                                         (1 << (j + 1)) + (1 << (j - 1));
+> >                 div_table[i + 2].div =3D (3 << j);
+> >         }
+> >
+> > To me, table still looks a better approach. Also, table is more extenda=
+ble &
+> > consistent w.r.t. clk framework & other referenced clk drivers.
+> >
+> > Whats your opinion ?
+>=20
+> Whatever CCF maintainers is fine with.
+>=20
 
-Too bad..
-Maybe recycled ino should be implemented all the same because it is simple
-and may improve workloads that are not so MEMCG intensive.
+Table is fine. Or something that calculates is also fine. Is it going to
+be extended in the future? If we're talking about a driver for hardware
+I wonder if this is really going to change in the future.
 
-> Roman (who I've just added to cc) tells me that currently we only have
-> per-memcg slab reuse instead of global when using CONFIG_MEMCG. This
-> contributes fairly significantly here since there are multiple tasks across
-> multiple cgroups which are contributing to the get_next_ino() thrash.
->
-> I think this is a good start, but we need something of a different magnitude in
-> order to actually solve this problem with the current slab infrastructure. How
-> about something like the following?
->
-> 1. Add get_next_ino_full, which uses whatever the full width of ino_t is
-> 2. Use get_next_ino_full in tmpfs (et al.)
+Please resend so your binding can be reviewed.
 
-I would prefer that filesystems making heavy use of get_next_ino, be converted
-to use a private ino pool per sb:
-
-ino_pool_create()
-ino_pool_get_next()
-
-flags to ino_pool_create() can determine the desired ino range.
-Does the Facebook use case involve a single large tmpfs or many
-small ones? I would guess the latter and therefore we are trying to solve
-a problem that nobody really needs to solve (i.e. global efficient ino pool).
-
-> 3. Add a mount option to tmpfs (et al.), say `32bit-inums`, which people can
->     pass if they want the 32-bit inode numbers back. This would still allow
->     people who want to make this tradeoff to use xino.
-
-inode32|inode64 (see man xfs(5)).
-
-> 4. (If you like) Also add a CONFIG option to disable this at compile time.
->
-
-I Don't know about disable, but the default mode for tmpfs (inode32|inode64)
-might me best determined by CONFIG option, so distro builders could decide
-if they want to take the risk of breaking applications on tmpfs.
-
-But if you implement per sb ino pool, maybe inode64 will no longer be
-required for your use case?
-
-Thanks,
-Amir.
