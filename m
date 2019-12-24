@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2F5C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B97C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BBB206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355A820730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="cUifgq/8"
+	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="0tCVYb7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfLXMMa (ORCPT
+        id S1726330AbfLXMMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:12:30 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33787 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfLXMM3 (ORCPT
+        Tue, 24 Dec 2019 07:12:35 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41897 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfLXMMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:12:29 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so4380467otp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:12:29 -0800 (PST)
+        Tue, 24 Dec 2019 07:12:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so7482991oie.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:12:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=hev-cc.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9BNmPl4A7u77U4XYbjAnNEvFngSX3WTvrmL/4/NFf/0=;
-        b=cUifgq/8r1suKoE/IUSYwY46YctGdVYUWTP+57RaD4Xmp/OGArfQd/7WoviYw4X9M9
-         nSCbR5Zp1KsDJ14/45VuLhGTjqkmUHPtiMcueXWHjNgInTlk0B8Lz0cK9z6lkQHN6YT0
-         IkZCCDtt5MEEzOZEcdk5V7Ee5EXWIkE+uJKFolRjKDQeR1WipfaSywCoYIjzgD7G6r+s
-         8rdfoHxWv7UIeDF9/IBoHtyDbrKm+xvX1Ox2Z5btaSrrJMh69SGryMGM/Q9vhySytWXo
-         JiHy4odvEn3zska7Htc2nzW3pNMb7kGTO8DrLJizg0tT0cKIwuI1R2aCf3Ax2noY5q/0
-         x8Aw==
+        bh=Xpn/DE/lipmC0d0Dlyqq2KHPBekSRodJk/NFu5QKcOU=;
+        b=0tCVYb7hGi34DF0fuomxgdBrpJPjm1fMmXQhi34VYy5TBsfgkAVWP8pWWinFNy5ME2
+         eahwqVClafWJDv4lZz1288tyeJo4frQS01257fqfp9qR9XnLM9wKryIwlrYBt8sJzXOy
+         chBJS5yRnpqsn4rJlEl1jiGih8sM2ZU1sAJR/zBdOkJNqq3aYfN4Lj7s2SQgC54HwaiQ
+         ybyiDaxuoW9VcvnEAvECGOFd2ljkwdmn5pB9STY1Tdp8h/Xe88U/fjRqiZ4im688pwfi
+         hUBklZo3KOFRrMUyRGeOFlQHUF4bFRMRrDO2F44PX26/6EHdfvBNqpKpET8Sswk7lyNH
+         MtxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9BNmPl4A7u77U4XYbjAnNEvFngSX3WTvrmL/4/NFf/0=;
-        b=Nly/ZpLYI8ampSfESbuAR7JdEv9F1V3mR7/8pwKlMxh+hmWgoY1AKmBpnD7kXXisYP
-         eIFWlHGxsccj03bWHPqmpQDPUOXXbOtAlQpwXyoha+lDtW95R1rIeKStgMb5bJ3Fksrl
-         Il67XykjKFu0bcc52PtZmiUvFF6ACZoZDjCxz0HNYUvAdAq2cW2XCnlNQr0Kim0hNSON
-         sotnW1IeF1t9JEC+OvvbmGgBZLjdVFY3mkZZuP0SoBkTeyhQ5Zjhqw85KOYAC6VuSA5u
-         BaaJvEJFwbkfxYs+d5iaF5mOpIQOXw0gMb7BsA7LAYTY2xDd4Y6UBoFNICMcRVrt7V8X
-         x8nA==
-X-Gm-Message-State: APjAAAVzjw24wby4RwBnlIyLoixcpR8wzbbU8NZ2yCrgNgjVPeNnyvlW
-        nqHbPj3Q34JagKoupU5Vr+k8mWPJydU=
-X-Google-Smtp-Source: APXvYqwb0ZtnuLJdbkpODmLRmILFwVYKNGvImP2Q65k6khZatugV88Gg+CJk1ezJsLu0fni5MJkDkQ==
-X-Received: by 2002:a9d:7d81:: with SMTP id j1mr33379310otn.267.1577189548643;
-        Tue, 24 Dec 2019 04:12:28 -0800 (PST)
+        bh=Xpn/DE/lipmC0d0Dlyqq2KHPBekSRodJk/NFu5QKcOU=;
+        b=kjZlQ4O50aYggjBN23qEp0t8q8qXlcxqc99BAqAPv1pSQWAMK/dTpJSc7EXQXaJGs+
+         +9BBrXuafZjKlgvToDjxvFvda+2M00KSQLnAPVlcfOJKODrFiEynLU3Vq/4nqoPER86I
+         jnSlQqRbdL+PE0rQsH7mil8rqWHLBdi7i9REE8s0n7OY5+6UKOzShiDtT8Xwf3yMYn+5
+         ouQYMxwkO02Ly9BDxJeF0BcmWyGTgiUqycoiTBP3I9/6KA4pzDoASZlK1CTZEuJFijzz
+         1xhHpqTr9+iMtQr/mkNg7G06SN5uvBXqiDeHfR0chQy6OR/L2UGdQ3UKmjRQorw4r1m8
+         Y88w==
+X-Gm-Message-State: APjAAAXevmosNfoQGAAUMP9wM9DANqzqWi7sSwqw7qR7Zuz5Mr8+w7hb
+        u/nVFmk4wVogEmPVdHO+FBd2saJKhO6ObA==
+X-Google-Smtp-Source: APXvYqxyWOqWNNtjktAYSq1j79AEY89ON4n29CyynO0Jf9amMzmdwGo2ISDF+mB/X2599jAoe/rVdg==
+X-Received: by 2002:aca:554d:: with SMTP id j74mr604250oib.92.1577189553199;
+        Tue, 24 Dec 2019 04:12:33 -0800 (PST)
 Received: from hev-sbc.hz.ali.com ([47.89.83.53])
-        by smtp.gmail.com with ESMTPSA id m12sm3778206otq.15.2019.12.24.04.12.25
+        by smtp.gmail.com with ESMTPSA id m12sm3778206otq.15.2019.12.24.04.12.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 04:12:28 -0800 (PST)
+        Tue, 24 Dec 2019 04:12:32 -0800 (PST)
 From:   Heiher <r@hev.cc>
 To:     linux-kernel@vger.kernel.org
 Cc:     Heiher <r@hev.cc>, Andrew Morton <akpm@linux-foundation.org>,
         Michel Lespinasse <walken@google.com>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [RFC PATCH 2/3] lib/rbtree: fix null pointer dereference in erase
-Date:   Tue, 24 Dec 2019 20:12:09 +0800
-Message-Id: <20191224121210.29713-2-r@hev.cc>
+Subject: [RFC PATCH 3/3] tools/rbtree: fix null pointer dereference in erase
+Date:   Tue, 24 Dec 2019 20:12:10 +0800
+Message-Id: <20191224121210.29713-3-r@hev.cc>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191224121210.29713-1-r@hev.cc>
 References: <20191224121210.29713-1-r@hev.cc>
@@ -77,11 +77,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 a null pointer dereference in erasing the root node of below tree.
 
 Tree structure:
-		   (1)[2]
-		  /   \
-	       (2)[1]  (3)[4]
-		      /
-		   (4)[3]
+                   (1)[2]
+                  /   \
+               (2)[1]  (3)[4]
+                      /
+                   (4)[3]
 
 (n): Insert order
 [n]: Key value or key order
@@ -91,13 +91,13 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michel Lespinasse <walken@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- lib/rbtree.c | 94 +++++++++++++++++++++++++++-------------------------
+ tools/lib/rbtree.c | 94 +++++++++++++++++++++++-----------------------
  1 file changed, 48 insertions(+), 46 deletions(-)
 
-diff --git a/lib/rbtree.c b/lib/rbtree.c
-index abc86c6a3177..a710c21f7be6 100644
---- a/lib/rbtree.c
-+++ b/lib/rbtree.c
+diff --git a/tools/lib/rbtree.c b/tools/lib/rbtree.c
+index 2548ff8c4d9c..8eb88439af57 100644
+--- a/tools/lib/rbtree.c
++++ b/tools/lib/rbtree.c
 @@ -351,56 +351,58 @@ ____rb_erase_color(struct rb_node *parent, struct rb_root *root,
  			break;
  		} else {
