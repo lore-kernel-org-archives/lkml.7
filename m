@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C38DC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0916C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1330206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A90206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="K8mCWyyW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="CNgMgsKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfLXMHZ (ORCPT
+        id S1726911AbfLXMH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:07:25 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53905 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfLXMHV (ORCPT
+        Tue, 24 Dec 2019 07:07:26 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53902 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfLXMHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Dec 2019 07:07:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so2258041wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:07:21 -0800 (PST)
+Received: by mail-wm1-f66.google.com with SMTP id m24so2258014wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:07:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XoYWPE8cyCMHdj/nC5g0vBWT64fDbt2xKGO150BvKJE=;
-        b=K8mCWyyWCLNS2JnoK/AGCyxSZtkrW1Rp6x29+IppxniUnau8LH9Z6M3SgaQdl5Cqbj
-         MFihbccaya8LqnzwnacVrH+SyX9FTDNzOVj2vnEJkQ+L/rEKsdNCrCA6dS8VFcVIfkwJ
-         N0+BPSmMewJTU3bab57Y+XjAdJlHZnltXLga1ZbiZuegxG5a9DvIMDbFAF6saiD57goU
-         UyeG4gswzE2ZGxJckpflhfYW6Pn2nhkiJ742LyleTRdclC6E3vWTBRK/EaBAuypAILcM
-         HR+SkfF+jDGMZdu5A0FCxsx9n4WP9i7b5VHCU0Q930sJULU3wAPvMYvOnADkPY9gk430
-         uZ3w==
+        bh=b9TsUyN+oyyXjUb/qESjsq0NNsFP2a1lN8TwiMljoxE=;
+        b=CNgMgsKNVBvdwio7z9GBftsi4FUdPBTsQmUtyMMh2unY2Wrze+jvvC12BLSoV2y71p
+         4U5iQegTgYvrlIBdk+vs2cy3Ub9kp8Kbzlx32AvzK9mDtDk2+YtjcdkVFBo/x22I4ueC
+         KF3p1HK6wwk842g7keyhHp5oG8lpOEc2tEtY5TRUbd01xSVwBw30vdTKfaLBsmQ2AY2B
+         Pe8Qfuc3ei3zHD4NaegaUY/rBTuW65HrXxBP0C3VR8WbdsZgqOLj5Zsz/1HQ2OauaDj3
+         u6CH/0TNiwH+pLVRhRnfeUvtqIYkAW3+lgbcBfhr6jMKdzJgCMxuxX3v/CD4XdAGzbgs
+         Eitw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XoYWPE8cyCMHdj/nC5g0vBWT64fDbt2xKGO150BvKJE=;
-        b=ohE6W68wYdqHvgpk9YB6ynejvM6evP1CW8H2+6nviGHofC9ovp9MkIB0EooAr3iToR
-         trCcdvSutkrzQfIYOH54HtGjsYE28eudGZYXNGpIuuJuPq/tvQxGnFHKD/GXpxhfeXAc
-         XTxFq2ft/08+prjBB40Y2cO59ALZwhwCYwvvMFb2P0vC6wTnJ63WVK5wpizYLF6TNb6q
-         4SlwJzzn3bxTkmpzvcbELc1urnBT+2/G91GARCF+U3cdYhsg6KCBJ2KK3455YAQIQ+Rt
-         CVFMVoLVY51LeBkEsuZrC3v2cQHvlSxXItxHtGfR2njgmhgQm8Dni90ThVyAYoTdFpEv
-         begA==
-X-Gm-Message-State: APjAAAUmJtaDPjKrysik/zEA6Sqr+mNs6pHDlWRXJ/7FpXynv/IWyOXB
-        DsAN7jMgjsPz/NxjO2H4QvAqIA==
-X-Google-Smtp-Source: APXvYqzNM8OUTWA/AzUPTWMx6UFqShhsbdq1HeSyO54eRjTKTg9PIO6l1lLUUWJCX3YuPTch8wjV2A==
-X-Received: by 2002:a1c:1d16:: with SMTP id d22mr4154098wmd.158.1577189240378;
-        Tue, 24 Dec 2019 04:07:20 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id s10sm23829210wrw.12.2019.12.24.04.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=b9TsUyN+oyyXjUb/qESjsq0NNsFP2a1lN8TwiMljoxE=;
+        b=GvrWPMGRX/VoR+peACv9MEo9jTi+coI5xtp/j4RY5UQJTU1mAtnRkxLEp4SSV2IsCR
+         zaft7Ujq7wNrMCG9tVScKmn1HhF6xLrI7MoA6TawKf8yy8z0Tu1KueUxlMQgctoeXy6l
+         AxBlCp42+D5ImwiFeVux2W84+R6FcNPkVC0+t24vS+5223bsJV8y3FZpsAhkagQu1744
+         QxCdBiUV3VwRyrlvZleYoHcQc7JYUF3G3Dh/YutkitY3/Xi3ijyd/Q2t1LnXKX8NWP4v
+         VP0UvMEtQ1wW/8fn6GjERbEiPbVkh0NPj7O6cgF7qAp5QX4rEzPbM7HmX0jh6aUXJUDD
+         w3vw==
+X-Gm-Message-State: APjAAAXfJbN15Wc9Mf0wEraixjNDnFVk7nAMHKh/p8pKyFBGToKoo6c+
+        a8msFKpYWZM2LUdwSAssBUVJ3g==
+X-Google-Smtp-Source: APXvYqwq1Rl4z4uHKTjbOWY20i9s6CbDtWGXW98Z/KC90gYdVkkq9X+0qHERy681I5WOtboTw7wMxA==
+X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr4075908wmk.50.1577189239313;
         Tue, 24 Dec 2019 04:07:19 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id s10sm23829210wrw.12.2019.12.24.04.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 04:07:18 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -64,9 +64,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 03/13] gpiolib: convert the type of hwnum to unsigned int in gpiochip_get_desc()
-Date:   Tue, 24 Dec 2019 13:06:59 +0100
-Message-Id: <20191224120709.18247-4-brgl@bgdev.pl>
+Subject: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
+Date:   Tue, 24 Dec 2019 13:06:58 +0100
+Message-Id: <20191224120709.18247-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191224120709.18247-1-brgl@bgdev.pl>
 References: <20191224120709.18247-1-brgl@bgdev.pl>
@@ -79,74 +79,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-gpiochip_get_desc() takes a u16 hwnum, but it turns out most users don't
-respect that and usually pass an unsigned int. Since implicit casting to
-a smaller type is dangerous - let's change the type of hwnum to unsigned
-int in gpiochip_get_desc() and in gpiochip_request_own_desc() where the
-size of hwnum is not respected either and who's a user of the former.
-
-This is safe as we then check the hwnum against the number of lines
-before proceeding in gpiochip_get_desc().
+Instead of calling the gpiochip's set_config() callback directly and
+checking its existence every time - just add a new routine that performs
+this check internally. Call it in gpio_set_config() and
+gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
+the check for chip->set() as it's irrelevant to this config option.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/gpio/gpiolib.c      | 5 +++--
- drivers/gpio/gpiolib.h      | 3 ++-
- include/linux/gpio/driver.h | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 616e431039fc..68adbd2179a0 100644
+index e5d101ee9ada..616e431039fc 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -140,7 +140,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
-  * in the given chip for the specified hardware number.
+@@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
+  * rely on gpio_request() having been called beforehand.
   */
- struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
--				    u16 hwnum)
-+				    unsigned int hwnum)
+ 
++static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
++			      enum pin_config_param mode)
++{
++	if (!gc->set_config)
++		return -ENOTSUPP;
++
++	return gc->set_config(gc, offset, mode);
++}
++
+ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 			   enum pin_config_param mode)
  {
- 	struct gpio_device *gdev = chip->gpiodev;
+@@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 	}
  
-@@ -2990,7 +2990,8 @@ EXPORT_SYMBOL_GPL(gpiochip_is_requested);
-  * A pointer to the GPIO descriptor, or an ERR_PTR()-encoded negative error
-  * code on failure.
-  */
--struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
-+struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
-+					    unsigned int hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
- 					    enum gpiod_flags dflags)
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index ca9bc1e4803c..a1cbeabadc69 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -78,7 +78,8 @@ struct gpio_array {
- 	unsigned long		invert_mask[];
- };
+ 	config = PIN_CONF_PACKED(mode, arg);
+-	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
++	return gpio_do_set_config(gc, offset, mode);
+ }
  
--struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip, u16 hwnum);
-+struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
-+				    unsigned int hwnum);
- int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- 				  unsigned int array_size,
- 				  struct gpio_desc **desc_array,
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index e2480ef94c55..4f032de10bae 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -715,7 +715,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
+@@ -3294,15 +3303,9 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
  
- #endif /* CONFIG_PINCTRL */
+ 	VALIDATE_DESC(desc);
+ 	chip = desc->gdev->chip;
+-	if (!chip->set || !chip->set_config) {
+-		gpiod_dbg(desc,
+-			  "%s: missing set() or set_config() operations\n",
+-			  __func__);
+-		return -ENOTSUPP;
+-	}
  
--struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
-+struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
-+					    unsigned int hwnum,
- 					    const char *label,
- 					    enum gpio_lookup_flags lflags,
- 					    enum gpiod_flags dflags);
+ 	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
+-	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
++	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+ 
+@@ -3339,7 +3342,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
+ 	packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
+ 					  !transitory);
+ 	gpio = gpio_chip_hwgpio(desc);
+-	rc = chip->set_config(chip, gpio, packed);
++	rc = gpio_do_set_config(chip, gpio, packed);
+ 	if (rc == -ENOTSUPP) {
+ 		dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
+ 				gpio);
 -- 
 2.23.0
 
