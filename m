@@ -2,418 +2,170 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401BEC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194FC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA1120643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577193773;
-	bh=fYayw163Gdp/ApFWVQbVw8DrqguABnpIw2dCZqP4ViY=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=hCoyVUU+vqgm0PZ8r2zZZMpVRFlAMnlsVxelUgKozS7R4gjCbmaL0yFjZYDwVSm1P
-	 w/AMc2+/wkTREWT5KqKPZkBU9hCy9XozY6l/I0zH4unQ8eGx/gmnMEZFEDCW6wkzNe
-	 4Oo533NobtVtZ+x7QyAWTIEEQROpysDK3eE/ow3Y=
+	by mail.kernel.org (Postfix) with ESMTP id D310F20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P2vg8CL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfLXNWw (ORCPT
+        id S1726269AbfLXNXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:22:52 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:51736 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726124AbfLXNWv (ORCPT
+        Tue, 24 Dec 2019 08:23:39 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46773 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfLXNXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:22:51 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ijk9A-0003eU-Ar; Tue, 24 Dec 2019 14:22:48 +0100
-To:     Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 14/18] KVM: arm64: spe: Provide guest virtual  interrupts for SPE
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 24 Dec 2019 08:23:38 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z7so19757272wrl.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 05:23:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nnK8AmCREBZiLwdQohIzHI5+LpSDbONArxxxpbozOY8=;
+        b=P2vg8CL1/9vKgCAtlMCJ7NcHOgUjL2WSLaaYIaQS4KR5qJeIx+pZdPxMc4xGFxB6aL
+         n9UK/EpKbgfGjCMSQhNSV0AYRAWxDL1MmZX2nY0vj50EG72uE+xLHMqG8PX99qlubM/y
+         VlguwLjxa+0I0NT/V0kCBmfLfXlqLIjGhRUu1mJRKx4R4tc2FxBodpuN6x/kEuabDEI0
+         U3aSlEF0ExZ8bI+KKKNtgZLxuh9YVXuIFDegfjR3PwOIx2MqdNqZh4O3H3Nyf4GOIN7/
+         FnVN9ojSguuqxmfuePCqKhQ5sNv7QX7MZB5kY1mfwIsaZzMpxBPulXBVE2uLIbyYYMQk
+         1Aqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nnK8AmCREBZiLwdQohIzHI5+LpSDbONArxxxpbozOY8=;
+        b=E/e/PysAaIfJ58dJV3K80V6mJbzA4cVAmRuNAVkCbTreKx25o/+pPPGYeZaLsnnPUl
+         vZWUAKpUWwLI+nA+jPiL4ap5LSx8jSwJAASkTD4l3DhX+kBGVsHHywcQI506xE1vJgSH
+         7a0DI2Wk0N6KrXUaAhsT6bSGGgT7Qi9yODk2fitQaqN8YRjVSdYZbeU1xBq6kF/TGWbk
+         4prVuZBG8vYt1rMD80XYK6lgFF/yftAeYaFPmpJjkS0gh4CRc7GsseC+28S7rtAEHg/b
+         bQhRP1ppi0p/h5UG/7WOFDtKCftVuhDM1bwiYilvV56Ojcgyn23QHcQ8ZhD4rxUOlPpz
+         V49g==
+X-Gm-Message-State: APjAAAWBolB+NECT1vuX5vchj+UXqxju9+usx2m8orDqrUh4rwnuwQAa
+        W18e8a5pNpIKj2YYbR6JgR3qa+kPpPk=
+X-Google-Smtp-Source: APXvYqyqK701fOS7mAFm4DpEz2O20Xf21px7/gpmrwvDdgJsB4at6exrx6dX5PK3x768n6palgFBrA==
+X-Received: by 2002:adf:f052:: with SMTP id t18mr34491459wro.192.1577193814882;
+        Tue, 24 Dec 2019 05:23:34 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:205b:58c3:be42:8997? ([2a01:e34:ed2f:f020:205b:58c3:be42:8997])
+        by smtp.googlemail.com with ESMTPSA id t125sm2707446wmf.17.2019.12.24.05.23.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Dec 2019 05:23:33 -0800 (PST)
+Subject: Re: [PATCH v8 1/7] thermal: sun8i: add thermal driver for
+ H6/H5/H3/A64/A83T/R40
+To:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219172823.1652600-2-anarsoul@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <6e270a06-acd4-5a87-6b84-13d987991e8a@linaro.org>
+Date:   Tue, 24 Dec 2019 14:23:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 13:22:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <20191224130853.GN42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-15-andrew.murray@arm.com>
- <867e2oimw9.wl-maz@kernel.org>
- <20191224115031.GG42593@e119886-lin.cambridge.arm.com>
- <1f3fbff6c9db0f14c92a6e3fb800fa0f@www.loen.fr>
- <20191224130853.GN42593@e119886-lin.cambridge.arm.com>
-Message-ID: <a2b8846377b3f5884feeb9728b16f826@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: andrew.murray@arm.com, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20191219172823.1652600-2-anarsoul@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-24 13:08, Andrew Murray wrote:
-> On Tue, Dec 24, 2019 at 12:42:02PM +0000, Marc Zyngier wrote:
->> On 2019-12-24 11:50, Andrew Murray wrote:
->> > On Sun, Dec 22, 2019 at 12:07:50PM +0000, Marc Zyngier wrote:
->> > > On Fri, 20 Dec 2019 14:30:21 +0000,
->> > > Andrew Murray <andrew.murray@arm.com> wrote:
->> > > >
->> > > > Upon the exit of a guest, let's determine if the SPE device 
->> has
->> > > generated
->> > > > an interrupt - if so we'll inject a virtual interrupt to the
->> > > guest.
->> > > >
->> > > > Upon the entry and exit of a guest we'll also update the state 
->> of
->> > > the
->> > > > physical IRQ such that it is active when a guest interrupt is
->> > > pending
->> > > > and the guest is running.
->> > > >
->> > > > Finally we map the physical IRQ to the virtual IRQ such that 
->> the
->> > > guest
->> > > > can deactivate the interrupt when it handles the interrupt.
->> > > >
->> > > > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
->> > > > ---
->> > > >  include/kvm/arm_spe.h |  6 ++++
->> > > >  virt/kvm/arm/arm.c    |  5 ++-
->> > > >  virt/kvm/arm/spe.c    | 71
->> > > +++++++++++++++++++++++++++++++++++++++++++
->> > > >  3 files changed, 81 insertions(+), 1 deletion(-)
->> > > >
->> > > > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
->> > > > index 9c65130d726d..91b2214f543a 100644
->> > > > --- a/include/kvm/arm_spe.h
->> > > > +++ b/include/kvm/arm_spe.h
->> > > > @@ -37,6 +37,9 @@ static inline bool 
->> kvm_arm_support_spe_v1(void)
->> > > >  						      ID_AA64DFR0_PMSVER_SHIFT);
->> > > >  }
->> > > >
->> > > > +void kvm_spe_flush_hwstate(struct kvm_vcpu *vcpu);
->> > > > +inline void kvm_spe_sync_hwstate(struct kvm_vcpu *vcpu);
->> > > > +
->> > > >  int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
->> > > >  			    struct kvm_device_attr *attr);
->> > > >  int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
->> > > > @@ -49,6 +52,9 @@ int kvm_arm_spe_v1_enable(struct kvm_vcpu
->> > > *vcpu);
->> > > >  #define kvm_arm_support_spe_v1()	(false)
->> > > >  #define kvm_arm_spe_irq_initialized(v)	(false)
->> > > >
->> > > > +static inline void kvm_spe_flush_hwstate(struct kvm_vcpu 
->> *vcpu)
->> > > {}
->> > > > +static inline void kvm_spe_sync_hwstate(struct kvm_vcpu 
->> *vcpu) {}
->> > > > +
->> > > >  static inline int kvm_arm_spe_v1_set_attr(struct kvm_vcpu 
->> *vcpu,
->> > > >  					  struct kvm_device_attr *attr)
->> > > >  {
->> > > > diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->> > > > index 340d2388ee2c..a66085c8e785 100644
->> > > > --- a/virt/kvm/arm/arm.c
->> > > > +++ b/virt/kvm/arm/arm.c
->> > > > @@ -741,6 +741,7 @@ int kvm_arch_vcpu_ioctl_run(struct 
->> kvm_vcpu
->> > > *vcpu, struct kvm_run *run)
->> > > >  		preempt_disable();
->> > > >
->> > > >  		kvm_pmu_flush_hwstate(vcpu);
->> > > > +		kvm_spe_flush_hwstate(vcpu);
->> > > >
->> > > >  		local_irq_disable();
->> > > >
->> > > > @@ -782,6 +783,7 @@ int kvm_arch_vcpu_ioctl_run(struct 
->> kvm_vcpu
->> > > *vcpu, struct kvm_run *run)
->> > > >  		    kvm_request_pending(vcpu)) {
->> > > >  			vcpu->mode = OUTSIDE_GUEST_MODE;
->> > > >  			isb(); /* Ensure work in x_flush_hwstate is committed */
->> > > > +			kvm_spe_sync_hwstate(vcpu);
->> > > >  			kvm_pmu_sync_hwstate(vcpu);
->> > > >  			if (static_branch_unlikely(&userspace_irqchip_in_use))
->> > > >  				kvm_timer_sync_hwstate(vcpu);
->> > > > @@ -816,11 +818,12 @@ int kvm_arch_vcpu_ioctl_run(struct 
->> kvm_vcpu
->> > > *vcpu, struct kvm_run *run)
->> > > >  		kvm_arm_clear_debug(vcpu);
->> > > >
->> > > >  		/*
->> > > > -		 * We must sync the PMU state before the vgic state so
->> > > > +		 * We must sync the PMU and SPE state before the vgic state 
->> so
->> > > >  		 * that the vgic can properly sample the updated state of 
->> the
->> > > >  		 * interrupt line.
->> > > >  		 */
->> > > >  		kvm_pmu_sync_hwstate(vcpu);
->> > > > +		kvm_spe_sync_hwstate(vcpu);
->> > >
->> > > The *HUGE* difference is that the PMU is purely a virtual 
->> interrupt,
->> > > while you're trying to deal with a HW interrupt here.
->> > >
->> > > >
->> > > >  		/*
->> > > >  		 * Sync the vgic state before syncing the timer state 
->> because
->> > > > diff --git a/virt/kvm/arm/spe.c b/virt/kvm/arm/spe.c
->> > > > index 83ac2cce2cc3..097ed39014e4 100644
->> > > > --- a/virt/kvm/arm/spe.c
->> > > > +++ b/virt/kvm/arm/spe.c
->> > > > @@ -35,6 +35,68 @@ int kvm_arm_spe_v1_enable(struct kvm_vcpu
->> > > *vcpu)
->> > > >  	return 0;
->> > > >  }
->> > > >
->> > > > +static inline void set_spe_irq_phys_active(struct
->> > > arm_spe_kvm_info *info,
->> > > > +					   bool active)
->> > > > +{
->> > > > +	int r;
->> > > > +	r = irq_set_irqchip_state(info->physical_irq,
->> > > IRQCHIP_STATE_ACTIVE,
->> > > > +				  active);
->> > > > +	WARN_ON(r);
->> > > > +}
->> > > > +
->> > > > +void kvm_spe_flush_hwstate(struct kvm_vcpu *vcpu)
->> > > > +{
->> > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
->> > > > +	bool phys_active = false;
->> > > > +	struct arm_spe_kvm_info *info = arm_spe_get_kvm_info();
->> > > > +
->> > > > +	if (!kvm_arm_spe_v1_ready(vcpu))
->> > > > +		return;
->> > > > +
->> > > > +	if (irqchip_in_kernel(vcpu->kvm))
->> > > > +		phys_active = kvm_vgic_map_is_active(vcpu, spe->irq_num);
->> > > > +
->> > > > +	phys_active |= spe->irq_level;
->> > > > +
->> > > > +	set_spe_irq_phys_active(info, phys_active);
->> > >
->> > > So you're happy to mess with the HW interrupt state even when 
->> you
->> > > don't have a HW irqchip? If you are going to copy paste the 
->> timer
->> > > code
->> > > here, you'd need to support it all the way (no, don't).
->> > >
->> > > > +}
->> > > > +
->> > > > +void kvm_spe_sync_hwstate(struct kvm_vcpu *vcpu)
->> > > > +{
->> > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
->> > > > +	u64 pmbsr;
->> > > > +	int r;
->> > > > +	bool service;
->> > > > +	struct kvm_cpu_context *ctxt = &vcpu->arch.ctxt;
->> > > > +	struct arm_spe_kvm_info *info = arm_spe_get_kvm_info();
->> > > > +
->> > > > +	if (!kvm_arm_spe_v1_ready(vcpu))
->> > > > +		return;
->> > > > +
->> > > > +	set_spe_irq_phys_active(info, false);
->> > > > +
->> > > > +	pmbsr = ctxt->sys_regs[PMBSR_EL1];
->> > > > +	service = !!(pmbsr & BIT(SYS_PMBSR_EL1_S_SHIFT));
->> > > > +	if (spe->irq_level == service)
->> > > > +		return;
->> > > > +
->> > > > +	spe->irq_level = service;
->> > > > +
->> > > > +	if (likely(irqchip_in_kernel(vcpu->kvm))) {
->> > > > +		r = kvm_vgic_inject_irq(vcpu->kvm, vcpu->vcpu_id,
->> > > > +					spe->irq_num, service, spe);
->> > > > +		WARN_ON(r);
->> > > > +	}
->> > > > +}
->> > > > +
->> > > > +static inline bool kvm_arch_arm_spe_v1_get_input_level(int
->> > > vintid)
->> > > > +{
->> > > > +	struct kvm_vcpu *vcpu = kvm_arm_get_running_vcpu();
->> > > > +	struct kvm_spe *spe = &vcpu->arch.spe;
->> > > > +
->> > > > +	return spe->irq_level;
->> > > > +}
->> > >
->> > > This isn't what such a callback is for. It is supposed to sample 
->> the
->> > > HW, an nothing else.
->> > >
->> > > > +
->> > > >  static int kvm_arm_spe_v1_init(struct kvm_vcpu *vcpu)
->> > > >  {
->> > > >  	if (!kvm_arm_support_spe_v1())
->> > > > @@ -48,6 +110,7 @@ static int kvm_arm_spe_v1_init(struct 
->> kvm_vcpu
->> > > *vcpu)
->> > > >
->> > > >  	if (irqchip_in_kernel(vcpu->kvm)) {
->> > > >  		int ret;
->> > > > +		struct arm_spe_kvm_info *info;
->> > > >
->> > > >  		/*
->> > > >  		 * If using the SPE with an in-kernel virtual GIC
->> > > > @@ -57,10 +120,18 @@ static int kvm_arm_spe_v1_init(struct
->> > > kvm_vcpu *vcpu)
->> > > >  		if (!vgic_initialized(vcpu->kvm))
->> > > >  			return -ENODEV;
->> > > >
->> > > > +		info = arm_spe_get_kvm_info();
->> > > > +		if (!info->physical_irq)
->> > > > +			return -ENODEV;
->> > > > +
->> > > >  		ret = kvm_vgic_set_owner(vcpu, vcpu->arch.spe.irq_num,
->> > > >  					 &vcpu->arch.spe);
->> > > >  		if (ret)
->> > > >  			return ret;
->> > > > +
->> > > > +		ret = kvm_vgic_map_phys_irq(vcpu, info->physical_irq,
->> > > > +					    vcpu->arch.spe.irq_num,
->> > > > +					    kvm_arch_arm_spe_v1_get_input_level);
->> > >
->> > > You're mapping the interrupt int the guest, and yet you have 
->> never
->> > > forwarded the interrupt the first place. All this flow is only 
->> going
->> > > to wreck the host driver as soon as an interrupt occurs.
->> > >
->> > > I think you should rethink the interrupt handling altogether. It
->> > > would
->> > > make more sense if the interrupt was actually completely
->> > > virtualized. If you can isolate the guest state and compute the
->> > > interrupt state in SW (and from the above, it seems that you 
->> can),
->> > > then you shouldn't mess with the whole forwarding *at all*, as 
->> it
->> > > isn't designed for devices shared between host and guests.
->> >
->> > Yes it's possible to read SYS_PMBSR_EL1_S_SHIFT and determine if 
->> SPE
->> > wants
->> > service. If I understand correctly, you're suggesting on 
->> entry/exit to
->> > the
->> > guest we determine this and inject an interrupt to the guest. As 
->> well as
->> > removing the kvm_vgic_map_phys_irq mapping to the physical 
->> interrupt?
->>
->> The mapping only makes sense for devices that have their interrupt
->> forwarded to a vcpu, where the expected flow is that the interrupt
->> is taken on the host with a normal interrupt handler and then
->> injected in the guest (you still have to manage the active state
->> though). The basic assumption is that such a device is entirely
->> owned by KVM.
->
-> Though the mapping does mean that if the guest handles the guest SPE
-> interrupt it doesn't have to wait for a guest exit before having the
-> SPE interrupt evaluated again (i.e. another SPE interrupt won't cause
-> a guest exit) - thus increasing the size of any black hole.
+On 19/12/2019 18:28, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+> 
+> This patch adds the support for allwinner thermal sensor, within
+> allwinner SoC. It will register sensors for thermal framework
+> and use device tree to bind cooling device.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+> ---
 
-Sure. It still remains that your use case is outside of the scope of
-this internal API.
+Applied, thanks.
 
->> Here, you're abusing the mapping interface: you don't have an
->> interrupt handler (the host SPE driver owns it), the interrupt
->> isn't forwarded, and yet you're messing with the active state.
->> None of that is expected, and you are in uncharted territory
->> as far as KVM is concerned.
->>
->> What bothers me the most is that this looks a lot like a previous
->> implementation of the timers, and we had all the problems in the
->> world to keep track of the interrupt state *and* have a reasonable
->> level of performance (hitting the redistributor on the fast path
->> is a performance killer).
->>
->> > My understanding was that I needed knowledge of the physical SPE
->> > interrupt
->> > number so that I could prevent the host SPE driver from getting 
->> spurious
->> > interrupts due to guest use of the SPE.
->>
->> You can't completely rule out the host getting interrupted. Even if 
->> you set
->> PMBSR_EL1.S to zero, there is no guarantee that the host will not 
->> observe
->> the interrupt anyway (the GIC architecture doesn't tell you how 
->> quickly
->> it will be retired, if ever). The host driver already checks for 
->> this
->> anyway.
->>
->> What you need to ensure is that PMBSR_EL1.S being set on guest entry
->> doesn't immediately kick you out of the guest and prevent forward
->> progress. This is why you need to manage the active state.
->>
->> The real question is: how quickly do you want to react to a SPE
->> interrupt firing while in a guest?
->>
->> If you want to take it into account as soon as it fires, then you 
->> need
->> to eagerly save/restore the active state together with the SPE state 
->> on
->> each entry/exit, and performance will suffer. This is what you are
->> currently doing.
->>
->> If you're OK with evaluating the interrupt status on exit, but 
->> without
->> the interrupt itself causing an exit, then you can simply manage it
->> as a purely virtual interrupt, and just deal with the active state
->> in load/put (set the interrupt as active on load, clear it on put).
->
-> This does feel like the pragmatic approach - a larger black hole in 
-> exchange
-> for performance. I imagine the blackhole would be naturally reduced 
-> on
-> machines with high workloads.
 
-Why? I don't see the relation between how busy the vcpu is and the size
-of the blackhole. It is strictly a function of the frequency of exits.
-
-         M.
-
->
-> I'll refine the series to take this approach.
->
->>
->> Given that SPE interrupts always indicate that profiling has 
->> stopped,
->
-> and faults :|
->
-> Thanks,
->
-> Andrew Murray
->
->> this only affects the size of the black hole, and I'm inclined to do
->> the latter.
->>
->>         M.
->> --
->> Jazz is not dead. It just smells funny...
 
 -- 
-Jazz is not dead. It just smells funny...
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
