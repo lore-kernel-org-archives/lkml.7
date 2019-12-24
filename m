@@ -2,103 +2,102 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D177C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81375C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AD020730
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577195178;
-	bh=cWGXGSQfWpo0lezE6WFGU+Fxc9XCO+Ww9It8x8AE1bU=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=Af44zVCRTBVKinPeUiXurGHJiZFhWOEW8q9arc9gauXALHEkSHGHBrzkvBIkDRefD
-	 L5fhMmntf6aloaF/jYFNbEONSea0DHdfCna4C1vWrM2oiowRN3c3/eSE+chhj1t0N0
-	 0UsCFajcpcuJoAoub3bCONsvjAXLIgUBoh10O0JQ=
+	by mail.kernel.org (Postfix) with ESMTP id 433F420730
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="a1XflIgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfLXNqR (ORCPT
+        id S1726271AbfLXNrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:46:17 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:34561 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726124AbfLXNqR (ORCPT
+        Tue, 24 Dec 2019 08:47:19 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40421 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfLXNrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:46:17 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ijkVo-0003p4-RU; Tue, 24 Dec 2019 14:46:12 +0100
-To:     Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 14/18] KVM: arm64: spe: Provide guest virtual  interrupts for SPE
-X-PHP-Originating-Script: 0:main.inc
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 13:46:12 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <20191224133647.GO42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-15-andrew.murray@arm.com>
- <867e2oimw9.wl-maz@kernel.org>
- <20191224115031.GG42593@e119886-lin.cambridge.arm.com>
- <1f3fbff6c9db0f14c92a6e3fb800fa0f@www.loen.fr>
- <20191224130853.GN42593@e119886-lin.cambridge.arm.com>
- <a2b8846377b3f5884feeb9728b16f826@www.loen.fr>
- <20191224133647.GO42593@e119886-lin.cambridge.arm.com>
-Message-ID: <ddd39371e1aa95747d42efdb55f73b51@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: andrew.murray@arm.com, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+        Tue, 24 Dec 2019 08:47:18 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c17so16048530qkg.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 05:47:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=gJSU2c7V0b8ZdILNENIi9JaOANjv/UG/dY9rvMfObQ0=;
+        b=a1XflIgSEYNpJvpUhAyvvY/8pqmTpscYLPyOlUzC6qYXGsT/ftktR5ECLrk070j9Zw
+         Qe6KW4fiampfcyY1sdzubGbwR3jBOQ3XqKWA4SHzzAlKVnpibJXXpttbqSVxLW3wU6rm
+         kIlmeHuOexw62UGQESniUTMe2cEa6jZB/DDRR2QuJaJfO+ukdC0uBfc4QGNg9pFJFueo
+         c3NGXtWjcKBjxu+DLtY5rBlhjOFGqozv0V1IqmUc44RSIhOWlRgFo7u08GVro97P8f3A
+         2FPXjktQebmxkgNmNMHM+qx20hfmZyHYbPGZZiRc3J0lElrF052KAhcVsfwYMURkegtb
+         8Eeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=gJSU2c7V0b8ZdILNENIi9JaOANjv/UG/dY9rvMfObQ0=;
+        b=PuY5nszATf+L6BQI5k6zKb8DrAKDzLGPAKNkSS4bCgOz5iebdbW0tor3QeO7sUDkNQ
+         UhV50jC0vbBPfL7OS6g2TqKuKGia/aPI1/XxRSABXmT9WnNi5nMGECdNcoDVzM9JuzdA
+         pQNK8e0lDmnP2omrM9DBODWsPiDR9UquDQJ2hrdIysKIZsE8S3vsah6gz+F6YMowM7QJ
+         7G1MMKiHNmGL3jVWh7DaJWTpSDhuztndFYcW0HwTOr4GbaZxhEUeknRAkpeiexFN8Zm2
+         6RRDGcVuqa2GAj7LclmBCo0s7vvypQgCeGLAcQDedkGbmqmuM4ppVHUVO+QXmHzY3Lru
+         NJ1A==
+X-Gm-Message-State: APjAAAVTw5vsH2dlyC22g/6QLGrXzr6rDClge4+ux33gsvVy52u+gMkx
+        U98HCa8ZVTs070ct170rkmU0Jw==
+X-Google-Smtp-Source: APXvYqwIoLmnlGecAq3xrlAoCzXA4v5nuuwvRo44+mVVe8A3lZxILyFHSq9kRU8TkLB5N4Pp4CdLPA==
+X-Received: by 2002:a37:8085:: with SMTP id b127mr30055985qkd.424.1577195237928;
+        Tue, 24 Dec 2019 05:47:17 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r44sm7586209qta.26.2019.12.24.05.47.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Dec 2019 05:47:17 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/page_owner: print largest memory consumer when OOM panic occurs
+Date:   Tue, 24 Dec 2019 08:47:15 -0500
+Message-Id: <5E08DE19-5B71-4245-8908-548BB4FA861F@lca.pw>
+References: <1577169946.4959.4.camel@mtkswgap22>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com
+In-Reply-To: <1577169946.4959.4.camel@mtkswgap22>
+To:     Miles Chen <miles.chen@mediatek.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-24 13:36, Andrew Murray wrote:
-> On Tue, Dec 24, 2019 at 01:22:46PM +0000, Marc Zyngier wrote:
->> On 2019-12-24 13:08, Andrew Murray wrote:
 
-[...]
 
->> > This does feel like the pragmatic approach - a larger black hole 
->> in
->> > exchange
->> > for performance. I imagine the blackhole would be naturally 
->> reduced on
->> > machines with high workloads.
->>
->> Why? I don't see the relation between how busy the vcpu is and the 
->> size
->> of the blackhole. It is strictly a function of the frequency of 
->> exits.
->
-> Indeed, my assumption being that the busier a system is the more
-> interrupts, thus leading to more exits and so an increased frequency 
-> of
-> SPE interrupt evaluation and thus smaller black hole.
+> On Dec 24, 2019, at 1:45 AM, Miles Chen <miles.chen@mediatek.com> wrote:
+>=20
+> We use kmemleak too, but a memory leakage which is caused by
+> alloc_pages() in a kernel device driver cannot be caught by kmemleak.
+> We have fought against this kind of real problems for a few years and=20
+> find a way to make the debugging easier.
+>=20
+> We currently have information during OOM: process Node, zone, swap,=20
+> process (pid, rss, name), slab usage, and the backtrace, order, and
+> gfp flags of the OOM backtrace.=20
+> We can tell many different types of OOM problems by the information
+> above except the alloc_pages() leakage.
+>=20
+> The patch does work and save a lot of debugging time.
+> Could we consider the "greatest memory consumer" as another useful=20
+> OOM information?
 
-On a GICv4-enabled system, this isn't true anymore. My bet is that
-people won't use SPE to optimize IO-oriented workloads, but more CPU
-intensive workloads (that don't necessarily exit at all).
+This is rather situational considering there are memory leaks here and there=
+ but it is not necessary that straightforward as a single place of greatest c=
+onsumer.
 
-But never mind. Let's start with this approach, as it is simple and 
-easy
-to verify. If the black hole aspect becomes problematic, we know how
-to reduce it (at the expense of entry/exit performance).
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+The other question is why the offensive drivers that use alloc_pages() repea=
+tedly without using any object allocator? Do you have examples of this in dr=
+ivers that could happen?=
