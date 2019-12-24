@@ -2,87 +2,87 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,
+	URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1285CC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1708C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADE6206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WDGKIy18"
+	by mail.kernel.org (Postfix) with ESMTP id AB1BB206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfLXNhY (ORCPT
+        id S1726214AbfLXNl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:37:24 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:55361 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfLXNhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:37:24 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fd6f0d0b;
-        Tue, 24 Dec 2019 12:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=gEFNMUQrn8pc8q7jFRWms1pimpI=; b=WDGKIy
-        18ogApN3mCCt1ei3p//f+ODjeMeU3WEm0RkKAoGy+68nFuZxrzurmv9TREQ425T7
-        RpVjDmc/IYlHa50bSodtQ1kzbbyvtzOAaJUxRv2S6WRD9Yx1cAgIQ1kS50EG9Y8T
-        j9bEHGao9dOOlL5dAdEruj1Lt9lc52YYE0z42eDdJjNWIC8uai8tFCiQP7Zs1PE6
-        iyzGPbinUxXEOJzWv2FyzmTjAHvC/iLj3JJpgebaY5ibaCJZHuNDx1w1y8G3OODu
-        rNhdtcv/gJa24gEDPbAimM7jGpJSZmE3OY2yDJ1LmpBNEpKLB6HkPoxBHQX1lfWR
-        LwJEsshUu/l/k2tg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9ce5fc91 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Dec 2019 12:40:00 +0000 (UTC)
-Received: by mail-ot1-f50.google.com with SMTP id k16so21816731otb.2;
-        Tue, 24 Dec 2019 05:37:21 -0800 (PST)
-X-Gm-Message-State: APjAAAUcN+P8AMsvGeAXADpuXyuqubZ56t0wGrXxH9CB7vHeOeSbRvVA
-        Drdbc9eDdMRWpHu7B0pLTiVmE+LgK44SLlASnUg=
-X-Google-Smtp-Source: APXvYqwA4ZpN4V1E1okXO9b7enh8BI8YYtzeXZSuuTUBTw1msLneUGfzOnPjzlaKoJlvPA239aAuvu2XKas/sZFE5xE=
-X-Received: by 2002:a05:6830:1141:: with SMTP id x1mr39295818otq.120.1577194640368;
- Tue, 24 Dec 2019 05:37:20 -0800 (PST)
+        Tue, 24 Dec 2019 08:41:27 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55603 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfLXNl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 08:41:27 -0500
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id EFBDA240007;
+        Tue, 24 Dec 2019 13:41:24 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        <linux-rockchip@lists.infradead.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2] MAINTAINERS: Track Rockchip PMIC drivers
+Date:   Tue, 24 Dec 2019 14:41:22 +0100
+Message-Id: <20191224134122.20385-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191223130834.GA102399@zx2c4.com> <20191223232945.a3sbzfj6uw2sokba@lantea.localdomain>
-In-Reply-To: <20191223232945.a3sbzfj6uw2sokba@lantea.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 24 Dec 2019 14:37:09 +0100
-X-Gmail-Original-Message-ID: <CAHmME9qg8+xdM7Uo=XydwsOV27BWYK8fV44oimqiosBvH_-UDg@mail.gmail.com>
-Message-ID: <CAHmME9qg8+xdM7Uo=XydwsOV27BWYK8fV44oimqiosBvH_-UDg@mail.gmail.com>
-Subject: Re: vdso-related userspace crashes on 5.5 mips64
-To:     Paul Burton <paulburton@kernel.org>
-Cc:     linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christian Brauner <christian.brauner@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-More details forthcoming, but I just bisected this to:
+The current Rockchip section misses all the PMIC related drivers. They
+are all prefixed rk8* and are as wide as clks, regulators, pinctrl,
+RTCs, audio, etc.
 
-commit 942437c97fd9ff23a17c13118f50bd0490f6868c (refs/bisect/bad)
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Mon Jul 15 11:46:10 2019 +0200
+Add a dedicated MAINTAINER's entry.
 
-   y2038: allow disabling time32 system calls
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
 
-   At the moment, the compilation of the old time32 system calls depends
-   purely on the architecture. As systems with new libc based on 64-bit
-   time_t are getting deployed, even architectures that previously supported
-   these (notably x86-32 and arm32 but also many others) no longer depend on
-   them, and removing them from a kernel image results in a smaller kernel
-   binary, the same way we can leave out many other optional system calls.
+Changes since v1:
+* Create a PMIC entry in MAINTAINERS.
+* Track files with rk8 and not rk80.
 
-   More importantly, on an embedded system that needs to keep working
-   beyond year 2038, any user space program calling these system calls
-   is likely a bug, so removing them from the kernel image does provide
-   an extra debugging help for finding broken applications.
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-   I've gone back and forth on hiding this option unless CONFIG_EXPERT
-   is set. This version leaves it visible based on the logic that
-   eventually it will be turned off indefinitely.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9d3a5c54a41d..d3f814212ba8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13943,6 +13943,17 @@ S:	Maintained
+ F:	drivers/staging/media/hantro/
+ F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ 
++ROCKCHIP PMIC DRIVERS
++M:	Heiko Stuebner <heiko@sntech.de>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-rockchip@lists.infradead.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git
++S:	Maintained
++F:	Documentation/devicetree/bindings/*/*rk8*
++F:	include/*/*/rk8*
++F:	include/*/*/*/rk8*
++F:	drivers/*/*rk8*
++
+ ROCKER DRIVER
+ M:	Jiri Pirko <jiri@resnulli.us>
+ L:	netdev@vger.kernel.org
+-- 
+2.20.1
 
-   Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-   Signed-off-by: Arnd Bergmann <arnd@arndb.de>
