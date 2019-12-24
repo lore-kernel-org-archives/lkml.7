@@ -2,112 +2,79 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E482C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB11C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE24A20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425AB20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfLXK3x (ORCPT
+        id S1726245AbfLXKcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:29:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:50936 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfLXK3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 05:29:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93FCF31B;
-        Tue, 24 Dec 2019 02:29:52 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C4773F6CF;
-        Tue, 24 Dec 2019 02:29:51 -0800 (PST)
-Date:   Tue, 24 Dec 2019 10:29:50 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     will@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 02/18] arm64: KVM: reset E2PB correctly in MDCR_EL2
- when exiting the guest(VHE)
-Message-ID: <20191224102949.GD42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-3-andrew.murray@arm.com>
- <20191221131214.769a140e@why>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191221131214.769a140e@why>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+        Tue, 24 Dec 2019 05:32:48 -0500
+Received: from smtp25.cstnet.cn ([159.226.251.25]:50680 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726076AbfLXKcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:32:47 -0500
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-05 (Coremail) with SMTP id zQCowAAXHc1D3AFeEjTIBQ--.98S3;
+        Tue, 24 Dec 2019 17:37:08 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     paulus@samba.org
+Cc:     davem@davemloft.net, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ppp: Remove redundant BUG_ON() check in ppp_pernet
+Date:   Tue, 24 Dec 2019 09:37:04 +0000
+Message-Id: <1577180224-16405-1-git-send-email-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: zQCowAAXHc1D3AFeEjTIBQ--.98S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFW8Jr4UKFyrurWxAw4DXFb_yoW3Jrb_Cw
+        4fCFW3Aw1UAr1q9r4UCws8ZrZay3WkWr1kJrs2grZxX34ktFyrXr95ursrAr4kWrZ5CF9r
+        Ca47ZryrJrWYgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbFkYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2Iq
+        xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+        106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
+        xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWU
+        JVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcVWlDUUUU
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBAgNA102S0V3TwABse
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 01:12:14PM +0000, Marc Zyngier wrote:
-> On Fri, 20 Dec 2019 14:30:09 +0000
-> Andrew Murray <andrew.murray@arm.com> wrote:
-> 
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > On VHE systems, the reset value for MDCR_EL2.E2PB=b00 which defaults
-> > to profiling buffer using the EL2 stage 1 translations. 
-> 
-> Does the reset value actually matter here? I don't see it being
-> specific to VHE systems, and all we're trying to achieve is to restore
-> the SPE configuration to a state where it can be used by the host.
-> 
-> > However if the
-> > guest are allowed to use profiling buffers changing E2PB settings, we
-> 
-> How can the guest be allowed to change E2PB settings? Or do you mean
-> here that allowing the guest to use SPE will mandate changes of the
-> E2PB settings, and that we'd better restore the hypervisor state once
-> we exit?
-> 
-> > need to ensure we resume back MDCR_EL2.E2PB=b00. Currently we just
-> > do bitwise '&' with MDCR_EL2_E2PB_MASK which will retain the value.
-> > 
-> > So fix it by clearing all the bits in E2PB.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > ---
-> >  arch/arm64/kvm/hyp/switch.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> > index 72fbbd86eb5e..250f13910882 100644
-> > --- a/arch/arm64/kvm/hyp/switch.c
-> > +++ b/arch/arm64/kvm/hyp/switch.c
-> > @@ -228,9 +228,7 @@ void deactivate_traps_vhe_put(void)
-> >  {
-> >  	u64 mdcr_el2 = read_sysreg(mdcr_el2);
-> >  
-> > -	mdcr_el2 &= MDCR_EL2_HPMN_MASK |
-> > -		    MDCR_EL2_E2PB_MASK << MDCR_EL2_E2PB_SHIFT |
-> > -		    MDCR_EL2_TPMS;
-> > +	mdcr_el2 &= MDCR_EL2_HPMN_MASK | MDCR_EL2_TPMS;
-> >  
-> >  	write_sysreg(mdcr_el2, mdcr_el2);
-> >  
-> 
-> I'm OK with this change, but I believe the commit message could use
-> some tidying up.
+Passing NULL to ppp_pernet causes a crash via BUG_ON.
+Dereferencing net in net_generici() also has the same effect.
+This patch removes the redundant BUG_ON check on the same parameter.
 
-No problem, I'll update the commit message.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/ppp/ppp_generic.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks,
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 3bf8a8b..22cc2cb 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -296,8 +296,6 @@ static struct class *ppp_class;
+ /* per net-namespace data */
+ static inline struct ppp_net *ppp_pernet(struct net *net)
+ {
+-	BUG_ON(!net);
+-
+ 	return net_generic(net, ppp_net_id);
+ }
+ 
+-- 
+2.7.4
 
-Andrew Murray
-
-> 
-> Thanks,
-> 
-> 	M.
-> -- 
-> Jazz is not dead. It just smells funny...
