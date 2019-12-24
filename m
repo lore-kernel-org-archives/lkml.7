@@ -2,153 +2,157 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A2CC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A612AC2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCDB20718
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDA020718
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXcMGRKt"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YvAPkjPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfLXF3v (ORCPT
+        id S1726116AbfLXFce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 00:29:51 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33585 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbfLXF3u (ORCPT
+        Tue, 24 Dec 2019 00:32:34 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22606 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725858AbfLXFce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:29:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so3168882otp.0;
-        Mon, 23 Dec 2019 21:29:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5mIHnK6BEXabOhDkyqQEsS+XZ4SjPH+Ikpu6wNoKfTY=;
-        b=OXcMGRKt+jJv0xgFfQWCl/en/y7wiuoYYfovW6TgMPcdLXQVqP3tw5pvmFCEyhHwZP
-         wNFcQtSUDSe6dQMP49m9xNBUFB/s9iIpiv6RKSFKfjSqWtMP2OO+VzWtmCATpb+QyjO9
-         ZlC4vCaO07aKO/ajAkyUaVpRBFGhQ1QAIEEKyxXosQtMmBqm84ZoxrSU7gEsXjq/egWp
-         8jzR13+nUBRG6h9dFV4BlBULrmjylMxNpj9Dk2WoSbBPiv1tM02umpcDg8nxuejqflYC
-         1iZgvwkFxCKhHw1LU07KbJM+Eh2PoCcvRk549DxQS5m7c6NMVds8cQpXvgqjHT5hnTXd
-         1SsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5mIHnK6BEXabOhDkyqQEsS+XZ4SjPH+Ikpu6wNoKfTY=;
-        b=rPHMcOK09scCQqmMIbV1efI1jt4FVcO+DI9lQ5hTG3O5HTPVGXHhm9PuLiDIkWkmT4
-         /n+NI8lddIOc1d3ELgUot8MQbUPuBE5eePpqgAtvrAal3O4pCyVNSVb42lt3DOYV9LnB
-         k5uVx/FT4tH/DsrPcYn1V7YI8d9ls3v53FdRpls1ysrXV9GAyM9E+W6Q4ro7vOrKz9U6
-         yfEsp1zFzgaEsYyYDwyWZl/yMWZwVlSCKRL+Awx5Ux/lxj+kxFk13D4re+3WHwUehgin
-         14/mIlYo8ytNMZkOhUNERlY5fCHPm/NXx6nSuAXHMvOjPGAq2rXDwn0ZINJTfVOvwLAI
-         8F5g==
-X-Gm-Message-State: APjAAAUJetQzAirAc4RLwXTKkf0FGieJu9vReLDnzv9i3Fh80HdC1JKB
-        Q5we2MyaabrOX9G8LRnLaI9Bkpx8
-X-Google-Smtp-Source: APXvYqzBtDy5T8KNyDQtb9LOhaIsbpL690b19vPzf0dbocSBvDQ6VjIZQwUMHSj7KJKAuf5Z0AlrYw==
-X-Received: by 2002:a05:6830:605:: with SMTP id w5mr34268557oti.79.1577165389758;
-        Mon, 23 Dec 2019 21:29:49 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id p20sm8171116otr.71.2019.12.23.21.29.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Dec 2019 21:29:48 -0800 (PST)
-Date:   Mon, 23 Dec 2019 22:29:47 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com,
-        qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
-Message-ID: <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
-References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
- <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 24 Dec 2019 00:32:34 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577165553; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/zIvwtp8UO85ebHhHKbecVWYaBp9mm+ttOxLD7tikHo=; b=YvAPkjPMibPLRd04ti/+IfDF4rKr+cWaL7zAfTOkrSTEpI+wM0POVfJnQxxmQUJwTEZZqpQR
+ sdKQOUa8YOrzwlA10S4hz2LaJA+HSoPaQipDwexQcvZ2PGh4HwUK/VIijNxCSeROdIokyjmN
+ Ek02WULZq5h1NXqiEQARCmQyX08=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e01a2eb.7fc2925100a0-smtp-out-n01;
+ Tue, 24 Dec 2019 05:32:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6E7C6C433CB; Tue, 24 Dec 2019 05:32:27 +0000 (UTC)
+Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sthella)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C30D5C43383;
+        Tue, 24 Dec 2019 05:32:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C30D5C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
+From:   Shyam Kumar Thella <sthella@codeaurora.org>
+To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+Date:   Tue, 24 Dec 2019 11:02:12 +0530
+Message-Id: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
-> From: rtanwar <rahul.tanwar@intel.com>
-> 
-> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
-> Intel network processor SoC. It provides programming interfaces to control
-> & configure all CPU & peripheral clocks. Add common clock framework based
-> clock controller driver for CGU.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+QTI SDAM allows PMIC peripherals to access the shared memory that is
+available on QTI PMICs. Add documentation for it.
 
-Hi Rahul,
+Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+---
+ .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
 
-The 0day bot reported this warning with clang with your patch, mind
-taking a look at it since it seems like you will need to do a v2 based
-on other comments?
-
-It seems like the check either needs to be something different or the
-check should just be removed.
-
-Cheers,
-Nathan
-
-On Mon, Dec 23, 2019 at 04:48:54PM +0800, kbuild test robot wrote:
-> CC: kbuild-all@lists.01.org
-> In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
-> References: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
-> TO: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> CC: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-> CC: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com, qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> 
-> Hi Rahul,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on clk/clk-next]
-> [also build test WARNING on robh/for-next v5.5-rc3 next-20191220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Rahul-Tanwar/clk-intel-Add-a-new-driver-for-a-new-clock-controller-IP/20191223-110300
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: clang version 10.0.0 (git://gitmirror/llvm_project 891e25b02d760d0de18c7d46947913b3166047e7)
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> drivers/clk/x86/clk-cgu.c:50:20: warning: address of array 'ctx->clk_data.hws' will always evaluate to 'true' [-Wpointer-bool-conversion]
->            if (ctx->clk_data.hws)
->            ~~  ~~~~~~~~~~~~~~^~~
->    1 warning generated.
-> 
-> vim +50 drivers/clk/x86/clk-cgu.c
-> 
->     46	
->     47	void lgm_clk_add_lookup(struct lgm_clk_provider *ctx,
->     48				struct clk_hw *hw, unsigned int id)
->     49	{
->   > 50		if (ctx->clk_data.hws)
->     51			ctx->clk_data.hws[id] = hw;
->     52	}
->     53	
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+new file mode 100644
+index 0000000..8961a99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
++
++maintainers:
++  - Shyam Kumar Thella <sthella@codeaurora.org>
++
++description: |
++  The SDAM provides scratch register space for the PMIC clients. This
++  memory can be used by software to store information or communicate
++  to/from the PBUS.
++
++allOf:
++  - $ref: "nvmem.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - qcom,spmi-sdam
++
++  reg:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    type: object
++
++    properties:
++      reg:
++        maxItems: 1
++        description:
++          Offset and size in bytes within the storage device.
++
++      bits:
++        maxItems: 1
++        items:
++          items:
++            - minimum: 0
++              maximum: 7
++              description:
++                Offset in bit within the address range specified by reg.
++            - minimum: 1
++              description:
++                Size in bit within the address range specified by reg.
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++examples:
++  - |
++      sdam_1: nvram@b000 {
++         #address-cells = <1>;
++         #size-cells = <1>;
++         compatible = "qcom,spmi-sdam";
++          reg = <0xb000 0x100>;
++
++          /* Data cells */
++          restart_reason: restart@50 {
++              reg = <0x50 0x1>;
++              bits = <7 2>;
++          };
++      };
++...
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
