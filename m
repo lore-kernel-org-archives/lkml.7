@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583A8C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D5CC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A57320409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BF520409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577185899;
-	bh=B+LbsajaJ8dRZiUfq4Bvzq5UflstIu9LIgiVDp2wgoM=;
+	s=default; t=1577185903;
+	bh=KnZnsZyLuQAsFf8Ovlw+zB74JbpGbPJd9tpUzyxvJh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eR7fZ1a7FMjICeSyXahC0K4IBOjyQ3VLlXbHzD3ONuIspmX6s7QkXQIFw9fBIzwXh
-	 tpp/r+H4IOkUcOB13KecDGYRDaExmByVqoUFWORUBi9AJTM2mIeiA3KCRyywTZfnqQ
-	 kSpKgq+0kTAW8vQeEwpqlBKCTDnpgHvrzlKhAOlA=
+	b=0y3sOqvcA5bR4vUOLJLRpudqefPdrQpm/Nm/7EfbDBbXMnZ5lkikC9QA3ijWGLLQo
+	 Bvwd6bWxMEKVt0G3gQ5UUCjrcjkxn76g3ya/pRWqy9pYR8DhdZSjOOfa5fJa6bmQNX
+	 iXj7opJWo677wPws182jsfjmTLOmGIC2Trr/ElBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfLXLLi (ORCPT
+        id S1726873AbfLXLLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:11:38 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:50400 "EHLO
+        Tue, 24 Dec 2019 06:11:16 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:59757 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbfLXLLR (ORCPT
+        by vger.kernel.org with ESMTP id S1726302AbfLXLLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:11:17 -0500
+        Tue, 24 Dec 2019 06:11:14 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iji5r-000169-Kr; Tue, 24 Dec 2019 12:11:16 +0100
+        id 1iji5n-000169-9k; Tue, 24 Dec 2019 12:11:11 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
 Cc:     Eric Auger <eric.auger@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     Eric Auger <eric.auger@redhat.com>,
         Andrew Murray <Andrew.Murray@arm.com>,
         Zenghui Yu <yuzenghui@huawei.com>,
         Robert Richter <rrichter@marvell.com>
-Subject: [PATCH v3 07/32] irqchip/gic-v4.1: Don't use the VPE proxy if RVPEID is set
-Date:   Tue, 24 Dec 2019 11:10:30 +0000
-Message-Id: <20191224111055.11836-8-maz@kernel.org>
+Subject: [PATCH v3 02/32] irqchip/gic-v3: Add GICv4.1 VPEID size discovery
+Date:   Tue, 24 Dec 2019 11:10:25 +0000
+Message-Id: <20191224111055.11836-3-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191224111055.11836-1-maz@kernel.org>
 References: <20191224111055.11836-1-maz@kernel.org>
@@ -62,87 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The infamous VPE proxy device isn't used with GICv4.1 because:
-- we can invalidate any LPI from the DirectLPI MMIO interface
-- the ITS and redistributors understand the life cycle of
-  the doorbell, so we don't need to enable/disable it all
-  the time
-
-So let's escape early from the proxy related functions.
+While GICv4.0 mandates 16 bit worth of VPEIDs, GICv4.1 allows smaller
+implementations to be built. Add the required glue to dynamically
+compute the limit.
 
 Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 11 ++++++++++-
+ drivers/irqchip/irq-gic-v3.c       |  3 +++
+ include/linux/irqchip/arm-gic-v3.h |  5 +++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index e3c7d9ae0bdb..86c69b5cc156 100644
+index e05673bcd52b..d9d256471dc0 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3213,7 +3213,7 @@ static const struct irq_domain_ops its_domain_ops = {
- /*
-  * This is insane.
-  *
-- * If a GICv4 doesn't implement Direct LPIs (which is extremely
-+ * If a GICv4.0 doesn't implement Direct LPIs (which is extremely
-  * likely), the only way to perform an invalidate is to use a fake
-  * device to issue an INV command, implying that the LPI has first
-  * been mapped to some event on that device. Since this is not exactly
-@@ -3221,9 +3221,20 @@ static const struct irq_domain_ops its_domain_ops = {
-  * only issue an UNMAP if we're short on available slots.
-  *
-  * Broken by design(tm).
-+ *
-+ * GICv4.1, on the other hand, mandates that we're able to invalidate
-+ * by writing to a MMIO register. It doesn't implement the whole of
-+ * DirectLPI, but that's good enough. And most of the time, we don't
-+ * even have to invalidate anything, as the redistributor can be told
-+ * whether to generate a doorbell or not (we thus leave it enabled,
-+ * always).
-  */
- static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
- {
-+	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-+	if (gic_rdists->has_rvpeid)
-+		return;
+@@ -121,7 +121,16 @@ struct its_node {
+ #define ITS_ITT_ALIGN		SZ_256
+ 
+ /* The maximum number of VPEID bits supported by VLPI commands */
+-#define ITS_MAX_VPEID_BITS	(16)
++#define ITS_MAX_VPEID_BITS						\
++	({								\
++		int nvpeid = 16;					\
++		if (gic_rdists->has_rvpeid &&				\
++		    gic_rdists->gicd_typer2 & GICD_TYPER2_VIL)		\
++			nvpeid = 1 + (gic_rdists->gicd_typer2 &		\
++				      GICD_TYPER2_VID);			\
++									\
++		nvpeid;							\
++	})
+ #define ITS_MAX_VPEID		(1 << (ITS_MAX_VPEID_BITS))
+ 
+ /* Convert page order to size in bytes */
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index ffcb018395ed..286f98222878 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1576,6 +1576,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 
+ 	pr_info("%d SPIs implemented\n", GIC_LINE_NR - 32);
+ 	pr_info("%d Extended SPIs implemented\n", GIC_ESPI_NR);
 +
- 	/* Already unmapped? */
- 	if (vpe->vpe_proxy_event == -1)
- 		return;
-@@ -3246,6 +3257,10 @@ static void its_vpe_db_proxy_unmap_locked(struct its_vpe *vpe)
- 
- static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
- {
-+	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-+	if (gic_rdists->has_rvpeid)
-+		return;
++	gic_data.rdists.gicd_typer2 = readl_relaxed(gic_data.dist_base + GICD_TYPER2);
 +
- 	if (!gic_rdists->has_direct_lpi) {
- 		unsigned long flags;
+ 	gic_data.domain = irq_domain_create_tree(handle, &gic_irq_domain_ops,
+ 						 &gic_data);
+ 	irq_domain_update_bus_token(gic_data.domain, DOMAIN_BUS_WIRED);
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 9a5f85d30701..9dfe64189d99 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -13,6 +13,7 @@
+ #define GICD_CTLR			0x0000
+ #define GICD_TYPER			0x0004
+ #define GICD_IIDR			0x0008
++#define GICD_TYPER2			0x000C
+ #define GICD_STATUSR			0x0010
+ #define GICD_SETSPI_NSR			0x0040
+ #define GICD_CLRSPI_NSR			0x0048
+@@ -89,6 +90,9 @@
+ #define GICD_TYPER_ESPIS(typer)						\
+ 	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
  
-@@ -3257,6 +3272,10 @@ static void its_vpe_db_proxy_unmap(struct its_vpe *vpe)
- 
- static void its_vpe_db_proxy_map_locked(struct its_vpe *vpe)
- {
-+	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-+	if (gic_rdists->has_rvpeid)
-+		return;
++#define GICD_TYPER2_VIL			(1U << 7)
++#define GICD_TYPER2_VID			GENMASK(4, 0)
 +
- 	/* Already mapped? */
- 	if (vpe->vpe_proxy_event != -1)
- 		return;
-@@ -3279,6 +3298,10 @@ static void its_vpe_db_proxy_move(struct its_vpe *vpe, int from, int to)
- 	unsigned long flags;
- 	struct its_collection *target_col;
+ #define GICD_IROUTER_SPI_MODE_ONE	(0U << 31)
+ #define GICD_IROUTER_SPI_MODE_ANY	(1U << 31)
  
-+	/* GICv4.1 doesn't use a proxy, so nothing to do here */
-+	if (gic_rdists->has_rvpeid)
-+		return;
-+
- 	if (gic_rdists->has_direct_lpi) {
- 		void __iomem *rdbase;
- 
+@@ -615,6 +619,7 @@ struct rdists {
+ 	void			*prop_table_va;
+ 	u64			flags;
+ 	u32			gicd_typer;
++	u32			gicd_typer2;
+ 	bool			has_vlpis;
+ 	bool			has_rvpeid;
+ 	bool			has_direct_lpi;
 -- 
 2.20.1
 
