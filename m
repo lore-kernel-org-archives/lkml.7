@@ -2,565 +2,282 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73753C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916D8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307272073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="B3nFyoMs"
+	by mail.kernel.org (Postfix) with ESMTP id 71AAC20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLXQWh (ORCPT
+        id S1726331AbfLXQWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:22:37 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:20121 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfLXQWg (ORCPT
+        Tue, 24 Dec 2019 11:22:49 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40671 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfLXQWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 11:22:36 -0500
-X-Greylist: delayed 710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Dec 2019 11:22:33 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577204552;
-        s=strato-dkim-0002; d=dawncrow.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=jd8HIQj/ubKtUx8YHbbLAuh5R4GnjEShJcHWuqyq1x0=;
-        b=B3nFyoMsxOOtYautXf/bK2TnowsynLWvAAFbL/IuiQIsawJ7xmRm4MGnQ59aH9NGSm
-        JimoBhK3V0K4EVwU1my/nG6lT0qdHcOu1cmTqxITgcgIKcZoRgnXTIa6M3qNRboEu5Tf
-        QzKMLr8ajPdPeEFClFv/fVY5X9zFNWkCzolGi7csMfd4HWPct266kiUebSYJcVAa0/Qd
-        VU0CjKdd3UTgQkbKQwZVnASRtnh5dlJCtvy7PlMnXtPrAiSggTV/Qar7ZcP6f/ychzqt
-        lKGpH+c9AquLp+29XvbOBRcFN7lu5ROvQ4qxwnkoWU3xbsW//Bw0QxnMu5QklClkOENy
-        36iQ==
-X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
-X-RZG-CLASS-ID: mo00
-Received: from tesla.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id I099d1vBOGAT3jc
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 24 Dec 2019 17:10:29 +0100 (CET)
-From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
-To:     webmaster@dawncrow.de, linux@arm.linux.org.uk, robh+dt@kernel.org,
-        mark.rutland@arm.com, bcousson@baylibre.com, tony@atomide.com,
-        linux-omap@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: Add omap3-echo
-Date:   Tue, 24 Dec 2019 17:10:05 +0100
-Message-Id: <20191224161005.28083-1-nerv@dawncrow.de>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Dec 2019 11:22:49 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 2BD96E0007;
+        Tue, 24 Dec 2019 16:22:44 +0000 (UTC)
+Date:   Tue, 24 Dec 2019 17:30:49 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
+Message-ID: <20191224163049.GD7304@voidbox>
+References: <20191223214529.20377-1-repk@triplefau.lt>
+ <20191223214529.20377-2-repk@triplefau.lt>
+ <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the first generation Amazon Echo from 2016.
-Audio support is not yet implemented.
+On Tue, Dec 24, 2019 at 03:40:20PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On 24/12/19 3:15 AM, Remi Pommarel wrote:
+> > This adds support for the MIPI PHY also needed for PCIE found in the
+> > Amlogic AXG SoC Family.
+> > 
+> > MIPI or PCIE selection is done by the #phy-cells, making the mode
+> > static and exclusive.
+> > 
+> > For now only PCIE fonctionality is supported.
+> > 
+> > This PHY will be used to replace the mipi_enable clock gating logic
+> > which was mistakenly added in the clock subsystem. This also activate
+> > a non documented band gap bit in those registers that allows reliable
+> > PCIE clock signal generation on AXG platforms.
+> > 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> >  drivers/phy/amlogic/Kconfig                   |  11 ++
+> >  drivers/phy/amlogic/Makefile                  |   1 +
+> >  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
+> >  3 files changed, 188 insertions(+)
+> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+> > 
+> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> > index af774ac2b934..1eeb75d018e3 100644
+> > --- a/drivers/phy/amlogic/Kconfig
+> > +++ b/drivers/phy/amlogic/Kconfig
+> > @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
+> >  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
+> >  	  in Meson G12A SoCs.
+> >  	  If unsure, say N.
+> > +
+> > +config PHY_MESON_AXG_MIPI_PCIE
+> > +	tristate "Meson AXG MIPI + PCIE PHY driver"
+> > +	default ARCH_MESON
+> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> > +	select GENERIC_PHY
+> > +	select MFD_SYSCON
+> > +	help
+> > +	  Enable this to support the Meson MIPI + PCIE PHY found
+> > +	  in Meson AXG SoCs.
+> > +	  If unsure, say N.
+> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> > index 11d1c42ac2be..2167330a0ae8 100644
+> > --- a/drivers/phy/amlogic/Makefile
+> > +++ b/drivers/phy/amlogic/Makefile
+> > @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
+> > +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
+> > diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+> > new file mode 100644
+> > index 000000000000..006aa8cdfc47
+> > --- /dev/null
+> > +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
+> > @@ -0,0 +1,176 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Amlogic AXG MIPI + PCIE PHY driver
+> > + *
+> > + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
+> > + */
+> > +#include <linux/module.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/platform_device.h>
+> > +#include <dt-bindings/phy/phy.h>
+> > +
+> > +#define HHI_MIPI_CNTL0 0x00
+> > +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
+> > +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
+> > +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
+> > +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
+> > +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
+> > +
+> > +#define HHI_MIPI_CNTL1 0x01
+> > +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
+> > +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
+> > +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
+> > +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
+> > +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
+> > +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
+> > +
+> > +#define HHI_MIPI_CNTL2 0x02
+> > +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
+> > +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
+> > +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
+> > +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
+> > +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
+> > +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
+> > +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
+> > +
+> > +struct phy_axg_mipi_pcie_priv {
+> > +	struct phy *phy;
+> > +	unsigned int mode;
+> > +	struct regmap *regmap;
+> > +};
+> > +
+> > +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
+> > +	.reg_bits = 8,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.max_register = HHI_MIPI_CNTL2,
+> > +};
+> > +
+> > +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
+> > +{
+> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
+> > +
+> > +	/* MIPI not supported yet */
+> > +	if (priv->mode != PHY_TYPE_PCIE)
+> > +		return 0;
+> > +
+> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> > +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
+> > +
+> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> > +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
+> > +{
+> > +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
+> > +
+> > +	/* MIPI not supported yet */
+> > +	if (priv->mode != PHY_TYPE_PCIE)
+> > +		return 0;
+> > +
+> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> > +			   HHI_MIPI_CNTL0_BANDGAP, 0);
+> > +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
+> > +			   HHI_MIPI_CNTL0_ENABLE, 0);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_mipi_pcie_init(struct phy *phy)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_mipi_pcie_exit(struct phy *phy)
+> > +{
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct phy_ops phy_axg_mipi_pcie_ops = {
+> > +	.init = phy_axg_mipi_pcie_init,
+> > +	.exit = phy_axg_mipi_pcie_exit,
+> > +	.power_on = phy_axg_mipi_pcie_power_on,
+> > +	.power_off = phy_axg_mipi_pcie_power_off,
+> > +	.owner = THIS_MODULE,
+> > +};
+> > +
+> > +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
+> > +					   struct of_phandle_args *args)
+> > +{
+> > +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
+> > +	unsigned int mode;
+> > +
+> > +	if (args->args_count != 1) {
+> > +		dev_err(dev, "invalid number of arguments\n");
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	mode = args->args[0];
+> > +
+> > +	/* MIPI mode is not supported yet */
+> > +	if (mode != PHY_TYPE_PCIE) {
+> > +		dev_err(dev, "invalid phy mode select argument\n");
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	priv->mode = mode;
+> > +	return priv->phy;
+> > +}
+> > +
+> > +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct phy_provider *pphy;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct phy_axg_mipi_pcie_priv *priv;
+> > +	struct device_node *np = dev->of_node;
+> > +	int ret;
+> > +
+> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	/* Get the hhi system controller node */
+> > +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
+> > +	if (IS_ERR(priv->regmap)) {
+> > +		dev_err(dev, "failed to get HHI regmap\n");
+> > +		return PTR_ERR(priv->regmap);
+> > +	}
+> > +
+> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_ops);
+> > +	if (IS_ERR(priv->phy)) {
+> > +		ret = PTR_ERR(priv->phy);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "failed to create PHY\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	phy_set_drvdata(priv->phy, priv);
+> > +	dev_set_drvdata(dev, priv);
+> > +	pphy = devm_of_phy_provider_register(dev, phy_axg_mipi_pcie_xlate);
+> > +
+> > +	return PTR_ERR_OR_ZERO(pphy);
+> > +}
+> > +
+> > +static const struct of_device_id phy_axg_mipi_pcie_of_match[] = {
+> > +	{
+> > +		.compatible = "amlogic,axg-mipi-pcie-phy",
+> 
+> Is there a dt-binding documentation for this?
 
-Signed-off-by: André Hentschel <nerv@dawncrow.de>
----
+There is binding documentation updates for this whole serie but I thought
+they were supposed to be sent in separate serie, which is not the case
+apparently.
 
-I have local patches for the microphone array, but cleaning that up will take some time.
-Audio output seems to be even harder work...
-You can find a tutorial on how to boot the Echo here:
-https://labs.f-secure.com/archive/alexa-are-you-listening/
+Thanks,
 
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/omap3-echo.dts | 466 +++++++++++++++++++++++++++++++
- 2 files changed, 467 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-echo.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..923dabc09203 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-devkit8000.dtb \
- 	omap3-devkit8000-lcd43.dtb \
- 	omap3-devkit8000-lcd70.dtb \
-+	omap3-echo.dtb \
- 	omap3-evm.dtb \
- 	omap3-evm-37xx.dtb \
- 	omap3-gta04a3.dtb \
-diff --git a/arch/arm/boot/dts/omap3-echo.dts b/arch/arm/boot/dts/omap3-echo.dts
-new file mode 100644
-index 000000000000..751560b18f79
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-echo.dts
-@@ -0,0 +1,466 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
-+ */
-+/dts-v1/;
-+
-+#include "omap36xx.dtsi"
-+
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Amazon Echo (first generation)";
-+	compatible = "amazon,omap3-echo", "ti,omap3630", "ti,omap3";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0xc600000>; /* 198 MB */
-+	};
-+
-+	vcc5v: fixedregulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc3v3: fixedregulator1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc1v8: fixedregulator2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <40>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&button_pins>;
-+
-+		mute-button {
-+			label = "mute";
-+			linux,code = <KEY_MUTE>;
-+			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;	/* GPIO_70 */
-+			wakeup-source;
-+		};
-+
-+		help-button {
-+			label = "help";
-+			linux,code = <KEY_HELP>;
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;	/* GPIO_72 */
-+			wakeup-source;
-+		};
-+	};
-+
-+	rotary: rotary-encoder {
-+		compatible = "rotary-encoder";
-+		gpios = <
-+			&gpio3  5 GPIO_ACTIVE_HIGH /* GPIO_69 */
-+			&gpio3 12 GPIO_ACTIVE_HIGH /* GPIO_76 */
-+		>;
-+		linux,axis = <REL_X>;
-+		rotary-encoder,relative-axis;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+
-+	lp5523A: lp5523A@32 {
-+		compatible = "national,lp5523";
-+		label = "q1";
-+		reg = <0x32>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+		enable-gpio = <&gpio4 13 GPIO_ACTIVE_HIGH>; /* GPIO_109 */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523B: lp5523B@33 {
-+		compatible = "national,lp5523";
-+		label = "q3";
-+		reg = <0x33>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523C: lp5523C@34 {
-+		compatible = "national,lp5523";
-+		label = "q4";
-+		reg = <0x34>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523D: lp552D@35 {
-+		compatible = "national,lp5523";
-+		label = "q2";
-+		reg = <0x35>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&omap3_pmx_core {
-+	tps_pins: pinmux_tps_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21e0, PIN_INPUT_PULLUP | PIN_OFF_INPUT_PULLUP | PIN_OFF_OUTPUT_LOW | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* sys_nirq.sys_nirq */ 
-+		>;
-+	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_INPUT | MUX_MODE4)	/* dss_data0.gpio_70 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_INPUT | MUX_MODE4)	/* dss_data2.gpio_72 */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_clk.sdmmc1_clk */
-+			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_cmd.sdmmc1_cmd */
-+			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat0.sdmmc1_dat0 */
-+			OMAP3_CORE1_IOPAD(0x214a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat1.sdmmc1_dat1 */
-+			OMAP3_CORE1_IOPAD(0x214c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat2.sdmmc1_dat2 */
-+			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat3.sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_clk.sdmmc2_clk */
-+			OMAP3_CORE1_IOPAD(0x215a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_cmd.sdmmc2_cmd */
-+			OMAP3_CORE1_IOPAD(0x215c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat0.sdmmc2_dat0 */
-+			OMAP3_CORE1_IOPAD(0x215e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat1.sdmmc2_dat1 */
-+			OMAP3_CORE1_IOPAD(0x2160, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat2.sdmmc2_dat2 */
-+			OMAP3_CORE1_IOPAD(0x2162, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat3.sdmmc2_dat3 */
-+			OMAP3_CORE1_IOPAD(0x2164, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat4.sdmmc2_dat4 */
-+			OMAP3_CORE1_IOPAD(0x2166, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat5.sdmmc2_dat5 */
-+			OMAP3_CORE1_IOPAD(0x2168, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat6.sdmmc2_dat6 */
-+			OMAP3_CORE1_IOPAD(0x216a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat7.sdmmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&omap3_pmx_core2 {
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	bus-width = <8>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc3 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+	non-removable;
-+	disable-wp;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	vmmc-supply = <&vcc3v3>;
-+	vqmmc-supply = <&vcc1v8>;
-+};
-+
-+
-+&tps {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&tps_pins>;
-+
-+	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+	interrupt-parent = <&intc>;
-+
-+	ti,en-ck32k-xtal;
-+	ti,system-power-controller;
-+
-+	vcc1-supply = <&vcc5v>;
-+	vcc2-supply = <&vcc5v>;
-+	vcc3-supply = <&vcc5v>;
-+	vcc4-supply = <&vcc5v>;
-+	vcc5-supply = <&vcc5v>;
-+	vcc6-supply = <&vcc5v>;
-+	vcc7-supply = <&vcc5v>;
-+	vccio-supply = <&vcc5v>;
-+
-+	regulators {
-+
-+		vio_reg: regulator@1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			regulator-name = "vdd_dsp";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2850000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&sgx_module {
-+	status = "disabled";
-+};
 -- 
-2.17.1
-
+Remi
