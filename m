@@ -2,91 +2,219 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F28C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCACDC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E5C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577194191;
-	bh=osjy2qK69yjAAQdkQOcZUurhniBODraBI82bAEFIyn8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XX3PnB/Zqex1WgAIQM3YYalwwmnB1r23oDawhpZwCzWAtu6xKyYpjhoUejm+TE7mr
-	 uX9RoDT9dMwFLGmOaqHHeEYBdCpTCPRRy+7JJT+5AkN2eYD9G3ufnUNWv3m81y6Fuh
-	 AVLAEpBnl4C2K79w338Ja095hL28Rj3eQFfs1kvU=
+	by mail.kernel.org (Postfix) with ESMTP id 8F09120643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 13:34:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PU9V7y49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLXN3u (ORCPT
+        id S1726225AbfLXNes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 08:29:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfLXN3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 08:29:49 -0500
-Received: from localhost.localdomain (91-167-84-221.subs.proxad.net [91.167.84.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE2C520706;
-        Tue, 24 Dec 2019 13:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577194189;
-        bh=osjy2qK69yjAAQdkQOcZUurhniBODraBI82bAEFIyn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqRGLwnA/F+NR4PXaxTlOwffs4q+EPOPuckLk7tnEfFcupZszNKmW1NW6boLoxjhU
-         GQ6X01ky+d4KSYBvnFc0oHbRhuiZ6pu/+5+j35BnGpITFbYAV8tGHdHaG0K6EAH4j9
-         8xps0kTGjnVOxbzGGFlEookZQP9pVXKTCtCbEUmE=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 3/3] x86/efistub: disable paging at mixed mode entry
-Date:   Tue, 24 Dec 2019 14:29:09 +0100
-Message-Id: <20191224132909.102540-4-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191224132909.102540-1-ardb@kernel.org>
-References: <20191224132909.102540-1-ardb@kernel.org>
+        Tue, 24 Dec 2019 08:34:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41593 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726124AbfLXNes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 08:34:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577194486;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z2q4OL9ihk4Apd9lWWlPYliz8UTcK7dTTZ5u7f9/tL8=;
+        b=PU9V7y49DQkriYrbHtszXDtFLOdCfsoeL+Gs+yjQOCBN9utDBPXj5ysRlsa3+Bi8Bears9
+        agLVwpd3WOf3E2aGAi/TrkA6yMjXQInjbpGo4dap6aXUqNYjQtxRKEch2q1Cp5Ar/OnYhy
+        SUimtKOsPmYSqTxlJTSf0hMJLcZ9kqY=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-5XnNfgvLNou6CYZSM3nf8w-1; Tue, 24 Dec 2019 08:34:45 -0500
+X-MC-Unique: 5XnNfgvLNou6CYZSM3nf8w-1
+Received: by mail-lj1-f199.google.com with SMTP id w9so739652ljj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 05:34:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z2q4OL9ihk4Apd9lWWlPYliz8UTcK7dTTZ5u7f9/tL8=;
+        b=th26PRjUGZpyH3dFJLgv5//WQHilABo1DJExVol3njRQ01b6ZAa1SDhM2yM1GPEtwU
+         LP+0o6Q08qWdXJxumS8tOIufD3c24qhXah3qk0811dZweJq52Bm3tMWLdbbvFVI5qg7h
+         kQS9NJqBbKw48LhPmYW29kqtPjCYReYW7p6cV33S8xVbcZ3fJem+QZ6iTGfyTkZ8A3Jx
+         K5KQe0jNIiXhXOX/x6i67fMpSufbAghslgHSMcQSiospDNY51pBoitZ81Wa2fDVnxPXC
+         7OkQTy0yVMKTMFHOjtdLQFga4aEcZ1VJzrhnGjOazYlKuPTs3k0qfGL75y/q++PUAgUk
+         m2/g==
+X-Gm-Message-State: APjAAAX4M3jdY9fQ87mNntPOsgQ3qzul4Ems0g42p99QLC1t3i1BqMDo
+        OKZa9AOg0x6bNtEenXGl62/uperlgBK4zLY45MVyCiy2qiAdLBkfGdeJyzTNYtv07HnG5yscuQu
+        K4kSsvfxghs7EJuzxV303yEBmHXURcATU4fpcZYU/
+X-Received: by 2002:a2e:a486:: with SMTP id h6mr13293940lji.235.1577194483275;
+        Tue, 24 Dec 2019 05:34:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzA5nHrwNIXn8vl0vtcv0E5G8M12QmEmWl4uoe5YycqgbHMKvn+tixpF5hsd1XduLn1ToxUO/W02+T/ll8x6EQ=
+X-Received: by 2002:a2e:a486:: with SMTP id h6mr13293926lji.235.1577194483020;
+ Tue, 24 Dec 2019 05:34:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191224010103.56407-1-mcroce@redhat.com> <20191224095229.GA24310@apalos.home>
+In-Reply-To: <20191224095229.GA24310@apalos.home>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Tue, 24 Dec 2019 14:34:07 +0100
+Message-ID: <CAGnkfhzrSaVe3zJ+0rriqqELha554Gmv-zskrJbiBjhHdUG2uQ@mail.gmail.com>
+Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI mixed mode entry code goes through the ordinary startup_32()
-routine before jumping into the kernel's EFI boot code in 64-bit
-mode. The 32-bit startup code must be entered with paging disabled,
-but this is not documented as a requirement for the EFI handover
-protocol, and so we should disable paging explicitly when entering
-the kernel from 32-bit EFI firmware.
+On Tue, Dec 24, 2019 at 10:52 AM Ilias Apalodimas
+<ilias.apalodimas@linaro.org> wrote:
+>
+> On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:
+> > This patches change the memory allocator of mvpp2 from the frag allocator to
+> > the page_pool API. This change is needed to add later XDP support to mvpp2.
+> >
+> > The reason I send it as RFC is that with this changeset, mvpp2 performs much
+> > more slower. This is the tc drop rate measured with a single flow:
+> >
+> > stock net-next with frag allocator:
+> > rx: 900.7 Mbps 1877 Kpps
+> >
+> > this patchset with page_pool:
+> > rx: 423.5 Mbps 882.3 Kpps
+> >
+> > This is the perf top when receiving traffic:
+> >
+> >   27.68%  [kernel]            [k] __page_pool_clean_page
+>
+> This seems extremly high on the list.
+>
+> >    9.79%  [kernel]            [k] get_page_from_freelist
+> >    7.18%  [kernel]            [k] free_unref_page
+> >    4.64%  [kernel]            [k] build_skb
+> >    4.63%  [kernel]            [k] __netif_receive_skb_core
+> >    3.83%  [mvpp2]             [k] mvpp2_poll
+> >    3.64%  [kernel]            [k] eth_type_trans
+> >    3.61%  [kernel]            [k] kmem_cache_free
+> >    3.03%  [kernel]            [k] kmem_cache_alloc
+> >    2.76%  [kernel]            [k] dev_gro_receive
+> >    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
+> >    2.68%  [kernel]            [k] page_frag_free
+> >    1.83%  [kernel]            [k] inet_gro_receive
+> >    1.74%  [kernel]            [k] page_pool_alloc_pages
+> >    1.70%  [kernel]            [k] __build_skb
+> >    1.47%  [kernel]            [k] __alloc_pages_nodemask
+> >    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
+> >    1.29%  [kernel]            [k] tcf_action_exec
+> >
+> > I tried Ilias patches for page_pool recycling, I get an improvement
+> > to ~1100, but I'm still far than the original allocator.
+>
+> Can you post the recycling perf for comparison?
+>
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/head_64.S | 5 +++++
- 1 file changed, 5 insertions(+)
+  12.00%  [kernel]                  [k] get_page_from_freelist
+   9.25%  [kernel]                  [k] free_unref_page
+   6.83%  [kernel]                  [k] eth_type_trans
+   5.33%  [kernel]                  [k] __netif_receive_skb_core
+   4.96%  [mvpp2]                   [k] mvpp2_poll
+   4.64%  [kernel]                  [k] kmem_cache_free
+   4.06%  [kernel]                  [k] __xdp_return
+   3.60%  [kernel]                  [k] kmem_cache_alloc
+   3.31%  [kernel]                  [k] dev_gro_receive
+   3.29%  [kernel]                  [k] __page_pool_clean_page
+   3.25%  [mvpp2]                   [k] mvpp2_bm_pool_put
+   2.73%  [kernel]                  [k] __page_pool_put_page
+   2.33%  [kernel]                  [k] __alloc_pages_nodemask
+   2.33%  [kernel]                  [k] inet_gro_receive
+   2.05%  [kernel]                  [k] __build_skb
+   1.95%  [kernel]                  [k] build_skb
+   1.89%  [cls_matchall]            [k] mall_classify
+   1.83%  [kernel]                  [k] page_pool_alloc_pages
+   1.80%  [kernel]                  [k] tcf_action_exec
+   1.70%  [mvpp2]                   [k] mvpp2_buf_alloc.isra.0
+   1.63%  [kernel]                  [k] free_unref_page_prepare.part.0
+   1.45%  [kernel]                  [k] page_pool_return_skb_page
+   1.42%  [act_gact]                [k] tcf_gact_act
+   1.16%  [kernel]                  [k] netif_receive_skb_list_internal
+   1.08%  [kernel]                  [k] kfree_skb
+   1.07%  [kernel]                  [k] skb_release_data
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 58a512e33d8d..ee60b81944a7 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -244,6 +244,11 @@ SYM_FUNC_START(efi32_stub_entry)
- 	leal	efi32_config(%ebp), %eax
- 	movl	%eax, efi_config(%ebp)
- 
-+	/* Disable paging */
-+	movl	%cr0, %eax
-+	btrl	$X86_CR0_PG_BIT, %eax
-+	movl	%eax, %cr0
-+
- 	jmp	startup_32
- SYM_FUNC_END(efi32_stub_entry)
- #endif
+
+> >
+> > Any idea on why I get such bad numbers?
+>
+> Nop but it's indeed strange
+>
+> >
+> > Another reason to send it as RFC is that I'm not fully convinced on how to
+> > use the page_pool given the HW limitation of the BM.
+>
+> I'll have a look right after holidays
+>
+
+Thanks
+
+> >
+> > The driver currently uses, for every CPU, a page_pool for short packets and
+> > another for long ones. The driver also has 4 rx queue per port, so every
+> > RXQ #1 will share the short and long page pools of CPU #1.
+> >
+>
+> I am not sure i am following the hardware config here
+>
+
+Never mind, it's quite a mess, I needed a lot of time to get it :)
+
+The HW put the packets in different buffer pools depending on the size:
+short: 64..128
+long: 128..1664
+jumbo: 1664..9856
+
+Let's skip the jumbo buffer for now and assume we have 4 CPU, the
+driver allocates 4 short and 4 long buffers.
+Each port has 4 RX queues, and each one uses a short and a long buffer.
+With the page_pool api, we have 8 struct page_pool, 4 for the short
+and 4 for the long buffers.
+
+
+> > This means that for every RX queue I call xdp_rxq_info_reg_mem_model() twice,
+> > on two different page_pool, can this be a problem?
+> >
+> > As usual, ideas are welcome.
+> >
+> > Matteo Croce (2):
+> >   mvpp2: use page_pool allocator
+> >   mvpp2: memory accounting
+> >
+> >  drivers/net/ethernet/marvell/Kconfig          |   1 +
+> >  drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   7 +
+> >  .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 142 +++++++++++++++---
+> >  3 files changed, 125 insertions(+), 25 deletions(-)
+> >
+> > --
+> > 2.24.1
+> >
+> Cheers
+> /Ilias
+>
+
+Bye,
 -- 
-2.20.1
+Matteo Croce
+per aspera ad upstream
 
