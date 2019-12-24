@@ -6,112 +6,184 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64810C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D73C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32211206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D85206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="xE/k+Zm3"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="v5uo6zSi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLXMIy (ORCPT
+        id S1726887AbfLXMJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:08:54 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40474 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfLXMIx (ORCPT
+        Tue, 24 Dec 2019 07:09:31 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33853 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfLXMJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:08:53 -0500
-Received: by mail-io1-f67.google.com with SMTP id x1so18967987iop.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:08:52 -0800 (PST)
+        Tue, 24 Dec 2019 07:09:31 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r11so10349703pgf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 04:09:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kMEJ1g3awjiJois5IXlpJaY3/3SmKKn3MhVIUyIiwUc=;
-        b=xE/k+Zm3ZFRXndkfMspOBt5kR1YvFrSN0e2ynu/Wmd5Vds0tGvSKoLQ568kSJzlK+9
-         HM79XkYELPxySMdzErmPeFL+NY4dFv+zPRPCRw/alakoh4B9QoqXIHE79Awa475DyLqq
-         nyQ8jHyCpVmjoQTFe+9AhGTec4hJUJI+seEwGF+Xa85edEgT3Gb8OP03MI8rSI8wwaGx
-         RSYDy/qI4U0s/5cuRns5hsx4Be65/Lq53Sf3zVLf66C1l6K6oIVNA9zJgTASGFqua8ez
-         abXcCTTESsZT+6aWnJPDOflcO8DcUXVO/O3w4H1fU4AjyM/D8jnVGheLVhrC0ytMjZPY
-         xmPg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=K4+yYEajmvASBw/wK7dx01YAKKK9lQkCygbw5uYtDvw=;
+        b=v5uo6zSi8Zl71hkeRCL1WDbTWJpta5F83ZOr5fxkkmp8Nw9B+KoTpjA3o2GjQy6HDP
+         z+802JX+aRA390qBjINq0fnHSEcntSkwsD2EIdKdxcvAxxrKOvxCCaWOUUvCrR+n8fRj
+         meVMHS9VnwRQ3Mpp3i0JSkU6+2DH9Tm8yVzs9R4X2pRKBJzEhe4Iu0+PxpENQ/X2kzLq
+         V/G9BIlbM5R458R2UgYGUF2TnKMV2LmqGcHfOZ5qKpX+LQzykslgAxQOVxRyy1Xrojh+
+         ahp+RNTQr5w5UIgQgyaUDAlDJlFjIHRY7VldSOH4+iPjEpgAad3Lc8Ta0OVzWIkcCVWq
+         1C+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kMEJ1g3awjiJois5IXlpJaY3/3SmKKn3MhVIUyIiwUc=;
-        b=WS0joAuyfI41es4AJ3+CsAss/CMutiHlolO0yR3DkldUhuVV/Uwm2iGG/jRklRO+Y5
-         okkOcsGE7FgZmxQIU6w7nB/G/8HJy+EnrO+6TbaVqrb6Xu3jwfMx+SlOU5YuPXfUboXU
-         5RO2jhEk1ZXIrcz34zqiy6MOTK3mtzmzknyiPo41BqkvWlw7oWxXss56UB2BX20NG4mY
-         kDaTTkqcWp7UqcZWqOljUlcvfJZC357tsgrkAMwrLeG+nMNJVuNBh9iWPKqlW2wyzatx
-         XQmvHo0bjeGhF/F+qzdO45NEQnvHI+acw8/mJkXiPWGxbVSyUHrAPYAbGZbRQVXqPNWf
-         CV4g==
-X-Gm-Message-State: APjAAAX53U5M42QfaPWmQGrromslvtjs8C2cyckGMtcFrWW9/qCD+CnF
-        MZWHN1jnS4POxJ1d1Df+a/wB6ZlBSEQpxkaGydPrCQ==
-X-Google-Smtp-Source: APXvYqxS+n0uInOSHMsGQsOz7Vzo/DR0J0T9yDlisU6t8kWtggEJGnzpV5dEMdZJxeAAxYkBedY3EBh4JBiwBUrJ13o=
-X-Received: by 2002:a02:40e:: with SMTP id 14mr27133228jab.102.1577189332324;
- Tue, 24 Dec 2019 04:08:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
- <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
-In-Reply-To: <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 24 Dec 2019 13:08:41 +0100
-Message-ID: <CAMRc=MdCQkooyMLH8E2uX8+gT7h8VsXnvv0oXvCstb=vjHJ8WA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=K4+yYEajmvASBw/wK7dx01YAKKK9lQkCygbw5uYtDvw=;
+        b=TaE/kK4asY3fWAwgHntK1rWlEOhLBBK/agumzSTRK8FOy6IVAchw19UTVMlsi0rWcO
+         lf2rDI92bVpihFdznl++XJLman+ZszCktKU5PSeBs3tMFzgfpSCF4wnmK08ZUVG0M8st
+         auew/NaEubNL9Qs3+WatKPvfJ1MReQG4lwXopjkX+FoiwQdt8FLhSnGlJ3v1JNuij0ZM
+         t/PMAaPsg10uF2KI2T7yG9VRZDVVh6mbTSgZEsu7ifOFLFWVAwSGbXr73caQaNtJnHXQ
+         WfEGqVh/l3T85cejlXLwXmjkCyIzWLzyAlE4xzocr9T24JIZxOCd1FN+eTK213QDYxCH
+         YjOQ==
+X-Gm-Message-State: APjAAAXzX7RiOb/cgm4YH3FvHAjUY6QaBJ35i09T1o1MS5pBEHeYKTSA
+        pcc8JZiEuDVdllMHqJwCMuG1Pw==
+X-Google-Smtp-Source: APXvYqxA1SUulGpkbXDrLJ25MMXUtUB4dZYV+TVQUc/X6xA8o+7HrjCmP4+vfrzt7tm6wB0tahblTA==
+X-Received: by 2002:a63:1106:: with SMTP id g6mr36472053pgl.13.1577189369917;
+        Tue, 24 Dec 2019 04:09:29 -0800 (PST)
+Received: from [192.168.0.9] (111-255-104-19.dynamic-ip.hinet.net. [111.255.104.19])
+        by smtp.gmail.com with ESMTPSA id 68sm25845145pge.14.2019.12.24.04.09.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Dec 2019 04:09:29 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH v2 02/10] lib: vdso: move call to fallback out of common code.
+Date:   Tue, 24 Dec 2019 20:09:26 +0800
+Message-Id: <3D74AE31-03EA-4552-8AF7-90AA9DD65830@amacapital.net>
+References: <36f1ce73-d8bc-9c46-8a2a-b6514d4a1ba0@c-s.fr>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+In-Reply-To: <36f1ce73-d8bc-9c46-8a2a-b6514d4a1ba0@c-s.fr>
+To:     christophe leroy <christophe.leroy@c-s.fr>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 19 gru 2019 o 19:17 Andy Shevchenko <andy.shevchenko@gmail.com>
-napisa=C5=82(a):
->
-> On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently there is no way for user-space to be informed about changes
-> > in status of GPIO lines e.g. when someone else requests the line or its
-> > config changes. We can only periodically re-read the line-info. This
-> > is fine for simple one-off user-space tools, but any daemon that provid=
-es
-> > a centralized access to GPIO chips would benefit hugely from an event
-> > driven line info synchronization.
-> >
-> > This patch adds a new ioctl() that allows user-space processes to reuse
-> > the file descriptor associated with the character device for watching
-> > any changes in line properties. Every such event contains the updated
-> > line information.
-> >
-> > Currently the events are generated on three types of status changes: wh=
-en
-> > a line is requested, when it's released and when its config is changed.
-> > The first two are self-explanatory. For the third one: this will only
-> > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > as any changes that can happen from within the kernel (i.e.
-> > set_transitory() or set_debounce()) are of no interest to user-space.
->
-> > -       } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL) {
-> > +       } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL ||
-> > +                  cmd =3D=3D GPIO_GET_LINEINFO_WATCH_IOCTL) {
->
-> Wouldn't be better for maintenance to have them separated from the day 1?
->
 
-I think this would lead to a lot of code duplication. I left it as it is is=
- v4.
+> On Dec 24, 2019, at 7:41 PM, christophe leroy <christophe.leroy@c-s.fr> wr=
+ote:
+>=20
+> =EF=BB=BF
+>=20
+>> Le 24/12/2019 =C3=A0 03:24, Andy Lutomirski a =C3=A9crit :
+>>> On Mon, Dec 23, 2019 at 6:31 AM Christophe Leroy
+>>> <christophe.leroy@c-s.fr> wrote:
+>>>=20
+>>> On powerpc, VDSO functions and syscalls cannot be implemented in C
+>>> because the Linux kernel ABI requires that CR[SO] bit is set in case
+>>> of error and cleared when no error.
+>>>=20
+>>> As this cannot be done in C, C VDSO functions and syscall'based
+>>> fallback need a trampoline in ASM.
+>>>=20
+>>> By moving the fallback calls out of the common code, arches like
+>>> powerpc can implement both the call to C VDSO and the fallback call
+>>> in a single trampoline function.
+>> Maybe the issue is that I'm not a powerpc person, but I don't
+>> understand this.  The common vDSO code is in C.  Presumably this means
+>> that you need an asm trampoline no matter what to call the C code.  Is
+>> the improvement that, with this change, you can have the asm
+>> trampoline do a single branch, so it's logically:
+>> ret =3D [call the C code];
+>> if (ret =3D=3D 0) {
+>>  set success bit;
+>> } else {
+>>  ret =3D fallback;
+>>  if (ret =3D=3D 0)
+>>   set success bit;
+>> else
+>>   set failure bit;
+>> }
+>=20
+> More simple than above, in fact it is:
+>=20
+> ret =3D [call the C code];
+> if (ret =3D=3D 0) {
+> set success bit;
+> } else {
+> ret =3D fallback [ which sets the success/failure bit];
+> }
+> return ret
 
-Bart
+Cute.
+
+>=20
+>=20
+>> return ret;
+>> instead of:
+>> ret =3D [call the C code, which includes the fallback];
+>=20
+> C code cannot handle the success/failure bit so we need to do something wh=
+ich does:
+>=20
+> int assembly_to_fallback()
+> {
+>    ret =3D [syscall the fallback]
+>    if (success bit set)
+>        return ret;
+>    else
+>        return -ret;
+> }
+
+Wait, your calling convention has syscalls return positive values on error?
+
+But I think this is moot. The syscalls in question never return nonzero succ=
+ess values, so you should be able to inline the syscall without worrying abo=
+ut this.
+
+>=20
+> Also means going back and forth between the success bit and negative retur=
+n.
+>=20
+>> if (ret =3D=3D 0)
+>>   set success bit;
+>> else
+>>   set failure bit;
+>> It's not obvious to me that the former ought to be faster.
+>>>=20
+>>> The two advantages are:
+>>> - No need play back and forth with CR[SO] and negative return value.
+>>> - No stack frame is required in VDSO C functions for the fallbacks.
+>> How is no stack frame required?  Do you mean that the presence of the
+>> fallback causes worse code generation?  Can you improve the fallback
+>> instead?
+>=20
+> When function F1 calls function F2 (with BL insn), the link register (LR) i=
+s set with the return address in F1, so that at the end of F2, F2 branches t=
+o LR (with BLR insn), that's how you return from functions.
+>=20
+> When F2 calls function F3, the same happens, LR is set to the return of F3=
+ into F2. It means that F2 has to save LR in order to be able to return to F1=
+, otherwise the return address from F2 into F1 is lost.
+>=20
+> But ... thinking about it once more, indeed fallback means doing a syscall=
+, and in fact I realise that syscalls won't clobber LR, so it should be poss=
+ible to do something. Let me try it.
+>=20
+
+With that plus assume that nonzero return means failure, I think you should h=
+ave all your bases covered.=
