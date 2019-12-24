@@ -2,109 +2,102 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ADBC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 18:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332F8C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735A5206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 18:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCE9206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXdL/rij"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJVdKacB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLXStx (ORCPT
+        id S1726885AbfLXTJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 13:49:53 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42885 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfLXStx (ORCPT
+        Tue, 24 Dec 2019 14:09:06 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59056 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726201AbfLXTJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 13:49:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so15619807lfl.9;
-        Tue, 24 Dec 2019 10:49:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lWn5lG1lm71cwDo15yx9m3Zo5kwANx7q2As8ujx/+8M=;
-        b=BXdL/rijyVZCACaMXJD0dON+UYD7AWBhrRNXvpLvby8tHu3kIC/vQgf+nDvupD3ORA
-         wF0GxTbPYQLye/oZE04zLXZ8so0QiRHQeSJVW5jtbVyghCEDjgCFXEJ6lBv7JX6xX5GD
-         x3gooA/KHSkBahceOOg1HO4eVx0ndOcId0FRmUAc0VCzMWtdpukzaWh0d0Rij2+53kWU
-         xISo0e1KOpUG0C7TO2GkVpJtvf63aGaDOwwLRF9HlO4qN7w9Tc9eFar17akS1pUmejEL
-         sT2NQwyLXe1Q6tn6Z63Zxjo7aTtndzXPNxtNZMHMqgt3B3wq8fMZdNcruBdxP8PE/IH3
-         h5eQ==
+        Tue, 24 Dec 2019 14:09:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577214545;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=sN9oy8InhvYTWTcIBE/ApxS/MBEGLGguoOVJTgKsavo=;
+        b=jJVdKacBe0wQCss1x8T4wt7+tk0KPTIRzDkofj9xJNyi7ecBawk7LX288YcTzQbkpx1lU6
+        NRKZm0/+3rBvPElV0motQ7Qa2X5Li8QgvyQ/MImxDNbUPW5XhLRWvoZP76Qg5LQGkMjCyy
+        s3YTmzHn0EaFEQg5V/YWbyYorq3m3EM=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-TkeCNZUeMaWNTn-I9_Tqnw-1; Tue, 24 Dec 2019 14:09:00 -0500
+X-MC-Unique: TkeCNZUeMaWNTn-I9_Tqnw-1
+Received: by mail-yb1-f197.google.com with SMTP id a14so15919397ybh.14
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:09:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lWn5lG1lm71cwDo15yx9m3Zo5kwANx7q2As8ujx/+8M=;
-        b=ZhwjedrKJxnYiCxHxfxsdyXY4ROzBcINW9lzooe41JSi1pF5FaDVjHNdLMO3BHFE4T
-         bBq871UA20tUuIVGzqBBxO/XC2yRJReFjpbmGfh5s9+pzInlf2X9r7Kw5LqQS91pAIqg
-         ff2faXj1DJHignwrX6QoYj93yiRYoEVpFNqWDdCcyv8PBCpbcH5e68ddjwDuufEmh0n1
-         qNEMd+28CH8zat55nvtRCS2PiL4J+Ca/uVPB0kkdzryDWIFHyOPFg/w2i0+HZoOb59Yv
-         eK5OrxeADWoP9JVrB1fdWhHdJuiajPMNl0FCkHq3Hm28QC/jIHRU0LcQYdGXCL2ib0vj
-         nBxQ==
-X-Gm-Message-State: APjAAAVv5Chz+bLzIm6lqjPm39YG6XOvQ6So6+YjcI5iISd8ShE17ORq
-        nNe0MjvvRr/3goEcUiiaoCb2fMqHrHM=
-X-Google-Smtp-Source: APXvYqwoWhSsy+1/t4bgnaW4ctju9iEb5ctRYbTMpHNAblSqYOqjz0OPVcCOe9L4KURxzBFWKktWWg==
-X-Received: by 2002:a19:c210:: with SMTP id l16mr21640528lfc.35.1577213390894;
-        Tue, 24 Dec 2019 10:49:50 -0800 (PST)
-Received: from pc636 ([37.212.210.43])
-        by smtp.gmail.com with ESMTPSA id z7sm12351936lfa.81.2019.12.24.10.49.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=sN9oy8InhvYTWTcIBE/ApxS/MBEGLGguoOVJTgKsavo=;
+        b=E7ZSoe49i2/lbMwWaF/6ILxVGU7jwevgf+fM5e30g1WzIDPP2Y0oUiw7GK3wE29Ii3
+         TowEtANhC0mwwORpeh4Tk3kXMvgOPPnlk+2mCATIvPJct7EOha6HIcskCpRVqrrAh/4A
+         f2P54nb2l/P5JVVxTLe5OU9qRxilhatgPAuE/n0AoRGkpaCYG4LgUQRQegzsy0wSr1Xt
+         X2Drvfdfzhhig5bE7bpcXCGcLpjjMIezwzsMuHBVwICcSOrqCVZ6HmJn2oR9T4T7d4B3
+         21k36liCh5B4yu/1xC3uTMlLvFzSIMEIwvvcP04uOnGchic8xS8CRyFkd+ecJhD4QDK5
+         vGCA==
+X-Gm-Message-State: APjAAAU4/BXEpmOAQ3365VqIArLO6BHB4SVrXDypVhcDZfpdZ7M8/DMm
+        gZ09kw+LR0JY1SZGaC3oxlKLtCqLsd/vvk2FOsN3SwuCTF54c8iemmz1Vy8/orLhU5+FVmiQdOF
+        mLytkW0AADNrURQ6UL1BndenP
+X-Received: by 2002:a25:68d2:: with SMTP id d201mr27072874ybc.177.1577214540288;
+        Tue, 24 Dec 2019 11:09:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz0S3EZ46tOP4qqPj6eQg1Mo8wV9UwKPT4m38jrGBN38s6oteTQkqrcrF05/SG735A3VfXw9w==
+X-Received: by 2002:a25:68d2:: with SMTP id d201mr27072853ybc.177.1577214540042;
+        Tue, 24 Dec 2019 11:09:00 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id e131sm9679917ywb.81.2019.12.24.11.08.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 10:49:50 -0800 (PST)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 24 Dec 2019 19:49:40 +0100
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20191224184940.GA16346@pc636>
-References: <20191220125624.3953-1-urezki@gmail.com>
- <20191221232117.GA67625@google.com>
+        Tue, 24 Dec 2019 11:08:59 -0800 (PST)
+Date:   Tue, 24 Dec 2019 12:08:57 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Roland Dreier <roland@purestorage.com>,
+        Jim Yan <jimyan@baidu.com>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/vt-d: Add a quirk flag for scope mismatched
+ devices
+Message-ID: <20191224190857.kb32qjogzumoh4xv@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Roland Dreier <roland@purestorage.com>, Jim Yan <jimyan@baidu.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20191224062240.4796-1-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191221232117.GA67625@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191224062240.4796-1-baolu.lu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Joel.
-
-> 
-> Hi Uladzislau,
-> 
-> Your patch is based on an older version of the kfree_rcu work. The latest
-> version is in Paul's -dev branch. There is also additional work done in that
-> branch as well "rcu: Add multiple in-flight batches of kfree_rcu() work" :
-> https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/commit/?h=dev&id=e38fa01b94c87dfa945afa603ed50b4f7955934b
-> 
-Ahh. I see there are some differences and my baseline is wrong. I will
-double check and rebase on Paul's -dev branch.
-
+On Tue Dec 24 19, Lu Baolu wrote:
+>We expect devices with endpoint scope to have normal PCI headers,
+>and devices with bridge scope to have bridge PCI headers.  However
+>Some PCI devices may be listed in the DMAR table with bridge scope,
+>even though they have a normal PCI header. Add a quirk flag for
+>those special devices.
 >
-> Could you rebase your patch on Paul's -dev branch? The branch also has an
-> rcuperf patch for measuring memory footprint automatically (memory footprint
-> value is printed by rcuperf). Although I'd say try to use the latest version
-> of the rcuperf patch by reverting that and applying:
-> https://lore.kernel.org/patchwork/patch/1170895/ . I can then add your
-> Tested-by tag to any future postings of the patch for rcuperf as well!
-> 
-I will do that and run all tests based on the latest code base.
+>Cc: Roland Dreier <roland@purestorage.com>
+>Cc: Jim Yan <jimyan@baidu.com>
+>Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>---
 
-Thanks for your comments.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
---
-Vlad Rezki
