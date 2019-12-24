@@ -2,299 +2,198 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8B3C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E445C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2902071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:08:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VU+4pYsP"
+	by mail.kernel.org (Postfix) with ESMTP id 4A95920643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 10:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577182164;
+	bh=OcYvU6R9hPJgmJg3UwAfVCin1mEXqh7FP8N9hsHQNeU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fAl/xk5F4lrANl6I6Q2cXgvXS3PGJcqhfrtexDkuv9OnvqySlifkFcDpOxj07PtEy
+	 oBMFhQL0/Smv18GbCSKtGi+2jxDIy1vMQyxVcHNpDSUbBUhCKtUoc/vMWUO2OmTQvB
+	 WZkth1XIxVSiBa9a3XWbwFOmhI4CtyiQCfBykISw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfLXKIs (ORCPT
+        id S1726234AbfLXKJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:08:48 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58616 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfLXKIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 05:08:48 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBOA8Sjb001388;
-        Tue, 24 Dec 2019 04:08:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577182108;
-        bh=or8fipxbRc2a8M90fDUSpMJz30EauQq+xaBHouDa29w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VU+4pYsPAjeQIi1aQQkda9hB+6xqQNu5/ro5CqPGHmvAIc/bvGlhPmag4BDTPyYr0
-         by3trbAOCVKwLLqB7J6vR1ezHzXGHH/y1AGMLSChgbprGowolCJuNM9l3aHyhgtlO+
-         PTnw0ac7prZdDM3G2hZclXzdzuY2vUkqhnw1Jkq8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBOA8Svs025637
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Dec 2019 04:08:28 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Dec 2019 04:08:27 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Dec 2019 04:08:27 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBOA8OcH097407;
-        Tue, 24 Dec 2019 04:08:24 -0600
-Subject: Re: [PATCH v2 1/3] phy: amlogic: Add Amlogic AXG MIPI/PCIE PHY Driver
-To:     Remi Pommarel <repk@triplefau.lt>, Yue Wang <yue.wang@Amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>
-References: <20191223214529.20377-1-repk@triplefau.lt>
- <20191223214529.20377-2-repk@triplefau.lt>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <a2445a16-651c-457c-9e3c-23899c639a1a@ti.com>
-Date:   Tue, 24 Dec 2019 15:40:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20191223214529.20377-2-repk@triplefau.lt>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Tue, 24 Dec 2019 05:09:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbfLXKJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:09:23 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EAF72071A;
+        Tue, 24 Dec 2019 10:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577182161;
+        bh=OcYvU6R9hPJgmJg3UwAfVCin1mEXqh7FP8N9hsHQNeU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X8ogjSxmBHca5nsL5BInqifxvj7nOhyh902O2b0NIdrXPscb+r1ItHnf9hJoLzZAv
+         L9q7c04rXqWTvPYBsAVWDiyIXedtoYN+67rSjcq52yqNI50HL88+uCnLSaNFE3+I5Y
+         ztzJ8syVplerh7dv0AfnWbgdi+rci75L2/USw358=
+Date:   Tue, 24 Dec 2019 19:09:16 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "naveen.n.rao@linux.vnet.ibm.com" <naveen.n.rao@linux.vnet.ibm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6] arm64: implement KPROBES_ON_FTRACE
+Message-Id: <20191224190916.2e47478445fb179e88f60cc3@kernel.org>
+In-Reply-To: <20191223153300.30281a93@xhacker.debian>
+References: <20191218140622.57bbaca5@xhacker.debian>
+        <20191218222550.51f0b681de7bbab7e49b09a9@kernel.org>
+        <20191223153300.30281a93@xhacker.debian>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jisheng,
 
-On 24/12/19 3:15 AM, Remi Pommarel wrote:
-> This adds support for the MIPI PHY also needed for PCIE found in the
-> Amlogic AXG SoC Family.
-> 
-> MIPI or PCIE selection is done by the #phy-cells, making the mode
-> static and exclusive.
-> 
-> For now only PCIE fonctionality is supported.
-> 
-> This PHY will be used to replace the mipi_enable clock gating logic
-> which was mistakenly added in the clock subsystem. This also activate
-> a non documented band gap bit in those registers that allows reliable
-> PCIE clock signal generation on AXG platforms.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/phy/amlogic/Kconfig                   |  11 ++
->  drivers/phy/amlogic/Makefile                  |   1 +
->  drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c | 176 ++++++++++++++++++
->  3 files changed, 188 insertions(+)
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> 
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index af774ac2b934..1eeb75d018e3 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
->  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
->  	  in Meson G12A SoCs.
->  	  If unsure, say N.
-> +
-> +config PHY_MESON_AXG_MIPI_PCIE
-> +	tristate "Meson AXG MIPI + PCIE PHY driver"
-> +	default ARCH_MESON
-> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Enable this to support the Meson MIPI + PCIE PHY found
-> +	  in Meson AXG SoCs.
-> +	  If unsure, say N.
-> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> index 11d1c42ac2be..2167330a0ae8 100644
-> --- a/drivers/phy/amlogic/Makefile
-> +++ b/drivers/phy/amlogic/Makefile
-> @@ -4,3 +4,4 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
->  obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-> +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE)	+= phy-meson-axg-mipi-pcie.o
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> new file mode 100644
-> index 000000000000..006aa8cdfc47
-> --- /dev/null
-> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie.c
-> @@ -0,0 +1,176 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Amlogic AXG MIPI + PCIE PHY driver
-> + *
-> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
-> + */
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/platform_device.h>
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +#define HHI_MIPI_CNTL0 0x00
-> +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-> +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-> +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-> +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-> +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
-> +
-> +#define HHI_MIPI_CNTL1 0x01
-> +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-> +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-> +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-> +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-> +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-> +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
-> +
-> +#define HHI_MIPI_CNTL2 0x02
-> +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-> +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-> +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-> +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-> +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-> +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-> +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-> +
-> +struct phy_axg_mipi_pcie_priv {
-> +	struct phy *phy;
-> +	unsigned int mode;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static const struct regmap_config phy_axg_mipi_pcie_regmap_conf = {
-> +	.reg_bits = 8,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = HHI_MIPI_CNTL2,
-> +};
-> +
-> +static int phy_axg_mipi_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	/* MIPI not supported yet */
-> +	if (priv->mode != PHY_TYPE_PCIE)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_axg_mipi_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	/* MIPI not supported yet */
-> +	if (priv->mode != PHY_TYPE_PCIE)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_BANDGAP, 0);
-> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> +			   HHI_MIPI_CNTL0_ENABLE, 0);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_init(struct phy *phy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_exit(struct phy *phy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops phy_axg_mipi_pcie_ops = {
-> +	.init = phy_axg_mipi_pcie_init,
-> +	.exit = phy_axg_mipi_pcie_exit,
-> +	.power_on = phy_axg_mipi_pcie_power_on,
-> +	.power_off = phy_axg_mipi_pcie_power_off,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct phy *phy_axg_mipi_pcie_xlate(struct device *dev,
-> +					   struct of_phandle_args *args)
-> +{
-> +	struct phy_axg_mipi_pcie_priv *priv = dev_get_drvdata(dev);
-> +	unsigned int mode;
-> +
-> +	if (args->args_count != 1) {
-> +		dev_err(dev, "invalid number of arguments\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	mode = args->args[0];
-> +
-> +	/* MIPI mode is not supported yet */
-> +	if (mode != PHY_TYPE_PCIE) {
-> +		dev_err(dev, "invalid phy mode select argument\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	priv->mode = mode;
-> +	return priv->phy;
-> +}
-> +
-> +static int phy_axg_mipi_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *pphy;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy_axg_mipi_pcie_priv *priv;
-> +	struct device_node *np = dev->of_node;
-> +	int ret;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/* Get the hhi system controller node */
-> +	priv->regmap = syscon_node_to_regmap(of_get_parent(dev->of_node));
-> +	if (IS_ERR(priv->regmap)) {
-> +		dev_err(dev, "failed to get HHI regmap\n");
-> +		return PTR_ERR(priv->regmap);
-> +	}
-> +
-> +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_ops);
-> +	if (IS_ERR(priv->phy)) {
-> +		ret = PTR_ERR(priv->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to create PHY\n");
-> +		return ret;
-> +	}
-> +
-> +	phy_set_drvdata(priv->phy, priv);
-> +	dev_set_drvdata(dev, priv);
-> +	pphy = devm_of_phy_provider_register(dev, phy_axg_mipi_pcie_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(pphy);
-> +}
-> +
-> +static const struct of_device_id phy_axg_mipi_pcie_of_match[] = {
-> +	{
-> +		.compatible = "amlogic,axg-mipi-pcie-phy",
+On Mon, 23 Dec 2019 07:47:24 +0000
+Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 
-Is there a dt-binding documentation for this?
+> Hi Masami,
+> 
+> On Wed, 18 Dec 2019 22:25:50 +0900 Masami Hiramatsu wrote:
+> 
+> 
+> > 
+> > 
+> > On Wed, 18 Dec 2019 06:21:35 +0000
+> > Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+> > 
+> > > KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
+> > > eliminates the need for a trap, as well as the need to emulate or
+> > > single-step instructions.
+> > >
+> > > Tested on berlin arm64 platform.
+> > >
+> > > ~ # mount -t debugfs debugfs /sys/kernel/debug/
+> > > ~ # cd /sys/kernel/debug/
+> > > /sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
+> > >
+> > > before the patch:
+> > >
+> > > /sys/kernel/debug # cat kprobes/list
+> > > ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
+> > >
+> > > after the patch:
+> > >
+> > > /sys/kernel/debug # cat kprobes/list
+> > > ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]  
+> > 
+> > BTW, it seems this automatically changes the offset without
+> > user's intention or any warnings. How would you manage if the user
+> > pass a new probe on _do_fork+0x4?
+> 
+> In current implementation, two probes at the same address _do_fork+0x4
 
-Thanks
-Kishon
+OK, that is my point.
+
+> > IOW, it is still the question who really wants to probe on
+> > the _do_fork+"0", if kprobes modifies it automatically,
+> > no one can do that anymore.
+> > This can be happen if the user want to record LR or SP value
+> > at the function call for debug. If kprobe always modifies it,
+> > we will lose the way to do it.
+> 
+> arm64's DYNAMIC_FTRACE_WITH_REGS implementation makes use of GCC
+> -fpatchable-function-entry=2 option to insert two nops. When the function
+> is traced, the first nop will be modified to the LR saver, then the
+> second nop to "bl <ftrace-entry>", commit 3b23e4991fb6("
+> arm64: implement ftrace with regs") explains the mechanism.
+
+So both of the instruction at func+0 and func+4 are replaced.
+
+> So on arm64(in fact any arch makes use of -fpatchable-function-entry will
+> behave similarly), when DYNAMIC_FTRACE_WITH_REGS is enabled, the ftrace location
+> is always on the first 4 bytes offset.
+> 
+> I think when users want to register a kprobe on _do_fork+0, what he really want
+> is to kprobe on the patched(by -fpatchable-function-entry)_do_fork+4
+
+OK, in this case, kprobe should treat the first 2 instructions as a
+single virtual instruction. This means,
+
+ - kprobes can probe func+0, but not func+4 if the function is ftraced.
+    (-EILSEQ must be returned)
+ - both debugfs/kprobes/list and tracefs/kprobe_events should show the
+   probed address as func+0. Not func+4.
+
+Then, user can use kprobes as if there is one big (8-byte) instruction
+at the entry of the function. Since probing on func+4 is rejected and
+the call-site LR/SP is restored in ftrace, there should be no
+contradiction. It should work as if we put a breakpoint on the func + 0.
+
+> 
+> PS: per my understanding, powerpc's kprobes_on_ftrace also introduces an
+> extra automatic offset due to its implementation.
+
+Uh, that is also ugly.... must be fixed.
+
+
+> > 
+> > Could you remove below function at this moment?
+> > 
+> > > +kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset)
+> > > +{
+> > > +     unsigned long addr = kallsyms_lookup_name(name);
+> > > +
+> > > +     if (addr && !offset) {
+> > > +             unsigned long faddr;
+> > > +             /*
+> > > +              * with -fpatchable-function-entry=2, the first 4 bytes is the
+> > > +              * LR saver, then the actual call insn. So ftrace location is
+> > > +              * always on the first 4 bytes offset.
+> > > +              */
+> > > +             faddr = ftrace_location_range(addr,
+> > > +                                           addr + AARCH64_INSN_SIZE);
+> > > +             if (faddr)
+> > > +                     return (kprobe_opcode_t *)faddr;
+> > > +     }
+> > > +     return (kprobe_opcode_t *)addr;
+> > > +}
+> > > +
+> > > +bool arch_kprobe_on_func_entry(unsigned long offset)
+> > > +{
+> > > +     return offset <= AARCH64_INSN_SIZE;
+> > > +}  
+> > 
+> > 
+> > Without this automatic change, we still can change the offset
+> > in upper layer.
+> 
+> If remove the two functions, kprobe on  _do_fork can't ride on
+> ftrace infrastructure, but kprobe on _do_fork+4 can. I'm not sure
+> whether this is reasonable. Every kprobe users on arm64 will need to
+> remember to pass an extra offset +4 to make use of kprobe_on_ftrace, could
+> we hide the "+4"?
+
+Yes, OK, as I said above, please hide +4. We will see the virtual
+"call" instruction (= "mov x9, lr; br <addr>") at the entry of ftraced
+function. :)
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
