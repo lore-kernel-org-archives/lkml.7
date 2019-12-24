@@ -2,132 +2,90 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3FFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE163C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8912071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTatrIDi"
+	by mail.kernel.org (Postfix) with ESMTP id AEB8920706
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 05:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfLXFs1 (ORCPT
+        id S1726193AbfLXFtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 00:48:27 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:35645 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfLXFs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:48:27 -0500
-Received: by mail-qv1-f67.google.com with SMTP id u10so7066370qvi.2;
-        Mon, 23 Dec 2019 21:48:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=chyirdOESrcyZYls0O4S3CM7+3ie23NclpnHj9Q8TZ8=;
-        b=QTatrIDibvsfq4PIGOcDpegqvGeyTx/uyaEzHEx87OT9YjFBlXGYfYtaSXgB63vHsr
-         P7WkavE0s+JmgT+ohyprAJLIXh1/A4tDK7Z58DCZ1Oi/r0qlHzB+5oSEOCZLspyrj3tb
-         w7PZTpQxl+XtGtUjxC3nemQ8Oq+U5fql2TvIkoMBtU5HpKmfH65tsV8rRWmSa5fEst0A
-         rmM2uGFabc6Cm23pE79n7ePT3/LdX2tfKcSwtBJ7z/J2pa8meORoVjuiBGmEc4wlTSUn
-         xLDlsapm3n8DOGqBAGIf1Ksjw0VTGJytiNfJzq5vlSL156SFmVvQvkCNY1O4i9Ch7AMG
-         V9rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=chyirdOESrcyZYls0O4S3CM7+3ie23NclpnHj9Q8TZ8=;
-        b=MTPEIPuREeRkyKq+IMr66NfRBYzHM3LeQ9dl8EtVBJOYfLI96TMcoLwSSj22/o4Ncs
-         W3Y+M1BEXLMukkgVRXcNlwMZq6Er3QJ5f9HxgXrsP9cT8MFNog4VE3IkyTbIT03CTeur
-         aVhe3HXdib+P8GUZjdY4gGX2uDz+flXgJmJU+azltsAGLBcM9pH1vjPChG3ytVyzkuq5
-         EVw6WMJiKoT6ktAdP4psBrEg4o5VHjijawTJorQP6xc8fcMyahzqsCF+jOVxL2t5sx+N
-         cnTgu7bJWu9Ebf1uY1xZnlrvZbrcp3vs10zMhhCDuUpNPsixGRHtxdgVLRyk6sy01EIC
-         pOvg==
-X-Gm-Message-State: APjAAAX7kUJS6Q4pZTQ0xo2GvLXvjTZg49X2WZyN16PLNPf2Em5sfsrO
-        QEN453FS3mSE6gZoQL1NUupOxZIGWN4mNQHZofQ=
-X-Google-Smtp-Source: APXvYqyrl1A6qr+sRbltNuz0bedudNwNw9G+4NxHPfCUvFEVv0wsJxTDoCR7jgt8O1rGoz8FIm9AYLmdrDYss5hRiMw=
-X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr27799530qvb.163.1577166505897;
- Mon, 23 Dec 2019 21:48:25 -0800 (PST)
+        Tue, 24 Dec 2019 00:49:12 -0500
+Received: from mga03.intel.com ([134.134.136.65]:50042 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfLXFtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 00:49:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 21:49:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,350,1571727600"; 
+   d="scan'208";a="242421618"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Dec 2019 21:49:09 -0800
+Received: from [10.226.38.1] (unknown [10.226.38.1])
+        by linux.intel.com (Postfix) with ESMTP id A898E58046E;
+        Mon, 23 Dec 2019 21:49:06 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com,
+        qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>,
+        clang-built-linux@googlegroups.com
+References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+ <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+ <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <c61235a7-969f-f534-e25f-e3990b9c8d11@linux.intel.com>
+Date:   Tue, 24 Dec 2019 13:49:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-8-kpsingh@chromium.org>
-In-Reply-To: <20191220154208.15895-8-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 23 Dec 2019 21:48:14 -0800
-Message-ID: <CAEf4BzZQYnSv+0nEkgt1kovXdtqMNv5hMhLdCWkJhUS-Lr3hyQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 07/13] bpf: lsm: Implement attach, detach and execution.
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> A user space program can attach an eBPF program by:
->
->   hook_fd = open("/sys/kernel/security/bpf/bprm_check_security",
->                  O_RDWR|O_CLOEXEC)
->   prog_fd = bpf(BPF_PROG_LOAD, ...)
->   bpf(BPF_PROG_ATTACH, hook_fd, prog_fd)
->
-> The following permissions are required to attach a program to a hook:
->
-> - CAP_SYS_ADMIN to load eBPF programs
-> - CAP_MAC_ADMIN (to update the policy of an LSM)
-> - The securityfs file being a valid hook and writable (O_RDWR)
->
-> When such an attach call is received, the attachment logic looks up the
-> dentry and appends the program to the bpf_prog_array.
->
-> The BPF programs are stored in a bpf_prog_array and writes to the array
-> are guarded by a mutex. The eBPF programs are executed as a part of the
-> LSM hook they are attached to. If any of the eBPF programs return
-> an error (-ENOPERM) the action represented by the hook is denied.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
 
->  MAINTAINERS             |   1 +
->  include/linux/bpf_lsm.h |  13 ++++
->  kernel/bpf/syscall.c    |   5 +-
->  security/bpf/lsm_fs.c   |  19 +++++-
->  security/bpf/ops.c      | 134 ++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 169 insertions(+), 3 deletions(-)
+On 24/12/2019 1:29 PM, Nathan Chancellor wrote:
+> On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
+>> From: rtanwar <rahul.tanwar@intel.com>
+>>
+>> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+>> Intel network processor SoC. It provides programming interfaces to control
+>> & configure all CPU & peripheral clocks. Add common clock framework based
+>> clock controller driver for CGU.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> Hi Rahul,
 >
+> The 0day bot reported this warning with clang with your patch, mind
+> taking a look at it since it seems like you will need to do a v2 based
+> on other comments?
+>
+> It seems like the check either needs to be something different or the
+> check should just be removed.
+>
+> Cheers,
+> Nathan
 
-[...]
+Hi Nathan,
+
+Yes sure, i will fix it in v3. I anyways need to post v3 to address review
+comments received from few reviewers. Thanks.
+
+Regards,
+Rahul
+
