@@ -2,125 +2,72 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A738C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4129C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C74206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7052D206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XMrsfNl1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TbW2PnNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfLXIaO (ORCPT
+        id S1726174AbfLXIjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 03:30:14 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:12999 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726076AbfLXIaO (ORCPT
+        Tue, 24 Dec 2019 03:39:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36174 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfLXIjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 03:30:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577176213; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ZRku7WBdBHXtA+hx/XFQP6Kg96ShJ6vt8/K+Drr0o4M=; b=XMrsfNl1tqvVPygbc111g2z0ALw6JS4rPqSNUrglsx6emhQhcCXgliI6/1LjSgRZPztTEiKk
- 53FzTX3HwAD8XFdrXj6MKH7CBmQIqDr3yv5VyrSva+zOQmRznqK1DxL9/oGJnXY/1qfAtxgy
- ygJ/CH6m/XPnA9igyoVMA4mHqKE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e01cc93.7fc3cdf25928-smtp-out-n03;
- Tue, 24 Dec 2019 08:30:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5D66FC433CB; Tue, 24 Dec 2019 08:30:11 +0000 (UTC)
-Received: from [10.204.79.159] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sramana)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65DB0C43383;
-        Tue, 24 Dec 2019 08:30:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65DB0C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sramana@codeaurora.org
-Subject: Re: [PATCH] arm64: Set SSBS for user threads while creation
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, will@kernel.org,
-        catalin.marinas@arm.com, maz@kernel.org, will.deacon@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1577106146-8999-1-git-send-email-sramana@codeaurora.org>
- <d490d6ce-8b07-ce79-4580-ac80f239312a@arm.com>
-From:   Srinivas Ramana <sramana@codeaurora.org>
-Message-ID: <3a50c921-b37b-ea3d-1b9e-87113d3d3fd3@codeaurora.org>
-Date:   Tue, 24 Dec 2019 14:00:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 24 Dec 2019 03:39:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7RtsRvXL/OT5R4i1kB+q/MHMarLarNN508wCa6Na1T8=; b=TbW2PnNl96TvsWRoVq0UW2DCA
+        HW25YfXwZ9rWtRWC8P0COso55C0BUlMfhiTw/Z28N63VExbQvrDMXAYrMDmLxx2qgPtKGdkdJX/VX
+        GiiBaBnX0lUnOw1HqKx6R9nztFV9iefTTbdyP9pixp0Od95nzNyUt1f4jnpqJO68VA4m6L4pi6bRa
+        Mk03gyBJGwJFjbDK4o6N6s0L6wTmMcYif+li6c5DpgkbrPhMdQmbpyS/6NnnZzenY5vxDUaJx9Mqg
+        yRsD7zv2T9o249dEW9i5YBfm40Q2UVVglbSsUnzWNRzGVGLVmzSrFqklUcnVcKS23cycT8k2V+iWX
+        9Nn6Knv+Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ijfii-0000wR-RB; Tue, 24 Dec 2019 08:39:12 +0000
+Date:   Tue, 24 Dec 2019 00:39:12 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, y2038@lists.linaro.org,
+        Brian Foster <bfoster@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs: rename compat_time_t to old_time32_t
+Message-ID: <20191224083912.GB1739@infradead.org>
+References: <20191218163954.296726-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <d490d6ce-8b07-ce79-4580-ac80f239312a@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218163954.296726-1-arnd@arndb.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/24/2019 12:36 PM, Anshuman Khandual wrote:
+On Wed, Dec 18, 2019 at 05:39:28PM +0100, Arnd Bergmann wrote:
+> The compat_time_t type has been removed everywhere else,
+> as most users rely on old_time32_t for both native and
+> compat mode handling of 32-bit time_t.
 > 
+> Remove the last one in xfs.
 > 
-> On 12/23/2019 06:32 PM, Srinivas Ramana wrote:
->> Current SSBS implementation takes care of setting the
->> SSBS bit in start_thread() for user threads. While this works
->> for tasks launched with fork/clone followed by execve, for cases
->> where userspace would just call fork (eg, Java applications) this
->> leaves the SSBS bit unset. This results in performance
->> regression for such tasks.
->>
->> It is understood that commit cbdf8a189a66 ("arm64: Force SSBS
->> on context switch") masks this issue, but that was done for a
->> different reason where heterogeneous CPUs(both SSBS supported
->> and unsupported) are present. It is appropriate to take care
->> of the SSBS bit for all threads while creation itself.
-> 
-> So this fixes the situation (i.e low performance) from the creation time
-> of a task with fork() which will never see a subsequent execve, till it
-> gets context switched for the very first time ?
-> 
-Yes, that is correct.
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
->>
->> Fixes: 8f04e8e6e29c ("arm64: ssbd: Add support for PSTATE.SSBS rather than trapping to EL3")
->> Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
->> ---
->>   arch/arm64/kernel/process.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
->> index 71f788cd2b18..a8f05cc39261 100644
->> --- a/arch/arm64/kernel/process.c
->> +++ b/arch/arm64/kernel/process.c
->> @@ -399,6 +399,13 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
->>   		 */
->>   		if (clone_flags & CLONE_SETTLS)
->>   			p->thread.uw.tp_value = childregs->regs[3];
->> +
->> +		if (arm64_get_ssbd_state() != ARM64_SSBD_FORCE_ENABLE) {
->> +			if (is_compat_thread(task_thread_info(p)))
->> +				set_compat_ssbs_bit(childregs);
->> +			else
->> +				set_ssbs_bit(childregs);
->> +		}
->>   	} else {
->>   		memset(childregs, 0, sizeof(struct pt_regs));
->>   		childregs->pstate = PSR_MODE_EL1h;
->>
+Looks good,
 
-Thanks,
--- Srinivas R
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation
-Center, Inc., is a member of Code Aurora Forum, a Linux Foundation
-Collaborative Project
+Reviewed-by: Christoph Hellwig <hch@lst.de>
