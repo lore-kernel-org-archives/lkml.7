@@ -2,303 +2,534 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8D6C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E54AC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258EC20409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="NW8OMOp7";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="TW02clq0"
+	by mail.kernel.org (Postfix) with ESMTP id 488EE2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 12:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbfLXM3y (ORCPT
+        id S1726316AbfLXMaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 07:29:54 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:19576 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbfLXM3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 07:29:53 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBOCRwmD016101;
-        Tue, 24 Dec 2019 04:29:44 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=Pe3XYDkeuXN8Pq9lro+ZrhrsBYl9iS25ZNNeq9BXAg0=;
- b=NW8OMOp78ZhBrKhVoVrGW0LBh9uPwftXDMLzcio5lebUntkxecs5ZzE2aM1Zs/ju8Akm
- b1v6+M5gjsTGW+wzIw+OB6tm62r2K3HvZ5/6YFlbgLuoHjAZcrZiILlaYdrHQO3SP8ZR
- 9X+qJpBSF81VM07KdM1lBehPFexFoVvKfIsv9Bs+JvrJtazjvpZ/HvZWnwETC3F9+WRZ
- bw6cvp6ctJ7LqC2nWNEXi985UJmxqJS6n6tCxocE+lqbxRbqmIGpHUZzFGpM6veOVCEF
- ruOPUgYqhiUK9lMOq2H3ua93O7LIgRmrpFZokSs26ioQ8dv3AjHdFnpQd68lC3ugDPzK PA== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2x1gu50611-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Dec 2019 04:29:43 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DpOxRYpPE0W8M8M3JbOuNMR6URK3ApoS9f7WPaGPu62ZEcmUWddVcOQNmtUe50a+vqphJG+zjoHkhGJEa3hlIxmfEt0egLtkYBfx0qN1TNk5KmkgGNJV6QSZ7KjeSHwCIsmBWJWI7f2vKv9GJ8THy2HS5Vah7SXlGvlTJlQ5YkgGCaIIiD6UeF8uUhG2mEON5ITwV+Z+vcqtEyZeqceYDNeLBosDIavg1gkJwaG5hDNOOt+lmWB8d6WEohht3jyZuxfmxcDTQWzQsovveVnoEgOPSylbz145z24SDjgXnd4r1eun7HcI/1OmsbPlNv6coJLneUVqvGXT9q7jO27xsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pe3XYDkeuXN8Pq9lro+ZrhrsBYl9iS25ZNNeq9BXAg0=;
- b=SC0TL0ashuJH5X5bOez3BrvnApL9jPqKeQtt0H6YMbIIZcbxIRoeucegzZR4zsnC0uTemA58o7ygxNH/RlIC9nVui9i7qYMNwUjTKYnh0M2YrqDVgRBhCFflkNA1LbI/tCFONtlcKdI5I/1OnkKE+BxXXRoZwbr9V8iHUPo6JdTqu2AbBJAexABN5mqQ3cW+OkPPDk/macb/uzT5NBGV4Os8ExbJxrmYyut5ASyF50vhAQ1uJY3W3DImwBCwxwkUY6u0V6MntAHnDJdT9/KwYonNE1vnJefyc1UNi0otvVw8Ap8tN1aUvkICED86EUDkxJLbxuXhgxMETwkq1Zm50w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pe3XYDkeuXN8Pq9lro+ZrhrsBYl9iS25ZNNeq9BXAg0=;
- b=TW02clq0iNlX1chFCoEGRoxGGaJLJu2GCCSLLVZpxcKUXOI+WxxKkZZ/aNwvf/ZfOVC8sPAoVWLZVCYrl8yjKBtjMJRiD4Ai5dBNzqHbBis/YSAjL81JiFjoVzkhvFYdErQruIg2wcF1cqbew0MRveE3iVEdqXCqFhjRHBhZ2QY=
-Received: from BYAPR07MB5110.namprd07.prod.outlook.com (20.176.255.14) by
- BYAPR07MB4728.namprd07.prod.outlook.com (52.135.202.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Tue, 24 Dec 2019 12:29:40 +0000
-Received: from BYAPR07MB5110.namprd07.prod.outlook.com
- ([fe80::e4c9:23b3:78c1:acdd]) by BYAPR07MB5110.namprd07.prod.outlook.com
- ([fe80::e4c9:23b3:78c1:acdd%6]) with mapi id 15.20.2559.017; Tue, 24 Dec 2019
- 12:29:40 +0000
-From:   Yuti Suresh Amonkar <yamonkar@cadence.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "praneeth@ti.com" <praneeth@ti.com>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        "jsarha@ti.com" <jsarha@ti.com>, Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        "kishon@ti.com" <kishon@ti.com>
-Subject: RE: [PATCH v2] phy: Add DisplayPort configuration options
-Thread-Topic: [PATCH v2] phy: Add DisplayPort configuration options
-Thread-Index: AQHVuZarlyuLHgdLs0ymbXdtACZzt6fH9ueAgAE9e1A=
-Date:   Tue, 24 Dec 2019 12:29:40 +0000
-Message-ID: <BYAPR07MB51108A47A453B456F5F0D233D2290@BYAPR07MB5110.namprd07.prod.outlook.com>
-References: <1577108473-29294-1-git-send-email-yamonkar@cadence.com>
- <20191223171849.yvofolswgvyfklry@hendrix.home>
-In-Reply-To: <20191223171849.yvofolswgvyfklry@hendrix.home>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNceWFtb25rYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0wYmYwZTMxZi0yNjQ5LTExZWEtYWU3My0xNGFiYzUzOWE4NjNcYW1lLXRlc3RcMGJmMGUzMjAtMjY0OS0xMWVhLWFlNzMtMTRhYmM1MzlhODYzYm9keS50eHQiIHN6PSI1NjUxIiB0PSIxMzIyMTY2NDE3NzM0NjkzMjgiIGg9IkZuYkg3TGlxUFhpU29XbkxXczl4VCtCcWJDVT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
-x-originating-ip: [14.143.9.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57abde6d-9c1f-4172-ceb0-08d7886cf2a8
-x-ms-traffictypediagnostic: BYAPR07MB4728:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR07MB47282A37B1336FEC33F27611D2290@BYAPR07MB4728.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0261CCEEDF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(36092001)(199004)(189003)(13464003)(66446008)(9686003)(2906002)(55016002)(86362001)(6916009)(7696005)(64756008)(76116006)(66476007)(66556008)(66946007)(55236004)(478600001)(71200400001)(33656002)(6506007)(53546011)(186003)(52536014)(316002)(26005)(4326008)(54906003)(8936002)(81166006)(81156014)(8676002)(966005)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB4728;H:BYAPR07MB5110.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6iI9wyAB7KTdt3DUMtw/74RZHrZx6R22IrwCp4FO2rmSLzWhSHKEvV1BXYkfOhOUOk1DoOEHgLt44G6O9GTOIm+n7RTuUEezv5R0dtq6+ea8tOnVJtJYGpMDb/8f+UaG0jb19B7bBG4xchLZinuZaSAlQbxnQUE8H7J5AAvl4MKDIII69meFT45zAx3i/X3ouJvTM6B8ax6A9fcH4E/3k+wqmxcTh0DMd7eItqkNXrTBqFc6oYedS87hk1IDEKh0MrtfReFyxJOVRW/W3Wo7lS2PEuASHXOM96RwXdFO4GzhV/FC/IDBKTiWnuc1Uup3bXi2rvGMFfc4I4DjC97joTjmASBB9xTvbv4OrwRIUUU3KlJFBZJfFY4UMETOf7KAmc0rkq070nMCaWfUzUWECFGeQbnw/sBHNk0oIXccoYIBg9n/4Rh+WJun8iBZ9/+UAHwgzdFDvekLanDkrovJ+DLrhFxEUKHlYtWX1qFTdiJmsxljxvEQHZ7p2TaKZhHDR4DUxbzE/xmdQjM3YXBByqayn/yOdXqaaWcXW9P926xwlL773bNrq4jYe+CPHlj1
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 24 Dec 2019 07:30:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:51766 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbfLXMaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 07:30:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 237BD1FB;
+        Tue, 24 Dec 2019 04:30:18 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 666873F534;
+        Tue, 24 Dec 2019 04:30:17 -0800 (PST)
+Date:   Tue, 24 Dec 2019 12:30:15 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 12/18] KVM: arm64: add a new vcpu device control group
+ for SPEv1
+Message-ID: <20191224123015.GJ42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+ <20191220143025.33853-13-andrew.murray@arm.com>
+ <86a77kipw7.wl-maz@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57abde6d-9c1f-4172-ceb0-08d7886cf2a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2019 12:29:40.2520
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iL2d6qXZJ7X2Y0VAfpYDzwfAKNdpL5oLLKqBCJq86CmvDtoyVxisoS2SjT3UZ0oCc4HheX0z+lt6zwcpWfraYKKZM7/sJINX9l2aYaR84fk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4728
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-24_03:2019-12-24,2019-12-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912240110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86a77kipw7.wl-maz@kernel.org>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-> -----Original Message-----
-> From: Maxime Ripard <maxime@cerno.tech>
-> Sent: Monday, December 23, 2019 22:49
-> To: Yuti Suresh Amonkar <yamonkar@cadence.com>
-> Cc: linux-kernel@vger.kernel.org; dri-devel@lists.freedesktop.org;
-> praneeth@ti.com; tomi.valkeinen@ti.com; jsarha@ti.com; Milind Parab
-> <mparab@cadence.com>; Swapnil Kashinath Jakhade
-> <sjakhade@cadence.com>
-> Subject: Re: [PATCH v2] phy: Add DisplayPort configuration options
->=20
-> EXTERNAL MAIL
->=20
->=20
-> Hi,
->=20
-> Please note that I don't have access to the displayPort spec, so I'll onl=
-y
-> comment on the content of that patch, not whether it's complete or not.
->=20
-> On Mon, Dec 23, 2019 at 02:41:13PM +0100, Yuti Amonkar wrote:
-> > Allow DisplayPort PHYs to be configured through the generic functions
-> > through a custom structure added to the generic union.
-> > The configuration structure is used for reconfiguration of DisplayPort
-> > PHYs during link training operation.
-> >
-> > The parameters added here are the ones defined in the DisplayPort spec
-> > 1.4 which include link rate, number of lanes, voltage swing and
-> > pre-emphasis.
-> >
-> > Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+On Sun, Dec 22, 2019 at 11:03:04AM +0000, Marc Zyngier wrote:
+> On Fri, 20 Dec 2019 14:30:19 +0000,
+> Andrew Murray <andrew.murray@arm.com> wrote:
+> > 
+> > From: Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> > To configure the virtual SPEv1 overflow interrupt number, we use the
+> > vcpu kvm_device ioctl, encapsulating the KVM_ARM_VCPU_SPE_V1_IRQ
+> > attribute within the KVM_ARM_VCPU_SPE_V1_CTRL group.
+> > 
+> > After configuring the SPEv1, call the vcpu ioctl with attribute
+> > KVM_ARM_VCPU_SPE_V1_INIT to initialize the SPEv1.
+> > 
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 > > ---
-> >
-> > This patch was a part of [1] series earlier but we think that it needs
-> > to have a separate attention of the reviewers. Also as both [1] & [2]
-> > are dependent on this patch, our sincere request to reviewers to have
-> > a faster review of this patch.
-> >
-> > [1]
-> >
-> > https://lkml.org/lkml/2019/12/11/455
-> >
-> > [2]
-> >
-> > https://patchwork.kernel.org/cover/11271191/
-> >
-> >  include/linux/phy/phy-dp.h | 95
-> ++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/phy/phy.h    |  4 ++
-> >  2 files changed, 99 insertions(+)
-> >  create mode 100644 include/linux/phy/phy-dp.h
-> >
-> > diff --git a/include/linux/phy/phy-dp.h b/include/linux/phy/phy-dp.h
-> > new file mode 100644 index 0000000..18cad23
+> >  Documentation/virt/kvm/devices/vcpu.txt |  28 ++++
+> >  arch/arm64/include/asm/kvm_host.h       |   2 +-
+> >  arch/arm64/include/uapi/asm/kvm.h       |   4 +
+> >  arch/arm64/kvm/Makefile                 |   1 +
+> >  arch/arm64/kvm/guest.c                  |   6 +
+> >  arch/arm64/kvm/reset.c                  |   3 +
+> >  include/kvm/arm_spe.h                   |  45 +++++++
+> >  include/uapi/linux/kvm.h                |   1 +
+> >  virt/kvm/arm/arm.c                      |   1 +
+> >  virt/kvm/arm/spe.c                      | 163 ++++++++++++++++++++++++
+> >  10 files changed, 253 insertions(+), 1 deletion(-)
+> >  create mode 100644 virt/kvm/arm/spe.c
+> > 
+> > diff --git a/Documentation/virt/kvm/devices/vcpu.txt b/Documentation/virt/kvm/devices/vcpu.txt
+> > index 6f3bd64a05b0..cefad056d677 100644
+> > --- a/Documentation/virt/kvm/devices/vcpu.txt
+> > +++ b/Documentation/virt/kvm/devices/vcpu.txt
+> > @@ -74,3 +74,31 @@ Specifies the base address of the stolen time structure for this VCPU. The
+> >  base address must be 64 byte aligned and exist within a valid guest memory
+> >  region. See Documentation/virt/kvm/arm/pvtime.txt for more information
+> >  including the layout of the stolen time structure.
+> > +
+> > +4. GROUP: KVM_ARM_VCPU_SPE_V1_CTRL
+> > +Architectures: ARM64
+> > +
+> > +4.1. ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_IRQ
+> > +Parameters: in kvm_device_attr.addr the address for SPE buffer overflow interrupt
+> > +	    is a pointer to an int
+> > +Returns: -EBUSY: The SPE overflow interrupt is already set
+> > +         -ENXIO: The overflow interrupt not set when attempting to get it
+> > +         -ENODEV: SPEv1 not supported
+> > +         -EINVAL: Invalid SPE overflow interrupt number supplied or
+> > +                  trying to set the IRQ number without using an in-kernel
+> > +                  irqchip.
+> > +
+> > +A value describing the SPEv1 (Statistical Profiling Extension v1) overflow
+> > +interrupt number for this vcpu. This interrupt should be PPI and the interrupt
+> > +type and number must be same for each vcpu.
+> > +
+> > +4.2 ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_INIT
+> > +Parameters: no additional parameter in kvm_device_attr.addr
+> > +Returns: -ENODEV: SPEv1 not supported or GIC not initialized
+> > +         -ENXIO: SPEv1 not properly configured or in-kernel irqchip not
+> > +                 configured as required prior to calling this attribute
+> > +         -EBUSY: SPEv1 already initialized
+> > +
+> > +Request the initialization of the SPEv1.  If using the SPEv1 with an in-kernel
+> > +virtual GIC implementation, this must be done after initializing the in-kernel
+> > +irqchip.
+> > diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> > index 333c6491bec7..d00f450dc4cd 100644
+> > --- a/arch/arm64/include/asm/kvm_host.h
+> > +++ b/arch/arm64/include/asm/kvm_host.h
+> > @@ -39,7 +39,7 @@
+> >  
+> >  #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+> >  
+> > -#define KVM_VCPU_MAX_FEATURES 7
+> > +#define KVM_VCPU_MAX_FEATURES 8
+> >  
+> >  #define KVM_REQ_SLEEP \
+> >  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+> > diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+> > index 820e5751ada7..905a73f30079 100644
+> > --- a/arch/arm64/include/uapi/asm/kvm.h
+> > +++ b/arch/arm64/include/uapi/asm/kvm.h
+> > @@ -106,6 +106,7 @@ struct kvm_regs {
+> >  #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
+> >  #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
+> >  #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
+> > +#define KVM_ARM_VCPU_SPE_V1		7 /* Support guest SPEv1 */
+> >  
+> >  struct kvm_vcpu_init {
+> >  	__u32 target;
+> > @@ -326,6 +327,9 @@ struct kvm_vcpu_events {
+> >  #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
+> >  #define KVM_ARM_VCPU_PVTIME_CTRL	2
+> >  #define   KVM_ARM_VCPU_PVTIME_IPA	0
+> > +#define KVM_ARM_VCPU_SPE_V1_CTRL	3
+> > +#define   KVM_ARM_VCPU_SPE_V1_IRQ	0
+> > +#define   KVM_ARM_VCPU_SPE_V1_INIT	1
+> >  
+> >  /* KVM_IRQ_LINE irq field index values */
+> >  #define KVM_ARM_IRQ_VCPU2_SHIFT		28
+> > diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> > index 5ffbdc39e780..526f3bf09321 100644
+> > --- a/arch/arm64/kvm/Makefile
+> > +++ b/arch/arm64/kvm/Makefile
+> > @@ -37,3 +37,4 @@ kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/vgic/vgic-debug.o
+> >  kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/irqchip.o
+> >  kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/arch_timer.o
+> >  kvm-$(CONFIG_KVM_ARM_PMU) += $(KVM)/arm/pmu.o
+> > +kvm-$(CONFIG_KVM_ARM_SPE) += $(KVM)/arm/spe.o
+> > diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> > index 2fff06114a8f..50fea538b8bd 100644
+> > --- a/arch/arm64/kvm/guest.c
+> > +++ b/arch/arm64/kvm/guest.c
+> > @@ -874,6 +874,8 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
+> >  		break;
+> >  	case KVM_ARM_VCPU_PVTIME_CTRL:
+> >  		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
+> > +	case KVM_ARM_VCPU_SPE_V1_CTRL:
+> > +		ret = kvm_arm_spe_v1_set_attr(vcpu, attr);
+> >  		break;
+> >  	default:
+> >  		ret = -ENXIO;
+> > @@ -897,6 +899,8 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
+> >  		break;
+> >  	case KVM_ARM_VCPU_PVTIME_CTRL:
+> >  		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
+> > +	case KVM_ARM_VCPU_SPE_V1_CTRL:
+> > +		ret = kvm_arm_spe_v1_get_attr(vcpu, attr);
+> >  		break;
+> >  	default:
+> >  		ret = -ENXIO;
+> > @@ -920,6 +924,8 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
+> >  		break;
+> >  	case KVM_ARM_VCPU_PVTIME_CTRL:
+> >  		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
+> > +	case KVM_ARM_VCPU_SPE_V1_CTRL:
+> > +		ret = kvm_arm_spe_v1_has_attr(vcpu, attr);
+> >  		break;
+> >  	default:
+> >  		ret = -ENXIO;
+> > diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> > index f4a8ae918827..cf17aff1489d 100644
+> > --- a/arch/arm64/kvm/reset.c
+> > +++ b/arch/arm64/kvm/reset.c
+> > @@ -80,6 +80,9 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+> >  	case KVM_CAP_ARM_INJECT_SERROR_ESR:
+> >  		r = cpus_have_const_cap(ARM64_HAS_RAS_EXTN);
+> >  		break;
+> > +	case KVM_CAP_ARM_SPE_V1:
+> > +		r = kvm_arm_support_spe_v1();
+> > +		break;
+> >  	case KVM_CAP_SET_GUEST_DEBUG:
+> >  	case KVM_CAP_VCPU_ATTRIBUTES:
+> >  		r = 1;
+> > diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
+> > index 30c40b1bc385..d1f3c564dfd0 100644
+> > --- a/include/kvm/arm_spe.h
+> > +++ b/include/kvm/arm_spe.h
+> > @@ -8,6 +8,7 @@
+> >  
+> >  #include <uapi/linux/kvm.h>
+> >  #include <linux/kvm_host.h>
+> > +#include <linux/cpufeature.h>
+> >  
+> >  struct kvm_spe {
+> >  	int irq_num;
+> > @@ -18,8 +19,52 @@ struct kvm_spe {
+> >  
+> >  #ifdef CONFIG_KVM_ARM_SPE
+> >  #define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
+> > +#define kvm_arm_spe_irq_initialized(v)		\
+> > +	((v)->arch.spe.irq_num >= VGIC_NR_SGIS &&	\
+> > +	(v)->arch.spe.irq_num <= VGIC_MAX_PRIVATE)
+> 
+> This is buggy, as it accepts 32 as a valid interrupt (which obviously
+> isn't a PPI). Having fixed it, this is a duplicate of irq_is_ppi().
+
+I'll replace that line with irq_is_ppi.
+
+> 
+> And that's where we can finally confirm that 'irq_num' is a GIC
+> INTID. Please name it as such.
+
+OK.
+
+
+> 
+> > +
+> > +static inline bool kvm_arm_support_spe_v1(void)
+> > +{
+> > +	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> > +
+> > +	return !!cpuid_feature_extract_unsigned_field(dfr0,
+> > +						      ID_AA64DFR0_PMSVER_SHIFT);
+> > +}
+> > +
+> > +int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
+> > +			    struct kvm_device_attr *attr);
+> > +int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
+> > +			    struct kvm_device_attr *attr);
+> > +int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
+> > +			    struct kvm_device_attr *attr);
+> > +int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu);
+> >  #else
+> >  #define kvm_arm_spe_v1_ready(v)		(false)
+> > +#define kvm_arm_support_spe_v1()	(false)
+> > +#define kvm_arm_spe_irq_initialized(v)	(false)
+> > +
+> > +static inline int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
+> > +					  struct kvm_device_attr *attr)
+> > +{
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +static inline int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
+> > +					  struct kvm_device_attr *attr)
+> > +{
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +static inline int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
+> > +					  struct kvm_device_attr *attr)
+> > +{
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +static inline int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
+> > +{
+> > +	return 0;
+> > +}
+> >  #endif /* CONFIG_KVM_ARM_SPE */
+> >  
+> >  #endif /* __ASM_ARM_KVM_SPE_H */
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index f0a16b4adbbd..1a362c230e4a 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -1009,6 +1009,7 @@ struct kvm_ppc_resize_hpt {
+> >  #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
+> >  #define KVM_CAP_ARM_NISV_TO_USER 177
+> >  #define KVM_CAP_ARM_INJECT_EXT_DABT 178
+> > +#define KVM_CAP_ARM_SPE_V1 179
+> >  
+> >  #ifdef KVM_CAP_IRQ_ROUTING
+> >  
+> > diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> > index 12e0280291ce..340d2388ee2c 100644
+> > --- a/virt/kvm/arm/arm.c
+> > +++ b/virt/kvm/arm/arm.c
+> > @@ -22,6 +22,7 @@
+> >  #include <trace/events/kvm.h>
+> >  #include <kvm/arm_pmu.h>
+> >  #include <kvm/arm_psci.h>
+> > +#include <kvm/arm_spe.h>
+> >  
+> >  #define CREATE_TRACE_POINTS
+> >  #include "trace.h"
+> > diff --git a/virt/kvm/arm/spe.c b/virt/kvm/arm/spe.c
+> > new file mode 100644
+> > index 000000000000..83ac2cce2cc3
 > > --- /dev/null
-> > +++ b/include/linux/phy/phy-dp.h
-> > @@ -0,0 +1,95 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +++ b/virt/kvm/arm/spe.c
+> > @@ -0,0 +1,163 @@
+> > +// SPDX-License-Identifier: GPL-2.0
 > > +/*
-> > + * Copyright (C) 2019 Cadence Design Systems Inc.
+> > + * Copyright (C) 2019 ARM Ltd.
 > > + */
 > > +
-> > +#ifndef __PHY_DP_H_
-> > +#define __PHY_DP_H_
+> > +#include <linux/cpu.h>
+> > +#include <linux/kvm.h>
+> > +#include <linux/kvm_host.h>
+> > +#include <linux/uaccess.h>
+> > +#include <asm/kvm_emulate.h>
+> > +#include <kvm/arm_spe.h>
+> > +#include <kvm/arm_vgic.h>
 > > +
-> > +#include <linux/types.h>
+> > +int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
+> > +{
+> > +	if (!vcpu->arch.spe.created)
+> > +		return 0;
+> 
+> Shouldn't it be an error to enable something that doesn't exist?
+
+It looks like this has adopted the same approach as kvm_arm_pmu_v3_enable. In
+kvm_vcpu_first_run_init we attempt to enable pmu v3 and spe - without first
+checking they exist.
+
+
+> 
 > > +
-> > +/**
-> > + * struct phy_configure_opts_dp - DisplayPort PHY configuration set
-> > + *
-> > + * This structure is used to represent the configuration state of a
-> > + * DisplayPort phy.
+> > +	/*
+> > +	 * A valid interrupt configuration for the SPE is either to have a
+> 
+> either?
+> 
+> > +	 * properly configured interrupt number and using an in-kernel irqchip.
+> > +	 */
+> > +	if (irqchip_in_kernel(vcpu->kvm)) {
+> > +		int irq = vcpu->arch.spe.irq_num;
+> > +
+> > +		if (!kvm_arm_spe_irq_initialized(vcpu))
+> > +			return -EINVAL;
+> > +
+> > +		if (!irq_is_ppi(irq))
+> > +			return -EINVAL;
+> > +	}
+> > +
+> > +	vcpu->arch.spe.ready = true;
+> 
+> And SPE is then ready even when we don't have an in-kernel irqchip?
+
+I recall in Sudeep's previous patchset that you suggested we don't support
+SPE without an in-kernel irqchip. I'll update to reflect that feedback.
+
+
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int kvm_arm_spe_v1_init(struct kvm_vcpu *vcpu)
+> > +{
+> > +	if (!kvm_arm_support_spe_v1())
+> > +		return -ENODEV;
+> > +
+> > +	if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
+> > +		return -ENXIO;
+> > +
+> > +	if (vcpu->arch.spe.created)
+> > +		return -EBUSY;
+> > +
+> > +	if (irqchip_in_kernel(vcpu->kvm)) {
+> > +		int ret;
+> > +
+> > +		/*
+> > +		 * If using the SPE with an in-kernel virtual GIC
+> > +		 * implementation, we require the GIC to be already
+> > +		 * initialized when initializing the SPE.
+> > +		 */
+> > +		if (!vgic_initialized(vcpu->kvm))
+> > +			return -ENODEV;
+> > +
+> > +		ret = kvm_vgic_set_owner(vcpu, vcpu->arch.spe.irq_num,
+> > +					 &vcpu->arch.spe);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	vcpu->arch.spe.created = true;
+> 
+> Same problem.
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * For one VM the interrupt type must be same for each vcpu.
+> > + * As a PPI, the interrupt number is the same for all vcpus,
+> > + * while as an SPI it must be a separate number per vcpu.
+> 
+> Why do you want to support SPIs at all? And it isn't what
+> kvm_arm_spe_irq_initialized claims to be doing.
+
+I don't think we do. I think it's expected that the SPE interrupt is a PPI,
+at least that's what the SPE driver expects. I'll simplify this.
+
+
+> 
 > > + */
-> > +struct phy_configure_opts_dp {
-> > +	/**
-> > +	 * @link_rate:
-> > +	 *
-> > +	 * Link Rate, in Mb/s, of the main link.
-> > +	 *
-> > +	 * Allowed values: 1620, 2160, 2430, 2700, 3240, 4320, 5400, 8100
-> Mb/s
-> > +	 */
-> > +	unsigned int link_rate;
+> > +static bool spe_irq_is_valid(struct kvm *kvm, int irq)
+> > +{
+> > +	int i;
+> > +	struct kvm_vcpu *vcpu;
 > > +
-> > +	/**
-> > +	 * @lanes:
-> > +	 *
-> > +	 * Number of active, consecutive, data lanes, starting from
-> > +	 * lane 0, used for the transmissions on main link.
-> > +	 *
-> > +	 * Allowed values: 1, 2, 4
-> > +	 */
-> > +	unsigned int lanes;
+> > +	kvm_for_each_vcpu(i, vcpu, kvm) {
+> > +		if (!kvm_arm_spe_irq_initialized(vcpu))
+> > +			continue;
 > > +
-> > +	/**
-> > +	 * @voltage:
-> > +	 *
-> > +	 * Voltage swing levels, as specified by DisplayPort specification,
-> > +	 * to be used by particular lanes. One value per lane.
-> > +	 * voltage[0] is for lane 0, voltage[1] is for lane 1, etc.
-> > +	 *
-> > +	 * Maximum value: 3
-> > +	 */
-> > +	unsigned int voltage[4];
+> > +		if (vcpu->arch.spe.irq_num != irq)
+> > +			return false;
+> > +	}
 > > +
-> > +	/**
-> > +	 * @pre:
-> > +	 *
-> > +	 * Pre-emphasis levels, as specified by DisplayPort specification, to=
- be
-> > +	 * used by particular lanes. One value per lane.
-> > +	 *
-> > +	 * Maximum value: 3
-> > +	 */
-> > +	unsigned int pre[4];
+> > +	return true;
+> > +}
 > > +
-> > +	/**
-> > +	 * @ssc:
-> > +	 *
-> > +	 * Flag indicating, whether or not to enable spread-spectrum
-> clocking.
-> > +	 *
-> > +	 */
-> > +	u8 ssc : 1;
+> > +int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
+> > +{
+> > +	switch (attr->attr) {
+> > +	case KVM_ARM_VCPU_SPE_V1_IRQ: {
+> > +		int __user *uaddr = (int __user *)(long)attr->addr;
+> > +		int irq;
 > > +
-> > +	/**
-> > +	 * @set_rate:
-> > +	 *
-> > +	 * Flag indicating, whether or not reconfigure link rate and SSC to
-> > +	 * requested values.
-> > +	 *
-> > +	 */
-> > +	u8 set_rate : 1;
+> > +		if (!irqchip_in_kernel(vcpu->kvm))
+> > +			return -EINVAL;
+> 
+> Here, you forbid setting the IRQ for a VM that doesn't have an
+> in-kernel irqchip. And yet below, you're happy to initialise it.
+> 
 > > +
-> > +	/**
-> > +	 * @set_lanes:
-> > +	 *
-> > +	 * Flag indicating, whether or not reconfigure lane count to
-> > +	 * requested value.
-> > +	 *
-> > +	 */
-> > +	u8 set_lanes : 1;
+> > +		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
+> > +			return -ENODEV;
 > > +
-> > +	/**
-> > +	 * @set_voltages:
-> > +	 *
-> > +	 * Flag indicating, whether or not reconfigure voltage swing
-> > +	 * and pre-emphasis to requested values. Only lanes specified
-> > +	 * by "lanes" parameter will be affected.
-> > +	 *
-> > +	 */
-> > +	u8 set_voltages : 1;
->=20
-> I'm not quite sure what these flags are supposed to be doing, or what use=
--
-> cases they cover. The current API is using validate to make sure that we =
-can
-> have a handshake between the caller and its PHY and must never apply the
-> configuration, and configure must always apply the configuration. These
-> flags look redundant.
->=20
-> Maxime
+> > +		if (get_user(irq, uaddr))
+> > +			return -EFAULT;
+> > +
+> > +		/* The SPE overflow interrupt can be a PPI only */
+> > +		if (!(irq_is_ppi(irq)))
+> > +			return -EINVAL;
+> 
+> Ah, so you do know about irq_is_ppi()...
+> 
+> > +
+> > +		if (!spe_irq_is_valid(vcpu->kvm, irq))
+> 
+> But why don't you fold the interrupt validity checks in this helper?
 
-These flags are used to reconfigure the link during the link training proce=
-dure as described in DisplayPort spec. In this procedure , we may need to c=
-onfigure only subset of parameters (VS, Pre-emphasis, link rate and num of =
-lanes) depending on different phases. e.g. At one stage, we may need to con=
-figure only Voltage swing and Pre-emphasis keeping number of lanes and link=
- rate intact(set_voltages=3Dtrue), while at other stage, we may need to con=
-figure all parameters. We use the flags to determine which parameter is upd=
-ated during link training. Using separate flags for this provides control t=
-o upper layer.
-I am not sure how to use validate to achieve this. As per my understanding =
-validate is used to verify if set of parameters can be handled by PHY.
+That makes sense.
 
-Thanks & Regards,
-Yuti Amonkar
+
+> 
+> > +			return -EINVAL;
+> > +
+> > +		if (kvm_arm_spe_irq_initialized(vcpu))
+> > +			return -EBUSY;
+> > +
+> > +		kvm_debug("Set kvm ARM SPE irq: %d\n", irq);
+> > +		vcpu->arch.spe.irq_num = irq;
+> > +		return 0;
+> > +	}
+> > +	case KVM_ARM_VCPU_SPE_V1_INIT:
+> > +		return kvm_arm_spe_v1_init(vcpu);
+> > +	}
+> > +
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
+> > +{
+> > +	switch (attr->attr) {
+> > +	case KVM_ARM_VCPU_SPE_V1_IRQ: {
+> > +		int __user *uaddr = (int __user *)(long)attr->addr;
+> > +		int irq;
+> > +
+> > +		if (!irqchip_in_kernel(vcpu->kvm))
+> > +			return -EINVAL;
+> > +
+> > +		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
+> > +			return -ENODEV;
+> > +
+> > +		if (!kvm_arm_spe_irq_initialized(vcpu))
+> > +			return -ENXIO;
+> > +
+> > +		irq = vcpu->arch.spe.irq_num;
+> > +		return put_user(irq, uaddr);
+> > +	}
+> > +	}
+> > +
+> > +	return -ENXIO;
+> > +}
+> > +
+> > +int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
+> > +{
+> > +	switch (attr->attr) {
+> > +	case KVM_ARM_VCPU_SPE_V1_IRQ:
+> > +	case KVM_ARM_VCPU_SPE_V1_INIT:
+> > +		if (kvm_arm_support_spe_v1() &&
+> > +		    test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
+> > +			return 0;
+> 
+> It is interesting that all the user interface is designed with the
+> feature being optional in mind, and yet you've removed all the
+> necessary handling code.
+
+Yeah I broke that, I'll fix it.
+
+Thanks,
+
+Andrew Murray
+
+
+> 
+> 	M.
+> 
+> -- 
+> Jazz is not dead, it just smells funny.
