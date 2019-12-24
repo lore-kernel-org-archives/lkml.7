@@ -2,161 +2,91 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FBDC2D0CF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21557C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2835B2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577186434;
-	bh=5op17jsWx2Ma+YJRFe+2cUP0MpYQx2k0rHUHDvFPe2I=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=LDduFmbc1FyNnAzKlEO/K2wo5wXZXFaFbkRdwBs8UDSnYl407WIXAmy+zGXuePB5V
-	 7CM5Cp7EuQEHdeLCNE79ftYXd5PXVpVY2IC9fC1lBcvuMgremFmmCaGTpJvM3n1xO8
-	 VMvOJZtQ1ptPGHGkFQYL4RcgfjMcSDW/wzwno+Uw=
+	by mail.kernel.org (Postfix) with ESMTP id DD693206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 11:22:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="H2b2ofvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfLXLUd (ORCPT
+        id S1726244AbfLXLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:20:33 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:38264 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbfLXLUc (ORCPT
+        Tue, 24 Dec 2019 06:22:22 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:32831 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfLXLWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:20:32 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ijiEj-0001Gs-CF; Tue, 24 Dec 2019 12:20:25 +0100
-To:     Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity  for managed interrupt
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 24 Dec 2019 06:22:22 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r21so17708914edq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 03:22:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N+JpIu3vYJU8a5Gq7Z5l9BFQkWLO3Nuw3pvsMvETS7c=;
+        b=H2b2ofvx22QIFqPfWb/57Cgo4+6EYRM3UmWRLglTZC78WjixSKQRStrNRVkP41+J3i
+         D9rt2R9ktslIGTdHcHmxVtFRgeRAodsryfwssz/uNBn9qP1aW+pFoeFzxj8r4J954YCj
+         /9Bxje/ma4Hcq9VmUqFpcK3BtabstmdU11pb09O9By5MFwQUYXWRZ4hArq/sDJuE7e6d
+         jdrO8GqEyfSdl6I/YpBFOU6Cr1beioNmDtweTzR+t8T59BJIq3R5aSjs+xiMhsdZpTOe
+         vCcr70c7mVfdLY84kTlBITIgkg00wbxKAHZz9Ua63zF5lxS/qM7GVJYyklqRrp8PV5Bw
+         RJ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N+JpIu3vYJU8a5Gq7Z5l9BFQkWLO3Nuw3pvsMvETS7c=;
+        b=B2eL8I2v296ATwm5qyq9zOlcYVly+lgVo62TNBogPNHX+rzLpxNNLdMS6mu+t2Boqu
+         RnQwoVLU/DVaWFz58Ik8A0hRHBk8TO+VII3zaW/RrJIGzgn0uLDiDBV6sHuaz11aQSt/
+         JXOebJVX6u3ppzDTDeoNIbvQa4y3dlkVOfnGrfVnBBsb7FXCLgT929g8d/dSpVb+GGbn
+         LzPVudn2ldtMamIhrqNEnncquX2NhpJEtJqfzldyKB8+t2wwSr1RaL+uTpBID/aosW0p
+         zltbOcFsu9rmbVCUyZBj7DUJdQ8BiEJasOxkmg9HNdk3D3tZOZrG3BMPtherzdIHF4Ke
+         9Z+Q==
+X-Gm-Message-State: APjAAAV5LKsYRowM0JHT5XAk5kbB9i3skJbbZXPx6CETrLYYRafE8KSE
+        Bf5KZabayqqpTOoMIPdhDgs0Tsxd58SjK/n3MsI=
+X-Google-Smtp-Source: APXvYqwpjloweDhJk9K1WbRoanlfiA93jPFsGS8Fs+PosuYx6ygOY/COI9WSyi+Vw5n5/quxpcoKFqWqpEy093u1djo=
+X-Received: by 2002:aa7:d6d1:: with SMTP id x17mr1784678edr.57.1577186540180;
+ Tue, 24 Dec 2019 03:22:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 24 Dec 2019 11:20:25 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, <tglx@linutronix.de>,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>,
-        <bigeasy@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <hch@lst.de>, <axboe@kernel.dk>,
-        <bvanassche@acm.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        Zhang Yi <yi.zhang@redhat.com>
-In-Reply-To: <20191224015926.GC13083@ming.t460p>
-References: <a5f6a542-2dbc-62de-52e2-bd5413b5db51@huawei.com>
- <68058fd28c939b8e065524715494de95@www.loen.fr>
- <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
- <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
- <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
- <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
- <20191220233138.GB12403@ming.t460p>
- <fffcd23dd8286615b6e2c99620836cb1@www.loen.fr>
- <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
- <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
- <20191224015926.GC13083@ming.t460p>
-Message-ID: <7a961950624c414bb9d0c11c914d5c62@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: ming.lei@redhat.com, john.garry@huawei.com, tglx@linutronix.de, chenxiang66@hisilicon.com, bigeasy@linutronix.de, linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de, axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org, mingo@redhat.com, yi.zhang@redhat.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+References: <20191215211223.1451499-1-martin.blumenstingl@googlemail.com> <CAKGbVbvj5zK9gVDQ3+0=xmF5pOUOSJzZ6jaGKHoCqwjYz+UiEQ@mail.gmail.com>
+In-Reply-To: <CAKGbVbvj5zK9gVDQ3+0=xmF5pOUOSJzZ6jaGKHoCqwjYz+UiEQ@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 24 Dec 2019 12:22:09 +0100
+Message-ID: <CAFBinCD+k8O90ePuwSEnW1+oh-xJ9oUC5P2WrHgLLBb0RHj+=Q@mail.gmail.com>
+Subject: Re: [RFC v1 0/1] drm: lima: devfreq and cooling device support
+To:     Qiang Yu <yuq825@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        lima@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Rob Herring <robh@kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-24 01:59, Ming Lei wrote:
-> On Mon, Dec 23, 2019 at 10:47:07AM +0000, Marc Zyngier wrote:
->> On 2019-12-23 10:26, John Garry wrote:
->> > > > > > I've also managed to trigger some of them now that I have
->> > > > > access to
->> > > > > > a decent box with nvme storage.
->> > > > >
->> > > > > I only have 2x NVMe SSDs when this occurs - I should not be
->> > > > > hitting this...
->> > > > >
->> > > > > Out of curiosity, have you tried
->> > > > > > with the SMMU disabled? I'm wondering whether we hit some
->> > > > > livelock
->> > > > > > condition on unmapping buffers...
->> > > > >
->> > > > > No, but I can give it a try. Doing that should lower the CPU
->> > > > > usage, though,
->> > > > > so maybe masks the issue - probably not.
->> > > >
->> > > > Lots of CPU lockup can is performance issue if there isn't
->> > > > obvious bug.
->> > > >
->> > > > I am wondering if you may explain it a bit why enabling SMMU 
->> may
->> > > > save
->> > > > CPU a it?
->> > > The other way around. mapping/unmapping IOVAs doesn't comes for
->> > > free.
->> > > I'm trying to find out whether the NVMe map/unmap patterns 
->> trigger
->> > > something unexpected in the SMMU driver, but that's a very long
->> > > shot.
->> >
->> > So I tested v5.5-rc3 with and without the SMMU enabled, and 
->> without
->> > the SMMU enabled I don't get the lockup.
->>
->> OK, so my hunch wasn't completely off... At least we have something
->> to look into.
->>
->> [...]
->>
->> > Obviously this is not conclusive, especially with such limited
->> > testing - 5 minute runs each. The CPU load goes up when disabling 
->> the
->> > SMMU, but that could be attributed to extra throughput (1183K ->
->> > 1539K) loading.
->> >
->> > I do notice that since we complete the NVMe request in irq 
->> context,
->> > we also do the DMA unmap, i.e. talk to the SMMU, in the same 
->> context,
->> > which is less than ideal.
->>
->> It depends on how much overhead invalidating the TLB adds to the
->> equation, but we should be able to do some tracing and find out.
->>
->> > I need to finish for the Christmas break today, so can't check 
->> this
->> > much further ATM.
->>
->> No worries. May I suggest creating a new thread in the new year, 
->> maybe
->> involving Robin and Will as well?
->
-> Zhang Yi has observed the CPU lockup issue once when running heavy IO 
-> on
-> single nvme drive, and please CC him if you have new patch to try.
+On Mon, Dec 16, 2019 at 3:51 AM Qiang Yu <yuq825@gmail.com> wrote:
+[...]
+> For the code, I think you may need some lock to protect the time records as
+> there are two kernel threads gp/pp will try to mark GPU busy and several
+> interrupts try to mark GPU idle.
+good catch, thank you for this!
+I assume the reason is that the panfrost GPUs are using a "unified"
+architecture, while the ones supported by lima don't
 
-On which architecture? John was indicating that this also happen on 
-x86.
+I'll add locking so I don't run into trouble.
 
-> Then looks the DMA unmap cost is too big on aarch64 if SMMU is 
-> involved.
 
-So far, we don't have any data suggesting that this is actually the 
-case.
-Also, other workloads (such as networking) do not exhibit this 
-behaviour,
-while being least as unmap-heavy as NVMe is.
-
-If the cross-architecture aspect is confirmed, this points more into
-the direction of an interaction between the NVMe subsystem and the
-DMA API more than an architecture-specific problem.
-
-Given that we have so far very little data, I'd hold off any 
-conclusion.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thank you!
+Martin
