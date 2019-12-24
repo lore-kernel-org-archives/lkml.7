@@ -2,118 +2,189 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D499C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCCDC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB2820643
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6040A20643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 15:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577202519;
+	bh=ZsnfTax4xBkqYdlR9GE05a4/xzxBYK0CqG9UA1RrSK8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ncHN2CSgD2jR5ajKYxUv0VialeduN16pKgkc0qcmkHc0dMsGq/tumo9AxpOym6tRL
+	 Bu5pBN15iShrOM8FE3ZSOIxcaw9SKoRfrMxu2rteNmlVwn6Ml7FLSANHo8weElzBRh
+	 A9NJqF1k8hi/aWrLx8CneqdpTXi3TnHVgWlZIkjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLXPr1 (ORCPT
+        id S1726730AbfLXPsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 10:47:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:32988 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfLXPr1 (ORCPT
+        Tue, 24 Dec 2019 10:48:38 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:47224 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbfLXPsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 10:47:27 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so10565045pgk.0;
-        Tue, 24 Dec 2019 07:47:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tRZbwjsZiLdv5LPfBH5AaEk9IY4yrV1a4chfsCyzuvo=;
-        b=tl7stWyg5vveWsbCNWzQu0e/1fVS8FsDf7XTpQGBB325WsoR6NaVVUM6AZ3lFvkhiC
-         XzSDDq3bYV33ncvY3MIirsRylzlV69BtQfqYYqbPTd99Sp+llfy6icxBYainZbdQx2nB
-         as6exrF1zrrt5NYc5qaZSs/V0QCQr6jnRYkgzVZSTj9BfQEnQqEUSybbHza5tF9393vR
-         YQQNvJEXvEO6RD6MHMbwHegkgHQNiHyTnjhUZR4l+Toc0deOheykOEO/rABGsvbyrh/m
-         7y4HZyvmB09yf8ifiwWLbsR7E7J4k038HNMf7Vows0t+YzPUFNrPAT2ezRmvQu4b0CeN
-         E+Lg==
-X-Gm-Message-State: APjAAAUDt+951AaCtHdhe+6bUeGQroHhNyplqR2zOJbXmWw6c8+FtyZM
-        pSrYaHbp+pTVBufVrYoHygY=
-X-Google-Smtp-Source: APXvYqyU3/YxRP76cum9fxpksf5dFUrNFqEVZXrDKO5xc0U7alnCtnPHr/Wdeg9VUGMXJItluJheLA==
-X-Received: by 2002:a63:cb09:: with SMTP id p9mr38168685pgg.105.1577202446338;
-        Tue, 24 Dec 2019 07:47:26 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:1206:80fd:a97:a7d:f0c8? ([2601:647:4000:1206:80fd:a97:a7d:f0c8])
-        by smtp.gmail.com with ESMTPSA id y38sm26414530pgk.33.2019.12.24.07.47.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Dec 2019 07:47:25 -0800 (PST)
-Subject: Re: [PATCH v1 2/2] scsi: ufs: use ufshcd_vops_dbg_register_dump for
- vendor specific dumps
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, pedrom.sousa@synopsys.com,
-        jejb@linux.ibm.com, matthias.bgg@gmail.com
-Cc:     beanhuo@micron.com, cang@codeaurora.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <1577192466-20762-1-git-send-email-stanley.chu@mediatek.com>
- <1577192466-20762-3-git-send-email-stanley.chu@mediatek.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <b95b94f9-4db3-89d2-95d7-dbcfc9ac6369@acm.org>
-Date:   Tue, 24 Dec 2019 07:47:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <1577192466-20762-3-git-send-email-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 24 Dec 2019 10:48:37 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=big-swifty.misterjones.org)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1ijmQD-00050u-Uq; Tue, 24 Dec 2019 16:48:34 +0100
+Date:   Tue, 24 Dec 2019 15:48:33 +0000
+Message-ID: <8636d9iv1q.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     kvm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 08/18] arm64: KVM: add support to save/restore SPE profiling buffer controls
+In-Reply-To: <20191224151739.GP42593@e119886-lin.cambridge.arm.com>
+References: <20191220143025.33853-1-andrew.murray@arm.com>
+        <20191220143025.33853-9-andrew.murray@arm.com>
+        <20191221135755.70a6e8df@why>
+        <20191224104929.GE42593@e119886-lin.cambridge.arm.com>
+        <20191224151739.GP42593@e119886-lin.cambridge.arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: andrew.murray@arm.com, kvm@vger.kernel.org, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-24 05:01, Stanley Chu wrote:
-> We already have ufshcd_vops_dbg_register_dump() thus all
-> "hba->vops->dbg_register_dump" references can be replaced by it.
+On Tue, 24 Dec 2019 15:17:39 +0000,
+Andrew Murray <andrew.murray@arm.com> wrote:
 > 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index b6b9665..1ac9272 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -428,8 +428,7 @@ static void ufshcd_print_host_regs(struct ufs_hba *hba)
->  
->  	ufshcd_print_clk_freqs(hba);
->  
-> -	if (hba->vops && hba->vops->dbg_register_dump)
-> -		hba->vops->dbg_register_dump(hba);
-> +	ufshcd_vops_dbg_register_dump(hba);
->  }
+> On Tue, Dec 24, 2019 at 10:49:30AM +0000, Andrew Murray wrote:
+> > On Sat, Dec 21, 2019 at 01:57:55PM +0000, Marc Zyngier wrote:
+> > > On Fri, 20 Dec 2019 14:30:15 +0000
+> > > Andrew Murray <andrew.murray@arm.com> wrote:
+> > > 
+> > > > From: Sudeep Holla <sudeep.holla@arm.com>
+> > > > 
+> > > > Currently since we don't support profiling using SPE in the guests,
+> > > > we just save the PMSCR_EL1, flush the profiling buffers and disable
+> > > > sampling. However in order to support simultaneous sampling both in
+> > > 
+> > > Is the sampling actually simultaneous? I don't believe so (the whole
+> > > series would be much simpler if it was).
+> > 
+> > No the SPE is used by either the guest or host at any one time. I guess
+> > the term simultaneous was used to refer to illusion given to both guest
+> > and host that they are able to use it whenever they like. I'll update
+> > the commit message to drop the magic.
+> >  
+> > 
+> > > 
+> > > > the host and guests, we need to save and reatore the complete SPE
+> > > 
+> > > s/reatore/restore/
+> > 
+> > Noted.
+> > 
+> > 
+> > > 
+> > > > profiling buffer controls' context.
+> > > > 
+> > > > Let's add the support for the same and keep it disabled for now.
+> > > > We can enable it conditionally only if guests are allowed to use
+> > > > SPE.
+> > > > 
+> > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > > > [ Clear PMBSR bit when saving state to prevent spurious interrupts ]
+> > > > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > > > ---
+> > > >  arch/arm64/kvm/hyp/debug-sr.c | 51 +++++++++++++++++++++++++++++------
+> > > >  1 file changed, 43 insertions(+), 8 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+> > > > index 8a70a493345e..12429b212a3a 100644
+> > > > --- a/arch/arm64/kvm/hyp/debug-sr.c
+> > > > +++ b/arch/arm64/kvm/hyp/debug-sr.c
+> > > > @@ -85,7 +85,8 @@
+> > > >  	default:	write_debug(ptr[0], reg, 0);			\
+> > > >  	}
+> > > >  
+> > > > -static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+> > > > +static void __hyp_text
+> > > > +__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+> > > 
+> > > nit: don't split lines like this if you can avoid it. You can put the
+> > > full_ctxt parameter on a separate line instead.
+> > 
+> > Yes understood.
+> > 
+> > 
+> > > 
+> > > >  {
+> > > >  	u64 reg;
+> > > >  
+> > > > @@ -102,22 +103,46 @@ static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+> > > >  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+> > > >  		return;
+> > > >  
+> > > > -	/* No; is the host actually using the thing? */
+> > > > -	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
+> > > > -	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
+> > > > +	/* Save the control register and disable data generation */
+> > > > +	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1(SYS_PMSCR);
+> > > > +
+> > > > +	if (!ctxt->sys_regs[PMSCR_EL1])
+> > > 
+> > > Shouldn't you check the enable bits instead of relying on the whole
+> > > thing being zero?
+> > 
+> > Yes that would make more sense (E1SPE and E0SPE).
+> > 
+> > I feel that this check makes an assumption about the guest/host SPE
+> > driver... What happens if the SPE driver writes to some SPE registers
+> > but doesn't enable PMSCR? If the guest is also using SPE then those
+> > writes will be lost, when the host returns and the SPE driver enables
+> > SPE it won't work.
+> >
+> > With a quick look at the SPE driver I'm not sure this will happen, but
+> > even so it makes me nervous relying on these assumptions. I wonder if
+> > this risk is present in other devices?
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+As a rule of thumb, you should always save whatever you're about to
+overwrite if the registers are not under exclusive control of KVM. No
+exception.
+
+So if the guest is willing to use SPE *and* that it isn't enabled on
+the host, these registers have to be saved on vcpu_load() and restored
+on vcpu_put().
+
+If SPE is enabled on the host, then trapping has to be enabled, and no
+tracing occurs in the guest for this time slice.
+
+> In fact, this may be a good reason to trap the SPE registers - this would
+> allow you to conditionally save/restore based on a dirty bit. It would
+> also allow you to re-evaluate the SPE interrupt (for example when the guest
+> clears the status register) and thus potentially reduce any black hole.
+
+I don't see what trapping buys you in the expected case (where the
+guest is tracing and the host isn't). To clear PMBSR_EL1.S, you first
+need to know that an interrupt has fired. So this brings you exactly
+nothing in this particular case, and just adds overhead for everything
+else. The whole point of the architecture is that in the non-contended
+case, we can give SPE to the guest and mostly forget about it.
+
+I strongly suggest that you start with the simplest possible, non
+broken implementation. It doesn't matter if the black holes last for
+seconds for now. Once you have something that looks reasonable, we can
+evaluate how to improve on it by throwing actual HW and workloads at
+it.
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
