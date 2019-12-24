@@ -2,102 +2,95 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332F8C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A3FC2D0D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCE9206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799A220643
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 19:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jJVdKacB"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="f8OM+3XU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLXTJG (ORCPT
+        id S1726259AbfLXTgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 14:09:06 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59056 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726201AbfLXTJG (ORCPT
+        Tue, 24 Dec 2019 14:36:10 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36414 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfLXTgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 14:09:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577214545;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=sN9oy8InhvYTWTcIBE/ApxS/MBEGLGguoOVJTgKsavo=;
-        b=jJVdKacBe0wQCss1x8T4wt7+tk0KPTIRzDkofj9xJNyi7ecBawk7LX288YcTzQbkpx1lU6
-        NRKZm0/+3rBvPElV0motQ7Qa2X5Li8QgvyQ/MImxDNbUPW5XhLRWvoZP76Qg5LQGkMjCyy
-        s3YTmzHn0EaFEQg5V/YWbyYorq3m3EM=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-TkeCNZUeMaWNTn-I9_Tqnw-1; Tue, 24 Dec 2019 14:09:00 -0500
-X-MC-Unique: TkeCNZUeMaWNTn-I9_Tqnw-1
-Received: by mail-yb1-f197.google.com with SMTP id a14so15919397ybh.14
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:09:00 -0800 (PST)
+        Tue, 24 Dec 2019 14:36:09 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n12so15692354lfe.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 11:36:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Lme9Wyno1ygBZWQLeRNkRIxRgffFulfZDQ48FUsXuA=;
+        b=f8OM+3XUqBeZKY+6zorTFgHHqvIbDxTbgy9NEbgemnUwj1/f9jJuj4G92IIfVYfVCg
+         PbD8Qf2tvK/0gYEd4gaEH+WlMRL6lmknPlrPmZFtyeW8/5fMHGNBQxULMgwnDWq8xi+x
+         Ixr8QzlWetXxmYXcK7ym0mhdwdc/1L8gmBpd97Iz7JiQQGe0rsAG4GzIHApC6bDLJanx
+         Wb2MLrG2UX2Y4zwRypJJcnRB4/MxynyaphlnGYzpDefzcDeponubc/MHz2x1Yx8x862s
+         5TcmBh+UqQ+MFP8nr5s5y85KTg5EyN3JwUscG390aqu5h83yri7LtXXsnW66Z5wrtpkf
+         3D9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=sN9oy8InhvYTWTcIBE/ApxS/MBEGLGguoOVJTgKsavo=;
-        b=E7ZSoe49i2/lbMwWaF/6ILxVGU7jwevgf+fM5e30g1WzIDPP2Y0oUiw7GK3wE29Ii3
-         TowEtANhC0mwwORpeh4Tk3kXMvgOPPnlk+2mCATIvPJct7EOha6HIcskCpRVqrrAh/4A
-         f2P54nb2l/P5JVVxTLe5OU9qRxilhatgPAuE/n0AoRGkpaCYG4LgUQRQegzsy0wSr1Xt
-         X2Drvfdfzhhig5bE7bpcXCGcLpjjMIezwzsMuHBVwICcSOrqCVZ6HmJn2oR9T4T7d4B3
-         21k36liCh5B4yu/1xC3uTMlLvFzSIMEIwvvcP04uOnGchic8xS8CRyFkd+ecJhD4QDK5
-         vGCA==
-X-Gm-Message-State: APjAAAU4/BXEpmOAQ3365VqIArLO6BHB4SVrXDypVhcDZfpdZ7M8/DMm
-        gZ09kw+LR0JY1SZGaC3oxlKLtCqLsd/vvk2FOsN3SwuCTF54c8iemmz1Vy8/orLhU5+FVmiQdOF
-        mLytkW0AADNrURQ6UL1BndenP
-X-Received: by 2002:a25:68d2:: with SMTP id d201mr27072874ybc.177.1577214540288;
-        Tue, 24 Dec 2019 11:09:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz0S3EZ46tOP4qqPj6eQg1Mo8wV9UwKPT4m38jrGBN38s6oteTQkqrcrF05/SG735A3VfXw9w==
-X-Received: by 2002:a25:68d2:: with SMTP id d201mr27072853ybc.177.1577214540042;
-        Tue, 24 Dec 2019 11:09:00 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id e131sm9679917ywb.81.2019.12.24.11.08.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 11:08:59 -0800 (PST)
-Date:   Tue, 24 Dec 2019 12:08:57 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Roland Dreier <roland@purestorage.com>,
-        Jim Yan <jimyan@baidu.com>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Add a quirk flag for scope mismatched
- devices
-Message-ID: <20191224190857.kb32qjogzumoh4xv@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Roland Dreier <roland@purestorage.com>, Jim Yan <jimyan@baidu.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20191224062240.4796-1-baolu.lu@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Lme9Wyno1ygBZWQLeRNkRIxRgffFulfZDQ48FUsXuA=;
+        b=a5ZD9tsvLQ7GJM9DTm7A2XHUOcpsDqUepoQ08PaVRTwnrtQwmTMjLGT7jCR1G7JNbA
+         dtdMvneySy47YNW/7vJQozlk0DrJq0vhcAieH9g20x/9M5RqZ293UdvaiolTXBRqsTHj
+         iAb0f0czwzf5sBJag7TQ7Ar1k34frto9VGBN5Fc6RuZDZeMlHrzrBkiyn9Ex6yfjYbou
+         J8H90CO26OJujwhTxH5LWICVs/gQ938CGFNE0uh7HKVTRUc1V8oEkamcOqRSKvKuzYya
+         7VWKibDBoRtm3LMIcepFRNu2F9D7egkUkXJskeAZUTVUM1JC1HRRGbIgNvM6wbjynJCG
+         2WRA==
+X-Gm-Message-State: APjAAAW6phuPJQy7a4Aknk4Qa1icXrXX8+Z5MbxbfV4dL3V80SPMsd85
+        zn4elA3OezzMQx+QXNu4MxV28WEyBnabNTX2bh7r
+X-Google-Smtp-Source: APXvYqyyd41paNWd67q+SotBLtkizccVMdu3Hz4Ze4VEpxhr+L2hhXbp6W/Ter6cuc+8yBX4JmRQ+64Igvaadkob3xQ=
+X-Received: by 2002:a19:ae04:: with SMTP id f4mr20932323lfc.64.1577216167638;
+ Tue, 24 Dec 2019 11:36:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191224062240.4796-1-baolu.lu@linux.intel.com>
+References: <20191224124552.10452-1-yuehaibing@huawei.com>
+In-Reply-To: <20191224124552.10452-1-yuehaibing@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 24 Dec 2019 14:35:56 -0500
+Message-ID: <CAHC9VhQ17u_44L+oKVBu6ThatY4TmYa_hTL8JjGsmV=sxJ_FOg@mail.gmail.com>
+Subject: Re: [PATCH -next] selinux: remove set but not used variable 'sidtab'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, omosnace@redhat.com,
+        rgb@redhat.com, keescook@chromium.org, casey@schaufler-ca.com,
+        jeffv@google.com, kent.overstreet@gmail.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Dec 24 19, Lu Baolu wrote:
->We expect devices with endpoint scope to have normal PCI headers,
->and devices with bridge scope to have bridge PCI headers.  However
->Some PCI devices may be listed in the DMAR table with bridge scope,
->even though they have a normal PCI header. Add a quirk flag for
->those special devices.
+On Tue, Dec 24, 2019 at 7:46 AM YueHaibing <yuehaibing@huawei.com> wrote:
+> security/selinux/ss/services.c: In function security_port_sid:
+> security/selinux/ss/services.c:2346:17: warning: variable sidtab set but not used [-Wunused-but-set-variable]
+> security/selinux/ss/services.c: In function security_ib_endport_sid:
+> security/selinux/ss/services.c:2435:17: warning: variable sidtab set but not used [-Wunused-but-set-variable]
+> security/selinux/ss/services.c: In function security_netif_sid:
+> security/selinux/ss/services.c:2480:17: warning: variable sidtab set but not used [-Wunused-but-set-variable]
+> security/selinux/ss/services.c: In function security_fs_use:
+> security/selinux/ss/services.c:2831:17: warning: variable sidtab set but not used [-Wunused-but-set-variable]
 >
->Cc: Roland Dreier <roland@purestorage.com>
->Cc: Jim Yan <jimyan@baidu.com>
->Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->---
+> Since commit 66f8e2f03c02 ("selinux: sidtab reverse lookup hash table")
+> 'sidtab' is not used any more, so remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  security/selinux/ss/services.c | 8 --------
+>  1 file changed, 8 deletions(-)
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Merged into selinux/next, thanks!
 
+-- 
+paul moore
+www.paul-moore.com
