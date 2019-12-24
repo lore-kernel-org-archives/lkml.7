@@ -2,94 +2,119 @@ Return-Path: <SRS0=+gZy=2O=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0252C3F68F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0437C3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DEB2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F922071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Dec 2019 08:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dqFhzp7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfLXInE (ORCPT
+        id S1726157AbfLXIpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 03:43:04 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55645 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfLXInE (ORCPT
+        Tue, 24 Dec 2019 03:45:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36342 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfLXIpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 03:43:04 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ijfmL-0001uj-7b; Tue, 24 Dec 2019 08:42:58 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     ville.syrjala@linux.intel.com, swati2.sharma@intel.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v3] drm/i915: Re-init lspcon after HPD if lspcon probe failed
-Date:   Tue, 24 Dec 2019 16:42:51 +0800
-Message-Id: <20191224084251.28414-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Dec 2019 03:45:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SBlyM3tWHI25Sz7v/cjt5Ay7mLJRoQCMkKNrRJl+b8I=; b=dqFhzp7SHFCKCb3kOeXdh4oGw
+        OUvtYdUbJsWaVqkNeoxgXdMCNwBVAn59DF/2pPw5frxhBkta1Bht5bV66K0c7X7w65CXu3ei+Yeo/
+        ytoGFG/rBZMG7MeirUKJAdJZm1jg+oFlbepQ86HUmelYYXnTbvUoQjJXyFaQtI/EvEeriKE4wyGsf
+        vOgj3KprqUyCBr9AGL2FZI2vXWqn94s/DgK9pbggcsQsws3GMdD1OKZyThMJJpxu96uPsLqK3ev0Y
+        q9ur/AMFMkrE/mRdCEzucCshDuIdfqFPLW6brLVJJ3XCPBq4KnLlNXMSBfCoe1lJYZ9Xn8OK2EUIN
+        mBQEY87dw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ijfoY-00041S-H6; Tue, 24 Dec 2019 08:45:14 +0000
+Date:   Tue, 24 Dec 2019 00:45:14 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, y2038@lists.linaro.org,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Jan Kara <jack@suse.cz>, Eric Sandeen <sandeen@sandeen.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] xfs: disallow broken ioctls without
+ compat-32-bit-time
+Message-ID: <20191224084514.GC1739@infradead.org>
+References: <20191218163954.296726-1-arnd@arndb.de>
+ <20191218163954.296726-2-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218163954.296726-2-arnd@arndb.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
-becomes useless and never responds to cable hotplugging:
-[    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
-[    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
+On Wed, Dec 18, 2019 at 05:39:29PM +0100, Arnd Bergmann wrote:
+> +/* disallow y2038-unsafe ioctls with CONFIG_COMPAT_32BIT_TIME=n */
+> +static bool xfs_have_compat_bstat_time32(unsigned int cmd)
+> +{
+> +	if (IS_ENABLED(CONFIG_COMPAT_32BIT_TIME))
+> +		return true;
+> +
+> +	if (IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall())
+> +		return true;
+> +
+> +	if (cmd == XFS_IOC_FSBULKSTAT_SINGLE ||
+> +	    cmd == XFS_IOC_FSBULKSTAT ||
+> +	    cmd == XFS_IOC_SWAPEXT)
+> +		return false;
+> +
+> +	return true;
 
-Seems like the lspcon chip on the system in question only gets powered
-after the cable is plugged.
+I think the check for the individual command belongs into the callers,
+which laves us with:
 
-So let's call lspcon_init() dynamically to properly initialize the
-lspcon chip and make HDMI port work.
+static inline bool have_time32(void)
+{
+	return IS_ENABLED(CONFIG_COMPAT_32BIT_TIME) ||
+		(IS_ENABLED(CONFIG_64BIT) && !in_compat_syscall());
+}
 
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/203
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Make sure it's handled under long HPD case.
+and that looks like it should be in a generic helper somewhere.
 
-v2: 
- - Move lspcon_init() inside of intel_dp_hpd_pulse().
 
- drivers/gpu/drm/i915/display/intel_dp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+>  STATIC int
+>  xfs_ioc_fsbulkstat(
+>  	xfs_mount_t		*mp,
+> @@ -637,6 +655,9 @@ xfs_ioc_fsbulkstat(
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  
+> +	if (!xfs_have_compat_bstat_time32(cmd))
+> +		return -EINVAL;
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index fe31bbfd6c62..a72c9c041c60 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -6573,6 +6573,7 @@ enum irqreturn
- intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
- {
- 	struct intel_dp *intel_dp = &intel_dig_port->dp;
-+	struct drm_i915_private *dev_priv = dp_to_i915(intel_dp);
- 
- 	if (long_hpd && intel_dig_port->base.type == INTEL_OUTPUT_EDP) {
- 		/*
-@@ -6593,7 +6594,12 @@ intel_dp_hpd_pulse(struct intel_digital_port *intel_dig_port, bool long_hpd)
- 		      long_hpd ? "long" : "short");
- 
- 	if (long_hpd) {
--		intel_dp->reset_link_params = true;
-+		if (intel_dig_port->base.type == INTEL_OUTPUT_DDI &&
-+		    HAS_LSPCON(dev_priv) && !intel_dig_port->lspcon.active)
-+			lspcon_init(intel_dig_port);
-+		else
-+			intel_dp->reset_link_params = true;
-+
- 		return IRQ_NONE;
- 	}
- 
--- 
-2.17.1
+Here we can simply check for cmd != XFS_IOC_FSINUMBERS before the call.
 
+>  	if (XFS_FORCED_SHUTDOWN(mp))
+>  		return -EIO;
+>  
+> @@ -1815,6 +1836,11 @@ xfs_ioc_swapext(
+>  	struct fd	f, tmp;
+>  	int		error = 0;
+>  
+> +	if (!xfs_have_compat_bstat_time32(XFS_IOC_SWAPEXT)) {
+> +		error = -EINVAL;
+> +		goto out;
+> +	}
+
+And for this one we just have one cmd anyway.  But I actually still
+disagree with the old_time check for this one entirely, as voiced on
+one of the last iterations.  For swapext the time stamp really is
+only used as a generation counter, so overflows are entirely harmless.
