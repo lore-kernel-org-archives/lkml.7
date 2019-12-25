@@ -2,198 +2,87 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40ECC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA54C47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812762067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jR6KPAeL"
+	by mail.kernel.org (Postfix) with ESMTP id C3B7A2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLYTVu (ORCPT
+        id S1726881AbfLYTjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 14:21:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43863 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726397AbfLYTVu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 14:21:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577301708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OKuMH7cOPk6Y3exCZSCpC68iVYRRyyM9yHlIxnQYc5Q=;
-        b=jR6KPAeLuFiVyr+Fg7kMlA3bx0NvDvsCFHLkA1t2Tlkunfe2D//j2ECqTqa/PN6nUNDA1E
-        xpHxos+TZa2lNx2UFLrGj1u7mYfkARb+J568klhCNAdrUoxncQcfdbJvyBmmwMTSsGwY+y
-        aV2gRr6KhxLbk7BICAAX11hGcVeEUcM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-f0m36YqNNayB1z6IGVRPqw-1; Wed, 25 Dec 2019 14:21:44 -0500
-X-MC-Unique: f0m36YqNNayB1z6IGVRPqw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 533DD801E70;
-        Wed, 25 Dec 2019 19:21:43 +0000 (UTC)
-Received: from kasong-rh-laptop.redhat.com (ovpn-12-152.pek2.redhat.com [10.72.12.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C8AF101F6CF;
-        Wed, 25 Dec 2019 19:21:40 +0000 (UTC)
-From:   Kairui Song <kasong@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, kexec@lists.infradead.org,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in kdump kernel
-Date:   Thu, 26 Dec 2019 03:21:18 +0800
-Message-Id: <20191225192118.283637-1-kasong@redhat.com>
+        Wed, 25 Dec 2019 14:39:02 -0500
+Received: from albireo.enyo.de ([37.24.231.21]:43874 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfLYTjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 14:39:01 -0500
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1ikCUh-000786-Vl; Wed, 25 Dec 2019 19:38:55 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1ikCTv-0004Mj-Rz; Wed, 25 Dec 2019 20:38:07 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Rich Felker <dalias@libc.org>, linux-fsdevel@vger.kernel.org,
+        musl@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [musl] getdents64 lost direntries with SMB/NFS and buffer size < unknown threshold
+References: <20191120001522.GA25139@brightrain.aerifal.cx>
+        <8736eiqq1f.fsf@mid.deneb.enyo.de>
+        <20191120205913.GD16318@brightrain.aerifal.cx>
+        <20191121175418.GI4262@mit.edu>
+Date:   Wed, 25 Dec 2019 20:38:07 +0100
+In-Reply-To: <20191121175418.GI4262@mit.edu> (Theodore Y. Ts'o's message of
+        "Thu, 21 Nov 2019 12:54:18 -0500")
+Message-ID: <87a77g2o2o.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are reports about kdump hang upon reboot on some HPE machines,
-kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-error occurred and crashed the system.
+* Theodore Y. Ts'o:
 
-On the machine I can reproduce this issue, part of the topology
-looks like this:
+> On Wed, Nov 20, 2019 at 03:59:13PM -0500, Rich Felker wrote:
+>> 
+>> POSIX only allows both behaviors (showing or not showing) the entry
+>> that was deleted. It does not allow deletion of one entry to cause
+>> other entries not to be seen.
+>
+> Agreed, but POSIX requires this of *readdir*.  POSIX says nothing
+> about getdents64(2), which is Linux's internal implementation which is
+> exposed to a libc.
 
-[0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-          +-01.0-[02]--
-          +-01.1-[05]--
-          +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk=
-)
-          +-02.1-[0f]--
-          +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 C=
-ontrollers
+Sure, but Linux better provides some reasonable foundation for a libc.
 
-When shuting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-will hang, depend on which device is reinitialized in kdump kernel.
+I mean, sure, we can read the entire directory into RAM on the first
+readdir, and get a fully conforming implementation this way (and as
+Rich noted, glibc's 32 KiB buffer tends to approximate that in
+practice).  But that doesn't strike me as particularly useful.
 
-If force remove unused device then trigger kdump, the problem will never
-happen:
+The POSIX requirement is really unfortunate because it leads to
+incorrect implementations of rm -rf which would on a compliant system
+and fail in practice.
 
-    echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
-    echo c > /proc/sysrq-trigger
+> So we would need to see what is exactly going on at the interfaces
+> between the VFS and libc, the nfs client code and the VFS, the nfs
+> client code and the nfs server, and possibly the behavior of the nfs
+> server.
+>
+> First of all.... you can't reproduce this on anything other than with
+> NFS, correct?  That is, does it show up if you are using ext4, xfs,
+> btrfs, etc.?
 
-    ... Kdump save vmcore through network, the NIC get reinitialized and
-    hpsa is untouched. Then reboot with no problem. (If hpsa is used
-    instead, shutdown the NIC in first kernel will help)
+I'm sure it shows up with certain directory contents on any Linux file
+system except for those that happen to have a separate B-tree (or
+equivalent) for telldir/seekdir support.  And even those will have
+broken corner case in case of billions of directory operations.
 
-The cause is that some devices are enabled by the first kernel, but it
-don't have the chance to shutdown the device, and kdump kernel is not
-aware of it, unless it reinitialize the device.
-
-Upon reboot, kdump kernel will skip downstream device shutdown and
-clears its bridge's master bit directly. The downstream device could
-error out as it can still send requests but upstream refuses it.
-
-So for kdump, let kernel read the correct hardware power state on boot,
-and always clear the bus master bit of PCI device upon shutdown if the
-device is on. PCIe port driver will always shutdown all downstream
-devices first, so this should ensure all downstream devices have bus
-master bit off before clearing the bridge's bus master bit.
-
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- drivers/pci/pci-driver.c | 11 ++++++++---
- drivers/pci/quirks.c     | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 0454ca0e4e3f..84a7fd643b4d 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -18,6 +18,7 @@
- #include <linux/kexec.h>
- #include <linux/of_device.h>
- #include <linux/acpi.h>
-+#include <linux/crash_dump.h>
- #include "pci.h"
- #include "pcie/portdrv.h"
-=20
-@@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
- 	 * If this is a kexec reboot, turn off Bus Master bit on the
- 	 * device to tell it to not continue to do DMA. Don't touch
- 	 * devices in D3cold or unknown states.
--	 * If it is not a kexec reboot, firmware will hit the PCI
--	 * devices with big hammer and stop their DMA any way.
-+	 * If this is kdump kernel, also turn off Bus Master, the device
-+	 * could be activated by previous crashed kernel and may block
-+	 * it's upstream from shutting down.
-+	 * Else, firmware will hit the PCI devices with big hammer
-+	 * and stop their DMA any way.
- 	 */
--	if (kexec_in_progress && (pci_dev->current_state <=3D PCI_D3hot))
-+	if ((kexec_in_progress || is_kdump_kernel()) &&
-+			pci_dev->current_state <=3D PCI_D3hot)
- 		pci_clear_master(pci_dev);
- }
-=20
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4937a088d7d8..c65d11ab3939 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -28,6 +28,7 @@
- #include <linux/platform_data/x86/apple.h>
- #include <linux/pm_runtime.h>
- #include <linux/switchtec.h>
-+#include <linux/crash_dump.h>
- #include <asm/dma.h>	/* isa_dma_bridge_buggy */
- #include "pci.h"
-=20
-@@ -192,6 +193,25 @@ static int __init pci_apply_final_quirks(void)
- }
- fs_initcall_sync(pci_apply_final_quirks);
-=20
-+/*
-+ * Read the device state even if it's not enabled. The device could be
-+ * activated by previous crashed kernel, this will read and correct the
-+ * cached state.
-+ */
-+static void quirk_read_pm_state_in_kdump(struct pci_dev *dev)
-+{
-+	u16 pmcsr;
-+
-+	if (!is_kdump_kernel())
-+		return;
-+
-+	if (dev->pm_cap) {
-+		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-+		dev->current_state =3D (pmcsr & PCI_PM_CTRL_STATE_MASK);
-+	}
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_read_pm_state_in_k=
-dump);
-+
- /*
-  * Decoding should be disabled for a PCI device during BAR sizing to avo=
-id
-  * conflict. But doing so may cause problems on host bridge and perhaps =
-other
---=20
-2.24.1
-
+32 bits are simply not enough storage space for the cookie.  Hashing
+just masks the presence of these bugs, but does not eliminate them
+completely.
