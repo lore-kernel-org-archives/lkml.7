@@ -2,73 +2,99 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B81AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 20:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18705C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230EE2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 20:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E178320828
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kJNBQkw6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGOQxTFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfLYUqg (ORCPT
+        id S1726879AbfLYVB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 15:46:36 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:40016 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfLYUqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 15:46:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4ZzRvdaBtnhB0AU4QWJ+geeibBRbqhrl+tCTqbC8vaU=; b=kJNBQkw6ivE+im5O6ztGzUBsBB
-        /VDcORIn2KtBPoC1qux3QHcFdbVeM7C/afZgC706hL7dTqOg/10MzhBC190VmOmTGIQKazpowtIS+
-        g1T8aZw5zcErTraxRUshRczhczu4yYfBn1tKHVA9qNuh+LUEZiX1KSAVuhHHWJno3KDQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ikDY7-0008Nv-7l; Wed, 25 Dec 2019 21:46:31 +0100
-Date:   Wed, 25 Dec 2019 21:46:31 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2] mv88e6xxx: Add serdes Rx statistics
-Message-ID: <20191225204631.GB31948@lunn.ch>
-References: <20191225052238.23334-1-nikita.yoush@cogentembedded.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191225052238.23334-1-nikita.yoush@cogentembedded.com>
+        Wed, 25 Dec 2019 16:01:26 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43044 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfLYVBZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 16:01:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x6so11229480pfo.10;
+        Wed, 25 Dec 2019 13:01:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
+        b=bGOQxTFwxP1otsSd5NeJRqc73rlwFRxg/BNztDOWXV5KLxJ+1RfJ2kpkZg+sVY3uij
+         OVh3NdcAk4y/mxEwVyOplTqsO47IOJkEVDN7CZFXJX+0v6vG4Nw2UaC3KoaEdxPmjgeF
+         M9/pgXuVrJiMifN48wI8wpdJQdjqlho32Cjtc9zqikzLBehFm2an+UKWoC3ylDJ4gsHV
+         gOaKvk5WzhAk0AtPiPUgDrqa6Dj1uoLhkPfQEtNzX6Qq5rhgD4bmckHOCvghdSKOfxIr
+         yEfLSxdvRSo88b4Y+ED3KGEm4+Y0y1PUOjUdrJkdiW/ZNJBD3YhHX3LUxC4nlwDTV9Oc
+         N8TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
+        b=nVYL1ABIgIqESlbYMwkHy1UIAuc7OoKvAgBWYmGylwPrQw97u2G2s+ZHp3BR4jzxRs
+         6/PlTVODtI3DkEOWZDqdE4aigN3FOjAkHlEU7FrFVrsXqJfBqpcGLt2HMH7k5OURrWVG
+         dQryHg0vdNtvm9AiJulo4gEjbE6+L2V/wu11aPcS26/dLYVYjKVxZBsJPt1jpHq+xQM6
+         BrbDuBSe5JH3ZBktV0fldjM0e+eIY447NpCTjOrxGZUAIJZfDNhVusTFca1qXue084sG
+         5KRxXFH7drNjCcNTBnGfU/zMlZ5w/EWZzOhI6fjrkojAqVEPxCuFRj9U9VLIP89vVG/3
+         GLqQ==
+X-Gm-Message-State: APjAAAW1+nGCpLoaDaf5yggMH5msG0bzQecvRvZi9Jd/qKaMRfhx4Qg3
+        vhSxMSvR7zEN9ZnfiAqHVbw=
+X-Google-Smtp-Source: APXvYqxW5SaK5vVHtdzTRDHjbGXNaL7hHDnAwfUtpMj0wFspBzJa9z06R5wG/TCqvfOKZkLD6PH5ow==
+X-Received: by 2002:a63:26c4:: with SMTP id m187mr45446784pgm.410.1577307684968;
+        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
+Received: from localhost.localdomain ([113.30.156.69])
+        by smtp.googlemail.com with ESMTPSA id k5sm7560232pju.5.2019.12.25.13.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
+From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+To:     jacek.anaszewski@gmail.com
+Cc:     trivial@kernel.org, Mohana Datta Yelugoti <ymdatta.work@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: spi-ir-led: fix spelling mistake "balue"->"value"
+Date:   Thu, 26 Dec 2019 02:29:39 +0530
+Message-Id: <20191225205941.28429-1-ymdatta.work@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 08:22:38AM +0300, Nikita Yushchenko wrote:
-> If packet checker is enabled in the serdes, then Rx counter registers
-> start working, and no side effects have been detected.
-> 
-> This patch enables packet checker automatically when powering serdes on,
-> and exposes Rx counter registers via ethtool statistics interface.
-> 
-> Code partially basded by older attempt by Andrew Lunn.
-> 
-> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> ---
-> Changes from v1:
-> - added missing break statement (thanks kbuild test robot <lkp@intel.com>)
+There is a spelling mistake in:
+      Documentation/bindings/leds/irled/spi-ir-led.txt.
+Fix it.
 
-Opps. Sorry i missed that.
+Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+---
+ Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+diff --git a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+index 21882c8d4b0c..83ff1b4d70a6 100644
+--- a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
++++ b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+@@ -8,7 +8,7 @@ Required properties:
+ 	- compatible: should be "ir-spi-led".
+ 
+ Optional properties:
+-	- duty-cycle: 8 bit balue that represents the percentage of one period
++	- duty-cycle: 8 bit value that represents the percentage of one period
+ 	  in which the signal is active.  It can be 50, 60, 70, 75, 80 or 90.
+ 	- led-active-low: boolean value that specifies whether the output is
+ 	  negated with a NOT gate.
+-- 
+2.17.1
 
-    Andrew
