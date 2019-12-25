@@ -2,174 +2,264 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B9C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286FBC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EDF20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D091B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ozInkqUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfLYFR4 (ORCPT
+        id S1726400AbfLYFWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 00:17:56 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:35676 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725784AbfLYFRz (ORCPT
+        Wed, 25 Dec 2019 00:22:52 -0500
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:40699 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfLYFWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 00:17:55 -0500
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBP5HMP6016470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Dec 2019 00:17:23 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 9471C420485; Wed, 25 Dec 2019 00:17:22 -0500 (EST)
-Date:   Wed, 25 Dec 2019 00:17:22 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Andrea Vai <andrea.vai@unipv.it>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Message-ID: <20191225051722.GA119634@mit.edu>
-References: <f38db337cf26390f7c7488a0bc2076633737775b.camel@unipv.it>
- <20191218094830.GB30602@ming.t460p>
- <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
- <20191223130828.GA25948@ming.t460p>
- <20191223162619.GA3282@mit.edu>
- <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
- <20191223172257.GB3282@mit.edu>
- <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
- <20191223195301.GC3282@mit.edu>
- <20191224012707.GA13083@ming.t460p>
+        Wed, 25 Dec 2019 00:22:52 -0500
+Received: by mail-wm1-f41.google.com with SMTP id t14so3761198wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 21:22:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qMTBrOIT6QljA26o7CngIXpUowbXiYo2yACLBwyAbCI=;
+        b=ozInkqUYw1Kqoft2NGxBrmmVKrzez0ibPnP4Zt+XboGoIQK8sM3cM63+Yp1Ho8Pe3a
+         BZT9i06stwBv8LUlvGBploPoPcOnu2y/88iiZ7aOPREfnUT3e7fmpHN8JQM3CkDoIeEb
+         YMrBbGnyGVIRTe9n5SId2UoZuVWlfHskGpIigNcbKQ18P6mnwAqLdCfvdkwYCr2iTh8D
+         u51Vy2QL2Sa6cmaMLt3z5AAzPxEhxsbnYerHJqWw/+nBcGiDE5H9g81nu1KCRYhotsED
+         mxIL9FTjYTZw82zmD0ASo5K503NK1xWMAfNX1YGHdOiRbTAVk8GsUrFcj2Kpu980bJon
+         2YhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qMTBrOIT6QljA26o7CngIXpUowbXiYo2yACLBwyAbCI=;
+        b=ZJt0vK2obB7Hl9fE2oAWj74W/13BqhNTWYryDZhc+eHw3GhjRrRwJUsu5dSEyeRs39
+         S3zEPgubOmjKkog1SdCegW41aDpgk+E8eEXe46ux0OR19Xz4YtGY8CJzWuufyNBDgnZU
+         aRGIQQNFqqRDD90bx3RBi/OVoWvgCzEECvM0okXQitnmKVQZHWZC/Rg16LRjrOzX2REv
+         dsydwDo6MafnqFCEke/+Qy1OnqgrdocSUE8q10a7jkw0Mdf4zo32SoG5u/cAs9L5SPpQ
+         K8ZWrriagNVgEXmqN3faiueLi5O0F8fIBqLiB7uQ/FR0G5Nnq7HMPmlCciI6w2eVfNbq
+         58HA==
+X-Gm-Message-State: APjAAAVAtjSZ3xJuFUX4hdbdc3gdg7wK7b2sZDYr/Fr/ApGE+FpScgYd
+        Klfv1/lqRQqlxGb+LysZo7ISCg==
+X-Google-Smtp-Source: APXvYqzc/V6XRdPpMfp67C5BqhJAi7qCXNhWtCdv9V988HZMNdA4oBVTi0zALCXR804KowE8pqShrA==
+X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr7249445wmo.12.1577251369298;
+        Tue, 24 Dec 2019 21:22:49 -0800 (PST)
+Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id u16sm4682935wmj.41.2019.12.24.21.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 21:22:48 -0800 (PST)
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH v2] mv88e6xxx: Add serdes Rx statistics
+Date:   Wed, 25 Dec 2019 08:22:38 +0300
+Message-Id: <20191225052238.23334-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224012707.GA13083@ming.t460p>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 09:27:07AM +0800, Ming Lei wrote:
-> The ext4_release_file() should be run from read() or write() syscall if
-> Fedora 30's 'cp' is implemented correctly. IMO, it isn't expected behavior
-> for ext4_release_file() to be run thousands of times when just
-> running 'cp' once, see comment of ext4_release_file():
+If packet checker is enabled in the serdes, then Rx counter registers
+start working, and no side effects have been detected.
 
-What's your evidence of that?  As opposed to the writeback taking a
-long time, leading to the *one* call of ext4_release_file taking a
-long time?  If it's a big file, we might very well be calliing
-ext4_writepages multiple times, from a single call to
-__filemap_fdatawrite_range().
+This patch enables packet checker automatically when powering serdes on,
+and exposes Rx counter registers via ethtool statistics interface.
 
-You confused mightily from that assertion, and that caused me to make
-assumptions that cp was doing something crazy.  But I'm quite conviced
-now that this is almost certainly not what is happening.
+Code partially basded by older attempt by Andrew Lunn.
 
-> > I suspect the next step is use a blktrace, to see what kind of I/O is
-> > being sent to the USB drive, and how long it takes for the I/O to
-> > complete.  You might also try to capture the output of "iostat -x 1"
-> > while the script is running, and see what the difference might be
-> > between a kernel version that has the problem and one that doesn't,
-> > and see if that gives us a clue.
-> 
-> That isn't necessary, given we have concluded that the bad write
-> performance is caused by broken write order.
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+Changes from v1:
+- added missing break statement (thanks kbuild test robot <lkp@intel.com>)
+- renamed variable ret -> err to follow the rest of the file
 
-I didn't see any evidence of that from what I had in my inbox, so I
-went back to the mailing list archives to figure out what you were
-talking about.  Part of the problem is this has been a very
-long-spanning thread, and I had deleted from my inbox all of the parts
-relating to the MQ scheduler since that was clearly Not My Problem.  :-)
+ drivers/net/dsa/mv88e6xxx/chip.c   |   3 +
+ drivers/net/dsa/mv88e6xxx/serdes.c | 100 ++++++++++++++++++++++++++++-
+ drivers/net/dsa/mv88e6xxx/serdes.h |   9 +++
+ 3 files changed, 109 insertions(+), 3 deletions(-)
 
-So, summarizing the most of the thread.  The problem started when we
-removed the legacy I/O scheduler, since we are now only using the MQ
-scheduler.  What the kernel is sending is long writes (240 sectors),
-but it is being sent as an interleaved stream of two sequential
-writes.  This particular pendrive can't handle this workload, because
-it has a very simplistic Flash Translation Layer.  Now, this is not
-*broken*, from a storage perspective; it's just that it's more than
-the simple little brain of this particular pen drive can handle.
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 3bd988529178..5eeeb6566196 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -4424,6 +4424,9 @@ static const struct mv88e6xxx_ops mv88e6390_ops = {
+ 	.gpio_ops = &mv88e6352_gpio_ops,
+ 	.avb_ops = &mv88e6390_avb_ops,
+ 	.ptp_ops = &mv88e6352_ptp_ops,
++	.serdes_get_sset_count = mv88e6390_serdes_get_sset_count,
++	.serdes_get_strings = mv88e6390_serdes_get_strings,
++	.serdes_get_stats = mv88e6390_serdes_get_stats,
+ 	.phylink_validate = mv88e6390_phylink_validate,
+ };
+ 
+diff --git a/drivers/net/dsa/mv88e6xxx/serdes.c b/drivers/net/dsa/mv88e6xxx/serdes.c
+index 902feb398746..8d8b3b74aee1 100644
+--- a/drivers/net/dsa/mv88e6xxx/serdes.c
++++ b/drivers/net/dsa/mv88e6xxx/serdes.c
+@@ -405,22 +405,116 @@ static int mv88e6390_serdes_power_sgmii(struct mv88e6xxx_chip *chip, u8 lane,
+ 	return err;
+ }
+ 
++struct mv88e6390_serdes_hw_stat {
++	char string[ETH_GSTRING_LEN];
++	int reg;
++};
++
++static struct mv88e6390_serdes_hw_stat mv88e6390_serdes_hw_stats[] = {
++	{ "serdes_rx_pkts", 0xf021 },
++	{ "serdes_rx_bytes", 0xf024 },
++	{ "serdes_rx_pkts_error", 0xf027 },
++};
++
++int mv88e6390_serdes_get_sset_count(struct mv88e6xxx_chip *chip, int port)
++{
++	if (mv88e6390_serdes_get_lane(chip, port) == 0)
++		return 0;
++
++	return ARRAY_SIZE(mv88e6390_serdes_hw_stats);
++}
++
++int mv88e6390_serdes_get_strings(struct mv88e6xxx_chip *chip,
++				 int port, uint8_t *data)
++{
++	struct mv88e6390_serdes_hw_stat *stat;
++	int i;
++
++	if (mv88e6390_serdes_get_lane(chip, port) == 0)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(mv88e6390_serdes_hw_stats); i++) {
++		stat = &mv88e6390_serdes_hw_stats[i];
++		memcpy(data + i * ETH_GSTRING_LEN, stat->string,
++		       ETH_GSTRING_LEN);
++	}
++	return ARRAY_SIZE(mv88e6390_serdes_hw_stats);
++}
++
++static uint64_t mv88e6390_serdes_get_stat(struct mv88e6xxx_chip *chip, int lane,
++					  struct mv88e6390_serdes_hw_stat *stat)
++{
++	u16 reg[3];
++	int err, i;
++
++	for (i = 0; i < 3; i++) {
++		err = mv88e6390_serdes_read(chip, lane, MDIO_MMD_PHYXS,
++					    stat->reg + i, &reg[i]);
++		if (err) {
++			dev_err(chip->dev, "failed to read statistic\n");
++			return 0;
++		}
++	}
++
++	return reg[0] | ((u64)reg[1] << 16) | ((u64)reg[2] << 32);
++}
++
++int mv88e6390_serdes_get_stats(struct mv88e6xxx_chip *chip, int port,
++			       uint64_t *data)
++{
++	struct mv88e6390_serdes_hw_stat *stat;
++	int lane;
++	int i;
++
++	lane = mv88e6390_serdes_get_lane(chip, port);
++	if (lane == 0)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(mv88e6390_serdes_hw_stats); i++) {
++		stat = &mv88e6390_serdes_hw_stats[i];
++		data[i] = mv88e6390_serdes_get_stat(chip, lane, stat);
++	}
++
++	return ARRAY_SIZE(mv88e6390_serdes_hw_stats);
++}
++
++static int mv88e6390_serdes_enable_checker(struct mv88e6xxx_chip *chip, u8 lane)
++{
++	u16 reg;
++	int err;
++
++	err = mv88e6390_serdes_read(chip, lane, MDIO_MMD_PHYXS,
++				    MV88E6390_PG_CONTROL, &reg);
++	if (err)
++		return err;
++
++	reg |= MV88E6390_PG_CONTROL_ENABLE_PC;
++	return mv88e6390_serdes_write(chip, lane, MDIO_MMD_PHYXS,
++				      MV88E6390_PG_CONTROL, reg);
++}
++
+ int mv88e6390_serdes_power(struct mv88e6xxx_chip *chip, int port, u8 lane,
+ 			   bool up)
+ {
+ 	u8 cmode = chip->ports[port].cmode;
++	int err = 0;
+ 
+ 	switch (cmode) {
+ 	case MV88E6XXX_PORT_STS_CMODE_SGMII:
+ 	case MV88E6XXX_PORT_STS_CMODE_1000BASEX:
+ 	case MV88E6XXX_PORT_STS_CMODE_2500BASEX:
+-		return mv88e6390_serdes_power_sgmii(chip, lane, up);
++		err = mv88e6390_serdes_power_sgmii(chip, lane, up);
++		break;
+ 	case MV88E6XXX_PORT_STS_CMODE_XAUI:
+ 	case MV88E6XXX_PORT_STS_CMODE_RXAUI:
+-		return mv88e6390_serdes_power_10g(chip, lane, up);
++		err = mv88e6390_serdes_power_10g(chip, lane, up);
++		break;
+ 	}
+ 
+-	return 0;
++	if (!err && up)
++		err = mv88e6390_serdes_enable_checker(chip, lane);
++
++	return err;
+ }
+ 
+ static void mv88e6390_serdes_irq_link_sgmii(struct mv88e6xxx_chip *chip,
+diff --git a/drivers/net/dsa/mv88e6xxx/serdes.h b/drivers/net/dsa/mv88e6xxx/serdes.h
+index bd8df36ab537..d16ef4da20b0 100644
+--- a/drivers/net/dsa/mv88e6xxx/serdes.h
++++ b/drivers/net/dsa/mv88e6xxx/serdes.h
+@@ -74,6 +74,10 @@
+ #define MV88E6390_SGMII_PHY_STATUS_SPD_DPL_VALID BIT(11)
+ #define MV88E6390_SGMII_PHY_STATUS_LINK		BIT(10)
+ 
++/* Packet generator pad packet checker */
++#define MV88E6390_PG_CONTROL		0xf010
++#define MV88E6390_PG_CONTROL_ENABLE_PC		BIT(0)
++
+ u8 mv88e6341_serdes_get_lane(struct mv88e6xxx_chip *chip, int port);
+ u8 mv88e6352_serdes_get_lane(struct mv88e6xxx_chip *chip, int port);
+ u8 mv88e6390_serdes_get_lane(struct mv88e6xxx_chip *chip, int port);
+@@ -99,6 +103,11 @@ int mv88e6352_serdes_get_strings(struct mv88e6xxx_chip *chip,
+ 				 int port, uint8_t *data);
+ int mv88e6352_serdes_get_stats(struct mv88e6xxx_chip *chip, int port,
+ 			       uint64_t *data);
++int mv88e6390_serdes_get_sset_count(struct mv88e6xxx_chip *chip, int port);
++int mv88e6390_serdes_get_strings(struct mv88e6xxx_chip *chip,
++				 int port, uint8_t *data);
++int mv88e6390_serdes_get_stats(struct mv88e6xxx_chip *chip, int port,
++			       uint64_t *data);
+ 
+ /* Return the (first) SERDES lane address a port is using, 0 otherwise. */
+ static inline u8 mv88e6xxx_serdes_get_lane(struct mv88e6xxx_chip *chip,
+-- 
+2.20.1
 
-Previously, with a single queue, and specially since the queue depth
-supported by this pen drive is 1, the elevator algorithm would sort
-the I/O requests so that it would be mostly sequential, and this
-wouldn't be much of a problem.  However, once the legacy I/O stack was
-removed, the MQ stack is designed so that we don't have to take a
-global lock in order to submit an I/O request.  That also means that
-we can't do a full elevator sort since that would require locking all
-of the queues.
-
-This is not a problem, since HDD's generally have a 16 deep queue, and
-SSD's have a super-deep queue depth since they get their speed via
-parallel writes to different flash chips.  Unfortunately, it *is* a
-problem for super primitive USB sticks.
-
-> So far, the reason points to the extra writeback path from exit_to_usermode_loop().
-> If it is not from close() syscall, the issue should be related with file reference
-> count. If it is from close() syscall, the issue might be in 'cp''s
-> implementation.
-
-Oh, it's probably from the close system call; and it's *only* from a
-single close system call.  Because there is the auto delayed
-allocation resolution to protect against buggy userspace, under
-certain circumstances, as I explained earlier, we force a full
-writeout on a close for a file decsriptor which was opened with an
-O_TRUNC.  This is by *design*, since we are trying to protect against
-buggy userspace (application programmers vastly outnumber file system
-programmers, and far too many of them want O_PONY).  This is Working
-As Intended.
-
-You can disable it by deleting the test file before the cp:
-
-    rm -f /mnt/pendrive/$testfile
-
-Or you can disable the protection against stupid userspace by using
-the noauto_da_alloc mount option.  (But then if you have a buggy game
-program which writes the top-ten score file by using open(2) w/
-O_TRUNC, and then said program closes the OpenGL library, and the
-proprietary 3rd party binary-only video driver wedges the X server
-requiring a hard reset to recover, and the top-ten score file becomes
-a zero-length file, don't come crying to me...  Or if a graphical text
-editor forgets to use fsync(2) before saving a source file you spent
-hours working on, and then the system crashes at exactly the wrong
-moment and your source file becomes zero-length, against, don't come
-crying to me.  Blame the stupid application programmer which wrote
-your text editor who decided to skip the fsync(2), or who decided that
-copying the ACL's and xattrs was Too Hard(tm), and so opening the file
-with O_TRUNC and rewriting the file in place was easier for the
-application programmer.)
-
-In any case, I think this is all working all as intended.  The MQ I/O
-stack is optimized for modern HDD and SSD's, and especially SSD's.
-And the file system assumes that parallel sequential writes,
-especially if they are large, is really not a big deal, since that's
-what NCQ or massive parallelism of pretty much all SSD's want.
-(Again, ignoring the legacy of crappy flash drives.
-
-You can argue with storage stack folks about whether we need to have
-super-dumb mode for slow, crappy flash which uses a global lock and a
-global elevator scheduler for super-crappy flash if you want.  I'm
-going to stay out of that argument.
-
-					- Ted
