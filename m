@@ -2,365 +2,847 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE61C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 01:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A4CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 01:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F523206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 01:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A236520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 01:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HNWZ4B+q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ey5DiqmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfLYBdY (ORCPT
+        id S1726287AbfLYBl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 20:33:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44870 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfLYBdY (ORCPT
+        Tue, 24 Dec 2019 20:41:59 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43615 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfLYBl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 20:33:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B7vf1Lr+0vpG04aPGihhTl0MZWGW2MJj0bafFcdjdMk=; b=HNWZ4B+qJ+4daIU9cLRoqebso
-        uD0fy9nZmBV34lrqbLjTU8poeKfZ8vKMXJ+2bkyzBhGtWjQT+Ojzxn/OD5r/OJ+TkMSmLQMQBUm3Y
-        /i22SV476jUCPkq6ofG4atiwSOSOSmeWY4cTY3OuWpVY0p7WFx+uiJOMJZ1FPv13SP4peiUOwM6Fj
-        /DIWN8DGtSa7+t6BshbY8SaTekZt9S8nq/PF8/q6MK2zBJ/z/gKJxtNE+zO2HzUMC68WSxWAQhFmd
-        H5et2qhXxS0JUWaP7uu+Eff3xnq4zNEPXSwYF1opPNiUR2yZWtsiX1vwxOqk55Gad28OIb9LIbyHM
-        XzTIvF1Jg==;
-Received: from [2601:1c0:6280:3f0::fee9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ijvY4-0001B5-EY; Wed, 25 Dec 2019 01:33:16 +0000
-Subject: Re: [PATCH v3 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20191224020615.134668-1-damien.lemoal@wdc.com>
- <20191224020615.134668-3-damien.lemoal@wdc.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ac1bd604-0088-2002-f03b-5752425bb530@infradead.org>
-Date:   Tue, 24 Dec 2019 17:33:14 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 24 Dec 2019 20:41:59 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x6so10353641pfo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 17:41:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KTEVQsFHcTNBDL1hhhCTlxNvdRd6TdaqhptV37ULVpM=;
+        b=Ey5DiqmAg4sPegvwih+yJ6XJnRY7NsdbqOLAHpl5Ir1VG1FSBMVumjTO37RpToArPV
+         mQM0vL+eyb7Rsp/QIQ/w1ZNEUPGdO9KE6rt3VnwSs+z1AS7RKcTUyg3+ltAsvZTrIWGa
+         9cwD/6knJbHhwaKpKMqNgFqck4SdsMCWGXqUjcMBh8gHtqqo5V+/NmBfnhWJAAzIpZTJ
+         mcmP0B8stYSQJG1uZ0cP8b1KRoh2my/iH8G+Acnm9hD6QwrQZZlNIam64UmdzifXbc9R
+         UA3zO9M1iYK4JhJ+eKtWZhLpFBILQefOQEwSKoV0N9bnYnxGm00Y1PSxt3gA0cj2PWbI
+         bq8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KTEVQsFHcTNBDL1hhhCTlxNvdRd6TdaqhptV37ULVpM=;
+        b=WdBtgIxt+2mrfNpQXSY3c2phLVOZJQBVUlzd3vqX3Xvlx8d16TKhiBxGXRi/rVrfzC
+         D4Sflu/yWQiKK7KuAMYl1AQuoTCIPzga3Whr3BcDCvErKsCDbZ1G5o93aUqlghmvry2E
+         wVrniJqlMBQTIBP7coRR+wegWoXOTjeXGsrbMMQofA8Y8uWhaErKQ35mi4qfyCMYJ6X7
+         hKxcKtpAiBD5k5CCf0jQSm711U9E7iy08Qg4LqUopQjugaH3AaaaIjbaxMfDMRQ/4xmf
+         jHsP9S7NBlH6cWmqrMpb3iKY0cQ2T5ys3NpR2bqmVYCyO10IKsNq/yAR3u2Gc1kSZ0fm
+         e/ew==
+X-Gm-Message-State: APjAAAVdk2nd7Wd6u6wT/k/ObgKDmx25bQ8s8QQ4jf8+dxDvVf3vE78o
+        Er8cV5Wyk5GAmNb/kaFk06k=
+X-Google-Smtp-Source: APXvYqzf3ApH3KTklGdemrv+w6LNzKXlQBIAupL+tNuQRx6UkVqNnp6L7oqi8pIPp4FcHmq9vra8zQ==
+X-Received: by 2002:a63:4d1b:: with SMTP id a27mr39223005pgb.352.1577238117723;
+        Tue, 24 Dec 2019 17:41:57 -0800 (PST)
+Received: from localhost.localdomain ([180.204.52.194])
+        by smtp.gmail.com with ESMTPSA id 81sm31258846pfx.30.2019.12.24.17.41.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 24 Dec 2019 17:41:57 -0800 (PST)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     lee.jones@linaro.org, matthias.bgg@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: [PATCH v6] mfd: mt6360: add pmic mt6360 driver
+Date:   Wed, 25 Dec 2019 09:41:48 +0800
+Message-Id: <20191225014148.19082-1-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191224020615.134668-3-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Gene Chen <gene_chen@richtek.com>
 
-Just a few typos and nits and a few questions...
+Add mfd driver for mt6360 pmic chip include
+Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
 
-On 12/23/19 6:06 PM, Damien Le Moal wrote:
-> Add the new file Documentation/filesystems/zonefs.txt to document zonefs
-> principles and user-space tool usage.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> Reviewed-by: Hannes Reinecke <hare@suse.com>
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  Documentation/filesystems/zonefs.txt | 215 +++++++++++++++++++++++++++
->  MAINTAINERS                          |   1 +
->  2 files changed, 216 insertions(+)
->  create mode 100644 Documentation/filesystems/zonefs.txt
-> 
-> diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
-> new file mode 100644
-> index 000000000000..e88a4743bc64
-> --- /dev/null
-> +++ b/Documentation/filesystems/zonefs.txt
-> @@ -0,0 +1,215 @@
-> +ZoneFS - Zone filesystem for Zoned block devices
-> +
-> +Overview
-> +========
-> +
-> +zonefs is a very simple file system exposing each zone of a zoned block device
-> +as a file. Unlike a regular file system with zoned block device support (e.g.
-> +f2fs), zonefs does not hide the sequential write constraint of zoned block
-> +devices to the user. Files representing sequential write zones of the device
-> +must be written sequentially starting from the end of the file (append only
-> +writes).
-> +
-> +As such, zonefs is in essence closer to a raw block device access interface
-> +than to a full featured POSIX file system. The goal of zonefs is to simplify
-> +the implementation of zoned block devices support in applications by replacing
+Signed-off-by: Gene Chen <gene_chen@richtek.com
+---
+ drivers/mfd/Kconfig                |  12 +
+ drivers/mfd/Makefile               |   1 +
+ drivers/mfd/mt6360-core.c          | 426 +++++++++++++++++++++++++++++
+ include/linux/mfd/mt6360-private.h | 217 +++++++++++++++
+ include/linux/mfd/mt6360.h         |  32 +++
+ 5 files changed, 688 insertions(+)
+ create mode 100644 drivers/mfd/mt6360-core.c
+ create mode 100644 include/linux/mfd/mt6360-private.h
+ create mode 100644 include/linux/mfd/mt6360.h
 
-                      of zoned block device support
+changelogs between v1 & v2
+- include missing header file
 
-> +raw block device file accesses with a richer file API, avoiding relying on
-> +direct block device file ioctls which may be more obscure to developers. One
-> +example of this approach is the implementation of LSM (log-structured merge)
-> +tree structures (such as used in RocksDB and LevelDB) on zoned block devices
-> +by allowing SSTables to be stored in a zone file similarly to a regular file
-> +system rather than as a range of sectors of the entire disk. The introduction
-> +of the higher level construct "one file is one zone" can help reducing the
-> +amount of changes needed in the application as well as introducing support for
-> +different application programming languages.
-> +
-> +zonefs on-disk metadata
-> +-----------------------
-> +
-> +zonefs on-disk metadata is reduced to an immutable super block which
-> +persistently stores a magic number and optional features flags and values. On
+changelogs between v2 & v3
+- add changelogs
 
-                                                   feature
+changelogs between v3 & v4
+- fix Kconfig description
+- replace mt6360_pmu_info with mt6360_pmu_data
+- replace probe with probe_new
+- remove unnecessary irq_chip variable
+- remove annotation
+- replace MT6360_MFD_CELL with OF_MFD_CELL
 
-> +mount, zonefs uses blkdev_report_zones() to obtain the device zone configuration
-> +and populates the mount point with a static file tree solely based on this
-> +information. File sizes come from the device zone type and write pointer
-> +position managed by the device itself.
-> +
-> +The super block is always writen on disk at sector 0. The first zone of the
+changelogs between v4 & v5
+- remove unnecessary parse dt function
+- use devm_i2c_new_dummy_device
+- add base-commit message
 
-                             written
+changelogs between v5 & v6
+- review return value
+- remove i2c id_table
+- use GPL license v2
 
-> +device storing the super block is never exposed as a zone file by zonefs. If the
-> +zone containing the super block is a sequential zone, the mkzonefs format tool
-> +always "finishes" the zone, that is, transition the zone to a full state to make
-
-                                        it transitions the zone
-
-> +it readonly, preventing any data write.
-> +
-> +Zone type sub-directories
-> +-------------------------
-> +
-> +Files representing zones of the same type are grouped together under the same
-> +sub-directory automatically created on mount.
-> +
-> +For conventional zones, the sub-directory "cnv" is used. This directory is
-> +however created only and only if the device has useable conventional zones. If
-
-                   if and only if                  usable
-
-> +the device only has a single conventional zone at sector 0, the zone will not
-> +be exposed as a file as it will be used to store zonefs super block. For such
-
-                                           to store the zonefs super block.
-
-> +devices, the "cnv" sub-directory will not be created.
-> +
-> +For sequential write zones, the sub-directory "seq" is used.
-> +
-> +These two directories are the only directories that exist in zonefs. Users
-> +cannot create other directories and cannot rename nor delete the "cnv" and
-> +"seq" sub-directories.
-> +
-> +The size of the directories indicated by the st_size field of struct stat,
-> +obtained with the stat() or fstat() system calls, indicate the number of files
-
-                                                     indicates
-
-> +existing under the directory.
-> +
-> +Zone files
-> +----------
-> +
-> +Zone files are named using the number of the zone they represent within the set
-> +of zones of a particular type. That is, both the "cnv" and "seq" directories
-> +contain files named "0", "1", "2", ... The file numbers also represent
-> +increasing zone start sector on the device.
-> +
-> +All read and write operations to zone files are not allowed beyond the file
-> +maximum size, that is, beyond the zone size. Any access exceeding the zone
-> +size is failed with the -EFBIG error.
-> +
-> +Creating, deleting, renaming or modifying any attribute of files and
-> +sub-directories is not allowed.
-> +
-> +The number of blocks of a file as reported by stat() and fstat() indicates the
-> +size of the file zone, or in other words, the maximum file size.
-> +
-> +Conventional zone files
-> +-----------------------
-> +
-> +The size of conventional zone files is fixed to the size of the zone they
-> +represent. Conventional zone files cannot be truncated.
-> +
-> +These files can be randomly read and written, using any form of IO operation:
-> +buffered IOs, direct IOs, memory mapped IOs (mmap) etc. There are no IO
-
-                                                     , etc.
-
-> +constraint for these files beyond the file size limit mentioned above.
-
-   constraints
-
-> +
-> +Sequential zone files
-> +---------------------
-> +
-> +The size of sequential zone files present in the "seq" sub-directory represent
-
-                                                                        represents
-
-> +the file's zone write pointer position relative to the zone start sector.
-> +
-> +Sequential zone files can only be written sequentially, starting from the file
-> +end, that is, write operations can only be append writes. Zonefs makes no
-> +attempt at accepting random writes and will fail any write request that has a
-> +start offset not corresponding to the end of the last issued write.
-> +
-> +In order to give guarantees regarding write ordering, zonefs also prevents
-> +buffered writes and mmap writes for sequential files. Only direct IO writes are
-> +accepted. There are no restrictions on read operations nor on the type of IO
-> +used to request reads (buffered IOs, direct IOs and mmap reads are all
-> +accepted).
-> +
-> +Truncating sequential zone files is allowed only down to 0, in wich case, the
-
-                                                                  which
-
-> +zone is reset to rewind the file zone write pointer position to the start of
-> +the zone, or up to the zone size, in which case the file's zone is transitioned
-> +to the FULL state (finish zone operation).
-
-Just to clarify, truncate can be done to zero or the the zone size, but nothing else.
-Is that correct?
-
-> +
-> +zonefs format options
-> +---------------------
-> +
-> +Several optional features of zonefs can be enabled at format time.
-> +* Conventional zone aggregation: ranges of contiguous conventional zones can be
-> +  agregated into a single larger file instead of the default one file per zone.
-
-     aggregated
-
-> +* File ownership: The owner UID and GID of zone files is by default 0 (root)
-> +  but can be changed to any valid UID/GID.
-> +* File access permissions: the default 640 access permissions can be changed.
-> +
-> +User Space Tools
-> +----------------
-> +
-> +The mkzonefs tool is used to format zoned block devices for use with zonefs.
-> +This tool is available on Github at:
-> +
-> +git@github.com:damien-lemoal/zonefs-tools.git.
-
-maybe better to say:  https://github.com/damien-lemoal/zonefs-tools
-
-> +
-> +zonefs-tools also includes a test suite which can be run against any zoned
-> +block device, including null_blk block device created with zoned mode.
-> +
-> +Examples
-> +--------
-> +
-> +The following formats a 15TB host-managed SMR HDD with 256 MB zones
-> +with the conventional zones aggregation feature enabled.
-> +
-> +# mkzonefs -o aggr_cnv /dev/sdX
-> +# mount -t zonefs /dev/sdX /mnt
-> +# ls -l /mnt/
-> +total 0
-> +dr-xr-xr-x 2 root root     1 Nov 25 13:23 cnv
-> +dr-xr-xr-x 2 root root 55356 Nov 25 13:23 seq
-> +
-> +The size of the zone files sub-directories indicate the number of files
-> +existing for each type of zones. In this example, there is only one
-> +conventional zone file (all conventional zones are agreggated under a single
-
-                                                      aggregated
-
-> +file).
-> +
-> +# ls -l /mnt/cnv
-> +total 137101312
-> +-rw-r----- 1 root root 140391743488 Nov 25 13:23 0
-> +
-> +This aggregated conventional zone file can be used as a regular file.
-> +
-> +# mkfs.ext4 /mnt/cnv/0
-> +# mount -o loop /mnt/cnv/0 /data
-> +
-> +The "seq" sub-directory grouping files for sequential write zones has in this
-> +example 55356 zones.
-> +
-> +# ls -lv /mnt/seq
-> +total 14511243264
-> +-rw-r----- 1 root root 0 Nov 25 13:23 0
-> +-rw-r----- 1 root root 0 Nov 25 13:23 1
-> +-rw-r----- 1 root root 0 Nov 25 13:23 2
-> +...
-> +-rw-r----- 1 root root 0 Nov 25 13:23 55354
-> +-rw-r----- 1 root root 0 Nov 25 13:23 55355
-> +
-> +For sequential write zone files, the file size changes as data is appended at
-> +the end of the file, similarly to any regular file system.
-> +
-> +# dd if=/dev/zero of=/mnt/seq/0 bs=4096 count=1 conv=notrunc oflag=direct
-> +1+0 records in
-> +1+0 records out
-> +4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s
-
-why so slow?
-
-> +
-> +# ls -l /mnt/seq/0
-> +-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/sdh/seq/0
-
-I don't understand the "sdh/" here. Please explain for me (not necessarily
-in the doc file).
-
-> +
-> +The written file can be truncated to the zone size, prventing any further write
-
-                                                       preventing
-
-> +operation.
-> +
-> +# truncate -s 268435456 /mnt/seq/0
-> +# ls -l /mnt/seq/0
-> +-rw-r----- 1 root root 268435456 Nov 25 13:49 /mnt/seq/0
-> +
-> +Truncation to 0 size allows freeing the file zone storage space and restart
-> +append-writes to the file.
-> +
-> +# truncate -s 0 /mnt/seq/0
-> +# ls -l /mnt/seq/0
-> +-rw-r----- 1 root root 0 Nov 25 13:49 /mnt/seq/0
-> +
-> +Since files are statically mapped to zones on the disk, the number of blocks of
-> +a file as reported by stat() and fstat() indicates the size of the file zone.
-> +
-> +# stat /mnt/seq/0
-> +  File: /mnt/seq/0
-> +  Size: 0         	Blocks: 524288     IO Block: 4096   regular empty file
-> +Device: 870h/2160d	Inode: 50431       Links: 1
-> +Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)
-> +Access: 2019-11-25 13:23:57.048971997 +0900
-> +Modify: 2019-11-25 13:52:25.553805765 +0900
-> +Change: 2019-11-25 13:52:25.553805765 +0900
-> + Birth: -
-> +
-> +The number of blocks of the file ("Blocks") in units of 512B blocks gives the
-> +maximum file size of 524288 * 512 B = 256 MB, corresponding to the device zone
-> +size in this example. Of note is that the "IO block" field always indicates the
-> +minimum IO size for writes and corresponds to the device physical sector size.
-
-
-thanks.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 420900852166..e6df91d55405 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -856,6 +856,18 @@ config MFD_MAX8998
+ 	  additional drivers must be enabled in order to use the functionality
+ 	  of the device.
+ 
++config MFD_MT6360
++	tristate "Mediatek MT6360 SubPMIC"
++	select MFD_CORE
++	select REGMAP_I2C
++	select REGMAP_IRQ
++	depends on I2C
++	help
++	  Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
++	  PMU part includes Charger, Flashlight, RGB LED
++	  PMIC part includes 2-channel BUCKs and 2-channel LDOs
++	  LDO part includes 4-channel LDOs
++
+ config MFD_MT6397
+ 	tristate "MediaTek MT6397 PMIC Support"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index aed99f08739f..f5f80d75ee53 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -237,6 +237,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
++obj-$(CONFIG_MFD_MT6360)	+= mt6360-core.o
+ mt6397-objs	:= mt6397-core.o mt6397-irq.o
+ obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
+ obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
+diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+new file mode 100644
+index 000000000000..f6d43b6dad4e
+--- /dev/null
++++ b/drivers/mfd/mt6360-core.c
+@@ -0,0 +1,426 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/version.h>
++
++#include <linux/mfd/mt6360.h>
++#include <linux/mfd/mt6360-private.h>
++
++/* reg 0 -> 0 ~ 7 */
++#define MT6360_CHG_TREG_EVT		(4)
++#define MT6360_CHG_AICR_EVT		(5)
++#define MT6360_CHG_MIVR_EVT		(6)
++#define MT6360_PWR_RDY_EVT		(7)
++/* REG 1 -> 8 ~ 15 */
++#define MT6360_CHG_BATSYSUV_EVT		(9)
++#define MT6360_FLED_CHG_VINOVP_EVT	(11)
++#define MT6360_CHG_VSYSUV_EVT		(12)
++#define MT6360_CHG_VSYSOV_EVT		(13)
++#define MT6360_CHG_VBATOV_EVT		(14)
++#define MT6360_CHG_VBUSOV_EVT		(15)
++/* REG 2 -> 16 ~ 23 */
++/* REG 3 -> 24 ~ 31 */
++#define MT6360_WD_PMU_DET		(25)
++#define MT6360_WD_PMU_DONE		(26)
++#define MT6360_CHG_TMRI			(27)
++#define MT6360_CHG_ADPBADI		(29)
++#define MT6360_CHG_RVPI			(30)
++#define MT6360_OTPI			(31)
++/* REG 4 -> 32 ~ 39 */
++#define MT6360_CHG_AICCMEASL		(32)
++#define MT6360_CHGDET_DONEI		(34)
++#define MT6360_WDTMRI			(35)
++#define MT6360_SSFINISHI		(36)
++#define MT6360_CHG_RECHGI		(37)
++#define MT6360_CHG_TERMI		(38)
++#define MT6360_CHG_IEOCI		(39)
++/* REG 5 -> 40 ~ 47 */
++#define MT6360_PUMPX_DONEI		(40)
++#define MT6360_BAT_OVP_ADC_EVT		(41)
++#define MT6360_TYPEC_OTP_EVT		(42)
++#define MT6360_ADC_WAKEUP_EVT		(43)
++#define MT6360_ADC_DONEI		(44)
++#define MT6360_BST_BATUVI		(45)
++#define MT6360_BST_VBUSOVI		(46)
++#define MT6360_BST_OLPI			(47)
++/* REG 6 -> 48 ~ 55 */
++#define MT6360_ATTACH_I			(48)
++#define MT6360_DETACH_I			(49)
++#define MT6360_QC30_STPDONE		(51)
++#define MT6360_QC_VBUSDET_DONE		(52)
++#define MT6360_HVDCP_DET		(53)
++#define MT6360_CHGDETI			(54)
++#define MT6360_DCDTI			(55)
++/* REG 7 -> 56 ~ 63 */
++#define MT6360_FOD_DONE_EVT		(56)
++#define MT6360_FOD_OV_EVT		(57)
++#define MT6360_CHRDET_UVP_EVT		(58)
++#define MT6360_CHRDET_OVP_EVT		(59)
++#define MT6360_CHRDET_EXT_EVT		(60)
++#define MT6360_FOD_LR_EVT		(61)
++#define MT6360_FOD_HR_EVT		(62)
++#define MT6360_FOD_DISCHG_FAIL_EVT	(63)
++/* REG 8 -> 64 ~ 71 */
++#define MT6360_USBID_EVT		(64)
++#define MT6360_APWDTRST_EVT		(65)
++#define MT6360_EN_EVT			(66)
++#define MT6360_QONB_RST_EVT		(67)
++#define MT6360_MRSTB_EVT		(68)
++#define MT6360_OTP_EVT			(69)
++#define MT6360_VDDAOV_EVT		(70)
++#define MT6360_SYSUV_EVT		(71)
++/* REG 9 -> 72 ~ 79 */
++#define MT6360_FLED_STRBPIN_EVT		(72)
++#define MT6360_FLED_TORPIN_EVT		(73)
++#define MT6360_FLED_TX_EVT		(74)
++#define MT6360_FLED_LVF_EVT		(75)
++#define MT6360_FLED2_SHORT_EVT		(78)
++#define MT6360_FLED1_SHORT_EVT		(79)
++/* REG 10 -> 80 ~ 87 */
++#define MT6360_FLED2_STRB_EVT		(80)
++#define MT6360_FLED1_STRB_EVT		(81)
++#define MT6360_FLED2_STRB_TO_EVT	(82)
++#define MT6360_FLED1_STRB_TO_EVT	(83)
++#define MT6360_FLED2_TOR_EVT		(84)
++#define MT6360_FLED1_TOR_EVT		(85)
++/* REG 11 -> 88 ~ 95 */
++/* REG 12 -> 96 ~ 103 */
++#define MT6360_BUCK1_PGB_EVT		(96)
++#define MT6360_BUCK1_OC_EVT		(100)
++#define MT6360_BUCK1_OV_EVT		(101)
++#define MT6360_BUCK1_UV_EVT		(102)
++/* REG 13 -> 104 ~ 111 */
++#define MT6360_BUCK2_PGB_EVT		(104)
++#define MT6360_BUCK2_OC_EVT		(108)
++#define MT6360_BUCK2_OV_EVT		(109)
++#define MT6360_BUCK2_UV_EVT		(110)
++/* REG 14 -> 112 ~ 119 */
++#define MT6360_LDO1_OC_EVT		(113)
++#define MT6360_LDO2_OC_EVT		(114)
++#define MT6360_LDO3_OC_EVT		(115)
++#define MT6360_LDO5_OC_EVT		(117)
++#define MT6360_LDO6_OC_EVT		(118)
++#define MT6360_LDO7_OC_EVT		(119)
++/* REG 15 -> 120 ~ 127 */
++#define MT6360_LDO1_PGB_EVT		(121)
++#define MT6360_LDO2_PGB_EVT		(122)
++#define MT6360_LDO3_PGB_EVT		(123)
++#define MT6360_LDO5_PGB_EVT		(125)
++#define MT6360_LDO6_PGB_EVT		(126)
++#define MT6360_LDO7_PGB_EVT		(127)
++
++#define MT6360_REGMAP_IRQ_REG(_irq_evt)		\
++	REGMAP_IRQ_REG(_irq_evt, (_irq_evt) / 8, BIT((_irq_evt) % 8))
++
++static const struct regmap_irq mt6360_pmu_irqs[] =  {
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TREG_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_AICR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_MIVR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_PWR_RDY_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_BATSYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_CHG_VINOVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VSYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VSYSOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VBATOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_VBUSOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_WD_PMU_DET),
++	MT6360_REGMAP_IRQ_REG(MT6360_WD_PMU_DONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TMRI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_ADPBADI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_RVPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_OTPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_AICCMEASL),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHGDET_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_WDTMRI),
++	MT6360_REGMAP_IRQ_REG(MT6360_SSFINISHI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_RECHGI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TERMI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_IEOCI),
++	MT6360_REGMAP_IRQ_REG(MT6360_PUMPX_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHG_TREG_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BAT_OVP_ADC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_TYPEC_OTP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_ADC_WAKEUP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_ADC_DONEI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_BATUVI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_VBUSOVI),
++	MT6360_REGMAP_IRQ_REG(MT6360_BST_OLPI),
++	MT6360_REGMAP_IRQ_REG(MT6360_ATTACH_I),
++	MT6360_REGMAP_IRQ_REG(MT6360_DETACH_I),
++	MT6360_REGMAP_IRQ_REG(MT6360_QC30_STPDONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_QC_VBUSDET_DONE),
++	MT6360_REGMAP_IRQ_REG(MT6360_HVDCP_DET),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHGDETI),
++	MT6360_REGMAP_IRQ_REG(MT6360_DCDTI),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_DONE_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_UVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_OVP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_CHRDET_EXT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_LR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_HR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FOD_DISCHG_FAIL_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_USBID_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_APWDTRST_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_EN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_QONB_RST_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_MRSTB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_OTP_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_VDDAOV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_SYSUV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_STRBPIN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_TORPIN_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_TX_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED_LVF_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_SHORT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_SHORT_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_STRB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_STRB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_STRB_TO_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_STRB_TO_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED2_TOR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_FLED1_TOR_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK1_UV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_OV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_BUCK2_UV_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO1_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO2_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO3_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO5_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO6_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO7_OC_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO1_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO2_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO3_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO5_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO6_PGB_EVT),
++	MT6360_REGMAP_IRQ_REG(MT6360_LDO7_PGB_EVT),
++};
++
++static int mt6360_pmu_handle_post_irq(void *irq_drv_data)
++{
++	struct mt6360_pmu_data *mpd = irq_drv_data;
++
++	return regmap_update_bits(mpd->regmap,
++		MT6360_PMU_IRQ_SET, MT6360_IRQ_RETRIG, MT6360_IRQ_RETRIG);
++}
++
++static struct regmap_irq_chip mt6360_pmu_irq_chip = {
++	.irqs = mt6360_pmu_irqs,
++	.num_irqs = ARRAY_SIZE(mt6360_pmu_irqs),
++	.num_regs = MT6360_PMU_IRQ_REGNUM,
++	.mask_base = MT6360_PMU_CHG_MASK1,
++	.status_base = MT6360_PMU_CHG_IRQ1,
++	.ack_base = MT6360_PMU_CHG_IRQ1,
++	.init_ack_masked = true,
++	.use_ack = true,
++	.handle_post_irq = mt6360_pmu_handle_post_irq,
++};
++
++static const struct regmap_config mt6360_pmu_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = MT6360_PMU_MAXREG,
++};
++
++static const struct resource mt6360_adc_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_ADC_DONEI, "adc_donei"),
++};
++
++static const struct resource mt6360_chg_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TREG_EVT, "chg_treg_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PWR_RDY_EVT, "pwr_rdy_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_BATSYSUV_EVT, "chg_batsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSUV_EVT, "chg_vsysuv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VSYSOV_EVT, "chg_vsysov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBATOV_EVT, "chg_vbatov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_VBUSOV_EVT, "chg_vbusov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_AICCMEASL, "chg_aiccmeasl"),
++	DEFINE_RES_IRQ_NAMED(MT6360_WDTMRI, "wdtmri"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_RECHGI, "chg_rechgi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_TERMI, "chg_termi"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHG_IEOCI, "chg_ieoci"),
++	DEFINE_RES_IRQ_NAMED(MT6360_PUMPX_DONEI, "pumpx_donei"),
++	DEFINE_RES_IRQ_NAMED(MT6360_ATTACH_I, "attach_i"),
++	DEFINE_RES_IRQ_NAMED(MT6360_CHRDET_EXT_EVT, "chrdet_ext_evt"),
++};
++
++static const struct resource mt6360_led_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_CHG_VINOVP_EVT, "fled_chg_vinovp_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED_LVF_EVT, "fled_lvf_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_SHORT_EVT, "fled2_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_SHORT_EVT, "fled1_short_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED2_STRB_TO_EVT, "fled2_strb_to_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_FLED1_STRB_TO_EVT, "fled1_strb_to_evt"),
++};
++
++static const struct resource mt6360_pmic_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_PGB_EVT, "buck1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OC_EVT, "buck1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_OV_EVT, "buck1_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK1_UV_EVT, "buck1_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_PGB_EVT, "buck2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OC_EVT, "buck2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_OV_EVT, "buck2_ov_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_BUCK2_UV_EVT, "buck2_uv_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_OC_EVT, "ldo6_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_OC_EVT, "ldo7_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO6_PGB_EVT, "ldo6_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO7_PGB_EVT, "ldo7_pgb_evt"),
++};
++
++static const struct resource mt6360_ldo_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_OC_EVT, "ldo1_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_OC_EVT, "ldo2_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_OC_EVT, "ldo3_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_OC_EVT, "ldo5_oc_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO1_PGB_EVT, "ldo1_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO2_PGB_EVT, "ldo2_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO3_PGB_EVT, "ldo3_pgb_evt"),
++	DEFINE_RES_IRQ_NAMED(MT6360_LDO5_PGB_EVT, "ldo5_pgb_evt"),
++};
++
++static const struct mfd_cell mt6360_devs[] = {
++	OF_MFD_CELL("mt6360_adc", mt6360_adc_resources,
++		    NULL, 0, 0, "mediatek,mt6360_adc"),
++	OF_MFD_CELL("mt6360_chg", mt6360_chg_resources,
++		    NULL, 0, 0, "mediatek,mt6360_chg"),
++	OF_MFD_CELL("mt6360_led", mt6360_led_resources,
++		    NULL, 0, 0, "mediatek,mt6360_led"),
++	OF_MFD_CELL("mt6360_pmic", mt6360_pmic_resources,
++		    NULL, 0, 0, "mediatek,mt6360_pmic"),
++	OF_MFD_CELL("mt6360_ldo", mt6360_ldo_resources,
++		    NULL, 0, 0, "mediatek,mt6360_ldo"),
++	OF_MFD_CELL("mt6360_tcpc", NULL,
++		    NULL, 0, 0, "mediatek,mt6360_tcpc"),
++};
++
++static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
++	MT6360_PMU_SLAVEID,
++	MT6360_PMIC_SLAVEID,
++	MT6360_LDO_SLAVEID,
++	MT6360_TCPC_SLAVEID,
++};
++
++static int mt6360_pmu_probe(struct i2c_client *client)
++{
++	struct mt6360_pmu_data *mpd;
++	unsigned int reg_data;
++	int i, ret;
++
++	mpd = devm_kzalloc(&client->dev, sizeof(*mpd), GFP_KERNEL);
++	if (!mpd)
++		return -ENOMEM;
++
++	mpd->dev = &client->dev;
++	i2c_set_clientdata(client, mpd);
++
++	mpd->regmap = devm_regmap_init_i2c(client, &mt6360_pmu_regmap_config);
++	if (IS_ERR(mpd->regmap)) {
++		dev_err(&client->dev, "Failed to register regmap\n");
++		return PTR_ERR(mpd->regmap);
++	}
++
++	ret = regmap_read(mpd->regmap, MT6360_PMU_DEV_INFO, &reg_data);
++	if (ret) {
++		dev_err(&client->dev, "Device not found\n");
++		return ret;
++	}
++
++	mpd->chip_rev = reg_data & CHIP_REV_MASK;
++	if (mpd->chip_rev != CHIP_VEN_MT6360) {
++		dev_err(&client->dev, "Device not supported\n");
++		return -ENODEV;
++	}
++
++	mt6360_pmu_irq_chip.irq_drv_data = mpd;
++	ret = devm_regmap_add_irq_chip(&client->dev, mpd->regmap, client->irq,
++				       IRQF_TRIGGER_FALLING, 0,
++				       &mt6360_pmu_irq_chip, &mpd->irq_data);
++	if (ret) {
++		dev_err(&client->dev, "Failed to add Regmap IRQ Chip\n");
++		return ret;
++	}
++
++	mpd->i2c[0] = client;
++	for (i = 1; i < MT6360_SLAVE_MAX; i++) {
++		mpd->i2c[i] = devm_i2c_new_dummy_device(&client->dev,
++							client->adapter,
++							mt6360_slave_addr[i]);
++		if (IS_ERR(mpd->i2c[i])) {
++			dev_err(&client->dev,
++				"Failed to get new dummy I2C device for address 0x%x",
++				mt6360_slave_addr[i]);
++			return PTR_ERR(mpd->i2c[i]);
++		}
++		i2c_set_clientdata(mpd->i2c[i], mpd);
++	}
++
++	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
++				   mt6360_devs, ARRAY_SIZE(mt6360_devs), NULL,
++				   0, regmap_irq_get_domain(mpd->irq_data));
++	if (ret) {
++		dev_err(&client->dev,
++			"Failed to register subordinate devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_suspend(struct device *dev)
++{
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(i2c->irq);
++
++	return 0;
++}
++
++static int __maybe_unused mt6360_pmu_resume(struct device *dev)
++{
++
++	struct i2c_client *i2c = to_i2c_client(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(i2c->irq);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(mt6360_pmu_pm_ops,
++			 mt6360_pmu_suspend, mt6360_pmu_resume);
++
++static const struct of_device_id __maybe_unused mt6360_pmu_of_id[] = {
++	{ .compatible = "mediatek,mt6360_pmu", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6360_pmu_of_id);
++
++static struct i2c_driver mt6360_pmu_driver = {
++	.driver = {
++		.pm = &mt6360_pmu_pm_ops,
++		.of_match_table = of_match_ptr(mt6360_pmu_of_id),
++	},
++	.probe_new = mt6360_pmu_probe,
++};
++module_i2c_driver(mt6360_pmu_driver);
++
++MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
++MODULE_DESCRIPTION("MT6360 PMU I2C Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/mt6360-private.h b/include/linux/mfd/mt6360-private.h
+new file mode 100644
+index 000000000000..d542652f4de0
+--- /dev/null
++++ b/include/linux/mfd/mt6360-private.h
+@@ -0,0 +1,217 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#ifndef __MT6360_PRIVATE_H__
++#define __MT6360_PRIVATE_H__
++
++/* PMU register defininition */
++#define MT6360_PMU_DEV_INFO			(0x00)
++#define MT6360_PMU_CORE_CTRL1			(0x01)
++#define MT6360_PMU_RST1				(0x02)
++#define MT6360_PMU_CRCEN			(0x03)
++#define MT6360_PMU_RST_PAS_CODE1		(0x04)
++#define MT6360_PMU_RST_PAS_CODE2		(0x05)
++#define MT6360_PMU_CORE_CTRL2			(0x06)
++#define MT6360_PMU_TM_PAS_CODE1			(0x07)
++#define MT6360_PMU_TM_PAS_CODE2			(0x08)
++#define MT6360_PMU_TM_PAS_CODE3			(0x09)
++#define MT6360_PMU_TM_PAS_CODE4			(0x0A)
++#define MT6360_PMU_IRQ_IND			(0x0B)
++#define MT6360_PMU_IRQ_MASK			(0x0C)
++#define MT6360_PMU_IRQ_SET			(0x0D)
++#define MT6360_PMU_SHDN_CTRL			(0x0E)
++#define MT6360_PMU_TM_INF			(0x0F)
++#define MT6360_PMU_I2C_CTRL			(0x10)
++#define MT6360_PMU_CHG_CTRL1			(0x11)
++#define MT6360_PMU_CHG_CTRL2			(0x12)
++#define MT6360_PMU_CHG_CTRL3			(0x13)
++#define MT6360_PMU_CHG_CTRL4			(0x14)
++#define MT6360_PMU_CHG_CTRL5			(0x15)
++#define MT6360_PMU_CHG_CTRL6			(0x16)
++#define MT6360_PMU_CHG_CTRL7			(0x17)
++#define MT6360_PMU_CHG_CTRL8			(0x18)
++#define MT6360_PMU_CHG_CTRL9			(0x19)
++#define MT6360_PMU_CHG_CTRL10			(0x1A)
++#define MT6360_PMU_CHG_CTRL11			(0x1B)
++#define MT6360_PMU_CHG_CTRL12			(0x1C)
++#define MT6360_PMU_CHG_CTRL13			(0x1D)
++#define MT6360_PMU_CHG_CTRL14			(0x1E)
++#define MT6360_PMU_CHG_CTRL15			(0x1F)
++#define MT6360_PMU_CHG_CTRL16			(0x20)
++#define MT6360_PMU_CHG_AICC_RESULT		(0x21)
++#define MT6360_PMU_DEVICE_TYPE			(0x22)
++#define MT6360_PMU_QC_CONTROL1			(0x23)
++#define MT6360_PMU_QC_CONTROL2			(0x24)
++#define MT6360_PMU_QC30_CONTROL1		(0x25)
++#define MT6360_PMU_QC30_CONTROL2		(0x26)
++#define MT6360_PMU_USB_STATUS1			(0x27)
++#define MT6360_PMU_QC_STATUS1			(0x28)
++#define MT6360_PMU_QC_STATUS2			(0x29)
++#define MT6360_PMU_CHG_PUMP			(0x2A)
++#define MT6360_PMU_CHG_CTRL17			(0x2B)
++#define MT6360_PMU_CHG_CTRL18			(0x2C)
++#define MT6360_PMU_CHRDET_CTRL1			(0x2D)
++#define MT6360_PMU_CHRDET_CTRL2			(0x2E)
++#define MT6360_PMU_DPDN_CTRL			(0x2F)
++#define MT6360_PMU_CHG_HIDDEN_CTRL1		(0x30)
++#define MT6360_PMU_CHG_HIDDEN_CTRL2		(0x31)
++#define MT6360_PMU_CHG_HIDDEN_CTRL3		(0x32)
++#define MT6360_PMU_CHG_HIDDEN_CTRL4		(0x33)
++#define MT6360_PMU_CHG_HIDDEN_CTRL5		(0x34)
++#define MT6360_PMU_CHG_HIDDEN_CTRL6		(0x35)
++#define MT6360_PMU_CHG_HIDDEN_CTRL7		(0x36)
++#define MT6360_PMU_CHG_HIDDEN_CTRL8		(0x37)
++#define MT6360_PMU_CHG_HIDDEN_CTRL9		(0x38)
++#define MT6360_PMU_CHG_HIDDEN_CTRL10		(0x39)
++#define MT6360_PMU_CHG_HIDDEN_CTRL11		(0x3A)
++#define MT6360_PMU_CHG_HIDDEN_CTRL12		(0x3B)
++#define MT6360_PMU_CHG_HIDDEN_CTRL13		(0x3C)
++#define MT6360_PMU_CHG_HIDDEN_CTRL14		(0x3D)
++#define MT6360_PMU_CHG_HIDDEN_CTRL15		(0x3E)
++#define MT6360_PMU_CHG_HIDDEN_CTRL16		(0x3F)
++#define MT6360_PMU_CHG_HIDDEN_CTRL17		(0x40)
++#define MT6360_PMU_CHG_HIDDEN_CTRL18		(0x41)
++#define MT6360_PMU_CHG_HIDDEN_CTRL19		(0x42)
++#define MT6360_PMU_CHG_HIDDEN_CTRL20		(0x43)
++#define MT6360_PMU_CHG_HIDDEN_CTRL21		(0x44)
++#define MT6360_PMU_CHG_HIDDEN_CTRL22		(0x45)
++#define MT6360_PMU_CHG_HIDDEN_CTRL23		(0x46)
++#define MT6360_PMU_CHG_HIDDEN_CTRL24		(0x47)
++#define MT6360_PMU_CHG_HIDDEN_CTRL25		(0x48)
++#define MT6360_PMU_BC12_CTRL			(0x49)
++#define MT6360_PMU_CHG_STAT			(0x4A)
++#define MT6360_PMU_RESV1			(0x4B)
++#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEH	(0x4E)
++#define MT6360_PMU_TYPEC_OTP_TH_SEL_CODEL	(0x4F)
++#define MT6360_PMU_TYPEC_OTP_HYST_TH		(0x50)
++#define MT6360_PMU_TYPEC_OTP_CTRL		(0x51)
++#define MT6360_PMU_ADC_BAT_DATA_H		(0x52)
++#define MT6360_PMU_ADC_BAT_DATA_L		(0x53)
++#define MT6360_PMU_IMID_BACKBST_ON		(0x54)
++#define MT6360_PMU_IMID_BACKBST_OFF		(0x55)
++#define MT6360_PMU_ADC_CONFIG			(0x56)
++#define MT6360_PMU_ADC_EN2			(0x57)
++#define MT6360_PMU_ADC_IDLE_T			(0x58)
++#define MT6360_PMU_ADC_RPT_1			(0x5A)
++#define MT6360_PMU_ADC_RPT_2			(0x5B)
++#define MT6360_PMU_ADC_RPT_3			(0x5C)
++#define MT6360_PMU_ADC_RPT_ORG1			(0x5D)
++#define MT6360_PMU_ADC_RPT_ORG2			(0x5E)
++#define MT6360_PMU_BAT_OVP_TH_SEL_CODEH		(0x5F)
++#define MT6360_PMU_BAT_OVP_TH_SEL_CODEL		(0x60)
++#define MT6360_PMU_CHG_CTRL19			(0x61)
++#define MT6360_PMU_VDDASUPPLY			(0x62)
++#define MT6360_PMU_BC12_MANUAL			(0x63)
++#define MT6360_PMU_CHGDET_FUNC			(0x64)
++#define MT6360_PMU_FOD_CTRL			(0x65)
++#define MT6360_PMU_CHG_CTRL20			(0x66)
++#define MT6360_PMU_CHG_HIDDEN_CTRL26		(0x67)
++#define MT6360_PMU_CHG_HIDDEN_CTRL27		(0x68)
++#define MT6360_PMU_RESV2			(0x69)
++#define MT6360_PMU_USBID_CTRL1			(0x6D)
++#define MT6360_PMU_USBID_CTRL2			(0x6E)
++#define MT6360_PMU_USBID_CTRL3			(0x6F)
++#define MT6360_PMU_FLED_CFG			(0x70)
++#define MT6360_PMU_RESV3			(0x71)
++#define MT6360_PMU_FLED1_CTRL			(0x72)
++#define MT6360_PMU_FLED_STRB_CTRL		(0x73)
++#define MT6360_PMU_FLED1_STRB_CTRL2		(0x74)
++#define MT6360_PMU_FLED1_TOR_CTRL		(0x75)
++#define MT6360_PMU_FLED2_CTRL			(0x76)
++#define MT6360_PMU_RESV4			(0x77)
++#define MT6360_PMU_FLED2_STRB_CTRL2		(0x78)
++#define MT6360_PMU_FLED2_TOR_CTRL		(0x79)
++#define MT6360_PMU_FLED_VMIDTRK_CTRL1		(0x7A)
++#define MT6360_PMU_FLED_VMID_RTM		(0x7B)
++#define MT6360_PMU_FLED_VMIDTRK_CTRL2		(0x7C)
++#define MT6360_PMU_FLED_PWSEL			(0x7D)
++#define MT6360_PMU_FLED_EN			(0x7E)
++#define MT6360_PMU_FLED_Hidden1			(0x7F)
++#define MT6360_PMU_RGB_EN			(0x80)
++#define MT6360_PMU_RGB1_ISNK			(0x81)
++#define MT6360_PMU_RGB2_ISNK			(0x82)
++#define MT6360_PMU_RGB3_ISNK			(0x83)
++#define MT6360_PMU_RGB_ML_ISNK			(0x84)
++#define MT6360_PMU_RGB1_DIM			(0x85)
++#define MT6360_PMU_RGB2_DIM			(0x86)
++#define MT6360_PMU_RGB3_DIM			(0x87)
++#define MT6360_PMU_RESV5			(0x88)
++#define MT6360_PMU_RGB12_Freq			(0x89)
++#define MT6360_PMU_RGB34_Freq			(0x8A)
++#define MT6360_PMU_RGB1_Tr			(0x8B)
++#define MT6360_PMU_RGB1_Tf			(0x8C)
++#define MT6360_PMU_RGB1_TON_TOFF		(0x8D)
++#define MT6360_PMU_RGB2_Tr			(0x8E)
++#define MT6360_PMU_RGB2_Tf			(0x8F)
++#define MT6360_PMU_RGB2_TON_TOFF		(0x90)
++#define MT6360_PMU_RGB3_Tr			(0x91)
++#define MT6360_PMU_RGB3_Tf			(0x92)
++#define MT6360_PMU_RGB3_TON_TOFF		(0x93)
++#define MT6360_PMU_RGB_Hidden_CTRL1		(0x94)
++#define MT6360_PMU_RGB_Hidden_CTRL2		(0x95)
++#define MT6360_PMU_RESV6			(0x97)
++#define MT6360_PMU_SPARE1			(0x9A)
++#define MT6360_PMU_SPARE2			(0xA0)
++#define MT6360_PMU_SPARE3			(0xB0)
++#define MT6360_PMU_SPARE4			(0xC0)
++#define MT6360_PMU_CHG_IRQ1			(0xD0)
++#define MT6360_PMU_CHG_IRQ2			(0xD1)
++#define MT6360_PMU_CHG_IRQ3			(0xD2)
++#define MT6360_PMU_CHG_IRQ4			(0xD3)
++#define MT6360_PMU_CHG_IRQ5			(0xD4)
++#define MT6360_PMU_CHG_IRQ6			(0xD5)
++#define MT6360_PMU_QC_IRQ			(0xD6)
++#define MT6360_PMU_FOD_IRQ			(0xD7)
++#define MT6360_PMU_BASE_IRQ			(0xD8)
++#define MT6360_PMU_FLED_IRQ1			(0xD9)
++#define MT6360_PMU_FLED_IRQ2			(0xDA)
++#define MT6360_PMU_RGB_IRQ			(0xDB)
++#define MT6360_PMU_BUCK1_IRQ			(0xDC)
++#define MT6360_PMU_BUCK2_IRQ			(0xDD)
++#define MT6360_PMU_LDO_IRQ1			(0xDE)
++#define MT6360_PMU_LDO_IRQ2			(0xDF)
++#define MT6360_PMU_CHG_STAT1			(0xE0)
++#define MT6360_PMU_CHG_STAT2			(0xE1)
++#define MT6360_PMU_CHG_STAT3			(0xE2)
++#define MT6360_PMU_CHG_STAT4			(0xE3)
++#define MT6360_PMU_CHG_STAT5			(0xE4)
++#define MT6360_PMU_CHG_STAT6			(0xE5)
++#define MT6360_PMU_QC_STAT			(0xE6)
++#define MT6360_PMU_FOD_STAT			(0xE7)
++#define MT6360_PMU_BASE_STAT			(0xE8)
++#define MT6360_PMU_FLED_STAT1			(0xE9)
++#define MT6360_PMU_FLED_STAT2			(0xEA)
++#define MT6360_PMU_RGB_STAT			(0xEB)
++#define MT6360_PMU_BUCK1_STAT			(0xEC)
++#define MT6360_PMU_BUCK2_STAT			(0xED)
++#define MT6360_PMU_LDO_STAT1			(0xEE)
++#define MT6360_PMU_LDO_STAT2			(0xEF)
++#define MT6360_PMU_CHG_MASK1			(0xF0)
++#define MT6360_PMU_CHG_MASK2			(0xF1)
++#define MT6360_PMU_CHG_MASK3			(0xF2)
++#define MT6360_PMU_CHG_MASK4			(0xF3)
++#define MT6360_PMU_CHG_MASK5			(0xF4)
++#define MT6360_PMU_CHG_MASK6			(0xF5)
++#define MT6360_PMU_QC_MASK			(0xF6)
++#define MT6360_PMU_FOD_MASK			(0xF7)
++#define MT6360_PMU_BASE_MASK			(0xF8)
++#define MT6360_PMU_FLED_MASK1			(0xF9)
++#define MT6360_PMU_FLED_MASK2			(0xFA)
++#define MT6360_PMU_FAULTB_MASK			(0xFB)
++#define MT6360_PMU_BUCK1_MASK			(0xFC)
++#define MT6360_PMU_BUCK2_MASK			(0xFD)
++#define MT6360_PMU_LDO_MASK1			(0xFE)
++#define MT6360_PMU_LDO_MASK2			(0xFF)
++#define MT6360_PMU_MAXREG			(MT6360_PMU_LDO_MASK2)
++
++/* MT6360_PMU_IRQ_SET */
++#define MT6360_PMU_IRQ_REGNUM	(MT6360_PMU_LDO_IRQ2 - MT6360_PMU_CHG_IRQ1 + 1)
++#define MT6360_IRQ_RETRIG	BIT(2)
++
++#define CHIP_VEN_MASK				(0xF0)
++#define CHIP_VEN_MT6360				(0x50)
++#define CHIP_REV_MASK				(0x0F)
++
++#endif /* __MT6360_PRIVATE_H__ */
+diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
+new file mode 100644
+index 000000000000..f9a189f37144
+--- /dev/null
++++ b/include/linux/mfd/mt6360.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#ifndef __MT6360_H__
++#define __MT6360_H__
++
++#include <linux/regmap.h>
++
++enum {
++	MT6360_SLAVE_PMU = 0,
++	MT6360_SLAVE_PMIC,
++	MT6360_SLAVE_LDO,
++	MT6360_SLAVE_TCPC,
++	MT6360_SLAVE_MAX,
++};
++
++#define MT6360_PMU_SLAVEID	(0x34)
++#define MT6360_PMIC_SLAVEID	(0x1A)
++#define MT6360_LDO_SLAVEID	(0x64)
++#define MT6360_TCPC_SLAVEID	(0x4E)
++
++struct mt6360_pmu_data {
++	struct i2c_client *i2c[MT6360_SLAVE_MAX];
++	struct device *dev;
++	struct regmap *regmap;
++	struct regmap_irq_chip_data *irq_data;
++	unsigned int chip_rev;
++};
++
++#endif /* __MT6360_H__ */
 -- 
-~Randy
+2.23.0
 
