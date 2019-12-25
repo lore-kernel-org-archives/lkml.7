@@ -2,97 +2,131 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1CC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABAC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C736D2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnV1PVKt"
+	by mail.kernel.org (Postfix) with ESMTP id C86EF2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfLYCgx (ORCPT
+        id S1726435AbfLYCiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 21:36:53 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34950 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfLYCgx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 21:36:53 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s7so1895352pjc.0;
-        Tue, 24 Dec 2019 18:36:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pdIbOs3lDS1y4SwDmDRq4hIBgk7hg9mVWHE7Ddel5uU=;
-        b=dnV1PVKt2H+CsjlMYnYLbstb7q7F2tr2GthayCFodUykVCzuV3+rJuxSKxewzZDEfS
-         +fpWJye1uNAyPx2619mh1RhTj+PIVRXpATrD6ootqBJ3hL5A3C6WL0EhUt1t5PcDOywV
-         HODmZkrvchjgUdAE4tFFgH+HiIBY/B3FEbnxTEuN7OCyqEeu5pezOYwNqk9Wh5c2JM06
-         /hjjTtT7sWGxt/z+8jlxyGU3VMigiP1yePUyJPrjAFAddkl9LT/GeG0IkagmcuZJn6R2
-         Y95iL4CYmQ1Ny6chVsIntCfHRHuq52pWlF68tPPrUw/2x46pPhV0WYgAzM0dA6RZW8pF
-         04Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pdIbOs3lDS1y4SwDmDRq4hIBgk7hg9mVWHE7Ddel5uU=;
-        b=qsC3ATkYvGLtO+KmYl0W/SMPCLj45/OQ54IBHnSL5JCsAKC1Y8pcUZisvFVK9MD/xN
-         olX+gKRL5eV/ZKhgL05LrYupvGJ/SdfWUB3V7SpqncUeawDcwsT1N2kHbDln2fKFNF+V
-         VpQ65swxM6sFbu9HzX0NzltBVo3XlGaMxMPHypD6ByB+jW5d4kuK1vnGCvqkLQDcUZI7
-         OiBI0Om2+ZN7aaRMTXKGx5w7JqPPwr2XYf7m+WMgfwdWRBuOSHliTEAs/a/CviAPNFFE
-         7x5jqiOmqmlAQUBnqsOKp30fFtPbr5pX4rc/5kmtuH+0fau8DmeP/EY07zJLn4Ej2AGX
-         gJdQ==
-X-Gm-Message-State: APjAAAUvHJluv75J4TLOYdeiJ02mKLKvz01PGzYbfwaqiSIfKqvlrLuu
-        8yUre0BPCynQKwv7f+aFt4c=
-X-Google-Smtp-Source: APXvYqxJq1WbS2DBxAHVPR59NM3DZHjm6j4bnWQpGwhVVbZ07V0gQZ5xhzu5Kt45G8iYbCONeB0dqQ==
-X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr10170606pjo.2.1577241412487;
-        Tue, 24 Dec 2019 18:36:52 -0800 (PST)
-Received: from localhost.localdomain (114-34-112-171.HINET-IP.hinet.net. [114.34.112.171])
-        by smtp.gmail.com with ESMTPSA id u18sm27245406pgi.44.2019.12.24.18.36.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 24 Dec 2019 18:36:52 -0800 (PST)
-From:   Jun Chen <ptchentw@gmail.com>
-To:     laurent.pinchart@ideasonboard.com
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ptchentw@gmail.com,
-        Jun Chen <jun.chen@vatics.com>
-Subject: [PATCH] media: uvcvideo: Fix annotation for uvc_video_clock_update()
-Date:   Wed, 25 Dec 2019 10:34:17 +0800
-Message-Id: <1577241257-9203-1-git-send-email-ptchentw@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 24 Dec 2019 21:38:46 -0500
+Received: from mga03.intel.com ([134.134.136.65]:22133 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfLYCip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 21:38:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Dec 2019 18:38:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,353,1571727600"; 
+   d="scan'208";a="417703430"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Dec 2019 18:38:43 -0800
+Cc:     baolu.lu@linux.intel.com,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSN?=
+ =?UTF-8?Q?=3a_=5bPATCH=5d_iommu/vt-d=3a_Don=27t_reject_nvme_host_due_to_sco?=
+ =?UTF-8?Q?pe_mismatch?=
+To:     "Jim,Yan" <jimyan@baidu.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+References: <4b77511069cb4fbc982eebaad941cd23@baidu.com>
+ <149a454d-96ea-1e25-74d1-04a08f8b261e@linux.intel.com>
+ <8fbd6988b0a94c5e9e4b23eed59114dc@baidu.com>
+ <273a4cc4-f17b-63a6-177d-9830e683bf52@linux.intel.com>
+ <062f5fd1611940b083ec34603eca94e1@baidu.com>
+ <46d15bd6-4b50-d0cb-e0b8-763a808c4de8@linux.intel.com>
+ <eccacec618c04a58be66809a541a95bf@baidu.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f5ceee32-4a21-a09c-1e1b-d3f0539ace4c@linux.intel.com>
+Date:   Wed, 25 Dec 2019 10:37:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <eccacec618c04a58be66809a541a95bf@baidu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Chen <jun.chen@vatics.com>
+Hi,
 
-The formula (2) is to convert from SOF to host clock,
-it should be fix as
-"TS = ((TS2 - TS1) * SOF + TS1 * SOF2 - TS2 * SOF1) / (SOF2 - SOF1)"
+On 12/25/19 10:05 AM, Jim,Yan wrote:
+> Hi,
+> 
+>> -----邮件原件-----
+>> 发件人: Lu Baolu [mailto:baolu.lu@linux.intel.com]
+>> 发送时间: 2019年12月25日 10:01
+>> 收件人: Jim,Yan <jimyan@baidu.com>; Jerry Snitselaar <jsnitsel@redhat.com>
+>> 抄送: iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org
+>> 主题: Re: 答复: 答复: 答复: 答复: [PATCH] iommu/vt-d: Don't reject nvme
+>> host due to scope mismatch
+>>
+>> Hi,
+>>
+>> On 2019/12/25 9:52, Jim,Yan wrote:
+>>> Hi,
+>>>
+>>>> -----邮件原件-----
+>>>> 发件人: Lu Baolu [mailto:baolu.lu@linux.intel.com]
+>>>> 发送时间: 2019年12月24日 19:27
+>>>> 收件人: Jim,Yan <jimyan@baidu.com>; Jerry Snitselaar
+>>>> <jsnitsel@redhat.com>
+>>>> 抄送: iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org
+>>>> 主题: Re: 答复: 答复: 答复: [PATCH] iommu/vt-d: Don't reject nvme host
+>> due to
+>>>> scope mismatch
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 2019/12/24 16:18, Jim,Yan wrote:
+>>>>>>>> For both cases, a quirk flag seems to be more reasonable, so that
+>>>>>>>> unrelated devices will not be impacted.
+>>>>>>>>
+>>>>>>>> Best regards,
+>>>>>>>> baolu
+>>>>>>> Hi Baolu,
+>>>>>>> 	Thanks for your advice. And I modify the patch as follow.
+>>>>>> I just posted a patch for both NTG and NVME cases. Can you please
+>>>>>> take a
+>>>> look?
+>>>>>> Does it work for you?
+>>>>>>
+>>>>>> Best regards,
+>>>>>> baolu
+>>>>>>
+>>>>> I have tested your patch. It does work for me. But I prefer my
+>>>>> second version,
+>>>> it is more flexible, and may use for similar unknown devices.
+>>>>>
+>>>>
+>>>> I didn't get your point. Do you mind explaining why it's more flexible?
+>>>>
+>>>> Best regards,
+>>>> Baolu
+>>> For example, an unknown device has a normal PCI header and bridge scope
+>> and a class of PCI_CLASS_BRIDGE_PCI.
+>>> These devices do have a class of PCI_BASE_CLASS_BRIDGE in common.
+>>
+>> This is not a common case. It's only for devices on the marketing and hard for
+>> the VT-d users to get it fixed in the OEM firmware.
+>>
+>> Best regards,
+>> Baolu
+> 
+> Got it. Then I am OK with this patch. I have tested it yesterday. It does work for me.
+> Thanks.
 
-Signed-off-by: Jun Chen <jun.chen@vatics.com>
----
- drivers/media/usb/uvc/uvc_video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can I add your Tested-by?
 
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index 8fa77a8..a3150da 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -622,7 +622,7 @@ static u16 uvc_video_clock_host_sof(const struct uvc_clock_sample *sample)
-  * to avoid losing precision in the division. Similarly, the host timestamp is
-  * computed with
-  *
-- * TS = ((TS2 - TS1) * PTS + TS1 * SOF2 - TS2 * SOF1) / (SOF2 - SOF1)	     (2)
-+ * TS = ((TS2 - TS1) * SOF + TS1 * SOF2 - TS2 * SOF1) / (SOF2 - SOF1)	     (2)
-  *
-  * SOF values are coded on 11 bits by USB. We extend their precision with 16
-  * decimal bits, leading to a 11.16 coding.
--- 
-1.9.1
-
+Best regards,
+baolu
