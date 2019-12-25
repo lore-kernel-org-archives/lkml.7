@@ -2,126 +2,98 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88922C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079E7C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF0620722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1B82176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tk0h3zyt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOuV4oow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfLYQef (ORCPT
+        id S1726489AbfLYQzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 11:34:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34577 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfLYQef (ORCPT
+        Wed, 25 Dec 2019 11:55:41 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42572 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfLYQzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 11:34:35 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r11so11800011pgf.1;
-        Wed, 25 Dec 2019 08:34:34 -0800 (PST)
+        Wed, 25 Dec 2019 11:55:41 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p9so9589051plk.9;
+        Wed, 25 Dec 2019 08:55:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=bM15yY7unBCboNQn0vtKKuJc6P9Ay93lXeItl76c2q0=;
-        b=Tk0h3zyt8O/p5F3+j0HKXDtRinFFYF5/mfOJnqQZnXmb9S9njd2ELDf2DFSTtYlbNd
-         KdUQ+53mbOMHpoMjTcZ0sfqdrFBRdPsdffgeHETwv22HBVGyPl+idbpSNyqEeerkUsVw
-         iHnA7UhCfW9BjY8pla7q20R+csHYg9uGOa6/gXZ9xbXUdvGK4Q74e1n99RWrDYR5PsqX
-         H1AMrIdtaVbAiX/tt+gYmbIiqTVBUM4GlmUZ9kE8Om/ygBug/yYTbbTNNka7efKF35DC
-         62jCBnXXyEzPntXjRepOd3nAXLeKTHYw2ZN2vp5gZASUQwCc4o5ETSL++Tg//GvGuH0s
-         vhyA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AySHyODX723ypmTC5O2oQybWpRk/Zz477qDH+2iKNgc=;
+        b=oOuV4oowDUNNEP1zGbyM86daC5q8vhrFyNvDRI5PuNHF1bMi826cqx6Ezio3cjELdk
+         pRc+s/kp9b8mq/ZBERaL/stJVv+YlAy0SuE7Ho5pdD8YO0kdcpLoQ18ZrzY0UkflS04x
+         iQ4OXpAR1XraTAlbLGuv1EgEm5VpMhIS8+y+q2PMGFiy76i0DquY2XHVvU1vVJ6dcXq0
+         ceGpImP8ntDjQA4/5A8kXO7n0gkpcEbwlkteSZWcba2xCXoK155R+reiy8sPaOrdXC52
+         u/O3D596FEj44rgAw3xIuLxdI+z4mkIMWRES6X1JLwy6U2oqBhsMk4XDrFszLb1EWpTv
+         mmGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=bM15yY7unBCboNQn0vtKKuJc6P9Ay93lXeItl76c2q0=;
-        b=CsJ0GV2oJOJj1L6MytcxGsn/RqzYywl18O18oS7niDmQ+sfazbUsVq5ETYDj/+SI2T
-         WpGqvIHSBEHPiufrby5INqBoGmAlU307uquLudAhKPWus8U9z9A1Bg0n1b0xEfjy4736
-         WzN+UEY7UrmwFCTGMe9I+2oyI2xpND1okblZfvPFriErkQNjnAjZZQ/hteeeEaAn4HAj
-         EonsPLIABuG+HrOfnO8KdbLqzEjij+/46P50/iktqtR8WopdD7vsS/vbjSUTIJikPS3g
-         OLE1dZHQRcqsOVU8A70Q8UFJXpqiH2DmDKE9H72eYiNaFEpI+DW8FKqAcYErtyufKeVd
-         HV7g==
-X-Gm-Message-State: APjAAAWN/vjibRtGSq2jbH1ofo85qY588m+tcHt/2acS45KCiFdbOyoc
-        ypW5nzYQKBpwrwxm1DdzN04=
-X-Google-Smtp-Source: APXvYqw1qvcsid6VJtiBetDQXvsJ7ayB2ot+OMcWo7b6tScrQecVUQtRND3OzAHpSX4y8Ag4Vad3mQ==
-X-Received: by 2002:a63:eb02:: with SMTP id t2mr44014216pgh.289.1577291674429;
-        Wed, 25 Dec 2019 08:34:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r66sm33694347pfc.74.2019.12.25.08.34.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Dec 2019 08:34:33 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Michael Turquette <mturquette@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] clk: Don't try to enable critical clocks if prepare failed
-Date:   Wed, 25 Dec 2019 08:34:29 -0800
-Message-Id: <20191225163429.29694-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AySHyODX723ypmTC5O2oQybWpRk/Zz477qDH+2iKNgc=;
+        b=JZJZkRTO7/BW0FBk5yhfRNkD302XMBE8XPnMmKbsjjt9LFEZc9dVpkYgQAoDut8lTz
+         vqa9NQrgEe1Y9nqhS7NJ0w/aoP5umGqrfEyylAv1NV+YlHWcECTF4T9LD0+v+4HY0dsw
+         sMDLQb0SrTyT3fjy9s1ebgY3AnQ/BiUguqo7dvmzMLjhN8JprzYegjwr5oLGuN9dum34
+         AmbebND4hw+rRL4D1OGbTouVM9R19tpaAxjmYjLZi6KXaVACTxiH7hZw90yynAtbMVag
+         BuQOqTaYdX1rBC+lnis+dwsVoMFJN5sftlt5Xdm1Zfv/sDhy1ldn5p4NzC/4f7QIPBOL
+         orEw==
+X-Gm-Message-State: APjAAAWdLVVFrwzi/g3z6PP3IaIZZpvs3LFnq8XFlno4Yu3jwZ0jW/kN
+        x6v+kwk4jS/ZPNlz1E2dLFLHMzVukAA=
+X-Google-Smtp-Source: APXvYqzLBLg+gEhnXhZnRUG9AfI31aohkIJAYtp3BLvP1VmKLagFrVScK1T5WKxVX+xJhKlM51bX4Q==
+X-Received: by 2002:a17:90a:2645:: with SMTP id l63mr13784307pje.88.1577292940343;
+        Wed, 25 Dec 2019 08:55:40 -0800 (PST)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id x18sm32811353pfr.26.2019.12.25.08.55.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Dec 2019 08:55:39 -0800 (PST)
+Received: by masabert (Postfix, from userid 1000)
+        id E976420123B; Thu, 26 Dec 2019 01:55:36 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     madhu.cr@ti.com, linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, zbr@ioremap.net
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] docs: w1: Fix a typo in omap-hdq.rst
+Date:   Thu, 26 Dec 2019 01:55:34 +0900
+Message-Id: <20191225165534.9395-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.24.1.590.gb02fd2accad4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following traceback is seen if a critical clock fails to prepare.
+This patch fix a spelling typo in omap-hdq.rst
 
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-------------[ cut here ]------------
-Enabling unprepared plld_per
-WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
-...
-Call trace:
- clk_core_enable+0xcc/0x2c0
- __clk_register+0x5c4/0x788
- devm_clk_hw_register+0x4c/0xb0
- bcm2835_register_pll_divider+0xc0/0x150
- bcm2835_clk_probe+0x134/0x1e8
- platform_drv_probe+0x50/0xa0
- really_probe+0xd4/0x308
- driver_probe_device+0x54/0xe8
- device_driver_attach+0x6c/0x78
- __driver_attach+0x54/0xd8
-...
-
-Check return values from clk_core_prepare() and clk_core_enable() and
-bail out if any of those functions returns an error.
-
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 ---
- drivers/clk/clk.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ Documentation/w1/masters/omap-hdq.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 6a11239ccde3..772258de2d1f 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3426,11 +3426,17 @@ static int __clk_core_init(struct clk_core *core)
- 	if (core->flags & CLK_IS_CRITICAL) {
- 		unsigned long flags;
+diff --git a/Documentation/w1/masters/omap-hdq.rst b/Documentation/w1/masters/omap-hdq.rst
+index 345298a59e50..5347b5d9e90a 100644
+--- a/Documentation/w1/masters/omap-hdq.rst
++++ b/Documentation/w1/masters/omap-hdq.rst
+@@ -44,7 +44,7 @@ that the ID used should be same for both master and slave driver loading.
+ e.g::
  
--		clk_core_prepare(core);
-+		ret = clk_core_prepare(core);
-+		if (ret)
-+			goto out;
+   insmod omap_hdq.ko W1_ID=2
+-  inamod w1_bq27000.ko F_ID=2
++  insmod w1_bq27000.ko F_ID=2
  
- 		flags = clk_enable_lock();
--		clk_core_enable(core);
-+		ret = clk_core_enable(core);
- 		clk_enable_unlock(flags);
-+		if (ret) {
-+			clk_core_unprepare(core);
-+			goto out;
-+		}
- 	}
- 
- 	clk_core_reparent_orphans_nolock();
+ The driver also supports 1-wire mode. In this mode, there is no need to
+ pass slave ID as parameter. The driver will auto-detect slaves connected
 -- 
-2.17.1
+2.24.1.590.gb02fd2accad4
 
