@@ -2,134 +2,85 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1445BC2D0D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6890C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43CB2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8657D20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:26:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uUB0+vEB"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="cSARCu8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLYGHJ (ORCPT
+        id S1726353AbfLYG03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 01:07:09 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:15211 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726185AbfLYGHI (ORCPT
+        Wed, 25 Dec 2019 01:26:29 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45889 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfLYG03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 01:07:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577254028; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=WBG1ZiYj+iJJrSUURj9H+ndKxXeywY95HPsfqF/a078=;
- b=uUB0+vEB597IZjIS++N7nDQxOgZZtNMqksV0kBaa1IseDc8C7OIB0l4cz9bMmuMnct0AdNOu
- j78mTU5dfLvF56H9aLspNdwyGVP9Rrol8SBsnuFtFxFQ1+q0igzKWfRSQJmHs/sCbLqe8+GI
- OM8bol64YamX+MmziyD0vr97qkA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e02fc88.7fb23dcc2298-smtp-out-n03;
- Wed, 25 Dec 2019 06:07:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 584C9C433A2; Wed, 25 Dec 2019 06:07:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E9D0CC43383;
-        Wed, 25 Dec 2019 06:07:03 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 25 Dec 2019 14:07:03 +0800
-From:   rjliao@codeaurora.org
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Retry btsoc initialize when it
- fails
-In-Reply-To: <20191219065217.14122-1-rjliao@codeaurora.org>
-References: <20191219065217.14122-1-rjliao@codeaurora.org>
-Message-ID: <4c02862a446715d393d4b5ddac3b3bed@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Wed, 25 Dec 2019 01:26:29 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so11658770pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 22:26:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=jZH1Nd14C4y1v7M9e0zeyyhv8KS4mYmJ4ps3dkwUq6U=;
+        b=cSARCu8BcGVOjjooyN/fRaiPim25pg5M7o5ewQm0qlByNomuX0rBXxUcybCA6+Wszz
+         f9ZS6S4KC4vQppjoW1F6DAmhzRR5eykmx0Xwms22l9dy3Elb6/eg5MMTFkL6OyaOV2/F
+         0cP7OD9MpXVx1ZAA5GoPLOh2hFcttQsk//tZcP11RJFgUAEx7o8+bS7olAGByQGr++Ex
+         AevnWJO29QVfR2chIsJqXgC5XoZ17kyfsG0bvqsTFqJaJXyqkxfgHiDZjTrGHTNmgMoU
+         isuvE1QTJ+MSVNeyehOh1kXQl4aAXnY+OYz1SNLa8UjuvN6ZAN7OQ0ZtENtbgw4HkoZP
+         9C4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jZH1Nd14C4y1v7M9e0zeyyhv8KS4mYmJ4ps3dkwUq6U=;
+        b=FUcbAa8smVp6EY9TF6G1ctZZc42HvSybF57b6kA4T8JSsrFbg8eTg4QB+kcYRi3uOD
+         D9rOrtlGSmih5qyTJy1MG25RBiqRHO1Lz3IWm3X9eFSZ75tSBxZBMDFXhD5ZPDHtdviK
+         tTgPqilVpznNtsXWuXQPqWos7gpt15P2Lfi79u4cgPDnwbf+x3MlNV7EJGV/trChsyRc
+         HLEpphuYqlC902BOFSWGFwNdpOZDpyOauRgMwxa7UExTwaX0GY1ltSP8NHuhUTmeMKBh
+         gWftK51aekRf5REKT6KxTPAbfTivkYNmFNoAEuViUxhbb8La6iyU1PbAWibQYqacxvM7
+         IXPg==
+X-Gm-Message-State: APjAAAVTF3aZOCSijtInMr1SFTIDtSCflhPHo6U8OWeiU8s7mTJG0kXQ
+        PgVLA6ADzN2yCiNpI28hMN2d3w==
+X-Google-Smtp-Source: APXvYqw0fjpRsVmlvDAPhKnuWJ0kSbeo4g6EMdxN9ly15W+RkYOmVMSW6Cyqzp5iGcSkyhKwCdaD3Q==
+X-Received: by 2002:a63:e954:: with SMTP id q20mr43060915pgj.204.1577255188578;
+        Tue, 24 Dec 2019 22:26:28 -0800 (PST)
+Received: from libai.bytedance.net ([61.120.150.71])
+        by smtp.gmail.com with ESMTPSA id j7sm30875474pgn.0.2019.12.24.22.26.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Dec 2019 22:26:28 -0800 (PST)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
+Subject: [PATCH v2 0/2] misc: pvpanic: add crash loaded event
+Date:   Wed, 25 Dec 2019 14:26:20 +0800
+Message-Id: <20191225062622.60453-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ingnore this patch, I have just sent the new set of patches.
+Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
+kernel actually hit a kernel panic, but the guest kernel wants to
+handle by itself.
 
-在 2019-12-19 14:52，Rocky Liao 写道：
-> This patch adds the retry of btsoc initialization when it fails. There 
-> are
-> reports that the btsoc initialization may fail on some platforms but 
-> the
-> repro ratio is very low. The failure may be caused by UART, platform HW 
-> or
-> the btsoc itself but it's very difficlut to root cause, given the repro
-> ratio is very low. Add a retry for the btsoc initialization will 
-> resolve
-> most of the failures and make Bluetooth finally works.
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 1cb706acdef6..af45b31f1b5f 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -53,6 +53,9 @@
->  /* Controller debug log header */
->  #define QCA_DEBUG_HANDLE	0x2EDC
-> 
-> +/* max retry count when init fails */
-> +#define QCA_MAX_INIT_RETRY_COUNT 3
-> +
->  enum qca_flags {
->  	QCA_IBS_ENABLED,
->  	QCA_DROP_VENDOR_EVENT,
-> @@ -1259,6 +1262,7 @@ static int qca_setup(struct hci_uart *hu)
->  	struct qca_data *qca = hu->priv;
->  	struct qca_serdev *qcadev;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
-> +	unsigned int init_retry_count = 0;
->  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
->  	const char *firmware_name = qca_get_firmware_name(hu);
->  	int ret;
-> @@ -1276,6 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
->  	 */
->  	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-> 
-> +retry:
->  	if (qca_is_wcn399x(soc_type)) {
->  		bt_dev_info(hdev, "setting up wcn3990");
-> 
-> @@ -1341,6 +1346,20 @@ static int qca_setup(struct hci_uart *hu)
->  		 * patch/nvm-config is found, so run with original fw/config.
->  		 */
->  		ret = 0;
-> +	} else {
-> +		if (init_retry_count < QCA_MAX_INIT_RETRY_COUNT) {
-> +			qca_power_off(hdev);
-> +			if (hu->serdev) {
-> +				serdev_device_close(hu->serdev);
-> +				ret = serdev_device_open(hu->serdev);
-> +				if (ret) {
-> +					bt_dev_err(hu->hdev, "open port fail");
-> +					return ret;
-> +				}
-> +			}
-> +			init_retry_count++;
-> +			goto retry;
-> +		}
->  	}
-> 
->  	/* Setup bdaddr */
+Suggested by Greg KH, move the bit definition to uapi header file
+for the programs outside of kernel.
+
+zhenwei pi (2):
+  misc: pvpanic: move bit definition to uapi header file
+  misc: pvpanic: add crash loaded event
+
+ drivers/misc/pvpanic.c      | 12 +++++++++---
+ include/uapi/misc/pvpanic.h |  9 +++++++++
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+ create mode 100644 include/uapi/misc/pvpanic.h
+
+-- 
+2.11.0
+
