@@ -2,72 +2,61 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEEAC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF313C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1851D2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AAA20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfLYIei (ORCPT
+        id S1726397AbfLYIpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 03:34:38 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:54412 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726196AbfLYIeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 03:34:37 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R361e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TltSXMn_1577262870;
-Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TltSXMn_1577262870)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 25 Dec 2019 16:34:35 +0800
-From:   Hui Zhu <teawater@gmail.com>
-To:     fengguang.wu@intel.com, linux-kernel@vger.kernel.org
-Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: [PATCH for vm-scalability] usemem: Fix the build warning
-Date:   Wed, 25 Dec 2019 16:34:25 +0800
-Message-Id: <1577262865-10253-1-git-send-email-teawater@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 25 Dec 2019 03:45:20 -0500
+Received: from mga12.intel.com ([192.55.52.136]:43783 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfLYIpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 03:45:20 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Dec 2019 00:45:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,353,1571727600"; 
+   d="scan'208";a="268590979"
+Received: from yuxiyang-mobl.ccr.corp.intel.com (HELO wfg-t570.sh.intel.com) ([10.254.215.126])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Dec 2019 00:45:19 -0800
+Received: from wfg by wfg-t570.sh.intel.com with local (Exim 4.89)
+        (envelope-from <fengguang.wu@intel.com>)
+        id 1ik2IA-0000eL-CG; Wed, 25 Dec 2019 16:45:18 +0800
+Date:   Wed, 25 Dec 2019 16:45:18 +0800
+From:   Fengguang Wu <fengguang.wu@intel.com>
+To:     Hui Zhu <teawater@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: Re: [PATCH for vm-scalability] usemem: Fix the build warning
+Message-ID: <20191225084518.GA2140@wfg-t540p.sh.intel.com>
+References: <1577262865-10253-1-git-send-email-teawater@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1577262865-10253-1-git-send-email-teawater@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Got:
-gcc -O -c -Wall -g  usemem.c -o usemem.o
-usemem.c: In function ‘output_statistics’:
-usemem.c:638:2: warning: ignoring return value of ‘write’, declared with attribute warn_unused_result [-Wunused-result]
-  write(1, buf, len);
+Thanks teawater!
 
-This commit fixes this warning.
+>-	write(1, buf, len);
+>+	if (write(1, buf, len) != len)
+>+		printf("Output buf \"%s\" fail\n", buf);
 
-Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
----
- usemem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changed it to
 
-diff --git a/usemem.c b/usemem.c
-index 85dbdc5..9158304 100644
---- a/usemem.c
-+++ b/usemem.c
-@@ -635,7 +635,8 @@ static void output_statistics(unsigned long unit_bytes, const char *intro)
- 			"%s%lu bytes / %lu usecs = %lu KB/s\n",
- 			intro, unit_bytes, delta_us, throughput);
- 	fflush(stdout);
--	write(1, buf, len);
-+	if (write(1, buf, len) != len)
-+		printf("Output buf \"%s\" fail\n", buf);
- }
- 
- static void timing_free(void *ptrs[], unsigned int nptr,
--- 
-2.7.4
+                fprintf(stderr, "WARNING: statistics output may be incomplete.\n");
 
+Thanks,
+Fengguang
