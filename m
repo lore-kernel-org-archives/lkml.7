@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D1CC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854DFC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA9F206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F2B20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577232567;
-	bh=dYy2H33zREIWzAdKTtdSY8Nv7OIsH0akMM5AhkCB2sY=;
+	s=default; t=1577232571;
+	bh=rIVB20PJkY3bX46FQMn4q4NR4z30KvUdhzRCjTpYv0Y=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fzOIOl6Umt+bTCgYGI+g9fvzIjrtgj9jDmqE4YnIuIkPNBbBqZQKyThTORqxqcHEy
-	 l5wqOOYPHGlT70Ghk+2sVSwTVqb7s0WrKz2nFETYqzzxAPzR80oiks2lAjWi0iFgKd
-	 8q4/KJaLOZOhJNRGshA3UamIzRWVQU0wjZDBN2D8=
+	b=rFC4LLXdFYxyeti3C/CTb9blEiD6scDBqPzTJERCSLP0iTC6kkMdWmtlTlZ3/fbCU
+	 Wtv/4RSc57BxG7FJjlPrMrVLXeIb65wAIVfnXd1M69JXxKW4e03UXVH/Bnf/nn7I6q
+	 J6S6JiWa+fBEfsDa+BVXgEb06dcyTscnUO6TxOFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfLYAJ0 (ORCPT
+        id S1727109AbfLYAJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:09:26 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33446 "EHLO
+        Tue, 24 Dec 2019 19:09:30 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33774 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfLYAJP (ORCPT
+        with ESMTP id S1726946AbfLYAJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 19:09:15 -0500
+        Tue, 24 Dec 2019 19:09:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=2GeG6xR/J7VM2a/ObwQ0fm8SxgMna4I+z6ph1YDl5Rs=; b=LfGTMjJEKuyE
-        ea2zyxLVkyi/yF1/sjsO/UviCdqxEIx6SmUAf7MFxvGMd6I8DPh1SDStqKKqQXjLH489wNc3RxTX3
-        XIJvnfZFcRRD6MmFMjE8SqAl826vjxoKHWJbEacnMcrwy4WqFPWWimrMW2kz7gYxPh4hzAfikFEGO
-        oNTC4=;
+        List-Archive; bh=XHO12lr1qLB4FKdbh6ys7+jy8rW61hg1/mw41eet/vI=; b=Mtpl63TU2Fv6
+        qcc+jUPgG3t3sObYqw3qJntc+jQ4uZINU2M1k868I2OCc5Pud3blFUcYCeHQIkBzsOsgptBIZ54Cj
+        ZWXWfzCq8Qz+RUCkV5eUOepHvLvxwtoNAl0nxJRNCa3qrtS83ZQXcggQNxHstk4cbci6icVmJdT6e
+        x6aVo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1ijuEd-0007M2-Vr; Wed, 25 Dec 2019 00:09:08 +0000
+        id 1ijuEp-0007N2-Fd; Wed, 25 Dec 2019 00:09:19 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 7D617D01957; Wed, 25 Dec 2019 00:09:07 +0000 (GMT)
+        id 00AA5D01963; Wed, 25 Dec 2019 00:09:18 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        broonie@kernel.org, lgirdwood@gmail.com,
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
+        Keiji Hayashibara <hayashibara.keiji@socionext.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: spdifrx: fix inconsistent lock state" to the asoc tree
-In-Reply-To:  <20191204154333.7152-2-olivier.moysan@st.com>
-Message-Id:  <applied-20191204154333.7152-2-olivier.moysan@st.com>
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: Applied "spi: uniphier: Change argument of irq functions to private structure" to the spi tree
+In-Reply-To: <1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com>
+Message-Id: <applied-1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com>
 X-Patchwork-Hint: ignore
-Date:   Wed, 25 Dec 2019 00:09:07 +0000 (GMT)
+Date:   Wed, 25 Dec 2019 00:09:18 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: spdifrx: fix inconsistent lock state
+   spi: uniphier: Change argument of irq functions to private structure
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,92 +90,66 @@ to this mail.
 Thanks,
 Mark
 
-From 2859b1784031b5709446af8f6039c467f136e67d Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Wed, 4 Dec 2019 16:43:31 +0100
-Subject: [PATCH] ASoC: stm32: spdifrx: fix inconsistent lock state
+From 9859db51387df8a7e8564a211158ff8bf263b0a8 Mon Sep 17 00:00:00 2001
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Date: Tue, 24 Dec 2019 09:58:24 +0900
+Subject: [PATCH] spi: uniphier: Change argument of irq functions to private
+ structure
 
-In current spdifrx driver locks may be requested as follows:
-- request lock on iec capture control, when starting synchronization.
-- request lock in interrupt context, when spdifrx stop is called
-from IRQ handler.
+This changes each argument of functions uniphier_irq_{enable,disable}()
+to uniphier_spi_priv because these functions are used not only for
+spi_device but also for the entire controller.
 
-Take lock with IRQs disabled, to avoid the possible deadlock.
-
-Lockdep report:
-[   74.278059] ================================
-[   74.282306] WARNING: inconsistent lock state
-[   74.290120] --------------------------------
-...
-[   74.314373]        CPU0
-[   74.314377]        ----
-[   74.314381]   lock(&(&spdifrx->lock)->rlock);
-[   74.314396]   <Interrupt>
-[   74.314400]     lock(&(&spdifrx->lock)->rlock);
-
-Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191204154333.7152-2-olivier.moysan@st.com
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Link: https://lore.kernel.org/r/1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_spdifrx.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/spi/spi-uniphier.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index 3fd28ee01675..9c6beb610c17 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -320,6 +320,7 @@ static void stm32_spdifrx_dma_ctrl_stop(struct stm32_spdifrx_data *spdifrx)
- static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
- {
- 	int cr, cr_mask, imr, ret;
-+	unsigned long flags;
- 
- 	/* Enable IRQs */
- 	imr = SPDIFRX_IMR_IFEIE | SPDIFRX_IMR_SYNCDIE | SPDIFRX_IMR_PERRIE;
-@@ -327,7 +328,7 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
- 	if (ret)
- 		return ret;
- 
--	spin_lock(&spdifrx->lock);
-+	spin_lock_irqsave(&spdifrx->lock, flags);
- 
- 	spdifrx->refcount++;
- 
-@@ -362,7 +363,7 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
- 				"Failed to start synchronization\n");
- 	}
- 
--	spin_unlock(&spdifrx->lock);
-+	spin_unlock_irqrestore(&spdifrx->lock, flags);
- 
- 	return ret;
- }
-@@ -370,11 +371,12 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
- static void stm32_spdifrx_stop(struct stm32_spdifrx_data *spdifrx)
- {
- 	int cr, cr_mask, reg;
-+	unsigned long flags;
- 
--	spin_lock(&spdifrx->lock);
-+	spin_lock_irqsave(&spdifrx->lock, flags);
- 
- 	if (--spdifrx->refcount) {
--		spin_unlock(&spdifrx->lock);
-+		spin_unlock_irqrestore(&spdifrx->lock, flags);
- 		return;
- 	}
- 
-@@ -393,7 +395,7 @@ static void stm32_spdifrx_stop(struct stm32_spdifrx_data *spdifrx)
- 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_DR, &reg);
- 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_CSR, &reg);
- 
--	spin_unlock(&spdifrx->lock);
-+	spin_unlock_irqrestore(&spdifrx->lock, flags);
+diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
+index 47cde1864630..a44a1a5fb7b0 100644
+--- a/drivers/spi/spi-uniphier.c
++++ b/drivers/spi/spi-uniphier.c
+@@ -93,9 +93,9 @@ static inline unsigned int bytes_per_word(unsigned int bits)
+ 	return bits <= 8 ? 1 : (bits <= 16 ? 2 : 4);
  }
  
- static int stm32_spdifrx_dma_ctrl_register(struct device *dev,
+-static inline void uniphier_spi_irq_enable(struct spi_device *spi, u32 mask)
++static inline void uniphier_spi_irq_enable(struct uniphier_spi_priv *priv,
++					   u32 mask)
+ {
+-	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+ 	u32 val;
+ 
+ 	val = readl(priv->base + SSI_IE);
+@@ -103,9 +103,9 @@ static inline void uniphier_spi_irq_enable(struct spi_device *spi, u32 mask)
+ 	writel(val, priv->base + SSI_IE);
+ }
+ 
+-static inline void uniphier_spi_irq_disable(struct spi_device *spi, u32 mask)
++static inline void uniphier_spi_irq_disable(struct uniphier_spi_priv *priv,
++					    u32 mask)
+ {
+-	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+ 	u32 val;
+ 
+ 	val = readl(priv->base + SSI_IE);
+@@ -339,12 +339,12 @@ static int uniphier_spi_transfer_one_irq(struct spi_master *master,
+ 
+ 	uniphier_spi_fill_tx_fifo(priv);
+ 
+-	uniphier_spi_irq_enable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
++	uniphier_spi_irq_enable(priv, SSI_IE_RCIE | SSI_IE_RORIE);
+ 
+ 	time_left = wait_for_completion_timeout(&priv->xfer_done,
+ 					msecs_to_jiffies(SSI_TIMEOUT_MS));
+ 
+-	uniphier_spi_irq_disable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
++	uniphier_spi_irq_disable(priv, SSI_IE_RCIE | SSI_IE_RORIE);
+ 
+ 	if (!time_left) {
+ 		dev_err(dev, "transfer timeout.\n");
 -- 
 2.20.1
 
