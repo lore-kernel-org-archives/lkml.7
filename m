@@ -2,98 +2,124 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2285C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA29C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D212072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0120730
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:29:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hyyuIbMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLYJOm (ORCPT
+        id S1726399AbfLYJ3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 04:14:42 -0500
-Received: from mga18.intel.com ([134.134.136.126]:26290 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfLYJOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 04:14:41 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Dec 2019 01:14:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,353,1571727600"; 
-   d="scan'208";a="212079837"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 25 Dec 2019 01:14:34 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ik2kU-00020J-8e; Wed, 25 Dec 2019 17:14:34 +0800
-Date:   Wed, 25 Dec 2019 17:14:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     kbuild-all@lists.01.org, dri-devel@lists.freedesktop.org,
-        thierry.reding@gmail.com, sam@ravnborg.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v2 3/3] drm/panel: add panel driver for Leadtek
- LTK500HD1829
-Message-ID: <201912251756.Sa7kvTwW%lkp@intel.com>
-References: <20191217222812.19872-3-heiko@sntech.de>
+        Wed, 25 Dec 2019 04:29:11 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6623 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726025AbfLYJ3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 04:29:11 -0500
+X-UUID: b3d58ddf514249d9b3da9fc4c7ea5b75-20191225
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=MQpZnlOW3rHl7XcCvW/fiVIv7mvsoc4U1tYgVz64kwo=;
+        b=hyyuIbMzic0VYRogqCCFKuTYs/TvNOwZZqr3i4C9wi7o02au4JYeRZIBX7eE+d+1YxCxemQ6wqkBH+jYcCav7rCqQf8lnogQrTosc5wa3vFbkbf5B95fVHzV0N2WDfTDe2trqnv7fkXez12tdAeRb9+VBen+LOYi5FRhcIK5Di4=;
+X-UUID: b3d58ddf514249d9b3da9fc4c7ea5b75-20191225
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 430936111; Wed, 25 Dec 2019 17:29:06 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 25 Dec 2019 17:28:44 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 25 Dec 2019 17:28:42 +0800
+Message-ID: <1577266145.31907.4.camel@mtkswgap22>
+Subject: Re: [PATCH] mm/page_owner: print largest memory consumer when OOM
+ panic occurs
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Qian Cai <cai@lca.pw>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-mediatek@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Wed, 25 Dec 2019 17:29:05 +0800
+In-Reply-To: <5E08DE19-5B71-4245-8908-548BB4FA861F@lca.pw>
+References: <1577169946.4959.4.camel@mtkswgap22>
+         <5E08DE19-5B71-4245-8908-548BB4FA861F@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217222812.19872-3-heiko@sntech.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
+T24gVHVlLCAyMDE5LTEyLTI0IGF0IDA4OjQ3IC0wNTAwLCBRaWFuIENhaSB3cm90ZToNCj4gDQo+
+ID4gT24gRGVjIDI0LCAyMDE5LCBhdCAxOjQ1IEFNLCBNaWxlcyBDaGVuIDxtaWxlcy5jaGVuQG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gV2UgdXNlIGttZW1sZWFrIHRvbywgYnV0IGEg
+bWVtb3J5IGxlYWthZ2Ugd2hpY2ggaXMgY2F1c2VkIGJ5DQo+ID4gYWxsb2NfcGFnZXMoKSBpbiBh
+IGtlcm5lbCBkZXZpY2UgZHJpdmVyIGNhbm5vdCBiZSBjYXVnaHQgYnkga21lbWxlYWsuDQo+ID4g
+V2UgaGF2ZSBmb3VnaHQgYWdhaW5zdCB0aGlzIGtpbmQgb2YgcmVhbCBwcm9ibGVtcyBmb3IgYSBm
+ZXcgeWVhcnMgYW5kIA0KPiA+IGZpbmQgYSB3YXkgdG8gbWFrZSB0aGUgZGVidWdnaW5nIGVhc2ll
+ci4NCj4gPiANCj4gPiBXZSBjdXJyZW50bHkgaGF2ZSBpbmZvcm1hdGlvbiBkdXJpbmcgT09NOiBw
+cm9jZXNzIE5vZGUsIHpvbmUsIHN3YXAsIA0KPiA+IHByb2Nlc3MgKHBpZCwgcnNzLCBuYW1lKSwg
+c2xhYiB1c2FnZSwgYW5kIHRoZSBiYWNrdHJhY2UsIG9yZGVyLCBhbmQNCj4gPiBnZnAgZmxhZ3Mg
+b2YgdGhlIE9PTSBiYWNrdHJhY2UuIA0KPiA+IFdlIGNhbiB0ZWxsIG1hbnkgZGlmZmVyZW50IHR5
+cGVzIG9mIE9PTSBwcm9ibGVtcyBieSB0aGUgaW5mb3JtYXRpb24NCj4gPiBhYm92ZSBleGNlcHQg
+dGhlIGFsbG9jX3BhZ2VzKCkgbGVha2FnZS4NCj4gPiANCj4gPiBUaGUgcGF0Y2ggZG9lcyB3b3Jr
+IGFuZCBzYXZlIGEgbG90IG9mIGRlYnVnZ2luZyB0aW1lLg0KPiA+IENvdWxkIHdlIGNvbnNpZGVy
+IHRoZSAiZ3JlYXRlc3QgbWVtb3J5IGNvbnN1bWVyIiBhcyBhbm90aGVyIHVzZWZ1bCANCj4gPiBP
+T00gaW5mb3JtYXRpb24/DQo+IA0KPiBUaGlzIGlzIHJhdGhlciBzaXR1YXRpb25hbCBjb25zaWRl
+cmluZyB0aGVyZSBhcmUgbWVtb3J5IGxlYWtzIGhlcmUgYW5kIHRoZXJlIGJ1dCBpdCBpcyBub3Qg
+bmVjZXNzYXJ5IHRoYXQgc3RyYWlnaHRmb3J3YXJkIGFzIGEgc2luZ2xlIHBsYWNlIG9mIGdyZWF0
+ZXN0IGNvbnN1bWVyLg0KDQpBZ3JlZWQsIGJ1dCBoYXZpbmcgdGhlIGdyZWF0ZXN0IG1lbW9yeSBj
+b25zdW1lciBpbmZvcm1hdGlvbiBkb2VzIG5vIGhhcm0NCmhlcmUuDQpNYXliZSB5b3UgY2FuIHNo
+YXJlIHNvbWUgY2FzZXMgdG8gbWU/DQoNCg0KVGhlIGdyZWF0ZXN0IG1lbW9yeSBjb25zdW1lciBw
+cm92aWRlcyBhIHN0cm9uZyBjbHVlIG9mIG9mIGEgbWVtb3J5DQpsZWFrYWdlLg0KSSBoYXZlIHNl
+ZW4gc29tZSBkaWZmZXJlbnQgdHlwZXMgb2YgT09NIGlzc3Vlcy4NCg0KMS4gdGFzayBsZWFrYWdl
+LCB3ZSBjYW4gb2JzZXJ2ZSB0aGVzZSBieSB0aGUga2VybmVsX3N0YWNrIG51bWJlcnMNCg0KMi4g
+bWVtb3J5IGZyYWdtZW50YXRpb24sIGNoZWNrIHRoZSBaT05FIG1lbW9yeSBzdGF0dXMgYW5kIHRo
+ZSBhbGxvY2F0aW9uDQpvcmRlcg0KDQozLiBrbWFsbG9jIGxlYWthZ2UsIGNoZWNrIHRoZSBzbGFi
+IG51bWJlcnMgYW5kIGxldCdzIHNheSB0aGUgbnVtYmVyDQprYW1sbG9jLTUxMiBpcyBhYm5vcm1h
+bCwNCmFuZCB3ZSBjYW4gZW5hYmxlIGttZW1sZWFrLCByZXByb2R1Y2UgdGhlIGlzc3VlLiBNb3N0
+IG9mIHRoZSB0aW1lLCBJIHNhdw0KYSBzaW5nbGUgYmFja3RyYWNlIG9mIHRoYXQgbGVhay4NCkl0
+J3MgaGVscGZ1bCB0byBoYXZlIHRoZSBncmVhdGVzdCBtZW1vcnkgY29uc3VtZXIgaW4gdGhpcyBj
+YXNlLg0KDQo0LiB2bWFsbG9jIGxlYWthZ2UsIHdlIGhhdmUgbm8gdm1hbGxvYyBudW1iZXJzIG5v
+dy4gQW5kIEkgc2F3IGEgY2FzZQ0KdGhhdCB3ZSBwYXNzIGEgbGFyZ2UgbnVtYmVyDQppbnRvIHZt
+YWxsb2MoKSBpbiBhIGZ1enppbmcgdGVzdCBhbmQgaXQgY2F1c2VzIE9PTSBrZXJuZWwgcGFuaWMu
+DQpJdCBpcyBoYXJkIHRvIHJlcHJvZHVjZSB0aGUgaXNzdWUgYW5kIGttZW1sZWFrIGNhbiBkbyBs
+aXR0bGUgaGVscCBoZXJlDQpiZWNhdXNlIGl0IGlzIGEgT09NIGtlcm5lbCBwYW5pYy4NClRoYXQg
+aXMgdGhlIGlzc3VlIHdoaWNoIGluc3BpcmVzIG1lIHRvIGNyZWF0ZSB0aGlzIHBhdGNoLiBXZSBm
+b3VuZCB0aGUNCnJvb3QgY2F1c2UgYnkgdGhpcyBhcHByb2FjaC4NCg0KNS4gT09NIGR1ZSB0byBv
+dXQgb2Ygbm9ybWFsIG1lbW9yeSAoaW4gMzJiaXQga2VybmVsKSwgd2UgY2FuIGNoZWNrIHRoZQ0K
+YWxsb2NhdGUgZmxhZ3MgYW5kIHRoZQ0Kem9uZSBtZW1vcnkgc3RhdHVzLiBJbiB0aGlzIGNhc2Us
+IHdlIGNhbiB0cnkgdG8gY2hlY2sgdGhlIG1lbW9yeQ0KYWxsb2NhdGlvbnMgYW5kIHNlZSBpZiB0
+aGV5IGNhbg0KdXNlIGhpZ2htZW0uIEtub3dpbmcgdGhlIGdyZWF0ZXN0IG1lbW9yeSBjb25zdW1l
+ciBtYXkgb3IgbWF5IG5vdCBiZQ0KdXNlZnVsIGhlcmUuDQoNCjYuIE9PTSBjYXVzZWQgYnkgMiBv
+ciBtb3JlIGRpZmZlcmVudCBiYWNrdHJhY2VzLiBJIHNhdyB0aGlzIG9uY2UgYW5kIHdlDQplbmFi
+bGUgUEFHRV9PV05FUiBhbmQNCmdldCB0aGUgY29tcGxldGUgaW5mb3JtYXRpb24gb2YgbWVtb3J5
+IHVzYWdlIGFuZCBsb2NhdGUgdGhlIHJvb3QgY2F1c2UuDQpBZ2Fpbiwga25vd2luZyB0aGUgZ3Jl
+YXRlc3QNCm1lbW9yeSBjb25zdW1lciBpcyBzdGlsbCBhIGhlbHAgaW4gdGhpcyBpc3N1ZS4NCg0K
+Ny4gT09NIGNhdXNlIGJ5IGFsbG9jX3BhZ2VzKCkuIFRoZXJlIGFyZSBubyBleGlzdGluZyB1c2Vm
+dWwgaW5mb3JtYXRpb24NCmZvciB0aGlzIGlzc3VlLiANCkNPTkZJR19QQUdFX09XTkVSIGlzIHVz
+ZWZ1bCBhbmQgd2UgY2FuIGRvIG1vcmUgYmFzZSBvbg0KQ09ORklHX1BBR0VfT1dORVIuICh0aGlz
+IHBhdGNoKQ0KDQo+IA0KPiBUaGUgb3RoZXIgcXVlc3Rpb24gaXMgd2h5IHRoZSBvZmZlbnNpdmUg
+ZHJpdmVycyB0aGF0IHVzZSBhbGxvY19wYWdlcygpIHJlcGVhdGVkbHkgd2l0aG91dCB1c2luZyBh
+bnkgb2JqZWN0IGFsbG9jYXRvcj8gRG8geW91IGhhdmUgZXhhbXBsZXMgb2YgdGhpcyBpbiBkcml2
+ZXJzIHRoYXQgY291bGQgaGFwcGVuPw0KDQoNCkZvciBleGFtcGxlLCB3ZSdyZSBpbXBsZW1lbnRp
+bmcgb3VyIGlvbW11IGRyaXZlciBhbmQgdGhlcmUgYXJlIG1hbnkNCmFsbG9jX3BhZ2VzKCkgaW4g
+ZHJpdmVycy9pb21tdS4NClRoaXMgYXBwcm9hY2ggaGVscHMgdXMgbG9jYXRlZCBzb21lIG1lbW9y
+eSBsZWFrYWdlcyBpbiBvdXINCmltcGxlbWVudGF0aW9uLg0KDQpUaGFua3MgYWdhaW4gZm9yIHlv
+dXIgY29tbWVudHMNCkl0J3MgQ2hyaXN0bWFzIG5vdyBzbyBJIHRoaW5rIHdlIGNhbiBkaXNjdXNz
+IGFmdGVyIHRoZSBDaHJpc3RtYXMgYnJlYWs/DQoNCkkgaGF2ZSBwb3N0ZWQgdGhlIG51bWJlciBv
+ZiBpc3N1ZXMgYWRkcmVzc2VkIGJ5IHRoaXMgYXBwcm9hY2ggKDcgcmVhbA0KcHJvYmxlbXMgc2lu
+Y2UgMjAxOS81KSANCkkgdGhpbmsgdGhpcyBhcHByb2FjaCBjYW4gaGVscCBwZW9wbGUuIDopDQoN
+Cg0KICBNaWxlcw0KDQo=
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on robh/for-next]
-[cannot apply to drm-exynos/exynos-drm-next drm-intel/for-linux-next tegra-drm/drm/tegra/for-next drm-tip/drm-tip linus/master drm/drm-next v5.5-rc3 next-20191220]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Heiko-Stuebner/dt-bindings-Add-vendor-prefix-for-Leadtek-Technology/20191221-062606
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-129-g341daf20-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c:411:22: sparse: sparse: incorrect type in initializer (different argument counts)
->> drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c:411:22: sparse:    expected int ( *get_modes )( ... )
->> drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c:411:22: sparse:    got int ( * )( ... )
-   drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c:463:15: sparse: sparse: undefined identifier 'drm_panel_of_backlight'
-
-vim +411 drivers/gpu/drm/panel/panel-leadtek-ltk500hd1829.c
-
-   407	
-   408	static const struct drm_panel_funcs ltk500hd1829_funcs = {
-   409		.unprepare = ltk500hd1829_unprepare,
-   410		.prepare = ltk500hd1829_prepare,
- > 411		.get_modes = ltk500hd1829_get_modes,
-   412	};
-   413	
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
