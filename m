@@ -2,168 +2,156 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B21C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65D4C2D0CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B232077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB6A20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CptSbGMv";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CxjFcU4i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfLYGdb convert rfc822-to-8bit (ORCPT
+        id S1726369AbfLYGkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 01:33:31 -0500
-Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:33172 "EHLO
-        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725847AbfLYGda (ORCPT
+        Wed, 25 Dec 2019 01:40:32 -0500
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:41727 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfLYGkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 01:33:30 -0500
-X-Greylist: delayed 948 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Dec 2019 01:33:29 EST
-Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.191) BY m9a0013g.houston.softwaregrp.com WITH ESMTP
- FOR linux-kernel@vger.kernel.org;
- Wed, 25 Dec 2019 06:32:42 +0000
-Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
- M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 25 Dec 2019 06:15:27 +0000
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (15.124.72.11) by
- M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 25 Dec 2019 06:15:27 +0000
+        Wed, 25 Dec 2019 01:40:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577256031; x=1608792031;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=+hFmzIwqSQifXI0avuqxIiOa0Vm6kISz1Cr52u9UYh4=;
+  b=CptSbGMvfgL4quBd+pAfvfR7cqcggUge9XUomkiT48qKNFZbKnsjF/J0
+   T2pWnIX4987Pzp40QnBPYoNTx/os04EiNkuCl5UzUylPuX3soekuTgBBJ
+   iRQyZ7FlSpAkJzDUliSRAUBQ69TY14KlSBmB0Lad83MnXKkS4ABXbq4O3
+   yd8NAvtvU4iQZF/2nyjJA5590iqmC2VgN8JhTAKZv/Ik83hm4rjZt0qRU
+   BcxIXKmF9h+/AEouMBP4w4xV0vEPPJU2SZMaePFhL22mic1LvwHo0A30C
+   fddSij9Dcco1qQJdUEM78G2eD+hSKlj+/X9nrxXe/Thps4c/VQm1HWNbN
+   A==;
+IronPort-SDR: BfJ7RfwvdQJ8XcKvRA17w6OY8yjMslFx9ZwEcD0RSiKPXs/tE0LJOGiBo9BF5k8MHo23B8KWQU
+ wFPMKAKHcCn0b9xPLUzp8pYU+DMmUkzPr1CU8WLLxakzPu8LNArVw4v4nL+6cxdqF2Ix/avBiU
+ dOBcGUZ1wfGEXlM4a95BvessUJfWGxGGfQwckUFIBLTAi0p4ISnE3edOSoiy0Afx4lo5Y2Hxus
+ SKSh0wEJht99veQGxtqPzqdvhjhc9odl4Fc+o2nCZ48e/3m9NH4Pvhv5CUoMrO1buEmX8uLlT+
+ DOU=
+X-IronPort-AV: E=Sophos;i="5.69,353,1571673600"; 
+   d="scan'208";a="233782101"
+Received: from mail-dm6nam10lp2102.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.102])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Dec 2019 14:40:30 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aJG0B5tOM6L/DABzHPW+fTKOA+HGZh3npdmkwNmY9PYWa0/gmQnLQ1rKKjABwielhNAyHkseEf9YnGUVWinIgJyDApaxBQdTCZ820dIcBZifnloqndnuFxBC8bP0Y+Cmt0UOJ1L7AgeSA/LWvlGBuPnOsc5k4qy4bw92s7BFGmNS64yB74GT5SZvxA+Y2UQ88vpW5yiZafTjWdCsecydtJ3mnDOi266ZLqzSS/1i0k8hiVo5RoSQcszky0GmNVFfFUxCVfyvF/i+L7q/hXn679QnN5rHostT8w5Kylmk2lbHu4zoxztAImg/A6DxJerIbbO5OKI0L1CLYfMVqJWxrQ==
+ b=HKT/3pCLpIv6pjSMFxvaE//RmA3GpjFsIXiWvi+na69bWdS5KUdoFdJtxARPmDA1UAmb/mY4O2T4TOCErrW3Z9vAJfDvpBhZNgCfHeItqs3jJqmsynWqg0UEWbjPqGa/pchPIkmWxCK79Sa3hEARJPxs0h/bqtN0cRPh6YOVCxe3xzeJjDQq8Ye9nqkaYZZUKsfdlTUSazfAj7UnZuE1lWqZ6TDDBaFp5KyAmicyO0u3goiAr3occb0xgVhUtFSZt7JR2C+2If5R3J/BCal+OrT5ULZSaVdLQaKWdmKSO29l7Oti21fqIXSdMGW0+QhZO+KhEKF7cpwrkH6m4pdfnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdNs6krga8opvF0rSxAo8xgdmm3YOshNPbFmYEeplKY=;
- b=Kk0a1/nVaJ2TB+19vAwnQrnI4N/3096V+dmkJ3zShvVhEDHW8mFuUrfXYxAdpEJHSELqRj7+TFNboL8+RZ/uq8IsVS1najTuxU+/h6+6XB0+tK4epfKx65yVHg9NWt2TGi/0hGrRBGr9YrSicIbOI8lDqwSvJm1L4qmxKb7KqZdLNDepHpMvcOwIYG8tuRu1bqafvX18uP//xgulNrd1I42lg9GJSIjzUBb18aRAD2ZYuvsiKnF1R28eGfe47/mRXiNUbmG+WyHXcOh3oJtUQ9UJXSKPZFyNW5LuS9cN9zA9d/U1I+NWF+h5lyBremD6oxcDvmqEGLX2g/SwQGtjFw==
+ bh=+hFmzIwqSQifXI0avuqxIiOa0Vm6kISz1Cr52u9UYh4=;
+ b=Gg8MARz7/Wt4720GoSB2bitxo7Y/RtVgOmZsla2b8I0WntSXEtFzjlKgKQu/UY3zTF6cabas+TPglLwpEu664H9uLnKIexZGf6AVADozylELRwKX3jd+KSPSF+ED4um017k+30473lLCoHhx9jqO3be9v5VIq+RCq7MDfsHvRAeXmGIQXJ4mQKy6prs8B7akn8E43s9dnMrviEN2c/M0jmGFuI5Wf/2JkdUZcz8mSqluORFTTL/ZAlqDTJf4C5lVIz7qXP+v6xZadR90WcM9t3xpzEKIe8TsgRcuzaUuO3CBHjrXKHG7e5fwwXspYq7sjmLVjhqfTD30BkCpOhUzeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from CH2PR18MB3206.namprd18.prod.outlook.com (52.132.247.79) by
- CH2PR18MB3271.namprd18.prod.outlook.com (52.132.245.149) with Microsoft SMTP
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+hFmzIwqSQifXI0avuqxIiOa0Vm6kISz1Cr52u9UYh4=;
+ b=CxjFcU4iZK+amzbT2cF+XVePh78IRCL1lTeJmsBJEjGhzDG0wgJKTRf3t/c3IW+3uJ7hdkO/fIAdpujGu34TM7AeHLE0NmDfxRd0CknfetCGwnGUpMZuiqe0XQ7etSQPZ1YTBOuFvURr72SqnJtb3Hx54Xw9qQOHdYOA1B2kR0A=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
+ BYAPR04MB3782.namprd04.prod.outlook.com (52.135.214.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.19; Wed, 25 Dec 2019 06:15:25 +0000
-Received: from CH2PR18MB3206.namprd18.prod.outlook.com
- ([fe80::54af:ef86:cd53:ba5c]) by CH2PR18MB3206.namprd18.prod.outlook.com
- ([fe80::54af:ef86:cd53:ba5c%5]) with mapi id 15.20.2559.017; Wed, 25 Dec 2019
- 06:15:25 +0000
-Received: from ghe-pc.suse.asia (45.122.156.254) by MAXPR0101CA0007.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2581.11 via Frontend Transport; Wed, 25 Dec 2019 06:15:21 +0000
-From:   Gang He <GHe@suse.com>
-To:     "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>
-CC:     Gang He <GHe@suse.com>,
+ 15.20.2559.15; Wed, 25 Dec 2019 06:40:29 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61%5]) with mapi id 15.20.2581.007; Wed, 25 Dec 2019
+ 06:40:29 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: [PATCH] ocfs2: fix the crash due to call ocfs2_get_dlm_debug once
- less
-Thread-Topic: [PATCH] ocfs2: fix the crash due to call ocfs2_get_dlm_debug
- once less
-Thread-Index: AQHVuuqxJ867Wgxv9EOdDT6+lBFGfg==
-Date:   Wed, 25 Dec 2019 06:15:24 +0000
-Message-ID: <20191225061501.13587-1-ghe@suse.com>
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v3 2/2] zonefs: Add documentation
+Thread-Topic: [PATCH v3 2/2] zonefs: Add documentation
+Thread-Index: AQHVuf7Aj/1RgKnKOE6js//cNKXmzQ==
+Date:   Wed, 25 Dec 2019 06:40:29 +0000
+Message-ID: <BYAPR04MB58167BE64D952F385E3F7146E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20191224020615.134668-1-damien.lemoal@wdc.com>
+ <20191224020615.134668-3-damien.lemoal@wdc.com>
+ <ac1bd604-0088-2002-f03b-5752425bb530@infradead.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR0101CA0007.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:c::17) To CH2PR18MB3206.namprd18.prod.outlook.com
- (2603:10b6:610:14::15)
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=GHe@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.12.3
-x-originating-ip: [45.122.156.254]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 37e78de2-82c8-4ad1-f8dd-08d78901d446
-x-ms-traffictypediagnostic: CH2PR18MB3271:
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e65f9052-404e-4369-517e-08d789055515
+x-ms-traffictypediagnostic: BYAPR04MB3782:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR18MB3271A7FEBCC154368435DB39CF280@CH2PR18MB3271.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:651;
+x-microsoft-antispam-prvs: <BYAPR04MB3782BE3C71926E3AEEB1C83FE7280@BYAPR04MB3782.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
 x-forefront-prvs: 02622CEF0A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(16526019)(8676002)(498600001)(26005)(81156014)(81166006)(71200400001)(186003)(2906002)(52116002)(6506007)(6512007)(5660300002)(4326008)(66556008)(1076003)(66476007)(66946007)(8936002)(36756003)(110136005)(64756008)(86362001)(956004)(66446008)(6486002)(2616005)(54906003)(16060500001);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR18MB3271;H:CH2PR18MB3206.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(189003)(199004)(81166006)(478600001)(9686003)(91956017)(33656002)(76116006)(7696005)(6506007)(26005)(53546011)(8936002)(8676002)(81156014)(71200400001)(5660300002)(66946007)(4744005)(86362001)(66446008)(55016002)(186003)(52536014)(4326008)(2906002)(66476007)(66556008)(54906003)(64756008)(110136005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB3782;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mzjKG4O1LKcVP53zYfN4gnF+UcaCStnmRpxMynZWFmPOSiE/USEqU18jIxly5ATVvZo5bRjzeNvhMeIsBSlh9i6ffEMXHvNDgeflYNW13dbYiq6aUfgtX6DF3KQA4rdNUL88hXs9bu0cWL3XbXbu2Cy5ATqsefSK9tyoYZZZVxNTvDXMK0N1GQ1VRd+NHVSO1TSpZm3+9m6tWtiUYk74d6wlFl18a1BEB8pJB6WafY7uOJB/3Kcew2QSFp1GBhq6v1PJEjxxZV4ndoRoGNcvWwZzofGqAUrvs9JgKGlrk29vrJFdQ1SdKfQkMkuf+1lO3ljkOvVRCf6PYARERI1xRuaF+Yf47WuHtKYT5stYbjYjiRzD9SOaVrmz2y7PI820LIRdQzeWcbaO8DLdY/94PGBKCmnTkEmNQrd4/W6Q4V4BZfMOGTo5yDFJ8a97dHPAIrn0Wbrq+TOaGKN2ooVoU43bUz3X35GBQz8vjIB8s+czjdbT+4QICkpCqlWo2nCu
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+x-microsoft-antispam-message-info: BM/tJfHg+qYqkt9FLxrZS7R/lTxNAtnoSpvXiF/zyziqs0paUoMGjAogfqhq+Bv10lyRjxhaHFHlfMqEyFZuRQpiiYyMOoMG4t8PRrRDr2WRjou/ocIwk9FsnM/Y7fsQvfpG6Kzx1TA88xoXc38MVPAYka7ItHJD4RKVL8wkwzTogc42EWtDIicDykriYEvFumiwFr8JjOFpn6FFl+7gs0+Lmk87WoNZMlgzYzJps69Wj8xsdV+UkG8I22Ryx10V1aMFUXiips1zj/Eq87eeXlcJKrlw1Uv0Nz0Sv55D7SHY2NIJLPeYx9McJKruUzK+DC29Cf3yHNsKRKRMTb+1yQii1lwL6QZQnezpw8bZJb8PSMcPh4BjZW2WVlz/1/OX3LUFunA1LEGyiDhRf3eTXf7jgyFVa/WNNYZsjrDI98BM+rs+ySKaphqom+ELw3aL
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37e78de2-82c8-4ad1-f8dd-08d78901d446
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Dec 2019 06:15:25.0466
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e65f9052-404e-4369-517e-08d789055515
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Dec 2019 06:40:29.0737
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jU+As+1xeQop2QxAy2poiv3uQ3UGKed6qk6t/T8FjW6F2wcF2CvtKZ7avMQ1rfng
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR18MB3271
-X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-userprincipalname: 7L961cvgvVvLX2+d7k4+hwPFUngnT66+F7U7cH7pspdgDKGAdwbAfzxBWCg2H+jiKX6IIgLi++APF3JXEQi/Dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB3782
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because ocfs2_get_dlm_debug() function is called once less here,
-ocfs2 file system will trigger the system crash, usually after
-ocfs2 file system is unmounted.
-this system crash is caused by a generic memory corruption, these
-crash backtraces are not always the same, for exapmle,
-
-[ 4106.597432] ocfs2: Unmounting device (253,16) on (node 172167785)
-[ 4116.230719] general protection fault: 0000 [#1] SMP PTI
-[ 4116.230731] CPU: 3 PID: 14107 Comm: fence_legacy Kdump:
-[ 4116.230737] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-[ 4116.230772] RIP: 0010:__kmalloc+0xa5/0x2a0
-[ 4116.230778] Code: 00 00 4d 8b 07 65 4d 8b
-[ 4116.230785] RSP: 0018:ffffaa1fc094bbe8 EFLAGS: 00010286
-[ 4116.230790] RAX: 0000000000000000 RBX: d310a8800d7a3faf RCX: 0000000000000000
-[ 4116.230794] RDX: 0000000000000000 RSI: 0000000000000dc0 RDI: ffff96e68fc036c0
-[ 4116.230798] RBP: d310a8800d7a3faf R08: ffff96e6ffdb10a0 R09: 00000000752e7079
-[ 4116.230802] R10: 000000000001c513 R11: 0000000004091041 R12: 0000000000000dc0
-[ 4116.230806] R13: 0000000000000039 R14: ffff96e68fc036c0 R15: ffff96e68fc036c0
-[ 4116.230811] FS:  00007f699dfba540(0000) GS:ffff96e6ffd80000(0000) knlGS:00000
-[ 4116.230815] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4116.230819] CR2: 000055f3a9d9b768 CR3: 000000002cd1c000 CR4: 00000000000006e0
-[ 4116.230833] Call Trace:
-[ 4116.230898]  ? ext4_htree_store_dirent+0x35/0x100 [ext4]
-[ 4116.230924]  ext4_htree_store_dirent+0x35/0x100 [ext4]
-[ 4116.230957]  htree_dirblock_to_tree+0xea/0x290 [ext4]
-[ 4116.230989]  ext4_htree_fill_tree+0x1c1/0x2d0 [ext4]
-[ 4116.231027]  ext4_readdir+0x67c/0x9d0 [ext4]
-[ 4116.231040]  iterate_dir+0x8d/0x1a0
-[ 4116.231056]  __x64_sys_getdents+0xab/0x130
-[ 4116.231063]  ? iterate_dir+0x1a0/0x1a0
-[ 4116.231076]  ? do_syscall_64+0x60/0x1f0
-[ 4116.231080]  ? __ia32_sys_getdents+0x130/0x130
-[ 4116.231086]  do_syscall_64+0x60/0x1f0
-[ 4116.231151]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 4116.231168] RIP: 0033:0x7f699d33a9fb
-
-This regression problem was introduced by commit e581595ea29c ("ocfs:
-no need to check return value of debugfs_create functions").
-
-Signed-off-by: Gang He <ghe@suse.com>
----
- fs/ocfs2/dlmglue.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index 1c4c51f3df60..cda1027d0819 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -3282,6 +3282,7 @@ static void ocfs2_dlm_init_debug(struct ocfs2_super *osb)
- 
- 	debugfs_create_u32("locking_filter", 0600, osb->osb_debug_root,
- 			   &dlm_debug->d_filter_secs);
-+	ocfs2_get_dlm_debug(dlm_debug);
- }
- 
- static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
--- 
-2.12.3
-
+On 2019/12/25 10:33, Randy Dunlap wrote:=0A=
+[...]=0A=
+>> +For sequential write zone files, the file size changes as data is appen=
+ded at=0A=
+>> +the end of the file, similarly to any regular file system.=0A=
+>> +=0A=
+>> +# dd if=3D/dev/zero of=3D/mnt/seq/0 bs=3D4096 count=3D1 conv=3Dnotrunc =
+oflag=3Ddirect=0A=
+>> +1+0 records in=0A=
+>> +1+0 records out=0A=
+>> +4096 bytes (4.1 kB, 4.0 KiB) copied, 1.05112 s, 3.9 kB/s=0A=
+> =0A=
+> why so slow?=0A=
+> =0A=
+>> +=0A=
+>> +# ls -l /mnt/seq/0=0A=
+>> +-rw-r----- 1 root root 4096 Nov 25 13:23 /mnt/sdh/seq/0=0A=
+> =0A=
+> I don't understand the "sdh/" here. Please explain for me (not necessaril=
+y=0A=
+> in the doc file).=0A=
+=0A=
+The drive I used for generating the example was /dev/sdh and it was in=0A=
+fact mounted under /mnt/sdh/ for the test, but I removed "sdh" from the=0A=
+pasted commands and results to make things simpler. I forgot to remove=0A=
+the drive name on this line. Fixed now.=0A=
+=0A=
+Thank you for the review.=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
