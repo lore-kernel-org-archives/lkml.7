@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17445C2D0D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA878C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CF22063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22AE2063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GlptQvw+"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="L9vNQNnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfLYA57 (ORCPT
+        id S1726702AbfLYA55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:57:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37139 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfLYA56 (ORCPT
+        Tue, 24 Dec 2019 19:57:57 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51832 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfLYA55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 19:57:58 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so8283942wru.4;
-        Tue, 24 Dec 2019 16:57:56 -0800 (PST)
+        Tue, 24 Dec 2019 19:57:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so3406223wmd.1;
+        Tue, 24 Dec 2019 16:57:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PFmQ90ZYw4YHFMWAxeUA4KZ+OR6FSTaAbjo/3KRmum4=;
-        b=GlptQvw+dENRbqNV/ZmYyeMc5Iulp2sTSNKMBKg5vCMLRijEI9Hx3VEPXiFos2QoaM
-         qGGlUu6cka/RPmy43aWC/KO2BUyr6IVmb71uP+FS/BlJENgpEVw2bRW8ERlUHsPOhPq6
-         1FL/jRTLeIDjfgkSdwv+b3IwbhE7XNOo7ENrwB+ytOP8t2aByTrcLeDhjS61iXJoPo/2
-         ltA1Pfr8zQsYRObjB5Gq2glDrrGmaJNg4dHHyJtZ/dG7wDQVsCgcja2RlaCwN+9UNEER
-         pUpOoSHw3xsn8oebebqtZljVxeKLTlHXZ7dyOa6ixLsSuoBrq3aajnuQR1iHKWAAqRJ6
-         6BdQ==
+        bh=7xaUferG7HAWecpJcxnOnz4oYDhKhjdfLvmFfZUZQK4=;
+        b=L9vNQNnFaEGspbC0QRsDefYP16CFmPV+JMq+na4k4pspEeksqZ23LFmXN8OMUcLHQf
+         4V2zoD0aHmMa5Fxyq+l20LTxCyj7UQrngOEpBQOGjF+Ju/BDuC2+brkHGTFLdZLWg+sc
+         84YoXz2IPAuNIfwTiYf5jRBC67lV3HhdA1fNVptfaLPj0pnIbzQO1+Y3gwUDUUj2WFam
+         yKXJD62lgd+ZwOLkz/zprhAzMXH6wg76NK9adOEENRUQ61w/i2K9uhUBc0EP0t9dA+gt
+         DdnyKCsutNax4YBT5nGJc7hxLh1Oc8iwHVz3RDYOH+tdSa3ZAPB98RXT8I+M6pbWdM3v
+         Bt6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PFmQ90ZYw4YHFMWAxeUA4KZ+OR6FSTaAbjo/3KRmum4=;
-        b=NZaSHMFO0ctdNBM/fKE8WfWM/RpJJjsZb2wX2RuSAOtKKUFfFIa+CTgV/160YQeO7d
-         M+icVLfDKBVPcXpdq2yeiGpwegEeEg93ILqjSh3De9Wvi3jezBnluSCy8ZxAN2O9SNdh
-         q+7m2R9dnjCHY1BPOEqkFA2I6eefIQrOIaHUomMAuM3N/jK4LYyuKSe8z8O2CT2ltnj8
-         OGLzaexozrrcEW6U2FkZWGoOHpJG2Scbw463/mOOUo0uXIXLgM2gw8kaG6aXA1QJ5YSD
-         v7/1enDflhWOvk20xWcT3T3jAstlnOFvNYzdXp6yYu1Ljq/ko7JvyirJlu9p2UmhAk+i
-         sHDA==
-X-Gm-Message-State: APjAAAVe7Hr/gVf5vIBlOYWC140AEA31K9FZNg6OfUIxF9A+QUtqpqjQ
-        oZVCeANL4cay1ad9FSw5A5M=
-X-Google-Smtp-Source: APXvYqzMRfyD3lyEw+Zb4gNepoyAdwAUCWFEyKKCzMwOT61ncy02kog+p+b5jrt9BJEzS0NQro+IIQ==
-X-Received: by 2002:a5d:6390:: with SMTP id p16mr38153955wru.170.1577235476171;
-        Tue, 24 Dec 2019 16:57:56 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id e18sm26034448wrw.70.2019.12.24.16.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=7xaUferG7HAWecpJcxnOnz4oYDhKhjdfLvmFfZUZQK4=;
+        b=M8SCXEHdGk06dHv7PnjImitwMPPfRL0/iOZF9OxWWXi/IOCLMu0FhDYq8+pD4Lpey7
+         5ArNNaJOIqzB4JXcT1+7P3U06mzOrsoCr3k5iyfRiXzTulcy3EahflL7YSVBRkJed89r
+         96IyezR71JGSfftArmBHa3n28hrPJjtl4OiNQZPvEQDV6QGzDWkP9XdQnnp4P8G4vyWO
+         AqbbrvzN/FULYR96Fo3wzRhugxL43nvEflBC6+lFjz9QXyiPAxrxFrA0mof4vWd7dqTg
+         qwTzEH9ivClmDBRgFQvcfuy+pnCZ+ZkL27uqMrBYQx4TKdV2+s2OQHpEy29M0CtWws48
+         csNg==
+X-Gm-Message-State: APjAAAU54DxG5R4XQQcGboBQmrYTCejRvgNgUpvj8KyvxRAxlqXxZjB6
+        ydfjj0kQLrUzqI73+Mpuhjw=
+X-Google-Smtp-Source: APXvYqzE+4J+EBv4z0CzgDiPxQWZzZ7eL1fSoI4TT/crUG7n8l3YetIiwu2KCeBd2ZY+CHgYsCrjUA==
+X-Received: by 2002:a1c:f003:: with SMTP id a3mr5946155wmb.41.1577235475292;
         Tue, 24 Dec 2019 16:57:55 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id e18sm26034448wrw.70.2019.12.24.16.57.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 16:57:54 -0800 (PST)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
         davem@davemloft.net, khilman@baylibre.com
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         balbes-150@yandex.ru, ingrassia@epigenesys.com,
         jbrunet@baylibre.com, linus.luessing@c0d3.blue,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/3] ARM: dts: meson8m2: mxiii-plus: use the same RGMII TX delay as u-boot
-Date:   Wed, 25 Dec 2019 01:56:55 +0100
-Message-Id: <20191225005655.1502037-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 2/3] ARM: dts: meson8b: odroidc1: use the same RGMII TX delay as u-boot
+Date:   Wed, 25 Dec 2019 01:56:54 +0100
+Message-Id: <20191225005655.1502037-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
 References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
@@ -85,25 +85,25 @@ still high packet loss when transmitting data.
 Update the TX delay to 2ns - which is the same value that u-boot and the
 vendor kernel use - to fix the packet loss when transmitting data.
 
-Fixes: 35ee52bea66c74 ("ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus")
+Fixes: 9c15795a4f96cb ("ARM: dts: meson8b-odroidc1: ethernet support")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 2 +-
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-index d54477b1001c..fd94b5cbd845 100644
---- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-+++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-@@ -71,7 +71,7 @@ &ethmac {
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index a2a47804fc4a..e2ba2d66d8d9 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -204,7 +204,7 @@ &ethmac {
  
+ 	phy-mode = "rgmii";
+ 	phy-handle = <&eth_phy>;
 -	amlogic,tx-delay-ns = <4>;
 +	amlogic,tx-delay-ns = <2>;
  
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
+ 	nvmem-cells = <&ethernet_mac_address>;
+ 	nvmem-cell-names = "mac-address";
 -- 
 2.24.1
 
