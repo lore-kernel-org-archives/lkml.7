@@ -2,123 +2,167 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE97C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185D6C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34EC2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2672072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmqPNLeB"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="c8Zo8NEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLYMxb (ORCPT
+        id S1726885AbfLYMyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 07:53:31 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44676 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfLYMxa (ORCPT
+        Wed, 25 Dec 2019 07:54:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41206 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfLYMyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 07:53:30 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so18416321iln.11;
-        Wed, 25 Dec 2019 04:53:30 -0800 (PST)
+        Wed, 25 Dec 2019 07:54:53 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so21746656wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 04:54:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TXGQF3/KDO1zgaXAR6TAzsWRArHyWP6++8bZMWIayrY=;
-        b=BmqPNLeBLPHY490CWbJVfy7w98jLr80ZA1inXydv/f6pvjGbYN8UHYyJai7BvKAJHc
-         gbP0b+M8cwrXQG3O75ar53NKEJ+cq1lj674bZNvqgX9OsywaZcQvjgTVOOy/8Kf+wjPX
-         TtGQ0VcAC0y7RjPyHQdgsmZBBr9m7xVmIA4zHG2wFNaq99tKMa2/oXVmtX1k0Az/jMSd
-         1TA9nyzT6f6XDM0nA0gfQe21TwTRLux99m1fS8/gCfDIq8MINYbxTc145dDQ6DcyCn1+
-         q0CqVIIXYTEi8ITug1CbZgH09+DefyR/C6+EUP16ZPX/Ai+ki0CZ9dJLFcpp0yJl28LR
-         OcrQ==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jIham/EaCFEKkl8fK1a+ksAmrlxt3rRnwMRIAl1SXmI=;
+        b=c8Zo8NEkJAvJVAWWv5++cFMFFPdQeZL0z/4iuG82ihnv+eFKk7q7quHsPKpqN6wGkK
+         Dh1LzXFczxl7GD2iDyWdUx9BegFuBu1KkVBX5AiU7EsZLDk3+Aiq2OT5L3+bmCvb7Asa
+         QMuwcpCubHeTZzkJe3UvMWtGkNigXRJh8J6Us=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TXGQF3/KDO1zgaXAR6TAzsWRArHyWP6++8bZMWIayrY=;
-        b=pQza7bXxIjVmKb2N63FZetdtrcPJbodipJH0utptWCjMdFQyHUfmWFS7rDISIbUR8z
-         YrkN8HCQcvUjAMSrMcyjtBOLZ9qJXyDklf95ZoXw9NLfyzg82lIuwAtwX6fOBRbHCMPZ
-         OzBY2Kj9AF6VAuBhkU6r1b4H30mciJT2q10Opm0LFFlhEgXq9q8ILqs76cAcTh9d3KvU
-         VPU3jjUSkUivLArCztaimCefDQSuxxeTjDBtqAlNM9nXxp1FN56I70KThO7jnNRu73lu
-         P7hQ384OTGzL4G36ew6cQt/5g1DojGByuzxwReXsmgxjNaWtpQw0cOpwRngRBk5iPu84
-         Tp8g==
-X-Gm-Message-State: APjAAAVKlaGMyTeenND3ssZfEGoCBBJG4YQEzzpjN6c8A7yJLOhz6eiY
-        iZ0AfvLiMZgdVeklM2F0WBkq84kc7YAnvcc4kXt0xHjx
-X-Google-Smtp-Source: APXvYqzIsyUJ2aDYpIXzN+pXO88Ij5mwzND8TTEzGDtSlQIqFJaNwUMUAkRw7L/q8P/srJYI4iEXI7zfLArkcZA4N5I=
-X-Received: by 2002:a92:4e:: with SMTP id 75mr34032444ila.276.1577278409744;
- Wed, 25 Dec 2019 04:53:29 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jIham/EaCFEKkl8fK1a+ksAmrlxt3rRnwMRIAl1SXmI=;
+        b=RexXUiQpL7y2B9QLL0UgBBLA+Yl/g/3TWwuVQc3GZ3SsTcHdih4GmDFGYLhCGdO/Ez
+         ZRwHIquxYTP7QStqS4YgCCvQVacAa9nM2xNXAwgI7v1MNNtb75rgVj2iX5fsN+ZjQuNx
+         Z9Ro1pl1WdDxsFBoXDFQIupn0t7LKjhO893zBNSwVaNapNaIO0Q1W5NUq/hYLajgc3aA
+         CIfbfHvQH3eFz8vz20UujK1xTZMRq7wvJ81SpUb93dIdDwfvnwj3wBjMdBQEo8jJzr5G
+         sJah10smpQWhIEYmH00AFzMHdDvXc3tAWaU6/uJXa9y2a/7Hi0ZfCXDCmfsAg0W7DrsU
+         uUZA==
+X-Gm-Message-State: APjAAAWwZfaafclNEA5E3q1Rq1f7ii/oVbCHKrDs3HrZR/lLkMR/3zjd
+        DK9Dl4OcU198u5Mtn0rVu0tNag==
+X-Google-Smtp-Source: APXvYqwp/mzSu8ZKoccwp/On7rTa48JnGRUaw5JCWV7XKfHi+/dOSDBDwJKdUU5R8dYXI5jJdjXsfA==
+X-Received: by 2002:adf:c145:: with SMTP id w5mr40394878wre.205.1577278490981;
+        Wed, 25 Dec 2019 04:54:50 -0800 (PST)
+Received: from localhost (host-92-23-123-10.as13285.net. [92.23.123.10])
+        by smtp.gmail.com with ESMTPSA id v83sm5590825wmg.16.2019.12.25.04.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2019 04:54:50 -0800 (PST)
+Date:   Wed, 25 Dec 2019 12:54:48 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Hugh Dickins <hughd@google.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "zhengbin (A)" <zhengbin13@huawei.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] fs: inode: Reduce volatile inode wraparound risk when
+ ino_t is 64 bit
+Message-ID: <20191225125448.GA309148@chrisdown.name>
+References: <20191220024936.GA380394@chrisdown.name>
+ <CAOQ4uxjqSWcrA1reiyit9DRt+aq2tXBxLdPE31RrYw1yr=4hjg@mail.gmail.com>
+ <20191220121615.GB388018@chrisdown.name>
+ <CAOQ4uxgo_kAttnB4N1+om5gScYSDn3FXAr+_GUiqNy_79iiLXQ@mail.gmail.com>
+ <20191220164632.GA26902@bombadil.infradead.org>
+ <CAOQ4uxhYY9Ep1ncpU+E3bWg4ZpR8pjvLJMA5vj+7frEJ2KTwsg@mail.gmail.com>
+ <20191220195025.GA9469@bombadil.infradead.org>
+ <20191223204551.GA272672@chrisdown.name>
+ <CAOQ4uxjm5JMvfbi4xa3yaDwuM+XpNOSDrbVsHvJtkms00ZBnAg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191224161005.28083-1-nerv@dawncrow.de> <20191224184503.GK35479@atomide.com>
- <a8f64408-f581-e57d-0f5d-db42ff0a4288@dawncrow.de>
-In-Reply-To: <a8f64408-f581-e57d-0f5d-db42ff0a4288@dawncrow.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 25 Dec 2019 06:53:18 -0600
-Message-ID: <CAHCN7xKMnfo5reY+VSs_iCv_NXs-E12dFcRXonz6cNe1-huSPQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-To:     =?UTF-8?Q?Andr=C3=A9_Hentschel?= <nerv@dawncrow.de>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjm5JMvfbi4xa3yaDwuM+XpNOSDrbVsHvJtkms00ZBnAg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 6:05 AM Andr=C3=A9 Hentschel <nerv@dawncrow.de> wro=
-te:
+Amir Goldstein writes:
+>> The slab i_ino recycling approach works somewhat, but is unfortunately neutered
+>> quite a lot by the fact that slab recycling is per-memcg. That is, replacing
+>> with recycle_or_get_next_ino(old_ino)[0] for shmfs and a few other trivial
+>> callsites only leads to about 10% slab reuse, which doesn't really stem the
+>> bleeding of 32-bit inums on an affected workload:
+>>
+>>      # tail -5000 /sys/kernel/debug/tracing/trace | grep -o 'recycle_or_get_next_ino:.*' | sort | uniq -c
+>>          4454 recycle_or_get_next_ino: not recycled
+>>           546 recycle_or_get_next_ino: recycled
+>>
 >
-> Am 24.12.19 um 19:45 schrieb Tony Lindgren:
-> > * Andr=C3=A9 Hentschel <nerv@dawncrow.de> [191224 16:11]:
-> >> This is the first generation Amazon Echo from 2016.
-> >> Audio support is not yet implemented.
-> >
-> > OK looks good to me, just worried about one part:
-> >
-> >> +&sgx_module {
-> >> +    status =3D "disabled";
-> >> +};
-> >
-> > We should have a separate am3703.dtsi or whatever the SoC model
-> > disabling sgx if not there on the SoC. That way board specific
-> > dts files can just include it without having to debug this issue
-> > over and over.
+>Too bad..
+>Maybe recycled ino should be implemented all the same because it is simple
+>and may improve workloads that are not so MEMCG intensive.
+
+Yeah, I agree. I'll send the full patch over separately (ie. not as v2 for 
+this) since it's not a total solution for the problem, but still helps somewhat 
+and we all seem to agree that it's overall an uncontroversial improvement.
+
+>> Roman (who I've just added to cc) tells me that currently we only have
+>> per-memcg slab reuse instead of global when using CONFIG_MEMCG. This
+>> contributes fairly significantly here since there are multiple tasks across
+>> multiple cgroups which are contributing to the get_next_ino() thrash.
+>>
+>> I think this is a good start, but we need something of a different magnitude in
+>> order to actually solve this problem with the current slab infrastructure. How
+>> about something like the following?
+>>
+>> 1. Add get_next_ino_full, which uses whatever the full width of ino_t is
+>> 2. Use get_next_ino_full in tmpfs (et al.)
 >
-> Thanks for the quick review in that time of the year!
-> The sgx issue came up in newer kernels and I had to bisect it to 3b72fc89=
-5a2e57f70276b46f386f35d752adf555
-> The device just wasn't booting without a message, so yes, we should make =
-it easier for others to figure it out.
-> SoC is DM3725 and only DM3730 has sgx support. And it's hard to say if th=
-e base is am37xx or omap36xx.
-> But I see the reasons you picked am3703, so I would move everything from =
-omap36xx.dtsi to am3703.dtsi except sgx?
-
-> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
-
-I can see value in having a 3703 base and including that in the 36xx
-with SGX and DSP nodes, but why not jus make SGX disabled by default.
-Those who want/need it can enable it on a per-board basis.
-> Or would it be better to have sgx support in a separate dtsi?
-
-I am not sure how much DSP stuff is in there, but the DM3730 is the
-AM3703 + DSP and 3D.
-
-adam
+>I would prefer that filesystems making heavy use of get_next_ino, be converted
+>to use a private ino pool per sb:
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>ino_pool_create()
+>ino_pool_get_next()
+>
+>flags to ino_pool_create() can determine the desired ino range.
+>Does the Facebook use case involve a single large tmpfs or many
+>small ones? I would guess the latter and therefore we are trying to solve
+>a problem that nobody really needs to solve (i.e. global efficient ino pool).
+
+Unfortunately in the case under discussion, it's all in one large tmpfs in 
+/dev/shm. I can empathise with that -- application owners often prefer to use 
+the mounts provided to them rather than having to set up their own. For this 
+one case we can change that, but I think it seems reasonable to support this 
+case since using a single tmpfs can be a reasonable decision as an application 
+developer, especially if you only have unprivileged access to the system.
+
+>> 3. Add a mount option to tmpfs (et al.), say `32bit-inums`, which people can
+>>     pass if they want the 32-bit inode numbers back. This would still allow
+>>     people who want to make this tradeoff to use xino.
+>
+>inode32|inode64 (see man xfs(5)).
+
+Ah great, thanks! I'll reuse precedent from those.
+
+>> 4. (If you like) Also add a CONFIG option to disable this at compile time.
+>>
+>
+>I Don't know about disable, but the default mode for tmpfs (inode32|inode64)
+>might me best determined by CONFIG option, so distro builders could decide
+>if they want to take the risk of breaking applications on tmpfs.
+
+Sounds good.
+
+>But if you implement per sb ino pool, maybe inode64 will no longer be
+>required for your use case?
+
+In this case I think per-sb ino pool will help a bit, but unfortunately not by 
+an order of magnitude. As with the recycling patch this will help reduce thrash 
+a bit but not conclusively prevent the problem from happening long-term. To fix 
+that, I think we really do need the option to use ino_t-sized get_next_ino_full 
+(or per-sb equivalent).
+
+Happy holidays, and thanks for your feedback!
+
+Chris
