@@ -2,114 +2,80 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56156C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 15:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA53C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 15:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2DC20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 15:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B8020722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 15:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLYPU6 convert rfc822-to-8bit (ORCPT
+        id S1726881AbfLYP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 10:20:58 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:57532 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbfLYPU5 (ORCPT
+        Wed, 25 Dec 2019 10:26:03 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:40947 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfLYP0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 10:20:57 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=gerry@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlvFgXf_1577287249;
-Received: from 192.168.0.100(mailfrom:gerry@linux.alibaba.com fp:SMTPD_---0TlvFgXf_1577287249)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 25 Dec 2019 23:20:50 +0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
- specification version 3
-From:   "Liu, Jiang" <gerry@linux.alibaba.com>
-In-Reply-To: <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
-Date:   Wed, 25 Dec 2019 23:20:07 +0800
-Cc:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-        mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
-        jing2.liu@intel.com, chao.p.peng@intel.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
- <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 25 Dec 2019 10:26:03 -0500
+Received: by mail-il1-f198.google.com with SMTP id e4so7200989ilm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 07:26:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=A7S/GOq+N1/RvV3BsEeeY8VJ+E23sie3htdgMTQ6zh8=;
+        b=oFZd4dsioUr6Ednyc4BAER3m6XzjahGW6bzGM3rA+Vi0ZbfA9oD/4/N5Hk0q0ngDO9
+         +38WGwvidkFWnNa4sogbz70C/mWIpqLGVSRgERci5tnhC6d57T6E6Rxed40p7miDAO2X
+         J+K+my/CZAZ2nsbYGo3chi+pJjkinvMyRiXKvLyRnoyMHBEnJKH9zfql5dkCImTuDjq4
+         K3NLbDGVm/017wUqjo07wJVQKYVgTO+lF/atEV37+NnUyda0KyOKZqAwK7NwKFv9svvQ
+         D6N7RGVtK76RZz4e4waNFGgRvJbN6hWnGUGtjWzKxm865x7Xw0z9KdrkHb+hRuAmusNI
+         ik5A==
+X-Gm-Message-State: APjAAAXj5o1NGZQ7mw+23uaxWlNMsWDH88GSe2Fh4jlcpZYakI2lbFeC
+        wBJaAE8IcyGdltpr5lhlfuqIYZmEHVURNmDyWF/G2DxxVgTj
+X-Google-Smtp-Source: APXvYqxEW020KE83xrHw3Gxo/vfwdXNrRfv9mftoPAYZg1BkC/8zDOT3yGFgKCXd/lTwsoyQohVTwsOf+XKRQkf+Diz+b0SqoodX
+MIME-Version: 1.0
+X-Received: by 2002:a92:3996:: with SMTP id h22mr34246521ilf.129.1577287560911;
+ Wed, 25 Dec 2019 07:26:00 -0800 (PST)
+Date:   Wed, 25 Dec 2019 07:26:00 -0800
+In-Reply-To: <0000000000001b2f4605991a4cc0@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c6e365059a88e032@google.com>
+Subject: Re: KASAN: use-after-free Read in fb_mode_is_equal
+From:   syzbot <syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com>
+To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
+        daniel.vetter@intel.com, dri-devel@lists.freedesktop.org,
+        hdanton@sina.com, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        mojha@codeaurora.org, sam@ravnborg.org,
+        shile.zhang@linux.alibaba.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
+commit 13ff178ccd6d3b8074c542a911300b79c4eec255
+Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue May 28 09:02:53 2019 +0000
 
-> On Dec 25, 2019, at 6:20 PM, Jason Wang <jasowang@redhat.com> wrote:
-> 
-> 
-> On 2019/12/25 上午10:50, Zha Bin wrote:
->> From: Liu Jiang <gerry@linux.alibaba.com>
->> 
->> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
->> virtio over mmio devices as a lightweight machine model for modern
->> cloud. The standard virtio over MMIO transport layer only supports one
->> legacy interrupt, which is much heavier than virtio over PCI transport
->> layer using MSI. Legacy interrupt has long work path and causes specific
->> VMExits in following cases, which would considerably slow down the
->> performance:
->> 
->> 1) read interrupt status register
->> 2) update interrupt status register
->> 3) write IOAPIC EOI register
->> 
->> We proposed to update virtio over MMIO to version 3[1] to add the
->> following new features and enhance the performance.
->> 
->> 1) Support Message Signaled Interrupt(MSI), which increases the
->>    interrupt performance for virtio multi-queue devices
->> 2) Support per-queue doorbell, so the guest kernel may directly write
->>    to the doorbells provided by virtio devices.
->> 
->> The following is the network tcp_rr performance testing report, tested
->> with virtio-pci device, vanilla virtio-mmio device and patched
->> virtio-mmio device (run test 3 times for each case):
->> 
->> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
->> 
->> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
->> 	trans/s	    9536	6939		9500
->> 	trans/s	    9734	7029		9749
->> 	trans/s	    9894	7095		9318
->> 
->> [1] https://lkml.org/lkml/2019/12/20/113
-> 
-> 
-> Thanks for the patch. Two questions after a quick glance:
-> 
-> 1) In PCI we choose to support MSI-X instead of MSI for having extra flexibility like alias, independent data and address (e.g for affinity) . Any reason for not start from MSI-X? E.g having MSI-X table and PBA (both of which looks pretty independent).
-Hi Jason,
-	Thanks for reviewing patches on Christmas Day:)
-	The PCI MSI-x has several advantages over PCI MSI, mainly 
-1) support 2048 vectors, much more than 32 vectors supported by MSI.
-2) dedicated address/data for each vector,
-3) per vector mask/pending bits.
-The proposed MMIO MSI extension supports both 1) and 2), but the extension doesn’t support 3) because
-we noticed that the Linux virtio subsystem doesn’t really make use of interrupt masking/unmasking.
+     fbcon: Call fbcon_mode_deleted/new_modelist directly
 
-On the other hand, we want to simplify VMM implementations as simple as possible, and mimicking the PCI MSI-x
-will cause some complexity to VMM implementations.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1737c63ee00000
+start commit:   46cf053e Linux 5.5-rc3
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b7c63ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b7c63ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
+dashboard link: https://syzkaller.appspot.com/bug?extid=f11cda116c57db68c227
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12bf72c6e00000
 
-> 2) It's better to split notify_multiplexer out of MSI support to ease the reviewers (apply to spec patch as well)
-Great suggestion, we will try to split the patch.
+Reported-by: syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com
+Fixes: 13ff178ccd6d ("fbcon: Call fbcon_mode_deleted/new_modelist directly")
 
-Thanks,
-Gerry
-
-> 
-> Thanks
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
