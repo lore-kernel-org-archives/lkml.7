@@ -2,246 +2,293 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB8FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C345FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D252063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A57206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DIZmayoH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEfSZPwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLYDXl (ORCPT
+        id S1726881AbfLYDYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 22:23:41 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31409 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726325AbfLYDXk (ORCPT
+        Tue, 24 Dec 2019 22:24:31 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46797 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfLYDYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 22:23:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577244218;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ruyeqG1I6DvkmeNFGOrLYjoLohtwIGHhqEPY82l6nhA=;
-        b=DIZmayoH9006v9Ctf3WLGiYX+ekbJbaEHISW16bWoTgUuJrZNs3ed/xyXMibl0B0Lwu6aH
-        RGgRFkbilqASAFn5fOSKPlwgs3xxskag7NkQ/JU9siMn5ltypU/lPrzO1Fe1BNTo+5oERO
-        SqbQtDmOgly9Ih6NW/A3KFeuXvP93c8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-I7_hbLxcNoKtW2LHnlBUZQ-1; Tue, 24 Dec 2019 22:23:37 -0500
-X-MC-Unique: I7_hbLxcNoKtW2LHnlBUZQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA218107ACC4;
-        Wed, 25 Dec 2019 03:23:35 +0000 (UTC)
-Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0D5E5D9CD;
-        Wed, 25 Dec 2019 03:23:24 +0000 (UTC)
-Subject: Re: [PATCH RESEND v2 08/17] KVM: X86: Implement ring-based dirty
- memory tracking
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-References: <20191221014938.58831-1-peterx@redhat.com>
- <20191221014938.58831-9-peterx@redhat.com>
- <5b341dce-6497-ada4-a77e-2bc5af2c53ab@redhat.com>
- <20191224150836.GB3023@xz-x1>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <14c2c6d3-00fc-1507-9dd3-c25605717d3d@redhat.com>
-Date:   Wed, 25 Dec 2019 11:23:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Dec 2019 22:24:30 -0500
+Received: by mail-io1-f65.google.com with SMTP id t26so20521809ioi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 19:24:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LUAxQSRBnLaLxVug1L0lFtz8w6DTvcYtj+Zp52pVaHU=;
+        b=fEfSZPwdBlEy9JhGU1wOVx9YvWDC26anUffx/qIIoGS9NgwbSXp0qgTu6envie+SOB
+         eBpUTxtF1/FY/Q5S1uzlwMsmtX1gw1bBOFLMVFVL3/tBHgGS+i4xjrmsWTKgIwAnfmp/
+         UcLRROdahZ447jqpTx/YJOTKP6xBtiHTnRJPisRpIADdLhhhQZPEShRPXEorAHtMoPgj
+         irc8+ZM+T9QKaq6mi6OgKydw8NrivGCHli7HVmnAmJpvKwKOeTZlMB1W2hBVSTgJy1co
+         gNglpAMFbFX0aq+luFDHQDf/7hNB2P0ws0GwdcaacgXxZS8l37wAP7LHZq9L/L0J5G5q
+         N4NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LUAxQSRBnLaLxVug1L0lFtz8w6DTvcYtj+Zp52pVaHU=;
+        b=SDH+qqQ2BzkfHJWTAzY3r4hjtAeaRQFLW99hFRI6k3JWc93dZ27ooQFat3yMtwJMtj
+         vPqZsxvxOE/5K3jMqQqBO8snYc4/n68emwpK31mgoi3iXJoIKUHsmkQ9VvYW1KW+VGm5
+         QLSqDLuJ7W6dyb9v2r4gEnTyxx/TrI/x5H7yr4BE0EN4yzx67YHkjQK0RyM+j15OOskk
+         aDWvWN645rTwi2amDo1aLROuaKIZCrldAaEnKsoIVl9L2VMB2Ob61VZrj+ZtXWLP4FhV
+         MTtj172Jd4pMONuD10RGfRaTpFNraaofAq0FYvLdHNPgi044aE8PJ3JVEKB5A/P/+Xzf
+         N23Q==
+X-Gm-Message-State: APjAAAW1rBcf/I7ADr5Rb/28uJE1JVuLHXaLelsBSuwgSZG7CRf4cdQv
+        Z4hU6FYnP674oNZOaKkmDEg6+R2cqM2VVWcC9AM=
+X-Google-Smtp-Source: APXvYqxgIRLM6rPqrpD6PEc+/SFCgf+ePKbksISde0uqfWO1OQgRqUUHQRMdt/dKxnRG/Oh5OabpOzU+wXCfocDKSQ0=
+X-Received: by 2002:a5d:9e15:: with SMTP id h21mr26833842ioh.132.1577244269985;
+ Tue, 24 Dec 2019 19:24:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191224150836.GB3023@xz-x1>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+References: <1574694943-7883-1-git-send-email-yingjie_bai@126.com>
+ <87pngglmxg.fsf@mpe.ellerman.id.au> <CAFAt38F-YQUVNXEnLut0tMivYUy_OTK7G4wAHfddcmncsEpREQ@mail.gmail.com>
+ <9e680f3798f1a771cba4b41f7a5d7fda7f534522.camel@buserror.net>
+In-Reply-To: <9e680f3798f1a771cba4b41f7a5d7fda7f534522.camel@buserror.net>
+From:   Yingjie Bai <byj.tea@gmail.com>
+Date:   Wed, 25 Dec 2019 11:24:18 +0800
+Message-ID: <CAFAt38FnH376ioDuvyNJW=iOxbcooRRsEeVEfDudRoV4gG98SQ@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/mpc85xx: also write addr_h to spin table for
+ 64bit boot entry
+To:     Scott Wood <oss@buserror.net>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, yingjie_bai@126.com,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Scott,
 
-On 2019/12/24 =E4=B8=8B=E5=8D=8811:08, Peter Xu wrote:
-> On Tue, Dec 24, 2019 at 02:16:04PM +0800, Jason Wang wrote:
->>> +struct kvm_dirty_ring {
->>> +	u32 dirty_index;
->>
->> Does this always equal to indices->avail_index?
-> Yes, but here we keep dirty_index as the internal one, so we never
-> need to worry about illegal userspace writes to avail_index (then we
-> never read it from kernel).
+__pa() returns 64bit in my setup.
 
+in arch/powerpc/include/asm/page.h
 
-I get you. But I'm not sure it's wroth to bother. We meet similar issue=20
-in virtio, the used_idx is not expected to write by userspace. We simply=20
-add checks.
-
-But anyway, I'm fine if you want to keep it (maybe with a comment to=20
-explain).
+#if defined(CONFIG_PPC32) && defined(CONFIG_BOOKE)
+#define __va(x) ((void *)(unsigned long)((phys_addr_t)(x) + VIRT_PHYS_OFFSET))
+#define __pa(x) ((unsigned long)(x) - VIRT_PHYS_OFFSET)
+#else
+#ifdef CONFIG_PPC64
+...
 
 
+
+/* See Description below for VIRT_PHYS_OFFSET */
+#if defined(CONFIG_PPC32) && defined(CONFIG_BOOKE)
+#ifdef CONFIG_RELOCATABLE
+#define VIRT_PHYS_OFFSET virt_phys_offset
+#else
+#define VIRT_PHYS_OFFSET (KERNELBASE - PHYSICAL_START)
+#endif
+#endif
+
+and VIRT_PHYS_OFFSET is a variable, virt_phys_offset, which is long long
+in arch/powerpc/mm/init_32.c
+#ifdef CONFIG_RELOCATABLE
+/* Used in __va()/__pa() */
+long long virt_phys_offset;
+EXPORT_SYMBOL(virt_phys_offset);
+#endif
+
+
+my config has
+CONFIG_RELOCATABLE=y
+CONFIG_BOOKE=y
+CONFIG_FSL_BOOKE=y
+CONFIG_PPC_FSL_BOOK3E=y
+CONFIG_PPC_BOOK3E_MMU=y
+CONFIG_FSL_SOC_BOOKE=y
+CONFIG_FSL_CORENET_RCPM=y
+CONFIG_CORENET_GENERIC=y
+CONFIG_VDSO32=y
+CONFIG_PPC32=y
+CONFIG_32BIT=y
+CONFIG_ARCH_HAS_ILOG2_U32=y
+CONFIG_INIT_ENV_ARG_LIMIT=32
+# CONFIG_PPC64 is not set
+CONFIG_PTE_64BIT=y
+CONFIG_PHYS_64BIT=y
+CONFIG_ARCH_PHYS_ADDR_T_64BIT=y
+CONFIG_ARCH_DMA_ADDR_T_64BIT=y
+# CONFIG_HAVE_64BIT_ALIGNED_ACCESS is not set
+CONFIG_PHYS_ADDR_T_64BIT=y
+CONFIG_PCI_BUS_ADDR_T_64BIT=y
+CONFIG_XZ_DEC_IA64=y
+CONFIG_GENERIC_ATOMIC64=y
+# CONFIG_ATOMIC64_SELFTEST is not set
+CONFIG_PRINT_STACK_DEPTH=64
+
+
+Here is my .config taken from a customized kernel, version 4.9
+#
+# Automatically generated file; DO NOT EDIT.
+# Linux/powerpc 4.9.79 Kernel Configuration
+#
+# CONFIG_PPC64 is not set
+
+#
+# Processor support
+#
+# CONFIG_PPC_BOOK3S_32 is not set
+CONFIG_PPC_85xx=y
+# CONFIG_PPC_8xx is not set
+# CONFIG_40x is not set
+# CONFIG_44x is not set
+# CONFIG_E200 is not set
+CONFIG_E500=y
+CONFIG_PPC_E500MC=y
+CONFIG_PPC_FPU=y
+CONFIG_FSL_EMB_PERFMON=y
+CONFIG_FSL_EMB_PERF_EVENT=y
+CONFIG_FSL_EMB_PERF_EVENT_E500=y
+CONFIG_BOOKE=y
+CONFIG_FSL_BOOKE=y
+CONFIG_PPC_FSL_BOOK3E=y
+CONFIG_PTE_64BIT=y
+CONFIG_PHYS_64BIT=y
+CONFIG_PPC_MMU_NOHASH=y
+CONFIG_PPC_BOOK3E_MMU=y
+# CONFIG_PPC_MM_SLICES is not set
+CONFIG_SMP=y
+CONFIG_NR_CPUS=4
+CONFIG_PPC_DOORBELL=y
+CONFIG_VDSO32=y
+CONFIG_CPU_BIG_ENDIAN=y
+CONFIG_PPC32=y
+CONFIG_32BIT=y
+CONFIG_ARCH_PHYS_ADDR_T_64BIT=y
+CONFIG_ARCH_DMA_ADDR_T_64BIT=y
+CONFIG_MMU=y
+# CONFIG_HAVE_SETUP_PER_CPU_AREA is not set
+# CONFIG_NEED_PER_CPU_EMBED_FIRST_CHUNK is not set
+CONFIG_NR_IRQS=512
+CONFIG_STACKTRACE_SUPPORT=y
+CONFIG_TRACE_IRQFLAGS_SUPPORT=y
+CONFIG_LOCKDEP_SUPPORT=y
+CONFIG_RWSEM_XCHGADD_ALGORITHM=y
+CONFIG_GENERIC_LOCKBREAK=y
+CONFIG_ARCH_HAS_ILOG2_U32=y
+CONFIG_GENERIC_HWEIGHT=y
+CONFIG_ARCH_HAS_DMA_SET_COHERENT_MASK=y
+CONFIG_PPC=y
+# CONFIG_GENERIC_CSUM is not set
+CONFIG_EARLY_PRINTK=y
+CONFIG_PANIC_TIMEOUT=180
+CONFIG_GENERIC_NVRAM=y
+CONFIG_SCHED_OMIT_FRAME_POINTER=y
+CONFIG_ARCH_MAY_HAVE_PC_FDC=y
+CONFIG_PPC_UDBG_16550=y
+CONFIG_GENERIC_TBSYNC=y
+CONFIG_AUDIT_ARCH=y
+CONFIG_GENERIC_BUG=y
+# CONFIG_EPAPR_BOOT is not set
+CONFIG_DEFAULT_UIMAGE=y
+CONFIG_ARCH_HIBERNATION_POSSIBLE=y
+# CONFIG_PPC_DCR_NATIVE is not set
+# CONFIG_PPC_DCR_MMIO is not set
+CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC=y
+CONFIG_ARCH_SUPPORTS_UPROBES=y
+CONFIG_PPC_ADV_DEBUG_REGS=y
+CONFIG_PPC_ADV_DEBUG_IACS=2
+CONFIG_PPC_ADV_DEBUG_DACS=2
+CONFIG_PPC_ADV_DEBUG_DVCS=0
+CONFIG_PPC_ADV_DEBUG_DAC_RANGE=y
+CONFIG_PGTABLE_LEVELS=2
+CONFIG_DEFCONFIG_LIST="/lib/modules/$UNAME_RELEASE/.config"
+CONFIG_IRQ_WORK=y
+
+#
+# Platform support
+#
+# CONFIG_PPC_CELL is not set
+# CONFIG_PPC_CELL_NATIVE is not set
+# CONFIG_PQ2ADS is not set
+CONFIG_FSL_SOC_BOOKE=y
+# CONFIG_BSC9131_RDB is not set
+# CONFIG_C293_PCIE is not set
+# CONFIG_BSC9132_QDS is not set
+# CONFIG_MPC8540_ADS is not set
+# CONFIG_MPC8560_ADS is not set
+# CONFIG_MPC85xx_CDS is not set
+# CONFIG_MPC85xx_MDS is not set
+# CONFIG_MPC8536_DS is not set
+# CONFIG_MPC85xx_DS is not set
+# CONFIG_MPC85xx_RDB is not set
+# CONFIG_P1010_RDB is not set
+# CONFIG_P1022_DS is not set
+# CONFIG_P1022_RDK is not set
+# CONFIG_P1023_RDB is not set
+# CONFIG_TWR_P102x is not set
+# CONFIG_SOCRATES is not set
+# CONFIG_KSI8560 is not set
+# CONFIG_XES_MPC85xx is not set
+# CONFIG_STX_GP3 is not set
+# CONFIG_TQM8540 is not set
+# CONFIG_TQM8541 is not set
+# CONFIG_TQM8548 is not set
+# CONFIG_TQM8555 is not set
+# CONFIG_TQM8560 is not set
+# CONFIG_SBC8548 is not set
+# CONFIG_PPA8548 is not set
+# CONFIG_GE_IMP3A is not set
+# CONFIG_SGY_CTS1000 is not set
+# CONFIG_MVME2500 is not set
+# CONFIG_PPC_QEMU_E500 is not set
+CONFIG_CORENET_GENERIC=y
+# CONFIG_KVM_GUEST is not set
+CONFIG_EPAPR_PARAVIRT=y
+CONFIG_PPC_SMP_MUXED_IPI=y
+# CONFIG_IPIC is not set
+CONFIG_MPIC=y
+# CONFIG_MPIC_TIMER is not set
+CONFIG_PPC_EPAPR_HV_PIC=y
+# CONFIG_MPIC_WEIRD is not set
+CONFIG_MPIC_MSGR=y
+# CONFIG_PPC_I8259 is not set
+# CONFIG_PPC_RTAS is not set
+# CONFIG_MMIO_NVRAM is not set
+# CONFIG_MPIC_U3_HT_IRQS is not set
+# CONFIG_PPC_MPC106 is not set
+# CONFIG_PPC_970_NAP is not set
+# CONFIG_PPC_P7_NAP is not set
+
+
+
+On Wed, Dec 25, 2019 at 9:25 AM Scott Wood <oss@buserror.net> wrote:
 >
->>
->>> +	u32 reset_index;
->>> +	u32 size;
->>> +	u32 soft_limit;
->>> +	struct kvm_dirty_gfn *dirty_gfns;
->>> +	struct kvm_dirty_ring_indices *indices;
->>
->> Any reason to keep dirty gfns and indices in different places? I guess=
- it is
->> because you want to map dirty_gfns as readonly page but I couldn't fin=
-d such
->> codes...
-> That's a good point!  We should actually map the dirty gfns as read
-> only.  I've added the check, something like this:
+> On Tue, 2019-12-24 at 09:35 +0800, Yingjie Bai wrote:
+> > Hi Michael,
+> > Thanks for pointing out the issue. My mistake...
+> > This patch should indeed make sense only when
+> > CONFIG_PHYS_64BIT=y
+> >
+> > I could not find corenet32_smp_defconfig, but I guess in your config,
+> > CONFIG_PHYS_64BIT=n ?
+> > I will update the patch later today
 >
-> static int kvm_vcpu_mmap(struct file *file, struct vm_area_struct *vma)
-> {
-> 	struct kvm_vcpu *vcpu =3D file->private_data;
-> 	unsigned long pages =3D (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+> corenet32_smp_defconfig is a makefile rule that pulls in multiple config
+> fragments.  It has CONFIG_PHYS_64BIT=y, but __pa() returns an unsigned long
+> regardless (which obviously needs to be fixed if DDR starting beyond 4G is to
+> be supported).
 >
-> 	/* If to map any writable page within dirty ring, fail it */
-> 	if ((kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff) ||
-> 	     kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff + pages - 1)) &&
-> 	    vma->vm_flags & VM_WRITE)
-> 		return -EINVAL;
+> What 32-bit config are you using where this actually builds?
 >
-> 	vma->vm_ops =3D &kvm_vcpu_vm_ops;
-> 	return 0;
-> }
+> -Scott
 >
-> I also changed the test code to cover this case.
 >
-> [...]
-
-
-Looks good.
-
-
->
->>> +struct kvm_dirty_ring_indices {
->>> +	__u32 avail_index; /* set by kernel */
->>> +	__u32 fetch_index; /* set by userspace */
->>
->> Is this better to make those two cacheline aligned?
-> Yes, Paolo should have mentioned that but I must have missed it!  I
-> hope I didn't miss anything else.
->
-> [...]
->
->>> +int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *rin=
-g)
->>> +{
->>> +	u32 cur_slot, next_slot;
->>> +	u64 cur_offset, next_offset;
->>> +	unsigned long mask;
->>> +	u32 fetch;
->>> +	int count =3D 0;
->>> +	struct kvm_dirty_gfn *entry;
->>> +	struct kvm_dirty_ring_indices *indices =3D ring->indices;
->>> +	bool first_round =3D true;
->>> +
->>> +	fetch =3D READ_ONCE(indices->fetch_index);
->>> +
->>> +	/*
->>> +	 * Note that fetch_index is written by the userspace, which
->>> +	 * should not be trusted.  If this happens, then it's probably
->>> +	 * that the userspace has written a wrong fetch_index.
->>> +	 */
->>> +	if (fetch - ring->reset_index > ring->size)
->>> +		return -EINVAL;
->>> +
->>> +	if (fetch =3D=3D ring->reset_index)
->>> +		return 0;
->>> +
->>> +	/* This is only needed to make compilers happy */
->>> +	cur_slot =3D cur_offset =3D mask =3D 0;
->>> +	while (ring->reset_index !=3D fetch) {
->>> +		entry =3D &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
->>> +		next_slot =3D READ_ONCE(entry->slot);
->>> +		next_offset =3D READ_ONCE(entry->offset);
->>> +		ring->reset_index++;
->>> +		count++;
->>> +		/*
->>> +		 * Try to coalesce the reset operations when the guest is
->>> +		 * scanning pages in the same slot.
->>> +		 */
->>> +		if (!first_round && next_slot =3D=3D cur_slot) {
->>
->> initialize cur_slot to -1 then we can drop first_round here?
-> cur_slot is unsigned.  We can force cur_slot to be s64 but maybe we
-> can also simply keep the first_round to be clear from its name.
->
-> [...]
-
-
-Sure.
-
-
->
->>> +int kvm_dirty_ring_push(struct kvm_dirty_ring *ring, u32 slot, u64 o=
-ffset)
->>> +{
->>> +	struct kvm_dirty_gfn *entry;
->>> +	struct kvm_dirty_ring_indices *indices =3D ring->indices;
->>> +
->>> +	/*
->>> +	 * Note: here we will start waiting even soft full, because we
->>> +	 * can't risk making it completely full, since vcpu0 could use
->>> +	 * it right after us and if vcpu0 context gets full it could
->>> +	 * deadlock if wait with mmu_lock held.
->>> +	 */
->>> +	if (kvm_get_running_vcpu() =3D=3D NULL &&
->>> +	    kvm_dirty_ring_soft_full(ring))
->>> +		return -EBUSY;
->>> +
->>> +	/* It will never gets completely full when with a vcpu context */
->>> +	WARN_ON_ONCE(kvm_dirty_ring_full(ring));
->>> +
->>> +	entry =3D &ring->dirty_gfns[ring->dirty_index & (ring->size - 1)];
->>> +	entry->slot =3D slot;
->>> +	entry->offset =3D offset;
->>> +	smp_wmb();
->>
->> Better to add comment to explain this barrier. E.g pairing.
-> Will do.
->
->>
->>> +	ring->dirty_index++;
->>> +	WRITE_ONCE(indices->avail_index, ring->dirty_index);
->>
->> Is WRITE_ONCE() a must here?
-> I think not, but seems to be clearer that we're publishing something
-> explicilty to userspace.  Since asked, I'm actually curious on whether
-> immediate memory writes like this could start to affect perf from any
-> of your previous perf works?
-
-
-I never measure the impact for a specific WRITE_ONCE(). But we don't do=20
-this in virtio/vhost. Maybe the maintainers can give more comments on thi=
-s.
-
-Thanks
-
-
->
-> Thanks,
->
-
