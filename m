@@ -2,103 +2,119 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF8DC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D40FC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78F62072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623A120722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:31:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="Sawr3RJ0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioGSWS/G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLYJ6w (ORCPT
+        id S1726395AbfLYKVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 04:58:52 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39109 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfLYJ6w (ORCPT
+        Wed, 25 Dec 2019 05:21:09 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23871 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726106AbfLYKVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 04:58:52 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l2so22543867lja.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 01:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BimAE/wzLaoJ+Q76OTXF2tSOsXH3zuFfkC4OKhHyt4M=;
-        b=Sawr3RJ0XQ4kFSYodnBYQ2C4OYnmS+dTU+GADcUfRFioyeQiYpsoojrV+bcKjvKhkr
-         l5dBEP+1n70Gzok8JpiiQwOAZWyZN7V5YQeRXeSuBekS2vKw4/Zxn14sGbGYe6g8nYqt
-         v8l8Rn/pmzy+OZuKWPrGBBbT4tyAe4GXN5bOSWIZ1Za4RNOlmEOYKsaaEKrl1bOG+Cpr
-         AjrHMzLWPRePRZi4XsrgxD7ngKSSbETAa8A/oQg+/iiIBaqXioTP5j1+JeYe86C6QXxb
-         BcIECzCTzgUgS4BC9DngU5jnB78k7UkDKW4Xsynzc++yrPCVw6RiMO7Mlzhu3VsY/epv
-         pDSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BimAE/wzLaoJ+Q76OTXF2tSOsXH3zuFfkC4OKhHyt4M=;
-        b=fbauhgWH7hdRGWLJqw60fyd+FeLckn8Rhnt7kDKSKjRbGuWYNPwfyxDHq9+NFGmjet
-         kAeFXEHOux7f89eAGZ1VVakMtrJdhlNLb2HXWVq91/Sin+mZYs6pUcCLe5BmB1f9/ZCg
-         O5tCIZLhRMJJkTszwGUY+avaNj+qaV9vroalYmcVkH2BST0ksWtp+K5H2p9orl8MyCJm
-         pd/ZEUCFAv5IW4u+WxW4FP3XRZvsFltaG6hHcm0DOSvf5aLx8WwrVX5llrEP92QqvUNX
-         FHbjzKdpKUJhs/U0eUrAI6ZksHBJJG6RkA8wOSvFMnRNm6ZwVQAxRPfmkSlqa1PFCVN9
-         x5CQ==
-X-Gm-Message-State: APjAAAXjhCOsxwMxF2Ip3rjPMycTjCUxxeFi1W6ywRT4wzsyTuFjJhPQ
-        UzMmHfRKrR4WUiDFJ6gN+GwuLA==
-X-Google-Smtp-Source: APXvYqyVCaK3RhWsqGk8ogHzgSadR0YNeuWFjHPQK3y6zRy7veQsw5x+SJ1Znlr403nf6FVtEcldXA==
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr22412615ljg.149.1577267929007;
-        Wed, 25 Dec 2019 01:58:49 -0800 (PST)
-Received: from msk1wst115n.omp.ru (mail.omprussia.ru. [5.134.221.218])
-        by smtp.gmail.com with ESMTPSA id t9sm11127171lfl.51.2019.12.25.01.58.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Dec 2019 01:58:48 -0800 (PST)
-Message-ID: <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
-Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-From:   Vyacheslav Dubeyko <slava@dubeyko.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Date:   Wed, 25 Dec 2019 12:58:47 +0300
-In-Reply-To: <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
-References: <20191223040020.109570-1-yuchao0@huawei.com>
-         <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Dec 2019 05:21:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577269267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jZKxE5DxO7ifxt1XeLzUb+gx1kehGU9I/C/p8L+AhTw=;
+        b=ioGSWS/Gwq2oHcRqn8Am8VUb15FOg831kGmT/hZOZt71+DqDcQS9zui7LWdxrSg4SXRrKe
+        u9LxBdK1oZS061DMlNdL4XNRxRxtpEXvKsyxnaPLKCCS2ZuEdG8thQUZXYsVdVN21ZFASD
+        ZQEtZLD6lXof35QRVR7q4oCHF6NZrC0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345-z3__PXNnPp6giLDjGL74hA-1; Wed, 25 Dec 2019 05:21:06 -0500
+X-MC-Unique: z3__PXNnPp6giLDjGL74hA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C25E6DB21;
+        Wed, 25 Dec 2019 10:21:04 +0000 (UTC)
+Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A42060BF3;
+        Wed, 25 Dec 2019 10:20:56 +0000 (UTC)
+Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
+ specification version 3
+To:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
+Date:   Wed, 25 Dec 2019 18:20:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
-> Hi,
-> 
-> CC linux-fsdevel
-> 
-> On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
-> > As Geert Uytterhoeven reported:
-> > 
-> > for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
-> > 
-> > On some platforms, HZ can be less than 50, then unexpected 0
-> > timeout
-> > jiffies will be set in congestion_wait().
-> > 
+
+On 2019/12/25 =E4=B8=8A=E5=8D=8810:50, Zha Bin wrote:
+> From: Liu Jiang <gerry@linux.alibaba.com>
+>
+> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
+> virtio over mmio devices as a lightweight machine model for modern
+> cloud. The standard virtio over MMIO transport layer only supports one
+> legacy interrupt, which is much heavier than virtio over PCI transport
+> layer using MSI. Legacy interrupt has long work path and causes specifi=
+c
+> VMExits in following cases, which would considerably slow down the
+> performance:
+>
+> 1) read interrupt status register
+> 2) update interrupt status register
+> 3) write IOAPIC EOI register
+>
+> We proposed to update virtio over MMIO to version 3[1] to add the
+> following new features and enhance the performance.
+>
+> 1) Support Message Signaled Interrupt(MSI), which increases the
+>     interrupt performance for virtio multi-queue devices
+> 2) Support per-queue doorbell, so the guest kernel may directly write
+>     to the doorbells provided by virtio devices.
+>
+> The following is the network tcp_rr performance testing report, tested
+> with virtio-pci device, vanilla virtio-mmio device and patched
+> virtio-mmio device (run test 3 times for each case):
+>
+> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
+>
+> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
+> 	trans/s	    9536	6939		9500
+> 	trans/s	    9734	7029		9749
+> 	trans/s	    9894	7095		9318
+>
+> [1] https://lkml.org/lkml/2019/12/20/113
 
 
-It looks like that HZ could have various value on diferent platforms.
-So, why does it need to divide HZ on 50? Does it really necessary?
-Could it be used HZ only without the division operation?
+Thanks for the patch. Two questions after a quick glance:
 
-Thanks,
-Viacheslav Dubeyko.
+1) In PCI we choose to support MSI-X instead of MSI for having extra=20
+flexibility like alias, independent data and address (e.g for affinity)=20
+. Any reason for not start from MSI-X? E.g having MSI-X table and PBA=20
+(both of which looks pretty independent).
+2) It's better to split notify_multiplexer out of MSI support to ease=20
+the reviewers (apply to spec patch as well)
 
+Thanks
 
