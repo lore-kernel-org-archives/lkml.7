@@ -2,103 +2,158 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99905C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54F9C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F11A2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:45:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="qJzF3OYA"
+	by mail.kernel.org (Postfix) with ESMTP id 944F02173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 21:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLYVpi (ORCPT
+        id S1726879AbfLYV7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 16:45:38 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40531 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfLYVph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 16:45:37 -0500
-Received: by mail-io1-f66.google.com with SMTP id x1so21880173iop.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 13:45:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3aSJZB0OJVXMfAC66n1zig6Ufda47bAnHowrO052PgA=;
-        b=qJzF3OYAhdUoP9SNNoN6oh+i6RoA7XW1rf4IP/TBkNLuslgp4h4WhU95Zibilay4up
-         ytryVQNI5KLtzBuEtBQ/NDSuByDRnGftfDrfFhV+7//t3TVVUlII8urB2bw9ECDpSUP6
-         KSGBDehQ/zyaVugSkZeLUWJeRn6vzI/+htg1c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3aSJZB0OJVXMfAC66n1zig6Ufda47bAnHowrO052PgA=;
-        b=Uu03jYmSW7cJnFkQSzvoa1w+IC89Ld87dNU6umJ3UzY/0hYIJBJwbTJYmSAXw+y3ww
-         cYK4bHAsZ4+ZeWkLtLNl6KfKLIK04yn1df8/BuqAlkbYthoLKsVIbNv7nHutQunT90b7
-         ubWyY9+IZ86DPA/DWlu+yuJ5OtYGgQIzCAE+5GYequQ8kof2y1JyK4ZNuwLtxyK1yCOG
-         d4idZ5lx5vYSbfUi6HsZv+zGtcg2NDkEScx8AYRNpnoNsxB8FkBvRJJj9FbssRVNGVSI
-         y5kyHkG83ZmaoQvXgrXPxdYbbjI2+KLdqOr/NhjoFa0qo1RW2gA2G839Pvctq/0+tru8
-         HZWg==
-X-Gm-Message-State: APjAAAVpGCuAum+zOJLUJoIpN7l5R/3HClivDlBlu7MWBT6l7P0ht5gY
-        NmQt727C+LwmCF0ABDyAtXAVQ3J/rTM=
-X-Google-Smtp-Source: APXvYqzgTY33/ZhQlYoKAndwCerwnRNs5PX00DMTIO5fDcXdLwipac5QX2Q8Oqs7lr4u0GD1JlqY4A==
-X-Received: by 2002:a5d:8782:: with SMTP id f2mr20237572ion.53.1577310336482;
-        Wed, 25 Dec 2019 13:45:36 -0800 (PST)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id t23sm11576607ila.75.2019.12.25.13.45.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Dec 2019 13:45:35 -0800 (PST)
-Date:   Wed, 25 Dec 2019 21:45:33 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc:     tycho@tycho.ws, jannh@google.com, christian.brauner@ubuntu.com,
-        keescook@chromium.org
-Subject: [PATCH] seccomp: Check flags on seccomp_notif is unset
-Message-ID: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
+        Wed, 25 Dec 2019 16:59:51 -0500
+Received: from mga02.intel.com ([134.134.136.20]:8384 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfLYV7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 16:59:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Dec 2019 13:59:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,356,1571727600"; 
+   d="scan'208";a="392192802"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 25 Dec 2019 13:59:47 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ikEh0-0007cC-Vl; Thu, 26 Dec 2019 05:59:46 +0800
+Date:   Thu, 26 Dec 2019 05:59:14 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     kbuild-all@lists.01.org, sravanhome@gmail.com, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] regulator: mpq7920: add mpq7920 regulator driver
+Message-ID: <201912260536.tzKV8pVS%lkp@intel.com>
+References: <20191222204507.32413-4-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191222204507.32413-4-sravanhome@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a small change in enforcement of the uapi for
-SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure which is
-passed (seccomp_notif), has a flags member. Previously that could be
-set to a nonsense value, and we would ignore it. This ensures that
-no flags are set.
+Hi Saravanan,
 
-Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-Cc: Kees Cook <keescook@chromium.org>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on regulator/for-next]
+[also build test WARNING on robh/for-next linus/master v5.5-rc3 next-20191220]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Saravanan-Sekar/Add-regulator-support-for-mpq7920/20191225-005026
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/regulator/mpq7920.c:339:44: sparse: sparse: Using plain integer as NULL pointer
+>> drivers/regulator/mpq7920.c:317:21: sparse: sparse: incorrect type in assignment (different modifiers)
+>> drivers/regulator/mpq7920.c:317:21: sparse:    expected struct regulator_ops *ops
+>> drivers/regulator/mpq7920.c:317:21: sparse:    got struct regulator_ops const *ops
+
+vim +339 drivers/regulator/mpq7920.c
+
+   306	
+   307	static inline int mpq7920_regulator_register(
+   308					struct mpq7920_regulator_info *info,
+   309					struct regulator_config *config)
+   310	{
+   311		int i;
+   312		struct regulator_desc *rdesc;
+   313		struct regulator_ops *ops;
+   314	
+   315		for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
+   316			rdesc = &info->rdesc[i];
+ > 317			ops = rdesc->ops;
+   318			if (rdesc->curr_table) {
+   319				ops->get_current_limit =
+   320					regulator_get_current_limit_regmap;
+   321				ops->set_current_limit =
+   322					regulator_set_current_limit_regmap;
+   323			}
+   324	
+   325			info->rdev[i] = devm_regulator_register(info->dev, rdesc,
+   326						 config);
+   327			if (IS_ERR(info->rdev))
+   328				return PTR_ERR(info->rdev);
+   329		}
+   330	
+   331		return 0;
+   332	}
+   333	
+   334	static int mpq7920_i2c_probe(struct i2c_client *client,
+   335					    const struct i2c_device_id *id)
+   336	{
+   337		struct device *dev = &client->dev;
+   338		struct mpq7920_regulator_info *info;
+ > 339		struct regulator_config config = { 0 };
+   340		struct regmap *regmap;
+   341		int ret;
+   342	
+   343		info = devm_kzalloc(dev, sizeof(struct mpq7920_regulator_info),
+   344					GFP_KERNEL);
+   345		if (!info)
+   346			return -ENOMEM;
+   347	
+   348		info->dev = dev;
+   349		info->rdesc = mpq7920_regulators_desc;
+   350		regmap = devm_regmap_init_i2c(client, &mpq7920_regmap_config);
+   351		if (IS_ERR(regmap)) {
+   352			dev_err(dev, "Failed to allocate regmap!\n");
+   353			return PTR_ERR(regmap);
+   354		}
+   355	
+   356		i2c_set_clientdata(client, info);
+   357		info->regmap = regmap;
+   358		if (client->dev.of_node)
+   359			mpq7920_parse_dt(&client->dev, info);
+   360	
+   361		config.dev = info->dev;
+   362		config.regmap = regmap;
+   363		config.driver_data = info;
+   364	
+   365		ret = mpq7920_regulator_register(info, &config);
+   366		if (ret < 0)
+   367			dev_err(dev, "Failed to register regulator!\n");
+   368	
+   369		return ret;
+   370	}
+   371	
+
 ---
- kernel/seccomp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 12d2227e5786..455925557490 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
- 	struct seccomp_notif unotif;
- 	ssize_t ret;
- 
-+	if (copy_from_user(&unotif, buf, sizeof(unotif)))
-+		return -EFAULT;
-+
-+	/* flags is reserved right now, make sure it's unset */
-+	if (unotif.flags)
-+		return -EINVAL;
-+
- 	memset(&unotif, 0, sizeof(unotif));
- 
- 	ret = down_interruptible(&filter->notif->request);
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
