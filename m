@@ -2,79 +2,79 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570F4C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12434C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1649F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577242962;
-	bh=TmX6g8ShDdQRr0f01ZX9dg2x7Z+X3Sh/DiayNwiGtK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fg7Ix5pJegfYQbnSMslz7P9xc+WSblowAefPHi1lEludqOKKuO25YoD01bubpzWCp
-	 dcLxX+gBeMlEI6kgrAJg5PJidyY3MsekvyfWVAjsc/bI3bt/9ZVcl+/Nb87Muh05TE
-	 dN2kSEMy3VctmrKu+5pZJqnyq/aInlAXP30IdxFQ=
+	by mail.kernel.org (Postfix) with ESMTP id D20B820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLYDCl (ORCPT
+        id S1726853AbfLYDH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 22:02:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbfLYDCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 22:02:40 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0AD2053B
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 03:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577242960;
-        bh=TmX6g8ShDdQRr0f01ZX9dg2x7Z+X3Sh/DiayNwiGtK4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xirEjZHyFUs73Sf8Wkt63+Q6xEwi2tRuAYmiryq6ZcURBSZX1/XT1yukjYReC1Eo9
-         pCAF+E2WU+zDtDWTgo9nuJhKVvI9URHyrQBP+a3mVZIMfXGTe2sVbtJwm4U8FBiGjl
-         ASUPbDGumfhcCctSl0dFOO4dE8TgjDWCHvoSCV9s=
-Received: by mail-wm1-f49.google.com with SMTP id t14so3624388wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 19:02:40 -0800 (PST)
-X-Gm-Message-State: APjAAAXVaf5vbOUlyhfxx2WY16Rpok8D1EmuBWjPfYFiAyem/U8G+Qil
-        5MigqDRCMJ9SEMrGE7pHdD+nMhzCO6CogliqdCw=
-X-Google-Smtp-Source: APXvYqxiUBJp0ZgqJ7mIBfvqEQUSXXh4FQA2JBOW1lsIiDEPzF9WNsmvrbwAnTF/RjSk5AUT80qYpMeE31ykN8KQaTA=
-X-Received: by 2002:a1c:4e10:: with SMTP id g16mr6738854wmh.94.1577242958681;
- Tue, 24 Dec 2019 19:02:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20191225025908.25305-1-kever.yang@rock-chips.com>
-In-Reply-To: <20191225025908.25305-1-kever.yang@rock-chips.com>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Wed, 25 Dec 2019 11:02:29 +0800
-X-Gmail-Original-Message-ID: <CAGb2v675A0fG9wHiJj_pkVQBmBFDf_u1L_dxiD9pT_8VBjujzw@mail.gmail.com>
-Message-ID: <CAGb2v675A0fG9wHiJj_pkVQBmBFDf_u1L_dxiD9pT_8VBjujzw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "rockchip: make sure timer7 is enabled on rk3288 platforms"
-To:     Kever Yang <kever.yang@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Dec 2019 22:07:28 -0500
+Received: from smtp25.cstnet.cn ([159.226.251.25]:42868 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726317AbfLYDH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 22:07:28 -0500
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-05 (Coremail) with SMTP id zQCowACXn89b0gJeJlojBg--.766S3;
+        Wed, 25 Dec 2019 11:07:08 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     paulus@samba.org
+Cc:     davem@davemloft.net, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ppp: Remove redundant BUG_ON() check in ppp_pernet
+Date:   Wed, 25 Dec 2019 03:07:04 +0000
+Message-Id: <1577243224-1923-1-git-send-email-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: zQCowACXn89b0gJeJlojBg--.766S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFW5XFW8XryDuF4xKr4kWFg_yoWxKwc_Cw
+        4fCFW3Aw1UAr1q9r4UCws8ZrZIy3WkWr1kJrs2grZxX34ktFyrXr95ursrAr4kWrZ5CF9r
+        Ca47ZryrJrWYgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcVWlDUUUU
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAMPA1z4ipKwYQAAsu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 10:59 AM Kever Yang <kever.yang@rock-chips.com> wrote:
->
-> This reverts commit 2a9fe3ca84afff6259820c4f62e579f41476becc.
-> All the U-Boot version for rk3288 including mainline, rockchip
-> legacy/next-dev, have init the timer7, so no need to init it in kernel
-> again.
+Passing NULL to ppp_pernet causes a crash via BUG_ON.
+Dereferencing net in net_generic() also has the same effect.
+This patch removes the redundant BUG_ON check on the same parameter.
 
-What about the ChromeOS bootloader?
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/ppp/ppp_generic.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> One more reason is that if  we enable the trust for rk3288, then timer7 is
-> not able to be accessed in kernel.
->
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 3bf8a8b..22cc2cb 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -296,8 +296,6 @@ static struct class *ppp_class;
+ /* per net-namespace data */
+ static inline struct ppp_net *ppp_pernet(struct net *net)
+ {
+-	BUG_ON(!net);
+-
+ 	return net_generic(net, ppp_net_id);
+ }
+ 
+-- 
+2.7.4
+
