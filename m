@@ -2,133 +2,61 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956EEC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C76C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697B7206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577232582;
-	bh=MTx2UINzPrzeSAzv3GPPK4PV5zFGMvG+6AloamW3Ur4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=H9L88yfUzXq2MhZTxlxVDzaDU5s9jXWcLCG8sLXrDFfxUrFzKbhcNBuv4b5SQ+Nk/
-	 PRNKyLCfCv53TpCeHsPofP6K5uKqRllojgGpszb75GkqmhWmZIN7TksprjaTBuEo4g
-	 /qnv5zIwXzxE1XdG4LDLlap5fKDcvw5vlCFbC+f8=
+	by mail.kernel.org (Postfix) with ESMTP id 6E2B3206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfLYAJk (ORCPT
+        id S1727233AbfLYAJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:09:40 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34146 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfLYAJi (ORCPT
+        Tue, 24 Dec 2019 19:09:47 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:57932 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfLYAJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 19:09:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=bEZvX6CrllH0JlHEqZn5tWeyLbTXuuTkTNuWN7wm62Q=; b=PZktTYDu3E3y
-        x1C1fcnOVPvjuJcW0KWfuKhwpnfEqBi5T1FkLy5PUYaty5bTUxz4BLFDfOmy2hOZvj1H3OOQwXpAo
-        iyexXvFcsE9U8PWC5aK2t91qTdWPoXoSzhzCzTSwOQklGEG5Mx1QdAY+j6U08rXwy5Q3Q0cH6AdhW
-        JXgVg=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ijuEj-0007Mf-Qr; Wed, 25 Dec 2019 00:09:13 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 58ABCD01957; Wed, 25 Dec 2019 00:09:13 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: SOF: imx8: fix memory allocation failure check on priv->pd_dev" to the asoc tree
-In-Reply-To:  <20191204124816.1415359-1-colin.king@canonical.com>
-Message-Id:  <applied-20191204124816.1415359-1-colin.king@canonical.com>
-X-Patchwork-Hint: ignore
-Date:   Wed, 25 Dec 2019 00:09:13 +0000 (GMT)
+        Tue, 24 Dec 2019 19:09:45 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B5BB6154CCC27;
+        Tue, 24 Dec 2019 16:09:44 -0800 (PST)
+Date:   Tue, 24 Dec 2019 16:09:44 -0800 (PST)
+Message-Id: <20191224.160944.944924950432766934.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: bcm_sf2: Fix IP fragment location and
+ behavior
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191220192422.22354-1-f.fainelli@gmail.com>
+References: <20191220192422.22354-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 24 Dec 2019 16:09:44 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Fri, 20 Dec 2019 11:24:21 -0800
 
-   ASoC: SOF: imx8: fix memory allocation failure check on priv->pd_dev
+> The IP fragment is specified through user-defined field as the first
+> bit of the first user-defined word. We were previously trying to extract
+> it from the user-defined mask which could not possibly work. The ip_frag
+> is also supposed to be a boolean, if we do not cast it as such, we risk
+> overwriting the next fields in CFP_DATA(6) which would render the rule
+> inoperative.
+> 
+> Fixes: 7318166cacad ("net: dsa: bcm_sf2: Add support for ethtool::rxnfc")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 98910e1d61384430a080b4bcf986c3b0cf3fdf46 Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Wed, 4 Dec 2019 12:48:16 +0000
-Subject: [PATCH] ASoC: SOF: imx8: fix memory allocation failure check on
- priv->pd_dev
-
-The memory allocation failure check for priv->pd_dev is incorrectly
-pointer checking priv instead of priv->pd_dev. Fix this.
-
-Addresses-Coverity: ("Logically dead code")
-Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191204124816.1415359-1-colin.king@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sof/imx/imx8.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
-index cfefcfd92798..9d926b1df0d7 100644
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -209,7 +209,7 @@ static int imx8_probe(struct snd_sof_dev *sdev)
- 
- 	priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
- 					  sizeof(*priv->pd_dev), GFP_KERNEL);
--	if (!priv)
-+	if (!priv->pd_dev)
- 		return -ENOMEM;
- 
- 	priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
--- 
-2.20.1
-
+Applied and queued up for -stable, thanks Florian.
