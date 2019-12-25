@@ -2,176 +2,173 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA5CC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C680C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8A920643
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EB720643
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 08:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HMWBaFXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfLYIRN (ORCPT
+        id S1726423AbfLYIRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 03:17:13 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:41550 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfLYIRM (ORCPT
+        Wed, 25 Dec 2019 03:17:20 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:57094 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfLYIRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 03:17:12 -0500
-Received: by mail-io1-f71.google.com with SMTP id g4so4436059iof.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 00:17:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=/9Bw7qmprJ0SOROl3Qu+Xe+XfMs8eXq753PbnDBLuKA=;
-        b=C8tPb5W/CFgSpg5bcG5HvZUlMfy+f8RLUQxonqGroj80xPNwzefZJl64CgrjMukT3w
-         w4sgc1CFBMNYk9LHPzIoTw9Ct1m3fO/tKkZifXUHRDtcgsCxi5BDIgCx17z7QggKXCsM
-         PqVEJ671/G2l4WfcW8d7ywR7y1PBSVGVCPSWTEu+ok3cAqCbb9GITxerHplO29ifwrMZ
-         KzmTsG3x1fkhgyT9zDbTLVNT0QVCg44j0fj+yTDTtjwrjA6ctkyqA0cfYzyhhLsqMj0j
-         Ph4X1AqLcFb49OlzIC1VwiYxzWoIgLbdGDOrdk2Oj8IScJOARBk1/RqoEkpT4VjodtEw
-         Z9Ng==
-X-Gm-Message-State: APjAAAXVMdCpQkIxFnQclw6EjgJRpt9Hn1U2Vz8VOYXJBx09Eqxo6oMJ
-        wUGRi94Ul2kstqNYqcm2WyzEwI0If93moiryFDa9MLta3a4G
-X-Google-Smtp-Source: APXvYqzIB8zOK+zR3revW5PFbqLD6T3fdiBkXdDLTBDlHwquDuD//F3froIF3R3qco/QYwemrlPmy5ZS3xhD60kOjIl3lfFAAag+
+        Wed, 25 Dec 2019 03:17:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577261839; x=1608797839;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hQSC1EpdWNIGIeM/LWhhe+AvxG97v20xEiXNGSC0PNI=;
+  b=HMWBaFXPWBWOV6bTwu6FIcbsl7dli92Aer4+R2b+ZSbYsifXn65QSTne
+   6Ucr5UA/ce9WAuD90RmyBs2KLBQZw0Ziej/mQ8zIwlePoMt0Kwj1r2wgM
+   yITwBzWVB5RiM0ypC5OY+EGWlGfRrdy5nPtjJjbnYTg3fdHllzNYcQpvt
+   Gy5TOB7Lp8lPscXFL8UJurvRGc5FxXVlPIqs5QXWT5p1ubj8AlWOawqcC
+   beAcTMpZWiR1swl7DllUqWaScWjV/eCpJaPWO89IG1g4dBdDtAQ6JG71y
+   i1bBqUXtsnfDoHJznfesqhbk9KdjE4U/QD3AhFYOdIHxxPrqphcj4durq
+   A==;
+IronPort-SDR: aAVzk4ZlXqo1J6ld5l2JMnfb1fuc2+G199zSh4TjMFFwRZzDvc43o0qz2SN+EdG/2PgSs6bK55
+ DNy+Wls3tdCTYc5jFJjFQkf47uabZdR/HgVLnBvCqkDg5wfW8f48QkXQfzz6EFNpWQdZ8h5sux
+ GSAiHyhmxiTilHsptx2aPP/Lf6QXGBkh979aVizwioKPevujlZ+Mab3O9eN7Oskv04psNx4R2k
+ ZutmjYqN0OLedt09uFz1mBj0gH/DNNEYA8fhXkHtTWSHgfRuBeZORlyAwGDVdrvz3/bwwHHPma
+ 7zA=
+X-IronPort-AV: E=Sophos;i="5.69,353,1571673600"; 
+   d="scan'208";a="130541476"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Dec 2019 16:17:18 +0800
+IronPort-SDR: 8SXxj/MF6eTQ/v5Y12AfnE1Pe/IxC5sfUVXm5WYDWIpav0U7oKfAcZ5R782AnooXtHQgAJ0mXy
+ c7KarEaAxfUU64tu8KY9BVLOs+UyXVSh+DLPDnrVYXsErsvwLVkaZwNxeSruA3ky3FMUdMS017
+ sXa49qQL8axRn3SJV7nWmSX7oqm/Dr7X+Agy3uiV35R7eApqHr1FdLjj6DgoBUV+jmxyn525fj
+ iB5jYAaIYdK4B0kLNeLrVRapBoUWu3XXaGIE69iv/zZ/8lcIGuLAJ0Q47QL+HHavLod7JYluY4
+ J+BQC1sQz0cyglKo4XJ1OYC3
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2019 00:11:30 -0800
+IronPort-SDR: 2QzkjoRoIHJzJkX92tvBLhGFN2647oJTjiVwOGBDf2925Su9JLcA3WKVLQ/PFoJ4hr22MBHIRc
+ LOtMO92rPtkozgY49RCuZHff9rGJs88S1QfjmRFkwLLnw02X07X773EHRNorHDSJ4yOZ51zTVj
+ bYELiFBHmR82OAxYGn6Z9yWlVq7pHYEi9BDDirfftCC5t0B/f9F30II4Z5rUtu/lEIoWu8uYxv
+ VI6OBHRKfLGK8HwFbRZMXvbj0ovBJPHoapTrGm+zrDcxnpHjOazZCkibXyVyFAizROR5riomxD
+ ruc=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 25 Dec 2019 00:17:15 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH v4 0/2] New zonefs file system
+Date:   Wed, 25 Dec 2019 17:17:14 +0900
+Message-Id: <20191225081716.327348-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:d809:: with SMTP id y9mr35425076ilm.261.1577261830210;
- Wed, 25 Dec 2019 00:17:10 -0800 (PST)
-Date:   Wed, 25 Dec 2019 00:17:10 -0800
-In-Reply-To: <0000000000001b2f4605991a4cc0@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001b8ab1059a82e37d@google.com>
-Subject: Re: KASAN: use-after-free Read in fb_mode_is_equal
-From:   syzbot <syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        dri-devel@lists.freedesktop.org, hdanton@sina.com,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mojha@codeaurora.org, shile.zhang@linux.alibaba.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-HEAD commit:    46cf053e Linux 5.5-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15cf54e1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=f11cda116c57db68c227
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10563ec1e00000
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f11cda116c57db68c227@syzkaller.appspotmail.com
+zonefs IO management implementation uses the new iomap generic code.
 
-==================================================================
-BUG: KASAN: use-after-free in fb_mode_is_equal+0x297/0x300  
-drivers/video/fbdev/core/modedb.c:924
-Read of size 4 at addr ffff8880946fcf9c by task syz-executor.3/9638
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
 
-CPU: 0 PID: 9638 Comm: syz-executor.3 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:134
-  fb_mode_is_equal+0x297/0x300 drivers/video/fbdev/core/modedb.c:924
-  fbcon_mode_deleted+0x12c/0x190 drivers/video/fbdev/core/fbcon.c:3060
-  fb_set_var+0xab9/0xdd0 drivers/video/fbdev/core/fbmem.c:971
-  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
-  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a919
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff6d156bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a919
-RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000013
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ff6d156c6d4
-R13: 00000000004c310d R14: 00000000004d8498 R15: 00000000ffffffff
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
 
-Allocated by task 9451:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3551
-  kmalloc include/linux/slab.h:556 [inline]
-  fb_add_videomode drivers/video/fbdev/core/modedb.c:1073 [inline]
-  fb_add_videomode+0x2fb/0x610 drivers/video/fbdev/core/modedb.c:1057
-  fb_set_var+0x5ef/0xdd0 drivers/video/fbdev/core/fbmem.c:1041
-  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
-  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
 
-Freed by task 9620:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
-  __cache_free mm/slab.c:3426 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3757
-  fb_delete_videomode+0x3fa/0x540 drivers/video/fbdev/core/modedb.c:1104
-  fb_set_var+0xac8/0xdd0 drivers/video/fbdev/core/fbmem.c:974
-  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1104
-  fb_ioctl+0xe6/0x130 drivers/video/fbdev/core/fbmem.c:1180
-  vfs_ioctl fs/ioctl.c:47 [inline]
-  file_ioctl fs/ioctl.c:545 [inline]
-  do_vfs_ioctl+0x977/0x14e0 fs/ioctl.c:732
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:749
-  __do_sys_ioctl fs/ioctl.c:756 [inline]
-  __se_sys_ioctl fs/ioctl.c:754 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
 
-The buggy address belongs to the object at ffff8880946fcf80
-  which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 28 bytes inside of
-  96-byte region [ffff8880946fcf80, ffff8880946fcfe0)
-The buggy address belongs to the page:
-page:ffffea000251bf00 refcount:1 mapcount:0 mapping:ffff8880aa400540  
-index:0x0
-raw: 00fffe0000000200 ffffea00023b2ac8 ffffea000203fc08 ffff8880aa400540
-raw: 0000000000000000 ffff8880946fc000 0000000100000020 0000000000000000
-page dumped because: kasan: bad access detected
+ Documentation/filesystems/zonefs.txt |  215 +++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1166 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1576 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
 
-Memory state around the buggy address:
-  ffff8880946fce80: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-  ffff8880946fcf00: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-> ffff8880946fcf80: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                             ^
-  ffff8880946fd000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-  ffff8880946fd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+-- 
+2.24.1
+
+
+
+
+
+
+
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  215 +++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1165 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1575 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.24.1
 
