@@ -2,201 +2,219 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B43C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59A8C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185E020722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:19:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hat9SJDJ"
+	by mail.kernel.org (Postfix) with ESMTP id 71FAD2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:21:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLYNT0 (ORCPT
+        id S1726559AbfLYNVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 08:19:26 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34532 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfLYNTZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 08:19:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c127so3553974wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 05:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gko1scD4L8Lrs1A77xEXZ+qwxNBxN0Emm901Nv0Qg+I=;
-        b=hat9SJDJ12WQ2XhpVS3I7xjmDuUinxdTmZ4BBTKZxtxgZ27S7knqze+jZx1+XtSq5T
-         ++kcqKuaBaxFBA1ROoUjoxE9DQIDOfFm9atRkBKhMLNC0kqKvrrgqxkUAnu77Q4UxgnP
-         RVPXi1qbmCcRQDbkW89s3hk1dSO/95EpzEYchm25Kvkw/wXH/bZBDfqtxPTwrCO8Pg64
-         ODERT1p+PSjYfrTphj2BqYnlOPT6G3WMNO2ISYG6J68gHH6uR/9k/VH4VPWeZ4p+7fwm
-         9NQJz5iGGB4iygnB62kFOYRj2oOc4r/paw4nsDdqkza0YG+RUe2UhRRHssE1gkhwpXEo
-         0PWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gko1scD4L8Lrs1A77xEXZ+qwxNBxN0Emm901Nv0Qg+I=;
-        b=XNSwnLxfAxe3FqScEm1L6y4cQUzvy8rs0fvYAcg1IwlPa8meufxHAM23ywz/mWFj0C
-         88EmTt/ItWgkZz3CSNHs68/OzUy8kkWcbnrqLegMTmwQqbNwAWsjdqTxwone/QpBdYeS
-         uNFFam+T+ypJZuyudr0nwWC/cXTYvKFgdvVQ5pI6T6PX5rHmyCoD6Nlf/KmBlOHYqxie
-         ZgO0DuD1by2h23FG36B1kIlZLZX41l1/i9p+leC4ReU8JT6kOosSi4kFGeFU+54iN3ya
-         23OhSUBZO5zNaTNcli1xWyOo42Aec5EUhuwVaLgoFUw7lGIeAYgi4mnbCmWDohP+m6x+
-         D4Pg==
-X-Gm-Message-State: APjAAAURPcpyA8653Gd0Lp7h3+rsJ81ePhN2HoA9EOfWHekcJgWe+BeH
-        8Jeo0NkadXZ/NXBM4SzgPkw7g9HtGSE=
-X-Google-Smtp-Source: APXvYqyQgavRLgMIBzsVCKok7sKhXBy0kJlGYJH07tEuzh+Fvp+sFgL3zlYcmLlctklVPo6ieYSnmw==
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr9150550wmf.133.1577279963635;
-        Wed, 25 Dec 2019 05:19:23 -0800 (PST)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id x10sm26500214wrv.60.2019.12.25.05.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2019 05:19:22 -0800 (PST)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: halt the engines before hard-reset
-Date:   Wed, 25 Dec 2019 15:19:21 +0200
-Message-Id: <20191225131921.15343-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 25 Dec 2019 08:21:32 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8189 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726388AbfLYNVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 08:21:31 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2C19D3222DBB212D927A;
+        Wed, 25 Dec 2019 21:21:26 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Dec 2019
+ 21:21:16 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <tomi.valkeinen@ti.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <mripard@kernel.org>, <wens@csie.org>, <jernej.skrabec@siol.net>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-tegra@vger.kernel.org>, <yukuai3@huawei.com>,
+        <zhengbin13@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH] drm: replace IS_ERR and PTR_ERR with PTR_ERR_OR_ZERO
+Date:   Wed, 25 Dec 2019 21:20:42 +0800
+Message-ID: <20191225132042.5491-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver must halt the engines before doing hard-reset, otherwise the
-device can go into undefined state. There is a place where the driver
-didn't do that and this patch fixes it.
+no functional change, just to make the code simpler
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- drivers/misc/habanalabs/device.c    |  1 +
- drivers/misc/habanalabs/goya/goya.c | 42 +++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/hdmi4.c         | 5 +----
+ drivers/gpu/drm/omapdrm/dss/hdmi4_core.c    | 6 ++----
+ drivers/gpu/drm/omapdrm/dss/hdmi5_core.c    | 4 +---
+ drivers/gpu/drm/omapdrm/dss/hdmi_phy.c      | 4 +---
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c      | 4 +---
+ drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c      | 4 +---
+ drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 4 +---
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c  | 5 +----
+ drivers/gpu/drm/tegra/drm.c                 | 4 +---
+ drivers/gpu/drm/tegra/gem.c                 | 4 +---
+ 10 files changed, 11 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index b155e9549076..166883b64725 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -1189,6 +1189,7 @@ int hl_device_init(struct hl_device *hdev, struct class *hclass)
- 	if (hdev->asic_funcs->get_hw_state(hdev) == HL_DEVICE_HW_STATE_DIRTY) {
- 		dev_info(hdev->dev,
- 			"H/W state is dirty, must reset before initializing\n");
-+		hdev->asic_funcs->halt_engines(hdev, true);
- 		hdev->asic_funcs->hw_fini(hdev, true);
- 	}
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+index 0f557fad4513..eb71baedf19e 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+@@ -587,10 +587,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
+ 		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
+ 		&pdata, sizeof(pdata));
  
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 72935851a7e8..5750294400f4 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -895,6 +895,11 @@ void goya_init_dma_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_external_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_1_GLBL_CFG0, 0);
- 	WREG32(mmDMA_QM_2_GLBL_CFG0, 0);
-@@ -956,6 +961,11 @@ static int goya_stop_external_queues(struct hl_device *hdev)
- {
- 	int rc, retval = 0;
- 
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmDMA_QM_0_GLBL_CFG1,
- 			mmDMA_QM_0_CP_STS,
-@@ -1744,9 +1754,18 @@ void goya_init_tpc_qmans(struct hl_device *hdev)
-  */
- static void goya_disable_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto disable_tpc;
-+
- 	WREG32(mmMME_QM_GLBL_CFG0, 0);
- 	WREG32(mmMME_CMDQ_GLBL_CFG0, 0);
- 
-+disable_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_QM_GLBL_CFG0, 0);
- 	WREG32(mmTPC0_CMDQ_GLBL_CFG0, 0);
- 
-@@ -1782,8 +1801,12 @@ static void goya_disable_internal_queues(struct hl_device *hdev)
-  */
- static int goya_stop_internal_queues(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
- 	int rc, retval = 0;
- 
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		goto stop_tpc;
-+
- 	/*
- 	 * Each queue (QMAN) is a separate H/W logic. That means that each
- 	 * QMAN can be stopped independently and failure to stop one does NOT
-@@ -1810,6 +1833,10 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 		retval = -EIO;
- 	}
- 
-+stop_tpc:
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return retval;
-+
- 	rc = goya_stop_queue(hdev,
- 			mmTPC0_QM_GLBL_CFG1,
- 			mmTPC0_QM_CP_STS,
-@@ -1975,6 +2002,11 @@ static int goya_stop_internal_queues(struct hl_device *hdev)
- 
- static void goya_dma_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_DMA))
-+		return;
-+
- 	WREG32(mmDMA_QM_0_GLBL_CFG1, 1 << DMA_QM_0_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_1_GLBL_CFG1, 1 << DMA_QM_1_GLBL_CFG1_DMA_STOP_SHIFT);
- 	WREG32(mmDMA_QM_2_GLBL_CFG1, 1 << DMA_QM_2_GLBL_CFG1_DMA_STOP_SHIFT);
-@@ -1984,6 +2016,11 @@ static void goya_dma_stall(struct hl_device *hdev)
- 
- static void goya_tpc_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_TPC))
-+		return;
-+
- 	WREG32(mmTPC0_CFG_TPC_STALL, 1 << TPC0_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC1_CFG_TPC_STALL, 1 << TPC1_CFG_TPC_STALL_V_SHIFT);
- 	WREG32(mmTPC2_CFG_TPC_STALL, 1 << TPC2_CFG_TPC_STALL_V_SHIFT);
-@@ -1996,6 +2033,11 @@ static void goya_tpc_stall(struct hl_device *hdev)
- 
- static void goya_mme_stall(struct hl_device *hdev)
- {
-+	struct goya_device *goya = hdev->asic_specific;
-+
-+	if (!(goya->hw_cap_initialized & HW_CAP_MME))
-+		return;
-+
- 	WREG32(mmMME_STALL, 0xFFFFFFFF);
+-	if (IS_ERR(hdmi->audio_pdev))
+-		return PTR_ERR(hdmi->audio_pdev);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
  }
  
+ /* -----------------------------------------------------------------------------
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+index ea5d5c228534..fdd73fb73653 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+@@ -924,8 +924,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+ 	core->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(core->base))
+-		return PTR_ERR(core->base);
+-
+-	return 0;
++
++	return PTR_ERR_OR_ZERO(core->base);
+ }
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+index ff4d35c8771f..30454bc9de78 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+@@ -908,8 +908,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+ 	core->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(core->base))
+-		return PTR_ERR(core->base);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(core->base);
+ }
+diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+index 00bbf24488c1..bbc02d5aa8fb 100644
+--- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
++++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+@@ -191,8 +191,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+ 	phy->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(phy->base))
+-		return PTR_ERR(phy->base);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(phy->base);
+ }
+diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+index 417ade3d2565..84c04d8192b3 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
++++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+@@ -191,10 +191,8 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
+ 	dclk->hw.init = &init;
+ 
+ 	tcon->dclk = clk_register(dev, &dclk->hw);
+-	if (IS_ERR(tcon->dclk))
+-		return PTR_ERR(tcon->dclk);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(tcon->dclk);
+ }
+ EXPORT_SYMBOL(sun4i_dclk_create);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
+index b66fa27fe6ea..12a7b7b1c99c 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c
+@@ -278,10 +278,8 @@ static int sun4i_hdmi_init_regmap_fields(struct sun4i_hdmi *hdmi)
+ 	hdmi->field_ddc_sck_en =
+ 		devm_regmap_field_alloc(hdmi->dev, hdmi->regmap,
+ 					hdmi->variant->field_ddc_sck_en);
+-	if (IS_ERR(hdmi->field_ddc_sck_en))
+-		return PTR_ERR(hdmi->field_ddc_sck_en);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(hdmi->field_ddc_sck_en);
+ }
+ 
+ int sun4i_hdmi_i2c_create(struct device *dev, struct sun4i_hdmi *hdmi)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+index fbf7da9d9592..41044f013933 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+@@ -229,8 +229,6 @@ int sun4i_tmds_create(struct sun4i_hdmi *hdmi)
+ 	tmds->div_offset = hdmi->variant->tmds_clk_div_offset;
+ 
+ 	hdmi->tmds_clk = devm_clk_register(hdmi->dev, &tmds->hw);
+-	if (IS_ERR(hdmi->tmds_clk))
+-		return PTR_ERR(hdmi->tmds_clk);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(hdmi->tmds_clk);
+ }
+diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
+index a4d31fe3abff..0456b9c144ba 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
++++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
+@@ -169,10 +169,7 @@ int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *dev,
+ 
+ 	priv->phy = phy;
+ 	priv->hw.init = &init;
+-
+ 	phy->clk_phy = devm_clk_register(dev, &priv->hw);
+-	if (IS_ERR(phy->clk_phy))
+-		return PTR_ERR(phy->clk_phy);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(phy->clk_phy);
+ }
+diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+index f455ce71e85d..15be6bfdfe0b 100644
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -347,10 +347,8 @@ static int tegra_gem_create(struct drm_device *drm, void *data,
+ 
+ 	bo = tegra_bo_create_with_handle(file, drm, args->size, args->flags,
+ 					 &args->handle);
+-	if (IS_ERR(bo))
+-		return PTR_ERR(bo);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(bo);
+ }
+ 
+ static int tegra_gem_mmap(struct drm_device *drm, void *data,
+diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
+index 1237df157e05..0a1c96129b2f 100644
+--- a/drivers/gpu/drm/tegra/gem.c
++++ b/drivers/gpu/drm/tegra/gem.c
+@@ -462,10 +462,8 @@ int tegra_bo_dumb_create(struct drm_file *file, struct drm_device *drm,
+ 
+ 	bo = tegra_bo_create_with_handle(file, drm, args->size, 0,
+ 					 &args->handle);
+-	if (IS_ERR(bo))
+-		return PTR_ERR(bo);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(bo);
+ }
+ 
+ static vm_fault_t tegra_bo_fault(struct vm_fault *vmf)
 -- 
-2.17.1
+2.17.2
 
