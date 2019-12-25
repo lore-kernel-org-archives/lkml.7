@@ -2,114 +2,105 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F039C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F2F2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FBD2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMG2oDNk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sc2pcOF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfLYMVI (ORCPT
+        id S1726410AbfLYMxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 07:21:08 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45643 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfLYMVH (ORCPT
+        Wed, 25 Dec 2019 07:53:12 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46801 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfLYMxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 07:21:07 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so9420881pls.12;
-        Wed, 25 Dec 2019 04:21:07 -0800 (PST)
+        Wed, 25 Dec 2019 07:53:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k8so12108879otl.13;
+        Wed, 25 Dec 2019 04:53:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Wnv0YtxvwjhRCPhA4AJ3WaBp5/g5a1eicQCrc+kMTmY=;
-        b=OMG2oDNknz48cEtssDl/vVCwRTDpy4JZD7NsViNt1A+1tVmxUvamS9au6lXuwsfsbb
-         xo7sYco5GmLylmIKjvVYxQbeDWo7CINAyrGKej02lF1ONZc7Ij+iiWgI0fvXGFVf7JIa
-         Qj2XJgg5U2BXd7VaXEQQaMqF66hMrscytGmNF2e5U1AIxdXFYRRuLw2HOn8tCGywk/Ms
-         6GJBKQjpjpc08ZZvU/gqtKv+992lHA4zqnlBS9hEkNo2vVG8z+/XPDB1Z+YjCt7hVThR
-         DO76tUarJfoxdKwQ0ewdU7FW+XrT4fVhFo0KeJgFhk0EK9f4IOaWflpfWJQnNEPLKrVb
-         wQdw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vFjlEPTID7+wvGwi4O8XdLzo/j62NZIF2USQQuU9w9M=;
+        b=Sc2pcOF3376eDsOqdpUZbNhwMHJsdgAMfozUlSuD6ku9yG13IU7vB9T4F17TxAr+jU
+         sM4c1XJutX/HfdzNb6hZngn6BUv8N6t0MbC4zZDYBWHicMXSh0t3H2Us2M584PKQ6KYz
+         Ihjky+LaFbgI1PoXYsmAC2EIcuTefPzWuqtKroZkgxf5qyyb6YwRgjVAsKxywY5frAW1
+         DoYhEgrx1U6FkRHwrLqR5/rAGnL6tj7FwqS465r6uczIeLbn++cqF/XOCYiiZcUa4afI
+         JzDd88jutE7hMVOtNV7dvd1KrDdk0gsQ/IEqCLQhaFSnweFG2IqR63DiBOGWgRNvjL2z
+         yHng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Wnv0YtxvwjhRCPhA4AJ3WaBp5/g5a1eicQCrc+kMTmY=;
-        b=swTZun40150ZKGhmHR1Xj73bjh5ha/iw13nyjwS41lG4a/RVMG4cw/gfYOmpH9g7I4
-         QsuoIU3U02i0G7vxV5eodK3w9MpuAq7nu+Bsph3Hqgo1+wT9sMvPvjhjcauDt/shDl1Y
-         N1AO3V7rxIRqUehnziNt4//9YhuVzdPdp0KV3ndAEx6J0ETB0WZoq4dvTAVFeOD49A5p
-         NeDqBObrmqFuaCcMPY3TbnRRl59hR7+kWbOucNXqxF6YLODnhIXvPJapt8C+uPxiuU9F
-         woCpPmrHRJ3HpkSB3zmcEF1Px2oFDNVNiGp/h1ntCXmx16u1PZY3q8HOX7li3U0a6LJj
-         T1tQ==
-X-Gm-Message-State: APjAAAWWfQD+/c987CkrJbhWV6Oc2gTCZSjH4aap82MCTJk5B02nC6/s
-        rtsCoDNYiAR6MDOjPC8qRa0=
-X-Google-Smtp-Source: APXvYqy58ZqVkaIvHcFkCrMhdICYlw646jVoZnTKQnvdCw8RedHK5kwZitO2+Q0vWLmz8BO97emiag==
-X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr39713272plt.139.1577276466677;
-        Wed, 25 Dec 2019 04:21:06 -0800 (PST)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id b65sm30400263pgc.18.2019.12.25.04.21.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Dec 2019 04:21:06 -0800 (PST)
-Date:   Wed, 25 Dec 2019 17:50:58 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vfio-ccw: Use the correct style for SPDX License Identifier
-Message-ID: <20191225122054.GA4598@nishad>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vFjlEPTID7+wvGwi4O8XdLzo/j62NZIF2USQQuU9w9M=;
+        b=Lj9UMKbUriqrEo2D2x8Gt0LF1zzf+8r1QKScknlLMOAHKLVbhA9zzKbnY5kDkILYJU
+         narKR/S/1cLp0nX2B3TWHkkzkzucbCi1Et4zFM6aaA71R5ubwE8HbE2C7Ue8WZMgiAOO
+         Xw0VKRvCItgtR+bwNOy09/30RNj+bWbOS+uM9dCYyM27At1It+LFstSDG+xAaMXibj9R
+         e/UK8has4/Rk40lMNzdlmJ68ZVztUYCbPEhkJpOg5kREEjcWZMjsMCU847WUNO7UOoUL
+         0eTSzP++HahkayHmH21iiU40Wy2F1PIh2LWyNu7qBW9Vmv+f1tJcJ8SSwLXTYbfxB2S8
+         Bgxw==
+X-Gm-Message-State: APjAAAXn64TUUWAShcdt1+wKX8KfJliFLEwRAmpfjpFg3TH9bRtltwQ/
+        zHDuEXzTXZ8sQvcNjZQLXAA88J6ljvXhIYSteyA1wXRA6II=
+X-Google-Smtp-Source: APXvYqz835znKdLdeEWba5fSr4HZoY649al6kisLYRQz09swIr5xk2ZSY1c0KFjwM7tIWRyIihSVPBSspeBWhs6w2oE=
+X-Received: by 2002:a9d:3f61:: with SMTP id m88mr28771702otc.56.1577278390716;
+ Wed, 25 Dec 2019 04:53:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191220070747.GA2190169@kroah.com> <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
+ <20191223120651.GC114474@kroah.com>
+In-Reply-To: <20191223120651.GC114474@kroah.com>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Wed, 25 Dec 2019 12:52:34 +0000
+Message-ID: <CADVatmPA-eYzzTQoOkgVSyi0D0PQo78oQjWJFmWMuMJ4HeU_qg@mail.gmail.com>
+Subject: Re: [GIT PULL] TTY/Serial driver fixes for 5.5-rc3
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to S/390 common i/o drivers.
-It assigns explicit block comment to the SPDX License
-Identifier.
+On Mon, Dec 23, 2019 at 12:06 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Dec 20, 2019 at 10:08:03AM -0800, Linus Torvalds wrote:
+> > On Thu, Dec 19, 2019 at 11:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > The last tty core fix should resolve a long-standing bug with a race
+> > > at port creation time that some people would see, and Sudip finally
+> > > tracked down.
+> >
+> > Hmm, looks good. But it makes me wonder if we should now try to remove
+> > the second call to tty_port_link_device()?
+> >
+> > Now we have a number of helpers that do that tty_port_link_device()
+> > call for the driver (eg tty_port_register_device_attr_serdev(),
+> > tty_port_register_device_attr(), and the just added
+> > uart_add_one_port()).
+> >
+> > But we also have drivers doing it by hand, and presumably we now have
+> > drivers that do it through multiple paths? I guess it's harmless, but
+> > it feels a bit odd. No?
+>
+> It does.  I'll try to look at this after the holidays unless Sudip beats
+> me to it.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+A regression reported by Kenny for this change. I have sent him a patch to test.
+I think that has to go in rc4. Will remove the second call after he has tested.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
-index 30162a318a8a..f5d31887d413 100644
---- a/drivers/s390/cio/vfio_ccw_trace.h
-+++ b/drivers/s390/cio/vfio_ccw_trace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Tracepoints for vfio_ccw driver
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Tracepoints for vfio_ccw driver
-  *
-  * Copyright IBM Corp. 2018
-  *
--- 
-2.17.1
-
+--
+Regards
+Sudip
