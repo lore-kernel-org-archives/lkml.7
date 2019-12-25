@@ -2,179 +2,128 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EBAC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00961C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CD72063A
+	by mail.kernel.org (Postfix) with ESMTP id C036220663
 	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVH8KhY4"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aNXqgDez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbfLYAst (ORCPT
+        id S1726325AbfLYA54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:48:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41039 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726225AbfLYAst (ORCPT
+        Tue, 24 Dec 2019 19:57:56 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33221 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfLYA54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 19:48:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577234926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p2LMygbzX1GIK1jz4FStb57GDDXp2O5Zety4OXi+v+s=;
-        b=FVH8KhY4U41UXJNWDCzqBRp530rawPONewoOH+hadie8TaxsRs+vYK9u4n1qT8s9xt1dQ5
-        ABvdurHnJJUeTxxBMw6tvt1U25MsMMmn+BYmQEUpWu9TFnuOEIvdpvp+Qi7NUVEw7/yUrb
-        fuKs/ifWWCk1ajslqo2VFftA9ZlESgM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-EkYzMKfMPkeauNCrbD-hWA-1; Tue, 24 Dec 2019 19:48:41 -0500
-X-MC-Unique: EkYzMKfMPkeauNCrbD-hWA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB36D107ACC4;
-        Wed, 25 Dec 2019 00:48:38 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B855B101F942;
-        Wed, 25 Dec 2019 00:48:27 +0000 (UTC)
-Date:   Wed, 25 Dec 2019 08:48:22 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     John Garry <john.garry@huawei.com>, tglx@linutronix.de,
-        "chenxiang (M)" <chenxiang66@hisilicon.com>, bigeasy@linutronix.de,
-        linux-kernel@vger.kernel.org, hare@suse.com, hch@lst.de,
-        axboe@kernel.dk, bvanassche@acm.org, peterz@infradead.org,
-        mingo@redhat.com, Zhang Yi <yi.zhang@redhat.com>
-Subject: Re: [PATCH RFC 1/1] genirq: Make threaded handler use irq affinity
-  for managed interrupt
-Message-ID: <20191225004822.GA12280@ming.t460p>
-References: <ac5b5a25-df2e-18e9-6b0f-60af8c7cec3b@huawei.com>
- <687cbcc4-89d9-63ea-a246-ce2abaae501a@huawei.com>
- <0fd543f8ffd90f90deb691aea1c275b4@www.loen.fr>
- <a5154365-59c5-429b-559e-94ad6dffcdb0@huawei.com>
- <20191220233138.GB12403@ming.t460p>
- <fffcd23dd8286615b6e2c99620836cb1@www.loen.fr>
- <d5774e2f-bb60-c27c-bf00-267b88400a12@huawei.com>
- <e815b5451ea86e99d42045f7067f455a@www.loen.fr>
- <20191224015926.GC13083@ming.t460p>
- <7a961950624c414bb9d0c11c914d5c62@www.loen.fr>
+        Tue, 24 Dec 2019 19:57:56 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d139so2799113wmd.0;
+        Tue, 24 Dec 2019 16:57:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VotzchowBWia33SBZNWvtqHuElucwAtYumoZTzGpWCQ=;
+        b=aNXqgDezUiPP92OPEEgyn6ex0MJJ6tkJa1iQLQ3x7tPeF92q1JidZhcqqXoZq/cqIe
+         hI33UVV6w97dO3Io4itkMlCA5gfJh3Cv5DjCYNlz0Fb5nUGZMkuN5wYA52KfiTqvISIU
+         XeVzRKIDZMV33Qs9uzua+D3v4QYNQFOwOlWhRUWqGRGUnJTg/gD51DETHTr2P34cg77i
+         8KgduyphFPuHG9G+ZMHQQ1pJJyTOlk+JzCQTFC2+mU1hc1TKLyaV2eCQGcVhQlcq2UUK
+         lhNnaA040a2/80/4FSVcGuKrfqG+FW/GzMixMLDW5ccq2YA82/i6ttml9s/VY0qWjYfl
+         mAwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VotzchowBWia33SBZNWvtqHuElucwAtYumoZTzGpWCQ=;
+        b=pV3snGY3o/P10kqVx9ByRbLCqOK3j39Y0rNtEmUXOnlcdBiUCoLow1A3n4ZsRxzLkI
+         AoIPD7jw5k9tWnWQCMnNOehhnWVDC+rAvFhKWU4fYTBoY5eDHbEVbapu7q/XTrCZGieh
+         Vmx/kP/EMf4UcuMxPSJiE9UXzmvLhUv1+6ULotN4vfGo+PDpzQcAANUXTvn+jzCrWxbR
+         dh02OumZW3GcT+ilvPFRyZM9+9ltEWQxSmJ2QNtPWUuFVzZhmEPStNVFJlzHTxlkhmxh
+         VOXkAB44drOK1GDF3MdQ76J61bHdL54B8nX1oYEP5o7YEPwKYzmnF4ie9tMgYYHioJAY
+         8mGQ==
+X-Gm-Message-State: APjAAAUwolsLWsiaLK4w50MlPX79SG7y88v4WkCpXFxPoSqLybA5HZ81
+        dw7beLM4BxPQwzAFTPahiS8=
+X-Google-Smtp-Source: APXvYqxT1GuAR0B1XYM3pxm/0fTXXYbqGvbrMnzYbqu3FXAimku+BcOGTgmHUUv4jgJzrLt3vo/FbA==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr6444994wmg.110.1577235473304;
+        Tue, 24 Dec 2019 16:57:53 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id e18sm26034448wrw.70.2019.12.24.16.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Dec 2019 16:57:52 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
+        davem@davemloft.net, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        balbes-150@yandex.ru, ingrassia@epigenesys.com,
+        jbrunet@baylibre.com, linus.luessing@c0d3.blue,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/3] Meson8b/8m2: Ethernet RGMII TX delay fixes
+Date:   Wed, 25 Dec 2019 01:56:52 +0100
+Message-Id: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a961950624c414bb9d0c11c914d5c62@www.loen.fr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 11:20:25AM +0000, Marc Zyngier wrote:
-> On 2019-12-24 01:59, Ming Lei wrote:
-> > On Mon, Dec 23, 2019 at 10:47:07AM +0000, Marc Zyngier wrote:
-> > > On 2019-12-23 10:26, John Garry wrote:
-> > > > > > > > I've also managed to trigger some of them now that I have
-> > > > > > > access to
-> > > > > > > > a decent box with nvme storage.
-> > > > > > >
-> > > > > > > I only have 2x NVMe SSDs when this occurs - I should not be
-> > > > > > > hitting this...
-> > > > > > >
-> > > > > > > Out of curiosity, have you tried
-> > > > > > > > with the SMMU disabled? I'm wondering whether we hit some
-> > > > > > > livelock
-> > > > > > > > condition on unmapping buffers...
-> > > > > > >
-> > > > > > > No, but I can give it a try. Doing that should lower the CPU
-> > > > > > > usage, though,
-> > > > > > > so maybe masks the issue - probably not.
-> > > > > >
-> > > > > > Lots of CPU lockup can is performance issue if there isn't
-> > > > > > obvious bug.
-> > > > > >
-> > > > > > I am wondering if you may explain it a bit why enabling SMMU
-> > > may
-> > > > > > save
-> > > > > > CPU a it?
-> > > > > The other way around. mapping/unmapping IOVAs doesn't comes for
-> > > > > free.
-> > > > > I'm trying to find out whether the NVMe map/unmap patterns
-> > > trigger
-> > > > > something unexpected in the SMMU driver, but that's a very long
-> > > > > shot.
-> > > >
-> > > > So I tested v5.5-rc3 with and without the SMMU enabled, and
-> > > without
-> > > > the SMMU enabled I don't get the lockup.
-> > > 
-> > > OK, so my hunch wasn't completely off... At least we have something
-> > > to look into.
-> > > 
-> > > [...]
-> > > 
-> > > > Obviously this is not conclusive, especially with such limited
-> > > > testing - 5 minute runs each. The CPU load goes up when disabling
-> > > the
-> > > > SMMU, but that could be attributed to extra throughput (1183K ->
-> > > > 1539K) loading.
-> > > >
-> > > > I do notice that since we complete the NVMe request in irq
-> > > context,
-> > > > we also do the DMA unmap, i.e. talk to the SMMU, in the same
-> > > context,
-> > > > which is less than ideal.
-> > > 
-> > > It depends on how much overhead invalidating the TLB adds to the
-> > > equation, but we should be able to do some tracing and find out.
-> > > 
-> > > > I need to finish for the Christmas break today, so can't check
-> > > this
-> > > > much further ATM.
-> > > 
-> > > No worries. May I suggest creating a new thread in the new year,
-> > > maybe
-> > > involving Robin and Will as well?
-> > 
-> > Zhang Yi has observed the CPU lockup issue once when running heavy IO on
-> > single nvme drive, and please CC him if you have new patch to try.
-> 
-> On which architecture? John was indicating that this also happen on x86.
+The Ethernet TX performance has been historically bad on Meson8b and
+Meson8m2 SoCs because high packet loss was seen. Today I (presumably)
+found out why this is: the input clock (which feeds the RGMII TX clock)
+has to be at least 4 times 125MHz. With the fixed "divide by 2" in the
+clock tree this means that m250_div needs to be at least 2.
 
-ARM64.
-
-To be honest, I never see such CPU lockup issue on x86 in case of running
-heavy IO on single NVMe drive.
-
-> 
-> > Then looks the DMA unmap cost is too big on aarch64 if SMMU is involved.
-> 
-> So far, we don't have any data suggesting that this is actually the case.
-> Also, other workloads (such as networking) do not exhibit this behaviour,
-> while being least as unmap-heavy as NVMe is.
-
-Maybe it is because networking workloads usually completes IO in softirq
-context, instead of hard interrupt context.
-
-> 
-> If the cross-architecture aspect is confirmed, this points more into
-> the direction of an interaction between the NVMe subsystem and the
-> DMA API more than an architecture-specific problem.
-> 
-> Given that we have so far very little data, I'd hold off any conclusion.
-
-We can start to collect latency data of dma unmapping vs nvme_irq()
-on both x86 and arm64.
-
-I will see if I can get a such box for collecting the latency data.
+Now the PRG_ETH0 register in Linux matches what u-boot and the vendor
+3.10 kernel use. iperf3 output on my Odroid-C1 (where this series has
+been tested):
+# iperf3 -c 192.168.1.100
+Connecting to host 192.168.1.100, port 5201
+[  5] local 192.168.1.163 port 42636 connected to 192.168.1.100 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   105 MBytes   878 Mbits/sec    0    609 KBytes       
+[  5]   1.00-2.00   sec   106 MBytes   885 Mbits/sec    0    683 KBytes       
+[  5]   2.00-3.09   sec  73.7 MBytes   570 Mbits/sec    0    683 KBytes       
+[  5]   3.09-4.00   sec  81.9 MBytes   754 Mbits/sec    0    795 KBytes       
+[  5]   4.00-5.00   sec   104 MBytes   869 Mbits/sec    0    877 KBytes       
+[  5]   5.00-6.00   sec   105 MBytes   878 Mbits/sec    0    877 KBytes       
+[  5]   6.00-7.00   sec  68.0 MBytes   571 Mbits/sec    0    877 KBytes       
+[  5]   7.00-8.00   sec  80.7 MBytes   676 Mbits/sec    0    877 KBytes       
+[  5]   8.00-9.01   sec   102 MBytes   853 Mbits/sec    0    877 KBytes       
+[  5]   9.01-10.00  sec   101 MBytes   859 Mbits/sec    0    877 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0             sender
+[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec                  receiver
 
 
-Thanks,
-Ming
+@David: please only apply patch #1 from this series. I included the .dts
+changes so others can test them together with the driver update (as the
+.dts has to be updated to fully fix the TX packet loss - with the old TX
+delay in the .dts there is still packet loss, even with a fixed driver).
+
+I will ask Kevin to apply patches #2 and #3 through his linux-amlogic
+tree - or resend them. When applying the .dts patches without the fix in
+the driver then I get 100% packet loss on my Odroid-C1. So unfortunately
+there's a hard dependency between patch 1 and 2/3.
+
+
+Martin Blumenstingl (3):
+  net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
+  ARM: dts: meson8b: odroidc1: use the same RGMII TX delay as u-boot
+  ARM: dts: meson8m2: mxiii-plus: use the same RGMII TX delay as u-boot
+
+ arch/arm/boot/dts/meson8b-odroidc1.dts             |  2 +-
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts          |  2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 14 +++++++++++---
+ 3 files changed, 13 insertions(+), 5 deletions(-)
+
+-- 
+2.24.1
 
