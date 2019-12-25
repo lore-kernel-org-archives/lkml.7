@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8F1C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916ECC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FAB2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5302077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLYLHa (ORCPT
+        id S1727002AbfLYLHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 06:07:30 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:36318 "EHLO honk.sigxcpu.org"
+        Wed, 25 Dec 2019 06:07:35 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:36330 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfLYLH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 06:07:28 -0500
+        id S1726853AbfLYLH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 06:07:29 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BEF1EFB02;
-        Wed, 25 Dec 2019 12:07:25 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id BD3F5FB06;
+        Wed, 25 Dec 2019 12:07:26 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bd8ULHC7HzCf; Wed, 25 Dec 2019 12:07:24 +0100 (CET)
+        with ESMTP id fN-2tku4eKrh; Wed, 25 Dec 2019 12:07:23 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 7003D40BFE; Wed, 25 Dec 2019 12:07:19 +0100 (CET)
+        id 57B1F40BE3; Wed, 25 Dec 2019 12:07:19 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
@@ -35,9 +35,9 @@ To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] leds: lm3692x: Allow to configure brigthness mode
-Date:   Wed, 25 Dec 2019 12:07:17 +0100
-Message-Id: <f6dabbf17ee2d839e53d305de819acd8fab72fad.1577271823.git.agx@sigxcpu.org>
+Subject: [PATCH v2 2/6] leds: lm3692x: Allow to configure over voltage protection
+Date:   Wed, 25 Dec 2019 12:07:15 +0100
+Message-Id: <5ee465d90bb71dc63e9fb2b794fd898eb6726fc4.1577271823.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1577271823.git.agx@sigxcpu.org>
 References: <cover.1577271823.git.agx@sigxcpu.org>
@@ -49,54 +49,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brightness mode is currently hardcoded as linear in the driver. Make
-exponential mode configurable via DT.
+Overvoltage protection is currently using the default of 29V.  Make it
+configurable via DT.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/leds/leds-lm3692x.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/leds/leds-lm3692x.c | 34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-index 28973cc5a6cc..ff20560a8263 100644
+index 8b408102e138..28973cc5a6cc 100644
 --- a/drivers/leds/leds-lm3692x.c
 +++ b/drivers/leds/leds-lm3692x.c
-@@ -115,7 +115,7 @@ struct lm3692x_led {
+@@ -114,6 +114,8 @@ struct lm3692x_led {
+ 	struct regulator *regulator;
  	int led_enable;
  	int model_id;
- 
--	u8 boost_ctrl;
-+	u8 boost_ctrl, brightness_ctrl;
++
++	u8 boost_ctrl;
  };
  
  static const struct reg_default lm3692x_reg_defs[] = {
-@@ -267,8 +267,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+@@ -249,10 +251,7 @@ static int lm3692x_init(struct lm3692x_led *led)
  	if (ret)
  		goto out;
  
--	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
--			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
-+	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
+-	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+-			LM3692X_BOOST_SW_1MHZ |
+-			LM3692X_BOOST_SW_NO_SHIFT |
+-			LM3692X_OCP_PROT_1_5A);
++	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
  	if (ret)
  		goto out;
  
 @@ -326,6 +325,7 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ {
  	struct fwnode_handle *child = NULL;
  	struct led_init_data init_data = {};
- 	u32 ovp;
-+	bool exp_mode;
++	u32 ovp;
  	int ret;
  
  	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-@@ -376,6 +376,12 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
- 		}
+@@ -350,6 +350,32 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ 		led->regulator = NULL;
  	}
  
-+	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
-+	exp_mode = device_property_read_bool(&led->client->dev,
-+				     "ti,brightness-mapping-exponential");
-+	if (exp_mode)
-+		led->brightness_ctrl |= LM3692X_MAP_MODE_EXP;
++	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
++		LM3692X_BOOST_SW_NO_SHIFT |
++		LM3692X_OCP_PROT_1_5A;
++	ret = device_property_read_u32(&led->client->dev,
++				       "ti,ovp-microvolt", &ovp);
++	if (ret) {
++		led->boost_ctrl |= LM3692X_OVP_29V;
++	} else {
++		switch (ovp) {
++		case 17000000:
++			break;
++		case 21000000:
++			led->boost_ctrl |= LM3692X_OVP_21V;
++			break;
++		case 25000000:
++			led->boost_ctrl |= LM3692X_OVP_25V;
++			break;
++		case 29000000:
++			led->boost_ctrl |= LM3692X_OVP_29V;
++			break;
++		default:
++			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
++			return -EINVAL;
++		}
++	}
 +
  	child = device_get_next_child_node(&led->client->dev, child);
  	if (!child) {
