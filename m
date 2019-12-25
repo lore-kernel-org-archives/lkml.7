@@ -2,76 +2,75 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85108C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2751C2D0D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A03420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12B720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfLYCUH (ORCPT
+        id S1726331AbfLYCZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 21:20:07 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44692 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726259AbfLYCUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 21:20:07 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED51ABED064994ED5F36;
-        Wed, 25 Dec 2019 10:20:01 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Dec 2019
- 10:19:55 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH] KVM: nvmx: retry writing guest memory after page fault injected
-Date:   Wed, 25 Dec 2019 10:21:41 +0800
-Message-ID: <1577240501-763-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 24 Dec 2019 21:25:45 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:60070 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbfLYCZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 21:25:45 -0500
+Received: from s0106602ad0811846.cg.shawcable.net ([68.147.191.165] helo=[192.168.0.12])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1ijwMn-0002rd-Gt; Tue, 24 Dec 2019 19:25:42 -0700
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, Kit Chow <kchow@gigaio.com>
+References: <20191216190120.21374-1-logang@deltatee.com>
+ <20191224045004.GI2536@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <aba86729-b9e7-dc7e-0860-05c95439a673@deltatee.com>
+Date:   Tue, 24 Dec 2019 19:25:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20191224045004.GI2536@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.191.165
+X-SA-Exim-Rcpt-To: kchow@gigaio.com, dave.jiang@intel.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 0/5] Support hot-unbind in IOAT
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
 
-We should retry writing guest memory when kvm_write_guest_virt_system()
-failed and page fault is injected in handle_vmread().
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/vmx/nested.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 2019-12-23 9:50 p.m., Vinod Koul wrote:
+> On 16-12-19, 12:01, Logan Gunthorpe wrote:
+>> Hey,
+>>
+>> This patchset creates some common infrastructure which I will use in the
+>> next version of the PLX driver. It adds a reference count to the
+>> dma_device struct which is taken and released every time a channel
+>> is allocated or freed. A call back is used to allow the driver to
+>> free the underlying memory and do any final cleanup.
+>>
+>> For a use-case, I've adjusted the ioat driver to properly support
+>> hot-unbind. The driver was already pretty close as it already had
+>> a shutdown state; so it mostly only required freeing the memory
+>> correctly and calling ioat_shutdown at the correct time.
+> 
+> I didnt find anything else (apart from one change i pointed), so I have
+> applied this and will fix the comment. No point in delaying this
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 8edefdc9c0cb..c1ec9f25a417 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4799,8 +4799,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 					instr_info, true, len, &gva))
- 			return 1;
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
--		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, &e))
-+		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, &e)) {
- 			kvm_inject_page_fault(vcpu, &e);
-+			return 1;
-+		}
- 	}
- 
- 	return nested_vmx_succeed(vcpu);
--- 
-2.19.1
+Great, thanks!
 
+Logan
