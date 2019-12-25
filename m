@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 363D2C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13655C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150502075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DC52075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfLYKjR (ORCPT
+        id S1727171AbfLYKjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:39:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40622 "EHLO
+        Wed, 25 Dec 2019 05:39:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40631 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfLYKjJ (ORCPT
+        with ESMTP id S1727066AbfLYKjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 05:39:09 -0500
+        Wed, 25 Dec 2019 05:39:11 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ik44C-00088w-FT; Wed, 25 Dec 2019 11:39:00 +0100
+        id 1ik44D-00089E-3f; Wed, 25 Dec 2019 11:39:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 19D001C2BA3;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C864F1C2B24;
         Wed, 25 Dec 2019 11:39:00 +0100 (CET)
-Date:   Wed, 25 Dec 2019 10:38:59 -0000
+Date:   Wed, 25 Dec 2019 10:39:00 -0000
 From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Make EAS wakeup placement consider
- uclamp restrictions
-Cc:     Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+Subject: [tip: sched/core] sched/uclamp: Make uclamp util helpers use and
+ return UL values
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Quentin Perret <qperret@google.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191211113851.24241-6-valentin.schneider@arm.com>
-References: <20191211113851.24241-6-valentin.schneider@arm.com>
+In-Reply-To: <20191211113851.24241-3-valentin.schneider@arm.com>
+References: <20191211113851.24241-3-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <157727033997.30329.10913355096896914803.tip-bot2@tip-bot2>
+Message-ID: <157727034066.30329.2864192311719058609.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,102 +63,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     1d42509e475cdc8542aa5b3e03a7e845244f4f57
-Gitweb:        https://git.kernel.org/tip/1d42509e475cdc8542aa5b3e03a7e845244f4f57
+Commit-ID:     686516b55e98edf18c2a02d36aaaa6f4c0f6c39c
+Gitweb:        https://git.kernel.org/tip/686516b55e98edf18c2a02d36aaaa6f4c0f6c39c
 Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Wed, 11 Dec 2019 11:38:51 
+AuthorDate:    Wed, 11 Dec 2019 11:38:48 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Dec 2019 10:42:09 +01:00
+CommitterDate: Wed, 25 Dec 2019 10:42:08 +01:00
 
-sched/fair: Make EAS wakeup placement consider uclamp restrictions
+sched/uclamp: Make uclamp util helpers use and return UL values
 
-task_fits_capacity() has just been made uclamp-aware, and
-find_energy_efficient_cpu() needs to go through the same treatment.
+Vincent pointed out recently that the canonical type for utilization
+values is 'unsigned long'. Internally uclamp uses 'unsigned int' values for
+cache optimization, but this doesn't have to be exported to its users.
 
-Things are somewhat different here however - using the task max clamp isn't
-sufficient. Consider the following setup:
-
-  The target runqueue, rq:
-    rq.cpu_capacity_orig = 512
-    rq.cfs.avg.util_avg = 200
-    rq.uclamp.max = 768 // the max p.uclamp.max of all enqueued p's is 768
-
-  The waking task, p (not yet enqueued on rq):
-    p.util_est = 600
-    p.uclamp.max = 100
-
-Now, consider the following code which doesn't use the rq clamps:
-
-  util = uclamp_task_util(p);
-  // Does the task fit in the spare CPU capacity?
-  cpu = cpu_of(rq);
-  fits_capacity(util, cpu_capacity(cpu) - cpu_util(cpu))
-
-This would lead to:
-
-  util = 100;
-  fits_capacity(100, 512 - 200)
-
-fits_capacity() would return true. However, enqueuing p on that CPU *will*
-cause it to become overutilized since rq clamp values are max-aggregated,
-so we'd remain with
-
-  rq.uclamp.max = 768
-
-which comes from the other tasks already enqueued on rq. Thus, we could
-select a high enough frequency to reach beyond 0.8 * 512 utilization
-(== overutilized) after enqueuing p on rq. What find_energy_efficient_cpu()
-needs here is uclamp_rq_util_with() which lets us peek at the future
-utilization landscape, including rq-wide uclamp values.
-
-Make find_energy_efficient_cpu() use uclamp_rq_util_with() for its
-fits_capacity() check. This is in line with what compute_energy() ends up
-using for estimating utilization.
+Make the uclamp helpers that deal with utilization use and return unsigned
+long values.
 
 Tested-By: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Suggested-by: Quentin Perret <qperret@google.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Quentin Perret <qperret@google.com>
 Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191211113851.24241-6-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20191211113851.24241-3-valentin.schneider@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ kernel/sched/core.c  |  6 +++---
+ kernel/sched/sched.h | 14 +++++++-------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 26c59bc..2d170b5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6273,9 +6273,18 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 				continue;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1f6c094..e7b08d5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -919,17 +919,17 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
+ 	return uc_req;
+ }
  
--			/* Skip CPUs that will be overutilized. */
- 			util = cpu_util_next(cpu, p, cpu);
- 			cpu_cap = capacity_of(cpu);
-+			spare_cap = cpu_cap - util;
-+
-+			/*
-+			 * Skip CPUs that cannot satisfy the capacity request.
-+			 * IOW, placing the task there would make the CPU
-+			 * overutilized. Take uclamp into account to see how
-+			 * much capacity we can get out of the CPU; this is
-+			 * aligned with schedutil_cpu_util().
-+			 */
-+			util = uclamp_rq_util_with(cpu_rq(cpu), util, p);
- 			if (!fits_capacity(util, cpu_cap))
- 				continue;
+-unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
++unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+ 	struct uclamp_se uc_eff;
  
-@@ -6290,7 +6299,6 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- 			 * Find the CPU with the maximum spare capacity in
- 			 * the performance domain
- 			 */
--			spare_cap = cpu_cap - util;
- 			if (spare_cap > max_spare_cap) {
- 				max_spare_cap = spare_cap;
- 				max_spare_cap_cpu = cpu;
+ 	/* Task currently refcounted: use back-annotated (effective) value */
+ 	if (p->uclamp[clamp_id].active)
+-		return p->uclamp[clamp_id].value;
++		return (unsigned long)p->uclamp[clamp_id].value;
+ 
+ 	uc_eff = uclamp_eff_get(p, clamp_id);
+ 
+-	return uc_eff.value;
++	return (unsigned long)uc_eff.value;
+ }
+ 
+ /*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index d9b2451..b478474 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2300,14 +2300,14 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+ #endif /* CONFIG_CPU_FREQ */
+ 
+ #ifdef CONFIG_UCLAMP_TASK
+-unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
++unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
+ static __always_inline
+-unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+-			      struct task_struct *p)
++unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
++			       struct task_struct *p)
+ {
+-	unsigned int min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
+-	unsigned int max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
++	unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
++	unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
+ 
+ 	if (p) {
+ 		min_util = max(min_util, uclamp_eff_value(p, UCLAMP_MIN));
+@@ -2325,8 +2325,8 @@ unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+ 	return clamp(util, min_util, max_util);
+ }
+ #else /* CONFIG_UCLAMP_TASK */
+-static inline unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+-					    struct task_struct *p)
++static inline unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
++					     struct task_struct *p)
+ {
+ 	return util;
+ }
