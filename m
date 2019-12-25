@@ -2,192 +2,103 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61032C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF8DC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F26720722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577267456;
-	bh=4ipXk1cphHEWAGsCbqAr/dqtrx4QOXDEwnmo325kjsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L6wLxb6MJBR5/o+tZoK3obGRGG9xliyGltRsJ1XxRr1ZOm++x7dRyzvMD1+6JKPbR
-	 YRzYkey/31irotkjzFmu2L7H79p087p/Aw0Ilb7lbyeIZqCJ/ZZ6wJjjLBK/bzxwS4
-	 Gc3rfriryQvNMOY+BT6H18n7T81qRddciV0nB36c=
+	by mail.kernel.org (Postfix) with ESMTP id D78F62072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:58:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="Sawr3RJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLYJuz (ORCPT
+        id S1726410AbfLYJ6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 04:50:55 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35772 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfLYJuz (ORCPT
+        Wed, 25 Dec 2019 04:58:52 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39109 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfLYJ6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 04:50:55 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so4097309wmb.0;
-        Wed, 25 Dec 2019 01:50:53 -0800 (PST)
+        Wed, 25 Dec 2019 04:58:52 -0500
+Received: by mail-lj1-f195.google.com with SMTP id l2so22543867lja.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 01:58:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uUIcjORB9nRFSyWLet1DgaSxDKS1ZBSPNyG2RWrs+X0=;
-        b=kIQ5TiSIn/4ihtFl9My93eQXD7DI5ixZJA2JE7zCgRQt0vAJxvDoo9xmCl69qve0+S
-         TD6SNWygGIkK7bxhwK7pFTBdhVsgHVVSz4Q9p1X8nm5w5yeU9URd5hbxEK2FkKio8DgC
-         iblh04KqdvqzN1SXv3CGSD1aO0YmkEonML+c/mPI9ae6hNfI4DNHux1ffuj6xC4h9XKe
-         1Af/06SZcXF6L43XMdvLKw3Ye7OPQxk7Zdd8pbUhl4LbcWHr6uvngfu0KvX6SDtqMbtb
-         ebxv1scGze+BvwL0g46wNmZsYW28zpku2s7hrhKDOQvkroGZSLb8KT9dc1yvYp98FJNn
-         ySPg==
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BimAE/wzLaoJ+Q76OTXF2tSOsXH3zuFfkC4OKhHyt4M=;
+        b=Sawr3RJ0XQ4kFSYodnBYQ2C4OYnmS+dTU+GADcUfRFioyeQiYpsoojrV+bcKjvKhkr
+         l5dBEP+1n70Gzok8JpiiQwOAZWyZN7V5YQeRXeSuBekS2vKw4/Zxn14sGbGYe6g8nYqt
+         v8l8Rn/pmzy+OZuKWPrGBBbT4tyAe4GXN5bOSWIZ1Za4RNOlmEOYKsaaEKrl1bOG+Cpr
+         AjrHMzLWPRePRZi4XsrgxD7ngKSSbETAa8A/oQg+/iiIBaqXioTP5j1+JeYe86C6QXxb
+         BcIECzCTzgUgS4BC9DngU5jnB78k7UkDKW4Xsynzc++yrPCVw6RiMO7Mlzhu3VsY/epv
+         pDSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uUIcjORB9nRFSyWLet1DgaSxDKS1ZBSPNyG2RWrs+X0=;
-        b=t026MKlPtfwjXB3ANdeneyDQQxJAQ8AeI7Tg2HVh3v0gYGdo3U5/5KGf7TH/tgcOJl
-         QB+FIz3j/OsnMYN+HsS4EzD+bSpdJXunUR1Ly6BvEbaYkSksXv0bJcscbhRcxJb25SLm
-         sdE70aZJzrqIpeRZfQcvybwUanRPZBlt8l2RqPYwBfi/6umJwM3YskiqsSNPIETueUCF
-         SggiQDEq+Qjz9h4wXIuvqGDEdeEz6LdKO6cMvD0iqwXq03Zmfm7StjYeTMfYC+YZWx7Z
-         +sKhQdtjAUqrJc3NP0DxxoAtfREJmD8KFTy746N7PT/XoMY/qsPiEnjUywN8eaten3LS
-         zqOA==
-X-Gm-Message-State: APjAAAW0K/W1T7WeY5thKWvNpxb0zdgoGM2x+sAlrD8yY3pcsGz09M4Y
-        LIDzPzPEDd7J5bD2YtEHRfE=
-X-Google-Smtp-Source: APXvYqw0JNwdFYz14eaGRl4M43XQ7IynkJCvisuLvd0Y+27+GCh+wAI2fvNnPXfAOKr53OJEfkyUNg==
-X-Received: by 2002:a05:600c:2c53:: with SMTP id r19mr8549154wmg.39.1577267452614;
-        Wed, 25 Dec 2019 01:50:52 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id e18sm27160969wrr.95.2019.12.25.01.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2019 01:50:52 -0800 (PST)
-Date:   Wed, 25 Dec 2019 10:50:50 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [GIT PULL 00/25] EFI updates for v5.6
-Message-ID: <20191225095050.GB73981@gmail.com>
-References: <20191224151025.32482-1-ardb@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224151025.32482-1-ardb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BimAE/wzLaoJ+Q76OTXF2tSOsXH3zuFfkC4OKhHyt4M=;
+        b=fbauhgWH7hdRGWLJqw60fyd+FeLckn8Rhnt7kDKSKjRbGuWYNPwfyxDHq9+NFGmjet
+         kAeFXEHOux7f89eAGZ1VVakMtrJdhlNLb2HXWVq91/Sin+mZYs6pUcCLe5BmB1f9/ZCg
+         O5tCIZLhRMJJkTszwGUY+avaNj+qaV9vroalYmcVkH2BST0ksWtp+K5H2p9orl8MyCJm
+         pd/ZEUCFAv5IW4u+WxW4FP3XRZvsFltaG6hHcm0DOSvf5aLx8WwrVX5llrEP92QqvUNX
+         FHbjzKdpKUJhs/U0eUrAI6ZksHBJJG6RkA8wOSvFMnRNm6ZwVQAxRPfmkSlqa1PFCVN9
+         x5CQ==
+X-Gm-Message-State: APjAAAXjhCOsxwMxF2Ip3rjPMycTjCUxxeFi1W6ywRT4wzsyTuFjJhPQ
+        UzMmHfRKrR4WUiDFJ6gN+GwuLA==
+X-Google-Smtp-Source: APXvYqyVCaK3RhWsqGk8ogHzgSadR0YNeuWFjHPQK3y6zRy7veQsw5x+SJ1Znlr403nf6FVtEcldXA==
+X-Received: by 2002:a2e:814e:: with SMTP id t14mr22412615ljg.149.1577267929007;
+        Wed, 25 Dec 2019 01:58:49 -0800 (PST)
+Received: from msk1wst115n.omp.ru (mail.omprussia.ru. [5.134.221.218])
+        by smtp.gmail.com with ESMTPSA id t9sm11127171lfl.51.2019.12.25.01.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 25 Dec 2019 01:58:48 -0800 (PST)
+Message-ID: <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
+Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
+From:   Vyacheslav Dubeyko <slava@dubeyko.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Date:   Wed, 25 Dec 2019 12:58:47 +0300
+In-Reply-To: <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+References: <20191223040020.109570-1-yuchao0@huawei.com>
+         <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
+> Hi,
+> 
+> CC linux-fsdevel
+> 
+> On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
+> > As Geert Uytterhoeven reported:
+> > 
+> > for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+> > 
+> > On some platforms, HZ can be less than 50, then unexpected 0
+> > timeout
+> > jiffies will be set in congestion_wait().
+> > 
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-> Ingo, Thomas,
-> 
-> Please consider the pull request below. I am anticipating some more
-> changes for this cycle, but it would be good to get these queued up and
-> into -next sooner rather than later, since there is some risk of
-> breakage even though the changes have been tested on a variety of
-> hardware.
-> 
-> If you have the stomach to go over them in detail: please take into
-> account that these patches modify the same efi_call_xxx() macro
-> definitions multiple times, in order to be bisectable, so please
-> consider the end result first before commenting on coding style of the
-> intermediate changes.
-> 
-> NOTE: this series depends on the efi-urgent PR that I just sent out, so
-> please merge tip/efi/urgent into tip/efi/core before applying the
-> changes below.
-> 
-> Thanks and happy Christmas,
-> Ard.
-> 
-> 
-> 
-> The following changes since commit 77217fcc8e04f27127b32825376ed508705fd946:
-> 
->   x86/efistub: disable paging at mixed mode entry (2019-12-23 16:25:21 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
-> 
-> for you to fetch changes up to c51a0735389b92cb0025137af0034773773ad7da:
-> 
->   efi/libstub/x86: avoid globals to store context during mixed mode calls (2019-12-24 15:32:22 +0100)
-> 
-> ----------------------------------------------------------------
-> EFI changes for v5.6:
-> - Cleanup of the GOP [graphics output] handling code in the EFI stub (Arvind)
-> - Inspired by the above, and with a little bit of Arvind's help, a complete
->   refactor of the mixed mode handling in the x86 EFI stub, getting rid of a
->   lot of ugly and unnecessary wrapping and typecasting. This is a worthwhile
->   cleanup by itself, but it also addresses a recurring issue where stub code
->   often fails to compile on non-x86 because all the casting and thunking via
->   variadic wrapper routines is masking problems in the code.
-> 
-> ----------------------------------------------------------------
-> Ard Biesheuvel (21):
->       efi/libstub: remove unused __efi_call_early() macro
->       efi/x86: rename efi_is_native() to efi_is_mixed()
->       efi/libstub: use a helper to iterate over a EFI handle array
->       efi/libstub: extend native protocol definitions with mixed_mode aliases
->       efi/libstub: distinguish between native/mixed not 32/64 bit
->       efi/libstub: drop explicit 32/64-bit protocol definitions
->       efi/libstub: use stricter typing for firmware function pointers
->       efi/libstub: annotate firmware routines as __efiapi
->       efi/libstub/x86: avoid thunking for native firmware calls
->       efi/libstub: avoid protocol wrapper for file I/O routines
->       efi/libstub: get rid of 'sys_table_arg' macro parameter
->       efi/libstub: unify the efi_char16_printk implementations
->       efi/libstub/x86: drop __efi_early() export and efi_config struct
->       efi/libstub: drop sys_table_arg from printk routines
->       efi/libstub: remove 'sys_table_arg' from all function prototypes
->       efi/libstub/x86: work around page freeing issue in mixed mode
->       efi/libstub: drop protocol argument from efi_call_proto() macro
->       efi/libstub: drop 'table' argument from efi_table_attr() macro
->       efi/libstub: rename efi_call_early/_runtime macros to be more intuitive
->       efi/libstub: tidy up types and names of global cmdline variables
->       efi/libstub/x86: avoid globals to store context during mixed mode calls
-> 
-> Arvind Sankar (4):
->       efi/gop: Remove bogus packed attribute from GOP structures
->       efi/gop: Remove unused typedef
->       efi/gop: Convert GOP structures to typedef and cleanup some types
->       efi/gop: Unify 32/64-bit functions
-> 
->  arch/arm/include/asm/efi.h                     |  17 +-
->  arch/arm64/include/asm/efi.h                   |  16 +-
->  arch/x86/Kconfig                               |  11 +-
->  arch/x86/boot/compressed/Makefile              |   2 +-
->  arch/x86/boot/compressed/eboot.c               | 290 +++++-----
->  arch/x86/boot/compressed/eboot.h               |  30 +-
->  arch/x86/boot/compressed/efi_stub_32.S         |  87 ---
->  arch/x86/boot/compressed/efi_stub_64.S         |   5 -
->  arch/x86/boot/compressed/efi_thunk_64.S        |  17 +-
->  arch/x86/boot/compressed/head_32.S             |  64 +--
->  arch/x86/boot/compressed/head_64.S             |  97 +---
->  arch/x86/include/asm/efi.h                     |  77 ++-
->  arch/x86/platform/efi/efi.c                    |  12 +-
->  arch/x86/platform/efi/efi_64.c                 |   6 +-
->  arch/x86/platform/efi/quirks.c                 |   2 +-
->  arch/x86/xen/efi.c                             |   2 +-
->  drivers/firmware/efi/libstub/arm-stub.c        | 110 ++--
->  drivers/firmware/efi/libstub/arm32-stub.c      |  70 ++-
->  drivers/firmware/efi/libstub/arm64-stub.c      |  32 +-
->  drivers/firmware/efi/libstub/efi-stub-helper.c | 278 +++++-----
->  drivers/firmware/efi/libstub/efistub.h         |  48 +-
->  drivers/firmware/efi/libstub/fdt.c             |  53 +-
->  drivers/firmware/efi/libstub/gop.c             | 163 +-----
->  drivers/firmware/efi/libstub/random.c          |  77 ++-
->  drivers/firmware/efi/libstub/secureboot.c      |  11 +-
->  drivers/firmware/efi/libstub/tpm.c             |  48 +-
->  include/linux/efi.h                            | 730 +++++++++++--------------
->  27 files changed, 914 insertions(+), 1441 deletions(-)
->  delete mode 100644 arch/x86/boot/compressed/efi_stub_32.S
->  delete mode 100644 arch/x86/boot/compressed/efi_stub_64.S
+It looks like that HZ could have various value on diferent platforms.
+So, why does it need to divide HZ on 50? Does it really necessary?
+Could it be used HZ only without the division operation?
 
-Applied to tip:efi/core, and merry Christmas to you too!
+Thanks,
+Viacheslav Dubeyko.
 
-	Ingo
+
