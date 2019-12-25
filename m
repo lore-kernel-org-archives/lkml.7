@@ -7,100 +7,118 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFFC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE97C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FBD2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34EC2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 12:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sc2pcOF3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmqPNLeB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLYMxM (ORCPT
+        id S1726704AbfLYMxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 07:53:12 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46801 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfLYMxL (ORCPT
+        Wed, 25 Dec 2019 07:53:31 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44676 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfLYMxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 07:53:11 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k8so12108879otl.13;
-        Wed, 25 Dec 2019 04:53:11 -0800 (PST)
+        Wed, 25 Dec 2019 07:53:30 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so18416321iln.11;
+        Wed, 25 Dec 2019 04:53:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vFjlEPTID7+wvGwi4O8XdLzo/j62NZIF2USQQuU9w9M=;
-        b=Sc2pcOF3376eDsOqdpUZbNhwMHJsdgAMfozUlSuD6ku9yG13IU7vB9T4F17TxAr+jU
-         sM4c1XJutX/HfdzNb6hZngn6BUv8N6t0MbC4zZDYBWHicMXSh0t3H2Us2M584PKQ6KYz
-         Ihjky+LaFbgI1PoXYsmAC2EIcuTefPzWuqtKroZkgxf5qyyb6YwRgjVAsKxywY5frAW1
-         DoYhEgrx1U6FkRHwrLqR5/rAGnL6tj7FwqS465r6uczIeLbn++cqF/XOCYiiZcUa4afI
-         JzDd88jutE7hMVOtNV7dvd1KrDdk0gsQ/IEqCLQhaFSnweFG2IqR63DiBOGWgRNvjL2z
-         yHng==
+         :cc:content-transfer-encoding;
+        bh=TXGQF3/KDO1zgaXAR6TAzsWRArHyWP6++8bZMWIayrY=;
+        b=BmqPNLeBLPHY490CWbJVfy7w98jLr80ZA1inXydv/f6pvjGbYN8UHYyJai7BvKAJHc
+         gbP0b+M8cwrXQG3O75ar53NKEJ+cq1lj674bZNvqgX9OsywaZcQvjgTVOOy/8Kf+wjPX
+         TtGQ0VcAC0y7RjPyHQdgsmZBBr9m7xVmIA4zHG2wFNaq99tKMa2/oXVmtX1k0Az/jMSd
+         1TA9nyzT6f6XDM0nA0gfQe21TwTRLux99m1fS8/gCfDIq8MINYbxTc145dDQ6DcyCn1+
+         q0CqVIIXYTEi8ITug1CbZgH09+DefyR/C6+EUP16ZPX/Ai+ki0CZ9dJLFcpp0yJl28LR
+         OcrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vFjlEPTID7+wvGwi4O8XdLzo/j62NZIF2USQQuU9w9M=;
-        b=Lj9UMKbUriqrEo2D2x8Gt0LF1zzf+8r1QKScknlLMOAHKLVbhA9zzKbnY5kDkILYJU
-         narKR/S/1cLp0nX2B3TWHkkzkzucbCi1Et4zFM6aaA71R5ubwE8HbE2C7Ue8WZMgiAOO
-         Xw0VKRvCItgtR+bwNOy09/30RNj+bWbOS+uM9dCYyM27At1It+LFstSDG+xAaMXibj9R
-         e/UK8has4/Rk40lMNzdlmJ68ZVztUYCbPEhkJpOg5kREEjcWZMjsMCU847WUNO7UOoUL
-         0eTSzP++HahkayHmH21iiU40Wy2F1PIh2LWyNu7qBW9Vmv+f1tJcJ8SSwLXTYbfxB2S8
-         Bgxw==
-X-Gm-Message-State: APjAAAXn64TUUWAShcdt1+wKX8KfJliFLEwRAmpfjpFg3TH9bRtltwQ/
-        zHDuEXzTXZ8sQvcNjZQLXAA88J6ljvXhIYSteyA1wXRA6II=
-X-Google-Smtp-Source: APXvYqz835znKdLdeEWba5fSr4HZoY649al6kisLYRQz09swIr5xk2ZSY1c0KFjwM7tIWRyIihSVPBSspeBWhs6w2oE=
-X-Received: by 2002:a9d:3f61:: with SMTP id m88mr28771702otc.56.1577278390716;
- Wed, 25 Dec 2019 04:53:10 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TXGQF3/KDO1zgaXAR6TAzsWRArHyWP6++8bZMWIayrY=;
+        b=pQza7bXxIjVmKb2N63FZetdtrcPJbodipJH0utptWCjMdFQyHUfmWFS7rDISIbUR8z
+         YrkN8HCQcvUjAMSrMcyjtBOLZ9qJXyDklf95ZoXw9NLfyzg82lIuwAtwX6fOBRbHCMPZ
+         OzBY2Kj9AF6VAuBhkU6r1b4H30mciJT2q10Opm0LFFlhEgXq9q8ILqs76cAcTh9d3KvU
+         VPU3jjUSkUivLArCztaimCefDQSuxxeTjDBtqAlNM9nXxp1FN56I70KThO7jnNRu73lu
+         P7hQ384OTGzL4G36ew6cQt/5g1DojGByuzxwReXsmgxjNaWtpQw0cOpwRngRBk5iPu84
+         Tp8g==
+X-Gm-Message-State: APjAAAVKlaGMyTeenND3ssZfEGoCBBJG4YQEzzpjN6c8A7yJLOhz6eiY
+        iZ0AfvLiMZgdVeklM2F0WBkq84kc7YAnvcc4kXt0xHjx
+X-Google-Smtp-Source: APXvYqzIsyUJ2aDYpIXzN+pXO88Ij5mwzND8TTEzGDtSlQIqFJaNwUMUAkRw7L/q8P/srJYI4iEXI7zfLArkcZA4N5I=
+X-Received: by 2002:a92:4e:: with SMTP id 75mr34032444ila.276.1577278409744;
+ Wed, 25 Dec 2019 04:53:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191220070747.GA2190169@kroah.com> <CAHk-=whcLH7EXVZbD0g1Bw7McrofQ-7vwiL2GAeMn=z9PP4VEQ@mail.gmail.com>
- <20191223120651.GC114474@kroah.com>
-In-Reply-To: <20191223120651.GC114474@kroah.com>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Wed, 25 Dec 2019 12:52:34 +0000
-Message-ID: <CADVatmPA-eYzzTQoOkgVSyi0D0PQo78oQjWJFmWMuMJ4HeU_qg@mail.gmail.com>
-Subject: Re: [GIT PULL] TTY/Serial driver fixes for 5.5-rc3
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
+References: <20191224161005.28083-1-nerv@dawncrow.de> <20191224184503.GK35479@atomide.com>
+ <a8f64408-f581-e57d-0f5d-db42ff0a4288@dawncrow.de>
+In-Reply-To: <a8f64408-f581-e57d-0f5d-db42ff0a4288@dawncrow.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 25 Dec 2019 06:53:18 -0600
+Message-ID: <CAHCN7xKMnfo5reY+VSs_iCv_NXs-E12dFcRXonz6cNe1-huSPQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Add omap3-echo
+To:     =?UTF-8?Q?Andr=C3=A9_Hentschel?= <nerv@dawncrow.de>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Russell King <linux@arm.linux.org.uk>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:06 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Wed, Dec 25, 2019 at 6:05 AM Andr=C3=A9 Hentschel <nerv@dawncrow.de> wro=
+te:
 >
-> On Fri, Dec 20, 2019 at 10:08:03AM -0800, Linus Torvalds wrote:
-> > On Thu, Dec 19, 2019 at 11:07 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > The last tty core fix should resolve a long-standing bug with a race
-> > > at port creation time that some people would see, and Sudip finally
-> > > tracked down.
+> Am 24.12.19 um 19:45 schrieb Tony Lindgren:
+> > * Andr=C3=A9 Hentschel <nerv@dawncrow.de> [191224 16:11]:
+> >> This is the first generation Amazon Echo from 2016.
+> >> Audio support is not yet implemented.
 > >
-> > Hmm, looks good. But it makes me wonder if we should now try to remove
-> > the second call to tty_port_link_device()?
+> > OK looks good to me, just worried about one part:
 > >
-> > Now we have a number of helpers that do that tty_port_link_device()
-> > call for the driver (eg tty_port_register_device_attr_serdev(),
-> > tty_port_register_device_attr(), and the just added
-> > uart_add_one_port()).
+> >> +&sgx_module {
+> >> +    status =3D "disabled";
+> >> +};
 > >
-> > But we also have drivers doing it by hand, and presumably we now have
-> > drivers that do it through multiple paths? I guess it's harmless, but
-> > it feels a bit odd. No?
+> > We should have a separate am3703.dtsi or whatever the SoC model
+> > disabling sgx if not there on the SoC. That way board specific
+> > dts files can just include it without having to debug this issue
+> > over and over.
 >
-> It does.  I'll try to look at this after the holidays unless Sudip beats
-> me to it.
+> Thanks for the quick review in that time of the year!
+> The sgx issue came up in newer kernels and I had to bisect it to 3b72fc89=
+5a2e57f70276b46f386f35d752adf555
+> The device just wasn't booting without a message, so yes, we should make =
+it easier for others to figure it out.
+> SoC is DM3725 and only DM3730 has sgx support. And it's hard to say if th=
+e base is am37xx or omap36xx.
+> But I see the reasons you picked am3703, so I would move everything from =
+omap36xx.dtsi to am3703.dtsi except sgx?
 
-A regression reported by Kenny for this change. I have sent him a patch to test.
-I think that has to go in rc4. Will remove the second call after he has tested.
+> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
 
+I can see value in having a 3703 base and including that in the 36xx
+with SGX and DSP nodes, but why not jus make SGX disabled by default.
+Those who want/need it can enable it on a per-board basis.
+> Or would it be better to have sgx support in a separate dtsi?
 
---
-Regards
-Sudip
+I am not sure how much DSP stuff is in there, but the DM3730 is the
+AM3703 + DSP and 3D.
+
+adam
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
