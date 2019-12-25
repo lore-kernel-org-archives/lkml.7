@@ -2,202 +2,121 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955BFC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B888C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555142075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:46:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="A8fWj9Il"
+	by mail.kernel.org (Postfix) with ESMTP id 01DC720722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 09:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577267417;
+	bh=gaTsB+Jl32BiRaIleRlRZQ/6Z7wa388de7ZDPsygRVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Js4h1Pun5qIhEgv9a2QKl/MnkF+GN8J1e3exsZtbQEyQT3s5TmXVINtWXWPvgBy8c
+	 VIBk9ZrYqaZ9A5vdVGLU0uAbfvz6VKam75kwj4+6kPdTVYwwSIwzPBg7QBA3QNCewa
+	 /bkf5gUw6jPWB5o930ZFMhQAasQJj1U5/+SWjQUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfLYJqi (ORCPT
+        id S1726461AbfLYJuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 04:46:38 -0500
-Received: from mail-co1nam11on2049.outbound.protection.outlook.com ([40.107.220.49]:17565
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726025AbfLYJqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 04:46:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XrmLkqn+4BR6a2sIFfh1ji6LVW1uot84iyPqntgLJLyaZB6DJ9Ieezy3qyGt23CHNAzzJBJoZeqpIE2ImNOFW8YdpKGxg9kwWzBBQRPhPs1F2V1DnrPLiDlNOMVRGndBxRWAwNm6LzWQRGM/7L27j8X8aaUTROKzJQHgSlcmMNYlTqvRegX1aeFxoTB22dGhdRfKnyGJZWnyxwZ1dWV8Oku/qiu19KXR7otvZGdw7aSwvTNSOwOLwG3CoZBWkwU1CJ4l0jNvD1yRyK7RejXzFL/0rLRKYOzaH1N2P3NnvCNRZijydQ8H/E0/cue5dCqPUyrqwpWo5nFstfPZirKyzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7TqOMncd1vfU0rllJ6s8uoTsr9k6wCFQtQn38evfM4o=;
- b=jWZiciXg8lxer9W4YXyKehEPWqotQtOGxCGX0iO2zjJ5rLH9OE7W1VNxEUPFVJibbPU4+qPcx9zBDtZTZQl4o2P6hizsaVncyPMKniSdCNRQza9hAMuBZcZIAVl2BYWa9W4nvWrU8ipvZc8Wo5PeO+jYXqVcYb5dhVmosCq9DqSJARXqRDPe+s8ugjhj8dokLeX5dzHMgp+34hO3UXnc5aaTzWiIzp+A4RETExin5p2ko240Xy3IOOuI3b/9s/lHfq2QaeZvvSX6RJs+xz7B7MlKrdpQWtcyuA78wRfzGZjrEhk7K2EbF+t/BVt4AjfS5zeGaSCWFewHsJmr6oyAdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Wed, 25 Dec 2019 04:50:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34063 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfLYJuQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 04:50:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so21522177wrr.1;
+        Wed, 25 Dec 2019 01:50:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7TqOMncd1vfU0rllJ6s8uoTsr9k6wCFQtQn38evfM4o=;
- b=A8fWj9IlaEoJOJ2IPfLfRFq5D0uJbJRLd7ul9VskpaYmrt5NtbnuqI84/3TEBcQyKuyL0HUt3ZaKybaoscH22hgM3G3M5/6LpIzkywlY9eSTGV6vAni9wuYdrRzu+qEtjK5QsS3Tln16QeeDvomSTsuxrZlBRibZ7Mqg+ThmAVo=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.93.213) by
- BYAPR03MB4213.namprd03.prod.outlook.com (20.177.185.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Wed, 25 Dec 2019 09:46:35 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::708d:91cc:79a7:9b9a%6]) with mapi id 15.20.2559.017; Wed, 25 Dec 2019
- 09:46:35 +0000
-Received: from xhacker.debian (124.74.246.114) by TYAPR01CA0125.jpnprd01.prod.outlook.com (2603:1096:404:2d::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Wed, 25 Dec 2019 09:46:30 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] kprobes/ftrace: Use ftrace_location() when
- [dis]arming probes
-Thread-Topic: [PATCH v7 1/3] kprobes/ftrace: Use ftrace_location() when
- [dis]arming probes
-Thread-Index: AQHVuweSj3f0oMePuk6TgrRxmwYaVafKlliA
-Date:   Wed, 25 Dec 2019 09:46:35 +0000
-Message-ID: <20191225173219.4f9db436@xhacker.debian>
-References: <20191225172625.69811b3e@xhacker.debian>
-        <20191225172752.70be1dc1@xhacker.debian>
-In-Reply-To: <20191225172752.70be1dc1@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR01CA0125.jpnprd01.prod.outlook.com
- (2603:1096:404:2d::17) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:139::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ed5490c-1162-42e7-cb88-08d7891f544d
-x-ms-traffictypediagnostic: BYAPR03MB4213:
-x-microsoft-antispam-prvs: <BYAPR03MB42131697C319F42A7FC2481DED280@BYAPR03MB4213.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02622CEF0A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(366004)(346002)(136003)(396003)(376002)(189003)(199004)(43544003)(9686003)(1076003)(5660300002)(86362001)(55016002)(66476007)(956004)(66946007)(66556008)(64756008)(81156014)(8936002)(81166006)(8676002)(66446008)(16526019)(71200400001)(2906002)(26005)(966005)(186003)(52116002)(7696005)(7416002)(6506007)(4326008)(316002)(54906003)(110136005)(478600001)(921003)(1121003)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4213;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tnRFQVUuUZRaT/zjuNDGY8Tm35lnzZxbWyKBFUn0aAzriZXPCz6INhB5QecP/Sk9MFv70DdZ4O3uvgY7Q2us7EHuGTLkUF4IZZOeGITsltHk4i2ATHy7Ns6q9e0wxQRwPFXJEhwEpI7SdYHBTz0rVXRzVWwDCkcIFc0pjy2SxhJV3KU4fB5pRrBGIJoR0QywuGWj8qKueY/f5EBX/fBHL447ik6cN5A2Ghxk2JR4af0nxcxgtjAxhULyuS6ZZRWMfCD0Ypz+vC7sIx4dqjtisnUSlhwFzieHGOxLzLjFuE3VXn9lrMBet7f5F1/8WPYBAdPwjDD31BGuoH7DAH4X0s5um6l25TXs/ROH8c8LgWSY4I00quhjshTPUTlZyhkYoA7y6bcu/qEIxFjNihEuO2jlTaimMWprYc7VWdLCT/pKDqw/xRZaZeBKWJXbggv5NYSADVbjH4NxvvrgkU3WUmq/gOtY1hPTlGyqOLgq7sH+JogZcO4Gyb3KOBvFKwHXUqLlZO4BduPKUsM/nCGZybirlFXud6JLjWASUchPQfCDGmwah6ghFJOvuWe6XyO6n/Oa690yML9N7J1Y5XgXn2eSJoMmi3vbud+BSxDKeXw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B5B2FE87FEB60E41A195114D4D37126D@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tyeEBPr9x2675SHEugYKlyIE05mvLrBQq6PrEF5BABs=;
+        b=V4ifU4ONtD1g9nsVaQ/MWUNJwEbMrr4s6wBf6SWQHpm3UTdmGw1hsFF/zEM/Oavk+2
+         QuZV6AFy2c57pCy61mv8o7sw2JYQwieI7PWr8TogG1ecXaWJ8X+srYxuOCugGSoqWc4O
+         c/XDpdkyFnxHOZ52K2XC4mcOcEkt6YbdX2Ag8DTWGVF/N5nedOfpbcaLSqPWYO5jvBlQ
+         43hIhv3HC+0IU69CsafmXF24nkSMD72Aq29JAlnj9nRGDuSet2onU7x3de8uKZuFofiD
+         fMqSiEt5KhFWinV2q829iab6GkHI+uEjYNAeE+Pr/+Kp5Vo4YR1+xeVUYpN08QCZ9EHT
+         M35w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tyeEBPr9x2675SHEugYKlyIE05mvLrBQq6PrEF5BABs=;
+        b=GB0cC9erswMpbxNbleC1P6X8vM/84wq3BL+UYclXsOl/fl12cRrLBhUD6BgJNPcwdt
+         qXL+3xywW7yzeW/6syo2WhpCeieq7CXxXqayGn9o05vcdnybBK3uI6i4EFIQI2mKUGWH
+         T+yX4slz8jdGKhQTnY4ZXxr5SHHpA71tBPndhFJdNO/mHAMqTiFUvt8pEQJoZGFGBYkM
+         I2kmneYonhxPS0FFWFZ0+RjLajuADDnEuN8ee/hkF3+X6p2IpfeLXyOWbGsm03zV+ulp
+         makWzhi2e+Bn0xreQ0bjq+UwQHa6WQDOUpLAPviqK0w6JbzqjPzEOrpKXmPKWT/HzdGb
+         uxBw==
+X-Gm-Message-State: APjAAAXtyic/WNzeIhwO9+XR1uXHHy+x8B/YGz7KlJkh2JHqiyfT8xCA
+        bzeUQOBBBEtHLgplRKimhTM=
+X-Google-Smtp-Source: APXvYqyp7gnRFb8K2+78RItUBwmkbuwDHR6GtyyAmDJnOdpuS2snRsIxSaHOkquoMdpm/Iukg1+TwQ==
+X-Received: by 2002:a05:6000:1187:: with SMTP id g7mr41041070wrx.109.1577267413971;
+        Wed, 25 Dec 2019 01:50:13 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id o4sm26836834wrw.97.2019.12.25.01.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2019 01:50:13 -0800 (PST)
+Date:   Wed, 25 Dec 2019 10:50:11 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [GIT PULL 0/3] EFI fixes for v5.5
+Message-ID: <20191225095011.GA73981@gmail.com>
+References: <20191224132909.102540-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ed5490c-1162-42e7-cb88-08d7891f544d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Dec 2019 09:46:35.3217
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b/Lwn3bbWU2FnnKwyXMgZXVAsjNRpsJ4XygQXaBfh+VPQXwyi/qVOxQxuMtP+HAjSF6Zw6UUrmV1p4MDWj7VYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4213
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224132909.102540-1-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Dec 2019 09:42:07 +0000 Jisheng Zhang wrote:
->=20
 
-oops, I missed "From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>"
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-I will take care this point when posting new version.
+> The following changes since commit a470552ee8965da0fe6fd4df0aa39c4cda652c7c:
+> 
+>   efi: Don't attempt to map RCI2 config table if it doesn't exist (2019-12-10 12:13:02 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urgent
+> 
+> for you to fetch changes up to 77217fcc8e04f27127b32825376ed508705fd946:
+> 
+>   x86/efistub: disable paging at mixed mode entry (2019-12-23 16:25:21 +0100)
+> 
+> ----------------------------------------------------------------
+> Some more fixes for the EFI subsystem:
+> - Ensure that the EFI framebuffer earlycon uses WC attributes on x86 (Arvind)
+> - Another mixed mode fix from Hans, for the RNG code this time.
+> - Fix mixed mode boot from OVMF, by disabling paging at entry.
+> 
+> ----------------------------------------------------------------
+> Ard Biesheuvel (1):
+>       x86/efistub: disable paging at mixed mode entry
+> 
+> Arvind Sankar (1):
+>       efi/earlycon: Fix write-combine mapping on x86
+> 
+> Hans de Goede (1):
+>       efi/libstub/random: Initialize pointer variables to zero for mixed mode
+> 
+>  arch/x86/boot/compressed/head_64.S    |  5 +++++
+>  drivers/firmware/efi/earlycon.c       | 16 +++++++---------
+>  drivers/firmware/efi/libstub/random.c |  6 +++---
+>  3 files changed, 15 insertions(+), 12 deletions(-)
 
+Applied to tip:efi/urgent, thanks Ard!
 
-> Ftrace location could include more than a single instruction in case
-> of some architectures (powerpc64, for now). In this case, kprobe is
-> permitted on any of those instructions, and uses ftrace infrastructure
-> for functioning.
->=20
-> However, [dis]arm_kprobe_ftrace() uses the kprobe address when setting
-> up ftrace filter IP. This won't work if the address points to any
-> instruction apart from the one that has a branch to _mcount(). To
-> resolve this, have [dis]arm_kprobe_ftrace() use ftrace_function() to
-> identify the filter IP.
->=20
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  kernel/kprobes.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 53534aa258a6..5c630b424e3a 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -986,9 +986,10 @@ static int prepare_kprobe(struct kprobe *p)
->  static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
->                                int *cnt)
->  {
-> +       unsigned long ftrace_ip =3D ftrace_location((unsigned long)p->add=
-r);
->         int ret =3D 0;
->=20
-> -       ret =3D ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
-> +       ret =3D ftrace_set_filter_ip(ops, ftrace_ip, 0, 0);
->         if (ret) {
->                 pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
->                          p->addr, ret);
-> @@ -1011,7 +1012,7 @@ static int __arm_kprobe_ftrace(struct kprobe *p, st=
-ruct ftrace_ops *ops,
->          * At this point, sinec ops is not registered, we should be sefe =
-from
->          * registering empty filter.
->          */
-> -       ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
-> +       ftrace_set_filter_ip(ops, ftrace_ip, 1, 0);
->         return ret;
->  }
->=20
-> @@ -1028,6 +1029,7 @@ static int arm_kprobe_ftrace(struct kprobe *p)
->  static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *o=
-ps,
->                                   int *cnt)
->  {
-> +       unsigned long ftrace_ip =3D ftrace_location((unsigned long)p->add=
-r);
->         int ret =3D 0;
->=20
->         if (*cnt =3D=3D 1) {
-> @@ -1038,7 +1040,7 @@ static int __disarm_kprobe_ftrace(struct kprobe *p,=
- struct ftrace_ops *ops,
->=20
->         (*cnt)--;
->=20
-> -       ret =3D ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
-> +       ret =3D ftrace_set_filter_ip(ops, ftrace_ip, 1, 0);
->         WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n"=
-,
->                   p->addr, ret);
->         return ret;
-> --
-> 2.24.1
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> https://urldefense.proofpoint.com/v2/url?u=3Dhttp-3A__lists.infradead.org=
-_mailman_listinfo_linux-2Darm-2Dkernel&d=3DDwICAg&c=3D7dfBJ8cXbWjhc0BhImu8w=
-Q&r=3DwlaKTGoVCDxOzHc2QUzpzGEf9oY3eidXlAe3OF1omvo&m=3DBG5GowWc97yveg-i3gFbh=
-3N7PDT3S3FwcxnpOSRpvIs&s=3DplWeJUToTNi5CWx998a_VbVx3eFc-MNhUNv4fLpmyiU&e=3D
-
+	Ingo
