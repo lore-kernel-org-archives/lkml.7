@@ -2,32 +2,32 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0014AC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8F1C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE05207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FAB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLYLH1 (ORCPT
+        id S1726918AbfLYLHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 06:07:27 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:36294 "EHLO honk.sigxcpu.org"
+        Wed, 25 Dec 2019 06:07:30 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:36318 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfLYLH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 06:07:26 -0500
+        id S1726409AbfLYLH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 06:07:28 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 8EBCDFB04;
-        Wed, 25 Dec 2019 12:07:24 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id BEF1EFB02;
+        Wed, 25 Dec 2019 12:07:25 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SHGpHxTKvx2y; Wed, 25 Dec 2019 12:07:19 +0100 (CET)
+        with ESMTP id bd8ULHC7HzCf; Wed, 25 Dec 2019 12:07:24 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3D39F40BD8; Wed, 25 Dec 2019 12:07:19 +0100 (CET)
+        id 7003D40BFE; Wed, 25 Dec 2019 12:07:19 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
@@ -35,10 +35,12 @@ To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] leds: lm3692x: Allow to set ovp and brigthness mode
-Date:   Wed, 25 Dec 2019 12:07:13 +0100
-Message-Id: <cover.1577271823.git.agx@sigxcpu.org>
+Subject: [PATCH v2 4/6] leds: lm3692x: Allow to configure brigthness mode
+Date:   Wed, 25 Dec 2019 12:07:17 +0100
+Message-Id: <f6dabbf17ee2d839e53d305de819acd8fab72fad.1577271823.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1577271823.git.agx@sigxcpu.org>
+References: <cover.1577271823.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -47,42 +49,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Overvoltage protection and brightness mode are currently hardcoded
-as 29V and disabled in the driver. Make these configurable via DT.
+Brightness mode is currently hardcoded as linear in the driver. Make
+exponential mode configurable via DT.
 
-Besides addressing review comments v2 also allows to limit the maximum led
-current.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ drivers/leds/leds-lm3692x.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Changes from v1
-- As per review comments by Dan Murphy
-  https://lore.kernel.org/linux-leds/3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com/
-  - Split commits per propoerty
-  - Add new properties to DT example too
-  - Drop dev_dbg() statements
-  - ovp: fix 21V value parsing
-  - ovp: Set correct default value if DT parsing fails
-- As per review comments by Pavel Machek
-  https://lore.kernel.org/linux-leds/20191221191515.GF32732@amd/
-  - Fix defaults (which is 29V)
-  - Use uV as Unit for ovp property
-- Change property name to 'ti,ovp-microvolt' to make it shorter
-- Honor led-max-microamp to not exceed the maximum led current
-
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,Pavel Machek <pavel@ucw.cz>,Dan Murphy <dmurphy@ti.com>,Rob Herring <robh+dt@kernel.org>,Mark Rutland <mark.rutland@arm.com>,linux-leds@vger.kernel.org,devicetree@vger.kernel.org,linux-kernel@vger.kernel.org
-
-
-Guido Günther (6):
-  dt: bindings: lm3692x: Add ti,ovp-microvolt property
-  leds: lm3692x: Allow to configure over voltage protection
-  dt: bindings: lm3692x: Add ti,brightness-mapping-exponential property
-  leds: lm3692x: Allow to configure brigthness mode
-  dt: bindings: lm3692x: Add led-max-microamp property
-  leds: lm3692x: Make sure we don't exceed the maximum led current
-
- .../devicetree/bindings/leds/leds-lm3692x.txt | 11 +++
- drivers/leds/leds-lm3692x.c                   | 67 +++++++++++++++++--
- 2 files changed, 72 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index 28973cc5a6cc..ff20560a8263 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -115,7 +115,7 @@ struct lm3692x_led {
+ 	int led_enable;
+ 	int model_id;
+ 
+-	u8 boost_ctrl;
++	u8 boost_ctrl, brightness_ctrl;
+ };
+ 
+ static const struct reg_default lm3692x_reg_defs[] = {
+@@ -267,8 +267,7 @@ static int lm3692x_init(struct lm3692x_led *led)
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
+-			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
++	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -326,6 +325,7 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ 	struct fwnode_handle *child = NULL;
+ 	struct led_init_data init_data = {};
+ 	u32 ovp;
++	bool exp_mode;
+ 	int ret;
+ 
+ 	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
+@@ -376,6 +376,12 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ 		}
+ 	}
+ 
++	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
++	exp_mode = device_property_read_bool(&led->client->dev,
++				     "ti,brightness-mapping-exponential");
++	if (exp_mode)
++		led->brightness_ctrl |= LM3692X_MAP_MODE_EXP;
++
+ 	child = device_get_next_child_node(&led->client->dev, child);
+ 	if (!child) {
+ 		dev_err(&led->client->dev, "No LED Child node\n");
 -- 
 2.23.0
 
