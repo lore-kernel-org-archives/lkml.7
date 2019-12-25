@@ -2,200 +2,124 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC6FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB13C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB4E206CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2045C2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 03:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELPo/u/8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHmWnkkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfLYD0z (ORCPT
+        id S1726702AbfLYDfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 22:26:55 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40121 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfLYD0y (ORCPT
+        Tue, 24 Dec 2019 22:35:13 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:43774 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfLYDfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 22:26:54 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u1so22044659ljk.7;
-        Tue, 24 Dec 2019 19:26:52 -0800 (PST)
+        Tue, 24 Dec 2019 22:35:13 -0500
+Received: by mail-yw1-f65.google.com with SMTP id v126so8985915ywc.10;
+        Tue, 24 Dec 2019 19:35:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aHHVqfLYHMRToLhVYPGytsm1bSssA6Z3fhzgTsYtpxk=;
-        b=ELPo/u/860upyNhSZEIDPUD3AIf688ncQhO+dYZClUmoLuIjHAOFEU5DxpUTUgsmBZ
-         qzRjuj1GpuIQ2vcmV97I5FuqPndI0d/UAHIcnooI9FZrBwNccCoJflqmUBO8karrGqLA
-         qttQG7qhhQke85hznYqCKBQFGUaL9zNUwwAFZ3ba5kLGkne2BU8BM4tP3ZS0Cp4qtBWL
-         cX/3GRsMirOCxt2+sT4XN0gBTJ+7gDyPC458FVwSrCiChyQ3vGakJzEnlRUiyVWTEoNl
-         3YwByHgUoaqAv/UiFswsRD1mYq+yGFofL3AQs3c46PWNQX21/TpDvz/PnnTtN7j3JQb9
-         49Rg==
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=f7OdTVI7jtXrQm/7QUzasuPuN5M09Cg0stJpVqfXKeQ=;
+        b=WHmWnkkWxsjSjUbUY0wzaOSTQSCHe0qF+Sh1LbvNUMl67+SUB4MXdKP8HpymHwrYv3
+         6k7K9Ij/OX3hmUZzWk03CJqB8zGkIoADgSTsBqK3mXOFUPbE9VR7LfCmDmtEHZ/Ybmd1
+         YBc+bqkedII6MSPlFfw+NAdonA0w4xqVYIGNMgoEoW2U/imA5qYTWnCR0BJHUKdD4cDG
+         CwB5u6hPsFg2eEpjLKEyTF5C491Xb8PZ+EjpmgrB0Mhim2ab1fq7fsRp6CO9Fqy1+P8B
+         2jHPW72Lqz2SlTqsNTGlo1gtUL8mhTB8WP0GA4FE1j+JXYfIfKvnRFITWYu5t6/akpSK
+         K4zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aHHVqfLYHMRToLhVYPGytsm1bSssA6Z3fhzgTsYtpxk=;
-        b=CI/O1YAn9P4e08okb4cgHiX51spiSn1VMJxbOF3Svwms7UaxA/mqYf/PUBbLCWncuR
-         GE70nFNIP8SpE8q/lzFPUL4cZhofSldXzTpozC7Iyekvb4XVzuuXfSFXLTe/Fy76jmzY
-         /YVDdts8Czjx/4WKieB3LRpfWnyjMu9UNBpINdqmlSmQNNpFNuVvAW6EpkNt8FCKYRHJ
-         s4BlFqk4hSOP3fv5zx+yWLfOP3rx/BOxpK7z5Ub8/UiVkC6fbdbRfOIAL2JuF0kRfGtq
-         5Ztj71GaXzfgMAUo2LYOy2MckiOuDOm+WjTGGj7ZfU2BqNK1ZTns092kfSmzbCMUy3Tn
-         Ha9w==
-X-Gm-Message-State: APjAAAWrhq3TdHcr6l3+T22SByB+hFgGk7+Pe/IXMeHIvGZyL1jsprxM
-        Owb/zW1KHeh/yocNYigoG24mNOWtgGrCtzvA4gQ=
-X-Google-Smtp-Source: APXvYqymrsdL5RCmAcSR9RDWs8R7f9zINWXbD2iaOYj05I5965/cNCggsSwWk3IQyK8XeunzCIdSuNxB2MiykvlHzIk=
-X-Received: by 2002:a05:651c:1b3:: with SMTP id c19mr17563548ljn.115.1577244411692;
- Tue, 24 Dec 2019 19:26:51 -0800 (PST)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=f7OdTVI7jtXrQm/7QUzasuPuN5M09Cg0stJpVqfXKeQ=;
+        b=tE5rQc7PTbygJ2snoA1fSqDMHW59h2QFh69HrKs7sXR+tCPYZD/WZk31y3zZM5az2H
+         We5PCNTcdHhbz9LXv2NbokoBMtZOLTNQNxU0HTN+ftSjRB3mYgQgjbfCOmVeEWD01JSK
+         r+bz6XG8UV6Ha0YH5GxS04PTxLMdkLzuvqYpqG0ZhN+i/urArKDRHyYH2QyjLPrankLE
+         OOGplp5XH7l0rSs7MdHBug2nNPiCh+25CGsmoz7tfyGrS2GY3YQNot6QprtHAkVUIYWU
+         YEi8IiKylKxjYkMzI3UIZu4iSkd2lrm1CEkRsFgaTW6JG3Zc+eZhhdBZC7/u0LT0inPU
+         swPg==
+X-Gm-Message-State: APjAAAXPVpWgEfYkn/5sruUM/fNyE4yHqFqIHo7rqwJKs/TBV9rtMVJp
+        Prl36gS2gZewrcYgRPHCrJLlkmdgDBw=
+X-Google-Smtp-Source: APXvYqwUMy6rvG29I7N4EOQQjmmU5tQ/oGTvBJf3VdxU9GrfnE7jctaOMygTr25SbzA4eXKXx+YaRQ==
+X-Received: by 2002:a0d:d4cb:: with SMTP id w194mr28057103ywd.263.1577244911769;
+        Tue, 24 Dec 2019 19:35:11 -0800 (PST)
+Received: from [0.0.0.0] ([107.175.31.166])
+        by smtp.gmail.com with ESMTPSA id 144sm10437319ywy.20.2019.12.24.19.35.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Dec 2019 19:35:11 -0800 (PST)
+From:   Su Yanjun <suyanjun218@gmail.com>
+Subject: [PATCH] NFSv3: FIx bug when using chacl and chmod to change acl
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <0f14d9f5-c937-783b-d88f-047e78502f71@gmail.com>
+Date:   Wed, 25 Dec 2019 11:37:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20191217155102.46039-1-mcroce@redhat.com> <cf5b01f8-b4e4-90da-0ee7-b1d81ee6d342@cumulusnetworks.com>
- <CAGnkfhxaT9_WL4UR8qurjBTkkdkuZFbfTQucLjoKOP-1eDEoTw@mail.gmail.com>
- <CAMDZJNUQHR2zJwzbqKJWqMEYSKpz3-VHu4LTUzWKX94rQgMzxw@mail.gmail.com> <CAEPJBmo5ju_2+XdmOEscb_bWL6+qZ72ewk1LTdmiHEgxeE5+VA@mail.gmail.com>
-In-Reply-To: <CAEPJBmo5ju_2+XdmOEscb_bWL6+qZ72ewk1LTdmiHEgxeE5+VA@mail.gmail.com>
-From:   Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Date:   Wed, 25 Dec 2019 11:26:15 +0800
-Message-ID: <CAMDZJNXfCyAOQU0-aFr_pC=ezihW0QQwHj8L+EaOHXZCM=j29Q@mail.gmail.com>
-Subject: Re: [ovs-dev] [PATCH net-next v2] openvswitch: add TTL decrement action
-To:     bindiya Kurle <bindiyakurle@gmail.com>
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        ovs dev <dev@openvswitch.org>, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 7:16 AM bindiya Kurle <bindiyakurle@gmail.com> wrot=
-e:
->
-> Hi Tonghao,
-> Once this kernel patch is integrated . I will be submitting patch to ovs-=
-dpdk  for implementing dec_ttl action on dpdk datapath.
-Good=EF=BC=8C thanks
-> Regards,
-> Bindiya
->
-> On Tue, Dec 24, 2019 at 2:12 PM Tonghao Zhang <xiangxia.m.yue@gmail.com> =
-wrote:
->>
->> Hi Matteo,
->> Did you have plan to implement the TTL decrement action in userspace
->> datapath(with dpdk),
->> I am doing some research offloading about TTL decrement action, and
->> may sent patch TTL decrement offload action,
->> using dpdk rte_flow.
->>
->> On Fri, Dec 20, 2019 at 8:37 PM Matteo Croce <mcroce@redhat.com> wrote:
->> >
->> > On Tue, Dec 17, 2019 at 5:30 PM Nikolay Aleksandrov
->> > <nikolay@cumulusnetworks.com> wrote:
->> > >
->> > > On 17/12/2019 17:51, Matteo Croce wrote:
->> > > > New action to decrement TTL instead of setting it to a fixed value=
-.
->> > > > This action will decrement the TTL and, in case of expired TTL, dr=
-op it
->> > > > or execute an action passed via a nested attribute.
->> > > > The default TTL expired action is to drop the packet.
->> > > >
->> > > > Supports both IPv4 and IPv6 via the ttl and hop_limit fields, resp=
-ectively.
->> > > >
->> > > > Tested with a corresponding change in the userspace:
->> > > >
->> > > >     # ovs-dpctl dump-flows
->> > > >     in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:ne=
-ver, actions:dec_ttl{ttl<=3D1 action:(drop)},1,1
->> > > >     in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:ne=
-ver, actions:dec_ttl{ttl<=3D1 action:(drop)},1,2
->> > > >     in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:ne=
-ver, actions:2
->> > > >     in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:ne=
-ver, actions:1
->> > > >
->> > > >     # ping -c1 192.168.0.2 -t 42
->> > > >     IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICM=
-P (1), length 84)
->> > > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq =
-1, length 64
->> > > >     # ping -c1 192.168.0.2 -t 120
->> > > >     IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto IC=
-MP (1), length 84)
->> > > >         192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq =
-1, length 64
->> > > >     # ping -c1 192.168.0.2 -t 1
->> > > >     #
->> > > >
->> > > > Co-authored-by: Bindiya Kurle <bindiyakurle@gmail.com>
->> > > > Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
->> > > > Signed-off-by: Matteo Croce <mcroce@redhat.com>
->> > > > ---
->> > > >  include/uapi/linux/openvswitch.h |  22 +++++++
->> > > >  net/openvswitch/actions.c        |  71 +++++++++++++++++++++
->> > > >  net/openvswitch/flow_netlink.c   | 105 ++++++++++++++++++++++++++=
-+++++
->> > > >  3 files changed, 198 insertions(+)
->> > > >
->> > >
->> > > Hi Matteo,
->> > >
->> > > [snip]
->> > > > +}
->> > > > +
->> > > >  /* When 'last' is true, sample() should always consume the 'skb'.
->> > > >   * Otherwise, sample() should keep 'skb' intact regardless what
->> > > >   * actions are executed within sample().
->> > > > @@ -1176,6 +1201,44 @@ static int execute_check_pkt_len(struct dat=
-apath *dp, struct sk_buff *skb,
->> > > >                            nla_len(actions), last, clone_flow_key)=
-;
->> > > >  }
->> > > >
->> > > > +static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_ke=
-y *key)
->> > > > +{
->> > > > +     int err;
->> > > > +
->> > > > +     if (skb->protocol =3D=3D htons(ETH_P_IPV6)) {
->> > > > +             struct ipv6hdr *nh =3D ipv6_hdr(skb);
->> > > > +
->> > > > +             err =3D skb_ensure_writable(skb, skb_network_offset(=
-skb) +
->> > > > +                                       sizeof(*nh));
->> > >
->> > > skb_ensure_writable() calls pskb_may_pull() which may reallocate so =
-nh might become invalid.
->> > > It seems the IPv4 version below is ok as the ptr is reloaded.
->> > >
->> >
->> > Right
->> >
->> > > One q as I don't know ovs that much - can this action be called only=
- with
->> > > skb->protocol =3D=3D  ETH_P_IP/IPV6 ? I.e. Are we sure that if it's =
-not v6, then it must be v4 ?
->> > >
->> >
->> > I'm adding a check in validate_and_copy_dec_ttl() so only ipv4/ipv6
->> > packet will pass.
->> >
->> > Thanks,
->> >
->> > --
->> > Matteo Croce
->> > per aspera ad upstream
->> >
->> > _______________________________________________
->> > dev mailing list
->> > dev@openvswitch.org
->> > https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+We find a bug when running test under nfsv3  as below.
+1)
+chacl u::r--,g::rwx,o:rw- file1
+2)
+chmod u+w file1
+3)
+chacl -l file1
+
+We expect u::rw-, but it shows u::r--, more likely it returns the
+cached acl in inode.
+
+We dig the code find that the code path is different.
+
+chacl->..->__nfs3_proc_setacls->nfs_zap_acl_cache
+Then nfs_zap_acl_cache clears the NFS_INO_INVALID_ACL in
+NFS_I(inode)->cache_validity.
+
+chmod->..->nfs3_proc_setattr
+Because NFS_INO_INVALID_ACL has been cleared by chacl path,
+nfs_zap_acl_cache wont be called.
+
+nfs_setattr_update_inode will set NFS_INO_INVALID_ACL so let it
+before nfs_zap_acl_cache call.
+
+Signed-off-by: Su Yanjun <suyanjun218@gmail.com>
+---
+ fs/nfs/nfs3proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index 9eb2f1a503ab..6d736f0ac811 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -140,9 +140,9 @@ nfs3_proc_setattr(struct dentry *dentry, struct nfs_fattr *fattr,
+     nfs_fattr_init(fattr);
+     status = rpc_call_sync(NFS_CLIENT(inode), &msg, 0);
+     if (status == 0) {
++        nfs_setattr_update_inode(inode, sattr, fattr);
+         if (NFS_I(inode)->cache_validity & NFS_INO_INVALID_ACL)
+             nfs_zap_acl_cache(inode);
+-        nfs_setattr_update_inode(inode, sattr, fattr);
+     }
+     dprintk("NFS reply setattr: %d\n", status);
+     return status;
+
+-- 
+2.17.1
+
