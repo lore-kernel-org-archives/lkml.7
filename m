@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA9CC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E609C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352552077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCDF2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfLYKju (ORCPT
+        id S1726954AbfLYKjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:39:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40657 "EHLO
+        Wed, 25 Dec 2019 05:39:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40587 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfLYKjl (ORCPT
+        with ESMTP id S1726395AbfLYKjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 05:39:41 -0500
+        Wed, 25 Dec 2019 05:39:04 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ik44e-0008GV-TS; Wed, 25 Dec 2019 11:39:29 +0100
+        id 1ik445-00085z-V3; Wed, 25 Dec 2019 11:38:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8D7C11C2B1E;
-        Wed, 25 Dec 2019 11:39:28 +0100 (CET)
-Date:   Wed, 25 Dec 2019 10:39:28 -0000
-From:   "tip-bot2 for Waiman Long" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6765A1C2B24;
+        Wed, 25 Dec 2019 11:38:53 +0100 (CET)
+Date:   Wed, 25 Dec 2019 10:38:53 -0000
+From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] locking/lockdep: Fix buffer overrun problem in
- stack_trace[]
-Cc:     Waiman Long <longman@redhat.com>,
+Subject: [tip: core/urgent] rseq: Reject unknown flags on rseq unregister
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Bart Van Assche <bvanassche@acm.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191220135128.14876-1-longman@redhat.com>
-References: <20191220135128.14876-1-longman@redhat.com>
+In-Reply-To: <20191211161713.4490-2-mathieu.desnoyers@efficios.com>
+References: <20191211161713.4490-2-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Message-ID: <157727036841.30329.5537146240257959465.tip-bot2@tip-bot2>
+Message-ID: <157727033331.30329.17206832903007175600.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,71 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/urgent branch of tip:
+The following commit has been merged into the core/urgent branch of tip:
 
-Commit-ID:     d91f3057263ceb691ef527e71b41a56b17f6c869
-Gitweb:        https://git.kernel.org/tip/d91f3057263ceb691ef527e71b41a56b17f6c869
-Author:        Waiman Long <longman@redhat.com>
-AuthorDate:    Fri, 20 Dec 2019 08:51:28 -05:00
+Commit-ID:     66528a4575eee9f5a5270219894ab6178f146e84
+Gitweb:        https://git.kernel.org/tip/66528a4575eee9f5a5270219894ab6178f146e84
+Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+AuthorDate:    Wed, 11 Dec 2019 11:17:11 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Dec 2019 10:42:32 +01:00
+CommitterDate: Wed, 25 Dec 2019 10:41:20 +01:00
 
-locking/lockdep: Fix buffer overrun problem in stack_trace[]
+rseq: Reject unknown flags on rseq unregister
 
-If the lockdep code is really running out of the stack_trace entries,
-it is likely that buffer overrun can happen and the data immediately
-after stack_trace[] will be corrupted.
+It is preferrable to reject unknown flags within rseq unregistration
+rather than to ignore them. It is an oversight caused by the fact that
+the check for unknown flags is after the rseq unregister flag check.
 
-If there is less than LOCK_TRACE_SIZE_IN_LONGS entries left before
-the call to save_trace(), the max_entries computation will leave it
-with a very large positive number because of its unsigned nature. The
-subsequent call to stack_trace_save() will then corrupt the data after
-stack_trace[]. Fix that by changing max_entries to a signed integer
-and check for negative value before calling stack_trace_save().
-
-Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 12593b7467f9 ("locking/lockdep: Reduce space occupied by stack traces")
-Link: https://lkml.kernel.org/r/20191220135128.14876-1-longman@redhat.com
+Link: https://lkml.kernel.org/r/20191211161713.4490-2-mathieu.desnoyers@efficios.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/rseq.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 32282e7..32406ef 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -482,7 +482,7 @@ static struct lock_trace *save_trace(void)
- 	struct lock_trace *trace, *t2;
- 	struct hlist_head *hash_head;
- 	u32 hash;
--	unsigned int max_entries;
-+	int max_entries;
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 27c48eb..a4f86a9 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -310,6 +310,8 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
+ 	int ret;
  
- 	BUILD_BUG_ON_NOT_POWER_OF_2(STACK_TRACE_HASH_SIZE);
- 	BUILD_BUG_ON(LOCK_TRACE_SIZE_IN_LONGS >= MAX_STACK_TRACE_ENTRIES);
-@@ -490,10 +490,8 @@ static struct lock_trace *save_trace(void)
- 	trace = (struct lock_trace *)(stack_trace + nr_stack_trace_entries);
- 	max_entries = MAX_STACK_TRACE_ENTRIES - nr_stack_trace_entries -
- 		LOCK_TRACE_SIZE_IN_LONGS;
--	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
- 
--	if (nr_stack_trace_entries >= MAX_STACK_TRACE_ENTRIES -
--	    LOCK_TRACE_SIZE_IN_LONGS - 1) {
-+	if (max_entries <= 0) {
- 		if (!debug_locks_off_graph_unlock())
- 			return NULL;
- 
-@@ -502,6 +500,7 @@ static struct lock_trace *save_trace(void)
- 
- 		return NULL;
- 	}
-+	trace->nr_entries = stack_trace_save(trace->entries, max_entries, 3);
- 
- 	hash = jhash(trace->entries, trace->nr_entries *
- 		     sizeof(trace->entries[0]), 0);
+ 	if (flags & RSEQ_FLAG_UNREGISTER) {
++		if (flags & ~RSEQ_FLAG_UNREGISTER)
++			return -EINVAL;
+ 		/* Unregister rseq for current thread. */
+ 		if (current->rseq != rseq || !current->rseq)
+ 			return -EINVAL;
