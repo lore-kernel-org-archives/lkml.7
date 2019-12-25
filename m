@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AA4C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319BEC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1BD2072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F12C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfLYKjH (ORCPT
+        id S1727056AbfLYKjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:39:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40579 "EHLO
+        Wed, 25 Dec 2019 05:39:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40589 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfLYKjE (ORCPT
+        with ESMTP id S1726879AbfLYKjF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 05:39:04 -0500
+        Wed, 25 Dec 2019 05:39:05 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ik447-000866-3n; Wed, 25 Dec 2019 11:38:55 +0100
+        id 1ik44B-00088W-U1; Wed, 25 Dec 2019 11:39:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC26F1C2BA3;
-        Wed, 25 Dec 2019 11:38:54 +0100 (CET)
-Date:   Wed, 25 Dec 2019 10:38:54 -0000
-From:   "tip-bot2 for Arvind Sankar" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8B0CB1C2B1E;
+        Wed, 25 Dec 2019 11:38:59 +0100 (CET)
+Date:   Wed, 25 Dec 2019 10:38:59 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: efi/urgent] efi/earlycon: Fix write-combine mapping on x86
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
+Subject: [tip: perf/core] x86/alternatives: Implement a better
+ poke_int3_handler() completion scheme
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191224132909.102540-2-ardb@kernel.org>
-References: <20191224132909.102540-2-ardb@kernel.org>
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157727033465.30329.13576323770465814572.tip-bot2@tip-bot2>
+Message-ID: <157727033938.30329.14333219738427372011.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,89 +57,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the efi/urgent branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     d92b54570d24d017d2630e314b525ed792f5aa6c
-Gitweb:        https://git.kernel.org/tip/d92b54570d24d017d2630e314b525ed792f5aa6c
-Author:        Arvind Sankar <nivedita@alum.mit.edu>
-AuthorDate:    Tue, 24 Dec 2019 14:29:07 +01:00
+Commit-ID:     1f676247f36a4bdea134de5e8bc5041db9678c4e
+Gitweb:        https://git.kernel.org/tip/1f676247f36a4bdea134de5e8bc5041db9678c4e
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 11 Dec 2019 01:25:57 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Dec 2019 10:46:06 +01:00
+CommitterDate: Wed, 25 Dec 2019 10:43:29 +01:00
 
-efi/earlycon: Fix write-combine mapping on x86
+x86/alternatives: Implement a better poke_int3_handler() completion scheme
 
-On x86, until PAT is initialized, WC translates into UC-. Since we
-calculate and store pgprot_writecombine(PAGE_KERNEL) when earlycon is
-initialized, this means we actually use UC- mappings instead of WC
-mappings, which makes scrolling very slow.
+Commit:
 
-Instead store a boolean flag to indicate whether we want to use
-writeback or write-combine mappings, and recalculate the actual pgprot_t
-we need on every mapping. Once PAT is initialized, we will start using
-write-combine mappings, which speeds up the scrolling considerably.
+  285a54efe386 ("x86/alternatives: Sync bp_patching update for avoiding NULL pointer exception")
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
+added an additional text_poke_sync() IPI to text_poke_bp_batch() to
+handle the rare case where another CPU is still inside an INT3 handler
+while we clear the global state.
+
+Instead of spraying IPIs around, count the active INT3 handlers and
+wait for them to go away before proceeding to clear/reuse the data.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 69c1f396f25b ("efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation")
-Link: https://lkml.kernel.org/r/20191224132909.102540-2-ardb@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/firmware/efi/earlycon.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ arch/x86/kernel/alternative.c | 84 +++++++++++++++++++++-------------
+ 1 file changed, 53 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
-index d4077db..5d4f847 100644
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -17,7 +17,7 @@ static const struct console *earlycon_console __initdata;
- static const struct font_desc *font;
- static u32 efi_x, efi_y;
- static u64 fb_base;
--static pgprot_t fb_prot;
-+static bool fb_wb;
- static void *efi_fb;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 30e8673..34360ca 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -948,10 +948,29 @@ struct text_poke_loc {
+ 	const u8 text[POKE_MAX_OPCODE_SIZE];
+ };
  
- /*
-@@ -33,10 +33,8 @@ static int __init efi_earlycon_remap_fb(void)
- 	if (!earlycon_console || !(earlycon_console->flags & CON_ENABLED))
+-static struct bp_patching_desc {
++struct bp_patching_desc {
+ 	struct text_poke_loc *vec;
+ 	int nr_entries;
+-} bp_patching;
++	atomic_t refs;
++};
++
++static struct bp_patching_desc *bp_desc;
++
++static inline struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
++{
++	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
++
++	if (!desc || !atomic_inc_not_zero(&desc->refs))
++		return NULL;
++
++	return desc;
++}
++
++static inline void put_desc(struct bp_patching_desc *desc)
++{
++	smp_mb__before_atomic();
++	atomic_dec(&desc->refs);
++}
+ 
+ static inline void *text_poke_addr(struct text_poke_loc *tp)
+ {
+@@ -972,26 +991,26 @@ NOKPROBE_SYMBOL(patch_cmp);
+ 
+ int notrace poke_int3_handler(struct pt_regs *regs)
+ {
++	struct bp_patching_desc *desc;
+ 	struct text_poke_loc *tp;
++	int len, ret = 0;
+ 	void *ip;
+-	int len;
++
++	if (user_mode(regs))
++		return 0;
+ 
+ 	/*
+ 	 * Having observed our INT3 instruction, we now must observe
+-	 * bp_patching.nr_entries.
++	 * bp_desc:
+ 	 *
+-	 *	nr_entries != 0			INT3
++	 *	bp_desc = desc			INT3
+ 	 *	WMB				RMB
+-	 *	write INT3			if (nr_entries)
+-	 *
+-	 * Idem for other elements in bp_patching.
++	 *	write INT3			if (desc)
+ 	 */
+ 	smp_rmb();
+ 
+-	if (likely(!bp_patching.nr_entries))
+-		return 0;
+-
+-	if (user_mode(regs))
++	desc = try_get_desc(&bp_desc);
++	if (!desc)
  		return 0;
  
--	if (pgprot_val(fb_prot) == pgprot_val(PAGE_KERNEL))
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WB);
--	else
--		efi_fb = memremap(fb_base, screen_info.lfb_size, MEMREMAP_WC);
-+	efi_fb = memremap(fb_base, screen_info.lfb_size,
-+			  fb_wb ? MEMREMAP_WB : MEMREMAP_WC);
+ 	/*
+@@ -1002,16 +1021,16 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 	/*
+ 	 * Skip the binary search if there is a single member in the vector.
+ 	 */
+-	if (unlikely(bp_patching.nr_entries > 1)) {
+-		tp = bsearch(ip, bp_patching.vec, bp_patching.nr_entries,
++	if (unlikely(desc->nr_entries > 1)) {
++		tp = bsearch(ip, desc->vec, desc->nr_entries,
+ 			     sizeof(struct text_poke_loc),
+ 			     patch_cmp);
+ 		if (!tp)
+-			return 0;
++			goto out_put;
+ 	} else {
+-		tp = bp_patching.vec;
++		tp = desc->vec;
+ 		if (text_poke_addr(tp) != ip)
+-			return 0;
++			goto out_put;
+ 	}
  
- 	return efi_fb ? 0 : -ENOMEM;
- }
-@@ -53,9 +51,12 @@ late_initcall(efi_earlycon_unmap_fb);
+ 	len = text_opcode_size(tp->opcode);
+@@ -1023,7 +1042,7 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 		 * Someone poked an explicit INT3, they'll want to handle it,
+ 		 * do not consume.
+ 		 */
+-		return 0;
++		goto out_put;
  
- static __ref void *efi_earlycon_map(unsigned long start, unsigned long len)
- {
-+	pgprot_t fb_prot;
+ 	case CALL_INSN_OPCODE:
+ 		int3_emulate_call(regs, (long)ip + tp->rel32);
+@@ -1038,7 +1057,11 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+ 		BUG();
+ 	}
+ 
+-	return 1;
++	ret = 1;
 +
- 	if (efi_fb)
- 		return efi_fb + start;
++out_put:
++	put_desc(desc);
++	return ret;
+ }
+ NOKPROBE_SYMBOL(poke_int3_handler);
  
-+	fb_prot = fb_wb ? PAGE_KERNEL : pgprot_writecombine(PAGE_KERNEL);
- 	return early_memremap_prot(fb_base + start, len, pgprot_val(fb_prot));
+@@ -1069,14 +1092,18 @@ static int tp_vec_nr;
+  */
+ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+ {
++	struct bp_patching_desc desc = {
++		.vec = tp,
++		.nr_entries = nr_entries,
++		.refs = ATOMIC_INIT(1),
++	};
+ 	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+ 	int do_sync;
+ 
+ 	lockdep_assert_held(&text_mutex);
+ 
+-	bp_patching.vec = tp;
+-	bp_patching.nr_entries = nr_entries;
++	smp_store_release(&bp_desc, &desc); /* rcu_assign_pointer */
+ 
+ 	/*
+ 	 * Corresponding read barrier in int3 notifier for making sure the
+@@ -1131,17 +1158,12 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 		text_poke_sync();
+ 
+ 	/*
+-	 * sync_core() implies an smp_mb() and orders this store against
+-	 * the writing of the new instruction.
++	 * Remove and synchronize_rcu(), except we have a very primitive
++	 * refcount based completion.
+ 	 */
+-	bp_patching.nr_entries = 0;
+-	/*
+-	 * This sync_core () call ensures that all INT3 handlers in progress
+-	 * have finished. This allows poke_int3_handler() after this to
+-	 * avoid touching bp_paching.vec by checking nr_entries == 0.
+-	 */
+-	text_poke_sync();
+-	bp_patching.vec = NULL;
++	WRITE_ONCE(bp_desc, NULL); /* RCU_INIT_POINTER */
++	if (!atomic_dec_and_test(&desc.refs))
++		atomic_cond_read_acquire(&desc.refs, !VAL);
  }
  
-@@ -215,10 +216,7 @@ static int __init efi_earlycon_setup(struct earlycon_device *device,
- 	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
- 		fb_base |= (u64)screen_info.ext_lfb_base << 32;
- 
--	if (opt && !strcmp(opt, "ram"))
--		fb_prot = PAGE_KERNEL;
--	else
--		fb_prot = pgprot_writecombine(PAGE_KERNEL);
-+	fb_wb = opt && !strcmp(opt, "ram");
- 
- 	si = &screen_info;
- 	xres = si->lfb_width;
+ void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
