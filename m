@@ -7,47 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B05C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CCCC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BAE2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B132077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfLYKjc (ORCPT
+        id S1727256AbfLYKjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:39:32 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40624 "EHLO
+        Wed, 25 Dec 2019 05:39:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40617 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfLYKjK (ORCPT
+        with ESMTP id S1726307AbfLYKjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 05:39:10 -0500
+        Wed, 25 Dec 2019 05:39:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ik44G-0008Ac-Nm; Wed, 25 Dec 2019 11:39:04 +0100
+        id 1ik445-00085y-Vi; Wed, 25 Dec 2019 11:38:54 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4FFA41C2BA3;
-        Wed, 25 Dec 2019 11:39:01 +0100 (CET)
-Date:   Wed, 25 Dec 2019 10:39:01 -0000
-From:   "tip-bot2 for Viresh Kumar" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 35AFD1C2B1E;
+        Wed, 25 Dec 2019 11:38:53 +0100 (CET)
+Date:   Wed, 25 Dec 2019 10:38:53 -0000
+From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Make sched-idle CPU selection
- consistent throughout
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+Subject: [tip: core/urgent] rseq: Unregister rseq for clone CLONE_VM
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: =?utf-8?q?=3Cb90cbcce608cef4e02a7bbfe178335f76d201bab=2E15737?=
- =?utf-8?q?28344=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
-References: =?utf-8?q?=3Cb90cbcce608cef4e02a7bbfe178335f76d201bab=2E157372?=
- =?utf-8?q?8344=2Egit=2Eviresh=2Ekumar=40linaro=2Eorg=3E?=
+In-Reply-To: <20191211161713.4490-3-mathieu.desnoyers@efficios.com>
+References: <20191211161713.4490-3-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Message-ID: <157727034115.30329.920144434327367815.tip-bot2@tip-bot2>
+Message-ID: <157727033304.30329.10105916023248676597.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,184 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the core/urgent branch of tip:
 
-Commit-ID:     17346452b25b98acfb395d2a82ec2e4ad0cb7a01
-Gitweb:        https://git.kernel.org/tip/17346452b25b98acfb395d2a82ec2e4ad0cb7a01
-Author:        Viresh Kumar <viresh.kumar@linaro.org>
-AuthorDate:    Thu, 14 Nov 2019 16:19:27 +05:30
+Commit-ID:     463f550fb47bede3a5d7d5177f363a6c3b45d50b
+Gitweb:        https://git.kernel.org/tip/463f550fb47bede3a5d7d5177f363a6c3b45d50b
+Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+AuthorDate:    Wed, 11 Dec 2019 11:17:12 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Dec 2019 10:42:07 +01:00
+CommitterDate: Wed, 25 Dec 2019 10:41:20 +01:00
 
-sched/fair: Make sched-idle CPU selection consistent throughout
+rseq: Unregister rseq for clone CLONE_VM
 
-There are instances where we keep searching for an idle CPU despite
-already having a sched-idle CPU (in find_idlest_group_cpu(),
-select_idle_smt() and select_idle_cpu() and then there are places where
-we don't necessarily do that and return a sched-idle CPU as soon as we
-find one (in select_idle_sibling()). This looks a bit inconsistent and
-it may be worth having the same policy everywhere.
+It has been reported by Google that rseq is not behaving properly
+with respect to clone when CLONE_VM is used without CLONE_THREAD.
 
-On the other hand, choosing a sched-idle CPU over a idle one shall be
-beneficial from performance and power point of view as well, as we don't
-need to get the CPU online from a deep idle state which wastes quite a
-lot of time and energy and delays the scheduling of the newly woken up
-task.
+It keeps the prior thread's rseq TLS registered when the TLS of the
+thread has moved, so the kernel can corrupt the TLS of the parent.
 
-This patch tries to simplify code around sched-idle CPU selection and
-make it consistent throughout.
+The approach of clearing the per task-struct rseq registration
+on clone with CLONE_THREAD flag is incomplete. It does not cover
+the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
 
-Testing is done with the help of rt-app on hikey board (ARM64 octa-core,
-2 clusters, 0-3 and 4-7). The cpufreq governor was set to performance to
-avoid any side affects from CPU frequency. Following are the tests
-performed:
+Here is the rationale for unregistering rseq on clone with CLONE_VM
+flag set:
 
-Test 1: 1-cfs-task:
+1) CLONE_THREAD requires CLONE_SIGHAND, which requires CLONE_VM to be
+   set. Therefore, just checking for CLONE_VM covers all CLONE_THREAD
+   uses. There is no point in checking for both CLONE_THREAD and
+   CLONE_VM,
 
- A single SCHED_NORMAL task is pinned to CPU5 which runs for 2333 us
- out of 7777 us (so gives time for the cluster to go in deep idle
- state).
+2) There is the possibility of an unlikely scenario where CLONE_SETTLS
+   is used without CLONE_VM. In order to be an issue, it would require
+   that the rseq TLS is in a shared memory area.
 
-Test 2: 1-cfs-1-idle-task:
+   I do not plan on adding CLONE_SETTLS to the set of clone flags which
+   unregister RSEQ, because it would require that we also unregister RSEQ
+   on set_thread_area(2) and arch_prctl(2) ARCH_SET_FS for completeness.
+   So rather than doing a partial solution, it appears better to let
+   user-space explicitly perform rseq unregistration across clone if
+   needed in scenarios where CLONE_VM is not set.
 
- A single SCHED_NORMAL task is pinned on CPU5 and single SCHED_IDLE
- task is pinned on CPU6 (to make sure cluster 1 doesn't go in deep idle
- state).
-
-Test 3: 1-cfs-8-idle-task:
-
- A single SCHED_NORMAL task is pinned on CPU5 and eight SCHED_IDLE
- tasks are created which run forever (not pinned anywhere, so they run
- on all CPUs). Checked with kernelshark that as soon as NORMAL task
- sleeps, the SCHED_IDLE task starts running on CPU5.
-
-And here are the results on mean latency (in us), using the "st" tool.
-
-  $ st 1-cfs-task/rt-app-cfs_thread-0.log
-  N       min     max     sum     mean    stddev
-  642     90      592     197180  307.134 109.906
-
-  $ st 1-cfs-1-idle-task/rt-app-cfs_thread-0.log
-  N       min     max     sum     mean    stddev
-  642     67      311     113850  177.336 41.4251
-
-  $ st 1-cfs-8-idle-task/rt-app-cfs_thread-0.log
-  N       min     max     sum     mean    stddev
-  643     29      173     41364   64.3297 13.2344
-
-The mean latency when we need to:
-
- - wakeup from deep idle state is 307 us.
- - wakeup from shallow idle state is 177 us.
- - preempt a SCHED_IDLE task is 64 us.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/b90cbcce608cef4e02a7bbfe178335f76d201bab.1573728344.git.viresh.kumar@linaro.org
+Link: https://lkml.kernel.org/r/20191211161713.4490-3-mathieu.desnoyers@efficios.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 34 ++++++++++++----------------------
- 1 file changed, 12 insertions(+), 22 deletions(-)
+ include/linux/sched.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8da0222..1f34fa9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5588,7 +5588,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 	unsigned int min_exit_latency = UINT_MAX;
- 	u64 latest_idle_timestamp = 0;
- 	int least_loaded_cpu = this_cpu;
--	int shallowest_idle_cpu = -1, si_cpu = -1;
-+	int shallowest_idle_cpu = -1;
- 	int i;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 467d260..716ad1d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1929,11 +1929,11 @@ static inline void rseq_migrate(struct task_struct *t)
  
- 	/* Check if we have any choice: */
-@@ -5597,6 +5597,9 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 
- 	/* Traverse only the allowed CPUs */
- 	for_each_cpu_and(i, sched_group_span(group), p->cpus_ptr) {
-+		if (sched_idle_cpu(i))
-+			return i;
-+
- 		if (available_idle_cpu(i)) {
- 			struct rq *rq = cpu_rq(i);
- 			struct cpuidle_state *idle = idle_get_state(rq);
-@@ -5619,12 +5622,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 				latest_idle_timestamp = rq->idle_stamp;
- 				shallowest_idle_cpu = i;
- 			}
--		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
--			if (sched_idle_cpu(i)) {
--				si_cpu = i;
--				continue;
--			}
--
-+		} else if (shallowest_idle_cpu == -1) {
- 			load = cpu_load(cpu_rq(i));
- 			if (load < min_load) {
- 				min_load = load;
-@@ -5633,11 +5631,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 		}
- 	}
- 
--	if (shallowest_idle_cpu != -1)
--		return shallowest_idle_cpu;
--	if (si_cpu != -1)
--		return si_cpu;
--	return least_loaded_cpu;
-+	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
- }
- 
- static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
-@@ -5790,7 +5784,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int 
+ /*
+  * If parent process has a registered restartable sequences area, the
+- * child inherits. Only applies when forking a process, not a thread.
++ * child inherits. Unregister rseq for a clone with CLONE_VM set.
   */
- static int select_idle_smt(struct task_struct *p, int target)
+ static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
  {
--	int cpu, si_cpu = -1;
-+	int cpu;
- 
- 	if (!static_branch_likely(&sched_smt_present))
- 		return -1;
-@@ -5798,13 +5792,11 @@ static int select_idle_smt(struct task_struct *p, int target)
- 	for_each_cpu(cpu, cpu_smt_mask(target)) {
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
--		if (available_idle_cpu(cpu))
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			return cpu;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
--	return si_cpu;
-+	return -1;
- }
- 
- #else /* CONFIG_SCHED_SMT */
-@@ -5834,7 +5826,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	u64 time, cost;
- 	s64 delta;
- 	int this = smp_processor_id();
--	int cpu, nr = INT_MAX, si_cpu = -1;
-+	int cpu, nr = INT_MAX;
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
- 	if (!this_sd)
-@@ -5864,11 +5856,9 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
- 	for_each_cpu_wrap(cpu, cpus, target) {
- 		if (!--nr)
--			return si_cpu;
--		if (available_idle_cpu(cpu))
-+			return -1;
-+		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
- 			break;
--		if (si_cpu == -1 && sched_idle_cpu(cpu))
--			si_cpu = cpu;
- 	}
- 
- 	time = cpu_clock(this) - time;
+-	if (clone_flags & CLONE_THREAD) {
++	if (clone_flags & CLONE_VM) {
+ 		t->rseq = NULL;
+ 		t->rseq_sig = 0;
+ 		t->rseq_event_mask = 0;
