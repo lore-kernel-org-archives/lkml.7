@@ -2,121 +2,126 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDD6C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88922C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D410520722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF0620722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 16:34:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tk0h3zyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLYQ1c (ORCPT
+        id S1726688AbfLYQef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 11:27:32 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33554 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfLYQ1c (ORCPT
+        Wed, 25 Dec 2019 11:34:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34577 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLYQef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 11:27:32 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ik9VR-0008LK-GD; Wed, 25 Dec 2019 16:27:29 +0000
-Date:   Wed, 25 Dec 2019 16:27:29 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "zhangyi (F)" <yi.zhang@huawei.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        miaoxie@huawei.com, zhangtianci1@huawei.com
-Subject: Re: [QUESTION] question about the errno of rename the parent dir to
- a subdir of a specified directory
-Message-ID: <20191225162729.GP4203@ZenIV.linux.org.uk>
-References: <4c54c1f0-fe9a-6dea-1727-6898e8dd85ef@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c54c1f0-fe9a-6dea-1727-6898e8dd85ef@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 25 Dec 2019 11:34:35 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r11so11800011pgf.1;
+        Wed, 25 Dec 2019 08:34:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=bM15yY7unBCboNQn0vtKKuJc6P9Ay93lXeItl76c2q0=;
+        b=Tk0h3zyt8O/p5F3+j0HKXDtRinFFYF5/mfOJnqQZnXmb9S9njd2ELDf2DFSTtYlbNd
+         KdUQ+53mbOMHpoMjTcZ0sfqdrFBRdPsdffgeHETwv22HBVGyPl+idbpSNyqEeerkUsVw
+         iHnA7UhCfW9BjY8pla7q20R+csHYg9uGOa6/gXZ9xbXUdvGK4Q74e1n99RWrDYR5PsqX
+         H1AMrIdtaVbAiX/tt+gYmbIiqTVBUM4GlmUZ9kE8Om/ygBug/yYTbbTNNka7efKF35DC
+         62jCBnXXyEzPntXjRepOd3nAXLeKTHYw2ZN2vp5gZASUQwCc4o5ETSL++Tg//GvGuH0s
+         vhyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=bM15yY7unBCboNQn0vtKKuJc6P9Ay93lXeItl76c2q0=;
+        b=CsJ0GV2oJOJj1L6MytcxGsn/RqzYywl18O18oS7niDmQ+sfazbUsVq5ETYDj/+SI2T
+         WpGqvIHSBEHPiufrby5INqBoGmAlU307uquLudAhKPWus8U9z9A1Bg0n1b0xEfjy4736
+         WzN+UEY7UrmwFCTGMe9I+2oyI2xpND1okblZfvPFriErkQNjnAjZZQ/hteeeEaAn4HAj
+         EonsPLIABuG+HrOfnO8KdbLqzEjij+/46P50/iktqtR8WopdD7vsS/vbjSUTIJikPS3g
+         OLE1dZHQRcqsOVU8A70Q8UFJXpqiH2DmDKE9H72eYiNaFEpI+DW8FKqAcYErtyufKeVd
+         HV7g==
+X-Gm-Message-State: APjAAAWN/vjibRtGSq2jbH1ofo85qY588m+tcHt/2acS45KCiFdbOyoc
+        ypW5nzYQKBpwrwxm1DdzN04=
+X-Google-Smtp-Source: APXvYqw1qvcsid6VJtiBetDQXvsJ7ayB2ot+OMcWo7b6tScrQecVUQtRND3OzAHpSX4y8Ag4Vad3mQ==
+X-Received: by 2002:a63:eb02:: with SMTP id t2mr44014216pgh.289.1577291674429;
+        Wed, 25 Dec 2019 08:34:34 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r66sm33694347pfc.74.2019.12.25.08.34.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 25 Dec 2019 08:34:33 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Michael Turquette <mturquette@baylibre.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] clk: Don't try to enable critical clocks if prepare failed
+Date:   Wed, 25 Dec 2019 08:34:29 -0800
+Message-Id: <20191225163429.29694-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 09:16:09PM +0800, zhangyi (F) wrote:
-> Hi,
-> 
-> If we rename the parent-dir to a sub-dir of a specified directory, the
-> rename() syscall return -EINVAL because lock_rename() in lock_rename()
-> checks the relations of the sorece and dest dirs. But if the 'parent'
-> dir is a mountpoint, the rename() syscall return -EXDEV instead because
-> it checks the parent dir's mountpoint of the sorece and dest dirs.
-> 
-> For example:
-> Case 1: rename() return -EINVAL
-> # mkdir -p parent/dir
-> # rename parent parent/dir/subdir parent
-> rename: parent: rename to parent/dir/subdir failed: Invalid argument
+The following traceback is seen if a critical clock fails to prepare.
 
-That was rename("parent", "parent/dir/subdir") being told to sod off and
-not try to create loops.
+bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+------------[ cut here ]------------
+Enabling unprepared plld_per
+WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
+...
+Call trace:
+ clk_core_enable+0xcc/0x2c0
+ __clk_register+0x5c4/0x788
+ devm_clk_hw_register+0x4c/0xb0
+ bcm2835_register_pll_divider+0xc0/0x150
+ bcm2835_clk_probe+0x134/0x1e8
+ platform_drv_probe+0x50/0xa0
+ really_probe+0xd4/0x308
+ driver_probe_device+0x54/0xe8
+ device_driver_attach+0x6c/0x78
+ __driver_attach+0x54/0xd8
+...
 
-> Case 2: rename() return -EXDEV
-> # mkdir parent
-> # mount -t tmpfs test parent
-> # mkdir parent/dir
-> # rename parent parent/dir/subdir parent
-> rename: parent: rename to parent/dir/subdir failed: Invalid cross-device link
-> 
-> In case 2, although 'parent' directory is a mountpoint, it acted as a root
-> dir of the "test tmpfs", so it should belongs to the same mounted fs of
-> 'dir' directoty, so I think it shall return -EINVAL.
-> 
-> Is it a bug or just designed as this ?
+Check return values from clk_core_prepare() and clk_core_enable() and
+bail out if any of those functions returns an error.
 
-rename() operates on directory entries.  Pathnames can refer to files (including
-directories) or they can refer to directory entries (links).  rename() and other
-directory-modifying syscalls operate on the latter.  In the second test two
-error conditions apply: in addition to attempted loop creation, we are asked to
-move the link 'parent' from whatever it's in (your current directory) to 'subdir'
-in the directory parent/dir, the latter being on a different filesystem.
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/clk/clk.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-It's not "take the file old pathname refers to, move it to new place"; that's
-particularly obvious when you consider
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 6a11239ccde3..772258de2d1f 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3426,11 +3426,17 @@ static int __clk_core_init(struct clk_core *core)
+ 	if (core->flags & CLK_IS_CRITICAL) {
+ 		unsigned long flags;
+ 
+-		clk_core_prepare(core);
++		ret = clk_core_prepare(core);
++		if (ret)
++			goto out;
+ 
+ 		flags = clk_enable_lock();
+-		clk_core_enable(core);
++		ret = clk_core_enable(core);
+ 		clk_enable_unlock(flags);
++		if (ret) {
++			clk_core_unprepare(core);
++			goto out;
++		}
+ 	}
+ 
+ 	clk_core_reparent_orphans_nolock();
+-- 
+2.17.1
 
-echo foo >a	# create a file
-ln a b		# now 'a' and 'b' both refer to it
-mv a c		# or rename a c a, if you really want to touch util-linux rename(1)
-
-Desired result is, of course, 'a' disappearing, 'b' left as is and 'c' now refering
-to the same file.  If you did mv b c as the last step, 'a' would be left as is,
-'b' would disappear and 'c' added, refering to the same file.  But the only
-difference between mv a c and mv b c is the first argument of rename(2) and
-in both cases it resolves to the same file.  In other words, rename(2) can't
-operate on that level; to be of any use it has to interpret the pathnames
-as refering to directory entries.
-
-That, BTW, is the source of "the last component must not be . or .." - they
-do refer to directories just fine, but rename("dir1/.", "dir2/foo") is not just
-'make the directory refered to by "dir1/." show up as "dir2/foo"' - it's
-'rip the entry "." from the directory "dir1" and move it into directory "dir2"
-under the name "foo"'.
-
-So your second testcase is a genuine cross-filesystem move; you want a link
-to disappear from a directory on one filesystem and reappear in a directory
-on another.  It doesn't matter what's mounted on top of that - directory
-entry refers to the mountpoint, not the thing mounted on it.
-
-And in cases when more than one error condition applies, portable userland
-should be ready to cope with the operating system returning any of those.
-Different Unices might return different applicable errors.  In this particular
-case I would expect EXDEV to take precedence on the majority of implementations,
-but that's not guaranteed.  Note, BTW, that there might be other errors
-applicable here and it's a sufficiently dark corner to expect differences
-(e.g. there might be a blanket ban on renaming mountpoints in general,
-POSIX being quiet on that topic be damned).  
-
-That actually might be a good way to get into given Unix VFS - figuring out
-what happens in this implementation will tell you a lot about its pathname
-resolution, related kernel data structures and locking involved.  Might
-send you away screaming, though - rename(2) is usually the worst part
-as it is, and bringing the mountpoint crossing into the game is likely
-to expose all kinds of interesting corner cases.
