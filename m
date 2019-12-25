@@ -2,113 +2,104 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C78C2D0CF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BCEC2D0CF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A37C20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 05:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD64A20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 06:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYYuuw+k"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tDBsskzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfLYF6K (ORCPT
+        id S1726359AbfLYGDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 00:58:10 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42955 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfLYF6K (ORCPT
+        Wed, 25 Dec 2019 01:03:25 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36923 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725847AbfLYGDZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 00:58:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so11274354pgb.9;
-        Tue, 24 Dec 2019 21:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AiPV7qSVZembCeJ1CduQaJCxTlT3uNWRUvbKg0FP3WY=;
-        b=IYYuuw+kCm70ZYOQqrqh/2XBK+bw5cAXyTSbWqZ69OYV3XNOaZhdGbyB/sK3j02MnM
-         1TvH815lM4paFfO2sbvk1EObeHX2X7m+0/buJqMZsYwUBn4TVlS29fkSmcxbFCP39J6D
-         1R/KdXXpIooTvcNa97GvFOI9LO/1owa0NC6ZV/NNIoT1nVHBm8Z8EtGsom324QwAbQZ3
-         ft5un86HEDmIFTzqn5+2uQ5aCZanEym395+OPegR3kRzEmKROAOJ2zdg+KAGwiTn6QJQ
-         fdjqeftDUoDkFj5uxJoB62aScynY07g08U8YFITMc5ykadIK/BaIySgdoEL1NNGlR2zE
-         DDNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AiPV7qSVZembCeJ1CduQaJCxTlT3uNWRUvbKg0FP3WY=;
-        b=Vx2IA5fg59c50EUj22PlHB7PAeASQXo2h6ARxKsqNAeZuArNBQ8xpAtWUJxYWDGe1/
-         MRESKSFmXwSZ7D+KvOPzu7mcmLN5I7MntkF22T8XpplOx7aoZXdmzbTPLUfZBr/UqzJA
-         oJmSqLOE/TXq0sHw4Zo4mFFuCtArdX8eqdOXW9dbUTTzfPU8BgfCJd/9tl9WSnwIqc+e
-         BmgCqa56i0QRCyd0eLRdO2K/b+aq7N5wmg2UbTIGgxhtCA+6FgjCFKleqW72ahp6nlWS
-         QnvqQWaDlQePpAbGNe7X3imgRl4cRwQNlgiGQuOjk+fXsN1UqAe9QQqQgCohzMs07XsK
-         3Eug==
-X-Gm-Message-State: APjAAAUzIfXpHGPIZAyDvmgop+DzNeq6uIEq6r5dmyfT55NciQNaN1sT
-        WXgnEOy2QSQu+swYTA3Kd1s=
-X-Google-Smtp-Source: APXvYqzPFFJB/OGExgKE32erZv+/D2GHd8RkQ9LPLv7p++7GmyWpLYMR7/hCVxxLwQLYs/dg3dIYFQ==
-X-Received: by 2002:a63:31d1:: with SMTP id x200mr38674413pgx.405.1577253489698;
-        Tue, 24 Dec 2019 21:58:09 -0800 (PST)
-Received: from bj10083pcu01.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t23sm33155331pfq.106.2019.12.24.21.58.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 24 Dec 2019 21:58:09 -0800 (PST)
-From:   Liangcai Fan <fanliangcai9@gmail.com>
-To:     masahiroy@kernel.org, michal.lkml@markovi.net
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        zhang.lyra@gmail.com, gengcixi@gmail.com, orson.zhai@unisoc.com,
-        Liangcai Fan <liangcai.fan@unisoc.com>,
-        Liangcai Fan <fanliangcai9@gmail.com>
-Subject: [PATCH] use bash instead of sh to run mkcompile_h
-Date:   Wed, 25 Dec 2019 13:58:03 +0800
-Message-Id: <1577253483-24358-1-git-send-email-fanliangcai9@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 25 Dec 2019 01:03:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577253804; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=x07ZjvCdtDiGfeXavvjtkSB2/7CUoW3zwEVQTTaNaJo=; b=tDBsskzvUu3MrlEqfRV/+hNovtH8sANX2lrFigsMijmqrjsDpIn36WELDmCGikLHFFXjZkdG
+ qnVviRzaoXkNsSi9UkEoYlFfZfW/m1RUlOxBGJFvWW2onYDUTOUAuFK2TlQ0lL4C6XBXYXN0
+ jP4/si3jKvehB44iHoU+/xD074A=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e02fbab.7fdb039df228-smtp-out-n02;
+ Wed, 25 Dec 2019 06:03:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76D37C4479C; Wed, 25 Dec 2019 06:03:22 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8CBCAC43383;
+        Wed, 25 Dec 2019 06:03:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8CBCAC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v1 1/4] Bluetooth: hci_qca: Add QCA Rome power off support to the qca_power_off()
+Date:   Wed, 25 Dec 2019 14:03:14 +0800
+Message-Id: <20191225060317.5258-1-rjliao@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liangcai Fan <liangcai.fan@unisoc.com>
+We will need to call the qca_power_off() API to power off Rome, add the
+support into it. QCA Rome is using bt_en GPIO for power off, so we just
+need to pull down this bt_en GPIO to power off it.
 
-Use sh to run mkcompile_h, compilation would fail if whoami contains
-backslash, since sh uses dash. The reason is that the echo command would
-interpret backslash to escapes, so the LINUX_COMPILE_BY definition was
-incorrect.
-
-Parse mkcompile_h with bash, the echo command would not see backslash as
-escapes, then there is no error with the definition of LINUX_COMPILE_BY.
-
-Signed-off-by: Liangcai Fan <liangcai.fan@unisoc.com>
-Signed-off-by: Liangcai Fan <fanliangcai9@gmail.com>
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 ---
- init/Makefile       | 2 +-
- scripts/mkcompile_h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_qca.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/init/Makefile b/init/Makefile
-index 6246a06..9348d17 100644
---- a/init/Makefile
-+++ b/init/Makefile
-@@ -33,6 +33,6 @@ $(obj)/version.o: include/generated/compile.h
- silent_chk_compile.h = :
- include/generated/compile.h: FORCE
- 	@$($(quiet)chk_compile.h)
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkcompile_h $@	\
-+	$(Q)$(BASH) $(srctree)/scripts/mkcompile_h $@	\
- 	"$(UTS_MACHINE)" "$(CONFIG_SMP)" "$(CONFIG_PREEMPT)"	\
- 	"$(CONFIG_PREEMPT_RT)" "$(CC) $(KBUILD_CFLAGS)"
-diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-index 3a5a4b2..cfc2e2a 100755
---- a/scripts/mkcompile_h
-+++ b/scripts/mkcompile_h
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index b602ed01505b..43fd84028786 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1413,13 +1413,26 @@ static void qca_power_shutdown(struct hci_uart *hu)
+ static int qca_power_off(struct hci_dev *hdev)
+ {
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
++	struct qca_serdev *qcadev;
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
++
++	if (qca_is_wcn399x(soc_type)) {
++		/* Perform pre shutdown command */
++		qca_send_pre_shutdown_cmd(hdev);
++
++		usleep_range(8000, 10000);
  
- TARGET=$1
+-	/* Perform pre shutdown command */
+-	qca_send_pre_shutdown_cmd(hdev);
++		qca_power_shutdown(hu);
++	} else {
++		if (hu->serdev) {
++			qcadev = serdev_device_get_drvdata(hu->serdev);
++
++			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+ 
+-	usleep_range(8000, 10000);
++			usleep_range(8000, 10000);
++		}
++	}
+ 
+-	qca_power_shutdown(hu);
+ 	return 0;
+ }
+ 
 -- 
-1.9.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
