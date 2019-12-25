@@ -2,76 +2,77 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC118C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930ECC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCABD20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEA520722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 13:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfLYNQJ (ORCPT
+        id S1726890AbfLYNQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 08:16:09 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39600 "EHLO huawei.com"
+        Wed, 25 Dec 2019 08:16:20 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49602 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbfLYNQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 08:16:08 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 64C181EDCB8BF8285E13;
-        Wed, 25 Dec 2019 21:16:02 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
+        id S1726353AbfLYNQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 08:16:20 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9A3DD1D59AB17D2663EB;
+        Wed, 25 Dec 2019 21:16:17 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.179) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Dec 2019
- 21:15:54 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <john@phrozen.org>, <ralf@linux-mips.org>, <paulburton@kernel.org>,
-        <jhogan@kernel.org>
-CC:     <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH] MIPS: ralink: add missing put_device in ill_acc_of_setup
-Date:   Wed, 25 Dec 2019 21:15:20 +0800
-Message-ID: <20191225131520.2505-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+ 21:16:10 +0800
+From:   "zhangyi (F)" <yi.zhang@huawei.com>
+Subject: [QUESTION] question about the errno of rename the parent dir to a
+ subdir of a specified directory
+To:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <miaoxie@huawei.com>,
+        <zhangtianci1@huawei.com>
+Message-ID: <4c54c1f0-fe9a-6dea-1727-6898e8dd85ef@huawei.com>
+Date:   Wed, 25 Dec 2019 21:16:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.179]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If of_find_device_by_node return 0 and ill_acc_of_setup return error,
-pdev don't have a corresponding object release.
+Hi,
 
-Fix it by adding put_device.
+If we rename the parent-dir to a sub-dir of a specified directory, the
+rename() syscall return -EINVAL because lock_rename() in lock_rename()
+checks the relations of the sorece and dest dirs. But if the 'parent'
+dir is a mountpoint, the rename() syscall return -EXDEV instead because
+it checks the parent dir's mountpoint of the sorece and dest dirs.
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- arch/mips/ralink/ill_acc.c | 2 ++
- 1 file changed, 2 insertions(+)
+For example:
+Case 1: rename() return -EINVAL
+# mkdir -p parent/dir
+# rename parent parent/dir/subdir parent
+rename: parent: rename to parent/dir/subdir failed: Invalid argument
 
-diff --git a/arch/mips/ralink/ill_acc.c b/arch/mips/ralink/ill_acc.c
-index 0ddeb31afa93..bdf53807d7c2 100644
---- a/arch/mips/ralink/ill_acc.c
-+++ b/arch/mips/ralink/ill_acc.c
-@@ -67,11 +67,13 @@ static int __init ill_acc_of_setup(void)
- 	irq = irq_of_parse_and_map(np, 0);
- 	if (!irq) {
- 		dev_err(&pdev->dev, "failed to get irq\n");
-+		put_device(&pdev->dev);
- 		return -EINVAL;
- 	}
- 
- 	if (request_irq(irq, ill_acc_irq_handler, 0, "ill_acc", &pdev->dev)) {
- 		dev_err(&pdev->dev, "failed to request irq\n");
-+		put_device(&pdev->dev);
- 		return -EINVAL;
- 	}
- 
--- 
-2.17.2
+Case 2: rename() return -EXDEV
+# mkdir parent
+# mount -t tmpfs test parent
+# mkdir parent/dir
+# rename parent parent/dir/subdir parent
+rename: parent: rename to parent/dir/subdir failed: Invalid cross-device link
+
+In case 2, although 'parent' directory is a mountpoint, it acted as a root
+dir of the "test tmpfs", so it should belongs to the same mounted fs of
+'dir' directoty, so I think it shall return -EINVAL.
+
+Is it a bug or just designed as this ?
+
+Thanks,
+Yi.
 
