@@ -7,74 +7,70 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBE6C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 18:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28662075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 18:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58272075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 18:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0fj3gvN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6HhfZ51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfLYSbU (ORCPT
+        id S1726489AbfLYSgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 13:31:20 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40376 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfLYSbT (ORCPT
+        Wed, 25 Dec 2019 13:36:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35020 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLYSgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 13:31:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so4676638wmi.5;
-        Wed, 25 Dec 2019 10:31:16 -0800 (PST)
+        Wed, 25 Dec 2019 13:36:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so22160144wro.2;
+        Wed, 25 Dec 2019 10:36:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=cnHMaBXT2c+d5dkvgsYVkdIu1ZixTBOd1OyV6qUudas=;
-        b=S0fj3gvNNDyDf9F4TChzhZ7Bgr5zHNclokFYmer7u5Pz9d9PJHj2q4DtZ1xEwyqLgR
-         HkuNx4+kMciMWyK3g0Co5H9elMxE8pLzKpLPXms7HkKI+YzSczP+V7g0nzx90FPxqypJ
-         8dC9v9sAc44CZQGqfvz/deuQImSTnCL6SwcrRcgHer2k4sG26lLx3a494XNET8Qvnnuh
-         Ju2mRX5CQYlpE5tPhxaqVd8LL6aJM2QYOjhwwzFTUsrhJKmCJFfcelHei1NPAzKVSsC+
-         vSmUl4Vi9x1ikHu1G4fP2nJJGsPWz2eUakdGys2ZpWS5296AGotySj8qf7Elg5jU8c4b
-         Lx7w==
+        bh=qMv6ZLPM7hCxbk7bCKDXLP5blGfXJiXsRRFE0KSzRnM=;
+        b=h6HhfZ51wXhB7/nPe4rJdATonmGAyngBKwg7CfhtVVUdEzWzx9bFeYQcRpkGsQ1Djd
+         OuTEPbPNlVqK3xaVfl5uYfvsNmUKl3KuNIthBcoqXdCCxS89PjS0DgsThAEuf6j6sfLa
+         kV/4jIX8InMLsRE12HI3W1RdJt0QxY1v22ow8bbRNJTBDFl42mkYA8FJIzVlbAcRuUbR
+         mWytZH+TPYrAE8AEdsYzG8TwLxcQX6ZvQBzNqVqum7kjcSkjU51x+Ej9J4Y3zEdBuX2e
+         yD9qo3XkHSOpjuTZV9e+bBp1oaFNGn3Lh1r0NV8qZzWG6vQ9Yt5yPcQaYdT6aD8Sz62d
+         Ef+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cnHMaBXT2c+d5dkvgsYVkdIu1ZixTBOd1OyV6qUudas=;
-        b=ClNR6mk43VY/gTGwI2hH7S3ZSbP6/NrS0SJpJ09jP+2D1bYKJBIZOLB902/LAZLMcd
-         uhFLKMmkjU4Qd8FRqGEvg12VjexHZqnvG8J0HAgN0yzfUSiTEe70dcp0Iyp+5/eFicDE
-         nz2r2aGbuSKbSJFe7/SbzX56w4ltvvnXr957HaDDcLxkRJU78g3kzCKvW5ESv2SxKAJA
-         fuhG6fFo5IHBEs35nOGFhIrvoEO/ZwJeHQxnbobQHrx/BemlbdYC88mCKJN0QwZ4QzZF
-         jzg0h89qiXof7yF59D1v1KF74R0iHD33UuN4WdpEhjmfek0Ed48B5ur+xZ+fWS1z+n/v
-         ENTw==
-X-Gm-Message-State: APjAAAVtst4kNm1WYrY4dZoJlSfsg2FLoTF9/GuFcvlUdJjV7IaC4wqF
-        XdUWGYLqrJyKCjFfAAULDfg=
-X-Google-Smtp-Source: APXvYqxQfUR5n5/FXn0O1SJIfbjw6ikTTUBXYNvCJzR/5P9PYjqDTlNyDniC2IgARUt+DOz7deELrQ==
-X-Received: by 2002:a7b:c936:: with SMTP id h22mr9853842wml.115.1577298675781;
-        Wed, 25 Dec 2019 10:31:15 -0800 (PST)
+        bh=qMv6ZLPM7hCxbk7bCKDXLP5blGfXJiXsRRFE0KSzRnM=;
+        b=pJoKVT9PSISr+WwWD9NLe3J6/NZchZAT2IZ0VWLRzAcxQ4ykSlSnAwWx4H7k5lZZ12
+         /aBl3SJfYsTmaREiOnskGXSSbtfeOsyDAc2zJdxb7RRsLiQ0ZqkSjs0lNX1sy1R5/VCB
+         efXwkJigfXwXbOj57TUqLT2eeuHnLka6Xgs/xsyypWy+3eDU3cnBe8JxV9l0priL0+g6
+         v3jWcA2JkVOihesBpsOYbGZiW28hGjGr0sfuWNyxZrRz5KMO1BU64EZEyM/bXweT3vLv
+         boSvTf5EQ6Du2MPszOIKHjhGj2032vIdP8pt++W4GOXpWmwQeMnDvvJn/WSN/aeJ/BHc
+         tApw==
+X-Gm-Message-State: APjAAAXWrsXCynA12CX9R+vv/hR4hDE5UEaLnV/4a3ImoAAsRwSo5bUA
+        YORC3K8XPghMnuAcnT9NVztP3S9LqLg=
+X-Google-Smtp-Source: APXvYqxjBVV2HWut3Uhndf/8dawGx2g1BP2+dy5Ls7Xve7ikklYlsJqyz0tVK8jAY7c8cg2Jjj86NA==
+X-Received: by 2002:a5d:6b82:: with SMTP id n2mr41160739wrx.153.1577298963467;
+        Wed, 25 Dec 2019 10:36:03 -0800 (PST)
 Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id n67sm6192048wmf.46.2019.12.25.10.31.14
+        by smtp.gmail.com with ESMTPSA id z124sm6495007wmc.20.2019.12.25.10.36.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Dec 2019 10:31:15 -0800 (PST)
-Date:   Wed, 25 Dec 2019 19:31:14 +0100
+        Wed, 25 Dec 2019 10:36:02 -0800 (PST)
+Date:   Wed, 25 Dec 2019 19:36:01 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Robert Hancock <hancockrwd@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        ". Robert Hancock" <hancockr@shaw.ca>, Tejun Heo <tj@kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: linux: sata_nv: adma support
-Message-ID: <20191225183114.us2z342zypokkfyn@pali>
-References: <201412232051.07067@pali>
- <201508021108.52978@pali>
- <CADLC3L3eym59Agpm2J_Oy_Eyfq=9iUTwi2BPxnLxoEM_Yx9cfw@mail.gmail.com>
- <201508042006.57727@pali>
- <20180510135157.awgoymyr2p5vbmlq@pali>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v2] libata: Fix retrieving of active qcs
+Message-ID: <20191225183601.mh4doqri6teuf2am@pali>
+References: <20191213080408.27032-1-s.hauer@pengutronix.de>
+ <20191225181840.ooo6mw5rffghbmu2@pali>
+ <ad600bac-fd26-2d6b-85e6-372c072be9f5@kernel.dk>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ipuiar57xko6paml"
+        protocol="application/pgp-signature"; boundary="uavokmfwgobx24dp"
 Content-Disposition: inline
-In-Reply-To: <20180510135157.awgoymyr2p5vbmlq@pali>
+In-Reply-To: <ad600bac-fd26-2d6b-85e6-372c072be9f5@kernel.dk>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -82,242 +78,82 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ipuiar57xko6paml
+--uavokmfwgobx24dp
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello!
-
-On Thursday 10 May 2018 15:51:57 Pali Roh=C3=A1r wrote:
-> On Tuesday 04 August 2015 20:06:57 Pali Roh=C3=A1r wrote:
-> > On Monday 03 August 2015 05:02:15 Robert Hancock wrote:
-> > > On Sun, Aug 2, 2015 at 3:08 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > wrote:
-> > > > On Sunday 02 August 2015 03:45:32 Robert Hancock wrote:
-> > > >> On Sat, Aug 1, 2015 at 2:09 PM, Pali Roh=C3=A1r <pali.rohar@gmail.=
-com>
-> > > >>=20
-> > > >> wrote:
-> > > >> > On Thursday 25 December 2014 07:22:13 Robert Hancock wrote:
-> > > >> >> On Tue, Dec 23, 2014 at 1:51 PM, Pali Roh=C3=A1r
-> > > >> >> <pali.rohar@gmail.com>
-> > > >> >>=20
-> > > >> >> wrote:
-> > > >> >> > Hello,
-> > > >> >> >=20
-> > > >> >> > I have nvidia nforce4 motherboard with nvidia sata
-> > > >> >> > controller:
-> > > >> >> >=20
-> > > >> >> > 00:07.0 IDE interface [0101]: NVIDIA Corporation CK804 Serial
-> > > >> >> > ATA Controller [10de:0054] (rev f3)
-> > > >> >> > 00:08.0 IDE interface [0101]: NVIDIA Corporation CK804 Serial
-> > > >> >> > ATA Controller [10de:0055] (rev f3)
-> > > >> >> >=20
-> > > >> >> > I manually enabled adma mode (which is disabled by default)
-> > > >> >> > by adding sata_nv.adma=3D1 to grub cmdline. In git history I
-> > > >> >> > found that enabling adma mode includes NCQ support and
-> > > >> >> > reduced CPU overhead. It looks like adma mode is working,
-> > > >> >> > but at every boot I see one same error message in dmesg:
-> > > >> >> >=20
-> > > >> >> > [   16.823514] ata1.00: exception Emask 0x1 SAct 0x0 SErr 0x0
-> > > >> >> > action 0x0
-> > > >> >> > [   16.823520] ata1.00: CPB resp_flags 0x11: , CMD error
-> > > >> >> > [   16.823524] ata1.00: failed command: SET FEATURES
-> > > >> >> > [   16.823530] ata1.00: cmd
-> > > >> >> > ef/05:fe:00:00:00/00:00:00:00:00/40 tag 16
-> > > >> >> > [   16.823530]          res
-> > > >> >> > 51/04:fe:00:00:00/00:00:00:00:00/40 Emask 0x1 (device error)
-> > > >> >> > [   16.823533] ata1.00: status: { DRDY ERR }
-> > > >> >> > [   16.823535] ata1.00: error: { ABRT }
-> > > >> >> >=20
-> > > >> >> > When adma is disabled then this error message is not
-> > > >> >> > generated.
-> > > >> >>=20
-> > > >> >> It looks like something is trying to issue a command to disable
-> > > >> >> APM power management on the drive, and the command fails
-> > > >> >> (likely because it doesn't support that command). I'm not sure
-> > > >> >> where that would be coming from - I'm pretty sure the kernel
-> > > >> >> doesn't issue that command itself. Something that's part of
-> > > >> >> your distro perhaps?
-> > > >> >>=20
-> > > >> >> I don't know why it would only be failing in ADMA mode either,
-> > > >> >> though depending on where the command is coming from, maybe
-> > > >> >> it's not being issued otherwise for some reason?
-> > > >> >>=20
-> > > >> >> > What does that error message means? It is critical? What is
-> > > >> >> > that command SET FEATURES doing? Are there any problems with
-> > > >> >> > adma mode on nforce4 motherboards? Because I did not see any
-> > > >> >> > problems (except that one error message).
-> > > >> >> >=20
-> > > >> >> > --
-> > > >> >> > Pali Roh=C3=A1r
-> > > >> >> > pali.rohar@gmail.com
-> > > >> >=20
-> > > >> > Hello,
-> > > >> >=20
-> > > >> > now after long time I did more investigation and that error is
-> > > >> > reported for every connected HDD. I identified that it comes
-> > > >> > from udev script
-> > > >> >=20
-> > > >> >  /lib/udev/rules.d/85-hdparm.rules
-> > > >> >=20
-> > > >> > which just call script /lib/udev/hdparm for every one connected
-> > > >> > HDD.
-> > > >> >=20
-> > > >> > Script /lib/udev/hdparm just call:
-> > > >> >  /sbin/hdparm -B254 $DRIVE
-> > > >> >=20
-> > > >> > And that -B254 cause above error message in dmesg log. Output
-> > > >> > from
-> > > >> >=20
-> > > >> > hdparm is:
-> > > >> >  /dev/sda:
-> > > >> >   setting Advanced Power Management level to 0xfe (254)
-> > > >> >   APM_level      =3D not supported
-> > > >> >=20
-> > > >> > Any idea why in ADMA mode it cause above error (APM unsupported)
-> > > >> > and in non ADMA mode it is working fine? Maybe APM ATA commands
-> > > >> > should not be sent via ADMA?
-> > > >> >=20
-> > > >> > Here is another output:
-> > > >> >  $ sudo hdparm -I /dev/sda | grep -i power
-> > > >> > =20
-> > > >> >             *    Power Management feature set
-> > > >> >            =20
-> > > >> >                  Power-Up In Standby feature set
-> > > >> >            =20
-> > > >> >             *    SET_FEATURES required to spinup after power up
-> > > >> >             *    Host-initiated interface power management
-> > > >>=20
-> > > >> The "set features" command is a non-data command so based on our
-> > > >> current knowledge, it should work in ADMA mode. However, these
-> > > >> NVIDIA SATAs are black boxes, and rather buggy ones at that, so
-> > > >> it's possible there's an unknown issue there.
-> > > >=20
-> > > > Maybe I should note that hdparm -I did not generated any error
-> > > > message. I post is here because it show "Power Management feature
-> > > > set" is supported by HDD. This indicate that HDD supports -B (APM)
-> > > > command, right?
-> > >=20
-> > > As far as I know, yes.
-> > >=20
-> > > >> The easiest way to test that would be to take out the condition
-> > > >> check for qc->tf.protocol =3D=3D ATA_PROT_NODATA in
-> > > >> nv_adma_use_reg_mode in drivers/ata/sata_nv.c. That would force
-> > > >> it to disable ADMA for all non-data commands.
-> > > >=20
-> > > > Ok, as now I have just SSH access to that machine, I will do kernel
-> > > > patching later (when I have physical access to it).
-> > > >=20
-> > > >> I really don't know why Ubuntu is disabling APM on all drives on
-> > > >> bootup however. Especially for laptops, that seems like a silly
-> > > >> thing to do explicitly. Sounds like one of the silly things
-> > > >> Ubuntu is known to do without consulting people.
-> > > >=20
-> > > > Looks like this comes from upstream udev/systemd project :-(
-> > > > Anyway, for laptops on battery ubuntu has another set of scripts
-> > > > which turn on APM (based on connected/disconnected AC adapter).
-> > >=20
-> > > There's no such scripts in Fedora, so either they removed it, or it's
-> > > something that either Debian or Ubuntu has added in.
-> > >=20
-> > > > That udev script which turn off APM is called when any disk is
-> > > > attached to system (so at boot time it is called for every one
-> > > > disk).
-> > > >=20
-> > > > Now I just masked that udev script and it is no longer called...
-> > > >=20
-> > > > Anyway if I call hdparm -B /dev/sda I get output:
-> > > >=20
-> > > > APM_level      =3D not supported
-> > > >=20
-> > > > And important is that there is no error message in dmesg. I get it
-> > > > only if I call hdparm -B with parameter (set option). But APM
-> > > > should be supported, right?
-> > >=20
-> > > Does the get command work without ADMA enabled?
+On Wednesday 25 December 2019 11:26:47 Jens Axboe wrote:
+> On 12/25/19 11:18 AM, Pali Roh=C3=A1r wrote:
+> > Hello Sascha!
 > >=20
-> > I requested to boot that machine with turned off ADMA. I verified it is=
-=20
-> > turned off as I found sata_nv.adma=3D0 in /proc/cmdline and file=20
-> > /sys/module/sata_nv/parameters/adma contains big N.
+> > On Friday 13 December 2019 09:04:08 Sascha Hauer wrote:
+> >> ata_qc_complete_multiple() is called with a mask of the still active
+> >> tags.
+> >>
+> >> mv_sata doesn't have this information directly and instead calculates
+> >> the still active tags from the started tags (ap->qc_active) and the
+> >> finished tags as (ap->qc_active ^ done_mask)
+> >>
+> >> Since 28361c40368 the hw_tag and tag are no longer the same and the
+> >> equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
+> >> initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
+> >> started and this will be in done_mask on completion. ap->qc_active ^
+> >> done_mask becomes 0x100000000 ^ 0x1 =3D 0x100000001 and thus tag 0 use=
+d as
+> >> the internal tag will never be reported as completed.
+> >>
+> >> This is fixed by introducing ata_qc_get_active() which returns the
+> >> active hardware tags and calling it where appropriate.
+> >>
+> >> This is tested on mv_sata, but sata_fsl and sata_nv suffer from the sa=
+me
+> >> problem. There is another case in sata_nv that most likely needs fixing
+> >> as well, but this looks a little different, so I wasn't confident enou=
+gh
+> >> to change that.
 > >=20
-> > I called hdparm:
+> > I can confirm that sata_nv.ko does not work in 4.18 (and new) kernel
+> > version correctly. More details are in email:
 > >=20
-> > $ sudo hdparm -B254 /dev/sda
+> > https://lore.kernel.org/linux-ide/20191225180824.bql2o5whougii4ch@pali/=
+T/
 > >=20
-> > /dev/sda:
-> >  setting Advanced Power Management level to 0xfe (254)
-> >  HDIO_DRIVE_CMD failed: Input/output error
-> >  APM_level      =3D not supported
+> > I tried this patch and it fixed above problems with sata_nv.ko. It just
+> > needs small modification (see below).
 > >=20
-> > It failed, but I do not see any error message in dmesg. There is nothin=
-g=20
-> > new in dmesg.
+> > So you can add my:
 > >=20
-> > So looks like I'm not able to set APM... But why in ADMA mode it=20
-> > generates some error and in non ADMA mode no error? Strange!
+> > Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 > >=20
+> > And I hope that patch would be backported to 4.18 and 4.19 stable
+> > branches soon as distributions kernels are broken for machines with
+> > these nvidia sata controllers.
+> >=20
+> > Anyway, what is that another case in sata_nv which needs to be fixed
+> > too?
 >=20
-> Hi Robert!
->=20
-> After long time I tested it again. I have there two SATA disks connected
-> to that computer. Running hdparm -B (without number) just print "not
-> supported" and hdparm -B254 still cause above kernel dmesg error.
->=20
-> But second disk print via hdparm -B current APM level and via -B<num> I
-> can set a new APM level. And it does not print any error (nor in dmesg
-> or on stdout).
->=20
-> Therefore first disk probably does not support APM and above kernel
-> dmesg error is caused only when I'm trying to set APM level on disk
-> without APM support.
->=20
-> So... is not this problem in kernel libata or sata_nv modules which
-> parses error messages for unsupported operations?
->=20
+> Thanks for testing, I've applied this for 5.5 and marked it for stable.
 
-Now I tried it again with 4.19 kernel + patch (because sata_nv is broken)
-https://lore.kernel.org/linux-ide/20191213080408.27032-1-s.hauer@pengutroni=
-x.de/T/#u
-and there is no error in dmesg when calling hdparm -B254 on disk without
-APM support when sata_nv is in ADMA mode.
+It is this one?
+https://git.kernel.dk/cgit/linux-block/commit/?h=3Dlibata-5.5&id=3Dd80f359d=
+0ebddb3ab3e9cc3fe96f244827ae7b09
 
-So I think this problem with error messages in dmesg is finally solved.
-But I do not know which change in kernel fixed it (or only hide?).
-
-Just for completeness here is output from hdparm (sda does not support
-APM, sdb supports APM):
-
-$ sudo hdparm -B254 /dev/sda
-
-/dev/sda:
- setting Advanced Power Management level to 0xfe (254)
-SG_IO: bad/missing sense data, sb[]:  70 00 05 00 00 00 00 0a 04 51 40 fe 2=
-1 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- APM_level      =3D not supported
-
-$ sudo hdparm -B254 /dev/sdb
-
-/dev/sdb:
- setting Advanced Power Management level to 0xfe (254)
- APM_level      =3D off
-
-By the way, do you know what that SG_IO error reported by hdparm means?
+Because there is missing EXPORT_SYMBOL_GPL for ata_qc_get_active()
+function as I wrote in previous email.
 
 --=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---ipuiar57xko6paml
+--uavokmfwgobx24dp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgOq8AAKCRCL8Mk9A+RD
-UkhcAKCDIObhB8sRX11+rH4rRBMRil4j3gCfeAzzgb7QSdaeY6EeNrFLDK4SD/g=
-=vmWk
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgOsDwAKCRCL8Mk9A+RD
+Ur2cAJ4uotJ5GOHvpyDmhcNG7VtbZ6NS+ACgnBe4SKSdgm/ikf17l0nZ+y4hGC8=
+=oOQ9
 -----END PGP SIGNATURE-----
 
---ipuiar57xko6paml--
+--uavokmfwgobx24dp--
