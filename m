@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CFBC2D0D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17445C2D0D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A206B2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CF22063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WAwEyf9Z"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GlptQvw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLYA55 (ORCPT
+        id S1726935AbfLYA57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:57:57 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40261 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfLYA54 (ORCPT
+        Tue, 24 Dec 2019 19:57:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37139 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfLYA56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 19:57:56 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so3500789wmi.5;
-        Tue, 24 Dec 2019 16:57:55 -0800 (PST)
+        Tue, 24 Dec 2019 19:57:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so8283942wru.4;
+        Tue, 24 Dec 2019 16:57:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6qx3JuRWucxWSZ+edEqkzvKfjwC/qHMJGDM4MA7mRVg=;
-        b=WAwEyf9Z6R6RPOxZ66EqNRQZQ/elC7tzeA/mn5bIOlxp8yZz+nS/BxDaKgYaFwfrwf
-         9b6O3XYC0Z6/4CSU1raIO9xqGyG0UXjUsvZuz6PihpBJc3JyAT76iT76Xxv2PhW+F69E
-         YcBYqaIDmNM3HZZmTC6kLjY9vQng9uwX75RxEuhAKlrNji9btuO8khgsADSUsGWlB08p
-         vSaG//6exaCwKeBBy5q29SFW4ugGU7isTDy0weKFZJ2ZD3TinNdcT22uPYuDz3fjjH2s
-         EpO7/UY1LUXPzIiFg9eku7VkHkUjW4p/bJZX8DogDpQOAYAdMwbZHgKZZz03BQx5YKlu
-         L57g==
+        bh=PFmQ90ZYw4YHFMWAxeUA4KZ+OR6FSTaAbjo/3KRmum4=;
+        b=GlptQvw+dENRbqNV/ZmYyeMc5Iulp2sTSNKMBKg5vCMLRijEI9Hx3VEPXiFos2QoaM
+         qGGlUu6cka/RPmy43aWC/KO2BUyr6IVmb71uP+FS/BlJENgpEVw2bRW8ERlUHsPOhPq6
+         1FL/jRTLeIDjfgkSdwv+b3IwbhE7XNOo7ENrwB+ytOP8t2aByTrcLeDhjS61iXJoPo/2
+         ltA1Pfr8zQsYRObjB5Gq2glDrrGmaJNg4dHHyJtZ/dG7wDQVsCgcja2RlaCwN+9UNEER
+         pUpOoSHw3xsn8oebebqtZljVxeKLTlHXZ7dyOa6ixLsSuoBrq3aajnuQR1iHKWAAqRJ6
+         6BdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6qx3JuRWucxWSZ+edEqkzvKfjwC/qHMJGDM4MA7mRVg=;
-        b=WNtrRoVAAW8HgUxR6ko5mMGyEyuNfn12/+n+B/HjZMMLthMKr8XWBAey102Adhm/4z
-         22Zc32q0vSiOzYaZQvhT8byD2Vv+xcHV0Y5QqAwV1peU561ZlJmY7Hbvu8fjhfXsh+v9
-         3VI6Yf+a/W7AilK/QUXdy1ZjIaFrHNthJzCpq4UZ5HAoxM9GyKms5oF7qQCdVtaeC8j7
-         NT7LkISQmCJk3g4bdMvHOwze8f0pE5f0PAmG4oPcC/+AKRBLmM38MkKdIJu69Su+X+7z
-         u8+1pCaMQ4CgVjDqeUdvzebPRT74Z/Evmmf8NImyrTxmkQKd/itCBQpW4JUCAhIlz2qv
-         3g4g==
-X-Gm-Message-State: APjAAAUz2wtgu21ojdsrlu/aoRTXYodjJUBulrCfMSpiaDikEeTX/XPc
-        atlrOVA9Oovq028N5SxYrCI=
-X-Google-Smtp-Source: APXvYqxXWv43UCTkk1HCYbZEh4PBsUSaBygIx+bAc3UIAf86L9GvuTHsdSzps77k73Ih82tygfr34w==
-X-Received: by 2002:a7b:c957:: with SMTP id i23mr6473304wml.49.1577235474370;
-        Tue, 24 Dec 2019 16:57:54 -0800 (PST)
+        bh=PFmQ90ZYw4YHFMWAxeUA4KZ+OR6FSTaAbjo/3KRmum4=;
+        b=NZaSHMFO0ctdNBM/fKE8WfWM/RpJJjsZb2wX2RuSAOtKKUFfFIa+CTgV/160YQeO7d
+         M+icVLfDKBVPcXpdq2yeiGpwegEeEg93ILqjSh3De9Wvi3jezBnluSCy8ZxAN2O9SNdh
+         q+7m2R9dnjCHY1BPOEqkFA2I6eefIQrOIaHUomMAuM3N/jK4LYyuKSe8z8O2CT2ltnj8
+         OGLzaexozrrcEW6U2FkZWGoOHpJG2Scbw463/mOOUo0uXIXLgM2gw8kaG6aXA1QJ5YSD
+         v7/1enDflhWOvk20xWcT3T3jAstlnOFvNYzdXp6yYu1Ljq/ko7JvyirJlu9p2UmhAk+i
+         sHDA==
+X-Gm-Message-State: APjAAAVe7Hr/gVf5vIBlOYWC140AEA31K9FZNg6OfUIxF9A+QUtqpqjQ
+        oZVCeANL4cay1ad9FSw5A5M=
+X-Google-Smtp-Source: APXvYqzMRfyD3lyEw+Zb4gNepoyAdwAUCWFEyKKCzMwOT61ncy02kog+p+b5jrt9BJEzS0NQro+IIQ==
+X-Received: by 2002:a5d:6390:: with SMTP id p16mr38153955wru.170.1577235476171;
+        Tue, 24 Dec 2019 16:57:56 -0800 (PST)
 Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id e18sm26034448wrw.70.2019.12.24.16.57.53
+        by smtp.googlemail.com with ESMTPSA id e18sm26034448wrw.70.2019.12.24.16.57.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 16:57:53 -0800 (PST)
+        Tue, 24 Dec 2019 16:57:55 -0800 (PST)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
         davem@davemloft.net, khilman@baylibre.com
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         balbes-150@yandex.ru, ingrassia@epigenesys.com,
         jbrunet@baylibre.com, linus.luessing@c0d3.blue,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
-Date:   Wed, 25 Dec 2019 01:56:53 +0100
-Message-Id: <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/3] ARM: dts: meson8m2: mxiii-plus: use the same RGMII TX delay as u-boot
+Date:   Wed, 25 Dec 2019 01:56:55 +0100
+Message-Id: <20191225005655.1502037-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
 References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
@@ -77,76 +77,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GXBB and newer SoCs use the fixed FCLK_DIV2 (1GHz) clock as input for
-the m250_sel clock. Meson8b and Meson8m2 use MPLL2 instead, whose rate
-can be adjusted at runtime.
+Due to a bug in the MPLL2 clock setup (which is used as input for the
+RGMII TX clock) a TX delay of 2ns did not work previously. With a TX
+delay of 4ns Ethernet worked enough to get an IP via DHCP but there was
+still high packet loss when transmitting data.
 
-So far we have been running MPLL2 with ~250MHz (and the internal
-m250_div with value 1), which worked enough that we could transfer data
-with an TX delay of 4ns. Unfortunately there is high packet loss with
-an RGMII PHY when transferring data (receiving data works fine though).
-Odroid-C1's u-boot is running with a TX delay of only 2ns as well as
-the internal m250_div set to 2 - no lost (TX) packets can be observed
-with that setting in u-boot.
+Update the TX delay to 2ns - which is the same value that u-boot and the
+vendor kernel use - to fix the packet loss when transmitting data.
 
-Manual testing has shown that the TX packet loss goes away when using
-the following settings in Linux:
-- MPLL2 clock set to ~500MHz
-- m250_div set to 2
-- TX delay set to 2ns
-
-Update the m250_div divider settings to only accept dividers greater or
-equal 2. This will allow the Meson8 and Meson8m2 .dts to be updated to
-use a TX delay of 2ns (instead of 4ns) to fix the TX packet loss.
-
-iperf3 results before the change:
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec   182 MBytes   153 Mbits/sec  514      sender
-[  5]   0.00-10.00  sec   182 MBytes   152 Mbits/sec           receiver
-
-iperf3 results after the change (including an updated TX delay of 2ns):
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0      sender
-[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec           receiver
-
-Fixes: 4f6a71b84e1afd ("net: stmmac: dwmac-meson8b: fix internal RGMII clock configuration")
+Fixes: 35ee52bea66c74 ("ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index bd6c01004913..0e2fa14f1423 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -112,6 +112,14 @@ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
- 	struct device *dev = dwmac->dev;
- 	const char *parent_name, *mux_parent_names[MUX_CLK_NUM_PARENTS];
- 	struct meson8b_dwmac_clk_configs *clk_configs;
-+	static const struct clk_div_table div_table[] = {
-+		{ .div = 2, .val = 2, },
-+		{ .div = 3, .val = 3, },
-+		{ .div = 4, .val = 4, },
-+		{ .div = 5, .val = 5, },
-+		{ .div = 6, .val = 6, },
-+		{ .div = 7, .val = 7, },
-+	};
+diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+index d54477b1001c..fd94b5cbd845 100644
+--- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
++++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
+@@ -71,7 +71,7 @@ &ethmac {
+ 	phy-handle = <&eth_phy0>;
+ 	phy-mode = "rgmii";
  
- 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
- 	if (!clk_configs)
-@@ -146,9 +154,9 @@ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
- 	clk_configs->m250_div.reg = dwmac->regs + PRG_ETH0;
- 	clk_configs->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
- 	clk_configs->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
--	clk_configs->m250_div.flags = CLK_DIVIDER_ONE_BASED |
--				CLK_DIVIDER_ALLOW_ZERO |
--				CLK_DIVIDER_ROUND_CLOSEST;
-+	clk_configs->m250_div.table = div_table;
-+	clk_configs->m250_div.flags = CLK_DIVIDER_ALLOW_ZERO |
-+				      CLK_DIVIDER_ROUND_CLOSEST;
- 	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_name, 1,
- 					 &clk_divider_ops,
- 					 &clk_configs->m250_div.hw);
+-	amlogic,tx-delay-ns = <4>;
++	amlogic,tx-delay-ns = <2>;
+ 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";
 -- 
 2.24.1
 
