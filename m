@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53548C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860D8C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289AC2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2412073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 11:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfLYLpR (ORCPT
+        id S1726399AbfLYLy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 06:45:17 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8186 "EHLO huawei.com"
+        Wed, 25 Dec 2019 06:54:26 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8187 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726025AbfLYLpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 06:45:16 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E255562D16940305A7BB;
-        Wed, 25 Dec 2019 19:45:12 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Dec 2019
- 19:45:04 +0800
+        id S1726185AbfLYLyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 06:54:25 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DFCD07D8244006852EF5;
+        Wed, 25 Dec 2019 19:54:23 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 25 Dec 2019
+ 19:54:16 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] x86/jump_label: Fix old-style declaration
-Date:   Wed, 25 Dec 2019 19:45:00 +0800
-Message-ID: <20191225114500.7712-1-yuehaibing@huawei.com>
+To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <mpe@ellerman.id.au>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] powerpc/pmac/smp: Fix old-style declaration
+Date:   Wed, 25 Dec 2019 19:49:43 +0800
+Message-ID: <20191225114943.17216-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,28 +43,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc warning:
+There expect the 'static' keyword to come first in a declaration
 
-arch/x86/kernel/jump_label.c:61:1: warning:
- inline is not at beginning of declaration [-Wold-style-declaration]
+arch/powerpc/platforms/powermac/smp.c:664:1: warning: static is not at beginning of declaration [-Wold-style-declaration]
+arch/powerpc/platforms/powermac/smp.c:665:1: warning: static is not at beginning of declaration [-Wold-style-declaration]
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/x86/kernel/jump_label.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/powermac/smp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index 9c4498e..5ba8477 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -58,7 +58,7 @@ __jump_label_set_jump_code(struct jump_entry *entry, enum jump_label_type type,
- 	return code;
- }
+diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
+index f95fbde..7233b85 100644
+--- a/arch/powerpc/platforms/powermac/smp.c
++++ b/arch/powerpc/platforms/powermac/smp.c
+@@ -661,8 +661,8 @@ static void smp_core99_gpio_tb_freeze(int freeze)
+ #endif /* !CONFIG_PPC64 */
  
--static void inline __jump_label_transform(struct jump_entry *entry,
-+static inline void __jump_label_transform(struct jump_entry *entry,
- 					  enum jump_label_type type,
- 					  int init)
+ /* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
+-volatile static long int core99_l2_cache;
+-volatile static long int core99_l3_cache;
++static volatile long int core99_l2_cache;
++static volatile long int core99_l3_cache;
+ 
+ static void core99_init_caches(int cpu)
  {
 -- 
 2.7.4
