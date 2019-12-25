@@ -2,87 +2,73 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA54C47409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B81AC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 20:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7A2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 19:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230EE2072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 20:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kJNBQkw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfLYTjC (ORCPT
+        id S1726879AbfLYUqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 14:39:02 -0500
-Received: from albireo.enyo.de ([37.24.231.21]:43874 "EHLO albireo.enyo.de"
+        Wed, 25 Dec 2019 15:46:36 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:40016 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfLYTjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 14:39:01 -0500
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1ikCUh-000786-Vl; Wed, 25 Dec 2019 19:38:55 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1ikCTv-0004Mj-Rz; Wed, 25 Dec 2019 20:38:07 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Rich Felker <dalias@libc.org>, linux-fsdevel@vger.kernel.org,
-        musl@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: Re: [musl] getdents64 lost direntries with SMB/NFS and buffer size < unknown threshold
-References: <20191120001522.GA25139@brightrain.aerifal.cx>
-        <8736eiqq1f.fsf@mid.deneb.enyo.de>
-        <20191120205913.GD16318@brightrain.aerifal.cx>
-        <20191121175418.GI4262@mit.edu>
-Date:   Wed, 25 Dec 2019 20:38:07 +0100
-In-Reply-To: <20191121175418.GI4262@mit.edu> (Theodore Y. Ts'o's message of
-        "Thu, 21 Nov 2019 12:54:18 -0500")
-Message-ID: <87a77g2o2o.fsf@mid.deneb.enyo.de>
+        id S1726415AbfLYUqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 15:46:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4ZzRvdaBtnhB0AU4QWJ+geeibBRbqhrl+tCTqbC8vaU=; b=kJNBQkw6ivE+im5O6ztGzUBsBB
+        /VDcORIn2KtBPoC1qux3QHcFdbVeM7C/afZgC706hL7dTqOg/10MzhBC190VmOmTGIQKazpowtIS+
+        g1T8aZw5zcErTraxRUshRczhczu4yYfBn1tKHVA9qNuh+LUEZiX1KSAVuhHHWJno3KDQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ikDY7-0008Nv-7l; Wed, 25 Dec 2019 21:46:31 +0100
+Date:   Wed, 25 Dec 2019 21:46:31 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2] mv88e6xxx: Add serdes Rx statistics
+Message-ID: <20191225204631.GB31948@lunn.ch>
+References: <20191225052238.23334-1-nikita.yoush@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191225052238.23334-1-nikita.yoush@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Theodore Y. Ts'o:
+On Wed, Dec 25, 2019 at 08:22:38AM +0300, Nikita Yushchenko wrote:
+> If packet checker is enabled in the serdes, then Rx counter registers
+> start working, and no side effects have been detected.
+> 
+> This patch enables packet checker automatically when powering serdes on,
+> and exposes Rx counter registers via ethtool statistics interface.
+> 
+> Code partially basded by older attempt by Andrew Lunn.
+> 
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> ---
+> Changes from v1:
+> - added missing break statement (thanks kbuild test robot <lkp@intel.com>)
 
-> On Wed, Nov 20, 2019 at 03:59:13PM -0500, Rich Felker wrote:
->> 
->> POSIX only allows both behaviors (showing or not showing) the entry
->> that was deleted. It does not allow deletion of one entry to cause
->> other entries not to be seen.
->
-> Agreed, but POSIX requires this of *readdir*.  POSIX says nothing
-> about getdents64(2), which is Linux's internal implementation which is
-> exposed to a libc.
+Opps. Sorry i missed that.
 
-Sure, but Linux better provides some reasonable foundation for a libc.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-I mean, sure, we can read the entire directory into RAM on the first
-readdir, and get a fully conforming implementation this way (and as
-Rich noted, glibc's 32 KiB buffer tends to approximate that in
-practice).  But that doesn't strike me as particularly useful.
-
-The POSIX requirement is really unfortunate because it leads to
-incorrect implementations of rm -rf which would on a compliant system
-and fail in practice.
-
-> So we would need to see what is exactly going on at the interfaces
-> between the VFS and libc, the nfs client code and the VFS, the nfs
-> client code and the nfs server, and possibly the behavior of the nfs
-> server.
->
-> First of all.... you can't reproduce this on anything other than with
-> NFS, correct?  That is, does it show up if you are using ext4, xfs,
-> btrfs, etc.?
-
-I'm sure it shows up with certain directory contents on any Linux file
-system except for those that happen to have a separate B-tree (or
-equivalent) for telldir/seekdir support.  And even those will have
-broken corner case in case of billions of directory operations.
-
-32 bits are simply not enough storage space for the cookie.  Hashing
-just masks the presence of these bugs, but does not eliminate them
-completely.
+    Andrew
