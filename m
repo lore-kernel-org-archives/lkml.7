@@ -6,82 +6,82 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E44C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A61DC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A132072A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02422072A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfLYKhh (ORCPT
+        id S1726516AbfLYKhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:37:37 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:42286 "EHLO inva021.nxp.com"
+        Wed, 25 Dec 2019 05:37:39 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:42330 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbfLYKhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 05:37:36 -0500
+        id S1726025AbfLYKhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 05:37:38 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A31952007A8;
-        Wed, 25 Dec 2019 11:37:34 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7667620084C;
+        Wed, 25 Dec 2019 11:37:36 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 93C7D20023C;
-        Wed, 25 Dec 2019 11:37:30 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6741F2007D4;
+        Wed, 25 Dec 2019 11:37:32 +0100 (CET)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 42AB840282;
-        Wed, 25 Dec 2019 18:37:25 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 17BCB402B3;
+        Wed, 25 Dec 2019 18:37:27 +0800 (SGT)
 From:   Biwen Li <biwen.li@nxp.com>
 To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
         mark.rutland@arm.com
 Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [RESEND v6,1/3] dt-bindings: i2c: support property idle-state
-Date:   Wed, 25 Dec 2019 18:36:22 +0800
-Message-Id: <20191225103624.48342-1-biwen.li@nxp.com>
+Subject: [RESEND v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
+Date:   Wed, 25 Dec 2019 18:36:24 +0800
+Message-Id: <20191225103624.48342-3-biwen.li@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191225103624.48342-1-biwen.li@nxp.com>
+References: <20191225103624.48342-1-biwen.li@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This supports property idle-state
+Specify a channel zero in idle state to
+avoid enterring tri-stated state for PCA9547.
+About E-00013:
+	- Description: I2C1 and I2C3 buses
+	  are missing pull-up.
+	- Impact: When the PCA954x device is tri-stated, the I2C bus
+	  will float. This makes the I2C bus and its associated
+	  downstream devices inaccessible.
+	- Hardware fix: Populate resistors R189 and R190 for I2C1
+	  and resistors R228 and R229 for I2C3.
+	- Software fix: Remove the tri-state option from the PCA954x
+	  driver(PCA954x always on enable status, specify a
+	  channel zero in dts to fix the errata E-00013).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
 Change in v6:
-	- add reviewed-by
+	- none
 
 Change in v5:
-	- none
+	- specify a channel zero when pca9547 in idle state.
 
-Change in v4:
-	- none
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Change in v3:
-	- update subject and description
-	- add some information for
-  	  property idle-state
-
-Change in v2:
-	- update subject and description
-	- add property idle-state
-
- Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-index 30ac6a60f041..7abda506b828 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-@@ -25,6 +25,8 @@ Required Properties:
- Optional Properties:
- 
-   - reset-gpios: Reference to the GPIO connected to the reset input.
-+  - idle-state: if present, overrides i2c-mux-idle-disconnect,
-+    Please refer to Documentation/devicetree/bindings/mux/mux-controller.txt
-   - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
-     children in idle state. This is necessary for example, if there are several
-     multiplexers on the bus and the devices behind them use same I2C addresses.
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+index 6fd7f63085c9..412f1bc0db5f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+@@ -49,6 +49,7 @@
+ 		reg = <0x75>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		idle-state = <0>;
+ 		i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.17.1
 
