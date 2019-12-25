@@ -2,152 +2,165 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC726C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2957BC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FAD20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96A820730
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUd4sYqG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Yl+/2aOI";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="mIgrkrl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfLYHT4 (ORCPT
+        id S1726879AbfLYHUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 02:19:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36727 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfLYHT4 (ORCPT
+        Wed, 25 Dec 2019 02:20:06 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:53766 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfLYHUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 02:19:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 19so16092825otz.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 23:19:55 -0800 (PST)
+        Wed, 25 Dec 2019 02:20:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1577258405; x=1608794405;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=fH+Jq6U7bPb2MKWRBn5Dl/Sisl+BG+gxaDejNRBmhkc=;
+  b=Yl+/2aOIyNn79fDBvcbBayX1JldWyBoi1ktaitLg02IIiA18Y6Q1fZVK
+   emvKSMNVw0q1/fXdnDylU2NHhFGUfmi0t3ywtlb4Kdm2kCSmAL+niHzKs
+   X7xs2eheb0hkHz7LvQyN11HhCfItIEN5Nlq2x35UkZORHZXxt0dVgmXO/
+   BnGJlJuDoIXKSvZ4oYtz5UR9CkL08riz8bQBo8x2lfHWOjj3qiR1o8MEm
+   UjSQmL0UGxbNYS47TcHJ7NRoH1ECDCXP1KVN3PT0TfEmnaEfpKytfP4k7
+   Im/C3GG400BkLr+nuvvlE+GjTAn3qNgIy8fXd9c3TPG1WaOu32uOXPFgV
+   w==;
+IronPort-SDR: ItP0j8B+v5mW48sjpiDNHwpLEEH50RWLL04wkBtQvzWNjIt7Umve5qT4CoNh+eptEEHiIZW6It
+ BzZPLOuBAscvt2BlNaSMcuqxLg6cjXGvDPMicuI2N8wjzboJVaSBJS0DvqSAGUJRyG+REz9KrU
+ InWNTwFanpyRjulMB5Pv2j2RR3rEiVItOSm/amhfP7awkLs6j9a4ed6HpvdUxFNt1LEHq+9D8c
+ GoJTLp6T+VHXt6yT/IBjQCHBHYuVH/BJRInqtSmpo8dhTdQGBhI0SXsKFlglLMmDP6SPh9zvRc
+ 1Mc=
+X-IronPort-AV: E=Sophos;i="5.69,353,1571673600"; 
+   d="scan'208";a="126862484"
+Received: from mail-mw2nam10lp2109.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.109])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Dec 2019 15:20:05 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=boejPbtlUJXvVRmJMWzADmjR3EIkqom2VDHEgAaJ4Akoxwa4doc9DGtLRQ87+Mh73Y/xJ+nG/dOyErSTDWwlweNiXffTgzYZxeMyjphl3GcGDAGrsfHVEUl1zIImBYPhsoqFV3qvmo07smuQf7c0lFyCSMPNfExZ9vww6fHzafZNgaW5294KDgBCuaA3pPWEe5pRzcWx5foBnYcqT+wVHb6IuyUBB/2OBT1MeuQ0FMEst4XuotSRv4GQanayTONX9p9VpVRCfveI/+Y7SUW1Wf0tFO5LoAk68bVltXn2S0mKPagvYDx8QUb6ly2A01cEYTwVUk3XQ6XwQC+C4uSQaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aoi8qYKLknjMZtAhAIDrHbrfiTDRf6Sic3qmYlIM5eY=;
+ b=N+A3NUFdUfG7yXjv7bIKbsMbqm/BltByZqjoeE2E9/lOlYtltA580m1j2PqJQGdg5bFggkBdAV+prXKDsbg5O1iNvEcKWcKQkNkFfNRSjn8wXB5wEjONv4C39i/PpuGEC1mSldSqHEyTLgNwflfuI/xcz9ml4vFdYqIajdRRCr1vEdjA5g7FZJs/ro6EHaLs4aFYus4WcmzuiHrTN1AZUyFswAL418QICtck+Zf/x2RiakbTLLHWqgniDBadtSCql1jTtPm88o7SBX31bt91mb0KzYC4uh6XkmT72SnM04skLgXGGGEIb8PQb8xwO5Zul7SU0cKc2ROq8ux4uBvJkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jZ7xOoyBKG3MRemDKdak1qOAx9GWCdCSPmNFPdoypUA=;
-        b=FUd4sYqGJsr9wL9opWZuxqwRrff1m4+/rRzR8g3KKeD5OZi2cQAwSzfP1z8GPdjNYf
-         j6TINdVgC9Vvx+xqKzsX76bNIOO6Z37RFCt/aG62qLL2U7HAVslziQYLnkMS7rdwIKoD
-         O2NvAsMHdTU1VOusBwswqt5h4EKVqXdKjkIoMDFmljNhyHGvhTzf8qR1BASwboAAIdhJ
-         s4c4XPQQvbglc+0qvUdfaJtANWbIYwBX5nLxCJxbezTWVQweaMlKbuezYnAEcdWZ/iv+
-         vNPL8NBfhHg6NvuKmpVl5x2NQksoGHBWnk8mBhTjxuz8iWG3vRqzcEavGPTG1rVhPOM1
-         1bVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jZ7xOoyBKG3MRemDKdak1qOAx9GWCdCSPmNFPdoypUA=;
-        b=FryS8lzrxrwiu0uhDDtPWVsUN/xuk0s/hc+5ehjL1F0Jry6YPWSKp4TNUtxMB4GFx0
-         ZfZI8MoulmM6Wi40nEYBxGtp5NPw7JmkuFNESH2+aJ5m51cPyNGFSqh3MbZEQwwI5gMk
-         7svdWK29LhOtWyyLijky7fZNxxSPuc7JeGNVvG3+SXQbvulbTUgB1wg4eFrtBBMQibjn
-         cPTHfiy89jRwmg0NE8vT/wB3FyYaLZxDryM12XcZ5pRj5BjKBBY6ZS9lHZbjWzsn5NTy
-         aOOT8MiSgROHSDd2m2xHOt2it5mAaXYlYRsQeXtTQ+Ia/c1m9yhQqXTPcDMqCMa2vgiz
-         2NEw==
-X-Gm-Message-State: APjAAAVYR+r80Imu0idiUmZVTqgkDRFbfRkLuXInHAAY7EzajmD2Dgs2
-        rFDu+q2FUZcbiWvkePvQZJn1BSWJ
-X-Google-Smtp-Source: APXvYqxiUJRAMt9ZeCeCB0/zIbNTcvwZa+M9GdvJUxVsq568zi9IA1fQxV4VQ1+QoSPZmhs1ZT9WCg==
-X-Received: by 2002:a05:6830:1487:: with SMTP id s7mr22470333otq.269.1577258395188;
-        Tue, 24 Dec 2019 23:19:55 -0800 (PST)
-Received: from JosephdeMacBook-Pro.local ([205.204.117.24])
-        by smtp.gmail.com with ESMTPSA id c21sm5841878oiy.11.2019.12.24.23.19.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Dec 2019 23:19:54 -0800 (PST)
-Subject: Re: [Ocfs2-devel] [PATCH] ocfs2: fix the crash due to call
- ocfs2_get_dlm_debug once less
-To:     Gang He <GHe@suse.com>, "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>
-References: <20191225061501.13587-1-ghe@suse.com>
-From:   Joseph Qi <jiangqi903@gmail.com>
-Message-ID: <07da3b5a-5884-8a95-6c39-1d84e9b5093b@gmail.com>
-Date:   Wed, 25 Dec 2019 15:19:47 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191225061501.13587-1-ghe@suse.com>
-Content-Type: text/plain; charset=utf-8
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aoi8qYKLknjMZtAhAIDrHbrfiTDRf6Sic3qmYlIM5eY=;
+ b=mIgrkrl3tTZjE2pkHnm/mLwjqhtKMUVhjV/VOPP3HAtsb2zCa0ET/sarQ6Bgv7wCUlBBsUAd5eKv7zcZmZX0GpoaOQlcR4YpLyYanWvoR2RZ16OMbboaFBPdcYcTV+8SbvWPScXwJKcJj2KV5eoQLF6CW943iQtWzTzEwNe/uxk=
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com (20.179.59.16) by
+ BYAPR04MB4392.namprd04.prod.outlook.com (20.176.251.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.14; Wed, 25 Dec 2019 07:20:03 +0000
+Received: from BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61]) by BYAPR04MB5816.namprd04.prod.outlook.com
+ ([fe80::cd8e:d1de:e661:a61%5]) with mapi id 15.20.2581.007; Wed, 25 Dec 2019
+ 07:20:02 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH v3 1/2] fs: New zonefs file system
+Thread-Topic: [PATCH v3 1/2] fs: New zonefs file system
+Thread-Index: AQHVuf7BpC1bTe1k6UmgztFIqbNKpA==
+Date:   Wed, 25 Dec 2019 07:20:02 +0000
+Message-ID: <BYAPR04MB58167AD3E7519632746CDE72E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+References: <20191224020615.134668-1-damien.lemoal@wdc.com>
+ <20191224020615.134668-2-damien.lemoal@wdc.com>
+ <20191224044001.GA2982727@magnolia>
+ <BYAPR04MB5816B3322FD95BD987A982C1E7280@BYAPR04MB5816.namprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Damien.LeMoal@wdc.com; 
+x-originating-ip: [199.255.47.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: eaa23faf-f90e-4727-f443-08d7890adbff
+x-ms-traffictypediagnostic: BYAPR04MB4392:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB43921CC3521865AE4CE761A0E7280@BYAPR04MB4392.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:383;
+x-forefront-prvs: 02622CEF0A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(199004)(189003)(2906002)(316002)(186003)(9686003)(4326008)(5660300002)(8936002)(81156014)(8676002)(81166006)(55016002)(86362001)(26005)(71200400001)(53546011)(6506007)(76116006)(66556008)(91956017)(64756008)(478600001)(66946007)(7696005)(54906003)(66446008)(6916009)(66476007)(52536014)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4392;H:BYAPR04MB5816.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LFSQsCbahM7ot0qVTsYJe4OaE+YvSuMJFvbv79WxgEIHWNuWj2/BGx9GlcBu2WrUHcFEhkAxp5vlj9twhwxfIhKDCw9I79oUFFzXuQHMHojji7rYTeCNVuKfuOVDRnbJXn3i78HywJWxmDu3+mk8hOGF4VIhJvy6/GtBs6l5n3Y9WShLjaK8u1gLz5I8PK4tBQSP4Ncq9gCHRoajczwUt6TIWY16ZW09HbIN6/eNyuwlhn0ZBYmyKx0mgtml0+dAuzH1Xt8at5Bz8lvipLeM+hi3kpgByx1orOAoUz8XZ7ePB/U4XF5hu2K/rc3CWJw8xZxnN2JS1j4/ln8+/q0Wc0dXdkloH2zSo48xwJ944ZSxhjo1yCKuUOIZ9Ejy9fWC62BtJCTV7Ckn31F7Utu0GmzyrNX/elwJO+MLke2puAU1vT2FMr0/XtfD4gczPR9k
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaa23faf-f90e-4727-f443-08d7890adbff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Dec 2019 07:20:02.8298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bTlE7MqCdNkKnPi1lUZpyXeDPkJeGXqlLBlUr7MvCYSwf0vIBNUURorhAPB0zJrj+oE0H1fhfNzmO7RUPOi1Zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4392
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/12/25 14:15, Gang He wrote:
-> Because ocfs2_get_dlm_debug() function is called once less here,
-> ocfs2 file system will trigger the system crash, usually after
-> ocfs2 file system is unmounted.
-> this system crash is caused by a generic memory corruption, these
-> crash backtraces are not always the same, for exapmle,
-> 
-> [ 4106.597432] ocfs2: Unmounting device (253,16) on (node 172167785)
-> [ 4116.230719] general protection fault: 0000 [#1] SMP PTI
-> [ 4116.230731] CPU: 3 PID: 14107 Comm: fence_legacy Kdump:
-> [ 4116.230737] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-> [ 4116.230772] RIP: 0010:__kmalloc+0xa5/0x2a0
-> [ 4116.230778] Code: 00 00 4d 8b 07 65 4d 8b
-> [ 4116.230785] RSP: 0018:ffffaa1fc094bbe8 EFLAGS: 00010286
-> [ 4116.230790] RAX: 0000000000000000 RBX: d310a8800d7a3faf RCX: 0000000000000000
-> [ 4116.230794] RDX: 0000000000000000 RSI: 0000000000000dc0 RDI: ffff96e68fc036c0
-> [ 4116.230798] RBP: d310a8800d7a3faf R08: ffff96e6ffdb10a0 R09: 00000000752e7079
-> [ 4116.230802] R10: 000000000001c513 R11: 0000000004091041 R12: 0000000000000dc0
-> [ 4116.230806] R13: 0000000000000039 R14: ffff96e68fc036c0 R15: ffff96e68fc036c0
-> [ 4116.230811] FS:  00007f699dfba540(0000) GS:ffff96e6ffd80000(0000) knlGS:00000
-> [ 4116.230815] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 4116.230819] CR2: 000055f3a9d9b768 CR3: 000000002cd1c000 CR4: 00000000000006e0
-> [ 4116.230833] Call Trace:
-> [ 4116.230898]  ? ext4_htree_store_dirent+0x35/0x100 [ext4]
-> [ 4116.230924]  ext4_htree_store_dirent+0x35/0x100 [ext4]
-> [ 4116.230957]  htree_dirblock_to_tree+0xea/0x290 [ext4]
-> [ 4116.230989]  ext4_htree_fill_tree+0x1c1/0x2d0 [ext4]
-> [ 4116.231027]  ext4_readdir+0x67c/0x9d0 [ext4]
-> [ 4116.231040]  iterate_dir+0x8d/0x1a0
-> [ 4116.231056]  __x64_sys_getdents+0xab/0x130
-> [ 4116.231063]  ? iterate_dir+0x1a0/0x1a0
-> [ 4116.231076]  ? do_syscall_64+0x60/0x1f0
-> [ 4116.231080]  ? __ia32_sys_getdents+0x130/0x130
-> [ 4116.231086]  do_syscall_64+0x60/0x1f0
-> [ 4116.231151]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [ 4116.231168] RIP: 0033:0x7f699d33a9fb
-> 
-> This regression problem was introduced by commit e581595ea29c ("ocfs:
-> no need to check return value of debugfs_create functions").
-> 
-> Signed-off-by: Gang He <ghe@suse.com>
-
-Thanks, Gang.
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-
-Add missing tags as well.
-
-Fixes: e581595ea29c ("ocfs: no need to check return value of debugfs_create functions")
-Cc: <stable@vger.kernel.org> v5.3+
-
-> ---
->  fs/ocfs2/dlmglue.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-> index 1c4c51f3df60..cda1027d0819 100644
-> --- a/fs/ocfs2/dlmglue.c
-> +++ b/fs/ocfs2/dlmglue.c
-> @@ -3282,6 +3282,7 @@ static void ocfs2_dlm_init_debug(struct ocfs2_super *osb)
->  
->  	debugfs_create_u32("locking_filter", 0600, osb->osb_debug_root,
->  			   &dlm_debug->d_filter_secs);
-> +	ocfs2_get_dlm_debug(dlm_debug);
->  }
->  
->  static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
-> 
+On 2019/12/25 15:05, Damien Le Moal wrote:=0A=
+>>> +		inode->i_mode =3D S_IFREG;=0A=
+>>=0A=
+>> i_mode &=3D ~S_IRWXUGO; ?=0A=
+> =0A=
+> Yes, indeed that is better. checkpatch.pl does spit out a warning if one=
+=0A=
+> uses the S_Ixxx macros though. See below.=0A=
+=0A=
+Please disregard this comment. checkpatch is fine. For some reasons I=0A=
+had warnings in the past but they are now gone. So using the macros=0A=
+instead of the harder to read hard-coded values.=0A=
+=0A=
+> =0A=
+>>=0A=
+>> Note that clearing the mode flags won't prevent programs with an=0A=
+>> existing writable fd from being able to call write().  I'd imagine that=
+=0A=
+>> they'd hit EIO pretty fast though, so that might not matter.=0A=
+>>=0A=
+>>> +		zone->wp =3D zone->start;=0A=
+>>> +	} else if (zone->cond =3D=3D BLK_ZONE_COND_READONLY) {=0A=
+>>> +		inode->i_flags |=3D S_IMMUTABLE;=0A=
+>>> +		inode->i_mode &=3D ~(0222); /* S_IWUGO */=0A=
+>>=0A=
+>> Might as well just use S_IWUGO directly here?=0A=
+=0A=
+Yes, I did in v4.=0A=
+=0A=
+> Because checkpatch spits out a warning if I do. I would prefer using the=
+=0A=
+> macro as I find it much easier to read. Should I just ignore checkpatch=
+=0A=
+> warning ?=0A=
+=0A=
+My mistake. No warnings :)=0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
