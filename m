@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C281C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19441C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B502077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92AE227BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 10:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfLYKjn (ORCPT
+        id S1727310AbfLYKjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 05:39:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40613 "EHLO
+        Wed, 25 Dec 2019 05:39:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40615 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfLYKjH (ORCPT
+        with ESMTP id S1726985AbfLYKjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Dec 2019 05:39:07 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ik44C-000893-M6; Wed, 25 Dec 2019 11:39:00 +0100
+        id 1ik44C-000899-U4; Wed, 25 Dec 2019 11:39:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D0231C2B1E;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 89E101C2BA8;
         Wed, 25 Dec 2019 11:39:00 +0100 (CET)
 Date:   Wed, 25 Dec 2019 10:39:00 -0000
 From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Make task_fits_capacity() consider
- uclamp restrictions
+Subject: [tip: sched/core] sched/uclamp: Rename uclamp_util_with() into
+ uclamp_rq_util_with()
 Cc:     Valentin Schneider <valentin.schneider@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Quentin Perret <qperret@google.com>,
@@ -44,10 +44,10 @@ Cc:     Valentin Schneider <valentin.schneider@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191211113851.24241-5-valentin.schneider@arm.com>
-References: <20191211113851.24241-5-valentin.schneider@arm.com>
+In-Reply-To: <20191211113851.24241-4-valentin.schneider@arm.com>
+References: <20191211113851.24241-4-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Message-ID: <157727034019.30329.4519699507798726125.tip-bot2@tip-bot2>
+Message-ID: <157727034043.30329.5395594787992535523.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,27 +63,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     a7008c07a568278ed2763436404752a98004c7ff
-Gitweb:        https://git.kernel.org/tip/a7008c07a568278ed2763436404752a98004c7ff
+Commit-ID:     d2b58a286e89824900d501db0be1d4f6aed474fc
+Gitweb:        https://git.kernel.org/tip/d2b58a286e89824900d501db0be1d4f6aed474fc
 Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Wed, 11 Dec 2019 11:38:50 
+AuthorDate:    Wed, 11 Dec 2019 11:38:49 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Dec 2019 10:42:09 +01:00
+CommitterDate: Wed, 25 Dec 2019 10:42:08 +01:00
 
-sched/fair: Make task_fits_capacity() consider uclamp restrictions
+sched/uclamp: Rename uclamp_util_with() into uclamp_rq_util_with()
 
-task_fits_capacity() drives CPU selection at wakeup time, and is also used
-to detect misfit tasks. Right now it does so by comparing task_util_est()
-with a CPU's capacity, but doesn't take into account uclamp restrictions.
+The current helper returns (CPU) rq utilization with uclamp restrictions
+taken into account. A uclamp task utilization helper would be quite
+helpful, but this requires some renaming.
 
-There's a few interesting uses that can come out of doing this. For
-instance, a low uclamp.max value could prevent certain tasks from being
-flagged as misfit tasks, so they could merrily remain on low-capacity CPUs.
-Similarly, a high uclamp.min value would steer tasks towards high capacity
-CPUs at wakeup (and, should that fail, later steered via misfit balancing),
-so such "boosted" tasks would favor CPUs of higher capacity.
-
-Introduce uclamp_task_util() and make task_fits_capacity() use it.
+Prepare the code for the introduction of a uclamp_task_util() by renaming
+the existing uclamp_util_with() to uclamp_rq_util_with().
 
 Tested-By: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
@@ -94,43 +88,50 @@ Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191211113851.24241-5-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/20191211113851.24241-4-valentin.schneider@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ kernel/sched/cpufreq_schedutil.c |  2 +-
+ kernel/sched/sched.h             |  9 +++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1f34fa9..26c59bc 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3711,6 +3711,20 @@ static inline unsigned long task_util_est(struct task_struct *p)
- 	return max(task_util(p), _task_util_est(p));
- }
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 9b8916f..7fbaee2 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -238,7 +238,7 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+ 	 */
+ 	util = util_cfs + cpu_util_rt(rq);
+ 	if (type == FREQUENCY_UTIL)
+-		util = uclamp_util_with(rq, util, p);
++		util = uclamp_rq_util_with(rq, util, p);
  
-+#ifdef CONFIG_UCLAMP_TASK
-+static inline unsigned long uclamp_task_util(struct task_struct *p)
-+{
-+	return clamp(task_util_est(p),
-+		     uclamp_eff_value(p, UCLAMP_MIN),
-+		     uclamp_eff_value(p, UCLAMP_MAX));
-+}
-+#else
-+static inline unsigned long uclamp_task_util(struct task_struct *p)
-+{
-+	return task_util_est(p);
-+}
-+#endif
-+
- static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
- 				    struct task_struct *p)
+ 	dl_util = cpu_util_dl(rq);
+ 
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b478474..1a88dc8 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2303,8 +2303,8 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
+ unsigned long uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
+ 
+ static __always_inline
+-unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
+-			       struct task_struct *p)
++unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
++				  struct task_struct *p)
  {
-@@ -3822,7 +3836,7 @@ done:
- 
- static inline int task_fits_capacity(struct task_struct *p, long capacity)
- {
--	return fits_capacity(task_util_est(p), capacity);
-+	return fits_capacity(uclamp_task_util(p), capacity);
+ 	unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
+ 	unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
+@@ -2325,8 +2325,9 @@ unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
+ 	return clamp(util, min_util, max_util);
  }
- 
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+ #else /* CONFIG_UCLAMP_TASK */
+-static inline unsigned long uclamp_util_with(struct rq *rq, unsigned long util,
+-					     struct task_struct *p)
++static inline
++unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
++				  struct task_struct *p)
+ {
+ 	return util;
+ }
