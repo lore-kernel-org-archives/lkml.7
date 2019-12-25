@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854DFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197FCC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F2B20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1466206D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 00:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577232571;
-	bh=rIVB20PJkY3bX46FQMn4q4NR4z30KvUdhzRCjTpYv0Y=;
+	s=default; t=1577232577;
+	bh=P4ygJ6cYHrjkofrx8i8bAa8LIXdzs3ANh94tcRhXwBw=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=rFC4LLXdFYxyeti3C/CTb9blEiD6scDBqPzTJERCSLP0iTC6kkMdWmtlTlZ3/fbCU
-	 Wtv/4RSc57BxG7FJjlPrMrVLXeIb65wAIVfnXd1M69JXxKW4e03UXVH/Bnf/nn7I6q
-	 J6S6JiWa+fBEfsDa+BVXgEb06dcyTscnUO6TxOFE=
+	b=wFNtKwLPhltZnEdO4CB/3+E4xqznsEmH1i8rX0wUkI2Y59lDE8hPpBrV0gt+Y6/ML
+	 ZYdCMzy5USSMUWR3eQ7gX+aNRCubZYXSag0o4a70+RNETfQz2/xoZmpI5EBNnmTSKA
+	 VljdYmE5jS5k8cmYeDvKdP/OWe9xr2aSfPhALFEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLYAJa (ORCPT
+        id S1727166AbfLYAJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 19:09:30 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33774 "EHLO
+        Tue, 24 Dec 2019 19:09:35 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33776 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLYAJ0 (ORCPT
+        with ESMTP id S1727033AbfLYAJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Dec 2019 19:09:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=XHO12lr1qLB4FKdbh6ys7+jy8rW61hg1/mw41eet/vI=; b=Mtpl63TU2Fv6
-        qcc+jUPgG3t3sObYqw3qJntc+jQ4uZINU2M1k868I2OCc5Pud3blFUcYCeHQIkBzsOsgptBIZ54Cj
-        ZWXWfzCq8Qz+RUCkV5eUOepHvLvxwtoNAl0nxJRNCa3qrtS83ZQXcggQNxHstk4cbci6icVmJdT6e
-        x6aVo=;
+        List-Archive; bh=qYw0hFHqV+Vl3T2a5+H9tmgzv/YFIJ5rUZWsEqa4kjM=; b=jFYpm02i2bxr
+        freAE6sTbc05Z+WQUBYgfOFTPI3ixkGTDCeURqCaPV4N2fjsNO9Vk41GD5IhAsrQcDMa2Y96w1Md5
+        YXJ4ISLhy4GMELV6vHTe7c4U8QN9zxTSCoQsFikwQY5MlG1BaxRxtEj5PpQaw4M2otXs++AYbdVVX
+        ofAro=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1ijuEp-0007N2-Fd; Wed, 25 Dec 2019 00:09:19 +0000
+        id 1ijuEp-0007N3-K2; Wed, 25 Dec 2019 00:09:19 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 00AA5D01963; Wed, 25 Dec 2019 00:09:18 +0000 (GMT)
+        id 19413D01A1C; Wed, 25 Dec 2019 00:09:19 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
@@ -53,11 +53,11 @@ Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
         linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Subject: Applied "spi: uniphier: Change argument of irq functions to private structure" to the spi tree
-In-Reply-To: <1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com>
-Message-Id: <applied-1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Applied "spi: uniphier: Fix FIFO threshold" to the spi tree
+In-Reply-To: <1577149107-30670-2-git-send-email-hayashi.kunihiko@socionext.com>
+Message-Id: <applied-1577149107-30670-2-git-send-email-hayashi.kunihiko@socionext.com>
 X-Patchwork-Hint: ignore
-Date:   Wed, 25 Dec 2019 00:09:18 +0000 (GMT)
+Date:   Wed, 25 Dec 2019 00:09:19 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: uniphier: Change argument of irq functions to private structure
+   spi: uniphier: Fix FIFO threshold
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,66 +90,98 @@ to this mail.
 Thanks,
 Mark
 
-From 9859db51387df8a7e8564a211158ff8bf263b0a8 Mon Sep 17 00:00:00 2001
+From 9cd34efbd3012171c102910ce17ee632a3cccb44 Mon Sep 17 00:00:00 2001
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Date: Tue, 24 Dec 2019 09:58:24 +0900
-Subject: [PATCH] spi: uniphier: Change argument of irq functions to private
- structure
+Date: Tue, 24 Dec 2019 09:58:23 +0900
+Subject: [PATCH] spi: uniphier: Fix FIFO threshold
 
-This changes each argument of functions uniphier_irq_{enable,disable}()
-to uniphier_spi_priv because these functions are used not only for
-spi_device but also for the entire controller.
+Rx threshold means the value to inform the receiver when the number of words
+in Rx FIFO is equal to or more than the value. Similarly, Tx threshold means
+the value to inform the sender when the number of words in Tx FIFO is equal
+to or less than the value. The controller triggers the driver to start
+the transfer.
 
+In case of Rx, the driver wants to detect that the specified number of words
+N are in Rx FIFO, so the value of Rx threshold should be N. In case of Tx,
+the driver wants to detect that the same number of spaces as Rx are in
+Tx FIFO, so the value of Tx threshold should be (FIFO size - N).
+
+For example, in order for the driver to receive at least 3 words from
+Rx FIFO, set 3 to Rx threshold.
+   +-+-+-+-+-+-+-+-+
+   | | | | | |*|*|*|
+   +-+-+-+-+-+-+-+-+
+
+In order for the driver to send at least 3 words to Tx FIFO, because
+it needs at least 3 spaces, set 8(FIFO size) - 3 = 5 to Tx threshold.
+   +-+-+-+-+-+-+-+-+
+   |*|*|*|*|*| | | |
+   +-+-+-+-+-+-+-+-+
+
+This adds new function uniphier_spi_set_fifo_threshold() to set
+threshold value to the register.
+
+And more, FIFO counts by 'words', so this renames 'fill_bytes' with
+'fill_words', and fixes the calculation using bytes_per_words.
+
+Fixes: 37ffab817098 ("spi: uniphier: introduce polling mode")
+Cc: Keiji Hayashibara <hayashibara.keiji@socionext.com>
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Link: https://lore.kernel.org/r/1577149107-30670-3-git-send-email-hayashi.kunihiko@socionext.com
+Link: https://lore.kernel.org/r/1577149107-30670-2-git-send-email-hayashi.kunihiko@socionext.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-uniphier.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/spi/spi-uniphier.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
-index 47cde1864630..a44a1a5fb7b0 100644
+index 47cde1864630..ce9b30112e26 100644
 --- a/drivers/spi/spi-uniphier.c
 +++ b/drivers/spi/spi-uniphier.c
-@@ -93,9 +93,9 @@ static inline unsigned int bytes_per_word(unsigned int bits)
- 	return bits <= 8 ? 1 : (bits <= 16 ? 2 : 4);
+@@ -290,25 +290,32 @@ static void uniphier_spi_recv(struct uniphier_spi_priv *priv)
+ 	}
  }
  
--static inline void uniphier_spi_irq_enable(struct spi_device *spi, u32 mask)
-+static inline void uniphier_spi_irq_enable(struct uniphier_spi_priv *priv,
-+					   u32 mask)
+-static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
++static void uniphier_spi_set_fifo_threshold(struct uniphier_spi_priv *priv,
++					    unsigned int threshold)
  {
--	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+-	unsigned int fifo_threshold, fill_bytes;
  	u32 val;
  
- 	val = readl(priv->base + SSI_IE);
-@@ -103,9 +103,9 @@ static inline void uniphier_spi_irq_enable(struct spi_device *spi, u32 mask)
- 	writel(val, priv->base + SSI_IE);
+-	fifo_threshold = DIV_ROUND_UP(priv->rx_bytes,
+-				bytes_per_word(priv->bits_per_word));
+-	fifo_threshold = min(fifo_threshold, SSI_FIFO_DEPTH);
+-
+-	fill_bytes = fifo_threshold - (priv->rx_bytes - priv->tx_bytes);
+-
+-	/* set fifo threshold */
+ 	val = readl(priv->base + SSI_FC);
+ 	val &= ~(SSI_FC_TXFTH_MASK | SSI_FC_RXFTH_MASK);
+-	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, fifo_threshold);
+-	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, fifo_threshold);
++	val |= FIELD_PREP(SSI_FC_TXFTH_MASK, SSI_FIFO_DEPTH - threshold);
++	val |= FIELD_PREP(SSI_FC_RXFTH_MASK, threshold);
+ 	writel(val, priv->base + SSI_FC);
++}
++
++static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
++{
++	unsigned int fifo_threshold, fill_words;
++	unsigned int bpw = bytes_per_word(priv->bits_per_word);
++
++	fifo_threshold = DIV_ROUND_UP(priv->rx_bytes, bpw);
++	fifo_threshold = min(fifo_threshold, SSI_FIFO_DEPTH);
++
++	uniphier_spi_set_fifo_threshold(priv, fifo_threshold);
++
++	fill_words = fifo_threshold -
++		DIV_ROUND_UP(priv->rx_bytes - priv->tx_bytes, bpw);
+ 
+-	while (fill_bytes--)
++	while (fill_words--)
+ 		uniphier_spi_send(priv);
  }
  
--static inline void uniphier_spi_irq_disable(struct spi_device *spi, u32 mask)
-+static inline void uniphier_spi_irq_disable(struct uniphier_spi_priv *priv,
-+					    u32 mask)
- {
--	struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
- 	u32 val;
- 
- 	val = readl(priv->base + SSI_IE);
-@@ -339,12 +339,12 @@ static int uniphier_spi_transfer_one_irq(struct spi_master *master,
- 
- 	uniphier_spi_fill_tx_fifo(priv);
- 
--	uniphier_spi_irq_enable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
-+	uniphier_spi_irq_enable(priv, SSI_IE_RCIE | SSI_IE_RORIE);
- 
- 	time_left = wait_for_completion_timeout(&priv->xfer_done,
- 					msecs_to_jiffies(SSI_TIMEOUT_MS));
- 
--	uniphier_spi_irq_disable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
-+	uniphier_spi_irq_disable(priv, SSI_IE_RCIE | SSI_IE_RORIE);
- 
- 	if (!time_left) {
- 		dev_err(dev, "transfer timeout.\n");
 -- 
 2.20.1
 
