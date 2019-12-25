@@ -2,174 +2,110 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759A0C2D0D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F58C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FD0206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577239501;
-	bh=BuguSI11fNOvxai3NtGegiK14Ns5/ESx5Q8SFpaFMqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aKka1srjhOana6h9l3wzE2sUQwlpNRwuKbEEtFjR8y6g1yM2J8GMg0ECBCISqFJxv
-	 0DewV3B46xsQ5gCIdGTdpWbuzrbClGKnLh3M2MPKmUXT3mmiYwJYHLRCs4eSpNDUS6
-	 P0/IsbYcD0K1aZAMp60blAJpTlqRQ/Vg8ksThGoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 710742063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 02:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfLYCE7 (ORCPT
+        id S1726702AbfLYCFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Dec 2019 21:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbfLYCE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Dec 2019 21:04:59 -0500
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490AB207FF
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 02:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577239498;
-        bh=BuguSI11fNOvxai3NtGegiK14Ns5/ESx5Q8SFpaFMqw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CLO7ywUTzsyegrBMJ3q6ULQ/6a4ZW6wck5hw5XQVIQBxbSA2Ra1bPOSJJYkv9zvHM
-         kszxBq73vBkmd0F8QK2zaereijEVhgQRzj/pSGWc/6CSDdj2kNaJLFEoRctc1jEGRQ
-         U4FK8Ar9hZMIPmxZZ6N/Prh5jR8jaMHjoVGVJAmQ=
-Received: by mail-wm1-f47.google.com with SMTP id a5so3478593wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 18:04:58 -0800 (PST)
-X-Gm-Message-State: APjAAAVQbvDSi9beEMmSw6+j4YA2RrUXGT3POvthp70T44PjM9NGTuZC
-        N0c4sKnKpsTaMejGkcrQctstvQUMy2ESAZg5xzGN6w==
-X-Google-Smtp-Source: APXvYqzyLAMdv/OPYL6BGanONxXB+KbVeLYDEBOfDn6wfw3gr+hZTJlIwv7oquVinsKjN6rXCYtfiKm3rktaDqONx84=
-X-Received: by 2002:a1c:20d6:: with SMTP id g205mr6696557wmg.38.1577239496558;
- Tue, 24 Dec 2019 18:04:56 -0800 (PST)
+        Tue, 24 Dec 2019 21:05:50 -0500
+Received: from mx22.baidu.com ([220.181.50.185]:58410 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726284AbfLYCFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Dec 2019 21:05:50 -0500
+Received: from BC-Mail-EX08.internal.baidu.com (unknown [172.31.51.48])
+        by Forcepoint Email with ESMTPS id 18716B98A2156D52D209;
+        Wed, 25 Dec 2019 10:05:46 +0800 (CST)
+Received: from BJHW-Mail-Ex02.internal.baidu.com (10.127.64.12) by
+ BC-Mail-EX08.internal.baidu.com (172.31.51.48) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1531.3; Wed, 25 Dec 2019 10:05:45 +0800
+Received: from BC-Mail-Ex03.internal.baidu.com (172.31.51.43) by
+ BJHW-Mail-Ex02.internal.baidu.com (10.127.64.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 25 Dec 2019 10:05:45 +0800
+Received: from BC-Mail-Ex03.internal.baidu.com ([100.100.100.102]) by
+ BC-Mail-Ex03.internal.baidu.com ([100.100.100.102]) with mapi id
+ 15.01.1531.010; Wed, 25 Dec 2019 10:05:45 +0800
+From:   "Jim,Yan" <jimyan@baidu.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiDnrZTlpI06IFtQQVRD?=
+ =?utf-8?B?SF0gaW9tbXUvdnQtZDogRG9uJ3QgcmVqZWN0IG52bWUgaG9zdCBkdWUgdG8g?=
+ =?utf-8?Q?scope_mismatch?=
+Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0hdIGlvbW11?=
+ =?utf-8?B?L3Z0LWQ6IERvbid0IHJlamVjdCBudm1lIGhvc3QgZHVlIHRvIHNjb3BlIG1p?=
+ =?utf-8?Q?smatch?=
+Thread-Index: AdW6BKk3WRIzqftPRCuhhluvn9v6Mv//tuqA//9dBfCAAPa3gP//eOkwgAF7SQD//3mpQA==
+Date:   Wed, 25 Dec 2019 02:05:45 +0000
+Message-ID: <eccacec618c04a58be66809a541a95bf@baidu.com>
+References: <4b77511069cb4fbc982eebaad941cd23@baidu.com>
+ <149a454d-96ea-1e25-74d1-04a08f8b261e@linux.intel.com>
+ <8fbd6988b0a94c5e9e4b23eed59114dc@baidu.com>
+ <273a4cc4-f17b-63a6-177d-9830e683bf52@linux.intel.com>
+ <062f5fd1611940b083ec34603eca94e1@baidu.com>
+ <46d15bd6-4b50-d0cb-e0b8-763a808c4de8@linux.intel.com>
+In-Reply-To: <46d15bd6-4b50-d0cb-e0b8-763a808c4de8@linux.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.200.92]
+x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex02_2019-12-25 10:05:45:837
+x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex02_GRAY_Inside_WithoutAtta_2019-12-25
+ 10:05:45:822
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191220192701.23415-1-john.s.andersen@intel.com> <F82D153A-F083-432B-864C-1CF6A02C19DD@oracle.com>
-In-Reply-To: <F82D153A-F083-432B-864C-1CF6A02C19DD@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 24 Dec 2019 18:04:41 -0800
-X-Gmail-Original-Message-ID: <CALCETrXpLxdnzQjjJcaEi6B8NwLR7uv2REwcdM5ZXFUQsXgM6Q@mail.gmail.com>
-Message-ID: <CALCETrXpLxdnzQjjJcaEi6B8NwLR7uv2REwcdM5ZXFUQsXgM6Q@mail.gmail.com>
-Subject: Re: [RESEND RFC 0/2] Paravirtualized Control Register pinning
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     John Andersen <john.s.andersen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Baidu-BdMsfe-DateCheck: 1_BC-Mail-EX08_2019-12-25 10:05:45:930
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 6:31 AM Liran Alon <liran.alon@oracle.com> wrote:
->
->
->
-> > On 20 Dec 2019, at 21:26, John Andersen <john.s.andersen@intel.com> wro=
-te:
-> >
-> > Paravirtualized Control Register pinning is a strengthened version of
-> > existing protections on the Write Protect, Supervisor Mode Execution /
-> > Access Protection, and User-Mode Instruction Prevention bits. The
-> > existing protections prevent native_write_cr*() functions from writing
-> > values which disable those bits. This patchset prevents any guest
-> > writes to control registers from disabling pinned bits, not just writes
-> > from native_write_cr*(). This stops attackers within the guest from
-> > using ROP to disable protection bits.
-> >
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__web.archive.org_=
-web_20171029060939_http-3A__www.blackbunny.io_linux-2Dkernel-2Dx86-2D64-2Db=
-ypass-2Dsmep-2Dkaslr-2Dkptr-5Frestric_&d=3DDwIDAg&c=3DRoP1YumCXCgaWHvlZYR8P=
-Zh8Bv7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D=
--H3SsRpu0sEBqqn9-OOVimBDXk6TimcJerlu4-ko5Io&s=3DTrjU4_UEZIoYjxtoXcjsA8Riu0Q=
-Z8eI7a4fH96hSBQc&e=3D
-> >
-> > The protection is implemented by adding MSRs to KVM which contain the
-> > bits that are allowed to be pinned, and the bits which are pinned. The
-> > guest or userspace can enable bit pinning by reading MSRs to check
-> > which bits are allowed to be pinned, and then writing MSRs to set which
-> > bits they want pinned.
-> >
-> > Other hypervisors such as HyperV have implemented similar protections
-> > for Control Registers and MSRs; which security researchers have found
-> > effective.
-> >
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__www.abatchy.com_=
-2018_01_kernel-2Dexploitation-2D4&d=3DDwIDAg&c=3DRoP1YumCXCgaWHvlZYR8PZh8Bv=
-7qIrMUB65eapI_JnE&r=3DJk6Q8nNzkQ6LJ6g42qARkg6ryIDGQr-yKXPNGZbpTx0&m=3D-H3Ss=
-Rpu0sEBqqn9-OOVimBDXk6TimcJerlu4-ko5Io&s=3DFg3e-BSUebNg44Ocp_y19xIoK0HJEHPW=
-2AgM958F3Uc&e=3D
-> >
->
-> I think it=E2=80=99s important to mention how Hyper-V implements this pro=
-tection as it is done in a very different architecture.
->
-> Hyper-V implements a set of PV APIs named VSM (Virtual Secure Mode) aimed=
- to allow a guest (partition) to separate itself to multiple security domai=
-ns called VTLs (Virtual Trust Level).
-> The VSM API expose an interface to higher VTLs to control the execution o=
-f lower VTLs. In theory, VSM supports up to 16 VTLs, but Windows VBS (Virtu=
-alization Based Security) that is
-> the only current technology which utilise VSM, use only 2 VTLs. VTL0 for =
-most of OS execution (Normal-Mode) and VTL1 for a secure OS execution (Secu=
-re-Mode).
->
-> Higher VTL controls execution of lower VTL by the following VSM mechanism=
-s:
-> 1) Memory Access Protections: Allows higher VTL to restrict memory access=
- to physical pages. Either making them inaccessible or limited to certain p=
-ermissions.
-> 2) Secure Intercepts: Allows a higher VTL to request hypervisor to interc=
-ept certain events in lower VTLs for handling by higher VTL. This includes =
-access to system registers (e.g. CRs & MSRs).
->
-> VBS use above mentioned mechanisms as follows:
-> a) Credentials Guard: Prevents pass-the-hash attacks. Done by encrypting =
-credentials using a VTL1 trustlet to encrypt them by an encryption-key stor=
-ed in VTL1-only accessible memory.
-> b) HVCI (Hypervisor-based Code-Integrity): Prevents execution of unsigned=
- code. Done by marking all EPT entries with NX until signature verified by =
-VTL1 service. Once verified, mark EPT entries as RO+X.
-> (HVCI also supports enforcing code-signing only on Ring0 code efficiently=
- by utilising Intel MBEC or AMD GMET CPU features. Which allows setting NX-=
-bit on EPT entries based on guest CPL).
-> c) KDP (Kernel Data Protection): Marks certain pages after initialisation=
- as read-only on VTL0 EPT.
-> d) kCFG (Kernel Control-Flow Guard): VTL1 protects bitmap,specifying vali=
-d indirect branch targets, by protecting it with read-only on VTL0 EPT.
-> e) HyperGuard: VTL1 use =E2=80=9CSecure Intercepts=E2=80=9D mechanism to =
-prevent VTL0 from modifying important system registers. Including CR0 & CR4=
- as done by this patch.
->     HyperGuard also implements a mechanism named NPIEP (Non-Privileged In=
-struction Execution Prevention) that prevents VTL0 Ring3 executing SIDT/SGD=
-T/SLDT/STR to leak Ring0 addresses.
->
-> To sum-up, In Hyper-V, the hypervisor expose a relatively thin API to all=
-ow guest to partition itself to multiple security domains (enforced by virt=
-ualization).
-> Using this framework, it=E2=80=99s possible to implement multiple OS-leve=
-l protection mechanisms. Only one of them are pinning certain registers to =
-specific values as done by this patch.
->
-> Therefore, as I also tried to say in recent KVM Forum, I think KVM should=
- consider exposing a VSM-like API to guest to allow various guest OS,
-> Including Linux, to implement VBS-like features. To decide on how this AP=
-I should look like, we need to have a more broad discussion with Linux
-> Security maintainers and KVM maintainers on which security features we wo=
-uld like to implement using such API and what should be their architecture.
-> Then, we can implement this API in KVM and start to gradually introduce m=
-ore security features in Linux which utilise this API.
-
-How about having KVM implement the VSM API directly?
+SGksDQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IEx1IEJhb2x1IFtt
+YWlsdG86YmFvbHUubHVAbGludXguaW50ZWwuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMTnlubQx
+MuaciDI15pelIDEwOjAxDQo+IOaUtuS7tuS6ujogSmltLFlhbiA8amlteWFuQGJhaWR1LmNvbT47
+IEplcnJ5IFNuaXRzZWxhYXIgPGpzbml0c2VsQHJlZGhhdC5jb20+DQo+IOaKhOmAgTogaW9tbXVA
+bGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcN
+Cj4g5Li76aKYOiBSZTog562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0hdIGlv
+bW11L3Z0LWQ6IERvbid0IHJlamVjdCBudm1lDQo+IGhvc3QgZHVlIHRvIHNjb3BlIG1pc21hdGNo
+DQo+IA0KPiBIaSwNCj4gDQo+IE9uIDIwMTkvMTIvMjUgOTo1MiwgSmltLFlhbiB3cm90ZToNCj4g
+PiBIaSwNCj4gPg0KPiA+PiAtLS0tLemCruS7tuWOn+S7ti0tLS0tDQo+ID4+IOWPkeS7tuS6ujog
+THUgQmFvbHUgW21haWx0bzpiYW9sdS5sdUBsaW51eC5pbnRlbC5jb21dDQo+ID4+IOWPkemAgeaX
+tumXtDogMjAxOeW5tDEy5pyIMjTml6UgMTk6MjcNCj4gPj4g5pS25Lu25Lq6OiBKaW0sWWFuIDxq
+aW15YW5AYmFpZHUuY29tPjsgSmVycnkgU25pdHNlbGFhcg0KPiA+PiA8anNuaXRzZWxAcmVkaGF0
+LmNvbT4NCj4gPj4g5oqE6YCBOiBpb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+PiDkuLvpopg6IFJlOiDnrZTlpI06IOetlOWk
+jTog562U5aSNOiBbUEFUQ0hdIGlvbW11L3Z0LWQ6IERvbid0IHJlamVjdCBudm1lIGhvc3QNCj4g
+ZHVlIHRvDQo+ID4+IHNjb3BlIG1pc21hdGNoDQo+ID4+DQo+ID4+IEhpLA0KPiA+Pg0KPiA+PiBP
+biAyMDE5LzEyLzI0IDE2OjE4LCBKaW0sWWFuIHdyb3RlOg0KPiA+Pj4+Pj4gRm9yIGJvdGggY2Fz
+ZXMsIGEgcXVpcmsgZmxhZyBzZWVtcyB0byBiZSBtb3JlIHJlYXNvbmFibGUsIHNvIHRoYXQNCj4g
+Pj4+Pj4+IHVucmVsYXRlZCBkZXZpY2VzIHdpbGwgbm90IGJlIGltcGFjdGVkLg0KPiA+Pj4+Pj4N
+Cj4gPj4+Pj4+IEJlc3QgcmVnYXJkcywNCj4gPj4+Pj4+IGJhb2x1DQo+ID4+Pj4+IEhpIEJhb2x1
+LA0KPiA+Pj4+PiAJVGhhbmtzIGZvciB5b3VyIGFkdmljZS4gQW5kIEkgbW9kaWZ5IHRoZSBwYXRj
+aCBhcyBmb2xsb3cuDQo+ID4+Pj4gSSBqdXN0IHBvc3RlZCBhIHBhdGNoIGZvciBib3RoIE5URyBh
+bmQgTlZNRSBjYXNlcy4gQ2FuIHlvdSBwbGVhc2UNCj4gPj4+PiB0YWtlIGENCj4gPj4gbG9vaz8N
+Cj4gPj4+PiBEb2VzIGl0IHdvcmsgZm9yIHlvdT8NCj4gPj4+Pg0KPiA+Pj4+IEJlc3QgcmVnYXJk
+cywNCj4gPj4+PiBiYW9sdQ0KPiA+Pj4+DQo+ID4+PiBJIGhhdmUgdGVzdGVkIHlvdXIgcGF0Y2gu
+IEl0IGRvZXMgd29yayBmb3IgbWUuIEJ1dCBJIHByZWZlciBteQ0KPiA+Pj4gc2Vjb25kIHZlcnNp
+b24sDQo+ID4+IGl0IGlzIG1vcmUgZmxleGlibGUsIGFuZCBtYXkgdXNlIGZvciBzaW1pbGFyIHVu
+a25vd24gZGV2aWNlcy4NCj4gPj4+DQo+ID4+DQo+ID4+IEkgZGlkbid0IGdldCB5b3VyIHBvaW50
+LiBEbyB5b3UgbWluZCBleHBsYWluaW5nIHdoeSBpdCdzIG1vcmUgZmxleGlibGU/DQo+ID4+DQo+
+ID4+IEJlc3QgcmVnYXJkcywNCj4gPj4gQmFvbHUNCj4gPiBGb3IgZXhhbXBsZSwgYW4gdW5rbm93
+biBkZXZpY2UgaGFzIGEgbm9ybWFsIFBDSSBoZWFkZXIgYW5kIGJyaWRnZSBzY29wZQ0KPiBhbmQg
+YSBjbGFzcyBvZiBQQ0lfQ0xBU1NfQlJJREdFX1BDSS4NCj4gPiBUaGVzZSBkZXZpY2VzIGRvIGhh
+dmUgYSBjbGFzcyBvZiBQQ0lfQkFTRV9DTEFTU19CUklER0UgaW4gY29tbW9uLg0KPiANCj4gVGhp
+cyBpcyBub3QgYSBjb21tb24gY2FzZS4gSXQncyBvbmx5IGZvciBkZXZpY2VzIG9uIHRoZSBtYXJr
+ZXRpbmcgYW5kIGhhcmQgZm9yDQo+IHRoZSBWVC1kIHVzZXJzIHRvIGdldCBpdCBmaXhlZCBpbiB0
+aGUgT0VNIGZpcm13YXJlLg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBCYW9sdQ0KDQpHb3QgaXQu
+IFRoZW4gSSBhbSBPSyB3aXRoIHRoaXMgcGF0Y2guIEkgaGF2ZSB0ZXN0ZWQgaXQgeWVzdGVyZGF5
+LiBJdCBkb2VzIHdvcmsgZm9yIG1lLiANClRoYW5rcy4NCg0KSmltDQo=
