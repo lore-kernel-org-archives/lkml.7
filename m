@@ -2,102 +2,98 @@ Return-Path: <SRS0=xpJL=2P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB00C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43EC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC6DF20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB8A2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Dec 2019 07:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Dahpx+iX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtmFxivQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfLYHeq (ORCPT
+        id S1726403AbfLYHoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 02:34:46 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:39790 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725992AbfLYHeq (ORCPT
+        Wed, 25 Dec 2019 02:44:13 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38156 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfLYHoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 02:34:46 -0500
-X-UUID: 8d3877e443564ef2ae5e9b89816a4440-20191225
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3JsaGytja2s0ajkjRHpfBvJl0ga0ZN42HUPzYb0ma90=;
-        b=Dahpx+iXR6uSnpu2HYXj97DWwwx9v7/79Ffy3GIyu6+DU1CjnOgFdFTekvJ91oKSel3E1Dsw8/L9OOP/4A9FbRXeNa4sWeAYtED7hOnNsOat2G05IbtFyR+aJwrRczG6V549PSS3CGjS4OBGD7tSlglUSyTh+3Jc0d+9NVVP0o4=;
-X-UUID: 8d3877e443564ef2ae5e9b89816a4440-20191225
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1769822510; Wed, 25 Dec 2019 15:34:38 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 25 Dec 2019 15:33:58 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 25 Dec 2019 15:34:13 +0800
-Message-ID: <1577259276.13056.54.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/2 RESEND] soc: mediatek: add header for SiP service
- interface
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Alim Akhtar <alim.akhtar@gmail.com>
-CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Leon Chen =?UTF-8?Q?=28=E9=99=B3=E6=96=87=E9=8F=98=29?= 
-        <Leon.Chen@mediatek.com>,
-        "Andy Teng ( =?ISO-8859-1?Q?=1B$B{}G!9(=1B(B?=)" 
-        <Andy.Teng@mediatek.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Chun-Hung Wu =?UTF-8?Q?=28=E5=B7=AB=E9=A7=BF=E5=AE=8F=29?= 
-        <Chun-hung.Wu@mediatek.com>,
-        Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?= 
-        <kuohong.wang@mediatek.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Avri Altman" <avri.altman@wdc.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Peter Wang =?UTF-8?Q?=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29?= 
-        <peter.wang@mediatek.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Date:   Wed, 25 Dec 2019 15:34:36 +0800
-In-Reply-To: <1576804540.13056.22.camel@mtkswgap22>
-References: <1576468137-17220-1-git-send-email-stanley.chu@mediatek.com>
-         <1576468137-17220-2-git-send-email-stanley.chu@mediatek.com>
-         <CAGOxZ50RKYAEw=HwYMH=Jm7cagUV12C-fwhauJhJqx6HscAmFA@mail.gmail.com>
-         <1576804540.13056.22.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 2EF099EE7E0791DEE4F5F3D3D0CACF2D26DB662205C351BEF72A3A062DA5475D2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 25 Dec 2019 02:44:12 -0500
+Received: by mail-pl1-f193.google.com with SMTP id f20so9260027plj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Dec 2019 23:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VnWaByxSuThcNDr6RgDflaqiHFBl/kk6IlTVbqeabtI=;
+        b=XtmFxivQ5byk+uSMLnq81rtYd5OwtBVQ4SbKkYp9OAqlPmUxJ/bnEGGUQhteEOEmpC
+         ZeiQ8U1v9YKNnyLtKMtu5xTqN7NKHAm4IC8cRWX4QptXgHrSZwUAkZV4q0Z2vmopJVTr
+         R9KlkF7KgvENLSrzLWzEeSmykSTiI36SdYhncHZSro5g44ePQhEMAusaMQPYQIQlgTkb
+         FEYeA+ejuKsnolNZ9v9KzUVvHN87Sr837nIvnP8cSX7UT0w0N/4RiKxjBtKmd0cI6rq/
+         yQqH+BNU39y95sujdWZwLCUJUx6yeC25j2o/fhsiIhk+7UpG6GNKuL8cjFgwh80UCKRx
+         roHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VnWaByxSuThcNDr6RgDflaqiHFBl/kk6IlTVbqeabtI=;
+        b=hFVQGq0Y19ulmyX9wzAHWVwsmqRcWVZucdAF5+/kFZ/4kbItn5bwl9NjWMiP5etXEr
+         YuhEQFkFs36D8QQ//rOw83keTvauup0iNTu3Qg5e/BwvkdDtfs3bnaeyMbxF/6yCOAqR
+         8jEhPMa0QXYjhj2T2/mKeUdbUsWev7ANAhwdhohTs2nrIhbTUoRsQYxNQkrSKy9Ks6/m
+         Raj3U1PBPsnf8kB+D1ZzFZiqpfAQeo/eXhkA11aqTPX6ir67TtDB0KBtEcR8s9aOy0On
+         xw7psNKnyK2nZTRcuD6s7JG2ZWjxuFkCKtLEkQSW67qXKZ/l/enSfLFO/1vDZlS6qSl+
+         FzWw==
+X-Gm-Message-State: APjAAAXvdAEK62nlkT98DgQvjbsZXLJOtSqjZ1M/9s4EAwBDZ2szQ9Ip
+        u7CuPqXXXy5xM6XTlMt2QJg=
+X-Google-Smtp-Source: APXvYqxR26g/z0d6N7wcisWdVzeD7t/M8wlqKfT/xMoaNLfotZAzx2vfmfv3p84jd1kE+/8NdVY5yA==
+X-Received: by 2002:a17:90a:8008:: with SMTP id b8mr11513134pjn.37.1577259852082;
+        Tue, 24 Dec 2019 23:44:12 -0800 (PST)
+Received: from BJ08491PCU01.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c68sm32240806pfc.156.2019.12.24.23.44.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 24 Dec 2019 23:44:11 -0800 (PST)
+From:   Li Guanglei <guangleix.li@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        guangleix.li@gmail.com, guanglei.li@unisoc.com
+Subject: [PATCH v01] sched/core: uclamp: fix rq.uclamp memory size of initialization
+Date:   Wed, 25 Dec 2019 15:44:04 +0800
+Message-Id: <1577259844-12677-1-git-send-email-guangleix.li@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxpbSwNCg0KV291bGQgeW91IHRoaW5rIGJlbG93IGV4cGxhbmF0aW9uIGlzIE9LIHRvIHlv
-dT8NCg0KQlRXLCBGWUksIHRoaXMgc2VyaWVzIHdhcyBjb21iaW5lZCB0byB0aGUgbmV3IHNlcmll
-cyAic2NzaTogdWZzOiBhZGQNCk1lZGlhVGVrIHZlbmRvciBpbXBsZW1lbnRhdGlvbnMiIHdpdGgg
-dGhpcyBzYW1lIHBhdGNoIGluIGl0Lg0KDQpUaGFua3MsDQpTdGFubGV5DQoNCg0KT24gRnJpLCAy
-MDE5LTEyLTIwIGF0IDA5OjE1ICswODAwLCBTdGFubGV5IENodSB3cm90ZToNCj4gSGkgQWxpbSwN
-Cj4gDQo+IE9uIEZyaSwgMjAxOS0xMi0yMCBhdCAwMjowMCArMDgwMCwgQWxpbSBBa2h0YXIgd3Jv
-dGU6DQo+ID4gPiArLyogVUZTIHJlbGF0ZWQgU01DIGNhbGwgKi8NCj4gPiA+ICsjZGVmaW5lIE1U
-S19TSVBfVUZTX0NPTlRST0wgXA0KPiA+ID4gKyAgICAgICBNVEtfU0lQX1NNQ19DTUQoMHgyNzYp
-DQo+ID4gPiArDQo+ID4gSG93IGFib3V0IG1vdmluZyBVRlMgc3BlY2lmaWMgc3R1ZmYgdG8gTVRL
-IFVGUyBkcml2ZXIgYW5kIGluY2x1ZGUgdGhpcw0KPiA+IGhlYWRlciBpbiBkcml2ZXIgZmlsZT8N
-Cj4gPiBSZXN0IGxvb2tzIGZpbmUuDQo+IA0KPiBUaGFua3Mgc28gbXVjaCBmb3IgeW91ciByZXZp
-ZXcuDQo+IA0KPiBPdXIgaW50ZW50aW9uIGlzIHRvIGNvbGxlY3QgYWxsIFNNQyBjYWxsIGNvbW1h
-bmQgdHlwZXMgaW4gTWVkaWFUZWsNCj4gQ2hpcHNldHMgaGVyZSBmb3IgZWFzaWVyIG1hbmFnZW1l
-bnQuDQo+IA0KPiBUaGlzIGlzIHRoZSBmaXJzdCB0aW1lIHdlIHNob3cgdGhpcyBoZWFkZXIgdGh1
-cyBvbmx5IFVGUyByZWxhdGVkIHN0dWZmDQo+IGlzIHByZXNlbnQgaGVyZS4NCj4gDQo+ID4gPiAr
-I2VuZGlmDQo+ID4gPiAtLQ0KPiA+ID4gMi4xOC4wDQo+ID4gDQo+ID4gDQo+IA0KPiBUaGFua3Ms
-DQo+IFN0YW5sZXkNCj4gDQoNCg0K
+From: Li Guanglei <guanglei.li@unisoc.com>
+
+uclamp_rq for each clamp id(UCLAMP_CNT) should be initialized when call
+init_uclamp.
+
+Signed-off-by: Li Guanglei <guanglei.li@unisoc.com>
+---
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 44123b4..05f870b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1252,7 +1252,8 @@ static void __init init_uclamp(void)
+ 	mutex_init(&uclamp_mutex);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
++		memset(&cpu_rq(cpu)->uclamp, 0,
++				sizeof(struct uclamp_rq)*UCLAMP_CNT);
+ 		cpu_rq(cpu)->uclamp_flags = 0;
+ 	}
+ 
+-- 
+2.7.4
 
