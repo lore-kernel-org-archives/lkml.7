@@ -2,140 +2,147 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A0AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 00:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1F0C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 00:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4112B2072A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 00:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A966206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 00:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v55O8BmS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bCOd9wrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLZAG6 (ORCPT
+        id S1726960AbfLZAWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 19:06:58 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40711 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbfLZAG6 (ORCPT
+        Wed, 25 Dec 2019 19:22:45 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:56782 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfLZAWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 19:06:58 -0500
-Received: by mail-pj1-f65.google.com with SMTP id bg7so2746494pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 16:06:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/FW3kEACozvgKmBcos25096FNZIjXneZXPW4dOBNTlA=;
-        b=v55O8BmSyuzFp6/zBFvfeg0VpVxbp5G4NMcq2POWBozmlsHuhqf4y3rgbigV36tWX8
-         vGGHUQ/cGkmY0+9IqyI4wvLaYQh6GbD/aJRs7zwK+v2QUEJU3/QxtknbAp6IJ4EV6dXb
-         ukIjoA+vjPBOXWCByRhgAwl874IgNm81xAp3owhFxjUJRgVSp15lgZQf+2XRGS+1PLDy
-         U6g/5eCDwyJQwrq3VkvEecTJsscQLqwy3QdH9HKwg2JhUmBZtrMfwORbfQFLLsXxDVww
-         3qrK4/mFQ2YSXZ2jqhNTD6xiKGcZ5M9AYsIvlgUmPe4ch+o1D9bfENEBgorlgQ/5SHfW
-         0Khw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/FW3kEACozvgKmBcos25096FNZIjXneZXPW4dOBNTlA=;
-        b=CrVtLi91XjRzbp0eDeUeTADLyt9CwqvuCGZSpj7Sm8O9UXnQjfYbXzl51h0C7zxwX8
-         tgZm4brIh28mXwu8CPNH2ypiSxO0pkTbVo9ZcX1X5hVVlG4omahuhltEIvhS8dwAF9V1
-         a1VcPV9wzONN9dk2w2zEE1HTYdzZ8pxObw1vXnGwXBqg7uWWpixAUkgen4xkEP0FHzBv
-         JfzivcimI44jQyGmr/ljaYJ4438PkDWzUb6TDcR3PQ1i1Kq5mBBW8I06GVpfNesGKWm8
-         D8jBGJ0LEKbNoIIGcBfRjQ4A9YxiTcI04PJVNU0JjKlmcdp1qGW7UZ555C+OqtgkjTTK
-         C0WQ==
-X-Gm-Message-State: APjAAAW3U2Hl/IqZiNT5UDDard9OE7P2+86Q6ropv2iUYfErNg5C+tt1
-        hALnsn1Snsp278W9NR3V2UXhVA==
-X-Google-Smtp-Source: APXvYqxyQe1HAFi8il8420J73gIndj9ejF7wX+TAiHVKpl8Lc8Mt+tKxZuZj8X5sos+cNbKod7EHiw==
-X-Received: by 2002:a17:90a:21d1:: with SMTP id q75mr16630643pjc.0.1577318817475;
-        Wed, 25 Dec 2019 16:06:57 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id b17sm21678657pfb.146.2019.12.25.16.06.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Dec 2019 16:06:56 -0800 (PST)
-Subject: Re: [PATCH v2] libata: Fix retrieving of active qcs
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-References: <20191213080408.27032-1-s.hauer@pengutronix.de>
- <20191225181840.ooo6mw5rffghbmu2@pali>
- <ad600bac-fd26-2d6b-85e6-372c072be9f5@kernel.dk>
- <20191225183601.mh4doqri6teuf2am@pali>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aa5da0c8-a05d-a66f-a629-29cb77417c13@kernel.dk>
-Date:   Wed, 25 Dec 2019 17:06:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191225183601.mh4doqri6teuf2am@pali>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 25 Dec 2019 19:22:45 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBQ0El2c096450;
+        Thu, 26 Dec 2019 00:21:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=FidDFb56tOGvXdSrIBlld65Mx8wH8w5gd9U+5ufUXEs=;
+ b=bCOd9wrkNlLbvtJbWl81N4/26kvABHMljeGR6i6+ASZKfrjzx75+DfhkkCy7hEucYA9X
+ 80I+nu40C5gXCBfTk/12jzU24hxU5i4etkph1RPwY4Zga/QrhsfSZu+2/lP+lzVWoCnv
+ blKgnXBFY9X4kTAegWFTaPr6opmLcShBD/MNaxSNq0wpgbkiTg271D9OByPaIYL1TGSu
+ +T1mI4POxThNOrxhLYultZKyfcX1dHo28l2HFlI+gmrK6fFTzyQ4LRoahGPpYINhf46k
+ QcA6kOEMGqah8MJjnEoq/WkDylLk1hIvtxHwWcXtUt1LM1rHNYZA2jtcv2s9qN6iGqSz Gg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2x1bbq06eg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Dec 2019 00:21:12 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBQ0JwUC052358;
+        Thu, 26 Dec 2019 00:21:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2x3nn6vb7v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Dec 2019 00:21:11 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBQ0L4Tl013321;
+        Thu, 26 Dec 2019 00:21:04 GMT
+Received: from [192.168.14.112] (/79.180.210.71)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Dec 2019 16:21:04 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH] KVM: nvmx: retry writing guest memory after page fault
+ injected
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1577240501-763-1-git-send-email-linmiaohe@huawei.com>
+Date:   Thu, 26 Dec 2019 02:20:59 +0200
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CE1E9880-3812-473F-A38B-2FAC45A95839@oracle.com>
+References: <1577240501-763-1-git-send-email-linmiaohe@huawei.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9481 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912260001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9481 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912260001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/25/19 11:36 AM, Pali Rohár wrote:
-> On Wednesday 25 December 2019 11:26:47 Jens Axboe wrote:
->> On 12/25/19 11:18 AM, Pali Rohár wrote:
->>> Hello Sascha!
->>>
->>> On Friday 13 December 2019 09:04:08 Sascha Hauer wrote:
->>>> ata_qc_complete_multiple() is called with a mask of the still active
->>>> tags.
->>>>
->>>> mv_sata doesn't have this information directly and instead calculates
->>>> the still active tags from the started tags (ap->qc_active) and the
->>>> finished tags as (ap->qc_active ^ done_mask)
->>>>
->>>> Since 28361c40368 the hw_tag and tag are no longer the same and the
->>>> equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
->>>> initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
->>>> started and this will be in done_mask on completion. ap->qc_active ^
->>>> done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
->>>> the internal tag will never be reported as completed.
->>>>
->>>> This is fixed by introducing ata_qc_get_active() which returns the
->>>> active hardware tags and calling it where appropriate.
->>>>
->>>> This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
->>>> problem. There is another case in sata_nv that most likely needs fixing
->>>> as well, but this looks a little different, so I wasn't confident enough
->>>> to change that.
->>>
->>> I can confirm that sata_nv.ko does not work in 4.18 (and new) kernel
->>> version correctly. More details are in email:
->>>
->>> https://lore.kernel.org/linux-ide/20191225180824.bql2o5whougii4ch@pali/T/
->>>
->>> I tried this patch and it fixed above problems with sata_nv.ko. It just
->>> needs small modification (see below).
->>>
->>> So you can add my:
->>>
->>> Tested-by: Pali Rohár <pali.rohar@gmail.com>
->>>
->>> And I hope that patch would be backported to 4.18 and 4.19 stable
->>> branches soon as distributions kernels are broken for machines with
->>> these nvidia sata controllers.
->>>
->>> Anyway, what is that another case in sata_nv which needs to be fixed
->>> too?
->>
->> Thanks for testing, I've applied this for 5.5 and marked it for stable.
-> 
-> It is this one?
-> https://git.kernel.dk/cgit/linux-block/commit/?h=libata-5.5&id=d80f359d0ebddb3ab3e9cc3fe96f244827ae7b09
-> 
-> Because there is missing EXPORT_SYMBOL_GPL for ata_qc_get_active()
-> function as I wrote in previous email.
 
-I missed that, I'll add it. Thanks!
 
--- 
-Jens Axboe
+> On 25 Dec 2019, at 4:21, linmiaohe <linmiaohe@huawei.com> wrote:
+>=20
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>=20
+> We should retry writing guest memory when =
+kvm_write_guest_virt_system()
+> failed and page fault is injected in handle_vmread().
+>=20
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+
+Patch fix seems correct to me:
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
+However, I suggest to rephrase commit title & message as follows:
+
+"""
+KVM: nVMX: vmread should not set rflags to specify success in case of =
+#PF
+
+In case writing to vmread destination operand result in a #PF, vmread =
+should
+not call nested_vmx_succeed() to set rflags to specify success. Similar =
+to as
+done in for VMPTRST (See handle_vmptrst()).
+"""
+
+In addition, it will be appreciated if you would also submit =
+kvm-unit-test that verifies this condition.
+
+-Liran
+
+> ---
+> arch/x86/kvm/vmx/nested.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 8edefdc9c0cb..c1ec9f25a417 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -4799,8 +4799,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+> 					instr_info, true, len, &gva))
+> 			return 1;
+> 		/* _system ok, nested_vmx_check_permission has verified =
+cpl=3D0 */
+> -		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, =
+&e))
+> +		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, =
+&e)) {
+> 			kvm_inject_page_fault(vcpu, &e);
+> +			return 1;
+> +		}
+> 	}
+>=20
+> 	return nested_vmx_succeed(vcpu);
+> --=20
+> 2.19.1
+>=20
 
