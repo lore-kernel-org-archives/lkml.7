@@ -6,63 +6,76 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E0DC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD49C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DFB20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151812080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfLZG4E (ORCPT
+        id S1726479AbfLZG4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 01:56:04 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:59570 "EHLO inva020.nxp.com"
+        Thu, 26 Dec 2019 01:56:06 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:59632 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfLZG4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 01:56:03 -0500
+        id S1726236AbfLZG4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 01:56:05 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 05DF71A1763;
-        Thu, 26 Dec 2019 07:56:02 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 78D541A163E;
+        Thu, 26 Dec 2019 07:56:03 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1DACD1A087E;
-        Thu, 26 Dec 2019 07:55:57 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E5F71A0BFA;
+        Thu, 26 Dec 2019 07:55:58 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3DDF3402D8;
-        Thu, 26 Dec 2019 14:55:51 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48DE7402B3;
+        Thu, 26 Dec 2019 14:55:52 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
         linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/2] cpufreq: Use imx-cpufreq-dt for i.MX8MP's speed grading
-Date:   Thu, 26 Dec 2019 14:52:46 +0800
-Message-Id: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/2] cpufreq: imx-cpufreq-dt: Add i.MX8MP support
+Date:   Thu, 26 Dec 2019 14:52:47 +0800
+Message-Id: <1577343167-16376-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
+References: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX8MP to blacklist, so that imx-cpufreq-dt driver can handle
-speed grading bits just like other i.MX8M SoCs.
+Add i.MX8MP cpufreq DT support for speed grading and market
+segment check.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/imx-cpufreq-dt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index f1d170d..a2e5f3a 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -109,6 +109,7 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "fsl,imx8mq", },
- 	{ .compatible = "fsl,imx8mm", },
- 	{ .compatible = "fsl,imx8mn", },
-+	{ .compatible = "fsl,imx8mp", },
+diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
+index 85a6efd..912e93d 100644
+--- a/drivers/cpufreq/imx-cpufreq-dt.c
++++ b/drivers/cpufreq/imx-cpufreq-dt.c
+@@ -35,7 +35,7 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- 	{ .compatible = "marvell,armadaxp", },
+-	if (of_machine_is_compatible("fsl,imx8mn"))
++	if (of_machine_is_compatible("fsl,imx8mn") || of_machine_is_compatible("fsl,imx8mp"))
+ 		speed_grade = (cell_value & IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK)
+ 			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
+ 	else
+@@ -54,7 +54,8 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
+ 		if (of_machine_is_compatible("fsl,imx8mm") ||
+ 		    of_machine_is_compatible("fsl,imx8mq"))
+ 			speed_grade = 1;
+-		if (of_machine_is_compatible("fsl,imx8mn"))
++		if (of_machine_is_compatible("fsl,imx8mn") ||
++			of_machine_is_compatible("fsl,imx8mp"))
+ 			speed_grade = 0xb;
+ 	}
  
 -- 
 2.7.4
