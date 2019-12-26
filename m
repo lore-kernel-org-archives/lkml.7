@@ -2,130 +2,92 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E53FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D28E8206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YefnrY+E"
+	by mail.kernel.org (Postfix) with ESMTP id 6557120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfLZMsf (ORCPT
+        id S1726480AbfLZMxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:48:35 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35908 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfLZMsf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:48:35 -0500
-Received: by mail-io1-f67.google.com with SMTP id r13so13114328ioa.3;
-        Thu, 26 Dec 2019 04:48:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
-        b=YefnrY+EbXXFw6NCNms+uP2FauCYX8EKKW7IStqcgZ54KItrEGn/LydFpjMviil83f
-         IW1I3cuFJuujnMkaahO8vjHIvrmwA2q81wpVQCAVyvqSefBHQd6tnGsnfs70RejWHS45
-         9M3N3yI3DsqIK6LzRuXKOBTf6Rkkyra6B55MxKyi7GiAlGbcApJ2snZ6JYLsUp4tChO9
-         +FUQkpP5R3u0L9oJhT8ittb4GYvz6lo/boEJwrBNG5+BL2XERJCWwtoiABAshfGI4jVC
-         9hZxJMGZUN+z+Zxks+onaDk2szb+ZRO3a0mWxmJFRVlb5Xz7drOwssgD6oCH6BmfRFt9
-         wkjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
-        b=RYJTdnj3nSnXGjXRnPWbnkr/jVbFECX8x8ogAeB40krJgvCnwtYxpGltw2hgSaL4u/
-         2dALbl4qiHnLH/emODaXNH2dKI8jH4e6uAzqkHsErH26Chk/VrlgEjVpOhnm56n4A2Sr
-         6h2oJLWyuKpLnp7EPUleeHy2LzrXL/5pRhZj5KlVNmB2T9MTudIi/jj1/86gIfVQG07m
-         OWYx+PR5SXYQP4/k3e+wd0kRgZX/59oKTruBs44xbLmDDIt5IpFJYZobeVZW6nBcS/e8
-         bshYA7tNu+wNCxwIKkFnbp1bbCap5MOQZb3BQKQ/VpU9sXxx3Kdw3BfQJ1k5AR43/mlP
-         m0sw==
-X-Gm-Message-State: APjAAAW4b5J1ziC2wZ5BMkmoBtDTwj4WX5QSgwAXLvVl8ybD9LFXbaf8
-        patI31KXJwX5gOWSzGkxXUhFPqQOnsMASiYFFJQ=
-X-Google-Smtp-Source: APXvYqzgTHGdCwlE1xHWPIw+T/zvXXg/5Q23YMQERnKG40D0J11GZjNSHiZT89pjLxBM19FDQcJcvzXznwVR1Scakqc=
-X-Received: by 2002:a6b:c410:: with SMTP id y16mr28959521ioa.18.1577364514436;
- Thu, 26 Dec 2019 04:48:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219172823.1652600-1-anarsoul@gmail.com> <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
- <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org> <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
- <20191226104419.GA26677@Red>
-In-Reply-To: <20191226104419.GA26677@Red>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Thu, 26 Dec 2019 20:47:47 +0800
-Message-ID: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Dec 2019 07:53:49 -0500
+Received: from mail.fudan.edu.cn ([61.129.42.10]:56122 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfLZMxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:53:49 -0500
+Received: from localhost.localdomain (unknown [10.222.182.212])
+        by app2 (Coremail) with SMTP id XQUFCgAnL5tJrQRe4BFhAA--.671S3;
+        Thu, 26 Dec 2019 20:53:29 +0800 (CST)
+From:   xiyuyang19@fudan.edu.cn
+To:     xiyuyang19@fudan.edu.cn
+Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu, leon@kernel.org,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] infiniband: i40iw: fix a potential NULL pointer dereference
+Date:   Thu, 26 Dec 2019 20:52:37 +0800
+Message-Id: <1577364757-18385-1-git-send-email-xiyuyang19@fudan.edu.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: XQUFCgAnL5tJrQRe4BFhAA--.671S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF4DKrWfJF18Wr48Zr1UZFb_yoWkGrX_Kr
+        47ZFn7ur98AFnFkr40kFnrXFyjv34jvwnrZw4Dt34fJ3W5Ww1DJrWkA3Wrur47WrWxGFsr
+        Jas5Cr4xCFW8GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUba8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kI
+        II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7
+        xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
+        z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4
+        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26ry5
+        Xr1UJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc
+        8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc2xSY4AK6svP
+        MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Xry5Jr1UJwCFx2IqxVCFs4IE7x
+        kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+        67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+        CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+        3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+        sGvfC2KfnxnUUI43ZEXa7VU06bytUUUUU==
+X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
-<clabbe.montjoie@gmail.com> wrote:
->
-> On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
-> > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
-> > > On 19/12/2019 18:33, Maxime Ripard wrote:
-> > > > Hi,
-> > > >
-> > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
-> > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> > > >> H6 and R40 SoCs.
-> > > >
-> > > > Thanks again for working on this.
-> > > >
-> > > > I'll merge the DT patches when the driver will have been merged.
-> > >
-> > > I've applied patches 1 & 2.
-> > >
-> > > They are in the testing branch and will go to the linux-next branch a=
-s
-> > > soon as the kernelci passes.
-> >
-> > I just merged all the other patches (except the patch 6, for the H6,
-> > as requested by Vasily on IRC).
-> >
->
-> Hello
->
-> Vasily asked to not apply H6 due to my test failling on h6 and since he d=
-idnt own any H6 hw.
-> But it was failling due my fault (a failling build).
->
-> So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and=
- B) as reported by my answer to this thread.
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-HI Corentin,
+in_dev_get may return a NULL object. The fix handles the situation
+by adding a check to avoid NULL pointer dereference on idev,
+as pick_local_ipaddrs does.
 
-Although it is not calibrated, it should work on the R40. Can you give
-my patch a try?
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+Changes in v2:
+- Release rtnl lock when in_dev_get return NULL
 
-Thx=EF=BC=8C
-Yangtao
+ drivers/infiniband/hw/i40iw/i40iw_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->
-> Regards
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
+index d44cf33d..d7146fdf 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_main.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
+@@ -1225,6 +1225,10 @@ static void i40iw_add_ipv4_addr(struct i40iw_device *iwdev)
+ 			const struct in_ifaddr *ifa;
+ 
+ 			idev = in_dev_get(dev);
++			if (!idev) {
++				i40iw_pr_err("ipv4 inet device not found\n");
++				break;
++			}
+ 			in_dev_for_each_ifa_rtnl(ifa, idev) {
+ 				i40iw_debug(&iwdev->sc_dev, I40IW_DEBUG_CM,
+ 					    "IP=%pI4, vlan_id=%d, MAC=%pM\n", &ifa->ifa_address,
+-- 
+2.7.4
+
