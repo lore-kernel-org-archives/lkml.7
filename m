@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7269C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89890C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A600E20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B61206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PV215Hsw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMxhyvbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfLZW3u (ORCPT
+        id S1727210AbfLZW34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:29:50 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43552 "EHLO
+        Thu, 26 Dec 2019 17:29:56 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34258 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLZW3o (ORCPT
+        with ESMTP id S1727109AbfLZW3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:29:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so24647317wre.10;
-        Thu, 26 Dec 2019 14:29:43 -0800 (PST)
+        Thu, 26 Dec 2019 17:29:48 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t2so24686545wrr.1;
+        Thu, 26 Dec 2019 14:29:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1OGCzyJCrst2owrhk2ZRzZZ6qSHUKtNRJtopFQDCbsw=;
-        b=PV215Hsw6rpU6vP8tuImqgBgyPzKwDg6oiJfeK9BI2rBRmCV9RZnRJNdrTCmzA18sl
-         AS3RHvtygKstcKILeYIz6G/MRPlhXvv0PePSsxoH1jzN1uyxUntdJieJRMFKYUL3pDcx
-         LanX2V0scXGeF7VHZ6HaGbNyujNzZtZH0bz1hUL7vBdudj7EZ640BDJVl6oVbOJoxFIp
-         iRopL0GXGwJfFzZDLeiVMMIJvD61+LmfjeVFFMeFaIHqQafRZrNaDnrBj4r9HNCMhj0x
-         T2uPxmMyn/YJDo0PQZM+RPTDbESmeZSa2PqitWJjHy1HN9nyoLfZhsZ8a6NYDuMIeArW
-         Ti/A==
+        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
+        b=aMxhyvbL6kizu+9jCXYyLPOff9KQggKXtOu+n68QL2xUjCsPWuBnuGMKjz+o3h0h85
+         HdRkKvamoJN370gZ2FG6tZGJRczJNmWac5+fSClSwg8z64H7hDJE4+ZY1uZ3arKf4qAd
+         vSghnz6vnXVy+aRjlH8CBMMw5rhGWuTg3ZwJ/2Pf32Dt4QH3CLwfc6Hyq0z9Rd4wh11c
+         muExlaUl465cgOoduaYJ61A4AJJTN/XptyxKG3IP/s/8QQgeybslKy/rZj+CFPYqqGLQ
+         kuBxjAZNYOqij1eV4Kh3yFCsItW2jGi0MRkObXAs/oIon76GX2myngmrK2Z5OPXg37FL
+         At+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=1OGCzyJCrst2owrhk2ZRzZZ6qSHUKtNRJtopFQDCbsw=;
-        b=anMjLgZriyVGd7EUZqPERgEaLoKuxcIvsnmo4k/iBYvD1cT9+8v+5o4P8hmyRmP+ZT
-         dlHbKEJf1cWnY6oDItNed5Pc359gWHFagWfSc5QI3KX+1ZlsK6f3Uv+Szid0K1p963cc
-         4ZzPxkCh6zbkl5FfFkGJD87T+qbZz4IBsDmAWeJBvU104BkjbRObskw1D4jg8pFYgD5E
-         8DaLhk1Q9RRbROhZ7HTXmiqvlN33u7q7Q1OvZPWL/yUtOoGzttUkLmXE6EFmymR1Ta3u
-         6GWmbVxVFaA4+Eu46VSr2vEMTYAHt66cikCn7rutPTlM+KKt6ixoLgexok9hHabTECR2
-         28lQ==
-X-Gm-Message-State: APjAAAVyUpkSnUZ2e31Edzfe2tmyidvJJzvL1F3Zgkmc0+xIcQgZXw0S
-        JZb8S09NUu7ErzzNClr2+eI=
-X-Google-Smtp-Source: APXvYqzQzABVu+SKYv0g1W8iRSiOGI4Mbm6b7r1KT2cZ4MqQy2HX6xRCwfE2nFShloC8CUsB++GnHg==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr46093512wrv.197.1577399382667;
-        Thu, 26 Dec 2019 14:29:42 -0800 (PST)
+        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
+        b=DyP79nWibCKJdFyau8Vh5ItbhaGeK7tmFAvHmNHWE8XnqN+xU30phP3YQ4sw1SbxVV
+         gAsfVyfL2HiYj3EV2OVdVOnNM2iBrQO9WnqzameUJtlMhy5pIXVFTXkdPe/BrfO238ec
+         B0NnibTzVC2kfT6isbW8njfUhAu87YwcoCyhRXeKC2XOYLsKY1gevpISvqTiKdbLxmzu
+         jbW2b2weAmt6iXhPR9QijgnItap9OdvtLAkd2WFzOLafPQVK9l8lMaSBt74MHjfTcMJO
+         wc52osoVCXOLrTonAdueCDfb9A3VxWj1KOzV8F/LqPlGEUa5d01Cpm0U7g1gDvCB08zj
+         3oMA==
+X-Gm-Message-State: APjAAAXtWvoVfkZamUh3VkDc5rnsC+TC5o8WTzsKf+N1EKO+gne3bpax
+        oIuKTnNjRfF7SZaNCBzSpac=
+X-Google-Smtp-Source: APXvYqzwN+PR7T0DBlSL3aYoPiqdEUnGMhN2rMUynlDSJkm1qIzruGiDVALIbw+NP0u/HM1JZlB5ow==
+X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr44168192wru.297.1577399386829;
+        Thu, 26 Dec 2019 14:29:46 -0800 (PST)
 Received: from localhost.localdomain (p5B3F7018.dip0.t-ipconnect.de. [91.63.112.24])
-        by smtp.gmail.com with ESMTPSA id j2sm9731276wmk.23.2019.12.26.14.29.41
+        by smtp.gmail.com with ESMTPSA id j2sm9731276wmk.23.2019.12.26.14.29.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:29:42 -0800 (PST)
+        Thu, 26 Dec 2019 14:29:46 -0800 (PST)
 From:   Saravanan Sekar <sravanhome@gmail.com>
 To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
@@ -64,9 +64,9 @@ To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
         gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
         davem@davemloft.net, mchehab+samsung@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] dt-bindings: Add an entry for Monolithic Power System, MPS
-Date:   Thu, 26 Dec 2019 23:29:27 +0100
-Message-Id: <20191226222930.8882-2-sravanhome@gmail.com>
+Subject: [PATCH v4 4/4] MAINTAINERS: Add entry for mpq7920 PMIC driver
+Date:   Thu, 26 Dec 2019 23:29:30 +0100
+Message-Id: <20191226222930.8882-5-sravanhome@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191226222930.8882-1-sravanhome@gmail.com>
 References: <20191226222930.8882-1-sravanhome@gmail.com>
@@ -75,26 +75,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for Monolithic Power System, MPS
+Add MAINTAINERS entry for Monolithic Power Systems mpq7920 PMIC driver.
 
 Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..5eac9d08bfa8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -605,6 +605,8 @@ patternProperties:
-     description: MiraMEMS Sensing Technology Co., Ltd.
-   "^mitsubishi,.*":
-     description: Mitsubishi Electric Corporation
-+  "^mps,.*":
-+    description: Monolithic Power Systems, Inc.
-   "^mosaixtech,.*":
-     description: Mosaix Technologies, Inc.
-   "^motorola,.*":
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fd82e674cf4..8a31285b59c6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11128,6 +11128,13 @@ S:	Maintained
+ F:	Documentation/driver-api/serial/moxa-smartio.rst
+ F:	drivers/tty/mxser.*
+ 
++MONOLITHIC POWER SYSTEM PMIC DRIVER
++M:	Saravanan Sekar <sravanhome@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
++F:	drivers/regulator/mpq7920.c
++F:	drivers/regulator/mpq7920.h
++
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.17.1
 
