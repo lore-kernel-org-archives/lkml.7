@@ -2,108 +2,392 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DD7C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5674DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A9C206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129A1206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h5ghKZ7Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2L/XU4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfLZWXb (ORCPT
+        id S1727050AbfLZWXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:23:31 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37638 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfLZWXb (ORCPT
+        Thu, 26 Dec 2019 17:23:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50861 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfLZWXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:23:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p14so13812507pfn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:23:30 -0800 (PST)
+        Thu, 26 Dec 2019 17:23:42 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so6800066wmb.0;
+        Thu, 26 Dec 2019 14:23:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sprza847Fg3Wz4gx8X0Ya4BdhvQ1Fb4mpkG/Xj/3FE4=;
-        b=h5ghKZ7QvZulvsEfe/dDrD3+cHPYPbwYA06G2rOMtFaM5jznZuvFQTpkDzmk8a44Bu
-         4ZdMEnrtCAU2E/pBbmFy/M5psqskyCfEZwvFqNVRp9ltsjmXnfAG3c7E/+NM58iD+JHi
-         u6BAqKvesPH+nLdfYGqmdjHpbkWJkaHSnrAiLAa+2nKzxZW9sDnbY83wc96tQ6/ctY9P
-         zM4A1AppsJ4LL4a0yUJltMZa7Xe7Oqx9kTIUhMZ8pnzuvM/9ygcD8pKY8yu9BR96eLcv
-         kBhWHheUkboln9UwbuKG6Ef4EunKkQCZ+UJDNFPC06DhxN3bjKBGXQHHUnXqV83LHn1H
-         861Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=3QNwTc3GGOSdCXQ9t4Oj8oCFjhCPFnlMMq+lcFhaEVc=;
+        b=E2L/XU4/xHdrN/H4yf61b8k/WvCWU+9naQOqymE5fohMiQ2ApT9pU61dihedVzFaMz
+         OmKyvkg0dNcLHiafQX7Q44mYwO1yaziKzIYXnZDhaVQa9qBO73LVMar9EmzQhiwUglgW
+         VwIqfNzXTVjs2xI/d+ySuTHXKyjKSCd/DqPVgE2tt1ir/8jCT+6sXbsBl1GCyTaEEmmu
+         +EH4dGBEKKGs/kXGXwleQEgPfPiOah/rh7dt+W/WzQTooCn9gQLNljxpDHHkgiX0DosJ
+         JewSZKxarK/YXpfCnpU7TM9y3d9ovolZblqNMmnNvXbpTmCCgU1K8dp+Zcf/3YrmXl5p
+         dBTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sprza847Fg3Wz4gx8X0Ya4BdhvQ1Fb4mpkG/Xj/3FE4=;
-        b=IOimrd5D4ZTdcqqurLuz7hIZ0fRII9w97FxaeuVM0p4DdFJEH+XJLmd4ASLaENCiZv
-         lqEd9+yxtM+Pa1FB3vN2TgxHK3dpT8EqejbkflmNrFYVYM9I36yehWeaW42WZqTMVVTL
-         70yKNblnUW+m9XOqHFjSHuIZSffwXm/tQreUvlXwuzoyLYuRmHKEzSQUX2w8WxbBM3Bc
-         SH+y9oCZSQW9VYyZGKzdsP+32BWgesbJk7dKgohjkE6GcVyiP1zo/MoAi76G8fLStlnV
-         p/TMPypDrf+yijcBLSwXaIv9Qhj3QcW0rgygxqCOidEkGA6kHAmjiiCsH1B5Jnk42fsO
-         MmzA==
-X-Gm-Message-State: APjAAAWHGqV+98eQAIeT7uIEhniv949nQ04JAxclGz11y1ug8HlFmeo5
-        jk1ONC4CZEnoiacrF2LwuX/HKvLUpkE=
-X-Google-Smtp-Source: APXvYqyCu1goN+OnYdwfkwXryXqj7LcmvuOHhUxkblWrrpql52W39bq2TU9mRFQIpm8+K+MEiVP+tQ==
-X-Received: by 2002:a62:5447:: with SMTP id i68mr41980642pfb.44.1577399010364;
-        Thu, 26 Dec 2019 14:23:30 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i11sm12282752pjg.0.2019.12.26.14.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:23:29 -0800 (PST)
-Date:   Thu, 26 Dec 2019 14:23:15 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-Message-ID: <20191226222315.GD1908628@ripper>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
- <20191207203603.2314424-2-bjorn.andersson@linaro.org>
- <20191224024845.445A92070E@mail.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=3QNwTc3GGOSdCXQ9t4Oj8oCFjhCPFnlMMq+lcFhaEVc=;
+        b=cdoRKXzgPNBgm+1Vs/ywfal0+OHUSJ/A1cJ64pfqyVUS2SerC+C5V8Y42JvwdhgbLe
+         Gr9n1E7zUg6qCxA/AbagFy0XkuqLmDTVk05Ix5DpMtFgXrUv1cIl34PODVjBEHP5X6hQ
+         QVr/4LLU8eFGDVMDnsKrWLDAbFWYDCxAzOiqMh7LMZD2F1BnXnA/4h1aroY97CrKEP/M
+         IYCO64bsSOJd/u2aIQDIqHp2kKJqyuTt7pwYhUBrMnwqUWYXn9wgwxm6b13JmOtFhrJc
+         M0qF2o5csCtYYT0AFKVPEmQQU9ncBJDMPTmupK/ltfel68PNL/GrI2O4O9gArIQhECye
+         ovVA==
+X-Gm-Message-State: APjAAAVU5kLSm1Inn9lXbfa5KERCo/FbeRoN4bUWvh0DzWxCENV7KCCh
+        /qR06ACN6633wsEYe0EHBFRkFquC31cbSQ==
+X-Google-Smtp-Source: APXvYqwvBrW52R/uUv9V0//RKTj/actbSLV9Ka4Rnm1P7CWPkrlBuWD31V7Z8EjQZHvgMcK+TgFFhA==
+X-Received: by 2002:a1c:1b44:: with SMTP id b65mr14898669wmb.11.1577399018370;
+        Thu, 26 Dec 2019 14:23:38 -0800 (PST)
+Received: from [192.168.0.104] (p5B3F7018.dip0.t-ipconnect.de. [91.63.112.24])
+        by smtp.gmail.com with ESMTPSA id x7sm32117123wrq.41.2019.12.26.14.23.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 14:23:37 -0800 (PST)
+Subject: Re: [PATCH v3 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191222204507.32413-1-sravanhome@gmail.com>
+ <20191222204507.32413-3-sravanhome@gmail.com>
+ <20191223105028.amtzf62yjdpdsfrt@hendrix.home>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <ec7d8937-724e-946c-0569-da685223d21d@gmail.com>
+Date:   Thu, 26 Dec 2019 23:23:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224024845.445A92070E@mail.kernel.org>
+In-Reply-To: <20191223105028.amtzf62yjdpdsfrt@hendrix.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23 Dec 18:48 PST 2019, Stephen Boyd wrote:
+On 23/12/19 11:50 am, Maxime Ripard wrote:
 
-> Quoting Bjorn Andersson (2019-12-07 12:36:02)
-> > The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
-> > SoC. Update the definition of these clocks to allow this to be wired up
-> > to the appropriate clock source.
-> > 
-> > Retain "xo" as the global named parent to make the change a nop in the
-> > event that DT doesn't carry the necessary clocks definition.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  .../devicetree/bindings/clock/qcom,gcc.yaml   |  6 ++--
-> >  drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++----
-> >  2 files changed, 32 insertions(+), 9 deletions(-)
-> 
-> What is this patch based on? I think I'm missing some sort of 8996 yaml
-> gcc binding patch.
-> 
+> On Sun, Dec 22, 2019 at 09:45:05PM +0100, Saravanan Sekar wrote:
+>> Add device tree binding information for mpq7920 regulator driver.
+>> Example bindings for mpq7920 are added.
+>>
+>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>> ---
+>>   .../bindings/regulator/mpq7920.yaml           | 143 ++++++++++++++++++
+>>   1 file changed, 143 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>> new file mode 100644
+>> index 000000000000..d173ba1fb28d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>> @@ -0,0 +1,143 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Monolithic Power System MPQ7920 PMIC
+>> +
+>> +maintainers:
+>> +  - Saravanan Sekar <sravanhome@gmail.com>
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "pmic@[0-9a-f]{1,2}"
+>> +  compatible:
+>> +    enum:
+>> +      - mps,mpq7920
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  mps,time-slot:
+>> +    description:
+>> +      each regulator output shall be delayed during power on/off sequence which
+>> +      based on configurable time slot value, must be one of following corresponding
+>> +      value 0.5ms, 2ms, 8ms, 16ms
+>> +    allOf:
+>> +      - $ref: "/schemas/types.yaml#/definitions/uint8"
+>> +      - enum: [ 0, 1, 2, 3 ]
+>> +      - default: 0
+>> +
+>> +  mps,fixed-on-time:
+>> +     description:
+>> +       select power on sequence with fixed time output delay mentioned in
+>> +       time-slot reg for all the regulators.
+>> +     type: boolean
+>> +
+>> +  mps,fixed-off-time:
+>> +     description:
+>> +        select power off sequence with fixed time output delay mentioned in
+>> +        time-slot reg for all the regulators.
+>> +     type: boolean
+> I'm not sure what this fixed-on-time and fixed-off-time property is
 
-The patch applies cleanly on linux-next and afaict it depends on the
-yamlification done in 9de7269e9703 ("dt-bindings: clock: Add YAML
-schemas for the QCOM GCC clock bindings"), which git tells me is
-included in v5.5-rc1 as well.
+the time slot register holds the time interval of Vout when enable the
+each regulator.
+fixed-on-time property is to specify each regulator shares same time
+interval mention in time slot register.
+variable on-time defines the factor or multiples of value in time slot
+register.
 
-Am I misunderstanding your question?
 
-Regards,
-Bjorn
+> supposed to be doing. Why not just get rid of the time slot property,
+> and set the power on / power off time in fixed-on-time /
+> fixed-off-time property?
+
+1. if fixed-on-time is needed with default time slot register settings,
+then time slot property is not needed
+2. if variable time is needed with modified time slot, then both
+variable time factor & time slot property is needed,
+Hope above explanations answers the necessary of all the above property
+
+>
+>> +  mps,inc-off-time:
+>> +     description: |
+>> +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
+>> +        output delay during power off sequence based on factor of time slot/interval
+>> +        for each regulator.
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - minimum: 0
+>> +       - maximum: 15
+>> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+> You should check the size of the array too, but if it's a property of
+> the regulators, why not have it in the regulators node?
+
+the node regulators & sub-node of regulators are parsed (initdata) by
+regulator framework during regulator registration,
+so it would be redundant parsing all the node if mentioned under each
+regulator node and this is optional. If you still not
+convinced I will change.
+
+>> +  mps,inc-on-time:
+>> +     description: |
+>> +        mutually exclusive to mps,fixed-on-time an array of 8, linearly increase
+>> +        output delay during power on sequence based on factor of time slot/interval
+>> +        for each regulator.
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - minimum: 0
+>> +       - maximum: 15
+>> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+>> +
+>> +  mps,switch-freq:
+>> +     description: |
+>> +        switching frequency must be one of following corresponding value
+>> +        1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: 2
+>> +
+>> +  mps,buck-softstart:
+>> +     description: |
+>> +        An array of 4 contains soft start time of each buck, must be one of
+>> +        following corresponding values 150us, 300us, 610us, 920us
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: [ 1, 1, 1, 1 ]
+>> +
+>> +  mps,buck-ovp:
+>> +     description: |
+>> +        An array of 4 contains over voltage protection of each buck, must be
+>> +        one of above values
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1 ]
+>> +       - default: [ 1, 1, 1, 1 ]
+>> +
+>> +  mps,buck-phase-delay:
+>> +     description: |
+>> +        An array of 4 contains phase delay of each buck must be one of above values
+>> +        corresponding to 0deg, 90deg, 180deg, 270deg
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: [ 0, 0, 1, 1 ]
+>> +
+>> +  regulators:
+>> +    type: object
+>> +    description:
+>> +      list of regulators provided by this controller, must be named
+>> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+>> +      The valid names for regulators are
+>> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+> For the third times now, the names should be validated using
+> propertyNames.
+
+Not sure did I understand your question correctly.
+all the node name under regulators node are parsed by regulator
+framework & validated against
+name in regulator descriptors.
+
+>
+> Maxime
+
+
+Thanks,
+
+Saravanan
+
+On 23/12/19 11:50 am, Maxime Ripard wrote:
+> On Sun, Dec 22, 2019 at 09:45:05PM +0100, Saravanan Sekar wrote:
+>> Add device tree binding information for mpq7920 regulator driver.
+>> Example bindings for mpq7920 are added.
+>>
+>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>> ---
+>>   .../bindings/regulator/mpq7920.yaml           | 143 ++++++++++++++++++
+>>   1 file changed, 143 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>> new file mode 100644
+>> index 000000000000..d173ba1fb28d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>> @@ -0,0 +1,143 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Monolithic Power System MPQ7920 PMIC
+>> +
+>> +maintainers:
+>> +  - Saravanan Sekar <sravanhome@gmail.com>
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "pmic@[0-9a-f]{1,2}"
+>> +  compatible:
+>> +    enum:
+>> +      - mps,mpq7920
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  mps,time-slot:
+>> +    description:
+>> +      each regulator output shall be delayed during power on/off sequence which
+>> +      based on configurable time slot value, must be one of following corresponding
+>> +      value 0.5ms, 2ms, 8ms, 16ms
+>> +    allOf:
+>> +      - $ref: "/schemas/types.yaml#/definitions/uint8"
+>> +      - enum: [ 0, 1, 2, 3 ]
+>> +      - default: 0
+>> +
+>> +  mps,fixed-on-time:
+>> +     description:
+>> +       select power on sequence with fixed time output delay mentioned in
+>> +       time-slot reg for all the regulators.
+>> +     type: boolean
+>> +
+>> +  mps,fixed-off-time:
+>> +     description:
+>> +        select power off sequence with fixed time output delay mentioned in
+>> +        time-slot reg for all the regulators.
+>> +     type: boolean
+> I'm not sure what this fixed-on-time and fixed-off-time property is
+> supposed to be doing. Why not just get rid of the time slot property,
+> and set the power on / power off time in fixed-on-time /
+> fixed-off-time property?
+>
+>> +  mps,inc-off-time:
+>> +     description: |
+>> +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
+>> +        output delay during power off sequence based on factor of time slot/interval
+>> +        for each regulator.
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - minimum: 0
+>> +       - maximum: 15
+>> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+> You should check the size of the array too, but if it's a property of
+> the regulators, why not have it in the regulators node?
+>
+>> +  mps,inc-on-time:
+>> +     description: |
+>> +        mutually exclusive to mps,fixed-on-time an array of 8, linearly increase
+>> +        output delay during power on sequence based on factor of time slot/interval
+>> +        for each regulator.
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - minimum: 0
+>> +       - maximum: 15
+>> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+>> +
+>> +  mps,switch-freq:
+>> +     description: |
+>> +        switching frequency must be one of following corresponding value
+>> +        1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: 2
+>> +
+>> +  mps,buck-softstart:
+>> +     description: |
+>> +        An array of 4 contains soft start time of each buck, must be one of
+>> +        following corresponding values 150us, 300us, 610us, 920us
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: [ 1, 1, 1, 1 ]
+>> +
+>> +  mps,buck-ovp:
+>> +     description: |
+>> +        An array of 4 contains over voltage protection of each buck, must be
+>> +        one of above values
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1 ]
+>> +       - default: [ 1, 1, 1, 1 ]
+>> +
+>> +  mps,buck-phase-delay:
+>> +     description: |
+>> +        An array of 4 contains phase delay of each buck must be one of above values
+>> +        corresponding to 0deg, 90deg, 180deg, 270deg
+>> +     allOf:
+>> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>> +       - enum: [ 0, 1, 2, 3 ]
+>> +       - default: [ 0, 0, 1, 1 ]
+>> +
+>> +  regulators:
+>> +    type: object
+>> +    description:
+>> +      list of regulators provided by this controller, must be named
+>> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+>> +      The valid names for regulators are
+>> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+> For the third times now, the names should be validated using
+> propertyNames.
+>
+> Maxime
