@@ -2,466 +2,149 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EBCC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AF820828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:40:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577400041;
-	bh=qFrAQxmmGl2P+G5h0KtjT0/kdX2SBLpbwUl15HqX6Ww=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LoJbPbRR0dMjx1iaj4Gv9WXDgQiyHj8PMdfOIOL2qZL/PAVk06+DmTnBDjyscRFcL
-	 5Se6qB+5TJ9xnbmYNHpdNF9OtJfHPfUoB2E9t2vhiHvUfT8BgwAV/28pComZlWmMBD
-	 RYOhQ6bW2Pi0dq6TTvHDHn5gR6kF3V9u2khZhKZ4=
+	by mail.kernel.org (Postfix) with ESMTP id A5C6720838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PqY30As1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfLZWkk (ORCPT
+        id S1726982AbfLZWmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:40:40 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43013 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLZWkj (ORCPT
+        Thu, 26 Dec 2019 17:42:12 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46614 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZWmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:40:39 -0500
-Received: by mail-il1-f195.google.com with SMTP id v69so21097508ili.10;
-        Thu, 26 Dec 2019 14:40:39 -0800 (PST)
+        Thu, 26 Dec 2019 17:42:12 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so13497147pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:42:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
+        b=PqY30As1HVeTsX24x5Wj6WCdolUj9fYeWJEBcnm/4JCPDvmyvH9x1QTfXP2eGTVZQ1
+         SgT5ceOX/76pPplSxkAm83FKnrlB0KO9vDgkjmRMxA7AGFm6y0hlQYFai34ljisdikcR
+         OfO/U/usnsywyWLeTs4/d3vweZC8vywjC+KC07FSb50e33UhRcnWi3qM2vICFfDnw71q
+         kRlSgrhcyP9Z76tdaFIfxXq1GMQKOdBoz+1W6xSjpL+p3m1/TaKMZIhESojfWOV7uYd7
+         rnPRwsLoA53FXbRj0og5CCL7AQpw4wM9LINfJULA7095mS9a2b2CU+AvGFQaoXOpFLWm
+         IxLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ScU1MX2NEah2LBpw4ejnPwfmUzUDKflMUjp7TE9pgIw=;
-        b=YYQ2pFYx6hFWmgYeZ5GCPFepFnUJQFFnMxxcjJ2Qj53vRBiBZSMH07nd8GD6PUc5fh
-         uoJU4qBMXkY7JuklLUZdkMY7aUNsZnVsxV/V66yCG7fEYuzd1+bIYPULA9pWf2hhSX/B
-         5HKuCOUO1fiF9JEI0D6r9AOEg7bcLY1lPsMN8fDlKFKCAmRT7P16k8XccIZhzjI4kccd
-         E6zw9TfqzS6KkliKldDJYh04CB0nmQWCMDk9LWV8hHncS2wBJj5XBZTDo2FVlBcWOJtY
-         Reh2huyUYvoUS+JRD5qxuQZTKd1Kq2wYu+Tfl1kLFYHSgc2lPsU0ovCxE3m6fZio3HCI
-         YpyA==
-X-Gm-Message-State: APjAAAVG/iIJ368eVXT6MSdxtlbqhv503z0AcucQ8WsARPMaU+WtQwVm
-        Im78oBsLI7YW8TSqJ71pbws/1EM=
-X-Google-Smtp-Source: APXvYqycmrJj1MD0bIoTy+e7Z6PGmi5l/Ou9AJE61k1DKonTyrenMukBPHUyYdLHq7GjQV49Y77IPA==
-X-Received: by 2002:a92:91c7:: with SMTP id e68mr42884312ill.161.1577400038309;
-        Thu, 26 Dec 2019 14:40:38 -0800 (PST)
-Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id t19sm6452533ioc.38.2019.12.26.14.40.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
+        b=t2Kfoc0KfyxSG23Hkf4cL1ylYGJnXas0JgQVTfRidKd+adGVhMnm41sInSZKmi8Yyi
+         j99iDjRY56WB904u/UO0VpK9XkSsG7WhF/qEFm55cgl8jugfMBK+pAPSqCMm8d6OAKes
+         gawb6ooJ/gKEfQFujZnN4bF4HuL3HP0juSlAmL6TMnhqNsw20DCrXQqk8nfWYFLt8oF5
+         XqpDFiMj6k6dwfNImSQdtCsf2VBZ/lSESZjvaekPSKXmMfwN3+Nb/BhfVNU7fgK9YFE8
+         ObNm/bQekMgsmkiQL7P1HUXX9gD6D3GKDfRX11QdvGuexjIXEVFrGJQdGQQ0zgIREmM8
+         6fDA==
+X-Gm-Message-State: APjAAAX8Gvs67do+sRJvX5Xa1tt3GKjJloBZdSujW7Z8KEac4v1VuzEU
+        QZWDHycs5ryjfQhlTLG/dhW9+w==
+X-Google-Smtp-Source: APXvYqxSDVbs2vOYOg9yW7JRrsiG0gRtxLuW9Zc6TrdhfBj3WsbSXbIYpDKPF1Q7zUKCs+ontwnuvg==
+X-Received: by 2002:a63:6c09:: with SMTP id h9mr50054003pgc.34.1577400131224;
+        Thu, 26 Dec 2019 14:42:11 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id bo19sm11591246pjb.25.2019.12.26.14.42.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:40:37 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] scripts/dtc: Update to upstream version v1.5.1-22-gc40aeb60b47a
-Date:   Thu, 26 Dec 2019 15:40:36 -0700
-Message-Id: <20191226224036.21691-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 26 Dec 2019 14:42:10 -0800 (PST)
+Date:   Thu, 26 Dec 2019 14:41:56 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+Message-ID: <20191226224156.GE1908628@ripper>
+References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
+ <20191207203603.2314424-2-bjorn.andersson@linaro.org>
+ <20191219063719.5AF942146E@mail.kernel.org>
+ <20191220023427.GL448416@yoga>
+ <20191224022042.7DDB120709@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224022042.7DDB120709@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the following commits from upstream:
+On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
 
-c40aeb60b47a travis.yml: Run tests on the non-x86 builders, too
-9f86aff444f4 Add .cirrus.yml for FreeBSD build
-34c82275bae6 Avoid gnu_printf attribute when using Clang
-743000931bc9 tests: default to 'cc' if CC not set
-adcd676491cc Add test-case for trailing zero
-d9c55f855b65 Remove trailing zero from the overlay path
-7a22132c79ec pylibfdt: Adjust for deprecated test methods
-dbe80d577ee2 tests: add extension to sed -i for GNU/BSD sed compatibility
-af57d440d887 libfdt: Correct prototype for fdt_ro_probe_()
-6ce585ac153b Use correct inttypes.h format specifier
-715028622547 support byacc in addition to bison
-fdf3f6d897ab pylibfdt: Correct the type for fdt_property_stub()
-430419c28100 tests: fix some python warnings
-588a29ff2e4e util: use gnu_printf format attribute
-bc876708ab1d fstree: replace lstat with stat
-4c3c4ccb9916 dumptrees: pass outputdir as first argument
-aa522da9fff6 tests: allow out-of-tree test run
-0d0d0fa51b1f fdtoverlay: Return non-zero exit code if overlays can't be applied
-4605eb047b38 Add .editorconfig
-18d7b2f4ee45 yamltree: Ensure consistent bracketing of properties with phandles
-67f790c1adcc libfdt.h: add explicit cast from void* to uint8_t* in fdt(32|64)_st
-b111122ea5eb pylibfdt: use python3 shebang
-60e0db3d65a1 Ignore phandle properties in /aliases
-95ce19c14064 README: update for Python 3
-5345db19f615 livetree: simplify condition in get_node_by_path
-b8d6eca78210 libfdt: Allow #size-cells of 0
-184f51099471 Makefile: Add EXTRA_CFLAGS variable
-812b1956a076 libfdt: Tweak data handling to satisfy Coverity
-5c715a44776a fdtoverlay: Ignore symbols in overlays which don't apply to the target tree
-b99353474850 fdtoverlay: Allow adding labels to __overlay__ nodes in overlays
-d6de81b81b68 pylibfdt: Add support for fdt_get_alias()
-1c17714dbb3a pylibfdt: Correct the FdtSw example
-ad57e4574a37 tests: Add a failed test case for 'fdtoverlay' with long target path
-bbe3b36f542b fdtoverlay: Rework output allocation
-6c2e61f08396 fdtoverlay: Improve error messages
-297f5abb362e fdtoverlay: Check for truncated overlay blobs
+> Quoting Bjorn Andersson (2019-12-19 18:34:27)
+> > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
+> > 
+> > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
+> > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
+> > > > SoC. Update the definition of these clocks to allow this to be wired up
+> > > > to the appropriate clock source.
+> > > > 
+> > > > Retain "xo" as the global named parent to make the change a nop in the
+> > > > event that DT doesn't carry the necessary clocks definition.
+> > > 
+> > > Something seems wrong still.
+> > > 
+> > > I wonder if we need to add the XO "active only" clk to the rpm clk
+> > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really the
+> > > truth for most of the SoCs out there because it's the only crystal that
+> > > needs to be on all the time when the CPU is active. The "normal" XO clk
+> > > will then be on all the time unless deep idle is entered and nobody has
+> > > turned that on via some clk_prepare() call. That's because we root all
+> > > other clks through the "normal" XO clk that will be on in deep
+> > > idle/suspend if someone needs it to be.
+> > > 
+> > 
+> > The patch doesn't attempt to address the fact that our representation of
+> > XO is incomplete, only the fact that CXO2 isn't properly described.
+> > 
+> > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
+> > presumably is the clock you're referring to here - i.e. the clock
+> > resource connected to CXO.
+> 
+> I don't mean the buffer clks, but the XO resource specifically. It's the
+> representation to the RPM that deep sleep/deep idle should or shouldn't
+> turn off XO and achieve "XO shutdown". Basically it can never be off
+> when the CPU is active because then the CPU itself wouldn't be clocked,
+> but when the CPU isn't active we may want to turn it off if nothing is
+> using it during sleep to clock some sort of wakeup logic or device that
+> is active when the CPU is idle.
+> 
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- scripts/dtc/checks.c                 |  5 +++++
- scripts/dtc/dtc-parser.y             |  4 ++++
- scripts/dtc/fstree.c                 |  2 +-
- scripts/dtc/libfdt/fdt.c             |  9 +++++++--
- scripts/dtc/libfdt/fdt_addresses.c   |  8 +++++---
- scripts/dtc/libfdt/fdt_overlay.c     | 28 +++++++++++++++++++---------
- scripts/dtc/libfdt/fdt_ro.c          | 11 ++++++-----
- scripts/dtc/libfdt/libfdt.h          |  4 ++--
- scripts/dtc/libfdt/libfdt_internal.h | 12 ++++++------
- scripts/dtc/livetree.c               |  3 +--
- scripts/dtc/util.c                   |  3 ++-
- scripts/dtc/util.h                   |  4 ++++
- scripts/dtc/version_gen.h            |  2 +-
- scripts/dtc/yamltree.c               | 21 +++++++++++++++++++++
- 14 files changed, 84 insertions(+), 32 deletions(-)
+I see. So we're missing the representation of the "raw" CXO in
+clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
+should be tied together for us to realize the "XO shutdown"...
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index d7986ee18012..756f0fa9203f 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -691,6 +691,11 @@ static void check_alias_paths(struct check *c, struct dt_info *dti,
- 		return;
- 
- 	for_each_property(node, prop) {
-+		if (streq(prop->name, "phandle")
-+		    || streq(prop->name, "linux,phandle")) {
-+			continue;
-+		}
-+
- 		if (!prop->val.val || !get_node_by_path(dti->dt, prop->val.val)) {
- 			FAIL_PROP(c, dti, node, prop, "aliases property is not a valid node (%s)",
- 				  prop->val.val);
-diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-index 2ed4dc1f07fd..40dcf4f149da 100644
---- a/scripts/dtc/dtc-parser.y
-+++ b/scripts/dtc/dtc-parser.y
-@@ -2,6 +2,8 @@
- /*
-  * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
-  */
-+%locations
-+
- %{
- #include <stdio.h>
- #include <inttypes.h>
-@@ -17,6 +19,8 @@ extern void yyerror(char const *s);
- 		treesource_error = true; \
- 	} while (0)
- 
-+#define YYERROR_CALL(msg) yyerror(msg)
-+
- extern struct dt_info *parser_output;
- extern bool treesource_error;
- %}
-diff --git a/scripts/dtc/fstree.c b/scripts/dtc/fstree.c
-index 9871689b4afb..5e59594ab301 100644
---- a/scripts/dtc/fstree.c
-+++ b/scripts/dtc/fstree.c
-@@ -30,7 +30,7 @@ static struct node *read_fstree(const char *dirname)
- 
- 		tmpname = join_path(dirname, de->d_name);
- 
--		if (lstat(tmpname, &st) < 0)
-+		if (stat(tmpname, &st) < 0)
- 			die("stat(%s): %s\n", tmpname, strerror(errno));
- 
- 		if (S_ISREG(st.st_mode)) {
-diff --git a/scripts/dtc/libfdt/fdt.c b/scripts/dtc/libfdt/fdt.c
-index 179168ec63e9..d6ce7c052dc8 100644
---- a/scripts/dtc/libfdt/fdt.c
-+++ b/scripts/dtc/libfdt/fdt.c
-@@ -15,8 +15,10 @@
-  * that the given buffer contains what appears to be a flattened
-  * device tree with sane information in its header.
-  */
--int fdt_ro_probe_(const void *fdt)
-+int32_t fdt_ro_probe_(const void *fdt)
- {
-+	uint32_t totalsize = fdt_totalsize(fdt);
-+
- 	if (fdt_magic(fdt) == FDT_MAGIC) {
- 		/* Complete tree */
- 		if (fdt_version(fdt) < FDT_FIRST_SUPPORTED_VERSION)
-@@ -31,7 +33,10 @@ int fdt_ro_probe_(const void *fdt)
- 		return -FDT_ERR_BADMAGIC;
- 	}
- 
--	return 0;
-+	if (totalsize < INT32_MAX)
-+		return totalsize;
-+	else
-+		return -FDT_ERR_TRUNCATED;
- }
- 
- static int check_off_(uint32_t hdrsize, uint32_t totalsize, uint32_t off)
-diff --git a/scripts/dtc/libfdt/fdt_addresses.c b/scripts/dtc/libfdt/fdt_addresses.c
-index d8ba8ec60c6c..9a82cd0ba2f9 100644
---- a/scripts/dtc/libfdt/fdt_addresses.c
-+++ b/scripts/dtc/libfdt/fdt_addresses.c
-@@ -14,7 +14,7 @@
- static int fdt_cells(const void *fdt, int nodeoffset, const char *name)
- {
- 	const fdt32_t *c;
--	int val;
-+	uint32_t val;
- 	int len;
- 
- 	c = fdt_getprop(fdt, nodeoffset, name, &len);
-@@ -25,10 +25,10 @@ static int fdt_cells(const void *fdt, int nodeoffset, const char *name)
- 		return -FDT_ERR_BADNCELLS;
- 
- 	val = fdt32_to_cpu(*c);
--	if ((val <= 0) || (val > FDT_MAX_NCELLS))
-+	if (val > FDT_MAX_NCELLS)
- 		return -FDT_ERR_BADNCELLS;
- 
--	return val;
-+	return (int)val;
- }
- 
- int fdt_address_cells(const void *fdt, int nodeoffset)
-@@ -36,6 +36,8 @@ int fdt_address_cells(const void *fdt, int nodeoffset)
- 	int val;
- 
- 	val = fdt_cells(fdt, nodeoffset, "#address-cells");
-+	if (val == 0)
-+		return -FDT_ERR_BADNCELLS;
- 	if (val == -FDT_ERR_NOTFOUND)
- 		return 2;
- 	return val;
-diff --git a/scripts/dtc/libfdt/fdt_overlay.c b/scripts/dtc/libfdt/fdt_overlay.c
-index e97f12b1a780..b310e49a698e 100644
---- a/scripts/dtc/libfdt/fdt_overlay.c
-+++ b/scripts/dtc/libfdt/fdt_overlay.c
-@@ -733,26 +733,36 @@ static int overlay_symbol_update(void *fdt, void *fdto)
- 		/* keep end marker to avoid strlen() */
- 		e = path + path_len;
- 
--		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
--
- 		if (*path != '/')
- 			return -FDT_ERR_BADVALUE;
- 
- 		/* get fragment name first */
- 		s = strchr(path + 1, '/');
--		if (!s)
--			return -FDT_ERR_BADOVERLAY;
-+		if (!s) {
-+			/* Symbol refers to something that won't end
-+			 * up in the target tree */
-+			continue;
-+		}
- 
- 		frag_name = path + 1;
- 		frag_name_len = s - path - 1;
- 
- 		/* verify format; safe since "s" lies in \0 terminated prop */
- 		len = sizeof("/__overlay__/") - 1;
--		if ((e - s) < len || memcmp(s, "/__overlay__/", len))
--			return -FDT_ERR_BADOVERLAY;
--
--		rel_path = s + len;
--		rel_path_len = e - rel_path;
-+		if ((e - s) > len && (memcmp(s, "/__overlay__/", len) == 0)) {
-+			/* /<fragment-name>/__overlay__/<relative-subnode-path> */
-+			rel_path = s + len;
-+			rel_path_len = e - rel_path - 1;
-+		} else if ((e - s) == len
-+			   && (memcmp(s, "/__overlay__", len - 1) == 0)) {
-+			/* /<fragment-name>/__overlay__ */
-+			rel_path = "";
-+			rel_path_len = 0;
-+		} else {
-+			/* Symbol refers to something that won't end
-+			 * up in the target tree */
-+			continue;
-+		}
- 
- 		/* find the fragment index in which the symbol lies */
- 		ret = fdt_subnode_offset_namelen(fdto, 0, frag_name,
-diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
-index 6fd9ec170dbe..a5c2797cde65 100644
---- a/scripts/dtc/libfdt/fdt_ro.c
-+++ b/scripts/dtc/libfdt/fdt_ro.c
-@@ -33,19 +33,20 @@ static int fdt_nodename_eq_(const void *fdt, int offset,
- 
- const char *fdt_get_string(const void *fdt, int stroffset, int *lenp)
- {
-+	int32_t totalsize = fdt_ro_probe_(fdt);
- 	uint32_t absoffset = stroffset + fdt_off_dt_strings(fdt);
- 	size_t len;
- 	int err;
- 	const char *s, *n;
- 
--	err = fdt_ro_probe_(fdt);
--	if (err != 0)
-+	err = totalsize;
-+	if (totalsize < 0)
- 		goto fail;
- 
- 	err = -FDT_ERR_BADOFFSET;
--	if (absoffset >= fdt_totalsize(fdt))
-+	if (absoffset >= totalsize)
- 		goto fail;
--	len = fdt_totalsize(fdt) - absoffset;
-+	len = totalsize - absoffset;
- 
- 	if (fdt_magic(fdt) == FDT_MAGIC) {
- 		if (stroffset < 0)
-@@ -288,7 +289,7 @@ const char *fdt_get_name(const void *fdt, int nodeoffset, int *len)
- 	const char *nameptr;
- 	int err;
- 
--	if (((err = fdt_ro_probe_(fdt)) != 0)
-+	if (((err = fdt_ro_probe_(fdt)) < 0)
- 	    || ((err = fdt_check_node_offset_(fdt, nodeoffset)) < 0))
- 			goto fail;
- 
-diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
-index 7b5ffd13a887..8907b09b86cc 100644
---- a/scripts/dtc/libfdt/libfdt.h
-+++ b/scripts/dtc/libfdt/libfdt.h
-@@ -136,7 +136,7 @@ static inline uint32_t fdt32_ld(const fdt32_t *p)
- 
- static inline void fdt32_st(void *property, uint32_t value)
- {
--	uint8_t *bp = property;
-+	uint8_t *bp = (uint8_t *)property;
- 
- 	bp[0] = value >> 24;
- 	bp[1] = (value >> 16) & 0xff;
-@@ -160,7 +160,7 @@ static inline uint64_t fdt64_ld(const fdt64_t *p)
- 
- static inline void fdt64_st(void *property, uint64_t value)
- {
--	uint8_t *bp = property;
-+	uint8_t *bp = (uint8_t *)property;
- 
- 	bp[0] = value >> 56;
- 	bp[1] = (value >> 48) & 0xff;
-diff --git a/scripts/dtc/libfdt/libfdt_internal.h b/scripts/dtc/libfdt/libfdt_internal.h
-index 7830e550c37a..058c7358d441 100644
---- a/scripts/dtc/libfdt/libfdt_internal.h
-+++ b/scripts/dtc/libfdt/libfdt_internal.h
-@@ -10,12 +10,12 @@
- #define FDT_ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
- #define FDT_TAGALIGN(x)		(FDT_ALIGN((x), FDT_TAGSIZE))
- 
--int fdt_ro_probe_(const void *fdt);
--#define FDT_RO_PROBE(fdt)			\
--	{ \
--		int err_; \
--		if ((err_ = fdt_ro_probe_(fdt)) != 0)	\
--			return err_; \
-+int32_t fdt_ro_probe_(const void *fdt);
-+#define FDT_RO_PROBE(fdt)					\
-+	{							\
-+		int32_t totalsize_;				\
-+		if ((totalsize_ = fdt_ro_probe_(fdt)) < 0)	\
-+			return totalsize_;			\
- 	}
- 
- int fdt_check_node_offset_(const void *fdt, int offset);
-diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-index 0c039993953a..032df5878ccc 100644
---- a/scripts/dtc/livetree.c
-+++ b/scripts/dtc/livetree.c
-@@ -526,8 +526,7 @@ struct node *get_node_by_path(struct node *tree, const char *path)
- 	p = strchr(path, '/');
- 
- 	for_each_child(tree, child) {
--		if (p && (strlen(child->name) == p-path) &&
--		    strprefixeq(path, p - path, child->name))
-+		if (p && strprefixeq(path, p - path, child->name))
- 			return get_node_by_path(child, p+1);
- 		else if (!p && streq(path, child->name))
- 			return child;
-diff --git a/scripts/dtc/util.c b/scripts/dtc/util.c
-index 48af961dcc8c..40274fb79236 100644
---- a/scripts/dtc/util.c
-+++ b/scripts/dtc/util.c
-@@ -13,6 +13,7 @@
- #include <stdarg.h>
- #include <string.h>
- #include <assert.h>
-+#include <inttypes.h>
- 
- #include <errno.h>
- #include <fcntl.h>
-@@ -393,7 +394,7 @@ void utilfdt_print_data(const char *data, int len)
- 
- 		printf(" = <");
- 		for (i = 0, len /= 4; i < len; i++)
--			printf("0x%08x%s", fdt32_to_cpu(cell[i]),
-+			printf("0x%08" PRIx32 "%s", fdt32_to_cpu(cell[i]),
- 			       i < (len - 1) ? " " : "");
- 		printf(">");
- 	} else {
-diff --git a/scripts/dtc/util.h b/scripts/dtc/util.h
-index ca5cb52928e3..5a4172dd0f84 100644
---- a/scripts/dtc/util.h
-+++ b/scripts/dtc/util.h
-@@ -12,7 +12,11 @@
-  */
- 
- #ifdef __GNUC__
-+#ifdef __clang__
- #define PRINTF(i, j)	__attribute__((format (printf, i, j)))
-+#else
-+#define PRINTF(i, j)	__attribute__((format (gnu_printf, i, j)))
-+#endif
- #define NORETURN	__attribute__((noreturn))
- #else
- #define PRINTF(i, j)
-diff --git a/scripts/dtc/version_gen.h b/scripts/dtc/version_gen.h
-index f2761e24cf40..6dba95d23207 100644
---- a/scripts/dtc/version_gen.h
-+++ b/scripts/dtc/version_gen.h
-@@ -1 +1 @@
--#define DTC_VERSION "DTC 1.5.0-g702c1b6c"
-+#define DTC_VERSION "DTC 1.5.0-gc40aeb60"
-diff --git a/scripts/dtc/yamltree.c b/scripts/dtc/yamltree.c
-index 5b6ea8ea862f..43ca869dd6a8 100644
---- a/scripts/dtc/yamltree.c
-+++ b/scripts/dtc/yamltree.c
-@@ -138,6 +138,27 @@ static void yaml_propval(yaml_emitter_t *emitter, struct property *prop)
- 		(yaml_char_t *)YAML_SEQ_TAG, 1, YAML_FLOW_SEQUENCE_STYLE);
- 	yaml_emitter_emit_or_die(emitter, &event);
- 
-+	/* Ensure we have a type marker before any phandle */
-+	for_each_marker(m) {
-+		int last_offset = 0;
-+		struct marker *type_m;
-+
-+		if (m->type >= TYPE_UINT8)
-+			last_offset = m->offset;
-+
-+		if (!(m->next && m->next->type == REF_PHANDLE &&
-+		      last_offset < m->next->offset))
-+			continue;
-+
-+		type_m = xmalloc(sizeof(*type_m));
-+		type_m->offset = m->next->offset;
-+		type_m->type = TYPE_UINT32;
-+		type_m->ref = NULL;
-+		type_m->next = m->next;
-+		m->next = type_m;
-+	}
-+
-+	m = prop->val.markers;
- 	for_each_marker(m) {
- 		int chunk_len;
- 		char *data = &prop->val.val[m->offset];
--- 
-2.20.1
+> > 
+> > > Did the downstream code explicitly enable this ln_bb_clk in the phy
+> > > drivers? I think it may have?
+> > > 
+> > 
+> > Yes, afaict all downstream drivers consuming a CLKREF also consumes
+> > LN_BB and ensures that this is enabled. So we've been relying on UFS to
+> > either not have probed yet or that UFS probed successfully for PCIe and
+> > USB to be functional.
+> > 
+> > So either we need this patch to ensure that the requests propagates
+> > down, or I need to patch up the PHY drivers to ensure that they also
+> > vote for the PMIC clock - and I do prefer this patch.
+> 
+> Cool. Yeah seems better to just indicate that the reference clks are
+> clocked by something else and fix that problem now.
+> 
 
+Let me know if I shouldn't interpret this sentence as "let's merge this
+for now".
+
+Regards,
+Bjorn
