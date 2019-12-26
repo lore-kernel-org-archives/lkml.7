@@ -2,85 +2,85 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D72BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1567EC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607982075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B612075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfLZDJ3 (ORCPT
+        id S1727009AbfLZDKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 22:09:29 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2916 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726885AbfLZDJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 22:09:28 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 1BDA1EB4859CFFBCC120;
-        Thu, 26 Dec 2019 11:09:24 +0800 (CST)
-Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 26 Dec 2019 11:09:23 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme764-chm.china.huawei.com (10.3.19.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 26 Dec 2019 11:09:23 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Thu, 26 Dec 2019 11:09:23 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-CC:     Liran Alon <liran.alon@oracle.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] KVM: nvmx: retry writing guest memory after page fault
- injected
-Thread-Topic: [PATCH] KVM: nvmx: retry writing guest memory after page fault
- injected
-Thread-Index: AdW7lko+tW3NyOtpREmlZJcElxGdUw==
-Date:   Thu, 26 Dec 2019 03:09:23 +0000
-Message-ID: <d66b6e479a4e4113a86bee1c0682aa46@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 25 Dec 2019 22:10:36 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47498 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbfLZDKf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 22:10:35 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlwmUT6_1577329818;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TlwmUT6_1577329818)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 26 Dec 2019 11:10:33 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Joseph Qi <joseph.qi@linux.alibaba.com>, xlpang@linux.alibaba.com,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] block: make the io_ticks counter more accurate
+Date:   Thu, 26 Dec 2019 11:10:14 +0800
+Message-Id: <20191226031014.58970-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCldhbnBlbmcgTGkgPGtlcm5lbGx3cEBnbWFpbC5jb20+IHdyb3RlOg0KPiBPbiBUaHUs
-IDI2IERlYyAyMDE5IGF0IDEwOjMyLCBsaW5taWFvaGUgPGxpbm1pYW9oZUBodWF3ZWkuY29tPiB3
-cm90ZToNCj4gPg0KPiA+ID4NCj4gPiA+SW4gYWRkaXRpb24sIGl0IHdpbGwgYmUgYXBwcmVjaWF0
-ZWQgaWYgeW91IHdvdWxkIGFsc28gc3VibWl0IGt2bS11bml0LXRlc3QgdGhhdCB2ZXJpZmllcyB0
-aGlzIGNvbmRpdGlvbi4NCj4gPg0KPiA+IEknZCBsaWtlIHRvIHN1Ym1pdCBrdm0tdW5pdC10ZXN0
-IHRoYXQgdmVyaWZpZXMgdGhpcyBjb25kaXRpb24sIGJ1dCBJIA0KPiA+IGFtIG5vdCBmYW1pbGlh
-ciB3aXRoIHRoZSBrdm0tdW5pdC10ZXN0IGNvZGUgeWV0IGFuZCBhbHNvIG5vdCBpbiBteSANCj4g
-PiByZWNlbnQgdG9kbyBsaXN0LiBTbyBzdWNoIGEgcGF0Y2ggbWF5IGNvbWUgbGF0ZS4gSXQgd291
-bGQgYmUgDQo+ID4gYXBwcmVjaWF0ZWQgdG9vIGlmIHlvdSBjb3VsZCBzdWJtaXQgdGhpcyBrdm0t
-dW5pdC10ZXN0IHBhdGNoLiA6KQ0KPg0KPiBIbW0sIGRpZCB5b3UgdmVyaWZ5IHlvdXIgb3duIHBh
-dGNoPyBQbGVhc2UgZ2l2ZSB0aGUgdGVzdGNhc2UuDQo+DQoNCkknYW0gc29ycnkgYnV0IHRoaXMg
-aXMgYSBjb2RlIGluc3BlY3Rpb24gcGF0aC4gQW5kIEkgdGhpbmsgdGhpcyBmaXggaXMgY29ycmVj
-dCBmcm9tIHRoZSBjb2RlIGxvZ2ljIGFuZA0KdGhpcyBiZWhhdmlvciBpcyBzaW1pbGFyIGFzIGhh
-bmRsZV92bXdyaXRlLCBoYW5kbGVfdm1wdHJzdCwgaGFuZGxlX2ludmVwdCBhbmQgc28gb24uIFRo
-YW5rcyENCg==
+Instead of the jiffies, we should update the io_ticks counter
+with the passed in parameter 'now'.
+
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+v2->v1: Use the same clock source for io_ticks and other statistics in the diskstats
+
+ block/blk-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 379f6f5..da7de9f 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1365,7 +1365,7 @@ void blk_account_io_done(struct request *req, u64 now)
+ 		part_stat_lock();
+ 		part = req->part;
+ 
+-		update_io_ticks(part, jiffies);
++		update_io_ticks(part, nsecs_to_jiffies(now));
+ 		part_stat_inc(part, ios[sgrp]);
+ 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
+ 		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
+@@ -1407,7 +1407,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
+ 		rq->part = part;
+ 	}
+ 
+-	update_io_ticks(part, jiffies);
++	update_io_ticks(part, nsecs_to_jiffies(ktime_get_ns()));
+ 
+ 	part_stat_unlock();
+ }
+-- 
+1.8.3.1
+
