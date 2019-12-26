@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D3BC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE36C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F10206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBA320882
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577369193;
-	bh=x9GnX+PrHTeZXUG6Uj8Jm/KjIXvJqw/p0hApKo59wvI=;
+	s=default; t=1577369206;
+	bh=I2R6Bu5kJD8KuY9dO7xtxRTVrMgrq8fYGn/rBwvgZrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbn+BrpYfW4SS2xbBEw49D5+SZjwwYd7qd7G3ANBFCSO/CjIeaD9krb4TqUCtrXl3
-	 JfdSFLkhRMxLXC8yN5T24nibngX46WWYN2t7ncL1BsOY3UHKoAbl6N9ifLA8z6zr9i
-	 nhBJ81/TNXNiTfC4d8CFkUr6i00MFoGlvm1cn+nM=
+	b=CDUGvACQeiHWnPchQY+XyEeyDyYw10vLmd5mXciyzTDZYKsJKJzOZrXNRX8qydrxD
+	 EFUgXjw/mYR3VRgHpieIoOMXApcMfiuKQ+bhfM624BCJJpQd0J08ly8yr971R9ycbN
+	 zPOLAAggoTA3garnRfhqQreTp0DlOwNhGFXnMzAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfLZOGd (ORCPT
+        id S1727323AbfLZOGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 09:06:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52316 "EHLO mail.kernel.org"
+        Thu, 26 Dec 2019 09:06:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbfLZOGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 09:06:32 -0500
+        id S1726450AbfLZOGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 09:06:45 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35B4D2053B;
-        Thu, 26 Dec 2019 14:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99B62075E;
+        Thu, 26 Dec 2019 14:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577369192;
-        bh=x9GnX+PrHTeZXUG6Uj8Jm/KjIXvJqw/p0hApKo59wvI=;
+        s=default; t=1577369204;
+        bh=I2R6Bu5kJD8KuY9dO7xtxRTVrMgrq8fYGn/rBwvgZrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bp7yi+9GC0df1Iehwg+jJ8ETW6VDesuF+VUJtt02+kkfr13LPgGBPUzUxzn+k225N
-         3BwMymTuTjRfNpQ2LQE87Q6vAyXOw+bcIKde8mxRiluhHQkyNVL87EGosYjO8vjWow
-         iJCsauPflxJDl9WXCU4L7dJJif3y1djnMofTAQR0=
+        b=yMMs1S89walorLz0dFpdbLyfXdVo6CtXlr4MVEBfOZq8M1oyAOHFb4O4ewrQ5qRYA
+         MMipMJxUXjnxh4SJZy+doK5ro1F/SoDmFTiSRZrixLVYIh4d48xzRrHYUTXNApm0q3
+         RegGtjxKmCUbO8xkefjb9ytaW2ZsZJ8NHKqCgagE=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Frank Rowand <frowand.list@gmail.com>
@@ -57,9 +57,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 13/22] tracing: Accept different type for synthetic event fields
-Date:   Thu, 26 Dec 2019 23:06:25 +0900
-Message-Id: <157736918549.11126.5446647426786150440.stgit@devnote2>
+Subject: [PATCH v5 14/22] tracing: Add NULL trace-array check in print_synth_event()
+Date:   Thu, 26 Dec 2019 23:06:37 +0900
+Message-Id: <157736919742.11126.13760002977641565928.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157736902773.11126.2531161235817081873.stgit@devnote2>
 References: <157736902773.11126.2531161235817081873.stgit@devnote2>
@@ -72,29 +72,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the synthetic event accepts a different type field to record.
-However, the size and signed flag must be same.
+Add NULL trace-array check in print_synth_event(), because
+if we enable tp_printk option, iter->tr can be NULL.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
  0 files changed
 
 diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index f62de5f43e79..dae2c25b209a 100644
+index dae2c25b209a..137fc50f2b35 100644
 --- a/kernel/trace/trace_events_hist.c
 +++ b/kernel/trace/trace_events_hist.c
-@@ -4110,8 +4110,11 @@ static int check_synth_field(struct synth_event *event,
+@@ -833,7 +833,7 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 		fmt = synth_field_fmt(se->fields[i]->type);
  
- 	field = event->fields[field_pos];
+ 		/* parameter types */
+-		if (tr->trace_flags & TRACE_ITER_VERBOSE)
++		if (tr && tr->trace_flags & TRACE_ITER_VERBOSE)
+ 			trace_seq_printf(s, "%s ", fmt);
  
--	if (strcmp(field->type, hist_field->type) != 0)
--		return -EINVAL;
-+	if (strcmp(field->type, hist_field->type) != 0) {
-+		if (field->size != hist_field->size ||
-+		    field->is_signed != hist_field->is_signed)
-+			return -EINVAL;
-+	}
- 
- 	return 0;
- }
+ 		snprintf(print_fmt, sizeof(print_fmt), "%%s=%s%%s", fmt);
 
