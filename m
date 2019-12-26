@@ -2,81 +2,106 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD49C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3FC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151812080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD7F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 06:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfLZG4G (ORCPT
+        id S1726460AbfLZG6L convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 01:56:06 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:59632 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfLZG4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 01:56:05 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 78D541A163E;
-        Thu, 26 Dec 2019 07:56:03 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E5F71A0BFA;
-        Thu, 26 Dec 2019 07:55:58 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48DE7402B3;
-        Thu, 26 Dec 2019 14:55:52 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] cpufreq: imx-cpufreq-dt: Add i.MX8MP support
-Date:   Thu, 26 Dec 2019 14:52:47 +0800
-Message-Id: <1577343167-16376-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
-References: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 26 Dec 2019 01:58:11 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:50328 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbfLZG6L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 01:58:11 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tly10jd_1577343401;
+Received: from 30.27.116.26(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0Tly10jd_1577343401)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 26 Dec 2019 14:56:42 +0800
+Content-Type: text/plain;
+        charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC] memcg: Add swappiness to cgroup2
+From:   teawater <teawaterz@linux.alibaba.com>
+In-Reply-To: <20191225140546.GA311630@chrisdown.name>
+Date:   Thu, 26 Dec 2019 14:56:40 +0800
+Cc:     Hui Zhu <teawater@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <6E9887B9-EEF7-406E-90D4-3FAEFE0A505E@linux.alibaba.com>
+References: <1577252208-32419-1-git-send-email-teawater@gmail.com>
+ <20191225140546.GA311630@chrisdown.name>
+To:     Chris Down <chris@chrisdown.name>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX8MP cpufreq DT support for speed grading and market
-segment check.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/cpufreq/imx-cpufreq-dt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufreq-dt.c
-index 85a6efd..912e93d 100644
---- a/drivers/cpufreq/imx-cpufreq-dt.c
-+++ b/drivers/cpufreq/imx-cpufreq-dt.c
-@@ -35,7 +35,7 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	if (of_machine_is_compatible("fsl,imx8mn"))
-+	if (of_machine_is_compatible("fsl,imx8mn") || of_machine_is_compatible("fsl,imx8mp"))
- 		speed_grade = (cell_value & IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK)
- 			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
- 	else
-@@ -54,7 +54,8 @@ static int imx_cpufreq_dt_probe(struct platform_device *pdev)
- 		if (of_machine_is_compatible("fsl,imx8mm") ||
- 		    of_machine_is_compatible("fsl,imx8mq"))
- 			speed_grade = 1;
--		if (of_machine_is_compatible("fsl,imx8mn"))
-+		if (of_machine_is_compatible("fsl,imx8mn") ||
-+			of_machine_is_compatible("fsl,imx8mp"))
- 			speed_grade = 0xb;
- 	}
- 
--- 
-2.7.4
+> 在 2019年12月25日，22:05，Chris Down <chris@chrisdown.name> 写道：
+> 
+> Hi Hui,
+> 
+> Hui Zhu writes:
+>> Even if cgroup2 has swap.max, swappiness is still a very useful config.
+>> This commit add swappiness to cgroup2.
+> 
+> When submitting patches like this, it's important to explain *why* you want it and what evidence there is. For example, how should one use this to compose a reasonable system? Why aren't existing protection controls sufficient for your use case? Where's the data?
+> 
+> Also, why would swappiness be something cgroup-specific instead of hardware-specific, when desired swappiness is really largely about the hardware you have in your system?
+> 
+> I struggle to think of situations where per-cgroup swappiness would be useful, since it's really not a workload-specific setting.
+
+
+Hi Chris,
+
+My thought about per-cgroup swappiness is different applications should have different memory footprint.
+For example, an application does a lot of file access work in a memory-constrained environment.  Its performance depend on the file access speed.  Keep more file cache will good for it.  Then more swappiness will good for it, especially with the high speed swap device(zram/zswap).
+And in the same environment, an application that access anon memory a lot of times.  Use low swapiness will good for its performance.  But just let it not to swap is not a good for it because the code is inside file cache.  Just drop the file cache will decrease the application speed sometime.
+Both of them are extreme examples.  Other applications maybe access both file and anon.  Maybe define a special swapiness is good for it.
+
+This is what I thought about add swappiness to cgroup2.
+
+Best,
+Hui
+
+> 
+> Thanks,
+> 
+> Chris
+> 
+>> Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+>> ---
+>> mm/memcontrol.c | 5 +++++
+>> 1 file changed, 5 insertions(+)
+>> 
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index c5b5f74..e966396 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -7143,6 +7143,11 @@ static struct cftype swap_files[] = {
+>> 		.file_offset = offsetof(struct mem_cgroup, swap_events_file),
+>> 		.seq_show = swap_events_show,
+>> 	},
+>> +	{
+>> +		.name = "swappiness",
+>> +		.read_u64 = mem_cgroup_swappiness_read,
+>> +		.write_u64 = mem_cgroup_swappiness_write,
+>> +	},
+>> 	{ }	/* terminate */
+>> };
+>> 
+>> -- 
+>> 2.7.4
+>> 
 
