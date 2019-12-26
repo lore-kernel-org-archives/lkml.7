@@ -2,208 +2,124 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E4C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D33BCC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A002D20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE56206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b1Bea9Qq"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="i8vuntsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfLZTMY (ORCPT
+        id S1726920AbfLZTMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:12:24 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:42277 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfLZTMY (ORCPT
+        Thu, 26 Dec 2019 14:12:46 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37193 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfLZTMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 14:12:24 -0500
-Received: by mail-vk1-f194.google.com with SMTP id s142so6316152vkd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 11:12:22 -0800 (PST)
+        Thu, 26 Dec 2019 14:12:45 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so11719361wru.4;
+        Thu, 26 Dec 2019 11:12:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r8KpMgsYL2ZCy9eGVPdtnJ4T4Q2FxqQwB9hJfGokaLs=;
-        b=b1Bea9QqFDzeF9WPB0W5ucaCk4UmLbyLzI58h7lEJOhZk39mF9M9biGSVuCZ4X3tbW
-         JFuIFnUCXw8ixNcsTDJKGKvoG6g/R3HcNNZLXRbmyn71/cBPL7G5KO6RTRqjdB8SjpLd
-         2hW3ccGuDSz2WNYtxyjIMQfkq8PD8hX6GxO4TBfe3WGEd5d1fML3yt6bfHazSEj9FhrS
-         D72tB5v6lPkD32ey6Gw1MWRlAwPDuf3Vh23Iq2u2Ixwx8iFi2em/zQ/U7xOnvKDZ5kfI
-         iU+B6eBazSGV4hwoNxAj02v2c53fp0KSOUduOSzuGGU0BjYMe9UwdG/d0MuR7jKaEfcG
-         Caag==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o51048wYw9BEZaiitxLj90ZEMjEnTK72AipdZVc4KuA=;
+        b=i8vuntspkDhdm9kb7ZKWY0l4L1kEyaFhXOKywZwoQEtIaTXSCJ21zDm6faFsybW7u/
+         rYJ0iw3mK/ofkusOEzVsR4Czh4xj7ICqWfnKe0hRA08VcrczuT6A6HIUmZlrtUKj166M
+         Q36OV++Jsv1YL+0YSYhnbDj206025nkSTx+JaHQg8BHZkA16NAlmZ4tr3IxMB/bQTm8b
+         C3mIqUNInWBkia2ZA64gUEB4yOEJZQydUbNm/6mjCS+BXBHg4pe4rtQePnS9FnN9Ts7l
+         1pTSRiMRAO9R5EaL9MLhurhiHxtu3+Jpk8qGoVdgX4Wgu5UgSuHly8WSQhO+4dGm5E79
+         TBTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r8KpMgsYL2ZCy9eGVPdtnJ4T4Q2FxqQwB9hJfGokaLs=;
-        b=HnAi+0i98c9bkgTDKpQEzvejkloU7gZ+/p10Bxy2w47GFYRpikKfDm+fpfndv1vTxk
-         qgIjaYs4M3CDZuiUD8zUwPxu6I+JI+XZhJbkydYpcrrOr5OuAIYH5CZQo8ElHFhQh8wy
-         0aykrjrTu1J7pD5Ifus6WrVH4tyHmvZc8sqKJP2cET0K3NoWLvN+rhjdimgaVXgF46Ll
-         hOKTvap6+qm1RQJLa5xbf2nKl9LKRHgKpozcC+emZpv01HpsOc7HucaglUMCg3nJZRCa
-         BL3F1DqYmEClcLZ1dHCl5Q3wl2m5jZTHgIsKzxehYmf7bLiXzVb26kmvN6VQ+qh02ElM
-         M00Q==
-X-Gm-Message-State: APjAAAV9T9m2u9NnCEj7Dr+fN1LkS3TWlJs/19wNupWLHderlIwIx9y/
-        agPMuPV5fCJGin74SJ66a4+dX+IlkuEdtYWqUhwxKudnPoo=
-X-Google-Smtp-Source: APXvYqyh6h0Cf/gdN5ieAF3s4fnxHFvyfa9/Cw2SM+DE8ZiVc4eKnVueqChIfPYbNB4aPgx7HuTWkd/j1u+pgZJE9ow=
-X-Received: by 2002:ac5:cde3:: with SMTP id v3mr28383914vkn.43.1577387541747;
- Thu, 26 Dec 2019 11:12:21 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o51048wYw9BEZaiitxLj90ZEMjEnTK72AipdZVc4KuA=;
+        b=fplzXlBACgHW7s0Lrnm3TM+o2001fsiiaNL4NYWcYfnta0HswPz8wII6lhBTF+/7jN
+         xf4fm2uQaFRiK+dIKzSeGxdWJ054R5k2gqRPIW7l2z5ywFXezzVUL8JWD0ofyhq8LWfB
+         FTOmAVF71iPB0Tw7d5hAxzc3e4MT1q1wVODJ+x3mhnnD3eIM1PS67fLd70p0x7gRToVd
+         zm279xbi7nIFP7hDRhKpf1UsT601OtzWbsxJqYFu09CFQwxe4eGVhuGZHRTAWhYhl3tS
+         UH8V/vG9Wcy9kWGzJezBUPoRUPqNO9V81WZ8aHTnWAo0yrVzZDiqGBe7yqGWu41nfPmu
+         u7Pw==
+X-Gm-Message-State: APjAAAX2paWV8jFxp/Rhm+rvvlyLXug6t31mUNtCio1kZv3Ad9hS3bV0
+        hIgK8FgGPVMs+2C1hbwcdXVbtPDAXhs=
+X-Google-Smtp-Source: APXvYqyLfiM/yY8EI/4Sm/i06hdMrdhfhj1HyNFKjcjBqFpoHTDendyzweHnTqvKQ5F4jw+c9GzBnQ==
+X-Received: by 2002:adf:e609:: with SMTP id p9mr45201687wrm.397.1577387563096;
+        Thu, 26 Dec 2019 11:12:43 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id o7sm8965937wmh.11.2019.12.26.11.12.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 11:12:42 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com,
+        sboyd@kernel.org
+Cc:     narmstrong@baylibre.com, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/2] clk: Meson8/8b/8m2: fix the mali clock flags
+Date:   Thu, 26 Dec 2019 20:12:22 +0100
+Message-Id: <20191226191224.3785282-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191223140322.20013-1-mst@redhat.com> <CANDihLHPk5khpv-f-M+qhkzgTkygAts38GGb-HChg-VL2bo+Uw@mail.gmail.com>
- <CA+FuTSfq5v3-0VYmTG7YFFUqT8uG53eXXhqc8WvVvMbp3s0nvA@mail.gmail.com>
- <CA+FuTScwwajN2ny2w8EBkBQd191Eb1ZsrRhbh3=5eQervArnEA@mail.gmail.com>
- <CANDihLFv+DJYOD1m_Z3CKuxoXG-z4zPy_Tc2eoggq1KRo+GeWw@mail.gmail.com> <CA+FuTSfrg9eOee6sxR-oSb4sfK2-FbQh7A0y3YJOjf+pTmSjxA@mail.gmail.com>
-In-Reply-To: <CA+FuTSfrg9eOee6sxR-oSb4sfK2-FbQh7A0y3YJOjf+pTmSjxA@mail.gmail.com>
-From:   Alistair Delva <adelva@google.com>
-Date:   Thu, 26 Dec 2019 11:12:10 -0800
-Message-ID: <CANDihLHxtZ+3vo4Eva=P7LN9y04wrKq3VKRUj0yo6tDvaM+CbQ@mail.gmail.com>
-Subject: Re: [PATCH net] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 8:02 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> On Mon, Dec 23, 2019 at 3:22 PM Alistair Delva <adelva@google.com> wrote:
-> >
-> > On Mon, Dec 23, 2019 at 12:12 PM Willem de Bruijn
-> > <willemdebruijn.kernel@gmail.com> wrote:
-> > >
-> > > On Mon, Dec 23, 2019 at 2:56 PM Willem de Bruijn
-> > > <willemdebruijn.kernel@gmail.com> wrote:
-> > > >
-> > > > 00fffe0ff0 DR7: 0000000000000400
-> > > > > > Call Trace:
-> > > > > >  ? preempt_count_add+0x58/0xb0
-> > > > > >  ? _raw_spin_lock_irqsave+0x36/0x70
-> > > > > >  ? _raw_spin_unlock_irqrestore+0x1a/0x40
-> > > > > >  ? __wake_up+0x70/0x190
-> > > > > >  virtnet_set_features+0x90/0xf0 [virtio_net]
-> > > > > >  __netdev_update_features+0x271/0x980
-> > > > > >  ? nlmsg_notify+0x5b/0xa0
-> > > > > >  dev_disable_lro+0x2b/0x190
-> > > > > >  ? inet_netconf_notify_devconf+0xe2/0x120
-> > > > > >  devinet_sysctl_forward+0x176/0x1e0
-> > > > > >  proc_sys_call_handler+0x1f0/0x250
-> > > > > >  proc_sys_write+0xf/0x20
-> > > > > >  __vfs_write+0x3e/0x190
-> > > > > >  ? __sb_start_write+0x6d/0xd0
-> > > > > >  vfs_write+0xd3/0x190
-> > > > > >  ksys_write+0x68/0xd0
-> > > > > >  __ia32_sys_write+0x14/0x20
-> > > > > >  do_fast_syscall_32+0x86/0xe0
-> > > > > >  entry_SYSENTER_compat+0x7c/0x8e
-> > > > > >
-> > > > > > A similar crash will likely trigger when enabling XDP.
-> > > > > >
-> > > > > > Reported-by: Alistair Delva <adelva@google.com>
-> > > > > > Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > > > > Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
-> > > > > > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > > > ---
-> > > > > >
-> > > > > > Lightly tested.
-> > > > > >
-> > > > > > Alistair, could you please test and confirm that this resolves the
-> > > > > > crash for you?
-> > > > >
-> > > > > This patch doesn't work. The reason is that NETIF_F_LRO is also turned
-> > > > > on by TSO4/TSO6, which your patch didn't check for. So it ends up
-> > > > > going through the same path and crashing in the same way.
-> > > > >
-> > > > >         if (virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO4) ||
-> > > > >             virtio_has_feature(vdev, VIRTIO_NET_F_GUEST_TSO6))
-> > > > >                 dev->features |= NETIF_F_LRO;
-> > > > >
-> > > > > It sounds like this patch is fixing something slightly differently to
-> > > > > my patch fixed. virtnet_set_features() doesn't care about
-> > > > > GUEST_OFFLOADS, it only tests against NETIF_F_LRO. Even if "offloads"
-> > > > > is zero, it will call virtnet_set_guest_offloads(), which triggers the
-> > > > > crash.
-> > > >
-> > > >
-> > > > Interesting. It's surprising that it is trying to configure a flag
-> > > > that is not configurable, i.e., absent from dev->hw_features
-> > > > after Michael's change.
-> > > >
-> > > > > So either we need to ensure NETIF_F_LRO is never set, or
-> > > >
-> > > > LRO might be available, just not configurable. Indeed this was what I
-> > > > observed in the past.
-> > >
-> > > dev_disable_lro expects that NETIF_F_LRO is always configurable. Which
-> > > I guess is a reasonable assumption, just not necessarily the case in
-> > > virtio_net.
-> > >
-> > > So I think we need both patches. Correctly mark the feature as fixed
-> > > by removing from dev->hw_features and also ignore the request from
-> > > dev_disable_lro, which does not check for this.
-> >
-> > Something like this maybe:
-> >
-> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > index 4d7d5434cc5d..0556f42b0fb5 100644
-> > --- a/drivers/net/virtio_net.c
-> > +++ b/drivers/net/virtio_net.c
-> > @@ -2560,6 +2560,9 @@ static int virtnet_set_features(struct net_device *dev,
-> >         u64 offloads;
-> >         int err;
-> >
-> > +       if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS))
-> > +               return 0;
-> > +
-> >         if ((dev->features ^ features) & NETIF_F_LRO) {
-> >                 if (vi->xdp_queue_pairs)
-> >                         return -EBUSY;
-> > @@ -2971,6 +2974,15 @@ static int virtnet_validate(struct virtio_device *vdev)
-> >         if (!virtnet_validate_features(vdev))
-> >                 return -EINVAL;
-> >
-> > +       /* VIRTIO_NET_F_CTRL_GUEST_OFFLOADS does not work without
-> > +        * VIRTIO_NET_F_CTRL_VQ. However the virtio spec does not
-> > +        * specify that VIRTIO_NET_F_CTRL_GUEST_OFFLOADS depends
-> > +        * on VIRTIO_NET_F_CTRL_VQ so devices can set the later but
-> > +        * not the former.
-> > +        */
-> > +       if (!virtio_has_feature(vdev, VIRTIO_NET_F_CTRL_VQ))
-> > +               __virtio_clear_bit(vdev, VIRTIO_NET_F_CTRL_GUEST_OFFLOADS);
-> > +
-> >         if (virtio_has_feature(vdev, VIRTIO_NET_F_MTU)) {
-> >                 int mtu = virtio_cread16(vdev,
-> >                                          offsetof(struct virtio_net_config,
->
-> I think we need three separate patches.
->
-> - disable guest offloads if VQ is absent
-> - remove LRO from hw_features if guest offloads are absent
->
-> This should fix the ethtool path.  But there is a separate path to
-> disable LRO through dev_disable_lro (from bond enslave, xdp install,
-> sysctl -n net.ipv.ip_forward=1, ..) that assumes LRO is always
-> configurable. So we cannot work around needing a patch to
-> virtset_set_features.
->
-> After a long detour, I think your original submission is fine for
-> that.
+While playing with devfreq support for the lima driver I experienced
+sporadic (random) system lockups. It turned out that this was in
+certain cases when changing the mali clock.
 
-Alright. Knowing all the use cases now, and if nobody beats me to it,
-I'll resubmit this as a series which fixes the three paths.
+The Amlogic vendor GPU platform driver (which is responsible for
+changing the clock frequency) uses the following pattern when updating
+the mali clock rate:
+- at initialization: initialize the two mali_0 and mali_1 clock trees
+  with a default setting and enable both clocks
+- when changing the clock frequency:
+-- set HHI_MALI_CLK_CNTL[31] to temporarily use the mali_1 clock output
+-- update the mali_0 clock tree (set the mux, divider, etc.)
+-- clear HHI_MALI_CLK_CNTL[31] to temporarily use the mali_0 clock
+   output again
 
-> Perhaps with a comment in the commit that it is needed even
-> if the feature is absent from hw_features for dev_disable_lro.
+With the common clock framework we can even do better:
+by setting CLK_SET_RATE_PARENT for the mali_0 and mali_1 output gates
+we can force the common clock framework to update the "inactive" clock
+and then switch to it's output.
 
-Ack.
+I only tested this patch for a limited time only (approx. 2 hours).
+So far I couldn't reproduce the sporadic system lockups with it.
+However, broader testing would be great so I would like this to be
+applied for -next.
+
+Changes since v1 at [0]:
+- extend the existing comment in patch #1 to describe how the glitch-
+  free mux works with the CCF
+- slightly updated the patch description of patch #1 to clarify that
+  the "mali_0" or "mali_1" trees must not be changed while running
+- add patch #2 to update the clk_set_rate() kerneldoc because we agreed
+  that clk_set_rate() should do a root-to-leaf update (it does already,
+  it's just not documented)
+
+
+[0] https://patchwork.kernel.org/cover/11293177/
+
+
+Martin Blumenstingl (2):
+  clk: meson: meson8b: make the CCF use the glitch-free "mali" mux
+  clk: clarify that clk_set_rate() does updates from top to bottom
+
+ drivers/clk/meson/meson8b.c | 11 +++++++----
+ include/linux/clk.h         |  3 +++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.24.1
+
