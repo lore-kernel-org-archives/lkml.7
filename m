@@ -2,150 +2,162 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925A0C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B7AC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E9C2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BEE62075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TDSn+jT+";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ZXNnWdDo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQzA5qIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfLZROi (ORCPT
+        id S1726654AbfLZRWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 12:14:38 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59892 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726480AbfLZROh (ORCPT
+        Thu, 26 Dec 2019 12:22:14 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43979 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZRWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 12:14:37 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 14305C096E;
-        Thu, 26 Dec 2019 17:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1577380476; bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=TDSn+jT+zVxCM459OfDnrzPiZ5IwRY6fWxTt6dN0z5FpDVFkS4IlEQ3m0AdGofa5P
-         p+/VKKSxpiNcCsoSuXkpYhSspzJWNI9r5O5MFNDQyLBjouilfA3TS78vZXofn27EwL
-         x8cdYlRso+Q5Ksb5Ddxffu/GRNnEkKGZADoTql6G0uXMKsVqfUxAw3cyUogajm1+Ia
-         6CDBFjFd3B4zgZ29P8FB58BPXmK7Nd66AXYY7HLSKIBFMBBr90DRtvF9amfAg9CgIX
-         /adpjQRskw6hMhQ0NsPzZ9TWdAmEAQqbScPR50CDPxLgi+k1q4HdO4NO0tk9f0JTtk
-         y3x0PF2negbTQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id D288AA007E;
-        Thu, 26 Dec 2019 17:14:33 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 26 Dec 2019 09:14:23 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 26 Dec 2019 09:14:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lf8pyPC+mugwc/qRwl7wrNhhuv/4pQu7J5XaYBgmes+kEacNFIIZXaUGlELcE0LvpVo+3yKvtTXsEGhHh1V8sQocPUvYUMAXIqftjm9tr94MnXMiFP7tFTmWb7COvNu1KZvHEv0CZ6iuHM5IS0sX81oC6UC6cfTdsWUUrG9K+Bt/3H+FzO3+YwEzPyLOFymXNNpWhDaeT49WNTjVtsGKszgkdmwD5G13CQiGfkwpKsqvNa3lEV2xqCZjr7JHg0qeXXDZy4vlhphMYx7paweRfbogVEEvG1YdjEnL9niT/4XKBqKGkgqRKPwiK6OVfeijLVbBLMEb3ZgbZlvuGA4HjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
- b=jQj0dyUgjEmz1ebiVb7tdifDFC4PuvSrLVjZhPS1pXk+YspwB26pDpAdRiRxI2/OaUl+Bdpoo95ydWGooDprvR2Q0pBqJWWQDDhfq2p8gJaVm2w/vpDXtdpCqXwYKZXptuN8LFXqXgC1WjtJxyheKY31Xb2RMjBYjfAzBoKek9cfsZFbhCJYisb0AzhTNHSXM1t2e+ZRd8uiriqjKCVDnBjPBJusNe5DWnh7wLNoBiWD/eoSGch8iLTTyi4MYdiOMKd3JVYzmArfPGpDuqCwJLjgwpvVpnMEYMxHU7JP1sU9UWfsy40XydKYWaEygXu8VM/Ve7IfKEzRm0V1Z7eJtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+        Thu, 26 Dec 2019 12:22:13 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k197so13114773pga.10;
+        Thu, 26 Dec 2019 09:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
- b=ZXNnWdDo+eu2qe9NLZyCVCYyLTWnX0gDf0wszsxtRrrTWQO6iaUcCKvNcjwU3oL2X+6Vh4oqSpQWgDu3H/PjKCsAoD6OG9ceaC8EnKdr+/evQp1Y/I76darmgFvqbLaIBJH30opwraIH5RAOrFZYSLKRvZC7IANdjYH2/WPc03Q=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3235.namprd12.prod.outlook.com (20.179.67.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Thu, 26 Dec 2019 17:14:21 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::3d20:3a36:3b64:4510]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::3d20:3a36:3b64:4510%7]) with mapi id 15.20.2581.007; Thu, 26 Dec 2019
- 17:14:21 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Colin Ian King <colin.king@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: net: stmmac: Add basic EST support for GMAC5+
-Thread-Topic: net: stmmac: Add basic EST support for GMAC5+
-Thread-Index: AQHVt5AvYOAfEKP32kajpx2asGgxD6fMsE8A
-Date:   Thu, 26 Dec 2019 17:14:20 +0000
-Message-ID: <BN8PR12MB326646266EF7CEA29685CF0AD32B0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <c1b6b4cc-bc94-8ed6-0098-de9e5321722a@canonical.com>
-In-Reply-To: <c1b6b4cc-bc94-8ed6-0098-de9e5321722a@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [188.251.69.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efe4d2ec-6943-4a75-631e-08d78a270c70
-x-ms-traffictypediagnostic: BN8PR12MB3235:
-x-microsoft-antispam-prvs: <BN8PR12MB32353C7D2F3A9FD4BC87C9FBD32B0@BN8PR12MB3235.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 02638D901B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(136003)(396003)(366004)(51914003)(189003)(199004)(71200400001)(316002)(86362001)(8676002)(110136005)(66946007)(76116006)(26005)(6506007)(8936002)(52536014)(33656002)(81156014)(81166006)(186003)(5660300002)(2906002)(9686003)(55016002)(64756008)(66476007)(66446008)(7696005)(66556008)(4326008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3235;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ooaZTlnb5x4NdPu75Of9zALmdLfFosk6YoMv4zSS+OmKcNDX+R2YE0DiMNOv61zNmxgZUAYtHlgmZ+ASC+bhE3zax4gPD0MVGXPtyDRL9hjRt0KT0ZptXcYfVCG1phqK4dk1SIyzFKtFHT8ls28ACDuERWGE2N705RSISA+89J2GBChNCBQGAmKbuAknrwrr/bPr3P0ziXbXx3AscqVh/AzK/HrPi0KznnLdpUDJCMcVcK/Q5tl6TTEGd7Uq7XLFaXWqU4nFkoaDP6BliriO3XR1oZjjNbL1/rXjXlBGWUryuJRB81sIpyFIOZ5Mc12ExPHiymZjuwj5AlIIBLFnEwQMX2/qYpy/fPvPgUn8rJW8ux+d0Id4anJn+pmhG0D8xvF5+h8C4pMDzsE5setbEHoemkpL6ajuIaGPWDPwwit5JfGl7IQVHkccZs8ZJzLgJclghaP+4ttKcsog57C1J5yNo0106ZSGEi3kLuX/QaVFtqF5Wabw+hcUI4oqWtMn
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l6FNc4QNuGPNE1Oy+AsJ/HcUQQhUOJ+/HyK0yE0YRTo=;
+        b=vQzA5qImmRfD2Viy4OoHhSeUm+QmovQe6k6UgmOfo4fvkM/CXD/vijtbh+JKdxcHay
+         hALLMOacPTTCyq3X11raB4Ud2m9xBznin3q/EetWqHSFXNN+QRvQ14dufx1PH8DHOYQy
+         KDW47SB9NQTgo2kIT3MvPdv6UjPE/q70LSPpG8A4ndSKDxsIZ5k5UO8xmv0fSvRGN8lI
+         BzAnNrBosEPg29fQb0QKTCMghBlJ6OMcGC3I8MSCdBmk9Hwo2PIUeTw203HjQrqxbnRt
+         a6JmPOhY2YEo9rV5lPbCfoaK4B8lUC0RzUVnnTA1wWm2qyovHBJtSlm2iiQGLjWxBcyS
+         mJWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l6FNc4QNuGPNE1Oy+AsJ/HcUQQhUOJ+/HyK0yE0YRTo=;
+        b=ka35tkT2NC29tx/7u92RsyqFmqhf2uqVJF38yiQZ8XuKsjsPby3sZ4VPVSoVWid7d4
+         PQUQf3aM/8d8/Ns/21VCuYeDlUwhktFJ0MtUbH48rzQj1v+sKIXKHljRbsb44y9hlklg
+         DbvoudhmfMuoOf3i8rhAw5KzPDkcaKQ8Kw65MfaWBSYJfbUzluJsxyIR4tdmgdb5eEQq
+         djKjRN4YqeVMKwLjcV5Uv9CHklOtUl39Sx1/LmodwVljEok77LOOD+2t4cf3B68uNyCu
+         jgnBT/74nNTsxCWUxmSakGRjpd9RFfCBT7v5tnvpNqotl/QkepJ2xOhzTBzSbgtFBoQ7
+         eadg==
+X-Gm-Message-State: APjAAAXaGC5Cm4XNcFGK9W3NWtq5LOKnUXP6tJL7bYLIyd4BXKsIAviG
+        tXqySHgrU4LS4u/RVDWvmK6C9rwA
+X-Google-Smtp-Source: APXvYqyEvJWlsXAytZd921Rhph3L83NAE4icdA/dphchI5YRrfhXDV06kSFwOM+s/HucnNokBs3wzA==
+X-Received: by 2002:aa7:8181:: with SMTP id g1mr50402760pfi.215.1577380932643;
+        Thu, 26 Dec 2019 09:22:12 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d23sm36583295pfo.176.2019.12.26.09.22.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 09:22:11 -0800 (PST)
+Subject: Re: [PATCH] clk: Don't try to enable critical clocks if prepare
+ failed
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191225163429.29694-1-linux@roeck-us.net>
+ <1jd0cbpg77.fsf@starbuckisacylon.baylibre.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <fed37460-6097-1a3d-3c05-e203871610ac@roeck-us.net>
+Date:   Thu, 26 Dec 2019 09:22:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: efe4d2ec-6943-4a75-631e-08d78a270c70
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Dec 2019 17:14:21.0305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RFZDm1voRoN4GsI3W0bWEdT9k6T3qyaDPJxtxaXB0GCH28xUAsFJ+rVkjj3V9ZpTJOoCAVwo2ctW7pC20ZXuTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3235
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <1jd0cbpg77.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCkRhdGU6IERl
-Yy8yMC8yMDE5LCAyMzo0OTowMiAoVVRDKzAwOjAwKQ0KDQo+IEhpLA0KPiANCj4gU3RhdGljIGFu
-YWx5c2lzIHdpdGggQ292ZXJpdHkgaGFzIGRldGVjdGVkIGEgcG90ZW50aWFsIGlzc3VlIHdpdGgg
-dGhlDQo+IGZvbGxvd2luZyBjb21taXQ6DQo+IA0KPiBjb21taXQgNTA0NzIzYWYwZDg1NDM0YmU1
-ZmI2ZjJkZGUwYjYyNjQ0YTdmMWVhZA0KPiBBdXRob3I6IEpvc2UgQWJyZXUgPGpvYWJyZXVAc3lu
-b3BzeXMuY29tPg0KPiBEYXRlOiAgIFdlZCBEZWMgMTggMTE6MzM6MDUgMjAxOSArMDEwMA0KPiAN
-Cj4gICAgIG5ldDogc3RtbWFjOiBBZGQgYmFzaWMgRVNUIHN1cHBvcnQgZm9yIEdNQUM1Kw0KPiAN
-Cj4gDQo+IEluIGZ1bmN0aW9uIGR3bWFjNV9lc3RfY29uZmlndXJlKCkgd2UgaGF2ZSBhIHU2NCB0
-b3RhbF9jdHIgYmVpbmcNCj4gYXNzaWduZWQgYXMgZm9sbG93czoNCj4gDQo+IAl0b3RhbF9jdHIg
-PSBjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdICogMTAwMDAwMDAwMDsNCj4gDQo+IFRoZSBjZmct
-PmN0clsxXSBpcyBhIHUzMiwgdGhlIG11bHRpcGxpY2F0aW9uIG9mIGNmZy0+Y3RyWzFdIGlzIGEg
-dTMyDQo+IG11bHRpcGxpY2F0aW9uIG9wZXJhdGlvbiwgc28gbXVsdGlwbHlpbmcgYnkgMTAwMDAw
-MDAwMCBjYW4gcG90ZW50aWFsbHkNCj4gY2F1c2UgYW4gb3ZlcmZsb3cuICBFaXRoZXIgY2ZnLT5j
-dHJbMV0gbmVlZHMgdG8gYmUgY2FzdCB0byBhIHU2NCBvcg0KPiAxMDAwMDAwMDAwIHNob3VsZCBi
-ZSBhdCBsZWFzdCBhIDEwMDAwMDAwMDBVTCB0byBhdm9pZCB0aGlzIG92ZXJmbG93LiBJDQo+IHdh
-cyBnb2luZyB0byBmaXggdGhpcyBidXQgb24gZnVydGhlciBpbnNwZWN0aW9uIEkgd2FzIG5vdCBz
-dXJlIGlmIHRoZQ0KPiBvcmlnaW5hbCBjb2RlIHdhcyBpbnRlbmRlZCBhczoNCj4gDQo+IAl0b3Rh
-bF9jdHIgPSBjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdICogMTAwMDAwMDAwMFVMOw0KPiBvcjoN
-Cj4gCXRvdGFsX2N0ciA9IChjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdKSAqIDEwMDAwMDAwMDBV
-TDsNCj4gDQo+IC4uaGVuY2UgSSdtIGZsYWdnaW5nIHRoaXMgdXAgYXMgcG90ZW50aWFsIGVycm9y
-Lg0KDQpUaGFua3MgZm9yIHRoZSByZXBvcnQuIFRoZSBmaXJzdCBvcHRpb24gaXMgdGhlIGNvcnJl
-Y3Qgb25lIGFzIGN0clsxXSBpcyANCnNlY29uZHMgYW5kIGN0clswXSBpcyBuYW5vc2Vjb25kcy4g
-Q2FuIHlvdSBzZW5kIGEgZml4LXVwIHBhdGNoID8NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3Vl
-bCBBYnJldQ0K
+On 12/26/19 1:51 AM, Jerome Brunet wrote:
+> 
+> On Wed 25 Dec 2019 at 17:34, Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+>> The following traceback is seen if a critical clock fails to prepare.
+>>
+>> bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+>> ------------[ cut here ]------------
+>> Enabling unprepared plld_per
+>> WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
+>> ...
+>> Call trace:
+>>   clk_core_enable+0xcc/0x2c0
+>>   __clk_register+0x5c4/0x788
+>>   devm_clk_hw_register+0x4c/0xb0
+>>   bcm2835_register_pll_divider+0xc0/0x150
+>>   bcm2835_clk_probe+0x134/0x1e8
+>>   platform_drv_probe+0x50/0xa0
+>>   really_probe+0xd4/0x308
+>>   driver_probe_device+0x54/0xe8
+>>   device_driver_attach+0x6c/0x78
+>>   __driver_attach+0x54/0xd8
+>> ...
+>>
+>> Check return values from clk_core_prepare() and clk_core_enable() and
+>> bail out if any of those functions returns an error.
+>>
+>> Cc: Jerome Brunet <jbrunet@baylibre.com>
+>> Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   drivers/clk/clk.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+>> index 6a11239ccde3..772258de2d1f 100644
+>> --- a/drivers/clk/clk.c
+>> +++ b/drivers/clk/clk.c
+>> @@ -3426,11 +3426,17 @@ static int __clk_core_init(struct clk_core *core)
+>>   	if (core->flags & CLK_IS_CRITICAL) {
+>>   		unsigned long flags;
+>>   
+>> -		clk_core_prepare(core);
+>> +		ret = clk_core_prepare(core);
+>> +		if (ret)
+>> +			goto out;
+>>   
+>>   		flags = clk_enable_lock();
+>> -		clk_core_enable(core);
+>> +		ret = clk_core_enable(core);
+>>   		clk_enable_unlock(flags);
+>> +		if (ret) {
+>> +			clk_core_unprepare(core);
+>> +			goto out;
+>> +		}
+> 
+> Hi Guenter,
+> 
+> It looks like it was a mistake to discard the possibility of a failure
+> here. Thanks for correcting this.
+> 
+> However, we would not want a critical clock to silently fail to
+> enable. This might lead to unexpected behavior which are generally hard
+> (and annoying) to debug.
+> 
+> Would you mind adding some kind of warning trace in case this fails ?
+> 
+
+The really relevant information is:
+
+bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
+
+which is already displayed (and not surprising since cprman isn't implemented
+in qemu). While I agree that an error message might be useful, replacing
+one traceback with another doesn't really make sense to me, and I am not
+really a friend of spreading tracebacks throughout the kernel. Please feel
+free to consider this patch to be a bug report, and feel free to ignore it
+and suggest something else.
+
+Thanks,
+Guenter
