@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4444EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D99C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1822320828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F08A20740
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PovNYG/8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UQmFVNA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfLZWRv (ORCPT
+        id S1727040AbfLZWRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:17:51 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34027 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfLZWRr (ORCPT
+        Thu, 26 Dec 2019 17:17:49 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46264 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfLZWRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Dec 2019 17:17:47 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r11so13513248pgf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:17:47 -0800 (PST)
+Received: by mail-pl1-f193.google.com with SMTP id y8so10937185pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:17:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=atr5dH9+58H0L1dBqDewFnWoCVnAfiU1TJyN0b3SOLw=;
-        b=PovNYG/8yvcQkau2yxewsi61ZYVYH+xuJSm+1FfpbcX5Lrd0edTC29t1WUNmEMOldi
-         qPeG9Jit/2cej0EQ3S5UwiPB/P81sRwx+kA8476XgyLM5vPpDYODNowEb4qZFqL370i1
-         nXB/3af9sVFwcCfMTVDORSGSaNQlKr11e+WY4JkXYXKJP5VvY/aqksZoQw0qmCWg2S0s
-         vqwUhMkHrVdcPw4NicoDOQLFcfvb9iF8bkTXnGXxMQHpPYnXN+5TlDya2LAmMPM+fAMa
-         HvLK4DsOixPh0d9iJ2c1bstBsXyJ6sHGcqpJ+oJBaA1BiyxgKAFa91LP4IwOrSkettTv
-         4fJw==
+        bh=tubUT90M6ZUsQq/NCNWX8+4auD3W82M3BMPow6ghbj8=;
+        b=UQmFVNA7UILTF3d5FkPUjDuMXwndbRHZm1U93zjabv/K6dGhtSfmt4s9JIg+xMq75d
+         Y23XDZw4It10l4QHXqaDJ2gjQ7UgsgsYKUABY6o6xlTM6PcI9JGpvxzOiNBkPbauQJQX
+         rOb03V74Q2iuvkeRbjoJ25qWSvTN+tewTjT3wPd/ueVoyCzibclmSE33cOkd0g/LLhFE
+         PwN21iKGHN6E0QaX+a9jOmpxp/0FWhAO0E6515STbaiPfJvHp37nOVMDlntvCQ+pVwZD
+         /Ct2qloyyzoXbev8IsVQDmVybAPP5fOQHljHSIHCexni+dNs47E8KE1BxAOlCHWLI6ls
+         AFUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=atr5dH9+58H0L1dBqDewFnWoCVnAfiU1TJyN0b3SOLw=;
-        b=P/fY5R/SYvcL56UbaiEHvgI9QSdwdnZ6pfIAK10rWJgwFmyWnOjfFHDXoUfjVhMHaP
-         MZ9yjdM7B4D4ylTsncgdDQa5q8ozTrYcBGMNn2MHhERcuiM+kv9fDQVgFU/Z7jNZISI8
-         M+HxToOAVivH8oZD91bMJSVwsedSbOG+YZcL48UmmNg0r5TEvEaDNMlSFhjTNu1Eoonh
-         07otVcWVqJxYNpwXGHbdPJO+siP6xE5R86dhpA7LbqFEJ2RdmyB4fdI4hbtDCXDtFEg8
-         349I5bWx6bwDc5gHbJg+1T3GHpyxJbwK/+MEe4MS9a//mgr+DVFGBy3ExdMc1uXVzn7x
-         n4gQ==
-X-Gm-Message-State: APjAAAX4Itc7nLJVEbB8z8KpeeBp5A48Nh3hgHXc7ZbrPNSK0kpT8yqF
-        TMMXt8Tjbugue64+YRswEG7jug==
-X-Google-Smtp-Source: APXvYqxjkphDV74NYDySl7S4Q4EqHt9CrR3SMTKiWnb+uEpFNDfkgplzaC9LAXUDcXRpxSglzDL53A==
-X-Received: by 2002:a62:3603:: with SMTP id d3mr49051073pfa.37.1577398667182;
-        Thu, 26 Dec 2019 14:17:47 -0800 (PST)
+        bh=tubUT90M6ZUsQq/NCNWX8+4auD3W82M3BMPow6ghbj8=;
+        b=tCP8MVb9QOSR1QwP9+LcxYRbI0/cpbnllOJHCalR6W5FVkf7xXgtZigOGIMZqEl+5k
+         cFk127PCzxozF0nuS1O+s8haPrxitSc2qjOpEW6QAHoR6ellpxbxsHzcE4VgSQTI/eEb
+         zEeAstI1CfNalLP0h1POaqErp4biCwcjA10al/PMdRTts858Wj2Y4nrExuQheg+AaJYw
+         bamXOXTsM8dNKcdpTds+MivnZ7GfOjkKF1Z1NDzqBvnclG9upLahPoJ84RKokN0vsCDO
+         K5Xn3cd/ahHSdUoqRnnrRWsf6u+M+lLzTZOP4V68DbQ1PONCkBAt5U+l7RBAsTT7DsCC
+         dHLg==
+X-Gm-Message-State: APjAAAWw1stFirBkKz59dGpJA6+okE2UwtZVdNhPuniO23MWmtf77GKn
+        dxJ/VfPjoHxPdjMPrdu1/nnh3w==
+X-Google-Smtp-Source: APXvYqzsnGwMryOZ8OSkxJxnL0bgVLu9XUOFhXRRLNcQ4apGus/dVePA/bPEIWlQsBQNQtZUk1Rydw==
+X-Received: by 2002:a17:90a:9f04:: with SMTP id n4mr22039896pjp.76.1577398665952;
+        Thu, 26 Dec 2019 14:17:45 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 2sm11779409pjh.19.2019.12.26.14.17.46
+        by smtp.gmail.com with ESMTPSA id 2sm11779409pjh.19.2019.12.26.14.17.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:17:46 -0800 (PST)
+        Thu, 26 Dec 2019 14:17:45 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
         Joerg Roedel <joro@8bytes.org>
@@ -64,9 +64,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, Patrick Daly <pdaly@codeaurora.org>,
         Pratik Patel <pratikp@codeaurora.org>,
         Rob Clark <robdclark@gmail.com>
-Subject: [PATCH 2/3] iommu/arm-smmu: Expose s2cr and smr structs to impl
-Date:   Thu, 26 Dec 2019 14:17:08 -0800
-Message-Id: <20191226221709.3844244-3-bjorn.andersson@linaro.org>
+Subject: [PATCH 1/3] iommu/arm-smmu: Don't blindly use first SMR to calculate mask
+Date:   Thu, 26 Dec 2019 14:17:07 -0800
+Message-Id: <20191226221709.3844244-2-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
 References: <20191226221709.3844244-1-bjorn.andersson@linaro.org>
@@ -77,73 +77,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the arm_smmu_s2cr and arm_smmu_smr structs to the internal header
-file, in order to expose them to the platform specific arm-smmu
-implementations.
+With the SMRs inherited from the bootloader the first SMR might actually
+be valid and in use. As such probing the SMR mask using the first SMR
+might break a stream in use. Search for an unused stream and use this to
+probe the SMR mask.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since RFC:
-- New patch
+- Deal with EXIDS
+- Use arm_smmu_gr0_read/write()
 
- drivers/iommu/arm-smmu.c | 14 --------------
- drivers/iommu/arm-smmu.h | 14 ++++++++++++++
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/iommu/arm-smmu.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 6ca6a4e072c8..9a9091b9dcc7 100644
+index 4f1a350d9529..6ca6a4e072c8 100644
 --- a/drivers/iommu/arm-smmu.c
 +++ b/drivers/iommu/arm-smmu.c
-@@ -73,24 +73,10 @@ module_param(disable_bypass, bool, S_IRUGO);
- MODULE_PARM_DESC(disable_bypass,
- 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+@@ -945,24 +945,43 @@ static void arm_smmu_write_sme(struct arm_smmu_device *smmu, int idx)
+  */
+ static void arm_smmu_test_smr_masks(struct arm_smmu_device *smmu)
+ {
++	u32 s2cr;
+ 	u32 smr;
++	int idx;
  
--struct arm_smmu_s2cr {
--	struct iommu_group		*group;
--	int				count;
--	enum arm_smmu_s2cr_type		type;
--	enum arm_smmu_s2cr_privcfg	privcfg;
--	u8				cbndx;
--};
--
- #define s2cr_init_val (struct arm_smmu_s2cr){				\
- 	.type = disable_bypass ? S2CR_TYPE_FAULT : S2CR_TYPE_BYPASS,	\
+ 	if (!smmu->smrs)
+ 		return;
+ 
++	for (idx = 0; idx < smmu->num_mapping_groups; idx++) {
++		if (smmu->features & ARM_SMMU_FEAT_EXIDS) {
++			s2cr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_S2CR(idx));
++			if (!FIELD_GET(S2CR_EXIDVALID, s2cr))
++				break;
++		} else {
++			smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(idx));
++			if (!FIELD_GET(SMR_VALID, smr))
++				break;
++		}
++	}
++
++	if (idx == smmu->num_mapping_groups) {
++		dev_err(smmu->dev, "Unable to compute streamid_mask\n");
++		return;
++	}
++
+ 	/*
+ 	 * SMR.ID bits may not be preserved if the corresponding MASK
+ 	 * bits are set, so check each one separately. We can reject
+ 	 * masters later if they try to claim IDs outside these masks.
+ 	 */
+ 	smr = FIELD_PREP(SMR_ID, smmu->streamid_mask);
+-	arm_smmu_gr0_write(smmu, ARM_SMMU_GR0_SMR(0), smr);
+-	smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(0));
++	arm_smmu_gr0_write(smmu, ARM_SMMU_GR0_SMR(idx), smr);
++	smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(idx));
+ 	smmu->streamid_mask = FIELD_GET(SMR_ID, smr);
+ 
+ 	smr = FIELD_PREP(SMR_MASK, smmu->streamid_mask);
+-	arm_smmu_gr0_write(smmu, ARM_SMMU_GR0_SMR(0), smr);
+-	smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(0));
++	arm_smmu_gr0_write(smmu, ARM_SMMU_GR0_SMR(idx), smr);
++	smr = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_SMR(idx));
+ 	smmu->smr_mask_mask = FIELD_GET(SMR_MASK, smr);
  }
- 
--struct arm_smmu_smr {
--	u16				mask;
--	u16				id;
--	bool				valid;
--};
--
- struct arm_smmu_cb {
- 	u64				ttbr[2];
- 	u32				tcr[2];
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index 62b9f0cec49b..73f94579b926 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -224,6 +224,20 @@ enum arm_smmu_implementation {
- 	QCOM_SMMUV2,
- };
- 
-+struct arm_smmu_s2cr {
-+	struct iommu_group		*group;
-+	int				count;
-+	enum arm_smmu_s2cr_type		type;
-+	enum arm_smmu_s2cr_privcfg	privcfg;
-+	u8				cbndx;
-+};
-+
-+struct arm_smmu_smr {
-+	u16				mask;
-+	u16				id;
-+	bool				valid;
-+};
-+
- struct arm_smmu_device {
- 	struct device			*dev;
  
 -- 
 2.24.0
