@@ -2,131 +2,140 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA01C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34090C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7578B206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0230220828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Y1MGTqeV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfLZWbE (ORCPT
+        id S1727049AbfLZWcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:31:04 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51430 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZWbE (ORCPT
+        Thu, 26 Dec 2019 17:32:16 -0500
+Received: from mail.efficios.com ([167.114.142.138]:56804 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZWcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:31:04 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ikbei-0000SB-TR; Thu, 26 Dec 2019 22:30:57 +0000
-Date:   Thu, 26 Dec 2019 22:30:56 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] security: apparmor: Fix a possible
- sleep-in-atomic-context bug in find_attach()
-Message-ID: <20191226223056.GQ4203@ZenIV.linux.org.uk>
-References: <20191217131220.11613-1-baijiaju1990@gmail.com>
+        Thu, 26 Dec 2019 17:32:16 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id A887E691136;
+        Thu, 26 Dec 2019 17:32:14 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id Wgk_AfSnlKw7; Thu, 26 Dec 2019 17:32:14 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0A349691131;
+        Thu, 26 Dec 2019 17:32:14 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0A349691131
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1577399534;
+        bh=Vu4bJnahkfBAh27AEmQtcTGKd5gsUZyTGrhSMJ/F/ag=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Y1MGTqeVknIAi0F/zMV9W7UG2DVSzalXonDMzMwwmwh/rWHhNh1k4kXb5R/b4vPyz
+         XiwtZ/9uPCVYndQ6yBrsfKbtQG4Dloa/w37EJDx1RJnE2XYwqTmaZFixtxfYADNu2h
+         ITm+XaGv25I4zlcWuKc97v+OV1hhNW4t9ocBQoLxijHmteRX0JUCarguowrBo1A2AK
+         9T1ConwwCSWWkrPhNDJm7LEzh1FeJWbi1DIGd12+guYH14sXXI/IBY6dMW8PV9bDZ7
+         xDpA4i8J/uEi5TEGevZjMecyr86VyxzFSMwfvF+TUq6ecEYsk4kjfx5p638Iwi1dh5
+         8ROaLE5OypWUA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id KMkEVBw-_XO2; Thu, 26 Dec 2019 17:32:13 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id DF1F769111B;
+        Thu, 26 Dec 2019 17:32:13 -0500 (EST)
+Date:   Thu, 26 Dec 2019 17:32:13 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-tip-commits <linux-tip-commits@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        stable <stable@vger.kernel.org>
+Message-ID: <1460494267.15769.1577399533860.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20191225113932.GD18098@zn.tnic>
+References: <20191211161713.4490-2-mathieu.desnoyers@efficios.com> <157727033331.30329.17206832903007175600.tip-bot2@tip-bot2> <20191225113932.GD18098@zn.tnic>
+Subject: Re: [tip: core/urgent] rseq: Reject unknown flags on rseq
+ unregister
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217131220.11613-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF71 (Linux)/8.8.15_GA_3890)
+Thread-Topic: core/urgent] rseq: Reject unknown flags on rseq unregister
+Thread-Index: BWaWCVXVOJYWOEoxqutpfh8/ngqLyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 09:12:20PM +0800, Jia-Ju Bai wrote:
-> The kernel may sleep while holding a RCU lock.
-> The function call path (from bottom to top) in Linux 4.19 is:
+----- On Dec 25, 2019, at 6:39 AM, Borislav Petkov bp@alien8.de wrote:
+
+> On Wed, Dec 25, 2019 at 10:38:53AM -0000, tip-bot2 for Mathieu Desnoyers wrote:
+>> The following commit has been merged into the core/urgent branch of tip:
+>> 
+>> Commit-ID:     66528a4575eee9f5a5270219894ab6178f146e84
+>> Gitweb:
+>> https://git.kernel.org/tip/66528a4575eee9f5a5270219894ab6178f146e84
+>> Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> AuthorDate:    Wed, 11 Dec 2019 11:17:11 -05:00
+>> Committer:     Ingo Molnar <mingo@kernel.org>
+>> CommitterDate: Wed, 25 Dec 2019 10:41:20 +01:00
+>> 
+>> rseq: Reject unknown flags on rseq unregister
+>> 
+>> It is preferrable to reject unknown flags within rseq unregistration
+>> rather than to ignore them. It is an oversight caused by the fact that
+>> the check for unknown flags is after the rseq unregister flag check.
+>> 
+>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Link:
+>> https://lkml.kernel.org/r/20191211161713.4490-2-mathieu.desnoyers@efficios.com
+>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>> ---
+>>  kernel/rseq.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>> 
+>> diff --git a/kernel/rseq.c b/kernel/rseq.c
+>> index 27c48eb..a4f86a9 100644
+>> --- a/kernel/rseq.c
+>> +++ b/kernel/rseq.c
+>> @@ -310,6 +310,8 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32,
+>> rseq_len,
+>>  	int ret;
+>>  
+>>  	if (flags & RSEQ_FLAG_UNREGISTER) {
+>> +		if (flags & ~RSEQ_FLAG_UNREGISTER)
+>> +			return -EINVAL;
+>>  		/* Unregister rseq for current thread. */
+>>  		if (current->rseq != rseq || !current->rseq)
+>>  			return -EINVAL;
 > 
-> security/apparmor/domain.c, 331: 
-> 	vfs_getxattr_alloc(GFP_KERNEL) in aa_xattrs_match
-> security/apparmor/domain.c, 425: 
-> 	aa_xattrs_match in __attach_match
-> security/apparmor/domain.c, 485: 
-> 	__attach_match in find_attach
-> security/apparmor/domain.c, 484:
->     rcu_read_lock in find_attach
-> 
-> vfs_getxattr_alloc(GFP_KERNEL) can sleep at runtime.
-> 
-> To fix this possible bug, GFP_KERNEL is replaced with GFP_ATOMIC for
-> vfs_getxattr_alloc().
-> 
-> This bug is found by a static analysis tool STCheck written by myself. 
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  security/apparmor/domain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
-> index 9be7ccb8379e..60b54ce57d1f 100644
-> --- a/security/apparmor/domain.c
-> +++ b/security/apparmor/domain.c
-> @@ -325,7 +325,7 @@ static int aa_xattrs_match(const struct linux_binprm *bprm,
->  
->  	for (i = 0; i < profile->xattr_count; i++) {
->  		size = vfs_getxattr_alloc(d, profile->xattrs[i], &value,
-> -					  value_size, GFP_KERNEL);
-> +					  value_size, GFP_ATOMIC);
+> Cc: stable perhaps?
 
-<stares>
+This could indeed be a candidate for stable, even though it's just a stricter
+checking of unknown flags (returning an error rather than ignoring them).
 
-How can that possibly make any sense?  We are, by the look of it, trying
-to read extended attributes of some sort here.  How the hell can that
-possibly hope to be non-blocking?
+Adding stable in CC here.
 
-<goes to read>
-Yup, vfs_getxattr_alloc() does call xattr ->get() method, which certainly
-can cause IO.  GFP_ATOMIC affects only the allocation done in
-vfs_getxattr_alloc() itself, ->get() call doesn't even see it.
+Thanks,
 
-AFAICS, that "fix" is pure cargo-culting; if that code *can* be called in
-non-blocking context, we are fucked, GFP_ATOMIC or no GFP_ATOMIC.
+Mathieu
 
-Let's look at your call chain...  find_attach() calls __attach_match()
-under rcu_read_lock().  Yes, it does, and by the look of the function
-itself it does expect to be called thus.
 
-Call of aa_xattrs_match() in there.  Present, no obvious dropping/regaining
-rcu_read_lock() around it.  Conditional upon perm & MAY_EXEC, but that
-doesn't seem to be provably excludable by the arguments of this particular
-call.  And yes, aa_xattrs_match() is very obviously blocking.
-
-So you've caught a real bug, but the "fix" doesn't fix anything whatsoever;
-reading xattrs *does* block, no matter what.
-
-By the look at git blame, we have commit 8e51f9087f4024d20f70f4d9831e1f45d8088331
-Author: Matthew Garrett <mjg59@google.com>
-Date:   Thu Feb 8 12:37:19 2018 -0800
-
-    apparmor: Add support for attaching profiles via xattr, presence and value
-    
-    Make it possible to tie Apparmor profiles to the presence of one or more
-    extended attributes, and optionally their values. An example usecase for
-    this is to automatically transition to a more privileged Apparmor profile
-    if an executable has a valid IMA signature, which can then be appraised
-    by the IMA subsystem.
-    
-    Signed-off-by: Matthew Garrett <mjg59@google.com>
-    Signed-off-by: John Johansen <john.johansen@canonical.com>
-
-to thank for that.  And by the time of that commit the call chain already
-existed, complete with rcu_read_lock().
-
-AFAICS, it really is buggered by design - you can't read xattrs in such
-context.  Again, GFP_ATOMIC is useless here - the problem is not in
-allocation, it's IO, possibly over network, etc. 
-
-Morever, *anything* that passes GFP_ATOMIC to vfs_getxattr_alloc() is
-deeply suspect - it's almost certainly cargo-culting in attempt to
-do inherently blocking operation in non-blocking context.  <greps>
-No GFP_ATOMIC (thankfully), but there's a bunch of GFP_NOFS and
-I really wonder if _those_ make any sense here...
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
