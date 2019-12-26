@@ -2,149 +2,96 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0C5C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C6720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54192080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PqY30As1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipGfi56K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfLZWmM (ORCPT
+        id S1726981AbfLZWti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:42:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46614 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLZWmM (ORCPT
+        Thu, 26 Dec 2019 17:49:38 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34846 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfLZWth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:42:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so13497147pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:42:11 -0800 (PST)
+        Thu, 26 Dec 2019 17:49:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so24682075wro.2;
+        Thu, 26 Dec 2019 14:49:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
-        b=PqY30As1HVeTsX24x5Wj6WCdolUj9fYeWJEBcnm/4JCPDvmyvH9x1QTfXP2eGTVZQ1
-         SgT5ceOX/76pPplSxkAm83FKnrlB0KO9vDgkjmRMxA7AGFm6y0hlQYFai34ljisdikcR
-         OfO/U/usnsywyWLeTs4/d3vweZC8vywjC+KC07FSb50e33UhRcnWi3qM2vICFfDnw71q
-         kRlSgrhcyP9Z76tdaFIfxXq1GMQKOdBoz+1W6xSjpL+p3m1/TaKMZIhESojfWOV7uYd7
-         rnPRwsLoA53FXbRj0og5CCL7AQpw4wM9LINfJULA7095mS9a2b2CU+AvGFQaoXOpFLWm
-         IxLA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5at3WDW9T3iSZqzougKhzLZuYlvgfZx4445eolFcJMI=;
+        b=ipGfi56KfMvoFQFqCzMpqOAD/XFQyfyWh6PwflY6SeW1Kp4pBeifjBPGnyhZr7em0a
+         44rtzBpvmUIjtXe3dEPYYVxzevMSCyPDtbHhKdKNKutRb6LGgwELS2LKxstBAipM9+o0
+         bb5NUwZCgVjk+jIglRLrU/DfLF83RIDtzCWmeWCs7SF5Yvjx3iAVMtXZfjTf+S3E9naI
+         p6zySolnZ55ISKQxUWPJBOQuRqnOyvxZrvonK8GHwNWl2CAaCJ32oe6B9dxoVBYmpi4i
+         gdzTQbGpXNLom2c2zvELUIs5vfnCD+GzQSVHsrm575Ftn1PY92DdJqp6917zegQbVd9Q
+         6r3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
-        b=t2Kfoc0KfyxSG23Hkf4cL1ylYGJnXas0JgQVTfRidKd+adGVhMnm41sInSZKmi8Yyi
-         j99iDjRY56WB904u/UO0VpK9XkSsG7WhF/qEFm55cgl8jugfMBK+pAPSqCMm8d6OAKes
-         gawb6ooJ/gKEfQFujZnN4bF4HuL3HP0juSlAmL6TMnhqNsw20DCrXQqk8nfWYFLt8oF5
-         XqpDFiMj6k6dwfNImSQdtCsf2VBZ/lSESZjvaekPSKXmMfwN3+Nb/BhfVNU7fgK9YFE8
-         ObNm/bQekMgsmkiQL7P1HUXX9gD6D3GKDfRX11QdvGuexjIXEVFrGJQdGQQ0zgIREmM8
-         6fDA==
-X-Gm-Message-State: APjAAAX8Gvs67do+sRJvX5Xa1tt3GKjJloBZdSujW7Z8KEac4v1VuzEU
-        QZWDHycs5ryjfQhlTLG/dhW9+w==
-X-Google-Smtp-Source: APXvYqxSDVbs2vOYOg9yW7JRrsiG0gRtxLuW9Zc6TrdhfBj3WsbSXbIYpDKPF1Q7zUKCs+ontwnuvg==
-X-Received: by 2002:a63:6c09:: with SMTP id h9mr50054003pgc.34.1577400131224;
-        Thu, 26 Dec 2019 14:42:11 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id bo19sm11591246pjb.25.2019.12.26.14.42.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:42:10 -0800 (PST)
-Date:   Thu, 26 Dec 2019 14:41:56 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-Message-ID: <20191226224156.GE1908628@ripper>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
- <20191207203603.2314424-2-bjorn.andersson@linaro.org>
- <20191219063719.5AF942146E@mail.kernel.org>
- <20191220023427.GL448416@yoga>
- <20191224022042.7DDB120709@mail.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224022042.7DDB120709@mail.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5at3WDW9T3iSZqzougKhzLZuYlvgfZx4445eolFcJMI=;
+        b=gfH9ai8FqolR9MID+9IARjgx+SOXK28okUO5+6vLPQPtUY/awtij7kMBXD9peRh3q9
+         AEwiZtbG8fCa1SnACpZATs54CpTDtLp1gnfYF/t5Zn5MJp2tjkBwe4NGcodOqZy/NNbR
+         wkvRqUS98YAoAW/tZy7aTQPfQGA50tF0MNfty5GXJjm35haoJp+KvbyGx9+PMdDzC/bH
+         HjlerCONe+Z9o1m8v/pjA0/4YSBJd2oD9sRbZv/9uxJ3X2TTNJHrUd4O77j1918mBEtv
+         2vHPD4Y8vwcMIg7H4nhVyIM402BCkfZCtMltS8dIKD5/8JwuWf/CwbfObbXxRA/6CnjF
+         oOUg==
+X-Gm-Message-State: APjAAAWOfMwWa+IDRkJ5+Qfa0i7z4bQlJTV6i6xDrHXYELpL3HnbafiA
+        10Kp/pw/8o4+bBBF4n/LolZpEEFdaGM=
+X-Google-Smtp-Source: APXvYqxeBLAwP4rgKmx8JG2+a1+YPrmS8JVJ7nqHuki6OV9hCVnrREV1PwVi0u6ZSOwxiSaQVXrj+g==
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr47548774wrw.31.1577400575245;
+        Thu, 26 Dec 2019 14:49:35 -0800 (PST)
+Received: from debian.office.codethink.co.uk. ([78.40.148.180])
+        by smtp.gmail.com with ESMTPSA id t81sm9541127wmg.6.2019.12.26.14.49.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Dec 2019 14:49:34 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     rostedt@goodmis.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        arnaldo.melo@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] libtraceevent: Add dependency on libdl
+Date:   Thu, 26 Dec 2019 22:49:31 +0000
+Message-Id: <20191226224931.3458-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
+event-plugin.c is calling dl_*() functions but it is not linked with
+libdl. As a result when we use ldd on the generated libtraceevent.so
+file, it does not list libdl as one of its dependencies.
+Add -ldl explicitly as done in tools/lib/lockdep.
 
-> Quoting Bjorn Andersson (2019-12-19 18:34:27)
-> > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
-> > 
-> > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
-> > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
-> > > > SoC. Update the definition of these clocks to allow this to be wired up
-> > > > to the appropriate clock source.
-> > > > 
-> > > > Retain "xo" as the global named parent to make the change a nop in the
-> > > > event that DT doesn't carry the necessary clocks definition.
-> > > 
-> > > Something seems wrong still.
-> > > 
-> > > I wonder if we need to add the XO "active only" clk to the rpm clk
-> > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really the
-> > > truth for most of the SoCs out there because it's the only crystal that
-> > > needs to be on all the time when the CPU is active. The "normal" XO clk
-> > > will then be on all the time unless deep idle is entered and nobody has
-> > > turned that on via some clk_prepare() call. That's because we root all
-> > > other clks through the "normal" XO clk that will be on in deep
-> > > idle/suspend if someone needs it to be.
-> > > 
-> > 
-> > The patch doesn't attempt to address the fact that our representation of
-> > XO is incomplete, only the fact that CXO2 isn't properly described.
-> > 
-> > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
-> > presumably is the clock you're referring to here - i.e. the clock
-> > resource connected to CXO.
-> 
-> I don't mean the buffer clks, but the XO resource specifically. It's the
-> representation to the RPM that deep sleep/deep idle should or shouldn't
-> turn off XO and achieve "XO shutdown". Basically it can never be off
-> when the CPU is active because then the CPU itself wouldn't be clocked,
-> but when the CPU isn't active we may want to turn it off if nothing is
-> using it during sleep to clock some sort of wakeup logic or device that
-> is active when the CPU is idle.
-> 
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ tools/lib/traceevent/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I see. So we're missing the representation of the "raw" CXO in
-clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
-should be tied together for us to realize the "XO shutdown"...
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index c874c017c636..0d0575981cc7 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -143,7 +143,7 @@ $(TE_IN): force
+ 	$(Q)$(MAKE) $(build)=libtraceevent
+ 
+ $(OUTPUT)libtraceevent.so.$(EVENT_PARSE_VERSION): $(TE_IN)
+-	$(QUIET_LINK)$(CC) --shared $(LDFLAGS) $^ -Wl,-soname,libtraceevent.so.$(EP_VERSION) -o $@
++	$(QUIET_LINK)$(CC) --shared $(LDFLAGS) $^ -ldl -Wl,-soname,libtraceevent.so.$(EP_VERSION) -o $@
+ 	@ln -sf $(@F) $(OUTPUT)libtraceevent.so
+ 	@ln -sf $(@F) $(OUTPUT)libtraceevent.so.$(EP_VERSION)
+ 
+-- 
+2.11.0
 
-> > 
-> > > Did the downstream code explicitly enable this ln_bb_clk in the phy
-> > > drivers? I think it may have?
-> > > 
-> > 
-> > Yes, afaict all downstream drivers consuming a CLKREF also consumes
-> > LN_BB and ensures that this is enabled. So we've been relying on UFS to
-> > either not have probed yet or that UFS probed successfully for PCIe and
-> > USB to be functional.
-> > 
-> > So either we need this patch to ensure that the requests propagates
-> > down, or I need to patch up the PHY drivers to ensure that they also
-> > vote for the PMIC clock - and I do prefer this patch.
-> 
-> Cool. Yeah seems better to just indicate that the reference clks are
-> clocked by something else and fix that problem now.
-> 
-
-Let me know if I shouldn't interpret this sentence as "let's merge this
-for now".
-
-Regards,
-Bjorn
