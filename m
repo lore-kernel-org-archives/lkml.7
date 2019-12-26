@@ -2,140 +2,106 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FB9C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3CCC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D221C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BE3206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:16:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObJhDY3m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOwZeBmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfLZP6K (ORCPT
+        id S1726621AbfLZQQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 10:58:10 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38863 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfLZP6J (ORCPT
+        Thu, 26 Dec 2019 11:16:02 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38988 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfLZQQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 10:58:09 -0500
-Received: by mail-pg1-f193.google.com with SMTP id a33so13030883pgm.5;
-        Thu, 26 Dec 2019 07:58:09 -0800 (PST)
+        Thu, 26 Dec 2019 11:16:02 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so13374529pfs.6;
+        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=Sc/QM60TLDKLCJyG51lQ93byw6/RqTEsu4YWyZPPW+4=;
-        b=ObJhDY3m1giX7IMM+TocG9g+ou2I5nCWXeMf7XFf6tq0yORrDGmN7i3Q8Q10njeqTt
-         QWjHXJJmpUvIdjJUwaCaUhjctHUZ+F/iXiPouMOq1ssnSgFq8W+ESzD5WH8QGOEXDf2J
-         qClVechzGE/Xj0CgeAYLlVtVGtiVVWbBaddt/AWbT/sVeOGsxVZPX+FcxSuUvQgnfm1w
-         fnc+Q4rkOosPe5c9mojXpmSMIPD4q1Ike1/rqTLSDqU2iA1XwKa8R9hdFZSh/WTWXZ8x
-         1vidOBtv2tj7wntzTrmJiLHAMGFGl++QeVy+7M44gmQDVw04JS7yv/fAJoicNVyblivA
-         lZaw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
+        b=OOwZeBmE81M04vqBjpbAQPzE1Jv7jX88b+pZMM4skQSdW5QALfcM5UmXOZhj7/FTkj
+         4DhhNJVBgdY2v5jYTZSvR7SjywMtapzuo94KlQhX+i6gd5qEU70YJjXcGW5wlrv6/DLH
+         04erO3Xts4xY+OTACxMlHd9zwhYsvTs+7+b5tSqtSzRRF+2vJLzlc5ShWkr6yXDN/Z5P
+         Cs6NqkIQzW5fpc3w9talZH/jXomQOF8gLQG2TxuLxk/W4pIU+2n6OV4BfIDq9Ls7bXG5
+         N7LmxXMt8wpbp7C6l1/KyrBUR5jHtMqnYnA9OSENlKkWdwirmF4pu/lCe4EH/9TXAcbZ
+         hRIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=Sc/QM60TLDKLCJyG51lQ93byw6/RqTEsu4YWyZPPW+4=;
-        b=ApDEFzPWf1R/OLK/2qr7xn8nFtqXXWPs0xpr27tPKs9r5264rshyuT0QlWS9RSuW0f
-         VkJAO8cwkbOl/Zsto0RWQZCEbnNTBg6/dmHIrLnKikAD8RgsGJuK9ka1QYWVVVlT2bGE
-         st/QP1xO+gbRwBLxQBD6d4dGby0xBEfu1R9sHIdiN30MRH3wL8vguFg8e3drxysQTF3g
-         zDbpND3vbbK0EiYe2RFWwVN8myR24sdkkvFAU0zwwsl0xL5RCqnlkMMw+4cv5BEeeMkT
-         tdPMOiNKPquhQ/LTeWbCoWuyJ4HEOfEUYJjIwg20WED6+gdq5FFwj9KatNjXF6T2Nw19
-         RvZw==
-X-Gm-Message-State: APjAAAWKtyIG7Hk1PLB9D4fmFK1pP8j2aw64VsfnDi+ADIh6xbL0oQJg
-        lzguSANznp2/e9rx1PHjzhQsVnlE
-X-Google-Smtp-Source: APXvYqyZIfc/06xxz7P7R0ZAi+ysQgE1I01Mo/VbflldUlzmyAq3fxGB80h3C8AEKnbCRfN3CaD3Lw==
-X-Received: by 2002:aa7:9aeb:: with SMTP id y11mr50638957pfp.63.1577375889222;
-        Thu, 26 Dec 2019 07:58:09 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
+        b=MR8G+z+lpp4nYq24VPrcW5ZklKa6dQ5o1Qq91M6KQcLSkPK/bY2Ves2yrSa30I7GZy
+         EwsfwHLwCNWOMa0I7JCzav6QW4cK7L7zEcOklGdGvI+1r/tLGzjzVbsvmBA2KNdfgaBN
+         TzM81/ckVK0wtHSdafveV8kS2v84fQ7/BGJNYCEpOHRncMRnNWdCcOJPZo6orVAFsVPb
+         d2cvi7rSYR4UzJDa7i2HV4Q34E7cuYsioSCzTcvyh+/MoI3NmO/DKw493MhDIMHtbu9m
+         4IzmduKvSuGLrxNMBIO7cO/goJRx+wTCsL6SabeBBSJuMX/FoGBwU5eMTFEvqarqMulG
+         m/ng==
+X-Gm-Message-State: APjAAAWeena9yTT7Xw3IaNHXmZs4aAFKNESl9HY9ckIWDIfsNrTIXBC/
+        RTlLCBg5DWedhGtd8hDcbko=
+X-Google-Smtp-Source: APXvYqwVVFAvQB+Vc97OxwqUsIcXopUjlkiipdOIflXffhnqN51FDYFXBGdYuGbNEFp+n+2UzJ7cpw==
+X-Received: by 2002:a63:5809:: with SMTP id m9mr47977371pgb.26.1577376961023;
+        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 144sm39109626pfc.124.2019.12.26.07.58.07
+        by smtp.gmail.com with ESMTPSA id j38sm34451197pgj.27.2019.12.26.08.15.59
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Dec 2019 07:58:08 -0800 (PST)
+        Thu, 26 Dec 2019 08:16:00 -0800 (PST)
+Date:   Thu, 26 Dec 2019 08:15:59 -0800
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Peter Chen <peter.chen@freescale.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        stable@vger.kernel.org
-Subject: [PATCH] usb: chipidea: host: Disable port power only if previously enabled
-Date:   Thu, 26 Dec 2019 07:57:54 -0800
-Message-Id: <20191226155754.25451-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Yury Norov <ynorov@marvell.com>
+Subject: Re: [PATCH v2 07/11] bitmap: Introduce bitmap_replace() helper
+Message-ID: <20191226161559.GA26197@roeck-us.net>
+References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
+ <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On shutdown, ehci_power_off() is called unconditionally to power off
-each port, even if it was never called to power on the port.
-For chipidea, this results in a call to ehci_ci_portpower() with a request
-to power off ports even if the port was never powered on.
-This results in the following warning from the regulator code.
+Hi,
 
-WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disable+0x1a8/0x210
-unbalanced disables for usb_otg2_vbus
-Modules linked in:
-CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
-Hardware name: Freescale i.MX7 Dual (Device Tree)
-[<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
-[<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
-[<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
-[<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
-[<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x1a8/0x210)
-[<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x38/0xe8)
-[<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x38/0xdc)
-[<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/0xa4)
-[<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller+0x5c/0xc4)
-[<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/0xcc)
-[<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
-[<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
-[<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
-...
+On Tue, Oct 22, 2019 at 08:29:18PM +0300, Andy Shevchenko wrote:
+> In some drivers we want to have a single operation over bitmap which is
+> an equivalent to:
+> 
+> 	*dst = (*old & ~(*mask)) | (*new & *mask)
+> 
+> Introduce bitmap_replace() helper for this.
+> 
+> Cc: Yury Norov <ynorov@marvell.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Keeping track of the power enable state avoids the warning and traceback.
+This patch results in the following boot log messages on various architectures.
+I have seen it on arm and mipsel, but others may be affected as well.
 
-Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Peter Chen <peter.chen@freescale.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/usb/chipidea/host.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+test_bitmap: [lib/test_bitmap.c:282] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
+test_bitmap: [lib/test_bitmap.c:286] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
+test_bitmap: [lib/test_bitmap.c:290] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
+test_bitmap: [lib/test_bitmap.c:294] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
 
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index b45ceb91c735..48e4a5ca1835 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -26,6 +26,7 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
- 
- struct ehci_ci_priv {
- 	struct regulator *reg_vbus;
-+	bool enabled;
- };
- 
- static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
-@@ -37,7 +38,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
- 	int ret = 0;
- 	int port = HCS_N_PORTS(ehci->hcs_params);
- 
--	if (priv->reg_vbus) {
-+	if (priv->reg_vbus && enable != priv->enabled) {
- 		if (port > 1) {
- 			dev_warn(dev,
- 				"Not support multi-port regulator control\n");
-@@ -53,6 +54,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable)
- 				enable ? "enable" : "disable", ret);
- 			return ret;
- 		}
-+		priv->enabled = enable;
- 	}
- 
- 	if (enable && (ci->platdata->phy_mode == USBPHY_INTERFACE_MODE_HSIC)) {
--- 
-2.17.1
-
+Guenter
