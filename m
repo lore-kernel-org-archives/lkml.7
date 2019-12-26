@@ -2,120 +2,137 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F60C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF5EC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F62321569
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C781208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dkoPDMmR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+/E7sdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfLZULM (ORCPT
+        id S1726933AbfLZU0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 15:11:12 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44800 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZULL (ORCPT
+        Thu, 26 Dec 2019 15:26:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44861 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZU0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 15:11:11 -0500
-Received: by mail-ed1-f67.google.com with SMTP id bx28so23591253edb.11;
-        Thu, 26 Dec 2019 12:11:10 -0800 (PST)
+        Thu, 26 Dec 2019 15:26:13 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so24467016wrm.11;
+        Thu, 26 Dec 2019 12:26:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DKyS0Vzar44g5nZVMq7w89sJBVTVVQr7IhBAjNIROrI=;
-        b=dkoPDMmRO2eMwq7TMq1HtLGXctYNZZjUXuFpwJaYLHjL4DHZBgoqJoj2hhpUurQB86
-         quqctLUkVeEctiVeMOgGlQKlzRsXqBY2H2rp9rluW2Ub29W0vqIMPXGP+zlhb+8UJmBD
-         NSl/EdBjv3zKh1ruJhqdiuFdRG813PmDhGNiz+al4f34WHfimfbMB8AlJCQVI/WhMSfz
-         7kMLzUho23PWWhN6nGDqRlnyl5bOKDsKbnmG/QVlKaVotqfucxZCUwe+mp+f52OcZpnR
-         ec0YYHCFTvIhPXxhSWEyhNw5FkVMpPcjhLiNnsQBSClPmjXpKatN6p2YCq8M+5eNPBYE
-         1vLA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9U7JTfD4fduXLjfQ1Xx2mG/4Nq5G+aypGi2uRZjCndQ=;
+        b=Y+/E7sdISgFCod6NdnHJW479g8MbWWiNgwWpI5rVpokct4dLSn3EClz4zxD5nUcwHG
+         849iZdjDWcPvqsDGib5WzIiUhGuLV+apNaE8wxvr6ziNcMBV04P+eNSrmZheHrP9KoN5
+         1f56JreZqERgJjZe2LLqBOpErT4GWmzWRSJapOT42TkPWV/3Nch5oKXTNI6qsQQJw59Q
+         /SD+GdekkD7sWS3z770vw6CkDlXPFk3WkuhXb23RpwdtmICcNf6wxMByJxP80Jo5J9kp
+         0QXxbYyDDSjx+3bMkRs9XA5u47uWRz2SYIF9gBE9sbvQScuTJXiC3PGYpDnBV72LD6QP
+         75xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DKyS0Vzar44g5nZVMq7w89sJBVTVVQr7IhBAjNIROrI=;
-        b=DnR6LQSXjnUhRQyozO5E/IsetZ0az9w58fZux1kQq98Jrxp4Q3ffYaJHM4i1t4pYX9
-         NOUwRJO3J6gScDG7YZNTKc0ijq36SI5oNbVmRjVoMor4ZKSMdyJTOplW9m0MJzyBjCUQ
-         LwRugfdSpxpHFbXgvJmkAlG4o57hFBC1po79en973PuE6pE3hc7/+QhHuHy9Tc58N9yO
-         /rBTDlKGL0YojqyKHTqEyetOuib/6uGe9n4VDarN/TVZghYwnsMo3og1t3byLtzXNe2h
-         lV6RgwHPa0xcb5zFh01304ZrAgTnK29GZoqarsk4+xADj4kmcsA7IRtu3XyJU0XuPl1G
-         s2tw==
-X-Gm-Message-State: APjAAAVestf004B6fs77qzaHfRlTJqevVd8d6/b3wBW/trHYekgrn1zw
-        uXfcmB6AnPoDZ9PDQPtzrzmIiiyx5FfvXo06gZA=
-X-Google-Smtp-Source: APXvYqyOHd8m4jOZ18liraS1LmkJgDRRTlRaa1TAnpybzR7ymvltec/WOyoBzbMMK/SVycz37m9EThbBbClEbuEt25k=
-X-Received: by 2002:a50:fb96:: with SMTP id e22mr51700477edq.18.1577391069615;
- Thu, 26 Dec 2019 12:11:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9U7JTfD4fduXLjfQ1Xx2mG/4Nq5G+aypGi2uRZjCndQ=;
+        b=sM5XWbGwh/7bJGfRikfU/udgLvgul2dQ3PsmWuoGHldjpfaeF4bOnE3OdP2IcPSEBc
+         dZ5vRR5odWui31telM2zl9podv8TjcnBTwuqzxnvs2V9ImgnHpilv1TG02bG6xRMgS3V
+         S97AckqI4U+qZ4OkcApmr5sQn7I6DrYNak7Kuv2xq1FamwzzDgR6iZB4fbIQy7K6YXow
+         wcfCMDx7D/r4r8+UifwukB9ao8OKRsq6pVQ/PkQa3yKB26o1HrsroEsEYMMSfH8z7VXg
+         rAeMcXrVECVs09iMXAleUE3TwEKKqTFSKwER36jKo6xXVwkLlswP4awcBCG2oxD4jjWq
+         cV2g==
+X-Gm-Message-State: APjAAAXb1d9dcowY+vAvZldMfcj2uPbvWdriGYMcMrYf8PHl+RzCzS+I
+        vT6kqdJkzF4ncQ16pbIEfQmI9LPe
+X-Google-Smtp-Source: APXvYqwcuB8ziCCtYYFgDEUXH4mvcKEbxT76KLDcss6Q4USj5UvoJ3HbyoEmisuUoyobLrZHRGuolA==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr46714621wrq.176.1577391971163;
+        Thu, 26 Dec 2019 12:26:11 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id o129sm9470927wmb.1.2019.12.26.12.26.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 12:26:10 -0800 (PST)
+Date:   Thu, 26 Dec 2019 21:26:07 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191226202607.GA9524@Red>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226104419.GA26677@Red>
+ <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191224173942.18160-1-repk@triplefau.lt> <20191224173942.18160-6-repk@triplefau.lt>
-In-Reply-To: <20191224173942.18160-6-repk@triplefau.lt>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 26 Dec 2019 21:10:58 +0100
-Message-ID: <CAFBinCBzt6SRGx+8iT=NHW00ip_gtg2cW7T8z9aqjeGPH8f7OQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] dt-bindings: Add AXG PCIE PHY bindings
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 6:32 PM Remi Pommarel <repk@triplefau.lt> wrote:
->
-> Add documentation for PCIE PHYs found in AXG SoCs.
->
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> new file mode 100644
-> index 000000000000..c622a1b38ffc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-pcie.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic AXG PCIE PHY
-> +
-> +maintainers:
-> +  - Remi Pommarel <repk@triplefau.lt>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,axg-pcie-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  aml,hhi-gpr:
-> +    maxItems: 1
-nit-pick (as I didn't have time to review the whole series yet):
-we have at least two other IP blocks that need this. they use
-"amlogic,hhi-sysctrl" for the property name
+On Thu, Dec 26, 2019 at 08:47:47PM +0800, Frank Lee wrote:
+> On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
+> <clabbe.montjoie@gmail.com> wrote:
+> >
+> > On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > > Hi,
+> > > > >
+> > > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > > >> H6 and R40 SoCs.
+> > > > >
+> > > > > Thanks again for working on this.
+> > > > >
+> > > > > I'll merge the DT patches when the driver will have been merged.
+> > > >
+> > > > I've applied patches 1 & 2.
+> > > >
+> > > > They are in the testing branch and will go to the linux-next branch as
+> > > > soon as the kernelci passes.
+> > >
+> > > I just merged all the other patches (except the patch 6, for the H6,
+> > > as requested by Vasily on IRC).
+> > >
+> >
+> > Hello
+> >
+> > Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
+> > But it was failling due my fault (a failling build).
+> >
+> > So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
+> 
+> HI Corentin,
+> 
+> Although it is not calibrated, it should work on the R40. Can you give
+> my patch a try?
+> 
 
+Hello
 
-Martin
+It is planned, I will report the result.
+
+Regards
