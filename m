@@ -2,326 +2,180 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D046AC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EADC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED712075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020992075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="vxJutbni"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhXwRTlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfLZPxK (ORCPT
+        id S1726653AbfLZPy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 10:53:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33222 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbfLZPxK (ORCPT
+        Thu, 26 Dec 2019 10:54:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38356 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfLZPy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 10:53:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so23985905wrq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 07:53:07 -0800 (PST)
+        Thu, 26 Dec 2019 10:54:27 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so13357480pfc.5;
+        Thu, 26 Dec 2019 07:54:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to;
-        bh=pKFg0PmItMpCVbFAkwqJZFmZmqvgsWEqeGsOZki+hlw=;
-        b=vxJutbnifriiCkbeZz/32yudq9nbbsXrZrBbeZxXsjuNs5iQgUU11x7VJdNw+NrhDM
-         mV4PxUGn9C6L/ZZ8A6ivN1KSuSjE+aNyYkrmTHz/CJJ+tZUAKEL359r+UIc0y+Kg51xp
-         ojL+LqHg0C1nIPsuzs5wJl03nDaCW8gbB8Sbs=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/6vaIkge0g4/LG/LGYfpxBu59tVj0p6kWQdY5gEb6BY=;
+        b=hhXwRTlfIU+lLocihsj8EjTZHM6SUS3g+Dg39uPqEUu/9kZIo+qAFc9EHFy/mpPtTb
+         6B+PmReIDIncdjxcUZn9GygU9exb5/ZnRNmaXKU5l/xEkRb19vzy9gtsfXGbYlTI1R+4
+         s4FtAiNNAqsknl8hubvUz9BQ2QfMKDbRh3Re0i3h2yBbK6UQL54TACIyboWEQ+VSHhjt
+         OKR+tf9IsDZWCRB9ap6rW3X6mSFTEXdPs54nP9ieQWA3Y1Bu8j3fgmn7+Lo5nZprM1+M
+         /h3q+raEo3/HXu89wGTpb2tqzsKEfBOde8w1SOLl+G0dSYiWn7qJa1tJYrUiNQVKfP8F
+         yVEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to;
-        bh=pKFg0PmItMpCVbFAkwqJZFmZmqvgsWEqeGsOZki+hlw=;
-        b=WBrJOxkcD938uQCEBau3hGef5US+kgVYNFp+tyIcmw/a3kYwAwX0KkqYkFpgx6wHqx
-         3CwsMU0lsD3WQ+feGr4AqSOm8+kLJgEHkcHws8Lc0ofgRcNWjuxMeWL62s6lk65SHfQC
-         r1HJIDLdvcvUtH5MlZ10BXCXRs2LO2qHvDE2bnMrItb6bJg54QD4uAnZR+atjWpiMtur
-         jlJ1jYmnDhCfpvVf1Qq/qxhv0KOujwC9tl1nqDKJAQhRpeZzs32mBrGiXlktmiOX1G1E
-         VimdgnVAQfLS0nncKP/dqdoDGC/0fX9Ds40cAWO9wv5UfUbZWmVtjeId9nXBvYzgtFYW
-         U/GQ==
-X-Gm-Message-State: APjAAAVhssKUOuEJ1WFxwcDc4OldSTvIqi1CaG3J99TgFzu5O5NFRLXW
-        ZMRiKg+5D4GnfxGWyOzr+EDIzA==
-X-Google-Smtp-Source: APXvYqyL6SqPdVD1FQJy72YAxKzU+Pt5kWVZpubaH50AKG1Nz4fwEHPdTJCCgUmJq843QZiV39D6nQ==
-X-Received: by 2002:adf:a746:: with SMTP id e6mr48284145wrd.329.1577375586367;
-        Thu, 26 Dec 2019 07:53:06 -0800 (PST)
-Received: from localhost ([85.255.234.78])
-        by smtp.gmail.com with ESMTPSA id k19sm8615388wmi.42.2019.12.26.07.53.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 07:53:05 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:53:04 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, "zhengbin (A)" <zhengbin13@huawei.com>
-Subject: [PATCH v2] fs: inode: Recycle inodenum from volatile inode slabs
-Message-ID: <20191226155304.GA422789@chrisdown.name>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/6vaIkge0g4/LG/LGYfpxBu59tVj0p6kWQdY5gEb6BY=;
+        b=HwUWXalyniK+LsP7nfvYIQzhY1Ev/btos7bfG8PxoHyovr7NRWWxpH6CDV+upsECjd
+         ZGFQ/CGwFvRuOFbhQPAoY8xWkcMUwGp8n9pyuQe6b3YCIeuQsA4Ahj1mb1ekoOuxaNkq
+         95QVXiyH/bry4wQeSC4ynMMElTL3bp8dfZOx9yOrvh3riZMGDGQJ3ATrTwfU+EGmXSZ0
+         OJpCX5F2NIDjwoUmJ3geLCMrZcjoVbYNzzYFlumii4+G1g+e2HQUnXNIsMqprsHXE3EZ
+         5Eh2UU4K6MQDOdGtObrDZ+zNPEBJmARrGuheCd4ZgG/jU0rKBmXT6SBG6oyP+6Pi5DeB
+         6ykQ==
+X-Gm-Message-State: APjAAAV6YLor6f3k1bKRQl4TTGkrYyvWQS2OJrFY0bBq3gO3SqAPdKv+
+        Dq8dPx3WVcrWkFyYIEJyrIo1tOPd
+X-Google-Smtp-Source: APXvYqzuezKkplo73OZwR3/hfOO/XIznV7i5DaZmMNGnkV8NiqrHmV+QvIrC6JYAE/t6fCgnD2KB4w==
+X-Received: by 2002:a63:465b:: with SMTP id v27mr50230402pgk.257.1577375666685;
+        Thu, 26 Dec 2019 07:54:26 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id u128sm14885906pfu.60.2019.12.26.07.54.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 07:54:25 -0800 (PST)
+Subject: Re: [PATCH v2 0/6] brcmstb_thermal updates for new processes
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191211203143.2952-1-f.fainelli@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <277b5f3d-b25b-89b0-9fc1-e520242b3380@gmail.com>
+Date:   Thu, 26 Dec 2019 07:54:14 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226154808.GA418948@chrisdown.name>
+In-Reply-To: <20191211203143.2952-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Facebook production we are seeing heavy i_ino wraparounds on tmpfs.
-On affected tiers, in excess of 10% of hosts show multiple files with
-different content and the same inode number, with some servers even
-having as many as 150 duplicated inode numbers with differing file
-content.
 
-This causes actual, tangible problems in production. For example, we
-have complaints from those working on remote caches that their
-application is reporting cache corruptions because it uses (device,
-inodenum) to establish the identity of a particular cache object, but
-because it's not unique any more, the application refuses to continue
-and reports cache corruption. Even worse, sometimes applications may not
-even detect the corruption but may continue anyway, causing phantom and
-hard to debug behaviour.
 
-In general, userspace applications expect that (device, inodenum) should
-be enough to be uniquely point to one inode, which seems fair enough.
-One might also need to check the generation, but in this case:
+On 12/11/2019 12:31 PM, Florian Fainelli wrote:
+> Hi,
+> 
+> This patch series contains a bug fix for the existing platforms and then
+> paves the way for adding support for Broadcom STB's latest chips in 16nm
+> processes, and finally updates the driver with pecularities introduced
+> with the 16nm, like the lack of interrupt notification from the HW.
+> 
+> Please queue up the first patch for -stable if you want, thanks!
 
-1. That's not currently exposed to userspace
-   (ioctl(...FS_IOC_GETVERSION...) returns ENOTTY);
-2. Even with generation, there shouldn't be two live inodes with the
-   same inode number on one device.
+Amit, Daniel, Rui, does this look acceptable to you now? Thank you
 
-In order to fix this, we reuse inode numbers from recycled slabs where
-possible, allowing us to significantly reduce the risk of 32 bit
-wraparound.
+> 
+> Changes in v2:
+> 
+> - kept defined constants in patch #1 and keep using them for subsequent
+>   patches
+> - add Reviewed-by tags to patches #3 through #6
+> - rebase against v5.5.-rc1
+> 
+> Florian Fainelli (6):
+>   thermal: brcmstb_thermal: Do not use DT coefficients
+>   thermal: brcmstb_thermal: Prepare to support a different process
+>   dt-bindings: thermal: Define BCM7216 thermal sensor compatible
+>   thermal: brcmstb_thermal: Add 16nm process thermal parameters
+>   thermal: brcmstb_thermal: Restructure interrupt registration
+>   thermal: brcmstb_thermal: Register different ops per process
+> 
+>  .../bindings/thermal/brcm,avs-tmon.txt        |  8 +-
+>  drivers/thermal/broadcom/brcmstb_thermal.c    | 99 ++++++++++++-------
+>  2 files changed, 67 insertions(+), 40 deletions(-)
+> 
 
-There are probably some other potential users of this, like some FUSE
-internals, and {proc,sys,kern}fs style APIs, but doing a general opt-out
-codemod requires some thinking depending on the particular callsites and
-how far up the stack they are, we might end up recycling an i_ino value
-that actually does have some semantic meaning. As such, to start with
-this patch only opts in a few get_next_ino-heavy filesystems, and those
-which looked straightforward and without likelihood for corner cases:
-
-- bpffs
-- configfs
-- debugfs
-- efivarfs
-- hugetlbfs
-- ramfs
-- tmpfs
-
-Another alternative considered was to change get_next_ino to use and
-return ino_t with internal use of 64-bit atomics, but this has a couple
-of setbacks that might make it not possible to use in all scenarios:
-
-1. This may break some 32-bit userspace applications on a 64-bit kernel
-   which cannot handle a 64-bit ino_t, see the comment above
-   get_next_ino;
-2. Some applications inside the kernel already make use of the ino_t
-   high bits. For example, overlayfs' xino feature uses these to merge
-   inode numbers and fsid indexes to form a new identifier.
-
-One limitation to this approach is that slab recycling is currently only
-per-memcg. This means workloads which heavily exercise get_next_ino with
-the same memcg are most likely to benefit, rather than those with a wide
-range of cgroups thrashing it. Depending on the workload, I've seen from
-10%-50% recycle rate, which seems like a reasonable win with no
-significant increase in code complexity.
-
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Reported-by: Phyllipe Medeiros <phyllipe@fb.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@fb.com
----
- fs/configfs/inode.c  |  2 +-
- fs/debugfs/inode.c   |  2 +-
- fs/efivarfs/inode.c  |  2 +-
- fs/hugetlbfs/inode.c |  4 ++--
- fs/inode.c           | 30 ++++++++++++++++++++++++++++++
- fs/ramfs/inode.c     |  2 +-
- include/linux/fs.h   |  2 ++
- kernel/bpf/inode.c   |  2 +-
- mm/shmem.c           |  2 +-
- 9 files changed, 40 insertions(+), 8 deletions(-)
-
-v2: accidentally left random.h included from testing. removed it.
-
-diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
-index fd0b5dd68f9e..c0157f9b3e33 100644
---- a/fs/configfs/inode.c
-+++ b/fs/configfs/inode.c
-@@ -114,7 +114,7 @@ struct inode *configfs_new_inode(umode_t mode, struct configfs_dirent *sd,
- {
- 	struct inode * inode = new_inode(s);
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode->i_mapping->a_ops = &configfs_aops;
- 		inode->i_op = &configfs_inode_operations;
- 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index bda942afc644..64af16104661 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -66,7 +66,7 @@ static struct inode *debugfs_get_inode(struct super_block *sb)
- {
- 	struct inode *inode = new_inode(sb);
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode->i_atime = inode->i_mtime =
- 			inode->i_ctime = current_time(inode);
- 	}
-diff --git a/fs/efivarfs/inode.c b/fs/efivarfs/inode.c
-index 96c0c86f3fff..ba2f3c6a4042 100644
---- a/fs/efivarfs/inode.c
-+++ b/fs/efivarfs/inode.c
-@@ -19,7 +19,7 @@ struct inode *efivarfs_get_inode(struct super_block *sb,
- 	struct inode *inode = new_inode(sb);
- 
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode->i_mode = mode;
- 		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
- 		inode->i_flags = is_removable ? 0 : S_IMMUTABLE;
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index d5c2a3158610..a867035b6460 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -732,7 +732,7 @@ static struct inode *hugetlbfs_get_root(struct super_block *sb,
- 
- 	inode = new_inode(sb);
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode->i_mode = S_IFDIR | ctx->mode;
- 		inode->i_uid = ctx->uid;
- 		inode->i_gid = ctx->gid;
-@@ -775,7 +775,7 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 	if (inode) {
- 		struct hugetlbfs_inode_info *info = HUGETLBFS_I(inode);
- 
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode_init_owner(inode, dir, mode);
- 		lockdep_set_class(&inode->i_mapping->i_mmap_rwsem,
- 				&hugetlbfs_i_mmap_rwsem_key);
-diff --git a/fs/inode.c b/fs/inode.c
-index aff2b5831168..1bd864735158 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -880,6 +880,11 @@ static struct inode *find_inode_fast(struct super_block *sb,
- #define LAST_INO_BATCH 1024
- static DEFINE_PER_CPU(unsigned int, last_ino);
- 
-+/*
-+ * As get_next_ino returns a type with a small width (typically 32 bits),
-+ * consider calling recycle_or_get_next_ino instead if your callsite may be able
-+ * to reuse a recycled inode's i_ino to reduce the risk of inode wraparound.
-+ */
- unsigned int get_next_ino(void)
- {
- 	unsigned int *p = &get_cpu_var(last_ino);
-@@ -904,6 +909,31 @@ unsigned int get_next_ino(void)
- }
- EXPORT_SYMBOL(get_next_ino);
- 
-+/*
-+ * get_next_ino() returns an unsigned int, which can wrap around on workloads
-+ * havily making use of it.
-+ *
-+ * To reduce the risks, callsites can instead use recycle_or_get_next_ino to
-+ * only get a new inode number when the slab wasn't recycled. old_ino should be
-+ * i_ino from the (potentially) recycled slab.
-+ */
-+unsigned int recycle_or_get_next_ino(ino_t old_ino)
-+{
-+	/*
-+	 * get_next_ino returns unsigned int. If this fires then i_ino must be
-+	 * >32 bits and have been changed later, so the caller shouldn't be
-+	 * recycling inode numbers
-+	 */
-+	WARN_ONCE(old_ino > UINT_MAX,
-+		  "Recyclable i_ino not from get_next_ino: %llu", (u64)old_ino);
-+
-+	if (old_ino)
-+		return old_ino;
-+	else
-+		return get_next_ino();
-+}
-+EXPORT_SYMBOL(recycle_or_get_next_ino);
-+
- /**
-  *	new_inode_pseudo 	- obtain an inode
-  *	@sb: superblock
-diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
-index 35624ca2a2f9..e517202dd607 100644
---- a/fs/ramfs/inode.c
-+++ b/fs/ramfs/inode.c
-@@ -66,7 +66,7 @@ struct inode *ramfs_get_inode(struct super_block *sb,
- 	struct inode * inode = new_inode(sb);
- 
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode_init_owner(inode, dir, mode);
- 		inode->i_mapping->a_ops = &ramfs_aops;
- 		mapping_set_gfp_mask(inode->i_mapping, GFP_HIGHUSER);
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 190c45039359..d90be3ab5fc4 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3053,6 +3053,8 @@ static inline void lockdep_annotate_inode_mutex_key(struct inode *inode) { };
- extern void unlock_new_inode(struct inode *);
- extern void discard_new_inode(struct inode *);
- extern unsigned int get_next_ino(void);
-+extern unsigned int recycle_or_get_next_ino(ino_t old_ino);
-+
- extern void evict_inodes(struct super_block *sb);
- 
- extern void __iget(struct inode * inode);
-diff --git a/kernel/bpf/inode.c b/kernel/bpf/inode.c
-index ecf42bec38c0..a459a7da74d5 100644
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -97,7 +97,7 @@ static struct inode *bpf_get_inode(struct super_block *sb,
- 	if (!inode)
- 		return ERR_PTR(-ENOSPC);
- 
--	inode->i_ino = get_next_ino();
-+	inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 	inode->i_atime = current_time(inode);
- 	inode->i_mtime = inode->i_atime;
- 	inode->i_ctime = inode->i_atime;
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 165fa6332993..8c358d2c24d3 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2247,7 +2247,7 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
- 
- 	inode = new_inode(sb);
- 	if (inode) {
--		inode->i_ino = get_next_ino();
-+		inode->i_ino = recycle_or_get_next_ino(inode->i_ino);
- 		inode_init_owner(inode, dir, mode);
- 		inode->i_blocks = 0;
- 		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
 -- 
-2.24.1
-
+Florian
