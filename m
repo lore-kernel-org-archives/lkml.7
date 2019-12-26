@@ -2,186 +2,189 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFAEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A1CC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6212920828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iy5TYbCS"
+	by mail.kernel.org (Postfix) with ESMTP id ED1D02080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577386587;
+	bh=qofhvnLir4yXKPBofip7iqoiOfFYbknkV6leA8/zahI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RuZEYkszmOxE0+eDr2yMrfXzLd8jFFzqEmi02nv76UZVd5LYULKmTwlOuF9coj2U0
+	 A5d8kIktVilx+UvcTFhuNcVhaIQLvbZqnUid1o9tiqtHMQRjKoKI07wVUWGhsuQLCg
+	 saLlXPU8Kkx8qQMb2YbANMiR0jX96vlgv32b9smk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLZSwj (ORCPT
+        id S1726809AbfLZS40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 13:52:39 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55757 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfLZSwa (ORCPT
+        Thu, 26 Dec 2019 13:56:26 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43727 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZS4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 13:52:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so4907586wmj.5;
-        Thu, 26 Dec 2019 10:52:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Tdk21lW1THUxHtY9vlZ1nRwe59sn6+TCzl9IK6kCrxY=;
-        b=iy5TYbCSAWLEklxNjWcYw/NjNKf0lb/V+hYcCMh1kVbwFjgAETRmR2NieVU29nMbjG
-         3ColCXXTQ0PqfbprUmdkgtLUaHb1vYj82WbM2M/V3MNOvimf47w7XFn01bmr4+V9CDLK
-         VWhuREDvC+8s9OkXhnDIVropP7Wv9E2KuFnhipf4sMbrS+Q9h4uWq5HyeZz6go9/OJoM
-         9KdREoM6V0gppd2Won4vWzgUqUB4sR9b9uYDLszLW0kvy0uU5a/C3zGcuBCdNegAsxsu
-         mv9mWq+YqWxpj8gUDTonZkALbmA1v3Hu8iYaWXNZSoI9accUVyGZsewf/zxHDGFth1Qu
-         mF2A==
+        Thu, 26 Dec 2019 13:56:25 -0500
+Received: by mail-io1-f67.google.com with SMTP id n21so22367750ioo.10;
+        Thu, 26 Dec 2019 10:56:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Tdk21lW1THUxHtY9vlZ1nRwe59sn6+TCzl9IK6kCrxY=;
-        b=cV4sobuE6F8syE13tNfi4p+wKnC1J3Vm8HjiSwgT2ORz05TZFw3wHOyGXPhQdHkKJA
-         lzi68Kkek9eeaezVyXuVR4AibyIGh1fR25wbGc8O/UMk7j+LetHbzrSmcYZlEYXS4xTx
-         lZQLRr/i+VpThli8qzC+f9uY6PcGgpJzXaGrKzkvRhlbTDhebn8mI/JjhRa8tN6320W1
-         dc8L2FZTaBNyQrj4mMsWG1XNrZZ+zZwG2qX7zdB6xWvyb2dk4HJwf8jCY4cPU5zrqfsv
-         nSfGH8zP+nOJTddSR9HJeegKpnROQA7GVl5OMevKZS5li9fMIuQpmc64l4OpABbUZkK/
-         N2NQ==
-X-Gm-Message-State: APjAAAVgNDR5iFFAfuNSf6L+jh/0Wj4FZYCNpMD5QwdL/sLe27Z91kYN
-        9AGflc8hTm8dYXWCbybVDQg=
-X-Google-Smtp-Source: APXvYqytWCvSfGTkES4SMiUhI/nM1xVgQh7JR7YbzW2kovtBSDGlDHHDJAYkz2oB1+Ao2XlCczoPDw==
-X-Received: by 2002:a1c:a745:: with SMTP id q66mr14592494wme.167.1577386348409;
-        Thu, 26 Dec 2019 10:52:28 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id j12sm32129352wrt.55.2019.12.26.10.52.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ToXdYUQkeYDdHoqDRcSS3dTsiT4R5dAKA/kDsRrqbhI=;
+        b=DyRW93k64GfJCQ9Ur9RvUBG67m/veso65llrj+T/jvCR/V9VVs2PTR2FFvnRVlO2eT
+         YFiwsUMVdHlRgdtL8C+N/ULYR5OYpePn7geayw1it+4IVv4Y23QsWuw7Yuu4XBfNdw4d
+         LGehXyd0hQKvySrAkvDPjkGOK9DmrAL4FuRWciQeTZpYlt4euSshNoo0VTEM5pQAj3C8
+         LKGsPKEAVmTd1IatKoUX4mo2RlE9kZExJl2eGhhKqIBAuPMTDohdpd5+GEZDzgFxJze1
+         bx+vcghylsptPyjbDoFPJUnTtz0v0IW2nhveaNIHDnjZ15rSlVpt+qzDiKibkZSsUf6D
+         uhMA==
+X-Gm-Message-State: APjAAAULacx2xtqV5v29fktumklCdZGrWr8CSh1+eeKoJz4KDhzzIKsh
+        xJ5VQpZwsCJvTYaNxE7R8A==
+X-Google-Smtp-Source: APXvYqxcD5zb2ctCYCJ+aegozBi9qaHP8u71SNg/N28coEluOAngGSi0T/I6lyj6OJ3DYPMg8kVJXg==
+X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr30642435iot.283.1577386584924;
+        Thu, 26 Dec 2019 10:56:24 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y9sm8849619ion.54.2019.12.26.10.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 10:52:27 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/2] net: phy: realtek: add support for configuring the RX delay on RTL8211F
-Date:   Thu, 26 Dec 2019 19:51:48 +0100
-Message-Id: <20191226185148.3764251-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191226185148.3764251-1-martin.blumenstingl@googlemail.com>
-References: <20191226185148.3764251-1-martin.blumenstingl@googlemail.com>
+        Thu, 26 Dec 2019 10:56:24 -0800 (PST)
+Date:   Thu, 26 Dec 2019 11:56:23 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+Message-ID: <20191226185623.GA4463@bogus>
+References: <20191216121932.22967-1-zhang.lyra@gmail.com>
+ <20191216121932.22967-4-zhang.lyra@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216121932.22967-4-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On RTL8211F the RX and TX delays (2ns) can be configured in two ways:
-- pin strapping (RXD1 for the TX delay and RXD0 for the RX delay, LOW
-  means "off" and HIGH means "on") which is read during PHY reset
-- using software to configure the TX and RX delay registers
+On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> 
+> add a new bindings to describe sc9863a clock compatible string.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> new file mode 100644
+> index 000000000000..881f0a0287e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2019 Unisoc Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: SC9863A Clock Control Unit Device Tree Bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  compatible :
+> +    enum:
+> +      - sprd,sc9863a-ap-clk
+> +      - sprd,sc9863a-pmu-gate
+> +      - sprd,sc9863a-pll
+> +      - sprd,sc9863a-mpll
+> +      - sprd,sc9863a-rpll
+> +      - sprd,sc9863a-dpll
+> +      - sprd,sc9863a-aon-clk
+> +      - sprd,sc9863a-apahb-gate
+> +      - sprd,sc9863a-aonapb-gate
+> +      - sprd,sc9863a-mm-gate
+> +      - sprd,sc9863a-mm-clk
+> +      - sprd,sc9863a-vspahb-gate
+> +      - sprd,sc9863a-apapb-gate
 
-So far only the configuration using pin strapping has been supported.
-Add support for enabling or disabling the RGMII RX delay based on the
-phy-mode to be able to get the RX delay into a known state. This is
-important because the RX delay has to be coordinated between the PHY,
-MAC and the PCB design (trace length). With an invalid RX delay applied
-(for example if both PHY and MAC add a 2ns RX delay) Ethernet may not
-work at all.
+These will probably need to be split to separate schemas for the reasons 
+below...
 
-Also add debug logging when configuring the RX delay (just like the TX
-delay) because this is a common source of problems.
+> +
+> +  clocks:
+> +    description: |
+> +      The input parent clock(s) phandle for this clock, only list fixed
+> +      clocks which are decleared in devicetree.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/net/phy/realtek.c | 46 ++++++++++++++++++++++++++++++---------
- 1 file changed, 36 insertions(+), 10 deletions(-)
+typo.
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index 879ca37c8508..f5fa2fff3ddc 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -29,6 +29,8 @@
- #define RTL8211F_INSR				0x1d
- 
- #define RTL8211F_TX_DELAY			BIT(8)
-+#define RTL8211F_RX_DELAY			BIT(3)
-+
- #define RTL8211E_TX_DELAY			BIT(1)
- #define RTL8211E_RX_DELAY			BIT(2)
- #define RTL8211E_MODE_MII_GMII			BIT(3)
-@@ -172,38 +174,62 @@ static int rtl8211c_config_init(struct phy_device *phydev)
- static int rtl8211f_config_init(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
--	u16 val;
-+	u16 val_txdly, val_rxdly;
- 	int ret;
- 
--	/* enable TX-delay for rgmii-{id,txid}, and disable it for rgmii and
--	 * rgmii-rxid. The RX-delay can be enabled by the external RXDLY pin.
--	 */
- 	switch (phydev->interface) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+		val_txdly = 0;
-+		val_rxdly = 0;
-+		break;
-+
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
--		val = 0;
-+		val_txdly = 0;
-+		val_rxdly = RTL8211F_RX_DELAY;
- 		break;
--	case PHY_INTERFACE_MODE_RGMII_ID:
-+
- 	case PHY_INTERFACE_MODE_RGMII_TXID:
--		val = RTL8211F_TX_DELAY;
-+		val_txdly = RTL8211F_TX_DELAY;
-+		val_rxdly = 0;
-+		break;
-+
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		val_txdly = RTL8211F_TX_DELAY;
-+		val_rxdly = RTL8211F_RX_DELAY;
- 		break;
-+
- 	default: /* the rest of the modes imply leaving delay as is. */
- 		return 0;
- 	}
- 
- 	ret = phy_modify_paged_changed(phydev, 0xd08, 0x11, RTL8211F_TX_DELAY,
--				       val);
-+				       val_txdly);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to update the TX delay register\n");
- 		return ret;
- 	} else if (ret) {
- 		dev_dbg(dev,
- 			"%s 2ns TX delay (and changing the value from pin-strapping RXD1 or the bootloader)\n",
--			val ? "Enabling" : "Disabling");
-+			val_txdly ? "Enabling" : "Disabling");
- 	} else {
- 		dev_dbg(dev,
- 			"2ns TX delay was already %s (by pin-strapping RXD1 or bootloader configuration)\n",
--			val ? "enabled" : "disabled");
-+			val_txdly ? "enabled" : "disabled");
-+	}
-+
-+	ret = phy_modify_paged_changed(phydev, 0xd08, 0x15, RTL8211F_RX_DELAY,
-+				       val_rxdly);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to update the RX delay register\n");
-+		return ret;
-+	} else if (ret) {
-+		dev_dbg(dev,
-+			"%s 2ns RX delay (and changing the value from pin-strapping RXD0 or the bootloader)\n",
-+			val_rxdly ? "Enabling" : "Disabling");
-+	} else {
-+		dev_dbg(dev,
-+			"2ns RX delay was already %s (by pin-strapping RXD0 or bootloader configuration)\n",
-+			val_rxdly ? "enabled" : "disabled");
- 	}
- 
- 	return 0;
--- 
-2.24.1
+You need to define how many clocks.
 
+> +
+> +  clock-names:
+> +    description: |
+> +      Clock name strings used for driver to reference.
+
+You need to list out the names.
+
+> +
+> +  reg:
+> +    description: |
+> +      Contain the registers base address and length. It must be configured
+> +      only if no 'sprd,syscon' under the node.
+> +
+> +  sprd,syscon:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: |
+> +      The phandle to the syscon which is in the same address area with
+> +      the clock, and so we can get regmap for the clocks from the
+> +      syscon device.
+
+It is preferred to make the clock node a child of the syscon and then 
+you don't need this property.
+
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  - |
+> +    ap_clk: clock-controller@21500000 {
+> +      compatible = "sprd,sc9863a-ap-clk";
+> +      reg = <0 0x21500000 0 0x1000>;
+> +      clocks = <&ext_32k>, <&ext_26m>;
+> +      clock-names = "ext-32k", "ext-26m";
+> +      #clock-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    apahb_gate: apahb-gate {
+> +      compatible = "sprd,sc9863a-apahb-gate";
+> +      sprd,syscon = <&ap_ahb_regs>;
+> +      #clock-cells = <1>;
+> +    };
+> +
+> +...
+> -- 
+> 2.20.1
+> 
