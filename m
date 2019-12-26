@@ -2,137 +2,129 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2244C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CCFC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CB420740
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73AE02075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLZNsK (ORCPT
+        id S1726596AbfLZN7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:48:10 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8197 "EHLO huawei.com"
+        Thu, 26 Dec 2019 08:59:01 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41178 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbfLZNsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:48:09 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E60EB48045FF6C5EA907;
-        Thu, 26 Dec 2019 21:48:06 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 21:47:56 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <darrick.wong@oracle.com>, <bfoster@redhat.com>,
-        <dchinner@redhat.com>, <sandeen@sandeen.net>,
-        <cmaiolino@redhat.com>, <hch@lst.de>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>, <houtao1@huawei.com>
-Subject: [PATCH 2/2] xfs: fix stale data exposure problem when punch hole, collapse range or zero range across a delalloc extent
-Date:   Thu, 26 Dec 2019 21:47:21 +0800
-Message-ID: <20191226134721.43797-3-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191226134721.43797-1-yukuai3@huawei.com>
-References: <20191226134721.43797-1-yukuai3@huawei.com>
+        id S1725954AbfLZN7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 08:59:00 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 17720E927BC04C10696D;
+        Thu, 26 Dec 2019 21:58:57 +0800 (CST)
+Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 26 Dec 2019 21:58:51 +0800
+From:   Zengruan Ye <yezengruan@huawei.com>
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>
+CC:     <yezengruan@huawei.com>, <maz@kernel.org>, <james.morse@arm.com>,
+        <linux@armlinux.org.uk>, <suzuki.poulose@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <catalin.marinas@arm.com>,
+        <mark.rutland@arm.com>, <will@kernel.org>, <steven.price@arm.com>,
+        <daniel.lezcano@linaro.org>
+Subject: [PATCH v2 0/6] KVM: arm64: VCPU preempted check support
+Date:   Thu, 26 Dec 2019 21:58:27 +0800
+Message-ID: <20191226135833.1052-1-yezengruan@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.221.248]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In xfs_file_fallocate, when punch hole, zero range or collapse range is
-performed, xfs_fulsh_unmap_range() need to be called first. However,
-xfs_map_blocks will convert the whole extent to real, even if there are
-some blocks not related. Furthermore, the unrelated blocks will hold stale
-data since xfs_fulsh_unmap_range didn't flush the correspond dirty pages
-to disk.
+This patch set aims to support the vcpu_is_preempted() functionality
+under KVM/arm64, which allowing the guest to obtain the VCPU is
+currently running or not. This will enhance lock performance on
+overcommitted hosts (more runnable VCPUs than physical CPUs in the
+system) as doing busy waits for preempted VCPUs will hurt system
+performance far worse than early yielding.
 
-In this case, if user shutdown file system through xfsioctl with cmd
-'XFS_IOC_GOINGDOWN' and arg 'XFS_FSOP_GOING_FLAGS_LOGFLUSH'. All the
-completed transactions will be flushed to disk, while dirty pages will
-never be flushed to disk. And after remount, the file will hold stale
-data.
+We have observed some performace improvements in uninx benchmark tests.
 
-Fix the problem by spliting delalloc extent before xfs_flush_unmap_range
-is called.
+unix benchmark result:
+  host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 CPUs
+  guest: kernel 5.5.0-rc1, 16 VCPUs
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- fs/xfs/xfs_file.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+               test-case                |    after-patch    |   before-patch
+----------------------------------------+-------------------+------------------
+ Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
+ Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
+ Execl Throughput                       |      3662.1 lps   |      2718.0 lps
+ File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
+ File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
+ File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
+ Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
+ Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
+ Process Creation                       |      4025.7 lps   |      3706.6 lps
+ Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
+ Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
+ System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
+----------------------------------------+-------------------+------------------
+ System Benchmarks Index Score          |      1835.1       |      1327.6
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index c93250108952..5398102feec9 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -786,6 +786,50 @@ xfs_break_layouts(
- 
- 	return error;
- }
-+int
-+try_split_da_extent(
-+	struct xfs_inode	*ip,
-+	loff_t			offset,
-+	loff_t			len)
-+{
-+	struct xfs_mount	*mp = ip->i_mount;
-+	xfs_fileoff_t		start = XFS_B_TO_FSBT(mp, offset);
-+	xfs_fileoff_t		end = XFS_B_TO_FSBT(mp, offset + len - 1);
-+	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_DATA_FORK);
-+	struct xfs_iext_cursor	cur;
-+	struct xfs_bmbt_irec	imap;
-+	int error;
-+
-+	/*
-+	 * if start belong to a delalloc extent and it's not the first block,
-+	 * split the extent at start.
-+	 */
-+	if (xfs_iext_lookup_extent(ip, ifp, start, &cur, &imap) &&
-+	    imap.br_startblock != HOLESTARTBLOCK &&
-+	    isnullstartblock(imap.br_startblock) &&
-+	    start > imap.br_startoff) {
-+		error = xfs_bmap_split_da_extent(ip, start);
-+		if (error)
-+			return error;
-+		ip->i_d.di_nextents--;
-+	}
-+
-+	/*
-+	 * if end + 1 belong to a delalloc extent and it's not the first block,
-+	 * split the extent at end + 1.
-+	 */
-+	if (xfs_iext_lookup_extent(ip, ifp, end + 1, &cur, &imap) &&
-+	    imap.br_startblock != HOLESTARTBLOCK &&
-+	    isnullstartblock(imap.br_startblock) &&
-+	    end + 1 > imap.br_startoff) {
-+		error = xfs_bmap_split_da_extent(ip, end + 1);
-+		if (error)
-+			return error;
-+		ip->i_d.di_nextents--;
-+	}
-+
-+	return 0;
-+}
- 
- #define	XFS_FALLOC_FL_SUPPORTED						\
- 		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
-@@ -842,6 +886,9 @@ xfs_file_fallocate(
- 	 */
- 	if (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE |
- 		    FALLOC_FL_COLLAPSE_RANGE)) {
-+		error = try_split_da_extent(ip, offset, len);
-+		if (error)
-+			goto out_unlock;
- 		error = xfs_flush_unmap_range(ip, offset, len);
- 		if (error)
- 			goto out_unlock;
+Changes from v1:
+https://lore.kernel.org/lkml/20191217135549.3240-1-yezengruan@huawei.com/
+ * Guest kernel no longer allocates the PV lock structure, instead it
+   is allocated by user space to avoid lifetime issues about kexec.
+ * Provide VCPU attributes for PV lock.
+ * Update SMC number of PV lock features.
+ * Report some basic validation when PV lock init.
+ * Document preempted field.
+ * Bunch of typo fixes.
+
+Zengruan Ye (6):
+  KVM: arm64: Document PV-lock interface
+  KVM: arm64: Add SMCCC paravirtualised lock calls
+  KVM: arm64: Support pvlock preempted via shared structure
+  KVM: arm64: Provide VCPU attributes for PV lock
+  KVM: arm64: Add interface to support VCPU preempted check
+  KVM: arm64: Support the VCPU preemption check
+
+ Documentation/virt/kvm/arm/pvlock.rst   |  63 ++++++++++++
+ Documentation/virt/kvm/devices/vcpu.txt |  14 +++
+ arch/arm/include/asm/kvm_host.h         |  18 ++++
+ arch/arm64/include/asm/kvm_host.h       |  28 ++++++
+ arch/arm64/include/asm/paravirt.h       |  15 +++
+ arch/arm64/include/asm/pvlock-abi.h     |  16 ++++
+ arch/arm64/include/asm/spinlock.h       |   7 ++
+ arch/arm64/include/uapi/asm/kvm.h       |   2 +
+ arch/arm64/kernel/Makefile              |   2 +-
+ arch/arm64/kernel/paravirt-spinlocks.c  |  13 +++
+ arch/arm64/kernel/paravirt.c            | 121 +++++++++++++++++++++++-
+ arch/arm64/kernel/setup.c               |   2 +
+ arch/arm64/kvm/Makefile                 |   1 +
+ arch/arm64/kvm/guest.c                  |   9 ++
+ include/linux/arm-smccc.h               |  14 +++
+ include/linux/cpuhotplug.h              |   1 +
+ include/uapi/linux/kvm.h                |   2 +
+ virt/kvm/arm/arm.c                      |   8 ++
+ virt/kvm/arm/hypercalls.c               |   8 ++
+ virt/kvm/arm/pvlock.c                   | 103 ++++++++++++++++++++
+ 20 files changed, 445 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/virt/kvm/arm/pvlock.rst
+ create mode 100644 arch/arm64/include/asm/pvlock-abi.h
+ create mode 100644 arch/arm64/kernel/paravirt-spinlocks.c
+ create mode 100644 virt/kvm/arm/pvlock.c
+
 -- 
-2.17.2
+2.19.1
+
 
