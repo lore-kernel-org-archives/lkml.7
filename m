@@ -2,111 +2,128 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65090C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8792CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409A920838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1AB20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hs/GWrax"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OG2vGorW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfLZTBC (ORCPT
+        id S1726960AbfLZTBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:01:02 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35412 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfLZTBC (ORCPT
+        Thu, 26 Dec 2019 14:01:16 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33361 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfLZTBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 14:01:02 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s7so3809793pjc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 11:01:02 -0800 (PST)
+        Thu, 26 Dec 2019 14:01:16 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so5551312wmd.0;
+        Thu, 26 Dec 2019 11:01:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sKQGR3Y9ZuT+GSwwu9eznDqy2WWfte9UQ+0KNkkzAxk=;
-        b=hs/GWraxJbhlVWLQfZcPf2AkuAt27ITg23eVhx5slTXjZDmmGDT18wTrueDpo8m0eD
-         8d8nydd5QR4XNM4RlO0OI/H2a1NFTgxHehliFMY9dUOV0FnX722XY/AzHNyMTNOKskze
-         /E/RT0Ktig+uyz3qru8cFDQRsT9VwFN3cw+wI6TpLLSnHoeonM+S6NRQvi+2fypakTkM
-         PrUUoJgiek7czSCleZJgOzdjGXzkBRJH3QnkJ5ngcvkj6u6XoS9+f1jkj2Iqo7lQ5Irk
-         zI9gQ2FQsUULdbacEegcJC2mNQge8fWvBNmK8wds1h3AOBjTI0R7QlvccbBfnSIHahdX
-         0pcw==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ncp0cKjiqSNqZtUZj6kSVhT3fNnvKYgj+9vZwHCvLHU=;
+        b=OG2vGorWxsVVWtHw8LcxkzPlVF8DTxDoodaUSMIy1WNJTNkvvSkZRVTN8+QAcO4TF+
+         BeA84DgZvW64FGHilCuwScNiEckg8lvJjC1G4siYN5zQujILB1NMUkzwKGzEC3KGGlUZ
+         Tkm578bVH9QmfnZYmUFbaErWmfWeqB1PK8jdwfkme/0Jldsdqi4XI3A1cVO52nwz6mD7
+         EJ+izmSGSCbYVk9y9J4DcSuMczsoLYpsXPnf7WTcFeQ+r5pUpUeGQQHK8qHx9KjjOLXT
+         dxYkeNK3g9ji0vmpZd2jeU9cI3WrTFSTtfFnbD7spBii7q20Hbe6/Cd8a4no2QihtKF+
+         SHzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sKQGR3Y9ZuT+GSwwu9eznDqy2WWfte9UQ+0KNkkzAxk=;
-        b=Q51fm5FHnYw2SY05QcE29jN5xsniJO6XuJsjwPLuKnuCF8HYGn96ieOqKzV/hrtlit
-         NIhkzJO37nfBSAiRktNhz21Pe+Zcz8vU+t09O2QmHSFA/8DcFCYvFgYmPOHhxLxF/hPe
-         U6KxEa6nOsWCqzJizn0AuAHBCqDzHN3ajgsbWZ0dMRFOCkWlyxcyPH3Aywq7ObRlrfb5
-         nlQOWl6RTRN4XybufEWO2vKWdp8s/isuhYrZYetAQFMwsEXqPM/zJEuefXAICe6PUMLZ
-         ZrAHvPi/aZw2KLMTvnWJTccxzbj670NVPWax4bgfooMWcBx42glWk8864iZq7AwwQeNe
-         QHfw==
-X-Gm-Message-State: APjAAAWdYWpUGv3IkPi3dgTF2f9g4LWsSvMQoEivkOFuszdIY1vkBAAg
-        +ECj/ra+oWpMxsGxP4O1wWx8IQ==
-X-Google-Smtp-Source: APXvYqzatM2elI5CdG4rtWQkuXM2/c5RjjfQZe6wfRlfMUYQEpcvtNgqLOYkooMoSJhAoTdOsq80fw==
-X-Received: by 2002:a17:90a:3742:: with SMTP id u60mr21741452pjb.29.1577386861619;
-        Thu, 26 Dec 2019 11:01:01 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q64sm12081353pjb.1.2019.12.26.11.01.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ncp0cKjiqSNqZtUZj6kSVhT3fNnvKYgj+9vZwHCvLHU=;
+        b=TZ9nAsV7I0r0QRBpxqWdkoS0+r2kIwOvWI1oN9SlkhbEig9toD2ozETX+/hHWXMpfU
+         Ns1w/DBZ9XVTKgq3uXHOeiUGeT+VfFPO11u3JPEKXJrPIzubySItmf8hfq65pnd4Zcnk
+         qgBGtSh3o69OC6n37HWDq2H8sd6HacQ+H4h6xAcieJsbXHoORolnScBmrWOwDgY6MR+U
+         v9dWIiKDUHB+Y9qmwtcRPsykhueAXS7TdIkKVk+PPMY1myp7aATGRVGZ/GtsglffMA63
+         C5E4QE3rTcxuIrpExYywi8l+lp5iQHPE11l/83VZ4hmmt+Cugr7de85qde93D2iDaMjf
+         VdYw==
+X-Gm-Message-State: APjAAAVULtimJJ+1b89dzBPA8aVlBN4I9Ys3bjJOGrd6Ap04R1VkXJyL
+        +UWwc+6dlkB3vx5CeFfTEuQ=
+X-Google-Smtp-Source: APXvYqwyHmDN753nFzJKANB8LWnP8tdzNpfU5bel2yfMTlsatjTbMVaemA+4OF1AHv2hPmAbPF+juQ==
+X-Received: by 2002:a7b:c08d:: with SMTP id r13mr16253154wmh.104.1577386873950;
+        Thu, 26 Dec 2019 11:01:13 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id u18sm31777854wrt.26.2019.12.26.11.01.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 11:01:00 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:00:58 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     David Dai <daidavid1@codeaurora.org>, georgi.djakov@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-Message-ID: <20191226190058.GL549437@yoga>
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <1576475925-20601-4-git-send-email-daidavid1@codeaurora.org>
- <20191226184803.GA26712@bogus>
+        Thu, 26 Dec 2019 11:01:13 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/1] dwmac-meson8b: Ethernet RGMII TX delay fix
+Date:   Thu, 26 Dec 2019 20:01:00 +0100
+Message-Id: <20191226190101.3766479-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226184803.GA26712@bogus>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26 Dec 10:48 PST 2019, Rob Herring wrote:
+The Ethernet TX performance has been historically bad on Meson8b and
+Meson8m2 SoCs because high packet loss was seen. Today I (presumably)
+found out why this is: the input clock (which feeds the RGMII TX clock)
+has to be at least 4 times 125MHz. With the fixed "divide by 2" in the
+clock tree this means that m250_div needs to be at least 2.
 
-> On Sun, Dec 15, 2019 at 09:58:44PM -0800, David Dai wrote:
-> > In order to better represent the hardware and its different Network-On-Chip
-> > devices, split the sdm845 provider driver into NoC specific providers.
-> > Remove duplicate functionality already provided by the icc rpmh and
-> > bcm voter drivers to calculate and commit bandwidth requests to hardware.
->  
-> This breaks backwards compatibility. Is that okay for all 845 users?
-> 
+With this patch and a 2ns TX delay generated by either the MAC *or* the
+PHY this results in improved Ethernet TX performance and no packet loss
+anymore:
+# iperf3 -c 192.168.1.100
+Connecting to host 192.168.1.100, port 5201
+[  5] local 192.168.1.163 port 42636 connected to 192.168.1.100 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   105 MBytes   878 Mbits/sec    0    609 KBytes       
+[  5]   1.00-2.00   sec   106 MBytes   885 Mbits/sec    0    683 KBytes       
+[  5]   2.00-3.09   sec  73.7 MBytes   570 Mbits/sec    0    683 KBytes       
+[  5]   3.09-4.00   sec  81.9 MBytes   754 Mbits/sec    0    795 KBytes       
+[  5]   4.00-5.00   sec   104 MBytes   869 Mbits/sec    0    877 KBytes       
+[  5]   5.00-6.00   sec   105 MBytes   878 Mbits/sec    0    877 KBytes       
+[  5]   6.00-7.00   sec  68.0 MBytes   571 Mbits/sec    0    877 KBytes       
+[  5]   7.00-8.00   sec  80.7 MBytes   676 Mbits/sec    0    877 KBytes       
+[  5]   8.00-9.01   sec   102 MBytes   853 Mbits/sec    0    877 KBytes       
+[  5]   9.01-10.00  sec   101 MBytes   859 Mbits/sec    0    877 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0             sender
+[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec                  receiver
 
-Yes, based on our discussions surrounding adding support for the
-pre-rpmh platforms, we concluded a while ago that we would like to
-attempt to move to this structure instead of the originally agreed upon.
 
-So we haven't merged any consumers using the current 845 binding in the
-upstream Linux repository.
+The .dts of these boards are still using an incorrect TX delay of 4ns.
+This will be fixed in follow-up patches when it's clear whether the MAC
+really generates an RX delay and how this can be configured.
 
 
-I'm not aware of any other public repositories that relies on the
-existing binding.
+Changes since v1 [0]:
+- update cover-letter title
+- dropped the .dts patches after discussion with Andrew in [1]
+- slightly reworded the patch description of patch #1 to indicate that
+  the goal is to fix the TX delay generated by the MAC, without
+  suggesting that it's recommended to let the MAC actually generate it.
 
-Thanks,
-Bjorn
 
-> > Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> > ---
-> >  drivers/interconnect/qcom/sdm845.c             | 1122 ++++++++++--------------
-> >  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
-> >  2 files changed, 606 insertions(+), 779 deletions(-)
+[0] https://patchwork.kernel.org/cover/11309887/
+[1] https://patchwork.kernel.org/patch/11309891/
+
+
+Martin Blumenstingl (1):
+  net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
+
+ .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+-- 
+2.24.1
+
