@@ -2,160 +2,701 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C8C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4E5C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518C220882
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RNaQ1gJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF8A2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577369076;
+	bh=ZoUQM+sInK3Fh4yWnr0sNG8myjGc2KKTjrEQfFSNEGw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2v+zYuAtxqgbAgbcPT8UxxoVjg8uXO3zdqGgHT98nqw1kqsTpbk/cqQXNkXUrEaaJ
+	 XS565Y1hYaBwnN5bNK5hBCRUBpyihklMX6nC3goZVkIGtAUK7LnwzFftaAgy6S7Ac4
+	 hAM8PbCrElzAtl4BJrapmPowgbt0vwCYA7VXs9Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfLZOEc (ORCPT
+        id S1727005AbfLZOEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 26 Dec 2019 09:04:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbfLZOEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Dec 2019 09:04:32 -0500
-Received: from mail-eopbgr30051.outbound.protection.outlook.com ([40.107.3.51]:53250
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726074AbfLZOEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 09:04:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q1lEAqOi+u5enHhacTjsCnAhwFhfkjh4QbbAHSZB7Ebq2aVTwbyfI2+M4KjqUS6ec6aR3GOlBONhgJ/oF9KN5vDEQEEGpZc2k1S/wHqPsPkSC4rACcuIsC+nd0BjlMBC/En8muzaKLaQm7xGu34ekka1zBbNZP3SeOHl9jBxNpHN09FyH97ykcdVx505wIj9vZjNxJSiyiJlX076aBX3Ui1r4z0tSd76OsbTcW19zMAlVI1HhdPwluYHpTw5uKQOEjxkcjMBy3zC2TeQPQl9AaLObyCREVOr8T0LZpu0z7jXmkHz/mbtlP10RCfScqG+H1MWpxk9pzR8F1JYChztIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HdeEwGufP9ZrXewH9YszJbbm5IsOTiS9gXj7hzsa+DY=;
- b=azwmVgNydjLnh9Zro9CRKwPGelGkN6fDdTBA1lWn8yLTvJspQq6pI3UyO0q5TpQIjezQZl1MvmwvdQYaX7a9lLnoZc1M5o+TLhzY83u5jlQrTUBYbqLH5Sd6l9O8NLuOPUV+871vB6w1WlysXKM7SgeXL/X2sRRoXM45tc+oHvgtgQd3swPZ8g4kBzC5mgS7aqf9bOqBmfCztmu1xy0n+ZksxF9e5S11mBmoJNWGAURSGBlQmjEiRXgzkgtgMNetSCjgU23t8LYJ8q1P71WLpRZDzgZ5LTkCfPRlnBSiYWcEhj8LNG+wPL3R833y6uHAWzIaBTUFUGSPk4ni0MpNJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HdeEwGufP9ZrXewH9YszJbbm5IsOTiS9gXj7hzsa+DY=;
- b=RNaQ1gJQD0er9jF4aar5VugS4UidfFHafySUZ2eCsjzKEVjHOGClG6z3GFvTlgM2Zh/K5uzFfs5UTPnTiiSSTqZzm0TjScLGOAqJQC4E89wWXacwSnf7InevFUU1A/6Ig4blaOohZjAZtvHS/cGJWjLFovhXd8SDBItSXByJA3s=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB5060.eurprd04.prod.outlook.com (20.177.41.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Thu, 26 Dec 2019 14:04:28 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::6d52:5678:e02f:95f4]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::6d52:5678:e02f:95f4%3]) with mapi id 15.20.2581.007; Thu, 26 Dec 2019
- 14:04:28 +0000
-Received: from localhost (89.37.124.34) by AM5PR0601CA0032.eurprd06.prod.outlook.com (2603:10a6:203:68::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Thu, 26 Dec 2019 14:04:27 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] cpufreq: imx-cpufreq-dt: Add i.MX8MP support
-Thread-Topic: [PATCH 2/2] cpufreq: imx-cpufreq-dt: Add i.MX8MP support
-Thread-Index: AQHVu7mKaZLuFaepI0S7Z4SaC6NlIKfMc1AA
-Date:   Thu, 26 Dec 2019 14:04:28 +0000
-Message-ID: <20191226140426.ip2vb6dom5hckenc@fsr-ub1664-175>
-References: <1577343167-16376-1-git-send-email-Anson.Huang@nxp.com>
- <1577343167-16376-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1577343167-16376-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0601CA0032.eurprd06.prod.outlook.com
- (2603:10a6:203:68::18) To AM0PR04MB5779.eurprd04.prod.outlook.com
- (2603:10a6:208:131::23)
-x-originating-ip: [89.37.124.34]
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d51eed90-c363-43d2-ff4e-08d78a0c8568
-x-ms-traffictypediagnostic: AM0PR04MB5060:|AM0PR04MB5060:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB50609D366D9596CAD6282654F62B0@AM0PR04MB5060.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 02638D901B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(366004)(346002)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(66446008)(186003)(16526019)(2906002)(66476007)(8936002)(6862004)(86362001)(1076003)(52116002)(81166006)(6496006)(8676002)(53546011)(66946007)(64756008)(66556008)(26005)(81156014)(71200400001)(54906003)(316002)(44832011)(6486002)(4326008)(956004)(478600001)(33716001)(6636002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5060;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CEhE1rkYukRZOPVEANut4o4U8hFudjiGvGqIt2XArQr0PBaWE1cvDjR6ZE6qQ0Y5nYlzXx7tGZkZmBzzKGC6i0hWyd/PMS0cUK/le6r7/uV3cf1ajohvQ5T9/S+u8+oJ/T6FVe/P9t3TIr72H/9Dejb3dgCTIN2GXW2iNtyO6+6LtyxcIZLyRLjBPobjTn4m+RebxoJyk2LQSfUoWXFa8feBeaHPjlJrUG08/JYb638sWXKJiDZXLyMNrY2Lm4Zf0aFfP8dpvegzxjwkGfBlO7Nq0D4Lxz8Co+NvoaEVWtu0RkGfypEInz/Ez93X5rlzapxnQmsPYu3xufq2LDwFrGbkwLWgRwPFR2sPAbP1napU7JAjsENtjjKAvBTcUSzoVgBXP8KBt+TuSCkqWu8cnsHiUEO4sRYnA5GzIIfKankMqQrj53AVNODsoj+gg97K
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8F23C618A82F824C80C1441332F2773D@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC9E2075E;
+        Thu, 26 Dec 2019 14:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577369071;
+        bh=ZoUQM+sInK3Fh4yWnr0sNG8myjGc2KKTjrEQfFSNEGw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DEfLSd7i/cND4+9YtqQlevXol/tRQaUExc1L1/hhkzf8f7oZUuwV3A9zAhiAvBvN1
+         LdYFSRggMvlnpXULl5x5nHbEq0scJ9NccpL6KKw2ngdt4lHWc5wOETyMB59jGOiets
+         kKSkIJNy9fjMYDYMSbKb3l6QWswkYpjt0+Bt3pD4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 03/22] tools: bootconfig: Add bootconfig command
+Date:   Thu, 26 Dec 2019 23:04:24 +0900
+Message-Id: <157736906470.11126.7077740771650790633.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157736902773.11126.2531161235817081873.stgit@devnote2>
+References: <157736902773.11126.2531161235817081873.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d51eed90-c363-43d2-ff4e-08d78a0c8568
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Dec 2019 14:04:28.1254
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BCiT2gmbSgN40DgIsZSYRCnUW5fHfLnfeJwjKRtrNQcUQzEwQScM5pkTc3WsjQGWDiekjn9UbaBKWY8SAST0aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5060
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-26 14:52:47, Anson Huang wrote:
-> Add i.MX8MP cpufreq DT support for speed grading and market
-> segment check.
->=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/cpufreq/imx-cpufreq-dt.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/cpufreq/imx-cpufreq-dt.c b/drivers/cpufreq/imx-cpufr=
-eq-dt.c
-> index 85a6efd..912e93d 100644
-> --- a/drivers/cpufreq/imx-cpufreq-dt.c
-> +++ b/drivers/cpufreq/imx-cpufreq-dt.c
-> @@ -35,7 +35,7 @@ static int imx_cpufreq_dt_probe(struct platform_device =
-*pdev)
->  	if (ret)
->  		return ret;
-> =20
-> -	if (of_machine_is_compatible("fsl,imx8mn"))
-> +	if (of_machine_is_compatible("fsl,imx8mn") || of_machine_is_compatible(=
-"fsl,imx8mp"))
+Add "bootconfig" command which operates the bootconfig
+config-data on initrd image.
 
-Is there a way we could do this more generic so we won't have to add
-another of_machine_is_compatible if a new imx8m comes around ?
+User can add/delete/verify the boot config on initrd
+image using this command.
 
-If not, please drop the second one on a new line to follow the 80 chars rul=
-e.
+e.g.
+Add a boot config to initrd image
+ # bootconfig -a myboot.conf /boot/initrd.img
 
-Then you can add:
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+Remove it.
+ # bootconfig -d /boot/initrd.img
 
->  		speed_grade =3D (cell_value & IMX8MN_OCOTP_CFG3_SPEED_GRADE_MASK)
->  			      >> OCOTP_CFG3_SPEED_GRADE_SHIFT;
->  	else
-> @@ -54,7 +54,8 @@ static int imx_cpufreq_dt_probe(struct platform_device =
-*pdev)
->  		if (of_machine_is_compatible("fsl,imx8mm") ||
->  		    of_machine_is_compatible("fsl,imx8mq"))
->  			speed_grade =3D 1;
-> -		if (of_machine_is_compatible("fsl,imx8mn"))
-> +		if (of_machine_is_compatible("fsl,imx8mn") ||
-> +			of_machine_is_compatible("fsl,imx8mp"))
->  			speed_grade =3D 0xb;
->  	}
-> =20
-> --=20
-> 2.7.4
->=20
+Or verify (and show) it.
+ # bootconfig /boot/initrd.img
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ Changes in v5:
+  - Fix Makefile to compile all C files always.
+  - Remove unused pattern from Makefile.
+---
+ tools/bootconfig/.gitignore                 |    1 
+ tools/bootconfig/Makefile                   |   20 ++
+ tools/bootconfig/include/linux/bootconfig.h |    7 +
+ tools/bootconfig/include/linux/bug.h        |   12 +
+ tools/bootconfig/include/linux/ctype.h      |    7 +
+ tools/bootconfig/include/linux/errno.h      |    7 +
+ tools/bootconfig/include/linux/kernel.h     |   18 +
+ tools/bootconfig/include/linux/printk.h     |   13 +
+ tools/bootconfig/include/linux/string.h     |   32 +++
+ tools/bootconfig/main.c                     |  337 +++++++++++++++++++++++++++
+ 10 files changed, 454 insertions(+)
+ create mode 100644 tools/bootconfig/.gitignore
+ create mode 100644 tools/bootconfig/Makefile
+ create mode 100644 tools/bootconfig/include/linux/bootconfig.h
+ create mode 100644 tools/bootconfig/include/linux/bug.h
+ create mode 100644 tools/bootconfig/include/linux/ctype.h
+ create mode 100644 tools/bootconfig/include/linux/errno.h
+ create mode 100644 tools/bootconfig/include/linux/kernel.h
+ create mode 100644 tools/bootconfig/include/linux/printk.h
+ create mode 100644 tools/bootconfig/include/linux/string.h
+ create mode 100644 tools/bootconfig/main.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 761a313dda4f..0a0acbc968d6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15774,6 +15774,7 @@ M:	Masami Hiramatsu <mhiramat@kernel.org>
+ S:	Maintained
+ F:	lib/bootconfig.c
+ F:	include/linux/bootconfig.h
++F:	tools/bootconfig/*
+ 
+ SUN3/3X
+ M:	Sam Creasey <sammy@sammy.net>
+diff --git a/tools/Makefile b/tools/Makefile
+index 7e42f7b8bfa7..bd778812e915 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -28,6 +28,7 @@ help:
+ 	@echo '  pci                    - PCI tools'
+ 	@echo '  perf                   - Linux performance measurement and analysis tool'
+ 	@echo '  selftests              - various kernel selftests'
++	@echo '  bootconfig             - boot config tool'
+ 	@echo '  spi                    - spi tools'
+ 	@echo '  tmon                   - thermal monitoring and tuning tool'
+ 	@echo '  turbostat              - Intel CPU idle stats and freq reporting tool'
+@@ -63,7 +64,7 @@ acpi: FORCE
+ cpupower: FORCE
+ 	$(call descend,power/$@)
+ 
+-cgroup firewire hv guest spi usb virtio vm bpf iio gpio objtool leds wmi pci firmware debugging: FORCE
++cgroup firewire hv guest bootconfig spi usb virtio vm bpf iio gpio objtool leds wmi pci firmware debugging: FORCE
+ 	$(call descend,$@)
+ 
+ liblockdep: FORCE
+@@ -96,7 +97,7 @@ kvm_stat: FORCE
+ 	$(call descend,kvm/$@)
+ 
+ all: acpi cgroup cpupower gpio hv firewire liblockdep \
+-		perf selftests spi turbostat usb \
++		perf selftests bootconfig spi turbostat usb \
+ 		virtio vm bpf x86_energy_perf_policy \
+ 		tmon freefall iio objtool kvm_stat wmi \
+ 		pci debugging
+@@ -107,7 +108,7 @@ acpi_install:
+ cpupower_install:
+ 	$(call descend,power/$(@:_install=),install)
+ 
+-cgroup_install firewire_install gpio_install hv_install iio_install perf_install spi_install usb_install virtio_install vm_install bpf_install objtool_install wmi_install pci_install debugging_install:
++cgroup_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install vm_install bpf_install objtool_install wmi_install pci_install debugging_install:
+ 	$(call descend,$(@:_install=),install)
+ 
+ liblockdep_install:
+@@ -141,7 +142,7 @@ acpi_clean:
+ cpupower_clean:
+ 	$(call descend,power/cpupower,clean)
+ 
+-cgroup_clean hv_clean firewire_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean:
++cgroup_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean:
+ 	$(call descend,$(@:_clean=),clean)
+ 
+ liblockdep_clean:
+@@ -176,7 +177,7 @@ build_clean:
+ 	$(call descend,build,clean)
+ 
+ clean: acpi_clean cgroup_clean cpupower_clean hv_clean firewire_clean \
+-		perf_clean selftests_clean turbostat_clean spi_clean usb_clean virtio_clean \
++		perf_clean selftests_clean turbostat_clean bootconfig_clean spi_clean usb_clean virtio_clean \
+ 		vm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
+ 		freefall_clean build_clean libbpf_clean libsubcmd_clean liblockdep_clean \
+ 		gpio_clean objtool_clean leds_clean wmi_clean pci_clean firmware_clean debugging_clean \
+diff --git a/tools/bootconfig/.gitignore b/tools/bootconfig/.gitignore
+new file mode 100644
+index 000000000000..e7644dfaa4a7
+--- /dev/null
++++ b/tools/bootconfig/.gitignore
+@@ -0,0 +1 @@
++bootconfig
+diff --git a/tools/bootconfig/Makefile b/tools/bootconfig/Makefile
+new file mode 100644
+index 000000000000..681b7aef3e44
+--- /dev/null
++++ b/tools/bootconfig/Makefile
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0
++# Makefile for bootconfig command
++
++bindir ?= /usr/bin
++
++HEADER = include/linux/bootconfig.h
++CFLAGS = -Wall -g -I./include
++
++PROGS = bootconfig
++
++all: $(PROGS)
++
++bootconfig: ../../lib/bootconfig.c main.c $(HEADER)
++	$(CC) $(filter %.c,$^) $(CFLAGS) -o $@
++
++install: $(PROGS)
++	install bootconfig $(DESTDIR)$(bindir)
++
++clean:
++	$(RM) -f *.o bootconfig
+diff --git a/tools/bootconfig/include/linux/bootconfig.h b/tools/bootconfig/include/linux/bootconfig.h
+new file mode 100644
+index 000000000000..078cbd2ba651
+--- /dev/null
++++ b/tools/bootconfig/include/linux/bootconfig.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _BOOTCONFIG_LINUX_BOOTCONFIG_H
++#define _BOOTCONFIG_LINUX_BOOTCONFIG_H
++
++#include "../../../../include/linux/bootconfig.h"
++
++#endif
+diff --git a/tools/bootconfig/include/linux/bug.h b/tools/bootconfig/include/linux/bug.h
+new file mode 100644
+index 000000000000..7b65a389c0dd
+--- /dev/null
++++ b/tools/bootconfig/include/linux/bug.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_BUG_H
++#define _SKC_LINUX_BUG_H
++
++#include <stdio.h>
++#include <stdlib.h>
++
++#define WARN_ON(cond)	\
++	((cond) ? printf("Internal warning(%s:%d, %s): %s\n",	\
++			__FILE__, __LINE__, __func__, #cond) : 0)
++
++#endif
+diff --git a/tools/bootconfig/include/linux/ctype.h b/tools/bootconfig/include/linux/ctype.h
+new file mode 100644
+index 000000000000..c56ecc136448
+--- /dev/null
++++ b/tools/bootconfig/include/linux/ctype.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_CTYPE_H
++#define _SKC_LINUX_CTYPE_H
++
++#include <ctype.h>
++
++#endif
+diff --git a/tools/bootconfig/include/linux/errno.h b/tools/bootconfig/include/linux/errno.h
+new file mode 100644
+index 000000000000..5d9f91ec2fda
+--- /dev/null
++++ b/tools/bootconfig/include/linux/errno.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_ERRNO_H
++#define _SKC_LINUX_ERRNO_H
++
++#include <asm/errno.h>
++
++#endif
+diff --git a/tools/bootconfig/include/linux/kernel.h b/tools/bootconfig/include/linux/kernel.h
+new file mode 100644
+index 000000000000..2d93320aa374
+--- /dev/null
++++ b/tools/bootconfig/include/linux/kernel.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_KERNEL_H
++#define _SKC_LINUX_KERNEL_H
++
++#include <stdlib.h>
++#include <stdbool.h>
++
++#include <linux/printk.h>
++
++typedef unsigned short u16;
++typedef unsigned int   u32;
++
++#define unlikely(cond)	(cond)
++
++#define __init
++#define __initdata
++
++#endif
+diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
+new file mode 100644
+index 000000000000..f3fdcf8ca09d
+--- /dev/null
++++ b/tools/bootconfig/include/linux/printk.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_PRINTK_H
++#define _SKC_LINUX_PRINTK_H
++
++#include <stdio.h>
++
++#define printk	printf
++#define pr_err printf
++#define pr_warn	printf
++#define pr_info	printf
++#define pr_debug printf
++
++#endif
+diff --git a/tools/bootconfig/include/linux/string.h b/tools/bootconfig/include/linux/string.h
+new file mode 100644
+index 000000000000..8267af75153a
+--- /dev/null
++++ b/tools/bootconfig/include/linux/string.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _SKC_LINUX_STRING_H
++#define _SKC_LINUX_STRING_H
++
++#include <string.h>
++
++/* Copied from lib/string.c */
++static inline char *skip_spaces(const char *str)
++{
++	while (isspace(*str))
++		++str;
++	return (char *)str;
++}
++
++static inline char *strim(char *s)
++{
++	size_t size;
++	char *end;
++
++	size = strlen(s);
++	if (!size)
++		return s;
++
++	end = s + size - 1;
++	while (end >= s && isspace(*end))
++		end--;
++	*(end + 1) = '\0';
++
++	return skip_spaces(s);
++}
++
++#endif
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+new file mode 100644
+index 000000000000..6cf6f443eaa1
+--- /dev/null
++++ b/tools/bootconfig/main.c
+@@ -0,0 +1,337 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Boot config tool for initrd image
++ */
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++#include <errno.h>
++
++#include <linux/kernel.h>
++#include <linux/bootconfig.h>
++
++static int xbc_show_array(struct xbc_node *node)
++{
++	const char *val;
++	int i = 0;
++
++	xbc_array_for_each_value(node, val) {
++		printf("\"%s\"%s", val, node->next ? ", " : ";\n");
++		i++;
++	}
++	return i;
++}
++
++static void xbc_show_compact_tree(void)
++{
++	struct xbc_node *node, *cnode;
++	int depth = 0, i;
++
++	node = xbc_root_node();
++	while (node && xbc_node_is_key(node)) {
++		for (i = 0; i < depth; i++)
++			printf("\t");
++		cnode = xbc_node_get_child(node);
++		while (cnode && xbc_node_is_key(cnode) && !cnode->next) {
++			printf("%s.", xbc_node_get_data(node));
++			node = cnode;
++			cnode = xbc_node_get_child(node);
++		}
++		if (cnode && xbc_node_is_key(cnode)) {
++			printf("%s {\n", xbc_node_get_data(node));
++			depth++;
++			node = cnode;
++			continue;
++		} else if (cnode && xbc_node_is_value(cnode)) {
++			printf("%s = ", xbc_node_get_data(node));
++			if (cnode->next)
++				xbc_show_array(cnode);
++			else
++				printf("\"%s\";\n", xbc_node_get_data(cnode));
++		} else {
++			printf("%s;\n", xbc_node_get_data(node));
++		}
++
++		if (node->next) {
++			node = xbc_node_get_next(node);
++			continue;
++		}
++		while (!node->next) {
++			node = xbc_node_get_parent(node);
++			if (!node)
++				return;
++			if (!xbc_node_get_child(node)->next)
++				continue;
++			depth--;
++			for (i = 0; i < depth; i++)
++				printf("\t");
++			printf("}\n");
++		}
++		node = xbc_node_get_next(node);
++	}
++}
++
++/* Simple real checksum */
++int checksum(unsigned char *buf, int len)
++{
++	int i, sum = 0;
++
++	for (i = 0; i < len; i++)
++		sum += buf[i];
++
++	return sum;
++}
++
++#define PAGE_SIZE	4096
++
++int load_xbc_fd(int fd, char **buf, int size)
++{
++	int ret;
++
++	*buf = malloc(size + 1);
++	if (!*buf)
++		return -ENOMEM;
++
++	ret = read(fd, *buf, size);
++	if (ret < 0)
++		return -errno;
++	(*buf)[size] = '\0';
++
++	return ret;
++}
++
++/* Return the read size or -errno */
++int load_xbc_file(const char *path, char **buf)
++{
++	struct stat stat;
++	int fd, ret;
++
++	fd = open(path, O_RDONLY);
++	if (fd < 0)
++		return -errno;
++	ret = fstat(fd, &stat);
++	if (ret < 0)
++		return -errno;
++
++	ret = load_xbc_fd(fd, buf, stat.st_size);
++
++	close(fd);
++
++	return ret;
++}
++
++int load_xbc_from_initrd(int fd, char **buf)
++{
++	struct stat stat;
++	int ret;
++	u32 size = 0, csum = 0, rcsum;
++
++	ret = fstat(fd, &stat);
++	if (ret < 0)
++		return -errno;
++
++	if (stat.st_size < 8)
++		return 0;
++
++	if (lseek(fd, -8, SEEK_END) < 0) {
++		printf("Faile to lseek: %d\n", -errno);
++		return -errno;
++	}
++
++	if (read(fd, &size, sizeof(u32)) < 0)
++		return -errno;
++
++	if (read(fd, &csum, sizeof(u32)) < 0)
++		return -errno;
++
++	/* Wrong size, maybe no boot config here */
++	if (stat.st_size < size + 8)
++		return 0;
++
++	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
++		printf("Faile to lseek: %d\n", -errno);
++		return -errno;
++	}
++
++	ret = load_xbc_fd(fd, buf, size);
++	if (ret < 0)
++		return ret;
++
++	/* Wrong Checksum, maybe no boot config here */
++	rcsum = checksum((unsigned char *)*buf, size);
++	if (csum != rcsum) {
++		printf("checksum error: %d != %d\n", csum, rcsum);
++		return 0;
++	}
++
++	ret = xbc_init(*buf);
++	/* Wrong data, maybe no boot config here */
++	if (ret < 0)
++		return 0;
++
++	return size;
++}
++
++int show_xbc(const char *path)
++{
++	int ret, fd;
++	char *buf = NULL;
++
++	fd = open(path, O_RDONLY);
++	if (fd < 0) {
++		printf("Failed to open initrd %s: %d\n", path, fd);
++		return -errno;
++	}
++
++	ret = load_xbc_from_initrd(fd, &buf);
++	if (ret < 0)
++		printf("Failed to load a boot config from initrd: %d\n", ret);
++	else
++		xbc_show_compact_tree();
++
++	close(fd);
++	free(buf);
++
++	return ret;
++}
++
++int delete_xbc(const char *path)
++{
++	struct stat stat;
++	int ret = 0, fd, size;
++	char *buf = NULL;
++
++	fd = open(path, O_RDWR);
++	if (fd < 0) {
++		printf("Failed to open initrd %s: %d\n", path, fd);
++		return -errno;
++	}
++
++	size = load_xbc_from_initrd(fd, &buf);
++	if (size < 0) {
++		ret = size;
++		printf("Failed to load a boot config from initrd: %d\n", ret);
++	} else if (size > 0) {
++		ret = fstat(fd, &stat);
++		if (!ret)
++			ret = ftruncate(fd, stat.st_size - size - 8);
++		if (ret)
++			ret = -errno;
++	} /* Ignore if there is no boot config in initrd */
++
++	close(fd);
++	free(buf);
++
++	return ret;
++}
++
++int apply_xbc(const char *path, const char *xbc_path)
++{
++	u32 size, csum;
++	char *buf, *data;
++	int ret, fd;
++
++	ret = load_xbc_file(xbc_path, &buf);
++	if (ret < 0) {
++		printf("Failed to load %s : %d\n", xbc_path, ret);
++		return ret;
++	}
++	size = strlen(buf) + 1;
++	csum = checksum((unsigned char *)buf, size);
++
++	/* Prepare xbc_path data */
++	data = malloc(size + 8);
++	if (!data)
++		return -ENOMEM;
++	strcpy(data, buf);
++	*(u32 *)(data + size) = size;
++	*(u32 *)(data + size + 4) = csum;
++
++	/* Check the data format */
++	ret = xbc_init(buf);
++	if (ret < 0) {
++		printf("Failed to parse %s: %d\n", xbc_path, ret);
++		return ret;
++	}
++	/* TODO: Check the options by schema */
++	free(buf);
++
++	/* Remove old boot config if exists */
++	ret = delete_xbc(path);
++	if (ret < 0)
++		return ret;
++
++	/* Apply new one */
++	fd = open(path, O_RDWR | O_APPEND);
++	if (fd < 0) {
++		printf("Failed to open %s: %d\n", path, fd);
++		return fd;
++	}
++	/* TODO: Ensure the @path is initramfs/initrd image */
++	ret = write(fd, data, size + 8);
++	if (ret < 0) {
++		printf("Failed to apply a boot config: %d\n", ret);
++		return ret;
++	}
++	close(fd);
++	free(data);
++
++	return 0;
++}
++
++int usage(void)
++{
++	printf("Usage: bootconfig [OPTIONS] <INITRD>\n"
++		" Apply, delete or show boot config to initrd.\n"
++		" Options:\n"
++		"		-a <config>: Apply boot config to initrd\n"
++		"		-d : Delete boot config file from initrd\n\n"
++		" If no option is given, show current applied boot config.\n");
++	return -1;
++}
++
++int main(int argc, char **argv)
++{
++	char *path = NULL;
++	char *apply = NULL;
++	bool delete = false;
++	int opt;
++
++	while ((opt = getopt(argc, argv, "hda:")) != -1) {
++		switch (opt) {
++		case 'd':
++			delete = true;
++			break;
++		case 'a':
++			apply = strdup(optarg);
++			break;
++		case 'h':
++		default:
++			return usage();
++		}
++	}
++
++	if (apply && delete) {
++		printf("Error: You can not specify both -a and -d at once.\n");
++		return usage();
++	}
++
++	if (optind >= argc) {
++		printf("Error: No initrd is specified.\n");
++		return usage();
++	}
++
++	path = argv[optind];
++
++	if (apply)
++		return apply_xbc(path, apply);
++	else if (delete)
++		return delete_xbc(path);
++
++	return show_xbc(path);
++}
++
+
