@@ -2,91 +2,128 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1D2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9C5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD502080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577386634;
-	bh=egJk+YJEdEZUHkmawZ2xJQDY2KVH9LnoXavNew67DIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vKQPDoZMLiNjEWEKxW+iDAsfcezRvC7Px/CRB/WMUMOZa2B4b1l1xXZd9LJnmfB+x
-	 Fb4K7b8SE1yGmd67RtOoz58wiyhK0bAT7xeI58I9IQvlYo6/DjjnajwqEn4ok3sHta
-	 0TlDVsTtI0xLz7b5pv4f1c5oxhm6SJPbGurmBaxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8E83120838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfLZS5N (ORCPT
+        id S1726855AbfLZS7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 13:57:13 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44748 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLZS5M (ORCPT
+        Thu, 26 Dec 2019 13:59:09 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38660 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZS7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 13:57:12 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so20757056iln.11;
-        Thu, 26 Dec 2019 10:57:12 -0800 (PST)
+        Thu, 26 Dec 2019 13:59:09 -0500
+Received: by mail-il1-f200.google.com with SMTP id i67so21406398ilf.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 10:59:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bfFASreyzqEKIaIlQEpKOKdP7fjtn5hK821zVwpHaQg=;
-        b=UKnTkfk3sKiD+1Si4Fuwie6HBVKmziVqG8kPEpZMIlXT1fXfA0uZ4OUHRuy/jBng/X
-         LJPOLFTa1UvbN/td4f33GgdShyM2luvbwEVfIq7BVfHQvjZUPtdakj1GS4hcF3ucQx51
-         DwVBjQgvCovW0PYKLstKtI5zx3HQPNWhQ5kUNaI7PpxpffgU5qwsYObk49MNntW44XCu
-         FNrib3L00vSsaV1H+HIGTvRH/AVbYybNk7fI1apRfxuxrFxtUVlLqHLQdX/tPzAkQlL5
-         7muOI4yfx1OihFRUNeYhs0IfCQ5OD9or9cgjIr7vyyADTjIGVK8xW0qPOhwmqjYnSC5R
-         WSGQ==
-X-Gm-Message-State: APjAAAVE2erL76cjmfYuB1hn0LBM4XFae/5X9i9DYJJ8qhLo4ryvPCVh
-        rx7v1peIDgKjwmzb0l6toA==
-X-Google-Smtp-Source: APXvYqwgg1UJCnGmdjOODKkwLbFlszTIpJ9ffWr9vGwMXlrCkaUxy18fBNKT9IVuOEOa3OdclX8XJg==
-X-Received: by 2002:a92:b06:: with SMTP id b6mr38897567ilf.127.1577386632134;
-        Thu, 26 Dec 2019 10:57:12 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k7sm6215606iol.15.2019.12.26.10.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 10:57:11 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:57:10 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH V2 4/6] clk: sprd: Add dt-bindings include file for
- SC9863A
-Message-ID: <20191226185710.GA13156@bogus>
-References: <20191216121932.22967-1-zhang.lyra@gmail.com>
- <20191216121932.22967-5-zhang.lyra@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=TNo0QHyIeHdI/8GLONj6hbWPDE88TILb9xkj6RUQsSU=;
+        b=a5ezhKRRxu9OtR8f85G6auD4KhKDvOmRm08C49LEc2cp64vOIiXouiUrboGG41S9cC
+         cEWXof6NPMUrL0UcC+w3/6cyuvFtDNtTUylYZZ3T8bU2J0eoIDdaJd+EAY5UOUHiDLbE
+         2IfvyFJ2Vh0YHZv0ylmO/LZtmsEnbFWda32s7GPYkd227HPaSIGDrossE0TUyS31/SeL
+         Z8nyrJreou3S/BogcL0B3i7wzDfg6RWjVTJ0EA5NRmniuOMCAA/r+bQxw5TneQ968sMo
+         oaKO/X+77HRZpm+mwDD0VMZa4hIzpnzNfrqvRXonrqHlF1dshauBKq0dUvUL35VkSL6Z
+         Ty0A==
+X-Gm-Message-State: APjAAAXwbIH+WSwDWl/SR9LS2TKFpcXNF2rjyOEE3OO8Pk9si8OycY5i
+        T5CtIwA3ajphUvjmo6YnA4NXW5+aUlad6+mPGiFIvx5bDStv
+X-Google-Smtp-Source: APXvYqwLsoPbnZNDL141I7xVT62mvkZcF8D3gKtHxDqMdO+g8VRSHXkHzrX3fgjNRU3y1dP84SMEw9ukIxpeSESgakL8a0gBWPJ+
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216121932.22967-5-zhang.lyra@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:d805:: with SMTP id y5mr39807073ilm.194.1577386748390;
+ Thu, 26 Dec 2019 10:59:08 -0800 (PST)
+Date:   Thu, 26 Dec 2019 10:59:08 -0800
+In-Reply-To: <000000000000b6b450059870d703@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cfb39e059a9ff822@google.com>
+Subject: Re: KASAN: global-out-of-bounds Read in precalculate_color
+From:   syzbot <syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, ericvh@gmail.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        lucho@ionkov.net, mchehab@kernel.org, netdev@vger.kernel.org,
+        rminnich@sandia.gov, syzkaller-bugs@googlegroups.com,
+        v9fs-developer@lists.sourceforge.net, viro@zeniv.linux.org.uk,
+        vivek.kasireddy@intel.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 20:19:30 +0800, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> 
-> This file defines all SC9863A clock indexes, it should be included in the
-> device tree in which there's device using the clocks.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  include/dt-bindings/clock/sprd,sc9863a-clk.h | 345 +++++++++++++++++++
->  1 file changed, 345 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
-> 
+syzbot has found a reproducer for the following crash on:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+HEAD commit:    46cf053e Linux 5.5-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11932ce1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
+dashboard link: https://syzkaller.appspot.com/bug?extid=02d9172bf4c43104cd70
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14861a49e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1794423ee00000
+
+The bug was bisected to:
+
+commit 7594bf37ae9ffc434da425120c576909eb33b0bc
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Mon Jul 17 02:53:08 2017 +0000
+
+     9p: untangle ->poll() mess
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e323a6e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e323a6e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+02d9172bf4c43104cd70@syzkaller.appspotmail.com
+Fixes: 7594bf37ae9f ("9p: untangle ->poll() mess")
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in precalculate_color+0x2154/0x2480  
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:942
+Read of size 1 at addr ffffffff88b3d3f9 by task vivid-000-vid-c/9278
+
+CPU: 0 PID: 9278 Comm: vivid-000-vid-c Not tainted 5.5.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  precalculate_color+0x2154/0x2480  
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:942
+  tpg_precalculate_colors drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:1093  
+[inline]
+  tpg_recalc+0x561/0x2850 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2118
+  tpg_calc_text_basep+0xa1/0x290  
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2136
+  vivid_fillbuff+0x1a5f/0x3af0  
+drivers/media/platform/vivid/vivid-kthread-cap.c:466
+  vivid_thread_vid_cap_tick+0x8cf/0x2210  
+drivers/media/platform/vivid/vivid-kthread-cap.c:727
+  vivid_thread_vid_cap+0x5d8/0xa60  
+drivers/media/platform/vivid/vivid-kthread-cap.c:866
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the variable:
+  kbd_keycodes+0x119/0x760
+
+Memory state around the buggy address:
+  ffffffff88b3d280: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 00 00
+  ffffffff88b3d300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffffffff88b3d380: 00 00 00 00 00 00 00 00 00 00 00 00 fa fa fa fa
+                                                                 ^
+  ffffffff88b3d400: 00 00 00 00 07 fa fa fa fa fa fa fa 00 00 00 00
+  ffffffff88b3d480: 00 fa fa fa fa fa fa fa 02 fa fa fa fa fa fa fa
+==================================================================
+
