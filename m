@@ -2,142 +2,196 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EBC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764B9C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D8A206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dsXFwUWj"
+	by mail.kernel.org (Postfix) with ESMTP id 4029A20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 15:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577374304;
+	bh=ACcMsXJRgvv86ni8jBDQzCMzllT9TiFSBLY7g9uTcEQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IrpQfyJvqwFWDF1KCTZ7V2CLbf8lnDb93o7m/ZAt5kuvOSWY44Wgt/O+cx/tBZ9+i
+	 EoAKoTJAoSPXTC6jzZbs0LRlj+Yfu0lha/g9zjhd+Hdjg3+OX6F7zV9XZxERGvyTte
+	 H69MWZINjPV0wZP7A8gQgY1fY2TvnOmhpOFBK/XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfLZPGA (ORCPT
+        id S1726535AbfLZPbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 10:06:00 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46510 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfLZPF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 10:05:59 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f15so18665116lfl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 07:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1lXldyy2rUjU3vsUoz2r9OdaSkB56U7u5IkcDGjgTII=;
-        b=dsXFwUWj2zd+802wi1aSzCpV+f0+CNWG3n8KF710hGCXgXnuQzdIRllOjjfrq98ydU
-         FIuEWvx0UCvqdPTywBHykRigcGPKwTdwx08JAELHGHF+62eVe/vrJzDt8B3NoI/9sa9K
-         EszCslrtgVARJAconxW6W9+h3ucRfpwbgLb9sq4Uy4Nu+mpOVHbIcdEoaOzOgmYVeAeJ
-         FKvN/aWdJkNN/orXe4rDae/OGLtgGYdpUNB79y+Rip2wmSguSUonHUb8nHvDd0DjOIrr
-         Ujfu4NOHQaZmBTGNB+m88ZTxgk4fE6MKHsCGNYCgNWFgNl8uRX4Q+JWzdVp1CQ8bvHVi
-         xXlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1lXldyy2rUjU3vsUoz2r9OdaSkB56U7u5IkcDGjgTII=;
-        b=IPyIyKmrZDFtn2ra93zteEOz0lil4xE4R1GVFrDQ1HzBkaYdreHg5mT9kM/C4k1N+e
-         Ghii3zHwEBQ8Qu0kRkLnPWHW54buzIXAWR9VPphbty/w2GxzepLO2+h8PkbrtM/NgkKV
-         K3NojczyAZivSjSiIePVqHaoyvyoinFkYi1LFpatDnxnG8VNBp6HDrCOVoLJiNjDrJQp
-         GQP3olXV8+khqxPJhgZIvWmKE5g0ANvTN1XbWEKpksHgOhoXOuJ4iQcWoBhmfK5jrBvZ
-         SHNuKm/hNnF6PXRmlJZqQzxgWCPB6Sv4MN5Oykpe+Q6zBbeqltv9gZ7s7FtXhB6Q7Mw2
-         SyUA==
-X-Gm-Message-State: APjAAAWWDBj8ucmg8g64KMS1VPglI5E/mxDL01b6shHib7KVRd9fbt3L
-        xc3lOZiKrB0qQeRszB0xvWzKoIZ1K8sFiPSv/saHUzXv
-X-Google-Smtp-Source: APXvYqxm/Lf/CBnbewwlll8lbRh6lPvHRg0d58EDcboqZqDNm7GwrDDKvCK8Y0O20b0ldUpMZiaO50vWbTjTDFiA4F8=
-X-Received: by 2002:ac2:44d9:: with SMTP id d25mr27409552lfm.15.1577372757749;
- Thu, 26 Dec 2019 07:05:57 -0800 (PST)
-MIME-Version: 1.0
-References: <CABk29NvMS87uGnFRWoN3Ce0t+UQ--qnjRmQCPJCCEcSASs25uQ@mail.gmail.com>
- <20191219001418.234372-1-joshdon@google.com>
-In-Reply-To: <20191219001418.234372-1-joshdon@google.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 26 Dec 2019 16:05:46 +0100
-Message-ID: <CAKfTPtDBuzVUZmqZo2MZNDrrnX=iMEN=pq6pid0NJ7PRzGjKjw@mail.gmail.com>
-Subject: Re: [PATCH v3] sched/fair: Do not set skip buddy up the sched hierarchy
-To:     Josh Don <joshdon@google.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thu, 26 Dec 2019 10:31:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbfLZPbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 10:31:42 -0500
+Received: from zzz.tds (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F6520838;
+        Thu, 26 Dec 2019 15:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577374301;
+        bh=ACcMsXJRgvv86ni8jBDQzCMzllT9TiFSBLY7g9uTcEQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JDdz9fZMaW1BlgOtBZ0f4M7ky4oGVKzckPX6a5hzwxI3P0mmY0lmvEhQLrdSD2/1A
+         45JOuqNera1RmgDjHlhvQCY3ZJR3un57Oaj6490x7Upa6b+VI4bHLz7gbkezfQ9XTv
+         UXxL1gOhAEGga0UtrzylvyrAUZmTCy5uZl/xKrKo=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Will Deacon <will@kernel.org>
+Cc:     Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] locking/refcount: add sparse annotations to dec-and-lock functions
+Date:   Thu, 26 Dec 2019 09:29:22 -0600
+Message-Id: <20191226152922.2034-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Dec 2019 at 01:14, Josh Don <joshdon@google.com> wrote:
->
-> From: Venkatesh Pallipadi <venki@google.com>
->
-> Setting the skip buddy up the hierarchy effectively means that a thread
-> calling yield will also end up skipping the other tasks in its hierarchy
-> as well. However, a yielding thread shouldn't end up causing this
-> behavior on behalf of its entire hierarchy.
->
-> For typical uses of yield, setting the skip buddy up the hierarchy is
-> counter-productive, as that results in CPU being yielded to a task in
-> some other cgroup.
->
-> So, limit the skip effect only to the task requesting it.
->
-> Co-developed-by: Josh Don <joshdon@google.com>
-> Signed-off-by: Josh Don <joshdon@google.com>
+From: Eric Biggers <ebiggers@google.com>
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Wrap refcount_dec_and_lock() and refcount_dec_and_lock_irqsave() with
+macros using __cond_lock() so that 'sparse' doesn't report warnings
+about unbalanced locking when using them.
 
-> ---
-> v2: Only clear skip buddy on the current cfs_rq
->
-> v3: Modify comment describing the justification for this change.
->
->  kernel/sched/fair.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 08a233e97a01..0056b57d52cb 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
->
->  static void __clear_buddies_skip(struct sched_entity *se)
->  {
-> -       for_each_sched_entity(se) {
-> -               struct cfs_rq *cfs_rq = cfs_rq_of(se);
-> -               if (cfs_rq->skip != se)
-> -                       break;
-> +       struct cfs_rq *cfs_rq = cfs_rq_of(se);
->
-> +       if (cfs_rq->skip == se)
->                 cfs_rq->skip = NULL;
-> -       }
->  }
->
->  static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
-> @@ -6552,8 +6549,12 @@ static void set_next_buddy(struct sched_entity *se)
->
->  static void set_skip_buddy(struct sched_entity *se)
->  {
-> -       for_each_sched_entity(se)
-> -               cfs_rq_of(se)->skip = se;
-> +       /*
-> +        * Only set the skip buddy for the task requesting it. Setting the skip
-> +        * buddy up the hierarchy would result in skipping all other tasks in
-> +        * the hierarchy as well.
-> +        */
-> +       cfs_rq_of(se)->skip = se;
->  }
->
->  /*
-> --
-> 2.24.1.735.g03f4e72817-goog
->
+This is the same thing that's done for their atomic_t equivalents.
+
+Don't annotate refcount_dec_and_mutex_lock(), because mutexes don't
+currently have sparse annotations.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ include/linux/refcount.h | 45 ++++++++++++++++++++++++++++++++++++----
+ lib/refcount.c           | 39 +++++-----------------------------
+ 2 files changed, 46 insertions(+), 38 deletions(-)
+
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 0ac50cf62d06..6bb5ab9e98ed 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -300,8 +300,45 @@ static inline void refcount_dec(refcount_t *r)
+ extern __must_check bool refcount_dec_if_one(refcount_t *r);
+ extern __must_check bool refcount_dec_not_one(refcount_t *r);
+ extern __must_check bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock);
+-extern __must_check bool refcount_dec_and_lock(refcount_t *r, spinlock_t *lock);
+-extern __must_check bool refcount_dec_and_lock_irqsave(refcount_t *r,
+-						       spinlock_t *lock,
+-						       unsigned long *flags);
++
++/**
++ * refcount_dec_and_lock - return holding spinlock if able to decrement
++ *                         refcount to 0
++ * @r: the refcount
++ * @lock: the spinlock to be locked
++ *
++ * Similar to atomic_dec_and_lock(), it will WARN on underflow and fail to
++ * decrement when saturated at REFCOUNT_SATURATED.
++ *
++ * Provides release memory ordering, such that prior loads and stores are done
++ * before, and provides a control dependency such that free() must come after.
++ * See the comment on top.
++ *
++ * Return: true and hold spinlock if able to decrement refcount to 0, false
++ *         otherwise
++ */
++extern __must_check bool _refcount_dec_and_lock(refcount_t *r,
++						spinlock_t *lock);
++#define refcount_dec_and_lock(r, lock) \
++	__cond_lock(lock, _refcount_dec_and_lock(r, lock))
++
++/**
++ * refcount_dec_and_lock_irqsave - return holding spinlock with disabled
++ *                                 interrupts if able to decrement refcount to 0
++ * @r: the refcount
++ * @lock: the spinlock to be locked
++ * @flags: saved IRQ-flags if the is acquired
++ *
++ * Same as refcount_dec_and_lock() above except that the spinlock is acquired
++ * with disabled interrupts.
++ *
++ * Return: true and hold spinlock if able to decrement refcount to 0, false
++ *         otherwise
++ */
++extern __must_check bool _refcount_dec_and_lock_irqsave(refcount_t *r,
++							spinlock_t *lock,
++							unsigned long *flags);
++#define refcount_dec_and_lock_irqsave(r, lock, flags) \
++	__cond_lock(lock, _refcount_dec_and_lock_irqsave(r, lock, flags))
++
+ #endif /* _LINUX_REFCOUNT_H */
+diff --git a/lib/refcount.c b/lib/refcount.c
+index ebac8b7d15a7..f0eb996b28c0 100644
+--- a/lib/refcount.c
++++ b/lib/refcount.c
+@@ -125,23 +125,7 @@ bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock)
+ }
+ EXPORT_SYMBOL(refcount_dec_and_mutex_lock);
+ 
+-/**
+- * refcount_dec_and_lock - return holding spinlock if able to decrement
+- *                         refcount to 0
+- * @r: the refcount
+- * @lock: the spinlock to be locked
+- *
+- * Similar to atomic_dec_and_lock(), it will WARN on underflow and fail to
+- * decrement when saturated at REFCOUNT_SATURATED.
+- *
+- * Provides release memory ordering, such that prior loads and stores are done
+- * before, and provides a control dependency such that free() must come after.
+- * See the comment on top.
+- *
+- * Return: true and hold spinlock if able to decrement refcount to 0, false
+- *         otherwise
+- */
+-bool refcount_dec_and_lock(refcount_t *r, spinlock_t *lock)
++bool _refcount_dec_and_lock(refcount_t *r, spinlock_t *lock)
+ {
+ 	if (refcount_dec_not_one(r))
+ 		return false;
+@@ -154,23 +138,10 @@ bool refcount_dec_and_lock(refcount_t *r, spinlock_t *lock)
+ 
+ 	return true;
+ }
+-EXPORT_SYMBOL(refcount_dec_and_lock);
++EXPORT_SYMBOL(_refcount_dec_and_lock);
+ 
+-/**
+- * refcount_dec_and_lock_irqsave - return holding spinlock with disabled
+- *                                 interrupts if able to decrement refcount to 0
+- * @r: the refcount
+- * @lock: the spinlock to be locked
+- * @flags: saved IRQ-flags if the is acquired
+- *
+- * Same as refcount_dec_and_lock() above except that the spinlock is acquired
+- * with disabled interupts.
+- *
+- * Return: true and hold spinlock if able to decrement refcount to 0, false
+- *         otherwise
+- */
+-bool refcount_dec_and_lock_irqsave(refcount_t *r, spinlock_t *lock,
+-				   unsigned long *flags)
++bool _refcount_dec_and_lock_irqsave(refcount_t *r, spinlock_t *lock,
++				    unsigned long *flags)
+ {
+ 	if (refcount_dec_not_one(r))
+ 		return false;
+@@ -183,4 +154,4 @@ bool refcount_dec_and_lock_irqsave(refcount_t *r, spinlock_t *lock,
+ 
+ 	return true;
+ }
+-EXPORT_SYMBOL(refcount_dec_and_lock_irqsave);
++EXPORT_SYMBOL(_refcount_dec_and_lock_irqsave);
+-- 
+2.24.1
+
