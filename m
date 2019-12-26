@@ -2,100 +2,109 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D0AC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346B5C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6897220828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oMWsgAD7"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC6820838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577354028;
+	bh=dGwRFsRQln5B894HkC1AQaBbrX1OHeeRML8iSWjpZgE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UKosMMoqmu7DR34Spd1GWVED48pzmNAOcyaYmLpR8Kxn9uc5WDxMC3Cg0fXVmBP2Q
+	 vOlfeMpTgbYQ+3SgSSotk//CB8RwCJikKEWqtUXbZmnwZeH+w7hQLY1bmiomD/Tvcd
+	 EqNtVNwbEj6QJw6/UeeYgl6Uom4AwDCrAbTXawJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfLZJwo (ORCPT
+        id S1726465AbfLZJxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 04:52:44 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:36691 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLZJwm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 04:52:42 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id xBQ9pgNY023812;
-        Thu, 26 Dec 2019 18:51:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com xBQ9pgNY023812
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1577353904;
-        bh=ZLGd9Sa7OALWrLmeWhKg0zq7ZvRRBITnevotAyP+VUY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oMWsgAD7R/WJ2a2AIefVtYY9nZ9TdqVt884C1haeLpabCj7Fd2Xf4zuc3jhuQk30K
-         yjjIxwdEdN2KbihzBeV7tl0m0LqoCaihEX/dETE7W/li8pQqaH85rnWM/s+ojNu2Xz
-         203MHgdB5eUJBhu9KvHsOKMuWvmQ7KzJycDHx6Fzg7evPmc34l0qY1TdGdVdZvXCrF
-         /aIGwh8lWfh1dMQyXw5GDKKywIecYr1hq+0y47ELlRUPnsV5Ty+IeHMdCDzOb0qgDp
-         LZU34q1ozlbJdJvz++YtUNDTbHztD+AQXSZQ6cKTSxj0w0CkMes0JrI31FZaQCIb9s
-         5syvPjmEpHsVA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thu, 26 Dec 2019 04:53:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfLZJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 04:53:46 -0500
+Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD252080D;
+        Thu, 26 Dec 2019 09:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577354026;
+        bh=dGwRFsRQln5B894HkC1AQaBbrX1OHeeRML8iSWjpZgE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dgn/DuDz+L/BUxnVLvQlzq2ES7WPkunjwb+MU50mPr9kHx/cQ5bm4vXbrRoiSR2mg
+         enWr6QOIn1W/J+HOPP7oQWFtVLVgF26bgngE+q4/zfrSD5sVSTkuQpoGAKCWFYAzpO
+         5cKA0Hxrb2SEob+emBTjwVQNxaUIrYWwBnKrzJWc=
+Date:   Thu, 26 Dec 2019 10:55:07 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] iommu/arm-smmu-v3: simplify parse_driver_options()
-Date:   Thu, 26 Dec 2019 18:51:41 +0900
-Message-Id: <20191226095141.30352-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191226095141.30352-1-yamada.masahiro@socionext.com>
-References: <20191226095141.30352-1-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add Libre Computer ALL-H3-IT H5 board
+Message-ID: <20191226095507.olorn47y7xmddgin@hendrix.home>
+References: <20191224061555.18358-1-wens@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lweqfbwsvdz4r4jl"
+Content-Disposition: inline
+In-Reply-To: <20191224061555.18358-1-wens@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using ARRAY_SIZE() instead of the sentinel is slightly simpler, IMHO.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+--lweqfbwsvdz4r4jl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- drivers/iommu/arm-smmu-v3.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On Tue, Dec 24, 2019 at 02:15:55PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The Libre Computer ALL-H3-IT board is a small single board computer that
+> is roughly the same size as the Raspberry Pi Zero, or around 20% smaller
+> than a credit card.
+>
+> The board features:
+>
+>   - H2, H3, or H5 SoC from Allwinner
+>   - 2 DDR3 DRAM chips
+>   - Realtek RTL8821CU based WiFi module
+>   - 128 Mbit SPI-NOR flash
+>   - micro-SD card slot
+>   - micro HDMI video output
+>   - FPC connector for camera sensor module
+>   - generic Raspberri-Pi style 40 pin GPIO header
+>   - additional pin headers for extra USB host ports, ananlog audio and
+>     IR receiver
+>
+> Only H5 variant test samples were made available, but the vendor does
+> have plans to include at least an H3 variant. Thus the device tree is
+> split much like the ALL-H3-CC, with a common dtsi file for the board
+> design, and separate dts files including the common board file and the
+> SoC dtsi file. The other variants will be added as they are made
+> available.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index ed9933960370..b27489b7f9d8 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -676,7 +676,6 @@ struct arm_smmu_option_prop {
- static const struct arm_smmu_option_prop arm_smmu_options[] = {
- 	{ ARM_SMMU_OPT_SKIP_PREFETCH, "hisilicon,broken-prefetch-cmd" },
- 	{ ARM_SMMU_OPT_PAGE0_REGS_ONLY, "cavium,cn9900-broken-page1-regspace"},
--	{ 0, NULL},
- };
- 
- static inline void __iomem *arm_smmu_page1_fixup(unsigned long offset,
-@@ -696,16 +695,16 @@ static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
- 
- static void parse_driver_options(struct arm_smmu_device *smmu)
- {
--	int i = 0;
-+	int i;
- 
--	do {
-+	for (i = 0; i < ARRAY_SIZE(arm_smmu_options); i++) {
- 		if (of_property_read_bool(smmu->dev->of_node,
- 						arm_smmu_options[i].prop)) {
- 			smmu->options |= arm_smmu_options[i].opt;
- 			dev_notice(smmu->dev, "option %s\n",
- 				arm_smmu_options[i].prop);
- 		}
--	} while (arm_smmu_options[++i].opt);
-+	};
- }
- 
- /* Low-level queue manipulation functions */
--- 
-2.17.1
+Applied, thanks!
+Maxime
 
+--lweqfbwsvdz4r4jl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgSDewAKCRDj7w1vZxhR
+xdlUAP4/EcPmWRKjD8xeYE9H+HSdokqIYjvzND2KP2yG9ujTsgEAkKWq6a5Igzyn
+/wXdS4/5tQyqvruVUJaIsmeNwKAxTAY=
+=RYso
+-----END PGP SIGNATURE-----
+
+--lweqfbwsvdz4r4jl--
