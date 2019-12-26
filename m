@@ -2,222 +2,406 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078D7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A982C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E9F20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F234320828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 14:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577369038;
+	bh=/DhEQA92gihaYrAywnwQJWZ2+k2B3bzyMLR89HcJcco=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RfPbjXtDLQgpcHYy2Z9WYlPDn4FHQki2v+Xx3viwV3v8oMZsjAGKaVJHKRhkRwnw8
+	 BytBVYwJCzYbMRIkVJ1idXzwr6fKEOupbwI3MDM5YGRpHkZ0V5xQc2cqJzrGdqcPvu
+	 uKhywadu/0CuAGHqexvn40DmjkqJaDY90lH/pxvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfLZN7e (ORCPT
+        id S1726626AbfLZOD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:59:34 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726626AbfLZN7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:59:06 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5F3AC4EA18A47E840D42;
-        Thu, 26 Dec 2019 21:59:02 +0800 (CST)
-Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 26 Dec 2019 21:58:54 +0800
-From:   Zengruan Ye <yezengruan@huawei.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     <yezengruan@huawei.com>, <maz@kernel.org>, <james.morse@arm.com>,
-        <linux@armlinux.org.uk>, <suzuki.poulose@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <catalin.marinas@arm.com>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <steven.price@arm.com>,
-        <daniel.lezcano@linaro.org>
-Subject: [PATCH v2 4/6] KVM: arm64: Provide VCPU attributes for PV lock
-Date:   Thu, 26 Dec 2019 21:58:31 +0800
-Message-ID: <20191226135833.1052-5-yezengruan@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-In-Reply-To: <20191226135833.1052-1-yezengruan@huawei.com>
-References: <20191226135833.1052-1-yezengruan@huawei.com>
+        Thu, 26 Dec 2019 09:03:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfLZOD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 09:03:57 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A15E2075E;
+        Thu, 26 Dec 2019 14:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577369035;
+        bh=/DhEQA92gihaYrAywnwQJWZ2+k2B3bzyMLR89HcJcco=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1rBD6mAF6ztX7buhjaNs8pb9MRnP6L7qw34iis7vi4DrA6xCFE4qWTAur/WcF02FL
+         sPFpMrSGT68P9oKJ08SRyrJj2HH2hori904rP9oXAABWHvC4ep7za9ORP5QQjPT7nl
+         GzuM/dLDW3m3YUv/HY+bZE0MDn1kKFhuTS5XWaG0=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/22] tracing: bootconfig: Boot-time tracing and Extra boot config
+Date:   Thu, 26 Dec 2019 23:03:48 +0900
+Message-Id: <157736902773.11126.2531161235817081873.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.221.248]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow user space to inform the KVM host where in the physical memory
-map the paravirtualized lock structures should be located.
+Hello,
 
-User space can set an attribute on the VCPU providing the IPA base
-address of the PV lock structure for that VCPU. This must be
-repeated for every VCPU in the VM.
+This is the 5th version of the series for the boot-time tracing.
 
-The address is given in terms of the physical address visible to
-the guest and must be 64 byte aligned. The guest will discover the
-address via a hypercall.
+Previous version is here.
 
-Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+https://lkml.kernel.org/r/157528159833.22451.14878731055438721716.stgit@devnote2
+
+In this version, I removed RFC tag from the series.
+Changes from the v4 are here, updating bootconfig things.
+
+ - [1/22] Fix help comment and indent of Kconfig.
+          Restrict available characters in values(*)
+          Drop backslash escape from quoted value(**)
+ - [3/22] Fix Makefile to compile tool correctly
+          Remove unused pattern from Makefile
+ - [4/22] Show test target bootconfig
+          Add printable value testcases
+          Add bad array testcase
+ - [9/22] Fix TOC list
+          Add notes about available characters.
+          Fix to use correct quotes (``) for .rst.
+
+(*) this is for preventing admin from shoot himself.
+(**) this rule is from legacy command line.
+
+Boot-time tracing features are not modified. I know Tom is working
+on exporting synthetic event (and dynamic events) APIs for module.
+If that APIs are merged first, I will update my series on top
+of that.
+
+This series can be applied on v5.5-rc3 or directly available at;
+
+https://github.com/mhiramat/linux.git ftrace-boottrace-v5
+
+
+Extra Boot Config
+=================
+
+Extra boot config allows admin to pass a tree-structured key-value
+list when booting up the kernel. This expands the kernel command
+line in an efficient way.
+
+Each key is described as a dot-jointed-words. And user can write
+the key-words in tree stlye. (In this version, the tailing ';'
+becomes optional. See Documentation/admin-guide/bootconfig.rst)
+
+For example,
+
+ feature.option.foo = 1
+ feature.option.bar = 2
+
+can be also written in
+
+ feature.option {
+    foo = 1
+    bar = 2
+ }
+
+or more compact,
+
+ feature.option{foo=1;bar=2}
+
+(Note that in both style, the same words are merged automatically
+ and make a single tree)
+All values are treated as a string, or array of strings, e.g.
+
+ feature.options = "foo", "bar"
+
+User can see the loaded key-value list via /proc/bootconfig.
+The size is limited upto 32KB and 1024 key-words and values
+in total.
+
+Boot with a Boot Config
+=======================
+
+This version doesn't require to modify boot loaders anymore.
+The boot config is loaded with initrd, and there is new "bootconfig"
+command under tools/bootconfig.
+To add (append) a bootconfig file to an initrd, you can use the
+bootconfig command like:
+
+ # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
+
+This verifies the configuration file too. 
+
+
+Boot-time Tracing
+=================
+
+Boot-time tracing supports following boot configs. Please read
+Documentation/trace/boottime-trace.rst for details.
+
+     - kernel.dump_on_oops [= MODE]
+     - kernel.traceoff_on_warning
+     - kernel.tp_printk
+     - kernel.fgraph_filters = FILTER[, FILTER2...]
+     - kernel.fgraph_notraces = FILTER[, FILTER2...]
+     - kernel.fgraph_max_depth = MAX_DEPTH
+     - ftrace.[instance.INSTANCE.]options = OPT1[,OPT2...]
+     - ftrace.[instance.INSTANCE.]trace_clock = CLOCK
+     - ftrace.[instance.INSTANCE.]buffer_size = SIZE
+     - ftrace.[instance.INSTANCE.]alloc_snapshot
+     - ftrace.[instance.INSTANCE.]cpumask = CPUMASK
+     - ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2...]
+     - ftrace.[instance.INSTANCE.]tracer = TRACER
+     - ftrace.[instance.INSTANCE.]ftrace.filters
+     - ftrace.[instance.INSTANCE.]ftrace.notraces
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2...]
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
+     - ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2...]
+     - ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2...]
+
+Kernel and Init Command Line
+============================
+
+Boot config also supports kernel and init command line parameters
+except for early kernel parameters.
+
+In boot config, all key-values start with "kernel." are automatically
+merged into user passed boot command line, and key-values which
+start with "init." are also passed to init. These options are visible
+on /proc/cmdline.
+
+For example,
+
+kernel {
+  audit = on
+  audit_backlog_limit = 256
+}
+init.systemd.unified_cgroup_hierarchy = 1
+
+
+Usage
+=====
+
+With this series, we can setup new kprobe and synthetic events, more
+complicated event filters and trigger actions including histogram
+via supplemental kernel cmdline.
+
+We can add filter and actions for each event, define kprobe events,
+and synthetic events with histogram like below.
+
+ftrace.event {
+	task.task_newtask {
+		filter = "pid < 128"
+		enable
+	}
+	kprobes.vfs_read {
+		probes = "vfs_read $arg1 $arg2"
+		filter = "common_pid < 200"
+		enable
+	}
+	synthetic.initcall_latency {
+		fields = "unsigned long func", "u64 lat"
+		actions = "hist:keys=func.sym,lat:vals=lat:sort=lat"
+	}
+	initcall.initcall_start {
+		actions = "hist:keys=func:ts0=common_timestamp.usecs"
+	}
+	initcall.initcall_finish {
+		actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)"
+	}
+}
+
+Also, this supports "instance" node, which allows us to run several
+tracers for different purpose at once. For example, one tracer is for
+tracing functions start with "user_", and others tracing "kernel_",
+you can write boot config as:
+
+ftrace.instance {
+	foo {
+		tracer = "function"
+		ftrace-filters = "user_*"
+	}
+	bar {
+		tracer = "function"
+		ftrace-filters = "function_*"
+	}
+}
+
+The instance node also accepts event nodes so that each instance
+can customize its event tracing.
+
+This boot-time trace also supports ftrace kernel parameters.
+For example, following kernel parameters
+
+trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
+
+it can be written in boot config like below.
+
+ftrace {
+	options = sym-addr;
+	events = "initcall:*";
+	tp-printk;
+	buffer-size = 1MB;
+	ftrace-filters = "vfs*";
+}
+
+However, since the initialization timing is different, if you need
+to trace very early boot, please use normal kernel parameters.
+
+Some Notes
+==========
+
+- To align the legacy command line rule, I made the quotes (double
+  quotes or single quotes) not able to be escaped.
+  Also, this rejects non-printable chars (except for space). Actually
+  legacy cmdline accepts any of them, but it might confuse users if
+  they put a control code by mistake. Imagine that they put a "\b"
+  on it...
+
+- Since it is not easy to write boot-time tracing without any bug
+  in bootconfig, a user-helper command will be needed.
+  That command will generate a boot config file from current ftrace
+  settings, or try to apply given boot config setting to the ftrace.
+
+- It is also possible to embed boot config file into the kernel
+  image for the environment which doesn't use initrd. But in that
+  case, user can not update the boot config.
+
+- As you can see, the EVENT.actions value is a bit ugly since histogram
+  interface settings are bit complicated. Maybe we can introduce more
+  abstractive syntax for that. e.g.
+
+ftrace.event.synthetic.initcall_latency {
+	fields = "unsigned long func", "u64 lat"
+	hist {
+		from {
+			event = initcall.initcall_start
+			key = func
+			assigns = "ts0=common_timestamp.usecs"
+		}
+		to {
+			event = initcall.initcall_finish
+			key = func
+			assigns = "lat=common_timestamp.usecs-$ts0"
+			onmatch = func, $lat
+		}
+		keys = func.sym, lat
+		vals = lat
+		sort = lat
+	}
+}
+
+Any suggestions, thoughts?
+
+Thank you,
+
 ---
- arch/arm64/include/asm/kvm_host.h |  9 +++++
- arch/arm64/include/uapi/asm/kvm.h |  2 ++
- arch/arm64/kvm/guest.c            |  9 +++++
- include/uapi/linux/kvm.h          |  2 ++
- virt/kvm/arm/pvlock.c             | 57 +++++++++++++++++++++++++++++++
- 5 files changed, 79 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 2818a2330f92..63b6e204676b 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -521,6 +521,15 @@ static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
- 	return (vcpu_arch->steal.base != GPA_INVALID);
- }
- 
-+int kvm_arm_pvlock_set_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+
-+int kvm_arm_pvlock_get_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+
-+int kvm_arm_pvlock_has_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+
- static inline void kvm_arm_pvlock_preempted_init(struct kvm_vcpu_arch *vcpu_arch)
- {
- 	vcpu_arch->pv.base = GPA_INVALID;
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index 820e5751ada7..137d966b57c7 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -326,6 +326,8 @@ struct kvm_vcpu_events {
- #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
- #define KVM_ARM_VCPU_PVTIME_CTRL	2
- #define   KVM_ARM_VCPU_PVTIME_IPA	0
-+#define KVM_ARM_VCPU_PVLOCK_CTRL	3
-+#define   KVM_ARM_VCPU_PVLOCK_IPA	0
- 
- /* KVM_IRQ_LINE irq field index values */
- #define KVM_ARM_IRQ_VCPU2_SHIFT		28
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 2fff06114a8f..6a5c12f3b08b 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -875,6 +875,9 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_set_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_PVLOCK_CTRL:
-+		ret = kvm_arm_pvlock_set_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -898,6 +901,9 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_get_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_PVLOCK_CTRL:
-+		ret = kvm_arm_pvlock_get_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -921,6 +927,9 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_PVTIME_CTRL:
- 		ret = kvm_arm_pvtime_has_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_PVLOCK_CTRL:
-+		ret = kvm_arm_pvlock_has_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index f0a16b4adbbd..bfc628c580d4 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1238,6 +1238,8 @@ enum kvm_device_type {
- #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
- 	KVM_DEV_TYPE_ARM_PV_TIME,
- #define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
-+	KVM_DEV_TYPE_ARM_PV_LOCK,
-+#define KVM_DEV_TYPE_ARM_PV_LOCK	KVM_DEV_TYPE_ARM_PV_LOCK
- 	KVM_DEV_TYPE_MAX,
- };
- 
-diff --git a/virt/kvm/arm/pvlock.c b/virt/kvm/arm/pvlock.c
-index cdfd30a903b9..cbc562274e5e 100644
---- a/virt/kvm/arm/pvlock.c
-+++ b/virt/kvm/arm/pvlock.c
-@@ -44,3 +44,60 @@ void kvm_update_pvlock_preempted(struct kvm_vcpu *vcpu, u64 preempted)
- 	kvm_put_guest(kvm, base + offset, preempted_le, u64);
- 	srcu_read_unlock(&kvm->srcu, idx);
- }
-+
-+int kvm_arm_pvlock_set_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr)
-+{
-+	u64 __user *user = (u64 __user *)attr->addr;
-+	struct kvm *kvm = vcpu->kvm;
-+	u64 ipa;
-+	int ret = 0;
-+	int idx;
-+
-+	if (attr->attr != KVM_ARM_VCPU_PVLOCK_IPA)
-+		return -ENXIO;
-+
-+	if (get_user(ipa, user))
-+		return -EFAULT;
-+	if (!IS_ALIGNED(ipa, 64))
-+		return -EINVAL;
-+	if (vcpu->arch.pv.base != GPA_INVALID)
-+		return -EEXIST;
-+
-+	/* Check the address is in a valid memslot */
-+	idx = srcu_read_lock(&kvm->srcu);
-+	if (kvm_is_error_hva(gfn_to_hva(kvm, ipa >> PAGE_SHIFT)))
-+		ret = -EINVAL;
-+	srcu_read_unlock(&kvm->srcu, idx);
-+
-+	if (!ret)
-+		vcpu->arch.pv.base = ipa;
-+
-+	return ret;
-+}
-+
-+int kvm_arm_pvlock_get_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr)
-+{
-+	u64 __user *user = (u64 __user *)attr->addr;
-+	u64 ipa;
-+
-+	if (attr->attr != KVM_ARM_VCPU_PVLOCK_IPA)
-+		return -ENXIO;
-+
-+	ipa = vcpu->arch.pv.base;
-+
-+	if (put_user(ipa, user))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+int kvm_arm_pvlock_has_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_PVLOCK_IPA:
-+		return 0;
-+	}
-+	return -ENXIO;
-+}
--- 
-2.19.1
+Masami Hiramatsu (22):
+      bootconfig: Add Extra Boot Config support
+      bootconfig: Load boot config from the tail of initrd
+      tools: bootconfig: Add bootconfig command
+      tools: bootconfig: Add bootconfig test script
+      proc: bootconfig: Add /proc/bootconfig to show boot config list
+      init/main.c: Alloc initcall_command_line in do_initcall() and free it
+      bootconfig: init: Allow admin to use bootconfig for kernel command line
+      bootconfig: init: Allow admin to use bootconfig for init command line
+      Documentation: bootconfig: Add a doc for extended boot config
+      tracing: Apply soft-disabled and filter to tracepoints printk
+      tracing: kprobes: Output kprobe event to printk buffer
+      tracing: kprobes: Register to dynevent earlier stage
+      tracing: Accept different type for synthetic event fields
+      tracing: Add NULL trace-array check in print_synth_event()
+      tracing/boot: Add boot-time tracing
+      tracing/boot: Add per-event settings
+      tracing/boot Add kprobe event support
+      tracing/boot: Add synthetic event support
+      tracing/boot: Add instance node support
+      tracing/boot: Add cpu_mask option support
+      tracing/boot: Add function tracer filter options
+      Documentation: tracing: Add boot-time tracing document
 
 
+ tools/bootconfig/.gitignore                     |    1 
+ tools/bootconfig/Makefile                       |   23 ++
+ tools/bootconfig/include/linux/bootconfig.h     |    7 
+ tools/bootconfig/include/linux/bug.h            |   12 +
+ tools/bootconfig/include/linux/ctype.h          |    7 
+ tools/bootconfig/include/linux/errno.h          |    7 
+ tools/bootconfig/include/linux/kernel.h         |   18 +
+ tools/bootconfig/include/linux/printk.h         |   13 +
+ tools/bootconfig/include/linux/string.h         |   32 ++
+ tools/bootconfig/main.c                         |  337 +++++++++++++++++++++++
+ tools/bootconfig/samples/bad-array.bconf        |    2 
+ tools/bootconfig/samples/bad-dotword.bconf      |    4 
+ tools/bootconfig/samples/bad-empty.bconf        |    1 
+ tools/bootconfig/samples/bad-keyerror.bconf     |    2 
+ tools/bootconfig/samples/bad-longkey.bconf      |    1 
+ tools/bootconfig/samples/bad-manywords.bconf    |    1 
+ tools/bootconfig/samples/bad-no-keyword.bconf   |    2 
+ tools/bootconfig/samples/bad-nonprintable.bconf |    2 
+ tools/bootconfig/samples/bad-spaceword.bconf    |    2 
+ tools/bootconfig/samples/bad-tree.bconf         |    5 
+ tools/bootconfig/samples/bad-value.bconf        |    3 
+ tools/bootconfig/samples/escaped.bconf          |    3 
+ tools/bootconfig/samples/good-printables.bconf  |    2 
+ tools/bootconfig/samples/good-simple.bconf      |   11 +
+ tools/bootconfig/samples/good-single.bconf      |    4 
+ tools/bootconfig/samples/good-tree.bconf        |   12 +
+ tools/bootconfig/test-bootconfig.sh             |   80 +++++
+ 27 files changed, 594 insertions(+)
+ create mode 100644 tools/bootconfig/.gitignore
+ create mode 100644 tools/bootconfig/Makefile
+ create mode 100644 tools/bootconfig/include/linux/bootconfig.h
+ create mode 100644 tools/bootconfig/include/linux/bug.h
+ create mode 100644 tools/bootconfig/include/linux/ctype.h
+ create mode 100644 tools/bootconfig/include/linux/errno.h
+ create mode 100644 tools/bootconfig/include/linux/kernel.h
+ create mode 100644 tools/bootconfig/include/linux/printk.h
+ create mode 100644 tools/bootconfig/include/linux/string.h
+ create mode 100644 tools/bootconfig/main.c
+ create mode 100644 tools/bootconfig/samples/bad-array.bconf
+ create mode 100644 tools/bootconfig/samples/bad-dotword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-empty.bconf
+ create mode 100644 tools/bootconfig/samples/bad-keyerror.bconf
+ create mode 100644 tools/bootconfig/samples/bad-longkey.bconf
+ create mode 100644 tools/bootconfig/samples/bad-manywords.bconf
+ create mode 100644 tools/bootconfig/samples/bad-no-keyword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-nonprintable.bconf
+ create mode 100644 tools/bootconfig/samples/bad-spaceword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-tree.bconf
+ create mode 100644 tools/bootconfig/samples/bad-value.bconf
+ create mode 100644 tools/bootconfig/samples/escaped.bconf
+ create mode 100644 tools/bootconfig/samples/good-printables.bconf
+ create mode 100644 tools/bootconfig/samples/good-simple.bconf
+ create mode 100644 tools/bootconfig/samples/good-single.bconf
+ create mode 100644 tools/bootconfig/samples/good-tree.bconf
+ create mode 100755 tools/bootconfig/test-bootconfig.sh
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
