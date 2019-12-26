@@ -2,109 +2,136 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346B5C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852D8C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC6820838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577354028;
-	bh=dGwRFsRQln5B894HkC1AQaBbrX1OHeeRML8iSWjpZgE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UKosMMoqmu7DR34Spd1GWVED48pzmNAOcyaYmLpR8Kxn9uc5WDxMC3Cg0fXVmBP2Q
-	 vOlfeMpTgbYQ+3SgSSotk//CB8RwCJikKEWqtUXbZmnwZeH+w7hQLY1bmiomD/Tvcd
-	 EqNtVNwbEj6QJw6/UeeYgl6Uom4AwDCrAbTXawJc=
+	by mail.kernel.org (Postfix) with ESMTP id 5B8642080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:57:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="n0N0a8W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfLZJxr (ORCPT
+        id S1726472AbfLZJ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 04:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfLZJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 04:53:46 -0500
-Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD252080D;
-        Thu, 26 Dec 2019 09:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577354026;
-        bh=dGwRFsRQln5B894HkC1AQaBbrX1OHeeRML8iSWjpZgE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dgn/DuDz+L/BUxnVLvQlzq2ES7WPkunjwb+MU50mPr9kHx/cQ5bm4vXbrRoiSR2mg
-         enWr6QOIn1W/J+HOPP7oQWFtVLVgF26bgngE+q4/zfrSD5sVSTkuQpoGAKCWFYAzpO
-         5cKA0Hxrb2SEob+emBTjwVQNxaUIrYWwBnKrzJWc=
-Date:   Thu, 26 Dec 2019 10:55:07 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Thu, 26 Dec 2019 04:57:43 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34311 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfLZJ5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 04:57:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c127so4808087wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 01:57:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ZCVwsdNusn35k9dtRa2QFLzjbX+kQx5eXmmmXDwk4S0=;
+        b=n0N0a8W3Ohe7CamYqnfWzwvIO5gtNcBHITgKM0r0ow7zB+CibGjPCaZS8Ghqm7wxdx
+         BaQUUezTvXySdb2AV7B+y4WhI1qmnHh7Vy5XfFh/Z6xdAd3xO0IlOEWZ9rTZR5Hpkzi8
+         Y3wuYSe8/mpW/Ty7IcStATjPjcYTwXFNtfWgQ0bGFc7JdvsdQ72rfw402qZpA94QS9gI
+         z5PthbLgBDTL+NLQk1JO5rqcyTS7UwzExYTDg2lwkBUI99w1DiOILvzO10KFZ+cUletF
+         XKXIifsOPDCAQU/Iw3DnmvLlbB9ON5QuZugNnxUu7K+vWD/wbXgLZDJO1+U3DUXvkpB1
+         nPFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ZCVwsdNusn35k9dtRa2QFLzjbX+kQx5eXmmmXDwk4S0=;
+        b=nc+S5KZVq0uq4n8d+IWst2jSoMeIiI3RJC6Y11kxJOkA2A9MyXCHxEOdqWk+P8ALXd
+         jMKZVJ4nZIGcZ6sRS991Q5zk/NPlIigcEHclFBE7Max/oRhZ9YW2/rknmh/LJo0dxI+c
+         ORH/aAVuk3W1AL/LkJ2Nwh5+TKx7GygcuR5Teu9TmElRtAKbEsSM55VmIR4IJxUSIJWT
+         i5KK0nC1oVpqB4isue32wDOHPpEZOEmPUejXrzv2+tAXNz8fVPp+w65n7EnQaqeDd9k0
+         TsZTt1vFo5YgRR6H2qoFG9OYiY3D07hlhvS0xWZ6ZwEWT44p3hlW7PWaUmPOYrI6GYeW
+         mdwA==
+X-Gm-Message-State: APjAAAWgBLmTFJ/40u8tFCNhbCLCw7FRIPjqUJ8dzb87/e+BExv8uBWJ
+        7ovkqy/3ruvhG85jsv8WhYz/rg==
+X-Google-Smtp-Source: APXvYqyLAIuz9sClbrMRrocB1W5zqs27UiqD9u07C9i5HwQZpfFqgT3ahQH+J9l+Pjju2Dixl1gnCA==
+X-Received: by 2002:a05:600c:30a:: with SMTP id q10mr12798628wmd.84.1577354260380;
+        Thu, 26 Dec 2019 01:57:40 -0800 (PST)
+Received: from localhost ([2a01:e0a:1a5:7ee0:1e09:f4bb:719a:3028])
+        by smtp.gmail.com with ESMTPSA id v22sm7772006wml.11.2019.12.26.01.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 01:57:39 -0800 (PST)
+References: <20191224173942.18160-1-repk@triplefau.lt>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sunxi: Add Libre Computer ALL-H3-IT H5 board
-Message-ID: <20191226095507.olorn47y7xmddgin@hendrix.home>
-References: <20191224061555.18358-1-wens@kernel.org>
+Subject: Re: [PATCH v3 0/5] PCI: amlogic: Make PCIe working reliably on AXG platforms
+In-reply-to: <20191224173942.18160-1-repk@triplefau.lt>
+Date:   Thu, 26 Dec 2019 10:57:39 +0100
+Message-ID: <1jblrvpfxo.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lweqfbwsvdz4r4jl"
-Content-Disposition: inline
-In-Reply-To: <20191224061555.18358-1-wens@kernel.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---lweqfbwsvdz4r4jl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue 24 Dec 2019 at 18:39, Remi Pommarel <repk@triplefau.lt> wrote:
 
-On Tue, Dec 24, 2019 at 02:15:55PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
+> PCIe device probing failures have been seen on AXG platforms and were due
+> to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit in
+> MIPI's PHY registers solved the problem. This bit appears to control band
+> gap reference.
 >
-> The Libre Computer ALL-H3-IT board is a small single board computer that
-> is roughly the same size as the Raspberry Pi Zero, or around 20% smaller
-> than a credit card.
+> As discussed here [1] one of these shared MIPI/PCIE PHY register bits was
+> mistakenly implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> a PHY driver to control this bit through syscon subsystem instead, as well
+> as setting the band gap one in order to get reliable PCIE communication.
 >
-> The board features:
+> While at it adding this PHY make AXG code close to G12A one thus allowing
+> to remove some specific platform handling in pci-meson driver.
 >
->   - H2, H3, or H5 SoC from Allwinner
->   - 2 DDR3 DRAM chips
->   - Realtek RTL8821CU based WiFi module
->   - 128 Mbit SPI-NOR flash
->   - micro-SD card slot
->   - micro HDMI video output
->   - FPC connector for camera sensor module
->   - generic Raspberri-Pi style 40 pin GPIO header
->   - additional pin headers for extra USB host ports, ananlog audio and
->     IR receiver
+> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> serie.
 >
-> Only H5 variant test samples were made available, but the vendor does
-> have plans to include at least an H3 variant. Thus the device tree is
-> split much like the ALL-H3-CC, with a common dtsi file for the board
-> design, and separate dts files including the common board file and the
-> SoC dtsi file. The other variants will be added as they are made
-> available.
+> Changes since v2:
+>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+>    in PCIE only driver instead
+>  - Include devicetree documentation
 >
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Changes sinve v1:
+>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+>  - Add a PHY driver for PCIE_PHY registers
+>  - Modify pci-meson.c to make use of both PHYs and remove specific
+>    handling for AXG and G12A
+>
+> [1] https://lkml.org/lkml/2019/12/16/119
+>
+> Remi Pommarel (5):
+>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+>   PCI: amlogic: Use AXG PCIE PHY
+>   arm64: dts: meson-axg: Add PCIE PHY node
+>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+>   dt-bindings: Add AXG PCIE PHY bindings
 
-Applied, thanks!
-Maxime
+Hi Remi,
 
---lweqfbwsvdz4r4jl
-Content-Type: application/pgp-signature; name="signature.asc"
+Usually, you should put the dt documentation first in the series.
+This way the properties are documented before being used
 
------BEGIN PGP SIGNATURE-----
+>
+>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +--
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  51 +++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   9 +
+>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+>  drivers/phy/amlogic/Kconfig                   |  11 ++
+>  drivers/phy/amlogic/Makefile                  |   1 +
+>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 185 ++++++++++++++++++
+>  7 files changed, 287 insertions(+), 108 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgSDewAKCRDj7w1vZxhR
-xdlUAP4/EcPmWRKjD8xeYE9H+HSdokqIYjvzND2KP2yG9ujTsgEAkKWq6a5Igzyn
-/wXdS4/5tQyqvruVUJaIsmeNwKAxTAY=
-=RYso
------END PGP SIGNATURE-----
-
---lweqfbwsvdz4r4jl--
