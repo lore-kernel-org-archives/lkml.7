@@ -2,91 +2,91 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212B7C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FCFC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FF420838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577353114;
-	bh=Mr8Uh6VVBiWsMxxVZI0L4qzbBIyfNz4dUgYhjdF9bxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zsf+npullNj5+dPeY239nuLNWQthc+HJW1j1o9vfC8hX6DTAWPNFmi2US+zI1XPBi
-	 /6cpxyClh2P3LAgOYwB+LjCPi189AJFRnAgRDzZ2ufwqiocImHd16g3QhLc8eNDgPK
-	 EqLsCD6eF9w6NvQUB2JvnR+Pyra0gi7CTEZKx0Hc=
+	by mail.kernel.org (Postfix) with ESMTP id 2FADF2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 09:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfLZJid (ORCPT
+        id S1726586AbfLZJiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 04:38:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfLZJic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 04:38:32 -0500
-Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992F82075E;
-        Thu, 26 Dec 2019 09:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577353112;
-        bh=Mr8Uh6VVBiWsMxxVZI0L4qzbBIyfNz4dUgYhjdF9bxw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RNn9y+8DsUK/oQbFJLeb19DhGx54/xMLG77+3mm4kwDstHVH8cubfvxvJjvHaoLaf
-         ydoXKFiFDeHUsNQW2DUVqLllBm0kDhSUgDxeXO40rw1G3cIkthez4HpOZzV2hpp2MK
-         p30RNiOo5UZVYnBbGFPwcU2kyWYHhihg8TFOip7Y=
-Date:   Thu, 26 Dec 2019 10:39:52 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v14 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
-Message-ID: <20191226093952.i2jttp7tr5hie6jl@hendrix.home>
-References: <20191222132229.30276-1-jagan@amarulasolutions.com>
+        Thu, 26 Dec 2019 04:38:50 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58866 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725878AbfLZJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 04:38:49 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 61E2EAFD2DD65EB152BF;
+        Thu, 26 Dec 2019 17:38:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 26 Dec
+ 2019 17:38:43 +0800
+Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
+To:     Vyacheslav Dubeyko <slava@dubeyko.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20191223040020.109570-1-yuchao0@huawei.com>
+ <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+ <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <8a196bfe-666b-3d7b-e78b-8d3a9bcca978@huawei.com>
+Date:   Thu, 26 Dec 2019 17:38:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="h3pmpnueinecnwd2"
-Content-Disposition: inline
-In-Reply-To: <20191222132229.30276-1-jagan@amarulasolutions.com>
+In-Reply-To: <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/12/25 17:58, Vyacheslav Dubeyko wrote:
+> On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
+>> Hi,
+>>
+>> CC linux-fsdevel
+>>
+>> On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
+>>> As Geert Uytterhoeven reported:
+>>>
+>>> for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+>>>
+>>> On some platforms, HZ can be less than 50, then unexpected 0
+>>> timeout
+>>> jiffies will be set in congestion_wait().
+>>>
+> 
+> 
+> It looks like that HZ could have various value on diferent platforms.
+> So, why does it need to divide HZ on 50? Does it really necessary?
 
---h3pmpnueinecnwd2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I guess this code was copied from other filesystems, I have no idea why
+we should use HZ/50 as timeout interval value.
 
-On Sun, Dec 22, 2019 at 06:52:22PM +0530, Jagan Teki wrote:
-> This is v14 version for Allwinner A64 MIPI-DSI support
-> and here is the previous version set[1]
+> Could it be used HZ only without the division operation?
 
-I applied the patches 1 to 6, and fixed checkpatch warnings in the
-patch 5. Make sure to run it before sending patches.
+Actually, as Geert pointed out, we can handle that zeroed value parameter
+inside congestion_wait() to cover all filesystems use cases.
 
 Thanks,
-Maxime
 
---h3pmpnueinecnwd2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgR/6AAKCRDj7w1vZxhR
-xbLvAQCJi7xi94JsmmvMc/qiv546VIdF1KVEM1HWgg4A2XFb1gD9GrsRw+V1QxTC
-1yZ8gotcEiYivT+fUp5C9q8c/WwP6wU=
-=zrYu
------END PGP SIGNATURE-----
-
---h3pmpnueinecnwd2--
+> 
+> Thanks,
+> Viacheslav Dubeyko.
+> 
+> 
+> .
+> 
