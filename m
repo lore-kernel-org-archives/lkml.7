@@ -2,206 +2,130 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA1C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6A7C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1022075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D28E8206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="j0Sr9BrQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YefnrY+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfLZMrI (ORCPT
+        id S1726659AbfLZMsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:47:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34507 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfLZMrH (ORCPT
+        Thu, 26 Dec 2019 07:48:35 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35908 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfLZMsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:47:07 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so6311255pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 04:47:07 -0800 (PST)
+        Thu, 26 Dec 2019 07:48:35 -0500
+Received: by mail-io1-f67.google.com with SMTP id r13so13114328ioa.3;
+        Thu, 26 Dec 2019 04:48:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=PhD3fzcXaiyg/tnRNmB1PHp90uiKGb3dtbUoxe3D81M=;
-        b=j0Sr9BrQC8c4ydR3qnTOsxs5JBbHMOURHWk1OMF+jueydY6/R8MerHxfFK9aMjeUci
-         qoTDLaUHDqccppNTClGJ//cvLmE2JnrWiRg5gwj4E+sb8t9iUIR9kSLxYhTVCL6YMTS0
-         qvPpFyOfz0ynYef3nyD3WXBiWsiEg8mT9eSWc3biW2A/7z5GWOJ/4rBuh9F8TJjFn3pt
-         sRvjeSXxOs+hNcHsw6GhundI6EYH2YPM1BSoBrMxmw5W6tElwlcMbJhP8HCmuP9zktxV
-         lC6izpxnBJ7RcD+dxciYD0kKv41ev1ElZVP7tSDbFsC5w+b4e1KLDxnW8p0fn2MG+0Qw
-         MuKg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
+        b=YefnrY+EbXXFw6NCNms+uP2FauCYX8EKKW7IStqcgZ54KItrEGn/LydFpjMviil83f
+         IW1I3cuFJuujnMkaahO8vjHIvrmwA2q81wpVQCAVyvqSefBHQd6tnGsnfs70RejWHS45
+         9M3N3yI3DsqIK6LzRuXKOBTf6Rkkyra6B55MxKyi7GiAlGbcApJ2snZ6JYLsUp4tChO9
+         +FUQkpP5R3u0L9oJhT8ittb4GYvz6lo/boEJwrBNG5+BL2XERJCWwtoiABAshfGI4jVC
+         9hZxJMGZUN+z+Zxks+onaDk2szb+ZRO3a0mWxmJFRVlb5Xz7drOwssgD6oCH6BmfRFt9
+         wkjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=PhD3fzcXaiyg/tnRNmB1PHp90uiKGb3dtbUoxe3D81M=;
-        b=rbPaXXh2xtleH4vUiSkYT0aqIx42Hw32rewJzwybnzwwt2/o6YThcm6CYBrzbBY2KK
-         fNb49YXD8Al5EYm/ezlC7CwDNPDK27ckIlB7d4egr+o2IzTca4V5e4+bxubC8JZNm+d4
-         xevs18onqf2cyfan6BUUjfEbHj9wiKAxYh48IX7+0oA3QnNJfYOA8+/aQgHaTf98AJHW
-         UmbKzafaq3mRE3IyBngOqAu/Bl9Qp9G0nyAM+yNlOwT3ADeiAJh0CVgBEU8uT9HJwSoQ
-         FtqTZ5Plif9wOsRPnKFc+I/oneRbYUVx3FwEZxe2kkcnKnIImTqX1fq1LmMrvB57InLS
-         p8Ng==
-X-Gm-Message-State: APjAAAWLEyCiJrek5JZPeJ4B2XXLZtiz50eeeWkRX1rF9hCApmGVXBfi
-        DCW/P4zfxB/MahMQwGaVavcZcg==
-X-Google-Smtp-Source: APXvYqzPa6VvdIr6Dl8mtjNyW3vIc35A2hn10EXkNtKJk3SGhwsdxozNFZ0TSQs/iz0ROixH9zEYWw==
-X-Received: by 2002:aa7:8096:: with SMTP id v22mr48236032pff.240.1577364426807;
-        Thu, 26 Dec 2019 04:47:06 -0800 (PST)
-Received: from [192.168.0.9] (111-255-104-19.dynamic-ip.hinet.net. [111.255.104.19])
-        by smtp.gmail.com with ESMTPSA id 68sm33233315pge.14.2019.12.26.04.47.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2019 04:47:06 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
+        b=RYJTdnj3nSnXGjXRnPWbnkr/jVbFECX8x8ogAeB40krJgvCnwtYxpGltw2hgSaL4u/
+         2dALbl4qiHnLH/emODaXNH2dKI8jH4e6uAzqkHsErH26Chk/VrlgEjVpOhnm56n4A2Sr
+         6h2oJLWyuKpLnp7EPUleeHy2LzrXL/5pRhZj5KlVNmB2T9MTudIi/jj1/86gIfVQG07m
+         OWYx+PR5SXYQP4/k3e+wd0kRgZX/59oKTruBs44xbLmDDIt5IpFJYZobeVZW6nBcS/e8
+         bshYA7tNu+wNCxwIKkFnbp1bbCap5MOQZb3BQKQ/VpU9sXxx3Kdw3BfQJ1k5AR43/mlP
+         m0sw==
+X-Gm-Message-State: APjAAAW4b5J1ziC2wZ5BMkmoBtDTwj4WX5QSgwAXLvVl8ybD9LFXbaf8
+        patI31KXJwX5gOWSzGkxXUhFPqQOnsMASiYFFJQ=
+X-Google-Smtp-Source: APXvYqzgTHGdCwlE1xHWPIw+T/zvXXg/5Q23YMQERnKG40D0J11GZjNSHiZT89pjLxBM19FDQcJcvzXznwVR1Scakqc=
+X-Received: by 2002:a6b:c410:: with SMTP id y16mr28959521ioa.18.1577364514436;
+ Thu, 26 Dec 2019 04:48:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20191219172823.1652600-1-anarsoul@gmail.com> <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org> <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226104419.GA26677@Red>
+In-Reply-To: <20191226104419.GA26677@Red>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 26 Dec 2019 20:47:47 +0800
+Message-ID: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Date:   Thu, 26 Dec 2019 20:46:52 +0800
-Message-Id: <E464D551-1631-4EA8-ADFB-852E16D29CA9@amacapital.net>
-References: <4820831.xlnk3tY4r2@tauon.chronox.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Ted Ts'o <tytso@mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-In-Reply-To: <4820831.xlnk3tY4r2@tauon.chronox.de>
-To:     Stephan Mueller <smueller@chronox.de>
-X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Dec 26, 2019, at 8:04 PM, Stephan Mueller <smueller@chronox.de> wrote:
->=20
-> =EF=BB=BFAm Donnerstag, 26. Dezember 2019, 12:12:29 CET schrieb Andy Lutom=
-irski:
->=20
-> Hi Andy,
->=20
->>>> On Dec 26, 2019, at 5:29 PM, Stephan M=C3=BCller <smueller@chronox.de> w=
-rote:
->>>=20
->>> =EF=BB=BFAm Montag, 23. Dezember 2019, 09:20:43 CET schrieb Andy Lutomir=
-ski:
->>>=20
->>> Hi Andy,
->>>=20
->>>> There are some open questions and future work here:
->>>>=20
->>>> Should the kernel provide an interface to get software-generated
->>>> "true random" numbers?  I can think of only one legitimate reason to
->>>> use such an interface: compliance with government standards.  If the
->>>> kernel provides such an interface going forward, I think it should
->>>> be a brand new character device, and it should have a default mode
->>>> 0440 or similar.  Software-generated "true random numbers" are a
->>>> very limited resource, and resource exhaustion is a big deal.  Ask
->>>> anyone who has twiddled their thumbs while waiting for gnupg to
->>>> generate a key.  If we think the kernel might do such a thing, then
->>>> patches 5-8 could be tabled for now.
->>>=20
->>> What about offering a compile-time option to enable or disable such code=
-?
->>> Note, with the existing random.c code base, there is no need to have a
->>> separate blocking_pool. The ChaCha20 DRNG could be used for that very sa=
-me
->>> purpose, provided that in case these true random numbers are generated
->>> when
->>> the Chacha20 DRNG received an equal amount of "unused" entropy.
->>=20
->> This scares me. The DRNG should be simple and easy to understand. If we=E2=
-=80=99re
->> tapping extra numbers in some weird way, then I would be more comfortable=
-
->> with some clear assurance that this doesn=E2=80=99t break the security. I=
-f we=E2=80=99re
->> tapping numbers in the same way as normal urandom, then I don=E2=80=99t r=
-eally see
->> the point.
->=20
-> Agreed. I was just trying to outline that the removal of the blocking_pool=
- is=20
-> a good thing. Even when we decide that random.c should receive a TRNG, we d=
-o=20
-> not need to re-add a blocking pool, but can easily use the existing ChaCha=
-20=20
-> DRNG (most likely with its own instance).
-
-Fair enough.
-
->=20
->>>> Alternatively, perhaps the kernel should instead provide a
->>>> privileged interface to read out raw samples from the various
->>>> entropy sources, and users who care could have a user daemon that
->>>> does something intelligent with them.  This would push the mess of
->>>> trying to comply with whatever standards are involved to userspace.
->>>> Userspace could then export "true randomness" via CUSE if it is so
->>>> inclined, or could have a socket with a well-known name, or whatever
->>>> else seems appropriate.
->>>=20
->>> With the patch set v26 of my LRNG I offer another possible alternative
->>> avoiding any additional character device file and preventing the
->>> starvation of legitimate use cases: the LRNG has an entropy pool that
->>> leaves different levels of entropy in the pool depending on the use case=
+On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
+<clabbe.montjoie@gmail.com> wrote:
+>
+> On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > >> H6 and R40 SoCs.
+> > > >
+> > > > Thanks again for working on this.
+> > > >
+> > > > I'll merge the DT patches when the driver will have been merged.
+> > >
+> > > I've applied patches 1 & 2.
+> > >
+> > > They are in the testing branch and will go to the linux-next branch a=
 s
->>> of this data.
->>>=20
->>> If an unprivileged caller requests true random data, at least 1024 bits o=
-f
->>> entropy is left in the pool. I.e. all entropy above that point is
->>> available
->>> for this request type. Note, even namespaces fall into this category
->>> considering that unprivileged users can create a user name space in whic=
-h
->>> they can become root.
->>=20
->> This doesn=E2=80=99t solve the problem. If two different users run stupid=
- programs
->> like gnupg, they will starve each other.
->=20
-> But such scenario will always occur, will it not? If there are two callers=
- for=20
-> a limited resource, they will content if one "over-uses" the resource. My i=
-dea=20
-> was to provide an interface where its use does not starve other more relev=
-ant=20
-> use cases (e.g. seeding of the DRNGs). I.e. a user of a TRNG has the right=
- to=20
-> be DoSed - that is the price to pay when using this concept.
+> > > soon as the kernelci passes.
+> >
+> > I just merged all the other patches (except the patch 6, for the H6,
+> > as requested by Vasily on IRC).
+> >
+>
+> Hello
+>
+> Vasily asked to not apply H6 due to my test failling on h6 and since he d=
+idnt own any H6 hw.
+> But it was failling due my fault (a failling build).
+>
+> So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and=
+ B) as reported by my answer to this thread.
 
-Maybe I=E2=80=99m just cynical, but I expect that, if the feature is availab=
-le to everyone, then lots of user programmers will use it even though they d=
-on=E2=80=99t need to.  If, on the other hand, there is a barrier to entry, t=
-hen people will be more likely to stop and think.
+HI Corentin,
 
-Even gnupg could have been more clever =E2=80=94 when generating a 4096-bit R=
-SA key, there is no actual need for 4096 bits of entropy, however entropy is=
- defined. 256 bits would have been more than adequate.
+Although it is not calibrated, it should work on the R40. Can you give
+my patch a try?
 
-(FWIW, my personal view is that 512 bits, in the sense of =E2=80=9Cthe distr=
-ibution being sampled produces no output with probability greater than about=
- 2^-512=E2=80=9D, is a good upper limit for even the most paranoid.  This is=
- because it=E2=80=99s reasonable to assume that an attacker can=E2=80=99t do=
- more than 2^128 operations. As djb has noted, multi-target attacks mean tha=
-t you can amplify success probability in some cases by a factor that won=E2=80=
-=99t exceed 2^128.  Some day, quantum computers might square-root everything=
-, giving 512 bits. Actually, quantum computers won=E2=80=99t square root eve=
-rything, but much more complicated analysis is needed to get a believable bo=
-und.)
+Thx=EF=BC=8C
+Yangtao
 
-=E2=80=94Andy
+>
+> Regards
