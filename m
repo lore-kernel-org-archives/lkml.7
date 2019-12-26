@@ -2,103 +2,122 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515CFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF032C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C07720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577365558;
-	bh=C8qj0SUmIJ4ig7POP0ZRqG48jGqcayfEotjWeZpuvZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NwOZXDCfkEzUZX2jCTN4SpM5NHT+tQSRzhwOPwx+xePz81nmlRDQ74koswVzE4/je
-	 t0u3gcfPctzdq2JCOC5711r66xUCqY6FGn2S8KRgnQrQfR5xB2kwkcsj8/SFRa87cv
-	 v14raqYraOgMnRK6gvb+t5x6sdyoL63j2TxQ5rig=
+	by mail.kernel.org (Postfix) with ESMTP id AFDC220828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20150623.gappssmtp.com header.i=@dubeyko-com.20150623.gappssmtp.com header.b="yHMEur93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfLZNF5 (ORCPT
+        id S1726741AbfLZNIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:05:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfLZNF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:05:56 -0500
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8827620740;
-        Thu, 26 Dec 2019 13:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577365556;
-        bh=C8qj0SUmIJ4ig7POP0ZRqG48jGqcayfEotjWeZpuvZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FTrkd0SYJ1uEduHNNc4QJCb1x+NJK/ZLM9zSIZxJI7vLle4u+Ysyx1viTVDWGEvmu
-         hjQsOtNm+frV4BrVrCK+TQcvhHG3h/XZu5KbI0Mu51wLrsi0X6qQpKxLaobYXEcVD9
-         uwxg1zUlZ01wb8LInqdbjfGOVZnCQ1aRNVBb32+M=
-Date:   Thu, 26 Dec 2019 15:05:52 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     xiyuyang19@fudan.edu.cn
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] infiniband: i40iw: fix a potential NULL pointer
- dereference
-Message-ID: <20191226130552.GD6285@unreal>
-References: <1577364757-18385-1-git-send-email-xiyuyang19@fudan.edu.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577364757-18385-1-git-send-email-xiyuyang19@fudan.edu.cn>
+        Thu, 26 Dec 2019 08:08:44 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33543 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfLZNIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 08:08:44 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so16679528lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 05:08:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XX+uD6u26dDFDC626LQb9o9CPegZnPxVtayuH9+QP+c=;
+        b=yHMEur933ZoxenJTF/O5tNptMe7y2msn2A4nAJAGHsuHLTSECG/y5MRFeXwBggLWqp
+         /gqUCKjAPxCWnGxfttHxQxTr2RA4ccUj3nGztv6us+e2bFB3O6r1xR2yD1cLZH0LtVzp
+         ChsZvQzl8eopBmxkxcXv9VU/PN/whUHhS01A2LOp6pkNxxw11O5CDI7yfNbaPUleWeL4
+         ejLUj6YVTtb2TFohC6tHr2y2CHtudkODp0kVhuMMNYxD4GMEVxc/L27eOg1VWDEeBApJ
+         dcT2nk5ikZMCf8qoCiec2jRp0ShuHC3OXNaaJl2eKI+8DXD4GbCMsHYyeqDiBYk36kT3
+         wG+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XX+uD6u26dDFDC626LQb9o9CPegZnPxVtayuH9+QP+c=;
+        b=gOJBr5aH/O0K7WdGXrOe4EgisDRTh+89RIHyeeNjLwWy5EsjMyW0PstfCV/tno0tB2
+         i1+AQ9ejKkDW3NM81JRWkg0CJ6NcrOvvbS2Vmu2ZHOv6XiDqEXD05B7/IkypChFZThRs
+         aUpItSO0H/xfOcBG2xVZhLAU2KvzUO6F9pzcsOGAr5eJOm7VTXMk6WGs62MsQhyh1BK0
+         wc4phbXZaH5hjz9qr95ePsC9znXBzKOGXT43JgkyiEGZmrZ6E1kXJZR4BXyz0Flc4wz/
+         rgsCADvx5pQoxSbSMR5OOntUbJlFUyIYKn8E2ySM//0nxSgQvQ2i6AsmVmq8hLqxG2wy
+         EKHA==
+X-Gm-Message-State: APjAAAVq8tpA2pzIRStrcdwdNBT7PoqxrOZVugXF18ZGgeDj1QvvK34y
+        3OdMHuoiIAJY0vIeiAbcqKr2Xw==
+X-Google-Smtp-Source: APXvYqxvUQ91Q6j1NhdVDolhqYVyEmWyagtDXGJ4B+gMTFF1SRRbv75fwcnAT7i9EH20MjdxcZEHvw==
+X-Received: by 2002:a05:651c:118b:: with SMTP id w11mr26296295ljo.54.1577365722046;
+        Thu, 26 Dec 2019 05:08:42 -0800 (PST)
+Received: from msk1wst115n.omp.ru (mail.omprussia.ru. [5.134.221.218])
+        by smtp.gmail.com with ESMTPSA id d25sm12356658ljj.51.2019.12.26.05.08.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 26 Dec 2019 05:08:41 -0800 (PST)
+Message-ID: <61e43dcb781c9e880fac95b525830fd384de122a.camel@dubeyko.com>
+Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
+From:   Vyacheslav Dubeyko <slava@dubeyko.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Date:   Thu, 26 Dec 2019 16:08:40 +0300
+In-Reply-To: <CAMuHMdV5VtR+vgYKcZtvcz16GPp9YLG_ecAeDsiNCreP4rYKjw@mail.gmail.com>
+References: <20191223040020.109570-1-yuchao0@huawei.com>
+         <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+         <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
+         <CAMuHMdV5VtR+vgYKcZtvcz16GPp9YLG_ecAeDsiNCreP4rYKjw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 08:52:37PM +0800, xiyuyang19@fudan.edu.cn wrote:
-> From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
->
-> in_dev_get may return a NULL object. The fix handles the situation
-> by adding a check to avoid NULL pointer dereference on idev,
-> as pick_local_ipaddrs does.
->
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
-> Changes in v2:
-> - Release rtnl lock when in_dev_get return NULL
->
->  drivers/infiniband/hw/i40iw/i40iw_main.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
-> index d44cf33d..d7146fdf 100644
-> --- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-> +++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-> @@ -1225,6 +1225,10 @@ static void i40iw_add_ipv4_addr(struct i40iw_device *iwdev)
->  			const struct in_ifaddr *ifa;
->
->  			idev = in_dev_get(dev);
-> +			if (!idev) {
-> +				i40iw_pr_err("ipv4 inet device not found\n");
-> +				break;
-> +			}
+Hi Geert,
 
-It continues to be wrong. You shouldn't get out of the loop, but skip
-in_dev_for_each_ifa_rtnl() section. Also, error print shouldn't be added
-too.
+On Thu, 2019-12-26 at 11:43 +0100, Geert Uytterhoeven wrote:
+> Hi Vyacheslav,
+> 
+> On Wed, Dec 25, 2019 at 10:58 AM Vyacheslav Dubeyko <
+> slava@dubeyko.com> wrote:
+> > On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
+> > > On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com>
+> > > wrote:
+> > > > As Geert Uytterhoeven reported:
+> > > > 
+> > > > for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+> > > > 
+> > > > On some platforms, HZ can be less than 50, then unexpected 0
+> > > > timeout
+> > > > jiffies will be set in congestion_wait().
+> > 
+> > It looks like that HZ could have various value on diferent
+> > platforms.
+> > So, why does it need to divide HZ on 50? Does it really necessary?
+> > Could it be used HZ only without the division operation?
+> 
+> A timeout of HZ means 1 second.
+> HZ/50 means 20 ms, but has the risk of being zero, if HZ < 50.
+> 
+> If you want to use a timeout of 20 ms, you best use
+> msecs_to_jiffies(20),
+> as that takes care of the special cases, and never returns 0.
+> 
 
-Thanks
+The msecs_to_jiffies(20) looks much better for my taste. Maybe, we
+could use this as solution of the issue?
 
->  			in_dev_for_each_ifa_rtnl(ifa, idev) {
->  				i40iw_debug(&iwdev->sc_dev, I40IW_DEBUG_CM,
->  					    "IP=%pI4, vlan_id=%d, MAC=%pM\n", &ifa->ifa_address,
-> --
-> 2.7.4
->
+Thanks,
+Viacheslav Dubeyko.
+
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
