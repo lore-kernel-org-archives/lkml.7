@@ -7,258 +7,155 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1BFC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD0C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F69D206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B7F206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577399093;
-	bh=m4Ju/o9t4gAgk+H7nnBIXf6IV4gFEYVFIdQdh6R0tUI=;
+	s=default; t=1577399377;
+	bh=Za4/fhrgSGMJJT2DPQ1b7i4PH3qo+DebV62pODPtibg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cxx8VxqGzA3CuUEH8DKVevvotH4kO/KZTqToI7UvyXBXpUsz0qHXf0z8g2TPgbhbY
-	 HXYn9d/5nppz5uXT80RAFKECyGVeaXaCvwNgRq0sRnnKjHGWzhnqyNTTl3lEuvFYaf
-	 jMWF9k8seEmtj7HgS8Vcg0kxZbPwVd67hQ72GT4M=
+	b=pRQcHMYeAKPj6fPVmFRzG0Y71KV7VtajsmQ0IKr6qqRBvUU8A+9IkBebTRZnNQEDA
+	 0axLIpt6QD3lNklZBpT4zA5bRKgBXYU6cgvUL480ZHhGMry/TyHnAMTKyOqANsfS0y
+	 6mYt3ieiX7+rvQNTfHHOTW+QgXad8FF2CpZqJtUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfLZWYw (ORCPT
+        id S1727021AbfLZW3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:24:52 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36601 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfLZWYw (ORCPT
+        Thu, 26 Dec 2019 17:29:37 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44779 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZW3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:24:52 -0500
-Received: by mail-io1-f65.google.com with SMTP id r13so14272074ioa.3;
-        Thu, 26 Dec 2019 14:24:51 -0800 (PST)
+        Thu, 26 Dec 2019 17:29:36 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so21085430iln.11;
+        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=37uqwtRwSPKrS7mePUoQwRbRxVBQ1BJulsNk0ZshgZ4=;
-        b=hW2qpQV1f1r8UgwfPA+eJshGpiDUYDLTwGHOxaA5NxraSPkGomehuIjOLkjEsHy0a7
-         vsj2HEBoHgYuAZXp7IKPKpEZaC3Jn5sEXcGQBY7MZds9jEIyowRTvm7RBoaXZFF6a+/l
-         lwzx+y9lreGzVJU5UFm4aJGYycAZGIGz8uiJbCCFXZ8ahzSC2mE6kgRz+WNpP/B8lPsy
-         SYUj0VCfCCY3vbwxCxPo5VhshmvkUFpFJPLKeY7LCyXj1fKBKrFa0DQg3RbGkU/YHFZ2
-         lpaAeztx5LT1OuBUti9Kk75myGktYEX9mUUxjSHU8lS+y/T4tUGrE7Tj9rK7hhpaaKuX
-         rRpA==
-X-Gm-Message-State: APjAAAUzGO1D9Qf5t/+E5c7NhX8EwI7jcm1a52sT0hgxJoWZq1VCjEUW
-        cyW9X07h5Xju5K5TBv8r8Q==
-X-Google-Smtp-Source: APXvYqwpmWnPzmhjJucVegrp/qxb0MG6G7PSqjM7NScWUgWQvP5DpgC4uYsIS18fm8wbuiIy81ilQg==
-X-Received: by 2002:a5d:8996:: with SMTP id m22mr33343498iol.141.1577399091059;
-        Thu, 26 Dec 2019 14:24:51 -0800 (PST)
+        bh=0HfQukFEOKou0TWVAOyJEghUYeBtOwFmOGUx5hYQoQQ=;
+        b=FWneVoon1qpjIG/zrUrKluXRyc/5nXH53yI73RGCsKkaL4EWBfRQShNd5cfCsLEfNk
+         mowt+ksiEZy+qAKuAy2POiRSbtlmVbAFzVtin3LzHnNAPI45e+isQrvbmT3GTYnwg7ax
+         4cDol6sA8KALk7A4m/JGqGiHRKNsu5vrQObYzcPcP8EXmqhFjxIWqbsaOD21AXJ9UTak
+         sNWWSp1MIyJaV54eoL9bHDG95gNNpSGzeOZZ0VJsEuVgJGIYQu1Zur38h34mj6SZonpy
+         D1ficwMv+G1eMJ5qIx0CsHhUG4o10OUyj8dbP3OpdjfX8PpYtzvnYTTBlPOodN8LvTcH
+         uYAw==
+X-Gm-Message-State: APjAAAXr69NmzzDBMDDoijI8vr2VHFoF3O8/z7ST1vUCLFKen+KdLS9e
+        taad2AskJn7yzHUOv+Iykg==
+X-Google-Smtp-Source: APXvYqyKHeFTS1rgXKIJtDHqKWaKwJuhNX9UygXL9K1AQkx1JoP6Vcp4Eq4BkAUtVgXSERlQ2Nhkgg==
+X-Received: by 2002:a92:ce85:: with SMTP id r5mr42607880ilo.301.1577399376036;
+        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
 Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m24sm8970619ioc.37.2019.12.26.14.24.50
+        by smtp.gmail.com with ESMTPSA id t23sm12668682ila.75.2019.12.26.14.29.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:24:50 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:24:49 -0700
+        Thu, 26 Dec 2019 14:29:34 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:29:33 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        a.hajda@samsung.com, narmstrong@baylibre.com,
-        tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net
-Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: Add documentation for
- Toshiba tc358768
-Message-ID: <20191226222449.GA8816@bogus>
-References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
- <20191217101506.18910-2-peter.ujfalusi@ti.com>
+To:     YuDong Zhang <mtwget@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
+ Dynament Premier series single gas sensor
+Message-ID: <20191226222933.GA20958@bogus>
+References: <20191217102930.26102-1-mtwget@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191217101506.18910-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:15:05PM +0200, Peter Ujfalusi wrote:
-> TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
+On Tue, Dec 17, 2019 at 06:29:30PM +0800, YuDong Zhang wrote:
+> Dynament Premier series single gas sensor.
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
 > ---
->  .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+>  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
 > new file mode 100644
-> index 000000000000..8f96867caca0
+> index 000000000000..e2bbae4dd086
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> @@ -0,0 +1,158 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
+> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
+> +title: Dynament Premier series single gas sensor
 > +
 > +maintainers:
-> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
+> +  - YuDong Zhang <mtwget@gmail.com>
 > +
 > +description: |
-> +  The TC358768/TC358778 is bridge device which converts RGB to DSI.
+> +  single gas sensor capable of measuring gas concentration of dust
+> +  particles, multi-gas sensor are not supported.
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
 > +
 > +properties:
 > +  compatible:
 > +    enum:
-> +      - toshiba,tc358768
-> +      - toshiba,tc358778
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low RESX pin
-> +
-> +  vddc-supply:
-> +    maxItems: 1
+> +      - dynament,premier
 
-Drop this. Not an array. *-supply doesn't need further constraints.
-
-> +    description: Regulator for 1.2V internal core power.
-> +
-> +  vddmipi-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V for the MIPI.
-> +
-> +  vddio-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.8V - 3.3V IO power.
-
-Blank line here.
-
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: refclk
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description: |
-> +          Video port for RGB input
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lines:
-> +                enum: [ 16, 18, 24 ]
-> +
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for DSI output (panel or connector).
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-
-No additionalProperties on this one?
+Typically compatible strings are for a specific part #, so you can 
+handle any differences. Unless the differences are discoverable in 
+another way (like registers).
 
 > +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
+> +  vcc-supply:
+> +    description: regulator that provides power to the sensor
 > +
 > +required:
 > +  - compatible
-> +  - reg
-> +  - vddc-supply
-> +  - vddmipi-supply
-> +  - vddio-supply
-> +  - ports
-> +
-> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    i2c1 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      dsi_bridge: tc358768@0e {
-> +        compatible = "toshiba,tc358768";
-> +        reg = <0x0e>;
-> +
-> +        clocks = <&tc358768_refclk>;
-> +        clock-names = "refclk";
-> +
-> +        /* GPIO line is inverted before going to the bridge */
-> +        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
-> +
-> +        vddc-supply = <&v1_2d>;
-> +        vddmipi-supply = <&v1_2d>;
-> +        vddio-supply = <&v3_3d>;
-> +
-> +        dsi_bridge_ports: ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +            reg = <0>;
-> +            rgb_in: endpoint {
-> +              remote-endpoint = <&dpi_out>;
-> +              data-lines = <24>;
-> +            };
-> +          };
-> +
-> +          port@1 {
-> +            reg = <1>;
-> +            dsi_out: endpoint {
-> +              remote-endpoint = <&lcd_in>;
-> +            };
-> +          };
-> +        };
+> +    serial {
+> +      single-gas-sensor {
+> +        compatible = "dynament,premier";
+> +        vcc-supply = <&reg_vcc5v0>;
 > +      };
 > +    };
-> +    
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 6046f4555852..5afca0586c41 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -261,6 +261,8 @@ patternProperties:
+>      description: Dragino Technology Co., Limited
+>    "^dserve,.*":
+>      description: dServe Technology B.V.
+> +  "^dynament,.*":
+> +    description: Dynament, Ltd.
+>    "^ea,.*":
+>      description: Embedded Artists AB
+>    "^ebs-systart,.*":
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ae228ac7adc9..4842a0afe32b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
+>  M:	YuDong Zhang <mtwget@gmail.com>
+>  S:	Maintained
+>  F:	drivers/iio/chemical/premier.c
+> +F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+>  
+>  DYNAMIC DEBUG
+>  M:	Jason Baron <jbaron@akamai.com>
 > -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 2.24.1
 > 
