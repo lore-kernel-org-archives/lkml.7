@@ -2,160 +2,107 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBD0C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC67DC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B7F206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577399377;
-	bh=Za4/fhrgSGMJJT2DPQ1b7i4PH3qo+DebV62pODPtibg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pRQcHMYeAKPj6fPVmFRzG0Y71KV7VtajsmQ0IKr6qqRBvUU8A+9IkBebTRZnNQEDA
-	 0axLIpt6QD3lNklZBpT4zA5bRKgBXYU6cgvUL480ZHhGMry/TyHnAMTKyOqANsfS0y
-	 6mYt3ieiX7+rvQNTfHHOTW+QgXad8FF2CpZqJtUc=
+	by mail.kernel.org (Postfix) with ESMTP id C256B206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLlRtcY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfLZW3h (ORCPT
+        id S1727120AbfLZW3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:29:37 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44779 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLZW3g (ORCPT
+        Thu, 26 Dec 2019 17:29:43 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33692 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZW3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:29:36 -0500
-Received: by mail-il1-f194.google.com with SMTP id z12so21085430iln.11;
-        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
+        Thu, 26 Dec 2019 17:29:43 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so24712418wrq.0;
+        Thu, 26 Dec 2019 14:29:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cNvwamoo4dW30eKmzFIFFIcQpw4e7mEPfnTJXuvvdsc=;
+        b=JLlRtcY/8CBDaPzFepxOtonk9vTzRAHaTYqApa/UOMvai0S8wJ8GZW4HU5h1cO7N9r
+         cCes7ekRdCOtbw/jtgcWE20ocoyD/zaNpo3J0IFrhTm3FbEf39kiD/PbpfDOV1/MOq8t
+         84eCIs94LrrY2WNvfqtjGOgJeCpFOyFdktf3L5ntnWU5rG/D8jrbIKabTFuWsSurCRRG
+         0xDXuZ+Tia7tEwtI4aA+53vaqJM+jz2ISPQOby+Hbz9SZzO5XfFNkDGzXYJH2nr3xVTp
+         LB4Q+k/42Y8WU6zuVNzaem3PYqhBL12t689pHwOw46qVfb1/t+TyfgBBHPsgBAPTBkeh
+         0LaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0HfQukFEOKou0TWVAOyJEghUYeBtOwFmOGUx5hYQoQQ=;
-        b=FWneVoon1qpjIG/zrUrKluXRyc/5nXH53yI73RGCsKkaL4EWBfRQShNd5cfCsLEfNk
-         mowt+ksiEZy+qAKuAy2POiRSbtlmVbAFzVtin3LzHnNAPI45e+isQrvbmT3GTYnwg7ax
-         4cDol6sA8KALk7A4m/JGqGiHRKNsu5vrQObYzcPcP8EXmqhFjxIWqbsaOD21AXJ9UTak
-         sNWWSp1MIyJaV54eoL9bHDG95gNNpSGzeOZZ0VJsEuVgJGIYQu1Zur38h34mj6SZonpy
-         D1ficwMv+G1eMJ5qIx0CsHhUG4o10OUyj8dbP3OpdjfX8PpYtzvnYTTBlPOodN8LvTcH
-         uYAw==
-X-Gm-Message-State: APjAAAXr69NmzzDBMDDoijI8vr2VHFoF3O8/z7ST1vUCLFKen+KdLS9e
-        taad2AskJn7yzHUOv+Iykg==
-X-Google-Smtp-Source: APXvYqyKHeFTS1rgXKIJtDHqKWaKwJuhNX9UygXL9K1AQkx1JoP6Vcp4Eq4BkAUtVgXSERlQ2Nhkgg==
-X-Received: by 2002:a92:ce85:: with SMTP id r5mr42607880ilo.301.1577399376036;
-        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t23sm12668682ila.75.2019.12.26.14.29.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cNvwamoo4dW30eKmzFIFFIcQpw4e7mEPfnTJXuvvdsc=;
+        b=kIhUQ1Zfandzg07OM4OKDWlV5FV+AOCLlqY8Ldw8OLu6Is4wGxikqt0AeLXofbrVnw
+         DeHFO9rfK0F/yMkjJLeePrw1LlbP+JRkMau2xzC//jVTp96Vb3gfm+vD7Y2GqRKYLfWp
+         bBsrBjH3+hsvHUSrTJK5MaeGVdx3wduvqf7GQ9CNRGFMTPGEDo0PGd6XPxMcMp6u4mAr
+         ITCkF3zgyG+V6fsgASqI9jDEGDy0qKvUY3EdzyAI4NZh888hlGoWOhcA4pOmtfUBDKwg
+         7aansysGfzSlFSfM0GJeAlOvKkgKIKePKl8mnsKJ7UQSJ8eKQC8Z09JL8Te9ExSvO/DD
+         zUMw==
+X-Gm-Message-State: APjAAAWsP5CEEnorLbp6IZgBzfYh+Uonc4koWJFnEl6c6nh+EXeiPF3+
+        booeW2M1a5xr5zkx1zfJotg=
+X-Google-Smtp-Source: APXvYqz27JK6nLbXAntRU3P2XYprFSagQ5bHWeh2eGH1ngIHB7ECWzyR7wuR+C1tIUamhRGjOIh9KA==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr47383927wrl.117.1577399381531;
+        Thu, 26 Dec 2019 14:29:41 -0800 (PST)
+Received: from localhost.localdomain (p5B3F7018.dip0.t-ipconnect.de. [91.63.112.24])
+        by smtp.gmail.com with ESMTPSA id j2sm9731276wmk.23.2019.12.26.14.29.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:29:34 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:29:33 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     YuDong Zhang <mtwget@gmail.com>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
- Dynament Premier series single gas sensor
-Message-ID: <20191226222933.GA20958@bogus>
-References: <20191217102930.26102-1-mtwget@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 26 Dec 2019 14:29:40 -0800 (PST)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Add regulator support for mpq7920
+Date:   Thu, 26 Dec 2019 23:29:26 +0100
+Message-Id: <20191226222930.8882-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 06:29:30PM +0800, YuDong Zhang wrote:
-> Dynament Premier series single gas sensor.
-> 
-> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
-> ---
->  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  1 +
->  3 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> new file mode 100644
-> index 000000000000..e2bbae4dd086
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dynament Premier series single gas sensor
-> +
-> +maintainers:
-> +  - YuDong Zhang <mtwget@gmail.com>
-> +
-> +description: |
-> +  single gas sensor capable of measuring gas concentration of dust
-> +  particles, multi-gas sensor are not supported.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - dynament,premier
+Changes in V4:
+    - fixed 0-DAY warnings
 
-Typically compatible strings are for a specific part #, so you can 
-handle any differences. Unless the differences are discoverable in 
-another way (like registers).
+Changes in V3:
+    - fixed review comments in Documentation and dt_bindings_check passed 
 
-> +
-> +  vcc-supply:
-> +    description: regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    serial {
-> +      single-gas-sensor {
-> +        compatible = "dynament,premier";
-> +        vcc-supply = <&reg_vcc5v0>;
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6046f4555852..5afca0586c41 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -261,6 +261,8 @@ patternProperties:
->      description: Dragino Technology Co., Limited
->    "^dserve,.*":
->      description: dServe Technology B.V.
-> +  "^dynament,.*":
-> +    description: Dynament, Ltd.
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebs-systart,.*":
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ae228ac7adc9..4842a0afe32b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
->  M:	YuDong Zhang <mtwget@gmail.com>
->  S:	Maintained
->  F:	drivers/iio/chemical/premier.c
-> +F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->  
->  DYNAMIC DEBUG
->  M:	Jason Baron <jbaron@akamai.com>
-> -- 
-> 2.24.1
-> 
+Changes in V2:
+    - fixed all the review comments in the driver, avoid ternery operator, inline & constant
+    - fixed/modifed review comments in Documentation
+
+This patch series add support for PMIC regulator driver for Monolithic
+Power System's MPQ7920 chipset. MPQ7920 provides support for 4-BUCK converter,
+one fixed voltage RTCLDO and 4-LDO regualtor, accessed over I2C.
+
+Saravanan Sekar (4):
+  dt-bindings: Add an entry for Monolithic Power System, MPS
+  dt-bindings: regulator: add document bindings for mpq7920
+  regulator: mpq7920: add mpq7920 regulator driver
+  MAINTAINERS: Add entry for mpq7920 PMIC driver
+
+ .../bindings/regulator/mpq7920.yaml           | 143 +++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mpq7920.c                   | 392 ++++++++++++++++++
+ drivers/regulator/mpq7920.h                   |  72 ++++
+ 7 files changed, 627 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+ create mode 100644 drivers/regulator/mpq7920.c
+ create mode 100644 drivers/regulator/mpq7920.h
+
+-- 
+2.17.1
+
