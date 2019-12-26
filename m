@@ -2,137 +2,91 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF5EC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50572C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C781208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+/E7sdI"
+	by mail.kernel.org (Postfix) with ESMTP id 2D63F2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfLZU0N (ORCPT
+        id S1726965AbfLZU2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 15:26:13 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44861 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZU0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 15:26:13 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so24467016wrm.11;
-        Thu, 26 Dec 2019 12:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9U7JTfD4fduXLjfQ1Xx2mG/4Nq5G+aypGi2uRZjCndQ=;
-        b=Y+/E7sdISgFCod6NdnHJW479g8MbWWiNgwWpI5rVpokct4dLSn3EClz4zxD5nUcwHG
-         849iZdjDWcPvqsDGib5WzIiUhGuLV+apNaE8wxvr6ziNcMBV04P+eNSrmZheHrP9KoN5
-         1f56JreZqERgJjZe2LLqBOpErT4GWmzWRSJapOT42TkPWV/3Nch5oKXTNI6qsQQJw59Q
-         /SD+GdekkD7sWS3z770vw6CkDlXPFk3WkuhXb23RpwdtmICcNf6wxMByJxP80Jo5J9kp
-         0QXxbYyDDSjx+3bMkRs9XA5u47uWRz2SYIF9gBE9sbvQScuTJXiC3PGYpDnBV72LD6QP
-         75xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9U7JTfD4fduXLjfQ1Xx2mG/4Nq5G+aypGi2uRZjCndQ=;
-        b=sM5XWbGwh/7bJGfRikfU/udgLvgul2dQ3PsmWuoGHldjpfaeF4bOnE3OdP2IcPSEBc
-         dZ5vRR5odWui31telM2zl9podv8TjcnBTwuqzxnvs2V9ImgnHpilv1TG02bG6xRMgS3V
-         S97AckqI4U+qZ4OkcApmr5sQn7I6DrYNak7Kuv2xq1FamwzzDgR6iZB4fbIQy7K6YXow
-         wcfCMDx7D/r4r8+UifwukB9ao8OKRsq6pVQ/PkQa3yKB26o1HrsroEsEYMMSfH8z7VXg
-         rAeMcXrVECVs09iMXAleUE3TwEKKqTFSKwER36jKo6xXVwkLlswP4awcBCG2oxD4jjWq
-         cV2g==
-X-Gm-Message-State: APjAAAXb1d9dcowY+vAvZldMfcj2uPbvWdriGYMcMrYf8PHl+RzCzS+I
-        vT6kqdJkzF4ncQ16pbIEfQmI9LPe
-X-Google-Smtp-Source: APXvYqwcuB8ziCCtYYFgDEUXH4mvcKEbxT76KLDcss6Q4USj5UvoJ3HbyoEmisuUoyobLrZHRGuolA==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr46714621wrq.176.1577391971163;
-        Thu, 26 Dec 2019 12:26:11 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id o129sm9470927wmb.1.2019.12.26.12.26.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 12:26:10 -0800 (PST)
-Date:   Thu, 26 Dec 2019 21:26:07 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-Message-ID: <20191226202607.GA9524@Red>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
- <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
- <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
- <20191226104419.GA26677@Red>
- <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
+        Thu, 26 Dec 2019 15:28:04 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:43686 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbfLZU2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 15:28:03 -0500
+Received: from [193.173.216.178] (helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ikZjg-0007qI-RB; Thu, 26 Dec 2019 21:27:56 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Kever Yang <kever.yang@rock-chips.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] Revert "rockchip: make sure timer7 is enabled on rk3288 platforms"
+Date:   Thu, 26 Dec 2019 21:27:45 +0100
+Message-ID: <1865524.AMUeMo0HA2@phil>
+In-Reply-To: <CAGb2v675A0fG9wHiJj_pkVQBmBFDf_u1L_dxiD9pT_8VBjujzw@mail.gmail.com>
+References: <20191225025908.25305-1-kever.yang@rock-chips.com> <CAGb2v675A0fG9wHiJj_pkVQBmBFDf_u1L_dxiD9pT_8VBjujzw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 08:47:47PM +0800, Frank Lee wrote:
-> On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
-> <clabbe.montjoie@gmail.com> wrote:
+Am Mittwoch, 25. Dezember 2019, 04:02:29 CET schrieb Chen-Yu Tsai:
+> On Wed, Dec 25, 2019 at 10:59 AM Kever Yang <kever.yang@rock-chips.com> wrote:
 > >
-> > On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
-> > > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
-> > > > On 19/12/2019 18:33, Maxime Ripard wrote:
-> > > > > Hi,
-> > > > >
-> > > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
-> > > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> > > > >> H6 and R40 SoCs.
-> > > > >
-> > > > > Thanks again for working on this.
-> > > > >
-> > > > > I'll merge the DT patches when the driver will have been merged.
-> > > >
-> > > > I've applied patches 1 & 2.
-> > > >
-> > > > They are in the testing branch and will go to the linux-next branch as
-> > > > soon as the kernelci passes.
-> > >
-> > > I just merged all the other patches (except the patch 6, for the H6,
-> > > as requested by Vasily on IRC).
-> > >
-> >
-> > Hello
-> >
-> > Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
-> > But it was failling due my fault (a failling build).
-> >
-> > So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
+> > This reverts commit 2a9fe3ca84afff6259820c4f62e579f41476becc.
+> > All the U-Boot version for rk3288 including mainline, rockchip
+> > legacy/next-dev, have init the timer7, so no need to init it in kernel
+> > again.
 > 
-> HI Corentin,
-> 
-> Although it is not calibrated, it should work on the R40. Can you give
-> my patch a try?
+> What about the ChromeOS bootloader?
+
+Coreboot does seem to start timer7 correctly:
+https://github.com/coreboot/coreboot/blob/master/src/soc/rockchip/rk3288/timer.c
+
+But old rk3288 Android TV-boxes do contain bootloaders not doing that and
+as the owners of such boxes will most often not have too great development
+tools available, that would break newer kernels for them, which is really bad
+as we value backwards compatibility very much.
+
+Instead (just checked theoretically) could we just check for psci existence?
+I.e. the calling order seems to be:
+
+start_kernel() (in init/main.c)
+	-> setup_arch()
+		-> psci_dt_init()
+			-> populates struct psci_ops
+	-> time_init()
+		-> machine_desc->init_time()
+
+so in rockchip_timer_init() you should "just" be able to check like
+
+	if (of_machine_is_compatible("rockchip,rk3288") && !psci_ops.cpu_on) {
+		/* timer init */
+	}
+
+
+Heiko
+
+> > One more reason is that if  we enable the trust for rk3288, then timer7 is
+> > not able to be accessed in kernel.
+> >
+> > Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 > 
 
-Hello
 
-It is planned, I will report the result.
 
-Regards
+
