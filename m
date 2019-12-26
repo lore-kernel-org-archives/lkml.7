@@ -7,88 +7,116 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F958C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6176DC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1995320882
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B10920740
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577387986;
-	bh=Brl7Oo2pJ3vPeukDemfVI1JG5nTIOneZws90P7czKb4=;
+	s=default; t=1577388141;
+	bh=h0usdPUBNffFSbR2BVkjJPeYhEAY6fsa3JYCRQEcRnE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rh0jcnFbsK73tXvlof3DEefISHka8tDApcXzxj9CHFw1qAqJFc00ptAt2iGbUU2+o
-	 41sk9byk3jUpZcOkTrcPbtkQC5lKdlh872Q0A75HFRTXK1l8eOUm03T9Qw7KVX0JI2
-	 8xN+QVIyESX2FmnRMVzTRsmbY4B9611W+aZK8PMI=
+	b=rc4a69tp8h50XGSKWO0t42Mr/U5MJxCvcer97/lAnt2jHJY/7DaxI+NHYcZHPIe3N
+	 qY6hxDXc95BgKO00Aa3XXxnxrQ+UvKoDk5SaeyEmWMF3vYISJEZHvBHqjYIfi+yNQZ
+	 LHuyjtrrONgPIpxwsoVpAgP5ARQ3T2KnqVSy1pdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbfLZTTp (ORCPT
+        id S1726935AbfLZTWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:19:45 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33380 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZTTo (ORCPT
+        Thu, 26 Dec 2019 14:22:20 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41111 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZTWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 14:19:44 -0500
-Received: by mail-il1-f193.google.com with SMTP id v15so20858540iln.0;
-        Thu, 26 Dec 2019 11:19:44 -0800 (PST)
+        Thu, 26 Dec 2019 14:22:20 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so20416254ioo.8;
+        Thu, 26 Dec 2019 11:22:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AqWJxAJe8Vgf4p53OHB9TkZmIbkYP+Pma79n+C2GBLc=;
-        b=bDbDPtaP+xY9RLPc7KU18sTMx141o5XL8ErAaaSqcla1z9nqc2XgOnBMHSd/dJ5GGq
-         l2eH3HuKbqd17ZYJXL0SvscAQMsAlsI6n2Up1G7rh5Pl5XUcHT3mDRy3w1a9iPpWO/As
-         FuhAPG011b1wdHXsZ4h3cxU4XaPEGoe4S5KCZ+jiUiPKNdq6jBVNmc1wYqffLHwxYCNY
-         4eNaK7wrrT2GS9s3Ywa1MFIwKFc6/s6/ug4gRVLNlvdRrUsN16l2RIsydpWPwVwse1Sn
-         2sffWOrRI79MwlEpW6vRKT3dlC++ypQZ5sXN3ozZKscBBendEdfds3g0fKrCGOhA36gF
-         8Ohg==
-X-Gm-Message-State: APjAAAUaZ/fChmXffgwYCqEoF3eWl5eB3MihNoZW4u0ekdGsB9VRysms
-        +AVkpe5MAzxV49+iBRAoBQ==
-X-Google-Smtp-Source: APXvYqzB6YGqCYlO6/M0ZHv5gof0FiLkRfYe1t/A15ZE+3JvhhyuAj2WMHUSJkh5iVeABFNEK6ImJg==
-X-Received: by 2002:a92:5a56:: with SMTP id o83mr37720479ilb.97.1577387984062;
-        Thu, 26 Dec 2019 11:19:44 -0800 (PST)
+        bh=R5ux+aGvRE7UtpZWNEHDpq3k2THh0opmzfMyK7lQA+4=;
+        b=hCDpSSLieOlbhG3SHdorTCIA19wv9VFFzfgKI0QhrVn8COMWCEV/+WOBsm0RdhQcgU
+         tC+S2PVEJsaObsFa0wxPWXKrZixMnaCV3qYiSQH/CBoP+MZgFtR8QvM0pqxzurro3KR+
+         C2gokJpNj6BDEG4dKIMth64lTzczX2x7eCLfypvtGX51clFnu02j/nbFcC6/xL/2xWfi
+         7Zwi1L39kC2BXWg1CFRHlxve0pjqo4IGQgQ8AB1MmDWJfRVEUUDbv5z8ENOsJXEOyn4z
+         FvDkhXkZ40rAVLRLci69UnGh9qmyYVgrHmTohrtcHVqZBtwOJ4pd8g9eBzkG0qIxZPBf
+         MOUg==
+X-Gm-Message-State: APjAAAXOOcui/iY7xHkcB4TDWzOYhThowj1jFLawMutEXKxcRNnfPspb
+        lc7OUoZlsZq6PrnWrdH57g==
+X-Google-Smtp-Source: APXvYqx2j8ZzstKCwh9JS77NHZuPA/MpsLy6K80JazDbIQ1Q8wufCtUxnmt94zLihf2RNl8QRxlb0w==
+X-Received: by 2002:a02:6558:: with SMTP id u85mr37591000jab.42.1577388139118;
+        Thu, 26 Dec 2019 11:22:19 -0800 (PST)
 Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m24sm8871530ioc.37.2019.12.26.11.19.43
+        by smtp.gmail.com with ESMTPSA id b145sm8844951iof.60.2019.12.26.11.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 11:19:43 -0800 (PST)
-Date:   Thu, 26 Dec 2019 12:19:42 -0700
+        Thu, 26 Dec 2019 11:22:18 -0800 (PST)
+Date:   Thu, 26 Dec 2019 12:22:17 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Qianggui Song <qianggui.song@amlogic.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: interrupt-controller: New binding
- for Meson-A1 SoCs
-Message-ID: <20191226191942.GA17451@bogus>
-References: <20191216123645.10099-1-qianggui.song@amlogic.com>
- <20191216123645.10099-2-qianggui.song@amlogic.com>
+To:     vincent.cheng.xh@renesas.com
+Cc:     mark.rutland@arm.com, richardcochran@gmail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] dt-bindings: ptp: Rename ptp-idtcm.yaml to
+ ptp-cm.yaml
+Message-ID: <20191226192217.GA17727@bogus>
+References: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1576558988-20837-2-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191216123645.10099-2-qianggui.song@amlogic.com>
+In-Reply-To: <1576558988-20837-2-git-send-email-vincent.cheng.xh@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Dec 2019 20:36:42 +0800, Qianggui Song wrote:
-> Update dt-binding document for GPIO interrupt controller of Meson-A1 SoCs
+On Tue, Dec 17, 2019 at 12:03:06AM -0500, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > 
-> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+> Renesas Electronics Corporation completed acquisition of IDT in 2019.
+> 
+> This patch removes IDT references or replaces IDT with Renesas.
+> Renamed ptp-idtcm.yaml to ptp-cm.yaml.
+> 
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > ---
->  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt    | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/ptp/ptp-cm.yaml  | 69 ++++++++++++++++++++++
+>  .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 69 ----------------------
+>  2 files changed, 69 insertions(+), 69 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-cm.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
 > 
+> +  compatible:
+> +    enum:
+> +      # For System Synchronizer
+> +      - renesas,8a34000
+> +      - renesas,8a34001
+> +      - renesas,8a34002
+> +      - renesas,8a34003
+> +      - renesas,8a34004
+> +      - renesas,8a34005
+> +      - renesas,8a34006
+> +      - renesas,8a34007
+> +      - renesas,8a34008
+> +      - renesas,8a34009
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+> -  compatible:
+> -    enum:
+> -      # For System Synchronizer
+> -      - idt,8a34000
+> -      - idt,8a34001
+> -      - idt,8a34002
+> -      - idt,8a34003
+> -      - idt,8a34004
+> -      - idt,8a34005
+> -      - idt,8a34006
+> -      - idt,8a34007
+> -      - idt,8a34008
+> -      - idt,8a34009
+
+NAK. You can't change this as it is an ABI.
+
+Rob
+
