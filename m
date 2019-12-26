@@ -2,61 +2,112 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AD3C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C973BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC8D2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95326206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="oW/XveMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbfLZUfr (ORCPT
+        id S1726954AbfLZUhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 15:35:47 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:57017 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZUfr (ORCPT
+        Thu, 26 Dec 2019 15:37:14 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55600 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZUhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 15:35:47 -0500
-Received: from [192.168.0.171] (188.147.97.8.nat.umts.dynamic.t-mobile.pl [188.147.97.8])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 239BDCECEC;
-        Thu, 26 Dec 2019 21:44:59 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH] Bluetooth: btbcm: Add missing static inline in header
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191226190340.116205-1-abhishekpandit@chromium.org>
-Date:   Thu, 26 Dec 2019 21:35:44 +0100
-Cc:     BlueZ <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <D2C723D9-663D-4026-A353-6DB7AF7AE995@holtmann.org>
-References: <20191226190340.116205-1-abhishekpandit@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Thu, 26 Dec 2019 15:37:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so5067662wmj.5;
+        Thu, 26 Dec 2019 12:37:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=llajuKPgaOsGAZ6hxa/EUEXLbYSF0qHLJQBA9/H47cY=;
+        b=oW/XveMrY7fe5BgQnxbWDFAdmRLzL34s6I+JDTYtT8TRs6ext70L0wuYi/+Vtfhd45
+         p99aaZp8WvB3IUsF09jM6FRejA5aZqbmUQPfEqA7hfIs69wsamf2BZWiOhUni2C/SLVb
+         DroTOrzmhzBXznCFPGZ903sH6HHNvidiSuV0NXecfwA70KkKc60JxEGg21o4y7U3iHoo
+         Q7zDTePknya/1fOgs6TMIOf82MU5Auee5qqrrrzIIbavbMBQWbbu/WHTN85vtN9SJqdS
+         hyeRaEbNItnY7nIsgz+Fl1sAAtKzv/lmtZz6u4WQyP2EbSuL3mBCs9H3gQ8KDvucVYf2
+         wpCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=llajuKPgaOsGAZ6hxa/EUEXLbYSF0qHLJQBA9/H47cY=;
+        b=GdqBoZAJy6Tn8JCrrA1rcYUraDH873+Om/rh0xAo60tGcTRr8+4cjGKWiwr7h9XCKc
+         RjiIytU9BalRTwqAOMxbV8qIQe0DVpQyo6uNX6RS7c1Ze4rvZno8ZUaCh5+uSLtHJMAz
+         2TU0+ZPscGPISqqFz6OJD+uRANlFW2pdH3At9LtNVv6ceHVlV6nfMExI27CH/3xCVCij
+         M4ywKwDo/OTiMS/mtJRA/1sL86H/QxtLv+u9NDHlXQIX+bj8Z60f3F9UkHqV/zRH6sjx
+         ZjQG6wxlLc7vlOvSdTvwqPolommh8Dl8dGo/I4OBoildN8e7ze7POTr08w0ZGfYNKe89
+         +jxA==
+X-Gm-Message-State: APjAAAXqfPG0I/tJcGzVceaiTALGCzZxb7+lPYlVmTH8Nc4Xcf50w4ln
+        SRpdUUAOBOfKBKO+THJbWLw=
+X-Google-Smtp-Source: APXvYqykOW8DBg++MEZzLBMV1jVOWJRZFOWwgqriD5aTx1V21CwR+2x7Bg2km6Aa9r9ts2qbHE2J7g==
+X-Received: by 2002:a1c:28d4:: with SMTP id o203mr15485931wmo.123.1577392631651;
+        Thu, 26 Dec 2019 12:37:11 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id q3sm32911665wrn.33.2019.12.26.12.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 12:37:10 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, jianxin.pan@amlogic.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC v1 0/2] dwmac-meson8b Ethernet RX delay configuration
+Date:   Thu, 26 Dec 2019 21:36:53 +0100
+Message-Id: <20191226203655.4046170-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+The Ethernet TX performance has been historically bad on Meson8b and
+Meson8m2 SoCs because high packet loss was seen. I found out that this
+was related (yet again) to the RGMII TX delay configuration.
+In the process of discussing the big picture (and not just a single
+patch) [0] with Andrew I discovered that the IP block behind the
+dwmac-meson8b driver actually seems to support the configuration of the
+RGMII RX delay (at least on the Meson8b SoC generation).
 
-> This fixes a double definition error when CONFIG_BT_BCM is not set.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> drivers/bluetooth/btbcm.h | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
+The goal of this series is to start the discussion around how to
+implement the RGMII RX delay on this IP block. Additionally it seems
+that the RX delay can also be applied for RMII PHYs?
 
-patch has been applied to bluetooth-next tree.
+@Jianxin: can you please add the Amlogic internal Ethernet team to this
+discussion? My questions are documented in the patch description of
+patch #2.
 
-Regards
+Dependencies: this series is based on my other series [1]
+"net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs"
 
-Marcel
+
+@David: please do NOT merge this series yet, it's only meant for
+discussion in it's current state!
+
+
+[0] https://patchwork.kernel.org/patch/11309891/
+[1] https://patchwork.kernel.org/patch/11310669/
+
+
+Martin Blumenstingl (2):
+  net: stmmac: dwmac-meson8b: use FIELD_PREP instead of open-coding it
+  net: stmmac: dwmac-meson8b: add support for the RX delay configuration
+
+ .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 60 ++++++++++---------
+ 1 file changed, 33 insertions(+), 27 deletions(-)
+
+-- 
+2.24.1
 
