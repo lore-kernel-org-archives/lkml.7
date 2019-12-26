@@ -2,104 +2,89 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89890C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9009C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B61206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aMxhyvbL"
+	by mail.kernel.org (Postfix) with ESMTP id 852BC206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577399431;
+	bh=P+0KcDQ/Yx8Nuk7b2278RkgOxU2ZsiTj9sOmnw3t0/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gw8dJz/fMASpj1yC9DM8SmNoF7EKhhAZh94ZiefvR1p37r4K8azE/V/rT0TQWY03O
+	 MFWL4kqzgfx/sINyVERXgiV4BbUYMC+gVVXsk3UYl0PGTMaEdTEk93/D+OGcjveU+4
+	 udsbl4zOC6ODgvY2GfbPDOGzTJyhq9GCZrlVaFhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfLZW34 (ORCPT
+        id S1727218AbfLZWaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:29:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34258 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfLZW3s (ORCPT
+        Thu, 26 Dec 2019 17:30:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34626 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZWaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:29:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so24686545wrr.1;
-        Thu, 26 Dec 2019 14:29:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
-        b=aMxhyvbL6kizu+9jCXYyLPOff9KQggKXtOu+n68QL2xUjCsPWuBnuGMKjz+o3h0h85
-         HdRkKvamoJN370gZ2FG6tZGJRczJNmWac5+fSClSwg8z64H7hDJE4+ZY1uZ3arKf4qAd
-         vSghnz6vnXVy+aRjlH8CBMMw5rhGWuTg3ZwJ/2Pf32Dt4QH3CLwfc6Hyq0z9Rd4wh11c
-         muExlaUl465cgOoduaYJ61A4AJJTN/XptyxKG3IP/s/8QQgeybslKy/rZj+CFPYqqGLQ
-         kuBxjAZNYOqij1eV4Kh3yFCsItW2jGi0MRkObXAs/oIon76GX2myngmrK2Z5OPXg37FL
-         At+w==
+        Thu, 26 Dec 2019 17:30:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id z193so24320366iof.1;
+        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
-        b=DyP79nWibCKJdFyau8Vh5ItbhaGeK7tmFAvHmNHWE8XnqN+xU30phP3YQ4sw1SbxVV
-         gAsfVyfL2HiYj3EV2OVdVOnNM2iBrQO9WnqzameUJtlMhy5pIXVFTXkdPe/BrfO238ec
-         B0NnibTzVC2kfT6isbW8njfUhAu87YwcoCyhRXeKC2XOYLsKY1gevpISvqTiKdbLxmzu
-         jbW2b2weAmt6iXhPR9QijgnItap9OdvtLAkd2WFzOLafPQVK9l8lMaSBt74MHjfTcMJO
-         wc52osoVCXOLrTonAdueCDfb9A3VxWj1KOzV8F/LqPlGEUa5d01Cpm0U7g1gDvCB08zj
-         3oMA==
-X-Gm-Message-State: APjAAAXtWvoVfkZamUh3VkDc5rnsC+TC5o8WTzsKf+N1EKO+gne3bpax
-        oIuKTnNjRfF7SZaNCBzSpac=
-X-Google-Smtp-Source: APXvYqzwN+PR7T0DBlSL3aYoPiqdEUnGMhN2rMUynlDSJkm1qIzruGiDVALIbw+NP0u/HM1JZlB5ow==
-X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr44168192wru.297.1577399386829;
-        Thu, 26 Dec 2019 14:29:46 -0800 (PST)
-Received: from localhost.localdomain (p5B3F7018.dip0.t-ipconnect.de. [91.63.112.24])
-        by smtp.gmail.com with ESMTPSA id j2sm9731276wmk.23.2019.12.26.14.29.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=oXj0egOLEipXvK+Cz50CdkjFGq0EgLBghdmBZ/5exkA=;
+        b=BaM0Kv9PitrssQO4/B6aM9d1d2nm86iTYsvEAFl43U2yJ+W7z2dteG4zllHXMzH+Gy
+         E9gpMYNbg1shBDkfqlqJNLXxt9BtgnjChgh8j/0DMLtX4RRPWvq0JJgWDxM5oC0zP3tj
+         HviaSLP8+HUEJ51IJSjmZJ6oBb2/qsMtYqohZNyL6zk8aYYPQBi3UvDGY8JbN1eiSTCs
+         JTx4LOpb4C7FfBDJkKJx97v8CC975hLm4L07JjEcIOCnO9vUks9t+kO0LL5A9cdgzRwD
+         jU5d1f+mTRbyC4gESq4AcGR4Tz7pmZj4mr96f6dLMUh2pvK8liwuQzcKLrWWx3CKjS6a
+         KC8A==
+X-Gm-Message-State: APjAAAXXmMeAtRHeeX/4OUGZMg6lIqgzwAS7qQTz/1T6grl1CFFnUjOB
+        TM1h5sevwPIFgWc0qZLlXg==
+X-Google-Smtp-Source: APXvYqybilZELhr0wxtYJ1otx4J19UA6rDSIOcsvRrEk+czzp4qNmJFh99eChtoX3LmtuL9hvrlJFg==
+X-Received: by 2002:a5e:8b06:: with SMTP id g6mr31032706iok.61.1577399429555;
+        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t88sm12617185ill.51.2019.12.26.14.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:29:46 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] MAINTAINERS: Add entry for mpq7920 PMIC driver
-Date:   Thu, 26 Dec 2019 23:29:30 +0100
-Message-Id: <20191226222930.8882-5-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191226222930.8882-1-sravanhome@gmail.com>
-References: <20191226222930.8882-1-sravanhome@gmail.com>
+        Thu, 26 Dec 2019 14:30:28 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:30:27 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mark.rutland@arm.com, paul@crapouillou.net, vkoul@kernel.org,
+        Zubair.Kakakhel@imgtec.com, dan.j.williams@intel.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 2374286503@qq.com
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add X1830 bindings.
+Message-ID: <20191226223027.GA29959@bogus>
+References: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for Monolithic Power Systems mpq7920 PMIC driver.
+On Tue, 17 Dec 2019 21:58:59 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
+> Add the dmaengine bindings for the X1830 Soc from Ingenic.
+> 
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+>  .../devicetree/bindings/dma/jz4780-dma.txt         |  6 ++--
+>  include/dt-bindings/dma/x1830-dma.h                | 39 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 2 deletions(-)
+>  create mode 100644 include/dt-bindings/dma/x1830-dma.h
+> 
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fd82e674cf4..8a31285b59c6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11128,6 +11128,13 @@ S:	Maintained
- F:	Documentation/driver-api/serial/moxa-smartio.rst
- F:	drivers/tty/mxser.*
- 
-+MONOLITHIC POWER SYSTEM PMIC DRIVER
-+M:	Saravanan Sekar <sravanhome@gmail.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
-+F:	drivers/regulator/mpq7920.c
-+F:	drivers/regulator/mpq7920.h
-+
- MR800 AVERMEDIA USB FM RADIO DRIVER
- M:	Alexey Klimov <klimov.linux@gmail.com>
- L:	linux-media@vger.kernel.org
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
