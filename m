@@ -2,176 +2,301 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163F0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86570C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E334120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:17:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bdk9f8SU"
+	by mail.kernel.org (Postfix) with ESMTP id 62D2F208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 18:45:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577385930;
+	bh=tL6CEkHTKhSkMFib2cuDMZLiaBeZxhznDznDa6MLrqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gkduM9cpbiLkd1Q+Li40jzTtkECwgb1SI6B2hS/MSqGIPExbkWTPYR4h5Tv3Axq9R
+	 orexATuiVi5FPn9piWwsB9A3zpSHu+2YC5mXqZpq8bR3wWhrjSV8Sx3DHzB897ByaS
+	 NYws5g3enG47YlNcOEYtO5uxoPbi1QXOcdSgZ3mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfLZSRU (ORCPT
+        id S1726809AbfLZSp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 13:17:20 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36770 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbfLZSRT (ORCPT
+        Thu, 26 Dec 2019 13:45:29 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32834 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfLZSp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 13:17:19 -0500
-Received: by mail-ed1-f67.google.com with SMTP id j17so23341889edp.3;
-        Thu, 26 Dec 2019 10:17:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/kVUvUUlIv+S4KgB8PAilg5eRolltdkQ40GkTlROLJs=;
-        b=bdk9f8SUF43t/ZpP5zxB4uQXnDLufOuMHu/wIWWmDxL7aVjosImu7uDnGwroYAo9hR
-         eJCnfI7jptFKeuPCfVOoo7DiYO5i6BKr4kO6hw5GyLhjfhklx2fPmTYgv6vRDCEfICc6
-         N3X3vUhbgwMXiacZqdUHI4AqL0uF0koIJCoO4qJCciRnbmP6Jx5g3AXukI/Fw4JQ/wAv
-         o4aL+uNzuC/mo44CJ2xatye3EAhKVbrD6a4UjOkCtB4+olUufm7vbM6mvjvPR9c991vv
-         jaTnyHZiCSrclPaFEMixAatFZ8y0GsfV++VqW1GaPDsCrplp7O/+sv4lIfufoL5CcUB6
-         HCRQ==
+        Thu, 26 Dec 2019 13:45:29 -0500
+Received: by mail-io1-f66.google.com with SMTP id z8so23908327ioh.0;
+        Thu, 26 Dec 2019 10:45:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/kVUvUUlIv+S4KgB8PAilg5eRolltdkQ40GkTlROLJs=;
-        b=bwfyVlAoOrRWq+cDkp9kZYWlhz9mL4OaCP9j7HNzb9K+hi6LLJ58fnVGDvzt6cpwGF
-         fScYdWLLSSrpYYQpek9WYSfdcANZKwysH9h8HVQLaGgvnR0oH6fwPNaTr8Lhnxs1nh/d
-         ZSGv/edPASV53Yx+uVVJxdbDNKF/8Adnhpu+KcMdNNkBwppL/D2WNkQwCbvfJBSklNmn
-         HqVrgJBSsvgstEsYfcl03lhpmxLiH1R1WzIhAgPahCwL5HzYDABMTBn7OdGERvQs2qCY
-         WHy0lAl/dBebWqzF45etgzePi1ZywNVHyeY0cJo3Qlw1qVh4/3lPmsnY7ZsZp1VwxUfU
-         4jjg==
-X-Gm-Message-State: APjAAAVudn+0q2f2JmMub2zjXdPAEAaHlco3PIiLKBtZlRMCouLAP7xb
-        DJ1NjU759/AsRGvWxAyktHybTf4XS8hVL0i3rE4=
-X-Google-Smtp-Source: APXvYqyIG6a7r9M4dZcMeoqoNvL9c1xsxC7MdJXKs8s6dyYvgPlDylAr5Jg+h9P+QsIDTu+cgoDJlTOe781mQBrq0i0=
-X-Received: by 2002:a17:906:260b:: with SMTP id h11mr49327361ejc.327.1577384236409;
- Thu, 26 Dec 2019 10:17:16 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=seNNxtSCY5PCaSndRDL3FP6aHUS8ClKGG6WAGLgdqN4=;
+        b=agFh0EaVoZpWBAB5sbjJecRFoz7lXwMOKm3sXb3AbEAq+x2REDyjEStoX2FzI4MY5X
+         8ggcuW6kQWLxvT1AUhsvFB8B8NJmEZtYNCEL6o6/YhcXP0XZ/vNgpTXsCzuPqZLfSws2
+         DbH5NHGQXEAw1XWA6HddLefzqm1AbgSHUxk/OpHZ1UMM6sUwZ4f8nWUcs/aTBDTpNNkR
+         BGm5G7zdEl16G9VUrROIqeMHeESMi3di7LDtB6MpnaCXvm3t1c+ftfAeGjvfc6fqG2rA
+         Z5iclBU3AFRNPMGUszJ70ubIz4m9zIjv19k+vUA3X4hVDX4/swSLls7GelvxumdDlAGG
+         N7fQ==
+X-Gm-Message-State: APjAAAW9QL2egsS7zvVM1LBBi2sTxfo81l3s+6UcLq2uysjJNjE2H+dt
+        rIIgRMQslX2JaMsXnVTUSA==
+X-Google-Smtp-Source: APXvYqx4a+2ZbSQn5pck8RmSH2U1pLL0lDa4l+CIZQSTvFSgSQJep4AGLUbj//ws+G+S6yfyMuxpIw==
+X-Received: by 2002:a5e:8505:: with SMTP id i5mr30406952ioj.158.1577385928163;
+        Thu, 26 Dec 2019 10:45:28 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id m189sm8649602ioa.17.2019.12.26.10.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 10:45:27 -0800 (PST)
+Date:   Thu, 26 Dec 2019 11:45:26 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
+        seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] dt-bindings: interconnect: Update Qualcomm SDM845
+ DT bindings
+Message-ID: <20191226184526.GA18040@bogus>
+References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
+ <1576475925-20601-2-git-send-email-daidavid1@codeaurora.org>
 MIME-Version: 1.0
-References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
- <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
- <20191225150845.GA16671@lunn.ch> <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
- <20191226105044.GC1480@lunn.ch> <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
- <20191226120133.GI1480@lunn.ch>
-In-Reply-To: <20191226120133.GI1480@lunn.ch>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 26 Dec 2019 19:17:05 +0100
-Message-ID: <CAFBinCC9KioCC8HzPOFm3x3ZjTiQm_gr-aemnziLnTN8Ets_+A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on
- Meson8b/8m2 SoCs
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
-        davem@davemloft.net, khilman@baylibre.com,
-        linus.luessing@c0d3.blue, balbes-150@yandex.ru,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ingrassia@epigenesys.com, jbrunet@baylibre.com,
-        Florian Fainelli <f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576475925-20601-2-git-send-email-daidavid1@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Sun, Dec 15, 2019 at 09:58:42PM -0800, David Dai wrote:
+> Redefine the Network-on-Chip devices to more accurately describe
+> the interconnect topology on Qualcomm's SDM845 platform. Each
+> interconnect device can communicate with different instances of the
+> RPMh hardware which are described as RSCs(Resource State Coordinators).
+> 
+> As part of updating the DT bindings, convert the existing sdm845 bindings
+> to DT schema format using json-schema.
 
-On Thu, Dec 26, 2019 at 1:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > the MAC is not capable of generating an RX delay (at least as far as I know).
->
-> So that immediately means rgmii is invalid as a phy-mode, since the
-> documentation implies the MAC needs to add RX delay.
-things turned out even more confusing thanks to your persistence (keep
-reading, it will get better though) :-)
+Too many things in one patch. Convert to schema in one patch and then 
+add new stuff in separate patch(es).
 
-I have tested the following on my Odroid-C1 which has an RTL8211F PHY.
-With patch #1 from this series I knew that the following was working:
-- phy-mode = "rgmii" and 2ns TX delay on the MAC (RX delay is
-seemingly not configured anywhere)
-- phy-mode = "rgmii-txid" (again, the RX delay is seemingly not
-configured anywhere)
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  .../bindings/interconnect/qcom,bcm-voter.yaml      |  45 +++++++++
+>  .../bindings/interconnect/qcom,sdm845.txt          |  24 -----
+>  .../bindings/interconnect/qcom,sdm845.yaml         | 108 +++++++++++++++++++++
+>  3 files changed, 153 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+> new file mode 100644
+> index 0000000..74f0715
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interconnect/qcom,bcm-voter.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm BCM-Voter Interconnect
+> +
+> +maintainers:
+> +  - David Dai <daidavid1@codeaurora.org>
+> +
+> +description: |
+> +    The Bus Clock Manager (BCM) is a dedicated hardware accelerator
+> +    that manages shared system resources by aggregating requests
+> +    from multiple Resource State Coordinators (RSC). Interconnect
+> +    providers are able to vote for aggregated thresholds values from
+> +    consumers by communicating through their respective RSCs.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sdm845-bcm-voter
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    apps_rsc: interconnect@179c0000 {
+> +        compatible = "qcom,rpmh-rsc";
+> +
+> +        apps_bcm_voter: bcm_voter {
+> +            compatible = "qcom,sdm845-bcm-voter";
+> +        };
+> +    };
+> +
+> +    disp_rsc: interconnect@179d0000 {
+> +        compatible = "qcom,rpmh-rsc";
+> +
+> +        disp_bcm_voter: bcm_voter {
+> +            compatible = "qcom,sdm845-bcm-voter";
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> deleted file mode 100644
+> index 5c4f1d9..0000000
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -Qualcomm SDM845 Network-On-Chip interconnect driver binding
+> ------------------------------------------------------------
+> -
+> -SDM845 interconnect providers support system bandwidth requirements through
+> -RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+> -able to communicate with the BCM through the Resource State Coordinator (RSC)
+> -associated with each execution environment. Provider nodes must reside within
+> -an RPMh device node pertaining to their RSC and each provider maps to a single
+> -RPMh resource.
+> -
+> -Required properties :
+> -- compatible : shall contain only one of the following:
+> -			"qcom,sdm845-rsc-hlos"
+> -- #interconnect-cells : should contain 1
+> -
+> -Examples:
+> -
+> -apps_rsc: rsc {
+> -	rsc_hlos: interconnect {
+> -		compatible = "qcom,sdm845-rsc-hlos";
+> -		#interconnect-cells = <1>;
+> -	};
+> -};
+> -
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> new file mode 100644
+> index 0000000..1aec321
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> @@ -0,0 +1,108 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title:  Qualcomm SDM845 Network-On-Chip Interconnect
+> +
+> +maintainers:
+> +  - David Dai <daidavid1@codeaurora.org>
+> +
+> +description: |
+> +   SDM845 interconnect providers support system bandwidth requirements through
+> +   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+> +   able to communicate with the BCM through the Resource State Coordinator (RSC)
+> +   associated with each execution environment. Provider nodes must point to at
+> +   least one RPMh device child node pertaining to their RSC and each provider
+> +   can map to multiple RPMh resources.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  compatible:
+> +    enum:
+> +      - qcom,sdm845-aggre1-noc
+> +      - qcom,sdm845-aggre2-noc
+> +      - qcom,sdm845-config-noc
+> +      - qcom,sdm845-dc-noc
+> +      - qcom,sdm845-gladiator-noc
+> +      - qcom,sdm845-mem-noc
+> +      - qcom,sdm845-mmss-noc
+> +      - qcom,sdm845-system-noc
+> +
+> +  '#interconnect-cells':
+> +    const: 1
+> +
+> +  qcom,bcm-voters:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      List of phandles to qcom,bcm-voter nodes that are required by
+> +      this interconnect to send RPMh commands.
+> +
+> +  qcom,bcm-voter-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
 
-with the patch to change the RX delay on the RTL8211F PHY I decided to
-try out phy-mode = "rgmii-id": this broke Ethernet.
-then I looked at the MAC registers and spotted that bits 13
-(adj_enable) and 14 (adj_setup) are set (first time I'm noticing
-this). unsetting them makes phy-mode = "rgmii-id" work!
-I also confirmed the opposite case: unsetting bit 13 and 14 breaks
-Ethernet with phy-mode = "rgmii-txid".
+Don't need a type for *-names.
 
-so it seems that there *is* a way to configure the RX delay on Meson8b
-and Meson8m2 SoCs (at least).
-I will spin up a RfC patch to discuss this with the Amlogic team and
-because I don't know what these bits do exactly
+> +    description: |
+> +      Names for each of the qcom,bcm-voters specified.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#interconnect-cells'
+> +  - qcom,bcm-voters
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/interconnect/qcom,sdm845.h>
+> +
+> +      mem_noc: interconnect@1380000 {
+> +             compatible = "qcom,sdm845-mem-noc";
+> +             reg = <0 0x01380000 0 0x27200>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      dc_noc: interconnect@14e0000 {
+> +             compatible = "qcom,sdm845-dc-noc";
+> +             reg = <0 0x014e0000 0 0x400>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      config_noc: interconnect@1500000 {
+> +             compatible = "qcom,sdm845-config-noc";
+> +             reg = <0 0x01500000 0 0x5080>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      system_noc: interconnect@1620000 {
+> +             compatible = "qcom,sdm845-system-noc";
+> +             reg = <0 0x01620000 0 0x18080>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      aggre1_noc: interconnect@16e0000 {
+> +             compatible = "qcom,sdm845-aggre1-noc";
+> +             reg = <0 0x016e0000 0 0xd080>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      aggre2_noc: interconnect@1700000 {
+> +             compatible = "qcom,sdm845-aggre2-noc";
+> +             reg = <0 0x01700000 0 0x3b100>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      mmss_noc: interconnect@1740000 {
+> +             compatible = "qcom,sdm845-mmss-noc";
+> +             reg = <0 0x01740000 0 0x1c1000>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
 
-> > it's mostly "broken" (high TX packet loss, slow TX speeds) for the two
-> > supported boards with an RGMII PHY (meson8b-odroidc1.dts and
-> > meson8m2-mxiii-plus.dts)
-> > examples on the many ways it was broken will follow - feel free to
-> > skip this part
->
-> That is actually good. If it never worked, we don't need to worry
-> about breaking it! We can spend our time getting this correct, and not
-> have to worry about backwards compatibility, etc.
-ACK
+Examples are just examples, not an enumeration of all possible nodes.
 
-> > > What we normally say is make the MAC add no delays, and pass the
-> > > correct configuration to the PHY so it adds the delay. But due to the
-> > > strapping pin on the rtl8211f, we are in a bit of a grey area. I would
-> > > suggest the MAC adds no delay, phy-mode is set to rmgii-id, the PHY
-> > > driver adds TX delay in software, we assume the strapping pin is set
-> > > to add RX delay, and we add a big fat comment in the DT.
-> > >
-> > > For the Micrel PHY, we do the same, plus add the vendor properties to
-> > > configure the clock skew.
-> > >
-> > > But as i said, we are in a bit of a grey area. We can consider other
-> > > options, but everything needs to be self consistent, between what the
-> > > MAC is doing, what the PHY is doing, and what phy-mode is set to in
-> > > DT.
->
-> > do you think it's worth the effort to get clarification from Realtek
-> > on the RX delay behavior (and whether there's a register to control
-> > it)?
->
-> You can ask. There are also datasheet here:
->
-> http://files.pine64.org/doc/datasheet/rock64/RTL8211F-CG-Realtek.pdf
-> https://datasheet.lcsc.com/szlcsc/1909021205_Realtek-Semicon-RTL8211F-CG_C187932.pdf
->
-> It looks like both RX and TX delay can be controlled via
-> strapping. But the register for controlling the TX delay is not
-> documented.
-I checked the mails I got from Realtek I while ago and they even
-included the RX delay bits!
-I even sent a patch two years ago but I must have dropped it at some
-point (maybe I assumed that it wasn't relevant anymore - I don't
-remember): [0]
+Also, when is qcom,bcm-voters more than 1 phandle.
 
-> > you mentioned that there was breakage earlier this year, so I'm not sure anymore
-> > (that leaves me thinking: asking them is still useful to get out of
-> > this grey area)
->
-> It was an Atheros PHY with breakage.
->
-> If we can fully control the RX and TX delays, that would be great. It
-> would also be useful if there was a way to determine how the PHY has
-> been strapped. If we cannot fully control the delays but we can find
-> out what delays it is using, we can check the requested configuration
-> against the strapped configuration, and warn if they are different.
-I am currently testing whether the pin strapping configuration can be
-read back by the RX and TX delay registers
-my Odroid-C1 has both strapped to GND which means off
-but my Khadas VIM2 has TX delay strapped to ETH_VDDIO which means on
-(RX delay is still strapped to GND)
-once I am done testing I will send patches for the RTL8211F PHY driver
-
-
-Martin
-
-
-[0] https://patchwork.ozlabs.org/patch/843946/
+Rob
