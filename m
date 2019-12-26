@@ -2,29 +2,29 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CCFC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED07C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AE02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF302075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfLZN7B (ORCPT
+        id S1726796AbfLZN7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:59:01 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41178 "EHLO huawei.com"
+        Thu, 26 Dec 2019 08:59:07 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8628 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLZN7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:59:00 -0500
+        id S1726597AbfLZN7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 08:59:06 -0500
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 17720E927BC04C10696D;
-        Thu, 26 Dec 2019 21:58:57 +0800 (CST)
+        by Forcepoint Email with ESMTP id 99B37949AB90627C46AF;
+        Thu, 26 Dec 2019 21:59:02 +0800 (CST)
 Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 26 Dec 2019 21:58:51 +0800
+ 14.3.439.0; Thu, 26 Dec 2019 21:58:53 +0800
 From:   Zengruan Ye <yezengruan@huawei.com>
 To:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -36,10 +36,12 @@ CC:     <yezengruan@huawei.com>, <maz@kernel.org>, <james.morse@arm.com>,
         <julien.thierry.kdev@gmail.com>, <catalin.marinas@arm.com>,
         <mark.rutland@arm.com>, <will@kernel.org>, <steven.price@arm.com>,
         <daniel.lezcano@linaro.org>
-Subject: [PATCH v2 0/6] KVM: arm64: VCPU preempted check support
-Date:   Thu, 26 Dec 2019 21:58:27 +0800
-Message-ID: <20191226135833.1052-1-yezengruan@huawei.com>
+Subject: [PATCH v2 2/6] KVM: arm64: Add SMCCC paravirtualised lock calls
+Date:   Thu, 26 Dec 2019 21:58:29 +0800
+Message-ID: <20191226135833.1052-3-yezengruan@huawei.com>
 X-Mailer: git-send-email 2.23.0.windows.1
+In-Reply-To: <20191226135833.1052-1-yezengruan@huawei.com>
+References: <20191226135833.1052-1-yezengruan@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -50,80 +52,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set aims to support the vcpu_is_preempted() functionality
-under KVM/arm64, which allowing the guest to obtain the VCPU is
-currently running or not. This will enhance lock performance on
-overcommitted hosts (more runnable VCPUs than physical CPUs in the
-system) as doing busy waits for preempted VCPUs will hurt system
-performance far worse than early yielding.
+Add two new SMCCC compatible hypercalls for PV lock features:
+  PV_LOCK_FEATURES:   0xC6000020
+  PV_LOCK_PREEMPTED:  0xC6000021
 
-We have observed some performace improvements in uninx benchmark tests.
+Also add the header file which defines the ABI for the paravirtualized
+lock features we're about to add.
 
-unix benchmark result:
-  host:  kernel 5.5.0-rc1, HiSilicon Kunpeng920, 8 CPUs
-  guest: kernel 5.5.0-rc1, 16 VCPUs
-
-               test-case                |    after-patch    |   before-patch
-----------------------------------------+-------------------+------------------
- Dhrystone 2 using register variables   | 334600751.0 lps   | 335319028.3 lps
- Double-Precision Whetstone             |     32856.1 MWIPS |     32849.6 MWIPS
- Execl Throughput                       |      3662.1 lps   |      2718.0 lps
- File Copy 1024 bufsize 2000 maxblocks  |    432906.4 KBps  |    158011.8 KBps
- File Copy 256 bufsize 500 maxblocks    |    116023.0 KBps  |     37664.0 KBps
- File Copy 4096 bufsize 8000 maxblocks  |   1432769.8 KBps  |    441108.8 KBps
- Pipe Throughput                        |   6405029.6 lps   |   6021457.6 lps
- Pipe-based Context Switching           |    185872.7 lps   |    184255.3 lps
- Process Creation                       |      4025.7 lps   |      3706.6 lps
- Shell Scripts (1 concurrent)           |      6745.6 lpm   |      6436.1 lpm
- Shell Scripts (8 concurrent)           |       998.7 lpm   |       931.1 lpm
- System Call Overhead                   |   3913363.1 lps   |   3883287.8 lps
-----------------------------------------+-------------------+------------------
- System Benchmarks Index Score          |      1835.1       |      1327.6
-
-Changes from v1:
-https://lore.kernel.org/lkml/20191217135549.3240-1-yezengruan@huawei.com/
- * Guest kernel no longer allocates the PV lock structure, instead it
-   is allocated by user space to avoid lifetime issues about kexec.
- * Provide VCPU attributes for PV lock.
- * Update SMC number of PV lock features.
- * Report some basic validation when PV lock init.
- * Document preempted field.
- * Bunch of typo fixes.
-
-Zengruan Ye (6):
-  KVM: arm64: Document PV-lock interface
-  KVM: arm64: Add SMCCC paravirtualised lock calls
-  KVM: arm64: Support pvlock preempted via shared structure
-  KVM: arm64: Provide VCPU attributes for PV lock
-  KVM: arm64: Add interface to support VCPU preempted check
-  KVM: arm64: Support the VCPU preemption check
-
- Documentation/virt/kvm/arm/pvlock.rst   |  63 ++++++++++++
- Documentation/virt/kvm/devices/vcpu.txt |  14 +++
- arch/arm/include/asm/kvm_host.h         |  18 ++++
- arch/arm64/include/asm/kvm_host.h       |  28 ++++++
- arch/arm64/include/asm/paravirt.h       |  15 +++
- arch/arm64/include/asm/pvlock-abi.h     |  16 ++++
- arch/arm64/include/asm/spinlock.h       |   7 ++
- arch/arm64/include/uapi/asm/kvm.h       |   2 +
- arch/arm64/kernel/Makefile              |   2 +-
- arch/arm64/kernel/paravirt-spinlocks.c  |  13 +++
- arch/arm64/kernel/paravirt.c            | 121 +++++++++++++++++++++++-
- arch/arm64/kernel/setup.c               |   2 +
- arch/arm64/kvm/Makefile                 |   1 +
- arch/arm64/kvm/guest.c                  |   9 ++
- include/linux/arm-smccc.h               |  14 +++
- include/linux/cpuhotplug.h              |   1 +
- include/uapi/linux/kvm.h                |   2 +
- virt/kvm/arm/arm.c                      |   8 ++
- virt/kvm/arm/hypercalls.c               |   8 ++
- virt/kvm/arm/pvlock.c                   | 103 ++++++++++++++++++++
- 20 files changed, 445 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/virt/kvm/arm/pvlock.rst
+Signed-off-by: Zengruan Ye <yezengruan@huawei.com>
+---
+ arch/arm64/include/asm/pvlock-abi.h | 16 ++++++++++++++++
+ include/linux/arm-smccc.h           | 14 ++++++++++++++
+ 2 files changed, 30 insertions(+)
  create mode 100644 arch/arm64/include/asm/pvlock-abi.h
- create mode 100644 arch/arm64/kernel/paravirt-spinlocks.c
- create mode 100644 virt/kvm/arm/pvlock.c
 
+diff --git a/arch/arm64/include/asm/pvlock-abi.h b/arch/arm64/include/asm/pvlock-abi.h
+new file mode 100644
+index 000000000000..06e0c3d7710a
+--- /dev/null
++++ b/arch/arm64/include/asm/pvlock-abi.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright(c) 2019 Huawei Technologies Co., Ltd
++ * Author: Zengruan Ye <yezengruan@huawei.com>
++ */
++
++#ifndef __ASM_PVLOCK_ABI_H
++#define __ASM_PVLOCK_ABI_H
++
++struct pvlock_vcpu_state {
++	__le64 preempted;
++	/* Structure must be 64 byte aligned, pad to that size */
++	u8 padding[56];
++} __packed;
++
++#endif
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index 59494df0f55b..3a5c6b35492f 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -46,6 +46,7 @@
+ #define ARM_SMCCC_OWNER_OEM		3
+ #define ARM_SMCCC_OWNER_STANDARD	4
+ #define ARM_SMCCC_OWNER_STANDARD_HYP	5
++#define ARM_SMCCC_OWNER_VENDOR_HYP	6
+ #define ARM_SMCCC_OWNER_TRUSTED_APP	48
+ #define ARM_SMCCC_OWNER_TRUSTED_APP_END	49
+ #define ARM_SMCCC_OWNER_TRUSTED_OS	50
+@@ -377,5 +378,18 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 			   ARM_SMCCC_OWNER_STANDARD_HYP,	\
+ 			   0x21)
+ 
++/* Paravirtualised lock calls */
++#define ARM_SMCCC_HV_PV_LOCK_FEATURES				\
++	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
++			   ARM_SMCCC_SMC_64,			\
++			   ARM_SMCCC_OWNER_VENDOR_HYP,		\
++			   0x20)
++
++#define ARM_SMCCC_HV_PV_LOCK_PREEMPTED				\
++	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
++			   ARM_SMCCC_SMC_64,			\
++			   ARM_SMCCC_OWNER_VENDOR_HYP,		\
++			   0x21)
++
+ #endif /*__ASSEMBLY__*/
+ #endif /*__LINUX_ARM_SMCCC_H*/
 -- 
 2.19.1
 
