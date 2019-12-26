@@ -2,251 +2,515 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9000CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCF3C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65847206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE1620740
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577395651;
+	bh=5Fmxp/YKTzh+dGgJOKExJGP6lDgdUYDXIb23qeYQRZ8=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=zS7roKdxmCskICbRnqu8A2tq1wEoyrbqIWvGyuPvIBmVq5aLEIEO9NAxZf0Y+GEDe
+	 2GF4/1W0XuEDwUg05iNQOwoW1JlNCCuyZ3C27ryQZ8n+lLO3+FkIyjRSJcncHeJ9ox
+	 TkhOl5rVKs4Lk5uEnawq1Zl/pSkWiqP1bp7HUI1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLZVZK (ORCPT
+        id S1726942AbfLZV1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 16:25:10 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33457 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfLZVZK (ORCPT
+        Thu, 26 Dec 2019 16:27:31 -0500
+Received: from mail-il1-f176.google.com ([209.85.166.176]:34846 "EHLO
+        mail-il1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZV1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 16:25:10 -0500
-Received: by mail-io1-f70.google.com with SMTP id i8so17617922ioi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:25:09 -0800 (PST)
+        Thu, 26 Dec 2019 16:27:30 -0500
+Received: by mail-il1-f176.google.com with SMTP id g12so21051711ild.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:27:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language;
+        bh=RJfOZVN3TcBH/XoG7lR9pBKxEzz5CfXs+3B1l1UJr7E=;
+        b=UqDWb8YVtmGQvN8GJubn52OpDj1ZVlmzR1rR7m12O3v2Po6DFFYswjVXchxBcFZGqO
+         EkYo4oRUNRDQcPEyTBIYrVJAPqUMXynsZrossTkvmtph/lfZFwT73MRkee0kItAgcNr6
+         Sww6/UHREE/RdgVk8aBstAO172+a5cYEk/x6Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8ZrbSLJoE/0RZS4DLSJov6nnyIw6Iqi+6lQYHCGgk+I=;
-        b=NXX5AVh1sA7wxGDYHaW8UWqk4kXjJVObP8jcRWlX0M2HoiesqLJhV5W9ttIA3pDJxU
-         Wz0YKpkRYXhBObZyeQNtw7eFoBQblDIxNkqpqaUyBnWaBracSaVlxVSYj8N8F7GOIoX3
-         ScajEz6keYUszaRBvT/7ha8QRegMq2t3MTQdm3mK5Hd8UGdSEcUdkVkhbHHeKG/YtUzG
-         ryOu/80qWUt/Q+hXOUUveRPwNZ4BOphgrYDDkcrtDLjzcIXI1y8urweCDdOGnBuGbgG7
-         Phoa7Jtio/VulF/niA+Y0NYYMknc4SRJQn4eSz/4R+TAA//LQKUQE364LMOwYolpJeio
-         2z9A==
-X-Gm-Message-State: APjAAAV8gibXw75W8xp0wxHpAdy5+yFMmPU9JuoEddgJUpJsKjNhCGf1
-        yyNPJEOnWsh6tH6W0RB/RIruYU/8NAq+V6OveiBZ6AgDtvr7
-X-Google-Smtp-Source: APXvYqyYQRL2CwPJ4BdRi56Er8MM1ohTatZXS8ZSvgqHxdkV3rcOxgNs1yyX/QDmSe/R9P/6U4kOD+F4kSgBCESoLFuc4pICdqUR
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language;
+        bh=RJfOZVN3TcBH/XoG7lR9pBKxEzz5CfXs+3B1l1UJr7E=;
+        b=ZXDw6ZPpnTeEhdNUrI/u26V1JXf/XxqFG+3QHjz314qwKN3TErFhEFHLpEL0hU0pGf
+         tDh7v+95kOWJsZ/D6fByef45RmBVQ72zESvs/aw/zpsTBhycpxwz6qU1Q0bUy0TAquBl
+         vkeFPXnNWdcGjBehtQf3FSY46whuh9Vhw6q5An9xSWH7RUsQR9iTvwBhT925XhYSPLr5
+         MCOhubhNkdYa4iq16x+Y+Go8zkG6VzFDS4hdvCip8MeIlEvM69Le/yYb9oSckelekSx+
+         ljjzPZLr5GoVlB9IW94adV25YfL0XFiqsrM5u3hPBycuuTqW4i2AkGh30XdXErd0cPip
+         6w/A==
+X-Gm-Message-State: APjAAAVKwctxs71uzsfUFvPds6APppMAmfTgQxXlMlMAjuzN6EsU3uVa
+        ro85ecoYlMizOLYeCLy+YWLVOA==
+X-Google-Smtp-Source: APXvYqzWUg2n2pN+z+v/hTdS+jwBFLs35CJTChgHy57q8YvMl088pnXweXzLfJcg0RE1LUxWbfuPJg==
+X-Received: by 2002:a92:838f:: with SMTP id p15mr40517033ilk.91.1577395649597;
+        Thu, 26 Dec 2019 13:27:29 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id z81sm11505744ilc.17.2019.12.26.13.27.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 13:27:28 -0800 (PST)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] Kselftest fixes update for Linux 5.5-rc4
+Message-ID: <ff093d74-a232-8dfc-d632-196a7a13b611@linuxfoundation.org>
+Date:   Thu, 26 Dec 2019 14:27:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c014:: with SMTP id u20mr28827749iol.43.1577395508935;
- Thu, 26 Dec 2019 13:25:08 -0800 (PST)
-Date:   Thu, 26 Dec 2019 13:25:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fb27f1059aa202ea@google.com>
-Subject: possible deadlock in pipe_lock (3)
-From:   syzbot <syzbot+217d60b447573313b211@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/mixed;
+ boundary="------------F2659E4A04661FD971CD5793"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This is a multi-part message in MIME format.
+--------------F2659E4A04661FD971CD5793
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot found the following crash on:
+Hi Linus,
 
-HEAD commit:    46cf053e Linux 5.5-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=167281c1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=217d60b447573313b211
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116496c1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10104649e00000
+Please pull the following Kselftest update for Linux 5.5-rc4.
 
-Bisection is inconclusive: the first bad commit could be any of:
+This Kselftest update for Linux 5.5-rc4 consists of:
 
-9211bfbf netfilter: add missing IS_ENABLED(CONFIG_BRIDGE_NETFILTER) checks  
-to header-file.
-47e640af netfilter: add missing IS_ENABLED(CONFIG_NF_TABLES) check to  
-header-file.
-a1b2f04e netfilter: add missing includes to a number of header-files.
-0abc8bf4 netfilter: add missing IS_ENABLED(CONFIG_NF_CONNTRACK) checks to  
-some header-files.
-bd96b4c7 netfilter: inline four headers files into another one.
-43dd16ef netfilter: nf_tables: store data in offload context registers
-78458e3e netfilter: add missing IS_ENABLED(CONFIG_NETFILTER) checks to some  
-header-files.
-20a9379d netfilter: remove "#ifdef __KERNEL__" guards from some headers.
-bd8699e9 netfilter: nft_bitwise: add offload support
-2a475c40 kbuild: remove all netfilter headers from header-test blacklist.
-7e59b3fe netfilter: remove unnecessary spaces
-1b90af29 ipvs: Improve robustness to the ipvs sysctl
-5785cf15 netfilter: nf_tables: add missing prototypes.
-0a30ba50 netfilter: nf_nat_proto: make tables static
-e84fb4b3 netfilter: conntrack: use shared sysctl constants
-10533343 netfilter: connlabels: prefer static lock initialiser
-8c0bb787 netfilter: synproxy: rename mss synproxy_options field
-c162610c Merge git://git.kernel.org/pub/scm/linux/kernel/git/pablo/nf-next
+-- rseq build failures fixes related to glibc 2.30 compatibility
+    from Mathieu Desnoyers
+-- Kunit fixes and cleanups from SeongJae Park
+-- Fixes to filesystems/epoll, firmware, and livepatch build failures
+    and skip handling.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=114c96c1e00000
+diff is attached.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+217d60b447573313b211@syzkaller.appspotmail.com
+thanks,
+-- Shuah
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-rc3-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor691/10028 is trying to acquire lock:
-ffff88809643c460 (&pipe->mutex/1){+.+.}, at: pipe_lock_nested fs/pipe.c:65  
-[inline]
-ffff88809643c460 (&pipe->mutex/1){+.+.}, at: pipe_lock+0x65/0x80  
-fs/pipe.c:73
+----------------------------------------------------------------
 
-but task is already holding lock:
-ffff888099382428 (sb_writers#4){.+.+}, at: file_start_write  
-include/linux/fs.h:2885 [inline]
-ffff888099382428 (sb_writers#4){.+.+}, at: do_splice+0xf48/0x1680  
-fs/splice.c:1169
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
 
-which lock already depends on the new lock.
+   Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
 
+are available in the Git repository at:
 
-the existing dependency chain (in reverse order) is:
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
+tags/linux-kselftest-5.5-rc4
 
--> #2 (sb_writers#4){.+.+}:
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        __sb_start_write+0x241/0x460 fs/super.c:1674
-        file_start_write include/linux/fs.h:2885 [inline]
-        ovl_write_iter+0x91b/0xc20 fs/overlayfs/file.c:277
-        call_write_iter include/linux/fs.h:1902 [inline]
-        new_sync_write+0x4d3/0x770 fs/read_write.c:483
-        __vfs_write+0xe1/0x110 fs/read_write.c:496
-        __kernel_write+0x11b/0x3b0 fs/read_write.c:515
-        write_pipe_buf+0x15d/0x1f0 fs/splice.c:809
-        splice_from_pipe_feed fs/splice.c:512 [inline]
-        __splice_from_pipe+0x3ee/0x7c0 fs/splice.c:636
-        splice_from_pipe+0x108/0x170 fs/splice.c:671
-        default_file_splice_write+0x3c/0x90 fs/splice.c:821
-        do_splice_from fs/splice.c:863 [inline]
-        do_splice+0xba4/0x1680 fs/splice.c:1170
-        __do_sys_splice fs/splice.c:1447 [inline]
-        __se_sys_splice fs/splice.c:1427 [inline]
-        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1427
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+for you to fetch changes up to 2a1f40adfb54ca65dc4c93bad444dd23b800a76e:
 
--> #1 (&ovl_i_mutex_key[depth]){+.+.}:
-        down_write+0x93/0x150 kernel/locking/rwsem.c:1534
-        inode_lock include/linux/fs.h:791 [inline]
-        ovl_write_iter+0x148/0xc20 fs/overlayfs/file.c:265
-        call_write_iter include/linux/fs.h:1902 [inline]
-        new_sync_write+0x4d3/0x770 fs/read_write.c:483
-        __vfs_write+0xe1/0x110 fs/read_write.c:496
-        __kernel_write+0x11b/0x3b0 fs/read_write.c:515
-        write_pipe_buf+0x15d/0x1f0 fs/splice.c:809
-        splice_from_pipe_feed fs/splice.c:512 [inline]
-        __splice_from_pipe+0x3ee/0x7c0 fs/splice.c:636
-        splice_from_pipe+0x108/0x170 fs/splice.c:671
-        default_file_splice_write+0x3c/0x90 fs/splice.c:821
-        do_splice_from fs/splice.c:863 [inline]
-        do_splice+0xba4/0x1680 fs/splice.c:1170
-        __do_sys_splice fs/splice.c:1447 [inline]
-        __se_sys_splice fs/splice.c:1427 [inline]
-        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1427
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+   rseq/selftests: Clarify rseq_prepare_unload() helper requirements 
+(2019-12-23 10:52:41 -0700)
 
--> #0 (&pipe->mutex/1){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-        pipe_lock_nested fs/pipe.c:65 [inline]
-        pipe_lock+0x65/0x80 fs/pipe.c:73
-        iter_file_splice_write+0x18b/0xc10 fs/splice.c:709
-        do_splice_from fs/splice.c:863 [inline]
-        do_splice+0xba4/0x1680 fs/splice.c:1170
-        __do_sys_splice fs/splice.c:1447 [inline]
-        __se_sys_splice fs/splice.c:1427 [inline]
-        __x64_sys_splice+0x2c6/0x330 fs/splice.c:1427
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+----------------------------------------------------------------
+linux-kselftest-5.5-rc4
 
-other info that might help us debug this:
+This Kselftest update for Linux 5.5-rc4 consists of:
 
-Chain exists of:
-   &pipe->mutex/1 --> &ovl_i_mutex_key[depth] --> sb_writers#4
+-- rseq build failures fixes related to glibc 2.30 compatibility
+    from Mathieu Desnoyers
+-- Kunit fixes and cleanups from SeongJae Park
+-- Fixes to filesystems/epoll, firmware, and livepatch build failures
+    and skip handling.
 
-  Possible unsafe locking scenario:
+----------------------------------------------------------------
+Mathieu Desnoyers (3):
+       rseq/selftests: Turn off timeout setting
+       rseq/selftests: Fix: Namespace gettid() for compatibility with 
+glibc 2.30
+       rseq/selftests: Clarify rseq_prepare_unload() helper requirements
 
-        CPU0                    CPU1
-        ----                    ----
-   lock(sb_writers#4);
-                                lock(&ovl_i_mutex_key[depth]);
-                                lock(sb_writers#4);
-   lock(&pipe->mutex/1);
+SeongJae Park (6):
+       docs/kunit/start: Use in-tree 'kunit_defconfig'
+       kunit: Remove duplicated defconfig creation
+       kunit: Create default config in '--build_dir'
+       kunit: Place 'test.log' under the 'build_dir'
+       kunit: Rename 'kunitconfig' to '.kunitconfig'
+       kunit/kunit_tool_test: Test '--build_dir' option run
 
-  *** DEADLOCK ***
+Shuah Khan (3):
+       selftests: filesystems/epoll: fix build error
+       selftests: firmware: Fix it to do root uid check and skip
+       selftests: livepatch: Fix it to do root uid check and skip
 
-1 lock held by syz-executor691/10028:
-  #0: ffff888099382428 (sb_writers#4){.+.+}, at: file_start_write  
-include/linux/fs.h:2885 [inline]
-  #0: ffff888099382428 (sb_writers#4){.+.+}, at: do_splice+0xf48/0x1680  
-fs/splice.c:1169
+  Documentation/dev-tools/kunit/start.rst            | 13 +++++--------
+  tools/testing/kunit/kunit.py                       | 18 +++++++++++-------
+  tools/testing/kunit/kunit_kernel.py                | 10 +++++-----
+  tools/testing/kunit/kunit_tool_test.py             | 10 +++++++++-
+  tools/testing/selftests/filesystems/epoll/Makefile |  2 +-
+  tools/testing/selftests/firmware/fw_lib.sh         |  6 ++++++
+  tools/testing/selftests/livepatch/functions.sh     | 15 ++++++++++++++-
+  tools/testing/selftests/livepatch/test-state.sh    |  3 +--
+  tools/testing/selftests/rseq/param_test.c          | 18 ++++++++++--------
+  tools/testing/selftests/rseq/rseq.h                | 12 +++++++-----
+  tools/testing/selftests/rseq/settings              |  1 +
+  11 files changed, 70 insertions(+), 38 deletions(-)
+  create mode 100644 tools/testing/selftests/rseq/settings
 
-stack backtrace:
-CPU: 1 PID: 10028 Comm: syz-executor691 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  pipe_lock_nested fs/pipe.c:65 [inline]
-  pipe_lock+0x65/0x80 fs/pipe.c:73
-  iter_file_splice_write+0x18b/0xc10 fs/splice.c:709
-  do_splice_from fs/splice.c:863 [inline]
-  do_splice+0xba4/0x1680 fs/splice.c:1170
-  __do_sys_splice fs/splice.c:1447 [inline]
-  __se_sys_splice fs/splice.c:1427 [inline]
-  __x64_sys_splice+0x2c6/0x330 fs/splice.c:1427
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x448059
-Code: e8 6c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 db 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6e364e9da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
-RAX: ffffffffffffffda RBX: 00000000006ddc28 RCX: 0000000000448059
-RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 00000000006ddc20 R08: 0000000100000002 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006ddc2c
-R13: 00007ffdf34111cf R14: 00007f6e364ea9c0 R15: 00000000006ddc2c
+----------------------------------------------------------------
 
+--------------F2659E4A04661FD971CD5793
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-kselftest-5.5-rc4.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-kselftest-5.5-rc4.diff"
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+index 9d6db892c41c..4e1d24db6b13 100644
+--- a/Documentation/dev-tools/kunit/start.rst
++++ b/Documentation/dev-tools/kunit/start.rst
+@@ -24,19 +24,16 @@ The wrapper can be run with:
+ For more information on this wrapper (also called kunit_tool) checkout the
+ :doc:`kunit-tool` page.
+ 
+-Creating a kunitconfig
+-======================
++Creating a .kunitconfig
++=======================
+ The Python script is a thin wrapper around Kbuild. As such, it needs to be
+-configured with a ``kunitconfig`` file. This file essentially contains the
++configured with a ``.kunitconfig`` file. This file essentially contains the
+ regular Kernel config, with the specific test targets as well.
+ 
+ .. code-block:: bash
+ 
+-	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
+ 	cd $PATH_TO_LINUX_REPO
+-	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
+-
+-You may want to add kunitconfig to your local gitignore.
++	cp arch/um/configs/kunit_defconfig .kunitconfig
+ 
+ Verifying KUnit Works
+ ---------------------
+@@ -151,7 +148,7 @@ and the following to ``drivers/misc/Makefile``:
+ 
+ 	obj-$(CONFIG_MISC_EXAMPLE_TEST) += example-test.o
+ 
+-Now add it to your ``kunitconfig``:
++Now add it to your ``.kunitconfig``:
+ 
+ .. code-block:: none
+ 
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index efe06d621983..e59eb9e7f923 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -31,15 +31,12 @@ class KunitStatus(Enum):
+ 	TEST_FAILURE = auto()
+ 
+ def create_default_kunitconfig():
+-	if not os.path.exists(kunit_kernel.KUNITCONFIG_PATH):
++	if not os.path.exists(kunit_kernel.kunitconfig_path):
+ 		shutil.copyfile('arch/um/configs/kunit_defconfig',
+-				kunit_kernel.KUNITCONFIG_PATH)
++				kunit_kernel.kunitconfig_path)
+ 
+ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	      request: KunitRequest) -> KunitResult:
+-	if request.defconfig:
+-		create_default_kunitconfig()
+-
+ 	config_start = time.time()
+ 	success = linux.build_reconfig(request.build_dir)
+ 	config_end = time.time()
+@@ -108,15 +105,22 @@ def main(argv, linux=None):
+ 	run_parser.add_argument('--build_dir',
+ 				help='As in the make command, it specifies the build '
+ 				'directory.',
+-				type=str, default=None, metavar='build_dir')
++				type=str, default='', metavar='build_dir')
+ 
+ 	run_parser.add_argument('--defconfig',
+-				help='Uses a default kunitconfig.',
++				help='Uses a default .kunitconfig.',
+ 				action='store_true')
+ 
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
++		if cli_args.build_dir:
++			if not os.path.exists(cli_args.build_dir):
++				os.mkdir(cli_args.build_dir)
++			kunit_kernel.kunitconfig_path = os.path.join(
++				cli_args.build_dir,
++				kunit_kernel.kunitconfig_path)
++
+ 		if cli_args.defconfig:
+ 			create_default_kunitconfig()
+ 
+diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+index bf3876835331..cc5d844ecca1 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -14,7 +14,7 @@ import os
+ import kunit_config
+ 
+ KCONFIG_PATH = '.config'
+-KUNITCONFIG_PATH = 'kunitconfig'
++kunitconfig_path = '.kunitconfig'
+ 
+ class ConfigError(Exception):
+ 	"""Represents an error trying to configure the Linux kernel."""
+@@ -82,7 +82,7 @@ class LinuxSourceTree(object):
+ 
+ 	def __init__(self):
+ 		self._kconfig = kunit_config.Kconfig()
+-		self._kconfig.read_from_file(KUNITCONFIG_PATH)
++		self._kconfig.read_from_file(kunitconfig_path)
+ 		self._ops = LinuxSourceTreeOperations()
+ 
+ 	def clean(self):
+@@ -111,7 +111,7 @@ class LinuxSourceTree(object):
+ 		return True
+ 
+ 	def build_reconfig(self, build_dir):
+-		"""Creates a new .config if it is not a subset of the kunitconfig."""
++		"""Creates a new .config if it is not a subset of the .kunitconfig."""
+ 		kconfig_path = get_kconfig_path(build_dir)
+ 		if os.path.exists(kconfig_path):
+ 			existing_kconfig = kunit_config.Kconfig()
+@@ -140,10 +140,10 @@ class LinuxSourceTree(object):
+ 			return False
+ 		return True
+ 
+-	def run_kernel(self, args=[], timeout=None, build_dir=None):
++	def run_kernel(self, args=[], timeout=None, build_dir=''):
+ 		args.extend(['mem=256M'])
+ 		process = self._ops.linux_bin(args, timeout, build_dir)
+-		with open('test.log', 'w') as f:
++		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
+ 			for line in process.stdout:
+ 				f.write(line.rstrip().decode('ascii') + '\n')
+ 				yield line.rstrip().decode('ascii')
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index a2a8ea6beae3..cba97756ac4a 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -174,6 +174,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		kunit.main(['run'], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+ 		assert self.linux_source_mock.run_kernel.call_count == 1
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
+ 	def test_run_passes_args_fail(self):
+@@ -199,7 +200,14 @@ class KUnitMainTest(unittest.TestCase):
+ 		timeout = 3453
+ 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
+ 		assert self.linux_source_mock.build_reconfig.call_count == 1
+-		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=None, timeout=timeout)
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
++		self.print_mock.assert_any_call(StrContains('Testing complete.'))
++
++	def test_run_builddir(self):
++		build_dir = '.kunit'
++		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 1
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
+ if __name__ == '__main__':
+diff --git a/tools/testing/selftests/filesystems/epoll/Makefile b/tools/testing/selftests/filesystems/epoll/Makefile
+index e62f3d4f68da..78ae4aaf7141 100644
+--- a/tools/testing/selftests/filesystems/epoll/Makefile
++++ b/tools/testing/selftests/filesystems/epoll/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ CFLAGS += -I../../../../../usr/include/
+-LDFLAGS += -lpthread
++LDLIBS += -lpthread
+ TEST_GEN_PROGS := epoll_wakeup_test
+ 
+ include ../../lib.mk
+diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
+index b879305a766d..5b8c0fedee76 100755
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -34,6 +34,12 @@ test_modprobe()
+ 
+ check_mods()
+ {
++	local uid=$(id -u)
++	if [ $uid -ne 0 ]; then
++		echo "skip all tests: must be run as root" >&2
++		exit $ksft_skip
++	fi
++
+ 	trap "test_modprobe" EXIT
+ 	if [ ! -d $DIR ]; then
+ 		modprobe test_firmware
+diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+index 31eb09e38729..a6e3d5517a6f 100644
+--- a/tools/testing/selftests/livepatch/functions.sh
++++ b/tools/testing/selftests/livepatch/functions.sh
+@@ -7,6 +7,9 @@
+ MAX_RETRIES=600
+ RETRY_INTERVAL=".1"	# seconds
+ 
++# Kselftest framework requirement - SKIP code is 4
++ksft_skip=4
++
+ # log(msg) - write message to kernel log
+ #	msg - insightful words
+ function log() {
+@@ -18,7 +21,16 @@ function log() {
+ function skip() {
+ 	log "SKIP: $1"
+ 	echo "SKIP: $1" >&2
+-	exit 4
++	exit $ksft_skip
++}
++
++# root test
++function is_root() {
++	uid=$(id -u)
++	if [ $uid -ne 0 ]; then
++		echo "skip all tests: must be run as root" >&2
++		exit $ksft_skip
++	fi
+ }
+ 
+ # die(msg) - game over, man
+@@ -62,6 +74,7 @@ function set_ftrace_enabled() {
+ #		 for verbose livepatching output and turn on
+ #		 the ftrace_enabled sysctl.
+ function setup_config() {
++	is_root
+ 	push_config
+ 	set_dynamic_debug
+ 	set_ftrace_enabled 1
+diff --git a/tools/testing/selftests/livepatch/test-state.sh b/tools/testing/selftests/livepatch/test-state.sh
+index dc2908c22c26..a08212708115 100755
+--- a/tools/testing/selftests/livepatch/test-state.sh
++++ b/tools/testing/selftests/livepatch/test-state.sh
+@@ -8,8 +8,7 @@ MOD_LIVEPATCH=test_klp_state
+ MOD_LIVEPATCH2=test_klp_state2
+ MOD_LIVEPATCH3=test_klp_state3
+ 
+-set_dynamic_debug
+-
++setup_config
+ 
+ # TEST: Loading and removing a module that modifies the system state
+ 
+diff --git a/tools/testing/selftests/rseq/param_test.c b/tools/testing/selftests/rseq/param_test.c
+index eec2663261f2..e8a657a5f48a 100644
+--- a/tools/testing/selftests/rseq/param_test.c
++++ b/tools/testing/selftests/rseq/param_test.c
+@@ -15,7 +15,7 @@
+ #include <errno.h>
+ #include <stddef.h>
+ 
+-static inline pid_t gettid(void)
++static inline pid_t rseq_gettid(void)
+ {
+ 	return syscall(__NR_gettid);
+ }
+@@ -373,11 +373,12 @@ void *test_percpu_spinlock_thread(void *arg)
+ 		rseq_percpu_unlock(&data->lock, cpu);
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -454,11 +455,12 @@ void *test_percpu_inc_thread(void *arg)
+ 		} while (rseq_unlikely(ret));
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -605,7 +607,7 @@ void *test_percpu_list_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -796,7 +798,7 @@ void *test_percpu_buffer_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -1011,7 +1013,7 @@ void *test_percpu_memcpy_buffer_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
+index d40d60e7499e..3f63eb362b92 100644
+--- a/tools/testing/selftests/rseq/rseq.h
++++ b/tools/testing/selftests/rseq/rseq.h
+@@ -149,11 +149,13 @@ static inline void rseq_clear_rseq_cs(void)
+ /*
+  * rseq_prepare_unload() should be invoked by each thread executing a rseq
+  * critical section at least once between their last critical section and
+- * library unload of the library defining the rseq critical section
+- * (struct rseq_cs). This also applies to use of rseq in code generated by
+- * JIT: rseq_prepare_unload() should be invoked at least once by each
+- * thread executing a rseq critical section before reclaim of the memory
+- * holding the struct rseq_cs.
++ * library unload of the library defining the rseq critical section (struct
++ * rseq_cs) or the code referred to by the struct rseq_cs start_ip and
++ * post_commit_offset fields. This also applies to use of rseq in code
++ * generated by JIT: rseq_prepare_unload() should be invoked at least once by
++ * each thread executing a rseq critical section before reclaim of the memory
++ * holding the struct rseq_cs or reclaim of the code pointed to by struct
++ * rseq_cs start_ip and post_commit_offset fields.
+  */
+ static inline void rseq_prepare_unload(void)
+ {
+diff --git a/tools/testing/selftests/rseq/settings b/tools/testing/selftests/rseq/settings
+new file mode 100644
+index 000000000000..e7b9417537fb
+--- /dev/null
++++ b/tools/testing/selftests/rseq/settings
+@@ -0,0 +1 @@
++timeout=0
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--------------F2659E4A04661FD971CD5793--
