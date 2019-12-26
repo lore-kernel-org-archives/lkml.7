@@ -2,93 +2,126 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA3C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 23:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 23:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAB520828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 23:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577402915;
-	bh=F3/Ek4N4te2eL9z//SOg2cSdKzvAfzjszj/humNu0EM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fF2SzoARcO5Sy6h+hEte9pz6DorYavh6MRypeEs/azjc1WbwT24JhTp7hMtUPpyhG
-	 /AEsgypjJWe4T7pNEMFqFtdT4pF8eiBwzszzY0QPzGCw5mYthsszDe2ikudBgkPJpM
-	 hoXCgZeb7zN4PT4DGeicNsKZQAkeBFbQW+zy3Oo8=
+	by mail.kernel.org (Postfix) with ESMTP id 1132C2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 23:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Z1hFH9rK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfLZX2e (ORCPT
+        id S1727072AbfLZX3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 18:28:34 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35478 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfLZX2d (ORCPT
+        Thu, 26 Dec 2019 18:29:24 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40629 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbfLZX3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 18:28:33 -0500
-Received: by mail-io1-f66.google.com with SMTP id v18so24442491iol.2;
-        Thu, 26 Dec 2019 15:28:33 -0800 (PST)
+        Thu, 26 Dec 2019 18:29:24 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so13552700pgt.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 15:29:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:mime-version:subject:from:in-reply-to:cc
+         :date:message-id:references:to;
+        bh=TQuMyWny8hWtt1MLws74+aMtByUKKMivFY0g2eakkkM=;
+        b=Z1hFH9rKZoZVwN3HFABEulLkhJJQHdiQ9hXRKpwuucZ8oG4skzgbM1MInEaAM2oNf+
+         Js5I7My4bwh77VhB1FOv4YRNewAKZBDq83zP6m5WXz9Gz9op6r1zchEnoHBIU3/KOXku
+         S5hPxMZ9EpYLYmGPFg3/4umrLgkYcFRiQK2tlvvVPAc3oVRzHjN9OOnxrFqtVcIshTqq
+         jSf0Dt13GHR605MmbOGp0lYTSrdB7dsYwjmOGmLPh5UWKl2uob+KPehVM0r50uzAuJc8
+         VKPPmoyBnPXN7sPihO7YiI3kCULqFDwq8UXURIpE0nwwpCSG6cgjKsbBgfdymzC1Z1Ay
+         arEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P9UdJ2EHCBfkgfAjYdg3N8nSpHkPs/odiwnqsSsf3dg=;
-        b=IR1xiXm03mGYQP1A57mKeXDq8PpZf6rQ74VhMT6wHpWeKL650gNYkYeeTkG2qEypdP
-         6KMVfmmLRow3tARj2tWTMydLrMj0FTq+MOvqeTpd00n2odd53I9/sY42hDhnY35Je1ee
-         r5qxTz1sjJP84FPlx/Uo7PGPC8L93ajK47DLV4qt79GbcKMPLnX/KZ0p2flwwDDeBlJ6
-         3l9NCOjYBJ2Ku3KS1dhMyJ+QMlg1Oy6biaKS+l7OJMX6aQMyz4+vsWK7ptUr8hAgHMrr
-         e5WWLK9oEuf6e3UOpjpjNSLQ8Pzl5nLvBnUtDawAyN9pjfRTuhJhA2GbPoFGaWvfMHRK
-         wesw==
-X-Gm-Message-State: APjAAAXixT/uFXe8XxFMP2cBuvTrAVZpip6KNJj7gYMVD3zDPyxc4dIS
-        WJYNmW+G4zwL3hDOVqkotA==
-X-Google-Smtp-Source: APXvYqzCdBBCz4heOHZ1/P78xQ3mabWQ4T11IcgNKpy4cZMKFSpw5EpztaTxRlx7ILKDEPxJChsm6w==
-X-Received: by 2002:a6b:7201:: with SMTP id n1mr29057420ioc.37.1577402912865;
-        Thu, 26 Dec 2019 15:28:32 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id a7sm8946258iod.61.2019.12.26.15.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 15:28:32 -0800 (PST)
-Date:   Thu, 26 Dec 2019 16:28:31 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     dri-devel@lists.freedesktop.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, maxime@cerno.tech, sam@ravnborg.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v4 2/3] dt-bindings: display: panel: Add binding document
- for  Leadtek LTK500HD1829
-Message-ID: <20191226232831.GA7084@bogus>
-References: <20191224112641.30647-1-heiko@sntech.de>
- <20191224112641.30647-2-heiko@sntech.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224112641.30647-2-heiko@sntech.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:content-transfer-encoding:mime-version:subject
+         :from:in-reply-to:cc:date:message-id:references:to;
+        bh=TQuMyWny8hWtt1MLws74+aMtByUKKMivFY0g2eakkkM=;
+        b=X2xskXDFGcKdeP1cjFBnuuBgJcyZEFjhNvm477XbGTzo1yv3zv7wKwfUlhdS/0JzsX
+         dL5/hJueyyluwLg/TfxKAFE1Ob4PcMcRLuP3E1fynpL38p/xmGOyOYGOIxI6DRtXT007
+         ZT7Qh9pj2rPaalPLly6Nr4VLZTUHgd2uO/Wd8xOdCEvU7sEvfHbAF295Vb/9glTMkTMX
+         z/Ar0/a3VyJuSzvwmn2EfJ3a4y9A/3PG7h3hnf5C2Vf8SPVYqoeUUVa+YzA5ZfXmbbBG
+         M+Z+UUjqYOHCwTvYJPSYekJ0c8lR6tqTwAbNpJXUv1tvFTjVsGJG24ha/lfaq2QEZA1u
+         Zlkg==
+X-Gm-Message-State: APjAAAUDRzIAqzgnFh8WtLUtHQ0Bul44vq9OFu9sVBkMZ78pbEhXWi/U
+        WeAUtrrQT9f5dqQyI26Yfe1l9g==
+X-Google-Smtp-Source: APXvYqw168U7pDuIAoJqCk32EI3yv82F+VAtM7+4RMaW9dlE9+1qYIzcTdTB4z9/E6MkxcZHX7Joiw==
+X-Received: by 2002:a63:1a19:: with SMTP id a25mr52030190pga.447.1577402963260;
+        Thu, 26 Dec 2019 15:29:23 -0800 (PST)
+Received: from [192.168.0.9] (114-27-11-154.dynamic-ip.hinet.net. [114.27.11.154])
+        by smtp.gmail.com with ESMTPSA id l2sm11776754pjt.31.2019.12.26.15.29.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 15:29:22 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+From:   Andy Lutomirski <luto@amacapital.net>
+In-Reply-To: <20191226140423.GB3158@mit.edu>
+Cc:     Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Date:   Fri, 27 Dec 2019 07:29:20 +0800
+Message-Id: <26B7EEAE-1166-4B45-9534-E00C5B2767C1@amacapital.net>
+References: <20191226140423.GB3158@mit.edu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Dec 2019 12:26:40 +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The LTK500HD1829 is a 5.0" 720x1280 DSI display.
-> 
-> changes in v2:
-> - fix id (Maxime)
-> - drop port (Maxime)
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  .../display/panel/leadtek,ltk500hd1829.yaml   | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+>> On Dec 26, 2019, at 10:04 PM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>>=20
+>> =EF=BB=BFOn Thu, Dec 26, 2019 at 01:03:34PM +0100, Stephan Mueller wrote:=
+
+>> Agreed. I was just trying to outline that the removal of the blocking_poo=
+l is
+>> a good thing. Even when we decide that random.c should receive a TRNG, we=
+ do
+>> not need to re-add a blocking pool, but can easily use the existing ChaCh=
+a20
+>> DRNG (most likely with its own instance).
+>=20
+> Well, it depends on what you mean by "TRNG" --- the ChaCha20 DRNG only
+> has a state of 256 bits.  So if you want to only depend on "true
+> entropy" you can't extract more than 256 bits without violating that
+> assumption, at least if you're using a very strict definition of TRNG.
+>=20
+> By getting rid of the blocking pool, and making /dev/random work like
+> getrandom with flags set to 0, we're effectively abandoning any kind
+> of assertion that /dev/random is some kind of TRNG.  This is not
+> insane; this is what the *BSD's have always done.
+>=20
+> But once we do this, and /dev/random takes on the semantics of "block
+> until the CRNG has been initialized, and then it won't block after
+> that", if we change it so that it now has some different semantics,
+> such as "one you extract a 256-bit key, the read from /dev/random will
+> block until we can refill it, which might take seconds, minutes or
+> hours", will be considered a regression, and we can't do that.
+
+I don=E2=80=99t think Stephan was proposing that. He was proposing a way to i=
+mplement a new interface that blocks.
+
+>=20
+> Of course, we can hope that people will be using getrandom() and there
+> will be very few new users of the /dev/random pathname.  But nothing
+> is ever guaranteed..
+>=20
+>                       - Ted
