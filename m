@@ -4,44 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CECC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1113EC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FFC207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD292080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 03:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLZDmN (ORCPT
+        id S1726942AbfLZDoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 22:42:13 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8184 "EHLO huawei.com"
+        Wed, 25 Dec 2019 22:44:55 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8190 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726896AbfLZDmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 22:42:13 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 44DEA9AECB4CD7818790;
-        Thu, 26 Dec 2019 11:42:10 +0800 (CST)
+        id S1726893AbfLZDoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 22:44:55 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 861DFF9DD7EAD9D01967;
+        Thu, 26 Dec 2019 11:44:52 +0800 (CST)
 Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 26 Dec
- 2019 11:42:08 +0800
-Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20191223040020.109570-1-yuchao0@huawei.com>
- <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 26 Dec
+ 2019 11:44:44 +0800
+Subject: Re: [f2fs-dev] [PATCH -next] f2fs: remove set but not used variable
+ 'cs_block'
+To:     YueHaibing <yuehaibing@huawei.com>, <jaegeuk@kernel.org>,
+        <chao@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191224124359.15040-1-yuehaibing@huawei.com>
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <2d2b3477-3eb4-7dd3-09b1-8c686e519c0e@huawei.com>
-Date:   Thu, 26 Dec 2019 11:42:07 +0800
+Message-ID: <673efe18-d528-2e9b-6d44-a6a7a22086f3@huawei.com>
+Date:   Thu, 26 Dec 2019 11:44:43 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191224124359.15040-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.134.22.195]
@@ -51,100 +49,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/23 16:41, Geert Uytterhoeven wrote:
-> Hi,
+On 2019/12/24 20:43, YueHaibing wrote:
+> fs/f2fs/segment.c: In function fix_curseg_write_pointer:
+> fs/f2fs/segment.c:4485:35: warning: variable cs_block set but not used [-Wunused-but-set-variable]
 > 
-> CC linux-fsdevel
-> 
-> On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
->> As Geert Uytterhoeven reported:
->>
->> for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
->>
->> On some platforms, HZ can be less than 50, then unexpected 0 timeout
->> jiffies will be set in congestion_wait().
->>
->> This patch introduces a macro DEFAULT_IO_TIMEOUT_JIFFIES to limit
->> mininum value of timeout jiffies.
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks for your patch!
-> 
->> ---
->>  fs/f2fs/compress.c |  3 ++-
->>  fs/f2fs/data.c     |  5 +++--
->>  fs/f2fs/f2fs.h     |  2 ++
->>  fs/f2fs/gc.c       |  3 ++-
->>  fs/f2fs/inode.c    |  3 ++-
->>  fs/f2fs/node.c     |  3 ++-
->>  fs/f2fs/recovery.c |  6 ++++--
->>  fs/f2fs/segment.c  | 12 ++++++++----
->>  fs/f2fs/super.c    |  6 ++++--
->>  9 files changed, 29 insertions(+), 14 deletions(-)
->>
->> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
->> index 1bc86a54ad71..ee4fe8e644aa 100644
->> --- a/fs/f2fs/compress.c
->> +++ b/fs/f2fs/compress.c
->> @@ -945,7 +945,8 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
->>                         } else if (ret == -EAGAIN) {
->>                                 ret = 0;
->>                                 cond_resched();
->> -                               congestion_wait(BLK_RW_ASYNC, HZ/50);
->> +                               congestion_wait(BLK_RW_ASYNC,
->> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->>                                 lock_page(cc->rpages[i]);
->>                                 clear_page_dirty_for_io(cc->rpages[i]);
->>                                 goto retry_write;
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index f1f5c701228d..78b5c0b0287e 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -2320,7 +2320,8 @@ int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
->>                 /* flush pending IOs and wait for a while in the ENOMEM case */
->>                 if (PTR_ERR(fio->encrypted_page) == -ENOMEM) {
->>                         f2fs_flush_merged_writes(fio->sbi);
->> -                       congestion_wait(BLK_RW_ASYNC, HZ/50);
->> +                       congestion_wait(BLK_RW_ASYNC,
->> +                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->>                         gfp_flags |= __GFP_NOFAIL;
->>                         goto retry_encrypt;
->>                 }
->> @@ -2900,7 +2901,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->>                                         if (wbc->sync_mode == WB_SYNC_ALL) {
->>                                                 cond_resched();
->>                                                 congestion_wait(BLK_RW_ASYNC,
->> -                                                               HZ/50);
->> +                                                       DEFAULT_IO_TIMEOUT_JIFFIES);
->>                                                 goto retry_write;
->>                                         }
->>                                         goto next;
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 16edbf4e05e8..4bdc20a94185 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -559,6 +559,8 @@ enum {
->>
->>  #define DEFAULT_RETRY_IO_COUNT 8       /* maximum retry read IO count */
->>
->> +#define        DEFAULT_IO_TIMEOUT_JIFFIES      (max_t(long, HZ/50, 1))
->> +
->>  /* maximum retry quota flush count */
->>  #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT                8
->>
-> 
-> Seeing other file systems (ext4, xfs) and even core MM code suffers from
-> the same issue, perhaps it makes sense to move this into congestion_wait(),
-> i.e. increase the timeout to 1 if it's zero in the latter function?
+> It is never used since commit 362d8a920384 ("f2fs: Check
+> write pointer consistency of open zones") , so remove it.
 
-Yup, maybe I can submit a RFC patch to change congestion_wait(), before that
-we still need this f2fs change.
+Thanks for the fix!
+
+Do you mind merging this patch to original patch? as it's still
+pending in dev branch.
 
 Thanks,
 
 > 
-> Gr{oetje,eeting}s,
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/f2fs/segment.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
->                         Geert
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index a951953..72cf257 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -4482,14 +4482,13 @@ static int fix_curseg_write_pointer(struct f2fs_sb_info *sbi, int type)
+>  	struct f2fs_dev_info *zbd;
+>  	struct blk_zone zone;
+>  	unsigned int cs_section, wp_segno, wp_blkoff, wp_sector_off;
+> -	block_t cs_zone_block, wp_block, cs_block;
+> +	block_t cs_zone_block, wp_block;
+>  	unsigned int log_sectors_per_block = sbi->log_blocksize - SECTOR_SHIFT;
+>  	sector_t zone_sector;
+>  	int err;
+>  
+>  	cs_section = GET_SEC_FROM_SEG(sbi, cs->segno);
+>  	cs_zone_block = START_BLOCK(sbi, GET_SEG_FROM_SEC(sbi, cs_section));
+> -	cs_block = START_BLOCK(sbi, cs->segno) + cs->next_blkoff;
+>  
+>  	zbd = get_target_zoned_dev(sbi, cs_zone_block);
+>  	if (!zbd)
 > 
