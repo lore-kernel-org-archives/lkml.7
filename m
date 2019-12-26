@@ -2,92 +2,123 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34BFC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADDDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989EC20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD4920882
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfLZNWx (ORCPT
+        id S1726575AbfLZNsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:22:53 -0500
-Received: from mail.fudan.edu.cn ([61.129.42.10]:41265 "EHLO fudan.edu.cn"
+        Thu, 26 Dec 2019 08:48:06 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8623 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLZNWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:22:53 -0500
-Received: from localhost.localdomain (unknown [10.222.182.212])
-        by app2 (Coremail) with SMTP id XQUFCgAn4fX8swReeGNhAA--.45422S3;
-        Thu, 26 Dec 2019 21:22:04 +0800 (CST)
-From:   xiyuyang19@fudan.edu.cn
-To:     xiyuyang19@fudan.edu.cn
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu, leon@kernel.org,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] infiniband: i40iw: fix a potential NULL pointer dereference
-Date:   Thu, 26 Dec 2019 21:21:56 +0800
-Message-Id: <1577366516-19556-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgAn4fX8swReeGNhAA--.45422S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF4DKrWfJF18Wr48Zr1UZFb_yoWkXrX_Kr
-        4UZFn7ur98AF12kr4kKFnrXFy2v34YvwsrZw4Dt34fJ34rWw1DJrZ5A3Wrur47urWxGFsr
-        Cas5Cw4xCFWrGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kI
-        II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7
-        xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
-        z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4
-        CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6cx26ry5
-        Xr1UJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc
-        8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AF
-        wI0_Jw0_GFylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Xr
-        y5Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-        04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JjVPfdUUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        id S1726475AbfLZNsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 08:48:06 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DA9A0EDE30359A9F38C2;
+        Thu, 26 Dec 2019 21:48:01 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
+ 21:47:55 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <darrick.wong@oracle.com>, <bfoster@redhat.com>,
+        <dchinner@redhat.com>, <sandeen@sandeen.net>,
+        <cmaiolino@redhat.com>, <hch@lst.de>
+CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <houtao1@huawei.com>
+Subject: [PATCH 1/2] xfs: introduce xfs_bmap_split_da_extent
+Date:   Thu, 26 Dec 2019 21:47:20 +0800
+Message-ID: <20191226134721.43797-2-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191226134721.43797-1-yukuai3@huawei.com>
+References: <20191226134721.43797-1-yukuai3@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Add a new function xfs_bmap_split_da_extent to split a delalloc extent
+into two delalloc extents.
 
-in_dev_get may return a NULL object. The fix handles the situation
-by adding a check to avoid NULL pointer dereference on idev,
-as pick_local_ipaddrs does.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
-Changes in v2:
-- Release rtnl lock when in_dev_get return NULL
-Changes in v3:
-- Continue the next loop when in_dev_get return NULL
+ fs/xfs/libxfs/xfs_bmap.c | 26 ++++++++++++++++++++++++--
+ fs/xfs/libxfs/xfs_bmap.h |  1 +
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
- drivers/infiniband/hw/i40iw/i40iw_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
-index d44cf33d..2386143 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-@@ -1225,6 +1225,8 @@ static void i40iw_add_ipv4_addr(struct i40iw_device *iwdev)
- 			const struct in_ifaddr *ifa;
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 4c2e046fbfad..8247054c1e2b 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -6117,7 +6117,7 @@ xfs_bmap_split_extent_at(
+ 	/*
+ 	 * Convert to a btree if necessary.
+ 	 */
+-	if (xfs_bmap_needs_btree(ip, whichfork)) {
++	if (tp && xfs_bmap_needs_btree(ip, whichfork)) {
+ 		int tmp_logflags; /* partial log flag return val */
  
- 			idev = in_dev_get(dev);
-+			if (!idev)
-+				continue;
- 			in_dev_for_each_ifa_rtnl(ifa, idev) {
- 				i40iw_debug(&iwdev->sc_dev, I40IW_DEBUG_CM,
- 					    "IP=%pI4, vlan_id=%d, MAC=%pM\n", &ifa->ifa_address,
+ 		ASSERT(cur == NULL);
+@@ -6132,7 +6132,7 @@ xfs_bmap_split_extent_at(
+ 		xfs_btree_del_cursor(cur, error);
+ 	}
+ 
+-	if (logflags)
++	if (tp && logflags)
+ 		xfs_trans_log_inode(tp, ip, logflags);
+ 	return error;
+ }
+@@ -6165,6 +6165,28 @@ xfs_bmap_split_extent(
+ 	return error;
+ }
+ 
++/*
++ * Splits a delalloc extent into two delalloc extents at split_fsb block
++ * such that it is the first block of the current_ext. Caller has to make
++ * sure split_fsb belong to a delalloc extent.
++ * If split_fsb is not the first block of the extent, caller need to sub
++ * the @ip->i_d.di_nextents to prevent crash in log recovery.
++ */
++int
++xfs_bmap_split_da_extent(
++	struct xfs_inode        *ip,
++	xfs_fileoff_t           split_fsb)
++{
++	struct xfs_trans        *tp = NULL;
++	int error;
++
++	xfs_ilock(ip, XFS_ILOCK_EXCL);
++	error = xfs_bmap_split_extent_at(tp, ip, split_fsb);
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
++
++	return error;
++}
++
+ /* Deferred mapping is only for real extents in the data fork. */
+ static bool
+ xfs_bmap_is_update_needed(
+diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+index 14d25e0b7d9c..d8d969aa17ef 100644
+--- a/fs/xfs/libxfs/xfs_bmap.h
++++ b/fs/xfs/libxfs/xfs_bmap.h
+@@ -223,6 +223,7 @@ int	xfs_bmap_insert_extents(struct xfs_trans *tp, struct xfs_inode *ip,
+ 		xfs_fileoff_t *next_fsb, xfs_fileoff_t offset_shift_fsb,
+ 		bool *done, xfs_fileoff_t stop_fsb);
+ int	xfs_bmap_split_extent(struct xfs_inode *ip, xfs_fileoff_t split_offset);
++int	xfs_bmap_split_da_extent(struct xfs_inode *ip, xfs_fileoff_t split_offset);
+ int	xfs_bmapi_reserve_delalloc(struct xfs_inode *ip, int whichfork,
+ 		xfs_fileoff_t off, xfs_filblks_t len, xfs_filblks_t prealloc,
+ 		struct xfs_bmbt_irec *got, struct xfs_iext_cursor *cur,
 -- 
-2.7.4
+2.17.2
 
