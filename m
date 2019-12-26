@@ -2,556 +2,449 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EF9C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9153C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AA9206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGZT2Bp9"
+	by mail.kernel.org (Postfix) with ESMTP id 73D12206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfLZIk5 (ORCPT
+        id S1726465AbfLZIrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 03:40:57 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34144 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbfLZIk5 (ORCPT
+        Thu, 26 Dec 2019 03:47:24 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.6]:47316 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725878AbfLZIrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 03:40:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577349656;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BetayLBkfzhyPO4EM0iArOCYMIIksq9EMq0hYpaLKHM=;
-        b=iGZT2Bp9lMAiclURL/EvgjQgVhRooSptbY2DZj7shTZKBwLH7cm85rTO8E33+HeI6L3cB+
-        lgUCbOM7bFH2B0y9yeKjrMxmx4OweUh/kTq7cIELIAN9azTeXKciwtDGk4HxKYkYdk0cJI
-        kQ5HuVaSybqxdC+gh3bQpQ8VCBc0qrs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-85-OBG6dK_cMr6CoVTrPEFuOQ-1; Thu, 26 Dec 2019 03:40:52 -0500
-X-MC-Unique: OBG6dK_cMr6CoVTrPEFuOQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 26 Dec 2019 03:47:24 -0500
+Received: from [67.219.250.102] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-6.bemta.az-a.us-west-2.aws.symcld.net id 8C/EC-22188-693740E5; Thu, 26 Dec 2019 08:47:18 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeJIrShJLcpLzFFi42JJl3vFqju1mCX
+  OYOlzHYsZex8wW5ydEGjR/noro8XlXXPYLJ4sPMNkcarlBYsDm8eCTaUe52csZPTY+b2B3WP9
+  lqssHp83yQWwRrFm5iXlVySwZnzaf4K5oCGm4tl1twbGbr8uRi4OIYEOJomGFyfYIZzZjBLb1
+  s9j6WLk5GATUJM4OfseK4gtItDIKLHyrT9IEbNAE6PEioeXwRLCAukS314uZwaxWQRUJZqfTw
+  Br5hVwlvjfPAusRkJATuLmuU7mCYycCxgZVjGaJxVlpmeU5CZm5ugaGhjoGhoa6RoaA2kjvcQ
+  q3US90mLd8tTiEl0gt7xYr7gyNzknRS8vtWQTIzBEUgqaeHYwtn19q3eIUZKDSUmUN96LKU6I
+  Lyk/pTIjsTgjvqg0J7X4EKMMB4eSBK9tAUuckGBRanpqRVpmDjBcYdISHDxKIrx1RUBp3uKCx
+  NzizHSI1ClGXY7bG5YsYhZiycvPS5US500DKRIAKcoozYMbAYudS4yyUsK8jAwMDEI8BalFuZ
+  klqPKvGMU5GJWEeb1BpvBk5pXAbXoFdAQT0BEfhZhAjihJREhJNTCJT/12P+aCdRtP8L3TVZk
+  yRvtKV4sy56pknH8sYXzuJsvssP0PvjK8ebjE1c8w+fKeW5vyj3rpfdlzTo9ng8O3FVV3410t
+  O/s3Syx/mfjZ6tcto9d+P6d2zJnHoB227kdF98zL9z6+bSi4EWZ5o3Hts0mG2hJqL0tW6077a
+  r5GyYGXbb3+3ccPH+m/Cbf+ub9qBdO86+XpfG3vdroIXeBcqNr/aNujbT5Tvqln2i2QvR+w3l
+  54778fj06F7b/hcvLqVAONp46B6WtVhR/u6rwZkX+sKu1a2PIMlZXdZzWV/02xLPu6OGxbkrF
+  sxowpxTxbJHKrJHTCFqg8T9AQ2ujQtNq4uNx7k5eWZWyG0uNIJZbijERDLeai4kQAXWNMGxgD
+  AAA=
+X-Env-Sender: pengms1@lenovo.com
+X-Msg-Ref: server-28.tower-326.messagelabs.com!1577350035!834206!1
+X-Originating-IP: [103.30.234.5]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 10338 invoked from network); 26 Dec 2019 08:47:17 -0000
+Received: from unknown (HELO apsmtp.lenovo.com) (103.30.234.5)
+  by server-28.tower-326.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Dec 2019 08:47:17 -0000
+Received: from smtpinternal.lenovo.com (unknown [10.96.80.15])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E91BE1804174;
-        Thu, 26 Dec 2019 08:40:49 +0000 (UTC)
-Received: from [10.72.12.162] (ovpn-12-162.pek2.redhat.com [10.72.12.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 130C660BEC;
-        Thu, 26 Dec 2019 08:40:24 +0000 (UTC)
-Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
- specification version 3
-To:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
-        gerry@linux.alibaba.com, jing2.liu@intel.com, chao.p.peng@intel.com
-References: <cover.1577240905.git.zhabin@linux.alibaba.com>
- <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <85eeab19-1f53-6c45-95a2-44c1cfd39184@redhat.com>
-Date:   Thu, 26 Dec 2019 16:40:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+        by Forcepoint Email with ESMTPS id 425513DB8D0D3919C1D8;
+        Thu, 26 Dec 2019 16:47:14 +0800 (CST)
+Received: from hsbmc.10.240.0.10 (unknown [10.245.100.154])
+        by Forcepoint Email with ESMTP id D9ACEFD90593623EE959;
+        Thu, 26 Dec 2019 16:47:13 +0800 (CST)
+From:   Andrew Peng <pengms1@lenovo.com>
+To:     linux@roeck-us.net, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, benjaminfair@google.com
+Cc:     openbmc@lists.ozlabs.org, Andrew Peng <pengms1@lenovo.com>,
+        Derek Lin <dlin23@lenovo.com>, Yonghui Liu <liuyh21@lenovo.com>
+Subject: [PATCH v1 0/1] hwmon: (pmbus) Add Infineon IR38164, Renesas RAA228006, and TI SN1701022 driver
+Date:   Thu, 26 Dec 2019 16:47:12 +0800
+Message-Id: <1577350032-127172-1-git-send-email-pengms1@lenovo.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the pmbus driver for Infineon IR38164 Voltage Regulator driver.
+Add the pmbus driver for Renesas RAA228006 Digital PWM Controller.
+Add the pmbus driver for TI SN1701022 driver.
 
-On 2019/12/25 =E4=B8=8A=E5=8D=8810:50, Zha Bin wrote:
-> From: Liu Jiang <gerry@linux.alibaba.com>
->
-> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
-> virtio over mmio devices as a lightweight machine model for modern
-> cloud. The standard virtio over MMIO transport layer only supports one
-> legacy interrupt, which is much heavier than virtio over PCI transport
-> layer using MSI. Legacy interrupt has long work path and causes specifi=
-c
-> VMExits in following cases, which would considerably slow down the
-> performance:
->
-> 1) read interrupt status register
-> 2) update interrupt status register
-> 3) write IOAPIC EOI register
->
-> We proposed to update virtio over MMIO to version 3[1] to add the
-> following new features and enhance the performance.
->
-> 1) Support Message Signaled Interrupt(MSI), which increases the
->     interrupt performance for virtio multi-queue devices
-> 2) Support per-queue doorbell, so the guest kernel may directly write
->     to the doorbells provided by virtio devices.
->
-> The following is the network tcp_rr performance testing report, tested
-> with virtio-pci device, vanilla virtio-mmio device and patched
-> virtio-mmio device (run test 3 times for each case):
->
-> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
->
-> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
-> 	trans/s	    9536	6939		9500
-> 	trans/s	    9734	7029		9749
-> 	trans/s	    9894	7095		9318
->
-> [1] https://lkml.org/lkml/2019/12/20/113
->
-> Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
-> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-> Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
-> Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
-> ---
->   drivers/virtio/virtio_mmio.c     | 226 ++++++++++++++++++++++++++++++=
-++++++---
->   include/uapi/linux/virtio_mmio.h |  28 +++++
->   2 files changed, 240 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.=
-c
-> index e09edb5..065c083 100644
-> --- a/drivers/virtio/virtio_mmio.c
-> +++ b/drivers/virtio/virtio_mmio.c
-> @@ -68,8 +68,8 @@
->   #include <linux/virtio_config.h>
->   #include <uapi/linux/virtio_mmio.h>
->   #include <linux/virtio_ring.h>
-> -
-> -
-> +#include <linux/msi.h>
-> +#include <asm/irqdomain.h>
->  =20
->   /* The alignment to use between consumer and producer parts of vring.
->    * Currently hardcoded to the page size. */
-> @@ -90,6 +90,12 @@ struct virtio_mmio_device {
->   	/* a list of queues so we can dispatch IRQs */
->   	spinlock_t lock;
->   	struct list_head virtqueues;
-> +
-> +	int doorbell_base;
-> +	int doorbell_scale;
+Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+Signed-off-by: Derek Lin <dlin23@lenovo.com>
+Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+---
+v1: initial version
 
+ drivers/hwmon/pmbus/Kconfig     |  25 ++++++++
+ drivers/hwmon/pmbus/Makefile    |   3 +
+ drivers/hwmon/pmbus/ir38164.c   |  72 +++++++++++++++++++++++
+ drivers/hwmon/pmbus/raa228006.c | 127 ++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/pmbus/sn1701022.c |  80 +++++++++++++++++++++++++
+ 5 files changed, 307 insertions(+)
+ create mode 100644 drivers/hwmon/pmbus/ir38164.c
+ create mode 100644 drivers/hwmon/pmbus/raa228006.c
+ create mode 100644 drivers/hwmon/pmbus/sn1701022.c
 
-It's better to use the terminology defined by spec, e.g=20
-notify_base/notify_multiplexer etc.
-
-And we usually use unsigned type for offset.
-
-
-> +	bool msi_enabled;
-> +	/* Name strings for interrupts. */
-> +	char (*vm_vq_names)[256];
->   };
->  =20
->   struct virtio_mmio_vq_info {
-> @@ -101,6 +107,8 @@ struct virtio_mmio_vq_info {
->   };
->  =20
->  =20
-> +static void vm_free_msi_irqs(struct virtio_device *vdev);
-> +static int vm_request_msi_vectors(struct virtio_device *vdev, int nirq=
-s);
->  =20
->   /* Configuration interface */
->  =20
-> @@ -273,12 +281,28 @@ static bool vm_notify(struct virtqueue *vq)
->   {
->   	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vq->vdev=
-);
->  =20
-> +	if (vm_dev->version =3D=3D 3) {
-> +		int offset =3D vm_dev->doorbell_base +
-> +			     vm_dev->doorbell_scale * vq->index;
-> +		writel(vq->index, vm_dev->base + offset);
-
-
-In virtio-pci we store the doorbell address in vq->priv to avoid doing=20
-multiplication in fast path.
-
-
-> +	} else
->   	/* We write the queue's selector into the notification register to
->   	 * signal the other end */
-> -	writel(vq->index, vm_dev->base + VIRTIO_MMIO_QUEUE_NOTIFY);
-> +		writel(vq->index, vm_dev->base + VIRTIO_MMIO_QUEUE_NOTIFY);
-> +
->   	return true;
->   }
->  =20
-> +/* Handle a configuration change */
-> +static irqreturn_t vm_config_changed(int irq, void *opaque)
-> +{
-> +	struct virtio_mmio_device *vm_dev =3D opaque;
-> +
-> +	virtio_config_changed(&vm_dev->vdev);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->   /* Notify all virtqueues on an interrupt. */
->   static irqreturn_t vm_interrupt(int irq, void *opaque)
->   {
-> @@ -307,7 +331,12 @@ static irqreturn_t vm_interrupt(int irq, void *opa=
-que)
->   	return ret;
->   }
->  =20
-> +static int vm_msi_irq_vector(struct device *dev, unsigned int nr)
-> +{
-> +	struct msi_desc *entry =3D first_msi_entry(dev);
->  =20
-> +	return entry->irq + nr;
-> +}
->  =20
->   static void vm_del_vq(struct virtqueue *vq)
->   {
-> @@ -316,6 +345,12 @@ static void vm_del_vq(struct virtqueue *vq)
->   	unsigned long flags;
->   	unsigned int index =3D vq->index;
->  =20
-> +	if (vm_dev->version =3D=3D 3 && vm_dev->msi_enabled) {
-> +		int irq =3D vm_msi_irq_vector(&vq->vdev->dev, index + 1);
-> +
-> +		free_irq(irq, vq);
-> +	}
-> +
->   	spin_lock_irqsave(&vm_dev->lock, flags);
->   	list_del(&info->node);
->   	spin_unlock_irqrestore(&vm_dev->lock, flags);
-> @@ -334,15 +369,41 @@ static void vm_del_vq(struct virtqueue *vq)
->   	kfree(info);
->   }
->  =20
-> -static void vm_del_vqs(struct virtio_device *vdev)
-> +static void vm_free_irqs(struct virtio_device *vdev)
->   {
->   	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +
-> +	if (vm_dev->version =3D=3D 3)
-> +		vm_free_msi_irqs(vdev);
-> +	else
-> +		free_irq(platform_get_irq(vm_dev->pdev, 0), vm_dev);
-> +}
-> +
-> +static void vm_del_vqs(struct virtio_device *vdev)
-> +{
->   	struct virtqueue *vq, *n;
->  =20
->   	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
->   		vm_del_vq(vq);
->  =20
-> -	free_irq(platform_get_irq(vm_dev->pdev, 0), vm_dev);
-> +	vm_free_irqs(vdev);
-> +}
-> +
-> +static int vm_request_single_irq(struct virtio_device *vdev)
-> +{
-> +	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +	int irq =3D platform_get_irq(vm_dev->pdev, 0);
-> +	int err;
-> +
-> +	if (irq < 0) {
-> +		dev_err(&vdev->dev, "Cannot get IRQ resource\n");
-> +		return irq;
-> +	}
-> +
-> +	err =3D request_irq(irq, vm_interrupt, IRQF_SHARED,
-> +			dev_name(&vdev->dev), vm_dev);
-> +
-> +	return err;
->   }
->  =20
->   static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsi=
-gned index,
-> @@ -455,6 +516,72 @@ static struct virtqueue *vm_setup_vq(struct virtio=
-_device *vdev, unsigned index,
->   	return ERR_PTR(err);
->   }
->  =20
-> +static inline void mmio_msi_set_enable(struct virtio_mmio_device *vm_d=
-ev,
-> +		int enable)
-> +{
-> +	u16 status;
-> +
-> +	status =3D readw(vm_dev->base + VIRTIO_MMIO_MSI_STATUS);
-> +	if (enable)
-> +		status |=3D VIRTIO_MMIO_MSI_ENABLE_MASK;
-> +	else
-> +		status &=3D ~VIRTIO_MMIO_MSI_ENABLE_MASK;
-> +	writew(status, vm_dev->base + VIRTIO_MMIO_MSI_STATUS);
-> +}
-> +
-> +static int vm_find_vqs_msi(struct virtio_device *vdev, unsigned int nv=
-qs,
-> +			struct virtqueue *vqs[], vq_callback_t *callbacks[],
-> +			const char * const names[], const bool *ctx,
-> +			struct irq_affinity *desc)
-> +{
-> +	int i, err, irq;
-> +	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +
-> +	/* Allocate nvqs irqs for queues and one irq for configuration */
-> +	err =3D vm_request_msi_vectors(vdev, nvqs + 1);
-> +	if (err !=3D 0)
-> +		return err;
-> +
-> +	for (i =3D 0; i < nvqs; i++) {
-> +		int index =3D i + 1;
-> +
-> +		if (!names[i]) {
-> +			vqs[i] =3D NULL;
-> +			continue;
-> +		}
-> +		vqs[i] =3D vm_setup_vq(vdev, i, callbacks[i], names[i],
-> +				ctx ? ctx[i] : false);
-> +		if (IS_ERR(vqs[i])) {
-> +			err =3D PTR_ERR(vqs[i]);
-> +			goto error_find;
-> +		}
-> +
-> +		if (!callbacks[i])
-> +			continue;
-> +
-> +		irq =3D vm_msi_irq_vector(&vqs[i]->vdev->dev, index);
-> +		/* allocate per-vq irq if available and necessary */
-> +		snprintf(vm_dev->vm_vq_names[index],
-> +			sizeof(*vm_dev->vm_vq_names),
-> +			"%s-%s",
-> +			dev_name(&vm_dev->vdev.dev), names[i]);
-> +		err =3D request_irq(irq, vring_interrupt, 0,
-> +				vm_dev->vm_vq_names[index], vqs[i]);
-> +
-> +		if (err)
-> +			goto error_find;
-> +	}
-> +
-> +	mmio_msi_set_enable(vm_dev, 1);
-> +	vm_dev->msi_enabled =3D true;
-> +
-> +	return 0;
-> +
-> +error_find:
-> +	vm_del_vqs(vdev);
-> +	return err;
-> +}
-> +
->   static int vm_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->   		       struct virtqueue *vqs[],
->   		       vq_callback_t *callbacks[],
-> @@ -463,16 +590,16 @@ static int vm_find_vqs(struct virtio_device *vdev=
-, unsigned nvqs,
->   		       struct irq_affinity *desc)
->   {
->   	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> -	int irq =3D platform_get_irq(vm_dev->pdev, 0);
->   	int i, err, queue_idx =3D 0;
->  =20
-> -	if (irq < 0) {
-> -		dev_err(&vdev->dev, "Cannot get IRQ resource\n");
-> -		return irq;
-> +	if (vm_dev->version =3D=3D 3) {
-> +		err =3D vm_find_vqs_msi(vdev, nvqs, vqs, callbacks,
-> +				names, ctx, desc);
-> +		if (!err)
-> +			return 0;
->   	}
->  =20
-> -	err =3D request_irq(irq, vm_interrupt, IRQF_SHARED,
-> -			dev_name(&vdev->dev), vm_dev);
-> +	err =3D vm_request_single_irq(vdev);
->   	if (err)
->   		return err;
->  =20
-> @@ -493,6 +620,73 @@ static int vm_find_vqs(struct virtio_device *vdev,=
- unsigned nvqs,
->   	return 0;
->   }
->  =20
-> +static void mmio_write_msi_msg(struct msi_desc *desc, struct msi_msg *=
-msg)
-> +{
-> +	struct device *dev =3D desc->dev;
-> +	struct virtio_device *vdev =3D dev_to_virtio(dev);
-> +	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +	void __iomem *pos =3D vm_dev->base;
-> +	uint16_t cmd =3D VIRTIO_MMIO_MSI_CMD(VIRTIO_MMIO_MSI_CMD_UPDATE,
-> +			desc->platform.msi_index);
-> +
-> +	writel(msg->address_lo, pos + VIRTIO_MMIO_MSI_ADDRESS_LOW);
-> +	writel(msg->address_hi, pos + VIRTIO_MMIO_MSI_ADDRESS_HIGH);
-> +	writel(msg->data, pos + VIRTIO_MMIO_MSI_DATA);
-> +	writew(cmd, pos + VIRTIO_MMIO_MSI_COMMAND);
-> +}
-> +
-> +static int vm_request_msi_vectors(struct virtio_device *vdev, int nirq=
-s)
-> +{
-> +	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +	int irq, err;
-> +	u16 csr =3D readw(vm_dev->base + VIRTIO_MMIO_MSI_STATUS);
-> +
-> +	if (vm_dev->msi_enabled || (csr & VIRTIO_MMIO_MSI_ENABLE_MASK) =3D=3D=
- 0)
-> +		return -EINVAL;
-> +
-> +	vm_dev->vm_vq_names =3D kmalloc_array(nirqs, sizeof(*vm_dev->vm_vq_na=
-mes),
-> +			GFP_KERNEL);
-> +	if (!vm_dev->vm_vq_names)
-> +		return -ENOMEM;
-> +
-> +	if (!vdev->dev.msi_domain)
-> +		vdev->dev.msi_domain =3D platform_msi_get_def_irq_domain();
-> +	err =3D platform_msi_domain_alloc_irqs(&vdev->dev, nirqs,
-> +			mmio_write_msi_msg);
-
-
-Can platform_msi_domain_alloc_irqs check msi_domain vs NULL?
-
-
-> +	if (err)
-> +		goto error_free_mem;
-> +
-> +	/* The first MSI vector is used for configuration change events. */
-> +	snprintf(vm_dev->vm_vq_names[0], sizeof(*vm_dev->vm_vq_names),
-> +			"%s-config", dev_name(&vdev->dev));
-> +	irq =3D vm_msi_irq_vector(&vdev->dev, 0);
-> +	err =3D request_irq(irq, vm_config_changed, 0, vm_dev->vm_vq_names[0]=
-,
-> +			vm_dev);
-> +	if (err)
-> +		goto error_free_mem;
-> +
-> +	return 0;
-> +
-> +error_free_mem:
-> +	kfree(vm_dev->vm_vq_names);
-> +	vm_dev->vm_vq_names =3D NULL;
-> +	return err;
-> +}
-> +
-> +static void vm_free_msi_irqs(struct virtio_device *vdev)
-> +{
-> +	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> +
-> +	if (vm_dev->msi_enabled) {
-> +		mmio_msi_set_enable(vm_dev, 0);
-> +		free_irq(vm_msi_irq_vector(&vdev->dev, 0), vm_dev);
-> +		platform_msi_domain_free_irqs(&vdev->dev);
-> +		kfree(vm_dev->vm_vq_names);
-> +		vm_dev->vm_vq_names =3D NULL;
-> +		vm_dev->msi_enabled =3D false;
-> +	}
-> +}
-> +
->   static const char *vm_bus_name(struct virtio_device *vdev)
->   {
->   	struct virtio_mmio_device *vm_dev =3D to_virtio_mmio_device(vdev);
-> @@ -567,7 +761,7 @@ static int virtio_mmio_probe(struct platform_device=
- *pdev)
->  =20
->   	/* Check device version */
->   	vm_dev->version =3D readl(vm_dev->base + VIRTIO_MMIO_VERSION);
-> -	if (vm_dev->version < 1 || vm_dev->version > 2) {
-> +	if (vm_dev->version < 1 || vm_dev->version > 3) {
->   		dev_err(&pdev->dev, "Version %ld not supported!\n",
->   				vm_dev->version);
->   		return -ENXIO;
-> @@ -603,6 +797,12 @@ static int virtio_mmio_probe(struct platform_devic=
-e *pdev)
->   		dev_warn(&pdev->dev, "Failed to enable 64-bit or 32-bit DMA.  Tryin=
-g to continue, but this might not work.\n");
->  =20
->   	platform_set_drvdata(pdev, vm_dev);
-> +	if (vm_dev->version =3D=3D 3) {
-> +		u32 db =3D readl(vm_dev->base + VIRTIO_MMIO_QUEUE_NOTIFY);
-> +
-> +		vm_dev->doorbell_base =3D db & 0xffff;
-> +		vm_dev->doorbell_scale =3D (db >> 16) & 0xffff;
-> +	}
->  =20
->   	rc =3D register_virtio_device(&vm_dev->vdev);
->   	if (rc)
-> @@ -619,8 +819,6 @@ static int virtio_mmio_remove(struct platform_devic=
-e *pdev)
->   	return 0;
->   }
->  =20
-> -
-> -
-
-
-Unnecessary changes.
-
-
->   /* Devices list parameter */
->  =20
->   #if defined(CONFIG_VIRTIO_MMIO_CMDLINE_DEVICES)
-> diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virt=
-io_mmio.h
-> index c4b0968..148895e 100644
-> --- a/include/uapi/linux/virtio_mmio.h
-> +++ b/include/uapi/linux/virtio_mmio.h
-> @@ -122,6 +122,34 @@
->   #define VIRTIO_MMIO_QUEUE_USED_LOW	0x0a0
->   #define VIRTIO_MMIO_QUEUE_USED_HIGH	0x0a4
->  =20
-> +/* MSI related registers */
-> +
-> +/* MSI status register */
-> +#define VIRTIO_MMIO_MSI_STATUS		0x0c0
-> +/* MSI command register */
-> +#define VIRTIO_MMIO_MSI_COMMAND		0x0c2
-> +/* MSI low 32 bit address, 64 bits in two halves */
-> +#define VIRTIO_MMIO_MSI_ADDRESS_LOW	0x0c4
-> +/* MSI high 32 bit address, 64 bits in two halves */
-> +#define VIRTIO_MMIO_MSI_ADDRESS_HIGH	0x0c8
-> +/* MSI data */
-> +#define VIRTIO_MMIO_MSI_DATA		0x0cc
-
-
-I wonder what's the advantage of using registers instead of memory=20
-mapped tables as PCI did. Is this because MMIO doesn't have capability=20
-list which makes it hard to be extended if we have variable size of table=
-s?
-
-
-> +
-> +/* RO: MSI feature enabled mask */
-> +#define VIRTIO_MMIO_MSI_ENABLE_MASK	0x8000
-> +/* RO: Maximum queue size available */
-> +#define VIRTIO_MMIO_MSI_STATUS_QMASK	0x07ff
-> +/* Reserved */
-> +#define VIRTIO_MMIO_MSI_STATUS_RESERVED	0x7800
-> +
-> +#define VIRTIO_MMIO_MSI_CMD_UPDATE	0x1
-
-
-I believe we need a command to read the number of vectors supported by=20
-the device, or 2048 is assumed to be a fixed size here?
-
-Thanks
-
-
-> +#define VIRTIO_MMIO_MSI_CMD_OP_MASK	0xf000
-> +#define VIRTIO_MMIO_MSI_CMD_ARG_MASK	0x0fff
-> +#define VIRTIO_MMIO_MSI_CMD(op, arg)	((op) << 12 | (arg))
-> +#define VIRITO_MMIO_MSI_CMD_ARG(cmd)	((cmd) & VIRTIO_MMIO_MSI_CMD_ARG_=
-MASK)
-> +#define VIRTIO_MMIO_MSI_CMD_OP(cmd)	\
-> +		(((cmd) & VIRTIO_MMIO_MSI_CMD_OP_MASK) >> 12)
-> +
->   /* Configuration atomicity value */
->   #define VIRTIO_MMIO_CONFIG_GENERATION	0x0fc
->  =20
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index b658848..d51e67d 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -64,6 +64,15 @@ config SENSORS_IR38064
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called ir38064.
+ 
++config SENSORS_IR38164
++	tristate "Infineon IR38164"
++	help
++	  If you say yes here you get hardware monitoring support for Infineon
++	  IR38164.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called ir38164.
++
+ config SENSORS_IRPS5401
+ 	tristate "Infineon IRPS5401"
+ 	help
+@@ -221,4 +230,20 @@ config SENSORS_ZL6100
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called zl6100.
+ 
++config SENSORS_RAA228006
++	tristate "RAA228006 and compatibles"
++	help
++	  If you say yes here you get hardware monitoring support for RAA228006.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called RAA228006.
++
++config SENSORS_SN1701022
++	tristate "SN1701022"
++	help
++	  If you say yes here you get hardware monitoring support for SN1701022.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called sn1701022.
++
+ endif # PMBUS
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index c950ea9..21d259f 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
+ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+ obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
+ obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
++obj-$(CONFIG_SENSORS_IR38164)	+= ir38164.o
+ obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
+ obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
+ obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
+@@ -25,3 +26,5 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
+ obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
+ obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
+ obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
++obj-$(CONFIG_SENSORS_RAA228006)	+= raa228006.o
++obj-$(CONFIG_SENSORS_SN1701022)	+= sn1701022.o
+diff --git a/drivers/hwmon/pmbus/ir38164.c b/drivers/hwmon/pmbus/ir38164.c
+new file mode 100644
+index 0000000..db89473
+--- /dev/null
++++ b/drivers/hwmon/pmbus/ir38164.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Hardware monitoring driver for Infineon ir38164
++ *
++ * Copyright (C) 2019-present Lenovo
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
++ * Boston, MA  02110-1301, USA.
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include "pmbus.h"
++
++static struct pmbus_driver_info ir38164_info = {
++	.pages = 1,
++	.format[PSC_VOLTAGE_IN] = linear,
++	.format[PSC_VOLTAGE_OUT] = linear,
++	.format[PSC_CURRENT_OUT] = linear,
++	.format[PSC_POWER] = linear,
++	.format[PSC_TEMPERATURE] = linear,
++
++	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
++	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
++	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
++	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
++	    | PMBUS_HAVE_POUT,
++};
++
++static int ir38164_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	return pmbus_do_probe(client, id, &ir38164_info);
++}
++
++static const struct i2c_device_id ir38164_id[] = {
++	{"ir38164", 0},
++	{}
++};
++
++MODULE_DEVICE_TABLE(i2c, ir38164_id);
++
++/* This is the driver that will be inserted */
++static struct i2c_driver ir38164_driver = {
++	.driver = {
++		   .name = "ir38164",
++		   },
++	.probe = ir38164_probe,
++	.remove = pmbus_do_remove,
++	.id_table = ir38164_id,
++};
++
++module_i2c_driver(ir38164_driver);
++
++MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
++MODULE_DESCRIPTION("PMBus driver for Infineon ir38164");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/pmbus/raa228006.c b/drivers/hwmon/pmbus/raa228006.c
+new file mode 100644
+index 0000000..9aed481
+--- /dev/null
++++ b/drivers/hwmon/pmbus/raa228006.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Hardware monitoring driver for raa228006
++ *
++ * Copyright (C) 2019-present Lenovo
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
++ * Boston, MA  02110-1301, USA.
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include "pmbus.h"
++
++static int raa228006_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct pmbus_driver_info *info;
++	u8 buf[I2C_SMBUS_BLOCK_MAX];
++	int ret;
++
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_READ_BYTE_DATA
++				| I2C_FUNC_SMBUS_READ_WORD_DATA
++				| I2C_FUNC_SMBUS_READ_BLOCK_DATA))
++		return -ENODEV;
++
++	/* By default this device doesn't boot to page 0, so set page 0
++	 * to access all pmbus registers.
++	 */
++
++	i2c_smbus_write_byte_data(client, 0, 0);
++
++	/* Read Manufacturer id */
++	ret = i2c_smbus_read_block_data(client, PMBUS_MFR_ID, buf);
++	if (ret < 0) {
++		dev_err(&client->dev, "Failed to read PMBUS_MFR_ID\n");
++		return ret;
++	}
++
++	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
++			    GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->format[PSC_VOLTAGE_IN] = direct;
++	info->format[PSC_VOLTAGE_OUT] = direct;
++	info->format[PSC_CURRENT_IN] = direct;
++	info->format[PSC_CURRENT_OUT] = direct;
++	info->format[PSC_POWER] = direct;
++	info->format[PSC_TEMPERATURE] = direct;
++	info->vrm_version = vr13;
++
++	info->m[PSC_VOLTAGE_IN] = 1,
++	info->b[PSC_VOLTAGE_IN] = 0,
++	info->R[PSC_VOLTAGE_IN] = 3,
++
++	info->m[PSC_VOLTAGE_OUT] = 1,
++	info->b[PSC_VOLTAGE_OUT] = 0,
++	info->R[PSC_VOLTAGE_OUT] = 0,
++
++	info->m[PSC_CURRENT_IN] = 1,
++	info->b[PSC_CURRENT_IN] = 0,
++	info->R[PSC_CURRENT_IN] = 1,
++
++	info->m[PSC_CURRENT_OUT] = 1,
++	info->b[PSC_CURRENT_OUT] = 0,
++	info->R[PSC_CURRENT_OUT] = 2,
++
++	info->m[PSC_POWER] = 1,
++	info->b[PSC_POWER] = 0,
++	info->R[PSC_POWER] = 3,
++
++	info->m[PSC_TEMPERATURE] = 1,
++	info->b[PSC_TEMPERATURE] = 0,
++	info->R[PSC_TEMPERATURE] = 3,
++
++	info->func[0] = PMBUS_HAVE_VIN
++		| PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN
++		| PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN
++		| PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP
++		| PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3
++		| PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT
++		| PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP;
++
++	info->pages = id->driver_data;
++
++	return pmbus_do_probe(client, id, info);
++}
++
++static const struct i2c_device_id raa228006_id[] = {
++	{"raa228006", 1},
++	{}
++};
++
++MODULE_DEVICE_TABLE(i2c, raa228006_id);
++
++/* This is the driver that will be inserted */
++static struct i2c_driver raa228006_driver = {
++	.driver = {
++		   .name = "raa228006",
++		   },
++	.probe = raa228006_probe,
++	.remove = pmbus_do_remove,
++	.id_table = raa228006_id,
++};
++
++module_i2c_driver(raa228006_driver);
++
++MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
++MODULE_DESCRIPTION("PMBus driver for raa228006");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/pmbus/sn1701022.c b/drivers/hwmon/pmbus/sn1701022.c
+new file mode 100644
+index 0000000..0ba45ac
+--- /dev/null
++++ b/drivers/hwmon/pmbus/sn1701022.c
+@@ -0,0 +1,80 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Hardware monitoring driver for sn1701022
++ *
++ * Copyright (C) 2019-present Lenovo
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor,
++ * Boston, MA  02110-1301, USA.
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include "pmbus.h"
++
++static struct pmbus_driver_info sn1701022_info = {
++	.pages = 2,
++	.format[PSC_VOLTAGE_IN] = linear,
++	.format[PSC_VOLTAGE_OUT] = vid,
++	.vrm_version = vr12,
++	.format[PSC_CURRENT_OUT] = linear,
++	.format[PSC_CURRENT_IN] = linear,
++	.format[PSC_POWER] = linear,
++	.format[PSC_TEMPERATURE] = linear,
++
++	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
++	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
++	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
++	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
++	    | PMBUS_HAVE_POUT,
++
++	.func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
++	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
++	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
++	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
++	    | PMBUS_HAVE_POUT,
++};
++
++static int sn1701022_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	return pmbus_do_probe(client, id, &sn1701022_info);
++}
++
++static const struct i2c_device_id sn1701022_id[] = {
++	{"sn1701022", 0},
++	{}
++};
++
++MODULE_DEVICE_TABLE(i2c, sn1701022_id);
++
++/* This is the driver that will be inserted */
++static struct i2c_driver sn1701022_driver = {
++	.driver = {
++		   .name = "sn1701022",
++		   },
++	.probe = sn1701022_probe,
++	.remove = pmbus_do_remove,
++	.id_table = sn1701022_id,
++};
++
++module_i2c_driver(sn1701022_driver);
++
++MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
++MODULE_DESCRIPTION("PMBus driver for  sn1701022");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
 
