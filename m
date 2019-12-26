@@ -6,62 +6,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E352C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B6EC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1169E206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE8A20838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 08:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfLZIsi (ORCPT
+        id S1726425AbfLZIyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 03:48:38 -0500
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.4]:38338 "EHLO
+        Thu, 26 Dec 2019 03:54:49 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.212]:44215 "EHLO
         mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725878AbfLZIsh (ORCPT
+        by vger.kernel.org with ESMTP id S1725815AbfLZIyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 03:48:37 -0500
+        Thu, 26 Dec 2019 03:54:49 -0500
 Received: from [67.219.250.102] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.us-west-2.aws.symcld.net id DE/50-19887-1E3740E5; Thu, 26 Dec 2019 08:48:33 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRWlGSWpSXmKPExsWSLveKVfdhMUu
-  cwacuGYsZex8wW5ydEGjR/noro8XlXXPYLJ4sPMNkcarlBYsDm8eCTaUe52csZPTY+b2B3WP9
-  lqssHp83yQWwRrFm5iXlVySwZnQ+3cpScCG34tBanwbGl6FdjFwcQgIdTBJtzVeYIZzZjBJrl
-  61n62Lk5GATUJM4OfseK4gtItDIKLHyrT9IEbNAE6PEioeXwRLCAq4SH2+3gdksAqoSL05MBb
-  N5BZwlvi55DzZIQkBO4ua5TuYJjJwLGBlWMVokFWWmZ5TkJmbm6BoaGOgaGhrpGhpZ6hqZWOo
-  lVukm6pUW65anFpfoGukllhfrFVfmJuek6OWllmxiBAZJSkHjzx2M3R/e6h1ilORgUhLljfdi
-  ihPiS8pPqcxILM6ILyrNSS0+xCjDwaEkwWtbwBInJFiUmp5akZaZAwxYmLQEB4+SCG9dEVCat
-  7ggMbc4Mx0idYpRUUqcNw0kIQCSyCjNg2uDRcklRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSs
-  K83iBTeDLzSuCmvwJazAS0+KMQE8jikkSElFQDU2rL2f7KyR3fUnwfhLtdkODXKbl+bttp7va
-  STk/fhY6+zudFD/UE/i2U35T56cqbrmdtv3nu/3Xba/1AOXvK6Qs6H7ZZrVo4r6zOP1Tzwaaf
-  /Tv+G2xkXm04xeJuXO08Ybb3k1b1tRcwnfg2++/ddy/W/9srbsRhcEY1sPCY7jGxeKWl2iUHY
-  szTDN1U/H37n0pdPHooJdBz2UPNpwaOR6KDNWc7Peu4IFv0Ut10Vd+aEI3v8unbmcO22BeIKx
-  XZS329duE590wXTrOCEEW9d8sDTYu6i9XeTA5cVdLvdNnB5+m/Y48Wt2yoPGgUnsJ7rrfB+my
-  VGa81my53bsAdzR8/zd/fEm29trbsZk2LEktxRqKhFnNRcSIAyUh+Sg0DAAA=
+        by server-2.bemta.az-a.us-west-2.aws.symcld.net id 81/BD-12408-255740E5; Thu, 26 Dec 2019 08:54:42 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRWlGSWpSXmKPExsWSLveKRTeolCX
+  OYNdVIYtdlzksZux9wGwx/8g5Vovf5/8yW2x6fI3Vonn1OWaLy7vmsFksvX6RyeJUywsWi9a9
+  R9gduDyutu9i91gzbw2jx4JNpR4XPx5j9ti0qpPNY/OSeo/zMxYyenzeJBfAEcWamZeUX5HAm
+  tH5dCtLwYXcikNrfRoYX4Z2MXJxCAl0MEnsaD/ADuHMZpRY8+kYYxcjJwebgJrEydn3WEFsEZ
+  CqMz+tuhg5OJgF0iU6JmaChIUFXCU+3m4DK2ERUJX4Nw2inFfAWWLt+/UsILaEgJzEzXOdzBM
+  YORcwMqxitEgqykzPKMlNzMzRNTQw0DU0NNI1NLLUNTKx1Eus0k3UKy3WLU8tLtE10kssL9Yr
+  rsxNzknRy0st2cQIDLKUgsafOxi7P7zVO8QoycGkJMob78UUJ8SXlJ9SmZFYnBFfVJqTWnyIU
+  YaDQ0mC17aAJU5IsCg1PbUiLTMHGPAwaQkOHiUR3jPFQGne4oLE3OLMdIjUKUZFKXHeoyAJAZ
+  BERmkeXBssyi4xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEubtBpnCk5lXAjf9FdBiJqDFH4W
+  YQBaXJCKkpBqYOBbbzsoU3xX/3+7or8pn3499U5960KBVsWSu/4M95sqTL9/eJnfgw/GNbY8/
+  bF37+1Hdro7XoeUd/3kVL5+W9eYq3na/elNoS/KMy6tiO1ctlkgPy5DrVr993kR0+eGSy7sbN
+  77127toXUvsg8aH55ZmOVfvsd8zwVK/gYHp6ulfG6czXz9i7moT/pk9+7Npu9+JVbNEP89kl1
+  +0YpqKXK1Ux4+zdiphd7Ya3Vv1b+e59QsqWL3zonkm32k8fXaDWcHvoO0un57/rdshcSfBxfS
+  1Wdy1E//4pR0j758+/lZafUmm+AIPG/Mpx/Uzjb7aG4bdPvjXa31gwz35u4xaxbt8ZNaxTOqe
+  uUdftUwtyl+JpTgj0VCLuag4EQBc54OLLQMAAA==
 X-Env-Sender: pengms1@lenovo.com
-X-Msg-Ref: server-17.tower-326.messagelabs.com!1577350110!899701!1
-X-Originating-IP: [103.30.234.5]
+X-Msg-Ref: server-15.tower-326.messagelabs.com!1577350478!834580!1
+X-Originating-IP: [103.30.234.4]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.44.22; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 31880 invoked from network); 26 Dec 2019 08:48:32 -0000
-Received: from unknown (HELO apsmtp.lenovo.com) (103.30.234.5)
-  by server-17.tower-326.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Dec 2019 08:48:32 -0000
+Received: (qmail 21287 invoked from network); 26 Dec 2019 08:54:41 -0000
+Received: from unknown (HELO apsmtp.lenovo.com) (103.30.234.4)
+  by server-15.tower-326.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Dec 2019 08:54:41 -0000
 Received: from smtpinternal.lenovo.com (unknown [10.96.80.15])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 0E415663493588316022;
-        Thu, 26 Dec 2019 16:48:30 +0800 (CST)
+        by Forcepoint Email with ESMTPS id C180451D802114F38E6F;
+        Thu, 26 Dec 2019 16:54:37 +0800 (CST)
 Received: from hsbmc.10.240.0.10 (unknown [10.245.100.154])
-        by Forcepoint Email with ESMTP id 9FA6E1C11291577F2F46;
-        Thu, 26 Dec 2019 16:48:29 +0800 (CST)
+        by Forcepoint Email with ESMTP id 571CD8510AD0A7328B23;
+        Thu, 26 Dec 2019 16:54:37 +0800 (CST)
 From:   Andrew Peng <pengms1@lenovo.com>
-To:     linux@roeck-us.net, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, benjaminfair@google.com
-Cc:     openbmc@lists.ozlabs.org, Andrew Peng <pengms1@lenovo.com>,
-        Derek Lin <dlin23@lenovo.com>, Yonghui Liu <liuyh21@lenovo.com>
+To:     joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com,
+        andrew@aj.id.au, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        benjaminfair@google.com, openbmc@lists.ozlabs.org
+Cc:     Andrew Peng <pengms1@lenovo.com>, Derek Lin <dlin23@lenovo.com>,
+        Yonghui Liu <liuyh21@lenovo.com>
 Subject: [PATCH v1 1/1] ARM: dts: aspeed: update Hr855xg2 device tree
-Date:   Thu, 26 Dec 2019 16:48:28 +0800
-Message-Id: <1577350108-127294-1-git-send-email-pengms1@lenovo.com>
+Date:   Thu, 26 Dec 2019 16:54:35 +0800
+Message-Id: <1577350475-127530-1-git-send-email-pengms1@lenovo.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
