@@ -2,467 +2,150 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ABBC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925A0C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD63220740
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E9C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:14:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJoxlqsf"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TDSn+jT+";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ZXNnWdDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLZRMr (ORCPT
+        id S1726806AbfLZROi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 12:12:47 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37748 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLZRMr (ORCPT
+        Thu, 26 Dec 2019 12:14:38 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59892 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726480AbfLZROh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 12:12:47 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so13437298pfn.4;
-        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
+        Thu, 26 Dec 2019 12:14:37 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 14305C096E;
+        Thu, 26 Dec 2019 17:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1577380476; bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=TDSn+jT+zVxCM459OfDnrzPiZ5IwRY6fWxTt6dN0z5FpDVFkS4IlEQ3m0AdGofa5P
+         p+/VKKSxpiNcCsoSuXkpYhSspzJWNI9r5O5MFNDQyLBjouilfA3TS78vZXofn27EwL
+         x8cdYlRso+Q5Ksb5Ddxffu/GRNnEkKGZADoTql6G0uXMKsVqfUxAw3cyUogajm1+Ia
+         6CDBFjFd3B4zgZ29P8FB58BPXmK7Nd66AXYY7HLSKIBFMBBr90DRtvF9amfAg9CgIX
+         /adpjQRskw6hMhQ0NsPzZ9TWdAmEAQqbScPR50CDPxLgi+k1q4HdO4NO0tk9f0JTtk
+         y3x0PF2negbTQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D288AA007E;
+        Thu, 26 Dec 2019 17:14:33 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 26 Dec 2019 09:14:23 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 26 Dec 2019 09:14:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lf8pyPC+mugwc/qRwl7wrNhhuv/4pQu7J5XaYBgmes+kEacNFIIZXaUGlELcE0LvpVo+3yKvtTXsEGhHh1V8sQocPUvYUMAXIqftjm9tr94MnXMiFP7tFTmWb7COvNu1KZvHEv0CZ6iuHM5IS0sX81oC6UC6cfTdsWUUrG9K+Bt/3H+FzO3+YwEzPyLOFymXNNpWhDaeT49WNTjVtsGKszgkdmwD5G13CQiGfkwpKsqvNa3lEV2xqCZjr7JHg0qeXXDZy4vlhphMYx7paweRfbogVEEvG1YdjEnL9niT/4XKBqKGkgqRKPwiK6OVfeijLVbBLMEb3ZgbZlvuGA4HjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
+ b=jQj0dyUgjEmz1ebiVb7tdifDFC4PuvSrLVjZhPS1pXk+YspwB26pDpAdRiRxI2/OaUl+Bdpoo95ydWGooDprvR2Q0pBqJWWQDDhfq2p8gJaVm2w/vpDXtdpCqXwYKZXptuN8LFXqXgC1WjtJxyheKY31Xb2RMjBYjfAzBoKek9cfsZFbhCJYisb0AzhTNHSXM1t2e+ZRd8uiriqjKCVDnBjPBJusNe5DWnh7wLNoBiWD/eoSGch8iLTTyi4MYdiOMKd3JVYzmArfPGpDuqCwJLjgwpvVpnMEYMxHU7JP1sU9UWfsy40XydKYWaEygXu8VM/Ve7IfKEzRm0V1Z7eJtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tcRXV91TDUxeHso2iZtQ7wegl6tGcSz0+CrYKB9XO/c=;
-        b=FJoxlqsfl2daiqfKeqo2C08BK5JnznTcmjxBvB5dDghjGhC5ZYzcUUPX+d0ywwyBcD
-         0mVY1kNdukXJLElsdhoq9n+6G2Uyrfzfx9pBKVc8Iogz2tChPyJmQhbPs0CvlnlYnRWA
-         J7/pCz8U2thm4fmJ+xaxkZYsRaWdMHQP7wy74qpC/wreoq1hn2WakesMHws8W9fIc9l2
-         VjLuwJ5JWCYyJmpP23n3gEzKesrHkFJeGRuqLwJvyVk5LmjMy6BAbSnPE/OXf5PIzn1g
-         ChttTTFNLRj9F5Cu0L7IZQBkOTLQSYAgzVXEVPnhiWkOQ+GGIzQLR2KVe8dqUY93foFP
-         smMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tcRXV91TDUxeHso2iZtQ7wegl6tGcSz0+CrYKB9XO/c=;
-        b=oWV6Abz8ZEh2C+UhOTl2gy9mMilajvnTBoTHmkCltNWYqtCQxkZkaEY46+/NRM94Rd
-         +miOX8mBa1zzdTl7jNcgId2zAZSsXHBBS5UwQ9Jwm90VW0/l8H8fyzE2244Wcoqz559+
-         9da5o3pmFYN0JmmHpsVg9NaDtbXx58cSQNx0RGu4qhXWl/B2nuduNgDXrslV/8IVlTsf
-         L/Llvqc9gWyBXauMZfFAuKAK4LLbP+gPtHz9m+lUcYUhhJcBhfuITnk9AdKHD/eVBaMp
-         LsuFgVQB9d+93wacEWg3wJn4AagTlGIpjWJMA5cun1LjQRA3+MxwdJ4YRfzrTGzYHPsy
-         B1TA==
-X-Gm-Message-State: APjAAAXuwjF6ELeTgN0quilHoW0PPGZ5PS+IIkxR7mzpfpv+ggVFpkqY
-        Rv9WLQCIbRQt+6HbF5xjS34=
-X-Google-Smtp-Source: APXvYqycKA1GjeNUwDsI6j96wkUF7Qw96QL6mzqR4EC4PwF+Y1lFK80xeZdaUy/rEuaY/G8wcm9Epw==
-X-Received: by 2002:a63:220b:: with SMTP id i11mr48980496pgi.50.1577380366441;
-        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a18sm2446693pjq.30.2019.12.26.09.12.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
-Subject: Re: [PATCH linux dev-5.4 v1 0/1] hwmon: (pmbus) Add Infineon IR38164,
- Renesas RAA228006, and TI SN1701022 driver
-To:     Andrew Peng <pengms1@lenovo.com>, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjaminfair@google.com
-Cc:     openbmc@lists.ozlabs.org, Derek Lin <dlin23@lenovo.com>,
-        Yonghui Liu <liuyh21@lenovo.com>
-References: <1577350647-128938-1-git-send-email-pengms1@lenovo.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4452cf36-25ac-6064-b124-fda71b282fb7@roeck-us.net>
-Date:   Thu, 26 Dec 2019 09:12:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1577350647-128938-1-git-send-email-pengms1@lenovo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=le4nA7EEjIQ/8dDjq/zddFgh/LFz5D/hv7vEtLT/MXQ=;
+ b=ZXNnWdDo+eu2qe9NLZyCVCYyLTWnX0gDf0wszsxtRrrTWQO6iaUcCKvNcjwU3oL2X+6Vh4oqSpQWgDu3H/PjKCsAoD6OG9ceaC8EnKdr+/evQp1Y/I76darmgFvqbLaIBJH30opwraIH5RAOrFZYSLKRvZC7IANdjYH2/WPc03Q=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3235.namprd12.prod.outlook.com (20.179.67.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Thu, 26 Dec 2019 17:14:21 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::3d20:3a36:3b64:4510]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::3d20:3a36:3b64:4510%7]) with mapi id 15.20.2581.007; Thu, 26 Dec 2019
+ 17:14:21 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Colin Ian King <colin.king@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: net: stmmac: Add basic EST support for GMAC5+
+Thread-Topic: net: stmmac: Add basic EST support for GMAC5+
+Thread-Index: AQHVt5AvYOAfEKP32kajpx2asGgxD6fMsE8A
+Date:   Thu, 26 Dec 2019 17:14:20 +0000
+Message-ID: <BN8PR12MB326646266EF7CEA29685CF0AD32B0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <c1b6b4cc-bc94-8ed6-0098-de9e5321722a@canonical.com>
+In-Reply-To: <c1b6b4cc-bc94-8ed6-0098-de9e5321722a@canonical.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [188.251.69.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: efe4d2ec-6943-4a75-631e-08d78a270c70
+x-ms-traffictypediagnostic: BN8PR12MB3235:
+x-microsoft-antispam-prvs: <BN8PR12MB32353C7D2F3A9FD4BC87C9FBD32B0@BN8PR12MB3235.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 02638D901B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(136003)(396003)(366004)(51914003)(189003)(199004)(71200400001)(316002)(86362001)(8676002)(110136005)(66946007)(76116006)(26005)(6506007)(8936002)(52536014)(33656002)(81156014)(81166006)(186003)(5660300002)(2906002)(9686003)(55016002)(64756008)(66476007)(66446008)(7696005)(66556008)(4326008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3235;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ooaZTlnb5x4NdPu75Of9zALmdLfFosk6YoMv4zSS+OmKcNDX+R2YE0DiMNOv61zNmxgZUAYtHlgmZ+ASC+bhE3zax4gPD0MVGXPtyDRL9hjRt0KT0ZptXcYfVCG1phqK4dk1SIyzFKtFHT8ls28ACDuERWGE2N705RSISA+89J2GBChNCBQGAmKbuAknrwrr/bPr3P0ziXbXx3AscqVh/AzK/HrPi0KznnLdpUDJCMcVcK/Q5tl6TTEGd7Uq7XLFaXWqU4nFkoaDP6BliriO3XR1oZjjNbL1/rXjXlBGWUryuJRB81sIpyFIOZ5Mc12ExPHiymZjuwj5AlIIBLFnEwQMX2/qYpy/fPvPgUn8rJW8ux+d0Id4anJn+pmhG0D8xvF5+h8C4pMDzsE5setbEHoemkpL6ajuIaGPWDPwwit5JfGl7IQVHkccZs8ZJzLgJclghaP+4ttKcsog57C1J5yNo0106ZSGEi3kLuX/QaVFtqF5Wabw+hcUI4oqWtMn
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: efe4d2ec-6943-4a75-631e-08d78a270c70
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Dec 2019 17:14:21.0305
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RFZDm1voRoN4GsI3W0bWEdT9k6T3qyaDPJxtxaXB0GCH28xUAsFJ+rVkjj3V9ZpTJOoCAVwo2ctW7pC20ZXuTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3235
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/26/19 12:57 AM, Andrew Peng wrote:
-> Add the pmbus driver for Infineon IR38164 Voltage Regulator driver.
-> Add the pmbus driver for Renesas RAA228006 Digital PWM Controller.
-> Add the pmbus driver for TI SN1701022 driver.
-> 
-> Signed-off-by: Andrew Peng <pengms1@lenovo.com>
-> Signed-off-by: Derek Lin <dlin23@lenovo.com>
-> Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
-> ---
-
-This is annoying, and each time it happens it is more annoying.
-Can you folks please stop sending me patches for non-upstream kernel branches ?
-
-Thanks,
-Guenter
-
-> v1: initial version
-> 
->   drivers/hwmon/pmbus/Kconfig     |  25 ++++++++
->   drivers/hwmon/pmbus/Makefile    |   3 +
->   drivers/hwmon/pmbus/ir38164.c   |  72 +++++++++++++++++++++++
->   drivers/hwmon/pmbus/raa228006.c | 127 ++++++++++++++++++++++++++++++++++++++++
->   drivers/hwmon/pmbus/sn1701022.c |  80 +++++++++++++++++++++++++
->   5 files changed, 307 insertions(+)
->   create mode 100644 drivers/hwmon/pmbus/ir38164.c
->   create mode 100644 drivers/hwmon/pmbus/raa228006.c
->   create mode 100644 drivers/hwmon/pmbus/sn1701022.c
-> 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 6106263..2312b58 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -73,6 +73,15 @@ config SENSORS_IR38064
->   	  This driver can also be built as a module. If so, the module will
->   	  be called ir38064.
->   
-> +config SENSORS_IR38164
-> +	tristate "Infineon IR38164"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for Infineon
-> +	  IR38164.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called ir38164.
-> +
->   config SENSORS_IRPS5401
->   	tristate "Infineon IRPS5401"
->   	help
-> @@ -230,4 +239,20 @@ config SENSORS_ZL6100
->   	  This driver can also be built as a module. If so, the module will
->   	  be called zl6100.
->   
-> +config SENSORS_RAA228006
-> +	tristate "RAA228006 and compatibles"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for RAA228006.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called RAA228006.
-> +
-> +config SENSORS_SN1701022
-> +	tristate "SN1701022"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for SN1701022.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called sn1701022.
-> +
->   endif # PMBUS
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 03bacfc..ba3aed5 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
->   obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
->   obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
->   obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
-> +obj-$(CONFIG_SENSORS_IR38164)	+= ir38164.o
->   obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
->   obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
->   obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
-> @@ -26,3 +27,5 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
->   obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
->   obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
->   obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
-> +obj-$(CONFIG_SENSORS_RAA228006)	+= raa228006.o
-> +obj-$(CONFIG_SENSORS_SN1701022)	+= sn1701022.o
-> diff --git a/drivers/hwmon/pmbus/ir38164.c b/drivers/hwmon/pmbus/ir38164.c
-> new file mode 100644
-> index 0000000..db89473
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/ir38164.c
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Hardware monitoring driver for Infineon ir38164
-> + *
-> + * Copyright (C) 2019-present Lenovo
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin Street, Fifth Floor,
-> + * Boston, MA  02110-1301, USA.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include "pmbus.h"
-> +
-> +static struct pmbus_driver_info ir38164_info = {
-> +	.pages = 1,
-> +	.format[PSC_VOLTAGE_IN] = linear,
-> +	.format[PSC_VOLTAGE_OUT] = linear,
-> +	.format[PSC_CURRENT_OUT] = linear,
-> +	.format[PSC_POWER] = linear,
-> +	.format[PSC_TEMPERATURE] = linear,
-> +
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-> +	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-> +	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-> +	    | PMBUS_HAVE_POUT,
-> +};
-> +
-> +static int ir38164_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	return pmbus_do_probe(client, id, &ir38164_info);
-> +}
-> +
-> +static const struct i2c_device_id ir38164_id[] = {
-> +	{"ir38164", 0},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, ir38164_id);
-> +
-> +/* This is the driver that will be inserted */
-> +static struct i2c_driver ir38164_driver = {
-> +	.driver = {
-> +		   .name = "ir38164",
-> +		   },
-> +	.probe = ir38164_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = ir38164_id,
-> +};
-> +
-> +module_i2c_driver(ir38164_driver);
-> +
-> +MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
-> +MODULE_DESCRIPTION("PMBus driver for Infineon ir38164");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/hwmon/pmbus/raa228006.c b/drivers/hwmon/pmbus/raa228006.c
-> new file mode 100644
-> index 0000000..9aed481
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/raa228006.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Hardware monitoring driver for raa228006
-> + *
-> + * Copyright (C) 2019-present Lenovo
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin Street, Fifth Floor,
-> + * Boston, MA  02110-1301, USA.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include "pmbus.h"
-> +
-> +static int raa228006_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	struct pmbus_driver_info *info;
-> +	u8 buf[I2C_SMBUS_BLOCK_MAX];
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_READ_BYTE_DATA
-> +				| I2C_FUNC_SMBUS_READ_WORD_DATA
-> +				| I2C_FUNC_SMBUS_READ_BLOCK_DATA))
-> +		return -ENODEV;
-> +
-> +	/* By default this device doesn't boot to page 0, so set page 0
-> +	 * to access all pmbus registers.
-> +	 */
-> +
-> +	i2c_smbus_write_byte_data(client, 0, 0);
-> +
-> +	/* Read Manufacturer id */
-> +	ret = i2c_smbus_read_block_data(client, PMBUS_MFR_ID, buf);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "Failed to read PMBUS_MFR_ID\n");
-> +		return ret;
-> +	}
-> +
-> +	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
-> +			    GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->format[PSC_VOLTAGE_IN] = direct;
-> +	info->format[PSC_VOLTAGE_OUT] = direct;
-> +	info->format[PSC_CURRENT_IN] = direct;
-> +	info->format[PSC_CURRENT_OUT] = direct;
-> +	info->format[PSC_POWER] = direct;
-> +	info->format[PSC_TEMPERATURE] = direct;
-> +	info->vrm_version = vr13;
-> +
-> +	info->m[PSC_VOLTAGE_IN] = 1,
-> +	info->b[PSC_VOLTAGE_IN] = 0,
-> +	info->R[PSC_VOLTAGE_IN] = 3,
-> +
-> +	info->m[PSC_VOLTAGE_OUT] = 1,
-> +	info->b[PSC_VOLTAGE_OUT] = 0,
-> +	info->R[PSC_VOLTAGE_OUT] = 0,
-> +
-> +	info->m[PSC_CURRENT_IN] = 1,
-> +	info->b[PSC_CURRENT_IN] = 0,
-> +	info->R[PSC_CURRENT_IN] = 1,
-> +
-> +	info->m[PSC_CURRENT_OUT] = 1,
-> +	info->b[PSC_CURRENT_OUT] = 0,
-> +	info->R[PSC_CURRENT_OUT] = 2,
-> +
-> +	info->m[PSC_POWER] = 1,
-> +	info->b[PSC_POWER] = 0,
-> +	info->R[PSC_POWER] = 3,
-> +
-> +	info->m[PSC_TEMPERATURE] = 1,
-> +	info->b[PSC_TEMPERATURE] = 0,
-> +	info->R[PSC_TEMPERATURE] = 3,
-> +
-> +	info->func[0] = PMBUS_HAVE_VIN
-> +		| PMBUS_HAVE_VOUT | PMBUS_HAVE_IIN
-> +		| PMBUS_HAVE_IOUT | PMBUS_HAVE_PIN
-> +		| PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP
-> +		| PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3
-> +		| PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT
-> +		| PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP;
-> +
-> +	info->pages = id->driver_data;
-> +
-> +	return pmbus_do_probe(client, id, info);
-> +}
-> +
-> +static const struct i2c_device_id raa228006_id[] = {
-> +	{"raa228006", 1},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, raa228006_id);
-> +
-> +/* This is the driver that will be inserted */
-> +static struct i2c_driver raa228006_driver = {
-> +	.driver = {
-> +		   .name = "raa228006",
-> +		   },
-> +	.probe = raa228006_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = raa228006_id,
-> +};
-> +
-> +module_i2c_driver(raa228006_driver);
-> +
-> +MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
-> +MODULE_DESCRIPTION("PMBus driver for raa228006");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/hwmon/pmbus/sn1701022.c b/drivers/hwmon/pmbus/sn1701022.c
-> new file mode 100644
-> index 0000000..0ba45ac
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/sn1701022.c
-> @@ -0,0 +1,80 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Hardware monitoring driver for sn1701022
-> + *
-> + * Copyright (C) 2019-present Lenovo
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 51 Franklin Street, Fifth Floor,
-> + * Boston, MA  02110-1301, USA.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include "pmbus.h"
-> +
-> +static struct pmbus_driver_info sn1701022_info = {
-> +	.pages = 2,
-> +	.format[PSC_VOLTAGE_IN] = linear,
-> +	.format[PSC_VOLTAGE_OUT] = vid,
-> +	.vrm_version = vr12,
-> +	.format[PSC_CURRENT_OUT] = linear,
-> +	.format[PSC_CURRENT_IN] = linear,
-> +	.format[PSC_POWER] = linear,
-> +	.format[PSC_TEMPERATURE] = linear,
-> +
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-> +	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-> +	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-> +	    | PMBUS_HAVE_POUT,
-> +
-> +	.func[1] = PMBUS_HAVE_VIN | PMBUS_HAVE_STATUS_INPUT
-> +	    | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
-> +	    | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
-> +	    | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
-> +	    | PMBUS_HAVE_POUT,
-> +};
-> +
-> +static int sn1701022_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	return pmbus_do_probe(client, id, &sn1701022_info);
-> +}
-> +
-> +static const struct i2c_device_id sn1701022_id[] = {
-> +	{"sn1701022", 0},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, sn1701022_id);
-> +
-> +/* This is the driver that will be inserted */
-> +static struct i2c_driver sn1701022_driver = {
-> +	.driver = {
-> +		   .name = "sn1701022",
-> +		   },
-> +	.probe = sn1701022_probe,
-> +	.remove = pmbus_do_remove,
-> +	.id_table = sn1701022_id,
-> +};
-> +
-> +module_i2c_driver(sn1701022_driver);
-> +
-> +MODULE_AUTHOR("Yonghui Liu <liuyh21@lenovo.com>");
-> +MODULE_DESCRIPTION("PMBus driver for  sn1701022");
-> +MODULE_LICENSE("GPL");
-> 
-
+RnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCkRhdGU6IERl
+Yy8yMC8yMDE5LCAyMzo0OTowMiAoVVRDKzAwOjAwKQ0KDQo+IEhpLA0KPiANCj4gU3RhdGljIGFu
+YWx5c2lzIHdpdGggQ292ZXJpdHkgaGFzIGRldGVjdGVkIGEgcG90ZW50aWFsIGlzc3VlIHdpdGgg
+dGhlDQo+IGZvbGxvd2luZyBjb21taXQ6DQo+IA0KPiBjb21taXQgNTA0NzIzYWYwZDg1NDM0YmU1
+ZmI2ZjJkZGUwYjYyNjQ0YTdmMWVhZA0KPiBBdXRob3I6IEpvc2UgQWJyZXUgPGpvYWJyZXVAc3lu
+b3BzeXMuY29tPg0KPiBEYXRlOiAgIFdlZCBEZWMgMTggMTE6MzM6MDUgMjAxOSArMDEwMA0KPiAN
+Cj4gICAgIG5ldDogc3RtbWFjOiBBZGQgYmFzaWMgRVNUIHN1cHBvcnQgZm9yIEdNQUM1Kw0KPiAN
+Cj4gDQo+IEluIGZ1bmN0aW9uIGR3bWFjNV9lc3RfY29uZmlndXJlKCkgd2UgaGF2ZSBhIHU2NCB0
+b3RhbF9jdHIgYmVpbmcNCj4gYXNzaWduZWQgYXMgZm9sbG93czoNCj4gDQo+IAl0b3RhbF9jdHIg
+PSBjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdICogMTAwMDAwMDAwMDsNCj4gDQo+IFRoZSBjZmct
+PmN0clsxXSBpcyBhIHUzMiwgdGhlIG11bHRpcGxpY2F0aW9uIG9mIGNmZy0+Y3RyWzFdIGlzIGEg
+dTMyDQo+IG11bHRpcGxpY2F0aW9uIG9wZXJhdGlvbiwgc28gbXVsdGlwbHlpbmcgYnkgMTAwMDAw
+MDAwMCBjYW4gcG90ZW50aWFsbHkNCj4gY2F1c2UgYW4gb3ZlcmZsb3cuICBFaXRoZXIgY2ZnLT5j
+dHJbMV0gbmVlZHMgdG8gYmUgY2FzdCB0byBhIHU2NCBvcg0KPiAxMDAwMDAwMDAwIHNob3VsZCBi
+ZSBhdCBsZWFzdCBhIDEwMDAwMDAwMDBVTCB0byBhdm9pZCB0aGlzIG92ZXJmbG93LiBJDQo+IHdh
+cyBnb2luZyB0byBmaXggdGhpcyBidXQgb24gZnVydGhlciBpbnNwZWN0aW9uIEkgd2FzIG5vdCBz
+dXJlIGlmIHRoZQ0KPiBvcmlnaW5hbCBjb2RlIHdhcyBpbnRlbmRlZCBhczoNCj4gDQo+IAl0b3Rh
+bF9jdHIgPSBjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdICogMTAwMDAwMDAwMFVMOw0KPiBvcjoN
+Cj4gCXRvdGFsX2N0ciA9IChjZmctPmN0clswXSArIGNmZy0+Y3RyWzFdKSAqIDEwMDAwMDAwMDBV
+TDsNCj4gDQo+IC4uaGVuY2UgSSdtIGZsYWdnaW5nIHRoaXMgdXAgYXMgcG90ZW50aWFsIGVycm9y
+Lg0KDQpUaGFua3MgZm9yIHRoZSByZXBvcnQuIFRoZSBmaXJzdCBvcHRpb24gaXMgdGhlIGNvcnJl
+Y3Qgb25lIGFzIGN0clsxXSBpcyANCnNlY29uZHMgYW5kIGN0clswXSBpcyBuYW5vc2Vjb25kcy4g
+Q2FuIHlvdSBzZW5kIGEgZml4LXVwIHBhdGNoID8NCg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3Vl
+bCBBYnJldQ0K
