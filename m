@@ -2,419 +2,218 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9169C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D41FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5EC2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A53E2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LYe4tCSb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfLZCZr (ORCPT
+        id S1726985AbfLZC13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 21:25:47 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42232 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726893AbfLZCZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 21:25:47 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2265BFD2E930668CFA45;
-        Thu, 26 Dec 2019 10:25:45 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 26 Dec 2019 10:25:34 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <linux-erofs@lists.ozlabs.org>, <gaoxiang25@huawei.com>
-CC:     Chao Yu <yuchao0@huawei.com>, David Howells <dhowells@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-Subject: [PATCH RESEND] erofs: convert to use the new mount fs_context api
-Date:   Thu, 26 Dec 2019 10:25:19 +0800
-Message-ID: <20191226022519.53386-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Wed, 25 Dec 2019 21:27:29 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31924 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726934AbfLZC12 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Dec 2019 21:27:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577327246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YJqjUH7vi87pEZSLD7MKF1pZgOM8LZyAmnT+DqqPgdM=;
+        b=LYe4tCSbyfMH6FvgCtwrpDBPk457uI8/LplSW8hY8f0SRTCjAxzOmJXyLWyRc4Ilxqoxp3
+        ZJQlhUltXbdS7owKiIaCHTnBqu8fzLuDZBFBlqJJyfrCceHVEwBaM98HyRP9OiP6AeAlca
+        eyWO6mjXFnZa+/+ps1ZfWW4JbSklppI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-brln3UgNNE2eo715QK7NNA-1; Wed, 25 Dec 2019 21:27:22 -0500
+X-MC-Unique: brln3UgNNE2eo715QK7NNA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73A65107ACC7;
+        Thu, 26 Dec 2019 02:27:19 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFBED5C578;
+        Thu, 26 Dec 2019 02:27:07 +0000 (UTC)
+Date:   Thu, 26 Dec 2019 10:27:02 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Andrea Vai <andrea.vai@unipv.it>,
+        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191226022702.GA2901@ming.t460p>
+References: <20191218094830.GB30602@ming.t460p>
+ <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
+ <20191223130828.GA25948@ming.t460p>
+ <20191223162619.GA3282@mit.edu>
+ <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
+ <20191223172257.GB3282@mit.edu>
+ <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
+ <20191223195301.GC3282@mit.edu>
+ <20191224012707.GA13083@ming.t460p>
+ <20191225051722.GA119634@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191225051722.GA119634@mit.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the erofs to use new internal mount API as the old one will
-be obsoleted and removed.  This allows greater flexibility in
-communication of mount parameters between userspace, the VFS and the
-filesystem.
+On Wed, Dec 25, 2019 at 12:17:22AM -0500, Theodore Y. Ts'o wrote:
+> On Tue, Dec 24, 2019 at 09:27:07AM +0800, Ming Lei wrote:
+> > The ext4_release_file() should be run from read() or write() syscall if
+> > Fedora 30's 'cp' is implemented correctly. IMO, it isn't expected behavior
+> > for ext4_release_file() to be run thousands of times when just
+> > running 'cp' once, see comment of ext4_release_file():
+> 
+> What's your evidence of that?  As opposed to the writeback taking a
+> long time, leading to the *one* call of ext4_release_file taking a
+> long time?  If it's a big file, we might very well be calliing
+> ext4_writepages multiple times, from a single call to
+> __filemap_fdatawrite_range().
+> 
+> You confused mightily from that assertion, and that caused me to make
+> assumptions that cp was doing something crazy.  But I'm quite conviced
+> now that this is almost certainly not what is happening.
+> 
+> > > I suspect the next step is use a blktrace, to see what kind of I/O is
+> > > being sent to the USB drive, and how long it takes for the I/O to
+> > > complete.  You might also try to capture the output of "iostat -x 1"
+> > > while the script is running, and see what the difference might be
+> > > between a kernel version that has the problem and one that doesn't,
+> > > and see if that gives us a clue.
+> > 
+> > That isn't necessary, given we have concluded that the bad write
+> > performance is caused by broken write order.
+> 
+> I didn't see any evidence of that from what I had in my inbox, so I
+> went back to the mailing list archives to figure out what you were
+> talking about.  Part of the problem is this has been a very
+> long-spanning thread, and I had deleted from my inbox all of the parts
+> relating to the MQ scheduler since that was clearly Not My Problem.  :-)
+> 
+> So, summarizing the most of the thread.  The problem started when we
+> removed the legacy I/O scheduler, since we are now only using the MQ
+> scheduler.  What the kernel is sending is long writes (240 sectors),
+> but it is being sent as an interleaved stream of two sequential
+> writes.  This particular pendrive can't handle this workload, because
+> it has a very simplistic Flash Translation Layer.  Now, this is not
+> *broken*, from a storage perspective; it's just that it's more than
+> the simple little brain of this particular pen drive can handle.
+> 
+> Previously, with a single queue, and specially since the queue depth
+> supported by this pen drive is 1, the elevator algorithm would sort
+> the I/O requests so that it would be mostly sequential, and this
+> wouldn't be much of a problem.  However, once the legacy I/O stack was
+> removed, the MQ stack is designed so that we don't have to take a
+> global lock in order to submit an I/O request.  That also means that
+> we can't do a full elevator sort since that would require locking all
+> of the queues.
+> 
+> This is not a problem, since HDD's generally have a 16 deep queue, and
+> SSD's have a super-deep queue depth since they get their speed via
+> parallel writes to different flash chips.  Unfortunately, it *is* a
+> problem for super primitive USB sticks.
+> 
+> > So far, the reason points to the extra writeback path from exit_to_usermode_loop().
+> > If it is not from close() syscall, the issue should be related with file reference
+> > count. If it is from close() syscall, the issue might be in 'cp''s
+> > implementation.
+> 
+> Oh, it's probably from the close system call; and it's *only* from a
+> single close system call.  Because there is the auto delayed
 
-See Documentation/filesystems/mount_api.txt for more information.
+Right. Looks I mis-interpreted the stackcount log, IOs are submitted
+from single close syscall.
 
-Cc: David Howells <dhowells@redhat.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-+Cc David Howells
- fs/erofs/internal.h |   2 +-
- fs/erofs/super.c    | 249 +++++++++++++++++++++-----------------------
- 2 files changed, 118 insertions(+), 133 deletions(-)
+> allocation resolution to protect against buggy userspace, under
+> certain circumstances, as I explained earlier, we force a full
+> writeout on a close for a file decsriptor which was opened with an
+> O_TRUNC.  This is by *design*, since we are trying to protect against
+> buggy userspace (application programmers vastly outnumber file system
+> programmers, and far too many of them want O_PONY).  This is Working
+> As Intended.
+> 
+> You can disable it by deleting the test file before the cp:
+> 
+>     rm -f /mnt/pendrive/$testfile
+> 
+> Or you can disable the protection against stupid userspace by using
+> the noauto_da_alloc mount option.  (But then if you have a buggy game
+> program which writes the top-ten score file by using open(2) w/
+> O_TRUNC, and then said program closes the OpenGL library, and the
+> proprietary 3rd party binary-only video driver wedges the X server
+> requiring a hard reset to recover, and the top-ten score file becomes
+> a zero-length file, don't come crying to me...  Or if a graphical text
+> editor forgets to use fsync(2) before saving a source file you spent
+> hours working on, and then the system crashes at exactly the wrong
+> moment and your source file becomes zero-length, against, don't come
+> crying to me.  Blame the stupid application programmer which wrote
+> your text editor who decided to skip the fsync(2), or who decided that
+> copying the ACL's and xattrs was Too Hard(tm), and so opening the file
+> with O_TRUNC and rewriting the file in place was easier for the
+> application programmer.)
+> 
+> In any case, I think this is all working all as intended.  The MQ I/O
+> stack is optimized for modern HDD and SSD's, and especially SSD's.
+> And the file system assumes that parallel sequential writes,
+> especially if they are large, is really not a big deal, since that's
+> what NCQ or massive parallelism of pretty much all SSD's want.
+> (Again, ignoring the legacy of crappy flash drives.
+> 
+> You can argue with storage stack folks about whether we need to have
+> super-dumb mode for slow, crappy flash which uses a global lock and a
+> global elevator scheduler for super-crappy flash if you want.  I'm
+> going to stay out of that argument.
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 1ed5beff7d11..a5fac25db6af 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -102,13 +102,13 @@ struct erofs_sb_info {
- #define set_opt(sbi, option)	((sbi)->mount_opt |= EROFS_MOUNT_##option)
- #define test_opt(sbi, option)	((sbi)->mount_opt & EROFS_MOUNT_##option)
- 
--#ifdef CONFIG_EROFS_FS_ZIP
- enum {
- 	EROFS_ZIP_CACHE_DISABLED,
- 	EROFS_ZIP_CACHE_READAHEAD,
- 	EROFS_ZIP_CACHE_READAROUND
- };
- 
-+#ifdef CONFIG_EROFS_FS_ZIP
- #define EROFS_LOCKED_MAGIC     (INT_MIN | 0xE0F510CCL)
- 
- /* basic unit of the workstation of a super_block */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 057e6d7b5b7f..b90713760885 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -10,6 +10,8 @@
- #include <linux/parser.h>
- #include <linux/seq_file.h>
- #include <linux/crc32c.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -192,41 +194,6 @@ static int erofs_read_superblock(struct super_block *sb)
- 	return ret;
- }
- 
--#ifdef CONFIG_EROFS_FS_ZIP
--static int erofs_build_cache_strategy(struct super_block *sb,
--				      substring_t *args)
--{
--	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	const char *cs = match_strdup(args);
--	int err = 0;
--
--	if (!cs) {
--		erofs_err(sb, "Not enough memory to store cache strategy");
--		return -ENOMEM;
--	}
--
--	if (!strcmp(cs, "disabled")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_DISABLED;
--	} else if (!strcmp(cs, "readahead")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_READAHEAD;
--	} else if (!strcmp(cs, "readaround")) {
--		sbi->cache_strategy = EROFS_ZIP_CACHE_READAROUND;
--	} else {
--		erofs_err(sb, "Unrecognized cache strategy \"%s\"", cs);
--		err = -EINVAL;
--	}
--	kfree(cs);
--	return err;
--}
--#else
--static int erofs_build_cache_strategy(struct super_block *sb,
--				      substring_t *args)
--{
--	erofs_info(sb, "EROFS compression is disabled, so cache strategy is ignored");
--	return 0;
--}
--#endif
--
- /* set up default EROFS parameters */
- static void erofs_default_options(struct erofs_sb_info *sbi)
- {
-@@ -251,73 +218,79 @@ enum {
- 	Opt_err
- };
- 
--static match_table_t erofs_tokens = {
--	{Opt_user_xattr, "user_xattr"},
--	{Opt_nouser_xattr, "nouser_xattr"},
--	{Opt_acl, "acl"},
--	{Opt_noacl, "noacl"},
--	{Opt_cache_strategy, "cache_strategy=%s"},
--	{Opt_err, NULL}
-+static const struct fs_parameter_spec erofs_param_specs[] = {
-+	fsparam_flag("user_xattr",	Opt_user_xattr),
-+	fsparam_flag("nouser_xattr",	Opt_nouser_xattr),
-+	fsparam_flag("acl",		Opt_acl),
-+	fsparam_flag("noacl",		Opt_noacl),
-+	fsparam_enum("cache_strategy",	Opt_cache_strategy),
-+	{}
- };
- 
--static int erofs_parse_options(struct super_block *sb, char *options)
--{
--	substring_t args[MAX_OPT_ARGS];
--	char *p;
--	int err;
--
--	if (!options)
--		return 0;
-+static const struct fs_parameter_enum erofs_param_enums[] = {
-+	{ Opt_cache_strategy, "disabled",	EROFS_ZIP_CACHE_DISABLED },
-+	{ Opt_cache_strategy, "readahead",	EROFS_ZIP_CACHE_READAHEAD},
-+	{ Opt_cache_strategy, "readaround",	EROFS_ZIP_CACHE_READAROUND},
-+	{}
-+};
- 
--	while ((p = strsep(&options, ","))) {
--		int token;
-+static const struct fs_parameter_description erofs_fs_parameters = {
-+	.name	= "erofs",
-+	.specs	= erofs_param_specs,
-+	.enums	= erofs_param_enums,
-+};
- 
--		if (!*p)
--			continue;
-+static int erofs_fc_parse_param(struct fs_context *fc,
-+				struct fs_parameter *param)
-+{
-+	struct erofs_sb_info *sbi __maybe_unused = fc->s_fs_info;
-+	struct fs_parse_result result;
-+	int opt;
- 
--		args[0].to = args[0].from = NULL;
--		token = match_token(p, erofs_tokens, args);
-+	opt = fs_parse(fc, &erofs_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
- 
--		switch (token) {
-+	switch (opt) {
- #ifdef CONFIG_EROFS_FS_XATTR
--		case Opt_user_xattr:
--			set_opt(EROFS_SB(sb), XATTR_USER);
--			break;
--		case Opt_nouser_xattr:
--			clear_opt(EROFS_SB(sb), XATTR_USER);
--			break;
-+	case Opt_user_xattr:
-+		set_opt(sbi, XATTR_USER);
-+		break;
-+	case Opt_nouser_xattr:
-+		clear_opt(sbi, XATTR_USER);
-+		break;
- #else
--		case Opt_user_xattr:
--			erofs_info(sb, "user_xattr options not supported");
--			break;
--		case Opt_nouser_xattr:
--			erofs_info(sb, "nouser_xattr options not supported");
--			break;
-+	case Opt_user_xattr:
-+		invalf(fc, "erofs: user_xattr options not supported");
-+		break;
-+	case Opt_nouser_xattr:
-+		invalf(fc, "erofs: nouser_xattr options not supported");
-+		break;
- #endif
- #ifdef CONFIG_EROFS_FS_POSIX_ACL
--		case Opt_acl:
--			set_opt(EROFS_SB(sb), POSIX_ACL);
--			break;
--		case Opt_noacl:
--			clear_opt(EROFS_SB(sb), POSIX_ACL);
--			break;
-+	case Opt_acl:
-+		set_opt(sbi, POSIX_ACL);
-+		break;
-+	case Opt_noacl:
-+		clear_opt(sbi, POSIX_ACL);
-+		break;
-+#else
-+	case Opt_acl:
-+		invalf(fc, "erofs: acl options not supported");
-+		break;
-+	case Opt_noacl:
-+		invalf(fc, "erofs: noacl options not supported");
-+		break;
-+#endif
-+	case Opt_cache_strategy:
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		sbi->cache_strategy = result.uint_32;
- #else
--		case Opt_acl:
--			erofs_info(sb, "acl options not supported");
--			break;
--		case Opt_noacl:
--			erofs_info(sb, "noacl options not supported");
--			break;
-+		errorf(fc, "erofs: compression not supported, cache strategy ignored");
- #endif
--		case Opt_cache_strategy:
--			err = erofs_build_cache_strategy(sb, args);
--			if (err)
--				return err;
--			break;
--		default:
--			erofs_err(sb, "Unrecognized mount option \"%s\" or missing value", p);
--			return -EINVAL;
--		}
-+		break;
-+	default:
-+		return invalf(fc, "erofs: invalid mount option: %s", param->key);
- 	}
- 	return 0;
- }
-@@ -381,7 +354,7 @@ static int erofs_init_managed_cache(struct super_block *sb)
- static int erofs_init_managed_cache(struct super_block *sb) { return 0; }
- #endif
- 
--static int erofs_fill_super(struct super_block *sb, void *data, int silent)
-+static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
- 	struct erofs_sb_info *sbi;
-@@ -394,11 +367,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 		return -EINVAL;
- 	}
- 
--	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
--	if (!sbi)
--		return -ENOMEM;
--
--	sb->s_fs_info = sbi;
-+	sbi = sb->s_fs_info;
- 	err = erofs_read_superblock(sb);
- 	if (err)
- 		return err;
-@@ -412,12 +381,6 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- #ifdef CONFIG_EROFS_FS_XATTR
- 	sb->s_xattr = erofs_xattr_handlers;
- #endif
--	/* set erofs default mount options */
--	erofs_default_options(sbi);
--
--	err = erofs_parse_options(sb, data);
--	if (err)
--		return err;
- 
- 	if (test_opt(sbi, POSIX_ACL))
- 		sb->s_flags |= SB_POSIXACL;
-@@ -450,15 +413,61 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (err)
- 		return err;
- 
--	erofs_info(sb, "mounted with opts: %s, root inode @ nid %llu.",
--		   (char *)data, ROOT_NID(sbi));
-+	erofs_info(sb, "mounted with root inode @ nid %llu.", ROOT_NID(sbi));
-+	return 0;
-+}
-+
-+static int erofs_fc_get_tree(struct fs_context *fc)
-+{
-+	return get_tree_bdev(fc, erofs_fc_fill_super);
-+}
-+
-+static int erofs_fc_reconfigure(struct fs_context *fc)
-+{
-+	struct super_block *sb = fc->root->d_sb;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+
-+	DBG_BUGON(!sb_rdonly(sb));
-+
-+	if (test_opt(sbi, POSIX_ACL))
-+		fc->sb_flags |= SB_POSIXACL;
-+	else
-+		fc->sb_flags &= ~SB_POSIXACL;
-+
-+	fc->sb_flags |= SB_RDONLY;
- 	return 0;
- }
- 
--static struct dentry *erofs_mount(struct file_system_type *fs_type, int flags,
--				  const char *dev_name, void *data)
-+static void erofs_fc_free(struct fs_context *fc)
- {
--	return mount_bdev(fs_type, flags, dev_name, data, erofs_fill_super);
-+	/*
-+	 * sbi stored in fs_context will be cleaned after transferring
-+	 * to corresponding superblock on a successful new mount, or
-+	 * free it here.
-+	 */
-+	kfree(fc->s_fs_info);
-+}
-+
-+static const struct fs_context_operations erofs_context_ops = {
-+	.parse_param	= erofs_fc_parse_param,
-+	.get_tree       = erofs_fc_get_tree,
-+	.reconfigure    = erofs_fc_reconfigure,
-+	.free		= erofs_fc_free,
-+};
-+
-+static int erofs_init_fs_context(struct fs_context *fc)
-+{
-+	struct erofs_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
-+
-+	if (!sbi)
-+		return -ENOMEM;
-+
-+	/* set default mount options */
-+	erofs_default_options(sbi);
-+
-+	fc->s_fs_info = sbi;
-+	fc->ops = &erofs_context_ops;
-+	return 0;
- }
- 
- /*
-@@ -497,7 +506,7 @@ static void erofs_put_super(struct super_block *sb)
- static struct file_system_type erofs_fs_type = {
- 	.owner          = THIS_MODULE,
- 	.name           = "erofs",
--	.mount          = erofs_mount,
-+	.init_fs_context = erofs_init_fs_context,
- 	.kill_sb        = erofs_kill_sb,
- 	.fs_flags       = FS_REQUIRES_DEV,
- };
-@@ -603,36 +612,12 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- 	return 0;
- }
- 
--static int erofs_remount(struct super_block *sb, int *flags, char *data)
--{
--	struct erofs_sb_info *sbi = EROFS_SB(sb);
--	unsigned int org_mnt_opt = sbi->mount_opt;
--	int err;
--
--	DBG_BUGON(!sb_rdonly(sb));
--	err = erofs_parse_options(sb, data);
--	if (err)
--		goto out;
--
--	if (test_opt(sbi, POSIX_ACL))
--		sb->s_flags |= SB_POSIXACL;
--	else
--		sb->s_flags &= ~SB_POSIXACL;
--
--	*flags |= SB_RDONLY;
--	return 0;
--out:
--	sbi->mount_opt = org_mnt_opt;
--	return err;
--}
--
- const struct super_operations erofs_sops = {
- 	.put_super = erofs_put_super,
- 	.alloc_inode = erofs_alloc_inode,
- 	.free_inode = erofs_free_inode,
- 	.statfs = erofs_statfs,
- 	.show_options = erofs_show_options,
--	.remount_fs = erofs_remount,
- };
- 
- module_init(erofs_module_init);
--- 
-2.18.0.rc1
+As I mentioned in the following link:
+
+https://lore.kernel.org/linux-scsi/20191224084721.GA27248@ming.t460p/
+
+The reason is that ioc_batching and BDI congestion is removed by blk-mq.
+
+Then after queue is congested, multiple sequential writes can be done
+concurrently at the same time. Before ioc_batching and BDI congestion is
+removed, writes are done serialized from multiple processes actually, so
+IOs are dispatched to drive in strict sequential order.
+
+This way can't be an issue for SSD.
+
+Maybe we need to be careful for HDD., since the request count in scheduler
+queue is double of in-flight request count, and in theory NCQ should only
+cover all in-flight 32 requests. I will find a sata HDD., and see if
+performance drop can be observed in the similar 'cp' test.
+
+
+Thanks,
+Ming
 
