@@ -2,106 +2,102 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3CCC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7BDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BE3206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423E1208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 16:21:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOwZeBmE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcJ8Fhrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfLZQQC (ORCPT
+        id S1726640AbfLZQVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 11:16:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38988 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfLZQQC (ORCPT
+        Thu, 26 Dec 2019 11:21:42 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37769 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfLZQVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 11:16:02 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so13374529pfs.6;
-        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
+        Thu, 26 Dec 2019 11:21:42 -0500
+Received: by mail-pj1-f66.google.com with SMTP id m13so3633391pjb.2;
+        Thu, 26 Dec 2019 08:21:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
-        b=OOwZeBmE81M04vqBjpbAQPzE1Jv7jX88b+pZMM4skQSdW5QALfcM5UmXOZhj7/FTkj
-         4DhhNJVBgdY2v5jYTZSvR7SjywMtapzuo94KlQhX+i6gd5qEU70YJjXcGW5wlrv6/DLH
-         04erO3Xts4xY+OTACxMlHd9zwhYsvTs+7+b5tSqtSzRRF+2vJLzlc5ShWkr6yXDN/Z5P
-         Cs6NqkIQzW5fpc3w9talZH/jXomQOF8gLQG2TxuLxk/W4pIU+2n6OV4BfIDq9Ls7bXG5
-         N7LmxXMt8wpbp7C6l1/KyrBUR5jHtMqnYnA9OSENlKkWdwirmF4pu/lCe4EH/9TXAcbZ
-         hRIQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dNzBbsBAeD8tPqRqiqpZEThvA8x3leCImQZb/BG9x4Q=;
+        b=dcJ8Fhrh7zoSXEsaf+C3T/Q0LqszfowWt/z7VLgChyxXm0pQPLIP+DplXNKdrnu7qf
+         SZay23pSuZd1w54Ak1fbvBLp5ITG4A4AKnVHe+c+9R+OU8susPdCMq8DnHz2EY+Hc+BW
+         23Tve2JXWPDz7hoVEuuz0OS7VFysCGEUpoaxh5J2yw4dzUJNV5WLKabwjLMmQLh1drHO
+         lFEbOImWwiONuIkiKGeg/mGWaY41/+VRKpnczJwQR4JFqnyv9R7/cTsqqqHcZg+5YNgZ
+         AWD7Jco/xqChiaC1V7/jpYQ/weB6EYv38sX78OvJ1pIjDg0LeFbDrre6PrgQb/rYLtiq
+         Dhbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
-        b=MR8G+z+lpp4nYq24VPrcW5ZklKa6dQ5o1Qq91M6KQcLSkPK/bY2Ves2yrSa30I7GZy
-         EwsfwHLwCNWOMa0I7JCzav6QW4cK7L7zEcOklGdGvI+1r/tLGzjzVbsvmBA2KNdfgaBN
-         TzM81/ckVK0wtHSdafveV8kS2v84fQ7/BGJNYCEpOHRncMRnNWdCcOJPZo6orVAFsVPb
-         d2cvi7rSYR4UzJDa7i2HV4Q34E7cuYsioSCzTcvyh+/MoI3NmO/DKw493MhDIMHtbu9m
-         4IzmduKvSuGLrxNMBIO7cO/goJRx+wTCsL6SabeBBSJuMX/FoGBwU5eMTFEvqarqMulG
-         m/ng==
-X-Gm-Message-State: APjAAAWeena9yTT7Xw3IaNHXmZs4aAFKNESl9HY9ckIWDIfsNrTIXBC/
-        RTlLCBg5DWedhGtd8hDcbko=
-X-Google-Smtp-Source: APXvYqwVVFAvQB+Vc97OxwqUsIcXopUjlkiipdOIflXffhnqN51FDYFXBGdYuGbNEFp+n+2UzJ7cpw==
-X-Received: by 2002:a63:5809:: with SMTP id m9mr47977371pgb.26.1577376961023;
-        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j38sm34451197pgj.27.2019.12.26.08.15.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Dec 2019 08:16:00 -0800 (PST)
-Date:   Thu, 26 Dec 2019 08:15:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Yury Norov <ynorov@marvell.com>
-Subject: Re: [PATCH v2 07/11] bitmap: Introduce bitmap_replace() helper
-Message-ID: <20191226161559.GA26197@roeck-us.net>
-References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
- <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dNzBbsBAeD8tPqRqiqpZEThvA8x3leCImQZb/BG9x4Q=;
+        b=dniT7eWsahPzjgqACl5XePSKPcpPbxM2l24GyLMVGDDs0KRQsBvA40ksBThk2YSjno
+         vX8tT6N5G50n62XqXaC66ys0sFqagN+/UNcYGX/NZ5YKE4pgLrr+uu4PUZGFBmO8NKbk
+         7iV7/vlIQCZ5GKAs8ctnbJJ3DVUTti6QtgJx9Ah9uizukzzCY1+xO40uki8o75qBO+55
+         sIenLN4U4LmgksYOE3XtK59Wz0kYhM7i8b9ww8S7lbJqXTCffvs8Uoq7v5Su6fwK8ZOI
+         NXIV9x4Q7Tvy16rvSCz8DgFzTF/I/QqAoza0sVvSspC1GRzdLS9dGxYJpkSHPb70Cfl9
+         m6XA==
+X-Gm-Message-State: APjAAAWEKayyGXOqxTQikrktwZ/EE+0BEqoS/rEAKOUC4hAqs48KYlTV
+        iZsgI5mBw+wmZ1Pmwb5FeAM=
+X-Google-Smtp-Source: APXvYqwZjkqHi0IWZYgQS/yv8ZAQz+xxniSvgOV2ig8Ro0xeeUrvv7zjZg9uIj7SBWZiGDoYzdBYvw==
+X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr20497612pjo.2.1577377301564;
+        Thu, 26 Dec 2019 08:21:41 -0800 (PST)
+Received: from masabert (i118-21-156-233.s30.a048.ap.plala.or.jp. [118.21.156.233])
+        by smtp.gmail.com with ESMTPSA id s24sm11098063pjp.17.2019.12.26.08.21.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Dec 2019 08:21:41 -0800 (PST)
+Received: by masabert (Postfix, from userid 1000)
+        id D60F420123E; Fri, 27 Dec 2019 01:21:39 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] Doc: x86: Fix a typo in mm.rst
+Date:   Fri, 27 Dec 2019 01:21:38 +0900
+Message-Id: <20191226162138.17601-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.24.1.590.gb02fd2accad4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch fix a spelling typo in mm.rst.
 
-On Tue, Oct 22, 2019 at 08:29:18PM +0300, Andy Shevchenko wrote:
-> In some drivers we want to have a single operation over bitmap which is
-> an equivalent to:
-> 
-> 	*dst = (*old & ~(*mask)) | (*new & *mask)
-> 
-> Introduce bitmap_replace() helper for this.
-> 
-> Cc: Yury Norov <ynorov@marvell.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ Documentation/x86/x86_64/mm.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This patch results in the following boot log messages on various architectures.
-I have seen it on arm and mipsel, but others may be affected as well.
+diff --git a/Documentation/x86/x86_64/mm.rst b/Documentation/x86/x86_64/mm.rst
+index 267fc4808945..e5053404a1ae 100644
+--- a/Documentation/x86/x86_64/mm.rst
++++ b/Documentation/x86/x86_64/mm.rst
+@@ -1,8 +1,8 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+-================
+-Memory Managment
+-================
++=================
++Memory Management
++=================
+ 
+ Complete virtual memory map with 4-level page tables
+ ====================================================
+-- 
+2.24.1.590.gb02fd2accad4
 
-test_bitmap: [lib/test_bitmap.c:282] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
-test_bitmap: [lib/test_bitmap.c:286] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
-test_bitmap: [lib/test_bitmap.c:290] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
-test_bitmap: [lib/test_bitmap.c:294] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
-
-Guenter
