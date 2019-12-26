@@ -2,99 +2,82 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E33C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F79C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683C02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="j8R00hr2"
+	by mail.kernel.org (Postfix) with ESMTP id 190672075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfLZKVf (ORCPT
+        id S1726450AbfLZK37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:21:35 -0500
-Received: from cavan.codon.org.uk ([93.93.128.6]:47018 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfLZKVf (ORCPT
+        Thu, 26 Dec 2019 05:29:59 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44554 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfLZK37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 05:21:35 -0500
-X-Greylist: delayed 1074 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Dec 2019 05:21:34 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=C3mxjaIDMuJTeQyZTd+qCmmlFsqprmMX4F3TTiwzZHM=; b=j8R00hr2GEVsOkbbGEEmt01bYd
-        vwA5caOLAxxH/pweQc3aPeaNuRixw7i2grmlD/9PxsIZFK2Hh9sYr11z17uDc9/Fk56hsulaz6mIQ
-        QvAS7cNOG3FHxojjB1kadh6cR6NF54E366ltCDtGX32pLpVu7EWuJeBtSUiyyvREzbOQ=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1ikPzS-0003n7-Sm; Thu, 26 Dec 2019 10:03:34 +0000
-Date:   Thu, 26 Dec 2019 10:03:34 +0000
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Ted Ts'o <tytso@mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Message-ID: <20191226100334.bsh3b3dphs4j4cvx@srcf.ucam.org>
-References: <cover.1577088521.git.luto@kernel.org>
- <9872655.prSdhymlXK@positron.chronox.de>
+        Thu, 26 Dec 2019 05:29:59 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 964A61C2103; Thu, 26 Dec 2019 11:29:57 +0100 (CET)
+Date:   Thu, 26 Dec 2019 11:29:56 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] leds: lm3692x: Disable chip on brightness 0
+Message-ID: <20191226102956.GH4033@amd>
+References: <cover.1577272495.git.agx@sigxcpu.org>
+ <e1dc56c07235063a9c0afbfc8c227b92b39ec3d4.1577272495.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="it/zdz3K1bH9Y8/E"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9872655.prSdhymlXK@positron.chronox.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <e1dc56c07235063a9c0afbfc8c227b92b39ec3d4.1577272495.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 10:29:00AM +0100, Stephan Müller wrote:
-> 
-> What about offering a compile-time option to enable or disable such code? 
-> Note, with the existing random.c code base, there is no need to have a 
-> separate blocking_pool. The ChaCha20 DRNG could be used for that very same 
-> purpose, provided that in case these true random numbers are generated when 
-> the Chacha20 DRNG received an equal amount of "unused" entropy.
 
-I think it's reasonable to offer such an option as long as it's made 
-clear that it'll break userland and should only be enabled under very 
-weird circumstances. We don't want to end up in a situation where 
-userland developers feel that they need to code to handle such 
-situations - the only people who care about this distinction should be 
-in control of their userland stack and able to cope with the 
-consequences.
+--it/zdz3K1bH9Y8/E
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If an unprivileged caller requests true random data, at least 1024 bits of 
-> entropy is left in the pool. I.e. all entropy above that point is available 
-> for this request type. Note, even namespaces fall into this category 
-> considering that unprivileged users can create a user name space in which they 
-> can become root.
+On Wed 2019-12-25 12:16:39, Guido G=FCnther wrote:
+> Otherwise there's a noticeable glow even with brightness 0. Also
+> turning off the regulator can save additional power.
 
-I also feel like describing any of this as "true random data" is 
-misleading. Most of our entropy sources are devices that could, given 
-sufficient information, be modelled accurately. We're not sampling 
-quantum events here.
- 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Ok, this will make set brightness slower, but I guess it makes sense.
+
+Can you try to toggling brightness quickly from userspace, maybe even
+=66rom two threads, to ensure nothing really goes wrong there?
+
+Hmm. And if this is independend of the other series, tell me and I can
+apply v2.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--it/zdz3K1bH9Y8/E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4Ei6QACgkQMOfwapXb+vKRlACgjsmUKw5HTV41mZpVjYyCe4a+
+jxAAn0TJv2kocImeeHf4JNzTV0lAj5vi
+=iO66
+-----END PGP SIGNATURE-----
+
+--it/zdz3K1bH9Y8/E--
