@@ -2,160 +2,102 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B939DC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8269C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1E82080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F97206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5ENSPtWu"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Mfvwn7FJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfLZKu7 (ORCPT
+        id S1726475AbfLZLEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:50:59 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:40428 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfLZKu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 05:50:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WWQCvAOj9VPIiUVGyfQ33Wwo9TwBrEqStTy3iF0TRKI=; b=5ENSPtWuCLATBd8/kwa0/36DDH
-        LgALFZw7cT3ojHPLSyxbRZynys24RXrvRE+4Hoa9l1gxwiTtzjWZ7v1ndSEl+oCZqWVHzg6NgsDfy
-        toS1nInW/8n8kzoXlBewdmyw3zos4MOsbNjS5iw3G9T8kM6A4qeCczP0Bcz7SHQsSvNg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ikQj6-00013d-GX; Thu, 26 Dec 2019 11:50:44 +0100
-Date:   Thu, 26 Dec 2019 11:50:44 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
-        davem@davemloft.net, khilman@baylibre.com,
-        linus.luessing@c0d3.blue, balbes-150@yandex.ru,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ingrassia@epigenesys.com, jbrunet@baylibre.com,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay
- on Meson8b/8m2 SoCs
-Message-ID: <20191226105044.GC1480@lunn.ch>
-References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
- <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
- <20191225150845.GA16671@lunn.ch>
- <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
+        Thu, 26 Dec 2019 06:04:07 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34054 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfLZLEH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 06:04:07 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so10121247lfc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 03:04:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dMuzKwiDG9erY21rvfOIFhgZeA3agNAcCiJiS61PwtU=;
+        b=Mfvwn7FJa6uuSnyUZWdsYRK1BPLGVGTda71DdZ00VryPu2xgB1/ctUYu/DTy7RZEBi
+         7WN5JGj/upLjqTsuPs4V2T5acL2Zq1Bq/vuEPKVQbbgH1aMu830hXCyMWfgHiq9oauTF
+         I715D1xkH6jylQT3zBZwRcthpgW4qDU2EyRBgX/PCTxGjqPupcuIkgI2RXIphW6imggK
+         El2LjR1GV1WNIkf8sTYlEXQo5vADwL3h4p2TKvk386Sqh4hdQTUVzLSL6bsopQgqA1C/
+         gMd5LoepahntJyZCkTAktCFj5X1/ob6G5iwqU+NSTXF2RErppyu1h+6fHPSqflHPXHNL
+         r/LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dMuzKwiDG9erY21rvfOIFhgZeA3agNAcCiJiS61PwtU=;
+        b=Ujlbr7KfKjAWpc72WCwYTT2wG8FfYycznfiIku7yDk8sgFFTEdx9iF03dkgECucCOa
+         xlcpIqoSDa4Z0C8wxqIKyjTPaL9REbnup0BBKbOUYP3rER3XbG3D59AIKKiZRbgmXSrZ
+         KTvOg/Xvp4jBIZpnE075ETUMC2TU7ItL62G9Vb9oDk85zfdZjQY0DfU9zfd3P43YPlyb
+         QD942nxSFj17hfP8O8fRPeG2uFh4jCrQUOwNXZI+p4q01A39LqA/e9A0R2jgVfm0FCvV
+         uY+rX4tg7MFg3nkKscvO5PmiRQDwnkmHWvbiiADBKJyZ31/hQ1/Rbqfc/Kt6uZKCND3+
+         tRiA==
+X-Gm-Message-State: APjAAAVWpTpAfNFkmCIWKEgGQm64gfPkUlog3lssJmYMCzFL2h1SqIuo
+        1Y5/O7YjJQZY0tt4JaiAbZiG9g==
+X-Google-Smtp-Source: APXvYqxyty1Ur5C7kdZ8TaFQIOjjXKTBfsFDaeaWxLUho5PXnAcZgwjh39AF42C5Amhhl1+IARuWYQ==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr26169631lfd.136.1577358245281;
+        Thu, 26 Dec 2019 03:04:05 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:867:b21c:a50d:bd68:cd46:4921? ([2a00:1fa0:867:b21c:a50d:bd68:cd46:4921])
+        by smtp.gmail.com with ESMTPSA id d24sm12128249lja.82.2019.12.26.03.04.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2019 03:04:04 -0800 (PST)
+Subject: Re: [PATCH] scsi: don't memset to zero after dma_alloc_coherent
+To:     yu kuai <yukuai3@huawei.com>, ysato@users.sourceforge.jp,
+        dalias@libc.org, aacraid@microsemi.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, sathya.prakash@broadcom.com,
+        chaitra.basappa@broadcom.com, suganath-prabu.subramani@broadcom.com
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        zhengbin13@huawei.com, yi.zhang@huawei.com
+References: <20191225132327.7121-1-yukuai3@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <a3b27b94-1ab6-c33f-611c-56143fd390f8@cogentembedded.com>
+Date:   Thu, 26 Dec 2019 14:03:55 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
+In-Reply-To: <20191225132327.7121-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >       # RX and TX delays are added by the MAC when required
-> >       - rgmii
-> >
-> >       # RGMII with internal RX and TX delays provided by the PHY,
-> >       # the MAC should not add the RX or TX delays in this case
-> >       - rgmii-id
-> >
-> >       # RGMII with internal RX delay provided by the PHY, the MAC
-> >       # should not add an RX delay in this case
-> >       - rgmii-rxid
-> >
-> >       # RGMII with internal TX delay provided by the PHY, the MAC
-> >       # should not add an TX delay in this case
-> >       - rgmii-txid
-> >
-> > So ideally, you want the MAC to add no delay at all, and then use the
-> > correct phy-mode so the PHY adds the correct delay. This gives you the
-> > most flexibility in terms of PHY and PCB design. This does however
-> > require that the PHY implements the delay, which not all do.
-> these boards (with RGMII PHY) that I am aware of are using an RTL8211F
-> PHY which implements a 2ns PHY TX delay
+Hello!
 
-We need to be careful here...
+On 25.12.2019 16:23, yu kuai wrote:
 
-Earlier this year we got into a mess with a PHY driver wrongly
-implemented these delays. DT contained 'rgmii', but the PHY driver
-actually implemented rgmii-id'. Boards worked, because they actually
-needed rgmii-id. But then came along a board which really did need
-rgmii. We took the decision, maybe the wrong decision, to fix the PHY
-driver, and fixup DT files as we found boards which had the incorrect
-setting. We broke a lot of boards for a while and caused lots of
-people pain.
-
-You might have something which works, but i want to be sure it is
-actually correct, not two bugs cancelling each other out.
-
-You say the RTL8211F PHY implements a 2ns PHY TX delay. So in DT, do
-you have the phy-mode of 'rgmii-txid'? That would be the correct
-setting to say that the PHY provides only the TX delay.
-
-> however, the 3.10 vendor kernel also supports Micrel RGMII (and RMII)
-> PHYs where I don't know if they implement a (configurable) TX delay.
+> dma_alloc_coherent already zeros out memory, so memset to zero is not
+> needed.
 > 
-> > Looking at patches 2 and 3, the phy-mode is set to rgmii. What you
-> > might actually need to do is set this to rgmii-txid, or maybe
-> > rgmii-id, once you have the MAC not inserting any delay.
-> please let us split this discussion:
-> 1) I believe that this patch is still correct and required whenever
-> the MAC *has to* generate the TX delay (one use-case could be the
-> Micrel PHYs I mentioned above)
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> ---
+>   arch/sh/mm/consistent.c             | 2 --
 
-I think this patch splits into two parts. One is getting a 25MHz
-clock. That part i can agree with straight away. The second part is
-setting a 2ns TX delay. This we need to be careful of. What is the MAC
-actually doing after this patch? What is the configured RX delay? Does
-the driver explicitly configure the RX delay? To what?
+    How this one is related to SCSI?
 
-If you look at the definitions above, if the phy-mode is rgmii, the
-MAC is responsible for both RX and TX delay. 
+>   drivers/scsi/dpt_i2o.c              | 4 ----
+>   drivers/scsi/mpt3sas/mpt3sas_base.c | 1 -
+>   drivers/scsi/mvsas/mv_init.c        | 4 ----
+>   drivers/scsi/pmcraid.c              | 1 -
+>   5 files changed, 12 deletions(-)
+[...]
 
-> 2) the correct phy-mode and where the TX delay is being generated. I
-> have tried "rgmii-txid" on my own Odroid-C1 and it's working fine
-> there. however, it's the only board with RGMII PHY that I have from
-> this generation of SoCs (and other testers are typically rare for this
-> platform, because it's an older SoC). so my idea was to use the same
-> settings as the 3.10 vendor kernel because these seem to be the "known
-> working" ones.
-
-Vendor kernels have the alternative of 'vendor crap' for a good
-reason. Just because it works does not mean it is correct.
-
-> what do you think about 2)? my main concern is that this *could* break
-> Ethernet on other people's boards.
-> on the other hand I have no idea how likely that actually is.
-
-From what i understand, Ethernet is already broken? Or is it broken on
-just some boards?
-
-Looking at the function rtl8211f_config_init(), that PHY driver can
-only control TX delays. RX delays are controlled by a strapping pin.
-
-The Micrel PHY driver can also control its clock skew, but it does it
-in an odd way, not via the phy-mode, but via additional
-properties. See the binding document.
-
-What we normally say is make the MAC add no delays, and pass the
-correct configuration to the PHY so it adds the delay. But due to the
-strapping pin on the rtl8211f, we are in a bit of a grey area. I would
-suggest the MAC adds no delay, phy-mode is set to rmgii-id, the PHY
-driver adds TX delay in software, we assume the strapping pin is set
-to add RX delay, and we add a big fat comment in the DT.
-
-For the Micrel PHY, we do the same, plus add the vendor properties to
-configure the clock skew.
-
-But as i said, we are in a bit of a grey area. We can consider other
-options, but everything needs to be self consistent, between what the
-MAC is doing, what the PHY is doing, and what phy-mode is set to in
-DT.
-
-    Andrew
+MBR, Sergei
