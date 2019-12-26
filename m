@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E94C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ABBC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE96120838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD63220740
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bp/fx6ZO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJoxlqsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfLZRK0 (ORCPT
+        id S1726741AbfLZRMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 12:10:26 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43781 "EHLO
+        Thu, 26 Dec 2019 12:12:47 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37748 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLZRKZ (ORCPT
+        with ESMTP id S1726480AbfLZRMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 12:10:25 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x6so12345196pfo.10;
-        Thu, 26 Dec 2019 09:10:25 -0800 (PST)
+        Thu, 26 Dec 2019 12:12:47 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so13437298pfn.4;
+        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FMhyUSbY+uFKj6x5W1VsuF+7c8qIlSDSygxqdy4+jdQ=;
-        b=bp/fx6ZOp/eIkBCHu/Z7ACHGVLQdQO1UplSLQytwaU9vzGWvu/h3oP5B0Yj8Y2UDnw
-         4A8VkUptwLXz6r+78hFZyc1LiE77El5I+LfvbS0txe7O6tK1vTivYiAqjfFTX37WUzmn
-         TCbFXegsbCzqtd27jwHfTDZHOyShSTA2sygFbKgTUfOVnLFyWJTG3oaKrHtZWwtQSBUO
-         D4RH3BNoY9byXHgTGdy/qwtbyoTwCMQI7xgGLLioY7Ft4KunZomOEj5cf/lEN3m93fSB
-         kJbPk2rh+SLWGVSFesmq+5RbZzYtd2zuAUVSDFu6ZxUFK2kRlCk0n58++sWiUjIH2Mmd
-         qx1w==
+        bh=tcRXV91TDUxeHso2iZtQ7wegl6tGcSz0+CrYKB9XO/c=;
+        b=FJoxlqsfl2daiqfKeqo2C08BK5JnznTcmjxBvB5dDghjGhC5ZYzcUUPX+d0ywwyBcD
+         0mVY1kNdukXJLElsdhoq9n+6G2Uyrfzfx9pBKVc8Iogz2tChPyJmQhbPs0CvlnlYnRWA
+         J7/pCz8U2thm4fmJ+xaxkZYsRaWdMHQP7wy74qpC/wreoq1hn2WakesMHws8W9fIc9l2
+         VjLuwJ5JWCYyJmpP23n3gEzKesrHkFJeGRuqLwJvyVk5LmjMy6BAbSnPE/OXf5PIzn1g
+         ChttTTFNLRj9F5Cu0L7IZQBkOTLQSYAgzVXEVPnhiWkOQ+GGIzQLR2KVe8dqUY93foFP
+         smMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=FMhyUSbY+uFKj6x5W1VsuF+7c8qIlSDSygxqdy4+jdQ=;
-        b=RB3gXPvBXJ2ra0/BZy7OTGBR1TxKb7y7zsxpLYTJhvznMDuNvfGqmo0ua4AO/ZM950
-         aVdVBoH1Jw6KBJ8y8owIQ+FFW+eQix1hRppuSRlEPVF3W0QB3/HBY0fR0P+KgINoKGuI
-         p647Z0gooxQFE6Mo8wGk3u9YePi1GjYdYCwhsHrpI/uMgfRQ9k8gw8u0xIdiyZ2O0FIG
-         +F6C/gLs/8o8DNaIBRuMnFyBXUf8QgjuweisZKm8+kUohCNFhvm4acr3ZAIFTO0tjpof
-         77OOLy2xYWmNaxGI5s/FZ9UG1fKahF+azlva3xvVPC2NO70SqK4g+AWEVvYqXKLf9TgG
-         jgKA==
-X-Gm-Message-State: APjAAAWvA0J7kaUJ9EL6RRHqRPGgZ+wDXdEXhbvcN23N4UKkWDwFhyZY
-        ZHcuvnBGxsUw7FDmSoS9w0s=
-X-Google-Smtp-Source: APXvYqzNLc250hRl9xPQH7jHMBKCb0ePxRXw9vSTZj8JVC4xexFQRcX75nwqqQPz0QCoszlA3pDOcA==
-X-Received: by 2002:a63:1853:: with SMTP id 19mr48130430pgy.170.1577380224686;
-        Thu, 26 Dec 2019 09:10:24 -0800 (PST)
+        bh=tcRXV91TDUxeHso2iZtQ7wegl6tGcSz0+CrYKB9XO/c=;
+        b=oWV6Abz8ZEh2C+UhOTl2gy9mMilajvnTBoTHmkCltNWYqtCQxkZkaEY46+/NRM94Rd
+         +miOX8mBa1zzdTl7jNcgId2zAZSsXHBBS5UwQ9Jwm90VW0/l8H8fyzE2244Wcoqz559+
+         9da5o3pmFYN0JmmHpsVg9NaDtbXx58cSQNx0RGu4qhXWl/B2nuduNgDXrslV/8IVlTsf
+         L/Llvqc9gWyBXauMZfFAuKAK4LLbP+gPtHz9m+lUcYUhhJcBhfuITnk9AdKHD/eVBaMp
+         LsuFgVQB9d+93wacEWg3wJn4AagTlGIpjWJMA5cun1LjQRA3+MxwdJ4YRfzrTGzYHPsy
+         B1TA==
+X-Gm-Message-State: APjAAAXuwjF6ELeTgN0quilHoW0PPGZ5PS+IIkxR7mzpfpv+ggVFpkqY
+        Rv9WLQCIbRQt+6HbF5xjS34=
+X-Google-Smtp-Source: APXvYqycKA1GjeNUwDsI6j96wkUF7Qw96QL6mzqR4EC4PwF+Y1lFK80xeZdaUy/rEuaY/G8wcm9Epw==
+X-Received: by 2002:a63:220b:: with SMTP id i11mr48980496pgi.50.1577380366441;
+        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v10sm28186162pgk.24.2019.12.26.09.10.23
+        by smtp.gmail.com with ESMTPSA id a18sm2446693pjq.30.2019.12.26.09.12.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2019 09:10:24 -0800 (PST)
-Subject: Re: [PATCH v1 0/1] hwmon: (pmbus) Add Infineon IR38164, Renesas
- RAA228006, and TI SN1701022 driver
+        Thu, 26 Dec 2019 09:12:46 -0800 (PST)
+Subject: Re: [PATCH linux dev-5.4 v1 0/1] hwmon: (pmbus) Add Infineon IR38164,
+ Renesas RAA228006, and TI SN1701022 driver
 To:     Andrew Peng <pengms1@lenovo.com>, jdelvare@suse.com,
         linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
         benjaminfair@google.com
 Cc:     openbmc@lists.ozlabs.org, Derek Lin <dlin23@lenovo.com>,
         Yonghui Liu <liuyh21@lenovo.com>
-References: <1577350032-127172-1-git-send-email-pengms1@lenovo.com>
+References: <1577350647-128938-1-git-send-email-pengms1@lenovo.com>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <7048fe51-67b9-e13a-1337-9e58cd782126@roeck-us.net>
-Date:   Thu, 26 Dec 2019 09:10:22 -0800
+Message-ID: <4452cf36-25ac-6064-b124-fda71b282fb7@roeck-us.net>
+Date:   Thu, 26 Dec 2019 09:12:44 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1577350032-127172-1-git-send-email-pengms1@lenovo.com>
+In-Reply-To: <1577350647-128938-1-git-send-email-pengms1@lenovo.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,7 +80,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/26/19 12:47 AM, Andrew Peng wrote:
+On 12/26/19 12:57 AM, Andrew Peng wrote:
 > Add the pmbus driver for Infineon IR38164 Voltage Regulator driver.
 > Add the pmbus driver for Renesas RAA228006 Digital PWM Controller.
 > Add the pmbus driver for TI SN1701022 driver.
@@ -88,13 +88,14 @@ On 12/26/19 12:47 AM, Andrew Peng wrote:
 > Signed-off-by: Andrew Peng <pengms1@lenovo.com>
 > Signed-off-by: Derek Lin <dlin23@lenovo.com>
 > Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
-
-Please don't add three drivers with one patch. One patch per driver, please.
-Also, don't label the patch "0/1" if there is just one patch.
-
-More comments inline.
-
 > ---
+
+This is annoying, and each time it happens it is more annoying.
+Can you folks please stop sending me patches for non-upstream kernel branches ?
+
+Thanks,
+Guenter
+
 > v1: initial version
 > 
 >   drivers/hwmon/pmbus/Kconfig     |  25 ++++++++
@@ -102,19 +103,16 @@ More comments inline.
 >   drivers/hwmon/pmbus/ir38164.c   |  72 +++++++++++++++++++++++
 >   drivers/hwmon/pmbus/raa228006.c | 127 ++++++++++++++++++++++++++++++++++++++++
 >   drivers/hwmon/pmbus/sn1701022.c |  80 +++++++++++++++++++++++++
-
-Documentation missing for each of those.
-
 >   5 files changed, 307 insertions(+)
 >   create mode 100644 drivers/hwmon/pmbus/ir38164.c
 >   create mode 100644 drivers/hwmon/pmbus/raa228006.c
 >   create mode 100644 drivers/hwmon/pmbus/sn1701022.c
 > 
 > diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index b658848..d51e67d 100644
+> index 6106263..2312b58 100644
 > --- a/drivers/hwmon/pmbus/Kconfig
 > +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -64,6 +64,15 @@ config SENSORS_IR38064
+> @@ -73,6 +73,15 @@ config SENSORS_IR38064
 >   	  This driver can also be built as a module. If so, the module will
 >   	  be called ir38064.
 >   
@@ -124,15 +122,13 @@ Documentation missing for each of those.
 > +	  If you say yes here you get hardware monitoring support for Infineon
 > +	  IR38164.
 > +
-Please more information.
-
 > +	  This driver can also be built as a module. If so, the module will
 > +	  be called ir38164.
 > +
 >   config SENSORS_IRPS5401
 >   	tristate "Infineon IRPS5401"
 >   	help
-> @@ -221,4 +230,20 @@ config SENSORS_ZL6100
+> @@ -230,4 +239,20 @@ config SENSORS_ZL6100
 >   	  This driver can also be built as a module. If so, the module will
 >   	  be called zl6100.
 >   
@@ -141,8 +137,6 @@ Please more information.
 > +	help
 > +	  If you say yes here you get hardware monitoring support for RAA228006.
 > +
-Please more information. What is that ?
-
 > +	  This driver can also be built as a module. If so, the module will
 > +	  be called RAA228006.
 > +
@@ -151,25 +145,23 @@ Please more information. What is that ?
 > +	help
 > +	  If you say yes here you get hardware monitoring support for SN1701022.
 > +
-Please more information.
-
 > +	  This driver can also be built as a module. If so, the module will
 > +	  be called sn1701022.
 > +
 >   endif # PMBUS
 > diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index c950ea9..21d259f 100644
+> index 03bacfc..ba3aed5 100644
 > --- a/drivers/hwmon/pmbus/Makefile
 > +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
->   obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+>   obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
 >   obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
 >   obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
 > +obj-$(CONFIG_SENSORS_IR38164)	+= ir38164.o
 >   obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
 >   obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
 >   obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
-> @@ -25,3 +26,5 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
+> @@ -26,3 +27,5 @@ obj-$(CONFIG_SENSORS_TPS53679)	+= tps53679.o
 >   obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
 >   obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
 >   obj-$(CONFIG_SENSORS_ZL6100)	+= zl6100.o
@@ -185,16 +177,8 @@ Please more information.
 > +/*
 > + * Hardware monitoring driver for Infineon ir38164
 > + *
-No one but you knows what that is. Please provide a little more information.
-Same for other drivers.
-
 > + * Copyright (C) 2019-present Lenovo
 > + *
-
-Is "-present" legal ? I see you and Facebook are using it, but for me
-it doesn't really make sense. If you want to use it, please provide
-a link describing the legal rationale and implications.
-
 > + * This program is free software; you can redistribute it and/or
 > + * modify it under the terms of the GNU General Public License
 > + * as published by the Free Software Foundation; either version 2
@@ -209,11 +193,6 @@ a link describing the legal rationale and implications.
 > + * along with this program; if not, write to the Free Software
 > + * Foundation, Inc., 51 Franklin Street, Fifth Floor,
 > + * Boston, MA  02110-1301, USA.
-
-Please no such boilerplate. This is what SPDX is for.
-
-Same comments for the other drivers.
-
 > + */
 > +
 > +#include <linux/err.h>
@@ -249,17 +228,9 @@ Same comments for the other drivers.
 > +	{}
 > +};
 > +
-I don't immediately see why this driver is necessary. It should
-be sufficient to add ir38164 to pmbus.c. If that doesn't work,
-please explain.
-
 > +MODULE_DEVICE_TABLE(i2c, ir38164_id);
 > +
 > +/* This is the driver that will be inserted */
-
-This is a pretty pointless comment. I would suggest to remove it.
-Yes, I know, you'll find it throughout the kernel. That doesn't make it better.
-
 > +static struct i2c_driver ir38164_driver = {
 > +	.driver = {
 > +		   .name = "ir38164",
@@ -284,11 +255,6 @@ Yes, I know, you'll find it throughout the kernel. That doesn't make it better.
 > +/*
 > + * Hardware monitoring driver for raa228006
 > + *
-
-Here the missing information is really bad. There is almost nothing
-on the web describing what "raa228006" actually is. I am not inclined
-to accept this patch without further information.
-
 > + * Copyright (C) 2019-present Lenovo
 > + *
 > + * This program is free software; you can redistribute it and/or
@@ -330,9 +296,6 @@ to accept this patch without further information.
 > +	/* By default this device doesn't boot to page 0, so set page 0
 > +	 * to access all pmbus registers.
 > +	 */
-
-Is that true or is it cut-and-paste ?
-
 > +
 > +	i2c_smbus_write_byte_data(client, 0, 0);
 > +
@@ -343,9 +306,6 @@ Is that true or is it cut-and-paste ?
 > +		return ret;
 > +	}
 > +
-What is the point of reading the manufacturer ID and not doing anything
-with it ?
-
 > +	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
 > +			    GFP_KERNEL);
 > +	if (!info)
@@ -393,10 +353,6 @@ with it ?
 > +
 > +	info->pages = id->driver_data;
 > +
-
-There is nothing else but a single page. Why that complexity and not
-just use astatic allocation ? More cut-and-paste ?
-
 > +	return pmbus_do_probe(client, id, info);
 > +}
 > +
@@ -432,9 +388,6 @@ just use astatic allocation ? More cut-and-paste ?
 > +/*
 > + * Hardware monitoring driver for sn1701022
 > + *
-
-Same here.
-
 > + * Copyright (C) 2019-present Lenovo
 > + *
 > + * This program is free software; you can redistribute it and/or
