@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566EEC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F5C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3389F20740
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5340720828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfLZMR1 (ORCPT
+        id S1726575AbfLZMTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:17:27 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35340 "EHLO huawei.com"
+        Thu, 26 Dec 2019 07:19:03 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8195 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLZMR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:17:27 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D1CA81CD06450C954626;
-        Thu, 26 Dec 2019 20:17:19 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 20:17:11 +0800
+        id S1725954AbfLZMTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:19:02 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 661CE9B2BE8C528170E5;
+        Thu, 26 Dec 2019 20:18:59 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
+ 20:18:48 +0800
 From:   yu kuai <yukuai3@huawei.com>
-To:     <hao.wu@intel.com>, <mdf@kernel.org>
-CC:     <linux-fpga@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <yi.zhang@huawe.com>, <zhengbin13@huawei.com>
-Subject: [PATCH] fpga: dfl: fme: remove set but not used variable 'fme'
-Date:   Thu, 26 Dec 2019 20:16:38 +0800
-Message-ID: <20191226121638.10507-1-yukuai3@huawei.com>
+To:     <stefanr@s5r6.in-berlin.de>
+CC:     <linux1394-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH] firewire: net: remove set but not used variable 'guid'
+Date:   Thu, 26 Dec 2019 20:18:15 +0800
+Message-ID: <20191226121815.11495-1-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -45,32 +46,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/fpga/dfl-fme-main.c: In function ‘fme_dev_destroy’:
-drivers/fpga/dfl-fme-main.c:678:18: warning: variable ‘fme’ set but not
-used [-Wunused-but-set-variable]
+drivers/firewire/net.c: In function ‘fwnet_finish_incoming_packet’:
+drivers/firewire/net.c:493:9: warning: variable ‘guid’ set but not
+used
 
-It is never used and so can be removed.
+It is never used, and so can be removed.
 
 Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- drivers/fpga/dfl-fme-main.c | 2 --
+ drivers/firewire/net.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 7c930e6b314d..1d4690c99268 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -675,10 +675,8 @@ static int fme_dev_init(struct platform_device *pdev)
- static void fme_dev_destroy(struct platform_device *pdev)
+diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
+index 715e491dfbc3..28785642a5c5 100644
+--- a/drivers/firewire/net.c
++++ b/drivers/firewire/net.c
+@@ -490,7 +490,6 @@ static int fwnet_finish_incoming_packet(struct net_device *net,
  {
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
--	struct dfl_fme *fme;
+ 	struct fwnet_device *dev;
+ 	int status;
+-	__be64 guid;
  
- 	mutex_lock(&pdata->lock);
--	fme = dfl_fpga_pdata_get_private(pdata);
- 	dfl_fpga_pdata_set_private(pdata, NULL);
- 	mutex_unlock(&pdata->lock);
- }
+ 	switch (ether_type) {
+ 	case ETH_P_ARP:
+@@ -512,7 +511,6 @@ static int fwnet_finish_incoming_packet(struct net_device *net,
+ 	 * Parse the encapsulation header. This actually does the job of
+ 	 * converting to an ethernet-like pseudo frame header.
+ 	 */
+-	guid = cpu_to_be64(dev->card->guid);
+ 	if (dev_hard_header(skb, net, ether_type,
+ 			   is_broadcast ? net->broadcast : net->dev_addr,
+ 			   NULL, skb->len) >= 0) {
 -- 
 2.17.2
 
