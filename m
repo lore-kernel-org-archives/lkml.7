@@ -2,105 +2,156 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F21C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270BEC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5632075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF26B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 13:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfLZNQg (ORCPT
+        id S1726596AbfLZNRP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 08:16:36 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41600 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbfLZNQg (ORCPT
+        Thu, 26 Dec 2019 08:17:15 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:58129 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726060AbfLZNRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 08:16:36 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so32509003otc.8;
-        Thu, 26 Dec 2019 05:16:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YXEQfNaH8VgTuSjnmguZGyC11qEHXS5tzAGI8RrbPY8=;
-        b=GF4b3ctqjMVQ3Jb+e46vQOkSONVLZM3KfdYhX1urh4bwGFznUnLyqDfv/lU4OUuZXv
-         z/YUjzsd6ag4gY/reT8TJEd11yEJLqFLMQ3CAB447vVWlcIk4g4SZ0JuHWcxsBU7d0Hf
-         kXKC5BPxvuCrJFIHlOFs5j/UJ4/CWLaJ+0mqIIHoZmABDimhlvS2NXLB1pUGQ21MFwtT
-         odAKwTFtE3s6E5cR2og1ncJHV3aVuPgAsGV10eSL6Pmzw/NmCl6prTibmP06QwwGPV6C
-         wo3RDRIOxZ8lbE6ppWHVhgWeB55g+mkejbZxtuxXRc5+qOp5UmT4a4ckB2IbaYqghoUm
-         KVhg==
-X-Gm-Message-State: APjAAAUXbrfw1/GHX/YeJISltDc3BdCWwSuPxYMJ1wICqozjgX2cmffE
-        mm/1dIe2u2OWzwfuiMmdDcMHYiNHShUL4MrW9T8=
-X-Google-Smtp-Source: APXvYqzjoOLS5EFKuY6BxQdWOZeUmiXoP4FsqbIxt6z03pBr9RBXWa7jFuBPKeZecz30modR1jUa5VsfvEbdjxPsOaY=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr51311676otm.297.1577366195614;
- Thu, 26 Dec 2019 05:16:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20191223040020.109570-1-yuchao0@huawei.com> <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
- <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
- <CAMuHMdV5VtR+vgYKcZtvcz16GPp9YLG_ecAeDsiNCreP4rYKjw@mail.gmail.com> <61e43dcb781c9e880fac95b525830fd384de122a.camel@dubeyko.com>
-In-Reply-To: <61e43dcb781c9e880fac95b525830fd384de122a.camel@dubeyko.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Dec 2019 14:16:24 +0100
-Message-ID: <CAMuHMdU+_RCp6JWsFm7kw4ce2vBimr=4_oEug=R0Jyr9f0L9Tg@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-To:     Vyacheslav Dubeyko <slava@dubeyko.com>
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Dec 2019 08:17:14 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=gerry@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlzWjMP_1577366226;
+Received: from 127.0.0.1(mailfrom:gerry@linux.alibaba.com fp:SMTPD_---0TlzWjMP_1577366226)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 26 Dec 2019 21:17:11 +0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
+ specification version 3
+From:   "Liu, Jiang" <gerry@linux.alibaba.com>
+In-Reply-To: <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
+Date:   Thu, 26 Dec 2019 21:16:19 +0800
+Cc:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+        mst@redhat.com, slp@redhat.com, virtio-dev@lists.oasis-open.org,
+        jing2.liu@intel.com, chao.p.peng@intel.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <56703BDA-B7AE-4656-8061-85FD1A130597@linux.alibaba.com>
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
+ <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
+ <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vyacheslav,
 
-On Thu, Dec 26, 2019 at 2:08 PM Vyacheslav Dubeyko <slava@dubeyko.com> wrote:
-> On Thu, 2019-12-26 at 11:43 +0100, Geert Uytterhoeven wrote:
-> > On Wed, Dec 25, 2019 at 10:58 AM Vyacheslav Dubeyko <
-> > slava@dubeyko.com> wrote:
-> > > On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
-> > > > On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com>
-> > > > wrote:
-> > > > > As Geert Uytterhoeven reported:
-> > > > >
-> > > > > for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
-> > > > >
-> > > > > On some platforms, HZ can be less than 50, then unexpected 0
-> > > > > timeout
-> > > > > jiffies will be set in congestion_wait().
-> > >
-> > > It looks like that HZ could have various value on diferent
-> > > platforms.
-> > > So, why does it need to divide HZ on 50? Does it really necessary?
-> > > Could it be used HZ only without the division operation?
-> >
-> > A timeout of HZ means 1 second.
-> > HZ/50 means 20 ms, but has the risk of being zero, if HZ < 50.
-> >
-> > If you want to use a timeout of 20 ms, you best use
-> > msecs_to_jiffies(20),
-> > as that takes care of the special cases, and never returns 0.
-> >
->
-> The msecs_to_jiffies(20) looks much better for my taste. Maybe, we
-> could use this as solution of the issue?
 
-Thanks, sounds good to me.
+> On Dec 26, 2019, at 4:09 PM, Jason Wang <jasowang@redhat.com> wrote:
+> 
+> 
+> On 2019/12/25 下午11:20, Liu, Jiang wrote:
+>> 
+>>> On Dec 25, 2019, at 6:20 PM, Jason Wang <jasowang@redhat.com> wrote:
+>>> 
+>>> 
+>>> On 2019/12/25 上午10:50, Zha Bin wrote:
+>>>> From: Liu Jiang <gerry@linux.alibaba.com>
+>>>> 
+>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
+>>>> virtio over mmio devices as a lightweight machine model for modern
+>>>> cloud. The standard virtio over MMIO transport layer only supports one
+>>>> legacy interrupt, which is much heavier than virtio over PCI transport
+>>>> layer using MSI. Legacy interrupt has long work path and causes specific
+>>>> VMExits in following cases, which would considerably slow down the
+>>>> performance:
+>>>> 
+>>>> 1) read interrupt status register
+>>>> 2) update interrupt status register
+>>>> 3) write IOAPIC EOI register
+>>>> 
+>>>> We proposed to update virtio over MMIO to version 3[1] to add the
+>>>> following new features and enhance the performance.
+>>>> 
+>>>> 1) Support Message Signaled Interrupt(MSI), which increases the
+>>>>    interrupt performance for virtio multi-queue devices
+>>>> 2) Support per-queue doorbell, so the guest kernel may directly write
+>>>>    to the doorbells provided by virtio devices.
+>>>> 
+>>>> The following is the network tcp_rr performance testing report, tested
+>>>> with virtio-pci device, vanilla virtio-mmio device and patched
+>>>> virtio-mmio device (run test 3 times for each case):
+>>>> 
+>>>> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
+>>>> 
+>>>> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
+>>>> 	trans/s	    9536	6939		9500
+>>>> 	trans/s	    9734	7029		9749
+>>>> 	trans/s	    9894	7095		9318
+>>>> 
+>>>> [1] https://lkml.org/lkml/2019/12/20/113
+>>> 
+>>> Thanks for the patch. Two questions after a quick glance:
+>>> 
+>>> 1) In PCI we choose to support MSI-X instead of MSI for having extra flexibility like alias, independent data and address (e.g for affinity) . Any reason for not start from MSI-X? E.g having MSI-X table and PBA (both of which looks pretty independent).
+>> Hi Jason,
+>> 	Thanks for reviewing patches on Christmas Day:)
+>> 	The PCI MSI-x has several advantages over PCI MSI, mainly
+>> 1) support 2048 vectors, much more than 32 vectors supported by MSI.
+>> 2) dedicated address/data for each vector,
+>> 3) per vector mask/pending bits.
+>> The proposed MMIO MSI extension supports both 1) and 2),
+> 
+> 
+> Aha right, I mis-read the patch. But more questions comes:
+> 
+> 1) The association between vq and MSI-X vector is fixed. This means it can't work for a device that have more than 2047 queues. We probably need something similar to virtio-pci to allow a dynamic association.
+We have considered both the PCI MSI-x like dynamic association design and fix mapping design.
+The fix mapping design simplifies both the interrupt configuration process and VMM implementations. 
+And the virtio mmio transport layer is mainly used by light VMMs to support small scale virtual machines,  2048 vectors should be enough for these usage cases.
+So the fix mapping design has been used.
 
-Gr{oetje,eeting}s,
+> 2) The mask and unmask control is missed
+> 
+> 
+>>  but the extension doesn’t support 3) because
+>> we noticed that the Linux virtio subsystem doesn’t really make use of interrupt masking/unmasking.
+> 
+> 
+> Not directly used but masking/unmasking is widely used in irq subsystem which allows lots of optimizations.
+> 
+> 
+>> 
+>> On the other hand, we want to simplify VMM implementations as simple as possible, and mimicking the PCI MSI-x
+>> will cause some complexity to VMM implementations.
+> 
+> 
+> I agree to simplify VMM implementation, but it looks to me introducing masking/pending won't cost too much code in the VMM implementation. Just new type of command for VIRTIO_MMIO_MSI_COMMAND.
+We want to make VMM implementations as simple as possible:) 
+And based on following observations, we have disabled support of mask/unmask,
+1) MSI is edge triggering, which means it won’t be shared with other interrupt sources, so masking/unmasking won’t be used for normal interrupt management logic.
+2) Linux virtio mmio transport layer doesn’t support  suspend/resume yet, so there’s no need to quiesce the device by masking interrupts.
+3) The legacy PCI 2.2 devices doesn’t support irq masking/unmasking, so irq masking/unmasking may be optional operations.
+So we skipped support of irq masking/unmasking. We will recheck whether irq masking/unmasking is mandatory for MMIO devices.
+On the other hand, we may enhance the spec to define command codes for masking/unmasking, and VMM may optionally support masking/unmasking.
 
-                        Geert
+Thanks,
+Gerry
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> Thanks
+> 
+> 
+>> 
+>>> 2) It's better to split notify_multiplexer out of MSI support to ease the reviewers (apply to spec patch as well)
+>> Great suggestion, we will try to split the patch.
+>> 
+>> Thanks,
+>> Gerry
+>> 
+>>> Thanks
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
