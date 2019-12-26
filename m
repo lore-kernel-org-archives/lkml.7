@@ -2,73 +2,85 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD9BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24071C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 591EA20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D1220882
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="s+drKSEi"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ntRYZFTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfLZUhV (ORCPT
+        id S1727100AbfLZUhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 15:37:21 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:40856 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbfLZUhQ (ORCPT
+        Thu, 26 Dec 2019 15:37:38 -0500
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:47800 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbfLZUhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 15:37:16 -0500
-Received: by mail-wm1-f47.google.com with SMTP id t14so6807932wmi.5;
-        Thu, 26 Dec 2019 12:37:14 -0800 (PST)
+        Thu, 26 Dec 2019 15:37:37 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 47kMG90SL5z9wK02
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 20:37:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lUPUYKM_CnnW for <linux-kernel@vger.kernel.org>;
+        Thu, 26 Dec 2019 14:37:36 -0600 (CST)
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com [209.85.219.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 47kMG86QJ7z9wK03
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 14:37:36 -0600 (CST)
+Received: by mail-yb1-f200.google.com with SMTP id y204so19817930yby.18
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 12:37:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RjzvH91MnVV7aITjjuXlbaOaZ4rQFhkSbeJltjOfK8A=;
-        b=s+drKSEiN/qOoiDdlcEy0bXE+J5Pc5IJ0dzfAXtyoK1ioUgP35H6WcIHPxSGqsGjoj
-         IgA7AzNURTPzCOEPtnsnNSbP8evDBzz/bQOmXHjd6aofJ7+iAtnsiWmtO7Mo9eEzI4pR
-         rL359/EItc2wt8MqMa1xQKhWBrl4ilmXxnGU8LFBOIVqVPFmkasHP5mcoF06myENwmzK
-         V0Fa7vSNiZ5ley+IA3SqIkpBIc45TksTRnyHAYerI+9KOPfC/M8EQ15BryuYrHMW0Oqd
-         UfIakJmOvV2/ULXcu1BKOVCHq42Kccr2MfE3rBanZ6ZsW33GF+sXcsF/njXcHJDo7P4o
-         MIJA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HImTIUDKCkz90/mVqDadf//lbgFZThYHx2fxEWAm4HE=;
+        b=ntRYZFTwgt+z1MZhyPlGfNMPLcxw29JgS0WhPgImNkqaBbFTC1vOGk7K1oK669JK7+
+         RM5f0Ij/xY/9H40Bz+uHIC9x3IU8wAB6weVq9ayqxNWVeOoEMTGBb9Bzo4ukPCNXGYtX
+         2nBwS+0PmrB0Y58rQrQzr0mnQTDSqySqmfx5wrqy0Nfn7a3NZu9v+4a+DRbR1HBU+tjY
+         k5HyTZ6umwEaA0Yjrkqal4bqG0pmNPL70+batjcNnnCHq+MB+1e+9cRveq6aO3Jme/Bv
+         oM6uP2mcJn3qMyEWDFcYDxBBBdSnGxJqg9fJAyoqWgrAXSPR1tP7adiPTb6Voa6D7kw2
+         S2sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RjzvH91MnVV7aITjjuXlbaOaZ4rQFhkSbeJltjOfK8A=;
-        b=uBI1TBAHMpMzIpqGAiEgwzTuqOW+dJ6T/1YylAuXyxtSlVrtk67wzItd/gsroVrTGo
-         5uJUsT1C8g04uX6E0nyC82DHdA0cl9rcSisUME0EpEmxt4fgPfKiXem6o2D0otBL2M0U
-         /FYmbFBI1rLndGQsKw4rl9hW4QXibZ2IaOm8WoRArhfsvAXvJPjE/I71Xx9qNTsWzhB1
-         46ffuaYfPfeCkIqc1Mko8WZOGOc3+TU1eFxUHBwRccbRPfdK39kZsrcpi+Ut+3k3hyGJ
-         drclNoWJCHGvNr+FnOJbpKMVLa7T4lVtyinf5JLOkgm8N+X/lRC0zJeF92I1QalcYkFM
-         Lorw==
-X-Gm-Message-State: APjAAAU3gCEfvk+xUxfSugvA2ypsq4LlHgYk2IvUyHG5b7Gz77KhWE+C
-        xvRQQMtqO5QjDiTjheL4j3E=
-X-Google-Smtp-Source: APXvYqw2MZbGNvdpTY6PKEXi82D3m+l0OOPUiJU+ERQgG9SfmDopfpP3drcdmqJBbzAUiexFFSEACA==
-X-Received: by 2002:a7b:ca4c:: with SMTP id m12mr15100035wml.176.1577392633660;
-        Thu, 26 Dec 2019 12:37:13 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id q3sm32911665wrn.33.2019.12.26.12.37.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HImTIUDKCkz90/mVqDadf//lbgFZThYHx2fxEWAm4HE=;
+        b=b1MRWPolLRonJrDqw3QzdP9AzbW1wWchc5sPGL8K8WozwYGmMSWbiGNPcsstMlixEP
+         qBzzsygcYZDMAElqVlX5K5kxyAyaEsP+bF7GgL2uxPl2fRg6vhUM0g+zDxD888r9JPpl
+         gNeORGQT/qBsO8NXjCx3jNuMXUDoqtTJsK1np4xy7WpRlFtwvrTxcplZGmF6wAAT4f3c
+         ZKEqyx6yh8FsAoM71BD2TTfkmMb8J1MmVcTnsoxdoWnwp7IPq5KlHe09cZUVGdND9ECs
+         RUtJtEJ0pI1YuPtdNs38lJqFz6tJCdC9sVvFFoqTNemtHYn/qkFarveNKBBaoq5miTVY
+         NFjg==
+X-Gm-Message-State: APjAAAVZQm1TvTNeGQDxD9bLKT4ojg/X65arw3dpiNKCZImCzLyrnNgH
+        pMACPw5kJ86kpkiOpG65UpOId5/ZIvEfdp3vQ+8A8nX+JETU0kxnK07v/JBuN4CvZej6DGK5VUb
+        anTgIhCK48gNPTCVGPKntcauV9M/O
+X-Received: by 2002:a81:6fd4:: with SMTP id k203mr34295349ywc.370.1577392656417;
+        Thu, 26 Dec 2019 12:37:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx0nn/4FSfZJVjPBvPs8yj+Byn1PGJYTHXNh9kAPj7PGWn9gUqx3rxnw6ePhGqE1GZBTI4thQ==
+X-Received: by 2002:a81:6fd4:: with SMTP id k203mr34295336ywc.370.1577392656189;
+        Thu, 26 Dec 2019 12:37:36 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id w74sm12621083ywa.71.2019.12.26.12.37.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 12:37:13 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, jianxin.pan@amlogic.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC v1 2/2] net: stmmac: dwmac-meson8b: add support for the RX delay configuration
-Date:   Thu, 26 Dec 2019 21:36:55 +0100
-Message-Id: <20191226203655.4046170-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191226203655.4046170-1-martin.blumenstingl@googlemail.com>
-References: <20191226203655.4046170-1-martin.blumenstingl@googlemail.com>
+        Thu, 26 Dec 2019 12:37:35 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: remove unnecessary assertion in nfsd4_layout_setlease
+Date:   Thu, 26 Dec 2019 14:37:33 -0600
+Message-Id: <20191226203733.27808-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,153 +88,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DO NOT MERGE THIS!
+In nfsd4_layout_setlease, checking for a valid file lock is
+redundant and can be removed. This patch eliminates such a
+BUG_ON check.
 
-Test results:
-- Akaso M8S (not upstream yet) Meson8m2 with RMII PHY: no change
-- Odroid-C1 Meson8b with RTL8211F RGMII PHY:
-  phy-mode = "rgmii" still works
-  phy-mode = "rgmii-id" works now
-- Khadas VIM2 GXM with RTL8211F RGMII PHY:
-  phy-mode = "rgmii" is now broken!
-  phy-mode = "rgmii-id" works
-
-The public A311D datasheet [0] mentions these bits in the PRG_ETH0 (also
-call PRG_ETH0_REG) register:
-- bit[13]: RMII & RGMII mode, Enable data delay adjustment and
-  calibration logic.
-- bit[14]: Set RXDV and RXD setup time, data is aligned with index 0.
-  When set to 1, auto delay and skew.
-- bit[19:15]:  Set bit14 to 0. RMII & RGMII mode. Capture input data at
-  clock index equal to adj_delay.
-- bit[24:20]: RMII & RGMII mode. 5 Bits correspondent to
-  {RXDV, RXD[3:0]}, set to 1 will delay the data capture by 1 cycle.
-(do all of these bits have the same meaning for all supported SoCs:
-Meson8b, Meson8m2, GXBB, GXL, GXM, AXG, G12A, G12B, SM1?)
-
-The public "Amlogic Ethernet controller user guide" recommends the
-following settings.
-RMII: adj_enable = 1, adj_setup = 0, adj_delay = 18, adj_skew = 0x0
-RGMII: adj_enable = 1, adj_setup = 1, adj_delay = 4, adj_skew = 0xc
-(shouldn't adj_delay be 0 for the RGMII mode based on the register
-description above?)
-
-Do we need to expose adj_delay and adj_skew to devicetree?
-How do I know which value to set for each board?
-
-[0] https://dl.khadas.com/Hardware/VIM3/Datasheet/A311D_Datasheet_01_Wesion.pdf
-[1] http://openlinux.amlogic.com/@api/deki/files/75/=Amlogic_Ethenet_controller_user_Guide.pdf
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 59 ++++++++++---------
- 1 file changed, 32 insertions(+), 27 deletions(-)
+ fs/nfsd/nfs4layouts.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 1483761ab1e6..af25eb1aea41 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -33,6 +33,10 @@
- #define PRG_ETH0_CLK_M250_SEL_SHIFT	4
- #define PRG_ETH0_CLK_M250_SEL_MASK	GENMASK(4, 4)
- 
-+/* TX clock delay in ns = "8ns / 4 * tx_dly_val" (where 8ns are exactly one
-+ * cycle of the 125MHz RGMII TX clock):
-+ * 0ns = 0x0, 2ns = 0x1, 4ns = 0x2, 6ns = 0x3
-+ */
- #define PRG_ETH0_TXDLY_MASK		GENMASK(6, 5)
- 
- /* divider for the result of m250_sel */
-@@ -44,6 +48,11 @@
- #define PRG_ETH0_INVERTED_RMII_CLK	BIT(11)
- #define PRG_ETH0_TX_AND_PHY_REF_CLK	BIT(12)
- 
-+#define PRG_ETH0_ADJ_ENABLE		BIT(13)
-+#define PRG_ETH0_ADJ_SETUP		BIT(14)
-+#define PRG_ETH0_ADJ_DELAY		GENMASK(19, 15)
-+#define PRG_ETH0_ADJ_SKEW		GENMASK(24, 20)
-+
- #define MUX_CLK_NUM_PARENTS		2
- 
- struct meson8b_dwmac;
-@@ -241,29 +250,38 @@ static int meson_axg_set_phy_mode(struct meson8b_dwmac *dwmac)
- 
- static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- {
-+	u8 tx_dly_val = dwmac->tx_delay_ns >> 1;
-+	u32 delay_config;
- 	int ret;
--	u8 tx_dly_val = 0;
- 
- 	switch (dwmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+		delay_config = FIELD_PREP(PRG_ETH0_TXDLY_MASK, tx_dly_val);
-+		delay_config |= PRG_ETH0_ADJ_ENABLE | PRG_ETH0_ADJ_SETUP;
-+		break;
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
--		/* TX clock delay in ns = "8ns / 4 * tx_dly_val" (where
--		 * 8ns are exactly one cycle of the 125MHz RGMII TX clock):
--		 * 0ns = 0x0, 2ns = 0x1, 4ns = 0x2, 6ns = 0x3
--		 */
--		tx_dly_val = dwmac->tx_delay_ns >> 1;
--		/* fall through */
--
--	case PHY_INTERFACE_MODE_RGMII_ID:
-+		delay_config = FIELD_PREP(PRG_ETH0_TXDLY_MASK, tx_dly_val);
-+		break;
- 	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		delay_config = PRG_ETH0_ADJ_ENABLE | PRG_ETH0_ADJ_SETUP;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RMII:
-+	default:
-+		delay_config = 0;
-+		break;
-+	};
-+
-+	meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK |
-+				PRG_ETH0_ADJ_ENABLE | PRG_ETH0_ADJ_SETUP |
-+				PRG_ETH0_ADJ_DELAY | PRG_ETH0_ADJ_SKEW,
-+				delay_config);
-+
-+	if (phy_interface_mode_is_rgmii(dwmac->phy_mode)) {
- 		/* only relevant for RMII mode -> disable in RGMII mode */
- 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
- 					PRG_ETH0_INVERTED_RMII_CLK, 0);
- 
--		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
--					FIELD_PREP(PRG_ETH0_TXDLY_MASK,
--						   tx_dly_val));
--
- 		/* Configure the 125MHz RGMII TX clock, the IP block changes
- 		 * the output automatically (= without us having to configure
- 		 * a register) based on the line-speed (125MHz for Gbit speeds,
-@@ -286,24 +304,11 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- 		devm_add_action_or_reset(dwmac->dev,
- 					(void(*)(void *))clk_disable_unprepare,
- 					dwmac->rgmii_tx_clk);
--		break;
--
--	case PHY_INTERFACE_MODE_RMII:
-+	} else {
- 		/* invert internal clk_rmii_i to generate 25/2.5 tx_rx_clk */
- 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
- 					PRG_ETH0_INVERTED_RMII_CLK,
- 					PRG_ETH0_INVERTED_RMII_CLK);
--
--		/* TX clock delay cannot be configured in RMII mode */
--		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
--					0);
--
--		break;
--
--	default:
--		dev_err(dwmac->dev, "unsupported phy-mode %s\n",
--			phy_modes(dwmac->phy_mode));
--		return -EINVAL;
+diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
+index 2681c70283ce..ef5f8e645f4f 100644
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -204,7 +204,6 @@ nfsd4_layout_setlease(struct nfs4_layout_stateid *ls)
+ 		locks_free_lock(fl);
+ 		return status;
  	}
+-	BUG_ON(fl != NULL);
+ 	return 0;
+ }
  
- 	/* enable TX_CLK and PHY_REF_CLK generator */
 -- 
-2.24.1
+2.20.1
 
