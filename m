@@ -2,127 +2,89 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3201C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E83EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B89206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B91120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 20:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ju0iqBtC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wI6RHv+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfLZUmH (ORCPT
+        id S1726885AbfLZUpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 15:42:07 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:39285 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfLZUmH (ORCPT
+        Thu, 26 Dec 2019 15:45:35 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:33472 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZUpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 15:42:07 -0500
-Received: by mail-yw1-f67.google.com with SMTP id h126so10596462ywc.6;
-        Thu, 26 Dec 2019 12:42:06 -0800 (PST)
+        Thu, 26 Dec 2019 15:45:34 -0500
+Received: by mail-pj1-f74.google.com with SMTP id u91so4122515pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 12:45:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=g86qrskhZaRGjgxmstzX/LzWZezxaIn6S4dfDOioLNc=;
-        b=ju0iqBtCnCnRzhHPSabea6qcNcgjTcoZTuWNuXELMsATmmtOTvqb2CE7WydBM8iUTb
-         /gcEOkUclsx6k5jU5kxaokTJWZH5n1jGh9Y1QP3HYvQCs14jVQox0MjJJCZYLW4qJM7q
-         xvvWKw2xIQdWge6Ek0GPn5sScOxj2kXuDFkEM1RR0GNatT8UjzizaPTzFFy/bognj0Bx
-         YLo0Nty+67EKBWMR+VXnMY6Ec4W5kDjtsTqlrnUElcdptcN9GZ2P5FirxMezi5ZrDpDt
-         q3bDVJWS7vg3it6AKzdSp1T+vwqzoWbJ8BC7T7K/X40u4u4tcbF1hW5K9Mna3JiEKT9C
-         o7xQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=U/F0Ny1cWR9vZvhJ3YyD2gGoI3HlhJe0r1qEnyZLWxo=;
+        b=wI6RHv+mVRYhGm1FR8NrPKPneutZrzsof1fPLKZqZYxtqdukNtRH114M26za60wiKv
+         frQ18CYqvXianRWhPCdApmjkJoLXMxPNl8utHPZhGBuHh9XlNbwUBzAOWmhmAX4KF7/w
+         jusyuWrxUPgMMplG2g42wpPrNUSYRS7ob//eVX2BlwuwkJiXAVfKDYfT+IeeI4vi54eA
+         EdeLgpvBdpRh94mctPK3GZdQb5Vwl15YfTsXo4ti6yFt0JzDk+88i0dzxoHnMyRdkHSz
+         NM5m6b3e0tURTzw3+CbNSNLxQI66g1/NOv/+wHUAo2EsdzjNYQqUwUPey0Ble8xanC1n
+         fuKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=g86qrskhZaRGjgxmstzX/LzWZezxaIn6S4dfDOioLNc=;
-        b=QKdNsetTJ/TA92QyrQhTyiSSr744gkgacx4BxSD4S9zhEuXWFugKDUd2AuFNgbxWRt
-         GvEQZP/yYP+SVPs87xKIyVC9Oc+gMkP39OncyoJ78ffYV8qE9TaB1a/jCXfFy0v8MAm1
-         abrqwxsKMCZzOvm5XQ8eTjTs9H/U6EDBEoeC2wL/06nHcaqhS/9nlU88lXwskW0AiKqB
-         D/YPKsRWNQ37gY8vJ763O/cOHqYHSxao4bsVKvaiiQ6KS5SVjczDwIpG6lwipkJOrYZY
-         w8jHj9fQ7EmFqakW+HbOrTW8ZHJg8tz4UIc5t/1JS0XjkH38jFYGsAjU1lcUyJRQWzET
-         5ihQ==
-X-Gm-Message-State: APjAAAXN6qqgcT0gmZK7frn2YvHlswd/T74d6+YETFBxDExEvuSOxS+n
-        gCTg/D5Sgkbi+LEXMD9S1Zsp48w=
-X-Google-Smtp-Source: APXvYqzJGlQHJhPxiU5x5y4opucYX2yp8WR5sheWemmFHpMxLNx6Q4Rvb2ghhuSMJDRwFJgqMBtnSg==
-X-Received: by 2002:a81:7016:: with SMTP id l22mr34108773ywc.69.1577392926123;
-        Thu, 26 Dec 2019 12:42:06 -0800 (PST)
-Received: from localhost ([12.156.111.130])
-        by smtp.gmail.com with ESMTPSA id w74sm12626034ywa.71.2019.12.26.12.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 12:42:05 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:42:05 -0500
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        kbuild test robot <lkp@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix a possible NULL deref
-Message-ID: <20191226204205.qzfcmohulcfbcl4e@960>
-References: <20191225235841.14393-1-ayman.bagabas@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191225235841.14393-1-ayman.bagabas@gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=U/F0Ny1cWR9vZvhJ3YyD2gGoI3HlhJe0r1qEnyZLWxo=;
+        b=ObTxNrQeGHIztaVbYaoXrGCa1RU53hvsTPmt/P7gv2KS5u8TnyNchzqKlGgN2I+yHa
+         ruSwlyoD429gJjoh3Np1tQO42OTSdz6okpfAq1OsiKGbJeZR9qsIly738Wxk8bxSv5I6
+         RNdwsKmuihgwxpuu9Hf8RUhG9onsFEeMSFgQGWBO29Gy0DCPe4lH4Z9KVM7viPtlzcP1
+         z9ATcFG9JGNY3OjDrPTWZ1SD2MslcXYTsx948DLiGAaSJAIgIRaYUy6F4lctRwcIbAXc
+         9h6HEuUyrp2r6v6RStnCz1S4yrU6PHbcOGwSBpB27Nx2iyAfoP8f0uwQlw03jepu8EXD
+         gKAQ==
+X-Gm-Message-State: APjAAAXsyOM0iP4nS4TtxEPNMgIZ+cE6ldijNvVHOyls+UEsfhQcAZ/v
+        DqcgcdvrdzHAEi8dfuz4SCNqkhLQk0Q39FtTJyC7QzcL5nuAcldWyjtT973AaNJXOd9NU3iZCj4
+        h2lz3I4TnWtAbT700GEbW1o2dBXqIb0sqbk+EubcwZq56GP879OhcibaDg8Bi4Mi/d4D5bpCZTM
+        7fJ4EnzZy3
+X-Google-Smtp-Source: APXvYqx5xjoGFvSFi6eyTgVV9nktwEV6ByHHsJ2GcUXuivyrjLvP1jAWRZFuaN6Z1rjSIOSZyVfI53D+VqczAv9S+VQ=
+X-Received: by 2002:a65:4587:: with SMTP id o7mr49947184pgq.303.1577393132464;
+ Thu, 26 Dec 2019 12:45:32 -0800 (PST)
+Date:   Thu, 26 Dec 2019 12:45:12 -0800
+Message-Id: <20191226204512.24524-1-asteinhauser@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH] Removing a dead definition or RSB_FILL_LOOPS
+From:   Anthony Steinhauser <asteinhauser@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, bp@alien8.de, tglx@linutronix.de,
+        Anthony Steinhauser <asteinhauser@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this patch I'll be sending another one. guid->guid_string
-is always true.
+It is never used, but it is misleading.
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+---
+ arch/x86/include/asm/nospec-branch.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-On 19/12/25 06:58PM, Ayman Bagabas wrote:
-> We're iterating over a NULL terminated array.
->
-> Fixes: 1ac9abeb2e5b ("platform/x86: huawei-wmi: Move to platform driver")
-> Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
-> ---
->  drivers/platform/x86/huawei-wmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-> index a2d846c4a7ee..42d461eeeff4 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -784,13 +784,13 @@ static const struct wmi_device_id huawei_wmi_events_id_table[] = {
->  static int huawei_wmi_probe(struct platform_device *pdev)
->  {
->  	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
-> +	struct input_dev *idev = *huawei_wmi->idev;
->  	int err;
->
->  	platform_set_drvdata(pdev, huawei_wmi);
->  	huawei_wmi->dev = &pdev->dev;
->
-> -	while (*guid->guid_string) {
-> -		struct input_dev *idev = *huawei_wmi->idev;
-> +	while (guid->guid_string) {
->
->  		if (wmi_has_guid(guid->guid_string)) {
->  			err = huawei_wmi_input_setup(&pdev->dev, guid->guid_string, &idev);
-> @@ -820,7 +820,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
->  {
->  	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
->
-> -	while (*guid->guid_string) {
-> +	while (guid->guid_string) {
->  		if (wmi_has_guid(guid->guid_string))
->  			huawei_wmi_input_exit(&pdev->dev, guid->guid_string);
->
->
-> base-commit: 46cf053efec6a3a5f343fead837777efe8252a46
-> --
-> 2.24.1
->
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index 5c24a7b35166..07e95dcb40ad 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -37,7 +37,6 @@
+  */
+ 
+ #define RSB_CLEAR_LOOPS		32	/* To forcibly overwrite all entries */
+-#define RSB_FILL_LOOPS		16	/* To avoid underflow */
+ 
+ /*
+  * Google experimented with loop-unrolling and this turned out to be
+-- 
+2.24.1.735.g03f4e72817-goog
 
---
-Thank you,
-Ayman
