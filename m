@@ -2,156 +2,233 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6154CC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42F7C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D149206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2EC206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EGpos4ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfLZLiy (ORCPT
+        id S1726653AbfLZLj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 06:38:54 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8620 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLZLiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 06:38:54 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EBB9B542022DD76BF121;
-        Thu, 26 Dec 2019 19:38:51 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 19:38:48 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <sathya.prakash@broadcom.com>,
-        <chaitra.basappa@broadcom.com>,
-        <suganath-prabu.subramani@broadcom.com>,
-        <sergei.shtylyov@cogentembedded.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <MPT-FusionLinux.pdl@broadcom.com>
-Subject: [PATCH V2] scsi: don't memset to zero after dma_alloc_coherent
-Date:   Thu, 26 Dec 2019 19:38:14 +0800
-Message-ID: <20191226113814.6784-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Thu, 26 Dec 2019 06:39:58 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42051 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLZLj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 06:39:57 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so22381036edv.9;
+        Thu, 26 Dec 2019 03:39:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hnDpuMiYhSgWz3b9tcFVN297Eqx81qPSphtkpFW2YI4=;
+        b=EGpos4ezfLlYKew+l/e4uJMp1Skke6cJfAC2hkFpwhvi2aSWglVSxO/Apd0kmsyYU4
+         h/9hBvwkjpD1LWarE95HV5ZORSNeSM6HLaCuBjhLCwboFt4tF4LDm8Wq+K/4nhVTXkPW
+         U+0pnY2U09Jy1xRZjZVbFDO0oJX2AUUEqzmciqjfqDuxrMPMP+iJDX00dXXhOb1MG22G
+         Iea+7+idDyh1+Rw72NADm1grR8WLkGAFilun3oYBoPzH+v8h87Rwgj2sBt6hXG5jeJkI
+         mVWFElZi0AHWt9mwfuEtHRWy3OavHY+pJ/Pr3wik7d+JhHAU2p+I4Be8MjzmEnv+PXSt
+         crXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hnDpuMiYhSgWz3b9tcFVN297Eqx81qPSphtkpFW2YI4=;
+        b=PRmjcP8+zgyJGUap8VTrG5pFGJeXj4ofAqi8aK+wPcFm/+L3wpd5Z7qzphhOtSVDLp
+         5HgCGRMXfxiNo+wUi496m2R7QAbpiRDBiF/kOS7Gi9AGTBVodjBakBkYQo47W/kMKUBm
+         +5dBO5q/Kebp7inPfTNqKlFfyh3s26s/UjFi7XJfGdYBaZq3SdxO89LhibT0d7nQIlAn
+         e/Ke5DW3vbFdkw30XEeadqBhul65RGp3aUajfFHM1qxTyeYmvByTjMUQYYGcXf1exLlM
+         fWnRn8THKJqLyDThzgAQyb4jlDor40uYJ164LU6DcHe0h9osCFUTLjzBZsuW8eC7IZRl
+         kf3g==
+X-Gm-Message-State: APjAAAXUsnuQKgALJaB89OD9Z1z3kbMnoj6B5zgQsAIDUB6O7zkvE3CD
+        ozA0QtZIHVkRjrRlEuiKRqq+Tx7AxBKp8AWvoug=
+X-Google-Smtp-Source: APXvYqwnJ4hu5Maho1A6UkCjxWLgHWKDqj1W43SvfESp+qHnuiZUYYJ6rlO/+jx29OthsJx6Da6soJidQqqcVLjEI0s=
+X-Received: by 2002:a17:906:e219:: with SMTP id gf25mr47257452ejb.51.1577360395212;
+ Thu, 26 Dec 2019 03:39:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
+ <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
+ <20191225150845.GA16671@lunn.ch> <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
+ <20191226105044.GC1480@lunn.ch>
+In-Reply-To: <20191226105044.GC1480@lunn.ch>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 26 Dec 2019 12:39:44 +0100
+Message-ID: <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on
+ Meson8b/8m2 SoCs
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
+        davem@davemloft.net, khilman@baylibre.com,
+        linus.luessing@c0d3.blue, balbes-150@yandex.ru,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ingrassia@epigenesys.com, jbrunet@baylibre.com,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_alloc_coherent already zeros out memory, so memset to zero is not
-needed.
+Hi Andrew,
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
-changes in V2
--split arch/ part to another patch
+On Thu, Dec 26, 2019 at 11:50 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > >       # RX and TX delays are added by the MAC when required
+> > >       - rgmii
+> > >
+> > >       # RGMII with internal RX and TX delays provided by the PHY,
+> > >       # the MAC should not add the RX or TX delays in this case
+> > >       - rgmii-id
+> > >
+> > >       # RGMII with internal RX delay provided by the PHY, the MAC
+> > >       # should not add an RX delay in this case
+> > >       - rgmii-rxid
+> > >
+> > >       # RGMII with internal TX delay provided by the PHY, the MAC
+> > >       # should not add an TX delay in this case
+> > >       - rgmii-txid
+> > >
+> > > So ideally, you want the MAC to add no delay at all, and then use the
+> > > correct phy-mode so the PHY adds the correct delay. This gives you the
+> > > most flexibility in terms of PHY and PCB design. This does however
+> > > require that the PHY implements the delay, which not all do.
+> > these boards (with RGMII PHY) that I am aware of are using an RTL8211F
+> > PHY which implements a 2ns PHY TX delay
+>
+> We need to be careful here...
+>
+> Earlier this year we got into a mess with a PHY driver wrongly
+> implemented these delays. DT contained 'rgmii', but the PHY driver
+> actually implemented rgmii-id'. Boards worked, because they actually
+> needed rgmii-id. But then came along a board which really did need
+> rgmii. We took the decision, maybe the wrong decision, to fix the PHY
+> driver, and fixup DT files as we found boards which had the incorrect
+> setting. We broke a lot of boards for a while and caused lots of
+> people pain.
+>
+> You might have something which works, but i want to be sure it is
+> actually correct, not two bugs cancelling each other out.
+(wow, that sounds painful)
 
- drivers/scsi/dpt_i2o.c              | 4 ----
- drivers/scsi/mpt3sas/mpt3sas_base.c | 1 -
- drivers/scsi/mvsas/mv_init.c        | 4 ----
- drivers/scsi/pmcraid.c              | 1 -
- 4 files changed, 10 deletions(-)
+> You say the RTL8211F PHY implements a 2ns PHY TX delay. So in DT, do
+> you have the phy-mode of 'rgmii-txid'? That would be the correct
+> setting to say that the PHY provides only the TX delay.
+yes, in my experiment (for which I did not send patches to the list
+yet because we're discussing that part) I set phy-mode = "rgmii-txid";
+this also makes the dwmac-meson8b driver ignore any TX delay on the MAC side
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index abc74fd474dc..b1b879beebfb 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -1331,7 +1331,6 @@ static s32 adpt_i2o_reset_hba(adpt_hba* pHba)
- 		printk(KERN_ERR"IOP reset failed - no free memory.\n");
- 		return -ENOMEM;
- 	}
--	memset(status,0,4);
- 
- 	msg[0]=EIGHT_WORD_MSG_SIZE|SGL_OFFSET_0;
- 	msg[1]=I2O_CMD_ADAPTER_RESET<<24|HOST_TID<<12|ADAPTER_TID;
-@@ -2803,7 +2802,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 			pHba->name);
- 		return -ENOMEM;
- 	}
--	memset(status, 0, 4);
- 
- 	writel(EIGHT_WORD_MSG_SIZE| SGL_OFFSET_6, &msg[0]);
- 	writel(I2O_CMD_OUTBOUND_INIT<<24 | HOST_TID<<12 | ADAPTER_TID, &msg[1]);
-@@ -2857,7 +2855,6 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
- 		printk(KERN_ERR "%s: Could not allocate reply pool\n", pHba->name);
- 		return -ENOMEM;
- 	}
--	memset(pHba->reply_pool, 0 , pHba->reply_fifo_size * REPLY_FRAME_SIZE * 4);
- 
- 	for(i = 0; i < pHba->reply_fifo_size; i++) {
- 		writel(pHba->reply_pool_pa + (i * REPLY_FRAME_SIZE * 4),
-@@ -3092,7 +3089,6 @@ static int adpt_i2o_build_sys_table(void)
- 		printk(KERN_WARNING "SysTab Set failed. Out of memory.\n");	
- 		return -ENOMEM;
- 	}
--	memset(sys_tbl, 0, sys_tbl_len);
- 
- 	sys_tbl->num_entries = hba_count;
- 	sys_tbl->version = I2OVERSION;
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 45fd8dfb7c40..663dd4df03e3 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -5090,7 +5090,6 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *ioc)
- 		_base_release_memory_pools(ioc);
- 		goto retry_allocation;
- 	}
--	memset(ioc->request, 0, sz);
- 
- 	if (retry_sz)
- 		ioc_err(ioc, "request pool: dma_alloc_coherent succeed: hba_depth(%d), chains_per_io(%d), frame_sz(%d), total(%d kb)\n",
-diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
-index 7af9173c4925..e77f4d5a049c 100644
---- a/drivers/scsi/mvsas/mv_init.c
-+++ b/drivers/scsi/mvsas/mv_init.c
-@@ -244,19 +244,16 @@ static int mvs_alloc(struct mvs_info *mvi, struct Scsi_Host *shost)
- 				     &mvi->tx_dma, GFP_KERNEL);
- 	if (!mvi->tx)
- 		goto err_out;
--	memset(mvi->tx, 0, sizeof(*mvi->tx) * MVS_CHIP_SLOT_SZ);
- 	mvi->rx_fis = dma_alloc_coherent(mvi->dev, MVS_RX_FISL_SZ,
- 					 &mvi->rx_fis_dma, GFP_KERNEL);
- 	if (!mvi->rx_fis)
- 		goto err_out;
--	memset(mvi->rx_fis, 0, MVS_RX_FISL_SZ);
- 
- 	mvi->rx = dma_alloc_coherent(mvi->dev,
- 				     sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1),
- 				     &mvi->rx_dma, GFP_KERNEL);
- 	if (!mvi->rx)
- 		goto err_out;
--	memset(mvi->rx, 0, sizeof(*mvi->rx) * (MVS_RX_RING_SZ + 1));
- 	mvi->rx[0] = cpu_to_le32(0xfff);
- 	mvi->rx_cons = 0xfff;
- 
-@@ -265,7 +262,6 @@ static int mvs_alloc(struct mvs_info *mvi, struct Scsi_Host *shost)
- 				       &mvi->slot_dma, GFP_KERNEL);
- 	if (!mvi->slot)
- 		goto err_out;
--	memset(mvi->slot, 0, sizeof(*mvi->slot) * slot_nr);
- 
- 	mvi->bulk_buffer = dma_alloc_coherent(mvi->dev,
- 				       TRASH_BUCKET_SIZE,
-diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
-index 7eb88fe1eb0b..6976013cf4c7 100644
---- a/drivers/scsi/pmcraid.c
-+++ b/drivers/scsi/pmcraid.c
-@@ -4718,7 +4718,6 @@ static int pmcraid_allocate_host_rrqs(struct pmcraid_instance *pinstance)
- 			return -ENOMEM;
- 		}
- 
--		memset(pinstance->hrrq_start[i], 0, buffer_size);
- 		pinstance->hrrq_curr[i] = pinstance->hrrq_start[i];
- 		pinstance->hrrq_end[i] =
- 			pinstance->hrrq_start[i] + PMCRAID_MAX_CMD - 1;
--- 
-2.17.2
+> > however, the 3.10 vendor kernel also supports Micrel RGMII (and RMII)
+> > PHYs where I don't know if they implement a (configurable) TX delay.
+> >
+> > > Looking at patches 2 and 3, the phy-mode is set to rgmii. What you
+> > > might actually need to do is set this to rgmii-txid, or maybe
+> > > rgmii-id, once you have the MAC not inserting any delay.
+> > please let us split this discussion:
+> > 1) I believe that this patch is still correct and required whenever
+> > the MAC *has to* generate the TX delay (one use-case could be the
+> > Micrel PHYs I mentioned above)
+>
+> I think this patch splits into two parts. One is getting a 25MHz
+> clock. That part i can agree with straight away. The second part is
+> setting a 2ns TX delay. This we need to be careful of. What is the MAC
+> actually doing after this patch? What is the configured RX delay? Does
+> the driver explicitly configure the RX delay? To what?
+good to see that we agree on the clock part!
 
+the MAC is not capable of generating an RX delay (at least as far as I know).
+to me this means that we are using the default on the PHY side (I
+*assume* - but I have no proof - that this means the RX delay is
+enabled, just like TX delay is enabled after a full chip reset)
+
+> > 2) the correct phy-mode and where the TX delay is being generated. I
+> > have tried "rgmii-txid" on my own Odroid-C1 and it's working fine
+> > there. however, it's the only board with RGMII PHY that I have from
+> > this generation of SoCs (and other testers are typically rare for this
+> > platform, because it's an older SoC). so my idea was to use the same
+> > settings as the 3.10 vendor kernel because these seem to be the "known
+> > working" ones.
+>
+> Vendor kernels have the alternative of 'vendor crap' for a good
+> reason. Just because it works does not mean it is correct.
+yes, there's no general rule about the quality of vendor code
+in my case I found Ethernet TX to be stable and close to Gbit/s speeds
+on the vendor kernel while mainline was dropping packets and speeds
+were worse
+that still doesn't mean the vendor code is good, but from a user
+perspective it's better than what we have in mainline
+
+> > what do you think about 2)? my main concern is that this *could* break
+> > Ethernet on other people's boards.
+> > on the other hand I have no idea how likely that actually is.
+>
+> From what i understand, Ethernet is already broken? Or is it broken on
+> just some boards?
+it's mostly "broken" (high TX packet loss, slow TX speeds) for the two
+supported boards with an RGMII PHY (meson8b-odroidc1.dts and
+meson8m2-mxiii-plus.dts)
+examples on the many ways it was broken will follow - feel free to
+skip this part
+
+before this patch we had:
+input clock at 250MHz
+|- m250_sel (inheriting the rate of the input clock because it's a mux)
+   |- m250_div set to 1
+      |- fixed_div_by_2 (outputting 125MHz for the RGMII TX clock)
+together with a configured (but suspicious) TX delay of 4ns on the MAC
+side in the board .dts
+Transmitting ("sending") data via Ethernet has heavy packet loss and
+far from Gbit/s speeds
+(setting the TX delay on the MAC in this case to 2ns broke Ethernet
+completely, even DHCP was failing)
+
+after this patch we have:
+input clock at 500MHz (double as before)
+|- m250_sel (inheriting the rate of the input clock because it's a mux)
+   |- m250_div set to 2
+      |- fixed_div_by_2 (still outputting 125MHz for the RGMII TX clock)
+with the old TX delay of 4ns on the MAC side there is still packet loss
+updating the TX delay on the MAC side to 2ns (which is what the vendor
+driver does) fixes the packet loss and transmit speeds
+
+> The Micrel PHY driver can also control its clock skew, but it does it
+> in an odd way, not via the phy-mode, but via additional
+> properties. See the binding document.
+I see, thank you for the hint
+
+> What we normally say is make the MAC add no delays, and pass the
+> correct configuration to the PHY so it adds the delay. But due to the
+> strapping pin on the rtl8211f, we are in a bit of a grey area. I would
+> suggest the MAC adds no delay, phy-mode is set to rmgii-id, the PHY
+> driver adds TX delay in software, we assume the strapping pin is set
+> to add RX delay, and we add a big fat comment in the DT.
+>
+> For the Micrel PHY, we do the same, plus add the vendor properties to
+> configure the clock skew.
+>
+> But as i said, we are in a bit of a grey area. We can consider other
+> options, but everything needs to be self consistent, between what the
+> MAC is doing, what the PHY is doing, and what phy-mode is set to in
+> DT.
+do you think it's worth the effort to get clarification from Realtek
+on the RX delay behavior (and whether there's a register to control
+it)?
+(when I previously asked them about interrupt support they answered
+all my questions so we were able to confirm that it's implemented
+properly upstream)
+before this email I would have asked Realtek about the RX delay and
+sent a patch updating rtl8211f_config_init (the
+PHY_INTERFACE_MODE_RGMII_RXID and PHY_INTERFACE_MODE_RGMII_ID cases).
+
+you mentioned that there was breakage earlier this year, so I'm not sure anymore
+(that leaves me thinking: asking them is still useful to get out of
+this grey area)
+
+
+Martin
