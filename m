@@ -2,120 +2,93 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3062FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD76CC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073F720CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRWj7QJR"
+	by mail.kernel.org (Postfix) with ESMTP id A9E9E2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfLZKoZ (ORCPT
+        id S1726475AbfLZKpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:44:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44027 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLZKoY (ORCPT
+        Thu, 26 Dec 2019 05:45:34 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46320 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLZKpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 05:44:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so23324892wre.10;
-        Thu, 26 Dec 2019 02:44:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
-        b=RRWj7QJRVGD7qhdqdeqYLZtA3GNeE24HteoqtMAQy9EdtyETZbqpILSloz8G+1S5l3
-         Cy8XV31tpQBWog6+NhQ5HZyK+hIMRWTEzlZDq+OY5LOH2PWHZAt54XpNkSFW9VNYvK7+
-         qOD+l/zTDhOjfG1WiXgWamWyNGx6mvp/eV7109emFx6+YLbOFGlnsQBka54AfSjekt3u
-         5bTHFNQZ7V3MphobXR5/U8bc0spT9mDwNzvS+LweUtl1Fe5JO8PmXYFYJbH3Vq6l48qN
-         ua7ud5NKDlQsiX8s1jsxKYZO3y1Qn6lYP536Y1fUhm8GTSH2duSQ/2CNMuBi732zoPwH
-         Swdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
-        b=WpqReZYAPND0pJcvE72W7t63feEUjMf0zLIivNZG/OA1yiSlfkw6NVniuY5+ZEbrW4
-         aInUltIq5S4q0JYmTCcqODEBZDHT4LoTyJKZ0huTnfpQ0vIpmlPH1QKgl4ajCgUf6zws
-         O3G2AKTlrtOZmBFSpA6950aTjJHrNKBQuFPvhHPCfVF3yq/sb5SKmi2LUjxg7RvXElFf
-         /1saRg91ATeWk/0YPfPjOFafAX35mpsKt+lbra2M+XxSauq5i7I2AKVdew9HYV/BqbGf
-         Qz2S9Enwo3MJ93i4bmHYQ9kCH77VDqjutFIXceUrmAR/0qQe3aNmEVrt198v6PBuTgJf
-         3X9g==
-X-Gm-Message-State: APjAAAW/k0KiNch0+0lH0BHO9QHvQsHlvXX3v0zYa18v/UapCVSokY+a
-        Q5Hf8Ei7YzqD0tUlkABXANqdLnNU
-X-Google-Smtp-Source: APXvYqzgFYTin+GSIcMwEioDi0ZQwh5k4QJ4YC+vSqSVqZpzHffcKVk3xA1ydLymrJcfkxNAOQOngA==
-X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr43133454wra.36.1577357062602;
-        Thu, 26 Dec 2019 02:44:22 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id y20sm7891048wmi.25.2019.12.26.02.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 02:44:21 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:44:19 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-Message-ID: <20191226104419.GA26677@Red>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
- <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
- <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+        Thu, 26 Dec 2019 05:45:34 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 124811C210C; Thu, 26 Dec 2019 11:45:32 +0100 (CET)
+Date:   Thu, 26 Dec 2019 11:45:31 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv2] phy: cpcap-usb: Fix flakey host idling and enumerating
+ of devices
+Message-ID: <20191226104531.GI4033@amd>
+References: <20191222180019.55417-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sl5MdczEF/OU2Miu"
 Content-Disposition: inline
-In-Reply-To: <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191222180019.55417-1-tony@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
-> On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
-> > On 19/12/2019 18:33, Maxime Ripard wrote:
-> > > Hi,
-> > >
-> > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
-> > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> > >> H6 and R40 SoCs.
-> > >
-> > > Thanks again for working on this.
-> > >
-> > > I'll merge the DT patches when the driver will have been merged.
-> >
-> > I've applied patches 1 & 2.
-> >
-> > They are in the testing branch and will go to the linux-next branch as
-> > soon as the kernelci passes.
-> 
-> I just merged all the other patches (except the patch 6, for the H6,
-> as requested by Vasily on IRC).
-> 
 
-Hello
+--sl5MdczEF/OU2Miu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
-But it was failling due my fault (a failling build).
+On Sun 2019-12-22 10:00:19, Tony Lindgren wrote:
+> We must let the USB host idle things properly before we switch to debug
+> UART mode. Otherwise the USB host may never idle after disconnecting
+> devices, and that causes the next enumeration to be flakey.
+>=20
+> Cc: Jacopo Mondi <jacopo@jmondi.org>
+> Cc: Marcel Partap <mpartap@gmx.net>
+> Cc: Merlijn Wajer <merlijn@wizzup.org>
+> Cc: Michael Scott <hashcode0f@gmail.com>
+> Cc: NeKit <nekit1000@gmail.com>
 
-So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Regards
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Fixes: 6d6ce40f63af ("phy: cpcap-usb: Add CPCAP PMIC USB support")
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+But it does not apply on top of 5.5-rc3 AFAICT.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--sl5MdczEF/OU2Miu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4Ej0sACgkQMOfwapXb+vIpXgCgpw8ow7BAI9AIa4DhiKn1Aloe
+6RIAn13zm1SNFtJWZ+ZLsyiIZou3MwFe
+=eChF
+-----END PGP SIGNATURE-----
+
+--sl5MdczEF/OU2Miu--
