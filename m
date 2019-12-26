@@ -2,107 +2,147 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF37C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A9FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1263D20740
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B5920828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="qsrinHpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfLZMIh (ORCPT
+        id S1726511AbfLZMMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:08:37 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8194 "EHLO huawei.com"
+        Thu, 26 Dec 2019 07:12:42 -0500
+Received: from mail-eopbgr690044.outbound.protection.outlook.com ([40.107.69.44]:24643
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726336AbfLZMIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:08:36 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 784B49C11E75D703A5D1;
-        Thu, 26 Dec 2019 20:08:34 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 20:08:24 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH] drm/radeon: remove three set but not used variable
-Date:   Thu, 26 Dec 2019 20:07:50 +0800
-Message-ID: <20191226120750.15106-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        id S1726336AbfLZMMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:12:42 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QBxcQMWRr3IsZTGtSTalGavh5+mDWas4dlz05YQ7lSNn83qYMXNQOfmm4inMnXALTGjUMSxynGTS50nm1TAfPIuXviAdaQra40IxqmAMGsCk1wUQKkiF5P45M7TahQYAkQuTmoth3UE1lCtfJEKq/TR9Sj2/pnC+ftYYjPkG5UdHeZZglS2sW6tX23B6obHRqqbl4eAqqbspaQnVIx3Ft7F2ptIddF5lmiyXwpDAkJNjZczybicL3nmv8OHiY8W2KDlkuHVgYaEYje5EY43tEPlSdZNcNk/m6fOWcpj+iGNtrNiQdO6daFceOBSlEhpyJ02xD25CRE750P66iHBrfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j1oPiLVamnefxhyesG2/3jGnz3Q+VN0LGN2xPn/xxcI=;
+ b=WGneDCJ/CDJRwK0DisIPZy3LAAYoRLeAAE4G8xEOZ+ltEH6tsQqeRlW/0dc8mlwRuGz5Ld8AXqgkIkMmQWJZ8H8g3+i+EByT6g+0eRWyKAOnl6wQRovX0LuNKsd9JqXFrbwRoHywQhrd1rzgtDfMGSr5totait9n90QDUfATQShol3wCFRQyQ237T/P/yaVLW1rAQIaj2nUOeatox8vagR65gGXzInX4cCO5gBSmMuQbOG51lscfBfMnc50+8Pan28nr5pR1YSQlHVruD3IAgvpFIm703mf8q03MJkHL/uKXDSNcQPytubAwPBYvETe8Hb5DjdJCe9BEhGlxmFfcNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j1oPiLVamnefxhyesG2/3jGnz3Q+VN0LGN2xPn/xxcI=;
+ b=qsrinHptMCknfYMbCPxlQ3dSpEBvNVO95/qQ6HEiseUuBG/kT+PMEQAi6ETjPY0/6rr+GYNL0UQ1aGEozonJNrs0+Ajh1ELuTVwTQsXruVQULMIScHL3y7JbIvt+o3whJ+hdSwTY6kdhKOw+IhdnHnwDKeWnXhKCHgSpkbeixR8=
+Received: from DM6PR02CA0109.namprd02.prod.outlook.com (2603:10b6:5:1b4::11)
+ by BYAPR02MB4726.namprd02.prod.outlook.com (2603:10b6:a03:52::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.12; Thu, 26 Dec
+ 2019 12:12:37 +0000
+Received: from SN1NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by DM6PR02CA0109.outlook.office365.com
+ (2603:10b6:5:1b4::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend
+ Transport; Thu, 26 Dec 2019 12:12:37 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT038.mail.protection.outlook.com (10.152.72.69) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
+ via Frontend Transport; Thu, 26 Dec 2019 12:12:37 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ikS0K-0003JU-Im; Thu, 26 Dec 2019 04:12:36 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ikS0F-0007wQ-FC; Thu, 26 Dec 2019 04:12:31 -0800
+Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBQCCLHJ022975;
+        Thu, 26 Dec 2019 04:12:21 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1ikS04-0007v9-RO; Thu, 26 Dec 2019 04:12:21 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: [PATCH 0/8] gpio: zynq: Update on gpio-zynq driver
+Date:   Thu, 26 Dec 2019 17:42:10 +0530
+Message-Id: <1577362338-28744-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39850400004)(189003)(199004)(81156014)(81166006)(4744005)(426003)(6636002)(36756003)(107886003)(8676002)(4326008)(336012)(9786002)(8936002)(2616005)(5660300002)(44832011)(7696005)(478600001)(186003)(26005)(70206006)(356004)(316002)(6666004)(2906002)(70586007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4726;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e157141a-d62a-43f3-caa3-08d789fce57d
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4726:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB472649F61321611CE221A303AF2B0@BYAPR02MB4726.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 02638D901B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vs3r9y2k6y7SFo2r81TxvL7WM2hA5uygF+MfLmhG1KiUqdvV3XoXUQ2vGB5+A9jd3WXuN4zjzQEPbuhXf5auK67KgapAsISHbRwrqudZcUyt2E5TvkRouVoY1QbUeBLUgWK5UfnnH6ocMSkWSVxAgfDsGfqVCb4QCMAcLm5W89VxHLasvtCTPGFmYEnpYRbZ+pLl6UZHMY8NxN78R/oE06E/dy9O4Ro931onDfZGTRi8AgduvCPiAQBVOVvaJwRiGDqA40LWOQtGO4PY2FZvYzTXELpRL1IPzDp9viHHGcfuA3+8aTyIzpJMWoyuGONeqQ+S1yu4eNpX5AcQf840o2+kEYgT3hftUB++RoK6vjDXOrCxPs65nvQEwuGRJ3V5CNws477GDT8SVHZfvA2U4EZjH4bqAMrSKbJoaxXQS1cm1zuYI3wrPd+hExybgx4l
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2019 12:12:37.0093
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e157141a-d62a-43f3-caa3-08d789fce57d
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4726
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+This patch series does the following:
+-Fix a bug in zynq_gpio_restore_context API
+-protect direction in/out with a spinlock
+-Add binding for Versal gpio
+-Add binding for pmc gpio node
+-Add Versal support
+-Disable the irq if it is not a wakeup source
+-Add pmc gpio support
+-Remove error prints in EPROBE_DEFER
 
-drivers/gpu/drm/radeon/radeon_atombios.c: In function
-‘radeon_get_atom_connector_info_from_object_table’:
-drivers/gpu/drm/radeon/radeon_atombios.c:651:26: warning: variable
-‘grph_obj_num’ set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/radeon/radeon_atombios.c:651:13: warning: variable
-‘grph_obj_id’ set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/radeon/radeon_atombios.c:573:37: warning: variable
-‘con_obj_type’ set but not used [-Wunused-but-set-variable]
 
-They are never used, and so can be removed.
+Glenn Langedock (1):
+  gpio: zynq: protect direction in/out with a spinlock
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- drivers/gpu/drm/radeon/radeon_atombios.c | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+Shubhrajyoti Datta (6):
+  dt-bindings: gpio: Add binding for Versal gpio
+  devicetree-binding: Add pmc gpio node
+  gpio: zynq: Add Versal support
+  gpio: zynq: Disable the irq if it is not a wakeup source
+  gpio: zynq: Add pmc gpio support
+  gpio: zynq: Remove error prints in EPROBE_DEFER
 
-diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
-index 072e6daedf7a..848ef68d9086 100644
---- a/drivers/gpu/drm/radeon/radeon_atombios.c
-+++ b/drivers/gpu/drm/radeon/radeon_atombios.c
-@@ -570,7 +570,7 @@ bool radeon_get_atom_connector_info_from_object_table(struct drm_device *dev)
- 		path_size += le16_to_cpu(path->usSize);
- 
- 		if (device_support & le16_to_cpu(path->usDeviceTag)) {
--			uint8_t con_obj_id, con_obj_num, con_obj_type;
-+			uint8_t con_obj_id, con_obj_num;
- 
- 			con_obj_id =
- 			    (le16_to_cpu(path->usConnObjectId) & OBJECT_ID_MASK)
-@@ -578,9 +578,6 @@ bool radeon_get_atom_connector_info_from_object_table(struct drm_device *dev)
- 			con_obj_num =
- 			    (le16_to_cpu(path->usConnObjectId) & ENUM_ID_MASK)
- 			    >> ENUM_ID_SHIFT;
--			con_obj_type =
--			    (le16_to_cpu(path->usConnObjectId) &
--			     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
- 
- 			/* TODO CV support */
- 			if (le16_to_cpu(path->usDeviceTag) ==
-@@ -648,15 +645,7 @@ bool radeon_get_atom_connector_info_from_object_table(struct drm_device *dev)
- 			router.ddc_valid = false;
- 			router.cd_valid = false;
- 			for (j = 0; j < ((le16_to_cpu(path->usSize) - 8) / 2); j++) {
--				uint8_t grph_obj_id, grph_obj_num, grph_obj_type;
--
--				grph_obj_id =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     OBJECT_ID_MASK) >> OBJECT_ID_SHIFT;
--				grph_obj_num =
--				    (le16_to_cpu(path->usGraphicObjIds[j]) &
--				     ENUM_ID_MASK) >> ENUM_ID_SHIFT;
--				grph_obj_type =
-+				uint8_t grph_obj_type =
- 				    (le16_to_cpu(path->usGraphicObjIds[j]) &
- 				     OBJECT_TYPE_MASK) >> OBJECT_TYPE_SHIFT;
- 
+Swapna Manupati (1):
+  gpio: zynq: Fix for bug in zynq_gpio_restore_context API
+
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+ drivers/gpio/gpio-zynq.c                           | 74 ++++++++++++++++++++--
+ 2 files changed, 72 insertions(+), 6 deletions(-)
+
 -- 
-2.17.2
+2.7.4
 
