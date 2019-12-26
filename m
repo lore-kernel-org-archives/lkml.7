@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEBEC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CA1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927C220740
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24CC20740
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfLZVZL (ORCPT
+        id S1727101AbfLZVZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 16:25:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:39189 "EHLO
+        Thu, 26 Dec 2019 16:25:13 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:48931 "EHLO
         mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfLZVZK (ORCPT
+        with ESMTP id S1726812AbfLZVZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Dec 2019 16:25:10 -0500
-Received: by mail-il1-f198.google.com with SMTP id n6so21712756ile.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:25:09 -0800 (PST)
+Received: by mail-il1-f198.google.com with SMTP id u14so12328623ilq.15
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:25:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6IJPcXe+juLl8jzBJQc1BqLt+0Vp3GWTy2GpjY0LKTY=;
-        b=Qc5/t1rLgd+l9Tj5xf7tzajhV7+w7WUDHMRl2PiHZ6eilU+DHfanRLBHlbwsnT/ael
-         hy0vdBreWIMkKmKabIB0OjxMKUeEXBdfsvhO9erGbFHkt6WdzX6nn32BGcL9xtq1Q4zL
-         aA29RD4Jt49BVMuiaeT06MdAagpU8gHGaevz6aJPZfmLF5rk6EMR+JvdemdkK9WY53Uu
-         03z1/YyTR5KYdAX9p5xyW2xwxIxFTUdYMOmoOxaKPWwvznAxYLCeQxGa30eT8RtzVDcb
-         sqh2tWHAwQU1H+3FGHZhDNhOjl4HJSOKOeLpLaXRO7+EOE96HsS1XhUAcut/R0TheZW7
-         xIwA==
-X-Gm-Message-State: APjAAAX6CjChzRuDq1MNIYlw1UITjPrIHEsFZ83apvIZ+V530y2ONeXs
-        SqCqblYZyqPQxvPyQjQWqNccRU9TF2mEBoE8+u6JwoHeZ7pB
-X-Google-Smtp-Source: APXvYqyobAtA2s2KbBgZHuJqufBOagLb5DPorQmugr0ywAH1wUP81TdDkdxzc8r9CkXlhJsQoLQGnalW5y9Y85DyoDBGfnocG0JB
+        bh=ZKQ8t0LgRq3eSEQ30gZDP+qRt7+3uldP2yAu+ovI0lM=;
+        b=OSQweBjFuMUebGg0jYHcDMffnvP6H/PCYpXebkvTMZdrsm6DpwZGUkRioWkTUdNpeW
+         6J/DkNPgfuvURpFjYYxe85kRndGfPUStKvdCsJg5if4ae+Sba4WCs9me3BQf90o9SMdT
+         H0BZRFtAyL0KXCHLlW1DszLf6MrDx2CyQVMC5ZCQRKNjaYPvYXRzC2wVOS1Mu1pNXn0M
+         fAs5A0skf7/E4JrJkaReRnHk5+t+4hUyyDKXOajKXdFX6tsQo0TCFK5KM0Ou2w33YpB7
+         YpEJeqNMWmhxPEIZo5dmcEqrAZnS4RXn1FG9x6wy3vMB2aSFjS4cQGI5woTM2h74HgPM
+         nUGg==
+X-Gm-Message-State: APjAAAXYsfoX8X5N7NNcu672opdpsMWOMlT0ZX4eC7BH3s2EUj1ENHR1
+        dIMBQdnoaq5pqiCXcqkwSp3w6Fn6OFWO/nVPcQy5kSpCAiNS
+X-Google-Smtp-Source: APXvYqySw3c5SYTM6WDiwD4RYyo/I1NRODtqLrRrqlDXUw9CGt3QivfVdV9pGcz2LrRCJChL1rfewTyX7Bb2B4uEEkIVNSco22P1
 MIME-Version: 1.0
-X-Received: by 2002:a92:503:: with SMTP id q3mr36439641ile.160.1577395509353;
+X-Received: by 2002:a5d:8901:: with SMTP id b1mr30764167ion.246.1577395509730;
  Thu, 26 Dec 2019 13:25:09 -0800 (PST)
 Date:   Thu, 26 Dec 2019 13:25:09 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000016d8b059aa2030e@google.com>
-Subject: INFO: task hung in sync_inodes_sb (3)
-From:   syzbot <syzbot+2b9e54155c8c25d8d165@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000072c55059aa2033b@google.com>
+Subject: possible deadlock in uart_write
+From:   syzbot <syzbot+b0e376d3731cd5e82bb7@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,177 +59,153 @@ syzbot found the following crash on:
 
 HEAD commit:    46cf053e Linux 5.5-rc3
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1150ecc6e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17295351e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=2b9e54155c8c25d8d165
+dashboard link: https://syzkaller.appspot.com/bug?extid=b0e376d3731cd5e82bb7
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152bdc56e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159c489ee00000
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2b9e54155c8c25d8d165@syzkaller.appspotmail.com
+Reported-by: syzbot+b0e376d3731cd5e82bb7@syzkaller.appspotmail.com
 
-INFO: task syz-executor221:9352 blocked for more than 143 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor221 D27256  9352   9350 0x00004000
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  io_schedule+0x1c/0x70 kernel/sched/core.c:5799
-  wait_on_page_bit_common mm/filemap.c:1175 [inline]
-  wait_on_page_bit+0x27c/0xa60 mm/filemap.c:1224
-  wait_on_page_writeback+0x1b2/0x4f0 mm/page-writeback.c:2822
-  __filemap_fdatawait_range+0x145/0x340 mm/filemap.c:526
-  filemap_fdatawait_keep_errors+0x22/0x30 mm/filemap.c:621
-  wait_sb_inodes fs/fs-writeback.c:2436 [inline]
-  sync_inodes_sb+0x6e4/0xb50 fs/fs-writeback.c:2558
-  __sync_filesystem fs/sync.c:34 [inline]
-  sync_filesystem fs/sync.c:67 [inline]
-  sync_filesystem+0x168/0x260 fs/sync.c:48
-  generic_shutdown_super+0x75/0x370 fs/super.c:448
-  kill_block_super+0xa0/0x100 fs/super.c:1444
-  deactivate_locked_super+0x95/0x100 fs/super.c:335
-  deactivate_super fs/super.c:366 [inline]
-  deactivate_super+0x1b2/0x1d0 fs/super.c:362
-  cleanup_mnt+0x351/0x4c0 fs/namespace.c:1102
-  __cleanup_mnt+0x16/0x20 fs/namespace.c:1109
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4487d7
-Code: Bad RIP value.
-RSP: 002b:00007ffd80a6c6d8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 000000000003fdba RCX: 00000000004487d7
-RDX: 0000000000400c50 RSI: 0000000000000002 RDI: 00007ffd80a6c780
-RBP: 00000000000024b2 R08: 0000000000000000 R09: 000000000000000a
-R10: 0000000000000005 R11: 0000000000000202 R12: 00007ffd80a6d7e0
-R13: 000000000226f940 R14: 0000000000000000 R15: 0000000000000000
+============================================
+WARNING: possible recursive locking detected
+5.5.0-rc3-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor.2/25003 is trying to acquire lock:
+ffffffff8c103048 (&port_lock_key){-.-.}, at: uart_write+0x1e1/0x6f0  
+drivers/tty/serial/serial_core.c:592
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/1113:
-  #0: ffffffff899a5680 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
-1 lock held by rsyslogd/9238:
-  #0: ffff8880a3d68120 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-2 locks held by getty/9328:
-  #0: ffff8880a89d3090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000177b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9329:
-  #0: ffff8880984fa090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017eb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9330:
-  #0: ffff88809f659090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017db2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9331:
-  #0: ffff888090379090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017cb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9332:
-  #0: ffff88809882c090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017bb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9333:
-  #0: ffff888094fd5090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017ab2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9334:
-  #0: ffff888099af1090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900011512e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by syz-executor221/9352:
-  #0: ffff8880979960d8 (&type->s_umount_key#41){+.+.}, at: deactivate_super  
-fs/super.c:365 [inline]
-  #0: ffff8880979960d8 (&type->s_umount_key#41){+.+.}, at:  
-deactivate_super+0x1aa/0x1d0 fs/super.c:362
-  #1: ffff8880979968b8 (&s->s_sync_lock){+.+.}, at: wait_sb_inodes  
-fs/fs-writeback.c:2375 [inline]
-  #1: ffff8880979968b8 (&s->s_sync_lock){+.+.}, at:  
-sync_inodes_sb+0x246/0xb50 fs/fs-writeback.c:2558
+but task is already holding lock:
+ffffffff8c103048 (&port_lock_key){-.-.}, at:  
+serial8250_handle_irq.part.0+0x24/0x330  
+drivers/tty/serial/8250/8250_port.c:1823
 
-=============================================
+other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-NMI backtrace for cpu 0
-CPU: 0 PID: 1113 Comm: khungtaskd Not tainted 5.5.0-rc3-syzkaller #0
+        CPU0
+        ----
+   lock(&port_lock_key);
+   lock(&port_lock_key);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+5 locks held by syz-executor.2/25003:
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at: spin_lock  
+include/linux/spinlock.h:338 [inline]
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at:  
+zap_pte_range mm/memory.c:1038 [inline]
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at:  
+zap_pmd_range mm/memory.c:1184 [inline]
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at:  
+zap_pud_range mm/memory.c:1213 [inline]
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at:  
+zap_p4d_range mm/memory.c:1234 [inline]
+  #0: ffff8880942de858 (&(ptlock_ptr(page))->rlock#2){+.+.}, at:  
+unmap_page_range+0x885/0x28a0 mm/memory.c:1255
+  #1: ffffffff899a5680 (rcu_read_lock){....}, at: lock_page_memcg+0x0/0x240  
+include/linux/cgroup.h:491
+  #2: ffff88809ed05430 (&(&i->lock)->rlock){-.-.}, at: spin_lock  
+include/linux/spinlock.h:338 [inline]
+  #2: ffff88809ed05430 (&(&i->lock)->rlock){-.-.}, at:  
+serial8250_interrupt+0x2d/0x1a0 drivers/tty/serial/8250/8250_core.c:116
+  #3: ffffffff8c103048 (&port_lock_key){-.-.}, at:  
+serial8250_handle_irq.part.0+0x24/0x330  
+drivers/tty/serial/8250/8250_port.c:1823
+  #4: ffff88808c386090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref+0x22/0x90  
+drivers/tty/tty_ldisc.c:288
+
+stack backtrace:
+CPU: 1 PID: 25003 Comm: syz-executor.2 Not tainted 5.5.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__lock_is_held kernel/locking/lockdep.c:4303 [inline]
-RIP: 0010:lock_is_held_type+0x177/0x320 kernel/locking/lockdep.c:4522
-Code: b8 48 8d 83 98 08 00 00 45 31 ff 48 89 45 d0 48 b8 00 00 00 00 00 fc  
-ff df 49 c1 ec 03 49 01 c4 8b 83 90 08 00 00 85 c0 7f 27 <e9> 0d 01 00 00  
-41 0f b6 04 24 41 83 c7 01 84 c0 74 08 3c 03 0f 8e
-RSP: 0018:ffffc90000da8e18 EFLAGS: 00000046
-RAX: 0000000000000000 RBX: ffff8880a99fa340 RCX: 0000000000000000
-RDX: 1ffff1101533f57a RSI: 00000000ffffffff RDI: ffff8880a99fabd4
-RBP: ffffc90000da8e60 R08: ffff8880a99fa340 R09: ffffed1015d2703d
-R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffffed101533f57a
-R13: 0000000000000001 R14: ffffffff899a5600 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000001cc8000 CR3: 00000000a3d91000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
   <IRQ>
-  lock_is_held include/linux/lockdep.h:361 [inline]
-  rcu_read_lock_sched_held+0x9c/0xd0 kernel/rcu/update.c:122
-  trace_softirq_entry include/trace/events/irq.h:128 [inline]
-  __do_softirq+0x78f/0x98c kernel/softirq.c:291
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  scheduler_ipi+0x38c/0x610 kernel/sched/core.c:2348
-  smp_reschedule_interrupt+0x78/0x4c0 arch/x86/kernel/smp.c:244
-  reschedule_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:853
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_deadlock_bug kernel/locking/lockdep.c:2371 [inline]
+  check_deadlock kernel/locking/lockdep.c:2412 [inline]
+  validate_chain kernel/locking/lockdep.c:2955 [inline]
+  __lock_acquire.cold+0x15d/0x385 kernel/locking/lockdep.c:3955
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  uart_write+0x1e1/0x6f0 drivers/tty/serial/serial_core.c:592
+  n_hdlc_send_frames+0x29a/0x480 drivers/tty/n_hdlc.c:403
+  n_hdlc_tty_wakeup+0xc0/0xe0 drivers/tty/n_hdlc.c:479
+  tty_wakeup+0xe9/0x120 drivers/tty/tty_io.c:536
+  tty_port_default_wakeup+0x2b/0x40 drivers/tty/tty_port.c:50
+  tty_port_tty_wakeup+0x57/0x70 drivers/tty/tty_port.c:388
+  uart_write_wakeup+0x46/0x70 drivers/tty/serial/serial_core.c:104
+  serial8250_tx_chars+0x495/0xaf0 drivers/tty/serial/8250/8250_port.c:1761
+  serial8250_handle_irq.part.0+0x2a2/0x330  
+drivers/tty/serial/8250/8250_port.c:1834
+  serial8250_handle_irq drivers/tty/serial/8250/8250_port.c:1820 [inline]
+  serial8250_default_handle_irq+0xc0/0x150  
+drivers/tty/serial/8250/8250_port.c:1850
+  serial8250_interrupt+0xf1/0x1a0 drivers/tty/serial/8250/8250_core.c:126
+  __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
+  handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
+  handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
+  handle_edge_irq+0x25e/0x8d0 kernel/irq/chip.c:830
+  generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
+  do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
+  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
   </IRQ>
-RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-Code: 78 3b ea f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 54 cb 5f  
-00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 44 cb 5f 00 fb f4 <c3> cc 55 48 89  
-e5 41 57 41 56 41 55 41 54 53 e8 3e 0f 9a f9 e8 79
-RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff02
-RAX: 1ffffffff132669e RBX: ffff8880a99fa340 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fabd4
-RBP: ffffc90000d3fd98 R08: ffff8880a99fa340 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffffffff8a799900 R14: 0000000000000000 R15: 0000000000000001
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:690
-  default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
-  start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:174 [inline]
+RIP: 0010:check_memory_region+0x105/0x1a0 mm/kasan/generic.c:192
+Code: eb 0c 49 83 c0 01 4c 89 c8 4d 39 c8 74 10 41 80 38 00 74 ee 4b 8d 44  
+25 00 4d 85 c0 75 31 49 89 d9 49 29 c1 e9 68 ff ff ff 5b <b8> 01 00 00 00  
+41 5c 41 5d 5d c3 4d 85 c9 74 ef 4d 01 e1 eb 09 48
+RSP: 0018:ffffc9000749f8a0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffda
+RAX: ffffed1015d2703d RBX: ffff8880ae938100 RCX: ffffffff8162ae44
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff8880ae9381e0
+RBP: ffffc9000749f8b0 R08: 1ffff11015d2703c R09: ffffed1015d2703d
+R10: ffffed1015d2703c R11: ffff8880ae9381e3 R12: ffffed1015d2703c
+R13: 0000000000000000 R14: ffffea0001b62008 R15: dead000000000100
+  __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  rcu_dynticks_curr_cpu_in_eqs+0x54/0xb0 kernel/rcu/tree.c:301
+  rcu_is_watching+0x10/0x30 kernel/rcu/tree.c:922
+  rcu_read_unlock include/linux/rcupdate.h:667 [inline]
+  __unlock_page_memcg+0x73/0x100 mm/memcontrol.c:2019
+  unlock_page_memcg+0x2c/0x40 mm/memcontrol.c:2028
+  page_remove_file_rmap mm/rmap.c:1273 [inline]
+  page_remove_rmap+0x60c/0x11d0 mm/rmap.c:1330
+  zap_pte_range mm/memory.c:1080 [inline]
+  zap_pmd_range mm/memory.c:1184 [inline]
+  zap_pud_range mm/memory.c:1213 [inline]
+  zap_p4d_range mm/memory.c:1234 [inline]
+  unmap_page_range+0xde0/0x28a0 mm/memory.c:1255
+  unmap_single_vma+0x19d/0x300 mm/memory.c:1300
+  unmap_vmas+0x184/0x2f0 mm/memory.c:1332
+  exit_mmap+0x2ba/0x530 mm/mmap.c:3140
+  __mmput kernel/fork.c:1082 [inline]
+  mmput+0x179/0x4d0 kernel/fork.c:1103
+  exit_mm kernel/exit.c:485 [inline]
+  do_exit+0x806/0x2ef0 kernel/exit.c:784
+  do_group_exit+0x135/0x360 kernel/exit.c:895
+  __do_sys_exit_group kernel/exit.c:906 [inline]
+  __se_sys_exit_group kernel/exit.c:904 [inline]
+  __ia32_sys_exit_group+0x44/0x50 kernel/exit.c:904
+  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f32a39
+Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
+24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:000000000848fd7c EFLAGS: 00000202 ORIG_RAX: 00000000000000fc
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000000002
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000080589db
+RBP: 00000000fffffff7 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
 
 ---
@@ -238,5 +215,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
