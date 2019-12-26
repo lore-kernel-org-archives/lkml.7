@@ -2,92 +2,120 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A329C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3062FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A0C2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073F720CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRWj7QJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfLZKnu (ORCPT
+        id S1726553AbfLZKoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:43:50 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34887 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLZKnu (ORCPT
+        Thu, 26 Dec 2019 05:44:25 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44027 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfLZKoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 05:43:50 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k16so27567916otb.2;
-        Thu, 26 Dec 2019 02:43:50 -0800 (PST)
+        Thu, 26 Dec 2019 05:44:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so23324892wre.10;
+        Thu, 26 Dec 2019 02:44:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
+        b=RRWj7QJRVGD7qhdqdeqYLZtA3GNeE24HteoqtMAQy9EdtyETZbqpILSloz8G+1S5l3
+         Cy8XV31tpQBWog6+NhQ5HZyK+hIMRWTEzlZDq+OY5LOH2PWHZAt54XpNkSFW9VNYvK7+
+         qOD+l/zTDhOjfG1WiXgWamWyNGx6mvp/eV7109emFx6+YLbOFGlnsQBka54AfSjekt3u
+         5bTHFNQZ7V3MphobXR5/U8bc0spT9mDwNzvS+LweUtl1Fe5JO8PmXYFYJbH3Vq6l48qN
+         ua7ud5NKDlQsiX8s1jsxKYZO3y1Qn6lYP536Y1fUhm8GTSH2duSQ/2CNMuBi732zoPwH
+         Swdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CciSmY8mQmtaNJQQRD2CEzQF42UO9vxilmnwdC9yw6Y=;
-        b=b74CcF25mImP66sBDSQR+v9dMkqvuhKKJpNN4CBLxTxEi4jAl17wNprjU840rniIxa
-         kDi6a4QucEu2oCW8/fVIn7baEIW4m8UJvpYnqBsZmrx0+cFkEdcZG1/EnBGqpLIwVvtz
-         8jUZ4bAOYnCA3uG27e6wnq6e5SQk24uZes3fUVPphRsd0+5Livy6AjWPjgvEotLlvS/9
-         HRDGBBYVxrCPexHF/X33fMb1DP9w/II0CkZnfo12E8c4Lha1DGsU2hfaVQTFHXqM742U
-         gylk4dQvh1j88xT+WJXd876F5OblFcr9oiqX4eQorWsJrA5jbr9N3Rsym0P8KAblFkph
-         8aiw==
-X-Gm-Message-State: APjAAAXVwVf7kZu2yE2NjusTGu2JwNaDY5PAEx/Y+i1RW0YgH1QvAGEe
-        Ga55Z3GrEEPsjf340T/5eIyoTdHMpTFvXJvzLzk=
-X-Google-Smtp-Source: APXvYqytesbdCSLGLFU6q/okcfGBQxgxfB9uJmiMZLPv6rJ8MjCWELPe7w54OoSpqXkcWdWMs6j1xnfDq8bZFtD2v0M=
-X-Received: by 2002:a9d:8f1:: with SMTP id 104mr45680549otf.107.1577357029668;
- Thu, 26 Dec 2019 02:43:49 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
+        b=WpqReZYAPND0pJcvE72W7t63feEUjMf0zLIivNZG/OA1yiSlfkw6NVniuY5+ZEbrW4
+         aInUltIq5S4q0JYmTCcqODEBZDHT4LoTyJKZ0huTnfpQ0vIpmlPH1QKgl4ajCgUf6zws
+         O3G2AKTlrtOZmBFSpA6950aTjJHrNKBQuFPvhHPCfVF3yq/sb5SKmi2LUjxg7RvXElFf
+         /1saRg91ATeWk/0YPfPjOFafAX35mpsKt+lbra2M+XxSauq5i7I2AKVdew9HYV/BqbGf
+         Qz2S9Enwo3MJ93i4bmHYQ9kCH77VDqjutFIXceUrmAR/0qQe3aNmEVrt198v6PBuTgJf
+         3X9g==
+X-Gm-Message-State: APjAAAW/k0KiNch0+0lH0BHO9QHvQsHlvXX3v0zYa18v/UapCVSokY+a
+        Q5Hf8Ei7YzqD0tUlkABXANqdLnNU
+X-Google-Smtp-Source: APXvYqzgFYTin+GSIcMwEioDi0ZQwh5k4QJ4YC+vSqSVqZpzHffcKVk3xA1ydLymrJcfkxNAOQOngA==
+X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr43133454wra.36.1577357062602;
+        Thu, 26 Dec 2019 02:44:22 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id y20sm7891048wmi.25.2019.12.26.02.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 02:44:21 -0800 (PST)
+Date:   Thu, 26 Dec 2019 11:44:19 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191226104419.GA26677@Red>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
 MIME-Version: 1.0
-References: <20191223040020.109570-1-yuchao0@huawei.com> <CAMuHMdUDMv_mMw_ZU4BtuRKX1OvMhjLWw2owTcAP-0D4j5XROw@mail.gmail.com>
- <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
-In-Reply-To: <1cc2d2a093ebb15a1fc6eb96d683e918a8d5a7d4.camel@dubeyko.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Dec 2019 11:43:38 +0100
-Message-ID: <CAMuHMdV5VtR+vgYKcZtvcz16GPp9YLG_ecAeDsiNCreP4rYKjw@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: introduce DEFAULT_IO_TIMEOUT_JIFFIES
-To:     Vyacheslav Dubeyko <slava@dubeyko.com>
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vyacheslav,
-
-On Wed, Dec 25, 2019 at 10:58 AM Vyacheslav Dubeyko <slava@dubeyko.com> wrote:
-> On Mon, 2019-12-23 at 09:41 +0100, Geert Uytterhoeven wrote:
-> > On Mon, Dec 23, 2019 at 5:01 AM Chao Yu <yuchao0@huawei.com> wrote:
-> > > As Geert Uytterhoeven reported:
+On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > Hi,
 > > >
-> > > for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+> > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > >> H6 and R40 SoCs.
 > > >
-> > > On some platforms, HZ can be less than 50, then unexpected 0
-> > > timeout
-> > > jiffies will be set in congestion_wait().
->
-> It looks like that HZ could have various value on diferent platforms.
-> So, why does it need to divide HZ on 50? Does it really necessary?
-> Could it be used HZ only without the division operation?
+> > > Thanks again for working on this.
+> > >
+> > > I'll merge the DT patches when the driver will have been merged.
+> >
+> > I've applied patches 1 & 2.
+> >
+> > They are in the testing branch and will go to the linux-next branch as
+> > soon as the kernelci passes.
+> 
+> I just merged all the other patches (except the patch 6, for the H6,
+> as requested by Vasily on IRC).
+> 
 
-A timeout of HZ means 1 second.
-HZ/50 means 20 ms, but has the risk of being zero, if HZ < 50.
+Hello
 
-If you want to use a timeout of 20 ms, you best use msecs_to_jiffies(20),
-as that takes care of the special cases, and never returns 0.
+Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
+But it was failling due my fault (a failling build).
 
-Gr{oetje,eeting}s,
+So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
