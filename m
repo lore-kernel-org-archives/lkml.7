@@ -6,113 +6,202 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4DBC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC747C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E985A20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD7F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rWgcDHsf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="K+iD5AE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfLZMBo (ORCPT
+        id S1726586AbfLZME0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:01:44 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:40518 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfLZMBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:01:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=5f9FO2IjRXu6jiUBvxbXob0IdCuPlK4tpmU4a1BrtKg=; b=rWgcDHsfNjmGjaw6IwHYelifmr
-        fj0xuVrH1RZMuSbTKnitSYFhi8p7na9PWEenybBSr5DX/hFOYl8KAbjPKRxbmRabaD/gCNMjPnNW2
-        ef8wtzMjzYeXZQJ3Oz5WBfb5+R3drXTZ0xjiYLJaBhXOhbmZDXqklw5xZ4DCfZxwtJ/w=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ikRpd-0001x6-Vp; Thu, 26 Dec 2019 13:01:33 +0100
-Date:   Thu, 26 Dec 2019 13:01:33 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
-        davem@davemloft.net, khilman@baylibre.com,
-        linus.luessing@c0d3.blue, balbes-150@yandex.ru,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ingrassia@epigenesys.com, jbrunet@baylibre.com,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay
- on Meson8b/8m2 SoCs
-Message-ID: <20191226120133.GI1480@lunn.ch>
-References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
- <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
- <20191225150845.GA16671@lunn.ch>
- <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
- <20191226105044.GC1480@lunn.ch>
- <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
+        Thu, 26 Dec 2019 07:04:26 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:35106 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfLZME0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:04:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577361859;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3PDCF9xkGeHLIJ88g7UinUwwyuHwYmmyTi0y9uV/15c=;
+        b=K+iD5AE5ATLpIvOIiwo7MNV+5xtXdgAPHF9dDOQIgUbQHwPdPGlZ1ygpli6oO/y6qH
+        KzDmY5vP3EDpEUkFBpGMgMSS+BX4tpKtsTI0Z/tZp7zT8twP672VNn3m+CNL/wmctxgB
+        LWUorfqtrkvufhVXxgndeYZHVSKxPa3/yt+WH0JhepTzargEeY9oZgd9GJ/egcL4fc+c
+        ea5u6gguONJ1RVHF9QzWI5Fh+tycX5EkvY4984dyumZuNtaVRWOg1BD9konoCC81vR5X
+        rt+drdl/sZqpti5i/xdu9/2U6oxPyn7eLFPDoeuiO5gvg2+LvBZavk8Ct+SazFc++2Pk
+        7YsA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaIPSZNQ=="
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id e09841vBQC3YBSF
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 26 Dec 2019 13:03:34 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>, Ted Ts'o <tytso@mit.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Date:   Thu, 26 Dec 2019 13:03:34 +0100
+Message-ID: <4820831.xlnk3tY4r2@tauon.chronox.de>
+In-Reply-To: <888017FA-06A1-42EF-9FC0-46629138DA9E@amacapital.net>
+References: <9872655.prSdhymlXK@positron.chronox.de> <888017FA-06A1-42EF-9FC0-46629138DA9E@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> the MAC is not capable of generating an RX delay (at least as far as I know).
+Am Donnerstag, 26. Dezember 2019, 12:12:29 CET schrieb Andy Lutomirski:
 
-So that immediately means rgmii is invalid as a phy-mode, since the
-documentation implies the MAC needs to add RX delay.
+Hi Andy,
 
-> it's mostly "broken" (high TX packet loss, slow TX speeds) for the two
-> supported boards with an RGMII PHY (meson8b-odroidc1.dts and
-> meson8m2-mxiii-plus.dts)
-> examples on the many ways it was broken will follow - feel free to
-> skip this part
+> > On Dec 26, 2019, at 5:29 PM, Stephan M=C3=BCller <smueller@chronox.de> =
+wrote:
+> >=20
+> > =EF=BB=BFAm Montag, 23. Dezember 2019, 09:20:43 CET schrieb Andy Lutomi=
+rski:
+> >=20
+> > Hi Andy,
+> >=20
+> >> There are some open questions and future work here:
+> >>=20
+> >> Should the kernel provide an interface to get software-generated
+> >> "true random" numbers?  I can think of only one legitimate reason to
+> >> use such an interface: compliance with government standards.  If the
+> >> kernel provides such an interface going forward, I think it should
+> >> be a brand new character device, and it should have a default mode
+> >> 0440 or similar.  Software-generated "true random numbers" are a
+> >> very limited resource, and resource exhaustion is a big deal.  Ask
+> >> anyone who has twiddled their thumbs while waiting for gnupg to
+> >> generate a key.  If we think the kernel might do such a thing, then
+> >> patches 5-8 could be tabled for now.
+> >=20
+> > What about offering a compile-time option to enable or disable such cod=
+e?
+> > Note, with the existing random.c code base, there is no need to have a
+> > separate blocking_pool. The ChaCha20 DRNG could be used for that very s=
+ame
+> > purpose, provided that in case these true random numbers are generated
+> > when
+> > the Chacha20 DRNG received an equal amount of "unused" entropy.
+>=20
+> This scares me. The DRNG should be simple and easy to understand. If we=
+=E2=80=99re
+> tapping extra numbers in some weird way, then I would be more comfortable
+> with some clear assurance that this doesn=E2=80=99t break the security. I=
+f we=E2=80=99re
+> tapping numbers in the same way as normal urandom, then I don=E2=80=99t r=
+eally see
+> the point.
 
-That is actually good. If it never worked, we don't need to worry
-about breaking it! We can spend our time getting this correct, and not
-have to worry about backwards compatibility, etc.
+Agreed. I was just trying to outline that the removal of the blocking_pool =
+is=20
+a good thing. Even when we decide that random.c should receive a TRNG, we d=
+o=20
+not need to re-add a blocking pool, but can easily use the existing ChaCha2=
+0=20
+DRNG (most likely with its own instance).
 
-> > What we normally say is make the MAC add no delays, and pass the
-> > correct configuration to the PHY so it adds the delay. But due to the
-> > strapping pin on the rtl8211f, we are in a bit of a grey area. I would
-> > suggest the MAC adds no delay, phy-mode is set to rmgii-id, the PHY
-> > driver adds TX delay in software, we assume the strapping pin is set
-> > to add RX delay, and we add a big fat comment in the DT.
-> >
-> > For the Micrel PHY, we do the same, plus add the vendor properties to
-> > configure the clock skew.
-> >
-> > But as i said, we are in a bit of a grey area. We can consider other
-> > options, but everything needs to be self consistent, between what the
-> > MAC is doing, what the PHY is doing, and what phy-mode is set to in
-> > DT.
+> >> Alternatively, perhaps the kernel should instead provide a
+> >> privileged interface to read out raw samples from the various
+> >> entropy sources, and users who care could have a user daemon that
+> >> does something intelligent with them.  This would push the mess of
+> >> trying to comply with whatever standards are involved to userspace.
+> >> Userspace could then export "true randomness" via CUSE if it is so
+> >> inclined, or could have a socket with a well-known name, or whatever
+> >> else seems appropriate.
+> >=20
+> > With the patch set v26 of my LRNG I offer another possible alternative
+> > avoiding any additional character device file and preventing the
+> > starvation of legitimate use cases: the LRNG has an entropy pool that
+> > leaves different levels of entropy in the pool depending on the use cas=
+es
+> > of this data.
+> >=20
+> > If an unprivileged caller requests true random data, at least 1024 bits=
+ of
+> > entropy is left in the pool. I.e. all entropy above that point is
+> > available
+> > for this request type. Note, even namespaces fall into this category
+> > considering that unprivileged users can create a user name space in whi=
+ch
+> > they can become root.
+>=20
+> This doesn=E2=80=99t solve the problem. If two different users run stupid=
+ programs
+> like gnupg, they will starve each other.
 
-> do you think it's worth the effort to get clarification from Realtek
-> on the RX delay behavior (and whether there's a register to control
-> it)?
+But such scenario will always occur, will it not? If there are two callers =
+for=20
+a limited resource, they will content if one "over-uses" the resource. My i=
+dea=20
+was to provide an interface where its use does not starve other more releva=
+nt=20
+use cases (e.g. seeding of the DRNGs). I.e. a user of a TRNG has the right =
+to=20
+be DoSed - that is the price to pay when using this concept.
+>=20
+> As I see it, there are two major problems with /dev/random right now: it=
+=E2=80=99s
+> prone to DoS (i.e. starvation, malicious or otherwise), and, because no
+> privilege is required, it=E2=80=99s prone to misuse. Gnupg is misuse, ful=
+l stop. If
+> we add a new unprivileged interface, gnupg and similar programs will use
+> it, and we lose all over again.
 
-You can ask. There are also datasheet here:
+I am under the impression that the over-using of /dev/random is that other =
+use=20
+cases like re-seeding of /dev/urandom are DoSed. But if there is a hog on t=
+he=20
+TRNG that only causes a problem for itself for other equally specialized=20
+applications, so be it.
 
-http://files.pine64.org/doc/datasheet/rock64/RTL8211F-CG-Realtek.pdf
-https://datasheet.lcsc.com/szlcsc/1909021205_Realtek-Semicon-RTL8211F-CG_C187932.pdf
+When using a char device with rights of 440, then at least all applications=
+=20
+part of that special group will still content for TRNG data. The only=20
+additional benefit I would currently see for a char device with permissions=
+ of=20
+440 is that an admin can control which applications have access to the TRNG=
+ to=20
+begin with. But when an attacker can fool those applications to use more=20
+random data, we again have a DoS. So, we just pushed the issue down the roa=
+d=20
+without solving it (and I think there is no solution for the issue that TRN=
+G=20
+users can DoS each other).=20
 
-It looks like both RX and TX delay can be controlled via
-strapping. But the register for controlling the TX delay is not
-documented.
+Speaking of GnuPG and after having some discussions with Werner Koch, I thi=
+nk=20
+the reason for using /dev/random was that this (used to be) the only=20
+randomness source that has a guarantee of being seeded (Werner is not=20
+participating in this thread, so I hope I am not misrepresenting his words)=
+=2E=20
+With the presence of getrandom(2), this is now solved. IIRC libgcrypt has=20
+received support for getrandom(2) and the issue of blocking on /dev/random=
+=20
+should now be a thing of the past with recent libgcrypt (and thus GnuPG)=20
+versions.=20
 
-> you mentioned that there was breakage earlier this year, so I'm not sure anymore
-> (that leaves me thinking: asking them is still useful to get out of
-> this grey area)
+Ciao
+Stephan
 
-It was an Atheros PHY with breakage.
 
-If we can fully control the RX and TX delays, that would be great. It
-would also be useful if there was a way to determine how the PHY has
-been strapped. If we cannot fully control the delays but we can find
-out what delays it is using, we can check the requested configuration
-against the strapped configuration, and warn if they are different.
-
-    Andrew
