@@ -2,218 +2,940 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D41FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A864CC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A53E2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FED320828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 02:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LYe4tCSb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZJzccynv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfLZC13 (ORCPT
+        id S1726934AbfLZCaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Dec 2019 21:27:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31924 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbfLZC12 (ORCPT
+        Wed, 25 Dec 2019 21:30:52 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36971 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfLZCav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Dec 2019 21:27:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577327246;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YJqjUH7vi87pEZSLD7MKF1pZgOM8LZyAmnT+DqqPgdM=;
-        b=LYe4tCSbyfMH6FvgCtwrpDBPk457uI8/LplSW8hY8f0SRTCjAxzOmJXyLWyRc4Ilxqoxp3
-        ZJQlhUltXbdS7owKiIaCHTnBqu8fzLuDZBFBlqJJyfrCceHVEwBaM98HyRP9OiP6AeAlca
-        eyWO6mjXFnZa+/+ps1ZfWW4JbSklppI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-brln3UgNNE2eo715QK7NNA-1; Wed, 25 Dec 2019 21:27:22 -0500
-X-MC-Unique: brln3UgNNE2eo715QK7NNA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73A65107ACC7;
-        Thu, 26 Dec 2019 02:27:19 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-26.pek2.redhat.com [10.72.8.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFBED5C578;
-        Thu, 26 Dec 2019 02:27:07 +0000 (UTC)
-Date:   Thu, 26 Dec 2019 10:27:02 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Andrea Vai <andrea.vai@unipv.it>,
-        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: AW: Slow I/O on USB media after commit
- f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-Message-ID: <20191226022702.GA2901@ming.t460p>
-References: <20191218094830.GB30602@ming.t460p>
- <b1b6a0e9d690ecd9432025acd2db4ac09f834040.camel@unipv.it>
- <20191223130828.GA25948@ming.t460p>
- <20191223162619.GA3282@mit.edu>
- <4c85fd3f2ec58694cc1ff7ab5c88d6e11ab6efec.camel@unipv.it>
- <20191223172257.GB3282@mit.edu>
- <bb5d395fe47f033be0b8ed96cbebf8867d2416c4.camel@unipv.it>
- <20191223195301.GC3282@mit.edu>
- <20191224012707.GA13083@ming.t460p>
- <20191225051722.GA119634@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191225051722.GA119634@mit.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Wed, 25 Dec 2019 21:30:51 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so12212431pga.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Dec 2019 18:30:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LmxoGLrqj02C7+56HMe3kKWHk3CnUs//IFmDvr8+vsg=;
+        b=ZJzccynvo3JHELRiRumUd+jY+jFF5At6iHvq4jo9SHiCpgbR0/qwyGSx/TKlNxr5Ye
+         oSIuYn83KydIskimZoMdWzNSntYxDIhC7xr6DvbOa9ZMW41ISvW2yyln1CUMq5C2qK5I
+         R1FxgXnVzlbnlH/kraPRKGzvyjGB2GQtDBF5d1587oCltOKqKs+qDD985rsjHSk/0tsg
+         Zeo1iDHcj6YmJrGu+gUvW4uY9rpTbkJj/OLiTnbgKNr3QOJHMPeOGoc9ma3JwsE7KBkG
+         rinLG2gvrdV2F4lnOs+AyvtB7i8GEpjLs8pW47wdsmqDAVj/APAldPFcIBr9cpEf/T82
+         Xq/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LmxoGLrqj02C7+56HMe3kKWHk3CnUs//IFmDvr8+vsg=;
+        b=bIRPEU4vVC49WI4uri7RXwaduqrOmpLr5m3kc1RKAbAOeX1UYY0zeYCUIT8cPKuP2v
+         HYRVbsyOFYRgLw+f66KkwPO21nobtBoUJST9oiWtw+U3OL/kL59UUfHJm7nKXuUYvHm7
+         kkUxPoZhnN0TYbP9eccxZ6LrE9u8/3pxpE2AVBZvFunyhD3cg5cHb8hd9EZP2MV9TKzm
+         CT3TThNCA+UuHkgE8NusT+9yqmnRCPWLZeDL+PrDSeuPmWOq6LZYYYS26VZEWlfaceIS
+         HKQy1GRBksfyQmBiXTDsDYQWzyFi0b+XbR7Tuba5yi2bo0Zhzib8KdSdjjsgjWItHtwm
+         lqjg==
+X-Gm-Message-State: APjAAAXj7Vb7nVqibSUR4exlDCM4eTxfy0Z8FL3sUEnXwQ8++feKROZr
+        POVXMWafCLFmiwf1WcRTnsA=
+X-Google-Smtp-Source: APXvYqz+YIkp4YWnm5htAfsgbtHHtcQm+t4ZCruOUJlndrEIFXh+ZZ5Q905T5F4P0jpZfGkr4LX5bw==
+X-Received: by 2002:aa7:982d:: with SMTP id q13mr45700828pfl.152.1577327449840;
+        Wed, 25 Dec 2019 18:30:49 -0800 (PST)
+Received: from localhost.localdomain ([101.15.212.52])
+        by smtp.gmail.com with ESMTPSA id r37sm8360016pjb.7.2019.12.25.18.30.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Dec 2019 18:30:49 -0800 (PST)
+From:   Jeff Chang <richtek.jeff.chang@gmail.com>
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        matthias.bgg@gmail.com, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jeff_chang@richtek.com, richtek.jeff.chang@gmail.com
+Subject: [PATCH v4] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+Date:   Thu, 26 Dec 2019 10:30:42 +0800
+Message-Id: <1577327442-27620-1-git-send-email-richtek.jeff.chang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 12:17:22AM -0500, Theodore Y. Ts'o wrote:
-> On Tue, Dec 24, 2019 at 09:27:07AM +0800, Ming Lei wrote:
-> > The ext4_release_file() should be run from read() or write() syscall if
-> > Fedora 30's 'cp' is implemented correctly. IMO, it isn't expected behavior
-> > for ext4_release_file() to be run thousands of times when just
-> > running 'cp' once, see comment of ext4_release_file():
-> 
-> What's your evidence of that?  As opposed to the writeback taking a
-> long time, leading to the *one* call of ext4_release_file taking a
-> long time?  If it's a big file, we might very well be calliing
-> ext4_writepages multiple times, from a single call to
-> __filemap_fdatawrite_range().
-> 
-> You confused mightily from that assertion, and that caused me to make
-> assumptions that cp was doing something crazy.  But I'm quite conviced
-> now that this is almost certainly not what is happening.
-> 
-> > > I suspect the next step is use a blktrace, to see what kind of I/O is
-> > > being sent to the USB drive, and how long it takes for the I/O to
-> > > complete.  You might also try to capture the output of "iostat -x 1"
-> > > while the script is running, and see what the difference might be
-> > > between a kernel version that has the problem and one that doesn't,
-> > > and see if that gives us a clue.
-> > 
-> > That isn't necessary, given we have concluded that the bad write
-> > performance is caused by broken write order.
-> 
-> I didn't see any evidence of that from what I had in my inbox, so I
-> went back to the mailing list archives to figure out what you were
-> talking about.  Part of the problem is this has been a very
-> long-spanning thread, and I had deleted from my inbox all of the parts
-> relating to the MQ scheduler since that was clearly Not My Problem.  :-)
-> 
-> So, summarizing the most of the thread.  The problem started when we
-> removed the legacy I/O scheduler, since we are now only using the MQ
-> scheduler.  What the kernel is sending is long writes (240 sectors),
-> but it is being sent as an interleaved stream of two sequential
-> writes.  This particular pendrive can't handle this workload, because
-> it has a very simplistic Flash Translation Layer.  Now, this is not
-> *broken*, from a storage perspective; it's just that it's more than
-> the simple little brain of this particular pen drive can handle.
-> 
-> Previously, with a single queue, and specially since the queue depth
-> supported by this pen drive is 1, the elevator algorithm would sort
-> the I/O requests so that it would be mostly sequential, and this
-> wouldn't be much of a problem.  However, once the legacy I/O stack was
-> removed, the MQ stack is designed so that we don't have to take a
-> global lock in order to submit an I/O request.  That also means that
-> we can't do a full elevator sort since that would require locking all
-> of the queues.
-> 
-> This is not a problem, since HDD's generally have a 16 deep queue, and
-> SSD's have a super-deep queue depth since they get their speed via
-> parallel writes to different flash chips.  Unfortunately, it *is* a
-> problem for super primitive USB sticks.
-> 
-> > So far, the reason points to the extra writeback path from exit_to_usermode_loop().
-> > If it is not from close() syscall, the issue should be related with file reference
-> > count. If it is from close() syscall, the issue might be in 'cp''s
-> > implementation.
-> 
-> Oh, it's probably from the close system call; and it's *only* from a
-> single close system call.  Because there is the auto delayed
+From: Jeff Chang <jeff_chang@richtek.com>
 
-Right. Looks I mis-interpreted the stackcount log, IOs are submitted
-from single close syscall.
+The MT6660 is a boosted BTL class-D amplifier with V/I sensing.
+A built-in DC-DC step-up converter is used to provide efficient
+power for class-D amplifier with multi-level class-G operation.
+The digital audio interface supports I2S, left-justified,
+right-justified, TDM and DSP A/B format for audio in with a data
+out used for chip information like voltage sense and current
+sense, which are able to be monitored via DATAO through proper
 
-> allocation resolution to protect against buggy userspace, under
-> certain circumstances, as I explained earlier, we force a full
-> writeout on a close for a file decsriptor which was opened with an
-> O_TRUNC.  This is by *design*, since we are trying to protect against
-> buggy userspace (application programmers vastly outnumber file system
-> programmers, and far too many of them want O_PONY).  This is Working
-> As Intended.
-> 
-> You can disable it by deleting the test file before the cp:
-> 
->     rm -f /mnt/pendrive/$testfile
-> 
-> Or you can disable the protection against stupid userspace by using
-> the noauto_da_alloc mount option.  (But then if you have a buggy game
-> program which writes the top-ten score file by using open(2) w/
-> O_TRUNC, and then said program closes the OpenGL library, and the
-> proprietary 3rd party binary-only video driver wedges the X server
-> requiring a hard reset to recover, and the top-ten score file becomes
-> a zero-length file, don't come crying to me...  Or if a graphical text
-> editor forgets to use fsync(2) before saving a source file you spent
-> hours working on, and then the system crashes at exactly the wrong
-> moment and your source file becomes zero-length, against, don't come
-> crying to me.  Blame the stupid application programmer which wrote
-> your text editor who decided to skip the fsync(2), or who decided that
-> copying the ACL's and xattrs was Too Hard(tm), and so opening the file
-> with O_TRUNC and rewriting the file in place was easier for the
-> application programmer.)
-> 
-> In any case, I think this is all working all as intended.  The MQ I/O
-> stack is optimized for modern HDD and SSD's, and especially SSD's.
-> And the file system assumes that parallel sequential writes,
-> especially if they are large, is really not a big deal, since that's
-> what NCQ or massive parallelism of pretty much all SSD's want.
-> (Again, ignoring the legacy of crappy flash drives.
-> 
-> You can argue with storage stack folks about whether we need to have
-> super-dumb mode for slow, crappy flash which uses a global lock and a
-> global elevator scheduler for super-crappy flash if you want.  I'm
-> going to stay out of that argument.
-
-As I mentioned in the following link:
-
-https://lore.kernel.org/linux-scsi/20191224084721.GA27248@ming.t460p/
-
-The reason is that ioc_batching and BDI congestion is removed by blk-mq.
-
-Then after queue is congested, multiple sequential writes can be done
-concurrently at the same time. Before ioc_batching and BDI congestion is
-removed, writes are done serialized from multiple processes actually, so
-IOs are dispatched to drive in strict sequential order.
-
-This way can't be an issue for SSD.
-
-Maybe we need to be careful for HDD., since the request count in scheduler
-queue is double of in-flight request count, and in theory NCQ should only
-cover all in-flight 32 requests. I will find a sata HDD., and see if
-performance drop can be observed in the similar 'cp' test.
+Signed-off-by: Jeff Chang <jeff_chang@richtek.com>
+---
+ Documentation/devicetree/bindings/sound/mt6660.txt |  53 ++
+ sound/soc/codecs/Kconfig                           |  11 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/mt6660.c                          | 628 +++++++++++++++++++++
+ sound/soc/codecs/mt6660.h                          |  75 +++
+ 5 files changed, 769 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mt6660.txt
+ create mode 100644 sound/soc/codecs/mt6660.c
+ create mode 100644 sound/soc/codecs/mt6660.h
 
 
-Thanks,
-Ming
+changelogs between v4 & v3
+	- remove unnecessary kcontrols.
+	- modify copy right header.
+	- use dev_dbg instead of dev_info.
+	- add necessary debug message.
+	- add DT binding documentation.
+	- add space before } at every table.
+
+changelogs between v3 & v2
+
+        - modify MT6660 Kconfig, remove unnecessary selection.
+        - remove my own debug io interface. use standard regmap for debugging.
+        - remove regmap volatile ops, we do not use cache.
+        - remove component io read/write function, use snd_soc_component_init_regmap.
+        - remove init setting write code. Using parsing dts to set them.
+        - remove unnecessary pr_info log message.
+        - remove mt6660_component_put_volsw. Using snd_soc_get_volsw.
+
+
+
+diff --git a/Documentation/devicetree/bindings/sound/mt6660.txt b/Documentation/devicetree/bindings/sound/mt6660.txt
+new file mode 100644
+index 0000000..2a1736b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mt6660.txt
+@@ -0,0 +1,53 @@
++MT6660 MediaTek Speaker Amplifier
++
++This device supports I2C mode only.
++
++Required properties:
++
++	- compatible : "mediatek,mt6660"
++	
++	- reg : The I2C slave address
++
++Optional properties:
++
++	- rt,init_setting_num : The initial register setting element number.
++
++	- rt,init_setting_addr : the addreses array for INIT Setting table.
++
++	- rt,init_setting_mask : the mask array for INIT Setting table.
++
++	- rt,init_setting_val : the value array for INIT Setting table.
++
++Example:
++
++	mt6660@34 {
++		status = "ok";
++		compatible = "mediatek,mt6660";
++		reg = <0x34>;
++		rt,init_setting_num = <26>;
++		rt,init_setting_addr =
++			<0x20 0x30 0x50 0xB1
++			 0xD3 0xE0 0x98 0xB9
++			 0xB7 0xB6 0x6B 0x07
++			 0xBB 0x69 0xBD 0x70
++			 0x7C 0x46 0x1A 0x1B
++			 0x51 0xA2 0x33 0x4C
++			 0x15 0x68>;
++		rt,init_setting_mask =
++			<0x80 0x01 0x1c 0x0c
++			 0x03 0x01 0x44 0xff
++			 0x7777 0x07 0xe0 0xff
++			 0xff 0xff 0xffff 0xff
++			 0xff 0xff 0xffffffff 0xffffffff
++			 0xff 0xff 0xffff 0xffff
++			 0x1800 0x1f>;
++		rt,init_setting_val =
++			<0x00 0x00 0x04 0x00
++			 0x03 0x00 0x04 0x82
++			 0x7273 0x03 0x20 0x70
++			 0x20 0x40 0x17f8 0x15
++			 0x00 0x1d 0x7fdb7ffe 0x7fdb7ffe
++			 0x58 0xce 0x7fff 0x0116
++			 0x0800 0x07>;
++	};
++
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 229cc89..f135fbb 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -122,6 +122,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_ML26124 if I2C
+ 	select SND_SOC_MT6351 if MTK_PMIC_WRAP
+ 	select SND_SOC_MT6358 if MTK_PMIC_WRAP
++	select SND_SOC_MT6660 if I2C
+ 	select SND_SOC_NAU8540 if I2C
+ 	select SND_SOC_NAU8810 if I2C
+ 	select SND_SOC_NAU8822 if I2C
+@@ -1465,6 +1466,16 @@ config SND_SOC_MT6358
+ 	  Enable support for the platform which uses MT6358 as
+ 	  external codec device.
+ 
++config SND_SOC_MT6660
++	tristate "Mediatek MT6660 Speaker Amplifier"
++	depends on I2C
++	help
++	  MediaTek MT6660 is a smart power amplifier which contain
++	  speaker protection, multi-band DRC, equalizer functions.
++	  Select N if you don't have MT6660 on board.
++	  Select M to build this as module.
++
++
+ config SND_SOC_NAU8540
+        tristate "Nuvoton Technology Corporation NAU85L40 CODEC"
+        depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index c498373..2b6814c 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -119,6 +119,7 @@ snd-soc-msm8916-analog-objs := msm8916-wcd-analog.o
+ snd-soc-msm8916-digital-objs := msm8916-wcd-digital.o
+ snd-soc-mt6351-objs := mt6351.o
+ snd-soc-mt6358-objs := mt6358.o
++snd-soc-mt6660-objs := mt6660.o
+ snd-soc-nau8540-objs := nau8540.o
+ snd-soc-nau8810-objs := nau8810.o
+ snd-soc-nau8822-objs := nau8822.o
+@@ -403,6 +404,7 @@ obj-$(CONFIG_SND_SOC_MSM8916_WCD_ANALOG) +=snd-soc-msm8916-analog.o
+ obj-$(CONFIG_SND_SOC_MSM8916_WCD_DIGITAL) +=snd-soc-msm8916-digital.o
+ obj-$(CONFIG_SND_SOC_MT6351)	+= snd-soc-mt6351.o
+ obj-$(CONFIG_SND_SOC_MT6358)	+= snd-soc-mt6358.o
++obj-$(CONFIG_SND_SOC_MT6660)	+= snd-soc-mt6660.o
+ obj-$(CONFIG_SND_SOC_NAU8540)   += snd-soc-nau8540.o
+ obj-$(CONFIG_SND_SOC_NAU8810)   += snd-soc-nau8810.o
+ obj-$(CONFIG_SND_SOC_NAU8822)   += snd-soc-nau8822.o
+diff --git a/sound/soc/codecs/mt6660.c b/sound/soc/codecs/mt6660.c
+new file mode 100644
+index 0000000..b8fc53b
+--- /dev/null
++++ b/sound/soc/codecs/mt6660.c
+@@ -0,0 +1,628 @@
++// SPDX-License-Identifier: GPL-2.0 //
++
++// Copyright (c) 2019 MediaTek Inc.
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/version.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/pm_runtime.h>
++#include <linux/delay.h>
++#include <sound/soc.h>
++#include <sound/tlv.h>
++#include <sound/pcm_params.h>
++#include <linux/debugfs.h>
++
++#include "mt6660.h"
++
++struct codec_reg_val {
++	u32 addr;
++	u32 mask;
++	u32 data;
++};
++
++struct reg_size_table {
++	u32 addr;
++	u8 size;
++};
++
++static const struct reg_size_table mt6660_reg_size_table[] = {
++	{ MT6660_REG_HPF1_COEF, 4 },
++	{ MT6660_REG_HPF2_COEF, 4 },
++	{ MT6660_REG_TDM_CFG3, 2 },
++	{ MT6660_REG_RESV17, 2 },
++	{ MT6660_REG_RESV23, 2 },
++	{ MT6660_REG_SIGMAX, 2 },
++	{ MT6660_REG_DEVID, 2 },
++	{ MT6660_REG_HCLIP_CTRL, 2 },
++	{ MT6660_REG_DA_GAIN, 2 },
++};
++
++static int mt6660_get_reg_size(uint32_t addr)
++{
++	int i = 0;
++
++	for (i = 0; i < ARRAY_SIZE(mt6660_reg_size_table); i++) {
++		if (mt6660_reg_size_table[i].addr == addr)
++			return mt6660_reg_size_table[i].size;
++	}
++	return 1;
++}
++
++static int mt6660_reg_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct mt6660_chip *chip = context;
++	int size = mt6660_get_reg_size(reg);
++	u8 reg_data[4] = {0};
++	int i = 0, ret = 0;
++
++	for (i = 0; i < size; i++)
++		reg_data[size - i - 1] = (val >> (8 * i)) & 0xff;
++
++	ret = i2c_smbus_write_i2c_block_data(chip->i2c, reg, size, reg_data);
++	if (ret < 0)
++		return ret;
++	return 0;
++}
++
++static int mt6660_reg_read(void *context, unsigned int reg, unsigned int *val)
++{
++	struct mt6660_chip *chip = context;
++	int size = mt6660_get_reg_size(reg);
++	int i = 0, ret = 0;
++	u8 data[4] = {0};
++	u32 reg_data = 0;
++
++	ret = i2c_smbus_read_i2c_block_data(chip->i2c, reg, size, data);
++	if (ret < 0)
++		return ret;
++	for (i = 0; i < size; i++) {
++		reg_data <<= 8;
++		reg_data |= data[i];
++	}
++	*val = reg_data;
++	return 0;
++}
++
++static struct regmap_config mt6660_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 32,
++	.reg_write = mt6660_reg_write,
++	.reg_read = mt6660_reg_read,
++};
++
++static int mt6660_codec_dac_event(struct snd_soc_dapm_widget *w,
++	struct snd_kcontrol *kcontrol, int event)
++{
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		usleep_range(1000, 1100);
++		break;
++	}
++	return 0;
++}
++
++static int mt6660_codec_classd_event(struct snd_soc_dapm_widget *w,
++	struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component =
++		snd_soc_dapm_to_component(w->dapm);
++	int ret = 0;
++
++	switch (event) {
++	case SND_SOC_DAPM_PRE_PMU:
++		dev_dbg(component->dev,
++			"%s: before classd turn on\n", __func__);
++		/* config to adaptive mode */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_BST_CTRL, 0x03, 0x03);
++		if (ret < 0) {
++			dev_err(component->dev, "config mode adaptive fail\n");
++			return ret;
++		}
++		break;
++	case SND_SOC_DAPM_POST_PMU:
++		/* voltage sensing enable */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV7, 0x04, 0x04);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"enable voltage sensing fail\n");
++			return ret;
++		}
++		dev_dbg(component->dev, "Amp on\n");
++		break;
++	case SND_SOC_DAPM_PRE_PMD:
++		dev_dbg(component->dev, "Amp off\n");
++		/* voltage sensing disable */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV7, 0x04, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"disable voltage sensing fail\n");
++			return ret;
++		}
++		/* pop-noise improvement 1 */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV10, 0x10, 0x10);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"pop-noise improvement 1 fail\n");
++			return ret;
++		}
++		break;
++	case SND_SOC_DAPM_POST_PMD:
++		dev_dbg(component->dev,
++			"%s: after classd turn off\n", __func__);
++		/* pop-noise improvement 2 */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_RESV10, 0x10, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"pop-noise improvement 2 fail\n");
++			return ret;
++		}
++		/* config to off mode */
++		ret = snd_soc_component_update_bits(component,
++			MT6660_REG_BST_CTRL, 0x03, 0x00);
++		if (ret < 0) {
++			dev_err(component->dev, "config mode off fail\n");
++			return ret;
++		}
++		break;
++	}
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget mt6660_component_dapm_widgets[] = {
++	SND_SOC_DAPM_DAC_E("DAC", NULL, MT6660_REG_PLL_CFG1,
++		0, 1, mt6660_codec_dac_event, SND_SOC_DAPM_POST_PMU),
++	SND_SOC_DAPM_ADC("VI ADC", NULL, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_PGA("PGA", SND_SOC_NOPM, 0, 0, NULL, 0),
++	SND_SOC_DAPM_OUT_DRV_E("ClassD", MT6660_REG_SYSTEM_CTRL, 2, 0,
++			       NULL, 0, mt6660_codec_classd_event,
++			       SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
++			       SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
++	SND_SOC_DAPM_OUTPUT("OUTP"),
++	SND_SOC_DAPM_OUTPUT("OUTN"),
++};
++
++static const struct snd_soc_dapm_route mt6660_component_dapm_routes[] = {
++	{ "DAC", NULL, "aif_playback" },
++	{ "PGA", NULL, "DAC" },
++	{ "ClassD", NULL, "PGA" },
++	{ "OUTP", NULL, "ClassD" },
++	{ "OUTN", NULL, "ClassD" },
++	{ "VI ADC", NULL, "ClassD" },
++	{ "aif_capture", NULL, "VI ADC" },
++};
++
++static int mt6660_component_get_volsw(struct snd_kcontrol *kcontrol,
++				  struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component =
++		snd_soc_kcontrol_component(kcontrol);
++	struct mt6660_chip *chip = (struct mt6660_chip *)
++		snd_soc_component_get_drvdata(component);
++	int ret = -EINVAL;
++
++	if (!strcmp(kcontrol->id.name, "Chip Rev")) {
++		ucontrol->value.integer.value[0] = chip->chip_rev & 0x0f;
++		ret = 0;
++	}
++	return ret;
++}
++
++static const DECLARE_TLV_DB_SCALE(vol_ctl_tlv, -1155, 5, 0);
++
++static const struct snd_kcontrol_new mt6660_component_snd_controls[] = {
++	SOC_SINGLE_TLV("Digital Volume", MT6660_REG_VOL_CTRL, 0, 255,
++			   1, vol_ctl_tlv),
++	SOC_SINGLE("Hard Clip Switch", MT6660_REG_HCLIP_CTRL, 8, 1, 0),
++	SOC_SINGLE("Clip Switch", MT6660_REG_SPS_CTRL, 0, 1, 0),
++	SOC_SINGLE("Boost Mode", MT6660_REG_BST_CTRL, 0, 3, 0),
++	SOC_SINGLE("DRE Switch", MT6660_REG_DRE_CTRL, 0, 1, 0),
++	SOC_SINGLE("DC Protect Switch",	MT6660_REG_DC_PROTECT_CTRL, 3, 1, 0),
++	SOC_SINGLE("Data Output Left Channel Selection",
++		   MT6660_REG_DATAO_SEL, 3, 7, 0),
++	SOC_SINGLE("Data Output Right Channel Selection",
++		   MT6660_REG_DATAO_SEL, 0, 7, 0),
++	SOC_SINGLE_EXT("T0 SEL", MT6660_REG_CALI_T0, 0, 7, 0,
++		       snd_soc_get_volsw, NULL),
++	SOC_SINGLE_EXT("Chip Rev", MT6660_REG_DEVID, 8, 15, 0,
++		       mt6660_component_get_volsw, NULL),
++};
++
++static inline int _mt6660_chip_power_on(struct mt6660_chip *chip, int on_off)
++{
++	u8 reg_data = 0;
++	int ret = 0;
++
++	ret = i2c_smbus_read_byte_data(chip->i2c, MT6660_REG_SYSTEM_CTRL);
++	if (ret < 0)
++		return ret;
++	reg_data = (u8)ret;
++	if (on_off)
++		reg_data &= (~0x01);
++	else
++		reg_data |= 0x01;
++	return regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, reg_data);
++}
++
++static int mt6660_apply_plat_data(struct mt6660_chip *chip,
++		struct snd_soc_component *component)
++{
++	size_t i = 0;
++	int num = chip->plat_data.init_setting_num;
++	int ret = 0;
++
++	ret = _mt6660_chip_power_on(chip, 1);
++	if (ret < 0) {
++		dev_err(chip->dev, "%s power on failed\n", __func__);
++		return ret;
++	}
++
++	for (i = 0; i < num; i++) {
++		ret = snd_soc_component_update_bits(component,
++				chip->plat_data.init_setting_addr[i],
++				chip->plat_data.init_setting_mask[i],
++				chip->plat_data.init_setting_val[i]);
++		if (ret < 0)
++			return ret;
++	}
++	ret = _mt6660_chip_power_on(chip, 0);
++	if (ret < 0) {
++		dev_err(chip->dev, "%s power on failed\n", __func__);
++		return ret;
++	}
++	return 0;
++}
++
++static int mt6660_component_probe(struct snd_soc_component *component)
++{
++	struct mt6660_chip *chip = snd_soc_component_get_drvdata(component);
++	int ret = 0;
++
++	dev_dbg(component->dev, "%s\n", __func__);
++	snd_soc_component_init_regmap(component, chip->regmap);
++
++	ret = mt6660_apply_plat_data(chip, component);
++	if (ret < 0)
++		dev_err(chip->dev, "mt6660 apply plat data failed\n");
++
++	return ret;
++}
++
++static void mt6660_component_remove(struct snd_soc_component *component)
++{
++	dev_dbg(component->dev, "%s\n", __func__);
++	snd_soc_component_exit_regmap(component);
++}
++
++static const struct snd_soc_component_driver mt6660_component_driver = {
++	.probe = mt6660_component_probe,
++	.remove = mt6660_component_remove,
++
++	.controls = mt6660_component_snd_controls,
++	.num_controls = ARRAY_SIZE(mt6660_component_snd_controls),
++	.dapm_widgets = mt6660_component_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(mt6660_component_dapm_widgets),
++	.dapm_routes = mt6660_component_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(mt6660_component_dapm_routes),
++
++	.idle_bias_on = false, /* idle_bias_off = true */
++};
++
++static int mt6660_component_aif_hw_params(struct snd_pcm_substream *substream,
++	struct snd_pcm_hw_params *hw_params, struct snd_soc_dai *dai)
++{
++	int word_len = params_physical_width(hw_params);
++	int aud_bit = params_width(hw_params);
++	u16 reg_data = 0;
++	int ret = 0;
++
++	dev_dbg(dai->dev, "%s: ++\n", __func__);
++	dev_dbg(dai->dev, "format: 0x%08x\n", params_format(hw_params));
++	dev_dbg(dai->dev, "rate: 0x%08x\n", params_rate(hw_params));
++	dev_dbg(dai->dev, "word_len: %d, aud_bit: %d\n", word_len, aud_bit);
++	if (word_len > 32 || word_len < 16) {
++		dev_err(dai->dev, "not supported word length\n");
++		return -ENOTSUPP;
++	}
++	switch (aud_bit) {
++	case 16:
++		reg_data = 3;
++		break;
++	case 18:
++		reg_data = 2;
++		break;
++	case 20:
++		reg_data = 1;
++		break;
++	case 24:
++	case 32:
++		reg_data = 0;
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++	ret = snd_soc_component_update_bits(dai->component,
++		MT6660_REG_SERIAL_CFG1, 0xc0, (reg_data << 6));
++	if (ret < 0) {
++		dev_err(dai->dev, "config aud bit fail\n");
++		return ret;
++	}
++	ret = snd_soc_component_update_bits(dai->component,
++		MT6660_REG_TDM_CFG3, 0x3f0, word_len << 4);
++	if (ret < 0) {
++		dev_err(dai->dev, "config word len fail\n");
++		return ret;
++	}
++	dev_dbg(dai->dev, "%s: --\n", __func__);
++	return 0;
++}
++
++static const struct snd_soc_dai_ops mt6660_component_aif_ops = {
++	.hw_params = mt6660_component_aif_hw_params,
++};
++
++#define STUB_RATES	SNDRV_PCM_RATE_8000_192000
++#define STUB_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
++			SNDRV_PCM_FMTBIT_U16_LE | \
++			SNDRV_PCM_FMTBIT_S24_LE | \
++			SNDRV_PCM_FMTBIT_U24_LE | \
++			SNDRV_PCM_FMTBIT_S32_LE | \
++			SNDRV_PCM_FMTBIT_U32_LE)
++
++static struct snd_soc_dai_driver mt6660_codec_dai = {
++	.name = "mt6660-aif",
++	.playback = {
++		.stream_name	= "aif_playback",
++		.channels_min	= 1,
++		.channels_max	= 2,
++		.rates		= STUB_RATES,
++		.formats	= STUB_FORMATS,
++	},
++	.capture = {
++		.stream_name	= "aif_capture",
++		.channels_min	= 1,
++		.channels_max	= 2,
++		.rates = STUB_RATES,
++		.formats = STUB_FORMATS,
++	},
++	/* dai properties */
++	.symmetric_rates = 1,
++	.symmetric_channels = 1,
++	.symmetric_samplebits = 1,
++	/* dai operations */
++	.ops = &mt6660_component_aif_ops,
++};
++
++static inline int _mt6660_chip_id_check(struct mt6660_chip *chip)
++{
++	u8 id[2] = {0};
++	int ret = 0;
++
++	ret = i2c_smbus_read_i2c_block_data(chip->i2c, MT6660_REG_DEVID, 2, id);
++	if (ret < 0)
++		return ret;
++	ret = (id[0] << 8) + id[1];
++	ret &= 0x0ff0;
++	if (ret != 0x00e0 && ret != 0x01e0) {
++		dev_err(chip->dev, "%s id(%x) not match\n", __func__, ret);
++		return -ENODEV;
++	}
++	return ret;
++}
++
++static inline int _mt6660_chip_sw_reset(struct mt6660_chip *chip)
++{
++	int ret;
++
++	/* turn on main pll first, then trigger reset */
++	ret = regmap_write(chip->regmap, 0x03, 0x00);
++	if (ret < 0)
++		return ret;
++	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x80);
++	msleep(30);
++	return 0;
++}
++
++static inline int _mt6660_read_chip_revision(struct mt6660_chip *chip)
++{
++	u8 reg_data[2] = {0};
++	int ret = 0;
++
++	ret = i2c_smbus_read_i2c_block_data(
++		chip->i2c, MT6660_REG_DEVID, 2, reg_data);
++	if (ret < 0) {
++		dev_err(chip->dev, "get chip revision fail\n");
++		return ret;
++	}
++	chip->chip_rev = reg_data[1];
++	return 0;
++}
++
++static int mt6660_parse_dt(struct mt6660_chip *chip, struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	u32 val;
++	size_t i = 0;
++
++	if (!np) {
++		dev_err(dev, "no device node\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32(np, "rt,init_setting_num", &val)) {
++		dev_err(dev, "no init setting\n");
++		chip->plat_data.init_setting_num = 0;
++	} else {
++		chip->plat_data.init_setting_num = val;
++	}
++
++	chip->plat_data.init_setting_addr =
++		devm_kzalloc(dev, sizeof(u32) *
++				chip->plat_data.init_setting_num, GFP_KERNEL);
++	chip->plat_data.init_setting_mask =
++		devm_kzalloc(dev, sizeof(u32) *
++				chip->plat_data.init_setting_num, GFP_KERNEL);
++	chip->plat_data.init_setting_val =
++		devm_kzalloc(dev, sizeof(u32) *
++				chip->plat_data.init_setting_num, GFP_KERNEL);
++
++	if (of_property_read_u32_array(np, "rt,init_setting_addr",
++				chip->plat_data.init_setting_addr,
++				chip->plat_data.init_setting_num)) {
++		dev_err(dev, "no init setting addr\n");
++	}
++	if (of_property_read_u32_array(np, "rt,init_setting_mask",
++				chip->plat_data.init_setting_mask,
++				chip->plat_data.init_setting_num)) {
++		dev_err(dev, "no init setting addr\n");
++	}
++	if (of_property_read_u32_array(np, "rt,init_setting_val",
++				chip->plat_data.init_setting_val,
++				chip->plat_data.init_setting_num)) {
++		dev_err(dev, "no init setting addr\n");
++	}
++
++	dev_dbg(dev, "%s, init stting table, num = %d\n", __func__,
++		chip->plat_data.init_setting_num);
++	for (i = 0; i < chip->plat_data.init_setting_num; i++) {
++		dev_dbg(dev, "0x%02x, 0x%08x, 0x%08x\n",
++				chip->plat_data.init_setting_addr[i],
++				chip->plat_data.init_setting_mask[i],
++				chip->plat_data.init_setting_val[i]);
++	}
++	return 0;
++}
++
++static int mt6660_i2c_probe(struct i2c_client *client,
++			    const struct i2c_device_id *id)
++{
++	struct mt6660_chip *chip = NULL;
++	int ret = 0;
++
++	dev_dbg(&client->dev, "%s\n", __func__);
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++	chip->i2c = client;
++	chip->dev = &client->dev;
++	mutex_init(&chip->io_lock);
++	i2c_set_clientdata(client, chip);
++
++	ret = mt6660_parse_dt(chip, &client->dev);
++	if (ret < 0) {
++		dev_err(&client->dev, "parsing dts failed\n");
++		return ret;
++	}
++
++	chip->regmap = devm_regmap_init(&client->dev,
++		NULL, chip, &mt6660_regmap_config);
++	if (IS_ERR(chip->regmap)) {
++		ret = PTR_ERR(chip->regmap);
++		dev_err(&client->dev, "failed to initialise regmap: %d\n", ret);
++		return ret;
++	}
++
++	/* chip reset first */
++	ret = _mt6660_chip_sw_reset(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip reset fail\n");
++		goto probe_fail;
++	}
++	/* chip power on */
++	ret = _mt6660_chip_power_on(chip, 1);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip power on 2 fail\n");
++		goto probe_fail;
++	}
++	/* chip devid check */
++	ret = _mt6660_chip_id_check(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "chip id check fail\n");
++		goto probe_fail;
++	}
++	/* chip revision get */
++	ret = _mt6660_read_chip_revision(chip);
++	if (ret < 0) {
++		dev_err(chip->dev, "read chip revision fail\n");
++		goto probe_fail;
++	}
++	pm_runtime_set_active(chip->dev);
++	pm_runtime_enable(chip->dev);
++
++	ret = devm_snd_soc_register_component(chip->dev,
++					       &mt6660_component_driver,
++					       &mt6660_codec_dai, 1);
++	return ret;
++probe_fail:
++	_mt6660_chip_power_on(chip, 0);
++	mutex_destroy(&chip->io_lock);
++	return ret;
++}
++
++static int mt6660_i2c_remove(struct i2c_client *client)
++{
++	struct mt6660_chip *chip = i2c_get_clientdata(client);
++
++	pm_runtime_disable(chip->dev);
++	pm_runtime_set_suspended(chip->dev);
++	mutex_destroy(&chip->io_lock);
++	return 0;
++}
++
++static int __maybe_unused mt6660_i2c_runtime_suspend(struct device *dev)
++{
++	struct mt6660_chip *chip = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "enter low power mode\n");
++	return regmap_update_bits(chip->regmap,
++		MT6660_REG_SYSTEM_CTRL, 0x01, 0x01);
++}
++
++static int __maybe_unused mt6660_i2c_runtime_resume(struct device *dev)
++{
++	struct mt6660_chip *chip = dev_get_drvdata(dev);
++
++	dev_dbg(dev, "exit low power mode\n");
++	return regmap_update_bits(chip->regmap,
++		MT6660_REG_SYSTEM_CTRL, 0x01, 0x00);
++}
++
++static const struct dev_pm_ops mt6660_dev_pm_ops = {
++	SET_RUNTIME_PM_OPS(mt6660_i2c_runtime_suspend,
++			   mt6660_i2c_runtime_resume, NULL)
++};
++
++static const struct of_device_id __maybe_unused mt6660_of_id[] = {
++	{ .compatible = "mediatek,mt6660",},
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6660_of_id);
++
++static const struct i2c_device_id mt6660_i2c_id[] = {
++	{"mt6660", 0 },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, mt6660_i2c_id);
++
++static struct i2c_driver mt6660_i2c_driver = {
++	.driver = {
++		.name = "mt6660",
++		.of_match_table = of_match_ptr(mt6660_of_id),
++		.pm = &mt6660_dev_pm_ops,
++	},
++	.probe = mt6660_i2c_probe,
++	.remove = mt6660_i2c_remove,
++	.id_table = mt6660_i2c_id,
++};
++module_i2c_driver(mt6660_i2c_driver);
++
++MODULE_AUTHOR("Jeff Chang <jeff_chang@richtek.com>");
++MODULE_DESCRIPTION("MT6660 SPKAMP Driver");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.0.7_G");
+diff --git a/sound/soc/codecs/mt6660.h b/sound/soc/codecs/mt6660.h
+new file mode 100644
+index 0000000..6c40b40
+--- /dev/null
++++ b/sound/soc/codecs/mt6660.h
+@@ -0,0 +1,75 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2019 MediaTek Inc.
++ */
++
++#ifndef __SND_SOC_MT6660_H
++#define __SND_SOC_MT6660_H
++
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++
++struct mt6660_platform_data {
++	u8 init_setting_num;
++	u32 *init_setting_addr;
++	u32 *init_setting_mask;
++	u32 *init_setting_val;
++};
++
++struct mt6660_chip {
++	struct i2c_client *i2c;
++	struct device *dev;
++	struct platform_device *param_dev;
++	struct mt6660_platform_data plat_data;
++	struct mutex io_lock;
++	struct regmap *regmap;
++	u16 chip_rev;
++};
++
++#define MT6660_REG_DEVID		(0x00)
++#define MT6660_REG_SYSTEM_CTRL		(0x03)
++#define MT6660_REG_IRQ_STATUS1		(0x05)
++#define MT6660_REG_ADDA_CLOCK		(0x07)
++#define MT6660_REG_SERIAL_CFG1		(0x10)
++#define MT6660_REG_DATAO_SEL		(0x12)
++#define MT6660_REG_TDM_CFG3		(0x15)
++#define MT6660_REG_HPF_CTRL		(0x18)
++#define MT6660_REG_HPF1_COEF		(0x1A)
++#define MT6660_REG_HPF2_COEF		(0x1B)
++#define MT6660_REG_PATH_BYPASS		(0x1E)
++#define MT6660_REG_WDT_CTRL		(0x20)
++#define MT6660_REG_HCLIP_CTRL		(0x24)
++#define MT6660_REG_VOL_CTRL		(0x29)
++#define MT6660_REG_SPS_CTRL		(0x30)
++#define MT6660_REG_SIGMAX		(0x33)
++#define MT6660_REG_CALI_T0		(0x3F)
++#define MT6660_REG_BST_CTRL		(0x40)
++#define MT6660_REG_PROTECTION_CFG	(0x46)
++#define MT6660_REG_DA_GAIN		(0x4c)
++#define MT6660_REG_AUDIO_IN2_SEL	(0x50)
++#define MT6660_REG_SIG_GAIN		(0x51)
++#define MT6660_REG_PLL_CFG1		(0x60)
++#define MT6660_REG_DRE_CTRL		(0x68)
++#define MT6660_REG_DRE_THDMODE		(0x69)
++#define MT6660_REG_DRE_CORASE		(0x6B)
++#define MT6660_REG_PWM_CTRL		(0x70)
++#define MT6660_REG_DC_PROTECT_CTRL	(0x74)
++#define MT6660_REG_ADC_USB_MODE		(0x7c)
++#define MT6660_REG_INTERNAL_CFG		(0x88)
++#define MT6660_REG_RESV0		(0x98)
++#define MT6660_REG_RESV1		(0x99)
++#define MT6660_REG_RESV2		(0x9A)
++#define MT6660_REG_RESV3		(0x9B)
++#define MT6660_REG_RESV6		(0xA2)
++#define MT6660_REG_RESV7		(0xA3)
++#define MT6660_REG_RESV10		(0xB0)
++#define MT6660_REG_RESV11		(0xB1)
++#define MT6660_REG_RESV16		(0xB6)
++#define MT6660_REG_RESV17		(0xB7)
++#define MT6660_REG_RESV19		(0xB9)
++#define MT6660_REG_RESV21		(0xBB)
++#define MT6660_REG_RESV23		(0xBD)
++#define MT6660_REG_RESV31		(0xD3)
++#define MT6660_REG_RESV40		(0xE0)
++
++#endif /* __SND_SOC_MT6660_H */
+-- 
+2.7.4
 
