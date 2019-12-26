@@ -2,72 +2,67 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26588C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB1FC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C3C20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191AD2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 19:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mELOjX4S"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e2RremBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfLZTBU (ORCPT
+        id S1726839AbfLZTDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:01:20 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33362 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfLZTBQ (ORCPT
+        Thu, 26 Dec 2019 14:03:52 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52247 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZTDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 14:01:16 -0500
-Received: by mail-wm1-f65.google.com with SMTP id d139so5551332wmd.0;
-        Thu, 26 Dec 2019 11:01:15 -0800 (PST)
+        Thu, 26 Dec 2019 14:03:51 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a6so3673504pjh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 11:03:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=G3rTKkxQ4jW7k/v9aR/psmRAwE+gN+ZcbP3Syw4+shY=;
-        b=mELOjX4SoFXM8AIHXZRIeFnnO9Y9LgnWsu0GIsFn/9o3LYHSDm34OAyN54M0CIE976
-         g6x4Mv7Z1xm/KtdgWm+DtHlMDMtdcBlKd8JzOVuyRJn/nTmxS5qnmqGrDdkhnYx1iqqT
-         uJeydm1jD+sPIvsAb+IjfYPHOX2Etf2GNbfnuSDMPe6zafIuuvhnTwraW6BBmTsQfNbi
-         aUsNny/3WM2NxfQoZuH/JjU8imbxePoXVI+IQvqq5QRlm7W+dwQTtx4g4aLVfhqHKnDm
-         M47QUxht+pMbSs35w9DCmZk2F8XJb2CgZaHESFNfgq/tCg2TagCC2tYhLPANuDqrJrnG
-         SPhw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1HRbjKd35Cia/8/yahM6SicmhvXLmAHSLQ8uWqh3y0o=;
+        b=e2RremBeMKCiUD8Ab9pU1/MKomvHp+ebvMQWmzfptDJWx4eI50IQeThvO39NYD814S
+         BNoljz3ka2GKLAeJSzDKRA2CgS7VZhV50ZhGguLdwkBz29NrEXF6UyvSlepm+6vePXJX
+         tadTiNWQvjIaonCRoZvbPyG/Za1hPk1Cbd2os=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=G3rTKkxQ4jW7k/v9aR/psmRAwE+gN+ZcbP3Syw4+shY=;
-        b=GvMNkQvew8/PuFn3XFd+/rHkZpTMj326x49lzDMSV7tvjsRLNb7cCVZuHVrK5i2xXt
-         qqfX0DRvmu5vDUDAmfjOJWTS2ZyyVCoPGby0b6qv/p5ay0y/pCk94QJtKCFZH7SrUpAw
-         6nmSc7t5zdPKt+ZzRchJA/ImwSdnrz/Y5rpDl7tQ21dBqK/JKDGcSot3hsMLsZyxJb1p
-         26nxxs/6RtR2g4FSXqH3izL6jiBAo5BG/Vd2AbPMfavb4cczUsaRX8ulxIpwmXUtzBMa
-         CJyDJEKM/mnPhtehEcL0IPVlzf3ih2yxs0iEIK3oU8IvkkV6O/lyOIYrAMjuNGv3jbYe
-         Aycg==
-X-Gm-Message-State: APjAAAXGvFsbfWJZu4ksZOTqtcKmYN5ZVU6+CnGAC0gxzHqDzhl9aj/c
-        BtR3Mo9SUI011dEOmWHG5gE=
-X-Google-Smtp-Source: APXvYqxXejnGcUgKodwQOfW9DCOGrgj2XtI1U1hjLycE2F7TOewPOhFjXUH3LM8ZXUN0XWcwkm3rWw==
-X-Received: by 2002:a7b:c392:: with SMTP id s18mr15862281wmj.169.1577386874993;
-        Thu, 26 Dec 2019 11:01:14 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id u18sm31777854wrt.26.2019.12.26.11.01.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1HRbjKd35Cia/8/yahM6SicmhvXLmAHSLQ8uWqh3y0o=;
+        b=CMvBXyfnECPrJUW8P3WA6R9dLfL6jvmuMtl2IOar6gRKzpGWdMZRu2fYxbW8kc2SJB
+         /vxmzOZltOW4z7guV7+im8kxatyNtxDXILYRPZmuOTq1JeMgptnxhiJlqWIW5GlwQvWB
+         1+QaN7XEiylSqalj+oegh4NB7dR+zk4vRF4CyeANBAmzxYRi8Fb5XWwKnj2+a/HSxWeD
+         uAV+7CDXU92VD6caD21YxtCxDX3MwZJ2eqERVv08ATL9odWzkzGsuBpnz4ztnFexOiq4
+         Em7e1UW6aEy2Q7FVChsps6CWrU7sL4IBTUrMMjx0rwr2cs+Dz7CEteqwvFkyXyhsumRS
+         haiA==
+X-Gm-Message-State: APjAAAWXqKZaEIoGGHG9Yrhyrf5t2yewu89+AK9mDSF22Eq6JWxHnBCH
+        gMLF3Y8uoQZHCWDKmlssRMbKZQ==
+X-Google-Smtp-Source: APXvYqwYGnjPFR2GvHC6Qk+yKrQNoFoEGJkU//8wbjkissUZma8D2N2gagVB/Ehj+gbwKOwYeD3z+g==
+X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr33127202plk.47.1577387031318;
+        Thu, 26 Dec 2019 11:03:51 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id q64sm12086336pjb.1.2019.12.26.11.03.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 11:01:14 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/1] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs
-Date:   Thu, 26 Dec 2019 20:01:01 +0100
-Message-Id: <20191226190101.3766479-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191226190101.3766479-1-martin.blumenstingl@googlemail.com>
-References: <20191226190101.3766479-1-martin.blumenstingl@googlemail.com>
+        Thu, 26 Dec 2019 11:03:50 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Bluetooth: btbcm: Add missing static inline in header
+Date:   Thu, 26 Dec 2019 11:03:40 -0800
+Message-Id: <20191226190340.116205-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,76 +70,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GXBB and newer SoCs use the fixed FCLK_DIV2 (1GHz) clock as input for
-the m250_sel clock. Meson8b and Meson8m2 use MPLL2 instead, whose rate
-can be adjusted at runtime.
+This fixes a double definition error when CONFIG_BT_BCM is not set.
 
-So far we have been running MPLL2 with ~250MHz (and the internal
-m250_div with value 1), which worked enough that we could transfer data
-with an TX delay of 4ns. Unfortunately there is high packet loss with
-an RGMII PHY when transferring data (receiving data works fine though).
-Odroid-C1's u-boot is running with a TX delay of only 2ns as well as
-the internal m250_div set to 2 - no lost (TX) packets can be observed
-with that setting in u-boot.
-
-Manual testing has shown that the TX packet loss goes away when using
-the following settings in Linux (the vendor kernel uses the same
-settings):
-- MPLL2 clock set to ~500MHz
-- m250_div set to 2
-- TX delay set to 2ns on the MAC side
-
-Update the m250_div divider settings to only accept dividers greater or
-equal 2 to fix the TX delay generated by the MAC.
-
-iperf3 results before the change:
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec   182 MBytes   153 Mbits/sec  514      sender
-[  5]   0.00-10.00  sec   182 MBytes   152 Mbits/sec           receiver
-
-iperf3 results after the change (including an updated TX delay of 2ns):
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-10.00  sec   927 MBytes   778 Mbits/sec    0      sender
-[  5]   0.00-10.01  sec   927 MBytes   777 Mbits/sec           receiver
-
-Fixes: 4f6a71b84e1afd ("net: stmmac: dwmac-meson8b: fix internal RGMII clock configuration")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index bd6c01004913..0e2fa14f1423 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -112,6 +112,14 @@ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
- 	struct device *dev = dwmac->dev;
- 	const char *parent_name, *mux_parent_names[MUX_CLK_NUM_PARENTS];
- 	struct meson8b_dwmac_clk_configs *clk_configs;
-+	static const struct clk_div_table div_table[] = {
-+		{ .div = 2, .val = 2, },
-+		{ .div = 3, .val = 3, },
-+		{ .div = 4, .val = 4, },
-+		{ .div = 5, .val = 5, },
-+		{ .div = 6, .val = 6, },
-+		{ .div = 7, .val = 7, },
-+	};
+ drivers/bluetooth/btbcm.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bluetooth/btbcm.h b/drivers/bluetooth/btbcm.h
+index 3c7dd0765837..014ef847a486 100644
+--- a/drivers/bluetooth/btbcm.h
++++ b/drivers/bluetooth/btbcm.h
+@@ -78,13 +78,13 @@ static inline int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+ 	return -EOPNOTSUPP;
+ }
  
- 	clk_configs = devm_kzalloc(dev, sizeof(*clk_configs), GFP_KERNEL);
- 	if (!clk_configs)
-@@ -146,9 +154,9 @@ static int meson8b_init_rgmii_tx_clk(struct meson8b_dwmac *dwmac)
- 	clk_configs->m250_div.reg = dwmac->regs + PRG_ETH0;
- 	clk_configs->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
- 	clk_configs->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
--	clk_configs->m250_div.flags = CLK_DIVIDER_ONE_BASED |
--				CLK_DIVIDER_ALLOW_ZERO |
--				CLK_DIVIDER_ROUND_CLOSEST;
-+	clk_configs->m250_div.table = div_table;
-+	clk_configs->m250_div.flags = CLK_DIVIDER_ALLOW_ZERO |
-+				      CLK_DIVIDER_ROUND_CLOSEST;
- 	clk = meson8b_dwmac_register_clk(dwmac, "m250_div", &parent_name, 1,
- 					 &clk_divider_ops,
- 					 &clk_configs->m250_div.hw);
+-int btbcm_read_pcm_int_params(struct hci_dev *hdev,
++static inline int btbcm_read_pcm_int_params(struct hci_dev *hdev,
+ 			      struct bcm_set_pcm_int_params *params)
+ {
+ 	return -EOPNOTSUPP;
+ }
+ 
+-int btbcm_write_pcm_int_params(struct hci_dev *hdev,
++static inline int btbcm_write_pcm_int_params(struct hci_dev *hdev,
+ 			       const struct bcm_set_pcm_int_params *params)
+ {
+ 	return -EOPNOTSUPP;
 -- 
-2.24.1
+2.24.1.735.g03f4e72817-goog
 
