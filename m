@@ -2,81 +2,141 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F5C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FBFC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5340720828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E942075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfLZMTD (ORCPT
+        id S1726508AbfLZMgz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:19:03 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8195 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfLZMTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:19:02 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 661CE9B2BE8C528170E5;
-        Thu, 26 Dec 2019 20:18:59 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Dec 2019
- 20:18:48 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <stefanr@s5r6.in-berlin.de>
-CC:     <linux1394-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH] firewire: net: remove set but not used variable 'guid'
-Date:   Thu, 26 Dec 2019 20:18:15 +0800
-Message-ID: <20191226121815.11495-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+        Thu, 26 Dec 2019 07:36:55 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:45203 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725954AbfLZMgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:36:55 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=gerry@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TlzWwkq_1577363770;
+Received: from 127.0.0.1(mailfrom:gerry@linux.alibaba.com fp:SMTPD_---0TlzWwkq_1577363770)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 26 Dec 2019 20:36:14 +0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v1 2/2] virtio-mmio: add features for virtio-mmio
+ specification version 3
+From:   "Liu, Jiang" <gerry@linux.alibaba.com>
+In-Reply-To: <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
+Date:   Thu, 26 Dec 2019 20:35:25 +0800
+Cc:     Zha Bin <zhabin@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+        mst@redhat.com, Sergio Lopez <slp@redhat.com>,
+        virtio-dev@lists.oasis-open.org, jing2.liu@intel.com,
+        chao.p.peng@intel.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <C5957AB7-3189-43E2-9187-B5AABEACE21F@linux.alibaba.com>
+References: <cover.1577240905.git.zhabin@linux.alibaba.com>
+ <a11d4c616158c9fb1ca4575ca0530b2e17b952fa.1577240905.git.zhabin@linux.alibaba.com>
+ <229e689d-10f1-2bfb-c393-14dfa9c78971@redhat.com>
+ <0460F92A-3DF6-4F7A-903B-6434555577CC@linux.alibaba.com>
+ <f8b46502-a5a5-c5c6-88df-101dbfd02fda@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
 
-drivers/firewire/net.c: In function ‘fwnet_finish_incoming_packet’:
-drivers/firewire/net.c:493:9: warning: variable ‘guid’ set but not
-used
 
-It is never used, and so can be removed.
-
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- drivers/firewire/net.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/firewire/net.c b/drivers/firewire/net.c
-index 715e491dfbc3..28785642a5c5 100644
---- a/drivers/firewire/net.c
-+++ b/drivers/firewire/net.c
-@@ -490,7 +490,6 @@ static int fwnet_finish_incoming_packet(struct net_device *net,
- {
- 	struct fwnet_device *dev;
- 	int status;
--	__be64 guid;
- 
- 	switch (ether_type) {
- 	case ETH_P_ARP:
-@@ -512,7 +511,6 @@ static int fwnet_finish_incoming_packet(struct net_device *net,
- 	 * Parse the encapsulation header. This actually does the job of
- 	 * converting to an ethernet-like pseudo frame header.
- 	 */
--	guid = cpu_to_be64(dev->card->guid);
- 	if (dev_hard_header(skb, net, ether_type,
- 			   is_broadcast ? net->broadcast : net->dev_addr,
- 			   NULL, skb->len) >= 0) {
--- 
-2.17.2
+> On Dec 26, 2019, at 4:09 PM, Jason Wang <jasowang@redhat.com> wrote:
+> 
+> 
+> On 2019/12/25 下午11:20, Liu, Jiang wrote:
+>> 
+>>> On Dec 25, 2019, at 6:20 PM, Jason Wang <jasowang@redhat.com> wrote:
+>>> 
+>>> 
+>>> On 2019/12/25 上午10:50, Zha Bin wrote:
+>>>> From: Liu Jiang <gerry@linux.alibaba.com>
+>>>> 
+>>>> Userspace VMMs (e.g. Qemu microvm, Firecracker) take advantage of using
+>>>> virtio over mmio devices as a lightweight machine model for modern
+>>>> cloud. The standard virtio over MMIO transport layer only supports one
+>>>> legacy interrupt, which is much heavier than virtio over PCI transport
+>>>> layer using MSI. Legacy interrupt has long work path and causes specific
+>>>> VMExits in following cases, which would considerably slow down the
+>>>> performance:
+>>>> 
+>>>> 1) read interrupt status register
+>>>> 2) update interrupt status register
+>>>> 3) write IOAPIC EOI register
+>>>> 
+>>>> We proposed to update virtio over MMIO to version 3[1] to add the
+>>>> following new features and enhance the performance.
+>>>> 
+>>>> 1) Support Message Signaled Interrupt(MSI), which increases the
+>>>>    interrupt performance for virtio multi-queue devices
+>>>> 2) Support per-queue doorbell, so the guest kernel may directly write
+>>>>    to the doorbells provided by virtio devices.
+>>>> 
+>>>> The following is the network tcp_rr performance testing report, tested
+>>>> with virtio-pci device, vanilla virtio-mmio device and patched
+>>>> virtio-mmio device (run test 3 times for each case):
+>>>> 
+>>>> 	netperf -t TCP_RR -H 192.168.1.36 -l 30 -- -r 32,1024
+>>>> 
+>>>> 		Virtio-PCI    Virtio-MMIO   Virtio-MMIO(MSI)
+>>>> 	trans/s	    9536	6939		9500
+>>>> 	trans/s	    9734	7029		9749
+>>>> 	trans/s	    9894	7095		9318
+>>>> 
+>>>> [1] https://lkml.org/lkml/2019/12/20/113
+>>> 
+>>> Thanks for the patch. Two questions after a quick glance:
+>>> 
+>>> 1) In PCI we choose to support MSI-X instead of MSI for having extra flexibility like alias, independent data and address (e.g for affinity) . Any reason for not start from MSI-X? E.g having MSI-X table and PBA (both of which looks pretty independent).
+>> Hi Jason,
+>> 	Thanks for reviewing patches on Christmas Day:)
+>> 	The PCI MSI-x has several advantages over PCI MSI, mainly
+>> 1) support 2048 vectors, much more than 32 vectors supported by MSI.
+>> 2) dedicated address/data for each vector,
+>> 3) per vector mask/pending bits.
+>> The proposed MMIO MSI extension supports both 1) and 2),
+> 
+> 
+> Aha right, I mis-read the patch. But more questions comes:
+> 
+> 1) The association between vq and MSI-X vector is fixed. This means it can't work for a device that have more than 2047 queues. We probably need something similar to virtio-pci to allow a dynamic association.
+> 2) The mask and unmask control is missed
+> 
+> 
+>>  but the extension doesn’t support 3) because
+>> we noticed that the Linux virtio subsystem doesn’t really make use of interrupt masking/unmasking.
+> 
+> 
+> Not directly used but masking/unmasking is widely used in irq subsystem which allows lots of optimizations.
+> 
+> 
+>> 
+>> On the other hand, we want to simplify VMM implementations as simple as possible, and mimicking the PCI MSI-x
+>> will cause some complexity to VMM implementations.
+> 
+> 
+> I agree to simplify VMM implementation, but it looks to me introducing masking/pending won't cost too much code in the VMM implementation. Just new type of command for VIRTIO_MMIO_MSI_COMMAND.
+> 
+> Thanks
+> 
+> 
+>> 
+>>> 2) It's better to split notify_multiplexer out of MSI support to ease the reviewers (apply to spec patch as well)
+>> Great suggestion, we will try to split the patch.
+>> 
+>> Thanks,
+>> Gerry
+>> 
+>>> Thanks
 
