@@ -2,101 +2,117 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0A3C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4DBC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E781D20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E985A20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 12:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rWgcDHsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfLZLwt (ORCPT
+        id S1726535AbfLZMBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 06:52:49 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52130 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfLZLwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 06:52:49 -0500
-Received: from p5b2a6c31.dip0.t-ipconnect.de ([91.42.108.49] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ikRh8-0004SH-SR; Thu, 26 Dec 2019 11:52:47 +0000
-Date:   Thu, 26 Dec 2019 12:52:45 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        tycho@tycho.ws, jannh@google.com, keescook@chromium.org
-Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
-Message-ID: <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
-References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
+        Thu, 26 Dec 2019 07:01:44 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:40518 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfLZMBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 07:01:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=5f9FO2IjRXu6jiUBvxbXob0IdCuPlK4tpmU4a1BrtKg=; b=rWgcDHsfNjmGjaw6IwHYelifmr
+        fj0xuVrH1RZMuSbTKnitSYFhi8p7na9PWEenybBSr5DX/hFOYl8KAbjPKRxbmRabaD/gCNMjPnNW2
+        ef8wtzMjzYeXZQJ3Oz5WBfb5+R3drXTZ0xjiYLJaBhXOhbmZDXqklw5xZ4DCfZxwtJ/w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ikRpd-0001x6-Vp; Thu, 26 Dec 2019 13:01:33 +0100
+Date:   Thu, 26 Dec 2019 13:01:33 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, netdev@vger.kernel.org,
+        davem@davemloft.net, khilman@baylibre.com,
+        linus.luessing@c0d3.blue, balbes-150@yandex.ru,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        ingrassia@epigenesys.com, jbrunet@baylibre.com,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/3] net: stmmac: dwmac-meson8b: Fix the RGMII TX delay
+ on Meson8b/8m2 SoCs
+Message-ID: <20191226120133.GI1480@lunn.ch>
+References: <20191225005655.1502037-1-martin.blumenstingl@googlemail.com>
+ <20191225005655.1502037-2-martin.blumenstingl@googlemail.com>
+ <20191225150845.GA16671@lunn.ch>
+ <CAFBinCA4X1e5_5nBiHmNiB40uJyr9Nm1b2VkF9NqM+wb7-1xmw@mail.gmail.com>
+ <20191226105044.GC1480@lunn.ch>
+ <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAFBinCB8YQ-tuGBixO_85NFXDdrH5keDURFgri5tFLdrAwUJKg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 25, 2019 at 09:45:33PM +0000, Sargun Dhillon wrote:
-> This patch is a small change in enforcement of the uapi for
-> SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure which is
-> passed (seccomp_notif), has a flags member. Previously that could be
-> set to a nonsense value, and we would ignore it. This ensures that
-> no flags are set.
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Cc: Kees Cook <keescook@chromium.org>
+> the MAC is not capable of generating an RX delay (at least as far as I know).
 
-I'm fine with this since we soon want to make use of the flag argument
-when we add a flag to get a pidfd from the seccomp notifier on receive.
-The major users I could identify already pass in seccomp_notif with all
-fields set to 0. If we really break users we can always revert; this
-seems very unlikely to me though.
+So that immediately means rgmii is invalid as a phy-mode, since the
+documentation implies the MAC needs to add RX delay.
 
-One more question below, otherwise:
+> it's mostly "broken" (high TX packet loss, slow TX speeds) for the two
+> supported boards with an RGMII PHY (meson8b-odroidc1.dts and
+> meson8m2-mxiii-plus.dts)
+> examples on the many ways it was broken will follow - feel free to
+> skip this part
 
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+That is actually good. If it never worked, we don't need to worry
+about breaking it! We can spend our time getting this correct, and not
+have to worry about backwards compatibility, etc.
 
-> ---
->  kernel/seccomp.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 12d2227e5786..455925557490 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct seccomp_filter *filter,
->  	struct seccomp_notif unotif;
->  	ssize_t ret;
->  
-> +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
-> +		return -EFAULT;
-> +
-> +	/* flags is reserved right now, make sure it's unset */
-> +	if (unotif.flags)
-> +		return -EINVAL;
-> +
+> > What we normally say is make the MAC add no delays, and pass the
+> > correct configuration to the PHY so it adds the delay. But due to the
+> > strapping pin on the rtl8211f, we are in a bit of a grey area. I would
+> > suggest the MAC adds no delay, phy-mode is set to rmgii-id, the PHY
+> > driver adds TX delay in software, we assume the strapping pin is set
+> > to add RX delay, and we add a big fat comment in the DT.
+> >
+> > For the Micrel PHY, we do the same, plus add the vendor properties to
+> > configure the clock skew.
+> >
+> > But as i said, we are in a bit of a grey area. We can consider other
+> > options, but everything needs to be self consistent, between what the
+> > MAC is doing, what the PHY is doing, and what phy-mode is set to in
+> > DT.
 
-Might it make sense to use
+> do you think it's worth the effort to get clarification from Realtek
+> on the RX delay behavior (and whether there's a register to control
+> it)?
 
-	err = copy_struct_from_user(&unotif, sizeof(unotif), buf, sizeof(unotif));
-	if (err)
-		return err;
+You can ask. There are also datasheet here:
 
-This way we check that the whole struct is 0 and report an error as soon
-as one of the members is non-zero. That's more drastic but it'd ensure
-that other fields can be used in the future for whatever purposes.
-It would also let us get rid of the memset() below. 
+http://files.pine64.org/doc/datasheet/rock64/RTL8211F-CG-Realtek.pdf
+https://datasheet.lcsc.com/szlcsc/1909021205_Realtek-Semicon-RTL8211F-CG_C187932.pdf
 
->  	memset(&unotif, 0, sizeof(unotif));
->  
->  	ret = down_interruptible(&filter->notif->request);
-> -- 
-> 2.20.1
-> 
+It looks like both RX and TX delay can be controlled via
+strapping. But the register for controlling the TX delay is not
+documented.
+
+> you mentioned that there was breakage earlier this year, so I'm not sure anymore
+> (that leaves me thinking: asking them is still useful to get out of
+> this grey area)
+
+It was an Atheros PHY with breakage.
+
+If we can fully control the RX and TX delays, that would be great. It
+would also be useful if there was a way to determine how the PHY has
+been strapped. If we cannot fully control the delays but we can find
+out what delays it is using, we can check the requested configuration
+against the strapped configuration, and warn if they are different.
+
+    Andrew
