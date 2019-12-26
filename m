@@ -2,142 +2,95 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037F6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED564C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD9621927
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC03A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="WNEAJ7bf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjXOxOoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfLZLl1 (ORCPT
+        id S1726479AbfLZLvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 06:41:27 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:18606 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLZLl1 (ORCPT
+        Thu, 26 Dec 2019 06:51:04 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46617 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfLZLvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 06:41:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577360485;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=mjCAlXQFM791pXZ+5qe3BYMWt7Wm/tbMO9xWf+vRptk=;
-        b=WNEAJ7bfLsiew2LcX+oF5GDc/Tth0nQq2gNzqaAx+n+KwmzFL7w0QDT0IJJZOy/qKS
-        VQTjyH7HwERUKOlbMcyP/CSF+8J+RdmjcxUgwcvw9DQ4E1Kt8ng5Z3MZ6HyIUfd6drTN
-        ntzjUgs1B+zaM5L0PZLPSak26lIeaujowSOrbCLV+igv9VhpzIu60lHhKsXIcpGhVM98
-        7NxvMAIgVhy+Ye1F/EsDeJVy5NW6E6GUowSxL7tT5rwBqDvBwRLc1vtaqA7y3wD5Essb
-        3+RSiqbfWU1SOTwu1ISiQdobojZo2g2x574c0m/y4HCxOHEkjuZ1+I/YDTyHC412QQCq
-        TU6A==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaIPSZNQ=="
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id e09841vBQBedBPY
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 26 Dec 2019 12:40:39 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Ted Ts'o <tytso@mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Date:   Thu, 26 Dec 2019 12:40:38 +0100
-Message-ID: <8794771.pXx7ivobnm@tauon.chronox.de>
-In-Reply-To: <20191226100334.bsh3b3dphs4j4cvx@srcf.ucam.org>
-References: <cover.1577088521.git.luto@kernel.org> <9872655.prSdhymlXK@positron.chronox.de> <20191226100334.bsh3b3dphs4j4cvx@srcf.ucam.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Thu, 26 Dec 2019 06:51:04 -0500
+Received: by mail-lj1-f194.google.com with SMTP id m26so22098759ljc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 03:51:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xHUUlXacIsdkD5xpHlgIYsmTNVE/8HZ6eRJcgqR5B9g=;
+        b=GjXOxOoOhDP4X6ZPiK6LdWzZksk6hiAx4g1LzSpAgk/Qupl7QrqrzzVscsAhTcdF2f
+         RO1dydg8sVY5NMak0Z12e6+ZT4geNxwRxHJN0Y3Z3rMyp1Ti2BUYaug2viNnRkLjf1as
+         RA//WDzY4qpv8MW+3sQ/onqFn1L3yBpmz9UVWfCu03s6Yhshgk8E8Z497mRAf2v+j31h
+         jELY5SnpmOEP8JzBBwW/X88FRHevEDedPNjAezdeeIEOntDF3fdbvhp73jcfL+pIGNdA
+         nkjlbK/rqgyHx+PkUgWeOX0sJRWDIbPm7xsxq19z5DZ+lMmclqUJ1NuvyB5buCyzwDGC
+         AoZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xHUUlXacIsdkD5xpHlgIYsmTNVE/8HZ6eRJcgqR5B9g=;
+        b=Kroy0LvUq1+9UqisOIN7hRrrSEaUFzEJgsiIkHDu5en2vq1yJcsUC1JzLTbc0AxN6R
+         pj/YG/W4OCFhWaKkqaGFojIVQnaN4mtJV7KYiBi+CvRu8jW/mHPhK7UzEJwvmrDQKBuu
+         OfML2KRn/75DLMmSqdmtQnyEF+YutYXvHdhAO+swbExaVxJsJUvVGV1lOW182AvVaXZo
+         RIHrcJy0tbdb04KZ5QoguPeoZQWg+SeKZZeNV/QektfNiv7rDTm6WNRRJi0quKtqJheo
+         NURvC2ezOxZ2PQCQRYefaHUoSKBU8NIuqwZ08P6GnWfQzqn/tq3ukc+6B3O5gTcxDRQ9
+         8wSg==
+X-Gm-Message-State: APjAAAWttayWkvprKde6Mou4x2dHw7spjCBJBBTPHI2XiWWeUkM10HBw
+        M0vHvUrDhOG4qcx7Qu5vvZ4=
+X-Google-Smtp-Source: APXvYqw/0SbORhl/FzuDQhVacfipG2Swb2CMGBo4iaB98a/5UinRs/3N0qHyAK+en7TqV0Ga/4UZ5A==
+X-Received: by 2002:a2e:9e16:: with SMTP id e22mr8118180ljk.220.1577361062211;
+        Thu, 26 Dec 2019 03:51:02 -0800 (PST)
+Received: from kbp1-lhp-A00636.cisco.com ([195.238.92.77])
+        by smtp.gmail.com with ESMTPSA id l12sm12249959lji.52.2019.12.26.03.51.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 03:51:01 -0800 (PST)
+From:   Vasyl Gomonovych <gomonovych@gmail.com>
+To:     openembedded-core@lists.openembedded.org, zhe.he@windriver.com,
+        ross.burton@intel.com, andrea.adami@gmail.com
+Cc:     Vasyl Gomonovych <gomonovych@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel: Make symbol link to vmlinux.64 in boot directory
+Date:   Thu, 26 Dec 2019 13:50:56 +0200
+Message-Id: <20191226115057.10413-1-gomonovych@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 26. Dezember 2019, 11:03:34 CET schrieb Matthew Garrett:
+Some mips 64 bit platforms use vmlinux.64 image name
+Make a symbol link to vmlinux.64 in arch/mips/boot/
 
-Hi Matthew,
+Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+---
+ meta/classes/kernel.bbclass | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> On Thu, Dec 26, 2019 at 10:29:00AM +0100, Stephan M=FCller wrote:
-> > What about offering a compile-time option to enable or disable such cod=
-e?
-> > Note, with the existing random.c code base, there is no need to have a
-> > separate blocking_pool. The ChaCha20 DRNG could be used for that very s=
-ame
-> > purpose, provided that in case these true random numbers are generated
-> > when
-> > the Chacha20 DRNG received an equal amount of "unused" entropy.
->=20
-> I think it's reasonable to offer such an option as long as it's made
-> clear that it'll break userland and should only be enabled under very
-> weird circumstances. We don't want to end up in a situation where
-> userland developers feel that they need to code to handle such
-> situations - the only people who care about this distinction should be
-> in control of their userland stack and able to cope with the
-> consequences.
-
-Ok.
->=20
-> > If an unprivileged caller requests true random data, at least 1024 bits=
- of
-> > entropy is left in the pool. I.e. all entropy above that point is
-> > available
-> > for this request type. Note, even namespaces fall into this category
-> > considering that unprivileged users can create a user name space in whi=
-ch
-> > they can become root.
->=20
-> I also feel like describing any of this as "true random data" is
-> misleading. Most of our entropy sources are devices that could, given
-> sufficient information, be modelled accurately. We're not sampling
-> quantum events here.
-
-I am fine using any terminology that fits.
-
-The terminology I used comes from the German AIS 31:
-
-"""
-True RNG: A device or mechanism for which the output values depend on some=
-=20
-unpredictable source (noise source, entropy source) that produces entropy.
-
-Note: The class of TRNGs splits into two subclasses (PTRNGs and NPTRNGs).
-"""
-
-Bottom line, a TRNG produces random numbers at an equal rate as the underly=
-ing=20
-noise source produces entropy. E.g. if the noise source produces 10 bits of=
-=20
-entropy, the RNG shall only generate 10 bits of random data.
-
-A physical TRNG (PTRNG) uses a physical phenomenon like shot noise of a dio=
-de=20
-in a ring oscillator. Commonly, stochastical models can be created for thos=
-e=20
-noise sources.
-
-A non-physical TRNG (NPTRNG) uses non-physical phenomenons like timing of=20
-events as noise source. The random.c or my LRNG are NPTRNGs. For NPTRNGs it=
- is=20
-unlikely that there is a stochastical model.
-
-
-Ciao
-Stephan
-
+diff --git a/meta/classes/kernel.bbclass b/meta/classes/kernel.bbclass
+index ebcb79a528..750988f4e5 100644
+--- a/meta/classes/kernel.bbclass
++++ b/meta/classes/kernel.bbclass
+@@ -613,6 +613,9 @@ do_kernel_link_images() {
+ 	if [ -f ../../../vmlinuz.bin ]; then
+ 		ln -sf ../../../vmlinuz.bin
+ 	fi
++	if [ -f ../../../vmlinux.64 ]; then
++		ln -sf ../../../vmlinux.64
++	fi
+ }
+ addtask kernel_link_images after do_compile before do_strip
+ 
+-- 
+2.17.1
 
