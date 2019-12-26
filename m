@@ -6,51 +6,49 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D850C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEEDC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4520A20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18ED420838
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 21:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfLZVPN (ORCPT
+        id S1727047AbfLZVPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 16:15:13 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42492 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZVPM (ORCPT
+        Thu, 26 Dec 2019 16:15:17 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:47895 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZVPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 16:15:12 -0500
-Received: by mail-io1-f72.google.com with SMTP id e7so17588748iog.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:15:11 -0800 (PST)
+        Thu, 26 Dec 2019 16:15:13 -0500
+Received: by mail-il1-f200.google.com with SMTP id x69so21573159ill.14
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 13:15:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=eKYwtZjwxXpWCOekYMYt9WDRJ4Y/KJHGrx/6wjCId6U=;
-        b=q81UKcR4gNR5+pWk0fOP1I9wWxh3l7IMAqaEJFJGU1S+UKNS0vpY/qZdKWYY/MrGbC
-         Iudosge+KUFIhwMoOcFbhOyP4+DYtpn3qe0vHf0kTipkcDoI/a933qGdw+eml7nxjkvG
-         FHLLW8a8gJXJhtphcfHAUUwld70lXs1OINnXO0rr8bQeSfHl7fi0i/VEEHnSoHqsaOcK
-         LxRH0I67vqJ3i7ZNiXkOB7ckzmBAO9TMHvqYft01CT58puTKVhNkXBm5ZLiXFVMQKK+Z
-         /zP29BDegBWKF5zv6zGV2RLt0OkW7nSGvtYosWDq02HmFM5xLsFTihNllluoDJZo6iNV
-         gVAg==
-X-Gm-Message-State: APjAAAXIOwuMwg9b2aDcQ1sdjYTp+OSDn545KfTVuPb5gM6xmBIgFgMw
-        51620Ibby+EKgTbRJui3OalrLrQ8uja41d2VkjQ+QxK58vYh
-X-Google-Smtp-Source: APXvYqzN1LRZcat8Gf3OapnF1VMsPHi/08XA+LdwCxVqpkNPiAQXMA7ZBRKm53iEIlzEsbYzGIImsucG0fuWBeuT3VRauNOa9V0e
+        bh=x5oMEt3exjsRQ5tHRiBRcy8CHYZHeDYRsdKd0pCRuDg=;
+        b=fs+GBTGMacxvoNUX/0EAKbo1EZXwuhu5q+E4dO5VH0DNpD4Rc+OoyIF+WmfC2Kl6nK
+         uepW0G3XbOKxH4XxwhXl174dpsjNIDGUqdLKBPrMjE3O2ToW2Id7HlzC5ToXfZgUtJEv
+         L4TtMPmuFXU5lrbbBBJ/eebJ9S+Gw/n/0lG9cLHkLBC7+TJ+MRjmoKPUFi1bju/R8WQ6
+         eNYTXw5mH1aZ3v656s7A8wxzR0THRJo0CHSC6IAU9+/xbGxjhfq5ugDhsy/C7oki1vPE
+         jQsQt/1BQFCUddCD0O8z7MMxS7n6J8LU9HX4DatJ/ouKW72xCJeMuR67jtirpzM4N91G
+         AXgQ==
+X-Gm-Message-State: APjAAAVAsBRrJQqmt4bT4fa4KKIxbpPHeF4XmDfGvtiKNMqqtaCnD5n1
+        ujZ90JsdiFSH6Tngm/01M3OHFHM/r5+SC9dYF9M/TOvTaG7A
+X-Google-Smtp-Source: APXvYqwd9sQMmFBlbFeR+HfmWxOnoMLIa9CowP17ksVE7YdifSv6Tc+ION5TXwdsEGQakp+G4nM3mhpPHx8nATh++B99uJpJS9AC
 MIME-Version: 1.0
-X-Received: by 2002:a92:d18a:: with SMTP id z10mr42462219ilz.48.1577394911483;
+X-Received: by 2002:a92:d781:: with SMTP id d1mr40087204iln.30.1577394911717;
  Thu, 26 Dec 2019 13:15:11 -0800 (PST)
 Date:   Thu, 26 Dec 2019 13:15:11 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005eaea0059aa1dff6@google.com>
-Subject: INFO: task hung in htable_put
-From:   syzbot <syzbot+84936245a918e2cddb32@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, coreteam@netfilter.org,
-        davem@davemloft.net, fw@strlen.de, hannes@cmpxchg.org,
-        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
+Message-ID: <0000000000006233e4059aa1dfb6@google.com>
+Subject: possible deadlock in do_io_accounting (3)
+From:   syzbot <syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io,
+        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, mhocko@suse.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,412 +61,174 @@ syzbot found the following crash on:
 
 HEAD commit:    46cf053e Linux 5.5-rc3
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=128f54e1e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=114262b9e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=84936245a918e2cddb32
+dashboard link: https://syzkaller.appspot.com/bug?extid=87a1b40b8fcdc9d40bd0
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134252c6e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c7c63ee00000
 
-The bug was bisected to:
-
-commit b8c8a338f75e052d9fa2fed851259320af412e3f
-Author: Johannes Weiner <hannes@cmpxchg.org>
-Date:   Fri Oct 13 22:58:05 2017 +0000
-
-     Revert "vmalloc: back off when the current task is killed"
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=178f8649e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=144f8649e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=104f8649e00000
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+84936245a918e2cddb32@syzkaller.appspotmail.com
-Fixes: b8c8a338f75e ("Revert "vmalloc: back off when the current task is  
-killed"")
+Reported-by: syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com
 
-INFO: task syz-executor013:10018 blocked for more than 143 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D27416 10018  10013 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1871
-  do_wait_for_common kernel/sched/completion.c:83 [inline]
-  __wait_for_common kernel/sched/completion.c:104 [inline]
-  wait_for_common kernel/sched/completion.c:115 [inline]
-  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
-  __flush_work+0x4fe/0xa50 kernel/workqueue.c:3041
-  __cancel_work_timer+0x3d9/0x540 kernel/workqueue.c:3128
-  cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3260
-  htable_destroy net/netfilter/xt_hashlimit.c:420 [inline]
-  htable_put+0x15f/0x220 net/netfilter/xt_hashlimit.c:449
-  hashlimit_mt_destroy_v2+0x56/0x70 net/netfilter/xt_hashlimit.c:971
-  cleanup_match+0xde/0x170 net/ipv6/netfilter/ip6_tables.c:478
-  cleanup_entry+0xd7/0x270 net/ipv4/netfilter/ip_tables.c:645
-  do_replace net/ipv4/netfilter/ip_tables.c:1148 [inline]
-  do_ipt_set_ctl+0x3e4/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000006cc018 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor013:10029 blocked for more than 143 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D28160 10029  10017 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-  hashlimit_mt_check_v2+0x327/0x3b0 net/netfilter/xt_hashlimit.c:950
-  xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
-  check_match net/ipv4/netfilter/ip_tables.c:472 [inline]
-  find_check_match net/ipv4/netfilter/ip_tables.c:488 [inline]
-  find_check_entry.isra.0+0x32f/0x920 net/ipv4/netfilter/ip_tables.c:538
-  translate_table+0xcb4/0x17d0 net/ipv4/netfilter/ip_tables.c:717
-  do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
-  do_ipt_set_ctl+0x2fe/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000000c7176 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor013:10030 blocked for more than 144 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D28160 10030  10014 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-  hashlimit_mt_check_v2+0x327/0x3b0 net/netfilter/xt_hashlimit.c:950
-  xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
-  check_match net/ipv4/netfilter/ip_tables.c:472 [inline]
-  find_check_match net/ipv4/netfilter/ip_tables.c:488 [inline]
-  find_check_entry.isra.0+0x32f/0x920 net/ipv4/netfilter/ip_tables.c:538
-  translate_table+0xcb4/0x17d0 net/ipv4/netfilter/ip_tables.c:717
-  do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
-  do_ipt_set_ctl+0x2fe/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000000c84a6 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor013:10031 blocked for more than 144 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D28160 10031  10015 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-  hashlimit_mt_check_v2+0x327/0x3b0 net/netfilter/xt_hashlimit.c:950
-  xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
-  check_match net/ipv4/netfilter/ip_tables.c:472 [inline]
-  find_check_match net/ipv4/netfilter/ip_tables.c:488 [inline]
-  find_check_entry.isra.0+0x32f/0x920 net/ipv4/netfilter/ip_tables.c:538
-  translate_table+0xcb4/0x17d0 net/ipv4/netfilter/ip_tables.c:717
-  do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
-  do_ipt_set_ctl+0x2fe/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000000c84a6 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor013:10032 blocked for more than 144 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D28160 10032  10012 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-  hashlimit_mt_check_v2+0x327/0x3b0 net/netfilter/xt_hashlimit.c:950
-  xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
-  check_match net/ipv4/netfilter/ip_tables.c:472 [inline]
-  find_check_match net/ipv4/netfilter/ip_tables.c:488 [inline]
-  find_check_entry.isra.0+0x32f/0x920 net/ipv4/netfilter/ip_tables.c:538
-  translate_table+0xcb4/0x17d0 net/ipv4/netfilter/ip_tables.c:717
-  do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
-  do_ipt_set_ctl+0x2fe/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000000c84a7 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
-INFO: task syz-executor013:10033 blocked for more than 145 seconds.
-       Not tainted 5.5.0-rc3-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D28160 10033  10016 0x00004004
-Call Trace:
-  context_switch kernel/sched/core.c:3385 [inline]
-  __schedule+0x934/0x1f90 kernel/sched/core.c:4081
-  schedule+0xdc/0x2b0 kernel/sched/core.c:4155
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4214
-  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
-  __mutex_lock+0x7ab/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-  hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-  hashlimit_mt_check_v2+0x327/0x3b0 net/netfilter/xt_hashlimit.c:950
-  xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
-  check_match net/ipv4/netfilter/ip_tables.c:472 [inline]
-  find_check_match net/ipv4/netfilter/ip_tables.c:488 [inline]
-  find_check_entry.isra.0+0x32f/0x920 net/ipv4/netfilter/ip_tables.c:538
-  translate_table+0xcb4/0x17d0 net/ipv4/netfilter/ip_tables.c:717
-  do_replace net/ipv4/netfilter/ip_tables.c:1136 [inline]
-  do_ipt_set_ctl+0x2fe/0x4c2 net/ipv4/netfilter/ip_tables.c:1672
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412b9
-Code: 0a 72 65 73 6f 72 74 2c 20 79 6f 75 20 6d 61 79 20 77 61 6e 74 20 74  
-6f 20 72 65 6d 6f 76 65 20 24 41 62 6f 72 74 4f 6e 55 6e <63> 6c 65 61 6e  
-43 6f 6e 66 69 67 20 74 6f 20 70 65 72 6d 69 74 20
-RSP: 002b:00007ffc9723f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412b9
-RDX: 0000000000000040 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000000c84a2 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000020000500 R11: 0000000000000246 R12: 0000000000402030
-R13: 00000000004020c0 R14: 0000000000000000 R15: 0000000000000000
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-rc3-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.1/21257 is trying to acquire lock:
+ffff88804c5ad0d0 (&sig->cred_guard_mutex){+.+.}, at:  
+do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/1114:
-  #0: ffffffff899a5680 (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x279 kernel/locking/lockdep.c:5334
-3 locks held by kworker/0:92/3036:
-1 lock held by rsyslogd/9860:
-  #0: ffff888095c665e0 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-2 locks held by getty/9982:
-  #0: ffff88809875e090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017cb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9983:
-  #0: ffff8880864d9090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017db2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9984:
-  #0: ffff8880a8c78090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000185b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9985:
-  #0: ffff888096bdd090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000184b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9986:
-  #0: ffff888097e13090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc9000183b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9987:
-  #0: ffff888082318090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900017fb2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9988:
-  #0: ffff88821526f090 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
-  #1: ffffc900011202e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x220/0x1bf0 drivers/tty/n_tty.c:2156
-1 lock held by syz-executor013/10018:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at: htable_put+0x21/0x220  
-net/netfilter/xt_hashlimit.c:446
-1 lock held by syz-executor013/10029:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at:  
-hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-1 lock held by syz-executor013/10030:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at:  
-hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-1 lock held by syz-executor013/10031:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at:  
-hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-1 lock held by syz-executor013/10032:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at:  
-hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
-1 lock held by syz-executor013/10033:
-  #0: ffffffff8a5393e0 (hashlimit_mutex){+.+.}, at:  
-hashlimit_mt_check_common.isra.0+0x341/0x1500  
-net/netfilter/xt_hashlimit.c:903
+but task is already holding lock:
+ffff8880a28aef40 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
 
-=============================================
+which lock already depends on the new lock.
 
-NMI backtrace for cpu 1
-CPU: 1 PID: 1114 Comm: khungtaskd Not tainted 5.5.0-rc3-syzkaller #0
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&p->lock){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+        seq_read+0x71/0x1170 fs/seq_file.c:161
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        kernel_readv fs/splice.c:365 [inline]
+        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
+        do_splice_to+0x127/0x180 fs/splice.c:892
+        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
+        do_sendfile+0x597/0xd00 fs/read_write.c:1464
+        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #2 (sb_writers#4){.+.+}:
+        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+        __sb_start_write+0x241/0x460 fs/super.c:1674
+        sb_start_write include/linux/fs.h:1650 [inline]
+        mnt_want_write+0x3f/0xc0 fs/namespace.c:354
+        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:21
+        ovl_create_object+0xb3/0x2c0 fs/overlayfs/dir.c:596
+        ovl_create+0x28/0x30 fs/overlayfs/dir.c:627
+        lookup_open+0x12d5/0x1a90 fs/namei.c:3241
+        do_last fs/namei.c:3331 [inline]
+        path_openat+0x14a2/0x4500 fs/namei.c:3537
+        do_filp_open+0x1a1/0x280 fs/namei.c:3567
+        do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+        __do_sys_open fs/open.c:1115 [inline]
+        __se_sys_open fs/open.c:1110 [inline]
+        __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
+        down_read+0x95/0x430 kernel/locking/rwsem.c:1495
+        inode_lock_shared include/linux/fs.h:801 [inline]
+        do_last fs/namei.c:3330 [inline]
+        path_openat+0x1e37/0x4500 fs/namei.c:3537
+        do_filp_open+0x1a1/0x280 fs/namei.c:3567
+        do_open_execat+0x137/0x690 fs/exec.c:856
+        __do_execve_file.isra.0+0x1702/0x22b0 fs/exec.c:1761
+        do_execveat_common fs/exec.c:1867 [inline]
+        do_execve fs/exec.c:1884 [inline]
+        __do_sys_execve fs/exec.c:1960 [inline]
+        __se_sys_execve fs/exec.c:1955 [inline]
+        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+        check_prev_add kernel/locking/lockdep.c:2476 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+        validate_chain kernel/locking/lockdep.c:2971 [inline]
+        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
+        do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
+        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
+        proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
+        seq_read+0x4ca/0x1170 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        do_preadv+0x1c4/0x280 fs/read_write.c:1089
+        __do_sys_preadv fs/read_write.c:1139 [inline]
+        __se_sys_preadv fs/read_write.c:1134 [inline]
+        __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+   &sig->cred_guard_mutex --> sb_writers#4 --> &p->lock
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&p->lock);
+                                lock(sb_writers#4);
+                                lock(&p->lock);
+   lock(&sig->cred_guard_mutex);
+
+  *** DEADLOCK ***
+
+1 lock held by syz-executor.1/21257:
+  #0: ffff8880a28aef40 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
+
+stack backtrace:
+CPU: 1 PID: 21257 Comm: syz-executor.1 Not tainted 5.5.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x197/0x210 lib/dump_stack.c:118
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0xb11/0x10c0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 3036 Comm: kworker/0:92 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events_power_efficient htable_gc
-RIP: 0010:__lock_acquire+0x1bc/0x4a00 kernel/locking/lockdep.c:3864
-Code: 2f 0f 87 bf 18 00 00 49 8d bb 98 08 00 00 49 81 ec 80 e1 2c 8b 48 b8  
-a3 8b 2e ba e8 a2 8b 2e 49 c1 fc 04 48 89 bd 60 ff ff ff <4c> 0f af e0 8b  
-85 70 ff ff ff 4c 8d 14 80 49 c1 e2 03 85 c0 74 46
-RSP: 0018:ffffc9000853fae8 EFLAGS: 00000006
-RAX: 2e8ba2e8ba2e8ba3 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88809e498dd8
-RBP: ffffc9000853fc00 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff14f3320 R11: ffff88809e498540 R12: 0000000000003d72
-R13: 0000000000000000 R14: ffffc9000d431060 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000500 CR3: 000000009624d000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
+  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
+  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
+  check_prev_add kernel/locking/lockdep.c:2476 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain kernel/locking/lockdep.c:2971 [inline]
+  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  htable_selective_cleanup+0xa6/0x330 net/netfilter/xt_hashlimit.c:382
-  htable_gc+0x26/0xc0 net/netfilter/xt_hashlimit.c:398
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2264
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2410
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
+  do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
+  proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
+  proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
+  seq_read+0x4ca/0x1170 fs/seq_file.c:229
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  do_preadv+0x1c4/0x280 fs/read_write.c:1089
+  __do_sys_preadv fs/read_write.c:1139 [inline]
+  __se_sys_preadv fs/read_write.c:1134 [inline]
+  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a919
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f76e9ff6c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a919
+RDX: 0000000000000001 RSI: 00000000200003c0 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f76e9ff76d4
+R13: 00000000004c8cc5 R14: 00000000004e0478 R15: 00000000ffffffff
 
 
 ---
@@ -478,6 +238,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
