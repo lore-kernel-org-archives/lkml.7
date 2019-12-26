@@ -2,76 +2,66 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B7AC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD511C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEE62075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:22:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQzA5qIm"
+	by mail.kernel.org (Postfix) with ESMTP id 847E8206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 17:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfLZRWO (ORCPT
+        id S1726659AbfLZRiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 12:22:14 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43979 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLZRWN (ORCPT
+        Thu, 26 Dec 2019 12:38:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45629 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbfLZRiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 12:22:13 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k197so13114773pga.10;
-        Thu, 26 Dec 2019 09:22:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l6FNc4QNuGPNE1Oy+AsJ/HcUQQhUOJ+/HyK0yE0YRTo=;
-        b=vQzA5qImmRfD2Viy4OoHhSeUm+QmovQe6k6UgmOfo4fvkM/CXD/vijtbh+JKdxcHay
-         hALLMOacPTTCyq3X11raB4Ud2m9xBznin3q/EetWqHSFXNN+QRvQ14dufx1PH8DHOYQy
-         KDW47SB9NQTgo2kIT3MvPdv6UjPE/q70LSPpG8A4ndSKDxsIZ5k5UO8xmv0fSvRGN8lI
-         BzAnNrBosEPg29fQb0QKTCMghBlJ6OMcGC3I8MSCdBmk9Hwo2PIUeTw203HjQrqxbnRt
-         a6JmPOhY2YEo9rV5lPbCfoaK4B8lUC0RzUVnnTA1wWm2qyovHBJtSlm2iiQGLjWxBcyS
-         mJWA==
+        Thu, 26 Dec 2019 12:38:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so13122993pgk.12;
+        Thu, 26 Dec 2019 09:38:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=l6FNc4QNuGPNE1Oy+AsJ/HcUQQhUOJ+/HyK0yE0YRTo=;
-        b=ka35tkT2NC29tx/7u92RsyqFmqhf2uqVJF38yiQZ8XuKsjsPby3sZ4VPVSoVWid7d4
-         PQUQf3aM/8d8/Ns/21VCuYeDlUwhktFJ0MtUbH48rzQj1v+sKIXKHljRbsb44y9hlklg
-         DbvoudhmfMuoOf3i8rhAw5KzPDkcaKQ8Kw65MfaWBSYJfbUzluJsxyIR4tdmgdb5eEQq
-         djKjRN4YqeVMKwLjcV5Uv9CHklOtUl39Sx1/LmodwVljEok77LOOD+2t4cf3B68uNyCu
-         jgnBT/74nNTsxCWUxmSakGRjpd9RFfCBT7v5tnvpNqotl/QkepJ2xOhzTBzSbgtFBoQ7
-         eadg==
-X-Gm-Message-State: APjAAAXaGC5Cm4XNcFGK9W3NWtq5LOKnUXP6tJL7bYLIyd4BXKsIAviG
-        tXqySHgrU4LS4u/RVDWvmK6C9rwA
-X-Google-Smtp-Source: APXvYqyEvJWlsXAytZd921Rhph3L83NAE4icdA/dphchI5YRrfhXDV06kSFwOM+s/HucnNokBs3wzA==
-X-Received: by 2002:aa7:8181:: with SMTP id g1mr50402760pfi.215.1577380932643;
-        Thu, 26 Dec 2019 09:22:12 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d23sm36583295pfo.176.2019.12.26.09.22.11
+        bh=MmHJMhL/ClL96dvLO618jh4MTLRMaTH5YzPmbcG1nUg=;
+        b=ZO3Rv0C50UXBL6RWaXWzq+ZCqY/T+7zZ57OVkuIz/sV8V3t3Doc0SGBdEAERdTajc4
+         4h+1EMcEddkq5O66UWV0Vu/ecMfsHP906rq71gYoADeoTCL2yCnT/BuT77jd5W/PhLuF
+         N8aDEdQd7otn+OIw/IalJ+bXwhfTWS5IQqorN9Y1ZaS03c0Iy9dlgNK6IV4W7SjLc5Ik
+         HQdcijWvaRpO0W0k+dd+28nwby6lCtprS79qcB8/gLIkmmlCGM+Jtt9Nu1EnYhkNBrh8
+         xmdlGDijR+8rn/wUdUvqdPTKQRvEPyjH6y033W4nhJMiQzgxMbrBpqaWO+5S4V6tybIU
+         kMvw==
+X-Gm-Message-State: APjAAAV4ugo0llhusl/Pwraw22eGGfF2EdV6YqyoB2zLFiedSDrZAJrn
+        bAAfGRY4pFLjb0xxxh6u6BjI5MlnVck=
+X-Google-Smtp-Source: APXvYqyascaaQ389fbn+3f8vAXtesPLJnuQSNGE9PhWj5Y6WVbwdID0iWpamDa9hSnWdFNKZeQ0HZw==
+X-Received: by 2002:aa7:946c:: with SMTP id t12mr40719359pfq.137.1577381883806;
+        Thu, 26 Dec 2019 09:38:03 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id q193sm33834849pfc.132.2019.12.26.09.38.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2019 09:22:11 -0800 (PST)
-Subject: Re: [PATCH] clk: Don't try to enable critical clocks if prepare
- failed
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191225163429.29694-1-linux@roeck-us.net>
- <1jd0cbpg77.fsf@starbuckisacylon.baylibre.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <fed37460-6097-1a3d-3c05-e203871610ac@roeck-us.net>
-Date:   Thu, 26 Dec 2019 09:22:10 -0800
+        Thu, 26 Dec 2019 09:38:02 -0800 (PST)
+Subject: Re: [PATCH v1 1/2] scsi: ufs: unify scsi_block_requests usage
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, pedrom.sousa@synopsys.com,
+        jejb@linux.ibm.com, matthias.bgg@gmail.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <1577192466-20762-1-git-send-email-stanley.chu@mediatek.com>
+ <1577192466-20762-2-git-send-email-stanley.chu@mediatek.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <96961682-9455-907d-753d-40c87cfc6b15@acm.org>
+Date:   Thu, 26 Dec 2019 09:38:01 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1jd0cbpg77.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1577192466-20762-2-git-send-email-stanley.chu@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,84 +70,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/26/19 1:51 AM, Jerome Brunet wrote:
-> 
-> On Wed 25 Dec 2019 at 17:34, Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> The following traceback is seen if a critical clock fails to prepare.
->>
->> bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
->> ------------[ cut here ]------------
->> Enabling unprepared plld_per
->> WARNING: CPU: 1 PID: 1 at drivers/clk/clk.c:1014 clk_core_enable+0xcc/0x2c0
->> ...
->> Call trace:
->>   clk_core_enable+0xcc/0x2c0
->>   __clk_register+0x5c4/0x788
->>   devm_clk_hw_register+0x4c/0xb0
->>   bcm2835_register_pll_divider+0xc0/0x150
->>   bcm2835_clk_probe+0x134/0x1e8
->>   platform_drv_probe+0x50/0xa0
->>   really_probe+0xd4/0x308
->>   driver_probe_device+0x54/0xe8
->>   device_driver_attach+0x6c/0x78
->>   __driver_attach+0x54/0xd8
->> ...
->>
->> Check return values from clk_core_prepare() and clk_core_enable() and
->> bail out if any of those functions returns an error.
->>
->> Cc: Jerome Brunet <jbrunet@baylibre.com>
->> Fixes: 99652a469df1 ("clk: migrate the count of orphaned clocks at init")
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>   drivers/clk/clk.c | 10 ++++++++--
->>   1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index 6a11239ccde3..772258de2d1f 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -3426,11 +3426,17 @@ static int __clk_core_init(struct clk_core *core)
->>   	if (core->flags & CLK_IS_CRITICAL) {
->>   		unsigned long flags;
->>   
->> -		clk_core_prepare(core);
->> +		ret = clk_core_prepare(core);
->> +		if (ret)
->> +			goto out;
->>   
->>   		flags = clk_enable_lock();
->> -		clk_core_enable(core);
->> +		ret = clk_core_enable(core);
->>   		clk_enable_unlock(flags);
->> +		if (ret) {
->> +			clk_core_unprepare(core);
->> +			goto out;
->> +		}
-> 
-> Hi Guenter,
-> 
-> It looks like it was a mistake to discard the possibility of a failure
-> here. Thanks for correcting this.
-> 
-> However, we would not want a critical clock to silently fail to
-> enable. This might lead to unexpected behavior which are generally hard
-> (and annoying) to debug.
-> 
-> Would you mind adding some kind of warning trace in case this fails ?
-> 
+On 12/24/19 5:01 AM, Stanley Chu wrote:
+> Currently UFS driver has ufshcd_scsi_block_requests() with
+> reference counter mechanism to avoid possible racing of blocking and
+> unblocking requests flow. Unify all users in UFS driver to use the
+> same function.
 
-The really relevant information is:
-
-bcm2835-clk 3f101000.cprman: plld: couldn't lock PLL
-
-which is already displayed (and not surprising since cprman isn't implemented
-in qemu). While I agree that an error message might be useful, replacing
-one traceback with another doesn't really make sense to me, and I am not
-really a friend of spreading tracebacks throughout the kernel. Please feel
-free to consider this patch to be a bug report, and feel free to ignore it
-and suggest something else.
-
-Thanks,
-Guenter
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
