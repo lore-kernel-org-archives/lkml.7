@@ -2,102 +2,158 @@ Return-Path: <SRS0=rArk=2Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8269C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ECFC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F97206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0C22075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Dec 2019 11:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="Mfvwn7FJ"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Qrbad0eH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfLZLEH (ORCPT
+        id S1726472AbfLZLMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 06:04:07 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34054 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfLZLEH (ORCPT
+        Thu, 26 Dec 2019 06:12:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46832 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfLZLMe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 06:04:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so10121247lfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 03:04:06 -0800 (PST)
+        Thu, 26 Dec 2019 06:12:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z124so12704851pgb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 03:12:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dMuzKwiDG9erY21rvfOIFhgZeA3agNAcCiJiS61PwtU=;
-        b=Mfvwn7FJa6uuSnyUZWdsYRK1BPLGVGTda71DdZ00VryPu2xgB1/ctUYu/DTy7RZEBi
-         7WN5JGj/upLjqTsuPs4V2T5acL2Zq1Bq/vuEPKVQbbgH1aMu830hXCyMWfgHiq9oauTF
-         I715D1xkH6jylQT3zBZwRcthpgW4qDU2EyRBgX/PCTxGjqPupcuIkgI2RXIphW6imggK
-         El2LjR1GV1WNIkf8sTYlEXQo5vADwL3h4p2TKvk386Sqh4hdQTUVzLSL6bsopQgqA1C/
-         gMd5LoepahntJyZCkTAktCFj5X1/ob6G5iwqU+NSTXF2RErppyu1h+6fHPSqflHPXHNL
-         r/LQ==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=XahL6G9knLB2n8H5gfpDsu6npK96lVW0v/QhI2IvksY=;
+        b=Qrbad0eHXMsPnR+ep/hgorsJ3L6/UQ2sMmnCFfDyOrsAH9gmPzUE+O/ihf8HbpmSe2
+         XTzrt9NI9JS19AC2ejj62s6PJlqoV8uEkFI6B2EUziulBKnZacCpUAk85XIlOhuzwMod
+         D2tJwuBtOKf6P6HWIp5IpVYx4zNvJMzTfIKblwY7wVhh16qcybT6pCb5d0nslb/ieDbZ
+         u7ZkEeLPc4fuRT/8CZVYGWqVevBDB0co3tPF0ysPnFICrBTzawoFWnKIQwrRqnfbdaRN
+         IKRYrNAXBxkF4wJNOjgBlxATJdf+ezJg0aMV4/CDo0nSqMEOnkf5Ory2Qm5ImGL5PdS1
+         Yunw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dMuzKwiDG9erY21rvfOIFhgZeA3agNAcCiJiS61PwtU=;
-        b=Ujlbr7KfKjAWpc72WCwYTT2wG8FfYycznfiIku7yDk8sgFFTEdx9iF03dkgECucCOa
-         xlcpIqoSDa4Z0C8wxqIKyjTPaL9REbnup0BBKbOUYP3rER3XbG3D59AIKKiZRbgmXSrZ
-         KTvOg/Xvp4jBIZpnE075ETUMC2TU7ItL62G9Vb9oDk85zfdZjQY0DfU9zfd3P43YPlyb
-         QD942nxSFj17hfP8O8fRPeG2uFh4jCrQUOwNXZI+p4q01A39LqA/e9A0R2jgVfm0FCvV
-         uY+rX4tg7MFg3nkKscvO5PmiRQDwnkmHWvbiiADBKJyZ31/hQ1/Rbqfc/Kt6uZKCND3+
-         tRiA==
-X-Gm-Message-State: APjAAAVWpTpAfNFkmCIWKEgGQm64gfPkUlog3lssJmYMCzFL2h1SqIuo
-        1Y5/O7YjJQZY0tt4JaiAbZiG9g==
-X-Google-Smtp-Source: APXvYqxyty1Ur5C7kdZ8TaFQIOjjXKTBfsFDaeaWxLUho5PXnAcZgwjh39AF42C5Amhhl1+IARuWYQ==
-X-Received: by 2002:ac2:5605:: with SMTP id v5mr26169631lfd.136.1577358245281;
-        Thu, 26 Dec 2019 03:04:05 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:867:b21c:a50d:bd68:cd46:4921? ([2a00:1fa0:867:b21c:a50d:bd68:cd46:4921])
-        by smtp.gmail.com with ESMTPSA id d24sm12128249lja.82.2019.12.26.03.04.03
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=XahL6G9knLB2n8H5gfpDsu6npK96lVW0v/QhI2IvksY=;
+        b=n3G6+VN+dmSxlEhgtVcgQERPNNq4ebVjN8YDek2PDXaL253FvCI07sWY0drhfg/DLd
+         Wk1MIBT7lkbWd6q8DI4lPby1OwzINps4cM6oNwUsiJSMvRFcUGMDvqaxOX9Kx+HY1FNg
+         P64JJYtBIp5kAV7K/l80vCP0oP4Ye6pDspcZAp62wNZPLl/+x7WGquLLL5juI0mbVscg
+         tfHJa42AKSHeVif/A3sZPJiyYtpdaV9PhdZD2PVBZ+I/l+kKsiWCzpaNsQPSEn2J08op
+         C5tcRfW59yGECbjMgf6N+Z3+HITu/Qgke1+sc/FnlEQ8UWFqQf/At7Ocf1iEJLBd8JTX
+         oeog==
+X-Gm-Message-State: APjAAAUUEWd+0RdN3yDMd9tbO6rinGTYeeXh/rjT38m0VU+qk7UApcXg
+        SE3xQK7ci1B+NcNo9x8CgeZG0Q==
+X-Google-Smtp-Source: APXvYqxMxc1hyWglZzwXvoW3reh+R+YzQsWl78Yfn6rauhrZAzzQW2YTb57MMRoRZn12XDGrddKtpA==
+X-Received: by 2002:a63:ff20:: with SMTP id k32mr46522975pgi.448.1577358753722;
+        Thu, 26 Dec 2019 03:12:33 -0800 (PST)
+Received: from [25.170.118.188] ([172.58.27.172])
+        by smtp.gmail.com with ESMTPSA id i3sm34346841pfo.72.2019.12.26.03.12.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2019 03:04:04 -0800 (PST)
-Subject: Re: [PATCH] scsi: don't memset to zero after dma_alloc_coherent
-To:     yu kuai <yukuai3@huawei.com>, ysato@users.sourceforge.jp,
-        dalias@libc.org, aacraid@microsemi.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, sathya.prakash@broadcom.com,
-        chaitra.basappa@broadcom.com, suganath-prabu.subramani@broadcom.com
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        zhengbin13@huawei.com, yi.zhang@huawei.com
-References: <20191225132327.7121-1-yukuai3@huawei.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <a3b27b94-1ab6-c33f-611c-56143fd390f8@cogentembedded.com>
-Date:   Thu, 26 Dec 2019 14:03:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20191225132327.7121-1-yukuai3@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 26 Dec 2019 03:12:32 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Date:   Thu, 26 Dec 2019 19:12:29 +0800
+Message-Id: <888017FA-06A1-42EF-9FC0-46629138DA9E@amacapital.net>
+References: <9872655.prSdhymlXK@positron.chronox.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Ted Ts'o <tytso@mit.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+In-Reply-To: <9872655.prSdhymlXK@positron.chronox.de>
+To:     =?utf-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
 
-On 25.12.2019 16:23, yu kuai wrote:
 
-> dma_alloc_coherent already zeros out memory, so memset to zero is not
-> needed.
-> 
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->   arch/sh/mm/consistent.c             | 2 --
+> On Dec 26, 2019, at 5:29 PM, Stephan M=C3=BCller <smueller@chronox.de> wro=
+te:
+>=20
+> =EF=BB=BFAm Montag, 23. Dezember 2019, 09:20:43 CET schrieb Andy Lutomirsk=
+i:
+>=20
+> Hi Andy,
+>>=20
+>> There are some open questions and future work here:
+>>=20
+>> Should the kernel provide an interface to get software-generated
+>> "true random" numbers?  I can think of only one legitimate reason to
+>> use such an interface: compliance with government standards.  If the
+>> kernel provides such an interface going forward, I think it should
+>> be a brand new character device, and it should have a default mode
+>> 0440 or similar.  Software-generated "true random numbers" are a
+>> very limited resource, and resource exhaustion is a big deal.  Ask
+>> anyone who has twiddled their thumbs while waiting for gnupg to
+>> generate a key.  If we think the kernel might do such a thing, then
+>> patches 5-8 could be tabled for now.
+>=20
+> What about offering a compile-time option to enable or disable such code?
+> Note, with the existing random.c code base, there is no need to have a=20
+> separate blocking_pool. The ChaCha20 DRNG could be used for that very same=
+=20
+> purpose, provided that in case these true random numbers are generated whe=
+n=20
+> the Chacha20 DRNG received an equal amount of "unused" entropy.
 
-    How this one is related to SCSI?
+This scares me. The DRNG should be simple and easy to understand. If we=E2=80=
+=99re tapping extra numbers in some weird way, then I would be more comforta=
+ble with some clear assurance that this doesn=E2=80=99t break the security. I=
+f we=E2=80=99re tapping numbers in the same way as normal urandom, then I do=
+n=E2=80=99t really see the point.
 
->   drivers/scsi/dpt_i2o.c              | 4 ----
->   drivers/scsi/mpt3sas/mpt3sas_base.c | 1 -
->   drivers/scsi/mvsas/mv_init.c        | 4 ----
->   drivers/scsi/pmcraid.c              | 1 -
->   5 files changed, 12 deletions(-)
-[...]
+>>=20
+>> Alternatively, perhaps the kernel should instead provide a
+>> privileged interface to read out raw samples from the various
+>> entropy sources, and users who care could have a user daemon that
+>> does something intelligent with them.  This would push the mess of
+>> trying to comply with whatever standards are involved to userspace.
+>> Userspace could then export "true randomness" via CUSE if it is so
+>> inclined, or could have a socket with a well-known name, or whatever
+>> else seems appropriate.
+>=20
+> With the patch set v26 of my LRNG I offer another possible alternative=20
+> avoiding any additional character device file and preventing the starvatio=
+n of=20
+> legitimate use cases: the LRNG has an entropy pool that leaves different=20=
 
-MBR, Sergei
+> levels of entropy in the pool depending on the use cases of this data.
+>=20
+> If an unprivileged caller requests true random data, at least 1024 bits of=
+=20
+> entropy is left in the pool. I.e. all entropy above that point is availabl=
+e=20
+> for this request type. Note, even namespaces fall into this category=20
+> considering that unprivileged users can create a user name space in which t=
+hey=20
+> can become root.
+
+This doesn=E2=80=99t solve the problem. If two different users run stupid pr=
+ograms like gnupg, they will starve each other.
+
+As I see it, there are two major problems with /dev/random right now: it=E2=80=
+=99s prone to DoS (i.e. starvation, malicious or otherwise), and, because no=
+ privilege is required, it=E2=80=99s prone to misuse. Gnupg is misuse, full s=
+top. If we add a new unprivileged interface, gnupg and similar programs will=
+ use it, and we lose all over again.
+
