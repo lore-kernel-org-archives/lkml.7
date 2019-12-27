@@ -2,57 +2,57 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D883C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39AFC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4C0208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9874208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469235;
-	bh=wBvesqRv6+JFHdNYD/+gWe4AyEM41kdiYVzP5Y+yzNw=;
+	s=default; t=1577469249;
+	bh=hWovyhmEjiLOx+RStHpljftNqQBfFJ59Eou4Rnua9cI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nD2/sjj9Is+N9SpLVMDPwu3OKtdVmN1nVGwKgcWRjTTtPs9JfjT0EfbNBy31k8i7+
-	 TOOiKCNkhA1W0DFAKHmczqko6PcClIVqDticBGIg9Tygsi2AQWspeYevNWsNiv21Q3
-	 gK9TRxNc2Rzj5YzjCwdjWea47dzsJs5pe5IeZV0g=
+	b=Ol+09IT/rp7ymSdBA8uSWF9Cry2olwyEZu574f9oI2ZK8XhGGFCtR570ZyuVQfwsh
+	 5dXmeweZLftkQMIwmZUBT8XpajyaSyLhzqUCkBPqMH3j5ecPDROHE+pCMLHtYosLyN
+	 eaBNBAUwYZ4RC1Cpmx0hvKlAX1UO6POACGcSH8KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfL0Rxu (ORCPT
+        id S1728204AbfL0RyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:53:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39904 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfL0Rmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:46 -0500
+        id S1727928AbfL0Rmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 892DF2176D;
-        Fri, 27 Dec 2019 17:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B444221582;
+        Fri, 27 Dec 2019 17:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468566;
-        bh=wBvesqRv6+JFHdNYD/+gWe4AyEM41kdiYVzP5Y+yzNw=;
+        s=default; t=1577468559;
+        bh=hWovyhmEjiLOx+RStHpljftNqQBfFJ59Eou4Rnua9cI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGhnuMWy97Z5DH5iv+8/Hy88QIZ9y7guuns7388WSHq7iJL1yETl8opu9K6OuCsU2
-         MMt3tRJ6beTWqgV3kQpIfotd6bRFdWz3poATOABzsTxpqa2HHFlUhePMp/5j0U2Bcj
-         tlDTslWr071X86RE0oVMN39Moxcxi7vTVicnNUL8=
+        b=J1+wiuv6w+1iB9dUQ32/oz6OVr4RLg/0p+kJlajr6ECTGKNqlqYcFQaigU3rITp2i
+         Lqs6cVrLSAJOGulwFoRRgkt/AzrilSNoofh5SDgOTlalohd4dGVlsMtaXH/YfEUby6
+         Bx+QhSV+Awdr2CGc5r0aHOaSDMOglqYgX5Q1ZcGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Stefan=20B=C3=BChler?= <source@stbuehler.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 091/187] cfg80211: fix double-free after changing network namespace
-Date:   Fri, 27 Dec 2019 12:39:19 -0500
-Message-Id: <20191227174055.4923-91-sashal@kernel.org>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 085/187] pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
+Date:   Fri, 27 Dec 2019 12:39:13 -0500
+Message-Id: <20191227174055.4923-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,38 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Bühler <source@stbuehler.de>
+From: Andrew Jeffery <andrew@aj.id.au>
 
-[ Upstream commit 56cb31e185adb61f930743a9b70e700a43625386 ]
+[ Upstream commit eb45f2110b036e4e35d3f3aaee1c2ccf49d92425 ]
 
-If wdev->wext.keys was initialized it didn't get reset to NULL on
-unregister (and it doesn't get set in cfg80211_init_wdev either), but
-wdev is reused if unregister was triggered through
-cfg80211_switch_netns.
+Early revisions of the AST2600 datasheet are conflicted about the state
+of the LPC/eSPI strapping bit (SCU510[6]). Conversations with ASPEED
+determined that the reference pinmux configuration tables were in error
+and the SCU documentation contained the correct configuration. Update
+the driver to reflect the state described in the SCU documentation.
 
-The next unregister (for whatever reason) will try to free
-wdev->wext.keys again.
-
-Signed-off-by: Stefan Bühler <source@stbuehler.de>
-Link: https://lore.kernel.org/r/20191126100543.782023-1-stefan.buehler@tik.uni-stuttgart.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Link: https://lore.kernel.org/r/20191202050110.15340-1-andrew@aj.id.au
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++--------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/net/wireless/core.c b/net/wireless/core.c
-index 350513744575..3e25229a059d 100644
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -1102,6 +1102,7 @@ static void __cfg80211_unregister_wdev(struct wireless_dev *wdev, bool sync)
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index c6800d220920..bb07024d22ed 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -1088,60 +1088,52 @@ SSSF_PIN_DECL(AF15, GPIOV7, LPCSMI, SIG_DESC_SET(SCU434, 15));
  
- #ifdef CONFIG_CFG80211_WEXT
- 	kzfree(wdev->wext.keys);
-+	wdev->wext.keys = NULL;
- #endif
- 	/* only initialized if we have a netdev */
- 	if (wdev->netdev)
+ #define AB7 176
+ SIG_EXPR_LIST_DECL_SESG(AB7, LAD0, LPC, SIG_DESC_SET(SCU434, 16),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16));
+ PIN_DECL_2(AB7, GPIOW0, LAD0, ESPID0);
+ 
+ #define AB8 177
+ SIG_EXPR_LIST_DECL_SESG(AB8, LAD1, LPC, SIG_DESC_SET(SCU434, 17),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17));
+ PIN_DECL_2(AB8, GPIOW1, LAD1, ESPID1);
+ 
+ #define AC8 178
+ SIG_EXPR_LIST_DECL_SESG(AC8, LAD2, LPC, SIG_DESC_SET(SCU434, 18),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18));
+ PIN_DECL_2(AC8, GPIOW2, LAD2, ESPID2);
+ 
+ #define AC7 179
+ SIG_EXPR_LIST_DECL_SESG(AC7, LAD3, LPC, SIG_DESC_SET(SCU434, 19),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19));
+ PIN_DECL_2(AC7, GPIOW3, LAD3, ESPID3);
+ 
+ #define AE7 180
+ SIG_EXPR_LIST_DECL_SESG(AE7, LCLK, LPC, SIG_DESC_SET(SCU434, 20),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20));
+ PIN_DECL_2(AE7, GPIOW4, LCLK, ESPICK);
+ 
+ #define AF7 181
+ SIG_EXPR_LIST_DECL_SESG(AF7, LFRAME, LPC, SIG_DESC_SET(SCU434, 21),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21));
+ PIN_DECL_2(AF7, GPIOW5, LFRAME, ESPICS);
+ 
+ #define AD7 182
+ SIG_EXPR_LIST_DECL_SESG(AD7, LSIRQ, LSIRQ, SIG_DESC_SET(SCU434, 22),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22));
+ PIN_DECL_2(AD7, GPIOW6, LSIRQ, ESPIALT);
+ FUNC_GROUP_DECL(LSIRQ, AD7);
+ FUNC_GROUP_DECL(ESPIALT, AD7);
+ 
+ #define AD8 183
+ SIG_EXPR_LIST_DECL_SESG(AD8, LPCRST, LPC, SIG_DESC_SET(SCU434, 23),
+-			  SIG_DESC_CLEAR(SCU510, 6));
+-SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23),
+ 			  SIG_DESC_SET(SCU510, 6));
++SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23));
+ PIN_DECL_2(AD8, GPIOW7, LPCRST, ESPIRST);
+ 
+ FUNC_GROUP_DECL(LPC, AB7, AB8, AC8, AC7, AE7, AF7, AD8);
 -- 
 2.20.1
 
