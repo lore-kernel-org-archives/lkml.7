@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D315C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20541C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01809206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E496C206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469880;
-	bh=0H7jxEWn0kJ94GucQWB7iemHQgpagReOFqt9e26JIAU=;
+	s=default; t=1577469891;
+	bh=CML4ynmYXN0xB1zt3WrGElGGQONxilXaUfFuXX/uags=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cS9L9jfwATFn3k58UDB9kPOpFbx27gYq9N6ZBp/0dzcp8Rl05REjk7dRO/4r5eYez
-	 yTRo+0L/HWB2j4LMif8bR4hxGAfotumpGd60Se+K1HelNMm12Kgd57QiKmjuh0Yo+W
-	 EtUp67mDvtsnQSPtHSlvDGcg4TuWMDNm4nfMgzTI=
+	b=KxY8xsqMxVVXYwDNA44E9iOVpZSl1VMOPs3dmHQqTn1ZDwQxoH1E3pumIqP0dKRIh
+	 Jypj3Dj+63mF+LNhzCwEx9dAZKxvot+d8F0TD1t229QBzKKpozxSdtH8D+VUNd3UKh
+	 FI7FHZfCEMCSt2hndAbFVdVpOOTFxbBnKCX6TBBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfL0SEi (ORCPT
+        id S1728522AbfL0SEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:04:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:04:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728639AbfL0SDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:20 -0500
+        id S1728573AbfL0SDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5DC2173E;
-        Fri, 27 Dec 2019 18:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 028682173E;
+        Fri, 27 Dec 2019 18:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469799;
-        bh=0H7jxEWn0kJ94GucQWB7iemHQgpagReOFqt9e26JIAU=;
+        s=default; t=1577469792;
+        bh=CML4ynmYXN0xB1zt3WrGElGGQONxilXaUfFuXX/uags=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tej11M6xbyjvQ9/RqmmzvExE8bs2D8d0NCLrjgBQUjpKXoPkjXcybsytpeKAqQRgU
-         sH99UyzXEQFaYWA+ukOfTMHVeuBDgMLS4YQ+k6H0q34cP7qkg7EupOnRGHjIuFGuBb
-         YaW2E816yplW+OWk2e2kiGEYKLqd+UVxlBfb8WTY=
+        b=wuhadizj9ACl8nWNgJJeIeGh+7Y1OQnD2EC1Fgnc+SI+XoF38x9B9wVdZKEwTFLVc
+         qLrIxnDQRqk6qhRFz7oQa2X+8fLFxznFkisKYQ/fYYPH1VrmNofvXcyS603+MdG/23
+         1mTL1WG5bstfDw2ej0cOI58uB9JkyTKkzCQ5C3ZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 47/57] net: stmmac: Do not accept invalid MTU values
-Date:   Fri, 27 Dec 2019 13:02:12 -0500
-Message-Id: <20191227180222.7076-47-sashal@kernel.org>
+Cc:     Thomas Hebb <tommyhebb@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 41/57] kconfig: don't crash on NULL expressions in expr_eq()
+Date:   Fri, 27 Dec 2019 13:02:06 -0500
+Message-Id: <20191227180222.7076-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -61,57 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-[ Upstream commit eaf4fac478077d4ed57cbca2c044c4b58a96bd98 ]
+[ Upstream commit 272a72103012862e3a24ea06635253ead0b6e808 ]
 
-The maximum MTU value is determined by the maximum size of TX FIFO so
-that a full packet can fit in the FIFO. Add a check for this in the MTU
-change callback.
+NULL expressions are taken to always be true, as implemented by the
+expr_is_yes() macro and by several other functions in expr.c. As such,
+they ought to be valid inputs to expr_eq(), which compares two
+expressions.
 
-Also check if provided and rounded MTU does not passes the maximum limit
-of 16K.
-
-Changes from v2:
-- Align MTU before checking if its valid
-
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ scripts/kconfig/expr.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index e6d16c48ffef..4ef923f1094a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3597,12 +3597,24 @@ static void stmmac_set_rx_mode(struct net_device *dev)
- static int stmmac_change_mtu(struct net_device *dev, int new_mtu)
+diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+index ed29bad1f03a..96420b620963 100644
+--- a/scripts/kconfig/expr.c
++++ b/scripts/kconfig/expr.c
+@@ -201,6 +201,13 @@ static int expr_eq(struct expr *e1, struct expr *e2)
  {
- 	struct stmmac_priv *priv = netdev_priv(dev);
-+	int txfifosz = priv->plat->tx_fifo_size;
-+
-+	if (txfifosz == 0)
-+		txfifosz = priv->dma_cap.tx_fifo_size;
-+
-+	txfifosz /= priv->plat->tx_queues_to_use;
+ 	int res, old_count;
  
- 	if (netif_running(dev)) {
- 		netdev_err(priv->dev, "must be stopped to change its MTU\n");
- 		return -EBUSY;
- 	}
- 
-+	new_mtu = STMMAC_ALIGN(new_mtu);
++	/*
++	 * A NULL expr is taken to be yes, but there's also a different way to
++	 * represent yes. expr_is_yes() checks for either representation.
++	 */
++	if (!e1 || !e2)
++		return expr_is_yes(e1) && expr_is_yes(e2);
 +
-+	/* If condition true, FIFO is too small or MTU too large */
-+	if ((txfifosz < new_mtu) || (new_mtu > BUF_SIZE_16KiB))
-+		return -EINVAL;
-+
- 	dev->mtu = new_mtu;
- 
- 	netdev_update_features(dev);
+ 	if (e1->type != e2->type)
+ 		return 0;
+ 	switch (e1->type) {
 -- 
 2.20.1
 
