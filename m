@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43514C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340A3C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1824220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCF5218AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468567;
-	bh=btxijgQeafxrlBq6FrXQk6LgJOls1zIVVBq1KL4GIBo=;
+	s=default; t=1577468570;
+	bh=2fWph/ItbPzO4DF1XjbTfqheJe3a3uYNXv0N8SZl55w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYRnCHYvaRfok9a9vgAqsi8SDPt/JQLBsCA4GifZyafBZ6LJssn3Gd2nUsLkFze80
-	 PZXKNYtnCRt5fbmadkL6XmDCnshB+LSzEUj1elPt6o+nG6Zdy1unYdeFr91gSCX1O2
-	 UZtOmniGTSRT22e8Nt+/MTNslQtYmUN6bQ5Wgk8E=
+	b=2VQaK5ZWFzhlFmS3lmesy7OMTAlBKK0M4rw8YHXTyIDdDt7CLapbpMHnL7QLWI7OO
+	 SETmqWrYaUyeMZk/YNt79DwjPg1CBsu+t15+3PVTfTxJ+W2EyWkVNHmXlHGXJ8kFSk
+	 J77CDUa2YPqvDhE3LiDXnh1Vpte+7xP7eS3T73hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfL0Rmp (ORCPT
+        id S1727991AbfL0Rms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:42:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39760 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbfL0Rmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:42 -0500
+        id S1727962AbfL0Rmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A4AD21744;
-        Fri, 27 Dec 2019 17:42:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5171E20740;
+        Fri, 27 Dec 2019 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468561;
-        bh=btxijgQeafxrlBq6FrXQk6LgJOls1zIVVBq1KL4GIBo=;
+        s=default; t=1577468564;
+        bh=2fWph/ItbPzO4DF1XjbTfqheJe3a3uYNXv0N8SZl55w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2bt21LKRHsJvtgLdzqViMGZofI2Kxs4HG/AvYEJP+iSWRkRk3ua03pq00GAXxxNB
-         +TvmJE15844w+FP7DwpdqHdUvwYuafdQFXL7FxLOWiawc6RTWfV6oaGndqphW+PujP
-         gCME2iz26L2V4WwDhPSrcSWyQB8H+TyDjdt+nA+I=
+        b=Ek5HNad94J9UvQm4qRn7WtvIblZvilXXHSGkNvkPK+jyV+h6+foeeStn1bsq5SCbF
+         iyozP6LC4oiLhz37ZzIo+Wsne7VNGX7Aut8B6/g9fviVVKf+6kYQKF7LRHEe7A1PZf
+         8ef5q6loRGrPkh/MFk2Yaxxp4OwUsQ3Fp4dSsMvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 087/187] net: usb: lan78xx: Fix suspend/resume PHY register access error
-Date:   Fri, 27 Dec 2019 12:39:15 -0500
-Message-Id: <20191227174055.4923-87-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Jian Hu <jian.hu@amlogic.com>, Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 089/187] clk: walk orphan list on clock provider registration
+Date:   Fri, 27 Dec 2019 12:39:17 -0500
+Message-Id: <20191227174055.4923-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,37 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
+[ Upstream commit 66d9506440bb05289eb4867059e7b8c6ed209717 ]
 
-Lan78xx driver accesses the PHY registers through MDIO bus over USB
-connection. When performing a suspend/resume, the PHY registers can be
-accessed before the USB connection is resumed. This will generate an
-error and will prevent the device to resume correctly.
-This patch adds the dependency between the MDIO bus and USB device to
-allow correct handling of suspend/resume.
+So far, we walked the orphan list every time a new clock was registered
+in CCF. This was fine since the clocks were only referenced by name.
 
-Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Now that the clock can be referenced through DT, it is not enough:
+* Controller A register first a reference clocks from controller B
+  through DT.
+* Controller B register all its clocks then register the provider.
+
+Each time controller B registers a new clock, the orphan list is walked
+but it can't match since the provider is registered yet. When the
+provider is finally registered, the orphan list is not walked unless
+another clock is registered afterward.
+
+This can lead to situation where some clocks remain orphaned even if
+the parent is available.
+
+Walking the orphan list on provider registration solves the problem.
+
+Reported-by: Jian Hu <jian.hu@amlogic.com>
+Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lkml.kernel.org/r/20191203080805.104628-1-jbrunet@baylibre.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/clk.c | 62 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index f24a1b0b801f..0becc79fd431 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1808,6 +1808,7 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
- 	dev->mdiobus->read = lan78xx_mdiobus_read;
- 	dev->mdiobus->write = lan78xx_mdiobus_write;
- 	dev->mdiobus->name = "lan78xx-mdiobus";
-+	dev->mdiobus->parent = &dev->udev->dev;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 1c677d7f7f53..9c570bfc40d6 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3231,6 +3231,41 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ }
+ #endif
  
- 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
- 		 dev->udev->bus->busnum, dev->udev->devnum);
++static void clk_core_reparent_orphans_nolock(void)
++{
++	struct clk_core *orphan;
++	struct hlist_node *tmp2;
++
++	/*
++	 * walk the list of orphan clocks and reparent any that newly finds a
++	 * parent.
++	 */
++	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
++		struct clk_core *parent = __clk_init_parent(orphan);
++
++		/*
++		 * We need to use __clk_set_parent_before() and _after() to
++		 * to properly migrate any prepare/enable count of the orphan
++		 * clock. This is important for CLK_IS_CRITICAL clocks, which
++		 * are enabled during init but might not have a parent yet.
++		 */
++		if (parent) {
++			/* update the clk tree topology */
++			__clk_set_parent_before(orphan, parent);
++			__clk_set_parent_after(orphan, parent, NULL);
++			__clk_recalc_accuracies(orphan);
++			__clk_recalc_rates(orphan, 0);
++		}
++	}
++}
++
++static void clk_core_reparent_orphans(void)
++{
++	clk_prepare_lock();
++	clk_core_reparent_orphans_nolock();
++	clk_prepare_unlock();
++}
++
+ /**
+  * __clk_core_init - initialize the data structures in a struct clk_core
+  * @core:	clk_core being initialized
+@@ -3241,8 +3276,6 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ static int __clk_core_init(struct clk_core *core)
+ {
+ 	int ret;
+-	struct clk_core *orphan;
+-	struct hlist_node *tmp2;
+ 	unsigned long rate;
+ 
+ 	if (!core)
+@@ -3389,27 +3422,8 @@ static int __clk_core_init(struct clk_core *core)
+ 		clk_enable_unlock(flags);
+ 	}
+ 
+-	/*
+-	 * walk the list of orphan clocks and reparent any that newly finds a
+-	 * parent.
+-	 */
+-	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+-		struct clk_core *parent = __clk_init_parent(orphan);
++	clk_core_reparent_orphans_nolock();
+ 
+-		/*
+-		 * We need to use __clk_set_parent_before() and _after() to
+-		 * to properly migrate any prepare/enable count of the orphan
+-		 * clock. This is important for CLK_IS_CRITICAL clocks, which
+-		 * are enabled during init but might not have a parent yet.
+-		 */
+-		if (parent) {
+-			/* update the clk tree topology */
+-			__clk_set_parent_before(orphan, parent);
+-			__clk_set_parent_after(orphan, parent, NULL);
+-			__clk_recalc_accuracies(orphan);
+-			__clk_recalc_rates(orphan, 0);
+-		}
+-	}
+ 
+ 	kref_init(&core->ref);
+ out:
+@@ -4255,6 +4269,8 @@ int of_clk_add_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clock from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
+@@ -4290,6 +4306,8 @@ int of_clk_add_hw_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clk_hw provider from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
 -- 
 2.20.1
 
