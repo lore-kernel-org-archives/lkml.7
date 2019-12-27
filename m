@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D0BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F58AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189B8206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4288521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468895;
-	bh=Ghd8K6VPRoWQjIndb3Yakrwxh4d7h/MYFhx9oZL8UIs=;
+	s=default; t=1577468897;
+	bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9AkI/svyDstW0Aeia2CBUT5WckxZ+ghSLeoxud7LZgkQYyCNxsrDeAqPj9cjvvAo
-	 l0Vhvx7OinlB8awtCmUMQGMV7gnQV/hO8EiD2EPJ1uF4L34PB7g4rfBxPNjjwEzYkR
-	 eQOb9pJaXOIQOJI3qFdXWY/KTBVgz7Htbv+OQZOw=
+	b=QkazGq6M0yuf3ZOFO1eR7p+HK/VOLH5ZEZekjl+J7ufTH7aw+OFh7pPxXYn6j8NuN
+	 TeW+6zqxEosrwJ6gGxOUMGzqupJkh5A4DUZRxmdwLJ6dEr7uVzqpSSrGhvPHiEwAgs
+	 7K4+975sgv39ScOL7RQOKrNDWI+8uBBT8cu7+7hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbfL0RsO (ORCPT
+        id S1728756AbfL0RsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:48:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:48:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfL0Rop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:45 -0500
+        id S1728553AbfL0Ror (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 455ED20740;
-        Fri, 27 Dec 2019 17:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C4B821582;
+        Fri, 27 Dec 2019 17:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468684;
-        bh=Ghd8K6VPRoWQjIndb3Yakrwxh4d7h/MYFhx9oZL8UIs=;
+        s=default; t=1577468687;
+        bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ctv03IHbUGaY9nOJ0Zf5PdBpTs2BscQgidjOMB/5ZICiA7/cqu6YCsipUwgvEUkCg
-         zDlZ0dIaECFC9iMF18Eh7ca88MUBCscandP9k+kN4BpUfHZEZTtuA7E+joUX0lB4je
-         sGImx14K2llLuwdPDXk01gE58qe+F29bD9m71Fsc=
+        b=Bo18kt42VO3VyEHCWPLJzYDvMVBoWXdbvnAl+PQqur3buYJLUq5yY/zVduF2nXKIZ
+         DS76y9g/FBqgf9h2ZVKKXlLoG7+P0nRkK2rcNYnZ7cmUIMvCAK9Viv2vN2jCv9zLNI
+         y5hEIszq85Yu4hJusEz2ItIgHvSHmSqhh7Mt5Q+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/84] btrfs: Fix error messages in qgroup_rescan_init
-Date:   Fri, 27 Dec 2019 12:43:11 -0500
-Message-Id: <20191227174352.6264-43-sashal@kernel.org>
+Cc:     Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 45/84] bpf: Clear skb->tstamp in bpf_redirect when necessary
+Date:   Fri, 27 Dec 2019 12:43:13 -0500
+Message-Id: <20191227174352.6264-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -59,42 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-[ Upstream commit 37d02592f11bb76e4ab1dcaa5b8a2a0715403207 ]
+[ Upstream commit 5133498f4ad1123a5ffd4c08df6431dab882cc32 ]
 
-The branch of qgroup_rescan_init which is executed from the mount
-path prints wrong errors messages. The textual print out in case
-BTRFS_QGROUP_STATUS_FLAG_RESCAN/BTRFS_QGROUP_STATUS_FLAG_ON are not
-set are transposed. Fix it by exchanging their place.
+Redirecting a packet from ingress to egress by using bpf_redirect
+breaks if the egress interface has an fq qdisc installed. This is the same
+problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Clear skb->tstamp when redirecting into the egress path.
+
+Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
+Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Link: https://lore.kernel.org/bpf/20191213180817.2510-1-lmb@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/core/filter.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index cdd6d5021000..7916f711daf5 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2862,12 +2862,12 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
- 		if (!(fs_info->qgroup_flags &
- 		      BTRFS_QGROUP_STATUS_FLAG_RESCAN)) {
- 			btrfs_warn(fs_info,
--			"qgroup rescan init failed, qgroup is not enabled");
-+			"qgroup rescan init failed, qgroup rescan is not queued");
- 			ret = -EINVAL;
- 		} else if (!(fs_info->qgroup_flags &
- 			     BTRFS_QGROUP_STATUS_FLAG_ON)) {
- 			btrfs_warn(fs_info,
--			"qgroup rescan init failed, qgroup rescan is not queued");
-+			"qgroup rescan init failed, qgroup is not enabled");
- 			ret = -EINVAL;
- 		}
+diff --git a/net/core/filter.c b/net/core/filter.c
+index e6fa88506c00..91b950261975 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2007,6 +2007,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
+ 	}
  
+ 	skb->dev = dev;
++	skb->tstamp = 0;
+ 
+ 	__this_cpu_inc(xmit_recursion);
+ 	ret = dev_queue_xmit(skb);
 -- 
 2.20.1
 
