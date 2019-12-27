@@ -2,89 +2,143 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DFFC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14945C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF01208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CDF208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfL0MsE (ORCPT
+        id S1727152AbfL0MsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:48:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47610 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfL0MsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:48:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BEBD8ACD7;
-        Fri, 27 Dec 2019 12:48:01 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 11E7AE008A; Fri, 27 Dec 2019 13:47:59 +0100 (CET)
-Date:   Fri, 27 Dec 2019 13:47:59 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v8 14/14] ethtool: provide link state with
- LINKSTATE_GET request
-Message-ID: <20191227124759.GK21614@unicorn.suse.cz>
-References: <cover.1577052887.git.mkubecek@suse.cz>
- <7a6c4161fc6d29620bdc95a919e03f8be8b91e48.1577052887.git.mkubecek@suse.cz>
- <918da8cd-7ebc-b895-85c8-afad9eed6036@gmail.com>
+        Fri, 27 Dec 2019 07:48:10 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8632 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbfL0MsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:48:09 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 243DD999849C7532FF57;
+        Fri, 27 Dec 2019 20:48:06 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.179) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 27 Dec 2019
+ 20:48:00 +0800
+Subject: Re: [QUESTION] question about the errno of rename the parent dir to a
+ subdir of a specified directory
+To:     Al Viro <viro@zeniv.linux.org.uk>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "miaoxie (A)" <miaoxie@huawei.com>,
+        zhangtianci <zhangtianci1@huawei.com>
+References: <4c54c1f0-fe9a-6dea-1727-6898e8dd85ef@huawei.com>
+ <20191225162729.GP4203@ZenIV.linux.org.uk>
+From:   "zhangyi (F)" <yi.zhang@huawei.com>
+Message-ID: <62e4c112-afc2-eb33-acc1-21c84aa528fa@huawei.com>
+Date:   Fri, 27 Dec 2019 20:47:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <918da8cd-7ebc-b895-85c8-afad9eed6036@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191225162729.GP4203@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.179]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 08:44:19PM -0800, Florian Fainelli wrote:
-> 
-> 
-> On 12/22/2019 3:46 PM, Michal Kubecek wrote:
-> > Implement LINKSTATE_GET netlink request to get link state information.
-> > 
-> > At the moment, only link up flag as provided by ETHTOOL_GLINK ioctl command
-> > is returned.
-> > 
-> > LINKSTATE_GET request can be used with NLM_F_DUMP (without device
-> > identification) to request the information for all devices in current
-> > network namespace providing the data.
-> > 
-> > Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-> > ---
-> 
-> [snip]
-> 
-> > +Kernel response contents:
-> > +
-> > +  ====================================  ======  ==========================
-> > +  ``ETHTOOL_A_LINKSTATE_HEADER``        nested  reply header
-> > +  ``ETHTOOL_A_LINKSTATE_LINK``          u8      autonegotiation status
-> 
-> ^ ==== Humm, auto-negotiation status may not be exactly accurate
-> especially with complex devices with SerDes/PHY/SFPs/what have you/.
-> Other than that, the code looks correct:
+Hi,
 
-It seems I forgot to edit this cell text after copy&paste from
-LINKMODES_GET above. Fixed in v9, thanks.
+Thanks for your detailed explanation, I will also check the freeBSD.
 
-Michal
+Thanks,
+Yi.
 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> -- 
-> Florian
+On 2019/12/26 0:27, Al Viro wrote:
+> On Wed, Dec 25, 2019 at 09:16:09PM +0800, zhangyi (F) wrote:
+>> Hi,
+>>
+>> If we rename the parent-dir to a sub-dir of a specified directory, the
+>> rename() syscall return -EINVAL because lock_rename() in lock_rename()
+>> checks the relations of the sorece and dest dirs. But if the 'parent'
+>> dir is a mountpoint, the rename() syscall return -EXDEV instead because
+>> it checks the parent dir's mountpoint of the sorece and dest dirs.
+>>
+>> For example:
+>> Case 1: rename() return -EINVAL
+>> # mkdir -p parent/dir
+>> # rename parent parent/dir/subdir parent
+>> rename: parent: rename to parent/dir/subdir failed: Invalid argument
+> 
+> That was rename("parent", "parent/dir/subdir") being told to sod off and
+> not try to create loops.
+> 
+>> Case 2: rename() return -EXDEV
+>> # mkdir parent
+>> # mount -t tmpfs test parent
+>> # mkdir parent/dir
+>> # rename parent parent/dir/subdir parent
+>> rename: parent: rename to parent/dir/subdir failed: Invalid cross-device link
+>>
+>> In case 2, although 'parent' directory is a mountpoint, it acted as a root
+>> dir of the "test tmpfs", so it should belongs to the same mounted fs of
+>> 'dir' directoty, so I think it shall return -EINVAL.
+>>
+>> Is it a bug or just designed as this ?
+> 
+> rename() operates on directory entries.  Pathnames can refer to files (including
+> directories) or they can refer to directory entries (links).  rename() and other
+> directory-modifying syscalls operate on the latter.  In the second test two
+> error conditions apply: in addition to attempted loop creation, we are asked to
+> move the link 'parent' from whatever it's in (your current directory) to 'subdir'
+> in the directory parent/dir, the latter being on a different filesystem.
+> 
+> It's not "take the file old pathname refers to, move it to new place"; that's
+> particularly obvious when you consider
+> 
+> echo foo >a	# create a file
+> ln a b		# now 'a' and 'b' both refer to it
+> mv a c		# or rename a c a, if you really want to touch util-linux rename(1)
+> 
+> Desired result is, of course, 'a' disappearing, 'b' left as is and 'c' now refering
+> to the same file.  If you did mv b c as the last step, 'a' would be left as is,
+> 'b' would disappear and 'c' added, refering to the same file.  But the only
+> difference between mv a c and mv b c is the first argument of rename(2) and
+> in both cases it resolves to the same file.  In other words, rename(2) can't
+> operate on that level; to be of any use it has to interpret the pathnames
+> as refering to directory entries.
+> 
+> That, BTW, is the source of "the last component must not be . or .." - they
+> do refer to directories just fine, but rename("dir1/.", "dir2/foo") is not just
+> 'make the directory refered to by "dir1/." show up as "dir2/foo"' - it's
+> 'rip the entry "." from the directory "dir1" and move it into directory "dir2"
+> under the name "foo"'.
+> 
+> So your second testcase is a genuine cross-filesystem move; you want a link
+> to disappear from a directory on one filesystem and reappear in a directory
+> on another.  It doesn't matter what's mounted on top of that - directory
+> entry refers to the mountpoint, not the thing mounted on it.
+> 
+> And in cases when more than one error condition applies, portable userland
+> should be ready to cope with the operating system returning any of those.
+> Different Unices might return different applicable errors.  In this particular
+> case I would expect EXDEV to take precedence on the majority of implementations,
+> but that's not guaranteed.  Note, BTW, that there might be other errors
+> applicable here and it's a sufficiently dark corner to expect differences
+> (e.g. there might be a blanket ban on renaming mountpoints in general,
+> POSIX being quiet on that topic be damned).  
+> 
+> That actually might be a good way to get into given Unix VFS - figuring out
+> what happens in this implementation will tell you a lot about its pathname
+> resolution, related kernel data structures and locking involved.  Might
+> send you away screaming, though - rename(2) is usually the worst part
+> as it is, and bringing the mountpoint crossing into the game is likely
+> to expose all kinds of interesting corner cases.
+> 
+> .
+> 
+
