@@ -2,179 +2,175 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0828C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70077C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC537208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FJ5H4I1p"
+	by mail.kernel.org (Postfix) with ESMTP id 310EF20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577447562;
+	bh=fpxAuj56PtPkXj1kH4oxVP3nuSYEPKqNh67BNwrzLbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f7MEylhJd8xC6HhapudoPlqBylecI+3HlHXoAdwUzdJWpib1FKxZ08XLv1JPOcqd/
+	 3OwKdMd5dpJf9YRdfzj54fH/If0k5wyc0hlJz6KWp4ANf3UAng5rtvbgEgVJvh9hQa
+	 CagaXKU84oyTOT4Y1us+GfarSqKP/Ja0jorVEs1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfL0LwE (ORCPT
+        id S1727141AbfL0Lwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:52:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51858 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfL0LwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 06:52:03 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so7893453wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 03:52:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CYKhEBIyq9WsTm4USUtMIQjKjqSO6ixzpKdzAB4oDVs=;
-        b=FJ5H4I1pH8AI9vdRjVpcvyexPVcVWHT4hESrkMD37naCNQrNUAToMg/KzQ63ShscAU
-         7sA1kSWqTuSap7spewyOng+o7oZcYxGmMSlArvHlF2Iup8iAUWmqeU/s6fFg6TYZERNd
-         ZCa1xrm59vHtXlRxvMsUpXpY3gPB2Npwv4YCucND4bjO4x2YAQwYap0pYA8QpedaLPQJ
-         NsvLACvis8dykG/Xi4K2Z28xmKhh0WFPojhK6Y3lVn7Z2sv3cmBdMSAlyFqQzJ4P4MCN
-         ptwtIXAjo87o5/2eURiV3/rZu9WFDLfRGY/z8C5jqmHE/EJFC1jvauq57HoPclwlxRU8
-         dsxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CYKhEBIyq9WsTm4USUtMIQjKjqSO6ixzpKdzAB4oDVs=;
-        b=aivsKX+2q2VpScNVf9FNo5nSJOZ+Usoxw+A4d7seI/eupLTmhvdHz3bwAiDkfRhJsy
-         QJKVvPxe3aOk4XjAw4xJJRaYm7zVJc1e+7qBlxNxZfvZtMLaPsiXKSi6IW3sgwMqNkjL
-         kQcvNG3vVqPGGvGnQxFIRGqvzqnwhaN1os412kezp6I+iKKrOoudjiTkoJzkXGlmBE4W
-         TE+bJxhm8EJDVfEHp3fVr9CtNLJxRxA4ya4XJvt5ffkiRm4p/80D6OttNxJqPbTXGayT
-         neYBIYbjPMqUb861cyGx1bSHzjStHBH+jkiMlff/9c1UFhtRbvYJel8W7OHYrRSmRuhM
-         JVhA==
-X-Gm-Message-State: APjAAAUUqRWMHqdnVSgD9lrxoyyK0QyKVQGt3nWglZr+Bqrnq2AmLKjN
-        fMlXJM1S4ewRDqd1VixahDZjWQ==
-X-Google-Smtp-Source: APXvYqz2mIvuXnQ4YmVCVQ4oGmz3+KftH7EYXnr0k5f6KQgbzvBbJr3z/NRPaqk+UBpY6/0lrBeEoA==
-X-Received: by 2002:a7b:c389:: with SMTP id s9mr18906638wmj.7.1577447519769;
-        Fri, 27 Dec 2019 03:51:59 -0800 (PST)
-Received: from apalos.home (athedsl-4510215.home.otenet.gr. [94.71.190.15])
-        by smtp.gmail.com with ESMTPSA id s128sm11127104wme.39.2019.12.27.03.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 03:51:58 -0800 (PST)
-Date:   Fri, 27 Dec 2019 13:51:56 +0200
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Tomislav Tomasic <tomislav.tomasic@sartura.hr>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Nadav Haklai <nadavh@marvell.com>
-Subject: Re: [RFC net-next 0/2] mvpp2: page_pool support
-Message-ID: <20191227115156.GA29682@apalos.home>
-References: <20191224010103.56407-1-mcroce@redhat.com>
- <20191224095229.GA24310@apalos.home>
- <20191224150058.4400ffab@carbon>
- <CAGnkfhzYdqBPvRM8j98HVMzeHSbJ8RyVH+nLpoKBuz2iqErPog@mail.gmail.com>
+        Fri, 27 Dec 2019 06:52:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfL0Lwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 06:52:41 -0500
+Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569B5208C4;
+        Fri, 27 Dec 2019 11:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577447560;
+        bh=fpxAuj56PtPkXj1kH4oxVP3nuSYEPKqNh67BNwrzLbU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K6ladlkbq2xNmkwSxOz0zb1jzq/dpn0LveU9V5KElUbc4eaIQUbAq/Llimn2PcVNS
+         djnkcmEGFB7TEMa/wCCIG1zFTkK8gAFpZl3eII6Yf1Wgntu359GOA07TwDBfZulqjE
+         LxMW1yK+5DLJM/CWGWpogwzCRR19OWLP+0sz/C8o=
+Date:   Fri, 27 Dec 2019 12:54:01 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
+        wens@csie.org, jernej.skrabec@siol.net, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-tegra@vger.kernel.org, zhengbin13@huawei.com,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH] drm: replace IS_ERR and PTR_ERR with PTR_ERR_OR_ZERO
+Message-ID: <20191227115401.agumkfuiwexl2wmx@hendrix.home>
+References: <20191225132042.5491-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qekez63uoqkeptq7"
 Content-Disposition: inline
-In-Reply-To: <CAGnkfhzYdqBPvRM8j98HVMzeHSbJ8RyVH+nLpoKBuz2iqErPog@mail.gmail.com>
+In-Reply-To: <20191225132042.5491-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 03:37:49PM +0100, Matteo Croce wrote:
-> On Tue, Dec 24, 2019 at 3:01 PM Jesper Dangaard Brouer
-> <brouer@redhat.com> wrote:
-> >
-> > On Tue, 24 Dec 2019 11:52:29 +0200
-> > Ilias Apalodimas <ilias.apalodimas@linaro.org> wrote:
-> >
-> > > On Tue, Dec 24, 2019 at 02:01:01AM +0100, Matteo Croce wrote:
-> > > > This patches change the memory allocator of mvpp2 from the frag allocator to
-> > > > the page_pool API. This change is needed to add later XDP support to mvpp2.
-> > > >
-> > > > The reason I send it as RFC is that with this changeset, mvpp2 performs much
-> > > > more slower. This is the tc drop rate measured with a single flow:
-> > > >
-> > > > stock net-next with frag allocator:
-> > > > rx: 900.7 Mbps 1877 Kpps
-> > > >
-> > > > this patchset with page_pool:
-> > > > rx: 423.5 Mbps 882.3 Kpps
-> > > >
-> > > > This is the perf top when receiving traffic:
-> > > >
-> > > >   27.68%  [kernel]            [k] __page_pool_clean_page
-> > >
-> > > This seems extremly high on the list.
-> >
-> > This looks related to the cost of dma unmap, as page_pool have
-> > PP_FLAG_DMA_MAP. (It is a little strange, as page_pool have flag
-> > DMA_ATTR_SKIP_CPU_SYNC, which should make it less expensive).
-> >
-> >
-> > > >    9.79%  [kernel]            [k] get_page_from_freelist
-> >
-> > You are clearly hitting page-allocator every time, because you are not
-> > using page_pool recycle facility.
-> >
-> >
-> > > >    7.18%  [kernel]            [k] free_unref_page
-> > > >    4.64%  [kernel]            [k] build_skb
-> > > >    4.63%  [kernel]            [k] __netif_receive_skb_core
-> > > >    3.83%  [mvpp2]             [k] mvpp2_poll
-> > > >    3.64%  [kernel]            [k] eth_type_trans
-> > > >    3.61%  [kernel]            [k] kmem_cache_free
-> > > >    3.03%  [kernel]            [k] kmem_cache_alloc
-> > > >    2.76%  [kernel]            [k] dev_gro_receive
-> > > >    2.69%  [mvpp2]             [k] mvpp2_bm_pool_put
-> > > >    2.68%  [kernel]            [k] page_frag_free
-> > > >    1.83%  [kernel]            [k] inet_gro_receive
-> > > >    1.74%  [kernel]            [k] page_pool_alloc_pages
-> > > >    1.70%  [kernel]            [k] __build_skb
-> > > >    1.47%  [kernel]            [k] __alloc_pages_nodemask
-> > > >    1.36%  [mvpp2]             [k] mvpp2_buf_alloc.isra.0
-> > > >    1.29%  [kernel]            [k] tcf_action_exec
-> > > >
-> > > > I tried Ilias patches for page_pool recycling, I get an improvement
-> > > > to ~1100, but I'm still far than the original allocator.
-> > --
-> > Best regards,
-> >   Jesper Dangaard Brouer
-> >   MSc.CS, Principal Kernel Engineer at Red Hat
-> >   LinkedIn: http://www.linkedin.com/in/brouer
-> >
-> 
-> The change I did to use the recycling is the following:
-> 
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -3071,7 +3071,7 @@ static int mvpp2_rx(struct mvpp2_port *port,
-> struct napi_struct *napi,
->     if (pp)
-> -       page_pool_release_page(pp, virt_to_page(data));
-> +      skb_mark_for_recycle(skb, virt_to_page(data), &rxq->xdp_rxq.mem);
->     else
->          dma_unmap_single_attrs(dev->dev.parent, dma_addr,
-> 
-> 
-Jesper is rightm you aren't recycling anything.
 
-The mark skb_mark_for_recycle() usage seems correct. 
-There are a few more places that we refuse to recycle (for example coalescing
-page pool and slub allocated pages is forbidden). I wonder if you hit any of
-those cases and recycling doesn't take place. 
-We'll hopefully release updated code shortly. I'll ping you and we can test on
-that
+--qekez63uoqkeptq7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Dec 25, 2019 at 09:20:42PM +0800, yu kuai wrote:
+> no functional change, just to make the code simpler
+>
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+> ---
+>  drivers/gpu/drm/omapdrm/dss/hdmi4.c         | 5 +----
+>  drivers/gpu/drm/omapdrm/dss/hdmi4_core.c    | 6 ++----
+>  drivers/gpu/drm/omapdrm/dss/hdmi5_core.c    | 4 +---
+>  drivers/gpu/drm/omapdrm/dss/hdmi_phy.c      | 4 +---
+>  drivers/gpu/drm/sun4i/sun4i_dotclock.c      | 4 +---
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c      | 4 +---
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 4 +---
+>  drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c  | 5 +----
+>  drivers/gpu/drm/tegra/drm.c                 | 4 +---
+>  drivers/gpu/drm/tegra/gem.c                 | 4 +---
+>  10 files changed, 11 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+> index 0f557fad4513..eb71baedf19e 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
+> @@ -587,10 +587,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
+>  		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
+>  		&pdata, sizeof(pdata));
+>
+> -	if (IS_ERR(hdmi->audio_pdev))
+> -		return PTR_ERR(hdmi->audio_pdev);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
+>  }
+>
+>  /* -----------------------------------------------------------------------------
+> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> index ea5d5c228534..fdd73fb73653 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+> @@ -924,8 +924,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
+>
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+>  	core->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(core->base))
+> -		return PTR_ERR(core->base);
+> -
+> -	return 0;
+> +
+> +	return PTR_ERR_OR_ZERO(core->base);
+>  }
+> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+> index ff4d35c8771f..30454bc9de78 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
+> @@ -908,8 +908,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
+>
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
+>  	core->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(core->base))
+> -		return PTR_ERR(core->base);
+>
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(core->base);
+>  }
+> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+> index 00bbf24488c1..bbc02d5aa8fb 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
+> @@ -191,8 +191,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
+>
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+>  	phy->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(phy->base))
+> -		return PTR_ERR(phy->base);
+>
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(phy->base);
+>  }
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+> index 417ade3d2565..84c04d8192b3 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+> @@ -191,10 +191,8 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
+>  	dclk->hw.init = &init;
+>
+>  	tcon->dclk = clk_register(dev, &dclk->hw);
+> -	if (IS_ERR(tcon->dclk))
+> -		return PTR_ERR(tcon->dclk);
+>
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(tcon->dclk);
 
-Thanks
-/Ilias
-> 
-> 
-> --
-> Matteo Croce
-> per aspera ad upstream
-> 
+This has been submitted a couple of times already. It's harder to
+maintain and not easier to read.
+
+Please remove sun4i from your patch
+
+Maxime
+
+--qekez63uoqkeptq7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgXw2QAKCRDj7w1vZxhR
+xcC0AP41YnCplFDuwO92c5iWckNOenpr5t0CgtMx4SUZvRwRfAEAofLF2tx6/nNv
+2u5zEYJchT5oj2oyNfSR2wa6CCYaMQM=
+=9hHy
+-----END PGP SIGNATURE-----
+
+--qekez63uoqkeptq7--
