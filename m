@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0D1C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E085C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CE6222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6282253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468485;
-	bh=CeEjd43JKGClgJcCmji5Y3DbpMh4kKHdTrFqyJWjyRE=;
+	s=default; t=1577468488;
+	bh=Ap0eT4B2IZ5lOyKqoub0MsmgTbdszsLuhRkh7djPqtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJYdnNfhKRqkDOR/B9Wq7ehNXBXH7ngunMJQxlEVyOLGJV+1KjxQSNAPRGZsOIGd+
-	 gbdRmE3BSZd7w4kFSg1vOvA3Qc/y7qUVO/rPeCiVTP/CzsdY2dwrG7VE9atkf6DG2U
-	 1qgzFO8YD4FMWXdU79FY7pEHT2veeHd+vars0VQk=
+	b=GvJ8uRmbIx4HIgAtFcXGDqBFKbmIXT/FqVZ5rI2rFzVM2a9nNyuvZhUAE3KkRgAgF
+	 iczDeC+dBIeYDzSdVPRu4RskHBJZeu0v4iCShCL4FdFzQuR/5yHIMfJ+Fsqeqr8my/
+	 1Zl6SzP84LcPEVmSSbgcthfFtv6lLfzTNVaNrtig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfL0RlY (ORCPT
+        id S1727445AbfL0Rl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37518 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfL0RlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:21 -0500
+        id S1727423AbfL0RlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B026D222C4;
-        Fri, 27 Dec 2019 17:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF2621775;
+        Fri, 27 Dec 2019 17:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468480;
-        bh=CeEjd43JKGClgJcCmji5Y3DbpMh4kKHdTrFqyJWjyRE=;
+        s=default; t=1577468482;
+        bh=Ap0eT4B2IZ5lOyKqoub0MsmgTbdszsLuhRkh7djPqtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xI3XacBA/CjjliAG/dbzJh7EU7lOc3Kv1s77fjYk0heOaljYAROmn+aSIZF/r/u9I
-         2ONLha0Sna6mgm3dQS6DOYiHWwJ18/rd62cKbHnHAE3tD/R65sw3GWQhNBtwFZ1Ye2
-         N73sel9v6LziefiRlf431JnT8WnyoJSC9mwXKgWk=
+        b=xCe7ECCA9bi2M7/DKa4QeazwYjEt11/TfGLWF7Y6Ic8BvucITeJEBUPDRO0HrKeNO
+         2bAY0bt2nm0WkKJSlHtGz4POPBh2r6AlmKKvghRV9ccBXAlNFyDGCjS2I8T7yGvfDX
+         opOeDuFfWKOmFrbemKHLRDNMQGmC5xH6IgH65KZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 019/187] libtraceevent: Fix lib installation with O=
-Date:   Fri, 27 Dec 2019 12:38:07 -0500
-Message-Id: <20191227174055.4923-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 021/187] regulator: core: fix regulator_register() error paths to properly release rdev
+Date:   Fri, 27 Dec 2019 12:38:09 -0500
+Message-Id: <20191227174055.4923-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,54 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 587db8ebdac2c5eb3a8851e16b26f2e2711ab797 ]
+[ Upstream commit a3cde9534ebdafe18a9bbab208df724c57e6c8e8 ]
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it fails to install libtraceevent.a and libtraceevent.so.1.1.0 with the
-error:
+There are several issues with the error handling code of
+the regulator_register() function:
+        ret = device_register(&rdev->dev);
+        if (ret != 0) {
+                put_device(&rdev->dev); --> rdev released
+                goto unset_supplies;
+        }
+...
+unset_supplies:
+...
+        unset_regulator_supplies(rdev); --> use-after-free
+...
+clean:
+        if (dangling_of_gpiod)
+                gpiod_put(config->ena_gpiod);
+        kfree(rdev);                     --> double free
 
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.a
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.so.1.1.0
+We add a variable to record the failure of device_register() and
+move put_device() down a bit to avoid the above issues.
 
-  cp: cannot stat 'libtraceevent.a': No such file or directory
-  Makefile:225: recipe for target 'install_lib' failed
-  make: *** [install_lib] Error 1
-
-I used the command:
-
-  make O=../../../obj-trace DESTDIR=~/test prefix==/usr  install
-
-It turns out libtraceevent Makefile, even though it builds in a separate
-folder, searches for libtraceevent.a and libtraceevent.so.1.1.0 in its
-source folder.
-
-So, add the 'OUTPUT' prefix to the source path so that 'make' looks for
-the files in the correct place.
-
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-1-sudipm.mukherjee@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: c438b9d01736 ("regulator: core: Move registration of regulator device")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20191201030250.38074-1-wenyang@linux.alibaba.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 5315f3787f8d..d008e64042ce 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -97,6 +97,7 @@ EVENT_PARSE_VERSION = $(EP_VERSION).$(EP_PATCHLEVEL).$(EP_EXTRAVERSION)
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 71c1467e1e2e..8f5c028090e9 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4990,6 +4990,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	struct regulator_dev *rdev;
+ 	bool dangling_cfg_gpiod = false;
+ 	bool dangling_of_gpiod = false;
++	bool reg_device_fail = false;
+ 	struct device *dev;
+ 	int ret, i;
  
- LIB_TARGET  = libtraceevent.a libtraceevent.so.$(EVENT_PARSE_VERSION)
- LIB_INSTALL = libtraceevent.a libtraceevent.so*
-+LIB_INSTALL := $(addprefix $(OUTPUT),$(LIB_INSTALL))
+@@ -5175,7 +5176,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	dev_set_drvdata(&rdev->dev, rdev);
+ 	ret = device_register(&rdev->dev);
+ 	if (ret != 0) {
+-		put_device(&rdev->dev);
++		reg_device_fail = true;
+ 		goto unset_supplies;
+ 	}
  
- INCLUDES = -I. -I $(srctree)/tools/include $(CONFIG_INCLUDES)
- 
+@@ -5205,7 +5206,10 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ clean:
+ 	if (dangling_of_gpiod)
+ 		gpiod_put(config->ena_gpiod);
+-	kfree(rdev);
++	if (reg_device_fail)
++		put_device(&rdev->dev);
++	else
++		kfree(rdev);
+ 	kfree(config);
+ rinse:
+ 	if (dangling_cfg_gpiod)
 -- 
 2.20.1
 
