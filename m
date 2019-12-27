@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D847C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9F9C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B78D22B48
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D80F22522
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468740;
-	bh=KV6gv0rCE9llG/Bq2Q+B7GqwVsdqUICSIUa5yUrEtv8=;
+	s=default; t=1577468748;
+	bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXEmjTZhPoN2byUwqDO7g7/9wijPvBap36ZuzWBOyrhPvxJ0kDenG7AC0ZI8kRAQ8
-	 hOxHdj2aoWu2Ol5qZzeZaXTuHTnO32jUgn6U6PNg0QtYo9penAHO2Acbz5RDseXU/i
-	 a65dWzUpuy/8OlQqWYGyC4c7QSYjW4NHkCdPANdk=
+	b=qFTaRs/KPh01UPB+JWZ4uloQLTap/ltmX/2SaDh2wtK4Us2kSut4+S14P6qCIxT5v
+	 Sae5XRl8pl61qzZmWhtUh8pfm+NTWIFv6PwTQ5gx/gG4qdINTb6LyM+NMld7aOWVuZ
+	 cXfKO/PXXXqYLrxnYS9XXjAZ3o2QUK5vzqbp5Q/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfL0Rpj (ORCPT
+        id S1728419AbfL0Rpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44126 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbfL0Rp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:45:28 -0500
+        id S1728345AbfL0RpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7D8B24125;
-        Fri, 27 Dec 2019 17:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A6F24125;
+        Fri, 27 Dec 2019 17:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468727;
-        bh=KV6gv0rCE9llG/Bq2Q+B7GqwVsdqUICSIUa5yUrEtv8=;
+        s=default; t=1577468724;
+        bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1burTYFd2dowUZi5ZCt2+aV4PNFHW4Xj3b17ZJWR2v1uU/SZ+0BXUjLWT/lZ6LxH
-         Jj0IpVGd7a78RuKF44pipiuGWt6MBnyzyBuQeYadlkA5QzouGw0uStL85LnSAiVSnw
-         SaA0HkGvnN1ukvC3ibdaO1OfNz9ZyDoB6oZvxKEo=
+        b=JepBpyMtxX28PZzRwkb5zTPZVL7sq1H8sqhI6lwWWqaXJn2Yi+RBBfnQuJzAubN+m
+         NlXRvMl5VPA2azpw4KhEh9yQEGoMajl1yco/nqxfHpLIK7neOYdxw6cXZ0bfXdcjU9
+         JIIWhpFuUquY/esd0lCzdEOZaJ8V2yXxc9jSCEsA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 80/84] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Fri, 27 Dec 2019 12:43:48 -0500
-Message-Id: <20191227174352.6264-80-sashal@kernel.org>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, Qian Cai <cai@lca.pw>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 77/84] s390/dasd: fix memleak in path handling error case
+Date:   Fri, 27 Dec 2019 12:43:45 -0500
+Message-Id: <20191227174352.6264-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -59,93 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Stefan Haberland <sth@linux.ibm.com>
 
-[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
+[ Upstream commit 00b39f698a4f1ee897227cace2e3937fc4412270 ]
 
-When doing stress test, we get the following trace:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
+If for whatever reason the dasd_eckd_check_characteristics() function
+exits after at least some paths have their configuration data
+allocated those data is never freed again. In the error case the
+device->private pointer is set to NULL and dasd_eckd_uncheck_device()
+will exit without freeing the path data because of this NULL pointer.
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
+Fix by calling dasd_eckd_clear_conf_data() for error cases.
 
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+Also use dasd_eckd_clear_conf_data() in dasd_eckd_uncheck_device()
+to avoid code duplication.
 
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
-
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
-
-Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/block/dasd_eckd.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index e8936ae46add..718afa4be2a0 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -456,9 +456,9 @@ hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_tx_timestamp(skb);
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 108fb1c77e1d..a2e34c853ca9 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -1770,7 +1770,7 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
+ 	dasd_free_block(device->block);
+ 	device->block = NULL;
+ out_err1:
+-	kfree(private->conf_data);
++	dasd_eckd_clear_conf_data(device);
+ 	kfree(device->private);
+ 	device->private = NULL;
+ 	return rc;
+@@ -1779,7 +1779,6 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
+ static void dasd_eckd_uncheck_device(struct dasd_device *device)
+ {
+ 	struct dasd_eckd_private *private = device->private;
+-	int i;
  
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
- 	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
+ 	if (!private)
+ 		return;
+@@ -1789,21 +1788,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
+ 	private->sneq = NULL;
+ 	private->vdsneq = NULL;
+ 	private->gneq = NULL;
+-	private->conf_len = 0;
+-	for (i = 0; i < 8; i++) {
+-		kfree(device->path[i].conf_data);
+-		if ((__u8 *)device->path[i].conf_data ==
+-		    private->conf_data) {
+-			private->conf_data = NULL;
+-			private->conf_len = 0;
+-		}
+-		device->path[i].conf_data = NULL;
+-		device->path[i].cssid = 0;
+-		device->path[i].ssid = 0;
+-		device->path[i].chpid = 0;
+-	}
+-	kfree(private->conf_data);
+-	private->conf_data = NULL;
++	dasd_eckd_clear_conf_data(device);
+ }
  
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
+ static struct dasd_ccw_req *
 -- 
 2.20.1
 
