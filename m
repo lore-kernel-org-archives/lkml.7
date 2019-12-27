@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF44BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66557C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83ABC20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3911520722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470592;
-	bh=5qimiPvZgZq/KiEoumXC++uKAGaZfv4SvZt7uJ03xv4=;
+	s=default; t=1577470596;
+	bh=GYAiOy07T+ykLeb+hCT6lXSIG+xqYiuRzQzeHMN3wWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvd7kwdTxtpwH1wACi1R/FIIMZUU9WPOkEURIB7Q2vel6P7kGFhTG7uhyf/1Y8apA
-	 MqzAhKAEXA76IaSV0NTSV58SN1c+5LtHMGiQWn0bodY7lc20pf4azdwRzxI1qNHRU3
-	 IznyUxZRjbBs+IInPhjT7Htvq02mA7f3dFVO/yic=
+	b=t/hAES0zrSw7EejHogTlTI1PSfm8tQtqpCZKrkQHn4Zqhdu8nzTLpP9w3IloiS61x
+	 2nU6Z0LFM6X0k/4dOmMPeh8GdQXd+jVLBhMN3+R7fnxipwvxbEd5xHHlM7X7UHL8Os
+	 GlilPy5F73F9GRHPqSZ0fAvREqAnXNZxA2GvpMQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbfL0SQR (ORCPT
+        id S1727826AbfL0SQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbfL0SQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:11 -0500
+        id S1727695AbfL0SQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61C6208C4;
-        Fri, 27 Dec 2019 18:16:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71DF21927;
+        Fri, 27 Dec 2019 18:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470571;
-        bh=5qimiPvZgZq/KiEoumXC++uKAGaZfv4SvZt7uJ03xv4=;
+        s=default; t=1577470575;
+        bh=GYAiOy07T+ykLeb+hCT6lXSIG+xqYiuRzQzeHMN3wWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmW9EZpfi6PPLYQ83dSHuQAvQvYWkgS6ssgTBdOQvibblrUegQBXX3VxcyXcTIA1N
-         oyVRs3s0RG12LRD15j4srXrfGCxIKy8CZpPsPpOrafiUBLUTgFOJiN4Q3R/Mi6sM0K
-         f6JJ6h5Mt8JTRJMsgbD8UkIjZ/poYlrxiM4XnGPE=
+        b=T184cwJhylxIKXZoF1kNn5oAzH27G67hH5/qvo+m/Z/h7HzmNCVDWZCCClY7zZMqZ
+         kZik95fKzcj2DRN1C7L4SAjAOXVO11set+lPKUS6eGzqEH1+PXRFeAwNz7OKoUSlKW
+         BfmpPbsmzAwxIY76hosfzLROqedGmOiYMcNv/bUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 18/25] regulator: rn5t618: fix module aliases
-Date:   Fri, 27 Dec 2019 13:15:42 -0500
-Message-Id: <20191227181549.8040-18-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 22/25] parisc: Fix compiler warnings in debug_core.c
+Date:   Fri, 27 Dec 2019 13:15:46 -0500
+Message-Id: <20191227181549.8040-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,34 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
+[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
 
-platform device aliases were missing, preventing
-autoloading of module.
+Fix this compiler warning:
+kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
+arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
+   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
+arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
+   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+      |                              ^~~~
+kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
+  596 |    atomic_xchg(&kgdb_active, cpu);
+      |    ^~~~~~~~~~~
 
-Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rn5t618-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index b85ceb8ff911..eccdddcf5315 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -95,6 +95,7 @@ static struct platform_driver rn5t618_regulator_driver = {
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index 0a90b965cccb..9849bef2a766 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -43,8 +43,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
+ **		if (((unsigned long)p & 0xf) == 0)
+ **			return __ldcw(p);
+ */
+-#define xchg(ptr, x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
++#define xchg(ptr, x)							\
++({									\
++	__typeof__(*(ptr)) __ret;					\
++	__typeof__(*(ptr)) _x_ = (x);					\
++	__ret = (__typeof__(*(ptr)))					\
++		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++	__ret;								\
++})
  
- module_platform_driver(rn5t618_regulator_driver);
- 
-+MODULE_ALIAS("platform:rn5t618-regulator");
- MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
- MODULE_DESCRIPTION("RN5T618 regulator driver");
- MODULE_LICENSE("GPL v2");
+ /* bug catcher for when unsupported size is used - won't link */
+ extern void __cmpxchg_called_with_bad_pointer(void);
 -- 
 2.20.1
 
