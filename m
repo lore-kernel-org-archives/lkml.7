@@ -2,94 +2,96 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386AFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6082C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188B020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D39821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577442109;
+	bh=TsgDsmDYdkZqIrtSYX/VEvTtA9J9Ee78lKdv08VCgLs=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=1yzpSwEFBz20ihpbmM/hA/Ml91Y8zUA51SawpMJQsCZy3Tz5MOb/tPXBWuSONucEy
+	 J3ypyyNoUnYm8NzBDBC5a5qC2f4+Vp4NJO0kDELUfCz9HSeLg2Svyvj5+JCvLRt/8X
+	 k8k/QdkezGods/l9VwiI60SOg5VZQxyznFnRf5qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfL0KQS (ORCPT
+        id S1726502AbfL0KVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 05:16:18 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:58786 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726297AbfL0KQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 05:16:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id BFBBBFB03;
-        Fri, 27 Dec 2019 11:16:15 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LOpDKjPcq13w; Fri, 27 Dec 2019 11:16:14 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 6CF2E49799; Fri, 27 Dec 2019 11:16:14 +0100 (CET)
-Date:   Fri, 27 Dec 2019 11:16:14 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt: bindings: lm3692x: Document new properties
-Message-ID: <20191227101614.GB2716@bogon.m.sigxcpu.org>
-References: <cover.1576499103.git.agx@sigxcpu.org>
- <35a23315938909c80e7772838e1de0d2d46302f2.1576499103.git.agx@sigxcpu.org>
- <20191226191906.GA13331@bogus>
+        Fri, 27 Dec 2019 05:21:48 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42876 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfL0KVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 05:21:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so35813457otd.9;
+        Fri, 27 Dec 2019 02:21:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=BNozEkFQwJDe/ZH+qVhHoHwdDuhlvg4ivwtzO8Pa6xg=;
+        b=I1jYO6Sf3zSHEdGxe7mJ7K2cxjZrYOo3OJkjeWvSRyariGUUx4GuWa4h/M4bqZmGf6
+         GVDq6UNCLFVpJKtaF/dOkainsyRckz/1sfuwHaR0nEO7cR8TptRUlAC4b0ssozDdcEsk
+         S/glSkQljhZwUwDM0dVdq6HazTOHLCWKYGtj5rBXlDNphCf6QQGoM/hR6lApVmVPo3Ir
+         jYGktUO5uDX0+g7HjLLMKg3ChDKYKOyNjXdsztB2hiNxKliIuOLD033GVORsC7sZkPvj
+         MN5TcQ9kJzMcnYZZ5r5xbAEQwW8Uai0Tt6wneahM5ovC6PoOO1sR+qVAcjc5FPywFEGH
+         hwRA==
+X-Gm-Message-State: APjAAAVY4ekIdLUlk0iGziIjxUntovA1z9g0j34HaEiNEJlmzJWx48Dh
+        LLL60Mh8Ufb7LyXhLT0QoY2hKPzQjbLjHwyrgppw+rV5
+X-Google-Smtp-Source: APXvYqxlydIBPjCsSMvnEjO+VOHBR4LNZQiX+rMNcvWG42Wv+Jgl6P9tBnssQ1bkjK8cb/PRZS646jD50rmGEuixb9E=
+X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr52522912otr.262.1577442107741;
+ Fri, 27 Dec 2019 02:21:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191226191906.GA13331@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 27 Dec 2019 11:21:37 +0100
+Message-ID: <CAJZ5v0i02hjtkXqxo=38XByY=G7LEDxdMbagAAvf207tSHXA2w@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.5-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, Dec 26, 2019 at 12:19:06PM -0700, Rob Herring wrote:
-> On Mon, Dec 16, 2019 at 01:28:05PM +0100, Guido Günther wrote:
-> > We allow configuration of brightness mode and over voltage
-> > protection.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> > index 4c2d923f8758..f195e8b45d85 100644
-> > --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> > +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-> > @@ -18,6 +18,10 @@ Required properties:
-> >  Optional properties:
-> >  	- enable-gpios : gpio pin to enable/disable the device.
-> >  	- vled-supply : LED supply
-> > +	- ti,brightness-mapping-exponential: Whether to use exponential
-> > +	    brightness mapping
-> > +	- ti,overvoltage-volts: Overvoltage protection in Volts, can
-> > +	    be 0 (unprotected), 21, 25 or 29V
-> 
-> '-microvolt' is the standard unit suffix.
+Hi Linus,
 
-Fixed in v2:
+Please pull from the tag
 
-   https://lore.kernel.org/linux-leds/20191226100615.GA4033@amd/T/#u
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.5-rc4
 
-Cheers,
- -- Guido
+with top-most commit 2cb7bfc1ca9a34ca148ed77f5f6f07373312bb0a
 
-> 
-> >  
-> >  Required child properties:
-> >  	- reg : 0 - Will enable all LED sync paths
-> > -- 
-> > 2.23.0
-> > 
-> 
+ Merge tag 'devfreq-fixes-for-5.5-rc4' of
+git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux
+
+on top of commit 46cf053efec6a3a5f343fead837777efe8252a46
+
+ Linux 5.5-rc3
+
+to receive power management fixes for 5.5-rc4.
+
+These fix compile test of the Tegra devfreq driver (Arnd Bergmann)
+and remove redundant Kconfig dependencies from multiple devfreq
+drivers (Leonard Crestez).
+
+Thanks!
+
+
+---------------
+
+Arnd Bergmann (1):
+      PM / devfreq: tegra: Add COMMON_CLK dependency
+
+Leonard Crestez (1):
+      PM / devfreq: Drop explicit selection of PM_OPP
+
+---------------
+
+ drivers/devfreq/Kconfig | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
