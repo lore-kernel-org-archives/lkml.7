@@ -2,143 +2,156 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D2DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87617C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CAB20882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3985F20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gy690DZ7"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aeeKxbr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfL0P5L (ORCPT
+        id S1727011AbfL0P6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:57:11 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:44581 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfL0P5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:57:11 -0500
-Received: by mail-yw1-f68.google.com with SMTP id t141so11415861ywc.11;
-        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
+        Fri, 27 Dec 2019 10:58:20 -0500
+Received: from mail-bn8nam12on2055.outbound.protection.outlook.com ([40.107.237.55]:6230
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726379AbfL0P6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:58:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gOCj0L+MJkcE6PT0yMnecRNUUnNGXcndEidqrbDtA9C/AIH3kNzHj+9HpPHHVqwjOFQP8oNV/lPu2oMWIDy2aFtWbyDlRFkyvOGnxqrB6Au2GfGRkmNMFz5z4bB1YxZtf1/21mmRwqWq8kenKjwboVH5qgQX+LnS7ZqVpEIMrhlohCjxr42tRtu9f7JUTWNrAcnkv8fOMoORva26MlnYiBUlSeC+ZvGm8wfF1/uE2+zNQTgUMsdunGaUMNX08RWbJzCSjZ8k2f9NlfiOHTpHEcWn5KZ5VaALJW/wAa8RB90mKndDCTOX/XGDjmv9qKEmMcvK1y4v8uJzf0zpUKqfaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wk8uak0Vil/mw6zN+A+wF6b0s7FpuAD4lfooSEVwZXg=;
+ b=MwmytmLcYaSzAfXDDO27F8LQPRvCgQQ2w+1u4flDIT4j/HSZdTwn9jV+e0pAu1VdVm8RXpyMBqAPvka1/v24TeZqIIOgzx1A2sjCwd7DPCAcF/KDX9C1IIWw/ExBdAAeIEnIqcah96ZZLiPzrlhiy6TKFXZ+eXRk8jYS6x2EuSaCe9ZOOYWdrSV5AF/3H14bA2lEEmeUrp3/qHuox66qz9EsVh5oIski755HS/jYxOdbZRzWr1TawAOexXua+JfVGH5j+pLxZAp0+Z67Pm6ulpYDQk9LsTDbDTO6UYCDKNUu3WYUEzHd+2gbfJC5BuQ0dZ42Fia1hywIF5CFyo1T9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BiQOKb56p1ie1sc7/zk5XIY9A7njVsnU/Z7f74v1ws4=;
-        b=Gy690DZ7EtGnqq+4IM4+RF/OnBqcOcaJEYInJ1mD9Ns2ltmazp2u9ihFntKhzb/Fkh
-         gNtjvQ971Ph1FX3+9UvBezQfI8dH2i3RBMOTQwEWO7s8LMA4q3rIst1nc4Ty9jMeOIor
-         SFyJaQ/Umf+YSe8Uy1sqlKOlGpAHEdNRD+l0ttFhN8945kOoo/O4CtYdkoeBLgelEZ12
-         Z3dXHp0NCZ9Un9f/C2FjWxK7m1IbQY+ZS2ifuDNcLZHDEgbPGgHAZ2qP5Xq+ZFo32RZg
-         KNk5lALW8LCJRyniatAqE9feGIAf8V3vZdw8qmHVuSgqbVAB3ejfiJ6xdeS8tHwXL91O
-         m/jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BiQOKb56p1ie1sc7/zk5XIY9A7njVsnU/Z7f74v1ws4=;
-        b=sYUosr2w1BQvsCi/kYUaw6b08tqt/+qxJ/8TnStE+OrT1UM1syI64SaMloLO+rtcfH
-         BFbdY2aT9yAetGKQQEh4fwnQw10WYsE1XTXFJqwO+S0RHG24wAmjXCS37AJYAWIZxalJ
-         9pzghWEfDof9FQFwfu0evLvq9d5HMVkuLWJ3g4VQGDQXobttcrzmCODQvwy6NjR0RE6s
-         zXGNIKU0pKk29wcgGd7eSOTxeW2N8twMK9ukwvmtGGsruWpQzXTxgXEkvpb8mzVHY8Wp
-         QD2/vEJBAx2ImEhGTrNbek6myRg/Riiw/iSMAzk4yOx09g6/3X3laVhhPCvCV0Gi5Smf
-         mQ3Q==
-X-Gm-Message-State: APjAAAXlbG6oDVU19y/3MYA6YZubc5i5xfbCQ+9+MgMCdugXSo2IdpzP
-        6Vn8KheYVUoqS5mB6IXJww==
-X-Google-Smtp-Source: APXvYqwMkbapAIncVSopx3B3vyv8N79XTKlT6CNOA3xgHugUPMHaWnqeiWLplmINdePWP4eoYlpvww==
-X-Received: by 2002:a0d:d64d:: with SMTP id y74mr39860256ywd.386.1577462230355;
-        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
-Received: from localhost ([64.192.53.12])
-        by smtp.gmail.com with ESMTPSA id q16sm13916240ywa.110.2019.12.27.07.57.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
-Date:   Fri, 27 Dec 2019 10:57:09 -0500
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        kbuild test robot <lkp@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix a possible NULL deref
-Message-ID: <20191227155709.6wztlhhzn6qljalp@960>
-References: <20191225235841.14393-1-ayman.bagabas@gmail.com>
- <20191226215418.GA3889@kadam>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wk8uak0Vil/mw6zN+A+wF6b0s7FpuAD4lfooSEVwZXg=;
+ b=aeeKxbr8eDCJ2oOcCAhLHcMzG6WlQ8W9JlG0v0kWASeZrE1VnBbXshxUwUSJ8PtIra/GQfnNXY0DcJJvGhLxVsb666R1ypTx6tQPW1skcIhWzmB/IeKyNG9JsK2tjr1TouUtWi3CdmXSN/OXS8r12gI9eXLTvbpLqQ5qDWYLTQs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB3737.namprd12.prod.outlook.com (10.255.173.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Fri, 27 Dec 2019 15:58:16 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
+ 15:58:16 +0000
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH v2] KVM: SVM: Override default MMIO mask if memory encryption is enabled
+Date:   Fri, 27 Dec 2019 09:58:00 -0600
+Message-Id: <d741b3a58769749b7873fea703c027a68b8e2e3d.1577462279.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SN1PR12CA0087.namprd12.prod.outlook.com
+ (2603:10b6:802:21::22) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226215418.GA3889@kadam>
+Received: from tlendack-t1.amd.com (165.204.77.1) by SN1PR12CA0087.namprd12.prod.outlook.com (2603:10b6:802:21::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.12 via Frontend Transport; Fri, 27 Dec 2019 15:58:15 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ad600a2b-c3fa-4b0a-029d-08d78ae595a6
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3737:|DM6PR12MB3737:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3737AA48068328244F4DCD3CEC2A0@DM6PR12MB3737.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0264FEA5C3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(189003)(199004)(81166006)(6666004)(8676002)(86362001)(478600001)(16526019)(4326008)(66946007)(52116002)(81156014)(6486002)(186003)(8936002)(7696005)(66476007)(26005)(66556008)(36756003)(956004)(2616005)(54906003)(5660300002)(2906002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3737;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6l4wxQYBe0gYgd8OKZsJbgxNi+smx6xdqW9h3bJzP2AmZEr/g+2jEIMWEZh2y9mrYcix4P7aK4BxuAoLmzeaQxQfl1XqVvgDbMNwExVwM7qHLaZJb3ie71fpqoNlX4Rsu+zSJqejNlWJ9dNeBlhPHiseN25HozJ5xMYJ2HA0DDn1ggk6odrkvWty6qWG6T9Mg2xZTsaImSrGhBFTaKyWWCgSJfdAlk6eRYzWp7geGs5o7GGx2wWFNcZSByWePwsB/qxiG3QjcpOOOzfatDjP8gbc4ULH2RMuo+lRCTa+OMJaCbFsUcYuymGroc7DStoI3VkVf5V8Tifr07Jh929irEGwKTOtonJlmr5jnLRAl3Q4eHy0nC0vJHRp/tzxFkiIHejbGOKSHZXX8JZ5zySVriB323Fdjb2jkAvE6hBF19Tmn2WWQIZh4Z+wHiPvRULf
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad600a2b-c3fa-4b0a-029d-08d78ae595a6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 15:58:16.0702
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rE9L9PCzYfP9EGfAK67ALR2LuJF/hgjhU+Z9ycgqe1eFC2gDPtGpyx4LQn6YcTCD3G8yMUH9j/wxqmiGnoGsrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3737
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/12/27 12:54AM, Dan Carpenter wrote:
-> On Wed, Dec 25, 2019 at 06:58:38PM -0500, Ayman Bagabas wrote:
-> > We're iterating over a NULL terminated array.
->
-> This changelog is kind of messed up.  This is how it looks in context:
-> https://marc.info/?l=linux-kernel&m=157731837511760&w=2
-> The subject and the commit message are far apart.  What's wrong with
-> iterating over a NULL terminated array?  The changelog doesn't say which
-> variable is NULL.
->
+The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
+faults when a guest performs MMIO. The AMD memory encryption support uses
+a CPUID function to define the encryption bit position. Given this, it is
+possible that these bits can conflict.
 
-I'm really sorry for my poor subject and commit message that shouldn't happen again.
+Use svm_hardware_setup() to override the MMIO mask if memory encryption
+support is enabled. When memory encryption support is enabled the physical
+address width is reduced and the first bit after the last valid reduced
+physical address bit will always be reserved. Use this bit as the MMIO
+mask.
 
-This is not an issue, the problem occurs to me when I try to use this
-module on kernel 5.0, particularly, when iterating over the struct
-wmi_device_id array. On kernel 5.0, I'm getting a NULL pointer
-dereference on *guid->guid_string on the 3rd NULL struct in the array.
-This is happening because the definition of struct wmi_device_id in <5.1 is
+Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/kvm/svm.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-struct wmi_device_id {
-	const char *guid_string;
-};
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 122d4ce3b1ab..2cb834b5982a 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1361,6 +1361,32 @@ static __init int svm_hardware_setup(void)
+ 		}
+ 	}
+ 
++	/*
++	 * The default MMIO mask is a single bit (excluding the present bit),
++	 * which could conflict with the memory encryption bit. Check for
++	 * memory encryption support and override the default MMIO masks if
++	 * it is enabled.
++	 */
++	if (cpuid_eax(0x80000000) >= 0x8000001f) {
++		u64 msr, mask;
++
++		rdmsrl(MSR_K8_SYSCFG, msr);
++		if (msr & MSR_K8_SYSCFG_MEM_ENCRYPT)  {
++			/*
++			 * The physical addressing width is reduced. The first
++			 * bit above the new physical addressing limit will
++			 * always be reserved. Use this bit and the present bit
++			 * to generate a page fault with PFER.RSV = 1.
++			 */
++			mask = BIT_ULL(boot_cpu_data.x86_phys_bits);
++			mask |= BIT_ULL(0);
++
++			kvm_mmu_set_mmio_spte_mask(mask, mask,
++						   PT_WRITABLE_MASK |
++						   PT_USER_MASK);
++		}
++	}
++
+ 	for_each_possible_cpu(cpu) {
+ 		r = svm_cpu_init(cpu);
+ 		if (r)
+-- 
+2.17.1
 
-Compared to this where guid->guid_string is not NULL
-
-struct wmi_device_id {
-	const char guid_string[UUID_STRING_LEN+1];
-};
-
-> >
-> > Fixes: 1ac9abeb2e5b ("platform/x86: huawei-wmi: Move to platform driver")
-> > Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
-> > ---
-> >  drivers/platform/x86/huawei-wmi.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-> > index a2d846c4a7ee..42d461eeeff4 100644
-> > --- a/drivers/platform/x86/huawei-wmi.c
-> > +++ b/drivers/platform/x86/huawei-wmi.c
-> > @@ -784,13 +784,13 @@ static const struct wmi_device_id huawei_wmi_events_id_table[] = {
-> >  static int huawei_wmi_probe(struct platform_device *pdev)
-> >  {
-> >  	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
-> > +	struct input_dev *idev = *huawei_wmi->idev;
->
-> This line seems like an unrelated change.  I'm still not sure the
-> justification for this.  I really hate puzzling over patches to try
-> figure out why a patch is making changes.
-
-This one is a logical error, we have an array of input_dev pointers for
-each guid. Defining idev in the loop would always reset the pointer to
-the first element in the array. The address of each pointer then passed
-to huawei_wmi_input_setup to allocate an input device. We want to keep a
-pointer to each allocated input device in the static huawei_wmi struct.
-
->
-> regards,
-> dan carpenter
->
->
-
---
-Thank you,
-Ayman
