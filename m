@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE95C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72380C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DC720740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC6F24125
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468729;
-	bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
+	s=default; t=1577468732;
+	bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7o1T0axKZXMDT9hBJFZRiyFa6KzmTttD7XPnIDumh2LOveZ3yGGL44CQ1XkLypMA
-	 OwPjV1wnTzppnykCh0fQTrTs/PxT2NdA9ksZjd09+qzmhd8F765MNiULHbZ1h7klLc
-	 yHZmZTXvDGbBN1ngCYg0d2uo8jrNdDCqqY71Eiv0=
+	b=KRIf6klkP6D607D/Z1cPSyEdyFvPz34bpr0T/fGxi+oI61zpIOB6h9cPayVt2JQw0
+	 p2OvkEzKH5vJfjCstxIBZY47PeLWUE6aiY+O9cBYsvb3rf36iLsC7AsqVbJZcJpYny
+	 UoqJY2yruhKmC3nKCBXz9QvpevWnMhfy65XALd84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfL0Rp2 (ORCPT
+        id S1728794AbfL0Rpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbfL0RpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:45:24 -0500
+        id S1728192AbfL0Rp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363C521D7E;
-        Fri, 27 Dec 2019 17:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16412464E;
+        Fri, 27 Dec 2019 17:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468723;
-        bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
+        s=default; t=1577468725;
+        bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XmX5C18QsZKkEpgY16u5EAVOLmNdDeTO8zXSL/AmrKWcoA22b4p/DKaTgcZ7DAask
-         hOoZsSiliuO00wrg52QykXeexAaNkUe5c7LI36bdLD5Kw0i2KcTJ09rt3/Wo340Q8R
-         YpNZBKi5v1GxHv5Jj9d7NPo2fplOz+WSu9xvTSNE=
+        b=NFKPeXXj9eANMDdKn/9Vr8iaAr6vFyQ0JkjEt7dj7pij2WLEKn0twp0smNWAkV2/A
+         GTyh+3ZjK4whNtaUkZ+TFB447xzXWfu1sPjwh8zBRevTVWT+et6zM8hB8l08vnP9pV
+         cBZ/FjeCzBFRusv2KEKJM2wK2dBc7gNbOLvIL1rc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Hulk Robot <hulkci@huawei.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 76/84] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
-Date:   Fri, 27 Dec 2019 12:43:44 -0500
-Message-Id: <20191227174352.6264-76-sashal@kernel.org>
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 78/84] block: fix memleak when __blk_rq_map_user_iov() is failed
+Date:   Fri, 27 Dec 2019 12:43:46 -0500
+Message-Id: <20191227174352.6264-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,93 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
+[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
 
-The max data count (mdc) is an unsigned 16-bit integer value as per AR
-documentation and is received via ccw_device_get_mdc() for a specific
-path mask from the CIO layer. The function itself also always returns a
-positive mdc value or 0 in case mdc isn't supported or couldn't be
-determined.
+When I doing fuzzy test, get the memleak report:
 
-Though, the comment for this function describes a negative return value
-to indicate failures.
+BUG: memory leak
+unreferenced object 0xffff88837af80000 (size 4096):
+  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
+  backtrace:
+    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
+    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
+    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
+    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
+    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
+    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
+    [<000000004fc670f6>] sg_write+0x5f/0x8c
+    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
+    [<000000008e177714>] vfs_write+0x1c3/0x500
+    [<0000000087d23f34>] ksys_write+0xf9/0x200
+    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
+    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-As a result, the DASD device driver interprets the return value of
-ccw_device_get_mdc() incorrectly. The error case is essentially a dead
-code path.
+If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
+the bio(s) which is allocated before this failing will leak. The
+refcount of the bio(s) is init to 1 and increased to 2 by calling
+bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
+the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
 
-To fix this behaviour, check explicitly for a return value of 0 and
-change the comment for ccw_device_get_mdc() accordingly.
-
-This fix merely enables the error code path in the DASD functions
-get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
-stays the same and is still correct.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 9 +++++----
- drivers/s390/cio/device_ops.c  | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ block/blk-map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index f89f9d02e788..108fb1c77e1d 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -1135,7 +1135,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- {
- 	struct dasd_eckd_private *private = device->private;
- 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
--	int tpm, mdc;
-+	unsigned int mdc;
-+	int tpm;
+diff --git a/block/blk-map.c b/block/blk-map.c
+index db9373bd31ac..9d8627acc2f5 100644
+--- a/block/blk-map.c
++++ b/block/blk-map.c
+@@ -145,7 +145,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
+ 	return 0;
  
- 	if (dasd_nofcx)
- 		return 0;
-@@ -1149,7 +1150,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- 		return 0;
- 
- 	mdc = ccw_device_get_mdc(device->cdev, 0);
--	if (mdc < 0) {
-+	if (mdc == 0) {
- 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
- 		return 0;
- 	} else {
-@@ -1160,12 +1161,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
- {
- 	struct dasd_eckd_private *private = device->private;
--	int mdc;
-+	unsigned int mdc;
- 	u32 fcx_max_data;
- 
- 	if (private->fcx_max_data) {
- 		mdc = ccw_device_get_mdc(device->cdev, lpm);
--		if ((mdc < 0)) {
-+		if (mdc == 0) {
- 			dev_warn(&device->cdev->dev,
- 				 "Detecting the maximum data size for zHPF "
- 				 "requests failed (rc=%d) for a new path %x\n",
-diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
-index 4435ae0b3027..f0cae1973f78 100644
---- a/drivers/s390/cio/device_ops.c
-+++ b/drivers/s390/cio/device_ops.c
-@@ -624,7 +624,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
-  * @mask: mask of paths to use
-  *
-  * Return the number of 64K-bytes blocks all paths at least support
-- * for a transport command. Return values <= 0 indicate failures.
-+ * for a transport command. Return value 0 indicates failure.
-  */
- int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
- {
+ unmap_rq:
+-	__blk_rq_unmap_user(bio);
++	blk_rq_unmap_user(bio);
+ fail:
+ 	rq->bio = NULL;
+ 	return ret;
 -- 
 2.20.1
 
