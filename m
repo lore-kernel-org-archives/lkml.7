@@ -2,102 +2,126 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5757C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6CAC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08C7208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577486639;
-	bh=f/BaAzN/B4zZGG5c/BBQIcz7jRbc0KgYPq9T/PT+PXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=141vmoXnr6wINJyEdH9znva3J5eYDT2WVWWk9QIHCr1KIUnhEkWH2++Yq+EeFTUkX
-	 QiGjxmkzAK1vyRjx4/ai5IG/p5xxecGXT9Nzqn7QJA1lD/c55kQ6dzjykEhH77bXVh
-	 3HBEaTNkKEexYYIFThmT9eyaRbt1pAfSkH+ZbgOw=
+	by mail.kernel.org (Postfix) with ESMTP id 71722208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lrPzsUsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfL0Wn7 (ORCPT
+        id S1726607AbfL0WoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 17:43:59 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33654 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL0Wn6 (ORCPT
+        Fri, 27 Dec 2019 17:44:11 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27636 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725860AbfL0WoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 17:43:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f/BaAzN/B4zZGG5c/BBQIcz7jRbc0KgYPq9T/PT+PXc=; b=tP3qhjwCEQuwzFSnbi5zPBeeH
-        2DRHUAYmEwPxP0/Mgv70UVBEbGkWtveOYNY9EPbCBWxrxBQoSqVeB1GwhORyMzJncJ1LpIyHztptw
-        3ucqshefdgD9UKxOKgRzoBHNNIAqInLWBIPTys1c9n3RtGDr/OQSpqw4KRCMAjKCuXUWs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ikyKn-0006aD-GF; Fri, 27 Dec 2019 22:43:53 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 0B66FD01A22; Fri, 27 Dec 2019 22:43:53 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 22:43:53 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH AUTOSEL 5.4 005/187] ASoC: max98090: remove msleep in PLL
- unlocked workaround
-Message-ID: <20191227224353.GN27497@sirena.org.uk>
-References: <20191227174055.4923-1-sashal@kernel.org>
- <20191227174055.4923-5-sashal@kernel.org>
+        Fri, 27 Dec 2019 17:44:10 -0500
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBRMdrDJ020386
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 14:44:09 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=PBpHMpBlV1Aa9DOQjEjFsW6rz8psMCEge3KgMqaCmYA=;
+ b=lrPzsUsN8trOHVNY/3K3rUSVazEB/JfWYylLxGWtz8UBx1T5S2IgdDF5lWcb28SxDj02
+ dq3UXpVLJodTut6uO83M1g1lKv8guIA1NL/JgEuJ8lAg8fRsZrHX3Cbjm9NOir6UoP9u
+ 6akT/qzOWLJQ4tQnmbc6z6sa+h9pebUgrZs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2x4wu7wqpv-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 14:44:09 -0800
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 27 Dec 2019 14:44:07 -0800
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id 32C8418FE1EBC; Fri, 27 Dec 2019 14:44:06 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <joel@jms.id.au>,
+        <linux-aspeed@lists.ozlabs.org>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [net-next PATCH] net/ncsi: Fix gma flag setting after response
+Date:   Fri, 27 Dec 2019 14:43:49 -0800
+Message-ID: <20191227224349.2182366-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8MZM6zh5Bb05FW+3"
-Content-Disposition: inline
-In-Reply-To: <20191227174055.4923-5-sashal@kernel.org>
-X-Cookie: I have many CHARTS and DIAGRAMS..
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-27_07:2019-12-24,2019-12-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=831 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1912270181
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+gma_flag was set at the time of GMA command request but it should
+only be set after getting successful response. Movinng this flag
+setting in GMA response handler.
 
---8MZM6zh5Bb05FW+3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This flag is used mainly for not repeating GMA command once
+received MAC address.
 
-On Fri, Dec 27, 2019 at 12:37:53PM -0500, Sasha Levin wrote:
-> From: Tzung-Bi Shih <tzungbi@google.com>
->=20
-> [ Upstream commit acb874a7c049ec49d8fc66c893170fb42c01bdf7 ]
->=20
-> It was observed Baytrail-based chromebooks could cause continuous PLL
-> unlocked when using playback stream and capture stream simultaneously.
-> Specifically, starting a capture stream after started a playback stream.
-> As a result, the audio data could corrupt or turn completely silent.
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ net/ncsi/ncsi-manage.c | 3 ---
+ net/ncsi/ncsi-rsp.c    | 6 ++++++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-This causes regressions, don't backport it.
+diff --git a/net/ncsi/ncsi-manage.c b/net/ncsi/ncsi-manage.c
+index 70fe02697544..e20b81514029 100644
+--- a/net/ncsi/ncsi-manage.c
++++ b/net/ncsi/ncsi-manage.c
+@@ -764,9 +764,6 @@ static int ncsi_gma_handler(struct ncsi_cmd_arg *nca, unsigned int mf_id)
+ 		return -1;
+ 	}
+ 
+-	/* Set the flag for GMA command which should only be called once */
+-	nca->ndp->gma_flag = 1;
+-
+ 	/* Get Mac address from NCSI device */
+ 	return nch->handler(nca);
+ }
+diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
+index d5611f04926d..a94bb59793f0 100644
+--- a/net/ncsi/ncsi-rsp.c
++++ b/net/ncsi/ncsi-rsp.c
+@@ -627,6 +627,9 @@ static int ncsi_rsp_handler_oem_mlx_gma(struct ncsi_request *nr)
+ 	saddr.sa_family = ndev->type;
+ 	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+ 	memcpy(saddr.sa_data, &rsp->data[MLX_MAC_ADDR_OFFSET], ETH_ALEN);
++	/* Set the flag for GMA command which should only be called once */
++	ndp->gma_flag = 1;
++
+ 	ret = ops->ndo_set_mac_address(ndev, &saddr);
+ 	if (ret < 0)
+ 		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
+@@ -671,6 +674,9 @@ static int ncsi_rsp_handler_oem_bcm_gma(struct ncsi_request *nr)
+ 	if (!is_valid_ether_addr((const u8 *)saddr.sa_data))
+ 		return -ENXIO;
+ 
++	/* Set the flag for GMA command which should only be called once */
++	ndp->gma_flag = 1;
++
+ 	ret = ops->ndo_set_mac_address(ndev, &saddr);
+ 	if (ret < 0)
+ 		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
+-- 
+2.17.1
 
---8MZM6zh5Bb05FW+3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4GiSgACgkQJNaLcl1U
-h9Ba1wf+JTLm9Xy9IZQEHitz8MmDgSB05uohq6xgipaiVvBS+AE9dV5vS+WMl7MD
-NWtX6HLYJkfZ5c07WbFfK72FcgbST7ppoGkUP7++wc11ltb5oL39hMSoS/y/d6bF
-D2QSiwg/1o2NJYCkAtxWDZDUJRVaqkegyP1yeSiWm/fMO9r7NLiU8sbJxSoHxGTv
-QtqJu/iWAm8UBvYBsQEM6t3GMCctVlsVq64vOSle1TnjdPjhI+FnLTv+H0C8BztO
-qVLM0p0sQG+SbL7YgijpTBI10A2w2Z6Dkqncspf2iAuppjxV1mxsPHWk2Bo/vn+1
-VxVYBVB2Vh7/PAnWjL0n86N46IajDA==
-=mRDX
------END PGP SIGNATURE-----
-
---8MZM6zh5Bb05FW+3--
