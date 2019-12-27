@@ -2,178 +2,129 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B735DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BB0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C2220882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA05920882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iUba+NWN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DcFOCXg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfL0RXF (ORCPT
+        id S1727060AbfL0RYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:23:05 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34563 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfL0RXF (ORCPT
+        Fri, 27 Dec 2019 12:24:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36664 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726527AbfL0RYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:23:05 -0500
-Received: by mail-ed1-f65.google.com with SMTP id l8so25866051edw.1;
-        Fri, 27 Dec 2019 09:23:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0UU+ysXx+Shc0uhfL0eYU+6BwpIeAsm7S9P/UHU0eAg=;
-        b=iUba+NWNA3cOXpD5+r04DSS11HD3AciHWRXYHS97zSESLqL4y0CXv4NzzuOaX99bzt
-         ijCXSOhYV7ucxVIFQWm5EEk/PHpCHm262LIdFhKd3Rj0m8MgP13uJJMMPxutIF12TVyt
-         NeWqHxRT6MtNP4fmJIauTMBXbxKxEjttj5+94a23FLWXoIAoodB+HyGqa6S8lOrIe75v
-         i60FDLNZzZLYOIW5tvr+PcsslPbLLmKqP+wm0iZRMRi6GIy9xPTVDyI4MDcgS98s5Z5k
-         0s44aKJRenjj9Cfz02DFsvOurf9rWc/4pyIoPOH42pX6++sh94sq7PqyE2MsZ3kWiC4a
-         Fk1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0UU+ysXx+Shc0uhfL0eYU+6BwpIeAsm7S9P/UHU0eAg=;
-        b=b6ZUDnFx4I6w5s/M132PXjmdrSw61Kw9qdjNctyk2SWWPCNscHWEDNPacJ+AKG9T4B
-         DQmEtkVlT7q1m1jhJSekGolrrTi1pX1zEgxlQcY7AuuguLjoOM8JVS9xRgUuMw9GMt2a
-         VrJPRktVprQHYLC2OBDa/MozsZXNPFAZ5QjBXXuUO0+W2SV6nx0s1tOI8FkYNvYrRlso
-         NzEevGfslypRMF6cla+4Vy+SDjWc9DTyTARVIM/SzjKZmMYB4UCBdVTtaYlmRglTrMux
-         QSHQoyq2NXzP3YTwoYFrBIAhXPeyjVabsFqWMP81pYy6y5fVCK/k80kXdMtWtX7PsKGp
-         LYfg==
-X-Gm-Message-State: APjAAAX08T4qCdm8K8vbLlDFp6+zRYYdeUG7rKB6BSnxQxfOcwOW8+Ol
-        QWzl2EaBe6KdWnRyNXbQYh+q471KjvNhUooZs2ZEdDFo
-X-Google-Smtp-Source: APXvYqygztpCwMZ2tOw2bt5blxVcse049EWJn1V8ypi9uRoEfMAWYxJV7H8W3FniudLtvI6csg6ZP2n5//ATD5ueUVI=
-X-Received: by 2002:a50:bae1:: with SMTP id x88mr39175305ede.10.1577467383228;
- Fri, 27 Dec 2019 09:23:03 -0800 (PST)
+        Fri, 27 Dec 2019 12:24:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577467458;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6BagKGK8+pZSqwaMw/HELL5MlEA5rUbPb85VxpNXUsU=;
+        b=DcFOCXg7tvjzKXO/4xT6mJhMyKoVI+MphdTK4X0+Ffe7AAJJD44bK8KpByEhJnKzScEJBN
+        3f/5S+48ez2V410e1M8RUuwx0EDO0wHT2DzhfnkAv/oExGl4zZiW4Ge5uBFW4XGhCVk6jf
+        z+U8CZnKIRNbdMX87vBkA9b3O/lpDWA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-1y8vaMnpOPeT0R7BGJ8Y8A-1; Fri, 27 Dec 2019 12:24:14 -0500
+X-MC-Unique: 1y8vaMnpOPeT0R7BGJ8Y8A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81F8A107ACC5;
+        Fri, 27 Dec 2019 17:24:13 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7712360BFB;
+        Fri, 27 Dec 2019 17:24:13 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 6A6B318089C8;
+        Fri, 27 Dec 2019 17:24:13 +0000 (UTC)
+Date:   Fri, 27 Dec 2019 12:24:13 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Al Viro <aviro@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <1031316500.2657655.1577467453350.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191227150218.GA1435@localhost>
+References: <20191208195340.GX4203@ZenIV.linux.org.uk> <20191227022627.24476-1-vdronov@redhat.com> <20191227150218.GA1435@localhost>
+Subject: Re: [PATCH v2] ptp: fix the race between the release of ptp_clock
+ and cdev
 MIME-Version: 1.0
-References: <20191227094606.143637-1-jian.hu@amlogic.com> <20191227094606.143637-6-jian.hu@amlogic.com>
-In-Reply-To: <20191227094606.143637-6-jian.hu@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 27 Dec 2019 18:22:52 +0100
-Message-ID: <CAFBinCB_0+k6rGxChpB77rPUrb-0mzxt_nQWXbiztCJnJq8XnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 5/5] clk: meson: a1: add support for Amlogic A1
- Peripheral clock driver
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [194.228.13.70, 10.4.196.16, 10.5.100.50, 10.4.195.23]
+Thread-Topic: fix the race between the release of ptp_clock and cdev
+Thread-Index: irWUFwtSG/M8AhEHYaeQCeWyBgqSgA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Hi Jian,
+Hello, Richard,
 
-my comments and questions below
-please keep in mind that I don't have access to the A1 datasheets, so
-I may ask stupid questions :)
+Thank you for the review!
 
-On Fri, Dec 27, 2019 at 10:47 AM Jian Hu <jian.hu@amlogic.com> wrote:
-[...]
-> +/* PLLs clock in gates, its parent is xtal */
-yes. doesn't the code below describe exactly this (what is so special
-about it that we need an extra comment)?
+> > + * @dev:   Pointer to the initialized device. Caller must provide
+> > + *         'release' filed
+> 
+> field
 
-[...]
-> +static const struct clk_parent_data sys_clk_parents[] = {
-> +       { .fw_name = "xtal" },
-> +       { .fw_name = "fclk_div2"},
-> +       { .fw_name = "fclk_div3"},
-> +       { .fw_name = "fclk_div5"},
-the last three values are missing a space before "}"
+Indeed. *sigh* Nothing is ideal. Let's hope a maintainer could fix it if
+this is approved.
 
-[...]
-> +       .hw.init = &(struct clk_init_data){
-> +               .name = "sys_clk",
-> +               .ops = &clk_regmap_mux_ro_ops,
-> +               .parent_hws = (const struct clk_hw *[]) {
-> +                       &a1_sys_a.hw, &a1_sys_b.hw,
-> +               },
-> +               .num_parents = 2,
-> +               /*
-> +                * This clock is used by APB bus which setted in Romcode
-like in the PLL clkc patch:
-- setted -> "is set"
-- Romcode == boot ROM ?
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
-[...]
-> +static struct clk_regmap a1_rtc_32k_sel = {
-> +       .data = &(struct clk_regmap_mux_data) {
-> +               .offset = RTC_CTRL,
-> +               .mask = 0x3,
-> +               .shift = 0,
-> +               .flags = CLK_MUX_ROUND_CLOSEST,
-CLK_MUX_ROUND_CLOSEST means the common clock framework will also
-accept rates greater than 32kHz.
-is that fine for this case?
+----- Original Message -----
+> From: "Richard Cochran" <richardcochran@gmail.com>
+> To: "Vladis Dronov" <vdronov@redhat.com>
+> Cc: linux-fsdevel@vger.kernel.org, "Alexander Viro" <viro@zeniv.linux.org.uk>, "Al Viro" <aviro@redhat.com>,
+> netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+> Sent: Friday, December 27, 2019 4:02:19 PM
+> Subject: Re: [PATCH v2] ptp: fix the race between the release of ptp_clock and cdev
+> 
+> On Fri, Dec 27, 2019 at 03:26:27AM +0100, Vladis Dronov wrote:
+> > Here cdev is embedded in posix_clock which is embedded in ptp_clock.
+> > The race happens because ptp_clock's lifetime is controlled by two
+> > refcounts: kref and cdev.kobj in posix_clock. This is wrong.
+> > 
+> > Make ptp_clock's sysfs device a parent of cdev with cdev_device_add()
+> > created especially for such cases. This way the parent device with its
+> > ptp_clock is not released until all references to the cdev are released.
+> > This adds a requirement that an initialized but not exposed struct
+> > device should be provided to posix_clock_register() by a caller instead
+> > of a simple dev_t.
+> > 
+> > This approach was adopted from the commit 72139dfa2464 ("watchdog: Fix
+> > the race between the release of watchdog_core_data and cdev"). See
+> > details of the implementation in the commit 233ed09d7fda ("chardev: add
+> > helper function to register char devs with a struct device").
+> 
+> Thanks for digging into this!
+> 
+> Acked-by: Richard Cochran <richardcochran@gmail.com>
+> 
+> >  /**
+> >   * posix_clock_register() - register a new clock
+> > - * @clk:   Pointer to the clock. Caller must provide 'ops' and 'release'
+> > - * @devid: Allocated device id
+> > + * @clk:   Pointer to the clock. Caller must provide 'ops' field
+> > + * @dev:   Pointer to the initialized device. Caller must provide
+> > + *         'release' filed
+> 
+> field
+> 
+> Thanks,
+> Richard
 
-[...]
-> +/*
-> + * the second parent is sys_pll_div16, it will complete in the CPU clock,
-I was confused by this but I assume you mean the parent with index 2?
-
-> + * the forth parent is the clock measurement source, it relies on
-> + * the clock measurement register configuration.
-...and parent with index 4 here
-
-[...]
-> +static struct clk_regmap a1_pwm_a = {
-> +       .data = &(struct clk_regmap_gate_data){
-> +               .offset = PWM_CLK_AB_CTRL,
-> +               .bit_idx = 8,
-> +       },
-> +       .hw.init = &(struct clk_init_data) {
-> +               .name = "pwm_a",
-> +               .ops = &clk_regmap_gate_ops,
-> +               .parent_hws = (const struct clk_hw *[]) {
-> +                       &a1_pwm_a_div.hw
-> +               },
-> +               .num_parents = 1,
-> +               /*
-> +                * The CPU working voltage is controlled by pwm_a
-> +                * in BL2 firmware. add the CLK_IS_CRITICAL flag
-> +                * to avoid changing at runtime.
-on G12A and G12B Linux has to manage the CPU voltage regulator
-can you confirm that for the A1 SoC this is really done by BL2? (I'm
-wondering since A1 is newer than G12)
-
-> +/*
-> + * spicc clk
-> + *    div2   |\         |\       _____
-> + *  ---------| |---DIV--| |     |     |    spicc out
-> + *  ---------| |        | |-----|GATE |---------
-> + *     ..... |/         | /     |_____|
-> + *  --------------------|/
-> + *                 24M
-does that "div2" stand for fclk_div2?
-
-[...]
-> +static const struct meson_eeclkc_data a1_periphs_data = {
-> +               .regmap_clks = a1_periphs_regmaps,
-> +               .regmap_clk_num = ARRAY_SIZE(a1_periphs_regmaps),
-> +               .hw_onecell_data = &a1_periphs_hw_onecell_data,
-> +};
-same comment as for the PLL clkc: please drop this and use the
-variables directly inside _probe to get rid of the struct
-meson_eeclkc_data (so I won't be confused about "EE clocks" on A1,
-while according to your description there's no "EE" domain)
-
-
-Martin
