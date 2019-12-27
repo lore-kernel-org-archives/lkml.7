@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4055C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B02C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2482206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123CB206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469315;
-	bh=G1X73f8j5ZQK4s/al11K17DrbTTEfiY6izAM4uPLVQI=;
+	s=default; t=1577469319;
+	bh=mTIUIuPdDWwgh0qX8a/UlwVj8gBl+shZGZxFTaLncsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BPpWcey3ypuc9h1qX4sMwWEi52Tetixpsc9i4owexGsNvYpfbOqeBygK5r50i4rJx
-	 GGJdvfYZ+2SAQl319r13nypCrhRbDqHwvLj/N4yq8lSrqa67I+iCLy1pfhuiFzOVYN
-	 1zFy4nEegySV2UiJCTfKCvCbUl4qyzfLgGwYP+pU=
+	b=SV7LkbOHbBz7ErUOcP27ZEKs4m/sJX0iq5lNlD8OKwn67r9H4DeMggYuZAVskjRSv
+	 Y6jnBRfy2248bd58NXzGzCkt0qaYkydRh9so0AolAQNDk6UeKnO0heQj7Le5cpUJ7m
+	 14ROtX0trW+ufgib123qiq77YnwPg1Vyt4YNbzd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfL0RmX (ORCPT
+        id S1728037AbfL0RzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:42:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:55:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbfL0RmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:18 -0500
+        id S1727823AbfL0RmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEBC821744;
-        Fri, 27 Dec 2019 17:42:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463FD21744;
+        Fri, 27 Dec 2019 17:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468537;
-        bh=G1X73f8j5ZQK4s/al11K17DrbTTEfiY6izAM4uPLVQI=;
+        s=default; t=1577468539;
+        bh=mTIUIuPdDWwgh0qX8a/UlwVj8gBl+shZGZxFTaLncsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRQiyUp9Xa9kReAmZHpjL5wmORu+xW4yYO49p0i4XLx+K+P5g7O9/PYqMWYAWhorK
-         vUJ0tzZPsyti2x3fy8EZ4M3JBq/9Wqg1SOtrPnkB8bH9lq5o6ea1UaUhzh2JH4OLdg
-         9Gsaw+AXkROb4m3WNQ8pNF7sePb/ayHn7TS7LxZU=
+        b=oir1Ph/9nhlQco+WLWxjJXBDXexU1wim2wuFoKY/myz9aRahoLHBDB7CptodrR2oj
+         EEcfS9xT6vIrNv/blsP4sJVhtOCLUoKA+IJ5CDlSkhd32gnqmy1xyynzgXsiWEqc2z
+         VnxKuXTrLLBG3JHe62GBM3C6lQ/hc4zCdjvPV3SI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
+Cc:     Netanel Belgazal <netanel@amazon.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 067/187] bnxt_en: Fix MSIX request logic for RDMA driver.
-Date:   Fri, 27 Dec 2019 12:38:55 -0500
-Message-Id: <20191227174055.4923-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 069/187] net: ena: fix napi handler misbehavior when the napi budget is zero
+Date:   Fri, 27 Dec 2019 12:38:57 -0500
+Message-Id: <20191227174055.4923-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -59,61 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Netanel Belgazal <netanel@amazon.com>
 
-[ Upstream commit 0c722ec0a289c7f6b53f89bad1cfb7c4db3f7a62 ]
+[ Upstream commit 24dee0c7478d1a1e00abdf5625b7f921467325dc ]
 
-The logic needs to check both bp->total_irqs and the reserved IRQs in
-hw_resc->resv_irqs if applicable and see if both are enough to cover
-the L2 and RDMA requested vectors.  The current code is only checking
-bp->total_irqs and can fail in some code paths, such as the TX timeout
-code path with the RDMA driver requesting vectors after recovery.  In
-this code path, we have not reserved enough MSIX resources for the
-RDMA driver yet.
+In netpoll the napi handler could be called with budget equal to zero.
+Current ENA napi handler doesn't take that into consideration.
 
-Fixes: 75720e6323a1 ("bnxt_en: Keep track of reserved IRQs.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+The napi handler handles Rx packets in a do-while loop.
+Currently, the budget check happens only after decrementing the
+budget, therefore the napi handler, in rare cases, could run over
+MAX_INT packets.
+
+In addition to that, this moves all budget related variables to int
+calculation and stop mixing u32 to avoid ambiguity
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-index b2c160947fc8..30816ec4fa91 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
-@@ -113,8 +113,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
- {
- 	struct net_device *dev = edev->net;
- 	struct bnxt *bp = netdev_priv(dev);
-+	struct bnxt_hw_resc *hw_resc;
- 	int max_idx, max_cp_rings;
- 	int avail_msix, idx;
-+	int total_vecs;
- 	int rc = 0;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index c487d2a7d6dd..b4a145220aba 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1238,8 +1238,8 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
+ 	struct ena_napi *ena_napi = container_of(napi, struct ena_napi, napi);
+ 	struct ena_ring *tx_ring, *rx_ring;
  
- 	ASSERT_RTNL();
-@@ -142,7 +144,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
- 	}
- 	edev->ulp_tbl[ulp_id].msix_base = idx;
- 	edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
--	if (bp->total_irqs < (idx + avail_msix)) {
-+	hw_resc = &bp->hw_resc;
-+	total_vecs = idx + avail_msix;
-+	if (bp->total_irqs < total_vecs ||
-+	    (BNXT_NEW_RM(bp) && hw_resc->resv_irqs < total_vecs)) {
- 		if (netif_running(dev)) {
- 			bnxt_close_nic(bp, true, false);
- 			rc = bnxt_open_nic(bp, true, false);
-@@ -156,7 +161,6 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
+-	u32 tx_work_done;
+-	u32 rx_work_done;
++	int tx_work_done;
++	int rx_work_done = 0;
+ 	int tx_budget;
+ 	int napi_comp_call = 0;
+ 	int ret;
+@@ -1256,7 +1256,11 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
  	}
  
- 	if (BNXT_NEW_RM(bp)) {
--		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
- 		int resv_msix;
+ 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
+-	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
++	/* On netpoll the budget is zero and the handler should only clean the
++	 * tx completions.
++	 */
++	if (likely(budget))
++		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
  
- 		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
+ 	/* If the device is about to reset or down, avoid unmask
+ 	 * the interrupt and return 0 so NAPI won't reschedule
 -- 
 2.20.1
 
