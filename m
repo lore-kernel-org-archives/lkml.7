@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14AEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54759C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4FE22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C92206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468762;
-	bh=bwX9MQGqz4h2Vatpd3JQoK5wQ8WUS1FdeURgY28UWGw=;
+	s=default; t=1577468766;
+	bh=scddgpvllI85i/98LWMYBVIE/Q5evmoMzZcNLa0aPZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=suPezijfnZStQ0m1ux9ZtakA55uUhfE0JIVQuUbFoYKScoMKiVx57Lw/JMAfjKRfj
-	 5lHAVP7Pps5GdJ50IxUzRuhfjZxW0AmwEt1NVSWkhHZGi4L1OVw9KkcH0GwbDKQEB9
-	 Zme6Rd7tqsTASe1sicOID06rbI+jM8OloU3q5gMY=
+	b=F5kfsiCYpxIC11jdzxo4HJ/opjbAT94nw3rnvz3j/Cdft0O8nq4zN0JSXaNKhFtie
+	 DCNVl3tn1urarVesHJlgZmWH1FE06H6qxhigDTFzlbRZ2PJ2XnV7PVrtTF5RpZu+3P
+	 t94L+CyRtPy7Bxtoj+EAmxqcbka1uyfIesid4uqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfL0RpT (ORCPT
+        id S1728726AbfL0RpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfL0RpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:45:13 -0500
+        id S1727969AbfL0RpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD23A24654;
-        Fri, 27 Dec 2019 17:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09745222C4;
+        Fri, 27 Dec 2019 17:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468712;
-        bh=bwX9MQGqz4h2Vatpd3JQoK5wQ8WUS1FdeURgY28UWGw=;
+        s=default; t=1577468708;
+        bh=scddgpvllI85i/98LWMYBVIE/Q5evmoMzZcNLa0aPZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSr9nxVBHtnJOzceesMdsUS/TQ0TiHM4uymMPDyYT6U8YMUsp7WIfz10+aTKfxTD8
-         3QoLQEvcC2a8ZAW4Qy8vjuEkS4Lf1c7Del9NSfu5vnWL5g6Mr1JooOVqWRBr9KC131
-         q0gtkJzVeRNFuHeM6jLn1Kwv9GnaIRqcSs+s+mTA=
+        b=KvVZoVB0rpijsBShgzq/OjUM/t815qrTeC+GXORZnhS6i/bY6ts690UsD6+Y7fK5x
+         JWIyCDE42kfu8UWKCqALXIjvSmvogzPPgi9LHhs0XONNmBRImCBwoXUkDfTXVpLoIb
+         3HG+M2cdPbUSZcCXD1Vn4yutp2ZsxafD9Ft333gg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 67/84] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Fri, 27 Dec 2019 12:43:35 -0500
-Message-Id: <20191227174352.6264-67-sashal@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 64/84] perf/x86/intel/bts: Fix the use of page_private()
+Date:   Fri, 27 Dec 2019 12:43:32 -0500
+Message-Id: <20191227174352.6264-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -59,79 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+Commit
 
-There are (at least) three bugs in the error paths:
+  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
 
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
+brought in a warning with the BTS buffer initialization
+that is easily tripped with (assuming KPTI is disabled):
 
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
+instantly throwing:
 
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
+> Modules linked in:
+> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
+> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
+> Call Trace:
+>  rb_alloc_aux+0x339/0x550
+>  perf_mmap+0x607/0xc70
+>  mmap_region+0x76b/0xbd0
+...
 
-The bugs are somewhat inter-twined, so fix them all at once:
+It appears to assume (for lost raisins) that PagePrivate() is set,
+while later it actually tests for PagePrivate() before using
+page_private().
 
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
+Make it consistent and always check PagePrivate() before using
+page_private().
 
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
-index 783ee6a32b5d..1b5e098b2367 100644
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2757,6 +2757,9 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 	int err;
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 7139f6bf27ad..510f9461407e 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -71,9 +71,17 @@ struct bts_buffer {
  
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
+ static struct pmu bts_pmu;
+ 
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
 +
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2767,11 +2770,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2793,6 +2792,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 				return -ENOMEM;
- 			}
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
+ }
  
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+ static void *
+@@ -91,9 +99,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -117,7 +123,7 @@ bts_buffer_setup_aux(struct perf_event *event, void **pages,
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
 -- 
 2.20.1
 
