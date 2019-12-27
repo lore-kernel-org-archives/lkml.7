@@ -2,174 +2,120 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8165C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D273BC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8987B20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A3821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DwiKlg3a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhCmF3lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfL0Qxy (ORCPT
+        id S1727029AbfL0Qzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:53:54 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43682 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Qxy (ORCPT
+        Fri, 27 Dec 2019 11:55:47 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39083 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Qzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 11:53:54 -0500
-Received: by mail-ed1-f68.google.com with SMTP id dc19so25737753edb.10;
-        Fri, 27 Dec 2019 08:53:52 -0800 (PST)
+        Fri, 27 Dec 2019 11:55:46 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so14969297pfs.6;
+        Fri, 27 Dec 2019 08:55:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
-        b=DwiKlg3avHIENCyNavhob2AMpVyTS9QSLl42Sq+4wmPxA2eGoEaW0dNQJSDgR9qVI/
-         gVpTH5X0CHsaaBqUQSIqqYyJvt9ANz4oUcUiF1HgEuaNFJ4f5fSTRM+ZdOaxipbQ+37l
-         e52TCpfVMWTs/4gfu4RQu63sv+6g+UJdbWRp+TidXrL8tOQ5ctn3zFDhXQl7NGKZtaEy
-         ejJ3rs1FslamWH8noA5P8dlPPpBQmf7bK+8qfHBl8yjGCGtAJYq7knGY0d37A9JguVRB
-         6wK1qjeq7+pJfp7csnP5t+//L8L+/RTNsK49f9NZAKBd2xrob+rD8KIBexvwXOkcSiRD
-         3zRA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4nsIk431IJE2Vk4G5K7I24soUyvvlcDR7eoVO3tZXDI=;
+        b=WhCmF3lfXiFeaDgdh8Zc4no994MMyy7RRNjNO3kp4sQAtoEC8jvl4bViEffarZPS8Q
+         OyGs55rjGjxyd98MBtFtV3PT+fNXmJS1V6Decc/gOiUrMGsGss+QjIRRV239f0cilRg5
+         tj/DC2EocfQvI9tfDYIzou/z6PgqvIBnysYOA1FQmgiB+eT6uWITC0O9qtgXynTQKyhy
+         tSinIq4wBl4o0ntM7G2w7AFfH98LNAd67r5jUx29l8zoFUSrgrK+32dhYpVg9YXAHGW0
+         /4a0TrPFLvwK4TE7mAJmdwglD3EpKpZ/qaV836dbxYAX1JlbvMQtwo4gTCFC2rJL1+Rc
+         PS5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
-        b=ndYCI3/fQPYhVgkEdZmaNNCFUD9dL99pDMAcWgS414N+sbh3tAnxekWXfEH9qd2ytd
-         yMG3TzJaPZS4xzAYrOsVkao0XxBno7cl8KXdXkY8GrAuf9x+jvsaMxfr39xI0n4Pv9Zc
-         FJKWEEv6s8edVEAgNRyFR0FBiQwHRZCdfpKKJO4q3rQzWX2clBIT5ghtauiwtp8JVMLx
-         V8MeLNAqmt/VdIoovQFwkO+SkmidUPWcoPntpTvZvQ3hlYsMfvbkU4yyLTvd/n6Jf46q
-         LakZLmQXAEqCHUeDwmzGiJFVj7oYPltdlQmk5Bgk8DEnTlZ7Q19fGdTit4Xe3dajNLCu
-         xOvg==
-X-Gm-Message-State: APjAAAW2fW7NZHqsCBZXwHbwZ+sZI/x9mlvX4cYZmpfBUGiMdoL+n/Lm
-        tPzay9vTgdW3gAzy1DYbiSGgFHM/pY4qoGScZJ4=
-X-Google-Smtp-Source: APXvYqygkSSfnw8HoIDr9icAV5YXJN/IAat2JIa4d06E0rVnVK5uFaStiuAG+Sxv/pJ2HevsAWvvqJm4znilTktaA3I=
-X-Received: by 2002:aa7:c80b:: with SMTP id a11mr57661239edt.240.1577465632157;
- Fri, 27 Dec 2019 08:53:52 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4nsIk431IJE2Vk4G5K7I24soUyvvlcDR7eoVO3tZXDI=;
+        b=ZMVN+j6RZcdlIOQ9N9iK5nrvQj9Ig5UHOFJmqUxyjXILLW3rAKfMfEigftq6jnQf9K
+         pFG5xqAfUm5zGS0/2jW2YjAYNr09kjekF7xHwxaX0xVm0mLVMdUvlvCpfXX29YR7DGk2
+         5wJSQzgw4SfP+fxfu/dTFLQmJ4Dm3f4ZYtO7Dj1GBU1h2VSV0PWu5wOWUW3io3ZxMAs+
+         pD7OEPfHkVbHVPWupOhxUwSWlDyg4VfjwuhlGP4OzOI85Ey1AQSadJb7gTLTQqgO+laR
+         iKLsaXTKITYjGPdqOjvRoxYO7J3LTyhaDGOlCct931dprbcWa/+dZQChQEZETdF5f/Fj
+         iH+g==
+X-Gm-Message-State: APjAAAXF17Iw8rBisfugdELBoa6rU/hahu4cbAVhXB6BL53TEONDiJ2W
+        bRAgPi5vFqZUZier3i6t9D0=
+X-Google-Smtp-Source: APXvYqyOPBCF3FRS8/uziPFI11Vq570WtF+ynBSOXyBPpYleRxUNXfDxAsungHAaqmCnvy0UyewLqA==
+X-Received: by 2002:aa7:86d4:: with SMTP id h20mr51240296pfo.232.1577465745925;
+        Fri, 27 Dec 2019 08:55:45 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i23sm20166129pfo.11.2019.12.27.08.55.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 27 Dec 2019 08:55:45 -0800 (PST)
+Date:   Fri, 27 Dec 2019 08:55:43 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Peter Chen <peter.chen@freescale.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] usb: chipidea: host: Disable port power only if
+ previously enabled
+Message-ID: <20191227165543.GA15950@roeck-us.net>
+References: <20191226155754.25451-1-linux@roeck-us.net>
+ <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <20191227094606.143637-1-jian.hu@amlogic.com> <20191227094606.143637-3-jian.hu@amlogic.com>
-In-Reply-To: <20191227094606.143637-3-jian.hu@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 27 Dec 2019 17:53:41 +0100
-Message-ID: <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jian,
+On Thu, Dec 26, 2019 at 02:46:15PM -0500, Alan Stern wrote:
+> On Thu, 26 Dec 2019, Guenter Roeck wrote:
+> 
+> > On shutdown, ehci_power_off() is called unconditionally to power off
+> > each port, even if it was never called to power on the port.
+> > For chipidea, this results in a call to ehci_ci_portpower() with a request
+> > to power off ports even if the port was never powered on.
+> > This results in the following warning from the regulator code.
+> 
+> That's weird -- we should always power-on every port during hub 
+> initialization.
+> 
+That is what I would have assumed, but test code shows that it doesn't
+happen.
 
-On Fri, Dec 27, 2019 at 10:46 AM Jian Hu <jian.hu@amlogic.com> wrote:
-[...]
-> @@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
->  {
->         struct clk_regmap *clk = to_clk_regmap(hw);
->         struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
-> +       int ret = 0;
->
-> -       if (meson_parm_read(clk->map, &pll->rst) ||
-> -           !meson_parm_read(clk->map, &pll->en) ||
-> +       if (MESON_PARM_APPLICABLE(&pll->rst))
-> +               ret = meson_parm_read(clk->map, &pll->rst);
-> +
-> +       if (ret || !meson_parm_read(clk->map, &pll->en) ||
->             !meson_parm_read(clk->map, &pll->l))
->                 return 0;
-I had to read this part twice to understand what it's doing because I
-misunderstood what "ret" is used for (I thought that some "return ret"
-is missing)
-my proposal to make it easier to read:
-...
-if (MESON_PARM_APPLICABLE(&pll->rst) &&
-    meson_parm_read(clk->map, &pll->rst))
-  return 0;
+> It looks like there's a bug in hub.c:hub_activate(): The line under
+> HUB_INIT which calls hub_power_on() should call
+> usb_hub_set_port_power() instead.  In fact, the comment near the start
 
-if (!meson_parm_read(clk->map, &pll->en) ||
-    !meson_parm_read(clk->map, &pll->l))
-                 return 0;
-...
+usb_hub_set_port_power() operates on a port of the hub. hub_activate()
+operates on the hub itself, or at least I think it does. I don't know
+how to convert the calls. Also, there are more calls to hub_power_on()
+in the same function.  Can you provide more details on what to do,
+or even better a patch for me to test ?
 
-please let me know what you think about this
+Thanks,
+Guenter
 
-> @@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->         /* do nothing if the PLL is already enabled */
->         if (clk_hw_is_enabled(hw))
->                 return 0;
-> +       /*
-> +        * Compared with the previous SoCs, self-adaption module current
-> +        * is newly added for A1, keep the new power-on sequence to enable the
-> +        * PLL.
-> +        */
-> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-> +               /* Enable the pll */
-> +               meson_parm_write(clk->map, &pll->en, 1);
-> +               udelay(10);
-> +               /* Enable the pll self-adaption module current */
-> +               meson_parm_write(clk->map, &pll->current_en, 1);
-> +               udelay(40);
-> +               /* Enable lock detect module */
-> +               meson_parm_write(clk->map, &pll->l_detect, 1);
-> +               meson_parm_write(clk->map, &pll->l_detect, 0);
-> +               goto out;
-> +       }
-in all other functions you are skipping the pll->rst register by
-checking for MESON_PARM_APPLICABLE(&pll->rst)
-I like that because it's a pattern which is easy to follow
-
-do you think we can make this part consistent with that?
-I'm thinking of something like this (not compile-tested and I dropped
-all comments, just so you get the idea):
-...
-if (MESON_PARM_APPLICABLE(&pll->rst)
-  meson_parm_write(clk->map, &pll->rst, 1);
-
-meson_parm_write(clk->map, &pll->en, 1);
-
-if (MESON_PARM_APPLICABLE(&pll->rst))
-  meson_parm_write(clk->map, &pll->rst, 0);
-
-if (MESON_PARM_APPLICABLE(&pll->current_en))
-  meson_parm_write(clk->map, &pll->current_en, 1);
-
-if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
-  meson_parm_write(clk->map, &pll->l_detect, 1);
-  meson_parm_write(clk->map, &pll->l_detect, 0);
-}
-
-if (meson_clk_pll_wait_lock(hw))
-...
-
-I see two (and a half) benefits here:
-- if there's a PLL with neither the pll->current_en nor the pll->rst
-registers then you get support for this implementation for free
-- the if (MESON_PARM_APPLICABLE(...)) pattern is already used in the
-driver, but only for one register (in your example when
-MESON_PARM_APPLICABLE(&pll->current_en) exists you also modify the
-pll->l_detect register, which I did not expect)
-- only counts half: no use of "goto", which in my opinion makes it
-very easy to read (just read from top to bottom, checking each "if")
-
-
-Martin
+> of hub_power_on() is wrong.  It says "Enable power on each port", but
+> in fact it only enables power for ports that had been powered-on
+> previously (i.e., the port's bit in hub->power_bits was set).  
+> Apparently this got messed up in commit ad493e5e5805 ("usb: add usb
+> port auto power off mechanism").
+> 
+> Now, the chipidea driver may still need to be updated, because 
+> ehci_turn_off_all_ports() will still be called during shutdown and it 
+> will try to power-down all ports, even those which are already powered 
+> down (for example, because the port is suspended).
+> 
+> Alan Stern
+> 
