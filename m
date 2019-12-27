@@ -2,312 +2,145 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C85C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A1CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382BC208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB35620838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W2/ZMv2Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHI9vvVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfL0UZF (ORCPT
+        id S1727071AbfL0U1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 15:25:05 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44654 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfL0UZE (ORCPT
+        Fri, 27 Dec 2019 15:27:01 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37624 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfL0U1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 15:25:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBRK4GIh073235;
-        Fri, 27 Dec 2019 20:25:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=dqZrG8E4cu2nvkEYIOnU0WpLE4hqWx9a3Pd5wmhmErs=;
- b=W2/ZMv2ZrzeYo3Bcus+L6AAtD0KTpHO+vjXLWeacrwnSVE9P/TnV+VwIE29eDLRE3/Rx
- ppFvrJgrxpGTp5po1Zj8UnTI6fm/BdBBYEEQxNeRwD+1YyCBAvUulkV2YT9E7kITYaud
- dQkwXjWabqtgjaRLtnRSn7Da6MmXbRXbGkJimUSEBdT7FzNmeHYk4pA49XuMSKaVYM4i
- xfZXmReCACKFsCFcweOqkPJxmPGvPTB1Ns3KwHHTaKADNEdkSYtdWDq2JhLCzE8O9Apg
- OWAmKaXgjadbEK888suDvG4CasghatIacjoB3Hr9M/dlOlnOtS0ceztYYX1QJN9B/dJW LA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2x1attxuf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Dec 2019 20:25:00 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBRK3P40181882;
-        Fri, 27 Dec 2019 20:25:00 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2x4t40vnc3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Dec 2019 20:24:59 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBRKOss8018407;
-        Fri, 27 Dec 2019 20:24:57 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Dec 2019 12:24:53 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v2] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <015901d5bce8$d6957010$83c05030$@gmail.com>
-Date:   Fri, 27 Dec 2019 15:24:52 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7BCC7682-CA85-4B97-BAD4-A6A1D1DD43D9@oracle.com>
-References: <001901d5ba67$8954ede0$9bfec9a0$@gmail.com>
- <594E0E04-1253-4C0D-8A58-EB4AF883B7EC@oracle.com>
- <015901d5bce8$d6957010$83c05030$@gmail.com>
-To:     Robert Milkowski <rmilkowski@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9483 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912270167
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9483 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912270167
+        Fri, 27 Dec 2019 15:27:01 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so15226350pfn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 12:27:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GkUIVOSRB0ui7Tj6XXdW1tapEpmmQozsPyWQm0I5SNk=;
+        b=LHI9vvVJi2FkSw3sqZyRb6OmkyjLywchf1TQDsZ3J4vUuI0a4l1RCbrksgR73xsP3I
+         u+4sLkRTGpqMUXuyr1xxYf+8QwrizUvbrbX0yJjHVjYV8R6yW2fCkAaGPmCDi87C8nUi
+         vm5xWe9ELj1DsGUYw9AwpnXvBICfdEVR1goh70myIVVhAjNur3y4qMsJ13rY6e9vj+LP
+         uajymLh5LrI+QNZjbSbU6MzyEaJCXHf4VURcU5KvjNLA9oVL3Dfszxfl+lEZ84fv88zL
+         +W+jRKf7a9QJUFtG1lqmE/FsPFaai0Q4yPXnVXayONgcscKaYoKRp06GewcGTZxFpVzu
+         Th6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GkUIVOSRB0ui7Tj6XXdW1tapEpmmQozsPyWQm0I5SNk=;
+        b=NYdl2RHk/IX9KTvG0FQWydpfyictfUNY+4d4eJDLkL8x3HteBKDGmL8wjysyT1o8xT
+         3/tZvojaii3txMjN0UMQ8lTkT5ODAPeWuEN3Dp/HtMT/rFeLNMkrNwfAKKEi3kvWB6PF
+         WnLYSd9zeuOByZTfi5j1EPBvtXb/2zL/IGUdPU1NbgeVgYobyDWShuaIwwNA9k1v+21l
+         nAbLcQdsJK1+Zn3PlrYGPdSdXduqOY4+ez/3tFAtgyRm7nQhzFY4WkjZ8wJDf6/A++/N
+         iqk8AebXUWJc719eeO7Z2PJycgC4dlci+4fnpM67oz5GmaDu9TgWJ66SA9FCeyuRp+VS
+         JMkg==
+X-Gm-Message-State: APjAAAUmEKSAdC105BHiXLkIm2zXaZY6lyXJHUYAZkGsT84Ju1CUjL5C
+        H/lMWb6aaoKaQziF1M8UZnROvA==
+X-Google-Smtp-Source: APXvYqzMFuyFFX1cCQquvaHxVqERuVRKvWiCGeNTeYX+5Z9dpHxR068mYwZLO5ITa/OtBjQVFIouOQ==
+X-Received: by 2002:a63:f901:: with SMTP id h1mr56630767pgi.445.1577478420181;
+        Fri, 27 Dec 2019 12:27:00 -0800 (PST)
+Received: from smuckle.san.corp.google.com ([2620:15c:2d:3:8fbe:ee3b:c81d:238d])
+        by smtp.gmail.com with ESMTPSA id t63sm42038315pfb.70.2019.12.27.12.26.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2019 12:26:59 -0800 (PST)
+Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        kernel-team@android.com
+References: <20191106194625.116692-1-smuckle@google.com>
+ <20191106231923.GK8309@piout.net>
+ <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
+ <20191115133627.GT3572@piout.net>
+From:   Steve Muckle <smuckle@google.com>
+Message-ID: <e43fd369-f0ad-f8bb-be8a-1a3ca038af44@google.com>
+Date:   Fri, 27 Dec 2019 12:26:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191115133627.GT3572@piout.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+(accidentally sent as HTML, resending in text)
 
+On 11/15/19 5:36 AM, Alexandre Belloni wrote:
+> On 06/11/2019 15:37:49-0800, Steve Muckle wrote:
+>> On 11/6/19 3:19 PM, Alexandre Belloni wrote:
+>>> On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
+>>>> Due to distribution constraints it may not be possible to statically
+>>>> compile the required RTC driver into the kernel.
+>>>>
+>>>> Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
+>>>> or not) by checking at the end of RTC device registration whether the
+>>>> time should be synced.
+>>>>
+>>>
+>>> This does not really help distributions because most of them will still
+>>> have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
+>>
+>> Just for my own edification, why is that? Is rtc0 normally useless on PC for
+>> some reason?
+>>
+> 
+> On PC, rtc0 is probably fine which is not the case for other
+> architectures where rtc0 is the SoC RTC and is often not battery backed.
+> 
+>> On the platforms I'm working with I believe it can be assured that rtc0 will
+>> be the correct rtc. That doesn't help typical distributions though.
+>>
+>> What about a kernel parameter to optionally override the rtc hctosys device
+>> at runtime?
+>>
+> 
+> What about keeping that in userspace instead which is way easier than
+> messing with kernel parameters?
 
-> On Dec 27, 2019, at 2:07 PM, Robert Milkowski <rmilkowski@gmail.com> =
-wrote:
->=20
-> Hi Chuck,
->=20
->>> On Dec 24, 2019, at 9:36 AM, Robert Milkowski <rmilkowski@gmail.com> =
-wrote:
->>>=20
->>> From: Robert Milkowski <rmilkowski@gmail.com>
->>>=20
->>> Currently, each time nfs4_do_fsinfo() is called it will do an =
-implicit
->>> NFS4 lease renewal, which is not compliant with the NFS4 =
-specification.
->>> This can result in a lease being expired by an NFS server.
->>=20
->> In addition to stating the bug symptoms, IMO you need
->>=20
->> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
->>=20
->=20
-> Right, makes sense. I will include it in the next patch revision.
-> Thans.
->=20
->=20
->> And this description needs to explain how 83ca7f5ab31f broke things.
->=20
-> Is adding the below to the previous description enough?
->=20
-> The 83ca7f5ab31f introduced implicit renew operation when calling =
-nfs4_do_fsinfo(),
-> which is not done by NFS servers which under some circumstances =
-results in nfsv4.0 lease
-> to expire on a server side which then will return NFS4ERR_EXPIRED or =
-NFS4ERR_STALE_CLIENTID.
-> This can be easily reproduced by frequently unmounting a sub-mount =
-over nfsv4.0,
-> which after a grace period will result in an error returned by a =
-server when accessing a file.
-> This can also happen after a sub-mount is automatically unmounted due =
-to inactivity
-> (after nfs_mountpoint_expiry_timeout), then the sub-mount is stat'ed =
-causing it to be mounted again,
-> and a file is accessed shortly after (this all depends on specific =
-grace time, last RENEW, etc.).
-> This specific case was observed on a production systems.
+This should ideally happen before file systems are mounted so I don't 
+see many alternatives for communicating which RTC should be used. 
+Android uses the kernel command line for userspace parameters as well 
+and that's an option but that defeats part of the value of doing it in 
+userspace IMO. There's also device tree but I'm not sure this belongs there.
 
-Wrap at 72, but OK. Some prefer short descriptions, but I like to
-have enough bread crumbs to find my way back to the purpose of a
-commit when I've forgotten it 6 months from now.
+Hctosys is also saving and restoring the system time on suspend/resume. 
+It seems more efficient to me to do this (which happens very frequently 
+on an Android device) in the kernel as opposed to in userspace.
 
-A timing-related failure is obnoxious, so this explanation is going
-to also help sustaining engineers locate this fix quickly if needed.
-
-
->> There are two usual practices to introduce behavior that diverges
->> amongst NFSv4 minor versions. Neither practice is followed here.
->>=20
->> - The difference is added to the XDR encoder and decoder. You could
->> do that by adding a RENEW to the COMPOUND in the NFSv4.0 case.
->>=20
->> - The function is converted to a virtual function which is added to
->> struct nfs4_minor_version_ops.
->>=20
->=20
-> Thanks for the explanation, I'm learning here and really do appreciate =
-any help.
-> So given the above advise I ended up with the below:
->=20
->=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 76d3716..6d075f0 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -4998,12 +4998,16 @@ static int nfs4_proc_statfs(struct nfs_server =
-*server, struct nfs_fh *fhandle, s
-> static int _nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh =
-*fhandle,
->                struct nfs_fsinfo *fsinfo)
-> {
-> +       struct nfs_client *clp =3D server->nfs_client;
->        struct nfs4_fsinfo_arg args =3D {
->                .fh =3D fhandle,
->                .bitmask =3D server->attr_bitmask,
-> +               .clientid =3D clp->cl_clientid,
-> +               .renew =3D nfs4_has_session(clp) ? 0 : 1,         /* =
-append RENEW */
->        };
->        struct nfs4_fsinfo_res res =3D {
->                .fsinfo =3D fsinfo,
-> +               .renew =3D nfs4_has_session(clp) ? 0 : 1,
-
-Urgh. I wish there was a better way to do this, but it will do for now.
-
-
->        };
->        struct rpc_message msg =3D {
->                .rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_FSINFO],
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index 936c577..0ce9a10 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -555,11 +555,13 @@ static int decode_layoutget(struct xdr_stream =
-*xdr, struct rpc_rqst *req,
-> #define NFS4_enc_fsinfo_sz     (compound_encode_hdr_maxsz + \
->                                encode_sequence_maxsz + \
->                                encode_putfh_maxsz + \
-> -                               encode_fsinfo_maxsz)
-> +                               encode_fsinfo_maxsz + \
-> +                               encode_renew_maxsz)
-> #define NFS4_dec_fsinfo_sz     (compound_decode_hdr_maxsz + \
->                                decode_sequence_maxsz + \
->                                decode_putfh_maxsz + \
-> -                               decode_fsinfo_maxsz)
-> +                               decode_fsinfo_maxsz + \
-> +                               decode_renew_maxsz)
-> #define NFS4_enc_renew_sz      (compound_encode_hdr_maxsz + \
->                                encode_renew_maxsz)
-> #define NFS4_dec_renew_sz      (compound_decode_hdr_maxsz + \
-> @@ -2646,6 +2648,8 @@ static void nfs4_xdr_enc_fsinfo(struct rpc_rqst =
-*req, struct xdr_stream *xdr,
->        encode_sequence(xdr, &args->seq_args, &hdr);
->        encode_putfh(xdr, args->fh, &hdr);
->        encode_fsinfo(xdr, args->bitmask, &hdr);
-> +       if (args->renew)
-> +               encode_renew(xdr, args->clientid, &hdr);
->        encode_nops(&hdr);
-> }
->=20
-> @@ -6778,6 +6782,11 @@ static int nfs4_xdr_dec_fsinfo(struct rpc_rqst =
-*req, struct xdr_stream *xdr,
->                status =3D decode_putfh(xdr);
->        if (!status)
->                status =3D decode_fsinfo(xdr, res->fsinfo);
-> +       if (status)
-> +               goto out;
-> +       if (res->renew)
-> +               status =3D decode_renew(xdr);
-> +out:
->        return status;
-> }
->=20
->=20
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 72d5695..49bd673 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1025,11 +1025,14 @@ struct nfs4_fsinfo_arg {
->        struct nfs4_sequence_args       seq_args;
->        const struct nfs_fh *           fh;
->        const u32 *                     bitmask;
-> +       clientid4                       clientid;
-> +       unsigned char                   renew:1;
-> };
->=20
-> struct nfs4_fsinfo_res {
->        struct nfs4_sequence_res        seq_res;
->        struct nfs_fsinfo              *fsinfo;
-> +       unsigned char                   renew:1;
-> };
->=20
-> struct nfs4_getattr_arg {
->=20
->=20
->=20
-> Let me know if that's what you had it mind and if no further comments =
-I will finish testing and submit new patch.
-
-Interesting to test what happens if:
-
-a) the server fails the COMPOUND before getting to the RENEW?
-
-b) the RENEW itself fails; does the client correctly perform state
-recovery in that case?
-
-
->> Prior to 83ca7f5ab31f, IIRC this function was part of a code path
->> that did actually renew the lease. It seems to me that the proper
->> fix here is to make NFSv4.0 renew the lease, not the other way
->> around. Is there a reason not to add a RENEW to the NFSv4.0 version
->> of the fsinfo COMPOUND?
->>=20
->=20
-> Strictly speaking I don't think renew is required here,
-
-That's correct, a RENEW is not required by the protocol. Our client
-implementation assumes that the lease is renewed, however, and
-appending a RENEW is a valid way to ensure that happens with NFSv4.0.
-
-
-> but adding it as part of the compound
-> operation is harmless and more in-line with how it is currently done =
-for v4.1.
->=20
-> Also, before the 83ca7f5ab31f, implicit lease renewal was only done in =
-nfs4_proc_setclientid_confirm(),
-> but the function is not called when mounting a sub-mount, and it was =
-not done in nfs4_do_fsinfo() either.
-> The implicit renewal in nfs4_do_fsinfo() when mounting each submount =
-was introduced by the commit, before it only happened on root
-> mount.
-> So this particular issue I'm trying to fix here did not occur before =
-the change, I think.
-
-Does that alter your explanation in the patch description? Does 83ca7f5
-make things worse?
-
-
-> (btw: according to RFC7530 section 9.5. the implicit renewal in =
-setclientid_confirm() wasn't correct either but I think it was
-> harmless).
-
-Indeed, the last paragraph of 16.34.5 clearly states:
-
-> SETCLIENTID_CONFIRM does not establish or renew a lease.
-
-
-
---
-Chuck Lever
-
-
-
+If I set the initial system time from the rtc in userspace but continue 
+to rely on the hctosys suspend/resume code, as it stands there will be a 
+window after the rtc driver is loaded but before the system time is set 
+where if suspend is entered, the correct time in the rtc will be lost.
+>>> Can't you move away from HCTOSYS and do the correct thing in userspace
+>>> instead of the crap hctosys is doing?
+>>
+>> Yes, I just figured it's a small change, and if hctosys can be made to work
+>> might as well use that.
+> 
+> The fact is that hctosys is more related to time keeping than it is to
+> the RTC subsytem. It also does a very poor job setting the system time
+> because adding 0.5s is not the smartest thing to do. The rtc granularity
+> is indeed 1 second but is can be very precisely set.
+No argument with that, but millions of devices successfully rely on it 
+today. AFAICT this simple patch doesn't make anything worse. Together 
+with a change to support a kernel parameter for runtime rtc selection, 
+it should allow RTC drivers to be modularized on many systems. Can it be 
+adopted as a stopgap measure?
