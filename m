@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764CC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AACFC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1E7206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6ECE20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468899;
-	bh=7O06fsqhjkB+bXQLYcomHu5IzcG2iatiptgUEdZPqac=;
+	s=default; t=1577468911;
+	bh=qJJlTlHRi51WTrLwYlXoW7LIzvQeZU6Zad7hGcPoHiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMwT79ocrEVIwfxRHJgoKpAG2zKRshhBYcejKlMrAUmOIpsDP/jESuOpZBijEWCvA
-	 pwECEZJpEVXL0n6O7bh5u6ZEpS2n4mwAImh31kwzEdAdcgXm0n+aMHvTbZBgYIIREx
-	 CvaZSzrh7OlitqwSSGCnIkMEV2Q2OZx1kRIWREOQ=
+	b=1cVgT5r9jfhJXjmOeFKX5DubfQWPihKsMCPDIDIh3MnHYkPMzczr/NjCb+OXlR5F5
+	 7bzi2FBCqq59T3YMU9xCUCu87JqwMM6+nPrOEmVEdsOZ1ko8iSQkwseiMjlFmZ9POo
+	 oCPTS54qXPGQXEaACCgGDyev+CsFgQpXTDdS0ISc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfL0RsK (ORCPT
+        id S1728426AbfL0Rsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:48:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:48:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfL0Roq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:46 -0500
+        id S1728532AbfL0Ron (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D246206F4;
-        Fri, 27 Dec 2019 17:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 024EF20740;
+        Fri, 27 Dec 2019 17:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468686;
-        bh=7O06fsqhjkB+bXQLYcomHu5IzcG2iatiptgUEdZPqac=;
+        s=default; t=1577468682;
+        bh=qJJlTlHRi51WTrLwYlXoW7LIzvQeZU6Zad7hGcPoHiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFXAaFnXmYYYdIGSqdTUa3yw1u1aeKiutvlTkjcYhjpxo9S7onjMg6L2C9+XARIfN
-         ZHyk+HnPRuiRhW6lcqc3gj4PSqI9b6QBOHKDNOkhe3tKrxXvKeaQxJYd294xzk5mfF
-         lJLrHQpWlMS2kuvTgXcj+SAsAxj2G4RbiuiM/bT0=
+        b=Za7HgRmvF4VoIYpbfJ/NjpML5xUcd7ZSLzGg9wUHbIjoI9IBA9+SinAAWhXHSrllQ
+         5BR53JYWCOXDBgN+2a418ckeAZ9GvpRiIA3oXUkkppuIRZWIUR/mEh1JnrbpIxjd3E
+         uTGVXOtc1uebFDizSttirjY2vG7lU2SWOJuDxfBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 44/84] ARM: shmobile: defconfig: Restore debugfs support
-Date:   Fri, 27 Dec 2019 12:43:12 -0500
-Message-Id: <20191227174352.6264-44-sashal@kernel.org>
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 41/84] qede: Fix multicast mac configuration
+Date:   Fri, 27 Dec 2019 12:43:09 -0500
+Message-Id: <20191227174352.6264-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit fa2cdb1762d15f701b83efa60b04f0d04e71bf89 ]
+[ Upstream commit 0af67e49b018e7280a4227bfe7b6005bc9d3e442 ]
 
-Since commit 0e4a459f56c32d3e ("tracing: Remove unnecessary DEBUG_FS
-dependency"), CONFIG_DEBUG_FS is no longer auto-enabled.  This breaks
-booting Debian 9, as systemd needs debugfs:
+Driver doesn't accommodate the configuration for max number
+of multicast mac addresses, in such particular case it leaves
+the device with improper/invalid multicast configuration state,
+causing connectivity issues (in lacp bonding like scenarios).
 
-    [FAILED] Failed to mount /sys/kernel/debug.
-    See 'systemctl status sys-kernel-debug.mount' for details.
-    [DEPEND] Dependency failed for Local File Systems.
-    ...
-    You are in emergGive root password for maintenance
-    (or press Control-D to continue):
-
-Fix this by enabling CONFIG_DEBUG_FS explicitly.
-
-See also commit 18977008f44c66bd ("ARM: multi_v7_defconfig: Restore
-debugfs support").
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Link: https://lore.kernel.org/r/20191209101327.26571-1-geert+renesas@glider.be
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/shmobile_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qede/qede_filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-index f8faf3729464..a0e487e95d69 100644
---- a/arch/arm/configs/shmobile_defconfig
-+++ b/arch/arm/configs/shmobile_defconfig
-@@ -211,5 +211,6 @@ CONFIG_NLS_ISO8859_1=y
- CONFIG_PRINTK_TIME=y
- # CONFIG_ENABLE_WARN_DEPRECATED is not set
- # CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_DEBUG_FS=y
- CONFIG_DEBUG_KERNEL=y
- # CONFIG_ARM_UNWIND is not set
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+index b16ce7d93caf..c3d5d40afec0 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+@@ -1230,7 +1230,7 @@ qede_configure_mcast_filtering(struct net_device *ndev,
+ 	netif_addr_lock_bh(ndev);
+ 
+ 	mc_count = netdev_mc_count(ndev);
+-	if (mc_count < 64) {
++	if (mc_count <= 64) {
+ 		netdev_for_each_mc_addr(ha, ndev) {
+ 			ether_addr_copy(temp, ha->addr);
+ 			temp += ETH_ALEN;
 -- 
 2.20.1
 
