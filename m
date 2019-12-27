@@ -2,193 +2,165 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223EEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F8C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CAC20882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108B720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Mbj9NLOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfL0PPX (ORCPT
+        id S1726876AbfL0PWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:15:23 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:32214 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0PPW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:15:22 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47kr3q4F8GzKmfB;
-        Fri, 27 Dec 2019 16:15:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id FoRWcIzpKAMD; Fri, 27 Dec 2019 16:15:13 +0100 (CET)
-Date:   Sat, 28 Dec 2019 02:15:01 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
-Message-ID: <20191227151501.osy2m6o6p6odzk74@yavin.dot.cyphar.com>
-References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
- <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
- <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
- <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
- <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
- <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
- <20191227114725.xsacnaoaaxdv6yg3@wittgenstein>
- <CAMp4zn8iMsRvDoDtrotfnEm2_UUULH9VRiR6q9u8CS4qham2Eg@mail.gmail.com>
+        Fri, 27 Dec 2019 10:22:16 -0500
+Received: from mout.gmx.net ([212.227.15.15]:37807 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfL0PWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:22:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1577460081;
+        bh=v3G485xxBEo3Cum4SQHR6DjKkNv1OjWEtlHcjeyT33o=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Mbj9NLOppltN6yvIvUfj6khIv4KYpcSGxS9QhXn2KTtgtij3z5d9f783Z+e3rdV3k
+         Yf9mbbbMum6w2xwKaL5TM8dbq4SxXf2KJcIhv/782qoSbIC/M4uJZMLfn9FeZ544nI
+         vmYMCO3OOTMwLUg56qr6+d4Zu8YdVIiP2yLmcCBA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.fritz.box ([62.216.209.247]) by mail.gmx.com
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MS3ir-1jDEAl40dP-00TQeZ; Fri, 27 Dec 2019 16:21:21 +0100
+From:   Peter Seiderer <ps.report@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     alsa-devel@alsa-project.org, Annaliese McDermond <nh6z@nh6z.net>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Peter Seiderer <ps.report@gmx.net>
+Subject: [PATCH v1] ASoC: tlv320aic32x4: handle regmap_read error gracefully
+Date:   Fri, 27 Dec 2019 16:20:56 +0100
+Message-Id: <20191227152056.9903-1-ps.report@gmx.net>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qp3epnoas5ruktga"
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn8iMsRvDoDtrotfnEm2_UUULH9VRiR6q9u8CS4qham2Eg@mail.gmail.com>
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:JPR7Yh/nE2L7BcQ/QhBP0f+6BAatPm4RrsDC8Faa/IZBqz+5LK9
+ 0Tz3d0ZdtzhqK6gKdD6/NL6QfPdwx02dYu8hSr85SISdb2haDdW8SAol8bCUsvGStOPtmSD
+ w/+TVwT+6kxlR96bCDTU+GZCf11jFHm+n0//HVe7wtGR49DJuIOR9FLaIHMLuj+2qysM76S
+ MQXAvGNi+kRploBjMqpbw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M04zpNXRc+4=:pFARzSYrMSaSWj3JOUjzDD
+ zZKAnBVEfh0UdbxhIUWxUPUyanSDuFF/PVULmGgGCv3+dqybsMe6Byzw/DUClwQ8n4r+j329c
+ R0QD/mDb1eXztoA36kKN3on9Zqr4SX5b57xQVzNjZ8NVRqZvcBUbbELWnBIPQ0vwMTNr7zdiX
+ mNgrDg/f/m99Eo/m32y744ygiwuZn4ymkCl9BJF9JcDz6d1jkzOF1ApdA5zot+I1jJIoIcMMy
+ cREdP6hnJZFJCZrQeT8wlTGqwG1nSjvFn8JMNO/ebpmrQOiB6ArFAUzOzC/aYW7Yqn9V72hLU
+ LT+vFxrsoqIdsfGTe5kWLRUE/etTZAbMu4/KMBD7+3g//3O1PjYnRERuq6hrmzLa38B/NqpZG
+ TbBrPhdQCX7E3yLgdHcqvAgHLTkHuFJWDIzHukxGglBCepGto5ujZZHNAuihfTtV48dPA4koA
+ YlaQ5VaWg5Fa1ySKMsmumEH+jcsJI92P2T0aehGhkXFWJQqQNZGLg//qPgYjuHPYB4PXRWqdW
+ lRPgkph9xCviRCagVqHlllWguRMsTe8J6i9JYlEHxz+eQXkdz5IM4Ur1+l0Gyr7X5zt93RY0i
+ XVZktxwqxNL7YFXxKt5VajeRwgi/oK18RlOdDPGUHDfXKpg16alo0+aNu2bcMW1lTQEQL6ePO
+ JayOqgeKuCv78rUGA0GHRiPBvjN4Nup/5DMD/GEY6KV/OO/AlGtOSH0Hv02Pu9EHmp63BsUh1
+ 0DfDctW3Td+OfcfgWwa6Mj9syY2Me8jmVylUBzYCtqcZk1B40CcbvODCCCVwfPINilH3jw9Kn
+ cQ8OXWHXduD12f9xuQZeTtNeU9C2nWcCPyEtAS7LkpgUKVye9RYDA+sxoN2E+eV5tLqCFwvxF
+ OIFJoh/dT6JUyCr1/kkY7IJtTqHAMZBFVCvuNnLdlM40yQMkS941sKliHJlawOsd3ccHgobX2
+ I93+hitZ0Q0zf59VXWWK0pESWOcE6+h2sa9QlrVnU5pr8yWCAZ2acUqDcIZdnQPJw+RK5uAAs
+ FYtBeGavyABpc3grY2TkH+P2Yp4dIBNHpk7q4xkNLHJ4Z+sZMXEUP84buR6rtx87Wz/M0E7ga
+ SCcgKQ50TBlSW7git9DY1nl4N8BdtK0TfC83mpgw13KF+7jdy1M01EQjZlwUJx6p7C4vROXGH
+ MsNoDmMTblz2SS6huC9eGWHXgFvrtTLLTB2sppax5qbwI1m6M1nthGuuW4EowY1/XbOBNYdS2
+ LYxq3Ywcke7vqQlRhOfvRuwgcFVvCsqRcTEl5fw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---qp3epnoas5ruktga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-12-27, Sargun Dhillon <sargun@sargun.me> wrote:
-> On Fri, Dec 27, 2019 at 6:47 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Fri, Dec 27, 2019 at 01:31:31PM +1100, Aleksa Sarai wrote:
-> > > On 2019-12-27, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > >
-> > > Scratch that -- as Tycho just mentioned, there is un-named padding in
-> > > the struct so check_zeroed_user() is the wrong thing to do. But this
-> >
-> > Hm, I don't think so.
-> > I understood Tycho's point as _if_ there ever is padding then this would
-> > not be zeroed.
-> > Right now, there is no padding since the struct is correctly padded:
-> >
-> > struct seccomp_data {
-> >         int nr;
-> >         __u32 arch;
-> >         __u64 instruction_pointer;
-> >         __u64 args[6];
-> > };
-> >
-> > struct seccomp_notif {
-> >         __u64 id;
-> >         __u32 pid;
-> >         __u32 flags;
-> >         struct seccomp_data data;
-> > };
-> >
-> > which would be - using pahole:
-> >
-> > struct seccomp_data {
-> >         int                        nr;                   /*     0     4=
- */
-> >         __u32                      arch;                 /*     4     4=
- */
-> >         __u64                      instruction_pointer;  /*     8     8=
- */
-> >         __u64                      args[6];              /*    16    48=
- */
-> >
-> >         /* size: 64, cachelines: 1, members: 4 */
-> > };
-> > struct seccomp_notif {
-> >         __u64                      id;                   /*     0     8=
- */
-> >         __u32                      pid;                  /*     8     4=
- */
-> >         __u32                      flags;                /*    12     4=
- */
-> >         struct seccomp_data data;                        /*    16    64=
- */
-> >
-> >         /* size: 80, cachelines: 2, members: 4 */
-> >         /* last cacheline: 16 bytes */
-> > };
-> >
-> > The only worry would be a 2byte int type but there's no architecture
-> > we support which does this right now afaict.
-> >
-> > > also will make extensions harder to deal with because (presumably) th=
-ey
-> > > will also have un-named padding, making copy_struct_from_user() the
-> >
-> > This all will be a non-issue if we just use __u64 for extensions.
-> >
-> > My point about using copy_struct_from_user() was that we should verify
-> > that _all_ fields are uninitialized and not just the flags argument
-> > since we might introduce a flags argument that requires another already
-> > existing member in seccomp_notif to be set to a value. We should do this
-> > change now so we don't have to risk breaking someone in the future.
-> >
-> > I'm trying to get at least Mozilla/Firefox off of their crazy
-> > SECCOMP_RET_TRAP way of implementing their broker onto the user notifier
-> > and they will likely need some extensions. That includes the pidfd stuff
-> > for seccomp that Sargun will likely be doing and the new pidfd_getfd()
-> > syscall. So it's not unlikely that we might need other already existing
-> > fields in that struct to be set to some value.
-> >
-> > I don't particulary care how we do it:
-> > - We can do a simple copy_from_user() and check each field individually.
->=20
-> Just doing a simple copy_from_user, and for now, calling memchr_inv
-> on the whole thing. We can drop the memset, and just leave a note to
-> indicate that if unpadded fields are introduced in the future, this struc=
-ture
-> must be manually zeroed out. Although, this might be laying a trap for
-> ourselves.
->=20
-> This leaves us in a good position for introducing a flag field in the fut=
-ure.
-> All we have to do is change the memchr_inv from checking on an
-> entire struct basis to checking on a per-field basis.
-
-There is no need to do memchr_inv() on copy_from_user() to check for
-zero-ness. That's the entire point of check_zeroed_user() -- to not need
-to do it that way.
-
-> > - Use copy_struct_from_user().
-> >   That is safe to do right now since there is no padding afaict and
-> >   it'll automatically verify new fields as well.
-> >   If I understand the worry correctly then the argument against
-> >   copy_struct_from_user() here is that there might be padding introduced
-> >   and userspace will not do an explicit memset() but rather rely on an
-> >   empty inializer {} and will _accidently_ pass down a struct which has
-> >   __all fields cleared__ but __uninitialized padding__ and we tell them
-> >   EINVAL? That can only happen if we introduce padding in the struct
-> >   which I'd argue we just don't do. That'll be in line with what we
-> >   require from our ABIs already anyway.
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---qp3epnoas5ruktga
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgYf8wAKCRCdlLljIbnQ
-ElhMAP4zLWE+r++uvi/UC9ZcIHcddNH68CbKzBsKVgf88RALlAEAgjfH80XjQsXo
-QCVHPhWjgbUafWOoPCP7x97K25qTVAc=
-=aqat
------END PGP SIGNATURE-----
-
---qp3epnoas5ruktga--
+Rml4ZXM6CgpbICAgIDUuMTY5MzEwXSBEaXZpc2lvbiBieSB6ZXJvIGluIGtlcm5lbC4KWyAgICA1
+LjIwMDk5OF0gQ1BVOiAxIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4zLjE4
+LTIwMTkxMDIxLTErICMxNApbICAgIDUuMjAzMDQ5XSBjZGNfYWNtIDItMS42OjEuMDogdHR5QUNN
+MDogVVNCIEFDTSBkZXZpY2UKWyAgICA1LjIwODE5OF0gSGFyZHdhcmUgbmFtZTogRnJlZXNjYWxl
+IGkuTVg2IFF1YWQvRHVhbExpdGUgKERldmljZSBUcmVlKQpbICAgIDUuMjIwMDg0XSBCYWNrdHJh
+Y2U6ClsgICAgNS4yMjI2MjhdIFs8ODAxMGY2MGM+XSAoZHVtcF9iYWNrdHJhY2UpIGZyb20gWzw4
+MDEwZjlhOD5dIChzaG93X3N0YWNrKzB4MjAvMHgyNCkKWyAgICA1LjIzMDM0OF0gIHI3OjgxMGEx
+YzZjIHI2OjAwMDAwMDAwIHI1OjYwMDAwMDEzIHI0OjgxMGExYzZjClsgICAgNS4yMzYwOTddIFs8
+ODAxMGY5ODg+XSAoc2hvd19zdGFjaykgZnJvbSBbPDgwOWUwNmEwPl0gKGR1bXBfc3RhY2srMHhh
+Yy8weGQ4KQpbICAgIDUuMjQzNDY5XSBbPDgwOWUwNWY0Pl0gKGR1bXBfc3RhY2spIGZyb20gWzw4
+MDEwZjc4MD5dIChfX2RpdjArMHgyNC8weDI4KQpbICAgIDUuMjUwNDMxXSAgcjk6ODExMWFkYzgg
+cjg6YWU2MzExODAgcjc6YWViZDI3YzAgcjY6YWU2MzFlNDAgcjU6MDAwMDAwMDAgcjQ6ODEwMDY1
+MDgKWyAgICA1LjI1ODMyNV0gWzw4MDEwZjc1Yz5dIChfX2RpdjApIGZyb20gWzw4MDlkZTdhYz5d
+IChMZGl2MCsweDgvMHgxMCkKWyAgICA1LjI2NDg0MV0gWzw4MDg1YzdlMD5dIChjbGtfYWljMzJ4
+NF9kaXZfcmVjYWxjX3JhdGUpIGZyb20gWzw4MDViYTcwYz5dIChfX2Nsa19yZWdpc3RlcisweDJm
+OC8weDdlNCkKWyAgICA1LjI3NDE0MV0gIHI1OjgwZGQwNjVjIHI0OmFlNmJkNDgwClsgICAgNS4y
+Nzc4NjldIFs8ODA1YmE0MTQ+XSAoX19jbGtfcmVnaXN0ZXIpIGZyb20gWzw4MDViYWNlMD5dIChk
+ZXZtX2Nsa19yZWdpc3RlcisweDU4LzB4OGMpClsgICAgNS4yODYxMzBdICByMTA6ODEwMDY1MDgg
+cjk6ODEwOTQ2ZDQgcjg6MDAwMDAwMDAgcjc6YWU4ZGUxYzAgcjY6YWU2MzFhYzAgcjU6YWU2MzFl
+NDAKWyAgICA1LjI5NDEwM10gIHI0OmFlOGQ4MDIwClsgICAgNS4yOTY3MjRdIFs8ODA1YmFjODg+
+XSAoZGV2bV9jbGtfcmVnaXN0ZXIpIGZyb20gWzw4MDg1Y2VhOD5dIChhaWMzMng0X3JlZ2lzdGVy
+X2Nsb2NrcysweDEyMC8weDE0YykKWyAgICA1LjMwNjAwNF0gIHI3OmFlOGRlMWMwIHI2OmFlOGQ4
+MDIwIHI1OmFlNjMxZTQwIHI0OjgxMDk0NmMwClsgICAgNS4zMTE4MThdIFs8ODA4NWNkODg+XSAo
+YWljMzJ4NF9yZWdpc3Rlcl9jbG9ja3MpIGZyb20gWzw4MDg1YmY2MD5dIChhaWMzMng0X3Byb2Jl
+KzB4OTQvMHg0NjgpClsgICAgNS4zMjA2MDJdICByMTA6ODEwOTQ3MzAgcjk6MDAwMDAwMDAgcjg6
+YWYzNjFmYzAgcjc6YmZkNmQwNDAgcjY6MDAwMDAwMDAgcjU6YWU4ZDgwMjAKWyAgICA1LjMyODU3
+NF0gIHI0OmFmMzYxZTQwClsgICAgNS4zMzExOTVdIFs8ODA4NWJlY2M+XSAoYWljMzJ4NF9wcm9i
+ZSkgZnJvbSBbPDgwODVjZjYwPl0gKGFpYzMyeDRfaTJjX3Byb2JlKzB4NmMvMHg4OCkKWyAgICA1
+LjMzOTQzNF0gIHI4OjAwMDAwMDAwIHI3OmFlOGQ4MDAwIHI2OjgxMDk0NzMwIHI1OmFlOGQ4MDAw
+IHI0OjgxMDA2NTA4ClsgICAgNS4zNDYyODhdIFs8ODA4NWNlZjQ+XSAoYWljMzJ4NF9pMmNfcHJv
+YmUpIGZyb20gWzw4MDc1NTRiMD5dIChpMmNfZGV2aWNlX3Byb2JlKzB4MmFjLzB4MmYwKQpbICAg
+IDUuMzU0ODk0XSAgcjU6ODA4NWNlZjQgcjQ6YWU4ZDgwMjAKWyAgICA1LjM1ODYyNV0gWzw4MDc1
+NTIwND5dIChpMmNfZGV2aWNlX3Byb2JlKSBmcm9tIFs8ODA2NzhlMzQ+XSAocmVhbGx5X3Byb2Jl
+KzB4MTFjLzB4NDI4KQpbICAgIDUuMzY2ODAyXSAgcjk6MDAwMDAwMDAgcjg6ODEwYjNlNzggcjc6
+MDAwMDAwMDAgcjY6ODExMWUwMjAgcjU6YWU4ZDgwMjAgcjQ6ODExMWUwMWMKWyAgICA1LjM3NDY5
+NF0gWzw4MDY3OGQxOD5dIChyZWFsbHlfcHJvYmUpIGZyb20gWzw4MDY3OTM4OD5dIChkcml2ZXJf
+cHJvYmVfZGV2aWNlKzB4ODgvMHgxZTApClsgICAgNS4zODMxMDZdICByMTA6ODBmNjM4NjAgcjk6
+ZmZmZmUwMDAgcjg6ZmZmZmUwMDAgcjc6ODA2Nzk3OTQgcjY6ODEwOTQ3MzAgcjU6ODEwOTQ3MzAK
+WyAgICA1LjM5MTA4MF0gIHI0OmFlOGQ4MDIwClsgICAgNS4zOTM3MDJdIFs8ODA2NzkzMDA+XSAo
+ZHJpdmVyX3Byb2JlX2RldmljZSkgZnJvbSBbPDgwNjc5NzhjPl0gKGRldmljZV9kcml2ZXJfYXR0
+YWNoKzB4NjgvMHg3MCkKWyAgICA1LjQwMjcyNF0gIHI5OmZmZmZlMDAwIHI4OmZmZmZlMDAwIHI3
+OjgwNjc5Nzk0IHI2OjgxMDk0NzMwIHI1OjAwMDAwMDAwIHI0OmFlOGQ4MDIwClsgICAgNS40MTA1
+NTVdIFs8ODA2Nzk3MjQ+XSAoZGV2aWNlX2RyaXZlcl9hdHRhY2gpIGZyb20gWzw4MDY3OTg1OD5d
+IChfX2RyaXZlcl9hdHRhY2grMHhjNC8weDE2NCkKWyAgICA1LjQxOTMxM10gIHI3OjgwNjc5Nzk0
+IHI2OmFlOGQ4MDIwIHI1OjgxMDk0NzMwIHI0OjAwMDAwMDAwClsgICAgNS40MjUxMjNdIFs8ODA2
+Nzk3OTQ+XSAoX19kcml2ZXJfYXR0YWNoKSBmcm9tIFs8ODA2NzZhMTQ+XSAoYnVzX2Zvcl9lYWNo
+X2RldisweDg0LzB4YzQpClsgICAgNS40MzMzODRdICByNzo4MDY3OTc5NCByNjo4MTA5NDczMCBy
+NTo4MTAwNjUwOCByNDphZThkYzBjMApbICAgIDUuNDM5MTkyXSBbPDgwNjc2OTkwPl0gKGJ1c19m
+b3JfZWFjaF9kZXYpIGZyb20gWzw4MDY3ODY2OD5dIChkcml2ZXJfYXR0YWNoKzB4MmMvMHgzMCkK
+WyAgICA1LjQ0NzI3OV0gIHI3OjAwMDAwMDAwIHI2OmFmMzYxNTAwIHI1OjgxMDdmZDk0IHI0Ojgx
+MDk0NzMwClsgICAgNS40NTMwODddIFs8ODA2Nzg2M2M+XSAoZHJpdmVyX2F0dGFjaCkgZnJvbSBb
+PDgwNjc3ZmM0Pl0gKGJ1c19hZGRfZHJpdmVyKzB4MWQwLzB4MjEwKQpbICAgIDUuNDYxMjQwXSBb
+PDgwNjc3ZGY0Pl0gKGJ1c19hZGRfZHJpdmVyKSBmcm9tIFs8ODA2NzlmMzQ+XSAoZHJpdmVyX3Jl
+Z2lzdGVyKzB4ODQvMHgxMTgpClsgICAgNS40Njk0MTRdICByNzowMDAwMDAwMCByNjo4MGY0YWM5
+YyByNTo4MTAwNjUwOCByNDo4MTA5NDczMApbICAgIDUuNDc1MjI0XSBbPDgwNjc5ZWIwPl0gKGRy
+aXZlcl9yZWdpc3RlcikgZnJvbSBbPDgwNzU1ZGZjPl0gKGkyY19yZWdpc3Rlcl9kcml2ZXIrMHg0
+Yy8weGI4KQpbICAgIDUuNDgzODA3XSAgcjU6ODEwMDY1MDggcjQ6ODEwOTQ3MTQKWyAgICA1LjQ4
+NzQ3Ml0gWzw4MDc1NWRiMD5dIChpMmNfcmVnaXN0ZXJfZHJpdmVyKSBmcm9tIFs8ODBmNGFjYzA+
+XSAoYWljMzJ4NF9pMmNfZHJpdmVyX2luaXQrMHgyNC8weDI4KQpbICAgIDUuNDk2NzUwXSAgcjU6
+ODEwMDY1MDggcjQ6ODEwYTcxODAKWyAgICA1LjUwMDQxNV0gWzw4MGY0YWM5Yz5dIChhaWMzMng0
+X2kyY19kcml2ZXJfaW5pdCkgZnJvbSBbPDgwMTAzMjg4Pl0gKGRvX29uZV9pbml0Y2FsbCsweDY0
+LzB4MmQwKQpbICAgIDUuNTA5NDQyXSBbPDgwMTAzMjI0Pl0gKGRvX29uZV9pbml0Y2FsbCkgZnJv
+bSBbPDgwZjAxNGE4Pl0gKGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4MzAwLzB4MzkwKQpbICAgIDUu
+NTE4Mjg3XSAgcjg6ODEwYzczMDAgcjc6ODEwYzczMDAgcjY6MDAwMDAwMDcgcjU6ODBmOTIwYzQg
+cjQ6ODBmNjM4NDAKWyAgICA1LjUyNTA3OV0gWzw4MGYwMTFhOD5dIChrZXJuZWxfaW5pdF9mcmVl
+YWJsZSkgZnJvbSBbPDgwOWY4OTJjPl0gKGtlcm5lbF9pbml0KzB4MTgvMHgxMjQpClsgICAgNS41
+MzM0OTBdICByMTA6MDAwMDAwMDAgcjk6MDAwMDAwMDAgcjg6MDAwMDAwMDAgcjc6MDAwMDAwMDAg
+cjY6MDAwMDAwMDAgcjU6ODA5Zjg5MTQKWyAgICA1LjU0MTQ2MV0gIHI0OjAwMDAwMDAwClsgICAg
+NS41NDQwODRdIFs8ODA5Zjg5MTQ+XSAoa2VybmVsX2luaXQpIGZyb20gWzw4MDEwMTBiND5dIChy
+ZXRfZnJvbV9mb3JrKzB4MTQvMHgyMCkKWyAgICA1LjU1MTgwMF0gRXhjZXB0aW9uIHN0YWNrKDB4
+YWYxMTVmYjAgdG8gMHhhZjExNWZmOCkKWyAgICA1LjU1NjkzNV0gNWZhMDogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
+MDAKWyAgICA1LjU2NTI2Ml0gNWZjMDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
+MDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKWyAgICA1LjU3MzUyMl0gNWZl
+MDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMTMgMDAwMDAwMDAK
+WyAgICA1LjU4MDI4M10gIHI1OjgwOWY4OTE0IHI0OjAwMDAwMDAwCgpTaWduZWQtb2ZmLWJ5OiBQ
+ZXRlciBTZWlkZXJlciA8cHMucmVwb3J0QGdteC5uZXQ+Ci0tLQogc291bmQvc29jL2NvZGVjcy90
+bHYzMjBhaWMzMng0LWNsay5jIHwgMyArKy0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFp
+YzMyeDQtY2xrLmMgYi9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFpYzMyeDQtY2xrLmMKaW5kZXgg
+MTU2YzE1M2MxMmFiLi43YTgyZTM0NDg3ODAgMTAwNjQ0Ci0tLSBhL3NvdW5kL3NvYy9jb2RlY3Mv
+dGx2MzIwYWljMzJ4NC1jbGsuYworKysgYi9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFpYzMyeDQt
+Y2xrLmMKQEAgLTMzOCw3ICszMzgsOCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBjbGtfYWljMzJ4
+NF9kaXZfcmVjYWxjX3JhdGUoc3RydWN0IGNsa19odyAqaHcsCiAKIAl1bnNpZ25lZCBpbnQgdmFs
+OwogCi0JcmVnbWFwX3JlYWQoZGl2LT5yZWdtYXAsIGRpdi0+cmVnLCAmdmFsKTsKKwlpZiAocmVn
+bWFwX3JlYWQoZGl2LT5yZWdtYXAsIGRpdi0+cmVnLCAmdmFsKSkKKwkJcmV0dXJuIDA7CiAKIAly
+ZXR1cm4gRElWX1JPVU5EX1VQKHBhcmVudF9yYXRlLCB2YWwgJiBBSUMzMlg0X0RJVl9NQVNLKTsK
+IH0KLS0gCjIuMjQuMAoK
