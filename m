@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28824C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60EDC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EED206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0A3206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469436;
-	bh=rKXG2FfPMLu109YtxLFFCzBWv+qZUCaZCORPmxlgi04=;
+	s=default; t=1577469440;
+	bh=VpTE1uMYQYHAjVi/WQfKAjM9ST04k+XHCIZY0MSvKwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=drnn8rJrWGT1YDB8+Sgy7wYpt6XNPc2W5xu3TVn8bOpHZTj/7kMHpGQa4MUMkZq6f
-	 i82EkWOeOvoV3H+kucc4rOdInZQ2QrrCRmvoynPs88OklZe1IBZeF9ygaq+sgCYoNZ
-	 NC6LU7u0rZmZGp0/UnLQF+5cUWtyX6RxvrkoadA0=
+	b=xGDbpgLIQUSE4Pz7lke2i+w9p0pXBzhVYpkzVJvxTeTN8Imla7uNqvOc62T+nwyXq
+	 Q4xOHz6HVoVh72mk1IxsFOPtdUDmXuTMRP1wW4nqXGZnkroNaaGug3Jsny8CEXYRxr
+	 wZEKY6MMIG++7o1kTVHbYp68IAXH94W2mm9mB3z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfL0R5O (ORCPT
+        id S1727981AbfL0R5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38284 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:57:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727607AbfL0Rls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:48 -0500
+        id S1727597AbfL0Rlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD02320CC7;
-        Fri, 27 Dec 2019 17:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F1A21927;
+        Fri, 27 Dec 2019 17:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468508;
-        bh=rKXG2FfPMLu109YtxLFFCzBWv+qZUCaZCORPmxlgi04=;
+        s=default; t=1577468506;
+        bh=VpTE1uMYQYHAjVi/WQfKAjM9ST04k+XHCIZY0MSvKwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgYeKwHqCFrWj22SQ7HqEFlgamdfQYItaWs1cNDEJjY/kB1uIgdj12478cqswDe0n
-         fu7KIWYkmNGfq9VkAu5tuMSlWjadKu2Xo/dcEoyb8UEHxhvtISnUK8y5G5fQ2JVcUh
-         oXRSDZ8CbIZ7XNzHK9njoDuGJhhdOq9iOHQQyyXI=
+        b=YRVHYkRrczg4Uh6v7gYnZQdxkY4jcKQyokaoVYRJ/sp8b9mShtX/PZnBgGi7U1bxi
+         aX78jsK0HLlG0EEZkEjFmrVFwK09kdqGcKCw8gAA5hbjGj95ndOE1Zu8t+3HwYFgm4
+         4bY64sM/CZjR3oB9Den6LCh/1vhcDainc1SButXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 041/187] selftests/ftrace: Fix ftrace test cases to check unsupported
-Date:   Fri, 27 Dec 2019 12:38:29 -0500
-Message-Id: <20191227174055.4923-41-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 039/187] ARM: dts: BCM5301X: Fix MDIO node address/size cells
+Date:   Fri, 27 Dec 2019 12:38:27 -0500
+Message-Id: <20191227174055.4923-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 25deae098e748d8d36bc35129a66734b8f6925c9 ]
+[ Upstream commit 093c3f94e922d83a734fc4da08cc5814990f32c6 ]
 
-Since dynamic function tracer can be disabled, set_ftrace_filter
-can be disappeared. Test cases which depends on it, must check
-whether the set_ftrace_filter exists or not before testing
-and if not, return as unsupported.
+The MDIO node on BCM5301X had an reversed #address-cells and
+ #size-cells properties, correct those, silencing checker warnings:
 
-Also, if the function tracer itself is disabled, we can not
-set "function" to current_tracer. Test cases must check it
-before testing, and return as unsupported.
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc | 2 ++
- tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
-index 36fb59f886ea..1a52f2883fe0 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-stacktrace.tc
-@@ -3,6 +3,8 @@
- # description: ftrace - stacktrace filter command
- # flags: instance
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 372dc1eb88a0..2d9b4dd05830 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -353,8 +353,8 @@
+ 	mdio: mdio@18003000 {
+ 		compatible = "brcm,iproc-mdio";
+ 		reg = <0x18003000 0x8>;
+-		#size-cells = <1>;
+-		#address-cells = <0>;
++		#size-cells = <0>;
++		#address-cells = <1>;
+ 	};
  
-+[ ! -f set_ftrace_filter ] && exit_unsupported
-+
- echo _do_fork:stacktrace >> set_ftrace_filter
- 
- grep -q "_do_fork:stacktrace:unlimited" set_ftrace_filter
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-index 86a1f07ef2ca..71fa3f49e35e 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_cpumask.tc
-@@ -15,6 +15,11 @@ if [ $NP -eq 1 ] ;then
-   exit_unresolved
- fi
- 
-+if ! grep -q "function" available_tracers ; then
-+  echo "Function trace is not enabled"
-+  exit_unsupported
-+fi
-+
- ORIG_CPUMASK=`cat tracing_cpumask`
- 
- do_reset() {
+ 	mdio-bus-mux@18003000 {
 -- 
 2.20.1
 
