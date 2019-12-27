@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAAEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EBDC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0FC21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B27421582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470536;
-	bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
+	s=default; t=1577470539;
+	bh=Czplure2xZKgEkKI4XC5UMk7izwZoY4ItYjVWnKukSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEdqEot88IOK6WIIIynN/EKeloUidYg0K68aRjxILefNotBrV1gYtep3BMUA0tpcT
-	 fV+c4p+FgvlDPgAlStU/9ISMho1Xks+hywDqJitnjhvM/R2I3rliY9DXFu0pfWhHlP
-	 +JicoXa8w6NS2k7LxILaGNGDKwKHJ1bZbs/JmIwM=
+	b=AoqX1bW2UdkkBYi2ewjMj0NGQ4exnSURMv7dpvo0033fiw3rlGwaOGk0e5FwhL94N
+	 2PtirIGgh9cEygIhbLXimYwIRoRhus0uOhtHb5ZKTf4zz81n6Y4+yisgv7R3An1yZW
+	 pURQLgInQUNOcMm6J3pRl2lYrIKiECIglDPiRE90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfL0SPf (ORCPT
+        id S1728033AbfL0SPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbfL0SPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:16 -0500
+        id S1727910AbfL0SPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C98E21582;
-        Fri, 27 Dec 2019 18:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D06208C4;
+        Fri, 27 Dec 2019 18:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470516;
-        bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
+        s=default; t=1577470518;
+        bh=Czplure2xZKgEkKI4XC5UMk7izwZoY4ItYjVWnKukSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xa0/YQLL1iHqJKnOL4nMZg9OwLUUMmbYAdf3qF+U+JbcAecjkhoa8NG26wQW71AQy
-         T46DP/KWWJE+7jtCR0daALtBl4zHuw6GnBRq+I7gnZl2tRuj1bdnSuFVO9MrNGN519
-         IMpBNLBNcdlX/6jrqZk8apLpg+0cIksI7bJdRuxU=
+        b=mtL9+c7ppH2soJS2OhwFLMqgYzdtWqxFuQhJwjPszi+hn+JgI7hbHAH/QRQ/2ixnf
+         RUYg51iuaqZziL7i/x6GOZCf6CBBuAdYdnXlrtuNLw57x3GOCvlXZTxmkBqNXRFQjj
+         wy2r37cIvmWEuwkd/GEaSqeHYZaoMSpTw3MIxqzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@dlink.ru>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/38] net, sysctl: Fix compiler warning when only cBPF is present
-Date:   Fri, 27 Dec 2019 13:14:30 -0500
-Message-Id: <20191227181435.7644-33-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 35/38] parisc: Fix compiler warnings in debug_core.c
+Date:   Fri, 27 Dec 2019 13:14:32 -0500
+Message-Id: <20191227181435.7644-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -61,64 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
+[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
 
-proc_dointvec_minmax_bpf_restricted() has been firstly introduced
-in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
-under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
-ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
-allocations"), because a new sysctl, bpf_jit_limit, made use of it.
-Finally, this parameter has become long instead of integer with
-fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
-added.
+Fix this compiler warning:
+kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
+arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
+   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
+arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
+   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+      |                              ^~~~
+kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
+  596 |    atomic_xchg(&kgdb_active, cpu);
+      |    ^~~~~~~~~~~
 
-With this last change, we got back to that
-proc_dointvec_minmax_bpf_restricted() is used only under
-CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
-brought back.
-
-So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
-since v4.20 we have:
-
-  CC      net/core/sysctl_net_core.o
-net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
-  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
-
-Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sysctl_net_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index a6fc82704f0c..b4318c1b5b96 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -255,6 +255,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
- 	return ret;
- }
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index 7ada30900807..90253bdc2ee5 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -43,8 +43,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
+ **		if (((unsigned long)p & 0xf) == 0)
+ **			return __ldcw(p);
+ */
+-#define xchg(ptr, x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
++#define xchg(ptr, x)							\
++({									\
++	__typeof__(*(ptr)) __ret;					\
++	__typeof__(*(ptr)) _x_ = (x);					\
++	__ret = (__typeof__(*(ptr)))					\
++		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++	__ret;								\
++})
  
-+# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -265,6 +266,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+# endif /* CONFIG_HAVE_EBPF_JIT */
- 
- static int
- proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ /* bug catcher for when unsupported size is used - won't link */
+ extern void __cmpxchg_called_with_bad_pointer(void);
 -- 
 2.20.1
 
