@@ -4,77 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B261AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9137C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3A520882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8B1206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfL0JUt (ORCPT
+        id S1726502AbfL0JYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 04:20:49 -0500
-Received: from smtp21.cstnet.cn ([159.226.251.21]:58568 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfL0JUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 04:20:49 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-01 (Coremail) with SMTP id qwCowAAnF5TkzAVeUKFLCg--.7S3;
-        Fri, 27 Dec 2019 17:20:37 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     srinivas.kandagatla@linaro.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: core: Fix a potential use after free
-Date:   Fri, 27 Dec 2019 09:20:34 +0000
-Message-Id: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: qwCowAAnF5TkzAVeUKFLCg--.7S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZr4kWF15Cr4Utr1DXr4fZrb_yoW3Jrb_Z3
-        WjgrsxuF18A3Wvkr15GF13Z3y0kFs0qrsYyF10qr95t390qr9rZ3yvv3sxXw1agr4fZF9r
-        XF1qqrsxW345ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbFAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8v_M3UUUUU==
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwIRA1z4i9UIOwAAsS
+        Fri, 27 Dec 2019 04:24:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44643 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfL0JYR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 04:24:17 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iklqv-000718-2j; Fri, 27 Dec 2019 09:24:13 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge isn't bound to driver
+Date:   Fri, 27 Dec 2019 17:24:05 +0800
+Message-Id: <20191227092405.29588-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Free the nvmem structure only after we are done using it.
-This patch just moves the put_device() down a bit to avoid the
-use after free.
+We have a Pericom USB add-on card that has three USB controller
+functions 06:00.[0-2], connected to bridge device 05:03.0, which is
+connected to another bridge device 04:00.0:
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+-[0000:00]-+-00.0
+           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
+           |                                            +-00.1
+           |                                            \-00.2
+
+When bridge device (05:03.0) and all three USB controller functions
+(06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
+USB devices into the add-on card.
+
+This is because the pcieport driver failed to probe on 04:00.0, since
+the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
+there's no native PCIe PME can work for devices connected to it.
+
+So let's correctly report runtime wakeup isn't supported when any of
+PCIe bridges isn't bound to pcieport driver.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/nvmem/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 9f1ee9c..7051d34 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -535,8 +535,8 @@ static struct nvmem_device *__nvmem_device_get(void *data,
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 951099279192..ca686cfbd65e 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
+ 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
+ 		return false;
  
- static void __nvmem_device_put(struct nvmem_device *nvmem)
- {
--	put_device(&nvmem->dev);
- 	module_put(nvmem->owner);
-+	put_device(&nvmem->dev);
- 	kref_put(&nvmem->refcnt, nvmem_device_release);
- }
++	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
++	 * no IRQ for PME.
++	 */
++	if (pci_is_pcie(dev)) {
++		while (bus->parent) {
++			if (!bus->self->driver)
++				return false;
++
++			bus = bus->parent;
++		}
++	}
++
+ 	if (device_can_wakeup(&dev->dev))
+ 		return true;
  
 -- 
-2.7.4
+2.17.1
 
