@@ -2,56 +2,59 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDD0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BAEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674BC20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30EC206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469208;
-	bh=6vZo0/a/kuflm0kBrVLyo8mMTul4k1bx6ud3tQqFMdU=;
+	s=default; t=1577469218;
+	bh=WfW8d4aeEG0t7FRFjhEz85O0YvSM8OOhmFuRuzlY88k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vm10e3hlntPI3TXDyOjTbAWA57oYyj5egyINZBoVFE6YsfIIB7mvYqCB0kFdsbtNy
-	 gwHMqAI5QhCYomDayaFrvZtB21ryWBAfWIAwSqQNnCoalNj5OiyXYTNYiL6h15WiJH
-	 91wqCbAqPgfRvPOL4DiWeFdMfbxNbJUnqj15vWJY=
+	b=xKJoMnzcumEuejJHBe5gOEO94P6/UPQTJv9PUTlS8F4T8RuLZ/KrL9zHEHPxxpYNp
+	 ubHONT2S83MZEezH4aMZsrT2bohn31+nSOYXu4/EJaILexw/zrciTmJXlLs7PhdSs/
+	 I9epu81UWzlkBc5RIZ8BnCazPd6+Z6lWe2jVDR8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfL0Rx1 (ORCPT
+        id S1728303AbfL0Rxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:53:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:53:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfL0Rmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:53 -0500
+        id S1728003AbfL0Rmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CCD121582;
-        Fri, 27 Dec 2019 17:42:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022B522525;
+        Fri, 27 Dec 2019 17:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468572;
-        bh=6vZo0/a/kuflm0kBrVLyo8mMTul4k1bx6ud3tQqFMdU=;
+        s=default; t=1577468571;
+        bh=WfW8d4aeEG0t7FRFjhEz85O0YvSM8OOhmFuRuzlY88k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9/N6Wb/jXGTn304ho/LQNwfXyoywTiQ7J3ruWW9Otfmhnv4XXKpFRF3HG9D1L/ml
-         /XKsyaCi41zFgHXTTULP5j+yH65tjkgklzgolHojMV6bWUitoun/h9fgBW2J1Eida+
-         8FSrht0hrv4uBSABA2ctlUszVjPH7g/0K6GHjdz8=
+        b=g03klbOLQc3tszFW5V3xUcicWztX0Kwm1Jm9Y9PmsDI4XqPruFvO4+hcLVfEpEIFR
+         OfUPBa2uzVBpwDZEndfBaE1JFIJPKRk5rh+lX4KzRh7THZ4NcyndhkmAJmDPpkuJ+8
+         m6Tm8vDJGvXPCwliVC8vFFX29eXsJa0+rwzGAg/U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 097/187] btrfs: handle error in btrfs_cache_block_group
-Date:   Fri, 27 Dec 2019 12:39:25 -0500
-Message-Id: <20191227174055.4923-97-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 096/187] ARM: shmobile: defconfig: Restore debugfs support
+Date:   Fri, 27 Dec 2019 12:39:24 -0500
+Message-Id: <20191227174055.4923-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,81 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit db8fe64f9ce61d1d89d3c3c34d111a43afb9f053 ]
+[ Upstream commit fa2cdb1762d15f701b83efa60b04f0d04e71bf89 ]
 
-We have a BUG_ON(ret < 0) in find_free_extent from
-btrfs_cache_block_group.  If we fail to allocate our ctl we'll just
-panic, which is not good.  Instead just go on to another block group.
-If we fail to find a block group we don't want to return ENOSPC, because
-really we got a ENOMEM and that's the root of the problem.  Save our
-return from btrfs_cache_block_group(), and then if we still fail to make
-our allocation return that ret so we get the right error back.
+Since commit 0e4a459f56c32d3e ("tracing: Remove unnecessary DEBUG_FS
+dependency"), CONFIG_DEBUG_FS is no longer auto-enabled.  This breaks
+booting Debian 9, as systemd needs debugfs:
 
-Tested with inject-error.py from bcc.
+    [FAILED] Failed to mount /sys/kernel/debug.
+    See 'systemctl status sys-kernel-debug.mount' for details.
+    [DEPEND] Dependency failed for Local File Systems.
+    ...
+    You are in emergGive root password for maintenance
+    (or press Control-D to continue):
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fix this by enabling CONFIG_DEBUG_FS explicitly.
+
+See also commit 18977008f44c66bd ("ARM: multi_v7_defconfig: Restore
+debugfs support").
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20191209101327.26571-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/arm/configs/shmobile_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 49cb26fa7c63..9ee6a6e55e4e 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -3780,6 +3780,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 				u64 flags, int delalloc)
- {
- 	int ret = 0;
-+	int cache_block_group_error = 0;
- 	struct btrfs_free_cluster *last_ptr = NULL;
- 	struct btrfs_block_group_cache *block_group = NULL;
- 	struct find_free_extent_ctl ffe_ctl = {0};
-@@ -3939,7 +3940,20 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 		if (unlikely(!ffe_ctl.cached)) {
- 			ffe_ctl.have_caching_bg = true;
- 			ret = btrfs_cache_block_group(block_group, 0);
--			BUG_ON(ret < 0);
-+
-+			/*
-+			 * If we get ENOMEM here or something else we want to
-+			 * try other block groups, because it may not be fatal.
-+			 * However if we can't find anything else we need to
-+			 * save our return here so that we return the actual
-+			 * error that caused problems, not ENOSPC.
-+			 */
-+			if (ret < 0) {
-+				if (!cache_block_group_error)
-+					cache_block_group_error = ret;
-+				ret = 0;
-+				goto loop;
-+			}
- 			ret = 0;
- 		}
- 
-@@ -4026,7 +4040,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 	if (ret > 0)
- 		goto search;
- 
--	if (ret == -ENOSPC) {
-+	if (ret == -ENOSPC && !cache_block_group_error) {
- 		/*
- 		 * Use ffe_ctl->total_free_space as fallback if we can't find
- 		 * any contiguous hole.
-@@ -4037,6 +4051,8 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 		space_info->max_extent_size = ffe_ctl.max_extent_size;
- 		spin_unlock(&space_info->lock);
- 		ins->offset = ffe_ctl.max_extent_size;
-+	} else if (ret == -ENOSPC) {
-+		ret = cache_block_group_error;
- 	}
- 	return ret;
- }
+diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
+index c6c70355141c..7e7b678ae153 100644
+--- a/arch/arm/configs/shmobile_defconfig
++++ b/arch/arm/configs/shmobile_defconfig
+@@ -215,4 +215,5 @@ CONFIG_DMA_CMA=y
+ CONFIG_CMA_SIZE_MBYTES=64
+ CONFIG_PRINTK_TIME=y
+ # CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
 -- 
 2.20.1
 
