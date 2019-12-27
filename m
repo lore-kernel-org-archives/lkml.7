@@ -2,95 +2,92 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D12C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD10C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696F4208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470745;
-	bh=YakL7Z5jZvtAm2DDPTCZLaiFry5jg5EXIsKrVuUci3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkJPTGCSnOZqhmShD/Kp8keNGp8aK99qzT3nCSMJjs3dCQjs6je1d6HzP/cFfcbG5
-	 0Nybc+W6LF0fm/imDk3tEZ199RQcw+ve4viYQ18ZTmQC2Bp5s/6KpEFQxx9mYgdzWD
-	 ozPa9kWNfWGKeJ6zvNJdvpOU3MC3SMo/s2FJ0SPE=
+	by mail.kernel.org (Postfix) with ESMTP id 4501220722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfL0STE (ORCPT
+        id S1727766AbfL0STQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:19:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39518 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:19:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41764 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfL0SO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:14:58 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB5DD22B48;
-        Fri, 27 Dec 2019 18:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470497;
-        bh=YakL7Z5jZvtAm2DDPTCZLaiFry5jg5EXIsKrVuUci3M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+WC6FWjTXwbmgaBJfqL3DTn7d1MPoj5598ugd4G5T6F3xwyJhz+xEXnJjgMifBN8
-         +LyJvwlvN414Ha12JKYzgR4EilXY9cL7OScR17IkBXqdUm3nrxJOT3qNiVoJKmuDFk
-         wK5KiKnsLNH1DAGbEEc6EUS/o7fJ9tRZV4QegEC4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/38] net: usb: lan78xx: Fix suspend/resume PHY register access error
-Date:   Fri, 27 Dec 2019 13:14:14 -0500
-Message-Id: <20191227181435.7644-17-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
-References: <20191227181435.7644-1-sashal@kernel.org>
+        id S1727393AbfL0SO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 11550ABEA;
+        Fri, 27 Dec 2019 18:14:54 +0000 (UTC)
+Date:   Fri, 27 Dec 2019 18:14:48 +0000
+From:   Michal Rostecki <mrostecki@opensuse.org>
+To:     mrostecki@opensuse.org
+Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 0/2] bpftool/libbpf: Add probe for large INSN
+ limit
+Message-ID: <20191227181448.GA452@wotan.suse.de>
+References: <20191227105346.867-1-mrostecki@opensuse.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227105346.867-1-mrostecki@opensuse.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+On Fri, Dec 27, 2019 at 11:53:44AM +0100, mrostecki@opensuse.org wrote:
+> From: Michal Rostecki <mrostecki@opensuse.org>
+> 
+> This series implements a new BPF feature probe which checks for the
+> commit c04c0d2b968a ("bpf: increase complexity limit and maximum program
+> size"), which increases the maximum program size to 1M. It's based on
+> the similar check in Cilium, althogh Cilium is already aiming to use
+> bpftool checks and eventually drop all its custom checks.
+> 
+> Examples of outputs:
+> 
+> # bpftool feature probe
+> [...]
+> Scanning miscellaneous eBPF features...
+> Large complexity limit and maximum program size (1M) is available
+> 
+> # bpftool feature probe macros
+> [...]
+> /*** eBPF misc features ***/
+> #define HAVE_HAVE_LARGE_INSN_LIMIT
+> 
+> # bpftool feature probe -j | jq '.["misc"]'
+> {
+>   "have_large_insn_limit": true
+> }
+> 
+> Michal Rostecki (2):
+>   libbpf: Add probe for large INSN limit
+>   bpftool: Add misc secion and probe for large INSN limit
+> 
+>  tools/bpf/bpftool/feature.c   | 18 ++++++++++++++++++
+>  tools/lib/bpf/libbpf.h        |  1 +
+>  tools/lib/bpf/libbpf.map      |  1 +
+>  tools/lib/bpf/libbpf_probes.c | 23 +++++++++++++++++++++++
+>  4 files changed, 43 insertions(+)
+> 
+> -- 
+> 2.16.4
+> 
 
-[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
-
-Lan78xx driver accesses the PHY registers through MDIO bus over USB
-connection. When performing a suspend/resume, the PHY registers can be
-accessed before the USB connection is resumed. This will generate an
-error and will prevent the device to resume correctly.
-This patch adds the dependency between the MDIO bus and USB device to
-allow correct handling of suspend/resume.
-
-Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index a3f9d8f05db4..96258e6a1920 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1763,6 +1763,7 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
- 	dev->mdiobus->read = lan78xx_mdiobus_read;
- 	dev->mdiobus->write = lan78xx_mdiobus_write;
- 	dev->mdiobus->name = "lan78xx-mdiobus";
-+	dev->mdiobus->parent = &dev->udev->dev;
- 
- 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
- 		 dev->udev->bus->busnum, dev->udev->devnum);
--- 
-2.20.1
-
+Sorry for sending this twice! I didn't see the thread immediately after
+sending the first time, so I though there is some problem with my
+@opensuse.org alias or SMTP server not accepting it. Please review this
+series, since I'm using @opensuse.org alias for upstream development
+more frequently than @suse.de.
