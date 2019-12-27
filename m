@@ -2,331 +2,143 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C439C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D2DC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C53221927
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CAB20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gy690DZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfL0Pqz (ORCPT
+        id S1726924AbfL0P5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:46:55 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:59254 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726495AbfL0Pqz (ORCPT
+        Fri, 27 Dec 2019 10:57:11 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:44581 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfL0P5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:46:55 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 4D9AB634C86;
-        Fri, 27 Dec 2019 17:46:17 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ikrof-000181-JN; Fri, 27 Dec 2019 17:46:17 +0200
-Date:   Fri, 27 Dec 2019 17:46:17 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v2 5/6] media: i2c: imx290: Add configurable link
- frequency and pixel rate
-Message-ID: <20191227154617.GH861@valkosipuli.retiisi.org.uk>
-References: <20191219182222.18961-1-manivannan.sadhasivam@linaro.org>
- <20191219182222.18961-6-manivannan.sadhasivam@linaro.org>
+        Fri, 27 Dec 2019 10:57:11 -0500
+Received: by mail-yw1-f68.google.com with SMTP id t141so11415861ywc.11;
+        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BiQOKb56p1ie1sc7/zk5XIY9A7njVsnU/Z7f74v1ws4=;
+        b=Gy690DZ7EtGnqq+4IM4+RF/OnBqcOcaJEYInJ1mD9Ns2ltmazp2u9ihFntKhzb/Fkh
+         gNtjvQ971Ph1FX3+9UvBezQfI8dH2i3RBMOTQwEWO7s8LMA4q3rIst1nc4Ty9jMeOIor
+         SFyJaQ/Umf+YSe8Uy1sqlKOlGpAHEdNRD+l0ttFhN8945kOoo/O4CtYdkoeBLgelEZ12
+         Z3dXHp0NCZ9Un9f/C2FjWxK7m1IbQY+ZS2ifuDNcLZHDEgbPGgHAZ2qP5Xq+ZFo32RZg
+         KNk5lALW8LCJRyniatAqE9feGIAf8V3vZdw8qmHVuSgqbVAB3ejfiJ6xdeS8tHwXL91O
+         m/jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BiQOKb56p1ie1sc7/zk5XIY9A7njVsnU/Z7f74v1ws4=;
+        b=sYUosr2w1BQvsCi/kYUaw6b08tqt/+qxJ/8TnStE+OrT1UM1syI64SaMloLO+rtcfH
+         BFbdY2aT9yAetGKQQEh4fwnQw10WYsE1XTXFJqwO+S0RHG24wAmjXCS37AJYAWIZxalJ
+         9pzghWEfDof9FQFwfu0evLvq9d5HMVkuLWJ3g4VQGDQXobttcrzmCODQvwy6NjR0RE6s
+         zXGNIKU0pKk29wcgGd7eSOTxeW2N8twMK9ukwvmtGGsruWpQzXTxgXEkvpb8mzVHY8Wp
+         QD2/vEJBAx2ImEhGTrNbek6myRg/Riiw/iSMAzk4yOx09g6/3X3laVhhPCvCV0Gi5Smf
+         mQ3Q==
+X-Gm-Message-State: APjAAAXlbG6oDVU19y/3MYA6YZubc5i5xfbCQ+9+MgMCdugXSo2IdpzP
+        6Vn8KheYVUoqS5mB6IXJww==
+X-Google-Smtp-Source: APXvYqwMkbapAIncVSopx3B3vyv8N79XTKlT6CNOA3xgHugUPMHaWnqeiWLplmINdePWP4eoYlpvww==
+X-Received: by 2002:a0d:d64d:: with SMTP id y74mr39860256ywd.386.1577462230355;
+        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
+Received: from localhost ([64.192.53.12])
+        by smtp.gmail.com with ESMTPSA id q16sm13916240ywa.110.2019.12.27.07.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2019 07:57:10 -0800 (PST)
+Date:   Fri, 27 Dec 2019 10:57:09 -0500
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        kbuild test robot <lkp@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: huawei-wmi: Fix a possible NULL deref
+Message-ID: <20191227155709.6wztlhhzn6qljalp@960>
+References: <20191225235841.14393-1-ayman.bagabas@gmail.com>
+ <20191226215418.GA3889@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219182222.18961-6-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191226215418.GA3889@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
+On 19/12/27 12:54AM, Dan Carpenter wrote:
+> On Wed, Dec 25, 2019 at 06:58:38PM -0500, Ayman Bagabas wrote:
+> > We're iterating over a NULL terminated array.
+>
+> This changelog is kind of messed up.  This is how it looks in context:
+> https://marc.info/?l=linux-kernel&m=157731837511760&w=2
+> The subject and the commit message are far apart.  What's wrong with
+> iterating over a NULL terminated array?  The changelog doesn't say which
+> variable is NULL.
+>
 
-On Thu, Dec 19, 2019 at 11:52:21PM +0530, Manivannan Sadhasivam wrote:
-> IMX290 operates with multiple link frequency and pixel rate combinations.
-> The initial driver used a single setting for both but since we now have
-> the lane count support in place, let's add configurable link frequency
-> and pixel rate.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 155 +++++++++++++++++++++----------------
->  1 file changed, 89 insertions(+), 66 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index a1974340e6fa..52f1e470b507 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -45,8 +45,6 @@
->  #define IMX290_HMAX_2_720 0x19C8
->  #define IMX290_HMAX_4_720 0x0CE4
->  
-> -#define IMX290_DEFAULT_LINK_FREQ 445500000
-> -
->  static const char * const imx290_supply_name[] = {
->  	"vdda",
->  	"vddd",
-> @@ -63,8 +61,6 @@ struct imx290_regval {
->  struct imx290_mode {
->  	u32 width;
->  	u32 height;
-> -	u32 pixel_rate;
-> -	u32 link_freq_index;
->  
->  	const struct imx290_regval *data;
->  	u32 data_size;
-> @@ -281,7 +277,10 @@ static const struct imx290_regval imx290_12bit_settings[] = {
->  
->  /* supported link frequencies */
->  static const s64 imx290_link_freq[] = {
-> -	IMX290_DEFAULT_LINK_FREQ,
-> +	891000000, /* 1920x1080 -  2 lane */
-> +	445500000, /* 1920x1080 -  4 lane */
-> +	594000000, /* 1280x720  -  2 lane */
-> +	297000000, /* 1280x720  -  4 lane */
+I'm really sorry for my poor subject and commit message that shouldn't happen again.
 
-Please use different arrays for different lane configurations. That makes
-this a lot cleaner.
+This is not an issue, the problem occurs to me when I try to use this
+module on kernel 5.0, particularly, when iterating over the struct
+wmi_device_id array. On kernel 5.0, I'm getting a NULL pointer
+dereference on *guid->guid_string on the 3rd NULL struct in the array.
+This is happening because the definition of struct wmi_device_id in <5.1 is
 
-This patch should precede the one adding support for 12 bpp.
+struct wmi_device_id {
+	const char *guid_string;
+};
 
->  };
->  
->  /* Mode configs */
-> @@ -291,16 +290,12 @@ static const struct imx290_mode imx290_modes[] = {
->  		.height = 1080,
->  		.data = imx290_1080p_settings,
->  		.data_size = ARRAY_SIZE(imx290_1080p_settings),
-> -		.pixel_rate = 178200000,
-> -		.link_freq_index = 0,
->  	},
->  	{
->  		.width = 1280,
->  		.height = 720,
->  		.data = imx290_720p_settings,
->  		.data_size = ARRAY_SIZE(imx290_720p_settings),
-> -		.pixel_rate = 178200000,
-> -		.link_freq_index = 0,
->  	},
->  };
->  
-> @@ -509,6 +504,73 @@ static int imx290_get_fmt(struct v4l2_subdev *sd,
->  	return 0;
->  }
->  
-> +static s64 imx290_get_link_freq_index(struct imx290 *imx290)
-> +{
-> +	const struct imx290_mode *cur_mode = imx290->current_mode;
-> +	u8 index;
-> +
-> +	if (cur_mode->width == 1920)
-> +		index = imx290->nlanes / 4;
-> +	else
-> +		index = (imx290->nlanes / 4) + 2;
-> +
-> +	return index;
-> +}
-> +
-> +static s64 imx290_get_link_freq(struct imx290 *imx290)
-> +{
-> +	u8 index = imx290_get_link_freq_index(imx290);
-> +
-> +	return imx290_link_freq[index];
-> +}
-> +
-> +static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
-> +{
-> +	s64 link_freq = imx290_get_link_freq(imx290);
-> +	u8 nlanes = imx290->nlanes;
-> +
-> +	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
-> +	return (link_freq * 2 * nlanes / imx290->bpp);
-> +}
-> +
-> +static int imx290_write_current_format(struct imx290 *imx290,
-> +				       struct v4l2_mbus_framefmt *format)
-> +{
-> +	int ret;
-> +
-> +	switch (format->code) {
-> +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> +		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_10bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 10;
-> +
-> +		break;
-> +	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_12bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 12;
-> +
-> +		break;
-> +	default:
-> +		dev_err(imx290->dev, "Unknown pixel format\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int imx290_set_fmt(struct v4l2_subdev *sd,
->  			  struct v4l2_subdev_pad_config *cfg,
->  		      struct v4l2_subdev_format *fmt)
-> @@ -517,6 +579,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->  	const struct imx290_mode *mode;
->  	struct v4l2_mbus_framefmt *format;
->  	unsigned int i;
-> +	int ret = 0;
->  
->  	mutex_lock(&imx290->lock);
->  
-> @@ -542,17 +605,27 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->  		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
->  	} else {
->  		format = &imx290->current_format;
-> -		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
-> -		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
-> -
->  		imx290->current_mode = mode;
-> +
-> +		/* Set current frame format */
-> +		ret = imx290_write_current_format(imx290, &fmt->format);
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set frame format\n");
-> +			goto err_out;
-> +		}
-> +
-> +		__v4l2_ctrl_s_ctrl(imx290->link_freq,
-> +				   imx290_get_link_freq_index(imx290));
-> +		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate,
-> +					 imx290_calc_pixel_rate(imx290));
->  	}
->  
->  	*format = fmt->format;
->  
-> +err_out:
->  	mutex_unlock(&imx290->lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
-> @@ -569,44 +642,6 @@ static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
->  	return 0;
->  }
->  
-> -static int imx290_write_current_format(struct imx290 *imx290,
-> -				       struct v4l2_mbus_framefmt *format)
-> -{
-> -	int ret;
-> -
-> -	switch (format->code) {
-> -	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> -		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-> -						ARRAY_SIZE(
-> -							imx290_10bit_settings));
-> -		if (ret < 0) {
-> -			dev_err(imx290->dev, "Could not set format registers\n");
-> -			return ret;
-> -		}
-> -
-> -		imx290->bpp = 10;
-> -
-> -		break;
-> -	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> -		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> -						ARRAY_SIZE(
-> -							imx290_12bit_settings));
-> -		if (ret < 0) {
-> -			dev_err(imx290->dev, "Could not set format registers\n");
-> -			return ret;
-> -		}
-> -
-> -		imx290->bpp = 12;
-> -
-> -		break;
-> -	default:
-> -		dev_err(imx290->dev, "Unknown pixel format\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int imx290_set_hmax(struct imx290 *imx290, u32 val)
->  {
->  	int ret;
-> @@ -640,13 +675,6 @@ static int imx290_start_streaming(struct imx290 *imx290)
->  		return ret;
->  	}
->  
-> -	/* Set current frame format */
-> -	ret = imx290_write_current_format(imx290, &imx290->current_format);
-> -	if (ret < 0) {
-> -		dev_err(imx290->dev, "Could not set frame format\n");
-> -		return ret;
-> -	}
-> -
->  	/* Apply default values of current mode */
->  	ret = imx290_set_register_array(imx290, imx290->current_mode->data,
->  					imx290->current_mode->data_size);
-> @@ -904,12 +932,6 @@ static int imx290_probe(struct i2c_client *client)
->  		goto free_err;
->  	}
->  
-> -	if (imx290->ep.link_frequencies[0] != IMX290_DEFAULT_LINK_FREQ) {
-> -		dev_err(dev, "Unsupported link frequency\n");
-> -		ret = -EINVAL;
-> -		goto free_err;
-> -	}
-> -
->  	/* Only CSI2 is supported for now */
->  	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
->  		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-> @@ -976,14 +998,15 @@ static int imx290_probe(struct i2c_client *client)
->  				       &imx290_ctrl_ops,
->  				       V4L2_CID_LINK_FREQ,
->  				       ARRAY_SIZE(imx290_link_freq) - 1,
-> -				       0, imx290_link_freq);
-> +				       (imx290->nlanes / 4),
-> +				       imx290_link_freq);
->  	if (imx290->link_freq)
->  		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
->  
->  	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
->  					       V4L2_CID_PIXEL_RATE, 1,
->  					       INT_MAX, 1,
-> -					       imx290_modes[0].pixel_rate);
-> +					       imx290_calc_pixel_rate(imx290));
->  
->  	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
->  				     V4L2_CID_TEST_PATTERN,
+Compared to this where guid->guid_string is not NULL
 
--- 
-Regards,
+struct wmi_device_id {
+	const char guid_string[UUID_STRING_LEN+1];
+};
 
-Sakari Ailus
+> >
+> > Fixes: 1ac9abeb2e5b ("platform/x86: huawei-wmi: Move to platform driver")
+> > Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+> > ---
+> >  drivers/platform/x86/huawei-wmi.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> > index a2d846c4a7ee..42d461eeeff4 100644
+> > --- a/drivers/platform/x86/huawei-wmi.c
+> > +++ b/drivers/platform/x86/huawei-wmi.c
+> > @@ -784,13 +784,13 @@ static const struct wmi_device_id huawei_wmi_events_id_table[] = {
+> >  static int huawei_wmi_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct wmi_device_id *guid = huawei_wmi_events_id_table;
+> > +	struct input_dev *idev = *huawei_wmi->idev;
+>
+> This line seems like an unrelated change.  I'm still not sure the
+> justification for this.  I really hate puzzling over patches to try
+> figure out why a patch is making changes.
+
+This one is a logical error, we have an array of input_dev pointers for
+each guid. Defining idev in the loop would always reset the pointer to
+the first element in the array. The address of each pointer then passed
+to huawei_wmi_input_setup to allocate an input device. We want to keep a
+pointer to each allocated input device in the static huawei_wmi struct.
+
+>
+> regards,
+> dan carpenter
+>
+>
+
+--
+Thank you,
+Ayman
