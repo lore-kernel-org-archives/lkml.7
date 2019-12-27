@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8221C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FADC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8126821775
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41A9208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfL0O43 (ORCPT
+        id S1727473AbfL0O4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 09:56:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43122 "EHLO mx2.suse.de"
+        Fri, 27 Dec 2019 09:56:22 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43008 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfL0O40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 09:56:26 -0500
+        id S1727423AbfL0O4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 09:56:17 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C2102B01D;
-        Fri, 27 Dec 2019 14:56:23 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id B447FAFB5;
+        Fri, 27 Dec 2019 14:56:13 +0000 (UTC)
 Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 6D7CEE008A; Fri, 27 Dec 2019 15:56:23 +0100 (CET)
-Message-Id: <ec8173368e1c08d79599815b8cda319bfcf5b072.1577457846.git.mkubecek@suse.cz>
+        id 62EA2E008A; Fri, 27 Dec 2019 15:56:13 +0100 (CET)
+Message-Id: <7db628c205242dc249c2d8468b458495bb43f8bb.1577457846.git.mkubecek@suse.cz>
 In-Reply-To: <cover.1577457846.git.mkubecek@suse.cz>
 References: <cover.1577457846.git.mkubecek@suse.cz>
 From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v9 14/14] ethtool: provide link state with
- LINKSTATE_GET request
+Subject: [PATCH net-next v9 12/14] ethtool: set link modes related data with
+ LINKMODES_SET request
 To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
 Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
@@ -39,327 +39,369 @@ Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Date:   Fri, 27 Dec 2019 15:56:23 +0100 (CET)
+Date:   Fri, 27 Dec 2019 15:56:13 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement LINKSTATE_GET netlink request to get link state information.
+Implement LINKMODES_SET netlink request to set advertised linkmodes and
+related attributes as ETHTOOL_SLINKSETTINGS and ETHTOOL_SSET commands do.
 
-At the moment, only link up flag as provided by ETHTOOL_GLINK ioctl command
-is returned.
-
-LINKSTATE_GET request can be used with NLM_F_DUMP (without device
-identification) to request the information for all devices in current
-network namespace providing the data.
+The request allows setting autonegotiation flag, speed, duplex and
+advertised link modes.
 
 Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/networking/ethtool-netlink.rst | 33 ++++++++-
- include/uapi/linux/ethtool_netlink.h         | 14 ++++
- net/ethtool/Makefile                         |  3 +-
- net/ethtool/common.c                         |  8 +++
- net/ethtool/common.h                         |  3 +
- net/ethtool/ioctl.c                          |  8 +--
- net/ethtool/linkstate.c                      | 74 ++++++++++++++++++++
- net/ethtool/netlink.c                        |  8 +++
- net/ethtool/netlink.h                        |  1 +
- 9 files changed, 146 insertions(+), 6 deletions(-)
- create mode 100644 net/ethtool/linkstate.c
+ Documentation/networking/ethtool-netlink.rst |  27 +++
+ include/uapi/linux/ethtool_netlink.h         |   1 +
+ net/ethtool/linkmodes.c                      | 235 +++++++++++++++++++
+ net/ethtool/netlink.c                        |   5 +
+ net/ethtool/netlink.h                        |   1 +
+ 5 files changed, 269 insertions(+)
 
 diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 9d96d51e9360..c60afba69e3c 100644
+index 04c55be0264c..625c80183563 100644
 --- a/Documentation/networking/ethtool-netlink.rst
 +++ b/Documentation/networking/ethtool-netlink.rst
-@@ -184,6 +184,7 @@ Userspace to kernel:
+@@ -183,6 +183,7 @@ Userspace to kernel:
+   ``ETHTOOL_MSG_LINKINFO_GET``          get link settings
    ``ETHTOOL_MSG_LINKINFO_SET``          set link settings
    ``ETHTOOL_MSG_LINKMODES_GET``         get link modes info
-   ``ETHTOOL_MSG_LINKMODES_SET``         set link modes info
-+  ``ETHTOOL_MSG_LINKSTATE_GET``         get link state
++  ``ETHTOOL_MSG_LINKMODES_SET``         set link modes info
    ===================================== ================================
  
  Kernel to userspace:
-@@ -194,6 +195,7 @@ Kernel to userspace:
-   ``ETHTOOL_MSG_LINKINFO_NTF``          link settings notification
-   ``ETHTOOL_MSG_LINKMODES_GET_REPLY``   link modes info
-   ``ETHTOOL_MSG_LINKMODES_NTF``         link modes notification
-+  ``ETHTOOL_MSG_LINKSTATE_GET_REPLY``   link state info
-   ===================================== ================================
- 
- ``GET`` requests are sent by userspace applications to retrieve device
-@@ -392,6 +394,35 @@ is supposed to allow requesting changes without knowing what exactly kernel
- supports.
+@@ -366,6 +367,30 @@ list.
+ devices supporting the request).
  
  
-+LINKSTATE_GET
++LINKMODES_SET
 +=============
-+
-+Requests link state information. At the moment, only link up/down flag (as
-+provided by ``ETHTOOL_GLINK`` ioctl command) is provided but some future
-+extensions are planned (e.g. link down reason). This request does not have any
-+attributes.
 +
 +Request contents:
 +
 +  ====================================  ======  ==========================
-+  ``ETHTOOL_A_LINKSTATE_HEADER``        nested  request header
++  ``ETHTOOL_A_LINKMODES_HEADER``        nested  request header
++  ``ETHTOOL_A_LINKMODES_AUTONEG``       u8      autonegotiation status
++  ``ETHTOOL_A_LINKMODES_OURS``          bitset  advertised link modes
++  ``ETHTOOL_A_LINKMODES_PEER``          bitset  partner link modes
++  ``ETHTOOL_A_LINKMODES_SPEED``         u32     link speed (Mb/s)
++  ``ETHTOOL_A_LINKMODES_DUPLEX``        u8      duplex mode
 +  ====================================  ======  ==========================
 +
-+Kernel response contents:
-+
-+  ====================================  ======  ==========================
-+  ``ETHTOOL_A_LINKSTATE_HEADER``        nested  reply header
-+  ``ETHTOOL_A_LINKSTATE_LINK``          bool    link state (up/down)
-+  ====================================  ======  ==========================
-+
-+For most NIC drivers, the value of ``ETHTOOL_A_LINKSTATE_LINK`` returns
-+carrier flag provided by ``netif_carrier_ok()`` but there are drivers which
-+define their own handler.
-+
-+``LINKSTATE_GET`` allows dump requests (kernel returns reply messages for all
-+devices supporting the request).
++``ETHTOOL_A_LINKMODES_OURS`` bit set allows setting advertised link modes. If
++autonegotiation is on (either set now or kept from before), advertised modes
++are not changed (no ``ETHTOOL_A_LINKMODES_OURS`` attribute) and at least one
++of speed and duplex is specified, kernel adjusts advertised modes to all
++supported modes matching speed, duplex or both (whatever is specified). This
++autoselection is done on ethtool side with ioctl interface, netlink interface
++is supposed to allow requesting changes without knowing what exactly kernel
++supports.
 +
 +
  Request translation
  ===================
  
-@@ -413,7 +444,7 @@ have their netlink replacement yet.
-   ``ETHTOOL_GMSGLVL``                 n/a
-   ``ETHTOOL_SMSGLVL``                 n/a
-   ``ETHTOOL_NWAY_RST``                n/a
--  ``ETHTOOL_GLINK``                   n/a
-+  ``ETHTOOL_GLINK``                   ``ETHTOOL_MSG_LINKSTATE_GET``
-   ``ETHTOOL_GEEPROM``                 n/a
-   ``ETHTOOL_SEEPROM``                 n/a
-   ``ETHTOOL_GCOALESCE``               n/a
+@@ -379,6 +404,7 @@ have their netlink replacement yet.
+   ``ETHTOOL_GSET``                    ``ETHTOOL_MSG_LINKINFO_GET``
+                                       ``ETHTOOL_MSG_LINKMODES_GET``
+   ``ETHTOOL_SSET``                    ``ETHTOOL_MSG_LINKINFO_SET``
++                                      ``ETHTOOL_MSG_LINKMODES_SET``
+   ``ETHTOOL_GDRVINFO``                n/a
+   ``ETHTOOL_GREGS``                   n/a
+   ``ETHTOOL_GWOL``                    n/a
+@@ -454,6 +480,7 @@ have their netlink replacement yet.
+   ``ETHTOOL_GLINKSETTINGS``           ``ETHTOOL_MSG_LINKINFO_GET``
+                                       ``ETHTOOL_MSG_LINKMODES_GET``
+   ``ETHTOOL_SLINKSETTINGS``           ``ETHTOOL_MSG_LINKINFO_SET``
++                                      ``ETHTOOL_MSG_LINKMODES_SET``
+   ``ETHTOOL_PHY_GTUNABLE``            n/a
+   ``ETHTOOL_PHY_STUNABLE``            n/a
+   ``ETHTOOL_GFECPARAM``               n/a
 diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index 35948df6d6e3..02f82f42a889 100644
+index dc1cae052eee..cddf978b98df 100644
 --- a/include/uapi/linux/ethtool_netlink.h
 +++ b/include/uapi/linux/ethtool_netlink.h
-@@ -19,6 +19,7 @@ enum {
+@@ -18,6 +18,7 @@ enum {
+ 	ETHTOOL_MSG_LINKINFO_GET,
  	ETHTOOL_MSG_LINKINFO_SET,
  	ETHTOOL_MSG_LINKMODES_GET,
- 	ETHTOOL_MSG_LINKMODES_SET,
-+	ETHTOOL_MSG_LINKSTATE_GET,
++	ETHTOOL_MSG_LINKMODES_SET,
  
  	/* add new constants above here */
  	__ETHTOOL_MSG_USER_CNT,
-@@ -33,6 +34,7 @@ enum {
- 	ETHTOOL_MSG_LINKINFO_NTF,
- 	ETHTOOL_MSG_LINKMODES_GET_REPLY,
- 	ETHTOOL_MSG_LINKMODES_NTF,
-+	ETHTOOL_MSG_LINKSTATE_GET_REPLY,
- 
- 	/* add new constants above here */
- 	__ETHTOOL_MSG_KERNEL_CNT,
-@@ -181,6 +183,18 @@ enum {
- 	ETHTOOL_A_LINKMODES_MAX = __ETHTOOL_A_LINKMODES_CNT - 1
+diff --git a/net/ethtool/linkmodes.c b/net/ethtool/linkmodes.c
+index 81856fa1e632..790b60771d0e 100644
+--- a/net/ethtool/linkmodes.c
++++ b/net/ethtool/linkmodes.c
+@@ -138,3 +138,238 @@ const struct ethnl_request_ops ethnl_linkmodes_request_ops = {
+ 	.reply_size		= linkmodes_reply_size,
+ 	.fill_reply		= linkmodes_fill_reply,
  };
- 
-+/* LINKSTATE */
 +
-+enum {
-+	ETHTOOL_A_LINKSTATE_UNSPEC,
-+	ETHTOOL_A_LINKSTATE_HEADER,		/* nest - _A_HEADER_* */
-+	ETHTOOL_A_LINKSTATE_LINK,		/* u8 */
++/* LINKMODES_SET */
 +
-+	/* add new constants above here */
-+	__ETHTOOL_A_LINKSTATE_CNT,
-+	ETHTOOL_A_LINKSTATE_MAX = __ETHTOOL_A_LINKSTATE_CNT - 1
++struct link_mode_info {
++	int				speed;
++	u8				duplex;
 +};
 +
- /* generic netlink info */
- #define ETHTOOL_GENL_NAME "ethtool"
- #define ETHTOOL_GENL_VERSION 1
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-index 8023da6672ce..9a1332fb0cc6 100644
---- a/net/ethtool/Makefile
-+++ b/net/ethtool/Makefile
-@@ -4,4 +4,5 @@ obj-y				+= ioctl.o common.o
- 
- obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
- 
--ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o
-+ethtool_nl-y	:= netlink.o bitset.o strset.o linkinfo.o linkmodes.o \
-+		   linkstate.o
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 1d4a0aeff2cb..e621b1694d2f 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -217,3 +217,11 @@ convert_legacy_settings_to_link_ksettings(
- 		= legacy_settings->eth_tp_mdix_ctrl;
- 	return retval;
- }
++#define __DEFINE_LINK_MODE_PARAMS(_speed, _type, _duplex) \
++	[ETHTOOL_LINK_MODE(_speed, _type, _duplex)] = { \
++		.speed	= SPEED_ ## _speed, \
++		.duplex	= __DUPLEX_ ## _duplex \
++	}
++#define __DUPLEX_Half DUPLEX_HALF
++#define __DUPLEX_Full DUPLEX_FULL
++#define __DEFINE_SPECIAL_MODE_PARAMS(_mode) \
++	[ETHTOOL_LINK_MODE_ ## _mode ## _BIT] = { \
++		.speed	= SPEED_UNKNOWN, \
++		.duplex	= DUPLEX_UNKNOWN, \
++	}
 +
-+int __ethtool_get_link(struct net_device *dev)
-+{
-+	if (!dev->ethtool_ops->get_link)
-+		return -EOPNOTSUPP;
-+
-+	return netif_running(dev) && dev->ethtool_ops->get_link(dev);
-+}
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-index c8a237402729..5c5f7dc90cd4 100644
---- a/net/ethtool/common.h
-+++ b/net/ethtool/common.h
-@@ -3,6 +3,7 @@
- #ifndef _ETHTOOL_COMMON_H
- #define _ETHTOOL_COMMON_H
- 
-+#include <linux/netdevice.h>
- #include <linux/ethtool.h>
- 
- /* compose link mode index from speed, type and duplex */
-@@ -19,6 +20,8 @@ extern const char
- phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
- extern const char link_mode_names[][ETH_GSTRING_LEN];
- 
-+int __ethtool_get_link(struct net_device *dev);
-+
- bool convert_legacy_settings_to_link_ksettings(
- 	struct ethtool_link_ksettings *link_ksettings,
- 	const struct ethtool_cmd *legacy_settings);
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index 36e2ef2d900d..182bffbffa78 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -1365,12 +1365,12 @@ static int ethtool_nway_reset(struct net_device *dev)
- static int ethtool_get_link(struct net_device *dev, char __user *useraddr)
- {
- 	struct ethtool_value edata = { .cmd = ETHTOOL_GLINK };
-+	int link = __ethtool_get_link(dev);
- 
--	if (!dev->ethtool_ops->get_link)
--		return -EOPNOTSUPP;
--
--	edata.data = netif_running(dev) && dev->ethtool_ops->get_link(dev);
-+	if (link < 0)
-+		return link;
- 
-+	edata.data = link;
- 	if (copy_to_user(useraddr, &edata, sizeof(edata)))
- 		return -EFAULT;
- 	return 0;
-diff --git a/net/ethtool/linkstate.c b/net/ethtool/linkstate.c
-new file mode 100644
-index 000000000000..2740cde0a182
---- /dev/null
-+++ b/net/ethtool/linkstate.c
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "netlink.h"
-+#include "common.h"
-+
-+struct linkstate_req_info {
-+	struct ethnl_req_info		base;
++static const struct link_mode_info link_mode_params[] = {
++	__DEFINE_LINK_MODE_PARAMS(10, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(10, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(100, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(100, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(1000, T, Half),
++	__DEFINE_LINK_MODE_PARAMS(1000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Autoneg),
++	__DEFINE_SPECIAL_MODE_PARAMS(TP),
++	__DEFINE_SPECIAL_MODE_PARAMS(AUI),
++	__DEFINE_SPECIAL_MODE_PARAMS(MII),
++	__DEFINE_SPECIAL_MODE_PARAMS(FIBRE),
++	__DEFINE_SPECIAL_MODE_PARAMS(BNC),
++	__DEFINE_LINK_MODE_PARAMS(10000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Pause),
++	__DEFINE_SPECIAL_MODE_PARAMS(Asym_Pause),
++	__DEFINE_LINK_MODE_PARAMS(2500, X, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(Backplane),
++	__DEFINE_LINK_MODE_PARAMS(1000, KX, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, KX4, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, KR, Full),
++	[ETHTOOL_LINK_MODE_10000baseR_FEC_BIT] = {
++		.speed	= SPEED_10000,
++		.duplex = DUPLEX_FULL,
++	},
++	__DEFINE_LINK_MODE_PARAMS(20000, MLD2, Full),
++	__DEFINE_LINK_MODE_PARAMS(20000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(40000, LR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(56000, LR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, KR, Full),
++	__DEFINE_LINK_MODE_PARAMS(25000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, CR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, LR4_ER4, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, SR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(1000, X, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, LR, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, LRM, Full),
++	__DEFINE_LINK_MODE_PARAMS(10000, ER, Full),
++	__DEFINE_LINK_MODE_PARAMS(2500, T, Full),
++	__DEFINE_LINK_MODE_PARAMS(5000, T, Full),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_NONE),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_RS),
++	__DEFINE_SPECIAL_MODE_PARAMS(FEC_BASER),
++	__DEFINE_LINK_MODE_PARAMS(50000, KR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, SR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, CR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, LR_ER_FR, Full),
++	__DEFINE_LINK_MODE_PARAMS(50000, DR, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, KR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, SR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, CR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, LR2_ER2_FR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(100000, DR2, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, KR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, SR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, LR4_ER4_FR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, DR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(200000, CR4, Full),
++	__DEFINE_LINK_MODE_PARAMS(100, T1, Full),
++	__DEFINE_LINK_MODE_PARAMS(1000, T1, Full),
++	__DEFINE_LINK_MODE_PARAMS(400000, KR8, Full),
++	__DEFINE_LINK_MODE_PARAMS(400000, SR8, Full),
++	__DEFINE_LINK_MODE_PARAMS(400000, LR8_ER8_FR8, Full),
++	__DEFINE_LINK_MODE_PARAMS(400000, DR8, Full),
++	__DEFINE_LINK_MODE_PARAMS(400000, CR8, Full),
 +};
-+
-+struct linkstate_reply_data {
-+	struct ethnl_reply_data		base;
-+	int				link;
-+};
-+
-+#define LINKSTATE_REPDATA(__reply_base) \
-+	container_of(__reply_base, struct linkstate_reply_data, base)
 +
 +static const struct nla_policy
-+linkstate_get_policy[ETHTOOL_A_LINKSTATE_MAX + 1] = {
-+	[ETHTOOL_A_LINKSTATE_UNSPEC]		= { .type = NLA_REJECT },
-+	[ETHTOOL_A_LINKSTATE_HEADER]		= { .type = NLA_NESTED },
-+	[ETHTOOL_A_LINKSTATE_LINK]		= { .type = NLA_REJECT },
++linkmodes_set_policy[ETHTOOL_A_LINKMODES_MAX + 1] = {
++	[ETHTOOL_A_LINKMODES_UNSPEC]		= { .type = NLA_REJECT },
++	[ETHTOOL_A_LINKMODES_HEADER]		= { .type = NLA_NESTED },
++	[ETHTOOL_A_LINKMODES_AUTONEG]		= { .type = NLA_U8 },
++	[ETHTOOL_A_LINKMODES_OURS]		= { .type = NLA_NESTED },
++	[ETHTOOL_A_LINKMODES_PEER]		= { .type = NLA_REJECT },
++	[ETHTOOL_A_LINKMODES_SPEED]		= { .type = NLA_U32 },
++	[ETHTOOL_A_LINKMODES_DUPLEX]		= { .type = NLA_U8 },
 +};
 +
-+static int linkstate_prepare_data(const struct ethnl_req_info *req_base,
-+				  struct ethnl_reply_data *reply_base,
-+				  struct genl_info *info)
++/* Set advertised link modes to all supported modes matching requested speed
++ * and duplex values. Called when autonegotiation is on, speed or duplex is
++ * requested but no link mode change. This is done in userspace with ioctl()
++ * interface, move it into kernel for netlink.
++ * Returns true if advertised modes bitmap was modified.
++ */
++static bool ethnl_auto_linkmodes(struct ethtool_link_ksettings *ksettings,
++				 bool req_speed, bool req_duplex)
 +{
-+	struct linkstate_reply_data *data = LINKSTATE_REPDATA(reply_base);
-+	struct net_device *dev = reply_base->dev;
++	unsigned long *advertising = ksettings->link_modes.advertising;
++	unsigned long *supported = ksettings->link_modes.supported;
++	DECLARE_BITMAP(old_adv, __ETHTOOL_LINK_MODE_MASK_NBITS);
++	unsigned int i;
++
++	BUILD_BUG_ON(ARRAY_SIZE(link_mode_params) !=
++		     __ETHTOOL_LINK_MODE_MASK_NBITS);
++
++	bitmap_copy(old_adv, advertising, __ETHTOOL_LINK_MODE_MASK_NBITS);
++
++	for (i = 0; i < __ETHTOOL_LINK_MODE_MASK_NBITS; i++) {
++		const struct link_mode_info *info = &link_mode_params[i];
++
++		if (info->speed == SPEED_UNKNOWN)
++			continue;
++		if (test_bit(i, supported) &&
++		    (!req_speed || info->speed == ksettings->base.speed) &&
++		    (!req_duplex || info->duplex == ksettings->base.duplex))
++			set_bit(i, advertising);
++		else
++			clear_bit(i, advertising);
++	}
++
++	return !bitmap_equal(old_adv, advertising,
++			     __ETHTOOL_LINK_MODE_MASK_NBITS);
++}
++
++static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
++				  struct ethtool_link_ksettings *ksettings,
++				  bool *mod)
++{
++	struct ethtool_link_settings *lsettings = &ksettings->base;
++	bool req_speed, req_duplex;
 +	int ret;
 +
-+	ret = ethnl_ops_begin(dev);
++	*mod = false;
++	req_speed = tb[ETHTOOL_A_LINKMODES_SPEED];
++	req_duplex = tb[ETHTOOL_A_LINKMODES_DUPLEX];
++
++	ethnl_update_u8(&lsettings->autoneg, tb[ETHTOOL_A_LINKMODES_AUTONEG],
++			mod);
++	ret = ethnl_update_bitset(ksettings->link_modes.advertising,
++				  __ETHTOOL_LINK_MODE_MASK_NBITS,
++				  tb[ETHTOOL_A_LINKMODES_OURS], link_mode_names,
++				  info->extack, mod);
 +	if (ret < 0)
 +		return ret;
-+	data->link = __ethtool_get_link(dev);
++	ethnl_update_u32(&lsettings->speed, tb[ETHTOOL_A_LINKMODES_SPEED],
++			 mod);
++	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
++			mod);
++
++	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
++	    (req_speed || req_duplex) &&
++	    ethnl_auto_linkmodes(ksettings, req_speed, req_duplex))
++		*mod = true;
++
++	return 0;
++}
++
++int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info)
++{
++	struct nlattr *tb[ETHTOOL_A_LINKMODES_MAX + 1];
++	struct ethtool_link_ksettings ksettings = {};
++	struct ethtool_link_settings *lsettings;
++	struct ethnl_req_info req_info = {};
++	struct net_device *dev;
++	bool mod = false;
++	int ret;
++
++	ret = nlmsg_parse(info->nlhdr, GENL_HDRLEN, tb,
++			  ETHTOOL_A_LINKMODES_MAX, linkmodes_set_policy,
++			  info->extack);
++	if (ret < 0)
++		return ret;
++	ret = ethnl_parse_header(&req_info, tb[ETHTOOL_A_LINKMODES_HEADER],
++				 genl_info_net(info), info->extack, true);
++	if (ret < 0)
++		return ret;
++	dev = req_info.dev;
++	if (!dev->ethtool_ops->get_link_ksettings ||
++	    !dev->ethtool_ops->set_link_ksettings)
++		return -EOPNOTSUPP;
++
++	rtnl_lock();
++	ret = ethnl_ops_begin(dev);
++	if (ret < 0)
++		goto out_rtnl;
++
++	ret = __ethtool_get_link_ksettings(dev, &ksettings);
++	if (ret < 0) {
++		if (info)
++			GENL_SET_ERR_MSG(info, "failed to retrieve link settings");
++		goto out_ops;
++	}
++	lsettings = &ksettings.base;
++
++	ret = ethnl_update_linkmodes(info, tb, &ksettings, &mod);
++	if (ret < 0)
++		goto out_ops;
++
++	if (mod) {
++		ret = dev->ethtool_ops->set_link_ksettings(dev, &ksettings);
++		if (ret < 0)
++			GENL_SET_ERR_MSG(info, "link settings update failed");
++	}
++
++out_ops:
 +	ethnl_ops_complete(dev);
-+
-+	return 0;
++out_rtnl:
++	rtnl_unlock();
++	dev_put(dev);
++	return ret;
 +}
-+
-+static int linkstate_reply_size(const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	return nla_total_size(sizeof(u8)) /* LINKSTATE_LINK */
-+		+ 0;
-+}
-+
-+static int linkstate_fill_reply(struct sk_buff *skb,
-+				const struct ethnl_req_info *req_base,
-+				const struct ethnl_reply_data *reply_base)
-+{
-+	struct linkstate_reply_data *data = LINKSTATE_REPDATA(reply_base);
-+
-+	if (data->link >= 0 &&
-+	    nla_put_u8(skb, ETHTOOL_A_LINKSTATE_LINK, !!data->link))
-+		return -EMSGSIZE;
-+
-+	return 0;
-+}
-+
-+const struct ethnl_request_ops ethnl_linkstate_request_ops = {
-+	.request_cmd		= ETHTOOL_MSG_LINKSTATE_GET,
-+	.reply_cmd		= ETHTOOL_MSG_LINKSTATE_GET_REPLY,
-+	.hdr_attr		= ETHTOOL_A_LINKSTATE_HEADER,
-+	.max_attr		= ETHTOOL_A_LINKSTATE_MAX,
-+	.req_info_size		= sizeof(struct linkstate_req_info),
-+	.reply_data_size	= sizeof(struct linkstate_reply_data),
-+	.request_policy		= linkstate_get_policy,
-+
-+	.prepare_data		= linkstate_prepare_data,
-+	.reply_size		= linkstate_reply_size,
-+	.fill_reply		= linkstate_fill_reply,
-+};
 diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 1b5e1bd26504..4ca96c7b86b3 100644
+index 703ff3a227a4..5f28f3cb022d 100644
 --- a/net/ethtool/netlink.c
 +++ b/net/ethtool/netlink.c
-@@ -210,6 +210,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
- 	[ETHTOOL_MSG_STRSET_GET]	= &ethnl_strset_request_ops,
- 	[ETHTOOL_MSG_LINKINFO_GET]	= &ethnl_linkinfo_request_ops,
- 	[ETHTOOL_MSG_LINKMODES_GET]	= &ethnl_linkmodes_request_ops,
-+	[ETHTOOL_MSG_LINKSTATE_GET]	= &ethnl_linkstate_request_ops,
- };
- 
- static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
-@@ -645,6 +646,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.flags	= GENL_UNS_ADMIN_PERM,
- 		.doit	= ethnl_set_linkmodes,
+@@ -638,6 +638,11 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.dumpit	= ethnl_default_dumpit,
+ 		.done	= ethnl_default_done,
  	},
 +	{
-+		.cmd	= ETHTOOL_MSG_LINKSTATE_GET,
-+		.doit	= ethnl_default_doit,
-+		.start	= ethnl_default_start,
-+		.dumpit	= ethnl_default_dumpit,
-+		.done	= ethnl_default_done,
++		.cmd	= ETHTOOL_MSG_LINKMODES_SET,
++		.flags	= GENL_UNS_ADMIN_PERM,
++		.doit	= ethnl_set_linkmodes,
 +	},
  };
  
  static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
 diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 1269cca8a002..da9d6521a4eb 100644
+index 256d38972d1e..1269cca8a002 100644
 --- a/net/ethtool/netlink.h
 +++ b/net/ethtool/netlink.h
-@@ -333,6 +333,7 @@ struct ethnl_request_ops {
- extern const struct ethnl_request_ops ethnl_strset_request_ops;
- extern const struct ethnl_request_ops ethnl_linkinfo_request_ops;
+@@ -335,5 +335,6 @@ extern const struct ethnl_request_ops ethnl_linkinfo_request_ops;
  extern const struct ethnl_request_ops ethnl_linkmodes_request_ops;
-+extern const struct ethnl_request_ops ethnl_linkstate_request_ops;
  
  int ethnl_set_linkinfo(struct sk_buff *skb, struct genl_info *info);
- int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
++int ethnl_set_linkmodes(struct sk_buff *skb, struct genl_info *info);
+ 
+ #endif /* _NET_ETHTOOL_NETLINK_H */
 -- 
 2.24.1
 
