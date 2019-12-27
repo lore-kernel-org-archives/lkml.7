@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBE7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B41C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C42824655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872B121582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468639;
-	bh=M5YR3Aja1kN2HFjnI1fjDZZmVPUiQ4RWomKcTuwqkyQ=;
+	s=default; t=1577468642;
+	bh=Emq/9B2AkW4YhJSNYylruI7SPFCFSURyWY2lX/sSuec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I/Zo8Ra85UV0KtjPhhbBiYd4DCz4N1jw57WTrD0UCY1vwGmO0ASORzjv0vkUyPgrs
-	 6CZQgP7rnDCLKe50pCARflBT9frDg7xpzZp1RC+IapWDBqBkoRrBeLJNvmeywxs2Wz
-	 f/yL00fW+WeMbfFzmMfKVzvgnn0ezPjOS2y4WZR8=
+	b=zqhyElxca80K47FcCmu5Bcz+fkpos0owCJbEMjaEQTXXWj0NpTdkB+ZqZuOW4Vmj/
+	 10BA2esMQV6Kn593AF5S/XP6+qTDvabm+2+5vTIoxq2hZtC2hkF4Ow2PcgvN0i/Mk+
+	 0e2qLrDUtyCWYQ6E20x6m+f5WuEpmR1hP7JxwWk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfL0Rn6 (ORCPT
+        id S1728320AbfL0RoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:43:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727511AbfL0Rnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:55 -0500
+        id S1728308AbfL0Rn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6993921D7E;
-        Fri, 27 Dec 2019 17:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACA462464E;
+        Fri, 27 Dec 2019 17:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468635;
-        bh=M5YR3Aja1kN2HFjnI1fjDZZmVPUiQ4RWomKcTuwqkyQ=;
+        s=default; t=1577468637;
+        bh=Emq/9B2AkW4YhJSNYylruI7SPFCFSURyWY2lX/sSuec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWIZ6NB6AvJzbESLu3n0aK/WW0FXLma1q0xSjUuj+yQRn/OWwZVhyiyAOLFt0NR+C
-         jaF7PC5d9a95uf0IRRM1Y3Sgq/udetS5FV4yZ5rvdrxLQp5A2wgiijbwY40h8NSwrW
-         vGnOlo/CR0mEkrjJYHRr5TauN2xZMy7kI7odCyF8=
+        b=zy1yK41vXYWF4K5X93xG1fkaP1iJA1UHm46ixboqebgLOpW2/Wvk9kve5J6Ky4+JW
+         zcCQLZUd/bGnxygplHny/SB63EMB7wTONYF67yRf+7QRsY2MGDSvdcXCnBlZNGGj/1
+         1hyv0Jm/tVPThmJX9prAH6iX8PsE4RSXfGIi8hZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tzung-Bi Shih <tzungbi@google.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 02/84] ASoC: max98090: remove msleep in PLL unlocked workaround
-Date:   Fri, 27 Dec 2019 12:42:30 -0500
-Message-Id: <20191227174352.6264-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/84] ASoC: max98090: fix possible race conditions
+Date:   Fri, 27 Dec 2019 12:42:32 -0500
+Message-Id: <20191227174352.6264-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -62,53 +62,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tzung-Bi Shih <tzungbi@google.com>
 
-[ Upstream commit acb874a7c049ec49d8fc66c893170fb42c01bdf7 ]
+[ Upstream commit 45dfbf56975994822cce00b7475732a49f8aefed ]
 
-It was observed Baytrail-based chromebooks could cause continuous PLL
-unlocked when using playback stream and capture stream simultaneously.
-Specifically, starting a capture stream after started a playback stream.
-As a result, the audio data could corrupt or turn completely silent.
+max98090_interrupt() and max98090_pll_work() run in 2 different threads.
+There are 2 possible races:
 
-As the datasheet suggested, the maximum PLL lock time should be 7 msec.
-The workaround resets the codec softly by toggling SHDN off and on if
-PLL failed to lock for 10 msec.  Notably, there is no suggested hold
-time for SHDN off.
+Note: M98090_REG_DEVICE_STATUS = 0x01.
+Note: ULK == 0, PLL is locked; ULK == 1, PLL is unlocked.
 
-On Baytrail-based chromebooks, it would easily happen continuous PLL
-unlocked if there is a 10 msec delay between SHDN off and on.  Removes
-the msleep().
+max98090_interrupt      max98090_pll_work
+----------------------------------------------
+schedule max98090_pll_work
+                        restart max98090 codec
+receive ULK INT
+                        assert ULK == 0
+schedule max98090_pll_work (1).
+
+In the case (1), the PLL is locked but max98090_interrupt unnecessarily
+schedules another max98090_pll_work.
+
+max98090_interrupt      max98090_pll_work      max98090 codec
+----------------------------------------------------------------------
+                                               ULK = 1
+receive ULK INT
+read 0x01
+                                               ULK = 0 (clear on read)
+schedule max98090_pll_work
+                        restart max98090 codec
+                                               ULK = 1
+receive ULK INT
+read 0x01
+                                               ULK = 0 (clear on read)
+                        read 0x01
+                        assert ULK == 0 (2).
+
+In the case (2), both max98090_interrupt and max98090_pll_work read
+the same clear-on-read register.  max98090_pll_work would falsely
+thought PLL is locked.
+Note: the case (2) race is introduced by the previous commit ("ASoC:
+max98090: exit workaround earlier if PLL is locked") to check the status
+and exit the loop earlier in max98090_pll_work.
+
+There are 2 possible solution options:
+A. turn off ULK interrupt before scheduling max98090_pll_work; and turn
+on again before exiting max98090_pll_work.
+B. remove the second thread of execution.
+
+Option A cannot fix the case (2) race because it still has 2 threads
+access the same clear-on-read register simultaneously.  Although we
+could suppose the register is volatile and read the status via I2C could
+be much slower than the hardware raises the bits.
+
+Option B introduces a maximum 10~12 msec penalty delay in the interrupt
+handler.  However, it could only punish the jack detection by extra
+10~12 msec.
+
+Adopts option B which is the better solution overall.
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Link: https://lore.kernel.org/r/20191122073114.219945-2-tzungbi@google.com
+Link: https://lore.kernel.org/r/20191122073114.219945-4-tzungbi@google.com
 Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/codecs/max98090.c | 8 ++------
+ sound/soc/codecs/max98090.h | 1 -
+ 2 files changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index c3b28b2f4b10..f8c8b9decab6 100644
+index 172a48d42479..f8cbed6cd0bf 100644
 --- a/sound/soc/codecs/max98090.c
 +++ b/sound/soc/codecs/max98090.c
-@@ -2132,10 +2132,16 @@ static void max98090_pll_work(struct work_struct *work)
+@@ -2121,10 +2121,8 @@ static void max98090_pll_det_disable_work(struct work_struct *work)
+ 			    M98090_IULK_MASK, 0);
+ }
  
- 	dev_info_ratelimited(component->dev, "PLL unlocked\n");
+-static void max98090_pll_work(struct work_struct *work)
++static void max98090_pll_work(struct max98090_priv *max98090)
+ {
+-	struct max98090_priv *max98090 =
+-		container_of(work, struct max98090_priv, pll_work);
+ 	struct snd_soc_component *component = max98090->component;
+ 	unsigned int pll;
+ 	int i;
+@@ -2293,7 +2291,7 @@ static irqreturn_t max98090_interrupt(int irq, void *data)
  
-+	/*
-+	 * As the datasheet suggested, the maximum PLL lock time should be
-+	 * 7 msec.  The workaround resets the codec softly by toggling SHDN
-+	 * off and on if PLL failed to lock for 10 msec.  Notably, there is
-+	 * no suggested hold time for SHDN off.
-+	 */
-+
- 	/* Toggle shutdown OFF then ON */
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, 0);
--	msleep(10);
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, M98090_SHDNN_MASK);
+ 	if (active & M98090_ULK_MASK) {
+ 		dev_dbg(component->dev, "M98090_ULK_MASK\n");
+-		schedule_work(&max98090->pll_work);
++		max98090_pll_work(max98090);
+ 	}
  
+ 	if (active & M98090_JDET_MASK) {
+@@ -2456,7 +2454,6 @@ static int max98090_probe(struct snd_soc_component *component)
+ 			  max98090_pll_det_enable_work);
+ 	INIT_WORK(&max98090->pll_det_disable_work,
+ 		  max98090_pll_det_disable_work);
+-	INIT_WORK(&max98090->pll_work, max98090_pll_work);
+ 
+ 	/* Enable jack detection */
+ 	snd_soc_component_write(component, M98090_REG_JACK_DETECT,
+@@ -2509,7 +2506,6 @@ static void max98090_remove(struct snd_soc_component *component)
+ 	cancel_delayed_work_sync(&max98090->jack_work);
+ 	cancel_delayed_work_sync(&max98090->pll_det_enable_work);
+ 	cancel_work_sync(&max98090->pll_det_disable_work);
+-	cancel_work_sync(&max98090->pll_work);
+ 	max98090->component = NULL;
+ }
+ 
+diff --git a/sound/soc/codecs/max98090.h b/sound/soc/codecs/max98090.h
+index b1572a2d19da..388d2f74674b 100644
+--- a/sound/soc/codecs/max98090.h
++++ b/sound/soc/codecs/max98090.h
+@@ -1533,7 +1533,6 @@ struct max98090_priv {
+ 	struct delayed_work jack_work;
+ 	struct delayed_work pll_det_enable_work;
+ 	struct work_struct pll_det_disable_work;
+-	struct work_struct pll_work;
+ 	struct snd_soc_jack *jack;
+ 	unsigned int dai_fmt;
+ 	int tdm_slots;
 -- 
 2.20.1
 
