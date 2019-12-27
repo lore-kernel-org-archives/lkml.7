@@ -7,52 +7,60 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8964DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F995C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A22B21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D06921582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469752;
-	bh=M/AhzUGI5hmN2hMMcmvCmBrnaWXHGDnoI5kLM8rRwP4=;
+	s=default; t=1577469755;
+	bh=GKYrCZ9/aDSL9Px/0Qf08dFJn+ZicSl101ldxGOtSH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/4gketSjYmYp5KqnmPGM+x0MCzanPvkW2br39RuLkcnGHvtbZ7LM8C24MbPxS8zY
-	 LCasjk+hxh5PeYxS318Uq1jJL8ZgCWLCptsrC1zawmSla5MiWEHTuCcN9rviCClaFC
-	 xjDAwMnMXwA2u9RDRnRfHVqsjP0ry2Ra1FpZh914=
+	b=jKFuyjlsxEr0mLnyJNhR/1hnp7fJSm47dcQzFXN7sUHnh94vUfL6Xl7aGoLhCgkas
+	 M7dawPc3geODomOk7OjLQzFzjSZTFAt9W4Zle1+OrKlAqyHwz0O+JQHVqwt0cMV4Yi
+	 4z9vuUaIEInp4kSJgEK1MDeudOudhutZUzZXnU14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfL0SCb (ORCPT
+        id S1727602AbfL0SCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:02:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59284 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:02:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727367AbfL0SC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:29 -0500
+        id S1727510AbfL0SCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5BB206CB;
-        Fri, 27 Dec 2019 18:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C5922B48;
+        Fri, 27 Dec 2019 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469748;
-        bh=M/AhzUGI5hmN2hMMcmvCmBrnaWXHGDnoI5kLM8rRwP4=;
+        s=default; t=1577469751;
+        bh=GKYrCZ9/aDSL9Px/0Qf08dFJn+ZicSl101ldxGOtSH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZP61wcKjZzkFiBvivS+kgFIgiNRTB5HFcprD9deFWpU3pwARYmDqx4YQCDVg7+XX
-         1z+yoMF6S21SM9f60pYUWsgBSc5pnDLKH7rvg/YFeEBklIJXUWR44fo/+cPe6vi/fS
-         yzXF0w+n/LR5RBLVDw6i8e0OmEPKl8XY8xh4mUXw=
+        b=lUfjiCc1qpxm0wILDcimGRolnWgX/DtzfXSWl70PCM3lqK2YpAQpXHaBGk5lTSalt
+         g/+pwWyWlFGuxA2ngo7dI0ERGR8sbgj9Zw1Hcnnd8hoc2T1vkXWoI2Vc4sEfvwOYlG
+         Smq7b9pfMXK/qmlIlYBBCLW0s8FD2HgBBxAyKTX8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     qize wang <wangqize888888888@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Dave Young <dyoung@redhat.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/57] mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
-Date:   Fri, 27 Dec 2019 13:01:29 -0500
-Message-Id: <20191227180222.7076-4-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/57] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
+Date:   Fri, 27 Dec 2019 13:01:31 -0500
+Message-Id: <20191227180222.7076-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,160 +69,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: qize wang <wangqize888888888@gmail.com>
+From: Dave Young <dyoung@redhat.com>
 
-[ Upstream commit 1e58252e334dc3f3756f424a157d1b7484464c40 ]
+[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
 
-mwifiex_process_tdls_action_frame() without checking
-the incoming tdls infomation element's vality before use it,
-this may cause multi heap buffer overflows.
+Michael Weiser reported that he got this error during a kexec rebooting:
 
-Fix them by putting vality check before use it.
+  esrt: Unsupported ESRT version 2904149718861218184.
 
-IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
-the origin marvell driver code is wrong:
+The ESRT memory stays in EFI boot services data, and it was reserved
+in kernel via efi_mem_reserve().  The initial purpose of the reservation
+is to reuse the EFI boot services data across kexec reboot. For example
+the BGRT image data and some ESRT memory like Michael reported.
 
-memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
-memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
+But although the memory is reserved it is not updated in the X86 E820 table,
+and kexec_file_load() iterates system RAM in the IO resource list to find places
+for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+initramfs overwrote the ESRT memory and then the failure happened.
 
-Fix the bug by changing pos(the address of IE) to
-pos+2 ( the address of IE value ).
+Since kexec_file_load() depends on the E820 table being updated, just fix this
+by updating the reserved EFI boot services memory as reserved type in E820.
 
-Signed-off-by: qize wang <wangqize888888888@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+bypassed in the reservation code path because they are assumed as reserved.
+
+But the reservation is still needed for multiple kexec reboots,
+and it is the only possible case we come here thus just drop the code
+chunk, then everything works without side effects.
+
+On my machine the ESRT memory sits in an EFI runtime data range, it does
+not trigger the problem, but I successfully tested with BGRT instead.
+both kexec_load() and kexec_file_load() work and kdump works as well.
+
+[ mingo: Edited the changelog. ]
+
+Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
+Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kexec@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/tdls.c | 70 +++++++++++++++++++--
- 1 file changed, 64 insertions(+), 6 deletions(-)
+ arch/x86/platform/efi/quirks.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
-index e76af2866a19..b5340af9fa5e 100644
---- a/drivers/net/wireless/marvell/mwifiex/tdls.c
-+++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
-@@ -956,59 +956,117 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 5b513ccffde4..cadd7fd290fa 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -257,10 +257,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 		return;
+ 	}
  
- 		switch (*pos) {
- 		case WLAN_EID_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			sta_ptr->tdls_cap.rates_len = pos[1];
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
- 			break;
+-	/* No need to reserve regions that will never be freed. */
+-	if (md.attribute & EFI_MEMORY_RUNTIME)
+-		return;
+-
+ 	size += addr % EFI_PAGE_SIZE;
+ 	size = round_up(size, EFI_PAGE_SIZE);
+ 	addr = round_down(addr, EFI_PAGE_SIZE);
+@@ -290,6 +286,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 	early_memunmap(new, new_size);
  
- 		case WLAN_EID_EXT_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			basic = sta_ptr->tdls_cap.rates_len;
-+			if (pos[1] > 32 - basic)
-+				return;
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
- 			sta_ptr->tdls_cap.rates_len += pos[1];
- 			break;
- 		case WLAN_EID_HT_CAPABILITY:
--			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
-+			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_cap))
-+				return;
-+			/* copy the ie's value into ht_capb*/
-+			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
- 			       sizeof(struct ieee80211_ht_cap));
- 			sta_ptr->is_11n_enabled = 1;
- 			break;
- 		case WLAN_EID_HT_OPERATION:
--			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
-+			if (pos > end -
-+			    sizeof(struct ieee80211_ht_operation) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_operation))
-+				return;
-+			/* copy the ie's value into ht_oper*/
-+			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
- 			       sizeof(struct ieee80211_ht_operation));
- 			break;
- 		case WLAN_EID_BSS_COEX_2040:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.coex_2040 = pos[2];
- 			break;
- 		case WLAN_EID_EXT_CAPABILITY:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > 8)
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], 8));
- 			break;
- 		case WLAN_EID_RSN:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > IEEE_MAX_IE_SIZE -
-+			    sizeof(struct ieee_types_header))
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
- 				     sizeof(struct ieee_types_header)));
- 			break;
- 		case WLAN_EID_QOS_CAPA:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.qos_info = pos[2];
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
--			if (priv->adapter->is_hw_11ac_capable)
--				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_operation) - 2)
-+					return;
-+				if (pos[1] !=
-+				    sizeof(struct ieee80211_vht_operation))
-+					return;
-+				/* copy the ie's value into vhtoper*/
-+				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
- 				       sizeof(struct ieee80211_vht_operation));
-+			}
- 			break;
- 		case WLAN_EID_VHT_CAPABILITY:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_cap) - 2)
-+					return;
-+				if (pos[1] != sizeof(struct ieee80211_vht_cap))
-+					return;
-+				/* copy the ie's value into vhtcap*/
-+				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
- 				       sizeof(struct ieee80211_vht_cap));
- 				sta_ptr->is_11ac_enabled = 1;
- 			}
- 			break;
- 		case WLAN_EID_AID:
--			if (priv->adapter->is_hw_11ac_capable)
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end - 4)
-+					return;
-+				if (pos[1] != 2)
-+					return;
- 				sta_ptr->tdls_cap.aid =
- 					get_unaligned_le16((pos + 2));
-+			}
-+			break;
- 		default:
- 			break;
- 		}
+ 	efi_memmap_install(new_phys, num_entries);
++	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
++	e820__update_table(e820_table);
+ }
+ 
+ /*
 -- 
 2.20.1
 
