@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3015C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2715C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0157222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918162067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469041;
-	bh=onSEEpP7BW8fkuP5VBJXjlJWYi+LHwQqtVjEOCKfnuY=;
+	s=default; t=1577469049;
+	bh=3P/hjoYRsu8bPZf0I3NrWjo6PZBfPtY27pUf3fjXgP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXlbB3jEljPb/KIk+plTJ7TWM7avdZ6aaLJsWtTu5xeXRbos8xE2/Uq3jSRqkcVAn
-	 7KK2hXlyC8aqXboyHz0x8XuOJ1OV3MAvA3b8odK7aVJZuEDyDLz9V242OvTzk8KQ4m
-	 yHeaZ9J+h3dy7ABaTO5GYiMXUMA7PCFDoM8Hwvao=
+	b=gXg4U2F9slRUdiHFxYZS9BxCBE45PimzkhMwRevprq7UfhCg9wRiPYQHnbgHnonyg
+	 NRI/D1hBkzpknpXtVNIime25aQw+HjVawXCDSfvi3cfDRUQNWIDP5+GiL4V3Pblv3a
+	 pk9+XjAA9T3L7+SqCtBbzgzEuCMsaz/RhODBNn5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfL0RoL (ORCPT
+        id S1728339AbfL0RoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727661AbfL0RoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:03 -0500
+        id S1727889AbfL0RoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E211B2253D;
-        Fri, 27 Dec 2019 17:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26902222C4;
+        Fri, 27 Dec 2019 17:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468642;
-        bh=onSEEpP7BW8fkuP5VBJXjlJWYi+LHwQqtVjEOCKfnuY=;
+        s=default; t=1577468640;
+        bh=3P/hjoYRsu8bPZf0I3NrWjo6PZBfPtY27pUf3fjXgP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VzQiWWWfSQyKJjQQbrbW1u4YeGfBqGApgB1u+vQwufAHduuxbb19xJII7EFm6qT1a
-         IwDrzbTKzndldooFKxBc40eAdZU7BxMeq40fJtJuaEKrrKm2HPW5q//ThaxDccy8kM
-         e4ojwf6vL+ztgnfPNvX3xRI3gGCAJPNqwiH43MGE=
+        b=oNqByy3MWHMOQT9qV2mBz0NshVipYTnpThuyUCndKGzkb2E4fZvi2GM0ZMt3NTQaU
+         lwFsa1OgzagiTdCBV3WinwF6Y0g2eSbDqi7KoT6Hk2cwXioaVtquXT6i5sqC5sgK9s
+         2lpI+aCv3YcVt3+CxusVYsVqj92SqAVVjIcsmr8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     qize wang <wangqize888888888@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/84] mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
-Date:   Fri, 27 Dec 2019 12:42:36 -0500
-Message-Id: <20191227174352.6264-8-sashal@kernel.org>
+Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/84] locking/spinlock/debug: Fix various data races
+Date:   Fri, 27 Dec 2019 12:42:34 -0500
+Message-Id: <20191227174352.6264-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,160 +64,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: qize wang <wangqize888888888@gmail.com>
+From: Marco Elver <elver@google.com>
 
-[ Upstream commit 1e58252e334dc3f3756f424a157d1b7484464c40 ]
+[ Upstream commit 1a365e822372ba24c9da0822bc583894f6f3d821 ]
 
-mwifiex_process_tdls_action_frame() without checking
-the incoming tdls infomation element's vality before use it,
-this may cause multi heap buffer overflows.
+This fixes various data races in spinlock_debug. By testing with KCSAN,
+it is observable that the console gets spammed with data races reports,
+suggesting these are extremely frequent.
 
-Fix them by putting vality check before use it.
+Example data race report:
 
-IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
-the origin marvell driver code is wrong:
+  read to 0xffff8ab24f403c48 of 4 bytes by task 221 on cpu 2:
+   debug_spin_lock_before kernel/locking/spinlock_debug.c:85 [inline]
+   do_raw_spin_lock+0x9b/0x210 kernel/locking/spinlock_debug.c:112
+   __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
+   _raw_spin_lock+0x39/0x40 kernel/locking/spinlock.c:151
+   spin_lock include/linux/spinlock.h:338 [inline]
+   get_partial_node.isra.0.part.0+0x32/0x2f0 mm/slub.c:1873
+   get_partial_node mm/slub.c:1870 [inline]
+  <snip>
 
-memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
-memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
+  write to 0xffff8ab24f403c48 of 4 bytes by task 167 on cpu 3:
+   debug_spin_unlock kernel/locking/spinlock_debug.c:103 [inline]
+   do_raw_spin_unlock+0xc9/0x1a0 kernel/locking/spinlock_debug.c:138
+   __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:159 [inline]
+   _raw_spin_unlock_irqrestore+0x2d/0x50 kernel/locking/spinlock.c:191
+   spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
+   free_debug_processing+0x1b3/0x210 mm/slub.c:1214
+   __slab_free+0x292/0x400 mm/slub.c:2864
+  <snip>
 
-Fix the bug by changing pos(the address of IE) to
-pos+2 ( the address of IE value ).
+As a side-effect, with KCSAN, this eventually locks up the console, most
+likely due to deadlock, e.g. .. -> printk lock -> spinlock_debug ->
+KCSAN detects data race -> kcsan_print_report() -> printk lock ->
+deadlock.
 
-Signed-off-by: qize wang <wangqize888888888@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This fix will 1) avoid the data races, and 2) allow using lock debugging
+together with KCSAN.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20191120155715.28089-1-elver@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/tdls.c | 70 +++++++++++++++++++--
- 1 file changed, 64 insertions(+), 6 deletions(-)
+ kernel/locking/spinlock_debug.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
-index 27779d7317fd..6058c48d56dc 100644
---- a/drivers/net/wireless/marvell/mwifiex/tdls.c
-+++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
-@@ -956,59 +956,117 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
+diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
+index 9aa0fccd5d43..03595c29c566 100644
+--- a/kernel/locking/spinlock_debug.c
++++ b/kernel/locking/spinlock_debug.c
+@@ -51,19 +51,19 @@ EXPORT_SYMBOL(__rwlock_init);
  
- 		switch (*pos) {
- 		case WLAN_EID_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			sta_ptr->tdls_cap.rates_len = pos[1];
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
- 			break;
+ static void spin_dump(raw_spinlock_t *lock, const char *msg)
+ {
+-	struct task_struct *owner = NULL;
++	struct task_struct *owner = READ_ONCE(lock->owner);
  
- 		case WLAN_EID_EXT_SUPP_RATES:
-+			if (pos[1] > 32)
-+				return;
- 			basic = sta_ptr->tdls_cap.rates_len;
-+			if (pos[1] > 32 - basic)
-+				return;
- 			for (i = 0; i < pos[1]; i++)
- 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
- 			sta_ptr->tdls_cap.rates_len += pos[1];
- 			break;
- 		case WLAN_EID_HT_CAPABILITY:
--			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
-+			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_cap))
-+				return;
-+			/* copy the ie's value into ht_capb*/
-+			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
- 			       sizeof(struct ieee80211_ht_cap));
- 			sta_ptr->is_11n_enabled = 1;
- 			break;
- 		case WLAN_EID_HT_OPERATION:
--			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
-+			if (pos > end -
-+			    sizeof(struct ieee80211_ht_operation) - 2)
-+				return;
-+			if (pos[1] != sizeof(struct ieee80211_ht_operation))
-+				return;
-+			/* copy the ie's value into ht_oper*/
-+			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
- 			       sizeof(struct ieee80211_ht_operation));
- 			break;
- 		case WLAN_EID_BSS_COEX_2040:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.coex_2040 = pos[2];
- 			break;
- 		case WLAN_EID_EXT_CAPABILITY:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > 8)
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], 8));
- 			break;
- 		case WLAN_EID_RSN:
-+			if (pos > end - sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] < sizeof(struct ieee_types_header))
-+				return;
-+			if (pos[1] > IEEE_MAX_IE_SIZE -
-+			    sizeof(struct ieee_types_header))
-+				return;
- 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
- 			       sizeof(struct ieee_types_header) +
- 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
- 				     sizeof(struct ieee_types_header)));
- 			break;
- 		case WLAN_EID_QOS_CAPA:
-+			if (pos > end - 3)
-+				return;
-+			if (pos[1] != 1)
-+				return;
- 			sta_ptr->tdls_cap.qos_info = pos[2];
- 			break;
- 		case WLAN_EID_VHT_OPERATION:
--			if (priv->adapter->is_hw_11ac_capable)
--				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_operation) - 2)
-+					return;
-+				if (pos[1] !=
-+				    sizeof(struct ieee80211_vht_operation))
-+					return;
-+				/* copy the ie's value into vhtoper*/
-+				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
- 				       sizeof(struct ieee80211_vht_operation));
-+			}
- 			break;
- 		case WLAN_EID_VHT_CAPABILITY:
- 			if (priv->adapter->is_hw_11ac_capable) {
--				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
-+				if (pos > end -
-+				    sizeof(struct ieee80211_vht_cap) - 2)
-+					return;
-+				if (pos[1] != sizeof(struct ieee80211_vht_cap))
-+					return;
-+				/* copy the ie's value into vhtcap*/
-+				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
- 				       sizeof(struct ieee80211_vht_cap));
- 				sta_ptr->is_11ac_enabled = 1;
- 			}
- 			break;
- 		case WLAN_EID_AID:
--			if (priv->adapter->is_hw_11ac_capable)
-+			if (priv->adapter->is_hw_11ac_capable) {
-+				if (pos > end - 4)
-+					return;
-+				if (pos[1] != 2)
-+					return;
- 				sta_ptr->tdls_cap.aid =
- 					get_unaligned_le16((pos + 2));
-+			}
-+			break;
- 		default:
- 			break;
- 		}
+-	if (lock->owner && lock->owner != SPINLOCK_OWNER_INIT)
+-		owner = lock->owner;
++	if (owner == SPINLOCK_OWNER_INIT)
++		owner = NULL;
+ 	printk(KERN_EMERG "BUG: spinlock %s on CPU#%d, %s/%d\n",
+ 		msg, raw_smp_processor_id(),
+ 		current->comm, task_pid_nr(current));
+ 	printk(KERN_EMERG " lock: %pS, .magic: %08x, .owner: %s/%d, "
+ 			".owner_cpu: %d\n",
+-		lock, lock->magic,
++		lock, READ_ONCE(lock->magic),
+ 		owner ? owner->comm : "<none>",
+ 		owner ? task_pid_nr(owner) : -1,
+-		lock->owner_cpu);
++		READ_ONCE(lock->owner_cpu));
+ 	dump_stack();
+ }
+ 
+@@ -80,16 +80,16 @@ static void spin_bug(raw_spinlock_t *lock, const char *msg)
+ static inline void
+ debug_spin_lock_before(raw_spinlock_t *lock)
+ {
+-	SPIN_BUG_ON(lock->magic != SPINLOCK_MAGIC, lock, "bad magic");
+-	SPIN_BUG_ON(lock->owner == current, lock, "recursion");
+-	SPIN_BUG_ON(lock->owner_cpu == raw_smp_processor_id(),
++	SPIN_BUG_ON(READ_ONCE(lock->magic) != SPINLOCK_MAGIC, lock, "bad magic");
++	SPIN_BUG_ON(READ_ONCE(lock->owner) == current, lock, "recursion");
++	SPIN_BUG_ON(READ_ONCE(lock->owner_cpu) == raw_smp_processor_id(),
+ 							lock, "cpu recursion");
+ }
+ 
+ static inline void debug_spin_lock_after(raw_spinlock_t *lock)
+ {
+-	lock->owner_cpu = raw_smp_processor_id();
+-	lock->owner = current;
++	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
++	WRITE_ONCE(lock->owner, current);
+ }
+ 
+ static inline void debug_spin_unlock(raw_spinlock_t *lock)
+@@ -99,8 +99,8 @@ static inline void debug_spin_unlock(raw_spinlock_t *lock)
+ 	SPIN_BUG_ON(lock->owner != current, lock, "wrong owner");
+ 	SPIN_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
+ 							lock, "wrong CPU");
+-	lock->owner = SPINLOCK_OWNER_INIT;
+-	lock->owner_cpu = -1;
++	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
++	WRITE_ONCE(lock->owner_cpu, -1);
+ }
+ 
+ /*
+@@ -183,8 +183,8 @@ static inline void debug_write_lock_before(rwlock_t *lock)
+ 
+ static inline void debug_write_lock_after(rwlock_t *lock)
+ {
+-	lock->owner_cpu = raw_smp_processor_id();
+-	lock->owner = current;
++	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
++	WRITE_ONCE(lock->owner, current);
+ }
+ 
+ static inline void debug_write_unlock(rwlock_t *lock)
+@@ -193,8 +193,8 @@ static inline void debug_write_unlock(rwlock_t *lock)
+ 	RWLOCK_BUG_ON(lock->owner != current, lock, "wrong owner");
+ 	RWLOCK_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
+ 							lock, "wrong CPU");
+-	lock->owner = SPINLOCK_OWNER_INIT;
+-	lock->owner_cpu = -1;
++	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
++	WRITE_ONCE(lock->owner_cpu, -1);
+ }
+ 
+ void do_raw_write_lock(rwlock_t *lock)
 -- 
 2.20.1
 
