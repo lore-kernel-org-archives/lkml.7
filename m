@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB9AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE16120CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C0720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469420;
-	bh=7rwKNQPuyOvNkbJa8xITK69Gi8xyKc1iP/xJ7pOhLxU=;
+	s=default; t=1577469425;
+	bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2OX3wpXNBVodxaK8z3IVF5D/Fpy9lpbYvF/fJwEwfGFb9Z7g8Qjymb/OpjkYuSuA
-	 t9e+SXa724+X2rcU27kkfuslsMTEpGOFXOmQpD9yDcIlD4vlx7E7OMh9mhZE/vIIP2
-	 ZFZpw65XytNLwI7WAV2peG5mxPodIPTj2tRJ/nD4=
+	b=IulGstN3OlByZdOE6u4laAF8Qmpo9b4HJuXz42nSSB+MJsTAOt7ZEQ8y1rTcy92Ks
+	 DlnRFHydJ/v08jiB1b9dr5GBy86ZihssgYhGEvLI1/eEHbILtsyy1/OffRoWS02mP4
+	 yjYU/oSUz5cGF0wHbmndw8i1QNYsYGG7mIYJ40zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfL0R46 (ORCPT
+        id S1728086AbfL0R5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:57:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727636AbfL0Rly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:54 -0500
+        id S1727617AbfL0Rlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29FFC218AC;
-        Fri, 27 Dec 2019 17:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EECC7222C3;
+        Fri, 27 Dec 2019 17:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468513;
-        bh=7rwKNQPuyOvNkbJa8xITK69Gi8xyKc1iP/xJ7pOhLxU=;
+        s=default; t=1577468510;
+        bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNpZHnPvsjr15yMJTvIgUhdmdQzuSxYdZUd11EJnwPdn+3ez2jBy/DA932wjqHBwP
-         pn5Iqs79iuu+RsLVdONijMfQDt5fZ7hAR8jtP/hsLVUK7MnclSmIolbXT48AqUGIHt
-         DjXDujJThfbuKlel75RnJRc5854agj66S4I6JIP4=
+        b=UcQH1k2S8rmSmk496usrwWckQZ6jw9H1vlHpMRAtpCS03A88KuDsBjQKwsX8Qg8mm
+         JyXdjYj1CZtYmXwKZKHvN/JFKJZYIvfvkS4g5cjQ7f5U93x9B+Y1aQsUufWNyu2oOu
+         8RQyTtC7QW5f+uUP2x/7zyTbUXh0VPlNiNngK46s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 046/187] selftests: safesetid: Fix Makefile to set correct test program
-Date:   Fri, 27 Dec 2019 12:38:34 -0500
-Message-Id: <20191227174055.4923-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 043/187] selftests/ftrace: Fix multiple kprobe testcase
+Date:   Fri, 27 Dec 2019 12:38:31 -0500
+Message-Id: <20191227174055.4923-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -62,41 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 8ef1ec0ca32c6f8a87f5b4c24b1db26da67c5609 ]
+[ Upstream commit 5cc6c8d4a99d0ee4d5466498e258e593df1d3eb6 ]
 
-Fix Makefile to set safesetid-test.sh to TEST_PROGS instead
-of non existing run_tests.sh.
+Fix multiple kprobe event testcase to work it correctly.
+There are 2 bugfixes.
+ - Since `wc -l FILE` returns not only line number but also
+   FILE filename, following "if" statement always failed.
+   Fix this bug by replacing it with 'cat FILE | wc -l'
+ - Since "while do-done loop" block with pipeline becomes a
+   subshell, $N local variable is not update outside of
+   the loop.
+   Fix this bug by using actual target number (256) instead
+   of $N.
 
-Without this fix, I got following error.
-  ----
-  TAP version 13
-  1..1
-  # selftests: safesetid: run_tests.sh
-  # Warning: file run_tests.sh is missing!
-  not ok 1 selftests: safesetid: run_tests.sh
-  ----
-
-Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/safesetid/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/ftrace/test.d/kprobe/multiple_kprobes.tc      | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/safesetid/Makefile b/tools/testing/selftests/safesetid/Makefile
-index cac42cd36a1b..fa02c4d5ec13 100644
---- a/tools/testing/selftests/safesetid/Makefile
-+++ b/tools/testing/selftests/safesetid/Makefile
-@@ -3,7 +3,7 @@
- CFLAGS = -Wall -O2
- LDLIBS = -lcap
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
+index 5862eee91e1d..6e3dbe5f96b7 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
+@@ -20,9 +20,9 @@ while read i; do
+   test $N -eq 256 && break
+ done
  
--TEST_PROGS := run_tests.sh
-+TEST_PROGS := safesetid-test.sh
- TEST_GEN_FILES := safesetid-test
+-L=`wc -l kprobe_events`
+-if [ $L -ne $N ]; then
+-  echo "The number of kprobes events ($L) is not $N"
++L=`cat kprobe_events | wc -l`
++if [ $L -ne 256 ]; then
++  echo "The number of kprobes events ($L) is not 256"
+   exit_fail
+ fi
  
- include ../lib.mk
 -- 
 2.20.1
 
