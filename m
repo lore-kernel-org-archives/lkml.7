@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E441C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4C1C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB21206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A60222522
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469804;
-	bh=KMIQ/vRNYcRb/g7omTSlt/igyCZg5W16R8w+aDwPuGI=;
+	s=default; t=1577469807;
+	bh=fEofdPQLdo3o+UTKlPauo6nULx3FWB7k5nBorR9fbVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBZQp6jYyLVQbH0p0wwkWfAsB0ZyuJ796umIfj674UNKB0pNI7Lts9k5oZ/OD4lUi
-	 SKRVH5eEw1qyM7I26x55epZ4PedeRlv921ByS0vmo/wKS/fq0/m0FvqHu34y8qWVrq
-	 HaXKaxJfHLExvCq00MZS8m5b4/GDRJJyT/gIBgpE=
+	b=X6xpvFfq5kRkeNS0lCJYxIQCK20K3CGbGa/t7BW4Iy4T2aJ9ou/I+GosG5P4R2Tiz
+	 Day6gWxoFbrHdiyivp0Dsg/yseV/axa04WhJXlV+74lzSEY7QIy7a/nYO8VPoIlXFn
+	 CvS1rF5msLKwQxVrkzMQYa116RNE1RG1xe/nxgi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfL0SDW (ORCPT
+        id S1727804AbfL0SD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:03:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60446 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:03:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbfL0SDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:16 -0500
+        id S1728591AbfL0SDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55831206F4;
-        Fri, 27 Dec 2019 18:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DDF621582;
+        Fri, 27 Dec 2019 18:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469795;
-        bh=KMIQ/vRNYcRb/g7omTSlt/igyCZg5W16R8w+aDwPuGI=;
+        s=default; t=1577469793;
+        bh=fEofdPQLdo3o+UTKlPauo6nULx3FWB7k5nBorR9fbVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y93tp1AuolJD9BRla8FQC+rY/b6wzEgMVDkcMU9exnn2vuRgCrrA1xf3yddlat5Wf
-         G+QseBOheSeVH8GkcHdIpMVmZAR8tGGcRiQJMnvq4SBqDKan6bkD8UflAYe57qmKJx
-         UDhbkLn7F2DBUcvmu4GsT5O4/z3N7dkH38O8itSM=
+        b=S/8NOmmyFE0LN8CrMGzTSarzB1+h/4D4wKyZI7DfL/8zLdUW8Znkn20pvD9JZNyu2
+         KVOWsACbwc89MJd9JYIW4bwtA5MeTQeGeyONKlNcPhWJJf9a/E6foRVl90EJrXNcTN
+         Lf/a72+LNAt4mjhdoh43veu8Ngi4/8BadpfFdibI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 43/57] perf/x86/intel: Fix PT PMI handling
-Date:   Fri, 27 Dec 2019 13:02:08 -0500
-Message-Id: <20191227180222.7076-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 42/57] perf/x86/intel/bts: Fix the use of page_private()
+Date:   Fri, 27 Dec 2019 13:02:07 -0500
+Message-Id: <20191227180222.7076-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -65,72 +65,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit 92ca7da4bdc24d63bb0bcd241c11441ddb63b80a ]
+[ Upstream commit ff61541cc6c1962957758ba433c574b76f588d23 ]
 
-Commit:
+Commit
 
-  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+  8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
 
-skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
-also inadvertently skips the active_events bump for PT in that case, which
-is a bug. If there aren't any hardware events at the same time as PT, the
-PMI handler will ignore PT PMIs, as active_events reads zero in that case,
-resulting in the "Uhhuh" spurious NMI warning and PT data loss.
+brought in a warning with the BTS buffer initialization
+that is easily tripped with (assuming KPTI is disabled):
 
-Fix this by always increasing active_events for PT events.
+instantly throwing:
 
-Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
-Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+> ------------[ cut here ]------------
+> WARNING: CPU: 2 PID: 326 at arch/x86/events/intel/bts.c:86 bts_buffer_setup_aux+0x117/0x3d0
+> Modules linked in:
+> CPU: 2 PID: 326 Comm: perf Not tainted 5.4.0-rc8-00291-gceb9e77324fa #904
+> RIP: 0010:bts_buffer_setup_aux+0x117/0x3d0
+> Call Trace:
+>  rb_alloc_aux+0x339/0x550
+>  perf_mmap+0x607/0xc70
+>  mmap_region+0x76b/0xbd0
+...
+
+It appears to assume (for lost raisins) that PagePrivate() is set,
+while later it actually tests for PagePrivate() before using
+page_private().
+
+Make it consistent and always check PagePrivate() before using
+page_private().
+
+Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/20191205142853.28894-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/bts.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6ed99de2ddf5..c1f7b3cb84a9 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -375,7 +375,7 @@ int x86_add_exclusive(unsigned int what)
- 	 * LBR and BTS are still mutually exclusive.
- 	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
--		return 0;
-+		goto out;
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 24ffa1e88cf9..4d3399405d06 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -71,9 +71,17 @@ struct bts_buffer {
  
- 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
- 		mutex_lock(&pmc_reserve_mutex);
-@@ -387,6 +387,7 @@ int x86_add_exclusive(unsigned int what)
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
+ static struct pmu bts_pmu;
  
-+out:
- 	atomic_inc(&active_events);
- 	return 0;
- 
-@@ -397,11 +398,15 @@ int x86_add_exclusive(unsigned int what)
- 
- void x86_del_exclusive(unsigned int what)
- {
-+	atomic_dec(&active_events);
++static int buf_nr_pages(struct page *page)
++{
++	if (!PagePrivate(page))
++		return 1;
 +
-+	/*
-+	 * See the comment in x86_add_exclusive().
-+	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
- 		return;
- 
- 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
--	atomic_dec(&active_events);
++	return 1 << page_private(page);
++}
++
+ static size_t buf_size(struct page *page)
+ {
+-	return 1 << (PAGE_SHIFT + page_private(page));
++	return buf_nr_pages(page) * PAGE_SIZE;
  }
  
- int x86_setup_perfctr(struct perf_event *event)
+ static void *
+@@ -89,9 +97,7 @@ bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
+ 	/* count all the high order buffers */
+ 	for (pg = 0, nbuf = 0; pg < nr_pages;) {
+ 		page = virt_to_page(pages[pg]);
+-		if (WARN_ON_ONCE(!PagePrivate(page) && nr_pages > 1))
+-			return NULL;
+-		pg += 1 << page_private(page);
++		pg += buf_nr_pages(page);
+ 		nbuf++;
+ 	}
+ 
+@@ -115,7 +121,7 @@ bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
+ 		unsigned int __nr_pages;
+ 
+ 		page = virt_to_page(pages[pg]);
+-		__nr_pages = PagePrivate(page) ? 1 << page_private(page) : 1;
++		__nr_pages = buf_nr_pages(page);
+ 		buf->buf[nbuf].page = page;
+ 		buf->buf[nbuf].offset = offset;
+ 		buf->buf[nbuf].displacement = (pad ? BTS_RECORD_SIZE - pad : 0);
 -- 
 2.20.1
 
