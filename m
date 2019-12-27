@@ -2,189 +2,342 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1219C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974B0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C4E2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBC8206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:20:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NEUfBpsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfL0HRw (ORCPT
+        id S1726495AbfL0HUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 02:17:52 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:41735 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfL0HRw (ORCPT
+        Fri, 27 Dec 2019 02:20:52 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:10128 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbfL0HUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 02:17:52 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBR7HPUC005151, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBR7HPUC005151
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Dec 2019 15:17:26 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Fri, 27 Dec 2019 15:17:25 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 27 Dec 2019 15:17:25 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Fri, 27 Dec 2019 15:17:25 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: RE: [PATCH 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
-Thread-Topic: [PATCH 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-Thread-Index: AQHVq0XEDCHB5XuVy0GM835RkHVd06eq2S4AgCLPVoA=
-Date:   Fri, 27 Dec 2019 07:17:25 +0000
-Message-ID: <a673b4e4bb454bad99ad483e1cccbbb1@realtek.com>
-References: <20191205082555.22633-1-james.tai@realtek.com>
- <20191205082555.22633-3-james.tai@realtek.com>
- <4040ffcf-5c54-fb44-b0a8-ce0c8c21b93f@suse.de>
-In-Reply-To: <4040ffcf-5c54-fb44-b0a8-ce0c8c21b93f@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 27 Dec 2019 02:20:52 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577431251; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=r7d29QOE1VRce5mJ7arHBOd8f6cfXlb4iukGjHVO6RE=;
+ b=NEUfBpszelo5cdyIzb9o0dHoruGSbTQbeIFQVkz5eKhXrSGF0Y5r8zZoLAk9ukAiwUibmoor
+ 5UYUfrMtb0E5szeY4RpCulOZbWmS4P3DTvlTXjWO2gpHGmojMx4eYgvRaEDKbfYEUB8cyTK/
+ 2HFfS3491FL+ZZ2MDeNUx834HuM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e05b0cf.7f9b2d1a56c0-smtp-out-n02;
+ Fri, 27 Dec 2019 07:20:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 91D4FC447A4; Fri, 27 Dec 2019 07:20:47 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 828BCC447A3;
+        Fri, 27 Dec 2019 07:20:46 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 27 Dec 2019 12:50:46 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?Q?Michael_Turquette_=C2=A0?= <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] clk: qcom: Add modem clock controller driver for
+ SC7180
+In-Reply-To: <1577421760-1174-4-git-send-email-tdas@codeaurora.org>
+References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+ <1577421760-1174-4-git-send-email-tdas@codeaurora.org>
+Message-ID: <7e63d3a91264e7c237c4cb10508182bf@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpIaSBBbmRyZWFzLA0KDQo+IFRoaXMgaHVuayBpcyBsYWNraW5nIHJ0ZDEzOTUsIHNvIGlzIG5v
-dCBiYXNlZCBvbiB0aGUgbGF0ZXN0IHBhdGNoZXMgSSBwb3N0ZWQuIEkNCj4gZXhwZWN0IHlvdSB0
-byBiZSBkZXZlbG9waW5nIGFnYWluc3QgbGludXgtbmV4dC5naXQgdHJlZSwgYW5kIHdoZW4gdGhl
-cmUncw0KPiByZWxldmFudCBpbi1mbGlnaHQgcGF0Y2hlcywgeW91J2xsIG5lZWQgdG8gZWl0aGVy
-IGFwcGx5IG15IHBhdGNoZXMgdmlhIGdpdC1hbSB0bw0KPiB5b3VyIHRyZWUsIG9yIGZvciBjb252
-ZW5pZW5jZSB5b3UgY2FuIHVzZSB0aGUgYmVnaW5uaW5nIG9mIG15IChidXQgYmV0dGVyIG5vdA0K
-PiB0aGUgZnVsbCBleHBlcmltZW50YWwpIHJ0ZDEyOTUtbmV4dCBicmFuY2ggKGdpdC1yZWJhc2Ug
-LWksIG9yIChjYXJlZnVsISkgZ2l0LXJlc2V0DQo+IC0taGFyZCkuIFllcywgbmVpdGhlciBpcyBz
-dXBlci1lYXN5Lg0KPiANCg0KSSB3aWxsIHVzZSB5b3VyIHJ0ZDEyOTUtbmV4dCBicmFuY2ggZm9y
-IGRldmVsb3BtZW50Lg0KDQo+IFNhbWUgYXMgd2l0aCB0aGUgYmluZGluZywgaXQgd291bGQgc2Vl
-bSBiZXR0ZXIgdG8gbm90IGFkZCB0aGlzIGF0IHRoZSBlbmQsIGV2ZW4NCj4gaWYgaXQncyB5b3Vy
-IG5ld2VzdCBmYW1pbHkuIENvbnNpZGVyIHRoaXM6IFNvbWVvbmUgZmluZHMgYW4NCj4gUlREMTAz
-NiBpbiB0aGVpciBob3VzZWhvbGQgYW5kIHdhbnRzIHRvIGNvbnRyaWJ1dGUgYSBwYXRjaCAtIHdo
-ZXJlIHdvdWxkDQo+IHRoZXkgYWRkIGl0PyBJIGRvbid0IHdhbnQgYWxsIG5ld2x5IGFkZGVkIHN0
-dWZmIHRvIGdvIGludG8gdGhlIGJvdHRvbSBvZiB0aGUgZmlsZQ0KPiAodGhlbiBpdCdsbCBiZSBo
-YXJkIHRvIGZpbmQgYW5kIHBvdGVudGlhbGx5IGNhdXNlcyBjb25mbGljdHMpLCBzbyB3ZSBuZWVk
-IGEgc3RhYmxlDQo+IHNvcnQgb3JkZXIgd2hlcmUgSSBkb24ndCBuZWVkIHRvIGRvIGhpc3Rvcmlj
-YWwgcmVzZWFyY2ggb2Ygd2hldGhlciAxMDM2IGlzDQo+IG5ld2VyIG9yIG9sZGVyIHRoYW4gMTE5
-NS8xMjk2IHRvIGRldGVybWluZSB3aGVyZSB0byBpbnNlcnQgaXQgaW4gYSBmaWxlLg0KPiBBbHBo
-YW51bWVyaWNhbCBzb3J0IG9yZGVyIHNlZW1zIHNpbXBsZXN0IHRvIHVuZGVyc3RhbmQgYW5kIGlz
-IHByb3Zlbg0KPiBlbHNld2hlcmUgdG8gcmVkdWNlIG1lcmdlIGNvbmZsaWN0cy4NCg0KVGhhbmtz
-IGZvciB5b3VyIGtpbmQgcmVtaW5kZXIuDQoNCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9i
-b290L2R0cy9yZWFsdGVrL3J0ZDEzMTktcHltcGFydGljbGUuZHRzDQo+ID4gYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTMxOS1weW1wYXJ0aWNsZS5kdHMNCj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZDhiZmUyMzA0YjcxDQo+ID4gLS0t
-IC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQxMzE5
-LXB5bXBhcnRpY2xlLmR0cw0KPiA+IEBAIC0wLDAgKzEsNDMgQEANCj4gPiArLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9yLWxhdGVyIE9SIEJTRC0yLUNsYXVzZSkNCj4gPiAr
-LyoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE5IFJlYWx0ZWsgU2VtaWNvbmR1Y3RvciBDb3Jw
-Lg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKy9kdHMtdjEvOw0KPiA+ICsNCj4gPiArI2luY2x1ZGUg
-InJ0ZDEzMTkuZHRzaSINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsJY29tcGF0aWJsZSA9ICJyZWFs
-dGVrLHB5bXBhcnRpY2xlIiwgInJlYWx0ZWsscnRkMTMxOSI7DQo+IA0KPiBUaGFua3MsIGNvcnJl
-Y3Qgb3JkZXIgbm93Lg0KPiANCj4gPiArCW1vZGVsID0gIlJlYWx0ZWsgUHltUGFydGljbGUgRVZC
-IjsNCj4gPiArDQo+ID4gKwltZW1vcnlAMCB7DQo+ID4gKwkJZGV2aWNlX3R5cGUgPSAibWVtb3J5
-IjsNCj4gPiArCQlyZWcgPSA8MHgwIDB4ODAwMDAwMDA+Ow0KPiA+ICsJfTsNCj4gDQo+IE5vISBJ
-IHVuZGVyc3Rvb2QgUlREMTMxOSBoYXMgdGhlIHNhbWUgYm9vdCBST00gc2l6ZSAxODQgS2lCIGFz
-IFJURDE2MTksDQo+IHNvIHBsZWFzZSBsb29rIGF0IHRoZSBwYXRjaGVzIEkgcG9zdGVkLCBpbmNs
-dWRpbmcgZml4IGZvciBSVEQxNjE5IFsxXSwgYW5kIGZpeA0KPiB0aGlzIHlvdXJzZWxmIGhlcmUu
-IEEgY29tbWVudCBmb3IgaHVtYW5zIHdvdWxkIGFsc28gYmUgbmljZS4NCj4gDQo+IEluIHRoZSBw
-dWJsaWMgQlBJLU00LWJzcCBjb2RlIEkgc2VlIG9uZSAtcHltcGFydGljbGUtMUdCLkNNQXgyLmR0
-cyBmaWxlLg0KPiBJZiB0aGlzIGJvYXJkIGlzIGF2YWlsYWJsZSB3aXRoIGxlc3MgdGhhbiAyIEdp
-QiBSQU0gdGhlbiBwbGVhc2UgdXNlIHRoZSBsb3dlcg0KPiB2YWx1ZSB0byBiZSBzYWZlIC0geW91
-IGNhbiBydW4gYSAyIEdpQiBib2FyZCB3aXRoIDEgR2lCIFJBTSB1c2VkLCBidXQgdXNpbmcNCj4g
-bW9yZSBSQU0gdGhhbiBhdmFpbGFibGUgd2lsbCBicmVhay4NCj4gDQo+IFsxXSBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMjY4OTY5Lw0KPiANCg0KSSB3aWxsIGZpeCBpdCBp
-biBuZXh0IHZlcnNpb24gcGF0Y2guDQoNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jl
-YWx0ZWsvcnRkMTMxOS5kdHNpDQo+ID4gQEAgLTAsMCArMSwxMiBAQA0KPiA+ICsvLyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb3ItbGF0ZXIgT1IgQlNELTItQ2xhdXNlKQ0KPiA+
-ICsvKg0KPiA+ICsgKiBSZWFsdGVrIFJURDEzMTkgU29DDQo+ID4gKyAqDQo+ID4gKyAqIENvcHly
-aWdodCAoYykgMjAxOSBSZWFsdGVrIFNlbWljb25kdWN0b3IgQ29ycC4NCj4gPiArICovDQo+ID4g
-Kw0KPiA+ICsjaW5jbHVkZSAicnRkMTN4eC5kdHNpIg0KPiA+ICsNCj4gPiArLyB7DQo+ID4gKwlj
-b21wYXRpYmxlID0gInJlYWx0ZWsscnRkMTMxOSI7DQo+ID4gK307DQo+IA0KPiBXaGF0IG90aGVy
-IGNvbnRlbnRzIGFyZSB5b3UgZXhwZWN0aW5nIHRvIGFkZCBpbiB0aGlzIGZpbGU/DQoNCkkgZXhw
-ZWN0IGFkZCBVU0IsIFNBVEEsIFBDSUUgYW5kIHNvIG9uLg0KDQo+ID4gKwljcHVzIHsNCj4gPiAr
-CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiAr
-DQo+ID4gKwkJY3B1MDogY3B1QDAgew0KPiA+ICsJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPiA+
-ICsJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IjsNCj4gPiArCQkJcmVnID0gPDB4MD47
-DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2Fj
-aGUgPSA8JmwyPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUxOiBjcHVAMTAwIHsNCj4g
-PiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29y
-dGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDEwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2Qg
-PSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4gPiArCQl9Ow0K
-PiA+ICsNCj4gPiArCQljcHUyOiBjcHVAMjAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1
-IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9
-IDwweDIwMD47DQo+ID4gKwkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQt
-bGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQljcHUzOiBjcHVA
-MzAwIHsNCj4gPiArCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCj4gPiArCQkJY29tcGF0aWJsZSA9
-ICJhcm0sY29ydGV4LWE1NSI7DQo+ID4gKwkJCXJlZyA9IDwweDMwMD47DQo+ID4gKwkJCWVuYWJs
-ZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gKwkJCW5leHQtbGV2ZWwtY2FjaGUgPSA8JmwyPjsNCj4g
-PiArCQl9Ow0KPiA+ICsNCj4gPiArCQlsMjogbDItY2FjaGUgew0KPiA+ICsJCQljb21wYXRpYmxl
-ID0gImNhY2hlIjsNCj4gPiArCQl9Ow0KPiANCj4gSSBub3RlIHRoaXMgc2VlbXMgYSBkaWZmZXJl
-bnQgY2FjaGUgdG9wb2xvZ3kgdGhhbiBSVEQxNjE5Pw0KPiANClllcywgSXQgaXMgZGlmZmVyZW50
-IGNhY2hlIHRvcG9sb2d5IHRoYW4gUlREMTYxOS4NClRoZSBSVEQxMzE5IGRvbid0IGhhdmUgYW4g
-TDMgY2FjaGUuDQoNCj4gPiArCW9zYzI3TTogb3NjIHsNCj4gPiArCQljb21wYXRpYmxlID0gImZp
-eGVkLWNsb2NrIjsNCj4gPiArCQljbG9jay1mcmVxdWVuY3kgPSA8MjcwMDAwMDA+Ow0KPiA+ICsJ
-CWNsb2NrLW91dHB1dC1uYW1lcyA9ICJvc2MyN00iOw0KPiANCj4gQlRXIEkgcmVjYWxsIHNlZWlu
-ZyAib3NjMjdtIiBpbiB5b3VyIGNsayBwYXRjaHNldC4gV2Ugc2hvdWxkIGRlY2lkZSBvbiBvbmUN
-Cj4gbmFtZSBhbmQgc3RpY2sgd2l0aCBpdCBjb25zaXN0ZW50bHksIGFuZCBJIHRoaW5rIGl0J3Mg
-YmVzdCB0byBoYXZlIHRoaXMgYXMgYSBub2RlDQo+IGhlcmUgaW4gLmR0c2kgKG9yIGluIC5kdHMp
-LCBpbiBjYXNlIE9FTXMgZXZlciBjaG9vc2UgdG8gaGF2ZSBpdCBnZW5lcmF0ZWQgYnkNCj4gc29t
-ZSBvdGhlciBub24tdHJpdmlhbCBJQy4NCg0KSSB1bmRlcnN0YW5kLg0KDQo+ID4gKwkJI2Nsb2Nr
-LWNlbGxzID0gPDA+Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwlzb2Mgew0KPiA+ICsJCWNvbXBh
-dGlibGUgPSAic2ltcGxlLWJ1cyI7DQo+ID4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4g
-KwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKwkJcmFuZ2VzID0gPDB4OTgwMDAwMDAgMHg5ODAw
-MDAwMCAweDY4MDAwMDAwPjsNCj4gDQo+IE5vISBMYWNraW5nIGEgcmFuZ2UgZm9yIGJvb3QgUk9N
-LiBBbmQgeW91ciByYW5nZSBpcyBwcm9iYWJseSB0b28gbGFyZ2UgZHVlIHRvDQo+IGhpZ2ggUkFN
-LiBQbGVhc2Ugc2VlIFsxXSBhbmQgZml4IGZvciBib3RoLiByLWJ1cyByYW5nZXMgYmVsb3cgd291
-bGQgaW5kaWNhdGUNCj4gdGhhdCBhYm92ZSBzb2MgcmFuZ2Ugc2hvdWxkIGJlIDB4MDAyMDAwMDAg
-bG9uZyBvbmx5LCBwbHVzIGV4dHJhIHJhbmdlcyBmb3INCj4gd2hhdGV2ZXIgYmVzaWRlcyByLWJ1
-cyBpcyBzaGFkb3dpbmcgUkFNIChlLmcuLCBHSUMpLg0KPiANCg0KSSB3aWxsIGZpeCBpdCBpbiBu
-ZXh0IHZlcnNpb24gcGF0Y2guDQoNCj4gPiArDQo+ID4gKwkJCXVhcnQwOiBzZXJpYWwwQDc4MDAg
-ew0KPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWFwYi11YXJ0IjsNCj4gPiArCQkJCXJl
-ZyA9IDwweDc4MDAgMHg0MDA+Ow0KPiA+ICsJCQkJcmVnLXNoaWZ0ID0gPDI+Ow0KPiA+ICsJCQkJ
-cmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiA+ICsJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDY4IElS
-UV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDQzMjAwMDAw
-MD47DQo+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCQl9Ow0KPiA+ICsNCj4g
-PiArCQkJdWFydDE6IHNlcmlhbDFAMWIyMDAgew0KPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJzbnBz
-LGR3LWFwYi11YXJ0IjsNCj4gPiArCQkJCXJlZyA9IDwweDFiMjAwIDB4NDAwPjsNCj4gPiArCQkJ
-CXJlZy1zaGlmdCA9IDwyPjsNCj4gPiArCQkJCXJlZy1pby13aWR0aCA9IDw0PjsNCj4gPiArCQkJ
-CWludGVycnVwdHMgPSA8R0lDX1NQSSA4OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQkJ
-CWNsb2NrLWZyZXF1ZW5jeSA9IDw0MzIwMDAwMDA+Ow0KPiA+ICsJCQkJc3RhdHVzID0gImRpc2Fi
-bGVkIjsNCj4gPiArCQkJfTsNCj4gPiArDQo+ID4gKwkJCXVhcnQyOiBzZXJpYWwyQDFiNDAwIHsN
-Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItdWFydCI7DQo+ID4gKwkJCQlyZWcg
-PSA8MHgxYjQwMCAweDQwMD47DQo+ID4gKwkJCQlyZWctc2hpZnQgPSA8Mj47DQo+ID4gKwkJCQly
-ZWctaW8td2lkdGggPSA8ND47DQo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTAgSVJR
-X1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAw
-PjsNCj4gPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJCX07DQo+IA0KPiBIZXJl
-IHlvdSBhcHBlYXIgdG8gaWdub3JlIG15IHBhdGNoZXMgaW50cm9kdWNpbmcgc3lzY29uIGZvciBJ
-U08gJiBNSVNDIQ0KPiANCj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIv
-MTEyNjk0NTMvDQoNCkkgd2lsbCBhcHBseSB0aGUgc3lzY29uIGZvciBJU08gJiBNSVNDIGluIG5l
-eHQgdmVyc2lvbiBwYXRjaC4NCg0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWdpYzogaW50ZXJy
-dXB0LWNvbnRyb2xsZXJAZmYxMDAwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxnaWMt
-djMiOw0KPiA+ICsJCQlyZWcgPSA8MHhmZjEwMDAwMCAweDEwMDAwPiwNCj4gPiArCQkJICAgICAg
-PDB4ZmYxNDAwMDAgMHhjMDAwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1BQSSA5IElS
-UV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsJCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gPiAr
-CQkJI2ludGVycnVwdC1jZWxscyA9IDwzPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArfTsN
-Cj4gDQoNClJlZ2FyZHMsDQpKYW1lcw0KDQoNCg==
+Hey Taniya,
+
+On 2019-12-27 10:12, Taniya Das wrote:
+> Add support for the modem clock controller found on SC7180
+> based devices. This would allow modem drivers to probe and
+> control their clocks.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/clk/qcom/Kconfig      |  9 +++++
+>  drivers/clk/qcom/Makefile     |  1 +
+>  drivers/clk/qcom/gcc-sc7180.c | 70 ++++++++++++++++++++++++++++++++
+>  drivers/clk/qcom/mss-sc7180.c | 94 
+> +++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 174 insertions(+)
+>  create mode 100644 drivers/clk/qcom/mss-sc7180.c
+> 
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 3b33ef1..5d4b6e5 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -245,6 +245,15 @@ config SC_GCC_7180
+>  	  Say Y if you want to use peripheral devices such as UART, SPI,
+>  	  I2C, USB, UFS, SDCC, etc.
+> 
+> +config SC_MSS_7180
+> +	tristate "SC7180 MSS Clock Controller"
+> +	select SC_GCC_7180
+> +	help
+> +	  Support for the MSS clock controller on Qualcomm Technologies, Inc
+> +	  SC7180 devices.
+> +	  Say Y if you want to use the MSS branch clocks of the MSS clock
+> +	  controller to reset the MSS subsystem.
+> +
+>  config SDM_CAMCC_845
+>  	tristate "SDM845 Camera Clock Controller"
+>  	select SDM_GCC_845
+> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+> index d899661..0e66bc6 100644
+> --- a/drivers/clk/qcom/Makefile
+> +++ b/drivers/clk/qcom/Makefile
+> @@ -46,6 +46,7 @@ obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
+>  obj-$(CONFIG_QCS_Q6SSTOP_404) += q6sstop-qcs404.o
+>  obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
+>  obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
+> +obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
+>  obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
+>  obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
+>  obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c 
+> b/drivers/clk/qcom/gcc-sc7180.c
+> index 38424e6..7b3a705 100644
+> --- a/drivers/clk/qcom/gcc-sc7180.c
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> @@ -2165,6 +2165,71 @@ static struct clk_branch gcc_video_xo_clk = {
+>  	},
+>  };
+> 
+> +static struct clk_branch gcc_mss_cfg_ahb_clk = {
+> +	.halt_reg = 0x8a000,
+> +	.halt_check = BRANCH_HALT,
+> +	.clkr = {
+> +		.enable_reg = 0x8a000,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_mss_cfg_ahb_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_mss_mfab_axis_clk = {
+> +	.halt_reg = 0x8a004,
+> +	.halt_check = BRANCH_HALT_VOTED,
+> +	.clkr = {
+> +		.enable_reg = 0x8a004,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_mss_mfab_axis_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_mss_nav_axi_clk = {
+> +	.halt_reg = 0x8a00c,
+> +	.halt_check = BRANCH_HALT_VOTED,
+> +	.clkr = {
+> +		.enable_reg = 0x8a00c,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_mss_nav_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_mss_snoc_axi_clk = {
+> +	.halt_reg = 0x8a150,
+> +	.halt_check = BRANCH_HALT,
+> +	.clkr = {
+> +		.enable_reg = 0x8a150,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_mss_snoc_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch gcc_mss_q6_memnoc_axi_clk = {
+> +	.halt_reg = 0x8a154,
+> +	.halt_check = BRANCH_HALT,
+> +	.clkr = {
+> +		.enable_reg = 0x8a154,
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_mss_q6_memnoc_axi_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+>  static struct gdsc ufs_phy_gdsc = {
+>  	.gdscr = 0x77004,
+>  	.pd = {
+> @@ -2334,6 +2399,11 @@ static struct clk_regmap *gcc_sc7180_clocks[] = 
+> {
+>  	[GPLL7] = &gpll7.clkr,
+>  	[GPLL4] = &gpll4.clkr,
+>  	[GPLL1] = &gpll1.clkr,
+> +	[GCC_MSS_CFG_AHB_CBCR] = &gcc_mss_cfg_ahb_clk.clkr,
+> +	[GCC_MSS_MFAB_AXIS_CBCR] = &gcc_mss_mfab_axis_clk.clkr,
+> +	[GCC_MSS_NAV_AXI_CBCR] = &gcc_mss_nav_axi_clk.clkr,
+> +	[GCC_MSS_Q6_MEMNOC_AXI_CBCR] = &gcc_mss_q6_memnoc_axi_clk.clkr,
+> +	[GCC_MSS_SNOC_AXI_CBCR] = &gcc_mss_snoc_axi_clk.clkr,
+>  };
+> 
+>  static const struct qcom_reset_map gcc_sc7180_resets[] = {
+> diff --git a/drivers/clk/qcom/mss-sc7180.c 
+> b/drivers/clk/qcom/mss-sc7180.c
+> new file mode 100644
+> index 0000000..24c38dc
+> --- /dev/null
+> +++ b/drivers/clk/qcom/mss-sc7180.c
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,mss-sc7180.h>
+> +
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "common.h"
+> +
+> +static struct clk_branch mss_axi_nav_clk = {
+> +	.halt_reg = 0xbc,
+
+if we use the entire mpss_perph
+reg space it should be 0x20bc
+instead.
+
+> +	.halt_check = BRANCH_HALT,
+> +	.clkr = {
+> +		.enable_reg = 0xbc,
+
+0x20bc
+
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "mss_axi_nav_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_branch mss_axi_crypto_clk = {
+> +	.halt_reg = 0xcc,
+
+if we use the entire mpss_perph
+reg space it should be 0x20cc
+instead.
+
+> +	.halt_check = BRANCH_HALT,
+> +	.clkr = {
+> +		.enable_reg = 0xcc,
+
+0x20cc
+
+> +		.enable_mask = BIT(0),
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "mss_axi_crypto_clk",
+> +			.ops = &clk_branch2_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct regmap_config mss_regmap_config = {
+> +	.reg_bits	= 32,
+> +	.reg_stride	= 4,
+> +	.val_bits	= 32,
+> +	.fast_io	= true,
+> +};
+> +
+> +static struct clk_regmap *mss_sc7180_clocks[] = {
+> +	[MSS_AXI_CRYPTO_CLK] = &mss_axi_crypto_clk.clkr,
+> +	[MSS_AXI_NAV_CLK] = &mss_axi_nav_clk.clkr,
+> +};
+> +
+> +static const struct qcom_cc_desc mss_sc7180_desc = {
+> +	.config = &mss_regmap_config,
+> +	.clks = mss_sc7180_clocks,
+> +	.num_clks = ARRAY_SIZE(mss_sc7180_clocks),
+> +};
+> +
+> +static int mss_sc7180_probe(struct platform_device *pdev)
+> +{
+> +	return qcom_cc_probe(pdev, &mss_sc7180_desc);
+
+Similar to turingcc-qcs404 and q6sstop-qcs404
+shouldn't we model the iface clk dependency
+here since  both the above clocks cant be turned
+on/off without it.
+
+> +}
+> +
+> +static const struct of_device_id mss_sc7180_match_table[] = {
+> +	{ .compatible = "qcom,sc7180-mss" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, mss_sc7180_match_table);
+> +
+> +static struct platform_driver mss_sc7180_driver = {
+> +	.probe		= mss_sc7180_probe,
+> +	.driver		= {
+> +		.name		= "sc7180-mss",
+> +		.of_match_table = mss_sc7180_match_table,
+> +	},
+> +};
+> +
+> +static int __init mss_sc7180_init(void)
+> +{
+> +	return platform_driver_register(&mss_sc7180_driver);
+> +}
+> +subsys_initcall(mss_sc7180_init);
+> +
+> +static void __exit mss_sc7180_exit(void)
+> +{
+> +	platform_driver_unregister(&mss_sc7180_driver);
+> +}
+> +module_exit(mss_sc7180_exit);
+> +
+> +MODULE_DESCRIPTION("QTI MSS SC7180 Driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
+> member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
