@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B83C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8F221582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ECA206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469369;
-	bh=TQYSuAZJRaCzizmp6PoJ4JqrQQooRARmD8G+/wehoZo=;
+	s=default; t=1577469377;
+	bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWiocIZUncdlZc7BFcLrV//RLy+Q+V4JJzkKcdwU+bELRKs11C1HC93130Y1T+6dQ
-	 KVNbljWI6/bPysKGB6HibGdtQJFpQ1kniAbZT8envHJJgJzziHB+zBGK3r02wirs1o
-	 Io7BKKrNjurAeHukyAT/KC/BF0NluzUOJYeyGpYQ=
+	b=Ah8VWH9X0KeSNNayi9uI7JRPYp5cH3jQH68mm4ti5gs9n7wlJ+8mxWXwccSxr1GW6
+	 pAebiJdLhuhCCDA7PqmJ5DEQEmHWHFgda3o7y84NAbyDXm8gNUQvQqWkQcOxLLMlCt
+	 S4LLB+tTDSeTpXeb/zKobtXatXjzrrnEdyFpjYd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfL0R4I (ORCPT
+        id S1727722AbfL0RmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:56:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38792 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfL0RmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:07 -0500
+        id S1727102AbfL0RmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AA9F21D7E;
-        Fri, 27 Dec 2019 17:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50F624654;
+        Fri, 27 Dec 2019 17:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468526;
-        bh=TQYSuAZJRaCzizmp6PoJ4JqrQQooRARmD8G+/wehoZo=;
+        s=default; t=1577468519;
+        bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSO/zpSJzA+k/8EMcBaonvzaahYWvdzusf5cI51mgpmKjMBYlr31RPoGtCEE/1wFR
-         5tERXo0h9pRtgOIobqhvatpxq0i9CqJunI7zxMcdMgsyZLrJCuYRzyJA1daYE6ig78
-         CUaAdvc74xmeCodwd0yd/1XP9rheL50eH2hU4sm4=
+        b=DAhU0rKHDKePhHcTbqG72SBAyuSWsJlM8N8Tlmi91c522xmtD5IjmyeeAHVaFbFCW
+         wujbs32Q7vQI5HaOtNJzke+66kO/jpUpOFECT5T+LgiDxj5bBCYFkf6a2wTustOfnj
+         F1yAPdRCFd39dElS+9qC/1cmZJcP4KVHvNz20GQc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Coelho <luciano.coelho@intel.com>, stable@ver.kernel.org,
-        Anders Kaseorg <andersk@mit.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 057/187] iwlwifi: pcie: move power gating workaround earlier in the flow
-Date:   Fri, 27 Dec 2019 12:38:45 -0500
-Message-Id: <20191227174055.4923-57-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 051/187] spi: spi-cavium-thunderx: Add missing pci_release_regions()
+Date:   Fri, 27 Dec 2019 12:38:39 -0500
+Message-Id: <20191227174055.4923-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,122 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 0df36b90c47d93295b7e393da2d961b2f3b6cde4 ]
+[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
 
-We need to reset the NIC after setting the bits to enable power
-gating and that cannot be done too late in the flow otherwise it
-cleans other registers and things that were already configured,
-causing initialization to fail.
+The driver forgets to call pci_release_regions() in probe failure
+and remove.
+Add the missed calls to fix it.
 
-In order to fix this, move the function to the common code in trans.c
-so it can be called directly from there at an earlier point, just
-after the reset we already do during initialization.
-
-Fixes: 9a47cb988338 ("iwlwifi: pcie: add workaround for power gating in integrated 22000")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205719
-Cc: stable@ver.kernel.org # 5.4+
-Reported-by: Anders Kaseorg <andersk@mit.edu>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/intel/iwlwifi/pcie/trans-gen2.c  | 25 ----------------
- .../net/wireless/intel/iwlwifi/pcie/trans.c   | 30 +++++++++++++++++++
- 2 files changed, 30 insertions(+), 25 deletions(-)
+ drivers/spi/spi-cavium-thunderx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans-gen2.c
-index ca3bb4d65b00..df8455f14e4d 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans-gen2.c
-@@ -57,24 +57,6 @@
- #include "internal.h"
- #include "fw/dbg.h"
+diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
+index d12e149f1a41..fd6b9caffaf0 100644
+--- a/drivers/spi/spi-cavium-thunderx.c
++++ b/drivers/spi/spi-cavium-thunderx.c
+@@ -82,6 +82,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
  
--static int iwl_pcie_gen2_force_power_gating(struct iwl_trans *trans)
--{
--	iwl_set_bits_prph(trans, HPM_HIPM_GEN_CFG,
--			  HPM_HIPM_GEN_CFG_CR_FORCE_ACTIVE);
--	udelay(20);
--	iwl_set_bits_prph(trans, HPM_HIPM_GEN_CFG,
--			  HPM_HIPM_GEN_CFG_CR_PG_EN |
--			  HPM_HIPM_GEN_CFG_CR_SLP_EN);
--	udelay(20);
--	iwl_clear_bits_prph(trans, HPM_HIPM_GEN_CFG,
--			    HPM_HIPM_GEN_CFG_CR_FORCE_ACTIVE);
--
--	iwl_trans_sw_reset(trans);
--	iwl_clear_bit(trans, CSR_GP_CNTRL, CSR_GP_CNTRL_REG_FLAG_INIT_DONE);
--
--	return 0;
--}
--
- /*
-  * Start up NIC's basic functionality after it has been reset
-  * (e.g. after platform boot, or shutdown via iwl_pcie_apm_stop())
-@@ -110,13 +92,6 @@ int iwl_pcie_gen2_apm_init(struct iwl_trans *trans)
- 
- 	iwl_pcie_apm_config(trans);
- 
--	if (trans->trans_cfg->device_family == IWL_DEVICE_FAMILY_22000 &&
--	    trans->cfg->integrated) {
--		ret = iwl_pcie_gen2_force_power_gating(trans);
--		if (ret)
--			return ret;
--	}
--
- 	ret = iwl_finish_nic_init(trans, trans->trans_cfg);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 6961f00ff812..d3db38c3095b 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -1783,6 +1783,29 @@ static int iwl_trans_pcie_clear_persistence_bit(struct iwl_trans *trans)
- 	return 0;
+ error:
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	spi_master_put(master);
+ 	return ret;
  }
+@@ -96,6 +97,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
+ 		return;
  
-+static int iwl_pcie_gen2_force_power_gating(struct iwl_trans *trans)
-+{
-+	int ret;
-+
-+	ret = iwl_finish_nic_init(trans, trans->trans_cfg);
-+	if (ret < 0)
-+		return ret;
-+
-+	iwl_set_bits_prph(trans, HPM_HIPM_GEN_CFG,
-+			  HPM_HIPM_GEN_CFG_CR_FORCE_ACTIVE);
-+	udelay(20);
-+	iwl_set_bits_prph(trans, HPM_HIPM_GEN_CFG,
-+			  HPM_HIPM_GEN_CFG_CR_PG_EN |
-+			  HPM_HIPM_GEN_CFG_CR_SLP_EN);
-+	udelay(20);
-+	iwl_clear_bits_prph(trans, HPM_HIPM_GEN_CFG,
-+			    HPM_HIPM_GEN_CFG_CR_FORCE_ACTIVE);
-+
-+	iwl_trans_pcie_sw_reset(trans);
-+
-+	return 0;
-+}
-+
- static int _iwl_trans_pcie_start_hw(struct iwl_trans *trans)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
-@@ -1802,6 +1825,13 @@ static int _iwl_trans_pcie_start_hw(struct iwl_trans *trans)
- 
- 	iwl_trans_pcie_sw_reset(trans);
- 
-+	if (trans->trans_cfg->device_family == IWL_DEVICE_FAMILY_22000 &&
-+	    trans->cfg->integrated) {
-+		err = iwl_pcie_gen2_force_power_gating(trans);
-+		if (err)
-+			return err;
-+	}
-+
- 	err = iwl_pcie_apm_init(trans);
- 	if (err)
- 		return err;
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	/* Put everything in a known state. */
+ 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
+ }
 -- 
 2.20.1
 
