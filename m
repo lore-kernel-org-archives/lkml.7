@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A281C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61732176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A9B206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469000;
-	bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
+	s=default; t=1577469004;
+	bh=RtFS6Ig+xSxNO0ISJNYHYxVZI60x+9oEXxbVu9DCVwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdsfPGMnzbEeNI2kRG75JrAkmTriYOYNYIZtDFxSNwnmBw3AGDteiJNJHofm97x5n
-	 pn8csXL7Giv6lUvnvEfeOQMCzTi+LQYsLIw89P7CBkH9kLRZKbhN7v9atH0DMXLWiV
-	 DFhFeqPy2rllLOuuaKi1JovIybjjPUgjw/it8ry4=
+	b=XLr4PyJV4PeLQxirg+2STRLBU51ppicC60Ff+f/ucnRIEHR/Ke/3kD9fg8Epa860L
+	 U6vttoddQWsXQDei4PRtjoqZLRpRf5OAn08DnGupIMcoKnzDM1zCzsnPB/xNuCvwOS
+	 IbDJVMkBVUGo8pVmHqA69iHGYyYg+AYTjpEMrR1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfL0RoU (ORCPT
+        id S1728638AbfL0RuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:50:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727437AbfL0RoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:09 -0500
+        id S1728404AbfL0RoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5F6222C2;
-        Fri, 27 Dec 2019 17:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC55920740;
+        Fri, 27 Dec 2019 17:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468648;
-        bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
+        s=default; t=1577468659;
+        bh=RtFS6Ig+xSxNO0ISJNYHYxVZI60x+9oEXxbVu9DCVwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wuKoLlWVp84OTmn1+BnhkZfDhTljcIrEBUoqBfYi4dqENm8kdODUECy6eXXO0o+sH
-         6LFTXLwl7wJO47Dj3FOkxn3HsihoEgMcOV3Zhd6ccI+XWgnEgo4dgmJPWklTYH/Dzi
-         NKi9Pgg1RAiCD0cAd1raetGobhARP7t3Kq88U7DY=
+        b=cXD2YjiKxuLcIjJfV4vb+V//C8HfUKT8Me3bXM4Jaguw5fhkG/tMz72F68hDq0BzT
+         ljuXzop6Sn+r66J/5FgLAUcHwYPohVZ4COoP/HPp5A5U8Ld5r6l8h7e4RT6OWTYgRQ
+         ZwnVUWckYSUOpeW3OgJ7DGLAYF1hFTcNxTN7SEQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Oliverio <marco.oliverio@tanaza.com>,
-        Rocco Folino <rocco.folino@tanaza.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/84] netfilter: nf_queue: enqueue skbs with NULL dst
-Date:   Fri, 27 Dec 2019 12:42:40 -0500
-Message-Id: <20191227174352.6264-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 21/84] netfilter: nf_tables: validate NFT_DATA_VALUE after nft_data_init()
+Date:   Fri, 27 Dec 2019 12:42:49 -0500
+Message-Id: <20191227174352.6264-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -63,42 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Oliverio <marco.oliverio@tanaza.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 0b9173f4688dfa7c5d723426be1d979c24ce3d51 ]
+[ Upstream commit 0d2c96af797ba149e559c5875c0151384ab6dd14 ]
 
-Bridge packets that are forwarded have skb->dst == NULL and get
-dropped by the check introduced by
-b60a77386b1d4868f72f6353d35dabe5fbe981f2 (net: make skb_dst_force
-return true when dst is refcounted).
+Userspace might bogusly sent NFT_DATA_VERDICT in several netlink
+attributes that assume NFT_DATA_VALUE. Moreover, make sure that error
+path invokes nft_data_release() to decrement the reference count on the
+chain object.
 
-To fix this we check skb_dst() before skb_dst_force(), so we don't
-drop skb packet with dst == NULL. This holds also for skb at the
-PRE_ROUTING hook so we remove the second check.
-
-Fixes: b60a77386b1d ("net: make skb_dst_force return true when dst is refcounted")
-Signed-off-by: Marco Oliverio <marco.oliverio@tanaza.com>
-Signed-off-by: Rocco Folino <rocco.folino@tanaza.com>
-Acked-by: Florian Westphal <fw@strlen.de>
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Fixes: 0f3cd9b36977 ("netfilter: nf_tables: add range expression")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c |  4 +++-
+ net/netfilter/nft_bitwise.c   |  4 ++--
+ net/netfilter/nft_cmp.c       |  6 ++++++
+ net/netfilter/nft_range.c     | 10 ++++++++++
+ 4 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-index a96a8c16baf9..ee6d98355081 100644
---- a/net/netfilter/nf_queue.c
-+++ b/net/netfilter/nf_queue.c
-@@ -174,7 +174,7 @@ static int __nf_queue(struct sk_buff *skb, const struct nf_hook_state *state,
- 		goto err;
- 	}
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 42f79f9532c6..4711a8b56f32 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -4117,8 +4117,10 @@ static int nft_get_set_elem(struct nft_ctx *ctx, struct nft_set *set,
+ 		return err;
  
--	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
-+	if (skb_dst(skb) && !skb_dst_force(skb)) {
- 		status = -ENETDOWN;
- 		goto err;
+ 	err = -EINVAL;
+-	if (desc.type != NFT_DATA_VALUE || desc.len != set->klen)
++	if (desc.type != NFT_DATA_VALUE || desc.len != set->klen) {
++		nft_data_release(&elem.key.val, desc.type);
+ 		return err;
++	}
+ 
+ 	priv = set->ops->get(ctx->net, set, &elem, flags);
+ 	if (IS_ERR(priv))
+diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
+index fff8073e2a56..058ee84ea531 100644
+--- a/net/netfilter/nft_bitwise.c
++++ b/net/netfilter/nft_bitwise.c
+@@ -83,7 +83,7 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
+ 			    tb[NFTA_BITWISE_MASK]);
+ 	if (err < 0)
+ 		return err;
+-	if (d1.len != priv->len) {
++	if (d1.type != NFT_DATA_VALUE || d1.len != priv->len) {
+ 		err = -EINVAL;
+ 		goto err1;
  	}
+@@ -92,7 +92,7 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
+ 			    tb[NFTA_BITWISE_XOR]);
+ 	if (err < 0)
+ 		goto err1;
+-	if (d2.len != priv->len) {
++	if (d2.type != NFT_DATA_VALUE || d2.len != priv->len) {
+ 		err = -EINVAL;
+ 		goto err2;
+ 	}
+diff --git a/net/netfilter/nft_cmp.c b/net/netfilter/nft_cmp.c
+index 79d48c1d06f4..7007045c0849 100644
+--- a/net/netfilter/nft_cmp.c
++++ b/net/netfilter/nft_cmp.c
+@@ -82,6 +82,12 @@ static int nft_cmp_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
+ 	if (err < 0)
+ 		return err;
+ 
++	if (desc.type != NFT_DATA_VALUE) {
++		err = -EINVAL;
++		nft_data_release(&priv->data, desc.type);
++		return err;
++	}
++
+ 	priv->sreg = nft_parse_register(tb[NFTA_CMP_SREG]);
+ 	err = nft_validate_register_load(priv->sreg, desc.len);
+ 	if (err < 0)
+diff --git a/net/netfilter/nft_range.c b/net/netfilter/nft_range.c
+index cedb96c3619f..2e1d2ec2f52a 100644
+--- a/net/netfilter/nft_range.c
++++ b/net/netfilter/nft_range.c
+@@ -70,11 +70,21 @@ static int nft_range_init(const struct nft_ctx *ctx, const struct nft_expr *expr
+ 	if (err < 0)
+ 		return err;
+ 
++	if (desc_from.type != NFT_DATA_VALUE) {
++		err = -EINVAL;
++		goto err1;
++	}
++
+ 	err = nft_data_init(NULL, &priv->data_to, sizeof(priv->data_to),
+ 			    &desc_to, tb[NFTA_RANGE_TO_DATA]);
+ 	if (err < 0)
+ 		goto err1;
+ 
++	if (desc_to.type != NFT_DATA_VALUE) {
++		err = -EINVAL;
++		goto err2;
++	}
++
+ 	if (desc_from.len != desc_to.len) {
+ 		err = -EINVAL;
+ 		goto err2;
 -- 
 2.20.1
 
