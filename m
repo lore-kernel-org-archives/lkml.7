@@ -2,38 +2,41 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBADC2D0DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80690C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CF820740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606DF20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfL0AdV (ORCPT
+        id S1727028AbfL0Ale (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 19:33:21 -0500
-Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:35180 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbfL0AdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 19:33:20 -0500
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@breakpoint.cc>)
-        id 1ikdZ7-0007YP-Up; Fri, 27 Dec 2019 01:33:18 +0100
-From:   Florian Westphal <fw@strlen.de>
-To:     <netfilter-devel@vger.kernel.org>
-Cc:     syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Florian Westphal <fw@strlen.de>
-Subject: [PATCH nf] netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
-Date:   Fri, 27 Dec 2019 01:33:10 +0100
-Message-Id: <20191227003310.16061-1-fw@strlen.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <00000000000057fd27059aa1dfca@google.com>
-References: <00000000000057fd27059aa1dfca@google.com>
+        Thu, 26 Dec 2019 19:41:34 -0500
+Received: from mga01.intel.com ([192.55.52.88]:33488 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfL0Ald (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 19:41:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 16:41:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
+   d="scan'208";a="219979332"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by orsmga006.jf.intel.com with ESMTP; 26 Dec 2019 16:41:32 -0800
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v11 0/8] Add Error Disconnect Recover (EDR) support
+Date:   Thu, 26 Dec 2019 16:39:06 -0800
+Message-Id: <cover.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,143 +44,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get crash when the targets checkentry function tries to make
-use of the network namespace pointer for arptables.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-When the net pointer got added back in 2010, only ip/ip6/ebtables were
-changed to initialize it, so arptables has this set to NULL.
+This patchset adds support for following features:
 
-This isn't a problem for normal arptables because no existing
-arptables target has a checkentry function that makes use of par->net.
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
 
-However, direct users of the setsockopt interface can provide any
-target they want as long as its registered for ARP or UNPSEC protocols.
+You can find EDR spec in the following link.
 
-syzkaller managed to send a semi-valid arptables rule for RATEEST target
-which is enough to trigger NULL deref:
+https://members.pcisig.com/wg/PCI-SIG/document/12614
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
-[..]
- xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
- check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
- find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
- translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
- do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
- do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
+Changes since v10:
+ * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
+   enabling status based on status of pcie_ports_dpc_native and FF mode.
+ * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
+   function to fix ACPI related boot warnings.
+ * Rebased on top of v5.5-rc3
 
-Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-Reported-by: syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- net/ipv4/netfilter/arp_tables.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+Changes since v9:
+ * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
+ * Added proper spec reference in git log for patch 5 & 7.
+ * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
+   pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
+ * Rebased on top of v5.4-rc5
 
-diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
-index 214154b47d56..069f72edb264 100644
---- a/net/ipv4/netfilter/arp_tables.c
-+++ b/net/ipv4/netfilter/arp_tables.c
-@@ -384,10 +384,11 @@ next:		;
- 	return 1;
- }
- 
--static inline int check_target(struct arpt_entry *e, const char *name)
-+static int check_target(struct arpt_entry *e, struct net *net, const char *name)
- {
- 	struct xt_entry_target *t = arpt_get_target(e);
- 	struct xt_tgchk_param par = {
-+		.net       = net,
- 		.table     = name,
- 		.entryinfo = e,
- 		.target    = t->u.kernel.target,
-@@ -399,8 +400,9 @@ static inline int check_target(struct arpt_entry *e, const char *name)
- 	return xt_check_target(&par, t->u.target_size - sizeof(*t), 0, false);
- }
- 
--static inline int
--find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
-+static int
-+find_check_entry(struct arpt_entry *e, struct net *net, const char *name,
-+		 unsigned int size,
- 		 struct xt_percpu_counter_alloc_state *alloc_state)
- {
- 	struct xt_entry_target *t;
-@@ -419,7 +421,7 @@ find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
- 	}
- 	t->u.kernel.target = target;
- 
--	ret = check_target(e, name);
-+	ret = check_target(e, net, name);
- 	if (ret)
- 		goto err;
- 	return 0;
-@@ -512,7 +514,9 @@ static inline void cleanup_entry(struct arpt_entry *e)
- /* Checks and translates the user-supplied table segment (held in
-  * newinfo).
-  */
--static int translate_table(struct xt_table_info *newinfo, void *entry0,
-+static int translate_table(struct net *net,
-+			   struct xt_table_info *newinfo,
-+			   void *entry0,
- 			   const struct arpt_replace *repl)
- {
- 	struct xt_percpu_counter_alloc_state alloc_state = { 0 };
-@@ -569,7 +573,7 @@ static int translate_table(struct xt_table_info *newinfo, void *entry0,
- 	/* Finally, each sanity check must pass */
- 	i = 0;
- 	xt_entry_foreach(iter, entry0, newinfo->size) {
--		ret = find_check_entry(iter, repl->name, repl->size,
-+		ret = find_check_entry(iter, net, repl->name, repl->size,
- 				       &alloc_state);
- 		if (ret != 0)
- 			break;
-@@ -974,7 +978,7 @@ static int do_replace(struct net *net, const void __user *user,
- 		goto free_newinfo;
- 	}
- 
--	ret = translate_table(newinfo, loc_cpu_entry, &tmp);
-+	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
- 	if (ret != 0)
- 		goto free_newinfo;
- 
-@@ -1149,7 +1153,8 @@ compat_copy_entry_from_user(struct compat_arpt_entry *e, void **dstptr,
- 	}
- }
- 
--static int translate_compat_table(struct xt_table_info **pinfo,
-+static int translate_compat_table(struct net *net,
-+				  struct xt_table_info **pinfo,
- 				  void **pentry0,
- 				  const struct compat_arpt_replace *compatr)
- {
-@@ -1217,7 +1222,7 @@ static int translate_compat_table(struct xt_table_info **pinfo,
- 	repl.num_counters = 0;
- 	repl.counters = NULL;
- 	repl.size = newinfo->size;
--	ret = translate_table(newinfo, entry1, &repl);
-+	ret = translate_table(net, newinfo, entry1, &repl);
- 	if (ret)
- 		goto free_newinfo;
- 
-@@ -1270,7 +1275,7 @@ static int compat_do_replace(struct net *net, void __user *user,
- 		goto free_newinfo;
- 	}
- 
--	ret = translate_compat_table(&newinfo, &loc_cpu_entry, &tmp);
-+	ret = translate_compat_table(net, &newinfo, &loc_cpu_entry, &tmp);
- 	if (ret != 0)
- 		goto free_newinfo;
- 
-@@ -1546,7 +1551,7 @@ int arpt_register_table(struct net *net,
- 	loc_cpu_entry = newinfo->entries;
- 	memcpy(loc_cpu_entry, repl->entries, repl->size);
- 
--	ret = translate_table(newinfo, loc_cpu_entry, repl);
-+	ret = translate_table(net, newinfo, loc_cpu_entry, repl);
- 	if (ret != 0)
- 		goto out_free;
- 
+Changes since v8:
+ * Rebased on top of v5.4-rc1
+
+Changes since v7:
+ * Updated DSM version number to match the spec.
+
+Changes since v6:
+ * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+ * Addressed Bjorn comments.
+
+Changes since v5:
+ * Addressed Keith's comments.
+ * Added additional check for FF mode in pci_aer_init().
+ * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+
+Changes since v4:
+ * Rebased on top of v5.3-rc1
+ * Fixed lock/unlock issue in edr_handle_event().
+ * Merged "Update error status after reset_link()" patch into this patchset.
+
+Changes since v3:
+ * Moved EDR related ACPI functions/definitions to pci-acpi.c
+ * Modified commit history in few patches to include spec reference.
+ * Added support to handle DPC triggered by NON_FATAL errors.
+ * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+ * Addressed Bjorn comments.
+
+Changes since v2:
+ * Split EDR support patch into multiple patches.
+ * Addressed Bjorn comments.
+
+Changes since v1:
+ * Rebased on top of v5.1-rc1
+
+Kuppuswamy Sathyanarayanan (8):
+  PCI/ERR: Update error status after reset_link()
+  PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+  PCI/DPC: Add dpc_process_error() wrapper function
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+  PCI/AER: Allow clearing Error Status Register in FF mode
+  PCI/DPC: Update comments related to DPC recovery on NON_FATAL errors
+  PCI/DPC: Clear AER registers in EDR mode
+  PCI/ACPI: Enable EDR support
+
+ Documentation/PCI/pcieaer-howto.rst       |   2 +-
+ drivers/acpi/pci_root.c                   |   9 +
+ drivers/net/ethernet/intel/ice/ice_main.c |   2 +-
+ drivers/ntb/hw/idt/ntb_hw_idt.c           |   2 +-
+ drivers/pci/pci-acpi.c                    |  98 ++++++++++
+ drivers/pci/pci.c                         |   2 +-
+ drivers/pci/pci.h                         |   2 +-
+ drivers/pci/pcie/Kconfig                  |  10 +
+ drivers/pci/pcie/aer.c                    |  16 +-
+ drivers/pci/pcie/dpc.c                    | 214 ++++++++++++++++++++--
+ drivers/pci/pcie/err.c                    |  12 +-
+ drivers/pci/pcie/portdrv_core.c           |   7 +-
+ drivers/pci/probe.c                       |   1 +
+ drivers/scsi/lpfc/lpfc_attr.c             |   2 +-
+ include/linux/acpi.h                      |   6 +-
+ include/linux/aer.h                       |  12 +-
+ include/linux/pci-acpi.h                  |  11 ++
+ include/linux/pci.h                       |   3 +-
+ 18 files changed, 365 insertions(+), 46 deletions(-)
+
 -- 
-2.24.1
+2.21.0
 
