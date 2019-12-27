@@ -2,94 +2,145 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D71C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9360C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E4120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="awumovmJ"
+	by mail.kernel.org (Postfix) with ESMTP id AF3332080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577410533;
+	bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=CVwx16Ii3qmtVF2SWRPjI4hocx+tpCAejo7aDlvzGcKpoJxLut19rOLIRXxCzXXmK
+	 QiGEQVDQrPHVZ8Ht1BzXcsbcs9Et2Tncuj/wiTx3BAaLV7PCRA2/pwdz+25uDHdSnO
+	 +s55K9QhiXw5jrDUYRGBNLmw4nFnQF7soUvn5uSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfL0Bf3 (ORCPT
+        id S1727140AbfL0Bfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 26 Dec 2019 20:35:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbfL0Bf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Dec 2019 20:35:29 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:32993 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfL0Bf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:35:28 -0500
-Received: by mail-ed1-f68.google.com with SMTP id r21so24090477edq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 17:35:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t2hkxx6EdZesk3LyhW8Bjdi5OF7N5XgZx/OPo6iWL4k=;
-        b=awumovmJVECZ0Nk/zD/7/Ex5YMktKw7NhFajPm4bgFTiF2ETfkapjS8VlX3uLqpIRv
-         6JofoXtruG/OJh5ZP2aFM8aE1WMGWcpoQpgjKTLp/hJjiPjkBlvWQnp7nh8qDj+Uuo+X
-         qMEtfHNJZv98S6kmQcWJMShyoywEiEEU28hTI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t2hkxx6EdZesk3LyhW8Bjdi5OF7N5XgZx/OPo6iWL4k=;
-        b=LKC+1rQ3xtmz8/+c0xdJ30baxn0CWfAOid9JFUxvItkCOI7IUWlQylXYSVElgnQEZQ
-         dBrEBQOOkFnkt+VNwaKtavyKqs1ofy6S22Li+9gv5MDueb7ByV5nbffHkC5Nq6AYcUGe
-         dz3zxb3bF4oaICOJgGL5UsKxuc71rLiyUSPhVEUcetFuBzP6bdFUrEGXHJ2kn6Z7c5l6
-         BZHciL0Kdr6VvdHwcvywc9zFqxApQIyhuws8pVBEN2MlT4DtdZuDY7HIylTfQsrOaU52
-         u+bO+LZP443+oMvJarbKa9tE9PWj791D6ZLKI6NXtnHEpnwA+JElZKcMG5j/eQDmU1WR
-         2V+Q==
-X-Gm-Message-State: APjAAAWlZNH5YJpDQXA2zD1ZmVQ7szrKMgPUu/r5kRIQIrw7VNvbWViO
-        DkalvSJIHOwbqYegz0Q2NQJHl/fJeUJ2OxIWHJKTHQ==
-X-Google-Smtp-Source: APXvYqziVcuWKxoTC5z2LyoMJWVCIQfGh0OJGrspzG1O5SgJ6+Lq/NGsxHbojw3SUweZkNqEh948ArUOFWHF6ZSqFe8=
-X-Received: by 2002:aa7:d714:: with SMTP id t20mr53554307edq.93.1577410526273;
- Thu, 26 Dec 2019 17:35:26 -0800 (PST)
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A445B2080D;
+        Fri, 27 Dec 2019 01:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577410528;
+        bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=PeZBHZBkQyRaDfaZDG3vZaRTcEMgVMs9ouVBb87r8KwsXuvhUp2ZIC21Zt29xBQsT
+         lT/+O3ub5mPrstV1Ct2Hj3KSmxl4FiAmwKUDyfOWxO2tFH/yJYTnuM+KWYklR7p7cn
+         Jjf1v0Iv/997dbhwWiiSCHcqaa7+SJneSxhzho7A=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191226180334.GA29409@ircssh-2.c.rugged-nimbus-611.internal> <201912270545.TQnRs9kG%lkp@intel.com>
-In-Reply-To: <201912270545.TQnRs9kG%lkp@intel.com>
-From:   Sargun Dhillon <sargun@sargun.me>
-Date:   Thu, 26 Dec 2019 20:35:00 -0500
-Message-ID: <CAMp4zn94deUbkXBrnX=Omw9-FmoZDANApqYUVsaV+VsXCX4Q-w@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] pid: Introduce pidfd_getfd syscall
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jed Davis <jld@mozilla.com>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191226224156.GE1908628@ripper>
+References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org> <20191219063719.5AF942146E@mail.kernel.org> <20191220023427.GL448416@yoga> <20191224022042.7DDB120709@mail.kernel.org> <20191226224156.GE1908628@ripper>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+User-Agent: alot/0.8.1
+Date:   Thu, 26 Dec 2019 17:35:27 -0800
+Message-Id: <20191227013528.A445B2080D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 5:20 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Sargun,
->
-> Thank you for the patch! Yet something to improve:
->
-> All errors (new ones prefixed by >>):
->
->    arch/alpha/kernel/systbls.o: In function `sys_call_table':
-> >> (.data+0x1120): undefined reference to `sys_pidfd'
-This is a small typo. I'll fix this in the next respin.
+Quoting Bjorn Andersson (2019-12-26 14:41:56)
+> On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
+>=20
+> > Quoting Bjorn Andersson (2019-12-19 18:34:27)
+> > > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
+> > >=20
+> > > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
+> > > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad=
+ on the
+> > > > > SoC. Update the definition of these clocks to allow this to be wi=
+red up
+> > > > > to the appropriate clock source.
+> > > > >=20
+> > > > > Retain "xo" as the global named parent to make the change a nop i=
+n the
+> > > > > event that DT doesn't carry the necessary clocks definition.
+> > > >=20
+> > > > Something seems wrong still.
+> > > >=20
+> > > > I wonder if we need to add the XO "active only" clk to the rpm clk
+> > > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really =
+the
+> > > > truth for most of the SoCs out there because it's the only crystal =
+that
+> > > > needs to be on all the time when the CPU is active. The "normal" XO=
+ clk
+> > > > will then be on all the time unless deep idle is entered and nobody=
+ has
+> > > > turned that on via some clk_prepare() call. That's because we root =
+all
+> > > > other clks through the "normal" XO clk that will be on in deep
+> > > > idle/suspend if someone needs it to be.
+> > > >=20
+> > >=20
+> > > The patch doesn't attempt to address the fact that our representation=
+ of
+> > > XO is incomplete, only the fact that CXO2 isn't properly described.
+> > >=20
+> > > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
+> > > presumably is the clock you're referring to here - i.e. the clock
+> > > resource connected to CXO.
+> >=20
+> > I don't mean the buffer clks, but the XO resource specifically. It's the
+> > representation to the RPM that deep sleep/deep idle should or shouldn't
+> > turn off XO and achieve "XO shutdown". Basically it can never be off
+> > when the CPU is active because then the CPU itself wouldn't be clocked,
+> > but when the CPU isn't active we may want to turn it off if nothing is
+> > using it during sleep to clock some sort of wakeup logic or device that
+> > is active when the CPU is idle.
+> >=20
+>=20
+> I see. So we're missing the representation of the "raw" CXO in
+> clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
+> should be tied together for us to realize the "XO shutdown"...
 
+Ok. This is another topic so not important to this patch right now.
 
->
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+>=20
+> > >=20
+> > > > Did the downstream code explicitly enable this ln_bb_clk in the phy
+> > > > drivers? I think it may have?
+> > > >=20
+> > >=20
+> > > Yes, afaict all downstream drivers consuming a CLKREF also consumes
+> > > LN_BB and ensures that this is enabled. So we've been relying on UFS =
+to
+> > > either not have probed yet or that UFS probed successfully for PCIe a=
+nd
+> > > USB to be functional.
+> > >=20
+> > > So either we need this patch to ensure that the requests propagates
+> > > down, or I need to patch up the PHY drivers to ensure that they also
+> > > vote for the PMIC clock - and I do prefer this patch.
+> >=20
+> > Cool. Yeah seems better to just indicate that the reference clks are
+> > clocked by something else and fix that problem now.
+> >=20
+>=20
+> Let me know if I shouldn't interpret this sentence as "let's merge this
+> for now".
+
+Yes I'd like to merge for now but the binding needs to be adjusted.
+Please resend.
+
