@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C964C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23333C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE2320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A3320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470603;
-	bh=EvSiv8FLJV0cVmTE8MdJXabwPC8Qy3ipYItIfivMmyI=;
+	s=default; t=1577470608;
+	bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkOiZgqda5xQDWBpZKcXx3xtX8/3tNnZu7hLVVtXYYNwbWu1E2+Ho9v7/ZQycDVDQ
-	 aeOgty51FZXrBRpaJSXWTT/CFW30zzvgpzSJNY6dfq63seulf09EZyDXup7d/++76r
-	 Eg3dNS6C4KPPNyYT2MQbGbsPp9m90g+xSApvrBGk=
+	b=BEoKdtbhWrNCFuhgwXEqjwRwbFgt50jFrnhxl+FmQk9ieJ+qoncgpU26G19Lb5tK5
+	 fZnovNvAaoG3yt+DfzuMQrct8/yLXGvHpnGiEzsM+YomAiUKzka+fMWIdd2GnmStBO
+	 ofPZwsFvhLfePGrX8bPrVFgWQdYK0n8AeNah8efk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfL0SQl (ORCPT
+        id S1728301AbfL0SQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727730AbfL0SQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:15 -0500
+        id S1728178AbfL0SQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5F88208C4;
-        Fri, 27 Dec 2019 18:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C22021582;
+        Fri, 27 Dec 2019 18:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470574;
-        bh=EvSiv8FLJV0cVmTE8MdJXabwPC8Qy3ipYItIfivMmyI=;
+        s=default; t=1577470566;
+        bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWKE76ydbS1ub3jM6U+9jaemexpSuzlwntkwuI59tTWe26azrjmpquHMbEEE+rFuj
-         WvKM9HlVJUXsVD+ddYmbVfi8Gl8M3KxiGzgVOoHV4EHV5QgDyQKjPbiQojLaSZaMQ/
-         PNb4Zc91Rf445GaktylYhfRZf/UJc7caNs+0zi0U=
+        b=ILR24doyNLkJc2uAeXoq+D7H43HdGJtYrBghqBVKnrWQBAg+8kB2oRoSZObExkTWn
+         alD0bI5iqcaAfryd8gNAfpL7zoLK6Vk1jCOfXx5IZ4aHRYfX7snAksNClkWG+DUTx2
+         uWStsuNsAn8+h9Cotjh2Ae4AXYcZzVzgYNCJl7x4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/25] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
-Date:   Fri, 27 Dec 2019 13:15:45 -0500
-Message-Id: <20191227181549.8040-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 13/25] bnx2x: Do not handle requests from VFs after parity
+Date:   Fri, 27 Dec 2019 13:15:37 -0500
+Message-Id: <20191227181549.8040-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -59,48 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
+[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
 
-The kernel may sleep while holding a spinlock.
-The function call path (from bottom to top) in Linux 4.19 is:
+Parity error from the hardware will cause PF to lose the state
+of their VFs due to PF's internal reload and hardware reset following
+the parity error. Restrict any configuration request from the VFs after
+the parity as it could cause unexpected hardware behavior, only way
+for VFs to recover would be to trigger FLR on VFs and reload them.
 
-net/nfc/nci/uart.c, 349:
-	nci_skb_alloc in nci_uart_default_recv_buf
-net/nfc/nci/uart.c, 255:
-	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
-net/nfc/nci/uart.c, 254:
-	spin_lock in nci_uart_tty_receive
-
-nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
-(FUNC_PTR) means a function pointer is called.
-
-To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
-nci_skb_alloc().
-
-This bug is found by a static analysis tool STCheck written by myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/nfc/nci/uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
-index 21d8875673a4..c3f2faa0210e 100644
---- a/net/nfc/nci/uart.c
-+++ b/net/nfc/nci/uart.c
-@@ -355,7 +355,7 @@ static int nci_uart_default_recv_buf(struct nci_uart *nu, const u8 *data,
- 			nu->rx_packet_len = -1;
- 			nu->rx_skb = nci_skb_alloc(nu->ndev,
- 						   NCI_MAX_PACKET_SIZE,
--						   GFP_KERNEL);
-+						   GFP_ATOMIC);
- 			if (!nu->rx_skb)
- 				return -ENOMEM;
- 		}
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 82960603da33..026c72e62c18 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -9942,10 +9942,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
+  */
+ static void bnx2x_parity_recover(struct bnx2x *bp)
+ {
+-	bool global = false;
+ 	u32 error_recovered, error_unrecovered;
+-	bool is_parity;
++	bool is_parity, global = false;
++#ifdef CONFIG_BNX2X_SRIOV
++	int vf_idx;
++
++	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
++		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
+ 
++		if (vf)
++			vf->state = VF_LOST;
++	}
++#endif
+ 	DP(NETIF_MSG_HW, "Handling parity\n");
+ 	while (1) {
+ 		switch (bp->recovery_state) {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+index 6f6f13dc2be3..ab8339594cd3 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+@@ -139,6 +139,7 @@ struct bnx2x_virtf {
+ #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
+ #define VF_ENABLED	2	/* VF Enabled */
+ #define VF_RESET	3	/* VF FLR'd, pending cleanup */
++#define VF_LOST		4	/* Recovery while VFs are loaded */
+ 
+ 	bool flr_clnup_stage;	/* true during flr cleanup */
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+index a12a4236b143..e9fc3b09dba8 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+@@ -2095,6 +2095,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
+ {
+ 	int i;
+ 
++	if (vf->state == VF_LOST) {
++		/* Just ack the FW and return if VFs are lost
++		 * in case of parity error. VFs are supposed to be timedout
++		 * on waiting for PF response.
++		 */
++		DP(BNX2X_MSG_IOV,
++		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
++
++		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
++		return;
++	}
++
+ 	/* check if tlv type is known */
+ 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
+ 		/* Lock the per vf op mutex and note the locker's identity.
 -- 
 2.20.1
 
