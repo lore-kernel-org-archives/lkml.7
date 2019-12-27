@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE89FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17C220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE6720722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469967;
-	bh=TlSEfINMZciJs0jWl7K4oZo9kl0tiFuaorqqYimDni8=;
+	s=default; t=1577469977;
+	bh=++ratIWmAhE5tE4tsd1sFbpNc6dWgtnuWykcqSCiRKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXK5psTtuB86WrVw6Xz0yqSsG6ZZKL1/Txx9tGlRdm9rFQuINVnSCB9wEx3MGpY6V
-	 U+0OK+T3gCFZOWkSuZD1oJlwlji0YpqFx7FgpArYwHm2GODkdeQFeMOTc4ZsT95Q/D
-	 Kqi+HFaHDZtkSdAtkf2q62oJ0WfeAsxU62W4lHi4=
+	b=I//i6oeooL0JzX71I9+rI9FUaW9Qy9v1wRb8gqYykb50HeEcF6JGx5Zc47xUyNiWy
+	 k71hkm4ZFLDmr/n/pPfwj/S9yWfO0tPJvTFW4Q2Th43ZVLAL4zEEPgBF3lxhPLXgQR
+	 Myh/PRArvGomJnOPUJO6LeWFetV1asVpkgaQVaq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfL0SGG (ORCPT
+        id S1728784AbfL0SGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:06:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:06:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfL0SCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:55 -0500
+        id S1728192AbfL0SCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5EA227BF;
-        Fri, 27 Dec 2019 18:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14B421744;
+        Fri, 27 Dec 2019 18:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469774;
-        bh=TlSEfINMZciJs0jWl7K4oZo9kl0tiFuaorqqYimDni8=;
+        s=default; t=1577469771;
+        bh=++ratIWmAhE5tE4tsd1sFbpNc6dWgtnuWykcqSCiRKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3qPPl/VYKWulDaCSR0NTn7ANnHh60/JVU0qBDgzpsYxWT/WSycWhvqdkTTssl4MG
-         d/EjT6XS7IOW1NnVc+HY5MnpR3T8hEDx7H1gcFY/zs/GR81JzpuDSTl3zAQlpDjaAO
-         aSeSkz/yXpObFtZpfxCDgfgQAt7mq5SptowDEBRM=
+        b=rjwyIwsX+1lBK0+Z7AiIBsLo94RJsJateN5Js3oKTDzF5wGYoZxHuX/eNiDOZ4xqK
+         j5LIGhh1nl+yStOyxD6rbfpU2rNrN+9GMGDFS6Hcn3qI4TUNpPH8FVuWav+FvKF3UA
+         w1FHojhN/zjgi4XZjaSHsVqKuYmdGoHZT/iZEkU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+Cc:     Paul Chaignon <paul.chaignon@orange.com>,
+        Mahshid Khezri <khezri.mahshid@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 25/57] samples: bpf: fix syscall_tp due to unused syscall
-Date:   Fri, 27 Dec 2019 13:01:50 -0500
-Message-Id: <20191227180222.7076-25-sashal@kernel.org>
+        bpf@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 22/57] bpf, mips: Limit to 33 tail calls
+Date:   Fri, 27 Dec 2019 13:01:47 -0500
+Message-Id: <20191227180222.7076-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -60,60 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Paul Chaignon <paul.chaignon@orange.com>
 
-[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
+[ Upstream commit e49e6f6db04e915dccb494ae10fa14888fea6f89 ]
 
-Currently, open() is called from the user program and it calls the syscall
-'sys_openat', not the 'sys_open'. This leads to an error of the program
-of user side, due to the fact that the counter maps are zero since no
-function such 'sys_open' is called.
+All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
+limit at runtime.  In addition, a test was recently added, in tailcalls2,
+to check this limit.
 
-This commit adds the kernel bpf program which are attached to the
-tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
+This patch updates the tail call limit in MIPS' JIT compiler to allow
+33 tail calls.
 
-Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
+Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
+Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/b8eb2caac1c25453c539248e56ca22f74b5316af.1575916815.git.paul.chaignon@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ arch/mips/net/ebpf_jit.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
-index 9149c524d279..8833aacb9c8c 100644
---- a/samples/bpf/syscall_tp_kern.c
-+++ b/samples/bpf/syscall_tp_kern.c
-@@ -50,13 +50,27 @@ static __always_inline void count(void *map)
- SEC("tracepoint/syscalls/sys_enter_open")
- int trace_enter_open(struct syscalls_enter_open_args *ctx)
+diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
+index 42faa95ce664..57a7a9d68475 100644
+--- a/arch/mips/net/ebpf_jit.c
++++ b/arch/mips/net/ebpf_jit.c
+@@ -612,6 +612,7 @@ static void emit_const_to_reg(struct jit_ctx *ctx, int dst, u64 value)
+ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
  {
--	count((void *)&enter_open_map);
-+	count(&enter_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_enter_openat")
-+int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
-+{
-+	count(&enter_open_map);
- 	return 0;
- }
+ 	int off, b_off;
++	int tcc_reg;
  
- SEC("tracepoint/syscalls/sys_exit_open")
- int trace_enter_exit(struct syscalls_exit_open_args *ctx)
- {
--	count((void *)&exit_open_map);
-+	count(&exit_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_exit_openat")
-+int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
-+{
-+	count(&exit_open_map);
- 	return 0;
- }
+ 	ctx->flags |= EBPF_SEEN_TC;
+ 	/*
+@@ -624,14 +625,14 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
+ 	b_off = b_imm(this_idx + 1, ctx);
+ 	emit_instr(ctx, bne, MIPS_R_AT, MIPS_R_ZERO, b_off);
+ 	/*
+-	 * if (--TCC < 0)
++	 * if (TCC-- < 0)
+ 	 *     goto out;
+ 	 */
+ 	/* Delay slot */
+-	emit_instr(ctx, daddiu, MIPS_R_T5,
+-		   (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4, -1);
++	tcc_reg = (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4;
++	emit_instr(ctx, daddiu, MIPS_R_T5, tcc_reg, -1);
+ 	b_off = b_imm(this_idx + 1, ctx);
+-	emit_instr(ctx, bltz, MIPS_R_T5, b_off);
++	emit_instr(ctx, bltz, tcc_reg, b_off);
+ 	/*
+ 	 * prog = array->ptrs[index];
+ 	 * if (prog == NULL)
 -- 
 2.20.1
 
