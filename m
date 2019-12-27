@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,NO_DNS_FOR_FROM,SIGNED_OFF_BY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37BFC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9687C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6F720740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B724C20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468525;
-	bh=yp7HcX3GTWvd+cFc6ZcLHokQqnbIblK6FTXaFM7Q0RI=;
+	s=default; t=1577468530;
+	bh=xliATFxaIc+DI3oWcgq4jydwYRh7rKbWojHiLvFhSpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=py/5gNhS3GSiX0C+epPCe1X/6WyQgiYP5KJ185e/9/H3TbUOLYPba+SUYj2RaEWsi
-	 yRyxBoQp4sFtTC7T5huEl4OHJ78YLsNfAVvW+qZqBfUJAoSQcwj7prnRO0Qd0h1QI3
-	 I32nBc+Lbj5IjU+ifM3AcsWA2p8m0F+gJxwItdzA=
+	b=h/nlUhr4BS/WhfS5H8JNttCDnz3iGyDjViN82b9a6yeGBuyxDumoVA5Hq8SmFydf7
+	 ox4djxbMCcuNpoGE55b7gHkH7hae8EJ8e4cltrC8rdGW2OBOdP0QQyPnU48I5YrJgz
+	 ibLgFxpvr3+FaUG9MXpaADPHDm1SmggIThCvqSl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfL0RmD (ORCPT
+        id S1727769AbfL0RmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:42:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbfL0RmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:02 -0500
+        id S1727733AbfL0RmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBC4E218AC;
-        Fri, 27 Dec 2019 17:42:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C4A2173E;
+        Fri, 27 Dec 2019 17:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468521;
-        bh=yp7HcX3GTWvd+cFc6ZcLHokQqnbIblK6FTXaFM7Q0RI=;
+        s=default; t=1577468524;
+        bh=xliATFxaIc+DI3oWcgq4jydwYRh7rKbWojHiLvFhSpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iedKNX5VH325YidskBgilEHb29mvFHawANRgn9ksrpXgijHipFD7xB8Tzzatn4V3R
-         YuX26igMLAOdDqmO1XVrnhCh6ygp/VjA3oqwep/lkHPesSJ+zEVFn/t9ElIIo439Bn
-         ht1v/yWfrPBgXojXE1b13fK7et/cV2EAITvdpD7s=
+        b=tv6Dh7QMt+OsieBq8OIoF160UvRlxBzUvTd3wUxj6J/LgWqcj9yYLAkpgybcOvsJh
+         gA7t5mdDcjDkuZuC1ZGPbjLnsvueAs7h2f2ah8UpYYmebdbOjmnWdxGRaWsYpMJI4e
+         rfoHc6u7D+fLLYFNx2C+FNKfpjRYcQow0rPn+H2k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 053/187] af_packet: set defaule value for tmo
-Date:   Fri, 27 Dec 2019 12:38:41 -0500
-Message-Id: <20191227174055.4923-53-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 055/187] NFC: nxp-nci: Fix probing without ACPI
+Date:   Fri, 27 Dec 2019 12:38:43 -0500
+Message-Id: <20191227174055.4923-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -59,57 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
+[ Upstream commit 868afbaca1e2a7923e48b5e8c07be34660525db5 ]
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+devm_acpi_dev_add_driver_gpios() returns -ENXIO if CONFIG_ACPI
+is disabled (e.g. on device tree platforms).
+In this case, nxp-nci will silently fail to probe.
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
+The other NFC drivers only log a debug message if
+devm_acpi_dev_add_driver_gpios() fails.
+Do the same in nxp-nci to fix this problem.
 
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Fixes: ad0acfd69add ("NFC: nxp-nci: Get rid of code duplication in ->probe()")
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nfc/nxp-nci/i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 82a50e850245..529d4ce945db 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
- 			msec = 1;
- 			div = ecmd.base.speed / 1000;
- 		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 4d1909aecd6c..9f60e4dc5a90 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -278,7 +278,7 @@ static int nxp_nci_i2c_probe(struct i2c_client *client,
  
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+ 	r = devm_acpi_dev_add_driver_gpios(dev, acpi_nxp_nci_gpios);
+ 	if (r)
+-		return r;
++		dev_dbg(dev, "Unable to add GPIO mapping table\n");
  
+ 	phy->gpiod_en = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
+ 	if (IS_ERR(phy->gpiod_en)) {
 -- 
 2.20.1
 
