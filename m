@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B1CC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73345C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C243020740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5078D206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468812;
-	bh=Y+XNfaE3LXyuKB4B73gODgRnofkdHBQCljhdKRzPBCI=;
+	s=default; t=1577468814;
+	bh=8S/+5UE9it8YgbnrQyv0phmL1rViXAEpCz3h0d/6G8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZRAl+yvaI/YSK0NbRVlJXSSXunmZmgNzfmq5ForrqHYgFn7MfMoooYuZeKPrwmN3
-	 /lXlo4+OSKzY4UiPtpc3ZPXTtNqwM2+HWEBrlmIVVJhagc9CMzu643oIL9/UUjRIjF
-	 +kA9v2nuKs1PfxQfclzWKSshQR/hWvDiUnGrXcy4=
+	b=lJNVTyhY0/21wxV2hhxhwGIQgdXWsAxw1pFMpXjKFnfSHbqctiz8G3ybUzbjoJAee
+	 emYsHf361kMXp1OzohRulmDQEDdj2sR4NHlOdgjx7ckj+JygJPqcmVV6AeLL6qQ6vc
+	 1j/nPun11R+vUrmJv1/KDn/vHo6JFGtOROGmBY7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfL0Rqv (ORCPT
+        id S1728670AbfL0RpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:46:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728669AbfL0RpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Dec 2019 12:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728618AbfL0Ro5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFE7F24679;
-        Fri, 27 Dec 2019 17:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C9A206F4;
+        Fri, 27 Dec 2019 17:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468706;
-        bh=Y+XNfaE3LXyuKB4B73gODgRnofkdHBQCljhdKRzPBCI=;
+        s=default; t=1577468696;
+        bh=8S/+5UE9it8YgbnrQyv0phmL1rViXAEpCz3h0d/6G8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lYosT19X2pFiFzSIGllXrhrV/YorBKe/X3NWx3tNSnZxWYW3q4XvEdGmmoRn6KhgQ
-         IKfjFP+5SQ1PYz4NCfECL0t4Q/GvuTyoH6VKREMbKvFeqaW/Y14YpHK2fkJROlPQZW
-         taiSUNnDwIoYa4fq/vXz7pwWNgttT2AXa2i+7qh0=
+        b=j9ywp+J6Kqx0WOVBkSAbaPpdlN5WYq1GfCIOtc6+ZnqmCSmE3dHJmmVVaK459Uwkj
+         B9+4ghrysO9dfyPxuPPQkDwbKYfT7LgmgcV2Q/10OcarZcOzmsFeYwtBFgrQUSHm+e
+         RlhSAaWocaRcgKnLbIaI1IjLitgu/H204CypdgAI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaotao Yin <xiaotao.yin@windriver.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 62/84] iommu/iova: Init the struct iova to fix the possible memleak
-Date:   Fri, 27 Dec 2019 12:43:30 -0500
-Message-Id: <20191227174352.6264-62-sashal@kernel.org>
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 53/84] gtp: fix wrong condition in gtp_genl_dump_pdp()
+Date:   Fri, 27 Dec 2019 12:43:21 -0500
+Message-Id: <20191227174352.6264-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -61,66 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaotao Yin <xiaotao.yin@windriver.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 472d26df5e8075eda677b6be730e0fbf434ff2a8 ]
+[ Upstream commit 94a6d9fb88df43f92d943c32b84ce398d50bf49f ]
 
-During ethernet(Marvell octeontx2) set ring buffer test:
-ethtool -G eth1 rx <rx ring size> tx <tx ring size>
-following kmemleak will happen sometimes:
+gtp_genl_dump_pdp() is ->dumpit() callback of GTP module and it is used
+to dump pdp contexts. it would be re-executed because of dump packet size.
 
-unreferenced object 0xffff000b85421340 (size 64):
-  comm "ethtool", pid 867, jiffies 4295323539 (age 550.500s)
-  hex dump (first 64 bytes):
-    80 13 42 85 0b 00 ff ff ff ff ff ff ff ff ff ff  ..B.............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000001b204ddf>] kmem_cache_alloc+0x1b0/0x350
-    [<00000000d9ef2e50>] alloc_iova+0x3c/0x168
-    [<00000000ea30f99d>] alloc_iova_fast+0x7c/0x2d8
-    [<00000000b8bb2f1f>] iommu_dma_alloc_iova.isra.0+0x12c/0x138
-    [<000000002f1a43b5>] __iommu_dma_map+0x8c/0xf8
-    [<00000000ecde7899>] iommu_dma_map_page+0x98/0xf8
-    [<0000000082004e59>] otx2_alloc_rbuf+0xf4/0x158
-    [<000000002b107f6b>] otx2_rq_aura_pool_init+0x110/0x270
-    [<00000000c3d563c7>] otx2_open+0x15c/0x734
-    [<00000000a2f5f3a8>] otx2_dev_open+0x3c/0x68
-    [<00000000456a98b5>] otx2_set_ringparam+0x1ac/0x1d4
-    [<00000000f2fbb819>] dev_ethtool+0xb84/0x2028
-    [<0000000069b67c5a>] dev_ioctl+0x248/0x3a0
-    [<00000000af38663a>] sock_ioctl+0x280/0x638
-    [<000000002582384c>] do_vfs_ioctl+0x8b0/0xa80
-    [<000000004e1a2c02>] ksys_ioctl+0x84/0xb8
+If dump packet size is too big, it saves current dump pointer
+(gtp interface pointer, bucket, TID value) then it restarts dump from
+last pointer.
+Current GTP code allows adding zero TID pdp context but dump code
+ignores zero TID value. So, last dump pointer will not be found.
 
-The reason:
-When alloc_iova_mem() without initial with Zero, sometimes fpn_lo will
-equal to IOVA_ANCHOR by chance, so when return with -ENOMEM(iova32_full)
-from __alloc_and_insert_iova_range(), the new_iova will not be freed in
-free_iova_mem().
+In addition, this patch adds missing rcu_read_lock() in
+gtp_genl_dump_pdp().
 
-Fixes: bb68b2fbfbd6 ("iommu/iova: Add rbtree anchor node")
-Signed-off-by: Xiaotao Yin <xiaotao.yin@windriver.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/gtp.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index da4516fbf542..34c058c24b9d 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -236,7 +236,7 @@ static DEFINE_MUTEX(iova_cache_mutex);
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 7ca96ba00f20..d64ebf0f9677 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -42,7 +42,6 @@ struct pdp_ctx {
+ 	struct hlist_node	hlist_addr;
  
- struct iova *alloc_iova_mem(void)
+ 	union {
+-		u64		tid;
+ 		struct {
+ 			u64	tid;
+ 			u16	flow;
+@@ -1249,43 +1248,46 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 				struct netlink_callback *cb)
  {
--	return kmem_cache_alloc(iova_cache, GFP_ATOMIC);
-+	return kmem_cache_zalloc(iova_cache, GFP_ATOMIC);
+ 	struct gtp_dev *last_gtp = (struct gtp_dev *)cb->args[2], *gtp;
++	int i, j, bucket = cb->args[0], skip = cb->args[1];
+ 	struct net *net = sock_net(skb->sk);
+-	struct gtp_net *gn = net_generic(net, gtp_net_id);
+-	unsigned long tid = cb->args[1];
+-	int i, k = cb->args[0], ret;
+ 	struct pdp_ctx *pctx;
++	struct gtp_net *gn;
++
++	gn = net_generic(net, gtp_net_id);
+ 
+ 	if (cb->args[4])
+ 		return 0;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
+ 		if (last_gtp && last_gtp != gtp)
+ 			continue;
+ 		else
+ 			last_gtp = NULL;
+ 
+-		for (i = k; i < gtp->hash_size; i++) {
+-			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid) {
+-				if (tid && tid != pctx->u.tid)
+-					continue;
+-				else
+-					tid = 0;
+-
+-				ret = gtp_genl_fill_info(skb,
+-							 NETLINK_CB(cb->skb).portid,
+-							 cb->nlh->nlmsg_seq,
+-							 cb->nlh->nlmsg_type, pctx);
+-				if (ret < 0) {
++		for (i = bucket; i < gtp->hash_size; i++) {
++			j = 0;
++			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i],
++						 hlist_tid) {
++				if (j >= skip &&
++				    gtp_genl_fill_info(skb,
++					    NETLINK_CB(cb->skb).portid,
++					    cb->nlh->nlmsg_seq,
++					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+-					cb->args[1] = pctx->u.tid;
++					cb->args[1] = j;
+ 					cb->args[2] = (unsigned long)gtp;
+ 					goto out;
+ 				}
++				j++;
+ 			}
++			skip = 0;
+ 		}
++		bucket = 0;
+ 	}
+ 	cb->args[4] = 1;
+ out:
++	rcu_read_unlock();
+ 	return skb->len;
  }
- EXPORT_SYMBOL(alloc_iova_mem);
  
 -- 
 2.20.1
