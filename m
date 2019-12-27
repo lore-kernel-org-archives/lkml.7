@@ -2,94 +2,77 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FF6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62E5C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4073C20882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8714420828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfL0MTN (ORCPT
+        id S1727166AbfL0MVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:19:13 -0500
-Received: from mga01.intel.com ([192.55.52.88]:58377 "EHLO mga01.intel.com"
+        Fri, 27 Dec 2019 07:21:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38860 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfL0MTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:19:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 04:19:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,363,1571727600"; 
-   d="scan'208";a="419706942"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Dec 2019 04:19:10 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ikoaD-0000Cc-Un; Fri, 27 Dec 2019 20:19:09 +0800
-Date:   Fri, 27 Dec 2019 20:18:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: fix ptr_ret.cocci warnings
-Message-ID: <20191227121851.gpmaugxrysxejmpy@4978f4969bb8>
-References: <201912272041.iVxC623g%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912272041.iVxC623g%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1726408AbfL0MVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:21:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A7DE2B285;
+        Fri, 27 Dec 2019 12:21:48 +0000 (UTC)
+From:   Michal Rostecki <mrostecki@suse.de>
+To:     bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Michal Rostecki <mrostecki@suse.de>
+Subject: [PATCH bpf-next 0/2] bpftool/libbpf: Add probe for large INSN limit
+Date:   Fri, 27 Dec 2019 12:06:03 +0100
+Message-Id: <20191227110605.1757-1-mrostecki@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+This series implements a new BPF feature probe which checks for the
+commit c04c0d2b968a ("bpf: increase complexity limit and maximum program
+size"), which increases the maximum program size to 1M. It's based on
+the similar check in Cilium, althogh Cilium is already aiming to use
+bpftool checks and eventually drop all its custom checks.
 
-drivers/pci/controller/pci-tegra.c:1365:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Examples of outputs:
 
+# bpftool feature probe
+[...]
+Scanning miscellaneous eBPF features...
+Large complexity limit and maximum program size (1M) is available
 
- Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+# bpftool feature probe macros
+[...]
+/*** eBPF misc features ***/
+#define HAVE_HAVE_LARGE_INSN_LIMIT
 
-Generated by: scripts/coccinelle/api/ptr_ret.cocci
+# bpftool feature probe -j | jq '.["misc"]'
+{
+  "have_large_insn_limit": true
+}
 
-Fixes: 191d6f91f283 ("PCI: Remove PCI_MSI_IRQ_DOMAIN architecture whitelist")
-CC: Palmer Dabbelt <palmer@sifive.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
+Michal Rostecki (2):
+  libbpf: Add probe for large INSN limit
+  bpftool: Add misc secion and probe for large INSN limit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   46cf053efec6a3a5f343fead837777efe8252a46
-commit: 191d6f91f283dfb007499bb8529d54c3ac434bd7 PCI: Remove PCI_MSI_IRQ_DOMAIN architecture whitelist
+ tools/bpf/bpftool/feature.c   | 18 ++++++++++++++++++
+ tools/lib/bpf/libbpf.h        |  1 +
+ tools/lib/bpf/libbpf.map      |  1 +
+ tools/lib/bpf/libbpf_probes.c | 23 +++++++++++++++++++++++
+ 4 files changed, 43 insertions(+)
 
- pci-tegra.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+-- 
+2.16.4
 
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1362,10 +1362,7 @@ static int tegra_pcie_resets_get(struct
- 		return PTR_ERR(pcie->afi_rst);
- 
- 	pcie->pcie_xrst = devm_reset_control_get_exclusive(dev, "pcie_x");
--	if (IS_ERR(pcie->pcie_xrst))
--		return PTR_ERR(pcie->pcie_xrst);
--
--	return 0;
-+	return PTR_ERR_OR_ZERO(pcie->pcie_xrst);
- }
- 
- static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
