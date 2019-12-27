@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ADEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A43C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66B921D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B332221582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468509;
-	bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
+	s=default; t=1577468512;
+	bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CqhXzIavrAW1JYGKEk4Xs2OSWiRGh6DtA612As/LF6XgnG4d5S6tH1F1ubX+78X38
-	 ZpMbLpRO4JOH4UIW3tjfPQ1fchHztfj4av1PY3uU7SKi8Ac/6bZHoRIgs4wHOaId1I
-	 +WZGO5PMLuSkd02aLv0yw5BAvoXprI+/FqEgVFQc=
+	b=JxLkE38En1wN53MBUW8FyJJWJlLyK1Ary9VoLzAlUokEOscM5IqoqrqF3MLwJm8OR
+	 ngwGeNtngs8Ov2892YuFQf71/0coXuCJwYIm0ZN82Xm2qtdG+CCifkY9kpQYcVYUeb
+	 8gJrq74XvlqhYA9MwPDkFrK1gJ/3KPPy8MNHSd6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfL0Rlt (ORCPT
+        id S1727627AbfL0Rlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbfL0Rlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:39 -0500
+        id S1727494AbfL0Rln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 209E321D7E;
-        Fri, 27 Dec 2019 17:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D9021D7E;
+        Fri, 27 Dec 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468498;
-        bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
+        s=default; t=1577468502;
+        bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nke2pLSa4cJ87CA4v4WfYfS73rBldD9czoQEqeq3JdmpKctZb1W6dowhXx3rqooKv
-         5ZM8S2Ct9NQ02JfvNr0qobdjhJEf7ih/ZgmXWLGs1ioG4Rp1loBeRkk+Z/WKNxF8Nl
-         QHwizTiTNpM+mCmyrwgeKSPrSo/42+wyHlkwmWtE=
+        b=I+lSwmxyzvLNw+Ybl0hsNaP+Hxhm8XONBVVcEEYEPKnTF3DcPqeDU2ipqyd8HEdFd
+         RmgRgS+VqH32K3L07YYzgH8+aPsDMbXgCbhpO/RjcHbZ+m3OPLWcr4Dt9gs0kAvDjw
+         Wv48DGUs9ULtKc0s6WlnHZYLGZXyc+WjMNDulfR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 033/187] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
-Date:   Fri, 27 Dec 2019 12:38:21 -0500
-Message-Id: <20191227174055.4923-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 036/187] netfilter: nf_tables: skip module reference count bump on object updates
+Date:   Fri, 27 Dec 2019 12:38:24 -0500
+Message-Id: <20191227174055.4923-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -62,91 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
+[ Upstream commit fd57d0cbe187e93f63777d36e9f49293311d417f ]
 
-The existing rbtree implementation might store consecutive elements
-where the closing element and the opening element might overlap, eg.
+Use __nft_obj_type_get() instead, otherwise there is a module reference
+counter leak.
 
-	[ a, a+1) [ a+1, a+2)
-
-This patch removes the optimization for non-anonymous sets in the exact
-matching case, where it is assumed to stop searching in case that the
-closing element is found. Instead, invalidate candidate interval and
-keep looking further in the tree.
-
-The lookup/get operation might return false, while there is an element
-in the rbtree. Moreover, the get operation returns true as if a+2 would
-be in the tree. This happens with named sets after several set updates.
-
-The existing lookup optimization (that only works for the anonymous
-sets) might not reach the opening [ a+1,... element if the closing
-...,a+1) is found in first place when walking over the rbtree. Hence,
-walking the full tree in that case is needed.
-
-This patch fixes the lookup and get operations.
-
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
+Fixes: d62d0ba97b58 ("netfilter: nf_tables: Introduce stateful object update operation")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ net/netfilter/nf_tables_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 57123259452f..a9f804f7a04a 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -74,8 +74,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 				parent = rcu_dereference_raw(parent->rb_left);
- 				continue;
- 			}
--			if (nft_rbtree_interval_end(rbe))
--				goto out;
-+			if (nft_rbtree_interval_end(rbe)) {
-+				if (nft_set_is_anonymous(set))
-+					return false;
-+				parent = rcu_dereference_raw(parent->rb_left);
-+				interval = NULL;
-+				continue;
-+			}
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 4c03c14e46bc..67ca47c7ce54 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -5217,7 +5217,7 @@ static int nf_tables_newobj(struct net *net, struct sock *nlsk,
+ 		if (nlh->nlmsg_flags & NLM_F_REPLACE)
+ 			return -EOPNOTSUPP;
  
- 			*ext = &rbe->ext;
- 			return true;
-@@ -88,7 +93,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 		*ext = &interval->ext;
- 		return true;
- 	}
--out:
-+
- 	return false;
- }
+-		type = nft_obj_type_get(net, objtype);
++		type = __nft_obj_type_get(objtype);
+ 		nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
  
-@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 			if (flags & NFT_SET_ELEM_INTERVAL_END)
- 				interval = rbe;
- 		} else {
--			if (!nft_set_elem_active(&rbe->ext, genmask))
-+			if (!nft_set_elem_active(&rbe->ext, genmask)) {
- 				parent = rcu_dereference_raw(parent->rb_left);
-+				continue;
-+			}
- 
- 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
- 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
-@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 				*elem = rbe;
- 				return true;
- 			}
--			return false;
-+
-+			if (nft_rbtree_interval_end(rbe))
-+				interval = NULL;
-+
-+			parent = rcu_dereference_raw(parent->rb_left);
- 		}
- 	}
- 
+ 		return nf_tables_updobj(&ctx, type, nla[NFTA_OBJ_DATA], obj);
 -- 
 2.20.1
 
