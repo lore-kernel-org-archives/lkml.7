@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133C7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCDAC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D908122522
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7357521927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468669;
-	bh=Jvvz7VAOuf5cr7sba0W0VhPGhpU6NhDWTovzuuWPgIw=;
+	s=default; t=1577468673;
+	bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EOFRaQl0IhbsHPhrtF+8A9U+IMvJpjr+/qpprYr4fPuSUrfKFGnPr0HovFaO12GBV
-	 Ks+z7DKuTRIHM1XOPO3Q/lMHZlaVJDC2uthJmxsZm2r5WDbvklfHcXlQyWCjxLdlnL
-	 kzL2yZSGFFFBRksqmaujo+2J50u9yBpn9au7JPMY=
+	b=WN7foOSJvG3FCvthK9SXfHiXzQaUbw+45hzFgQk5HbvTUDzIGhKsyGvhfFbkd59uH
+	 Dy3At2Gnr5BhX4Rtw9DNQO6Q9HN1+9etZh9dIDXQrk6BcxHrVXCjjV4pw4SFZhyBBW
+	 t6oqW2ckVxlyHtcRZPwOJXHZgUQgzucGAndh7B9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfL0Ro1 (ORCPT
+        id S1728477AbfL0Roc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfL0RoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:19 -0500
+        id S1728421AbfL0RoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A6624125;
-        Fri, 27 Dec 2019 17:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65BE621D7E;
+        Fri, 27 Dec 2019 17:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468658;
-        bh=Jvvz7VAOuf5cr7sba0W0VhPGhpU6NhDWTovzuuWPgIw=;
+        s=default; t=1577468662;
+        bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=exsQ2hwlHlKt1tvJN/qD0tsJIQCqqkwzS0RN0ZLiWFjDC4rZgbziop2YKYUnbetS7
-         8G9CUL75pMb0zxvpa5jTwIVusj23N58CC6PuznqaYVsXeVnDNh9sBRYyzo7F2JgjWK
-         KrdAjWHSIxyx5RvjgpKNHaQr8+c1/XB2wWfU9wWg=
+        b=gTelMYU+VeBH4dRadJ//po0y5oAzqZhzkJpsu7ed/FSPGMt0tMSvd9W4M/7KQaxH6
+         i0hDR/eecanNzWNScyWI4CipXZ/K+cecHpTZvjpxTHXc88ojmkWGEwzZNXxB461sO2
+         TJYqEbM75pQDNfa/MJ290rVbj0U1hbipCqEB0UeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/84] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
-Date:   Fri, 27 Dec 2019 12:42:48 -0500
-Message-Id: <20191227174352.6264-20-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/84] ARM: dts: BCM5301X: Fix MDIO node address/size cells
+Date:   Fri, 27 Dec 2019 12:42:51 -0500
+Message-Id: <20191227174352.6264-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
+[ Upstream commit 093c3f94e922d83a734fc4da08cc5814990f32c6 ]
 
-Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
-whose NFT_SET_ELEM_INTERVAL_END flag is set on.
+The MDIO node on BCM5301X had an reversed #address-cells and
+ #size-cells properties, correct those, silencing checker warnings:
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 0e1b1f7f4745..42f79f9532c6 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -4351,14 +4351,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
- 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
- 			return -EINVAL;
--		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
--		    flags & NFT_SET_ELEM_INTERVAL_END)
--			return -EINVAL;
- 	} else {
- 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
- 			return -EINVAL;
- 	}
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index bc607d11eef8..a678fb7c9e3b 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -350,8 +350,8 @@
+ 	mdio: mdio@18003000 {
+ 		compatible = "brcm,iproc-mdio";
+ 		reg = <0x18003000 0x8>;
+-		#size-cells = <1>;
+-		#address-cells = <0>;
++		#size-cells = <0>;
++		#address-cells = <1>;
+ 	};
  
-+	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
-+	     (nla[NFTA_SET_ELEM_DATA] ||
-+	      nla[NFTA_SET_ELEM_OBJREF] ||
-+	      nla[NFTA_SET_ELEM_TIMEOUT] ||
-+	      nla[NFTA_SET_ELEM_EXPIRATION] ||
-+	      nla[NFTA_SET_ELEM_USERDATA] ||
-+	      nla[NFTA_SET_ELEM_EXPR]))
-+		return -EINVAL;
-+
- 	timeout = 0;
- 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
- 		if (!(set->flags & NFT_SET_TIMEOUT))
+ 	mdio-bus-mux {
 -- 
 2.20.1
 
