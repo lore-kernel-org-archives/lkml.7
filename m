@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F816C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F50BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB6D206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0FA20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469010;
-	bh=6BIP6RJKIkQ6fJqWWj378oG3SczCCKwof3OyzQnjaPI=;
+	s=default; t=1577469014;
+	bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsnoqGajjvniuw83mhV1YVxQrkGAnVAGfYyrUU7CX5aahKbU/iVOu23qz01S5hXMd
-	 3mZzwUAp3jYaqLaESV3+J8mX7gSq3l6v57d9E0BIYt2hmnhx0aezBOO2cJqo7W7srL
-	 9obTluiRcDU6Y38zjs967O8D0ef1WWDusAh+aYXU=
+	b=ipnf1z36UG/MI9NoyL/KeUsyBCWT5P4GJQNzjIib90PL93GAOlZoa+S+xUISTObx+
+	 J+fCYWdIOX5W3U2riIjXVxAbhtk1QeFdsg2hFolhNHX/n1ON9taEt7/7DncYjpil1l
+	 d+/C+XrID362eJoiJdyCSArq1r6/uCy2CLrtnMKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfL0RoR (ORCPT
+        id S1726954AbfL0RuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:50:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbfL0RoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:07 -0500
+        id S1728393AbfL0RoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2054E24125;
-        Fri, 27 Dec 2019 17:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B192222C2;
+        Fri, 27 Dec 2019 17:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468646;
-        bh=6BIP6RJKIkQ6fJqWWj378oG3SczCCKwof3OyzQnjaPI=;
+        s=default; t=1577468657;
+        bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U24/4iRBZKPtMxzDfmB+w2Vp22grzG9IHgpw07AiohaBSwbSqpPm3eaeKYq6tLvEf
-         74Vb1Puq0YpsWnOjEh/Kusqc7isDkQCfLVZUCEVJZ+wq+btBv2dOQc21sPHfFJ1zAp
-         DilgXxXkL1vAaaIabNm/XIEk6vyJeHZNYhfOVkqg=
+        b=TeXz8Kfgpu9ydpDJqf3n116U8myZGxkhJo7oN/5fZzs04h0Zs9QjOrIWul1K2dob7
+         1XlZV75xVbltbOKnC4BOGJSksmH+APad1usYPTE1RwsiVT2Y3WBibf7/BjpBxqtpVp
+         6NMgaNMw12KXeIjJ8R4Gc3MSWT/0xAHwsJCZGooA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 11/84] ASoC: Intel: bytcr_rt5640: Update quirk for Teclast X89
-Date:   Fri, 27 Dec 2019 12:42:39 -0500
-Message-Id: <20191227174352.6264-11-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/84] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
+Date:   Fri, 27 Dec 2019 12:42:47 -0500
+Message-Id: <20191227174352.6264-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,50 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 7eccc05c7101f34cc36afe9405d15de6d4099fb4 ]
+[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
 
-When the Teclast X89 quirk was added we did not have jack-detection
-support yet.
+The existing rbtree implementation might store consecutive elements
+where the closing element and the opening element might overlap, eg.
 
-Note the over-current detection limit is set to 2mA instead of the usual
-1.5mA because this tablet tends to give false-positive button-presses
-when it is set to 1.5mA.
+	[ a, a+1) [ a+1, a+2)
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191203221442.2657-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch removes the optimization for non-anonymous sets in the exact
+matching case, where it is assumed to stop searching in case that the
+closing element is found. Instead, invalidate candidate interval and
+keep looking further in the tree.
+
+The lookup/get operation might return false, while there is an element
+in the rbtree. Moreover, the get operation returns true as if a+2 would
+be in the tree. This happens with named sets after several set updates.
+
+The existing lookup optimization (that only works for the anonymous
+sets) might not reach the opening [ a+1,... element if the closing
+...,a+1) is found in first place when walking over the rbtree. Hence,
+walking the full tree in that case is needed.
+
+This patch fixes the lookup and get operations.
+
+Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
+Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index b6dc524830b2..35983eae584a 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -675,13 +675,17 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_MCLK_EN),
- 	},
- 	{
-+		/* Teclast X89 */
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
- 			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
- 		},
- 		.driver_data = (void *)(BYT_RT5640_IN3_MAP |
--					BYT_RT5640_MCLK_EN |
--					BYT_RT5640_SSP0_AIF1),
-+					BYT_RT5640_JD_SRC_JD1_IN4P |
-+					BYT_RT5640_OVCD_TH_2000UA |
-+					BYT_RT5640_OVCD_SF_1P0 |
-+					BYT_RT5640_SSP0_AIF1 |
-+					BYT_RT5640_MCLK_EN),
- 	},
- 	{	/* Toshiba Satellite Click Mini L9W-B */
- 		.matches = {
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index b3e75f9cb686..0221510328d4 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -77,8 +77,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 				parent = rcu_dereference_raw(parent->rb_left);
+ 				continue;
+ 			}
+-			if (nft_rbtree_interval_end(rbe))
+-				goto out;
++			if (nft_rbtree_interval_end(rbe)) {
++				if (nft_set_is_anonymous(set))
++					return false;
++				parent = rcu_dereference_raw(parent->rb_left);
++				interval = NULL;
++				continue;
++			}
+ 
+ 			*ext = &rbe->ext;
+ 			return true;
+@@ -91,7 +96,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+-out:
++
+ 	return false;
+ }
+ 
+@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 		} else if (d > 0) {
+ 			parent = rcu_dereference_raw(parent->rb_right);
+ 		} else {
+-			if (!nft_set_elem_active(&rbe->ext, genmask))
++			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+ 				parent = rcu_dereference_raw(parent->rb_left);
++				continue;
++			}
+ 
+ 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
+ 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
+@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 				*elem = rbe;
+ 				return true;
+ 			}
+-			return false;
++
++			if (nft_rbtree_interval_end(rbe))
++				interval = NULL;
++
++			parent = rcu_dereference_raw(parent->rb_left);
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
