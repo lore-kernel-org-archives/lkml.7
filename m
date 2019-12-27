@@ -2,70 +2,109 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E7CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 19:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762E2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 19:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A40920838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 19:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577475915;
-	bh=6MmZxWVukgo7MwepA6+knamZU47yNkG6FY80v5p8oDU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=GkBuapXJ/wHeBdFof63ssK6cSPvLmej1GCu5hDOX6gPkTt7E9oDjiYgIyBxvLxYzU
-	 c+Pqi5R5EFt1nZs+Xea19UQpd7UmH45nClV04mFL2MafpjS1+tyRDkFNP1uw/s8cgg
-	 mzaN4JHwJ9zxEyb/ZKmEfYczVyGH6cAXVZzSe7oY=
+	by mail.kernel.org (Postfix) with ESMTP id 4288E208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 19:55:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WQYBrDKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfL0TpJ (ORCPT
+        id S1727060AbfL0Tz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 14:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 14:55:58 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41741 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbfL0TpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 14:45:08 -0500
-Subject: Re: [GIT PULL] gpio fixes for the v5.5 series
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577475908;
-        bh=6MmZxWVukgo7MwepA6+knamZU47yNkG6FY80v5p8oDU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kEINk1T9afrOHs+mXfcRyvdZfl9k6SFW+uu2nORuBpcUyFJh21W+8r3KN/n9Gfo4p
-         syMhKpu6o1/yBn0/I0x1hfrRpjsAujCbfcVYmIWFlbZ79X79xtfqFr2NebIrT3kH6D
-         oeRz/z2RJoFjXSqWYjvM9Ho1ydoAZIMW60k5Be+I=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdZucwZNrUo3=WPM-utorFaqOn4AyhxMnX4xM_wvhP8SXg@mail.gmail.com>
-References: <CACRpkdZucwZNrUo3=WPM-utorFaqOn4AyhxMnX4xM_wvhP8SXg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdZucwZNrUo3=WPM-utorFaqOn4AyhxMnX4xM_wvhP8SXg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.5-2
-X-PR-Tracked-Commit-Id: 286e7beaa4cc7734894ee214569de4669ed9891e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a305bd7c9c22e2f127b0674104acfa8133e3cd26
-Message-Id: <157747590806.1730.12327621591699474735.pr-tracker-bot@kernel.org>
-Date:   Fri, 27 Dec 2019 19:45:08 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        id S1726839AbfL0Tz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 14:55:58 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47kyHZ6XT3z9sPK;
+        Sat, 28 Dec 2019 06:55:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1577476555;
+        bh=j0HmGkYmZP1ENxV3TmAvjzJ+eKBsVqFFPKwareblGA4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WQYBrDKjUyk2dM8jHkdLrNYzprfJeCqHmAsqGbET3XBBrwP5cLYhRhdF+FaLyXr0A
+         KAG5jPzR6IgET4pO2f9dnbKkuoxBwTGn1TY5H70+aIVe1HhkfaczEFbAou4tNb69fR
+         4+7NiQpM5qOKKH7NxFEslKDbLHBhJjsy//1457p/zlml7bft9ymaeWFMs7erZWYfT6
+         v52KSHOtR8M8Vu8jZiUtO//i6VwV3zUpBJl3iAlOtA9o0yVANTe6UFexZ1XBcsWcgm
+         8MDJxZfcrX4By8TdjcVdvU3WdUPZ2kxlQkiAXDJFtRR989bXgQZTzPPrydn5OSJFTG
+         Mw86USBkYla6g==
+Date:   Sat, 28 Dec 2019 06:55:53 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jaedon Shin <jaedon.shin@gmail.com>
+Subject: linux-next: Fixes tags need some work in the block tree
+Message-ID: <20191228065553.6ba5d28f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Gmsk4d7kegXJZ8HM.5w8al/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 26 Dec 2019 00:07:39 +0100:
+--Sig_/Gmsk4d7kegXJZ8HM.5w8al/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.5-2
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a305bd7c9c22e2f127b0674104acfa8133e3cd26
+In commit
 
-Thank you!
+  1a3d78cb6e20 ("ata: ahci_brcm: BCM7425 AHCI requires AHCI_HFLAG_DELAY_ENG=
+INE")
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Fixes tags
+
+  Fixes: 9586114cf1e9 ("ata: ahci_brcmstb: add support MIPS-based platforms=
+")
+  Fixes: 423be77daabe ("ata: ahci_brcmstb: add quirk for broken ncq")
+
+have this problem:
+
+  - Target SHA1s do not exist
+
+Perhaps you meant
+
+Fixes: 1980eb9bd7d7 ("ata: ahci_brcmstb: add support for MIPS-based platfor=
+ms")
+Fixes: 7de3244530bf ("ata: ahci_brcmstb: disable NCQ for MIPS-based platfor=
+ms")
+
+or
+
+Fixes: b46f79bc78e0 ("ata: ahci_brcmstb: add a quirk for MIPS-based platfor=
+ms")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Gmsk4d7kegXJZ8HM.5w8al/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4GYckACgkQAVBC80lX
+0GzO/Qf/ft8XyT8foIeUyNA7gvfJesQ0T0QnB3eXewAc2k8WyzVspHnv0p+WmWVb
+eJI9/Y9fVdWDA6Kc65z8k3s1VUA036nsHfl3Q0+6/BSggZtLv+lwyFjInuz32hia
+ZDOWG0KeYAXVhstJ3FqW3OaO02sJiFpoXu6/PduVzyp9iLU1iciCZ/+sI8qXMeWX
+Trh23oliJCuhhDRi7hyAqsVQrjMiI/lj5MLpGg5g4iDAt3sF2svra/sqF5SH5/H+
+WcqRKEsGQPUcfdvKjuQNINezsJsa9/GBMn9Ts2a83a0t9I5j7TXv8wRnn+gI8K2q
+M/28fFfmozVFaHWtsZQVlS3DZiQKxQ==
+=dxgw
+-----END PGP SIGNATURE-----
+
+--Sig_/Gmsk4d7kegXJZ8HM.5w8al/--
