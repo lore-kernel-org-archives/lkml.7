@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7407C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA672C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60D7206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A7C20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469907;
-	bh=khFcGXJVXjFx8I0CAxnrluUsRGAVfEvAW5PLoDh6j0Y=;
+	s=default; t=1577469913;
+	bh=9ou5MNpUS1sANXm3BLDXni62ZoDMKIvRDc5ovsMkDpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7agD8vrHvl8RtDL83aLOzHiRIfXjldp2nAhfUqnTnH/yGTgIa1Ul75wlKn7SZpv4
-	 7buuyDNegCupVe0zsVcSVjMvx8gsG0FQtA4BUOoaMfqc9mj3XeLZ5Y+mk67RmHyx9m
-	 Ss/pC5kkzIhlTUWS0DJvwpnoQTl5X+08/gBK63k0=
+	b=je5ME2wsLbkDPXH6YtKpgHtWk/qrLeSBGznCIebGPTIEEG8tbZfSyx0mc7JoT+lBF
+	 zf81218xdXISkPGMJHFuA+tMMK34jsTH9ukVCIRCbtxGe/0QiLt3T/FWG3HjBhf5RI
+	 6d987VRMB/haOr0z3ECT3wW52xcur2rQnoYJPW3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfL0SFG (ORCPT
+        id S1728876AbfL0SFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:05:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60304 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728517AbfL0SDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728446AbfL0SDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Dec 2019 13:03:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CBCC206F4;
-        Fri, 27 Dec 2019 18:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48E922173E;
+        Fri, 27 Dec 2019 18:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469787;
-        bh=khFcGXJVXjFx8I0CAxnrluUsRGAVfEvAW5PLoDh6j0Y=;
+        s=default; t=1577469786;
+        bh=9ou5MNpUS1sANXm3BLDXni62ZoDMKIvRDc5ovsMkDpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyemZpXLSVORRYvQQ3tNEyHja848SyA84BQ0TSGJi/Bp5K8iomfBak7vW+5amrDvJ
-         JgHvglJxEtfuDW8/nrC8yhelqpeLpTttDZEnI3Q4Ydeu36uMiwbdXu3ddNMx3l3C9z
-         KPg6yKQO1E/p3etKs9471AaLWWAKnQ4FWuJ/xbcw=
+        b=RTOTBpmTJrCHR5NFCFjDWNiLA82FbaXHiZ2Gjpr6qEaPhSXsSrVLOQYwBGb92WKxF
+         RXf3o5W+oef8AwAPj235aOhCB2r2Urn1+Zq2CY1CMIHaFuu5y3dMm7ivy7ll8kEDsy
+         Om903rmcNzrrpaErEi3zCL8XCw34j98B0bBjT5wE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>,
         osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/57] gtp: avoid zero size hashtable
-Date:   Fri, 27 Dec 2019 13:02:01 -0500
-Message-Id: <20191227180222.7076-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 35/57] gtp: fix wrong condition in gtp_genl_dump_pdp()
+Date:   Fri, 27 Dec 2019 13:02:00 -0500
+Message-Id: <20191227180222.7076-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -62,40 +62,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 6a902c0f31993ab02e1b6ea7085002b9c9083b6a ]
+[ Upstream commit 94a6d9fb88df43f92d943c32b84ce398d50bf49f ]
 
-GTP default hashtable size is 1024 and userspace could set specific
-hashtable size with IFLA_GTP_PDP_HASHSIZE. If hashtable size is set to 0
-from userspace,  hashtable will not work and panic will occur.
+gtp_genl_dump_pdp() is ->dumpit() callback of GTP module and it is used
+to dump pdp contexts. it would be re-executed because of dump packet size.
+
+If dump packet size is too big, it saves current dump pointer
+(gtp interface pointer, bucket, TID value) then it restarts dump from
+last pointer.
+Current GTP code allows adding zero TID pdp context but dump code
+ignores zero TID value. So, last dump pointer will not be found.
+
+In addition, this patch adds missing rcu_read_lock() in
+gtp_genl_dump_pdp().
 
 Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/gtp.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 52628a9986b1..b2f5f7f3d6b4 100644
+index 0522cbdce44a..52628a9986b1 100644
 --- a/drivers/net/gtp.c
 +++ b/drivers/net/gtp.c
-@@ -664,10 +664,13 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
- 	if (err < 0)
- 		return err;
+@@ -42,7 +42,6 @@ struct pdp_ctx {
+ 	struct hlist_node	hlist_addr;
  
--	if (!data[IFLA_GTP_PDP_HASHSIZE])
-+	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
- 		hashsize = 1024;
--	else
-+	} else {
- 		hashsize = nla_get_u32(data[IFLA_GTP_PDP_HASHSIZE]);
-+		if (!hashsize)
-+			hashsize = 1024;
-+	}
+ 	union {
+-		u64		tid;
+ 		struct {
+ 			u64	tid;
+ 			u16	flow;
+@@ -1247,43 +1246,46 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 				struct netlink_callback *cb)
+ {
+ 	struct gtp_dev *last_gtp = (struct gtp_dev *)cb->args[2], *gtp;
++	int i, j, bucket = cb->args[0], skip = cb->args[1];
+ 	struct net *net = sock_net(skb->sk);
+-	struct gtp_net *gn = net_generic(net, gtp_net_id);
+-	unsigned long tid = cb->args[1];
+-	int i, k = cb->args[0], ret;
+ 	struct pdp_ctx *pctx;
++	struct gtp_net *gn;
++
++	gn = net_generic(net, gtp_net_id);
  
- 	err = gtp_hashtable_new(gtp, hashsize);
- 	if (err < 0)
+ 	if (cb->args[4])
+ 		return 0;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
+ 		if (last_gtp && last_gtp != gtp)
+ 			continue;
+ 		else
+ 			last_gtp = NULL;
+ 
+-		for (i = k; i < gtp->hash_size; i++) {
+-			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid) {
+-				if (tid && tid != pctx->u.tid)
+-					continue;
+-				else
+-					tid = 0;
+-
+-				ret = gtp_genl_fill_info(skb,
+-							 NETLINK_CB(cb->skb).portid,
+-							 cb->nlh->nlmsg_seq,
+-							 cb->nlh->nlmsg_type, pctx);
+-				if (ret < 0) {
++		for (i = bucket; i < gtp->hash_size; i++) {
++			j = 0;
++			hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i],
++						 hlist_tid) {
++				if (j >= skip &&
++				    gtp_genl_fill_info(skb,
++					    NETLINK_CB(cb->skb).portid,
++					    cb->nlh->nlmsg_seq,
++					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+-					cb->args[1] = pctx->u.tid;
++					cb->args[1] = j;
+ 					cb->args[2] = (unsigned long)gtp;
+ 					goto out;
+ 				}
++				j++;
+ 			}
++			skip = 0;
+ 		}
++		bucket = 0;
+ 	}
+ 	cb->args[4] = 1;
+ out:
++	rcu_read_unlock();
+ 	return skb->len;
+ }
+ 
 -- 
 2.20.1
 
