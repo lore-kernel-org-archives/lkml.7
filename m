@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905A7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D4021744
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34C121582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470558;
-	bh=B/WPZinwqaU3N5CEePyKCWSzXduU7EUxFTX6m0gZr/s=;
+	s=default; t=1577470574;
+	bh=cmQ5bPpFTHGhZsTA/P2QxTSzK+X+Y59Kbf/bpK7LRh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NwzYrsXU8CCX199nS44/PeB1e5YzRtiN1ZDpoiDdfzstLDwBqWYROhKz/eLU34ZH3
-	 JYZrlCyTVloooNjIw+fXr0EPWciZdvOSgEcoIYP03wH8jPojVbgdF1XxhoHL+ZtHwM
-	 Nu3WaDN/ujRShpThUkAaNgcrFH6Q0L1dtIJG6Yn8=
+	b=KADVQASOY1xtMZA9CgdKcfMnByOtYN+p0Fsf0EdKaHoPMDI3C0Xq1vHU24q8qN3r0
+	 M+r4Ch9XICtSUtW8o+zKHq+izDls/lxP7ucYLxBuiHGniuGx3lCmiJJ8eTARXPp8Zt
+	 mlojS34PEXX7D29/VAFxwUoJw5oDbeUmxvtXsS2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfL0SP4 (ORCPT
+        id S1728323AbfL0SQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbfL0SPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:54 -0500
+        id S1728284AbfL0SQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BD421744;
-        Fri, 27 Dec 2019 18:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B06C121775;
+        Fri, 27 Dec 2019 18:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470553;
-        bh=B/WPZinwqaU3N5CEePyKCWSzXduU7EUxFTX6m0gZr/s=;
+        s=default; t=1577470570;
+        bh=cmQ5bPpFTHGhZsTA/P2QxTSzK+X+Y59Kbf/bpK7LRh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfXJC/+P+Te4cAnTPKqaUHsFhlHuLP80RocKgWzPr2ZkvMp6OO8fAOY4loBM0Ovcg
-         49JWPQig5CwlzN+bm2ltgodj6QU9hV+plgG39Yq3Rg+PFi13mMAqwHON2v/P2YI+rq
-         wNq5JWEtlpzn59Hm5acoe9Wee1vtTHSS8y/s+56Y=
+        b=Gn/8FU576je5hT+wDWPRGNNrGgY0SK8eo+qWbVEKaniI9hpL0SLf2paZO/egPzP3Y
+         7izquxNul0upPxNM62NNQ2eDDQL7wFysv/C4BA3EUaphVzSvrVMbgwpe1nrFp4cHUM
+         nZshKnCDBIp0aS6p/HTSI1seXhwsaPip4afwO/Fk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 03/25] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-Date:   Fri, 27 Dec 2019 13:15:27 -0500
-Message-Id: <20191227181549.8040-3-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 17/25] ASoC: wm8962: fix lambda value
+Date:   Fri, 27 Dec 2019 13:15:41 -0500
+Message-Id: <20191227181549.8040-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -63,67 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
+[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
 
-Currently we add individual copy of same OPP table for each CPU within
-the cluster. This is redundant and doesn't reflect the reality.
+According to user manual, it is required that FLL_LAMBDA > 0
+in all cases (Integer and Franctional modes).
 
-We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
-anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
-->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
-operations. It also may cause issues when the vexpress_spc_cpufreq
-driver is built as a module.
-
-Since ve_spc_clk_init is built-in device initcall, we should be able to
-use the same topology_core_cpumask to set the opp sharing cpumask via
-dev_pm_opp_set_sharing_cpus and use the same later in the driver via
-dev_pm_opp_get_sharing_cpus.
-
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wm8962.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
-index 5766ce2be32b..29eb945075e3 100644
---- a/arch/arm/mach-vexpress/spc.c
-+++ b/arch/arm/mach-vexpress/spc.c
-@@ -555,8 +555,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index a7e79784fc16..4a3ce9b85253 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2792,7 +2792,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
  
- static int __init ve_spc_clk_init(void)
- {
--	int cpu;
-+	int cpu, cluster;
- 	struct clk *clk;
-+	bool init_opp_table[MAX_CLUSTERS] = { false };
+ 	if (target % Fref == 0) {
+ 		fll_div->theta = 0;
+-		fll_div->lambda = 0;
++		fll_div->lambda = 1;
+ 	} else {
+ 		gcd_fll = gcd(target, fratio * Fref);
  
- 	if (!info)
- 		return 0; /* Continue only if SPC is initialised */
-@@ -582,8 +583,17 @@ static int __init ve_spc_clk_init(void)
- 			continue;
- 		}
- 
-+		cluster = topology_physical_package_id(cpu_dev->id);
-+		if (init_opp_table[cluster])
-+			continue;
-+
- 		if (ve_init_opp_table(cpu_dev))
- 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+			 topology_core_cpumask(cpu_dev->id)))
-+			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
-+		else
-+			init_opp_table[cluster] = true;
+@@ -2862,7 +2862,7 @@ static int wm8962_set_fll(struct snd_soc_codec *codec, int fll_id, int source,
+ 		return -EINVAL;
  	}
  
- 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
+-	if (fll_div.theta || fll_div.lambda)
++	if (fll_div.theta)
+ 		fll1 |= WM8962_FLL_FRAC;
+ 
+ 	/* Stop the FLL while we reconfigure */
 -- 
 2.20.1
 
