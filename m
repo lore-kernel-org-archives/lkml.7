@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4055C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69B0220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2482206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469307;
-	bh=0K9cbE1aPc4/ll3AYgNd+gIeX0L4S01M2CUtmrNS0QA=;
+	s=default; t=1577469315;
+	bh=G1X73f8j5ZQK4s/al11K17DrbTTEfiY6izAM4uPLVQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeSldIGDlrtMO9UewxPOD3xRBjwNQR0xxxar/04DOWM/93J4X8dXMBbAU8Wjxm6DA
-	 rrjFpuK/szsP5QAmUBhNZ+tXcZoeXlMhdIA3XUGg8+fjqmdDgMb7O9iPGM5N9EMMkM
-	 4+rbLMQkUH9ItN32Hm4+eE6CNmqp50Ne3FMHNNqo=
+	b=BPpWcey3ypuc9h1qX4sMwWEi52Tetixpsc9i4owexGsNvYpfbOqeBygK5r50i4rJx
+	 GGJdvfYZ+2SAQl319r13nypCrhRbDqHwvLj/N4yq8lSrqa67I+iCLy1pfhuiFzOVYN
+	 1zFy4nEegySV2UiJCTfKCvCbUl4qyzfLgGwYP+pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfL0RzG (ORCPT
+        id S1727834AbfL0RmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:55:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfL0RmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:24 -0500
+        id S1727813AbfL0RmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF31820740;
-        Fri, 27 Dec 2019 17:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEBC821744;
+        Fri, 27 Dec 2019 17:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468544;
-        bh=0K9cbE1aPc4/ll3AYgNd+gIeX0L4S01M2CUtmrNS0QA=;
+        s=default; t=1577468537;
+        bh=G1X73f8j5ZQK4s/al11K17DrbTTEfiY6izAM4uPLVQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4Jy1Osjijb/2yyaAOY1RRuglTfzHrPSpWFyMQn3kgHv9u+nHSpubxgNThP3xcD/9
-         Wqiw9scunyNSRSPjVLECKxlHf+pa1Wp7Tg7XtktDlbFR2dvS8MH8v13573RhmOgQgJ
-         MFYmKbUPtBFTLO7Qs8p1Qux7kDz4lDUwmnfBL6Hk=
+        b=sRQiyUp9Xa9kReAmZHpjL5wmORu+xW4yYO49p0i4XLx+K+P5g7O9/PYqMWYAWhorK
+         vUJ0tzZPsyti2x3fy8EZ4M3JBq/9Wqg1SOtrPnkB8bH9lq5o6ea1UaUhzh2JH4OLdg
+         9Gsaw+AXkROb4m3WNQ8pNF7sePb/ayHn7TS7LxZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Chaignon <paul.chaignon@orange.com>,
-        Mahshid Khezri <khezri.mahshid@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 072/187] bpf, mips: Limit to 33 tail calls
-Date:   Fri, 27 Dec 2019 12:39:00 -0500
-Message-Id: <20191227174055.4923-72-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 067/187] bnxt_en: Fix MSIX request logic for RDMA driver.
+Date:   Fri, 27 Dec 2019 12:38:55 -0500
+Message-Id: <20191227174055.4923-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -62,59 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Chaignon <paul.chaignon@orange.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit e49e6f6db04e915dccb494ae10fa14888fea6f89 ]
+[ Upstream commit 0c722ec0a289c7f6b53f89bad1cfb7c4db3f7a62 ]
 
-All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
-limit at runtime.  In addition, a test was recently added, in tailcalls2,
-to check this limit.
+The logic needs to check both bp->total_irqs and the reserved IRQs in
+hw_resc->resv_irqs if applicable and see if both are enough to cover
+the L2 and RDMA requested vectors.  The current code is only checking
+bp->total_irqs and can fail in some code paths, such as the TX timeout
+code path with the RDMA driver requesting vectors after recovery.  In
+this code path, we have not reserved enough MSIX resources for the
+RDMA driver yet.
 
-This patch updates the tail call limit in MIPS' JIT compiler to allow
-33 tail calls.
-
-Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
-Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
-Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/b8eb2caac1c25453c539248e56ca22f74b5316af.1575916815.git.paul.chaignon@gmail.com
+Fixes: 75720e6323a1 ("bnxt_en: Keep track of reserved IRQs.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/net/ebpf_jit.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
-index 46b76751f3a5..3ec69d9cbe88 100644
---- a/arch/mips/net/ebpf_jit.c
-+++ b/arch/mips/net/ebpf_jit.c
-@@ -604,6 +604,7 @@ static void emit_const_to_reg(struct jit_ctx *ctx, int dst, u64 value)
- static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+index b2c160947fc8..30816ec4fa91 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c
+@@ -113,8 +113,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
  {
- 	int off, b_off;
-+	int tcc_reg;
+ 	struct net_device *dev = edev->net;
+ 	struct bnxt *bp = netdev_priv(dev);
++	struct bnxt_hw_resc *hw_resc;
+ 	int max_idx, max_cp_rings;
+ 	int avail_msix, idx;
++	int total_vecs;
+ 	int rc = 0;
  
- 	ctx->flags |= EBPF_SEEN_TC;
- 	/*
-@@ -616,14 +617,14 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
- 	b_off = b_imm(this_idx + 1, ctx);
- 	emit_instr(ctx, bne, MIPS_R_AT, MIPS_R_ZERO, b_off);
- 	/*
--	 * if (--TCC < 0)
-+	 * if (TCC-- < 0)
- 	 *     goto out;
- 	 */
- 	/* Delay slot */
--	emit_instr(ctx, daddiu, MIPS_R_T5,
--		   (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4, -1);
-+	tcc_reg = (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4;
-+	emit_instr(ctx, daddiu, MIPS_R_T5, tcc_reg, -1);
- 	b_off = b_imm(this_idx + 1, ctx);
--	emit_instr(ctx, bltz, MIPS_R_T5, b_off);
-+	emit_instr(ctx, bltz, tcc_reg, b_off);
- 	/*
- 	 * prog = array->ptrs[index];
- 	 * if (prog == NULL)
+ 	ASSERT_RTNL();
+@@ -142,7 +144,10 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
+ 	}
+ 	edev->ulp_tbl[ulp_id].msix_base = idx;
+ 	edev->ulp_tbl[ulp_id].msix_requested = avail_msix;
+-	if (bp->total_irqs < (idx + avail_msix)) {
++	hw_resc = &bp->hw_resc;
++	total_vecs = idx + avail_msix;
++	if (bp->total_irqs < total_vecs ||
++	    (BNXT_NEW_RM(bp) && hw_resc->resv_irqs < total_vecs)) {
+ 		if (netif_running(dev)) {
+ 			bnxt_close_nic(bp, true, false);
+ 			rc = bnxt_open_nic(bp, true, false);
+@@ -156,7 +161,6 @@ static int bnxt_req_msix_vecs(struct bnxt_en_dev *edev, int ulp_id,
+ 	}
+ 
+ 	if (BNXT_NEW_RM(bp)) {
+-		struct bnxt_hw_resc *hw_resc = &bp->hw_resc;
+ 		int resv_msix;
+ 
+ 		resv_msix = hw_resc->resv_irqs - bp->cp_nr_rings;
 -- 
 2.20.1
 
