@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23333C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF7EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A3320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406182173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470608;
-	bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
+	s=default; t=1577470610;
+	bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BEoKdtbhWrNCFuhgwXEqjwRwbFgt50jFrnhxl+FmQk9ieJ+qoncgpU26G19Lb5tK5
-	 fZnovNvAaoG3yt+DfzuMQrct8/yLXGvHpnGiEzsM+YomAiUKzka+fMWIdd2GnmStBO
-	 ofPZwsFvhLfePGrX8bPrVFgWQdYK0n8AeNah8efk=
+	b=iz3jHZ3M0j7wLqE3o3Vv29qvRCNIk81wNBWudJyFB979eRGjzCzV/kN6tGlVc9IqU
+	 VTl74x4LS2vRnaBxoPtbLCqsHpgfFIxggrmS/wcc8JjqnBEoLFVtmx3rk//AM4kQCM
+	 e7aptuEMcmIxrlM+uOlKJojPMNUYh/degeff35T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfL0SQM (ORCPT
+        id S1728281AbfL0SQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41242 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbfL0SQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:06 -0500
+        id S1728214AbfL0SQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C22021582;
-        Fri, 27 Dec 2019 18:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9767820CC7;
+        Fri, 27 Dec 2019 18:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470566;
-        bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
+        s=default; t=1577470563;
+        bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILR24doyNLkJc2uAeXoq+D7H43HdGJtYrBghqBVKnrWQBAg+8kB2oRoSZObExkTWn
-         alD0bI5iqcaAfryd8gNAfpL7zoLK6Vk1jCOfXx5IZ4aHRYfX7snAksNClkWG+DUTx2
-         uWStsuNsAn8+h9Cotjh2Ae4AXYcZzVzgYNCJl7x4=
+        b=ePeOFcNucVBa1B8L6DoNz2jsjFjk7tWOdjT10CozsA1VqXF/iQf9LoMumeysQ8s/a
+         ZrmoMUjhN0ivnzwR130gmMqRld5493nxOD2N4itpm1EeEIk7Tk/9GuMdVIiDuO0pg4
+         yTZjtj3+O1j72XWjyBokzs2Ubq5AOuLmFNw4ZSzQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/25] bnx2x: Do not handle requests from VFs after parity
-Date:   Fri, 27 Dec 2019 13:15:37 -0500
-Message-Id: <20191227181549.8040-13-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 11/25] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Fri, 27 Dec 2019 13:15:35 -0500
+Message-Id: <20191227181549.8040-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -60,86 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-Parity error from the hardware will cause PF to lose the state
-of their VFs due to PF's internal reload and hardware reset following
-the parity error. Restrict any configuration request from the VFs after
-the parity as it could cause unexpected hardware behavior, only way
-for VFs to recover would be to trigger FLR on VFs and reload them.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 82960603da33..026c72e62c18 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -9942,10 +9942,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
-  */
- static void bnx2x_parity_recover(struct bnx2x *bp)
- {
--	bool global = false;
- 	u32 error_recovered, error_unrecovered;
--	bool is_parity;
-+	bool is_parity, global = false;
-+#ifdef CONFIG_BNX2X_SRIOV
-+	int vf_idx;
-+
-+	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
-+		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 1efe5ca5c3bc..5bb2c89d55c8 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -330,6 +330,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
  
-+		if (vf)
-+			vf->state = VF_LOST;
-+	}
-+#endif
- 	DP(NETIF_MSG_HW, "Handling parity\n");
- 	while (1) {
- 		switch (bp->recovery_state) {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-index 6f6f13dc2be3..ab8339594cd3 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-@@ -139,6 +139,7 @@ struct bnx2x_virtf {
- #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
- #define VF_ENABLED	2	/* VF Enabled */
- #define VF_RESET	3	/* VF FLR'd, pending cleanup */
-+#define VF_LOST		4	/* Recovery while VFs are loaded */
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
  
- 	bool flr_clnup_stage;	/* true during flr cleanup */
- 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-index a12a4236b143..e9fc3b09dba8 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-@@ -2095,6 +2095,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
- {
- 	int i;
- 
-+	if (vf->state == VF_LOST) {
-+		/* Just ack the FW and return if VFs are lost
-+		 * in case of parity error. VFs are supposed to be timedout
-+		 * on waiting for PF response.
-+		 */
-+		DP(BNX2X_MSG_IOV,
-+		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
-+
-+		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
-+		return;
-+	}
-+
- 	/* check if tlv type is known */
- 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
- 		/* Lock the per vf op mutex and note the locker's identity.
 -- 
 2.20.1
 
