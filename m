@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BC9C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34C121582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1328C20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470574;
-	bh=cmQ5bPpFTHGhZsTA/P2QxTSzK+X+Y59Kbf/bpK7LRh4=;
+	s=default; t=1577470582;
+	bh=v0mFT+dJULRtbSxTn4Da5l41HK8LWJUO6RjWITOneDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KADVQASOY1xtMZA9CgdKcfMnByOtYN+p0Fsf0EdKaHoPMDI3C0Xq1vHU24q8qN3r0
-	 M+r4Ch9XICtSUtW8o+zKHq+izDls/lxP7ucYLxBuiHGniuGx3lCmiJJ8eTARXPp8Zt
-	 mlojS34PEXX7D29/VAFxwUoJw5oDbeUmxvtXsS2M=
+	b=KlcnBtxUvFZCACWSpAy50AsHY99QFP34VRZ1OLSI3P0PrAqpe59b85VsRzBuLl+TS
+	 rEP0/HGUBt3LD3OVouG1Q7jbFT2ch8bFtHbf5xsxhnaoov2ba1OWb3uwXt0dEqQT5F
+	 7g7qxsDBqBRMRuumg1pRDmJnFuHz490WQTsQffLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfL0SQN (ORCPT
+        id S1728390AbfL0SQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728284AbfL0SQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:11 -0500
+        id S1728326AbfL0SQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B06C121775;
-        Fri, 27 Dec 2019 18:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A20218AC;
+        Fri, 27 Dec 2019 18:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470570;
-        bh=cmQ5bPpFTHGhZsTA/P2QxTSzK+X+Y59Kbf/bpK7LRh4=;
+        s=default; t=1577470573;
+        bh=v0mFT+dJULRtbSxTn4Da5l41HK8LWJUO6RjWITOneDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gn/8FU576je5hT+wDWPRGNNrGgY0SK8eo+qWbVEKaniI9hpL0SLf2paZO/egPzP3Y
-         7izquxNul0upPxNM62NNQ2eDDQL7wFysv/C4BA3EUaphVzSvrVMbgwpe1nrFp4cHUM
-         nZshKnCDBIp0aS6p/HTSI1seXhwsaPip4afwO/Fk=
+        b=yGzUMCFE52mAxiwJUpgXh8HfubyZ5OQ9x/082kzof4E4PcoY6CtSWbtM6SXCQGkeD
+         Bollvt/qQ6qUe1MFufYPHgF3yuuh5jISdlCcMjZWpVa0lsvHiKz4YRXxqbnmonDjqS
+         gMWAFEKIEoVcDWHcNXbXtqyHj6Mq4Ftgp4mPybvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 17/25] ASoC: wm8962: fix lambda value
-Date:   Fri, 27 Dec 2019 13:15:41 -0500
-Message-Id: <20191227181549.8040-17-sashal@kernel.org>
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 20/25] net: qlogic: Fix error paths in ql_alloc_large_buffers()
+Date:   Fri, 27 Dec 2019 13:15:44 -0500
+Message-Id: <20191227181549.8040-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -61,45 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
+[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
 
-According to user manual, it is required that FLL_LAMBDA > 0
-in all cases (Integer and Franctional modes).
+ql_alloc_large_buffers() has the usual RX buffer allocation
+loop where it allocates skbs and maps them for DMA.  It also
+treats failure as a fatal error.
 
-Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+There are (at least) three bugs in the error paths:
+
+1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
+first buffer that couldn't be allocated will have .skb == NULL.
+But the qla_buf[] array is not zero-initialised.
+
+2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
+incorrect for the last allocated skb, if DMA mapping failed.
+
+3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
+ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
+after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
+will double-free it.
+
+The bugs are somewhat inter-twined, so fix them all at once:
+
+* Clear each entry in qla_buf[] before attempting to allocate
+  an skb for it.  This goes half-way to fixing bug 1.
+* Set the .skb field only after the skb is DMA-mapped.  This
+  fixes the rest.
+
+Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
+Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qla3xxx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index a7e79784fc16..4a3ce9b85253 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2792,7 +2792,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
+diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
+index c653b97d84d5..f2cb77c3b199 100644
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2752,6 +2752,9 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
+ 	int err;
  
- 	if (target % Fref == 0) {
- 		fll_div->theta = 0;
--		fll_div->lambda = 0;
-+		fll_div->lambda = 1;
- 	} else {
- 		gcd_fll = gcd(target, fratio * Fref);
+ 	for (i = 0; i < qdev->num_large_buffers; i++) {
++		lrg_buf_cb = &qdev->lrg_buf[i];
++		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
++
+ 		skb = netdev_alloc_skb(qdev->ndev,
+ 				       qdev->lrg_buffer_len);
+ 		if (unlikely(!skb)) {
+@@ -2762,11 +2765,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
+ 			ql_free_large_buffers(qdev);
+ 			return -ENOMEM;
+ 		} else {
+-
+-			lrg_buf_cb = &qdev->lrg_buf[i];
+-			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
+ 			lrg_buf_cb->index = i;
+-			lrg_buf_cb->skb = skb;
+ 			/*
+ 			 * We save some space to copy the ethhdr from first
+ 			 * buffer
+@@ -2788,6 +2787,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
+ 				return -ENOMEM;
+ 			}
  
-@@ -2862,7 +2862,7 @@ static int wm8962_set_fll(struct snd_soc_codec *codec, int fll_id, int source,
- 		return -EINVAL;
- 	}
- 
--	if (fll_div.theta || fll_div.lambda)
-+	if (fll_div.theta)
- 		fll1 |= WM8962_FLL_FRAC;
- 
- 	/* Stop the FLL while we reconfigure */
++			lrg_buf_cb->skb = skb;
+ 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
+ 			dma_unmap_len_set(lrg_buf_cb, maplen,
+ 					  qdev->lrg_buffer_len -
 -- 
 2.20.1
 
