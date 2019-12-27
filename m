@@ -2,115 +2,174 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FC7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8165C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4F220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577464588;
-	bh=vLaSTpW+zvXJSzqHa6YRxfz0UhXfnVZZ/YKoszrBy5M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zC1jcU2yjHL2u/V1yd+nzMwZD8aNzjfui8CFlWdHhFgHDrdSyqPFl8YD7G2ViWKIZ
-	 Ap9MDHLkPN8fnPt6MarZEvR5QFilaC6egU6IoHYIAq5g530f4+mETCHI+SIsdcYw42
-	 OLEBjHOYXZ7xscPg2r4NRu8PcF56sXeGEiTLEEWE=
+	by mail.kernel.org (Postfix) with ESMTP id 8987B20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DwiKlg3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfL0Qg1 (ORCPT
+        id S1726936AbfL0Qxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:36:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfL0QgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 11:36:25 -0500
-Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D2C21775;
-        Fri, 27 Dec 2019 16:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577464585;
-        bh=vLaSTpW+zvXJSzqHa6YRxfz0UhXfnVZZ/YKoszrBy5M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcfMwYLRuPSrv328SCJH+nZraP7qiUJzeC36eiW83W5fNVdGk9keYFqH4JwZ8kTRl
-         BXdzQ3yOAQcF4jdNYHtitHUYa0TfwIs40VECTdxahz5kEReb/0TJ5hu2CyflkoqrHV
-         FC8i6VNKkIrUbZF0VXX7DG95D5h24LAG1jmyKPYI=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH 2/2] x86/context-tracking: Remove exception_enter/exit() from KVM_PV_REASON_PAGE_NOT_PRESENT async page fault
-Date:   Fri, 27 Dec 2019 17:36:12 +0100
-Message-Id: <20191227163612.10039-3-frederic@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191227163612.10039-1-frederic@kernel.org>
-References: <20191227163612.10039-1-frederic@kernel.org>
+        Fri, 27 Dec 2019 11:53:54 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43682 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Qxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 11:53:54 -0500
+Received: by mail-ed1-f68.google.com with SMTP id dc19so25737753edb.10;
+        Fri, 27 Dec 2019 08:53:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
+        b=DwiKlg3avHIENCyNavhob2AMpVyTS9QSLl42Sq+4wmPxA2eGoEaW0dNQJSDgR9qVI/
+         gVpTH5X0CHsaaBqUQSIqqYyJvt9ANz4oUcUiF1HgEuaNFJ4f5fSTRM+ZdOaxipbQ+37l
+         e52TCpfVMWTs/4gfu4RQu63sv+6g+UJdbWRp+TidXrL8tOQ5ctn3zFDhXQl7NGKZtaEy
+         ejJ3rs1FslamWH8noA5P8dlPPpBQmf7bK+8qfHBl8yjGCGtAJYq7knGY0d37A9JguVRB
+         6wK1qjeq7+pJfp7csnP5t+//L8L+/RTNsK49f9NZAKBd2xrob+rD8KIBexvwXOkcSiRD
+         3zRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
+        b=ndYCI3/fQPYhVgkEdZmaNNCFUD9dL99pDMAcWgS414N+sbh3tAnxekWXfEH9qd2ytd
+         yMG3TzJaPZS4xzAYrOsVkao0XxBno7cl8KXdXkY8GrAuf9x+jvsaMxfr39xI0n4Pv9Zc
+         FJKWEEv6s8edVEAgNRyFR0FBiQwHRZCdfpKKJO4q3rQzWX2clBIT5ghtauiwtp8JVMLx
+         V8MeLNAqmt/VdIoovQFwkO+SkmidUPWcoPntpTvZvQ3hlYsMfvbkU4yyLTvd/n6Jf46q
+         LakZLmQXAEqCHUeDwmzGiJFVj7oYPltdlQmk5Bgk8DEnTlZ7Q19fGdTit4Xe3dajNLCu
+         xOvg==
+X-Gm-Message-State: APjAAAW2fW7NZHqsCBZXwHbwZ+sZI/x9mlvX4cYZmpfBUGiMdoL+n/Lm
+        tPzay9vTgdW3gAzy1DYbiSGgFHM/pY4qoGScZJ4=
+X-Google-Smtp-Source: APXvYqygkSSfnw8HoIDr9icAV5YXJN/IAat2JIa4d06E0rVnVK5uFaStiuAG+Sxv/pJ2HevsAWvvqJm4znilTktaA3I=
+X-Received: by 2002:aa7:c80b:: with SMTP id a11mr57661239edt.240.1577465632157;
+ Fri, 27 Dec 2019 08:53:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191227094606.143637-1-jian.hu@amlogic.com> <20191227094606.143637-3-jian.hu@amlogic.com>
+In-Reply-To: <20191227094606.143637-3-jian.hu@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 27 Dec 2019 17:53:41 +0100
+Message-ID: <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
+To:     Jian Hu <jian.hu@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a leftover. Page faults, just like most other exceptions,
-are protected inside user_exit() / user_enter() calls in x86 entry code
-when we fault from userspace. So this pair of calls is now useless.
+Hi Jian,
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kernel/kvm.c | 4 ----
- 1 file changed, 4 deletions(-)
+On Fri, Dec 27, 2019 at 10:46 AM Jian Hu <jian.hu@amlogic.com> wrote:
+[...]
+> @@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
+>  {
+>         struct clk_regmap *clk = to_clk_regmap(hw);
+>         struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+> +       int ret = 0;
+>
+> -       if (meson_parm_read(clk->map, &pll->rst) ||
+> -           !meson_parm_read(clk->map, &pll->en) ||
+> +       if (MESON_PARM_APPLICABLE(&pll->rst))
+> +               ret = meson_parm_read(clk->map, &pll->rst);
+> +
+> +       if (ret || !meson_parm_read(clk->map, &pll->en) ||
+>             !meson_parm_read(clk->map, &pll->l))
+>                 return 0;
+I had to read this part twice to understand what it's doing because I
+misunderstood what "ret" is used for (I thought that some "return ret"
+is missing)
+my proposal to make it easier to read:
+...
+if (MESON_PARM_APPLICABLE(&pll->rst) &&
+    meson_parm_read(clk->map, &pll->rst))
+  return 0;
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 32ef1ee733b7..81045aabb6f4 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -245,17 +245,13 @@ NOKPROBE_SYMBOL(kvm_read_and_reset_pf_reason);
- dotraplinkage void
- do_async_page_fault(struct pt_regs *regs, unsigned long error_code, unsigned long address)
- {
--	enum ctx_state prev_state;
--
- 	switch (kvm_read_and_reset_pf_reason()) {
- 	default:
- 		do_page_fault(regs, error_code, address);
- 		break;
- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
- 		/* page is swapped out by the host. */
--		prev_state = exception_enter();
- 		kvm_async_pf_task_wait((u32)address, !user_mode(regs));
--		exception_exit(prev_state);
- 		break;
- 	case KVM_PV_REASON_PAGE_READY:
- 		rcu_irq_enter();
--- 
-2.23.0
+if (!meson_parm_read(clk->map, &pll->en) ||
+    !meson_parm_read(clk->map, &pll->l))
+                 return 0;
+...
 
+please let me know what you think about this
+
+> @@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>         /* do nothing if the PLL is already enabled */
+>         if (clk_hw_is_enabled(hw))
+>                 return 0;
+> +       /*
+> +        * Compared with the previous SoCs, self-adaption module current
+> +        * is newly added for A1, keep the new power-on sequence to enable the
+> +        * PLL.
+> +        */
+> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+> +               /* Enable the pll */
+> +               meson_parm_write(clk->map, &pll->en, 1);
+> +               udelay(10);
+> +               /* Enable the pll self-adaption module current */
+> +               meson_parm_write(clk->map, &pll->current_en, 1);
+> +               udelay(40);
+> +               /* Enable lock detect module */
+> +               meson_parm_write(clk->map, &pll->l_detect, 1);
+> +               meson_parm_write(clk->map, &pll->l_detect, 0);
+> +               goto out;
+> +       }
+in all other functions you are skipping the pll->rst register by
+checking for MESON_PARM_APPLICABLE(&pll->rst)
+I like that because it's a pattern which is easy to follow
+
+do you think we can make this part consistent with that?
+I'm thinking of something like this (not compile-tested and I dropped
+all comments, just so you get the idea):
+...
+if (MESON_PARM_APPLICABLE(&pll->rst)
+  meson_parm_write(clk->map, &pll->rst, 1);
+
+meson_parm_write(clk->map, &pll->en, 1);
+
+if (MESON_PARM_APPLICABLE(&pll->rst))
+  meson_parm_write(clk->map, &pll->rst, 0);
+
+if (MESON_PARM_APPLICABLE(&pll->current_en))
+  meson_parm_write(clk->map, &pll->current_en, 1);
+
+if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
+  meson_parm_write(clk->map, &pll->l_detect, 1);
+  meson_parm_write(clk->map, &pll->l_detect, 0);
+}
+
+if (meson_clk_pll_wait_lock(hw))
+...
+
+I see two (and a half) benefits here:
+- if there's a PLL with neither the pll->current_en nor the pll->rst
+registers then you get support for this implementation for free
+- the if (MESON_PARM_APPLICABLE(...)) pattern is already used in the
+driver, but only for one register (in your example when
+MESON_PARM_APPLICABLE(&pll->current_en) exists you also modify the
+pll->l_detect register, which I did not expect)
+- only counts half: no use of "goto", which in my opinion makes it
+very easy to read (just read from top to bottom, checking each "if")
+
+
+Martin
