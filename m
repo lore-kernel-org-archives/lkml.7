@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D65C4C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9366CC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FDD20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FE220828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bhk+hAze"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ylrRXdCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfL0FdJ (ORCPT
+        id S1727230AbfL0FdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 00:33:09 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39993 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfL0FdC (ORCPT
+        Fri, 27 Dec 2019 00:33:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46420 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727060AbfL0Fc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 00:33:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so13915681pgt.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 21:33:01 -0800 (PST)
+        Fri, 27 Dec 2019 00:32:58 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so11287714pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 21:32:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2t+7hHUDAIU6/kyzomS9lXUD4GOc2eozdJ6K0tO6DWM=;
-        b=bhk+hAzeEOHKNO2859YUefgWnGGBXpUyN4CwlLzABkWSCsX8q3qDA7MoR6Ms5A5F7G
-         vXvdmYgbJkkKbGwOKbq3gtmK8Nw/1yuS9ZbUVdpzHcaVWvdtn5awQoyalQ93l69wmIc/
-         m5eHsN0l1ItVxKNS6aNfmkoJ0ID31OYow4zXRxnC0VO2V0SD1ZpHEQmfPvdLXoOB2zU2
-         P0AnIxEHr8jvGlAgfVv0lCaptgUMCp42oN0uh6nR0NkhZR6G2n+9QxIgzo34MVYrHhB4
-         3kbEU6MKw5DKwE6whoObsx00RNvgQpqFHnFKlzcXP4iNCTjQWI8sqPc1MJjw+0M+HHTj
-         8Cvg==
+        bh=CACSvkGQXTdbudbrDCr3GVf27K5HI0XInZ9uwni3MXE=;
+        b=ylrRXdCYJxPFdRcRwT43YU9htEJXb3RZq6jzea19OthZoBfBd4m9/gGbj4femDTUv9
+         KuHvQ1v0+LGkzmPlgXvWU7wHnTpPl0y44bxs+RtiWMm9fZ1ZzxaCPIC+3ueLS5NsksXo
+         lExY7XfeYQ1d4pHEXWPRCzBhgaFLJ0FYq/24nd33ipvfzcmOmxessAFWP8ki5PzrQi+z
+         wvJ8T//luOhE3WHswVoW8CxcF3xrwCvJRWWm5/6FwIdkW4qzkPTNIZm/IOoAu0ll8/4F
+         CNZprkIcdhzbDBj0VccAJpBfZc/0WSl0tCd5Jnp9ljcIrqoX7W0Ujo+pL3dADh5IOv0M
+         gfew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2t+7hHUDAIU6/kyzomS9lXUD4GOc2eozdJ6K0tO6DWM=;
-        b=gmcQA8aHwGV8bcUg9xSWe3hXeLOiMAqOtCXYXc4b8w0mXu4c+lEPHtE9LSsnllxlIy
-         deSov6jp+srqY2Dp88jUdXIKo/6G6qS67v96rO0eaSoWxvH28+CSt4o6bkUz70xYCDz7
-         0FcnXUgwU6V4hLmloK1e7OyLz6vNy1ATaFgbiGg0mYVUt323a2XPbKe6hd+XwKFhegUM
-         hiuGsPzgW3Qnih5igrYP6ffEZIZtOThvtGoIyBWWGcpobVpvW7s1PhEuZcriFi0Rd4xa
-         9VhOVNYCPXs8LfxkivMWfcQB5lI1S+huMyk2WL8c30XQmQuK/PWlNyfBH16JSAJb7lHN
-         mvxA==
-X-Gm-Message-State: APjAAAWt0l+MBUh5pmRs1ldrpEd1aCicaDjZjKLSboKbSStLedKfwMF5
-        MW70UPU6JbPOmzLGpkkxQinNRw==
-X-Google-Smtp-Source: APXvYqwCHtL65F4klQ7nfvCMnlbMC2Fw7n/B+CQK0brIPIgwIsnUim4YYHskacOMviBgFuA91mTWSA==
-X-Received: by 2002:a63:6c03:: with SMTP id h3mr49662731pgc.19.1577424781257;
-        Thu, 26 Dec 2019 21:33:01 -0800 (PST)
+        bh=CACSvkGQXTdbudbrDCr3GVf27K5HI0XInZ9uwni3MXE=;
+        b=SgNgKuPqvsUpXxHKLUvavp9dYgSHHUG9iRKxMGbP8MUWRzK+xHdrwZIXfV3oOF67gP
+         YYPbR/9+OP7f1HVNSUAIEPBhINBVDVte2awdNYh7WXHSg6qaRn3yfwEDfmhPUePJo5r7
+         c9GrMvTpmGI3O5TkFuYFa8f8LvEG81M8SBYt6xopDTiMPOtIc0vn73i3hKzPhsErfs0V
+         +xKih+fADSSppalOG3cmLgSL6tevTl/1TKL/xm/nh8NsiTIyKuxumRYDjxn8nB2H8CGD
+         sKlJuHhr9foFanhiXMdFe692+IzNi+2+aIjGRH5PTTGT1q7yeExN79655YHyOQ60oglE
+         SDvA==
+X-Gm-Message-State: APjAAAVtU5dK6u/GVsht8cGHYkPE/yG8UjkvSW7dWNnXcYPEGtUVx+i9
+        eY14uJ6+TN6LyACcv4xTunw6JA==
+X-Google-Smtp-Source: APXvYqwDC4IXipZ7ZUqmtRfUXBo5/Wl/A9WtrtL7RUaMcfUiAMm6gLsuotO/cQTVmLuhTHt1j7S+SQ==
+X-Received: by 2002:a17:90a:8912:: with SMTP id u18mr23852528pjn.64.1577424777538;
+        Thu, 26 Dec 2019 21:32:57 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c22sm16789196pfo.50.2019.12.26.21.33.00
+        by smtp.gmail.com with ESMTPSA id c22sm16789196pfo.50.2019.12.26.21.32.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 21:33:00 -0800 (PST)
+        Thu, 26 Dec 2019 21:32:56 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,9 +64,9 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>,
         Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v2 8/8] remoteproc: qcom: Introduce panic handler for PAS and ADSP
-Date:   Thu, 26 Dec 2019 21:32:15 -0800
-Message-Id: <20191227053215.423811-9-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 5/8] arm64: dts: qcom: sdm845: Add IMEM and PIL info region
+Date:   Thu, 26 Dec 2019 21:32:12 -0800
+Message-Id: <20191227053215.423811-6-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191227053215.423811-1-bjorn.andersson@linaro.org>
 References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
@@ -77,9 +77,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the PAS and ADSP/CDSP remoteproc drivers implement the panic
-handler that will invoke a stop to prepare the remoteprocs for post
-mortem debugging.
+Add a simple-mfd representing IMEM on SDM845 and define the PIL
+relocation info region, so that post mortem tools will be able to locate
+the loaded remoteprocs.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -87,60 +87,30 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Changes since v1:
 - None
 
- drivers/remoteproc/qcom_q6v5_adsp.c | 8 ++++++++
- drivers/remoteproc/qcom_q6v5_pas.c  | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-index 1a942c92d974..4189d22531f4 100644
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@ -291,12 +291,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
- 	return adsp->mem_region + offset;
- }
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 407d26e92fcc..e1e13d5bfeb3 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3020,6 +3020,16 @@ spmi_bus: spmi@c440000 {
+ 			cell-index = <0>;
+ 		};
  
-+static void adsp_panic(struct rproc *rproc)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
++		imem@146bf000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0 0x146bf000 0 0x1000>;
 +
-+	qcom_q6v5_panic(&adsp->q6v5);
-+}
++			pil-reloc {
++				compatible ="qcom,pil-reloc-info";
++				offset = <0x94c>;
++			};
++		};
 +
- static const struct rproc_ops adsp_ops = {
- 	.start = adsp_start,
- 	.stop = adsp_stop,
- 	.da_to_va = adsp_da_to_va,
- 	.parse_fw = qcom_register_dump_segments,
- 	.load = adsp_load,
-+	.panic = adsp_panic,
- };
- 
- static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 4dcdf1301e50..547d012cf2db 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -242,12 +242,20 @@ static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
- 	return adsp->mem_region + offset;
- }
- 
-+static void adsp_panic(struct rproc *rproc)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-+
-+	qcom_q6v5_panic(&adsp->q6v5);
-+}
-+
- static const struct rproc_ops adsp_ops = {
- 	.start = adsp_start,
- 	.stop = adsp_stop,
- 	.da_to_va = adsp_da_to_va,
- 	.parse_fw = qcom_register_dump_segments,
- 	.load = adsp_load,
-+	.panic = adsp_panic,
- };
- 
- static int adsp_init_clock(struct qcom_adsp *adsp)
+ 		apps_smmu: iommu@15000000 {
+ 			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+ 			reg = <0 0x15000000 0 0x80000>;
 -- 
 2.24.0
 
