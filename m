@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F58AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4288521D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1E7206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468897;
-	bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
+	s=default; t=1577468899;
+	bh=7O06fsqhjkB+bXQLYcomHu5IzcG2iatiptgUEdZPqac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkazGq6M0yuf3ZOFO1eR7p+HK/VOLH5ZEZekjl+J7ufTH7aw+OFh7pPxXYn6j8NuN
-	 TeW+6zqxEosrwJ6gGxOUMGzqupJkh5A4DUZRxmdwLJ6dEr7uVzqpSSrGhvPHiEwAgs
-	 7K4+975sgv39ScOL7RQOKrNDWI+8uBBT8cu7+7hc=
+	b=vMwT79ocrEVIwfxRHJgoKpAG2zKRshhBYcejKlMrAUmOIpsDP/jESuOpZBijEWCvA
+	 pwECEZJpEVXL0n6O7bh5u6ZEpS2n4mwAImh31kwzEdAdcgXm0n+aMHvTbZBgYIIREx
+	 CvaZSzrh7OlitqwSSGCnIkMEV2Q2OZx1kRIWREOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfL0RsM (ORCPT
+        id S1728641AbfL0RsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:48:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:48:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728553AbfL0Ror (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:47 -0500
+        id S1728551AbfL0Roq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C4B821582;
-        Fri, 27 Dec 2019 17:44:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D246206F4;
+        Fri, 27 Dec 2019 17:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468687;
-        bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
+        s=default; t=1577468686;
+        bh=7O06fsqhjkB+bXQLYcomHu5IzcG2iatiptgUEdZPqac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bo18kt42VO3VyEHCWPLJzYDvMVBoWXdbvnAl+PQqur3buYJLUq5yY/zVduF2nXKIZ
-         DS76y9g/FBqgf9h2ZVKKXlLoG7+P0nRkK2rcNYnZ7cmUIMvCAK9Viv2vN2jCv9zLNI
-         y5hEIszq85Yu4hJusEz2ItIgHvSHmSqhh7Mt5Q+U=
+        b=NFXAaFnXmYYYdIGSqdTUa3yw1u1aeKiutvlTkjcYhjpxo9S7onjMg6L2C9+XARIfN
+         ZHyk+HnPRuiRhW6lcqc3gj4PSqI9b6QBOHKDNOkhe3tKrxXvKeaQxJYd294xzk5mfF
+         lJLrHQpWlMS2kuvTgXcj+SAsAxj2G4RbiuiM/bT0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 45/84] bpf: Clear skb->tstamp in bpf_redirect when necessary
-Date:   Fri, 27 Dec 2019 12:43:13 -0500
-Message-Id: <20191227174352.6264-45-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 44/84] ARM: shmobile: defconfig: Restore debugfs support
+Date:   Fri, 27 Dec 2019 12:43:12 -0500
+Message-Id: <20191227174352.6264-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,39 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 5133498f4ad1123a5ffd4c08df6431dab882cc32 ]
+[ Upstream commit fa2cdb1762d15f701b83efa60b04f0d04e71bf89 ]
 
-Redirecting a packet from ingress to egress by using bpf_redirect
-breaks if the egress interface has an fq qdisc installed. This is the same
-problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
+Since commit 0e4a459f56c32d3e ("tracing: Remove unnecessary DEBUG_FS
+dependency"), CONFIG_DEBUG_FS is no longer auto-enabled.  This breaks
+booting Debian 9, as systemd needs debugfs:
 
-Clear skb->tstamp when redirecting into the egress path.
+    [FAILED] Failed to mount /sys/kernel/debug.
+    See 'systemctl status sys-kernel-debug.mount' for details.
+    [DEPEND] Dependency failed for Local File Systems.
+    ...
+    You are in emergGive root password for maintenance
+    (or press Control-D to continue):
 
-Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/bpf/20191213180817.2510-1-lmb@cloudflare.com
+Fix this by enabling CONFIG_DEBUG_FS explicitly.
+
+See also commit 18977008f44c66bd ("ARM: multi_v7_defconfig: Restore
+debugfs support").
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Link: https://lore.kernel.org/r/20191209101327.26571-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 1 +
+ arch/arm/configs/shmobile_defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index e6fa88506c00..91b950261975 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2007,6 +2007,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
- 	}
- 
- 	skb->dev = dev;
-+	skb->tstamp = 0;
- 
- 	__this_cpu_inc(xmit_recursion);
- 	ret = dev_queue_xmit(skb);
+diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
+index f8faf3729464..a0e487e95d69 100644
+--- a/arch/arm/configs/shmobile_defconfig
++++ b/arch/arm/configs/shmobile_defconfig
+@@ -211,5 +211,6 @@ CONFIG_NLS_ISO8859_1=y
+ CONFIG_PRINTK_TIME=y
+ # CONFIG_ENABLE_WARN_DEPRECATED is not set
+ # CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_DEBUG_FS=y
+ CONFIG_DEBUG_KERNEL=y
+ # CONFIG_ARM_UNWIND is not set
 -- 
 2.20.1
 
