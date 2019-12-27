@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C26C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16D3206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7161B206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469815;
-	bh=4vI5RpeiN7lbtTh/OPsyOoqAfoZFlIyDmqHsTYCLd50=;
+	s=default; t=1577469820;
+	bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmDRW4+QBIEfpFYqaBLJFW+BvSOxYFwQthT9Zz/qhw8HGCycIg5IhSN5fw6E3GyWR
-	 tjNOH1B8v6Qn7FqrPQBtuVlHABwHLWdHG0X+2Qv6xQhP4nPigxowbzHimhT33qX4IE
-	 P6BRIXPNu4Ln31Wl/JZoxri3QhPV38vXSGaJs9no=
+	b=LjdPNt2QZ0+wQqq3oi+3D1MLBdhZK9itBQyumEmkSxK22IzrcRWN1ftROjg7QD7xT
+	 VX+7TwZnY0Ul5deMy8OppKnysGHfsdt0x3j+Be4x0xWZ9kptAA+Q9E51SonEcMmnmP
+	 PNCnkNesQvmHRgTr0KlgqU449DsENoj5qSTB3W54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfL0SDe (ORCPT
+        id S1728761AbfL0SDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:03:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbfL0SDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:18 -0500
+        id S1728686AbfL0SD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D61218AC;
-        Fri, 27 Dec 2019 18:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A43C2173E;
+        Fri, 27 Dec 2019 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469797;
-        bh=4vI5RpeiN7lbtTh/OPsyOoqAfoZFlIyDmqHsTYCLd50=;
+        s=default; t=1577469806;
+        bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=juvmaldqdDEJtp+jb/XTYkkNio1H1bknUDfIE9OLYNKLkVMsRO97nEDdgecOiVF3s
-         uFgHgRUHvyHoQUIi83W3yos79hEHLx4cM5CaqjSjvEhx9ii8Bv/S+xRUNxDKSumm7T
-         LhbEIolQzgqTG6wpei9J7kcm9r4MgzMT32zRRNgk=
+        b=wtV4bh0S0i/t5I3QqXbndb1eHygbgjOX5YprWVvqn+EiNRX7Ny+4TzsxG29gXcnxy
+         2PZNqcDFkqL1Kr4d/XQE41yqmYY936eMplM/4UvM1vpo7LTrVAJgv5xR+F2rvaE+XL
+         EH4Ch7k4I3fRJydxpUG5XmQn/657gvNz+EpoH9VE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 45/57] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Fri, 27 Dec 2019 13:02:10 -0500
-Message-Id: <20191227180222.7076-45-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 53/57] parisc: Fix compiler warnings in debug_core.c
+Date:   Fri, 27 Dec 2019 13:02:18 -0500
+Message-Id: <20191227180222.7076-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,79 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+Fix this compiler warning:
+kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
+arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
+   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
+arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
+   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+      |                              ^~~~
+kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
+  596 |    atomic_xchg(&kgdb_active, cpu);
+      |    ^~~~~~~~~~~
 
-There are (at least) three bugs in the error paths:
-
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
-
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
-
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
-
-The bugs are somewhat inter-twined, so fix them all at once:
-
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
-
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
-index 5fca9a75780c..cc53ee26bd3e 100644
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2756,6 +2756,9 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 	int err;
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index f627c37dad9c..ab5c215cf46c 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -44,8 +44,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
+ **		if (((unsigned long)p & 0xf) == 0)
+ **			return __ldcw(p);
+ */
+-#define xchg(ptr, x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
++#define xchg(ptr, x)							\
++({									\
++	__typeof__(*(ptr)) __ret;					\
++	__typeof__(*(ptr)) _x_ = (x);					\
++	__ret = (__typeof__(*(ptr)))					\
++		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++	__ret;								\
++})
  
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
-+
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2766,11 +2769,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2792,6 +2791,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 				return -ENOMEM;
- 			}
- 
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+ /* bug catcher for when unsupported size is used - won't link */
+ extern void __cmpxchg_called_with_bad_pointer(void);
 -- 
 2.20.1
 
