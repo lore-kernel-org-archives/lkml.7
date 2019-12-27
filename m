@@ -2,198 +2,165 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45ABC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2ECC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FD6208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577429678;
-	bh=2weN5JX6ZnkjswoyolQKjBIPCekkLFG5RXJ35lLQBJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bmIRcnWYWoUMCntWYpZtZnjTQvWqDHwd3bj2i8us5BqNUYwEZu9pRMjjwEmzc7nta
-	 SgiBJdiuPTTFeDXAWz+oRB2veaH+b0VPkiLRpY1ZxG8vBQoJ5nfsQgU7sjZDwuHGmS
-	 CdhdZZaP0HdyQczNJbviWUEC2ksBSXoX0HZbutX0=
+	by mail.kernel.org (Postfix) with ESMTP id C0A57206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="YrwbpXmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfL0Gyh (ORCPT
+        id S1726491AbfL0G5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbfL0Gyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:54:37 -0500
-Received: from localhost (unknown [106.201.34.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD880206CB;
-        Fri, 27 Dec 2019 06:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577429676;
-        bh=2weN5JX6ZnkjswoyolQKjBIPCekkLFG5RXJ35lLQBJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pTfA0fEmxzH/+1heFC/7hwhz2SR019KKApYwddkwF7ZZlsMfPpImQyG65INVEOWSn
-         rZqGdhz9/b6oysNvoQLMcPFyPiWnCw8ed06QRC26ADY7OUzzyMzMmPAc+WKMU04lAx
-         uqIPtym/SENW8OZXY9GAMqzWM6lQQlcBuqt/HorU=
-Date:   Fri, 27 Dec 2019 12:24:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org
+        Fri, 27 Dec 2019 01:57:34 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45444 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfL0G5e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:57:34 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so11378247pls.12
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 22:57:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PnkNvUFtvzbbYcE5CwfaCD/l1qPrOZWX6lNmWQNNLKE=;
+        b=YrwbpXmotny6FI9nIbFIyeg+ylSzXsCvExjIzikQPY+n54yXehgurNHW7qrxGTQ9RT
+         zesiXNUmTMuhevDfwch77rne6wrlv23AiG84gNLfdfKymRAvkODhKqK6/pnazuqE0WIc
+         0ZBCViPwePVFn3aVY6NR9uKORsTkKiCCONjxkkAn8GJkIWpi9D3hCGFTMqTkDowkHUyM
+         A0VeSsnP/oiP/KDS9Xm72ld5HmU8jLfnYFvor6vE3ZO8SfX/GF0pubM87YEL2nY1asf3
+         +/OjQAVs8MHejN0ga1c1SC4/+PkFQatOcO56Tj4NrOm+tHGqWrGbviyQvxB2uacBMpai
+         c1yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PnkNvUFtvzbbYcE5CwfaCD/l1qPrOZWX6lNmWQNNLKE=;
+        b=rDjn2Z2U8sPcMfU0fuo49PSrGEpWYznocbnBbJu5oOElybBMI6Q24lb8xG7cMmhL1T
+         sryzAVOuuN7Dnp1TpN9NjPrIbKeAtEhBpOMV3aE8ActBQTWfWPPweRDBcOu2143RNESx
+         29kWvnvhqCLfiqgfpXmAFE4yUciqOLtkAxG4bdp3nTSjNPMsAKZ3tIiZfsZTBCC5t100
+         aNKFBGpSu/iFegANtoCtWERZh101sCw9RV+h0UyvuAbRaiUMSwgwDsHAN9OAf6D9r/F4
+         DMHOg0p/YIq3MpfZzckY6OLKxoAF2UrKgUxMYUdkvOx2E2uCSJ0rbU6lZPbYevwvmVvL
+         k/rQ==
+X-Gm-Message-State: APjAAAU4agh8vCiARcs50NH+eoVA0HmWHqyGIAgsHRtq6BsZW0tMYLYG
+        tg3Q8+Z5Wv7eaS0OUnczGsBhIw==
+X-Google-Smtp-Source: APXvYqxtY/9hAi9APfUm0ya3wc7W/vrscRGRDzi+zNzns0bnB8bJqCmwIydV8hjy8GFWNUvuMXpFXw==
+X-Received: by 2002:a17:902:bc4b:: with SMTP id t11mr14003821plz.190.1577429853727;
+        Thu, 26 Dec 2019 22:57:33 -0800 (PST)
+Received: from endless.endlessm-sf.com (ec2-34-209-191-27.us-west-2.compute.amazonaws.com. [34.209.191.27])
+        by smtp.gmail.com with ESMTPSA id o2sm13449658pjo.26.2019.12.26.22.57.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 22:57:33 -0800 (PST)
+From:   Chris Chiu <chiu@endlessm.com>
+X-Google-Original-From: Chris Chiu <chris.chiu@pacidal.com>
+To:     perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
+        hui.wang@canonical.com, tomas.espeleta@gmail.com
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH v5 02/17] soundwire: rename dev_to_sdw_dev macro
-Message-ID: <20191227065430.GI3006@vkoul-mobl>
-References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
- <20191217210314.20410-3-pierre-louis.bossart@linux.intel.com>
+        linux@endlessm.com, Chris Chiu <chiu@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] ALSA: hda/realtek - Enable the subwoofer of ASUS UX431FLC
+Date:   Fri, 27 Dec 2019 14:57:24 +0800
+Message-Id: <20191227065724.2581-1-chris.chiu@pacidal.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217210314.20410-3-pierre-louis.bossart@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-12-19, 15:02, Pierre-Louis Bossart wrote:
-> Since we want to introduce master devices, rename macro so that we
-> have consistency between slave and master device access.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/base/regmap/regmap-sdw.c |  4 ++--
+From: Chris Chiu <chiu@endlessm.com>
 
-need ack from Mark on this...
+ASUS reported that there's an additional speaker which serves as
+the subwoofer and uses DAC 0x02. It does not work with the commit
+73a723348a43 ("ALSA: hda/realtek - Enable internal speaker of ASUS
+UX431FLC") which enables the amplifier and front speakers. This
+commit enables the subwoofer to improve the acoustic experience.
 
->  drivers/soundwire/bus.c          |  2 +-
->  drivers/soundwire/bus_type.c     | 11 ++++++-----
->  drivers/soundwire/slave.c        |  2 +-
->  include/linux/soundwire/sdw.h    |  3 ++-
->  5 files changed, 12 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
-> index 50a66382d87d..d1fc0c22180a 100644
-> --- a/drivers/base/regmap/regmap-sdw.c
-> +++ b/drivers/base/regmap/regmap-sdw.c
-> @@ -10,7 +10,7 @@
->  static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
->  {
->  	struct device *dev = context;
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  
->  	return sdw_write(slave, reg, val);
->  }
-> @@ -18,7 +18,7 @@ static int regmap_sdw_write(void *context, unsigned int reg, unsigned int val)
->  static int regmap_sdw_read(void *context, unsigned int reg, unsigned int *val)
->  {
->  	struct device *dev = context;
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	int read;
->  
->  	read = sdw_read(slave, reg);
-> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-> index be5d437058ed..4b22ee996a65 100644
-> --- a/drivers/soundwire/bus.c
-> +++ b/drivers/soundwire/bus.c
-> @@ -110,7 +110,7 @@ EXPORT_SYMBOL(sdw_add_bus_master);
->  
->  static int sdw_delete_slave(struct device *dev, void *data)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_bus *bus = slave->bus;
->  
->  	sdw_slave_debugfs_exit(slave);
-> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-> index 370b94752662..c0585bcc8a41 100644
-> --- a/drivers/soundwire/bus_type.c
-> +++ b/drivers/soundwire/bus_type.c
-> @@ -33,7 +33,7 @@ sdw_get_device_id(struct sdw_slave *slave, struct sdw_driver *drv)
->  
->  static int sdw_bus_match(struct device *dev, struct device_driver *ddrv)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(ddrv);
->  
->  	return !!sdw_get_device_id(slave, drv);
-> @@ -49,7 +49,7 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
->  
->  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	char modalias[32];
->  
->  	sdw_slave_modalias(slave, modalias, sizeof(modalias));
-> @@ -69,7 +69,7 @@ EXPORT_SYMBOL_GPL(sdw_bus_type);
->  
->  static int sdw_drv_probe(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
->  	const struct sdw_device_id *id;
->  	int ret;
-> @@ -115,8 +115,9 @@ static int sdw_drv_probe(struct device *dev)
->  
->  static int sdw_drv_remove(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
-> +
->  	int ret = 0;
->  
->  	if (drv->remove)
-> @@ -129,7 +130,7 @@ static int sdw_drv_remove(struct device *dev)
->  
->  static void sdw_drv_shutdown(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  	struct sdw_driver *drv = drv_to_sdw_slave_driver(dev->driver);
->  
->  	if (drv->shutdown)
-> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-> index 19919975bb6d..48a513680db6 100644
-> --- a/drivers/soundwire/slave.c
-> +++ b/drivers/soundwire/slave.c
-> @@ -9,7 +9,7 @@
->  
->  static void sdw_slave_release(struct device *dev)
->  {
-> -	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-> +	struct sdw_slave *slave = to_sdw_slave_device(dev);
->  
->  	kfree(slave);
->  }
-> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-> index b7c9eca4332a..5b1180f1e6b5 100644
-> --- a/include/linux/soundwire/sdw.h
-> +++ b/include/linux/soundwire/sdw.h
-> @@ -582,7 +582,8 @@ struct sdw_slave {
->  	u32 unattach_request;
->  };
->  
-> -#define dev_to_sdw_dev(_dev) container_of(_dev, struct sdw_slave, dev)
-> +#define to_sdw_slave_device(d) \
-> +	container_of(d, struct sdw_slave, dev)
->  
->  struct sdw_driver {
->  	const char *name;
-> -- 
-> 2.20.1
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ sound/pci/hda/patch_realtek.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index fada1ff61353..0193a8722be2 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5576,6 +5576,16 @@ static void alc295_fixup_disable_dac3(struct hda_codec *codec,
+ 	}
+ }
+ 
++/* Fixed DAC (0x02) on NID 0x17 to enable the mono speaker */
++static void alc294_fixup_fixed_dac_subwoofer(struct hda_codec *codec,
++					const struct hda_fixup *fix, int action)
++{
++	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
++		hda_nid_t conn[1] = { 0x02 };
++		snd_hda_override_conn_list(codec, 0x17, 1, conn);
++	}
++}
++
+ /* Hook to update amp GPIO4 for automute */
+ static void alc280_hp_gpio4_automute_hook(struct hda_codec *codec,
+ 					  struct hda_jack_callback *jack)
+@@ -5950,7 +5960,8 @@ enum {
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+ 	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
+-	ALC294_FIXUP_ASUS_INTSPK_GPIO,
++	ALC294_FIXUP_ASUS_DUAL_SPEAKERS,
++	ALC294_FIXUP_FIXED_DAC_SUBWOOFER,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7097,10 +7108,9 @@ static const struct hda_fixup alc269_fixups[] = {
+ 			{ }
+ 		}
+ 	},
+-	[ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC] = {
++	[ALC294_FIXUP_ASUS_HEADSET_MIC] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+-			{ 0x14, 0x411111f0 }, /* disable confusing internal speaker */
+ 			{ 0x19, 0x04a11150 }, /* use as headset mic, without its own jack detect */
+ 			{ }
+ 		},
+@@ -7117,12 +7127,18 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
+-	[ALC294_FIXUP_ASUS_INTSPK_GPIO] = {
++	[ALC294_FIXUP_FIXED_DAC_SUBWOOFER] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc294_fixup_fixed_dac_subwoofer,
++		.chained = true,
++		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
++	},
++	[ALC294_FIXUP_ASUS_DUAL_SPEAKERS] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		/* The GPIO must be pulled to initialize the AMP */
+ 		.v.func = alc_fixup_gpio4,
+ 		.chained = true,
+-		.chain_id = ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
++		.chain_id = ALC294_FIXUP_FIXED_DAC_SUBWOOFER
+ 	},
+ };
+ 
+@@ -7291,7 +7307,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+-	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_GPIO),
++	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_DUAL_SPEAKERS),
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
 -- 
-~Vinod
+2.20.1
+
