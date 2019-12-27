@@ -2,113 +2,145 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C032AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D6CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8643320CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577467759;
-	bh=4IyyrK3rcc20TYIu/QyrdI8yxLZaiEYZrJ/T8FRNMo8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LdZDZSp4AQw5741nU4fCWx2+5lt3KiTTSnvqHJwyGy6cD2bVIsv6KzgAe1Q00WkxS
-	 LZhlS1eStLBbZ9Vr4ricQYsVERsy0Swd+Eo/0AtpUCuvaybGi+BoIBYB0GCsK+8ka4
-	 6PYCMEhod/Is0gyBLoLVi2VT6GhSOdpIgtQ5Wu0c=
+	by mail.kernel.org (Postfix) with ESMTP id 3E96020740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:37:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IzRk5AUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfL0R3R (ORCPT
+        id S1726995AbfL0Rhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:29:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbfL0R3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:29:16 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA22C222C2;
-        Fri, 27 Dec 2019 17:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577467755;
-        bh=4IyyrK3rcc20TYIu/QyrdI8yxLZaiEYZrJ/T8FRNMo8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KcmHrjXfclLV8Vsoee1bIIkoaLFa83xDzhbwLpmiFiuAOlmFBaVK62nLP48/UrF1j
-         1JDz44YJFkPh1AzlGOv8HBSUHsmZ6p1LAiJD+856pbs2u5mMeo0AyiPxEcMjH3QdvI
-         NEFlbey1JNPcgyPnTH4zSE9k2vuQ4W3tg6a3I9PU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wenyang@linux.alibaba.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 003/187] regulator: fix use after free issue
-Date:   Fri, 27 Dec 2019 12:26:07 -0500
-Message-Id: <20191227172911.4430-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227172911.4430-1-sashal@kernel.org>
-References: <20191227172911.4430-1-sashal@kernel.org>
+        Fri, 27 Dec 2019 12:37:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46688 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Rhs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:37:48 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so26596200wrl.13
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 09:37:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CgL35F0PbHIPU/xEH/yy9QoMVLs1tW/HJnhHgsc5otw=;
+        b=IzRk5AUha85e7ZBCIOmBml/0x7GVSoZe86A4RuekbCtKw9koHk96jYDQzvksMlroIw
+         QPo76Lk1FreaiJs+nJlxY+DGPDuAY+IqoHZrnEab+FZNodNyyzGPZuhhZGqNA0ygRsSn
+         OvxTJQgLvEO58F9eoYgth4dX9kL9tvBf8pkR4nNOy4ygfr+6ypFaOskRNfV+HjgNjTP9
+         SRXFGXA4FjuXIRfJOWUn34EHQSluO7zRj5sm7nGRHcDIecXkNdVEpdLeGYmaKErg5yfQ
+         /IVeaOYZu4c7oWdEMsF8yE3bTmR5fv4KWbFol8SVD2OByfCJyKRmC/iD7pBQB5Vr/sho
+         9vDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CgL35F0PbHIPU/xEH/yy9QoMVLs1tW/HJnhHgsc5otw=;
+        b=adTRI5eOMN5GrhZA6YvVCXLtsndYMAUz3H37EFZriBMyK2pqOqvXX55nvJfLH3hN3V
+         oDmn1zXuCAU+DJDVeffFv9apcN/GKVj9reGRfW4DQH5D6LUB4Ob6DP+fpH8810q5TtVn
+         r+QG5LFuOPmNdI20lrteO8YxHmfFgIOrXRl4kE5e6NwAD4zFi2CplEAkHCPHnLFnYNPI
+         2s6NfWF2+378atQNHD3fuBI5I4bSUUUOFKu3KroTz29mG1BYMXRlSluExddmvBd/+qsm
+         0tZI1xNN+nqx8kqo87aTR2FvGEwrnHuQX3Nl71FxZ8nY/HzNi/Bz/lt78bXZiWg5hhVN
+         1S5w==
+X-Gm-Message-State: APjAAAWFaz3fuXhDb9kssQAlIMUghu2GfMUtRmq8Tg4glkdpZU5+j5T0
+        JxGZZt4Imiq2fb8usX0R3C4=
+X-Google-Smtp-Source: APXvYqy2UYkwMWU2dPVz7z8FO3EUeuKP2Q67lEtRTqjhCkPr42la3j1A1wB8F6mXKYw58lhzPxwabg==
+X-Received: by 2002:adf:cf0a:: with SMTP id o10mr41875477wrj.325.1577468265643;
+        Fri, 27 Dec 2019 09:37:45 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id f1sm35001776wru.6.2019.12.27.09.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2019 09:37:45 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     yuq825@gmail.com, dri-devel@lists.freedesktop.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        tomeu.vizoso@collabora.com, robh@kernel.org, steven.price@arm.com,
+        alyssa.rosenzweig@collabora.com, linux-amlogic@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, wens@csie.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC v2 0/1] drm: lima: devfreq and cooling device support
+Date:   Fri, 27 Dec 2019 18:37:06 +0100
+Message-Id: <20191227173707.20413-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+This is my attempt at adding devfreq (and cooling device) support to
+the lima driver.
 
-[ Upstream commit 4affd79a125ac91e6a53be843ea3960a8fc00cbb ]
+I am seeking comments in two general areas:
+- regarding the integration into the existing lima code
+- for the actual devfreq code (I had to adapt the panfrost code
+  slightly, because lima uses a bus and a GPU/core clock)
 
-This is caused by dereferencing 'rdev' after put_device() in
-the _regulator_get()/_regulator_put() functions.
-This patch just moves the put_device() down a bit to avoid the
-issue.
+My own TODO list includes "more" testing on various Amlogic SoCs.
+So far I have tested this on Meson8b and Meson8m2 (which both have a
+GPU OPP table defined). However, I still need to test this on a GXL
+board (which is currently missing the GPU OPP table).
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20191124145835.25999-1-wenyang@linux.alibaba.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/regulator/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Test results from a Meson8m2 board:
+TEST #1: glmark2-es2-drm --off-screen in an infinite loop while cycling
+         through all available frequencies using the userspace governor
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index a46be221dbdc..71c1467e1e2e 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1935,8 +1935,8 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 	regulator = create_regulator(rdev, dev, id);
- 	if (regulator == NULL) {
- 		regulator = ERR_PTR(-ENOMEM);
--		put_device(&rdev->dev);
- 		module_put(rdev->owner);
-+		put_device(&rdev->dev);
- 		return regulator;
- 	}
- 
-@@ -2057,13 +2057,13 @@ static void _regulator_put(struct regulator *regulator)
- 
- 	rdev->open_count--;
- 	rdev->exclusive = 0;
--	put_device(&rdev->dev);
- 	regulator_unlock(rdev);
- 
- 	kfree_const(regulator->supply_name);
- 	kfree(regulator);
- 
- 	module_put(rdev->owner);
-+	put_device(&rdev->dev);
- }
- 
- /**
+     From  :   To
+           : 182142857 318750000 425000000 510000000 637500000   time(ms)
+  182142857:         0      1274      1274      1273      1279   5399468
+  318750000:      1274         0      1274      1273      1272   5114700
+  425000000:      1276      1274         0      1272      1271   5122008
+  510000000:      1909      1273      1273         0       636   5274292
+* 637500000:       640      1272      1272      1273         0   5186796
+Total transition : 24834
+
+TEST #2: glmark2-es2-drm --off-screen in an infinite loop with the
+         simple_ondemand governor
+     From  :   To
+           : 182142857 318750000 425000000 510000000 637500000   time(ms)
+  182142857:         0         0         0         0       203    318328
+  318750000:        53         0         0         0        21     56044
+  425000000:        27        18         0         0         2     34172
+  510000000:        27         6        14         0         1     41348
+* 637500000:        95        50        33        48         0   2085312
+
+
+Changes since RFC v1 at [0]:
+- added lock to protect the statistics as these can be written 
+  concurrently for example when the GP and PP IRQ are firing at the
+  same time. Thanks to Qiang Yu for the suggestion!
+- updated the copyright notice of lima_devfreq.c to indicate that the
+  code is derived from panfrost_devfreq.c. Thanks to  Chen-Yu Tsai  for
+  the suggestion!
+- I did not unify the code with panfrost yet because I don't know where
+  to put the result. any suggestion is welcome though!
+
+
+[0] https://patchwork.freedesktop.org/series/70967/
+
+
+Martin Blumenstingl (1):
+  drm/lima: Add optional devfreq support
+
+ drivers/gpu/drm/lima/Kconfig        |   1 +
+ drivers/gpu/drm/lima/Makefile       |   3 +-
+ drivers/gpu/drm/lima/lima_devfreq.c | 183 ++++++++++++++++++++++++++++
+ drivers/gpu/drm/lima/lima_devfreq.h |  15 +++
+ drivers/gpu/drm/lima/lima_device.c  |   4 +
+ drivers/gpu/drm/lima/lima_device.h  |  17 +++
+ drivers/gpu/drm/lima/lima_drv.c     |  14 ++-
+ drivers/gpu/drm/lima/lima_sched.c   |   7 ++
+ drivers/gpu/drm/lima/lima_sched.h   |   3 +
+ 9 files changed, 244 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
+ create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
+
 -- 
-2.20.1
+2.24.1
 
