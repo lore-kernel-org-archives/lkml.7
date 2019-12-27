@@ -6,82 +6,100 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED56C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC401C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899F520882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D98220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfL0M4a (ORCPT
+        id S1727060AbfL0M7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:56:30 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:33262 "EHLO honk.sigxcpu.org"
+        Fri, 27 Dec 2019 07:59:45 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:33310 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfL0M4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:56:30 -0500
+        id S1726377AbfL0M7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:59:45 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 37C1CFB03;
-        Fri, 27 Dec 2019 13:56:28 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 59BE2FB03;
+        Fri, 27 Dec 2019 13:59:42 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sWRGWaFKenMz; Fri, 27 Dec 2019 13:56:27 +0100 (CET)
+        with ESMTP id R0-rgRbwKwjQ; Fri, 27 Dec 2019 13:59:40 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id A042649799; Fri, 27 Dec 2019 13:56:26 +0100 (CET)
-Date:   Fri, 27 Dec 2019 13:56:26 +0100
+        id C688E49799; Fri, 27 Dec 2019 13:59:39 +0100 (CET)
+Date:   Fri, 27 Dec 2019 13:59:39 +0100
 From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
 To:     Pavel Machek <pavel@ucw.cz>
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] leds: lm3692x: Disable chip on brightness 0
-Message-ID: <20191227125626.GA26038@bogon.m.sigxcpu.org>
-References: <cover.1577272495.git.agx@sigxcpu.org>
- <e1dc56c07235063a9c0afbfc8c227b92b39ec3d4.1577272495.git.agx@sigxcpu.org>
- <20191226102956.GH4033@amd>
+Subject: Re: [PATCH v2 6/6] leds: lm3692x: Make sure we don't exceed the
+ maximum led current
+Message-ID: <20191227125939.GA26392@bogon.m.sigxcpu.org>
+References: <cover.1577271823.git.agx@sigxcpu.org>
+ <96dad031f3a9ff5bbc311d0ec8768b348b996bcf.1577271823.git.agx@sigxcpu.org>
+ <20191226101336.GD4033@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191226102956.GH4033@amd>
+In-Reply-To: <20191226101336.GD4033@amd>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-On Thu, Dec 26, 2019 at 11:29:56AM +0100, Pavel Machek wrote:
-> On Wed 2019-12-25 12:16:39, Guido Günther wrote:
-> > Otherwise there's a noticeable glow even with brightness 0. Also
-> > turning off the regulator can save additional power.
+Hi,
+On Thu, Dec 26, 2019 at 11:13:36AM +0100, Pavel Machek wrote:
+> On Wed 2019-12-25 12:07:19, Guido Günther wrote:
+> 1;2802;0c> The current is given by the formular from page 12 of
+> > https://www.ti.com/lit/ds/symlink/lm36922.pdf. We use this to limit the
+> > led's max_brightness using the led-max-microamp DT property.
+> > 
+> > The formular for the lm36923 is identical according to the data
+> sheet.
 > 
-> Ok, this will make set brightness slower, but I guess it makes sense.
+> formula?
 > 
-> Can you try to toggling brightness quickly from userspace, maybe even
-> from two threads, to ensure nothing really goes wrong there?
-
-I ran brightness setting in a tight loop from 0 to max from two threads
-100 times without issues.
-
+> >  static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >  {
+> >  	struct fwnode_handle *child = NULL;
+> >  	struct led_init_data init_data = {};
+> > -	u32 ovp;
+> > +	u32 ovp, max_cur;
+> >  	bool exp_mode;
+> >  	int ret;
+> >  
+> > @@ -397,6 +416,10 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >  		return ret;
+> >  	}
+> >  
+> > +	fwnode_property_read_u32(child, "led-max-microamp", &max_cur);
+> > +	led->led_dev.max_brightness = ret ? LED_FULL :
+> > +		lm3692x_max_brightness(led, max_cur);
+> > +
 > 
-> Hmm. And if this is independend of the other series, tell me and I can
-> apply v2.
+> Umm. Should ret come from this fwnode_property_read_u32()?
 
-There's minor merge conflict so to make sure this does not get dependent
-on the order i've folded this to the end of the
-
-    "leds: lm3692x: Allow to set ovp and brigthness mode"
-
-series with your Acked-by's folded in. I'll wait a couple of days and
-then send out a v3.
-
-Cheers and thanks for having a look,
+Argh...i was sure i had that fixed (and tested without setting
+led-max-microamp) but it was sitting on another branch. Thanks a lot for
+catching that!
  -- Guido
 
 > 
+> With that fixed,
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> (Feel free to wait for Rob before resending the series, and I guess
+> you can merge it with the next one).
+> 
 > Best regards,
-> 								Pavel
+> 									Pavel
 > -- 
 > (english) http://www.livejournal.com/~pavelmachek
 > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
