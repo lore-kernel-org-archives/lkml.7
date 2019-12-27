@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFF5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BD4C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB4F20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E47820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470652;
-	bh=rxxe1zwPlZHnF00l2eIYievunhJXNLEnNhDQ3mDUiXs=;
+	s=default; t=1577470661;
+	bh=pMNj/y+Vr3t2FCv8BhP/Tlx2V8tOzwmXwLLbwkGb0Qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLEcx2vzuCi7T31kXaoxYCCvncS6lnIWCfHYmmh8k4He1gH/CRvk8Put1+rFWzcAp
-	 /Vsd4FEsyS2+XK7G7Qm1P58RVkiA4EfWtdghMg+mSDcrPkg+zZqBSknOba1NaE/bSS
-	 wTovgQj1VBCqk/Cz+ANU4/1zUQGV+G/CzJVkl4iI=
+	b=jvm2XDtuxjIWGgb6k+A3Y72jn+R7rsmOwfPl4K2daDRss8hRovKhf6YbN4e24Moi4
+	 KT7iewuM4yEsVM4HsJHrhZEdeKQD9DDgFv3IqRj5BIRr3bAH114KG+bvdthEkeI3mX
+	 raanMJ8FJf9N5aL5gO1daVo8WgF9AQe4L55jsUyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfL0SRb (ORCPT
+        id S1728094AbfL0SRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfL0SQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:00 -0500
+        id S1727134AbfL0SP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D0521744;
-        Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D00B42173E;
+        Fri, 27 Dec 2019 18:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470559;
-        bh=rxxe1zwPlZHnF00l2eIYievunhJXNLEnNhDQ3mDUiXs=;
+        s=default; t=1577470557;
+        bh=pMNj/y+Vr3t2FCv8BhP/Tlx2V8tOzwmXwLLbwkGb0Qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZeBAyyNj69mZzs8ydoulm8wqqorqkueM45jRIXA5aF8sowe4E7N8TAw0T+bAIoWl
-         obPnw2v/9v1ZUAa5cBdm7MQ23TCZKiL1OobtAIU83Z/HiY8j6SWM2L11zzEn3qCIhs
-         UUSjKH7oxctw1a54wPyBETCtkTzCCew6YeXtpzU8=
+        b=uw3xy3Wffd7X1IuZkJmS+gD6+R4GUgG9EaSKsqYSeC5HCfEJsd5UBbB3PcbsJbnSt
+         +LBwgi5VIxSf0uXLm2hJLOVXisOcR2ZizS+EGaKKn3fbJVSfVG6L/TplRbtvIj5oeF
+         dwICszkOQnCaKih+qkI7Qfn+1gArMxDi4otOPasQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/25] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Fri, 27 Dec 2019 13:15:32 -0500
-Message-Id: <20191227181549.8040-8-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>,
+        Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/25] af_packet: set defaule value for tmo
+Date:   Fri, 27 Dec 2019 13:15:30 -0500
+Message-Id: <20191227181549.8040-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -61,52 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+There is softlockup when using TPACKET_V3:
+...
+NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
+(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
+(mod_timer) from [<c0549c30>]
+(prb_retire_rx_blk_timer_expired+0x68/0x11c)
+(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
+(call_timer_fn+0x90/0x17c)
+(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
+(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
+(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
+(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
+...
 
-Update the DT files accordingly.
+If __ethtool_get_link_ksettings() is failed in
+prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
+is zero and the timer expire for retire_blk_timer is turn to
+mod_timer(&pkc->retire_blk_timer, jiffies + 0),
+which will trigger cpu usage of softirq is 100%.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index d2450ab0a380..3293484028ad 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -79,7 +79,7 @@
- 		};
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 0dd9fc3f57e8..8b277658905f 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -587,7 +587,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
+ 			msec = 1;
+ 			div = speed / 1000;
+ 		}
+-	}
++	} else
++		return DEFAULT_PRB_RETIRE_TOV;
  
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
+ 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
  
- 		panel-timing {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 00707aac72fc..a74b09f17a1a 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -41,7 +41,7 @@
- 	};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
 -- 
 2.20.1
 
