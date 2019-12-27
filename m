@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6857FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27206C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA6D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07F82173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468560;
-	bh=OcNdbwEliGVpOYbXVJ9ALqYcB+eJC/IuXzLGPdaSWkA=;
+	s=default; t=1577468562;
+	bh=inSHXxAmEMnLtfzgN61sGOZo9j+enNoa1EQvuFtC+xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwXARZT71nUJOmi0iOVOK+LE3ZxPiscwu0AzIfJvZHySytzJjx9rBn5NO04qsv4qs
-	 BYiAQjnrQeJBHU8NZkkvYOaC/voMhxSWnW/jXXRIFjf3fP1Pr7xVvMmjpYTwBhm0/b
-	 G1WYJy+q4vQuGYYuvpIJKwy5ybyUW13YHaBnNZ1s=
+	b=MD/7F7+FXLNJby1+7KirQEg2sxQ3Qmt7XWtInBmfBhvJGb/bLJ2uJlarQh9xCMNNg
+	 fYJ9AvlXFa0YEfaS8QK0jkVyK84AAKr+RmH7W89yBlqdBdCAOpJJCEn0rzt47Uk/bF
+	 WzZC9g3HjX6u25k12V1dCqLk1Q6umwpk+n16GuEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfL0Rmi (ORCPT
+        id S1727936AbfL0Rml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:42:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39472 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfL0Rmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:32 -0500
+        id S1727900AbfL0Rmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C57218AC;
-        Fri, 27 Dec 2019 17:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A5E0218AC;
+        Fri, 27 Dec 2019 17:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468551;
-        bh=OcNdbwEliGVpOYbXVJ9ALqYcB+eJC/IuXzLGPdaSWkA=;
+        s=default; t=1577468554;
+        bh=inSHXxAmEMnLtfzgN61sGOZo9j+enNoa1EQvuFtC+xQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8VCd2+ym1LHUyT4IgjzPXAoydTfZcbdXIpMG/uz4BmBrRnpFrFFsiO2eSbmrHVC5
-         qwnMYoFA/cyL0PNpviCSQSLCB9oBpZbiD4Xl0I9GUye+DpAMe294Ijievo9DRXj4Ig
-         DUsxypKIygz67ly9zVqv/uCVb2K8bz5epMkKFyBs=
+        b=K6rAPHaVRkUH+wV59MSVeXDXe9dT0uYC5f/74nh8e0g1f+PcT+dfeC5a/h6LSZdEE
+         cXXx5/G+cEGzE2FkjWi9xK6/nZXCFXjewJIxV6lqy3Wcref2iTSiOLlVdJQNmTRHS4
+         U45UoS7eH/zkLQd3TdcWHpV6NdBuJeCfwpEEGLkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     SeongJae Park <sjpark@amazon.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 078/187] kselftest/runner: Print new line in print of timeout log
-Date:   Fri, 27 Dec 2019 12:39:06 -0500
-Message-Id: <20191227174055.4923-78-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 081/187] samples: bpf: fix syscall_tp due to unused syscall
+Date:   Fri, 27 Dec 2019 12:39:09 -0500
+Message-Id: <20191227174055.4923-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,40 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit d187801d1a46519d2a322f879f7c8f85c685372e ]
+[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
 
-If a timeout failure occurs, kselftest kills the test process and prints
-the timeout log.  If the test process has killed while printing a log
-that ends with new line, the timeout log can be printed in middle of the
-test process output so that it can be seems like a comment, as below:
+Currently, open() is called from the user program and it calls the syscall
+'sys_openat', not the 'sys_open'. This leads to an error of the program
+of user side, due to the fact that the counter maps are zero since no
+function such 'sys_open' is called.
 
-    # test_process_log	not ok 3 selftests: timers: nsleep-lat # TIMEOUT
+This commit adds the kernel bpf program which are attached to the
+tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
 
-This commit avoids such problem by printing one more line before the
-TIMEOUT failure log.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kselftest/runner.sh | 1 +
- 1 file changed, 1 insertion(+)
+ samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index 84de7bc74f2c..a8d20cbb711c 100644
---- a/tools/testing/selftests/kselftest/runner.sh
-+++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -79,6 +79,7 @@ run_one()
- 		if [ $rc -eq $skip_rc ]; then	\
- 			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
- 		elif [ $rc -eq $timeout_rc ]; then \
-+			echo "#"
- 			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
- 		else
- 			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
+index 1d78819ffef1..630ce8c4d5a2 100644
+--- a/samples/bpf/syscall_tp_kern.c
++++ b/samples/bpf/syscall_tp_kern.c
+@@ -47,13 +47,27 @@ static __always_inline void count(void *map)
+ SEC("tracepoint/syscalls/sys_enter_open")
+ int trace_enter_open(struct syscalls_enter_open_args *ctx)
+ {
+-	count((void *)&enter_open_map);
++	count(&enter_open_map);
++	return 0;
++}
++
++SEC("tracepoint/syscalls/sys_enter_openat")
++int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
++{
++	count(&enter_open_map);
+ 	return 0;
+ }
+ 
+ SEC("tracepoint/syscalls/sys_exit_open")
+ int trace_enter_exit(struct syscalls_exit_open_args *ctx)
+ {
+-	count((void *)&exit_open_map);
++	count(&exit_open_map);
++	return 0;
++}
++
++SEC("tracepoint/syscalls/sys_exit_openat")
++int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
++{
++	count(&exit_open_map);
+ 	return 0;
+ }
 -- 
 2.20.1
 
