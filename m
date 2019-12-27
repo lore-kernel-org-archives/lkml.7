@@ -2,116 +2,160 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D229BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC8BC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25CE20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577487970;
-	bh=/BtCTup5LkRr84T9j0F3KGj5sfWvVprZyXCfRA8eZ88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sXYOPaSEeBFETs8xkeAJ9sFJ+UNeXFN0KYrfHQIyNboZhb1gDVjS2IPmTP8kTBj4H
-	 o2vndsVvfIg9R31/YzhsQ2uec1Rn8CHM0IzBy5RAG5lg8NzprkgXsYpl73j+byIIYk
-	 fVqYMSMtv/c9DH7OuJ5EFo+DFDeTh1HqdMTtFbT8=
+	by mail.kernel.org (Postfix) with ESMTP id BA75F20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfL0XGJ (ORCPT
+        id S1726310AbfL0X5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 18:06:09 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42742 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfL0XGI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 18:06:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/BtCTup5LkRr84T9j0F3KGj5sfWvVprZyXCfRA8eZ88=; b=RzzMmJyoO8yVlxtsIdXSHGQHF
-        +5VakP72EFqCzomEI4NbEP2CBE/jIeRDvu3IkO4cqKIz857XSw/sEzNEVWRVAWN/gM6vCu3SkhJmX
-        V3tTjD30Cl8Apif9uwKJh0HSIatp7dq/4ppeiNmCwju3EZEBa4PwE1Iw0dqgbKJWTJ5b0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ikyOt-0006aq-2d; Fri, 27 Dec 2019 22:48:07 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 3B9AED01A22; Fri, 27 Dec 2019 22:48:06 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 22:48:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
- for audio mclk
-Message-ID: <20191227224806.GP27497@sirena.org.uk>
-References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
- <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
- <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
- <20191225175736.GC27497@sirena.org.uk>
- <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
+        Fri, 27 Dec 2019 18:57:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:43813 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfL0X5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 18:57:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 15:57:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,364,1571727600"; 
+   d="scan'208";a="418456292"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 27 Dec 2019 15:57:05 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ikzTd-0001sD-79; Sat, 28 Dec 2019 07:57:05 +0800
+Date:   Sat, 28 Dec 2019 07:56:48 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     kbuild-all@lists.01.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, gregkh@linuxfoundation.org,
+        Gary.Hook@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        Shyam-sundar.S-k@amd.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
+Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+Message-ID: <201912280738.zotyIgEi%lkp@intel.com>
+References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CKf/2jVYos1l2hij"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
-X-Cookie: I have many CHARTS and DIAGRAMS..
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sanjay,
 
---CKf/2jVYos1l2hij
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I love your patch! Perhaps something to improve:
 
-On Fri, Dec 27, 2019 at 05:56:06PM +0300, Dmitry Osipenko wrote:
-> 25.12.2019 20:57, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.5-rc3 next-20191220]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-> >> I'm not sure why clocks should be disabled during the rate-changing,
-> >> probably this action is not really needed.
+url:    https://github.com/0day-ci/linux/commits/Sanjay-R-Mehta/Add-AMD-PassThru-DMA-Engine-driver/20191227-234539
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 46cf053efec6a3a5f343fead837777efe8252a46
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-> > I know nothing about this particular device but this is not that
-> > unusual a restriction for audio hardware, you often can't
-> > robustly reconfigure the clocking for a device while it's active
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-> If nobody knows for sure, then will be better to keep
-> tegra_asoc_utils_set_rate() unchanged.
 
-Yeah, that's my instinct - unless we understand the disable it's
-safer not to do it.
+sparse warnings: (new ones prefixed by >>)
 
---CKf/2jVYos1l2hij
-Content-Type: application/pgp-signature; name="signature.asc"
+>> drivers/dma/ptdma/ptdma-dev.c:151:25: sparse: sparse: cast from restricted __le32
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    expected unsigned int [usertype]
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    got restricted __le32 [usertype]
+   drivers/dma/ptdma/ptdma-dev.c:180:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] length
+>> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    got unsigned long long [usertype] src_len
+   drivers/dma/ptdma/ptdma-dev.c:182:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] src_lo
+>> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    got unsigned int [usertype]
+   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] dst_lo
+   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    got unsigned int [usertype]
 
------BEGIN PGP SIGNATURE-----
+vim +151 drivers/dma/ptdma/ptdma-dev.c
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4GiiUACgkQJNaLcl1U
-h9Df1wf/WpeKIdsJm9CpD2g6l/HiFfNALEg3OrDmzNwzbGiCqrMSTPog6EddD3e6
-5EmfLE3DY2tSCu1nkVCtEhrfteuwqWsQQDmn6x/+iXZrGLzL0GsLVMhF0TwSgd9s
-jIySU0jRy6I/AhnYgQ5qx/UsFjBRIweMVFMeoRJBkn0bzT0T5Q7f84ROYhKZcOtz
-e7CHXFFtNBU0zJ2/VZLoILusTGzrIaNkkrZ82+6Zy76v9FyMdVM8LWMwr0V10C3O
-8fl9hvJIfXB11FSWf7jsENBla9LotrwLLivIkhsPfUxA6ZYsYjWkw1KeYCOfKwE5
-LURwVXe5lfCgCP+WY0M7dh/y2cWpAQ==
-=jKXz
------END PGP SIGNATURE-----
+   132	
+   133	static int pt_core_execute_cmd(struct ptdma_desc *desc,
+   134				       struct pt_cmd_queue *cmd_q)
+   135	{
+   136		u32 *mp;
+   137		__le32 *dp;
+   138		u32 tail;
+   139		int	i;
+   140		int ret = 0;
+   141	
+   142		if (desc->dw0.soc) {
+   143			desc->dw0.ioc = 1;
+   144			desc->dw0.soc = 0;
+   145		}
+   146		mutex_lock(&cmd_q->q_mutex);
+   147	
+   148		mp = (u32 *)&cmd_q->qbase[cmd_q->qidx];
+   149		dp = (__le32 *)desc;
+   150		for (i = 0; i < 8; i++)
+ > 151			mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
+   152	
+   153		cmd_q->qidx = (cmd_q->qidx + 1) % cmd_queue_length;
+   154	
+   155		/* The data used by this command must be flushed to memory */
+   156		wmb();
+   157	
+   158		/* Write the new tail address back to the queue register */
+   159		tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
+   160		iowrite32(tail, cmd_q->reg_tail_lo);
+   161	
+   162		/* Turn the queue back on using our cached control register */
+   163		iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
+   164		mutex_unlock(&cmd_q->q_mutex);
+   165	
+   166		return ret;
+   167	}
+   168	
+   169	int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+   170				     struct pt_passthru_engine *pt_engine)
+   171	{
+   172		struct ptdma_desc desc;
+   173	
+   174		cmd_q->cmd_error = 0;
+   175	
+   176		memset(&desc, 0, Q_DESC_SIZE);
+   177	
+   178		desc.dw0.val = CMD_DESC_DW0_VAL;
+   179	
+ > 180		desc.length = pt_engine->src_len;
+   181	
+ > 182		desc.src_lo = lower_32_bits(pt_engine->src_dma);
+   183		desc.dw3.src_hi = upper_32_bits(pt_engine->src_dma);
+   184	
+ > 185		desc.dst_lo = lower_32_bits(pt_engine->dst_dma);
+   186		desc.dw5.dst_hi = upper_32_bits(pt_engine->dst_dma);
+   187	
+   188		return pt_core_execute_cmd(&desc, cmd_q);
+   189	}
+   190	
 
---CKf/2jVYos1l2hij--
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
