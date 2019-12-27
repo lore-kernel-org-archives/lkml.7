@@ -2,248 +2,217 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC9FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B70C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33A720828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE23420882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:16:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JsINGrCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbfL0GMF (ORCPT
+        id S1726408AbfL0GQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:12:05 -0500
-Received: from mga18.intel.com ([134.134.136.126]:28703 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfL0GMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:12:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 22:12:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,362,1571727600"; 
-   d="scan'208";a="269004612"
-Received: from psklarow-mobl.ger.corp.intel.com ([10.252.31.109])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Dec 2019 22:12:00 -0800
-Message-ID: <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of
- tpm_tis_core_init" has been added to the 5.4-stable tree
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christian Bundy <christianbundy@fraction.io>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-In-Reply-To: <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
-References: <1577122577157232@kroah.com>
-         <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
-         <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160
- Espoo
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 27 Dec 2019 01:16:57 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3768 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfL0GQ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:16:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e05a1ca0000>; Thu, 26 Dec 2019 22:16:43 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 26 Dec 2019 22:16:56 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 26 Dec 2019 22:16:56 -0800
+Received: from [10.24.192.96] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Dec
+ 2019 06:16:52 +0000
+Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
+To:     JC Kuo <jckuo@nvidia.com>, <balbi@kernel.org>,
+        <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>
+CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
+ <3f02b1c8-0d2e-700c-d1f5-80f9655f62e0@nvidia.com>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <5fc4c7b7-0005-2b55-71ed-92c249aa35d8@nvidia.com>
+Date:   Fri, 27 Dec 2019 11:48:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Date:   Fri, 27 Dec 2019 08:11:50 +0200
-User-Agent: Evolution 3.34.1-2 
+In-Reply-To: <3f02b1c8-0d2e-700c-d1f5-80f9655f62e0@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577427403; bh=lspnrc2CBLB6URvouestBX0L08KJ5pMq/n+NcpkMWcw=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JsINGrCx41ms2ZJQcHJDxvZVJQH7iTCTHYI7dWhg3aUEVCNjgP5G9fM6s8Z+UuZXx
+         har9IArQEy67gcYXcHZztpeOhNTXRLvJSOsCelN6egZFPXac6oszcfrDXqxprmNEop
+         hXYAebDXYdtbieCFmkG2bBex7IrKolUDmvNezXgwD6secct/2Nr+cD818KmkjDvjnt
+         lk1aFUzK/15BC/d+K819/IwS3MoGDUpE517YgJ0clUyXFDXv7z7TZTvbATk8ndTxza
+         teBmYRJnaSkyfoBvBR+FogEi/KSfsUtUsVFatkrPhLb0ZhKvzebmHXMcSmMJ8vGxV6
+         WNvlmsC5rFEUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan, please also test the branch and tell if other patches are needed.
-I'm a bit blind with this as I don't have direct access to the faulting
-hardware. Thanks. [*]
 
-[*] https://lkml.org/lkml/2019/12/27/12
 
-/Jarkko
-
-On Fri, 2019-12-27 at 08:05 +0200, Jarkko Sakkinen wrote:
-> Hi,
+On 26-12-2019 12:12, JC Kuo wrote:
 > 
-> It is getting done on the PR. Hold on for testing and I'll send the
-> PR later today.
+> On 12/18/19 5:16 PM, Nagarjuna Kristam wrote:
+>> If usb-role-switch property is present in USB 2 port, register
+>> usb-role-switch to receive usb role changes.
+>>
+>> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+>> ---
+>> V2:
+>>   - Removed dev_set_drvdata for port->dev.
+>>   - Added of_platform_depopulate during error handling and driver removal.
+>> ---
+>>   drivers/phy/tegra/Kconfig |  1 +
+>>   drivers/phy/tegra/xusb.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/phy/tegra/xusb.h  |  3 +++
+>>   3 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index f9817c3..df07c4d 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -2,6 +2,7 @@
+>>   config PHY_TEGRA_XUSB
+>>   	tristate "NVIDIA Tegra XUSB pad controller driver"
+>>   	depends on ARCH_TEGRA
+>> +	select USB_CONN_GPIO
+>>   	help
+>>   	  Choose this option if you have an NVIDIA Tegra SoC.
+>>   
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index f98ec39..dc00b42 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   	port->dev.type = &tegra_xusb_port_type;
+>>   	port->dev.of_node = of_node_get(np);
+>>   	port->dev.parent = padctl->dev;
+>> +	port->dev.driver = padctl->dev->driver;
+>>   
+>>   	err = dev_set_name(&port->dev, "%s-%u", name, index);
+>>   	if (err < 0)
+>> @@ -541,6 +542,10 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   
+>>   static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+>>   {
+>> +	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
+>> +		of_platform_depopulate(&port->dev);
+>> +		usb_role_switch_unregister(port->usb_role_sw);
+>> +	}
+>>   	device_unregister(&port->dev);
+>>   }
+>>   
+>> @@ -551,11 +556,42 @@ static const char *const modes[] = {
+>>   	[USB_DR_MODE_OTG] = "otg",
+>>   };
+>>   
+>> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+>> +{
+>> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+>> +{
+>> +	int err = 0;
+>> +	struct usb_role_switch_desc role_sx_desc = {
+>> +					.set = tegra_xusb_role_sw_set,
+>> +					.fwnode = dev_fwnode(&port->dev),
+>> +						   };
+>> +
+>> +	port->usb_role_sw = usb_role_switch_register(&port->dev,
+>> +						&role_sx_desc);
+>> +	if (IS_ERR(port->usb_role_sw)) {
+>> +		err = PTR_ERR(port->usb_role_sw);
+>> +		if (err != EPROBE_DEFER)
+>> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
+>> +				err);
+>> +	}
+>> +
+>> +	/* populate connector entry */
+>> +	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
+>> +
+>> +	return err;
+>> +}
+>> +
+>>   static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   {
+>>   	struct tegra_xusb_port *port = &usb2->base;
+>>   	struct device_node *np = port->dev.of_node;
+>>   	const char *mode;
+>> +	int err;
+>>   
+>>   	usb2->internal = of_property_read_bool(np, "nvidia,internal");
+>>   
+>> @@ -572,6 +608,12 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   		usb2->mode = USB_DR_MODE_HOST;
+>>   	}
+>>   
+> "usb-role-switch" is not required for host mode port. If a otg or a peripheral
+> port doesn't have "usb-role-switch" property, .probe() should abort.
 > 
-> /Jarkko
+> Thanks,
+> JC
 > 
-> On Mon, 2019-12-23 at 11:46 -0800, Dan Williams wrote:
-> > Hi Greg,
-> > 
-> > Please drop the:
-> > 
-> >    Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-> > 
-> > ...tag. I had asked Jarkko to do that here:
-> > 
-> > https://lore.kernel.org/r/CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com/
-> > 
-> > ...but it didn't get picked up.
-> > 
-> > On Mon, Dec 23, 2019 at 9:37 AM <gregkh@linuxfoundation.org> wrote:
-> > > This is a note to let you know that I've just added the patch titled
-> > > 
-> > >     tpm_tis: reserve chip for duration of tpm_tis_core_init
-> > > 
-> > > to the 5.4-stable tree which can be found at:
-> > >     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> > > 
-> > > The filename of the patch is:
-> > >      tpm_tis-reserve-chip-for-duration-of-tpm_tis_core_init.patch
-> > > and it can be found in the queue-5.4 subdirectory.
-> > > 
-> > > If you, or anyone else, feels it should not be added to the stable tree,
-> > > please let <stable@vger.kernel.org> know about it.
-> > > 
-> > > 
-> > > From 21df4a8b6018b842d4db181a8b24166006bad3cd Mon Sep 17 00:00:00 2001
-> > > From: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > Date: Wed, 11 Dec 2019 16:54:55 -0700
-> > > Subject: tpm_tis: reserve chip for duration of tpm_tis_core_init
-> > > 
-> > > From: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > 
-> > > commit 21df4a8b6018b842d4db181a8b24166006bad3cd upstream.
-> > > 
-> > > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-> > > issuing commands to the tpm during initialization, just reserve the
-> > > chip after wait_startup, and release it when we are ready to call
-> > > tpm_chip_register.
-> > > 
-> > > Cc: Christian Bundy <christianbundy@fraction.io>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-> > > Cc: stable@vger.kernel.org
-> > > Cc: linux-integrity@vger.kernel.org
-> > > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-> > > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-> > > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > 
-> > > ---
-> > >  drivers/char/tpm/tpm_tis_core.c |   35 ++++++++++++++++++-----------------
-> > >  1 file changed, 18 insertions(+), 17 deletions(-)
-> > > 
-> > > --- a/drivers/char/tpm/tpm_tis_core.c
-> > > +++ b/drivers/char/tpm/tpm_tis_core.c
-> > > @@ -899,13 +899,13 @@ int tpm_tis_core_init(struct device *dev
-> > > 
-> > >         if (wait_startup(chip, 0) != 0) {
-> > >                 rc = -ENODEV;
-> > > -               goto out_err;
-> > > +               goto err_start;
-> > >         }
-> > > 
-> > >         /* Take control of the TPM's interrupt hardware and shut it off */
-> > >         rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
-> > >         if (rc < 0)
-> > > -               goto out_err;
-> > > +               goto err_start;
-> > > 
-> > >         intmask |= TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
-> > >                    TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
-> > > @@ -914,21 +914,21 @@ int tpm_tis_core_init(struct device *dev
-> > > 
-> > >         rc = tpm_chip_start(chip);
-> > >         if (rc)
-> > > -               goto out_err;
-> > > +               goto err_start;
-> > > +
-> > >         rc = tpm2_probe(chip);
-> > > -       tpm_chip_stop(chip);
-> > >         if (rc)
-> > > -               goto out_err;
-> > > +               goto err_probe;
-> > > 
-> > >         rc = tpm_tis_read32(priv, TPM_DID_VID(0), &vendor);
-> > >         if (rc < 0)
-> > > -               goto out_err;
-> > > +               goto err_probe;
-> > > 
-> > >         priv->manufacturer_id = vendor;
-> > > 
-> > >         rc = tpm_tis_read8(priv, TPM_RID(0), &rid);
-> > >         if (rc < 0)
-> > > -               goto out_err;
-> > > +               goto err_probe;
-> > > 
-> > >         dev_info(dev, "%s TPM (device-id 0x%X, rev-id %d)\n",
-> > >                  (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2",
-> > > @@ -937,13 +937,13 @@ int tpm_tis_core_init(struct device *dev
-> > >         probe = probe_itpm(chip);
-> > >         if (probe < 0) {
-> > >                 rc = -ENODEV;
-> > > -               goto out_err;
-> > > +               goto err_probe;
-> > >         }
-> > > 
-> > >         /* Figure out the capabilities */
-> > >         rc = tpm_tis_read32(priv, TPM_INTF_CAPS(priv->locality), &intfcaps);
-> > >         if (rc < 0)
-> > > -               goto out_err;
-> > > +               goto err_probe;
-> > > 
-> > >         dev_dbg(dev, "TPM interface capabilities (0x%x):\n",
-> > >                 intfcaps);
-> > > @@ -977,10 +977,9 @@ int tpm_tis_core_init(struct device *dev
-> > >                 if (tpm_get_timeouts(chip)) {
-> > >                         dev_err(dev, "Could not get TPM timeouts and durations\n");
-> > >                         rc = -ENODEV;
-> > > -                       goto out_err;
-> > > +                       goto err_probe;
-> > >                 }
-> > > 
-> > > -               tpm_chip_start(chip);
-> > >                 chip->flags |= TPM_CHIP_FLAG_IRQ;
-> > >                 if (irq) {
-> > >                         tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
-> > > @@ -991,18 +990,20 @@ int tpm_tis_core_init(struct device *dev
-> > >                 } else {
-> > >                         tpm_tis_probe_irq(chip, intmask);
-> > >                 }
-> > > -               tpm_chip_stop(chip);
-> > >         }
-> > > 
-> > > +       tpm_chip_stop(chip);
-> > > +
-> > >         rc = tpm_chip_register(chip);
-> > >         if (rc)
-> > > -               goto out_err;
-> > > -
-> > > -       if (chip->ops->clk_enable != NULL)
-> > > -               chip->ops->clk_enable(chip, false);
-> > > +               goto err_start;
-> > > 
-> > >         return 0;
-> > > -out_err:
-> > > +
-> > > +err_probe:
-> > > +       tpm_chip_stop(chip);
-> > > +
-> > > +err_start:
-> > >         if ((chip->ops != NULL) && (chip->ops->clk_enable != NULL))
-> > >                 chip->ops->clk_enable(chip, false);
-> > > 
-> > > 
-> > > 
-> > > Patches currently in stable-queue which might be from jsnitsel@redhat.com are
-> > > 
-> > > queue-5.4/iommu-fix-kasan-use-after-free-in-iommu_insert_resv_region.patch
-> > > queue-5.4/iommu-vt-d-fix-dmar-pte-read-access-not-set-error.patch
-> > > queue-5.4/iommu-set-group-default-domain-before-creating-direct-mappings.patch
-> > > queue-5.4/tpm_tis-reserve-chip-for-duration-of-tpm_tis_core_init.patch
-> > > queue-5.4/iommu-vt-d-allocate-reserved-region-for-isa-with-correct-permission.patch
-> > > queue-5.4/iommu-vt-d-set-isa-bridge-reserved-region-as-relaxable.patch
 
+Yes, will add the checks accordingly.
+-nagarjuna
+
+>> +	if (of_property_read_bool(np, "usb-role-switch")) {
+>> +		err = tegra_xusb_setup_usb_role_switch(port);
+>> +		if (err < 0)
+>> +			return err;
+>> +	}
+>> +
+>>   	usb2->supply = devm_regulator_get(&port->dev, "vbus");
+>>   	return PTR_ERR_OR_ZERO(usb2->supply);
+>>   }
+>> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+>> index da94fcc..9f27899 100644
+>> --- a/drivers/phy/tegra/xusb.h
+>> +++ b/drivers/phy/tegra/xusb.h
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/workqueue.h>
+>>   
+>>   #include <linux/usb/otg.h>
+>> +#include <linux/usb/role.h>
+>>   
+>>   /* legacy entry points for backwards-compatibility */
+>>   int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
+>> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
+>>   	struct list_head list;
+>>   	struct device dev;
+>>   
+>> +	struct usb_role_switch *usb_role_sw;
+>> +
+>>   	const struct tegra_xusb_port_ops *ops;
+>>   };
+>>   
+>>
