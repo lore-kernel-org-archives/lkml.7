@@ -2,242 +2,93 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF2EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1690FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E39208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ULYFxwWg"
+	by mail.kernel.org (Postfix) with ESMTP id E6CB4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfL0KaL (ORCPT
+        id S1727044AbfL0Kb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 05:30:11 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:24796 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfL0KaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 05:30:10 -0500
-X-Greylist: delayed 80746 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Dec 2019 05:30:09 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577442607;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Qx0iM8FINnvF6+4nf5gRDxQg8HM8PCrY5XDC09oP3uk=;
-        b=ULYFxwWgTUvxznZh3jbUvrtbLdfp1lGKxl3Sv6qMMY3hF5tyJ53LQaEF/HY6qI7DUF
-        rzIG8OVgPRnTGS/lH5McC3m6aqGsZQTcznqt21uab5qAFFJEggbN7k3QFH/nvrX85oVO
-        p60Xx6isGMhx8nJ3VZGYqyr/Rrsm71+lRwcAdLfiK19aLzNba4me6TuMGHuUGPaq34Kk
-        ZDWBcRuoZJEjIUIVWOAUPTKrdEUdCqQAThPFpJDLqjcD84tbZhCn0BXY5aOu8rpauyxb
-        xVgwMRb9obst7bEytkoq1zpA4Fmc4QcPQyOQQZXtA42hC5vrsH6lOUQdYGZD/IJM6JDZ
-        flHQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbJ/ScSKV5"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id e09841vBRATME7m
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 27 Dec 2019 11:29:22 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Andy Lutomirski <luto@amacapital.net>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Date:   Fri, 27 Dec 2019 11:29:22 +0100
-Message-ID: <4048434.Q8HajmOrkZ@tauon.chronox.de>
-In-Reply-To: <26B7EEAE-1166-4B45-9534-E00C5B2767C1@amacapital.net>
-References: <20191226140423.GB3158@mit.edu> <26B7EEAE-1166-4B45-9534-E00C5B2767C1@amacapital.net>
+        Fri, 27 Dec 2019 05:31:27 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:43760 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726270AbfL0Kb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 05:31:27 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxObhy3QVeYssBAA--.2105S2;
+        Fri, 27 Dec 2019 18:31:15 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: Fix compile warning about of_mdiobus_child_is_phy
+Date:   Fri, 27 Dec 2019 18:30:59 +0800
+Message-Id: <1577442659-12134-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9AxObhy3QVeYssBAA--.2105S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1DZr1kWw1xJr4rZw4Utwb_yoWDCrbEk3
+        W3GrW5Gr4rGFyfCw43Ga1IqF90yrWxWr4kXFZag3yvqw1DXw42v3y8AFn2qr4DGanrCFW5
+        Zw18Z3409w1UCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbskYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xK
+        xwCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
+        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+        6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
+        IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjxUg8hLDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 27. Dezember 2019, 00:29:20 CET schrieb Andy Lutomirski:
+Fix the following compile warning when CONFIG_OF_MDIO is not set:
 
-Hi Ted, Andy,
+  CC      drivers/net/phy/mdio_bus.o
+In file included from drivers/net/phy/mdio_bus.c:23:0:
+./include/linux/of_mdio.h:58:13: warning: ‘of_mdiobus_child_is_phy’ defined but not used [-Wunused-function]
+ static bool of_mdiobus_child_is_phy(struct device_node *child)
+             ^
 
-> >> On Dec 26, 2019, at 10:04 PM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >>=20
-> >> =EF=BB=BFOn Thu, Dec 26, 2019 at 01:03:34PM +0100, Stephan Mueller wro=
-te:
-> >> Agreed. I was just trying to outline that the removal of the
-> >> blocking_pool is a good thing. Even when we decide that random.c should
-> >> receive a TRNG, we do not need to re-add a blocking pool, but can easi=
-ly
-> >> use the existing ChaCha20 DRNG (most likely with its own instance).
-> >=20
-> > Well, it depends on what you mean by "TRNG" --- the ChaCha20 DRNG only
-> > has a state of 256 bits.  So if you want to only depend on "true
-> > entropy" you can't extract more than 256 bits without violating that
-> > assumption, at least if you're using a very strict definition of TRNG.
+Fixes: 0aa4d016c043 ("of: mdio: export of_mdiobus_child_is_phy")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/linux/of_mdio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-My definition of TRNG is identical to the German AIS 31 and I guess identic=
-al=20
-to your definition of a TRNG.
-
-A TRNG will produce an amount of random data that is equal to the amount of=
-=20
-"fresh" entropy that was provided by the noise source. I.e. it should be=20
-identical to the blocking_pool behavior.
-
-This definition is slightly stricter than the SP800-90A definition of "a DR=
-BG=20
-with prediction resistance" which requires a reseed with entropy equal to t=
-he=20
-security strength of the DRBG, but allows one generate operation which at m=
-ost=20
-generates 2^19 random bits.
-
-Such TRNG has two components
-
-1. the noise source / the entropy pool
-
-2. the random number generator
-
-All I try to say is that the random number generator does not need to be a=
-=20
-special implementation of, say, a blocking_pool, but it can be any type of=
-=20
-DRNG (ChaCha20, SP800-90A DRBG, ...).
-
-To manage that DRNG, the logic needs to ensure that the maximum entropy=20
-content assumed to be present in the DRNG is min(entropy_from_noise_source,=
-=20
-security_strength_DRNG). For the case of the blocking_pool, the security=20
-strength is 1024 bits which means that at most the blocking_pool can hold u=
-p=20
-to 1024 bits. With a ChaCha20 DRNG, the security strength is 256 bits.=20
-SP800-90A defines the security strengths of the DRBGs.
-
-That said, for a TRNG, the DRNG part must be seeded with the amount of entr=
-opy=20
-equaling the requested numbers of random bits, but at most with entropy=20
-equaling the security strength of the DRNG. If the caller wants more random=
-=20
-data, the request must be chunked to ensure that the DRNG is always reseede=
-d=20
-before satisfying the chunk of the request.
-
-> >=20
-> > By getting rid of the blocking pool, and making /dev/random work like
-> > getrandom with flags set to 0, we're effectively abandoning any kind
-> > of assertion that /dev/random is some kind of TRNG.  This is not
-> > insane; this is what the *BSD's have always done.
-
-Correct, and I am not disputing it. And I think that making Linux to behave=
-=20
-like the BSD's and guaranteeing that the DRNG is fully seeded based on Andy=
-'s=20
-patch set is a good thing.
-
-All I try to say is that there are use cases where a TRNG with the initiall=
-y=20
-defined operation is required. This most prominent use case is the German A=
-IS=20
-31 and the (re)seeding requirements of deterministic RNGs.
-> >=20
-> > But once we do this, and /dev/random takes on the semantics of "block
-> > until the CRNG has been initialized, and then it won't block after
-> > that", if we change it so that it now has some different semantics,
-> > such as "one you extract a 256-bit key, the read from /dev/random will
-> > block until we can refill it, which might take seconds, minutes or
-> > hours", will be considered a regression, and we can't do that.
->=20
-> I don=E2=80=99t think Stephan was proposing that. He was proposing a way =
-to
-> implement a new interface that blocks.
-
-Thank you, Andy. Yes. I am trying to propose a separate interface.
-
-Our discussion currently produced the following suggestions:
-
-=2D add a new GRND_TRUERANDOM flag to getrandom(2) which allows access to t=
-he=20
-TRNG. Andy did not like it because he mentioned that it may be misused sinc=
-e=20
-the syscall is unprivileged. I had some suggestions to overcome this proble=
-m,=20
-but not all of Andy's considerations could be addressed with this suggestio=
-n.=20
-As an idea, my current LRNG system call implementation looks like:
-
-SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
-                unsigned int, flags)
-{
-        if (flags & ~(GRND_NONBLOCK|GRND_RANDOM|GRND_INSECURE|
-GRND_TRUERANDOM))
-                return -EINVAL;
-
-        /*
-         * Requesting insecure and blocking randomness at the same time mak=
-es
-         * no sense.
-         */
-        if ((flags &
-             (GRND_INSECURE|GRND_RANDOM)) =3D=3D (GRND_INSECURE|GRND_RANDOM=
-))
-                return -EINVAL;
-
-        /* Only allow GRND_TRUERANDOM by itself or with NONBLOCK */
-        if ((flags & GRND_TRUERANDOM) &&
-            ((flags &~ GRND_TRUERANDOM) !=3D 0) &&
-            ((flags &~ (GRND_TRUERANDOM | GRND_NONBLOCK)) !=3D 0))
-                return -EINVAL;
-
-        if (count > INT_MAX)
-                count =3D INT_MAX;
-
-        if (flags & GRND_TRUERANDOM)
-                return lrng_read_common_block(flags & GRND_NONBLOCK, buf,
-                                              count, lrng_trng_get);
-        if (flags & GRND_INSECURE)
-                return lrng_sdrng_read(NULL, buf, count, NULL);
-
-        return lrng_read_common_block(flags & GRND_NONBLOCK, buf, count,
-                                      lrng_sdrng_get_sleep);
-
-}
-
-
-=2D Andy mentioned that he likes the approach with having another new char=
-=20
-device with permissions 440 to provide an interface to the TRNG as more=20
-appropriate. However, Greg was reluctant to add a new device file.
-
-I personally am indifferent. All I am suggesting is to have a TRNG offered =
-to=20
-user space.
-
-> > Of course, we can hope that people will be using getrandom() and there
-> > will be very few new users of the /dev/random pathname.  But nothing
-> > is ever guaranteed..
-> >=20
-> >                       - Ted
-
-
-
-Ciao
-Stephan
-
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index 79bc82e..491a2b7 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -55,7 +55,7 @@ static inline int of_mdio_parse_addr(struct device *dev,
+ }
+ 
+ #else /* CONFIG_OF_MDIO */
+-static bool of_mdiobus_child_is_phy(struct device_node *child)
++static inline bool of_mdiobus_child_is_phy(struct device_node *child)
+ {
+ 	return false;
+ }
+-- 
+2.1.0
 
