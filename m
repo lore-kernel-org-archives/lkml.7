@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDC8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3153C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2644D206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C151821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469548;
-	bh=Ls5eP08dXgIKhQU5IUZfcznzPTY9R0mvtRrX9FJWQTQ=;
+	s=default; t=1577469551;
+	bh=8enxHMK2nvjtUxxiMArkW5O/ABTFF34FRJEr3tTpn64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxVAX1qocTaTi3k76iu/LjJ0xGcnO+aa+vDyJ1VNUCBc+iSsXLC0R7pqfC1pW3WCT
-	 XirsmlLGzTomfrXP8wzuEDEv70fInVeanJdps0Bo9Lw5VzyAWvub7YEsCitceWDoMO
-	 2/Px/syKSa91iP75VHeKLfg8hifzgeaK0DWV4YZQ=
+	b=H/zPGqDZJziVYv1xBnhmg7P5Bhekv52ovMcedbgL6H6jcZdoBhbJaYW1gJNo/XTqi
+	 ok8mWRI86RQuxD6SjWX7aDkj4nYyB5v85+SFK/CEnoJ6mX19gf5n0WRVBYTHCMHkeV
+	 nFfwVuVORJj7gQwvl1+6WaSe6/aUBIRreosT9qPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfL0R7G (ORCPT
+        id S1727235AbfL0RlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:59:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfL0RlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:10 -0500
+        id S1727156AbfL0RlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0655D2173E;
-        Fri, 27 Dec 2019 17:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4252920740;
+        Fri, 27 Dec 2019 17:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468469;
-        bh=Ls5eP08dXgIKhQU5IUZfcznzPTY9R0mvtRrX9FJWQTQ=;
+        s=default; t=1577468464;
+        bh=8enxHMK2nvjtUxxiMArkW5O/ABTFF34FRJEr3tTpn64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvLeGofDAeEaVQJ8RZz8vxmt45M2I1YA7FxXtWG4tN1JPpSr9ndDDy2NDv3K/cQVw
-         axKSZUvRlCthgJLH0F+72GgFeNWnY+wwJcWGQEedwuh0IikgFy9w6CDhzake8ZOtit
-         VUL/607gmjlJAZSOWsS/HA4ZAZlNj7P+z4+8pDe0=
+        b=cwLkGPJWR51QZoANdYZzqF0V4XSGODslCKQyDyNb1X3kBgks93ceDcgFD6+K4sKkL
+         PLWrcynDWauLXFsqci9CYA5Fo+IIW6Kw8P3lo82rJZVr8gq7L4Y6ryZgWaVzhpV4W0
+         HpuXuJPx+Lneg9C2OvKU10Owz8jM2K4LT/PCUMhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+Cc:     Tzung-Bi Shih <tzungbi@google.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 011/187] gpio: Handle counting of Freescale chipselects
-Date:   Fri, 27 Dec 2019 12:37:59 -0500
-Message-Id: <20191227174055.4923-11-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 006/187] ASoC: max98090: exit workaround earlier if PLL is locked
+Date:   Fri, 27 Dec 2019 12:37:54 -0500
+Message-Id: <20191227174055.4923-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,76 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Tzung-Bi Shih <tzungbi@google.com>
 
-[ Upstream commit 71b8f600b034c7f5780f6fb311dabfe331c64feb ]
+[ Upstream commit 6f49919d11690a9b5614445ba30fde18083fdd63 ]
 
-We have a special quirk to handle the Freescale
-nonstandard SPI chipselect GPIOs in the gpiolib-of.c
-file, but it currently only handles the case where
-the GPIOs are actually requested (gpiod_*get()).
+According to the datasheet, PLL lock time typically takes 2 msec and
+at most takes 7 msec.
 
-We also need to handle that the SPI core attempts
-to count the GPIOs before use, and that needs a
-similar quirk in the OF part of the library.
+Check the lock status every 1 msec and exit the workaround if PLL is
+locked.
 
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20191128083718.39177-2-linus.walleij@linaro.org
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Link: https://lore.kernel.org/r/20191122073114.219945-3-tzungbi@google.com
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ sound/soc/codecs/max98090.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 80ea49f570f4..43ffec3a6fbb 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -23,6 +23,29 @@
- #include "gpiolib.h"
- #include "gpiolib-of.h"
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index 12cb87c0d463..f531e5a11bdd 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -2108,6 +2108,8 @@ static void max98090_pll_work(struct work_struct *work)
+ 	struct max98090_priv *max98090 =
+ 		container_of(work, struct max98090_priv, pll_work);
+ 	struct snd_soc_component *component = max98090->component;
++	unsigned int pll;
++	int i;
  
-+/**
-+ * of_gpio_spi_cs_get_count() - special GPIO counting for SPI
-+ * Some elder GPIO controllers need special quirks. Currently we handle
-+ * the Freescale GPIO controller with bindings that doesn't use the
-+ * established "cs-gpios" for chip selects but instead rely on
-+ * "gpios" for the chip select lines. If we detect this, we redirect
-+ * the counting of "cs-gpios" to count "gpios" transparent to the
-+ * driver.
-+ */
-+int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
-+{
-+	struct device_node *np = dev->of_node;
-+
-+	if (!IS_ENABLED(CONFIG_SPI_MASTER))
-+		return 0;
-+	if (!con_id || strcmp(con_id, "cs"))
-+		return 0;
-+	if (!of_device_is_compatible(np, "fsl,spi") &&
-+	    !of_device_is_compatible(np, "aeroflexgaisler,spictrl"))
-+		return 0;
-+	return of_gpio_named_count(np, "gpios");
-+}
-+
- /*
-  * This is used by external users of of_gpio_count() from <linux/of_gpio.h>
-  *
-@@ -35,6 +58,10 @@ int of_gpio_get_count(struct device *dev, const char *con_id)
- 	char propname[32];
- 	unsigned int i;
+ 	if (!snd_soc_component_is_active(component))
+ 		return;
+@@ -2127,8 +2129,16 @@ static void max98090_pll_work(struct work_struct *work)
+ 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
+ 			    M98090_SHDNN_MASK, M98090_SHDNN_MASK);
  
-+	ret = of_gpio_spi_cs_get_count(dev, con_id);
-+	if (ret > 0)
-+		return ret;
+-	/* Give PLL time to lock */
+-	msleep(10);
++	for (i = 0; i < 10; ++i) {
++		/* Give PLL time to lock */
++		usleep_range(1000, 1200);
 +
- 	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
- 		if (con_id)
- 			snprintf(propname, sizeof(propname), "%s-%s",
++		/* Check lock status */
++		pll = snd_soc_component_read32(
++				component, M98090_REG_DEVICE_STATUS);
++		if (!(pll & M98090_ULK_MASK))
++			break;
++	}
+ }
+ 
+ static void max98090_jack_work(struct work_struct *work)
 -- 
 2.20.1
 
