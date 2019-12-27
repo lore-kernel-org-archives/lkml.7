@@ -2,179 +2,178 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D13C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B735DC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D35208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C2220882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:23:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iUba+NWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfL0RPf convert rfc822-to-8bit (ORCPT
+        id S1726999AbfL0RXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:15:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52071 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbfL0RPf (ORCPT
+        Fri, 27 Dec 2019 12:23:05 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34563 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfL0RXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:15:35 -0500
-Received: from mail-pl1-f198.google.com ([209.85.214.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iktD2-0002lJ-2E
-        for linux-kernel@vger.kernel.org; Fri, 27 Dec 2019 17:15:32 +0000
-Received: by mail-pl1-f198.google.com with SMTP id o12so13597309pll.7
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 09:15:31 -0800 (PST)
+        Fri, 27 Dec 2019 12:23:05 -0500
+Received: by mail-ed1-f65.google.com with SMTP id l8so25866051edw.1;
+        Fri, 27 Dec 2019 09:23:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0UU+ysXx+Shc0uhfL0eYU+6BwpIeAsm7S9P/UHU0eAg=;
+        b=iUba+NWNA3cOXpD5+r04DSS11HD3AciHWRXYHS97zSESLqL4y0CXv4NzzuOaX99bzt
+         ijCXSOhYV7ucxVIFQWm5EEk/PHpCHm262LIdFhKd3Rj0m8MgP13uJJMMPxutIF12TVyt
+         NeWqHxRT6MtNP4fmJIauTMBXbxKxEjttj5+94a23FLWXoIAoodB+HyGqa6S8lOrIe75v
+         i60FDLNZzZLYOIW5tvr+PcsslPbLLmKqP+wm0iZRMRi6GIy9xPTVDyI4MDcgS98s5Z5k
+         0s44aKJRenjj9Cfz02DFsvOurf9rWc/4pyIoPOH42pX6++sh94sq7PqyE2MsZ3kWiC4a
+         Fk1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=KrWoelJmGiB71bSfb9IY5530bv8sUff/lG3OT8kddIY=;
-        b=kowm0tiV7atUs9hUhmw6OdKnNrOsckrJ3ZAe5uBu+22z9r8xm3ou/wkI+A53Fg8wv5
-         9U0r5WSAgsGFCMKgTIOpUN+d7/o0LLIyhLfa+4cMDau6U1kgrpbZmkt/N8OubQErgyBb
-         tTPZBaYF3OEFIMX0kSzDGLBiilgfxEc3+dkj5u6FGn+ivUC9/by5io2QxSR/o+V07tjm
-         pRGCT/k2ths4nCn6JiJftOkPK+q17Goi1GX1CTY0HkydmBBMV/t03gX77KAiStP2yUa4
-         iAAHQhV26Y1UQhZJ6wfX6hL8dCWf7mftNFG8eesCblzTCPz7UjF1EU61TNvinjrRSlU6
-         uXpw==
-X-Gm-Message-State: APjAAAX3Mvdpj6p5cR90voPqcYE1YdN72MG+loizvIKfssUyIiSsX5OE
-        HJS5ir5k8YBMt2OvkmCE496hoQeYnBPm6gLUF1y3IVu4wf/JEWhwdnLtyTStsFpyTuiy5vJqAkl
-        7lviCP7apbQXk4IbdiGp6PP05j1gGDgxLI3PZwnbQbw==
-X-Received: by 2002:aa7:93ce:: with SMTP id y14mr56102165pff.185.1577466930673;
-        Fri, 27 Dec 2019 09:15:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzykHiHnrogfyc+ELP9XKCPhG/DJGzdhgr4sOoR6vPeZQUQ6bZnWl9DucoDstfKWXdUApHyBQ==
-X-Received: by 2002:aa7:93ce:: with SMTP id y14mr56102051pff.185.1577466929498;
-        Fri, 27 Dec 2019 09:15:29 -0800 (PST)
-Received: from 2001-b011-380f-35a3-88bb-5c99-0021-8cca.dynamic-ip6.hinet.net (2001-b011-380f-35a3-88bb-5c99-0021-8cca.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:88bb:5c99:21:8cca])
-        by smtp.gmail.com with ESMTPSA id r2sm37569935pgv.16.2019.12.27.09.15.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Dec 2019 09:15:28 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge
- isn't bound to driver
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <1948783.ToaVGCCZch@kreacher>
-Date:   Sat, 28 Dec 2019 01:15:26 +0800
-Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
-References: <20191227092405.29588-1-kai.heng.feng@canonical.com>
- <1948783.ToaVGCCZch@kreacher>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0UU+ysXx+Shc0uhfL0eYU+6BwpIeAsm7S9P/UHU0eAg=;
+        b=b6ZUDnFx4I6w5s/M132PXjmdrSw61Kw9qdjNctyk2SWWPCNscHWEDNPacJ+AKG9T4B
+         DQmEtkVlT7q1m1jhJSekGolrrTi1pX1zEgxlQcY7AuuguLjoOM8JVS9xRgUuMw9GMt2a
+         VrJPRktVprQHYLC2OBDa/MozsZXNPFAZ5QjBXXuUO0+W2SV6nx0s1tOI8FkYNvYrRlso
+         NzEevGfslypRMF6cla+4Vy+SDjWc9DTyTARVIM/SzjKZmMYB4UCBdVTtaYlmRglTrMux
+         QSHQoyq2NXzP3YTwoYFrBIAhXPeyjVabsFqWMP81pYy6y5fVCK/k80kXdMtWtX7PsKGp
+         LYfg==
+X-Gm-Message-State: APjAAAX08T4qCdm8K8vbLlDFp6+zRYYdeUG7rKB6BSnxQxfOcwOW8+Ol
+        QWzl2EaBe6KdWnRyNXbQYh+q471KjvNhUooZs2ZEdDFo
+X-Google-Smtp-Source: APXvYqygztpCwMZ2tOw2bt5blxVcse049EWJn1V8ypi9uRoEfMAWYxJV7H8W3FniudLtvI6csg6ZP2n5//ATD5ueUVI=
+X-Received: by 2002:a50:bae1:: with SMTP id x88mr39175305ede.10.1577467383228;
+ Fri, 27 Dec 2019 09:23:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20191227094606.143637-1-jian.hu@amlogic.com> <20191227094606.143637-6-jian.hu@amlogic.com>
+In-Reply-To: <20191227094606.143637-6-jian.hu@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 27 Dec 2019 18:22:52 +0100
+Message-ID: <CAFBinCB_0+k6rGxChpB77rPUrb-0mzxt_nQWXbiztCJnJq8XnQ@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] clk: meson: a1: add support for Amlogic A1
+ Peripheral clock driver
+To:     Jian Hu <jian.hu@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ Hi Jian,
+
+my comments and questions below
+please keep in mind that I don't have access to the A1 datasheets, so
+I may ask stupid questions :)
+
+On Fri, Dec 27, 2019 at 10:47 AM Jian Hu <jian.hu@amlogic.com> wrote:
+[...]
+> +/* PLLs clock in gates, its parent is xtal */
+yes. doesn't the code below describe exactly this (what is so special
+about it that we need an extra comment)?
+
+[...]
+> +static const struct clk_parent_data sys_clk_parents[] = {
+> +       { .fw_name = "xtal" },
+> +       { .fw_name = "fclk_div2"},
+> +       { .fw_name = "fclk_div3"},
+> +       { .fw_name = "fclk_div5"},
+the last three values are missing a space before "}"
+
+[...]
+> +       .hw.init = &(struct clk_init_data){
+> +               .name = "sys_clk",
+> +               .ops = &clk_regmap_mux_ro_ops,
+> +               .parent_hws = (const struct clk_hw *[]) {
+> +                       &a1_sys_a.hw, &a1_sys_b.hw,
+> +               },
+> +               .num_parents = 2,
+> +               /*
+> +                * This clock is used by APB bus which setted in Romcode
+like in the PLL clkc patch:
+- setted -> "is set"
+- Romcode == boot ROM ?
+
+[...]
+> +static struct clk_regmap a1_rtc_32k_sel = {
+> +       .data = &(struct clk_regmap_mux_data) {
+> +               .offset = RTC_CTRL,
+> +               .mask = 0x3,
+> +               .shift = 0,
+> +               .flags = CLK_MUX_ROUND_CLOSEST,
+CLK_MUX_ROUND_CLOSEST means the common clock framework will also
+accept rates greater than 32kHz.
+is that fine for this case?
+
+[...]
+> +/*
+> + * the second parent is sys_pll_div16, it will complete in the CPU clock,
+I was confused by this but I assume you mean the parent with index 2?
+
+> + * the forth parent is the clock measurement source, it relies on
+> + * the clock measurement register configuration.
+...and parent with index 4 here
+
+[...]
+> +static struct clk_regmap a1_pwm_a = {
+> +       .data = &(struct clk_regmap_gate_data){
+> +               .offset = PWM_CLK_AB_CTRL,
+> +               .bit_idx = 8,
+> +       },
+> +       .hw.init = &(struct clk_init_data) {
+> +               .name = "pwm_a",
+> +               .ops = &clk_regmap_gate_ops,
+> +               .parent_hws = (const struct clk_hw *[]) {
+> +                       &a1_pwm_a_div.hw
+> +               },
+> +               .num_parents = 1,
+> +               /*
+> +                * The CPU working voltage is controlled by pwm_a
+> +                * in BL2 firmware. add the CLK_IS_CRITICAL flag
+> +                * to avoid changing at runtime.
+on G12A and G12B Linux has to manage the CPU voltage regulator
+can you confirm that for the A1 SoC this is really done by BL2? (I'm
+wondering since A1 is newer than G12)
+
+> +/*
+> + * spicc clk
+> + *    div2   |\         |\       _____
+> + *  ---------| |---DIV--| |     |     |    spicc out
+> + *  ---------| |        | |-----|GATE |---------
+> + *     ..... |/         | /     |_____|
+> + *  --------------------|/
+> + *                 24M
+does that "div2" stand for fclk_div2?
+
+[...]
+> +static const struct meson_eeclkc_data a1_periphs_data = {
+> +               .regmap_clks = a1_periphs_regmaps,
+> +               .regmap_clk_num = ARRAY_SIZE(a1_periphs_regmaps),
+> +               .hw_onecell_data = &a1_periphs_hw_onecell_data,
+> +};
+same comment as for the PLL clkc: please drop this and use the
+variables directly inside _probe to get rid of the struct
+meson_eeclkc_data (so I won't be confused about "EE clocks" on A1,
+while according to your description there's no "EE" domain)
 
 
-> On Dec 27, 2019, at 18:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> 
-> On Friday, December 27, 2019 10:24:05 AM CET Kai-Heng Feng wrote:
->> We have a Pericom USB add-on card that has three USB controller
->> functions 06:00.[0-2], connected to bridge device 05:03.0, which is
->> connected to another bridge device 04:00.0:
->> 
->> -[0000:00]-+-00.0
->>           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
->>           |                                            +-00.1
->>           |                                            \-00.2
->> 
->> When bridge device (05:03.0) and all three USB controller functions
->> (06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
->> USB devices into the add-on card.
->> 
->> This is because the pcieport driver failed to probe on 04:00.0, since
->> the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
->> there's no native PCIe PME can work for devices connected to it.
-> 
-> But in that case the PME driver (drivers/pci/pcie/pme.c) should not bind
-> to the port in question, so the "can_wakeup" flag should not be set for
-> the devices under that port.
-
-We can remove the can_wakeup flag for all its child devices once pcieport probe fails, but I think it's not intuitive.
-
-> 
->> So let's correctly report runtime wakeup isn't supported when any of
->> PCIe bridges isn't bound to pcieport driver.
->> 
->> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> drivers/pci/pci.c | 12 ++++++++++++
->> 1 file changed, 12 insertions(+)
->> 
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 951099279192..ca686cfbd65e 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
->> 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
->> 		return false;
->> 
->> +	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
->> +	 * no IRQ for PME.
->> +	 */
->> +	if (pci_is_pcie(dev)) {
->> +		while (bus->parent) {
->> +			if (!bus->self->driver)
->> +				return false;
->> +
->> +			bus = bus->parent;
->> +		}
->> +	}
->> +
-> 
-> So it looks like device_can_wakeup() returns 'true' for this device, but it
-> should return 'false'.
-
-The USB controllers can assert PME#, so it actually can wakeup, in a way.
-
-I think the logical distinction between pci_dev_run_wake() and device_can_wakeup() is that,
-pci_dev_run_wake() means it can actually do runtime wakeup, while device_can_wakeup()
-only means it has the capability to wakeup. Am I correct here?
-
-> 
-> Do you know why the "can_wakeup" flag is set for it?
-
-All PCI devices with PME cap calls device_set_wakeup_capable() in pci_pm_init().
-
-> 
->> 	if (device_can_wakeup(&dev->dev))
->> 		return true;
->> 
->> 
-> 
-> Moreover, even if the native PME is not supported, there can be an ACPI GPE (or
-> equivalent) that triggers when WAKE# is asserted by one of the PCIe devices
-> connected to it, so the test added by this patch cannot be used in general.
-
-Ok. So how to know when both native PME isn't supported and it doesn't use ACPI GPE?
-I thought ACPI GPE only works for devices directly connect to Root Complex, but I can't find the reference now.
-
-Another short-term workaround is to make pci_pme_list_scan() not skip bridge when it's in D3hot:
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e87196cc1a7f..3333194a62d3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2111,7 +2111,7 @@ static void pci_pme_list_scan(struct work_struct *work)
-                         * configuration space of subordinate devices
-                         * may be not accessible
-                         */
--                       if (bridge && bridge->current_state != PCI_D0)
-+                       if (bridge && bridge->current_state == PCI_D3cold)
-                                continue;
-                        /*
-                         * If the device is in D3cold it should not be
-
-I haven't seen any case that config space is not accessible under D3hot, but I don't have PCI spec to check.
-
-Kai-Heng
-
+Martin
