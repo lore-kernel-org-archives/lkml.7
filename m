@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB079C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691D320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B6721744
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470053;
-	bh=5xoNdYn26opBSDh04DZK7AGpg1tz1m+vcD613elU4+s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdownb9r7bTq2yhzOIPryQ9PfIUVIE+ktT+S/+iA21tUEQINrwjCh4pP0rhU1Zm8y
-	 52led5KA7W8FE/GtZZpttaSiUzMXI2WxqJfHrZWGFu9zu5hfNkZFvD0cLBMd43cbGO
-	 jKwI1RsQVT/8M7Ys8HPAFpquGTIyxxvsRngu59YE=
+	s=default; t=1577470479;
+	bh=htFu0h7MnxuTbn86aRRG0Y/vLwjJXBBQsUNcpcYgA8E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jawx+pjoweuxaFBWK/gNlGf/S1FyluUVuVGTUkwPvN692kpgEYHsLk90rTq6FOi0z
+	 jFvdXF3TXEgcrvHtCu55lK22sGLESOMTxuiEc2eE6XerqbaSfFejC+0nxury05chWf
+	 hi6c34XG56/k0cNvc+tFVOqs+haXe/jBwwBbIXQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfL0SHc (ORCPT
+        id S1727156AbfL0SOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:07:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfL0SC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:27 -0500
+        id S1726495AbfL0SOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32F3F2173E;
-        Fri, 27 Dec 2019 18:02:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A512820722;
+        Fri, 27 Dec 2019 18:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469747;
-        bh=5xoNdYn26opBSDh04DZK7AGpg1tz1m+vcD613elU4+s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYvuDoxMeZzt0S9+t6nyu/yOsoUqdrnzmRtR6JfdNYHqWC9GMFdrU6yxMnGMvEx3j
-         MqDAn2V+jPlgy+xaiNlRvBN868l0VpGLoOtJFkustmPP1KImk93tZIpLm7Z8oDhoiZ
-         vB5plIzMSQhjxHHtssW/Ajsmjl8VPb+TcwDufdTs=
+        s=default; t=1577470477;
+        bh=htFu0h7MnxuTbn86aRRG0Y/vLwjJXBBQsUNcpcYgA8E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dsaYOgPYcxRA00fQHIPa9oliYdHQVTJYQJ9dZg5UYZxrfUKSnEB2pNjzlVhU+Vgv8
+         UG15a+RMlh/aTWdh7BGhIunAWGEFB3AT4oGu3zVbZUNJlavzwjsT11EsZuWg4UxswN
+         oCaV8khsGJF9q87JYPlH+QCoBFwaK+AMH0TvfmTQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Ganapathi Bhat <gbhat@marvell.com>,
+        huangwen <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/57] netfilter: ctnetlink: netns exit must wait for callbacks
-Date:   Fri, 27 Dec 2019 13:01:28 -0500
-Message-Id: <20191227180222.7076-3-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/38] mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
+Date:   Fri, 27 Dec 2019 13:13:58 -0500
+Message-Id: <20191227181435.7644-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
-References: <20191227180222.7076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,77 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Ganapathi Bhat <gbhat@marvell.com>
 
-[ Upstream commit 18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb ]
+[ Upstream commit 3d94a4a8373bf5f45cf5f939e88b8354dbf2311b ]
 
-Curtis Taylor and Jon Maxwell reported and debugged a crash on 3.10
-based kernel.
+mwifiex_process_country_ie() function parse elements of bss
+descriptor in beacon packet. When processing WLAN_EID_COUNTRY
+element, there is no upper limit check for country_ie_len before
+calling memcpy. The destination buffer domain_info->triplet is an
+array of length MWIFIEX_MAX_TRIPLET_802_11D(83). The remote
+attacker can build a fake AP with the same ssid as real AP, and
+send malicous beacon packet with long WLAN_EID_COUNTRY elemen
+(country_ie_len > 83). Attacker can  force STA connect to fake AP
+on a different channel. When the victim STA connects to fake AP,
+will trigger the heap buffer overflow. Fix this by checking for
+length and if found invalid, don not connect to the AP.
 
-Crash occurs in ctnetlink_conntrack_events because net->nfnl socket is
-NULL.  The nfnl socket was set to NULL by netns destruction running on
-another cpu.
+This fix addresses CVE-2019-14895.
 
-The exiting network namespace calls the relevant destructors in the
-following order:
-
-1. ctnetlink_net_exit_batch
-
-This nulls out the event callback pointer in struct netns.
-
-2. nfnetlink_net_exit_batch
-
-This nulls net->nfnl socket and frees it.
-
-3. nf_conntrack_cleanup_net_list
-
-This removes all remaining conntrack entries.
-
-This is order is correct. The only explanation for the crash so ar is:
-
-cpu1: conntrack is dying, eviction occurs:
- -> nf_ct_delete()
-   -> nf_conntrack_event_report \
-     -> nf_conntrack_eventmask_report
-       -> notify->fcn() (== ctnetlink_conntrack_events).
-
-cpu1: a. fetches rcu protected pointer to obtain ctnetlink event callback.
-      b. gets interrupted.
- cpu2: runs netns exit handlers:
-     a runs ctnetlink destructor, event cb pointer set to NULL.
-     b runs nfnetlink destructor, nfnl socket is closed and set to NULL.
-cpu1: c. resumes and trips over NULL net->nfnl.
-
-Problem appears to be that ctnetlink_net_exit_batch only prevents future
-callers of nf_conntrack_eventmask_report() from obtaining the callback.
-It doesn't wait of other cpus that might have already obtained the
-callbacks address.
-
-I don't see anything in upstream kernels that would prevent similar
-crash: We need to wait for all cpus to have exited the event callback.
-
-Fixes: 9592a5c01e79dbc59eb56fa ("netfilter: ctnetlink: netns support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: huangwen <huangwenabc@gmail.com>
+Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index c781c9a1a697..39a32edaa92c 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -3422,6 +3422,9 @@ static void __net_exit ctnetlink_net_exit_batch(struct list_head *net_exit_list)
- 
- 	list_for_each_entry(net, net_exit_list, exit_list)
- 		ctnetlink_net_exit(net);
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+index 478885afb6c6..be3be7a63cf0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -271,6 +271,14 @@ static int mwifiex_process_country_ie(struct mwifiex_private *priv,
+ 			    "11D: skip setting domain info in FW\n");
+ 		return 0;
+ 	}
 +
-+	/* wait for other cpus until they are done with ctnl_notifiers */
-+	synchronize_rcu();
- }
++	if (country_ie_len >
++	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		mwifiex_dbg(priv->adapter, ERROR,
++			    "11D: country_ie_len overflow!, deauth AP\n");
++		return -EINVAL;
++	}
++
+ 	memcpy(priv->adapter->country_code, &country_ie[2], 2);
  
- static struct pernet_operations ctnetlink_net_ops = {
+ 	domain_info->country_code[0] = country_ie[2];
+@@ -314,8 +322,9 @@ int mwifiex_bss_start(struct mwifiex_private *priv, struct cfg80211_bss *bss,
+ 	priv->scan_block = false;
+ 
+ 	if (bss) {
+-		if (adapter->region_code == 0x00)
+-			mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00 &&
++		    mwifiex_process_country_ie(priv, bss))
++			return -EINVAL;
+ 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
 -- 
 2.20.1
 
