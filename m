@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D78C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FACC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DEA206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F752208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469177;
-	bh=dkNy826DC2l0wBjP/1QqqtSStFbYBWhyqa/0i34FXI4=;
+	s=default; t=1577469186;
+	bh=q/n2PPch65R2rI8P0F1GiC6a03jcPROWQkGw6IthEwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDu1T5wTv4SLikVleyLJmFQjHFAWUUjffuKu3DWCN3lUvSpkVdWvAvuSLrjzraGc6
-	 IV3KZLWgyNEH7XVO6awJWcJ/eqh1uJOSEigEHRFTG0P20RXxvWD2xxgGvQFxkLOo4B
-	 BW5KOVu6lrGnDyT8SRjZvPKvH5C2GTok58GXyRHQ=
+	b=JXbwHGkV1Ao/FiqPrGyLhoolWn/cpJXGxDsclT6Qb2ICQRtIqT/SvCLejRfxeUZk/
+	 KU4db3RhltATijCg83v2ZoDf97x0hug4nnahCPP0vM0wrv6z3gif0xyOhRn4Brvsv4
+	 qtoDghHvgsYwyCyqi8vr2Ik3s6agHvajOEfmDnAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfL0Rw4 (ORCPT
+        id S1728035AbfL0Rm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40320 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbfL0RnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:03 -0500
+        id S1727998AbfL0Rmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0332C21582;
-        Fri, 27 Dec 2019 17:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E63D021D7E;
+        Fri, 27 Dec 2019 17:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468582;
-        bh=dkNy826DC2l0wBjP/1QqqtSStFbYBWhyqa/0i34FXI4=;
+        s=default; t=1577468569;
+        bh=q/n2PPch65R2rI8P0F1GiC6a03jcPROWQkGw6IthEwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1M2ApYLYu7D3u/M0G/oME3RbrFgFddKr3ZVjPx7idCgP9Zy2l69Jf6Ad9HxGijGpg
-         qA84lo5oRrGfA2Iw7B85BTRCXBwE1oMmJYfeOQ7i2J9+Ac4BaEOwMNytfKGqizaN3C
-         O5ab067NzyfGXSAszgXhIgHRWDvP6mA+k9jgiAsI=
+        b=zhhxKT7RffIuuxGSetpilOkYDLjXF43CpWsIizblRYlTSQ3ZQ6NKpZUfxcqkXdqqP
+         T8VF8Y3+CcEoRJQdsOKxgNNiwDXPxkeaN4SrF3LiEvqfBKpz4yP0FxCR3guOc8nMvA
+         8qyHJ9yAgjQySCPWBe6+jF0mkk8iXSTV/NB9OfEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 105/187] habanalabs: rate limit error msg on waiting for CS
-Date:   Fri, 27 Dec 2019 12:39:33 -0500
-Message-Id: <20191227174055.4923-105-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 094/187] btrfs: Fix error messages in qgroup_rescan_init
+Date:   Fri, 27 Dec 2019 12:39:22 -0500
+Message-Id: <20191227174055.4923-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -58,56 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 018e0e3594f7dcd029d258e368c485e742fa9cdb ]
+[ Upstream commit 37d02592f11bb76e4ab1dcaa5b8a2a0715403207 ]
 
-In case a user submits a CS, and the submission fails, and the user doesn't
-check the return value and instead use the error return value as a valid
-sequence number of a CS and ask to wait on it, the driver will print an
-error and return an error code for that wait.
+The branch of qgroup_rescan_init which is executed from the mount
+path prints wrong errors messages. The textual print out in case
+BTRFS_QGROUP_STATUS_FLAG_RESCAN/BTRFS_QGROUP_STATUS_FLAG_ON are not
+set are transposed. Fix it by exchanging their place.
 
-The real problem happens if now the user ignores the error of the wait, and
-try to wait again and again. This can lead to a flood of error messages
-from the driver and even soft lockup event.
-
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/command_submission.c | 5 +++--
- drivers/misc/habanalabs/context.c            | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/btrfs/qgroup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index a9ac045dcfde..447f307ef4d6 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -777,8 +777,9 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
- 	memset(args, 0, sizeof(*args));
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 3ad151655eb8..5ccbc3b6c8f8 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3232,12 +3232,12 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
+ 		if (!(fs_info->qgroup_flags &
+ 		      BTRFS_QGROUP_STATUS_FLAG_RESCAN)) {
+ 			btrfs_warn(fs_info,
+-			"qgroup rescan init failed, qgroup is not enabled");
++			"qgroup rescan init failed, qgroup rescan is not queued");
+ 			ret = -EINVAL;
+ 		} else if (!(fs_info->qgroup_flags &
+ 			     BTRFS_QGROUP_STATUS_FLAG_ON)) {
+ 			btrfs_warn(fs_info,
+-			"qgroup rescan init failed, qgroup rescan is not queued");
++			"qgroup rescan init failed, qgroup is not enabled");
+ 			ret = -EINVAL;
+ 		}
  
- 	if (rc < 0) {
--		dev_err(hdev->dev, "Error %ld on waiting for CS handle %llu\n",
--			rc, seq);
-+		dev_err_ratelimited(hdev->dev,
-+				"Error %ld on waiting for CS handle %llu\n",
-+				rc, seq);
- 		if (rc == -ERESTARTSYS) {
- 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
- 			rc = -EINTR;
-diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
-index 17db7b3dfb4c..2df6fb87e7ff 100644
---- a/drivers/misc/habanalabs/context.c
-+++ b/drivers/misc/habanalabs/context.c
-@@ -176,7 +176,7 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
- 	spin_lock(&ctx->cs_lock);
- 
- 	if (seq >= ctx->cs_sequence) {
--		dev_notice(hdev->dev,
-+		dev_notice_ratelimited(hdev->dev,
- 			"Can't wait on seq %llu because current CS is at seq %llu\n",
- 			seq, ctx->cs_sequence);
- 		spin_unlock(&ctx->cs_lock);
 -- 
 2.20.1
 
