@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D59C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61770C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CC321582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E6920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfL0JqU (ORCPT
+        id S1727072AbfL0Jqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 04:46:20 -0500
+        Fri, 27 Dec 2019 04:46:31 -0500
 Received: from mail-sz.amlogic.com ([211.162.65.117]:21110 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfL0JqU (ORCPT
+        with ESMTP id S1726677AbfL0Jqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 04:46:20 -0500
+        Fri, 27 Dec 2019 04:46:31 -0500
 Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 27 Dec 2019
  17:46:34 +0800
@@ -38,9 +38,9 @@ CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
         <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 1/5] dt-bindings: clock: meson: add A1 PLL clock controller bindings
-Date:   Fri, 27 Dec 2019 17:46:02 +0800
-Message-ID: <20191227094606.143637-2-jian.hu@amlogic.com>
+Subject: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
+Date:   Fri, 27 Dec 2019 17:46:03 +0800
+Message-ID: <20191227094606.143637-3-jian.hu@amlogic.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191227094606.143637-1-jian.hu@amlogic.com>
 References: <20191227094606.143637-1-jian.hu@amlogic.com>
@@ -53,99 +53,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the documentation to support Amlogic A1 PLL clock driver,
-and add A1 PLL clock controller bindings.
+Compared with the previous SoCs, self-adaption module current
+is newly added for A1, And there is no reset parm except the
+fixed pll. In A1 PLL the PLL enable sequence is different, Using
+the new power-on sequence to enable the PLL.
 
 Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 ---
- .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
- include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
- 2 files changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
- create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+ drivers/clk/meson/clk-pll.c | 40 ++++++++++++++++++++++++++++++++-----
+ drivers/clk/meson/clk-pll.h |  2 ++
+ 2 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-new file mode 100644
-index 000000000000..7a327bb174b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
+index ddb1e5634739..9eb7d465d123 100644
+--- a/drivers/clk/meson/clk-pll.c
++++ b/drivers/clk/meson/clk-pll.c
+@@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
+ 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+ 
+ 	if (pll->init_count) {
+-		meson_parm_write(clk->map, &pll->rst, 1);
++		if (MESON_PARM_APPLICABLE(&pll->rst))
++			meson_parm_write(clk->map, &pll->rst, 1);
 +
-+title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+ 		regmap_multi_reg_write(clk->map, pll->init_regs,
+ 				       pll->init_count);
+-		meson_parm_write(clk->map, &pll->rst, 0);
 +
-+maintainers:
-+  - Neil Armstrong <narmstrong@baylibre.com>
-+  - Jerome Brunet <jbrunet@baylibre.com>
-+  - Jian Hu <jian.hu@jian.hu.com>
++		if (MESON_PARM_APPLICABLE(&pll->rst))
++			meson_parm_write(clk->map, &pll->rst, 0);
+ 	}
+ }
+ 
+@@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
+ {
+ 	struct clk_regmap *clk = to_clk_regmap(hw);
+ 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
++	int ret = 0;
+ 
+-	if (meson_parm_read(clk->map, &pll->rst) ||
+-	    !meson_parm_read(clk->map, &pll->en) ||
++	if (MESON_PARM_APPLICABLE(&pll->rst))
++		ret = meson_parm_read(clk->map, &pll->rst);
 +
-+properties:
-+  compatible:
-+    const: amlogic,a1-pll-clkc
++	if (ret || !meson_parm_read(clk->map, &pll->en) ||
+ 	    !meson_parm_read(clk->map, &pll->l))
+ 		return 0;
+ 
+@@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+ 	/* do nothing if the PLL is already enabled */
+ 	if (clk_hw_is_enabled(hw))
+ 		return 0;
++	/*
++	 * Compared with the previous SoCs, self-adaption module current
++	 * is newly added for A1, keep the new power-on sequence to enable the
++	 * PLL.
++	 */
++	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
++		/* Enable the pll */
++		meson_parm_write(clk->map, &pll->en, 1);
++		udelay(10);
++		/* Enable the pll self-adaption module current */
++		meson_parm_write(clk->map, &pll->current_en, 1);
++		udelay(40);
++		/* Enable lock detect module */
++		meson_parm_write(clk->map, &pll->l_detect, 1);
++		meson_parm_write(clk->map, &pll->l_detect, 0);
++		goto out;
++	}
+ 
+ 	/* Make sure the pll is in reset */
+ 	meson_parm_write(clk->map, &pll->rst, 1);
+@@ -331,6 +355,7 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+ 	/* Take the pll out reset */
+ 	meson_parm_write(clk->map, &pll->rst, 0);
+ 
++out:
+ 	if (meson_clk_pll_wait_lock(hw))
+ 		return -EIO;
+ 
+@@ -343,10 +368,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
+ 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+ 
+ 	/* Put the pll is in reset */
+-	meson_parm_write(clk->map, &pll->rst, 1);
++	if (MESON_PARM_APPLICABLE(&pll->rst))
++		meson_parm_write(clk->map, &pll->rst, 1);
+ 
+ 	/* Disable the pll */
+ 	meson_parm_write(clk->map, &pll->en, 0);
 +
-+  "#clock-cells":
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+clocks:
-+  maxItems: 2
-+  items:
-+   - description: Input xtal_fixpll
-+   - description: Input xtal_hifipll
-+
-+clock-names:
-+  maxItems: 2
-+  items:
-+     - const: xtal_fixpll
-+     - const: xtal_hifipll
-+
-+required:
-+  - compatible
-+  - "#clock-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clkc_pll: pll-clock-controller@7c80 {
-+                compatible = "amlogic,a1-pll-clkc";
-+                reg = <0 0x7c80 0 0x18c>;
-+                #clock-cells = <1>;
-+                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-+                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
-+                clock-names = "xtal_fixpll", "xtal_hifipll";
-+    };
-diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-new file mode 100644
-index 000000000000..58eae237e503
---- /dev/null
-+++ b/include/dt-bindings/clock/a1-pll-clkc.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#ifndef __A1_PLL_CLKC_H
-+#define __A1_PLL_CLKC_H
-+
-+#define CLKID_FIXED_PLL				1
-+#define CLKID_FCLK_DIV2				6
-+#define CLKID_FCLK_DIV3				7
-+#define CLKID_FCLK_DIV5				8
-+#define CLKID_FCLK_DIV7				9
-+#define CLKID_HIFI_PLL				10
-+
-+#endif /* __A1_PLL_CLKC_H */
++	/* Disable PLL internal self-adaption module current */
++	if (MESON_PARM_APPLICABLE(&pll->current_en))
++		meson_parm_write(clk->map, &pll->current_en, 0);
+ }
+ 
+ static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
+index 367efd0f6410..a2228c0fdce5 100644
+--- a/drivers/clk/meson/clk-pll.h
++++ b/drivers/clk/meson/clk-pll.h
+@@ -36,6 +36,8 @@ struct meson_clk_pll_data {
+ 	struct parm frac;
+ 	struct parm l;
+ 	struct parm rst;
++	struct parm current_en;
++	struct parm l_detect;
+ 	const struct reg_sequence *init_regs;
+ 	unsigned int init_count;
+ 	const struct pll_params_table *table;
 -- 
 2.24.0
 
