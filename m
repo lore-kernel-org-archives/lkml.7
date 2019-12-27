@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F86C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E8CC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697FC20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1A620740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468864;
-	bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
+	s=default; t=1577468870;
+	bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdlvCgp5hV8OvfpL+w6IrO5hpbmaV9DlFZglzrLjxzVbvu1xIpsqr66sKzj6OJwcb
-	 NB2+ucx2/Nj5Xet5clMigdXVfILp5grt98bH0RopqP5HARtDcuGn25yrmqpVgmeUhA
-	 NwccGEGx793w9pNfxIszw1Etdci+5lA72sXPYPOI=
+	b=HZJkg8T+v1ICo42oGFjohq2EV59ZWKPu0uFElTt3MDBB+DmIBTSZkiJOunzNZ/V2E
+	 HJnCoxrEQ8rbiveFro1yIFpzUr+UzCp7QPjD+3qNK3HHurKBXegc4iVUhQd6tVcRS2
+	 UMwJoRJT1rzy0Ypa5bERLxU422+RDmURRKHl969M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfL0Rrn (ORCPT
+        id S1728601AbfL0Rox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:47:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbfL0Roz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:55 -0500
+        id S1728547AbfL0Roo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D880D20740;
-        Fri, 27 Dec 2019 17:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197C4222C4;
+        Fri, 27 Dec 2019 17:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468694;
-        bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
+        s=default; t=1577468683;
+        bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAhyXW4MWH2HXnNKSTCJyAxyrVHHK4IvmmqxHp69pfO5Uju6X8l8nD0wni5p9VU5k
-         EXHmHmuhponV8LdPTl+BVQljf9QnlSNp3YbxoGbX1PSvNIPVi6fJ4ftX4VQoVRZuI8
-         vBLa6ozMEbyTwdwSIs9GOtttYBlxOqS71qjcqRgo=
+        b=xOjs8EhHA1gKleBA61jAKo6fto+W5LoaF0WCHzPa3LbtxfsUcrFRIzzrELAfCvDco
+         1gYgHTwiaSGfbtUrBo0Yi+y/4L1k8/MUkO/XL8ZrrmfUHdwMlGbfj+VEGoWSPgTd6m
+         uvFRKqn3mmkBGCtjdmQMGcgCBWyWnzCivMOkHgBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mahesh Bandewar <maheshb@google.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 51/84] bonding: fix active-backup transition after link failure
-Date:   Fri, 27 Dec 2019 12:43:19 -0500
-Message-Id: <20191227174352.6264-51-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 42/84] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Fri, 27 Dec 2019 12:43:10 -0500
+Message-Id: <20191227174352.6264-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,50 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 5d485ed88d48f8101a2067348e267c0aaf4ed486 ]
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-After the recent fix in commit 1899bb325149 ("bonding: fix state
-transition issue in link monitoring"), the active-backup mode with
-miimon initially come-up fine but after a link-failure, both members
-transition into backup state.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-Following steps to reproduce the scenario (eth1 and eth2 are the
-slaves of the bond):
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
 
-    ip link set eth1 up
-    ip link set eth2 down
-    sleep 1
-    ip link set eth2 up
-    ip link set eth1 down
-    cat /sys/class/net/eth1/bonding_slave/state
-    cat /sys/class/net/eth2/bonding_slave/state
-
-Fixes: 1899bb325149 ("bonding: fix state transition issue in link monitoring")
-CC: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 9b8143dca512..f57b86f1373d 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2223,9 +2223,6 @@ static void bond_miimon_commit(struct bonding *bond)
- 			} else if (BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
- 				/* make it immediately active */
- 				bond_set_active_slave(slave);
--			} else if (slave != primary) {
--				/* prevent it from being the active one */
--				bond_set_backup_slave(slave);
- 			}
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 04ccb274a620..9a6afd9f3f9b 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -344,6 +344,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
  
- 			netdev_info(bond->dev, "link status definitely up for interface %s, %u Mbps %s duplex\n",
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
+ 
 -- 
 2.20.1
 
