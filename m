@@ -2,106 +2,191 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_ABUSE_SURBL,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC401C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C14C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D98220CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAD720882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:00:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jdISPOh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfL0M7p (ORCPT
+        id S1727169AbfL0NAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:59:45 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:33310 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfL0M7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:59:45 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 59BE2FB03;
-        Fri, 27 Dec 2019 13:59:42 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id R0-rgRbwKwjQ; Fri, 27 Dec 2019 13:59:40 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id C688E49799; Fri, 27 Dec 2019 13:59:39 +0100 (CET)
-Date:   Fri, 27 Dec 2019 13:59:39 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] leds: lm3692x: Make sure we don't exceed the
- maximum led current
-Message-ID: <20191227125939.GA26392@bogon.m.sigxcpu.org>
-References: <cover.1577271823.git.agx@sigxcpu.org>
- <96dad031f3a9ff5bbc311d0ec8768b348b996bcf.1577271823.git.agx@sigxcpu.org>
- <20191226101336.GD4033@amd>
+        Fri, 27 Dec 2019 08:00:40 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:55945 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726377AbfL0NAk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 08:00:40 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577451639; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=elAZDYyWpHh1dEeZKdpEIhlxZZccEhpE0oQywbjr8TQ=; b=jdISPOh5v/3vGDtuhCo7x61I+0dsk7sWshA2g012ZmPCVlWA61nkzE/yDJNLbyDzEMIwmBRL
+ s55eJbYxSb6Qzlwjg0H9J4LH/BCaJ6r1W7w0N22zIj74+TwNbbOBBbroS/kdLk3rhvk+45pw
+ hmL261uVdjDJKJIVB/P+U8Eh5e8=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e060072.7f7729b19420-smtp-out-n01;
+ Fri, 27 Dec 2019 13:00:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3BF47C447AF; Fri, 27 Dec 2019 13:00:34 +0000 (UTC)
+Received: from [10.204.79.138] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akdwived)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36A09C447AD;
+        Fri, 27 Dec 2019 13:00:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36A09C447AD
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: Documentation for qcom,eud
+To:     Rob Herring <robh@kernel.org>,
+        Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ckadabi@codeaurora.org, tsoni@codeaurora.org,
+        rnayak@codeaurora.org, bryanh@codeaurora.org,
+        psodagud@codeaurora.org,
+        Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
+ <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
+ <20180925192507.GA19360@bogus>
+From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
+Message-ID: <03949a1b-ee93-ee71-ff6e-e1f045b15129@codeaurora.org>
+Date:   Fri, 27 Dec 2019 18:30:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20180925192507.GA19360@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191226101336.GD4033@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, Dec 26, 2019 at 11:13:36AM +0100, Pavel Machek wrote:
-> On Wed 2019-12-25 12:07:19, Guido Günther wrote:
-> 1;2802;0c> The current is given by the formular from page 12 of
-> > https://www.ti.com/lit/ds/symlink/lm36922.pdf. We use this to limit the
-> > led's max_brightness using the led-max-microamp DT property.
-> > 
-> > The formular for the lm36923 is identical according to the data
-> sheet.
-> 
-> formula?
-> 
-> >  static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >  {
-> >  	struct fwnode_handle *child = NULL;
-> >  	struct led_init_data init_data = {};
-> > -	u32 ovp;
-> > +	u32 ovp, max_cur;
-> >  	bool exp_mode;
-> >  	int ret;
-> >  
-> > @@ -397,6 +416,10 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >  		return ret;
-> >  	}
-> >  
-> > +	fwnode_property_read_u32(child, "led-max-microamp", &max_cur);
-> > +	led->led_dev.max_brightness = ret ? LED_FULL :
-> > +		lm3692x_max_brightness(led, max_cur);
-> > +
-> 
-> Umm. Should ret come from this fwnode_property_read_u32()?
+Hi Rob,
 
-Argh...i was sure i had that fixed (and tested without setting
-led-max-microamp) but it was sitting on another branch. Thanks a lot for
-catching that!
- -- Guido
+We would like to revive this thread, We also would like to address your 
+comments on this patch set.
 
-> 
-> With that fixed,
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> (Feel free to wait for Rob before resending the series, and I guess
-> you can merge it with the next one).
-> 
-> Best regards,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Please consider our reply against your comments so that we can proceed.
 
+On 9/26/2018 12:55 AM, Rob Herring wrote:
+> On Tue, Sep 04, 2018 at 02:34:12PM -0700, Prakruthi Deepak Heragu wrote:
+>> Documentation for Embedded USB Debugger (EUD) device tree bindings.
+>>
+>> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+>> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 41 ++++++++++++++++++++++
+>>   1 file changed, 41 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> new file mode 100644
+>> index 0000000..a03021a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+>> @@ -0,0 +1,41 @@
+>> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
+>> +
+>> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
+>> +on chip to support the USB-based debug and trace capabilities.
+> Is it just for debug and normally bypassed?
+Yes, In normal mode EUD is bypassed.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible:  Should be "qcom,msm-eud"
+> Needs to be SoC specific (though a fallback is fine).
 
+This IP will be present in all qcom SoC's that is why this is specific 
+to qcom, let us know if this is anyway problematic?
+
+>> + - interrupts:  Interrupt number
+>> + - reg: Should be address and size of EUD register space
+>> +
+>> +Driver notifies clients for VBUS attach/detach and charger enable/disable
+> Bindings are for h/w blocks, not drivers.
+This has been addressed in patch set v3 which is pending for your review.
+>
+>> +events. The link between client and EUD is established via a directed
+>> +graph. EUD driver has one endpoint of the graph link mentioning EUD as an
+>> +output link and clients registered for these notifications from the EUD
+>> +should have the other endpoint of the graph link as an input link.
+> OF graph is for describing data flows (i.e. h/w connections), not
+> clients wanting some event.
+
+Will rephrasing above description as below would work?
+
+"The link between event receiver and EUD is established via a directed 
+graph. Where EUD act as output link and event receiver(ex. usb 
+controller or charger h/w)Â  as input link"
+
+>> Each of
+>> +these endpoints should contain a 'remote-endpoint' phandle property that
+>> +points to the corresponding endpoint in the port of the remote device.
+> You don't need to describe how the graph binding works. Just what the
+> port assignments are.
+
+patch set v3 has removed the part describing how graph binding works.
+
+>
+> I worry this is going to collide with using the graph binding for USB
+> connectors.
+
+Can you please elaborate your query little more? USB controller has 
+input connection from EUD as well as USB connectors.
+
+As mentioned earlier, usb controller receive event from EUD only in 
+debug mode while in normal mode USB connector supplies the event.
+
+does that address concern?
+
+>
+>> +
+>> +An example for EUD device node:
+>> +
+>> +	eud: qcom,msm-eud@88e0000 {
+>> +		compatible = "qcom,msm-eud";
+>> +		interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
+>> +		reg = <0x88e0000 0x4000>;
+>> +		port {
+>> +                	eud_output: endpoint {
+>> +                        	remote-endpoint = <&usb3_input>;
+>> +                        };
+>> +        	};
+>> +	};
+>> +
+>> +An example for EUD client:
+> What are possible clients? Could we want to switch clients at runtime?
+
+As of now clients are usb controller and charger hardware, and they are 
+fixed.
+
+EUD application decide events dynamically.
+
+>
+>> +
+>> +	usb3 {
+>> +		port {
+>> +                	usb3_input: endpoint {
+>> +                        	remote-endpoint = <&eud_output>;
+>> +                        };
+>> +        	};
+>> +	};
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
