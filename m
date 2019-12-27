@@ -2,487 +2,230 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AEBC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01CEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E3020740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qRQu9/jp"
+	by mail.kernel.org (Postfix) with ESMTP id 66FB4208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 14:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfL0Os7 (ORCPT
+        id S1726954AbfL0OzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 09:48:59 -0500
-Received: from mail-dm6nam12on2061.outbound.protection.outlook.com ([40.107.243.61]:37857
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726379AbfL0Os7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 09:48:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TH1T770FwKkhSEdQahRhXXDcPt/cFRQm4tILajRX+Rhifh+yMvXuDjK0iMwTnIOWH2GhjRQNLAYYaI7wCgOb0N/GZPIXsp498gF8k5Pu7SDEhuJFMqKmITHjhJSb3I5iYIb/75gOLDTxTl6piXyQI0HUvNjrfHqU8wd8z0slvsapwme1i/80OOTHuvOFVPBGEyHotessElGF8wdHwI8enKbzbgy04/oRnWAdUM8L3kUBw7TzE4F7AzFBQcNN1CHof35NwxbcO7bSAvxRIY+qMvs0DjRa3b57cqM1wwyAr0yJuvwKDbtiVbK3gYV5+WqW/bA6eAda6ubwOawqBIwoDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBKNzRBG/bHUbCS+7M9ep4kk41HUKA/HzvOlJ5Ld+zg=;
- b=UE3AYYIBe1ETKTSs+aTJA25eHa7mHaK98YAQhUC+eUBQUv40GVvNjQyLT54wmGxe8osdozMX6J9lRRs5/Z98grIIJRDEnvrChcOyQBLv+R6JxMdUrsudVysLU/V5ZWruKf/hCU6dEIFVBu2UxTCxb0Ry6Mh9LPpQQxMs/RiArwniqRxHmMa3v4VR1XgOrnYRIs4+RlrqvYhlYvtZVgDNnHIJlsuWJ/FAdNkNhu5nPcPstr2Ne8iOUJVvFPneBZb5g/xnSAscII1jApHRNVZRLHz9EHjjzK/1hvnUNHn9I8EOLNx7fa9SOpxSGydYP6688tMG4aPeRfoVsRn8X5LIvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBKNzRBG/bHUbCS+7M9ep4kk41HUKA/HzvOlJ5Ld+zg=;
- b=qRQu9/jpe1AYIP9qzdoHoTK4sye8NmsH9D9yIp/NEqJoUlhfq8wn+7jiNbqwHMK/4fWCKpQpxeeOeTbSwcd0YrIhhteB5pY5lk5GbGD4qRKoApkI9Y1rrzFE/xj584UJS9TThdmRdJbaJ3jHFeWcM5qn7JwjtkriJnkT9h2Tcug=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB3485.namprd12.prod.outlook.com (20.178.242.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Fri, 27 Dec 2019 14:48:51 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
- 14:48:51 +0000
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        gregkh@linuxfoundation.org, Gary.Hook@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com
-Cc:     davem@davemloft.net, mchehab+samsung@kernel.org, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v2 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA information
-Date:   Fri, 27 Dec 2019 08:48:32 -0600
-Message-Id: <1577458112-109734-1-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR01CA0120.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::14) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
-MIME-Version: 1.0
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR01CA0120.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2581.11 via Frontend Transport; Fri, 27 Dec 2019 14:48:47 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dc64b79d-c7ce-4212-5fe2-08d78adbe341
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3485:|MN2PR12MB3485:|MN2PR12MB3485:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB34857B855AE376B5EA5A6576E52A0@MN2PR12MB3485.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
-X-Forefront-PRVS: 0264FEA5C3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(189003)(199004)(81156014)(478600001)(2616005)(16526019)(186003)(6486002)(8936002)(956004)(86362001)(36756003)(8676002)(81166006)(66556008)(66946007)(66476007)(6636002)(4326008)(5660300002)(52116002)(2906002)(6666004)(316002)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3485;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gEuEDtQBLLFGt22wZiKO9tnyHY9C06sUwYooru7+WMS4IZ+XkJod/NzYVR1ogBt/l3JVHV/9Ege5/kAcfDSdmQhoT2CY9miwx+ounIMnFPa/8NaaNt6jGObBXrmvlFctnAxrspF46JOOkF+zgiIf9VejQUocqyjBH67JF6LYxgjMz9zKxK2pgTichGUgLty6u7mJjw+o6+Ip9BoDOZGbgtv4dIeUjGvhOykZwsRrjXHe8POuGsgXngqulKiia5eRhcc0Pp5kqEW+xgppHGAzAaErZ9OKt2109SgM/HgV/HqhjQ/KaPf5MJn7vc6WXj+R0idHopqVZQvNJ5DRLAQPeGipVxkHFPV7ZYWGNkdEKMeQo+l0bJBE3B8IejYtufvuKsykZWdz87rfsc0f21sY4BJtSGuqFzFyAuQ9Lk/OIskX7xZx1RCJkwtbahIdWt0P
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc64b79d-c7ce-4212-5fe2-08d78adbe341
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 14:48:51.5295
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eBXOWlX6NJeQZ9n7Pipe7cRhloYVvX5lL8V1e4o7nFQHSBSmLNQyGOQ2qZXoy1m1w7Rook5n/gY8W9vS3YLrvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3485
+        Fri, 27 Dec 2019 09:55:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42518 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfL0OzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 09:55:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DA241ACA7;
+        Fri, 27 Dec 2019 14:55:15 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 1A247E008A; Fri, 27 Dec 2019 15:55:13 +0100 (CET)
+Message-Id: <cover.1577457846.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v9 00/14] ethtool netlink interface, part 1
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 27 Dec 2019 15:55:13 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+This is first part of netlink based alternative userspace interface for
+ethtool. It aims to address some long known issues with the ioctl
+interface, mainly lack of extensibility, raciness, limited error reporting
+and absence of notifications. The goal is to allow userspace ethtool
+utility to provide all features it currently does but without using the
+ioctl interface. However, some features provided by ethtool ioctl API will
+be available through other netlink interfaces (rtnetlink, devlink) if it's
+more appropriate.
 
-Expose data about the configuration and operation of the
-PTDMA through debugfs entries: device name, capabilities,
-configuration, statistics.
+The interface uses generic netlink family "ethtool" and provides multicast
+group "monitor" which is used for notifications. Documentation for the
+interface is in Documentation/networking/ethtool-netlink.rst file. The
+netlink interface is optional, it is built when CONFIG_ETHTOOL_NETLINK
+(bool) option is enabled.
 
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/dma/ptdma/Makefile        |   3 +-
- drivers/dma/ptdma/ptdma-debugfs.c | 237 ++++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-dev.c     |  26 +++++
- drivers/dma/ptdma/ptdma.h         |  12 ++
- 4 files changed, 277 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+There are three types of request messages distinguished by suffix "_GET"
+(query for information), "_SET" (modify parameters) and "_ACT" (perform an
+action). Kernel reply messages have name with additional suffix "_REPLY"
+(e.g. ETHTOOL_MSG_SETTINGS_GET_REPLY). Most "_SET" and "_ACT" message types
+do not have matching reply type as only some of them need additional reply
+data beyond numeric error code and extack. Kernel also broadcasts
+notification messages ("_NTF" suffix) on changes.
 
-diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-index 6fcb4ad..60e7c10 100644
---- a/drivers/dma/ptdma/Makefile
-+++ b/drivers/dma/ptdma/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_AMD_PTDMA) += ptdma.o
- 
- ptdma-objs := ptdma-dev.o \
--	      ptdma-dmaengine.o
-+	      ptdma-dmaengine.o \
-+	      ptdma-debugfs.o
- 
- ptdma-$(CONFIG_PCI) += ptdma-pci.o
-diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
-new file mode 100644
-index 0000000..b4af83c
---- /dev/null
-+++ b/drivers/dma/ptdma/ptdma-debugfs.c
-@@ -0,0 +1,237 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD Passthrough DMA device driver
-+ * -- Based on the CCP driver
-+ *
-+ * Copyright (C) 2016,2019 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Gary R Hook <gary.hook@amd.com>
-+ */
-+
-+#include <linux/debugfs.h>
-+
-+#include "ptdma.h"
-+
-+/* DebugFS helpers */
-+#define	OBUFP		(obuf + oboff)
-+#define	OBUFLEN		512
-+#define	OBUFSPC		(OBUFLEN - oboff)
-+
-+#define	MAX_NAME_LEN	20
-+#define	BUFLEN		63
-+#define	RI_VERSION_NUM	0x0000003F
-+
-+#define	RI_NUM_VQM	0x00078000
-+#define	RI_NVQM_SHIFT	15
-+#define	RI_NVQM(r)	(((r) * RI_NUM_VQM) >> RI_NVQM_SHIFT)
-+#define	RI_LSB_ENTRIES	0x0FF80000
-+#define	RI_NLSB_SHIFT	19
-+#define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
-+
-+static struct dentry *pt_debugfs_dir;
-+static DEFINE_MUTEX(pt_debugfs_lock);
-+
-+static ssize_t ptdma_debugfs_info_read(struct file *filp, char __user *ubuf,
-+				       size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+	unsigned int oboff = 0;
-+	unsigned int regval;
-+	ssize_t ret;
-+	char *obuf;
-+
-+	if (!pt)
-+		return 0;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "Device name: %s\n", pt->name);
-+	oboff += snprintf(OBUFP, OBUFSPC, "   # Queues: %d\n", 1);
-+	oboff += snprintf(OBUFP, OBUFSPC, "     # Cmds: %d\n", pt->cmd_count);
-+
-+	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "    Version: %d\n",
-+		   regval & RI_VERSION_NUM);
-+	oboff += snprintf(OBUFP, OBUFSPC, "    Engines:");
-+	oboff += snprintf(OBUFP, OBUFSPC, "\n");
-+	oboff += snprintf(OBUFP, OBUFSPC, "     Queues: %d\n",
-+		   (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Return a formatted buffer containing the current
-+ * statistics of queue for PTDMA
-+ */
-+static ssize_t ptdma_debugfs_stats_read(struct file *filp, char __user *ubuf,
-+					size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+	unsigned long total_pt_ops = 0;
-+	unsigned int oboff = 0;
-+	ssize_t ret = 0;
-+	char *obuf;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+
-+	total_pt_ops += cmd_q->total_pt_ops;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "Total Interrupts Handled: %ld\n",
-+			    pt->total_interrupts);
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Reset the counters in a queue
-+ */
-+static void ptdma_debugfs_reset_queue_stats(struct pt_cmd_queue *cmd_q)
-+{
-+	cmd_q->total_pt_ops = 0L;
-+}
-+
-+/*
-+ * A value was written to the stats variable, which
-+ * should be used to reset the queue counters across
-+ * that device.
-+ */
-+static ssize_t ptdma_debugfs_stats_write(struct file *filp,
-+					 const char __user *ubuf,
-+					 size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+
-+	ptdma_debugfs_reset_queue_stats(&pt->cmd_q);
-+	pt->total_interrupts = 0L;
-+
-+	return count;
-+}
-+
-+/*
-+ * Return a formatted buffer containing the current information
-+ * for that queue
-+ */
-+static ssize_t ptdma_debugfs_queue_read(struct file *filp, char __user *ubuf,
-+					size_t count, loff_t *offp)
-+{
-+	struct pt_cmd_queue *cmd_q = filp->private_data;
-+	unsigned int oboff = 0;
-+	unsigned int regval;
-+	ssize_t ret;
-+	char *obuf;
-+
-+	if (!cmd_q)
-+		return 0;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "               Pass-Thru: %ld\n",
-+			    cmd_q->total_pt_ops);
-+
-+	regval = ioread32(cmd_q->reg_int_enable);
-+	oboff += snprintf(OBUFP, OBUFSPC, "      Enabled Interrupts:");
-+	if (regval & INT_EMPTY_QUEUE)
-+		oboff += snprintf(OBUFP, OBUFSPC, " EMPTY");
-+	if (regval & INT_QUEUE_STOPPED)
-+		oboff += snprintf(OBUFP, OBUFSPC, " STOPPED");
-+	if (regval & INT_ERROR)
-+		oboff += snprintf(OBUFP, OBUFSPC, " ERROR");
-+	if (regval & INT_COMPLETION)
-+		oboff += snprintf(OBUFP, OBUFSPC, " COMPLETION");
-+	oboff += snprintf(OBUFP, OBUFSPC, "\n");
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * A value was written to the stats variable for a
-+ * queue. Reset the queue counters to this value.
-+ */
-+static ssize_t ptdma_debugfs_queue_write(struct file *filp,
-+					 const char __user *ubuf,
-+					 size_t count, loff_t *offp)
-+{
-+	struct pt_cmd_queue *cmd_q = filp->private_data;
-+
-+	ptdma_debugfs_reset_queue_stats(cmd_q);
-+
-+	return count;
-+}
-+
-+static const struct file_operations pt_debugfs_info_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_info_read,
-+	.write = NULL,
-+};
-+
-+static const struct file_operations pt_debugfs_queue_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_queue_read,
-+	.write = ptdma_debugfs_queue_write,
-+};
-+
-+static const struct file_operations pt_debugfs_stats_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_stats_read,
-+	.write = ptdma_debugfs_stats_write,
-+};
-+
-+void ptdma_debugfs_setup(struct pt_device *pt)
-+{
-+	struct pt_cmd_queue *cmd_q;
-+	char name[MAX_NAME_LEN + 1];
-+	struct dentry *debugfs_q_instance;
-+
-+	if (!debugfs_initialized())
-+		return;
-+
-+	mutex_lock(&pt_debugfs_lock);
-+	if (!pt_debugfs_dir)
-+		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
-+	mutex_unlock(&pt_debugfs_lock);
-+
-+	pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
-+
-+	debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
-+			    &pt_debugfs_info_ops);
-+
-+	debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
-+			    &pt_debugfs_stats_ops);
-+
-+	cmd_q = &pt->cmd_q;
-+
-+	snprintf(name, MAX_NAME_LEN - 1, "q");
-+
-+	debugfs_q_instance =
-+		debugfs_create_dir(name, pt->debugfs_instance);
-+
-+	debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
-+			    &pt_debugfs_queue_ops);
-+}
-+
-+void ptdma_debugfs_destroy(void)
-+{
-+	debugfs_remove_recursive(pt_debugfs_dir);
-+}
-diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-index 893ba32..1cb47bb 100644
---- a/drivers/dma/ptdma/ptdma-dev.c
-+++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -14,6 +14,7 @@
- #include <linux/pci.h>
- #include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
-+#include <linux/debugfs.h>
- 
- #include "ptdma.h"
- 
-@@ -130,6 +131,23 @@ static void pt_del_device(struct pt_device *pt)
- 	write_unlock_irqrestore(&pt_unit_lock, flags);
- }
- 
-+/*
-+ * pt_present - check if a PTDMA device is present
-+ *
-+ * Returns zero if a PTDMA device is present, -ENODEV otherwise.
-+ */
-+int pt_present(void)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	read_lock_irqsave(&pt_unit_lock, flags);
-+	ret = list_empty(&pt_units);
-+	read_unlock_irqrestore(&pt_unit_lock, flags);
-+
-+	return ret ? -ENODEV : 0;
-+}
-+
- static int pt_core_execute_cmd(struct ptdma_desc *desc,
- 			       struct pt_cmd_queue *cmd_q)
- {
-@@ -173,6 +191,7 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 
- 	cmd_q->cmd_error = 0;
- 
-+	cmd_q->total_pt_ops++;
- 	memset(&desc, 0, Q_DESC_SIZE);
- 
- 	desc.dw0.val = CMD_DESC_DW0_VAL;
-@@ -205,6 +224,7 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
- 	u32 status;
- 
- 	pt_core_disable_queue_interrupts(pt);
-+	pt->total_interrupts++;
- 
- 	status = ioread32(cmd_q->reg_interrupt_status);
- 	if (status) {
-@@ -370,6 +390,9 @@ int pt_core_init(struct pt_device *pt)
- 
- 	tasklet_init(&pt->tasklet, pt_do_cmd_complete, (ulong)&pt->tdata);
- 
-+	/* Set up debugfs entries */
-+	ptdma_debugfs_setup(pt);
-+
- 	return 0;
- 
- e_dmaengine:
-@@ -396,6 +419,9 @@ void pt_core_destroy(struct pt_device *pt)
- 	/* Remove this device from the list of available units first */
- 	pt_del_device(pt);
- 
-+	if (pt_present())
-+		ptdma_debugfs_destroy();
-+
- 	/* Disable and clear interrupts */
- 	pt_core_disable_queue_interrupts(pt);
- 
-diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-index 20e1de8..0d373d2 100644
---- a/drivers/dma/ptdma/ptdma.h
-+++ b/drivers/dma/ptdma/ptdma.h
-@@ -45,6 +45,7 @@
- #define	CMD_QUEUE_PRIO_OFFSET		0x00
- #define	CMD_REQID_CONFIG_OFFSET		0x04
- #define	CMD_TIMEOUT_OFFSET		0x08
-+#define	CMD_PT_VERSION			0x10
- 
- #define CMD_Q_CONTROL_BASE		0x0000
- #define CMD_Q_TAIL_LO_BASE		0x0004
-@@ -252,6 +253,8 @@ struct pt_cmd_queue {
- 	u32 q_int_status;
- 	u32 cmd_error;
- 
-+	/* queue Statistics */
-+	unsigned long total_pt_ops;
- } ____cacheline_aligned;
- 
- struct pt_device {
-@@ -290,6 +293,12 @@ struct pt_device {
- 
- 	wait_queue_head_t lsb_queue;
- 
-+	/* Device Statistics */
-+	unsigned long total_interrupts;
-+
-+	/* DebugFS info */
-+	struct dentry *debugfs_instance;
-+
- 	struct tasklet_struct tasklet;
- 	struct pt_tasklet_data tdata;
- };
-@@ -357,6 +366,9 @@ struct pt_dev_vdata {
- int pt_dmaengine_register(struct pt_device *pt);
- void pt_dmaengine_unregister(struct pt_device *pt);
- 
-+void ptdma_debugfs_setup(struct pt_device *pt);
-+void ptdma_debugfs_destroy(void);
-+
- int pt_core_init(struct pt_device *pt);
- void pt_core_destroy(struct pt_device *pt);
- 
+Basic concepts:
+
+- make extensions easier not only by allowing new attributes but also by
+  imposing as few artificial limits as possible, e.g. by using arbitrary
+  size bit sets for most bitmap attributes or by not using fixed size
+  strings
+- use extack for error reporting and warnings
+- send netlink notifications on changes (even if they were done using the
+  ioctl interface) and actions
+- avoid the racy read/modify/write cycle between kernel and userspace by
+  sending only attributes which userspace wants to change; there is still
+  a read/modify/write cycle between generic kernel code and ethtool_ops
+  handler in NIC driver but it is only in kernel and under RTNL lock
+- reduce the number of name lists that need to be kept in sync between
+  kernel and userspace (e.g. recognized link modes)
+- where feasible, allow dump requests to query specific information for all
+  network devices
+- as parsing and generating netlink messages is more complicated than
+  simply copying data structures between userspace API and ethtool_ops
+  handlers (which most ioctl commands do), split the code into multiple
+  files in net/ethtool directory; move net/core/ethtool.c also to this
+  directory and rename it to ioctl.c
+
+Changes between v8 and v9:
+
+- fix ethnl_update_u8()
+- fix description of ETHTOOL_A_LINKSTATE_LINK in rst file
+- add explanation of verbose vs. compact bitset usage to documentation
+- link ethtool-netlink.rst into toctree
+
+Main changes between v7 and v8:
+
+- preliminary patches sent as a separate series (already in net-next)
+- split notification related changes out of _SET patches
+- drop request specific flags from common header
+- use FLAG/flag rather than GFLAG/gflag for global flags (as there are
+  only global flags now)
+- allow device names up to ALTIFNAMSIZ characters
+- rename ETHTOOL_A_BITSET_LIST to ETHTOOL_A_BITSET_NOMASK
+- rename ETHTOOL_A_BIT{,S}_* to ETHTOOL_A_BITSET_BIT{,S}_*
+- use standard bitset helpers for link modes (rather than in-place
+  conversion)
+- use "default" rather than "standard" for unified _GET handlers
+- fixed 64-bit big endian bitset code
+
+Main changes between v6 and v7:
+
+- split complex messages into small single purpose ones (drop info and
+  request masks and one level of nesting)
+- separate request information and reply data into two structures
+- refactor bitset handling (no simultaneous u32/ulong handling but avoid
+  kmalloc() except for long bitmaps on 64-bit big endian architectures)
+- use only fixed size strings internally (will be replaced by char *
+  eventually but that will require rewriting also existing ioctl code)
+- rework ethnl_update_* helpers to return error code
+- rename request flag constants (to ETHTOOL_[GR]FLAG_ prefix)
+- convert documentation to rst
+
+Main changes between v5 and v6:
+
+- use ETHTOOL_MSG_ prefix for message types
+- replace ETHA_ prefix for netlink attributes by ETHTOOL_A_
+- replace ETH_x_IM_y for infomask bits by ETHTOOL_IM_x_y
+- split GET reply types from SET requests and notifications
+- split kernel and userspace message types into different enums
+- remove INFO_GET requests from submitted part
+- drop EVENT notifications (use rtnetlink and on-demand string set load)
+- reorganize patches to reduce the number of intermitent warnings
+- unify request/reply header and its processing
+- another nest around strings in a string set for consistency
+- more consistent identifier naming
+- coding style cleanup
+- get rid of some of the helpers
+- set bad attribute in extack where applicable
+- various bug fixes
+- improve documentation and code comments, more kerneldoc comments
+- more verbose commit messages
+
+Changes between v4 and v5:
+
+- do not panic on failed initialization, only WARN()
+
+Main changes between RFC v3 and v4:
+
+- use more kerneldoc style comments
+- strict attribute policy checking
+- use macros for tables of link mode names and parameters
+- provide permanent hardware address in rtnetlink
+- coding style cleanup
+- split too long patches, reorder
+- wrap more ETHA_SETTINGS_* attributes in nests
+- add also some SET_* implementation into submitted part
+
+Main changes between RFC v2 and RFC v3:
+
+- do not allow building as a module (no netdev notifiers needed)
+- drop some obsolete fields
+- add permanent hw address, timestamping and private flags support
+- rework bitset handling to get rid of variable length arrays
+- notify monitor on device renames
+- restructure GET_SETTINGS/SET_SETTINGS messages
+- split too long patches and submit only first part of the series
+
+Main changes between RFC v1 and RFC v2:
+
+- support dumps for all "get" requests
+- provide notifications for changes related to supported request types
+- support getting string sets (both global and per device)
+- support getting/setting device features
+- get rid of family specific header, everything passed as attributes
+- split netlink code into multiple files in net/ethtool/ directory
+
+
+Michal Kubecek (14):
+  ethtool: introduce ethtool netlink interface
+  ethtool: helper functions for netlink interface
+  ethtool: netlink bitset handling
+  ethtool: support for netlink notifications
+  ethtool: default handlers for GET requests
+  ethtool: provide string sets with STRSET_GET request
+  ethtool: provide link settings with LINKINFO_GET request
+  ethtool: set link settings with LINKINFO_SET request
+  ethtool: add default notification handler
+  ethtool: add LINKINFO_NTF notification
+  ethtool: provide link mode information with LINKMODES_GET request
+  ethtool: set link modes related data with LINKMODES_SET request
+  ethtool: add LINKMODES_NTF notification
+  ethtool: provide link state with LINKSTATE_GET request
+
+ Documentation/networking/ethtool-netlink.rst | 520 +++++++++++++
+ Documentation/networking/index.rst           |   1 +
+ include/linux/ethtool_netlink.h              |  17 +
+ include/linux/netdevice.h                    |   9 +
+ include/uapi/linux/ethtool.h                 |   3 +
+ include/uapi/linux/ethtool_netlink.h         | 204 +++++
+ net/Kconfig                                  |   8 +
+ net/ethtool/Makefile                         |   7 +-
+ net/ethtool/bitset.c                         | 735 +++++++++++++++++++
+ net/ethtool/bitset.h                         |  28 +
+ net/ethtool/common.c                         |  56 ++
+ net/ethtool/common.h                         |   7 +
+ net/ethtool/ioctl.c                          |  72 +-
+ net/ethtool/linkinfo.c                       | 167 +++++
+ net/ethtool/linkmodes.c                      | 377 ++++++++++
+ net/ethtool/linkstate.c                      |  74 ++
+ net/ethtool/netlink.c                        | 687 +++++++++++++++++
+ net/ethtool/netlink.h                        | 341 +++++++++
+ net/ethtool/strset.c                         | 425 +++++++++++
+ 19 files changed, 3683 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/networking/ethtool-netlink.rst
+ create mode 100644 include/linux/ethtool_netlink.h
+ create mode 100644 include/uapi/linux/ethtool_netlink.h
+ create mode 100644 net/ethtool/bitset.c
+ create mode 100644 net/ethtool/bitset.h
+ create mode 100644 net/ethtool/linkinfo.c
+ create mode 100644 net/ethtool/linkmodes.c
+ create mode 100644 net/ethtool/linkstate.c
+ create mode 100644 net/ethtool/netlink.c
+ create mode 100644 net/ethtool/netlink.h
+ create mode 100644 net/ethtool/strset.c
+
 -- 
-2.7.4
+2.24.1
 
