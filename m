@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A09C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54728C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4E6218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC85206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469786;
-	bh=e1IY0CTwJ395I5ZUM9PzmZGCwQNCt/o9tGCmn+++xNg=;
+	s=default; t=1577469790;
+	bh=kkLCG1ig3TWOWoPb25SzWe5lVPKOZSt6PHE83riOQY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeD9Ed0i/mqm7fYq3LtnGsiV43QDb0eJlPBc6pKOYI/+5Jkhg32cQPC443udTS79A
-	 aR5KVEujIYo4Ys+iWyc2VchZnVjRxyggyiya9m+8l2/ad6l9nlUGcpZlP3gEYWrdcj
-	 tX9DeJ0vnMEeUU70K/ifG6mC4TvgxLTjHO39J1rI=
+	b=cw23KHj8+Tn0g5vikSCEPpshdiE+Ycd9MJTdCMR7Iiv28RUE+n/uQ+UgEJufwUXV5
+	 8pnG/oAMrvXiW7HZ3zDk953/+Rmu8JL8P9fizAEVlq0nCDO/bPF2VNky694lfqkUJZ
+	 yMKxlKfOWNV8UmunQXfF2EL2BJexnAgxu29RqhxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfL0SDF (ORCPT
+        id S1728540AbfL0SDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:03:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60148 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:03:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbfL0SDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:02 -0500
+        id S1728507AbfL0SDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D581F20CC7;
-        Fri, 27 Dec 2019 18:03:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 304BA20CC7;
+        Fri, 27 Dec 2019 18:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469781;
-        bh=e1IY0CTwJ395I5ZUM9PzmZGCwQNCt/o9tGCmn+++xNg=;
+        s=default; t=1577469784;
+        bh=kkLCG1ig3TWOWoPb25SzWe5lVPKOZSt6PHE83riOQY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dbvp83kVigruwpEMNVxA6L+MRdaQonbsMqHxe+7dv+iyp8wq7OtaCo8xJKORM318g
-         RbNuMQTYIom7fP2NSAPWuNOLFZ4FtjtIhl/p6U32My5GKl2I812xKsWDd9Gcc7aysS
-         5pEO9VJafoBzQUUNM+z7oV0vUs9QHgw2+ARVMHgI=
+        b=jMGhvcrjfNpcmXTcBrMGrGJeC9YDuY1PF6rXv78wmLWeLvzeVY1aF+IF8TvB6B4GK
+         TruXwiciltD56xwVbIOagcdRvVkHOL5iCisC2pp+xxAnf3obK34TPQvyMXny+GtZde
+         rSO7Aix8UpNPrE6+C+wRaOCZqiwMN0B/0IdI6BzY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 31/57] bnx2x: Do not handle requests from VFs after parity
-Date:   Fri, 27 Dec 2019 13:01:56 -0500
-Message-Id: <20191227180222.7076-31-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 34/57] gtp: do not allow adding duplicate tid and ms_addr pdp context
+Date:   Fri, 27 Dec 2019 13:01:59 -0500
+Message-Id: <20191227180222.7076-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -60,86 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
+[ Upstream commit 6b01b1d9b2d38dc84ac398bfe9f00baff06a31e5 ]
 
-Parity error from the hardware will cause PF to lose the state
-of their VFs due to PF's internal reload and hardware reset following
-the parity error. Restrict any configuration request from the VFs after
-the parity as it could cause unexpected hardware behavior, only way
-for VFs to recover would be to trigger FLR on VFs and reload them.
+GTP RX packet path lookups pdp context with TID. If duplicate TID pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, TID value  should be unique.
+GTP TX packet path lookups pdp context with ms_addr. If duplicate ms_addr pdp
+contexts are existing in the list, it couldn't select correct pdp context.
+So, ms_addr value should be unique.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ drivers/net/gtp.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index dbe8feec456c..b0ada7eac652 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -9995,10 +9995,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
-  */
- static void bnx2x_parity_recover(struct bnx2x *bp)
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 5de4053774b8..0522cbdce44a 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -929,24 +929,31 @@ static void ipv4_pdp_fill(struct pdp_ctx *pctx, struct genl_info *info)
+ 	}
+ }
+ 
+-static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+-			struct genl_info *info)
++static int gtp_pdp_add(struct gtp_dev *gtp, struct sock *sk,
++		       struct genl_info *info)
  {
--	bool global = false;
- 	u32 error_recovered, error_unrecovered;
--	bool is_parity;
-+	bool is_parity, global = false;
-+#ifdef CONFIG_BNX2X_SRIOV
-+	int vf_idx;
-+
-+	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
-+		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
++	struct pdp_ctx *pctx, *pctx_tid = NULL;
+ 	struct net_device *dev = gtp->dev;
+ 	u32 hash_ms, hash_tid = 0;
+-	struct pdp_ctx *pctx;
++	unsigned int version;
+ 	bool found = false;
+ 	__be32 ms_addr;
  
-+		if (vf)
-+			vf->state = VF_LOST;
-+	}
-+#endif
- 	DP(NETIF_MSG_HW, "Handling parity\n");
- 	while (1) {
- 		switch (bp->recovery_state) {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-index 53466f6cebab..a887bfa24c88 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-@@ -139,6 +139,7 @@ struct bnx2x_virtf {
- #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
- #define VF_ENABLED	2	/* VF Enabled */
- #define VF_RESET	3	/* VF FLR'd, pending cleanup */
-+#define VF_LOST		4	/* Recovery while VFs are loaded */
+ 	ms_addr = nla_get_be32(info->attrs[GTPA_MS_ADDRESS]);
+ 	hash_ms = ipv4_hashfn(ms_addr) % gtp->hash_size;
++	version = nla_get_u32(info->attrs[GTPA_VERSION]);
  
- 	bool flr_clnup_stage;	/* true during flr cleanup */
- 	bool malicious;		/* true if FW indicated so, until FLR */
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-index 76a4668c50fe..6d5b81a971e3 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-@@ -2112,6 +2112,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
- {
- 	int i;
+-	hlist_for_each_entry_rcu(pctx, &gtp->addr_hash[hash_ms], hlist_addr) {
+-		if (pctx->ms_addr_ip4.s_addr == ms_addr) {
+-			found = true;
+-			break;
+-		}
+-	}
++	pctx = ipv4_pdp_find(gtp, ms_addr);
++	if (pctx)
++		found = true;
++	if (version == GTP_V0)
++		pctx_tid = gtp0_pdp_find(gtp,
++					 nla_get_u64(info->attrs[GTPA_TID]));
++	else if (version == GTP_V1)
++		pctx_tid = gtp1_pdp_find(gtp,
++					 nla_get_u32(info->attrs[GTPA_I_TEI]));
++	if (pctx_tid)
++		found = true;
  
-+	if (vf->state == VF_LOST) {
-+		/* Just ack the FW and return if VFs are lost
-+		 * in case of parity error. VFs are supposed to be timedout
-+		 * on waiting for PF response.
-+		 */
-+		DP(BNX2X_MSG_IOV,
-+		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
+ 	if (found) {
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_EXCL)
+@@ -954,6 +961,11 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
+ 		if (info->nlhdr->nlmsg_flags & NLM_F_REPLACE)
+ 			return -EOPNOTSUPP;
+ 
++		if (pctx && pctx_tid)
++			return -EEXIST;
++		if (!pctx)
++			pctx = pctx_tid;
 +
-+		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
-+		return;
-+	}
-+
- 	/* check if tlv type is known */
- 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
- 		/* Lock the per vf op mutex and note the locker's identity.
+ 		ipv4_pdp_fill(pctx, info);
+ 
+ 		if (pctx->gtp_version == GTP_V0)
+@@ -1077,7 +1089,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
+ 		goto out_unlock;
+ 	}
+ 
+-	err = ipv4_pdp_add(gtp, sk, info);
++	err = gtp_pdp_add(gtp, sk, info);
+ 
+ out_unlock:
+ 	rcu_read_unlock();
 -- 
 2.20.1
 
