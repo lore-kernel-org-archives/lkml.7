@@ -2,107 +2,119 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE03BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ED7C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED6E20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjaD/9UW"
+	by mail.kernel.org (Postfix) with ESMTP id 90F9A21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577460955;
+	bh=7r56deXllU1oGrb23gXCZ4pIfhEB/Z0xwJCja1MXEL4=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=K1cUOaislQj3belscNyoV9f8rVP3uzbafdSMN9DJy3rb8WJ72ZOJDFTSRnR5HXCFA
+	 6sD5iWovYzOxsy9+Evw3sEEhGHCymarGd+GvqrdSb7Cjdi6DXLCqe9Oaqi3LazHgbl
+	 R+Id9NTBM2/YMynw3KZC4CHnSJ81f/o4ocmDFcKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfL0PdC (ORCPT
+        id S1726920AbfL0Pfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:33:02 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41924 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0PdC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:33:02 -0500
-Received: by mail-il1-f193.google.com with SMTP id f10so22668692ils.8;
-        Fri, 27 Dec 2019 07:33:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V9cPm3vqG7hGU4wLY/J1RzTvaKshMDxfqOe3tJcxdms=;
-        b=CjaD/9UWaOdGTzJL0ZCIPxTJLTslA4mxVbd8+540q9kUZydT7eevq8oLiC44/qu1/a
-         bQNQ2dDLDS5kgiU/Gqmn2ZrmxOG40u3QVwGN45RK+j6tI/hs3u3ADjyrDlXTzdalEr+7
-         AHjMsa8bLRNkZBrgoJ5mbkHjP+J7v7sE6xxL8kv0L6BM/e923D+NIgZvnjrGsnhxlYQc
-         2SS+z2f6wVZ8Y04/7O7XBhyalGhrXLOJDZjZD+IFZufegBDLjsDnzneFVK/2rUg/NKGS
-         zF+1svHrKsPxb3VQ8tAL8Iy8SrpAQ+29ayKnBThOh0aXA7Ydc1Z5ltiPuMsf47zruj2i
-         gOSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V9cPm3vqG7hGU4wLY/J1RzTvaKshMDxfqOe3tJcxdms=;
-        b=YQNkZ5z2KzwlvkkFSMq5G5Ld8+umhLYnvQAbAsTikubyQXCfctmHDdM+EJY/D+3/sh
-         uDzt0J1s2sjuACrRfBxKxneq53Ppi3RuhHSFjDBHwFiysvMEfcXTCDMehmdmwokCu7qA
-         75wRKrjOzV3XmVxSIHYWzkbA3FAMn2oWcrOVl2HKIrCey/4Dp2iTAkRZxl8MaLm95Z8L
-         PLlr/2jY7drHwwp4isXb5CfLUjypRYJf5SLkAF0sHEfYPJFqj/RPtjOFQAgvwPD5WhfC
-         w7ws3Pb9B8/TkxUMSeX8jDLeUc8D7QulWytbgpM06gMl7eeVVNTOjA0PZcwu77de8BpS
-         33Rg==
-X-Gm-Message-State: APjAAAXGzArUZrQhPt4GJnC9OuR4hd7diKbfUZTbLzZffey1HXTLpmkF
-        H1zAOI82YsXeIR+qI1evgZAAl4hYlCkxHCNWNyq7i0wK
-X-Google-Smtp-Source: APXvYqzX2qFVNAxM5G2wHZ/X/+KgKejycb30U1EaIwQ1aIzO5uthpGLDxaXbd5sPkYyzhTl8+7IQR3W1IvRr+dOsPC4=
-X-Received: by 2002:a92:88d0:: with SMTP id m77mr47162823ilh.9.1577460781452;
- Fri, 27 Dec 2019 07:33:01 -0800 (PST)
+        Fri, 27 Dec 2019 10:35:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfL0Pfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:35:54 -0500
+Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FAC720740;
+        Fri, 27 Dec 2019 15:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577460953;
+        bh=7r56deXllU1oGrb23gXCZ4pIfhEB/Z0xwJCja1MXEL4=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=ycFG5d8GqzOqg09g3YY78naztjMaftPaJseNHozA9qOdVLhpzmJayZr5yMvzdQGkD
+         FJ+zXXFFgeMuKtTlgCxENE2LDnqVqslEdmYK4XG+W2l9PBwhuZ8jkoTlR8vKV0K8ZU
+         MRjVrRKwrch2A7BuGUTX+BaXagKluHzmx+7UyZA8=
+Date:   Fri, 27 Dec 2019 16:37:15 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191227153715.m7o6h6lniwg2456h@hendrix.home>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226103739.bz3i73gjmn5q5veu@core.my.home>
 MIME-Version: 1.0
-References: <cover.1577456898.git.chris@chrisdown.name> <28599683653d3fa779442a24b3b643bc395d88d0.1577456898.git.chris@chrisdown.name>
-In-Reply-To: <28599683653d3fa779442a24b3b643bc395d88d0.1577456898.git.chris@chrisdown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 27 Dec 2019 17:32:50 +0200
-Message-ID: <CAOQ4uxhLVW3ck_xhXbYgY3xYVOHaKGTht_UYZ4Y9NWL7kXZ1rw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] fs: inode: Add API to retrieve global next ino using
- full ino_t width
-To:     Chris Down <chris@chrisdown.name>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gfd3qq7a2xnbetqt"
+Content-Disposition: inline
+In-Reply-To: <20191226103739.bz3i73gjmn5q5veu@core.my.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 4:30 PM Chris Down <chris@chrisdown.name> wrote:
->
-> We can't just wholesale replace get_next_ino to use ino_t and 64-bit
-> atomics because of a few setbacks:
->
-> 1. This may break some 32-bit userspace applications on a 64-bit kernel
->    which cannot handle a 64-bit ino_t -- see the comment above
->    get_next_ino;
-> 2. Some applications inside the kernel already make use of the ino_t
->    high bits. For example, overlayfs' xino feature uses these to merge
->    inode numbers and fsid indexes to form a new identifier.
->
-> As such we need to make using the full width of ino_t an option for
-> users without being a requirement.
->
-> This will later be used to power inode64 in tmpfs, and can be used
-> elsewhere for other filesystems as desired.
->
 
-Unless I am missing something, I think the fact that get_next_ino()
-is a global counter was short sighted to begin with or it was never
-intended to be used for massive usage fs.
+--gfd3qq7a2xnbetqt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So I think that introducing another global counter to be used
-intentionally for massive usage is a mistake.
+On Thu, Dec 26, 2019 at 11:37:39AM +0100, Ond=C5=99ej Jirman wrote:
+> On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > >> H6 and R40 SoCs.
+> > > >
+> > > > Thanks again for working on this.
+> > > >
+> > > > I'll merge the DT patches when the driver will have been merged.
+> > >
+> > > I've applied patches 1 & 2.
+> > >
+> > > They are in the testing branch and will go to the linux-next branch as
+> > > soon as the kernelci passes.
+> >
+> > I just merged all the other patches (except the patch 6, for the H6,
+> > as requested by Vasily on IRC).
+>
+> Hello,
+>
+> I think you can apply H6 patch. This was just some misunderstanding
+> and H6 is working.
 
-I think tmpfs should be converted to use a per-sb ino allocator.
-When it's per-sb allocator, implementing the option if ino numbers
-are 32bit or 64bit per instance won't be a problem.
+Done, thanks!
+Maxime
 
-Thanks,
-Amir.
+--gfd3qq7a2xnbetqt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgYlKwAKCRDj7w1vZxhR
+xQkMAQC/ZoYUxPX5yzTlvbMxIWHNJ1u1lQvxfppZLauJ5rHWxgD8Cx+nXvhe72Cl
+ka9ZcT3Up4uJM95blHhx4KnSXMipwgQ=
+=Fewg
+-----END PGP SIGNATURE-----
+
+--gfd3qq7a2xnbetqt--
