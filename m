@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B788C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAAEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49ADA208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0FC21582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470533;
-	bh=v0mFT+dJULRtbSxTn4Da5l41HK8LWJUO6RjWITOneDk=;
+	s=default; t=1577470536;
+	bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRZ+aASGWKddsDbYDg6v7IpAgDesnNtIa5YrSFn0ViLMviQurzZWZWXHMGB1KUiPw
-	 0UiGR30OvWPIBLzFDbouKw3kFmynip/b7FKCe0oLhtXnLwPBD/mj6+Gb3yMabPQt/I
-	 j6K0vdPMHr3NA2//OyKH8IsNWNhQKOE3wp+4uLVI=
+	b=DEdqEot88IOK6WIIIynN/EKeloUidYg0K68aRjxILefNotBrV1gYtep3BMUA0tpcT
+	 fV+c4p+FgvlDPgAlStU/9ISMho1Xks+hywDqJitnjhvM/R2I3rliY9DXFu0pfWhHlP
+	 +JicoXa8w6NS2k7LxILaGNGDKwKHJ1bZbs/JmIwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfL0SPT (ORCPT
+        id S1728016AbfL0SPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbfL0SPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:13 -0500
+        id S1727902AbfL0SPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2174820CC7;
-        Fri, 27 Dec 2019 18:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C98E21582;
+        Fri, 27 Dec 2019 18:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470512;
-        bh=v0mFT+dJULRtbSxTn4Da5l41HK8LWJUO6RjWITOneDk=;
+        s=default; t=1577470516;
+        bh=XyKOjQslPdTHlWPxGpQ+P5WzATKnm4hOAEZiiYEXo9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZM87NhM1ujMqGeIwVMyhLviiZuqpVwUAWjMW1IB8YC0/oPAd9IwiexT0FuECIzUZo
-         BRm94nyvSeB+IyQZO3NY7iuwRMfmDhNZ5s0Go48ckcbu8Y2wD17BWVDPwyj3OCS/Si
-         bOS8te60qBWuSPx2otKZdq7w/4Le8SPjMkz08JZI=
+        b=Xa0/YQLL1iHqJKnOL4nMZg9OwLUUMmbYAdf3qF+U+JbcAecjkhoa8NG26wQW71AQy
+         T46DP/KWWJE+7jtCR0daALtBl4zHuw6GnBRq+I7gnZl2tRuj1bdnSuFVO9MrNGN519
+         IMpBNLBNcdlX/6jrqZk8apLpg+0cIksI7bJdRuxU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/38] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Fri, 27 Dec 2019 13:14:27 -0500
-Message-Id: <20191227181435.7644-30-sashal@kernel.org>
+Cc:     Alexander Lobakin <alobakin@dlink.ru>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/38] net, sysctl: Fix compiler warning when only cBPF is present
+Date:   Fri, 27 Dec 2019 13:14:30 -0500
+Message-Id: <20191227181435.7644-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,79 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+[ Upstream commit 1148f9adbe71415836a18a36c1b4ece999ab0973 ]
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+proc_dointvec_minmax_bpf_restricted() has been firstly introduced
+in commit 2e4a30983b0f ("bpf: restrict access to core bpf sysctls")
+under CONFIG_HAVE_EBPF_JIT. Then, this ifdef has been removed in
+ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv
+allocations"), because a new sysctl, bpf_jit_limit, made use of it.
+Finally, this parameter has become long instead of integer with
+fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+and thus, a new proc_dolongvec_minmax_bpf_restricted() has been
+added.
 
-There are (at least) three bugs in the error paths:
+With this last change, we got back to that
+proc_dointvec_minmax_bpf_restricted() is used only under
+CONFIG_HAVE_EBPF_JIT, but the corresponding ifdef has not been
+brought back.
 
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
+So, in configurations like CONFIG_BPF_JIT=y && CONFIG_HAVE_EBPF_JIT=n
+since v4.20 we have:
 
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
+  CC      net/core/sysctl_net_core.o
+net/core/sysctl_net_core.c:292:1: warning: ‘proc_dointvec_minmax_bpf_restricted’ defined but not used [-Wunused-function]
+  292 | proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
+Suppress this by guarding it with CONFIG_HAVE_EBPF_JIT again.
 
-The bugs are somewhat inter-twined, so fix them all at once:
-
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
-
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fdadd04931c2 ("bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K")
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191218091821.7080-1-alobakin@dlink.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qla3xxx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/sysctl_net_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
-index c653b97d84d5..f2cb77c3b199 100644
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2752,6 +2752,9 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 	int err;
+diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
+index a6fc82704f0c..b4318c1b5b96 100644
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -255,6 +255,7 @@ static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
+ 	return ret;
+ }
  
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
-+
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2762,11 +2765,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2788,6 +2787,7 @@ static int ql_alloc_large_buffers(struct ql3_adapter *qdev)
- 				return -ENOMEM;
- 			}
++# ifdef CONFIG_HAVE_EBPF_JIT
+ static int
+ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 				    void __user *buffer, size_t *lenp,
+@@ -265,6 +266,7 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
  
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
++# endif /* CONFIG_HAVE_EBPF_JIT */
+ 
+ static int
+ proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
 -- 
 2.20.1
 
