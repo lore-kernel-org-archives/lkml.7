@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DFBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E07C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EC6206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C9D206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469400;
-	bh=eH1Bug+ns69eCl4OYezFufgJ/9UJKJoBq0c4gH/24ys=;
+	s=default; t=1577469402;
+	bh=gmBAUI7uG/uiwVFr+rL5G03OOUX3wJAo+A3ELNJus/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y+Mbo/Lngn6VK1o9U6ddYBPvoww+DaoH81pVBYqO/tudDXrid86AS+uTEHxTN9y5D
-	 Acq9Wi2eYOOo+oYYLSeNxC9gwfJWgobCRyyjovkxAxnUZZl4/icF7ZKEH6SA44Hp8w
-	 p7UiP/vS2I8piyZfcUV6Mndbqow03blKdK555Wvo=
+	b=lcVRfOxjFUXwhrhIQPpCDUXiklMcWbQ6d1Xm+AyjZqfJc86gYD5Yrf7vexJ7MGU9u
+	 QeIyNmrseeoUcOyiMu5uco1C1NqKsN4i9vsB0UNONxeMvKDJU8YRLkoOXlqnv+CUKM
+	 BQMluKHp6U7pAPBiEQAhX4RB/M81ax6YltEEEhM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfL0Rl5 (ORCPT
+        id S1728129AbfL0R4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38374 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:56:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727631AbfL0Rlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:53 -0500
+        id S1727669AbfL0Rl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2425721D7E;
-        Fri, 27 Dec 2019 17:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE38222C2;
+        Fri, 27 Dec 2019 17:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468512;
-        bh=eH1Bug+ns69eCl4OYezFufgJ/9UJKJoBq0c4gH/24ys=;
+        s=default; t=1577468517;
+        bh=gmBAUI7uG/uiwVFr+rL5G03OOUX3wJAo+A3ELNJus/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oG1Lry8mWvrznFXE1RGWhj9mxQ+Xvkt/GuaVExuq2eIbaVPq/FPoERnR+Cn6o9qYy
-         MntxX7JGQQ46Ty1pQ2Bg9rFFDGx3YgtBH8lQ3pWbDkV2MjZUgDr5x8H31kyTXGfJtM
-         3ser/dhoey3jH19cf6KR9K6YdsN8AE3jsi7GFZqU=
+        b=aS4bQzOmSDIPh4YwUuIJQPQhJlOe66hAuc6rs+S83A+IynYVQaLn2NOO90HibGPIO
+         p8SCMeE8Ak125PDB6d+5Ftz29wmq8fYR3HSrs+m+KSYUcfFkKIUJ4B3gB/TAlpShMI
+         DLuhm4zMDrL3BO/xOgOQmfnZCtT2JvwKQ6r6SCbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 045/187] selftests: safesetid: Check the return value of setuid/setgid
-Date:   Fri, 27 Dec 2019 12:38:33 -0500
-Message-Id: <20191227174055.4923-45-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 049/187] mlxsw: spectrum_router: Remove unlikely user-triggerable warning
+Date:   Fri, 27 Dec 2019 12:38:37 -0500
+Message-Id: <20191227174055.4923-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,79 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 295c4e21cf27ac9af542140e3e797df9e0cf7b5f ]
+[ Upstream commit 62201c00c4679ad8f0730d6d925a5d23651dfad2 ]
 
-Check the return value of setuid() and setgid().
-This fixes the following warnings and improves test result.
+In case the driver vetoes the addition of an IPv6 multipath route, the
+IPv6 stack will emit delete notifications for the sibling routes that
+were already added to the FIB trie. Since these siblings are not present
+in hardware, a warning will be generated.
 
-safesetid-test.c: In function ‘main’:
-safesetid-test.c:294:2: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-  setuid(NO_POLICY_USER);
-  ^~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:295:2: warning: ignoring return value of ‘setgid’, declared with attribute warn_unused_result [-Wunused-result]
-  setgid(NO_POLICY_USER);
-  ^~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:309:2: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-  setuid(RESTRICTED_PARENT);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c:310:2: warning: ignoring return value of ‘setgid’, declared with attribute warn_unused_result [-Wunused-result]
-  setgid(RESTRICTED_PARENT);
-  ^~~~~~~~~~~~~~~~~~~~~~~~~
-safesetid-test.c: In function ‘test_setuid’:
-safesetid-test.c:216:3: warning: ignoring return value of ‘setuid’, declared with attribute warn_unused_result [-Wunused-result]
-   setuid(child_uid);
-   ^~~~~~~~~~~~~~~~~
+Have the driver ignore notifications for routes it does not have.
 
-Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: ebee3cad835f ("ipv6: Add IPv6 multipath notifications for add / replace")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/safesetid/safesetid-test.c  | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/safesetid/safesetid-test.c b/tools/testing/selftests/safesetid/safesetid-test.c
-index 8f40c6ecdad1..0c4d50644c13 100644
---- a/tools/testing/selftests/safesetid/safesetid-test.c
-+++ b/tools/testing/selftests/safesetid/safesetid-test.c
-@@ -213,7 +213,8 @@ static void test_setuid(uid_t child_uid, bool expect_success)
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index 39d600c8b92d..210ebc91d3d6 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -5637,8 +5637,13 @@ static void mlxsw_sp_router_fib6_del(struct mlxsw_sp *mlxsw_sp,
+ 	if (mlxsw_sp_fib6_rt_should_ignore(rt))
+ 		return;
  
- 	if (cpid == 0) {	    /* Code executed by child */
--		setuid(child_uid);
-+		if (setuid(child_uid) < 0)
-+			exit(EXIT_FAILURE);
- 		if (getuid() == child_uid)
- 			exit(EXIT_SUCCESS);
- 		else
-@@ -291,8 +292,10 @@ int main(int argc, char **argv)
++	/* Multipath routes are first added to the FIB trie and only then
++	 * notified. If we vetoed the addition, we will get a delete
++	 * notification for a route we do not have. Therefore, do not warn if
++	 * route was not found.
++	 */
+ 	fib6_entry = mlxsw_sp_fib6_entry_lookup(mlxsw_sp, rt);
+-	if (WARN_ON(!fib6_entry))
++	if (!fib6_entry)
+ 		return;
  
- 	// First test to make sure we can write userns mappings from a user
- 	// that doesn't have any restrictions (as long as it has CAP_SETUID);
--	setuid(NO_POLICY_USER);
--	setgid(NO_POLICY_USER);
-+	if (setuid(NO_POLICY_USER) < 0)
-+		die("Error with set uid(%d)\n", NO_POLICY_USER);
-+	if (setgid(NO_POLICY_USER) < 0)
-+		die("Error with set gid(%d)\n", NO_POLICY_USER);
- 
- 	// Take away all but setid caps
- 	drop_caps(true);
-@@ -306,8 +309,10 @@ int main(int argc, char **argv)
- 		die("test_userns failed when it should work\n");
- 	}
- 
--	setuid(RESTRICTED_PARENT);
--	setgid(RESTRICTED_PARENT);
-+	if (setuid(RESTRICTED_PARENT) < 0)
-+		die("Error with set uid(%d)\n", RESTRICTED_PARENT);
-+	if (setgid(RESTRICTED_PARENT) < 0)
-+		die("Error with set gid(%d)\n", RESTRICTED_PARENT);
- 
- 	test_setuid(ROOT_USER, false);
- 	test_setuid(ALLOWED_CHILD1, true);
+ 	/* If not all the nexthops are deleted, then only reduce the nexthop
 -- 
 2.20.1
 
