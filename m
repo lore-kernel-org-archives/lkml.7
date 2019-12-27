@@ -2,211 +2,196 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7BBC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AD3C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CE0208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Zx8dfvel"
+	by mail.kernel.org (Postfix) with ESMTP id D2774208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfL0Lzr (ORCPT
+        id S1726607AbfL0MAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:55:47 -0500
-Received: from mail-dm6nam12on2057.outbound.protection.outlook.com ([40.107.243.57]:42144
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726354AbfL0Lzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 06:55:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kIeW7O0ZaIYrfKXyrZEKi+FtSYYc1ksOrfCe916rY2nGo39tIAtRywCa/wNJBXv/W0cLeB+UHSkRYuz4MI6BQNoWloIwA9qkkQJZcMU3AwUXxV+01dptats/kl5Wipgzufr2dkciuO5Ce84o416DnBD2VpBI7KCWD5e2rTUzsbHGr0B40TXT9caHzbwQVX19O2RB+qIqxDs7D2IEwV08b6JUV0nNB5o5KtJIcVzAljZmgoXIaS2J88CXnF295aoFkGTZGmraVDrftzmCgWiBBnjK9oFOLRPtIYiAI8NAdtyMl38V0rJVU9jqwCrHtBnccg01Ho8OR6ab+IQHqCvB7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMWmVLnuiw1+mlJpvarOSsSKKS+zf/WY/Vyj9VqCqWs=;
- b=bB3zg6ctFIFTJNoYi+DtgNpgKqUWjjFZcB+XUJG9tymEbhp3e+urqlTOASrjlOyztV594xzGzt/S7JT6XW7zxE/mtKKm4eOUggYigFlxCTb+qaxN6SqJe/g0mGBjl5x7PZRBnqsng+wjT+eOQ0P84EyCTXiDG6gb6y8hKm4o8LVWwpUZ5nX1NcT59p5X7cnRDjeDs++vxIPissVJrWETlgCGHOHnEgrdgC1iTmyoCawYGJmrxMruUuZcd2ldfE1Du6BytyU/BbLG1oofdMgM55NBPHJrn5PwqmUJ01KRKlMQk3PXJ5hOs1kC2J6vEaKCij4oEOVY86RCMvZO3Ii1tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMWmVLnuiw1+mlJpvarOSsSKKS+zf/WY/Vyj9VqCqWs=;
- b=Zx8dfvelcg7Syv8GP+oHB5gBbyJhN2Ei6T4i+PUfSPEuNnU1YNzvcvUGPVtOHmU+SQgmq99a7TlQt0HAabl4Bp0l7fXc7EFpdoMaEgPrUJripztra9mkGO18whUKcKZaonWnEDHht+aMgC31PrCSf5EK8/SqWBRzcmYyW1KJj1s=
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com (52.132.172.222) by
- MN2PR02MB6383.namprd02.prod.outlook.com (52.132.175.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.12; Fri, 27 Dec 2019 11:55:41 +0000
-Received: from MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::f19a:a426:d2db:49ba]) by MN2PR02MB6336.namprd02.prod.outlook.com
- ([fe80::f19a:a426:d2db:49ba%3]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
- 11:55:41 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        Ley Foon Tan <lftan@altera.com>,
-        "rfi@lists.rocketboards.org" <rfi@lists.rocketboards.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: RE: [PATCH 2/2] PCI: Versal CPM: Add support for Versal CPM Root Port
- driver
-Thread-Topic: [PATCH 2/2] PCI: Versal CPM: Add support for Versal CPM Root
- Port driver
-Thread-Index: AQHVtypsQVCQA4Pdl0W2IKkLYMD11KfDHY8AgArLTXA=
-Date:   Fri, 27 Dec 2019 11:55:41 +0000
-Message-ID: <MN2PR02MB6336D981AA38923276DAAF43A52A0@MN2PR02MB6336.namprd02.prod.outlook.com>
-References: <1576842072-32027-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20191220145832.GA93984@google.com>
-In-Reply-To: <20191220145832.GA93984@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eadb79e3-3a72-49c4-2d25-08d78ac3b290
-x-ms-traffictypediagnostic: MN2PR02MB6383:|MN2PR02MB6383:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB6383362EB687924B0FC66F90A52A0@MN2PR02MB6383.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0264FEA5C3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(366004)(346002)(396003)(199004)(189003)(2906002)(55016002)(478600001)(33656002)(4326008)(5660300002)(9686003)(52536014)(54906003)(316002)(186003)(71200400001)(7696005)(8936002)(81166006)(8676002)(81156014)(66476007)(6506007)(66446008)(66556008)(76116006)(26005)(6916009)(64756008)(66946007)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6383;H:MN2PR02MB6336.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: L6TzSihQFoLgagSqvNXuhGLTu4Ikq7dfwpIniMAeyVJv60861otyKN+BRBrkYawJO8DmKlS++Yj2fQ1PlxMSrwTColbzflNfKCVtiDJTsiroRFFIGhS3rtDEfl+eQ1kBYp+FyzZNMZt6VZUuM9q6WL1goVMJ5iIN4tqLQorSXiTz2YVd/VTqYv74lm1JZQ7uoT9XRLJLXpb51dDGlr4CBvrlE0B3Va56jyi4wY6H4pN5rnywQtGHMRlSkbwgodMIX42lSzvwrU0hP982s+zTyLFPz5iM8xS7tTL7nhwWq+nM644EHu+U4VxXfbrJQ3/waDD9Xq62yEmbnuxQBLa0J7W72rSNUFJQQ/MteDlbj7iiJ236Z7t3yTXSDr7aUNNGvO2Kp6s22lTbOitt7A/EAqyB5NOs+DKimNcC+zIi0qRtd8dS7ZrB3f16btSPsH+K
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Dec 2019 07:00:11 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43678 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfL0MAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:00:10 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6A14E28A693;
+        Fri, 27 Dec 2019 12:00:07 +0000 (GMT)
+Date:   Fri, 27 Dec 2019 13:00:04 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Inki Dae <inki.dae@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] drm/bridge: Fix Exynos DSI after making bridge chain a
+ double-linked list
+Message-ID: <20191227130004.69d7dcad@collabora.com>
+In-Reply-To: <20191227110135.4961-1-m.szyprowski@samsung.com>
+References: <CGME20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d@eucas1p1.samsung.com>
+        <20191227110135.4961-1-m.szyprowski@samsung.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eadb79e3-3a72-49c4-2d25-08d78ac3b290
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Dec 2019 11:55:41.1965
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bopY3yQ0JL/oMqMEsdY9bNxHzmyEGIBZlaFeKvZ1wjsNt13saSPLc+6cUmnw72tF1aK4J+ZRtue8wVQJHeukhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6383
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 2/2] PCI: Versal CPM: Add support for Versal CPM Root=
- Port
-> driver
->=20
-> [+cc other drivers that use the broken "is link up" test in config access=
-]
->=20
-> On Fri, Dec 20, 2019 at 05:11:12PM +0530, Bharat Kumar Gogada wrote:
-> > - Adding support for versal CPM as Root Port.
-> > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrate=
-d
-> >   block for CPM along with the integrated bridge can function
-> >   as PCIe Root Port.
-> > - Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
-> >   vectors and handling MSI/MSI-X interrupts.
-> > - Bridge error and legacy interrupts in versal CPM are handled using
-> >   versal CPM specific MISC interrupt line.
->=20
-> "Versal" appears to be a brand name and should be capitalized consistentl=
-y.
->=20
-> > +#define INTX_NUM                        4
->=20
-> Don't we have a generic PCI core definition for this?
-Thanks Bjorn, will fix this with core definition.
->=20
-> > +static inline bool cpm_pcie_link_is_up(struct xilinx_cpm_pcie_port
-> > +*port)
->=20
-> Please follow the example of other drivers and name this "cpm_pcie_link_u=
-p()".
-Agreed, will change the name.
->=20
-> > +{
-> > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0; }
->=20
-> > +/**
-> > + * xilinx_cpm_pcie_valid_device - Check if a valid device is present
-> > +on bus
-> > + * @bus: PCI Bus structure
-> > + * @devfn: device/function
-> > + *
-> > + * Return: 'true' on success and 'false' if invalid device is found
-> > +*/ static bool xilinx_cpm_pcie_valid_device(struct pci_bus *bus,
-> > +					 unsigned int devfn)
-> > +{
-> > +	struct xilinx_cpm_pcie_port *port =3D bus->sysdata;
-> > +
-> > +	/* Check if link is up when trying to access downstream ports */
-> > +	if (bus->number !=3D port->root_busno)
-> > +		if (!cpm_pcie_link_is_up(port))
-> > +			return false;
->=20
-> This check for the link being up is racy and should be removed.  The link=
- may go
-> down after the check and before the config access.
->=20
-> A config access to a device where the link is down is an error, but it's =
-an error we
-> expect to happen because of enumeration, surprise unplug, or electrical i=
-ssue.
-> It's impossible to avoid so we must be able to handle and recover from it=
-.
->=20
-> I know there are other drivers that do this (dwc, altera, xilinix-nwl, xi=
-linx), and
-> I've pointed this out many times in the past.  This needs to be fixed.
-Agreed, will fix this check.
->=20
-> > +
-> > +	/* Only one device down on each root port */
-> > +	if (bus->number =3D=3D port->root_busno && devfn > 0)
-> > +		return false;
-> > +
-> > +	return true;
-> > +}
->=20
-> > +static irqreturn_t xilinx_cpm_pcie_intr_handler(int irq, void *data)
-> > +{
-> > +	struct xilinx_cpm_pcie_port *port =3D
-> > +				(struct xilinx_cpm_pcie_port *)data;
->=20
->   struct device *dev =3D port->dev;
->=20
-> to reduce repetition of "port->dev" below.
-Agreed, will fix this.
+On Fri, 27 Dec 2019 12:01:35 +0100
+Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 
-> > +	u32 val, mask, status, bit;
-> > +	unsigned long intr_val;
-> > +
-> > +	/* Read interrupt decode and mask registers */
-> > +	val =3D pcie_read(port, XILINX_CPM_PCIE_REG_IDR);
-> > +	mask =3D pcie_read(port, XILINX_CPM_PCIE_REG_IMR);
-> > +
-> > +	status =3D val & mask;
-> > +	if (!status)
-> > +		return IRQ_NONE;
-> > +
-> > +	if (status & XILINX_CPM_PCIE_INTR_LINK_DOWN)
-> > +		dev_warn(port->dev, "Link Down\n");
-> > +
-> > +	if (status & XILINX_CPM_PCIE_INTR_HOT_RESET)
-> > +		dev_info(port->dev, "Hot reset\n");
-> > ...
+> Exynos DSI DRM driver uses private calls to out bridge to force certain
+> order of operations during init/exit sequences. This no longer works after
+> conversion of bridge chain to a double-linked list. To fix the regression
+> call bridge related operations manually instead of the generic
+> drm_bridge_chain_*() operations.
+
+I think it'd be worth explaining what the problem is (infinite loop
+caused by list_for_each_entry() use when the bridge is no longer part
+of the chain attached to the encoder).
+
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Fixes: 05193dc38197 ("drm/bridge: Make the bridge chain a double-linked list")
+
+We also need to fix that in VC4.
+
+> ---
+> This patch is a result of the following discussion:
+> https://www.spinics.net/lists/dri-devel/msg239256.html
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 3955f84dc893..f5905c239a86 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -255,7 +255,6 @@ struct exynos_dsi {
+>  	struct mipi_dsi_host dsi_host;
+>  	struct drm_connector connector;
+>  	struct drm_panel *panel;
+> -	struct list_head bridge_chain;
+>  	struct drm_bridge *out_bridge;
+>  	struct device *dev;
+>  
+> @@ -1391,7 +1390,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+>  		if (ret < 0)
+>  			goto err_put_sync;
+>  	} else {
+> -		drm_bridge_chain_pre_enable(dsi->out_bridge);
+> +		if (dsi->out_bridge->funcs->pre_enable)
+> +			dsi->out_bridge->funcs->pre_enable(dsi->out_bridge);
+
+Okay, so you're calling ->{pre_enable,enable,disable,post_disable}() on
+the first bridge element which only works if the chain contains one
+bridge (see below). Maybe you should keep exynos_dsi.bridge_chain and
+create custom helpers to iterate over chain elements instead of calling
+those hooks only on out_bridge.
+
+>  	}
+>  
+>  	exynos_dsi_set_display_mode(dsi);
+> @@ -1402,7 +1402,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+>  		if (ret < 0)
+>  			goto err_display_disable;
+>  	} else {
+> -		drm_bridge_chain_enable(dsi->out_bridge);
+> +		if (dsi->out_bridge->funcs->enable)
+> +			dsi->out_bridge->funcs->enable(dsi->out_bridge);
+>  	}
+>  
+>  	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
+> @@ -1427,10 +1428,12 @@ static void exynos_dsi_disable(struct drm_encoder *encoder)
+>  	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+>  
+>  	drm_panel_disable(dsi->panel);
+> -	drm_bridge_chain_disable(dsi->out_bridge);
+> +	if (dsi->out_bridge->funcs->disable)
+> +		dsi->out_bridge->funcs->disable(dsi->out_bridge);
+>  	exynos_dsi_set_display_enable(dsi, false);
+>  	drm_panel_unprepare(dsi->panel);
+> -	drm_bridge_chain_post_disable(dsi->out_bridge);
+> +	if (dsi->out_bridge->funcs->post_disable)
+> +		dsi->out_bridge->funcs->post_disable(dsi->out_bridge);
+>  	dsi->state &= ~DSIM_STATE_ENABLED;
+>  	pm_runtime_put_sync(dsi->dev);
+>  }
+> @@ -1521,9 +1524,11 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+>  
+>  	out_bridge  = of_drm_find_bridge(device->dev.of_node);
+>  	if (out_bridge) {
+> -		drm_bridge_attach(encoder, out_bridge, NULL);
+> +		out_bridge->dev = drm;
+> +		out_bridge->encoder = encoder;
+> +		if (out_bridge->funcs->attach)
+> +			out_bridge->funcs->attach(out_bridge);
+
+If you don't want to keep the dsi_exynos.bridge_chain field, you should
+probably still use drm_bridge_attach() here and manually reset
+encoder->bridge_chain after checking it only contains a single element.
+Something like:
+
+		drm_bridge_attach(encoder, out_bridge, NULL);
+
+		/*
+		 * FIXME: we need to control the enable/disable
+		 * sequence to make sure the DSI host controller is
+		 * ready to send DSI commands before the
+		 * bridge->pre_enable()/panel->prepare() hooks are
+		 * called (those hooks are allowed to send DSI
+		 * commands). The only way to do that right now is to
+		 * reset the bridge chain so that the core thinks it's
+		 * empty and turns drm_bridge_chain_xxx() calls into
+		 * NOPs. This only works if the chain contains only one
+		 * bridge, otherwise we'd be skipping bridge->xxx()
+		 * calls on other bridges which is wrong.
+		 */
+		WARN_ON(!list_is_singular(&encoder->bridge_chain));
+		INIT_LIST_HEAD(&encoder->bridge_chain);
+
+Calling ->attach() directly might lead to an invalid pointer
+dereference if out_bridge tries to attach to another bridge
+(out_bridge->bridge_node is uninitialized if you don't call
+drm_bridge_attach()).
+
+>  		dsi->out_bridge = out_bridge;
+> -		list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
+>  	} else {
+>  		int ret = exynos_dsi_create_connector(encoder);
+>  
+> @@ -1589,7 +1594,6 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+>  		if (dsi->out_bridge->funcs->detach)
+>  			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+>  		dsi->out_bridge = NULL;
+> -		INIT_LIST_HEAD(&dsi->bridge_chain);
+>  	}
+>  
+>  	if (drm->mode_config.poll_enabled)
+> @@ -1737,7 +1741,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+>  	init_completion(&dsi->completed);
+>  	spin_lock_init(&dsi->transfer_lock);
+>  	INIT_LIST_HEAD(&dsi->transfer_list);
+> -	INIT_LIST_HEAD(&dsi->bridge_chain);
+>  
+>  	dsi->dsi_host.ops = &exynos_dsi_ops;
+>  	dsi->dsi_host.dev = dev;
 
