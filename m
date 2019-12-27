@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3221EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E9C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF3720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB0D206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469413;
-	bh=xYHCqeSqTyw7YMuYYvLayPiWngIzGhgLfcAOH/sluAY=;
+	s=default; t=1577469415;
+	bh=GmOtnR2Eu61QLEuSN3v9F9H3Vw8HY9Qr0TfA7waih40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UnySgS56lcdZ9c5+7W6KlxygqbiRSHnERcP++hUpJafTQHFGNJ9jJInj/hhq2HBsC
-	 y+6LLRodB9zuB+Vu3XU4m86nvYwpnHgVLwrSYqKI4mlkqlEt0Bf8BuhiM1ffW+IEnu
-	 KaoL3aIkvQsDcf9oxoQEedQR6XR6vip16kVBuabU=
+	b=Yuyq8rx22rNQxb0HAhR82qmzMbFqMXTrE9EDvdGfOdisOhYyPOG1bhS2QdaWQv8lO
+	 0z96c/TyoIdZd3a4AgBWCS+cSyxQBqq5eZNGEutnxZ/ohMMg65jUFeE8pL11FKq+ou
+	 iXUjmV9pTmU+9XPX9xboru1A+Z8gFopILJzZT1ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfL0R4v (ORCPT
+        id S1727647AbfL0Rly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:56:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727648AbfL0Rlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:55 -0500
+        id S1727605AbfL0Rlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCBE21D7E;
-        Fri, 27 Dec 2019 17:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A9EA2173E;
+        Fri, 27 Dec 2019 17:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468514;
-        bh=xYHCqeSqTyw7YMuYYvLayPiWngIzGhgLfcAOH/sluAY=;
+        s=default; t=1577468507;
+        bh=GmOtnR2Eu61QLEuSN3v9F9H3Vw8HY9Qr0TfA7waih40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPX4HnfrphBP8ln/fWl2yzFEk5lrA0IECFZ9h5UOstSh70hVWUBskl/aZ6GJ14oG5
-         y1cw2khDQx885oRrQQ5q24bDlP4Q8WCmSNTb/kfQkqBAjL6+IuVjVF8IupXWQbevEd
-         IMgeM0M9ucaRpfdDfBSyAYJ909pmYl33UKEeqiFU=
+        b=CR8G4ot0B1AVQctA4kF2Kbnuxi50B8uNSELE/WBitEq6O3cVYy0wf6egtRAfGvjp3
+         k1HPsVlc4Gs8qjXR8kF8sOTV8L9BNzR5JqDilu9XSgwiJwOGkIVQ4vpxaXxEsJy4CH
+         CYfbaEv79MjKcqUJ76JWe9CB22159W6xViJS1VjA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 047/187] ARM: exynos_defconfig: Restore debugfs support
-Date:   Fri, 27 Dec 2019 12:38:35 -0500
-Message-Id: <20191227174055.4923-47-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 040/187] selftests/ftrace: Fix to check the existence of set_ftrace_filter
+Date:   Fri, 27 Dec 2019 12:38:28 -0500
+Message-Id: <20191227174055.4923-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,42 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit a2315d3aea5976acd919d3d3fcf82f752562c25b ]
+[ Upstream commit fd1baf6ca2ea3550ea47f2bb0bdcf34ec764a779 ]
 
-Commit 9f532d26c75c ("ARM: exynos_defconfig: Trim and reorganize with
-savedefconfig") removed explicit enable line for CONFIG_DEBUG_FS, because
-that feature has been selected by other enabled options: CONFIG_TRACING,
-which in turn had been selected by CONFIG_PERF_EVENTS and
-CONFIG_PROVE_LOCKING.
+If we run ftracetest on the kernel with CONFIG_DYNAMIC_FTRACE=n,
+there is no set_ftrace_filter and all test cases are failed, because
+reset_ftrace_filter() returns an error.
+Let's check whether set_ftrace_filter exists in reset_ftrace_filter()
+and clean up only set_ftrace_notrace in initialize_ftrace().
 
-In meantime, commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS
-dependency") removed the dependency between CONFIG_DEBUG_FS and
-CONFIG_TRACING, so CONFIG_DEBUG_FS is no longer enabled in default builds.
-
-Enable it again explicitly, as debugfs support is essential for various
-automated testing tools.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/exynos_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/ftrace/test.d/functions | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 08db1c83eb2d..736ed7a7bcf8 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -348,6 +348,7 @@ CONFIG_PRINTK_TIME=y
- CONFIG_DYNAMIC_DEBUG=y
- CONFIG_DEBUG_INFO=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_DEBUG_FS=y
- CONFIG_DEBUG_KERNEL=y
- CONFIG_SOFTLOCKUP_DETECTOR=y
- # CONFIG_DETECT_HUNG_TASK is not set
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index 86986c4bba54..5d4550591ff9 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -46,6 +46,9 @@ reset_events_filter() { # reset all current setting filters
+ }
+ 
+ reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
++    if [ ! -f set_ftrace_filter ]; then
++      return 0
++    fi
+     echo > set_ftrace_filter
+     grep -v '^#' set_ftrace_filter | while read t; do
+ 	tr=`echo $t | cut -d: -f2`
+@@ -93,7 +96,7 @@ initialize_ftrace() { # Reset ftrace to initial-state
+     disable_events
+     [ -f set_event_pid ] && echo > set_event_pid
+     [ -f set_ftrace_pid ] && echo > set_ftrace_pid
+-    [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
++    [ -f set_ftrace_notrace ] && echo > set_ftrace_notrace
+     [ -f set_graph_function ] && echo | tee set_graph_*
+     [ -f stack_trace_filter ] && echo > stack_trace_filter
+     [ -f kprobe_events ] && echo > kprobe_events
 -- 
 2.20.1
 
