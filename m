@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC1AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09521C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF7320740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA60C20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468614;
-	bh=Zhh8mlWbxSNHdATn4ItCyFo0X+Liip+CoikS38de9UE=;
+	s=default; t=1577468617;
+	bh=WVrp7kpSwaN3E2DQOEWjNnna9bWepczGG6U1C3xO4DQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+Xo6+3fX9HBz3ZCqVUHbHknwdOiIUWSFITMx/S+G1omAGb0nrhlow1Y4JVdQqCK6
-	 g1sW+4vGKHoVUdGDFL+a5TOZi/1Yu2FrkXJJp7tF97Eo9k7NSn8QAnZrYnDBtVFOBL
-	 oVkOTe2bIVuGhz7DFr9LOqzxvoU5oTfPs92s4mOM=
+	b=nSCDNOkIf5dTE/vQRSB00WuJojrjZCc1+2rWxFEm5u/dIDp1S1MWWPa8gEAJW9s4m
+	 k4tpmLeSjrThJW2NL7fVbiB2bku2WKeQSqXdnBauLXWy7ohdb4DOz5yKxhc6T3uVzo
+	 0h42p6xF2tvwz6VNWqVfOj/UZvgl81oTrOsJwN6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfL0Rnd (ORCPT
+        id S1728266AbfL0Rnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:43:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbfL0Rnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:31 -0500
+        id S1727681AbfL0Rnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB7122522;
-        Fri, 27 Dec 2019 17:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C959222C2;
+        Fri, 27 Dec 2019 17:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468610;
-        bh=Zhh8mlWbxSNHdATn4ItCyFo0X+Liip+CoikS38de9UE=;
+        s=default; t=1577468613;
+        bh=WVrp7kpSwaN3E2DQOEWjNnna9bWepczGG6U1C3xO4DQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ai5Kgt2n6CIpoOJxINcl78PKxkg0lkSMT41FkOrHM+978zNHxs7+UK1sl9uAjQuCK
-         xrVfpdO7Dd/rxSfA7LlMaf3tdgfCYk9brGrhJqE4WwY3KcZuxf4KUcQnzbXU/ZqWZ5
-         kkIWk9Oz+8T5sxAYXVVH3Q15fK31EFVRm5+KyQ10=
+        b=n765tRx4vP8g2zi3s6gfL2hCKVILRiKn6+qvqZ7f0SgFJI5sxPOWAwyJjOmBtmo+J
+         jET9wfupkiA6BGwaQpTNWle3IJakNOTGUNZz3WfzDq5G1j+aKTfWu1c/DgEnJSLAQq
+         8K2Jhi1fwDw+Y8JnMHwzagg7ibyr0itwyTQ+pC3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 130/187] staging: axis-fifo: add unspecified HAS_IOMEM dependency
-Date:   Fri, 27 Dec 2019 12:39:58 -0500
-Message-Id: <20191227174055.4923-130-sashal@kernel.org>
+Cc:     Thomas Hebb <tommyhebb@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 132/187] kconfig: don't crash on NULL expressions in expr_eq()
+Date:   Fri, 27 Dec 2019 12:40:00 -0500
+Message-Id: <20191227174055.4923-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -59,41 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brendan Higgins <brendanhiggins@google.com>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-[ Upstream commit d3aa8de6b5d0853c43c616586b4e232aa1fa7de9 ]
+[ Upstream commit 272a72103012862e3a24ea06635253ead0b6e808 ]
 
-Currently CONFIG_XIL_AXIS_FIFO=y implicitly depends on
-CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-the following build error:
+NULL expressions are taken to always be true, as implemented by the
+expr_is_yes() macro and by several other functions in expr.c. As such,
+they ought to be valid inputs to expr_eq(), which compares two
+expressions.
 
-ld: drivers/staging/axis-fifo/axis-fifo.o: in function `axis_fifo_probe':
-drivers/staging/axis-fifo/axis-fifo.c:809: undefined reference to `devm_ioremap_resource'
-
-Fix the build error by adding the unspecified dependency.
-
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Link: https://lore.kernel.org/r/20191211192742.95699-7-brendanhiggins@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/axis-fifo/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/expr.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
-index 3fffe4d6f327..f180a8e9f58a 100644
---- a/drivers/staging/axis-fifo/Kconfig
-+++ b/drivers/staging/axis-fifo/Kconfig
-@@ -4,7 +4,7 @@
- #
- config XIL_AXIS_FIFO
- 	tristate "Xilinx AXI-Stream FIFO IP core driver"
--	depends on OF
-+	depends on OF && HAS_IOMEM
- 	help
- 	  This adds support for the Xilinx AXI-Stream FIFO IP core driver.
- 	  The AXI Streaming FIFO allows memory mapped access to a AXI Streaming
+diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+index 77ffff3a053c..9f1de58e9f0c 100644
+--- a/scripts/kconfig/expr.c
++++ b/scripts/kconfig/expr.c
+@@ -254,6 +254,13 @@ static int expr_eq(struct expr *e1, struct expr *e2)
+ {
+ 	int res, old_count;
+ 
++	/*
++	 * A NULL expr is taken to be yes, but there's also a different way to
++	 * represent yes. expr_is_yes() checks for either representation.
++	 */
++	if (!e1 || !e2)
++		return expr_is_yes(e1) && expr_is_yes(e2);
++
+ 	if (e1->type != e2->type)
+ 		return 0;
+ 	switch (e1->type) {
 -- 
 2.20.1
 
