@@ -2,165 +2,121 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8473AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108B720CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C64222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Mbj9NLOp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P03xYqEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfL0PWQ (ORCPT
+        id S1726954AbfL0PWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:22:16 -0500
-Received: from mout.gmx.net ([212.227.15.15]:37807 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfL0PWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:22:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1577460081;
-        bh=v3G485xxBEo3Cum4SQHR6DjKkNv1OjWEtlHcjeyT33o=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Mbj9NLOppltN6yvIvUfj6khIv4KYpcSGxS9QhXn2KTtgtij3z5d9f783Z+e3rdV3k
-         Yf9mbbbMum6w2xwKaL5TM8dbq4SxXf2KJcIhv/782qoSbIC/M4uJZMLfn9FeZ544nI
-         vmYMCO3OOTMwLUg56qr6+d4Zu8YdVIiP2yLmcCBA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.fritz.box ([62.216.209.247]) by mail.gmx.com
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MS3ir-1jDEAl40dP-00TQeZ; Fri, 27 Dec 2019 16:21:21 +0100
-From:   Peter Seiderer <ps.report@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     alsa-devel@alsa-project.org, Annaliese McDermond <nh6z@nh6z.net>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Seiderer <ps.report@gmx.net>
-Subject: [PATCH v1] ASoC: tlv320aic32x4: handle regmap_read error gracefully
-Date:   Fri, 27 Dec 2019 16:20:56 +0100
-Message-Id: <20191227152056.9903-1-ps.report@gmx.net>
-X-Mailer: git-send-email 2.24.0
+        Fri, 27 Dec 2019 10:22:18 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44442 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0PWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:22:17 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w127so21704129qkb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 07:22:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=q/5pToebsXwR45NBxV6wXVjuLILCBYdTY0wd0j924VQ=;
+        b=P03xYqEoVwTNgrLqvA8+7xkPAhykF47NSuY3r6yEgVup1SFamngJvcN6KE2lzUOHt6
+         bP7Bz+pqqDAWkPzohI/LLtWOM1YHwtGJzhBcp3oFXWi7LcghkLcDxUr2PvZ+vp0f/Agd
+         UngIlnKay5C2rJX+YwpGNUMi8YAx/d/LiP9MRWsz5ssHhwPM80PpENEKI3EPyBM+BRlW
+         +xcJr1RfGOimv4DgyG+xB6ehjEbEXgi2LMhtWAQTM+SlAIudN/xHkmLcZ/SiYa60QAv2
+         OhjNkJW0J2ruZkW93qXhDW6aIxSApnp9b3NFs9W3R6mRjjQOnFtE2i6SdsteSZk6rEZI
+         h1XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=q/5pToebsXwR45NBxV6wXVjuLILCBYdTY0wd0j924VQ=;
+        b=oEarLfSYbZDmbt1jEXhjf4ZICM7JpjSe7nzHeRjstx9Rvk2d9ReCa0M/06MqTcYBCz
+         d5/4jwgQhiQeKnJOrFwyOiUvrXgKz2C4ZMtgqP7hCxeXbDzpKvU6BEc8EV5anx6u0YLt
+         Ix4kI6DglCVMqJnSATlKZ9IbAa9SFyTAy0ic6S2/VFie74i0D6bo9Z74fvD15QKngzsG
+         zgUFQ3t8Os7Ds4wv9b+llFuWB9KaZ/cL1N7ZsoRRZeevADhIfHTvOk83Pb7gj8NvwIc9
+         IYYIMOjkCmSLPvMoZUqBG+29l/us0JOEm/sYb/HnWjNKOVEfm4mbR2mJy8IWMzzieRI4
+         8xng==
+X-Gm-Message-State: APjAAAWzIY1x5IcPKvjRlc9nWCXZnTSe28fngIlEkb0kSwAJg0mOwf0N
+        L2IFfhTmZVcRVTnwZWWWOQmfSw==
+X-Google-Smtp-Source: APXvYqy6szxex0QEGm5xWs1fnlfx3eTZUBsk/wv3TTEwD2X5K6tXMgEbcDM+cGy9l5fQJ0gVjvHpug==
+X-Received: by 2002:a05:620a:b0f:: with SMTP id t15mr42638632qkg.135.1577460135914;
+        Fri, 27 Dec 2019 07:22:15 -0800 (PST)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id r6sm10569519qtm.63.2019.12.27.07.22.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Dec 2019 07:22:15 -0800 (PST)
+Subject: Re: [Patch v6 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <qperret@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+ <1576123908-12105-5-git-send-email-thara.gopinath@linaro.org>
+ <20191216143932.GT2844@hirez.programming.kicks-ass.net>
+ <20191216175901.GA157313@google.com>
+ <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
+Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5E0621A5.5040901@linaro.org>
+Date:   Fri, 27 Dec 2019 10:22:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:JPR7Yh/nE2L7BcQ/QhBP0f+6BAatPm4RrsDC8Faa/IZBqz+5LK9
- 0Tz3d0ZdtzhqK6gKdD6/NL6QfPdwx02dYu8hSr85SISdb2haDdW8SAol8bCUsvGStOPtmSD
- w/+TVwT+6kxlR96bCDTU+GZCf11jFHm+n0//HVe7wtGR49DJuIOR9FLaIHMLuj+2qysM76S
- MQXAvGNi+kRploBjMqpbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M04zpNXRc+4=:pFARzSYrMSaSWj3JOUjzDD
- zZKAnBVEfh0UdbxhIUWxUPUyanSDuFF/PVULmGgGCv3+dqybsMe6Byzw/DUClwQ8n4r+j329c
- R0QD/mDb1eXztoA36kKN3on9Zqr4SX5b57xQVzNjZ8NVRqZvcBUbbELWnBIPQ0vwMTNr7zdiX
- mNgrDg/f/m99Eo/m32y744ygiwuZn4ymkCl9BJF9JcDz6d1jkzOF1ApdA5zot+I1jJIoIcMMy
- cREdP6hnJZFJCZrQeT8wlTGqwG1nSjvFn8JMNO/ebpmrQOiB6ArFAUzOzC/aYW7Yqn9V72hLU
- LT+vFxrsoqIdsfGTe5kWLRUE/etTZAbMu4/KMBD7+3g//3O1PjYnRERuq6hrmzLa38B/NqpZG
- TbBrPhdQCX7E3yLgdHcqvAgHLTkHuFJWDIzHukxGglBCepGto5ujZZHNAuihfTtV48dPA4koA
- YlaQ5VaWg5Fa1ySKMsmumEH+jcsJI92P2T0aehGhkXFWJQqQNZGLg//qPgYjuHPYB4PXRWqdW
- lRPgkph9xCviRCagVqHlllWguRMsTe8J6i9JYlEHxz+eQXkdz5IM4Ur1+l0Gyr7X5zt93RY0i
- XVZktxwqxNL7YFXxKt5VajeRwgi/oK18RlOdDPGUHDfXKpg16alo0+aNu2bcMW1lTQEQL6ePO
- JayOqgeKuCv78rUGA0GHRiPBvjN4Nup/5DMD/GEY6KV/OO/AlGtOSH0Hv02Pu9EHmp63BsUh1
- 0DfDctW3Td+OfcfgWwa6Mj9syY2Me8jmVylUBzYCtqcZk1B40CcbvODCCCVwfPINilH3jw9Kn
- cQ8OXWHXduD12f9xuQZeTtNeU9C2nWcCPyEtAS7LkpgUKVye9RYDA+sxoN2E+eV5tLqCFwvxF
- OIFJoh/dT6JUyCr1/kkY7IJtTqHAMZBFVCvuNnLdlM40yQMkS941sKliHJlawOsd3ccHgobX2
- I93+hitZ0Q0zf59VXWWK0pESWOcE6+h2sa9QlrVnU5pr8yWCAZ2acUqDcIZdnQPJw+RK5uAAs
- FYtBeGavyABpc3grY2TkH+P2Yp4dIBNHpk7q4xkNLHJ4Z+sZMXEUP84buR6rtx87Wz/M0E7ga
- SCcgKQ50TBlSW7git9DY1nl4N8BdtK0TfC83mpgw13KF+7jdy1M01EQjZlwUJx6p7C4vROXGH
- MsNoDmMTblz2SS6huC9eGWHXgFvrtTLLTB2sppax5qbwI1m6M1nthGuuW4EowY1/XbOBNYdS2
- LYxq3Ywcke7vqQlRhOfvRuwgcFVvCsqRcTEl5fw==
+In-Reply-To: <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4ZXM6CgpbICAgIDUuMTY5MzEwXSBEaXZpc2lvbiBieSB6ZXJvIGluIGtlcm5lbC4KWyAgICA1
-LjIwMDk5OF0gQ1BVOiAxIFBJRDogMSBDb21tOiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS4zLjE4
-LTIwMTkxMDIxLTErICMxNApbICAgIDUuMjAzMDQ5XSBjZGNfYWNtIDItMS42OjEuMDogdHR5QUNN
-MDogVVNCIEFDTSBkZXZpY2UKWyAgICA1LjIwODE5OF0gSGFyZHdhcmUgbmFtZTogRnJlZXNjYWxl
-IGkuTVg2IFF1YWQvRHVhbExpdGUgKERldmljZSBUcmVlKQpbICAgIDUuMjIwMDg0XSBCYWNrdHJh
-Y2U6ClsgICAgNS4yMjI2MjhdIFs8ODAxMGY2MGM+XSAoZHVtcF9iYWNrdHJhY2UpIGZyb20gWzw4
-MDEwZjlhOD5dIChzaG93X3N0YWNrKzB4MjAvMHgyNCkKWyAgICA1LjIzMDM0OF0gIHI3OjgxMGEx
-YzZjIHI2OjAwMDAwMDAwIHI1OjYwMDAwMDEzIHI0OjgxMGExYzZjClsgICAgNS4yMzYwOTddIFs8
-ODAxMGY5ODg+XSAoc2hvd19zdGFjaykgZnJvbSBbPDgwOWUwNmEwPl0gKGR1bXBfc3RhY2srMHhh
-Yy8weGQ4KQpbICAgIDUuMjQzNDY5XSBbPDgwOWUwNWY0Pl0gKGR1bXBfc3RhY2spIGZyb20gWzw4
-MDEwZjc4MD5dIChfX2RpdjArMHgyNC8weDI4KQpbICAgIDUuMjUwNDMxXSAgcjk6ODExMWFkYzgg
-cjg6YWU2MzExODAgcjc6YWViZDI3YzAgcjY6YWU2MzFlNDAgcjU6MDAwMDAwMDAgcjQ6ODEwMDY1
-MDgKWyAgICA1LjI1ODMyNV0gWzw4MDEwZjc1Yz5dIChfX2RpdjApIGZyb20gWzw4MDlkZTdhYz5d
-IChMZGl2MCsweDgvMHgxMCkKWyAgICA1LjI2NDg0MV0gWzw4MDg1YzdlMD5dIChjbGtfYWljMzJ4
-NF9kaXZfcmVjYWxjX3JhdGUpIGZyb20gWzw4MDViYTcwYz5dIChfX2Nsa19yZWdpc3RlcisweDJm
-OC8weDdlNCkKWyAgICA1LjI3NDE0MV0gIHI1OjgwZGQwNjVjIHI0OmFlNmJkNDgwClsgICAgNS4y
-Nzc4NjldIFs8ODA1YmE0MTQ+XSAoX19jbGtfcmVnaXN0ZXIpIGZyb20gWzw4MDViYWNlMD5dIChk
-ZXZtX2Nsa19yZWdpc3RlcisweDU4LzB4OGMpClsgICAgNS4yODYxMzBdICByMTA6ODEwMDY1MDgg
-cjk6ODEwOTQ2ZDQgcjg6MDAwMDAwMDAgcjc6YWU4ZGUxYzAgcjY6YWU2MzFhYzAgcjU6YWU2MzFl
-NDAKWyAgICA1LjI5NDEwM10gIHI0OmFlOGQ4MDIwClsgICAgNS4yOTY3MjRdIFs8ODA1YmFjODg+
-XSAoZGV2bV9jbGtfcmVnaXN0ZXIpIGZyb20gWzw4MDg1Y2VhOD5dIChhaWMzMng0X3JlZ2lzdGVy
-X2Nsb2NrcysweDEyMC8weDE0YykKWyAgICA1LjMwNjAwNF0gIHI3OmFlOGRlMWMwIHI2OmFlOGQ4
-MDIwIHI1OmFlNjMxZTQwIHI0OjgxMDk0NmMwClsgICAgNS4zMTE4MThdIFs8ODA4NWNkODg+XSAo
-YWljMzJ4NF9yZWdpc3Rlcl9jbG9ja3MpIGZyb20gWzw4MDg1YmY2MD5dIChhaWMzMng0X3Byb2Jl
-KzB4OTQvMHg0NjgpClsgICAgNS4zMjA2MDJdICByMTA6ODEwOTQ3MzAgcjk6MDAwMDAwMDAgcjg6
-YWYzNjFmYzAgcjc6YmZkNmQwNDAgcjY6MDAwMDAwMDAgcjU6YWU4ZDgwMjAKWyAgICA1LjMyODU3
-NF0gIHI0OmFmMzYxZTQwClsgICAgNS4zMzExOTVdIFs8ODA4NWJlY2M+XSAoYWljMzJ4NF9wcm9i
-ZSkgZnJvbSBbPDgwODVjZjYwPl0gKGFpYzMyeDRfaTJjX3Byb2JlKzB4NmMvMHg4OCkKWyAgICA1
-LjMzOTQzNF0gIHI4OjAwMDAwMDAwIHI3OmFlOGQ4MDAwIHI2OjgxMDk0NzMwIHI1OmFlOGQ4MDAw
-IHI0OjgxMDA2NTA4ClsgICAgNS4zNDYyODhdIFs8ODA4NWNlZjQ+XSAoYWljMzJ4NF9pMmNfcHJv
-YmUpIGZyb20gWzw4MDc1NTRiMD5dIChpMmNfZGV2aWNlX3Byb2JlKzB4MmFjLzB4MmYwKQpbICAg
-IDUuMzU0ODk0XSAgcjU6ODA4NWNlZjQgcjQ6YWU4ZDgwMjAKWyAgICA1LjM1ODYyNV0gWzw4MDc1
-NTIwND5dIChpMmNfZGV2aWNlX3Byb2JlKSBmcm9tIFs8ODA2NzhlMzQ+XSAocmVhbGx5X3Byb2Jl
-KzB4MTFjLzB4NDI4KQpbICAgIDUuMzY2ODAyXSAgcjk6MDAwMDAwMDAgcjg6ODEwYjNlNzggcjc6
-MDAwMDAwMDAgcjY6ODExMWUwMjAgcjU6YWU4ZDgwMjAgcjQ6ODExMWUwMWMKWyAgICA1LjM3NDY5
-NF0gWzw4MDY3OGQxOD5dIChyZWFsbHlfcHJvYmUpIGZyb20gWzw4MDY3OTM4OD5dIChkcml2ZXJf
-cHJvYmVfZGV2aWNlKzB4ODgvMHgxZTApClsgICAgNS4zODMxMDZdICByMTA6ODBmNjM4NjAgcjk6
-ZmZmZmUwMDAgcjg6ZmZmZmUwMDAgcjc6ODA2Nzk3OTQgcjY6ODEwOTQ3MzAgcjU6ODEwOTQ3MzAK
-WyAgICA1LjM5MTA4MF0gIHI0OmFlOGQ4MDIwClsgICAgNS4zOTM3MDJdIFs8ODA2NzkzMDA+XSAo
-ZHJpdmVyX3Byb2JlX2RldmljZSkgZnJvbSBbPDgwNjc5NzhjPl0gKGRldmljZV9kcml2ZXJfYXR0
-YWNoKzB4NjgvMHg3MCkKWyAgICA1LjQwMjcyNF0gIHI5OmZmZmZlMDAwIHI4OmZmZmZlMDAwIHI3
-OjgwNjc5Nzk0IHI2OjgxMDk0NzMwIHI1OjAwMDAwMDAwIHI0OmFlOGQ4MDIwClsgICAgNS40MTA1
-NTVdIFs8ODA2Nzk3MjQ+XSAoZGV2aWNlX2RyaXZlcl9hdHRhY2gpIGZyb20gWzw4MDY3OTg1OD5d
-IChfX2RyaXZlcl9hdHRhY2grMHhjNC8weDE2NCkKWyAgICA1LjQxOTMxM10gIHI3OjgwNjc5Nzk0
-IHI2OmFlOGQ4MDIwIHI1OjgxMDk0NzMwIHI0OjAwMDAwMDAwClsgICAgNS40MjUxMjNdIFs8ODA2
-Nzk3OTQ+XSAoX19kcml2ZXJfYXR0YWNoKSBmcm9tIFs8ODA2NzZhMTQ+XSAoYnVzX2Zvcl9lYWNo
-X2RldisweDg0LzB4YzQpClsgICAgNS40MzMzODRdICByNzo4MDY3OTc5NCByNjo4MTA5NDczMCBy
-NTo4MTAwNjUwOCByNDphZThkYzBjMApbICAgIDUuNDM5MTkyXSBbPDgwNjc2OTkwPl0gKGJ1c19m
-b3JfZWFjaF9kZXYpIGZyb20gWzw4MDY3ODY2OD5dIChkcml2ZXJfYXR0YWNoKzB4MmMvMHgzMCkK
-WyAgICA1LjQ0NzI3OV0gIHI3OjAwMDAwMDAwIHI2OmFmMzYxNTAwIHI1OjgxMDdmZDk0IHI0Ojgx
-MDk0NzMwClsgICAgNS40NTMwODddIFs8ODA2Nzg2M2M+XSAoZHJpdmVyX2F0dGFjaCkgZnJvbSBb
-PDgwNjc3ZmM0Pl0gKGJ1c19hZGRfZHJpdmVyKzB4MWQwLzB4MjEwKQpbICAgIDUuNDYxMjQwXSBb
-PDgwNjc3ZGY0Pl0gKGJ1c19hZGRfZHJpdmVyKSBmcm9tIFs8ODA2NzlmMzQ+XSAoZHJpdmVyX3Jl
-Z2lzdGVyKzB4ODQvMHgxMTgpClsgICAgNS40Njk0MTRdICByNzowMDAwMDAwMCByNjo4MGY0YWM5
-YyByNTo4MTAwNjUwOCByNDo4MTA5NDczMApbICAgIDUuNDc1MjI0XSBbPDgwNjc5ZWIwPl0gKGRy
-aXZlcl9yZWdpc3RlcikgZnJvbSBbPDgwNzU1ZGZjPl0gKGkyY19yZWdpc3Rlcl9kcml2ZXIrMHg0
-Yy8weGI4KQpbICAgIDUuNDgzODA3XSAgcjU6ODEwMDY1MDggcjQ6ODEwOTQ3MTQKWyAgICA1LjQ4
-NzQ3Ml0gWzw4MDc1NWRiMD5dIChpMmNfcmVnaXN0ZXJfZHJpdmVyKSBmcm9tIFs8ODBmNGFjYzA+
-XSAoYWljMzJ4NF9pMmNfZHJpdmVyX2luaXQrMHgyNC8weDI4KQpbICAgIDUuNDk2NzUwXSAgcjU6
-ODEwMDY1MDggcjQ6ODEwYTcxODAKWyAgICA1LjUwMDQxNV0gWzw4MGY0YWM5Yz5dIChhaWMzMng0
-X2kyY19kcml2ZXJfaW5pdCkgZnJvbSBbPDgwMTAzMjg4Pl0gKGRvX29uZV9pbml0Y2FsbCsweDY0
-LzB4MmQwKQpbICAgIDUuNTA5NDQyXSBbPDgwMTAzMjI0Pl0gKGRvX29uZV9pbml0Y2FsbCkgZnJv
-bSBbPDgwZjAxNGE4Pl0gKGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4MzAwLzB4MzkwKQpbICAgIDUu
-NTE4Mjg3XSAgcjg6ODEwYzczMDAgcjc6ODEwYzczMDAgcjY6MDAwMDAwMDcgcjU6ODBmOTIwYzQg
-cjQ6ODBmNjM4NDAKWyAgICA1LjUyNTA3OV0gWzw4MGYwMTFhOD5dIChrZXJuZWxfaW5pdF9mcmVl
-YWJsZSkgZnJvbSBbPDgwOWY4OTJjPl0gKGtlcm5lbF9pbml0KzB4MTgvMHgxMjQpClsgICAgNS41
-MzM0OTBdICByMTA6MDAwMDAwMDAgcjk6MDAwMDAwMDAgcjg6MDAwMDAwMDAgcjc6MDAwMDAwMDAg
-cjY6MDAwMDAwMDAgcjU6ODA5Zjg5MTQKWyAgICA1LjU0MTQ2MV0gIHI0OjAwMDAwMDAwClsgICAg
-NS41NDQwODRdIFs8ODA5Zjg5MTQ+XSAoa2VybmVsX2luaXQpIGZyb20gWzw4MDEwMTBiND5dIChy
-ZXRfZnJvbV9mb3JrKzB4MTQvMHgyMCkKWyAgICA1LjU1MTgwMF0gRXhjZXB0aW9uIHN0YWNrKDB4
-YWYxMTVmYjAgdG8gMHhhZjExNWZmOCkKWyAgICA1LjU1NjkzNV0gNWZhMDogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
-MDAKWyAgICA1LjU2NTI2Ml0gNWZjMDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
-MDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKWyAgICA1LjU3MzUyMl0gNWZl
-MDogMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMTMgMDAwMDAwMDAK
-WyAgICA1LjU4MDI4M10gIHI1OjgwOWY4OTE0IHI0OjAwMDAwMDAwCgpTaWduZWQtb2ZmLWJ5OiBQ
-ZXRlciBTZWlkZXJlciA8cHMucmVwb3J0QGdteC5uZXQ+Ci0tLQogc291bmQvc29jL2NvZGVjcy90
-bHYzMjBhaWMzMng0LWNsay5jIHwgMyArKy0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFp
-YzMyeDQtY2xrLmMgYi9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFpYzMyeDQtY2xrLmMKaW5kZXgg
-MTU2YzE1M2MxMmFiLi43YTgyZTM0NDg3ODAgMTAwNjQ0Ci0tLSBhL3NvdW5kL3NvYy9jb2RlY3Mv
-dGx2MzIwYWljMzJ4NC1jbGsuYworKysgYi9zb3VuZC9zb2MvY29kZWNzL3RsdjMyMGFpYzMyeDQt
-Y2xrLmMKQEAgLTMzOCw3ICszMzgsOCBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBjbGtfYWljMzJ4
-NF9kaXZfcmVjYWxjX3JhdGUoc3RydWN0IGNsa19odyAqaHcsCiAKIAl1bnNpZ25lZCBpbnQgdmFs
-OwogCi0JcmVnbWFwX3JlYWQoZGl2LT5yZWdtYXAsIGRpdi0+cmVnLCAmdmFsKTsKKwlpZiAocmVn
-bWFwX3JlYWQoZGl2LT5yZWdtYXAsIGRpdi0+cmVnLCAmdmFsKSkKKwkJcmV0dXJuIDA7CiAKIAly
-ZXR1cm4gRElWX1JPVU5EX1VQKHBhcmVudF9yYXRlLCB2YWwgJiBBSUMzMlg0X0RJVl9NQVNLKTsK
-IH0KLS0gCjIuMjQuMAoK
+On 12/17/2019 07:57 AM, Dietmar Eggemann wrote:
+> On 16/12/2019 18:59, Quentin Perret wrote:
+>> On Monday 16 Dec 2019 at 15:39:32 (+0100), Peter Zijlstra wrote:
+>>>> @@ -10274,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>>>>  
+>>>>  	update_misfit_status(curr, rq);
+>>>>  	update_overutilized_status(task_rq(curr));
+>>>> +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
+>>>>  }
+>>>
+>>> My objection here is that when the arch does not have support for it,
+>>> there is still code generated and runtime overhead associated with it.
+>>
+>> I guess this function could be stubbed for CONFIG_CPU_THERMAL=n ?
+>> That is, reflecting the thermal pressure in the scheduler only makes
+>> sense when the thermal infrastructure is enabled to begin with (which is
+>> indeed not the case for most archs).
+> 
+> Makes sense to me. If we can agree that 'CPU cooling' is the only actor
+> for thermal (CPU capacity) capping.
+> 
+> thermal_sys-$(CONFIG_CPU_THERMAL)       += cpu_cooling.o
+> 
+
+Hi All,
+Thanks for all the reviews!
+
+The other option will be to have a separate
+CONFIG_HAVE_SCHED_THERMAL_PRESSURE. This will ensure that we are not
+tied to cpu cooling thermal infrastructure. What say?
+ There is a CONFIG_HAVE_SCHED_AVG_IRQ for irq load average in pelt.c.
+
+
+-- 
+Warm Regards
+Thara
