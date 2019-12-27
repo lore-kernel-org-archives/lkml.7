@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32945C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03217C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BFF206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D096920CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469473;
-	bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
+	s=default; t=1577469480;
+	bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3XmSwldmUyvlXCLN4D6eMzFQLJbxYMVsXBlh2R3DEesQNqgWN58sZ41WH/Vnt1M/
-	 qzehJaVy2jP0sQe6RnGkdDz7gMPGgXHaEHJFdvyRydyATy/hFosil6+/2SslqcZjFZ
-	 E/hWEEkd9+rS8QRlOvI+Ek+SQMoQ36i3+ReGVHVk=
+	b=t7Ll62IFafV315g+bc3oYoAszYW26BG3vqbMtfLsJ86EmJmSdTxLEeE8YwdrA5sMl
+	 opt3HYD6h5+xc0c5hvKxE9VmznwtIn8dEpeaOAe0kUKS9KDUzUnKgiHSo3bheQ9IHb
+	 2phmlwz2Wvf0jGl6rPsBk7nq4tT+4SLsb0XzvLz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfL0R5w (ORCPT
+        id S1727867AbfL0R57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:57:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:57:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfL0Rlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:40 -0500
+        id S1727519AbfL0Rlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52F4F227BF;
-        Fri, 27 Dec 2019 17:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A5A227BF;
+        Fri, 27 Dec 2019 17:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468500;
-        bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
+        s=default; t=1577468496;
+        bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smoZQx/iMuXbMSdNlw0kql4c7GB7QgI6me66ZwvSivErb4dAwyZ5Mnll3MPeUPYjP
-         fSnVwjOHhU6sa2GxxNUU84MrihqRFne+DASlVUq1z0hg+R7BRWgy08PGSs8K4eqdkU
-         eMyAG9prYiTdefBkfz/yE0Od4QI2TjqyWRV54Xe8=
+        b=0zE8IFjMgJ9TIuhTYpBtUuuuvEg7KHyUB1ub0N8OQImPjTeAKAPvCjOVtbEEHd5es
+         A5r/QvmBaYsVSbowzQ8EIL6Yu5Z//UGmL8+1myoVK9VND6FNxeutXSYeY94jdjk2by
+         gyZOpA1YGAG2jQ2RbHkMIMzY9l87yNehl5NI3a1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 034/187] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
-Date:   Fri, 27 Dec 2019 12:38:22 -0500
-Message-Id: <20191227174055.4923-34-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 031/187] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
+Date:   Fri, 27 Dec 2019 12:38:19 -0500
+Message-Id: <20191227174055.4923-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,48 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
+[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
 
-Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
-whose NFT_SET_ELEM_INTERVAL_END flag is set on.
+Currently we add individual copy of same OPP table for each CPU within
+the cluster. This is redundant and doesn't reflect the reality.
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
+anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
+->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
+operations. It also may cause issues when the vexpress_spc_cpufreq
+driver is built as a module.
+
+Since ve_spc_clk_init is built-in device initcall, we should be able to
+use the same topology_core_cpumask to set the opp sharing cpumask via
+dev_pm_opp_set_sharing_cpus and use the same later in the driver via
+dev_pm_opp_get_sharing_cpus.
+
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 712a428509ad..7120eba71ac5 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -4489,14 +4489,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
- 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
- 			return -EINVAL;
--		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
--		    flags & NFT_SET_ELEM_INTERVAL_END)
--			return -EINVAL;
- 	} else {
- 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
- 			return -EINVAL;
+diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
+index 354e0e7025ae..1da11bdb1dfb 100644
+--- a/arch/arm/mach-vexpress/spc.c
++++ b/arch/arm/mach-vexpress/spc.c
+@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
+ 
+ static int __init ve_spc_clk_init(void)
+ {
+-	int cpu;
++	int cpu, cluster;
+ 	struct clk *clk;
++	bool init_opp_table[MAX_CLUSTERS] = { false };
+ 
+ 	if (!info)
+ 		return 0; /* Continue only if SPC is initialised */
+@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
+ 			continue;
+ 		}
+ 
++		cluster = topology_physical_package_id(cpu_dev->id);
++		if (init_opp_table[cluster])
++			continue;
++
+ 		if (ve_init_opp_table(cpu_dev))
+ 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
++		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
++			 topology_core_cpumask(cpu_dev->id)))
++			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
++		else
++			init_opp_table[cluster] = true;
  	}
  
-+	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
-+	     (nla[NFTA_SET_ELEM_DATA] ||
-+	      nla[NFTA_SET_ELEM_OBJREF] ||
-+	      nla[NFTA_SET_ELEM_TIMEOUT] ||
-+	      nla[NFTA_SET_ELEM_EXPIRATION] ||
-+	      nla[NFTA_SET_ELEM_USERDATA] ||
-+	      nla[NFTA_SET_ELEM_EXPR]))
-+		return -EINVAL;
-+
- 	timeout = 0;
- 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
- 		if (!(set->flags & NFT_SET_TIMEOUT))
+ 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
 -- 
 2.20.1
 
