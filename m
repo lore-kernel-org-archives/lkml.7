@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F2C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C314CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E303208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10CB20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470523;
-	bh=YQpnEO+zftTcEksKOgn/okVCs3guuDl7CCpC4AedMHE=;
+	s=default; t=1577470525;
+	bh=yHCh4QScFjCwLSI9Otg0zyHCn4qOLLgXiiPFPp86E74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsyLfLuiGC+z1/zPMjWHWAszu8BMcQ5seFN4DLM+3bIge5IF3fbg9KRHJn9NFH32m
-	 3qt7xHERxXqbIa4hMeukilVW/plGyc7oADiBL2DoDSoURZHdN1PkgbwiuI3PuxdOz+
-	 ArgYzMcagsRnAN6B+aylO8gsHfmURV8D0EFvQPa0=
+	b=MNiOooJqX0Oi2qAxEhJ1lgItM2vKnAKvFEE25bgF9Cp7G5Q/ZKjrFarQXeyHqtmw6
+	 i/tTD+vH5UMx/Eneixd6WTgY4DPmG+FwBYh/4ejKa7vCX84C2U/MkEkh9r8UoKskxW
+	 ucG0FIaN/01EYuUFnJ2/wmNvm+khW+VkcEGXwxAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfL0SPW (ORCPT
+        id S1727989AbfL0SPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40090 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbfL0SPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:18 -0500
+        id S1727912AbfL0SPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9095E20722;
-        Fri, 27 Dec 2019 18:15:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C750C20CC7;
+        Fri, 27 Dec 2019 18:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470517;
-        bh=YQpnEO+zftTcEksKOgn/okVCs3guuDl7CCpC4AedMHE=;
+        s=default; t=1577470519;
+        bh=yHCh4QScFjCwLSI9Otg0zyHCn4qOLLgXiiPFPp86E74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+XCNGbUwcjRfvoeqywAheztejyaB/I+51dNkOOcEeozrxT9u/OsfmmQQUbMn29XC
-         ckk28Gfpbhu+PuykSarRLbHvqOwPgIpEnT5l3eTAKDKW2yxNp5auDZed1x9k7q1jED
-         bzbDlUwm0clTNOhH1nbv2/q/daljbs2240oanmbg=
+        b=XtzMATBDiPXIXVuK3Q1Rqn2tqTEmy17i2nUYWuEV7vB5EmwWn81XXN7wUxS5/ANYk
+         VQbp3/bQJzrwfNARqpC6hobcSGukgRPHKJUrXzEFbxArgKPO8QbdWYlmJO9IalIkIv
+         30sALXjyiMEo+h+F/+U29NlT2wW0XnHDgth3lCfk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        Bob Liu <bob.liu@oracle.com>, Hulk Robot <hulkci@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 34/38] block: fix memleak when __blk_rq_map_user_iov() is failed
-Date:   Fri, 27 Dec 2019 13:14:31 -0500
-Message-Id: <20191227181435.7644-34-sashal@kernel.org>
+Cc:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 36/38] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
+Date:   Fri, 27 Dec 2019 13:14:33 -0500
+Message-Id: <20191227181435.7644-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -60,60 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
+[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
 
-When I doing fuzzy test, get the memleak report:
+When doing stress test, we get the following trace:
+kernel BUG at lib/dynamic_queue_limits.c:26!
+Internal error: Oops - BUG: 0 [#1] SMP ARM
+Modules linked in: hip04_eth
+CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
+Hardware name: Hisilicon A15
+task: c3637668 task.stack: de3bc000
+PC is at dql_completed+0x18/0x154
+LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
+pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
+sp : de3bdc2c  ip : 00000000  fp : c020fb10
+r10: 00000000  r9 : c39b4224  r8 : 00000001
+r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
+r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
+Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 32c5387d  Table: 1e189b80  DAC: 55555555
+Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
+Stack: (0xde3bdc2c to 0xde3be000)
+[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
+[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
+[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
+[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
+[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
+Exception stack(0xde3bdde0 to 0xde3bde28)
+dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
+de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
+de20: 600f0213 ffffffff
+[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+Kernel panic - not syncing: Fatal exception in interrupt
 
-BUG: memory leak
-unreferenced object 0xffff88837af80000 (size 4096):
-  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
-  backtrace:
-    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
-    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
-    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
-    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
-    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
-    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
-    [<000000004fc670f6>] sg_write+0x5f/0x8c
-    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
-    [<000000008e177714>] vfs_write+0x1c3/0x500
-    [<0000000087d23f34>] ksys_write+0xf9/0x200
-    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
-    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Pre-modification code:
+int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+{
+[...]
+[1]	priv->tx_head = TX_NEXT(tx_head);
+[2]	count++;
+[3]	netdev_sent_queue(ndev, skb->len);
+[...]
+}
+An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
+tx_head has been updated, but corresponding 'skb->len' has not been
+added to dql_queue.
 
-If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
-the bio(s) which is allocated before this failing will leak. The
-refcount of the bio(s) is init to 1 and increased to 2 by calling
-bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
-the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
+And then
+hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
 
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In hip04_tx_reclaim, because tx_head has been updated,
+bytes_compl will plus an additional "skb-> len"
+which has not been added to dql_queue. And then
+trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+
+To solve the problem described above, we put
+"netdev_sent_queue(ndev, skb->len);"
+before
+"priv->tx_head = TX_NEXT(tx_head);"
+
+Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-map.c | 2 +-
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index a8b4f526d8bb..52edbe6b9380 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -142,7 +142,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
- 	return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 4436a0307f32..0b3aa83f3fc1 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -455,9 +455,9 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	skb_tx_timestamp(skb);
  
- unmap_rq:
--	__blk_rq_unmap_user(bio);
-+	blk_rq_unmap_user(bio);
- fail:
- 	rq->bio = NULL;
- 	return ret;
+ 	hip04_set_xmit_desc(priv, phys);
+-	priv->tx_head = TX_NEXT(tx_head);
+ 	count++;
+ 	netdev_sent_queue(ndev, skb->len);
++	priv->tx_head = TX_NEXT(tx_head);
+ 
+ 	stats->tx_bytes += skb->len;
+ 	stats->tx_packets++;
 -- 
 2.20.1
 
