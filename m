@@ -2,149 +2,109 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D62C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FB1C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E3F20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70EB20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577484804;
+	bh=iZnqzqDa4efObkwi/oGhOaDMX+KempluIoxxYoO/E5w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vlcwwrrY1eUZBwVHs99NvDZ2Z26poPEvJvvEteybjm4Oo7fGM94r+Cw8IwLpXlRki
+	 ogtO79usbS0tCE1KG7qOSGxHsA7XtIhQRcS9ZF6DJD/hgSDGVoRoO8ShXPY936QlUl
+	 NLm8CvA7Ydn9n5XNSJK/WY3yCS3A/ZSxCVYpHBrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfL0WKM (ORCPT
+        id S1726377AbfL0WNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 17:10:12 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:51298 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725306AbfL0WKL (ORCPT
+        Fri, 27 Dec 2019 17:13:24 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36656 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfL0WNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 17:10:11 -0500
-Received: from callcc.thunk.org (96-72-84-49-static.hfc.comcastbusiness.net [96.72.84.49] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBRM8vac001407
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Dec 2019 17:08:59 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 75080420485; Fri, 27 Dec 2019 17:08:57 -0500 (EST)
-Date:   Fri, 27 Dec 2019 17:08:57 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Stephan Mueller <smueller@chronox.de>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Message-ID: <20191227220857.GD70060@mit.edu>
-References: <20191226140423.GB3158@mit.edu>
- <4048434.Q8HajmOrkZ@tauon.chronox.de>
- <20191227130436.GC70060@mit.edu>
- <15817620.rmTN4T87Wr@tauon.chronox.de>
+        Fri, 27 Dec 2019 17:13:23 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n12so21560920lfe.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 14:13:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TzNDgewdty9+XCRaXDaU2bPI7xNE/bDJBnpHNO7m5MI=;
+        b=eXwiGLZOx9BivEyNJf7zzgLYHeRiMJI1uecqF8smMsuOgs+Cx53GMofDb4oWPS3MGQ
+         BIGX05y8iL3+DicrPwXvF3BPXyBut0xRzAix260rRPvJOGlkag7p9e2Li+ta+DW4rH92
+         vmo8HQ9NZJTCKxHKlc/BhYmbqDJhF15/q1dNE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TzNDgewdty9+XCRaXDaU2bPI7xNE/bDJBnpHNO7m5MI=;
+        b=RzZ48NxduQEcS3NNLwWAwc+ORXZsWTj27Dq5GNsBdgzIJnbtJMFGlS8TsvE7GW49YZ
+         465lFPHuW2ar92iSXd55cIhaVySiW57e//5SFuP15X8tphfCDTQ6mqVDwB8ID6WmkfLP
+         tdILp+Glitg3U3xq5Kh4ICX8+1y65Lnq3sKpSMLSN+E8gs8Y1lzypoL+R21zrTPM+wv+
+         951hfMoXM+IvcJ0pLUwtSAx6HXbY8r7H6eorCRFxa+rWwzAIe2FrzUwhEu7/m2UPx+x2
+         c7IpdNh8p9oQhyN5El8dM+d0VPIQp7Y+NdT3ROCYP9PuSOxmHrU6DBThiFD0vY5yqC13
+         AAEQ==
+X-Gm-Message-State: APjAAAUKoeMhiyNqCq9ZZmMi64yEKhMYv2Pm/2SaH1lleepIEZ0maGhK
+        5+q3xa4c8pCScOp5HOQCyk3rnRcgN/M=
+X-Google-Smtp-Source: APXvYqy8+kV/M3orb5GoFT0p6jk0LD9Ecb/zupTVNKdksl+7Jj5gnZwAui20QhALHJrpSn33orrmLw==
+X-Received: by 2002:a19:ca59:: with SMTP id h25mr29763831lfj.27.1577484801093;
+        Fri, 27 Dec 2019 14:13:21 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id 138sm15446810lfa.76.2019.12.27.14.13.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2019 14:13:20 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id y4so13760020ljj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 14:13:19 -0800 (PST)
+X-Received: by 2002:a2e:8946:: with SMTP id b6mr27871105ljk.1.1577484799595;
+ Fri, 27 Dec 2019 14:13:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15817620.rmTN4T87Wr@tauon.chronox.de>
+References: <20191221.180914.601367701836089009.davem@davemloft.net>
+In-Reply-To: <20191221.180914.601367701836089009.davem@davemloft.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 27 Dec 2019 14:13:03 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whpoNwcb2fXH3e=pFjY1Tjb9rHLVjq_q-OzK3FMgvx2wA@mail.gmail.com>
+Message-ID: <CAHk-=whpoNwcb2fXH3e=pFjY1Tjb9rHLVjq_q-OzK3FMgvx2wA@mail.gmail.com>
+Subject: Re: [GIT] Networking
+To:     David Miller <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 10:22:23PM +0100, Stephan Mueller wrote:
-> 
-> I am unsure but it sounds like you are refuting your blocking_pool 
-> implementation. Nothing more and nothing less than the blocking_pool, just 
-> with a more modern and further analyzed DRNG is what was referenced as a TRNG.
+On Sat, Dec 21, 2019 at 6:09 PM David Miller <davem@davemloft.net> wrote:
+>
+> Antoine Tenart (2):
+>       of: mdio: export of_mdiobus_child_is_phy
 
-Yes, and that's why I am planning on taking Andy's patches to drop the
-blocking pool.  Trying to make the claim that you can read one byte
-from /dev/random if and only if one byte of entropy has flowed into
-it.... is a mug's game, for the reasons I gave above.
+I didn't notice until now (bad me - I've actually been taking a few
+days off due to xmas), but this causes a new warning in some
+configurations.
 
-> Or maybe the terminology of TRNG (i.e. "true") is offending. I have no concern 
-> to have it replaced with some other terminology. Yet, I was just taking one 
-> well-defined term.
+In particular, it causes a warning about
 
-But my point is that it *isn't* a well defined term, precisely because
-it's completely unclear what application programmer can expect when
-they try to use some hypothetical GRANDOM_TRUERANDOM flag.  What does
-that *mean*?  The kernel can't offer up any guarantees about whether
-or not the noise source has been appropriately characterized.  All
-say, a GPG or OpenSSL developer can do is get the vague sense that
-TRUERANDOM is "better" and of course, they want the best security, so
-of *course* they are going to try to use it.  At which point it will
-block, and when some other clever user (maybe a distro release
-engineer) puts it into an init script, then systems will stop working
-and users will complain to Linus.
+   'of_mdiobus_child_is_phy' defined but noy used
 
-And then we'll have companies like Intel claiming that RDSEED has been
-very carefully characterized --- by them --- and we should *obviously*
-trust it, and wire up RDSEED so that TRUERANDOM will have a near
-infinite supply of really good entropy.  And they might even be
-correct.  But this way lies a huge mess which is fundamentally social,
-not technical.
+because when CONFIG_OF_MDIO is disabled, the <linux/of_mdio.h> header now has
 
-The claim we can make for getrandom(2) is that we do the best job that
-we can, and we feed in as many sources as possible and hope that at
-least one or more sources is not known to the attacker.  One of the
-sources could very well be AES(NSA_KEY, SEQ++).  But that still will
-protect us from the Chinese and Russian crypto teams.  And we can hope
-that the NSA doesn't have access to the inter-packet arrival times on
-the local area network, or the radio strength as recorded from the
-WiFi radio, etc. etc.  But note that we didn't make any claims of how
-many bits of entropy that we have; it helps that we are implicitly
-making a claim that we trust the crypto algorithms.   
+  static bool of_mdiobus_child_is_phy(struct device_node *child)
+  {
+         return false;
+  }
 
-> > So let's take a step back and ask the question: "Exactly what _value_
-> > do you want to provide by creating some kind of true random
-> > interface?"  What does this enable?  What applications does this
-> > really help?
-> 
-> There are simply cryptographers who have use cases for such random numbers. 
-> The core use case is to seed other DRNGs and avoiding the chaining of free-
-> running DRNGs.
+which is all kinds of stupid.
 
-For this very specialized use case, what I think the kernel should
-provide is maximal transparency; that is, given the DRBG direct access
-to the TPM's random number generator, or direct access to the
-ChaosKey, and the userspace DRBG should be able to get a list of the
-various hardware RNG's, and select one, with the characterization
-being done userspace, not in the kernel.
+I'm assuming that dummy function should just be marked "inline", the
+way the other helper dummy functions are defined when OF_MDIO is not
+enabled.
 
-The kernel shouldn't be mixing various noise sources together, and it
-certainly shouldn't be trying to claim that it knows how many bits of
-entropy that it gets when is trying to play some jitter entropy game
-on a stupid-simple CPU architecture for IOT/Embedded user cases where
-everything is synchronized off of a single master oscillator, and
-there is no CPU instruction reordering or register renaming, etc.,
-etc.
-
-You can talk about providing tools that try to make these estimations
---- but these sorts of things would have to be done on each user's
-hardware, and for most distro users, it's just not practical.
-
-So if it's just for cryptographers, then let it all be done in
-userspace, and let's not make it easy for GPG, OpenSSL, etc., to all
-say, "We want TrueRandom(tm); we won't settle for less".  We can talk
-about how do we provide the interfaces so that those cryptographers
-can get the information they need so they can get access to the raw
-noise sources, separated out and named, and with possibly some way
-that the noise source can authenticate itself to the Cryptographer's
-userspace library/application.
-
-But all of this should probably not be in drivers/char/random.c, and
-we probably need to figure out a better kernel to userspace interface
-than what we have with /dev/hwrng.
-
-					- Ted
+                 Linus
