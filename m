@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51882C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E563C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2514320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5925320722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470014;
-	bh=LhXCJwhZ7SIthiaSz6eacka57FWG4LDTW51FS5XhUMc=;
+	s=default; t=1577470024;
+	bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnqHKZfEGlhtVbLFeqSWE4pFYEJ0QxK5XzAbhBzwEOL4EwPmiT5hLc+45BN2aKTlH
-	 m++VOnZwlrJ4lMTHJgMIMPQ9iNViAXO9yQOxkCtVPhfurjCvXCoBPrZnEmqgU5Lh3S
-	 XjmVvuBqzE8xJudukHOBxwZtt9ZycsOFECPbhhrc=
+	b=Etnru6k/alfGR8pLLVT6vaVkXubOjumpWFop33x9XEKrJGpluVPHQxexwxjE6ZS9g
+	 ++5dD5memlWCSFXBjl1efrjYilwEnRCLYxNSlFSjwFN8U21FizHSxtGgiBpMWh8f+G
+	 djldVkxLe2jtMhXcI/Q0OH3hWQIeQ3RDi6W6JqUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfL0SGw (ORCPT
+        id S1728354AbfL0SHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:06:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbfL0SCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:43 -0500
+        id S1727510AbfL0SCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0C321744;
-        Fri, 27 Dec 2019 18:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D39720CC7;
+        Fri, 27 Dec 2019 18:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469763;
-        bh=LhXCJwhZ7SIthiaSz6eacka57FWG4LDTW51FS5XhUMc=;
+        s=default; t=1577469759;
+        bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RreIoUx5kdv0A0SkkqhlwFtC/fl1qO/yqwcGbJ8Uo9usmXn8lz2i9heMDlOzBzBnS
-         ut8FG2aaYmDedTHJtv9Qi86Vw9brFMPGmn4N/mQBRJXPuOIjgXC5iM9BGVDxNTQVoH
-         gsdVMCQeVuJ7EtkXdgvmxoxHzY/fq2G4lzNGuYcc=
+        b=mZwAp77gbas1+en36/ww7FX6kGwCCejuAmE2qrqVVj4gPEScCaKu3h7s+ng5j5YAb
+         auJuEfKJwbmpBoxe5z/3HwNCpi2E4HW1ZFC49jFNLezv/l0ty6F6d0mWgaxiN5MrDv
+         ZimDoqiITUTn2NHn3fyGLg+KbmNjg6SLabDTlNUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 15/57] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Fri, 27 Dec 2019 13:01:40 -0500
-Message-Id: <20191227180222.7076-15-sashal@kernel.org>
+Cc:     Phil Sutter <phil@nwl.cc>, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: [PATCH AUTOSEL 4.14 12/57] netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
+Date:   Fri, 27 Dec 2019 13:01:37 -0500
+Message-Id: <20191227180222.7076-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -61,38 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Phil Sutter <phil@nwl.cc>
 
-[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
+[ Upstream commit 164166558aacea01b99c8c8ffb710d930405ba69 ]
 
-The MDIO node on Cygnus had an reversed #address-cells and
- #size-cells properties, correct those.
+With 'bytes(__u32)' being 32, a left-shift of 31 may happen which is
+undefined for the signed 32-bit value 1. Avoid this by declaring 1 as
+unsigned.
 
-Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-Reported-by: Simon Horman <simon.horman@netronome.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/linux/netfilter/xt_sctp.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 8b2c65cd61a2..b822952c29f8 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -165,8 +165,8 @@
- 		mdio: mdio@18002000 {
- 			compatible = "brcm,iproc-mdio";
- 			reg = <0x18002000 0x8>;
--			#size-cells = <1>;
--			#address-cells = <0>;
-+			#size-cells = <0>;
-+			#address-cells = <1>;
- 			status = "disabled";
+diff --git a/include/uapi/linux/netfilter/xt_sctp.h b/include/uapi/linux/netfilter/xt_sctp.h
+index 4bc6d1a08781..b4d804a9fccb 100644
+--- a/include/uapi/linux/netfilter/xt_sctp.h
++++ b/include/uapi/linux/netfilter/xt_sctp.h
+@@ -41,19 +41,19 @@ struct xt_sctp_info {
+ #define SCTP_CHUNKMAP_SET(chunkmap, type) 		\
+ 	do { 						\
+ 		(chunkmap)[type / bytes(__u32)] |= 	\
+-			1 << (type % bytes(__u32));	\
++			1u << (type % bytes(__u32));	\
+ 	} while (0)
  
- 			gphy0: ethernet-phy@0 {
+ #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)		 	\
+ 	do {							\
+ 		(chunkmap)[type / bytes(__u32)] &= 		\
+-			~(1 << (type % bytes(__u32)));	\
++			~(1u << (type % bytes(__u32)));	\
+ 	} while (0)
+ 
+ #define SCTP_CHUNKMAP_IS_SET(chunkmap, type) 			\
+ ({								\
+ 	((chunkmap)[type / bytes (__u32)] & 		\
+-		(1 << (type % bytes (__u32)))) ? 1: 0;	\
++		(1u << (type % bytes (__u32)))) ? 1: 0;	\
+ })
+ 
+ #define SCTP_CHUNKMAP_RESET(chunkmap) \
 -- 
 2.20.1
 
