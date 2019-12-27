@@ -2,151 +2,185 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99682C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C37C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C5D20409
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7033E208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577415409;
+	bh=0YahA+kvULGCzgYTT42hVi0RhV0OrR9aY60pCf42HFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=I51R8OGX/gNdMJz5JlMYTEhFSXgqjuSW1PbB68Dk8JfLCNv/7GATX2HTRzjmCkqvv
+	 gF8ZGY0tdOHu1TlvvF3ec15pWkm+PKH2A5IodJ6poAZ84/NRJjanAcs5XS985LAH39
+	 sUk24Uyl6MV1g7TryCj61YTJpKMXl0NBP/MPiimc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfL0CrI (ORCPT
+        id S1727144AbfL0C4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:47:08 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:51058 "EHLO deadmen.hmeau.com"
+        Thu, 26 Dec 2019 21:56:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfL0CrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:47:07 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ikfeZ-0002ni-4M; Fri, 27 Dec 2019 10:47:03 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ikfeW-0003Ko-Ai; Fri, 27 Dec 2019 10:47:00 +0800
-Date:   Fri, 27 Dec 2019 10:47:00 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chandan Rajendra <chandan@linux.vnet.ibm.com>,
-        linux-fscrypt@vger.kernel.org
-Subject: [v4 PATCH] fscrypt: Allow modular crypto algorithms
-Message-ID: <20191227024700.7vrzuux32uyfdgum@gondor.apana.org.au>
-References: <20191221143020.hbgeixvlmzt7nh54@gondor.apana.org.au>
- <20191221234428.GA551@zzz.localdomain>
- <20191222084155.n4mbomsw6pl4c7kv@gondor.apana.org.au>
- <20191222164545.GA157733@zzz.localdomain>
- <20191223074623.you4ivf2yuxk4ad2@gondor.apana.org.au>
- <20191224223852.GA178036@zzz.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224223852.GA178036@zzz.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1726115AbfL0C4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:56:47 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0627E2080D;
+        Fri, 27 Dec 2019 02:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577415406;
+        bh=0YahA+kvULGCzgYTT42hVi0RhV0OrR9aY60pCf42HFs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sSeru6vWGtL9u3Fpf4KCIntPCRYwJCs1WtLdg2U6hnAIsq7JAL+R3jxHlMRDKmVF9
+         Z7eN83Ar28MkrbRRvYBbjorunwCzgwxtb7IFCR5ysSpPmUiko2ovtE5ULv/JkhrjkG
+         +k1pqaNG0Fs23lKT4ED8wuVeLQr+QfwwP5raKSCc=
+Date:   Fri, 27 Dec 2019 11:56:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 21/22] tracing/boot: Add function tracer filter
+ options
+Message-Id: <20191227115639.d6c33d51d2b10f33dbd05796@kernel.org>
+In-Reply-To: <201912270227.Dwa2YddH%lkp@intel.com>
+References: <157736928302.11126.8760178688093051786.stgit@devnote2>
+        <201912270227.Dwa2YddH%lkp@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 04:38:52PM -0600, Eric Biggers wrote:
+
+Oops, the ftrace_set_filter/notrace_filter depend on CONFIG_DYNAMIC_FTRACE, not CONFIG_FUNCTION_TRACER
+
+Thanks, I'll fix it.
+
+On Fri, 27 Dec 2019 02:05:11 +0800
+kbuild test robot <lkp@intel.com> wrote:
+
+> Hi Masami,
 > 
-> This needs to be under EXT4_FS, not EXT3_FS.  That should address the kbuild
-> test robot error.
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on trace/for-next]
+> [also build test ERROR on lwn/docs-next linus/master v5.5-rc3]
+> [cannot apply to tip/perf/core next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Masami-Hiramatsu/tracing-bootconfig-Boot-time-tracing-and-Extra-boot-config/20191227-002009
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git for-next
+> config: xtensa-allyesconfig (attached as .config)
+> compiler: xtensa-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=xtensa 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    In file included from kernel/trace/trace_boot.c:9:0:
+> >> include/linux/ftrace.h:719:50: error: expected identifier or '(' before '{' token
+>     #define ftrace_set_filter(ops, buf, len, reset) ({ -ENODEV; })
+>                                                      ^
+> >> kernel/trace/trace_boot.c:249:12: note: in expansion of macro 'ftrace_set_filter'
+>     extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+>                ^~~~~~~~~~~~~~~~~
+>    include/linux/ftrace.h:720:51: error: expected identifier or '(' before '{' token
+>     #define ftrace_set_notrace(ops, buf, len, reset) ({ -ENODEV; })
+>                                                       ^
+> >> kernel/trace/trace_boot.c:251:12: note: in expansion of macro 'ftrace_set_notrace'
+>     extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
+>                ^~~~~~~~~~~~~~~~~~
+> --
+>    In file included from kernel//trace/trace_boot.c:9:0:
+> >> include/linux/ftrace.h:719:50: error: expected identifier or '(' before '{' token
+>     #define ftrace_set_filter(ops, buf, len, reset) ({ -ENODEV; })
+>                                                      ^
+>    kernel//trace/trace_boot.c:249:12: note: in expansion of macro 'ftrace_set_filter'
+>     extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+>                ^~~~~~~~~~~~~~~~~
+>    include/linux/ftrace.h:720:51: error: expected identifier or '(' before '{' token
+>     #define ftrace_set_notrace(ops, buf, len, reset) ({ -ENODEV; })
+>                                                       ^
+>    kernel//trace/trace_boot.c:251:12: note: in expansion of macro 'ftrace_set_notrace'
+>     extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
+>                ^~~~~~~~~~~~~~~~~~
+> 
+> vim +/ftrace_set_filter +249 kernel/trace/trace_boot.c
+> 
+>    246	
+>    247	#ifdef CONFIG_FUNCTION_TRACER
+>    248	extern bool ftrace_filter_param __initdata;
+>  > 249	extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+>    250				     int len, int reset);
+>  > 251	extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
+>    252				      int len, int reset);
+>    253	static void __init
+>    254	trace_boot_set_ftrace_filter(struct trace_array *tr, struct xbc_node *node)
+>    255	{
+>    256		struct xbc_node *anode;
+>    257		const char *p;
+>    258		char *q;
+>    259	
+>    260		xbc_node_for_each_array_value(node, "ftrace.filters", anode, p) {
+>    261			q = kstrdup(p, GFP_KERNEL);
+>    262			if (!q)
+>    263				return;
+>    264			if (ftrace_set_filter(tr->ops, q, strlen(q), 0) < 0)
+>    265				pr_err("Failed to add %s to ftrace filter\n", p);
+>    266			else
+>    267				ftrace_filter_param = true;
+>    268			kfree(q);
+>    269		}
+>    270		xbc_node_for_each_array_value(node, "ftrace.notraces", anode, p) {
+>    271			q = kstrdup(p, GFP_KERNEL);
+>    272			if (!q)
+>    273				return;
+>    274			if (ftrace_set_notrace(tr->ops, q, strlen(q), 0) < 0)
+>    275				pr_err("Failed to add %s to ftrace filter\n", p);
+>    276			else
+>    277				ftrace_filter_param = true;
+>    278			kfree(q);
+>    279		}
+>    280	}
+>    281	#else
+>    282	#define trace_boot_set_ftrace_filter(tr, node) do {} while (0)
+>    283	#endif
+>    284	
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
 
-Yes indeed.
-
----8<---
-The commit 643fa9612bf1 ("fscrypt: remove filesystem specific
-build config option") removed modular support for fs/crypto.  This
-causes the Crypto API to be built-in whenever fscrypt is enabled.
-This makes it very difficult for me to test modular builds of
-the Crypto API without disabling fscrypt which is a pain.
-
-As fscrypt is still evolving and it's developing new ties with the
-fs layer, it's hard to build it as a module for now.
-
-However, the actual algorithms are not required until a filesystem
-is mounted.  Therefore we can allow them to be built as modules.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/fs/crypto/Kconfig b/fs/crypto/Kconfig
-index ff5a1746cbae..02df95b44331 100644
---- a/fs/crypto/Kconfig
-+++ b/fs/crypto/Kconfig
-@@ -2,13 +2,8 @@
- config FS_ENCRYPTION
- 	bool "FS Encryption (Per-file encryption)"
- 	select CRYPTO
--	select CRYPTO_AES
--	select CRYPTO_CBC
--	select CRYPTO_ECB
--	select CRYPTO_XTS
--	select CRYPTO_CTS
--	select CRYPTO_SHA512
--	select CRYPTO_HMAC
-+	select CRYPTO_HASH
-+	select CRYPTO_SKCIPHER
- 	select KEYS
- 	help
- 	  Enable encryption of files and directories.  This
-@@ -16,3 +11,15 @@ config FS_ENCRYPTION
- 	  efficient since it avoids caching the encrypted and
- 	  decrypted pages in the page cache.  Currently Ext4,
- 	  F2FS and UBIFS make use of this feature.
-+
-+# Filesystems supporting encryption must select this if FS_ENCRYPTION.  This
-+# allows the algorithms to be built as modules when all the filesystems are.
-+config FS_ENCRYPTION_ALGS
-+	tristate
-+	select CRYPTO_AES
-+	select CRYPTO_CBC
-+	select CRYPTO_CTS
-+	select CRYPTO_ECB
-+	select CRYPTO_HMAC
-+	select CRYPTO_SHA512
-+	select CRYPTO_XTS
-diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
-index ef42ab040905..db9bfa08d3e0 100644
---- a/fs/ext4/Kconfig
-+++ b/fs/ext4/Kconfig
-@@ -39,6 +39,7 @@ config EXT4_FS
- 	select CRYPTO
- 	select CRYPTO_CRC32C
- 	select FS_IOMAP
-+	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
- 	help
- 	  This is the next generation of the ext3 filesystem.
- 
-diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
-index 652fd2e2b23d..599fb9194c6a 100644
---- a/fs/f2fs/Kconfig
-+++ b/fs/f2fs/Kconfig
-@@ -6,6 +6,7 @@ config F2FS_FS
- 	select CRYPTO
- 	select CRYPTO_CRC32
- 	select F2FS_FS_XATTR if FS_ENCRYPTION
-+	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
- 	help
- 	  F2FS is based on Log-structured File System (LFS), which supports
- 	  versatile "flash-friendly" features. The design has been focused on
-diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
-index 69932bcfa920..45d3d207fb99 100644
---- a/fs/ubifs/Kconfig
-+++ b/fs/ubifs/Kconfig
-@@ -12,6 +12,7 @@ config UBIFS_FS
- 	select CRYPTO_ZSTD if UBIFS_FS_ZSTD
- 	select CRYPTO_HASH_INFO
- 	select UBIFS_FS_XATTR if FS_ENCRYPTION
-+	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
- 	depends on MTD_UBI
- 	help
- 	  UBIFS is a file system for flash devices which works on top of UBI.
 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Masami Hiramatsu <mhiramat@kernel.org>
