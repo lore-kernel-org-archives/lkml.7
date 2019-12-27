@@ -2,215 +2,115 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C654EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED85C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9948220828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C57920828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfL0Lrc (ORCPT
+        id S1727050AbfL0LvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:47:32 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46419 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfL0Lrb (ORCPT
+        Fri, 27 Dec 2019 06:51:16 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:56324 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0LvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 06:47:31 -0500
-Received: from p5b2a6dac.dip0.t-ipconnect.de ([91.42.109.172] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iko5X-0006iS-El; Fri, 27 Dec 2019 11:47:27 +0000
-Date:   Fri, 27 Dec 2019 12:47:26 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        keescook@chromium.org
-Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
-Message-ID: <20191227114725.xsacnaoaaxdv6yg3@wittgenstein>
-References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
- <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
- <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
- <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
- <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
- <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
+        Fri, 27 Dec 2019 06:51:16 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-2e-5e05f03118ce
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 90.F8.08102.130F50E5; Fri, 27 Dec 2019 12:51:13 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Fri, 27 Dec 2019 12:51:08 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "pavel@ucw.cz" <pavel@ucw.cz>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v7 11/12] leds: Add common LED binding parsing support
+ to LED class/core
+Thread-Topic: [PATCH v7 11/12] leds: Add common LED binding parsing support
+ to LED class/core
+Thread-Index: AQHVtlJMyatI9ieot0i0jk0Qmtw3YKfE7uMAgAjrkIA=
+Date:   Fri, 27 Dec 2019 11:51:07 +0000
+Message-ID: <4f5c3d6b5e10936b3bae672021aec375c2880bf2.camel@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+         <c7abf8d15ea54fee504fbec5666d013c26d3b62a.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191221193758.GJ32732@amd>
+In-Reply-To: <20191221193758.GJ32732@amd>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <35D7AE440FBBEF4692D77DA8C8D1C20F@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
-User-Agent: NeoMutt/20180716
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0wTWRTHc2emM7fowFhed+sjUjVm1yxKQuJdl6gflIxGjYkaEqN0Bxhb
+        Ip3itBjdJYomPlqQYHyFhhajIqgEtMpiiW4QwQXWFyKoEVSEKBAXMSBqxMdMR4VPc+b8/7/z
+        Px/OhaThGW2E6ZJTlCUhw0SHULVlH/2/xg3qkuf1dfyGT7W0MXjfwGkGD3ubKXykq4fGxfW3
+        dTj3v0s6/LjqPIWfvm0AeOT+fgIfHi0l8Ju8Jzp8sXgU4NaaIhpXvaoA+Ma5+zQuedBC4KKS
+        Rgq3NC/Fnc0NNN5ztZ7Bn9svUIsj+XJfOeBfP9zD8L7yv/iAp5Ph/WddNN/RfoXm/31YTfDH
+        fB8IvuzcO4Yf8k9bHbJ+QkKK4Ny6Jt0izV34xwTrLXcvlVkWuu3u00oqB7xn3UAPEReP8ttP
+        Um4QAg1cG0C9TaWM9tMI0K6XhYoCIc0lIPcjRgUiuBh0Mc9Fqx6S+xuiwIs2QvWEc8mounSm
+        5jGjit5iQqsXoKZbd4MWipuFjnrXqm2WW4UqCw8SWtR1gHx5PUG/nvsZXQ90BLMANxW5cgaC
+        fZKLRv4X73Ta0hw6deUOqdWRqK/787e+CV390BVcmVTmVNbM1dDF6PlgDdDqGHQ4t4vRdpiE
+        mgp7qAIQ5RmX4BmjPeNozzjaM44+DnRnAbIJ6RkWwSnGxcpiVqxst9qUT6rd5gfaxQxfBl/q
+        ltUBAoI68BMkTJHsvRJdsiE0xZ623So4rGY5K0N01AEESVMEK1kUjU0Ttv8pyvbv0mRImaLZ
+        2V0HNxo4NWuzKGaK8nd1CoQmxDpeK+AkWbSI2zalZzjHZALq1eEhxgiHKKWJspDltJrV8zA7
+        lPtQpYlK7kIVZx2Zgk3pamgzmAML+rwnSFjvLTlBGijJLonGaHa6auVUqzVL+hHUD6IhMIWz
+        n/5X1InKs/kxp1+JIJSINwZCjXAKY5IxB+x9+7t++fIRy6qk6uczhPhrW6MoGLbrZuz8hmWZ
+        N7a0hl3ObnQNDWcL7opB8okxsPbjy8TUbH+VfI/IExOiksJz9ZSUvzLM3DN6ZtAf+0/K7oii
+        fG+ifVO2r3DdY3rBtc5ZO2rnxM/bMPvQ0EBijM01ElgUtT90b/fO1iUHOpL6V5goh1WI+4WU
+        HcJX+zfP7PMDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 01:31:31PM +1100, Aleksa Sarai wrote:
-> On 2019-12-27, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > > On December 26, 2019 3:32:29 PM GMT+01:00, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > >On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > > >> On Wed, Dec 25, 2019 at 09:45:33PM +0000, Sargun Dhillon wrote:
-> > > >> > This patch is a small change in enforcement of the uapi for
-> > > >> > SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure
-> > > >which is
-> > > >> > passed (seccomp_notif), has a flags member. Previously that could
-> > > >be
-> > > >> > set to a nonsense value, and we would ignore it. This ensures that
-> > > >> > no flags are set.
-> > > >> > 
-> > > >> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > > >> > Cc: Kees Cook <keescook@chromium.org>
-> > > >> 
-> > > >> I'm fine with this since we soon want to make use of the flag
-> > > >argument
-> > > >> when we add a flag to get a pidfd from the seccomp notifier on
-> > > >receive.
-> > > >> The major users I could identify already pass in seccomp_notif with
-> > > >all
-> > > >> fields set to 0. If we really break users we can always revert; this
-> > > >> seems very unlikely to me though.
-> > > >> 
-> > > >> One more question below, otherwise:
-> > > >> 
-> > > >> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > >> 
-> > > >> > ---
-> > > >> >  kernel/seccomp.c | 7 +++++++
-> > > >> >  1 file changed, 7 insertions(+)
-> > > >> > 
-> > > >> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > >> > index 12d2227e5786..455925557490 100644
-> > > >> > --- a/kernel/seccomp.c
-> > > >> > +++ b/kernel/seccomp.c
-> > > >> > @@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct
-> > > >seccomp_filter *filter,
-> > > >> >  	struct seccomp_notif unotif;
-> > > >> >  	ssize_t ret;
-> > > >> >  
-> > > >> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
-> > > >> > +		return -EFAULT;
-> > > >> > +
-> > > >> > +	/* flags is reserved right now, make sure it's unset */
-> > > >> > +	if (unotif.flags)
-> > > >> > +		return -EINVAL;
-> > > >> > +
-> > > >> 
-> > > >> Might it make sense to use
-> > > >> 
-> > > >> 	err = copy_struct_from_user(&unotif, sizeof(unotif), buf,
-> > > >sizeof(unotif));
-> > > >> 	if (err)
-> > > >> 		return err;
-> > > >> 
-> > > >> This way we check that the whole struct is 0 and report an error as
-> > > >soon
-> > > >> as one of the members is non-zero. That's more drastic but it'd
-> > > >ensure
-> > > >> that other fields can be used in the future for whatever purposes.
-> > > >> It would also let us get rid of the memset() below. 
-> > > >
-> > > >Given that this isn't an extensible struct, it would be simpler to just
-> > > >do
-> > > >check_zeroed_user() -- copy_struct_from_user() is overkill. That would
-> > > >also remove the need for any copy_from_user()s and the memset can be
-> > > >dropped by just doing
-> > > >
-> > > >  struct seccomp_notif unotif = {};
-> > > >
-> > > >> >  	memset(&unotif, 0, sizeof(unotif));
-> > > >> >  
-> > > >> >  	ret = down_interruptible(&filter->notif->request);
-> > > >> > -- 
-> > > >> > 2.20.1
-> > > >> > 
-> > > 
-> > > It is an extensible struct. That's why we have notifier size checking built in.
-> > 
-> > Ah right, NOTIF_GET_SIZES. I reckon check_zeroed_user() is still a bit
-> > simpler since none of the fields are used right now (and really, this
-> > patch should be checking all of them, not just ->flags, if we want to
-> > use any of them in the future).
-> 
-> Scratch that -- as Tycho just mentioned, there is un-named padding in
-> the struct so check_zeroed_user() is the wrong thing to do. But this
-
-Hm, I don't think so.
-I understood Tycho's point as _if_ there ever is padding then this would
-not be zeroed.
-Right now, there is no padding since the struct is correctly padded:
-
-struct seccomp_data {
-	int nr;
-	__u32 arch;
-	__u64 instruction_pointer;
-	__u64 args[6];
-};
-
-struct seccomp_notif {
-	__u64 id;
-	__u32 pid;
-	__u32 flags;
-	struct seccomp_data data;
-};
-
-which would be - using pahole:
-
-struct seccomp_data {
-        int                        nr;                   /*     0     4 */
-        __u32                      arch;                 /*     4     4 */
-        __u64                      instruction_pointer;  /*     8     8 */
-        __u64                      args[6];              /*    16    48 */
-
-        /* size: 64, cachelines: 1, members: 4 */
-};
-struct seccomp_notif {
-        __u64                      id;                   /*     0     8 */
-        __u32                      pid;                  /*     8     4 */
-        __u32                      flags;                /*    12     4 */
-        struct seccomp_data data;                        /*    16    64 */
-
-        /* size: 80, cachelines: 2, members: 4 */
-        /* last cacheline: 16 bytes */
-};
-
-The only worry would be a 2byte int type but there's no architecture
-we support which does this right now afaict.
-
-> also will make extensions harder to deal with because (presumably) they
-> will also have un-named padding, making copy_struct_from_user() the
-
-This all will be a non-issue if we just use __u64 for extensions.
-
-My point about using copy_struct_from_user() was that we should verify
-that _all_ fields are uninitialized and not just the flags argument
-since we might introduce a flags argument that requires another already
-existing member in seccomp_notif to be set to a value. We should do this
-change now so we don't have to risk breaking someone in the future.
-
-I'm trying to get at least Mozilla/Firefox off of their crazy
-SECCOMP_RET_TRAP way of implementing their broker onto the user notifier
-and they will likely need some extensions. That includes the pidfd stuff
-for seccomp that Sargun will likely be doing and the new pidfd_getfd()
-syscall. So it's not unlikely that we might need other already existing
-fields in that struct to be set to some value.
-
-I don't particulary care how we do it:
-- We can do a simple copy_from_user() and check each field individually.
-- Use copy_struct_from_user().
-  That is safe to do right now since there is no padding afaict and
-  it'll automatically verify new fields as well.
-  If I understand the worry correctly then the argument against
-  copy_struct_from_user() here is that there might be padding introduced
-  and userspace will not do an explicit memset() but rather rely on an
-  empty inializer {} and will _accidently_ pass down a struct which has
-  __all fields cleared__ but __uninitialized padding__ and we tell them
-  EINVAL? That can only happen if we introduce padding in the struct
-  which I'd argue we just don't do. That'll be in line with what we
-  require from our ABIs already anyway.
-
-Christian
+DQpPbiBTYXQsIDIwMTktMTItMjEgYXQgMjA6MzcgKzAxMDAsIFBhdmVsIE1hY2hlayB3cm90ZToN
+Cj4gSGkhDQo+IA0KPiA+IFF1Y2lrIGdyZXAgZm9yICdmb3JfZWFjaCcgb3IgJ2xpbnV4LGRlZmF1
+bHQtdHJpZ2dlcicgb3INCj4gDQo+IHF1aWNrLg0KPiANCj4gPiBJZiBpbml0X2RhdGEgaXMgZ292
+ZW4gYnV0IG5vIHN0YXJ0aW5nIHBvaW50IGZvciBub2RlIGxvb2t1cCAtIHRoZW4NCj4gDQo+IGlz
+IGdpdmVuLg0KPiANCj4gPiAocGFyZW50KSBkZXZpY2UncyBvd24gRFQgbm9kZSBpcyB1c2VkLiBJ
+ZiBubyBsZWQtY29tcGF0aWJsZSBpcw0KPiA+IGdpdmVuLA0KPiA+IHRoZW4gb2ZfbWF0Y2ggaXMg
+c2VhcmNoZWQgZm9yLiBJZiBuZWl0aGVyIGxlZC1jb21wYXRpYmxlIG5vdA0KPiA+IG9mX21hdGNo
+DQo+IA0KPiBub3Igb2ZfbWF0Y2guDQo+IA0KPiA+IGlzIGdpdmVuIHRoZW4gZGV2aWNlJ3Mgb3du
+IG5vZGUgb3IgcGFzc2VkIHN0YXJ0aW5nIHBvaW50IGFyZSB1c2VkDQo+ID4gYXMNCj4gPiBzdWNo
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRp
+bmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KDQovL3NuaXANCg0KPiA+IEBA
+IC0zMjIsNiArMzk4LDEwIEBAIGludCBsZWRfY2xhc3NkZXZfcmVnaXN0ZXJfZXh0KHN0cnVjdCBk
+ZXZpY2UNCj4gPiAqcGFyZW50LA0KPiA+ICAJCQlsZWRfY2Rldi0+bmFtZSk7DQo+ID4gIA0KPiA+
+ICAJcmV0dXJuIDA7DQo+ID4gK2Vycl9vdXQ6DQo+ID4gKwlpZiAobGVkX2NkZXYtPmZ3bm9kZV9v
+d25lZCkNCj4gPiArCQlmd25vZGVfaGFuZGxlX3B1dChmdyk7DQo+ID4gKwlyZXR1cm4gcmV0Ow0K
+PiA+ICB9DQo+IA0KPiBsZWRfY2Rldi0+Zndub2RlX293bmVkID0gZmFsc2UgaGVyZT8NCg0KSSBh
+ZGRlZCB0aGlzIGFsdGhvdWdoIHdpdGggdGhlIGN1cnJlbnQgcGF0Y2ggaXQgc2hvdWxkIG5vdCBi
+ZSByZXF1aXJlZC4NClRoZSBsZWRfY2Rldi0+Zndub2RlX293bmVkIGlzIGFueXdheXMgcmUtaW5p
+dGlhbGl6ZWQgYXQgdGhlIGJlZ2lubmluZw0Kb2YgdGhlICdsZWRfY2xhc3NkZXZfcmVnaXN0ZXJf
+ZXh0Jy4gSXQgd29uJ3QgZWF0IG1hbnkgY3ljbGVzIHRvIHplcm8gaXQNCmhlcmUgdGhvdWdoIHNv
+IHBlcmhhcHMgaXQncyBzYWZlciB0byBqdXN0IGRvIGl0Lg0KDQpJIGFtIG5vdCBzdXJlIEkgY2Fu
+IGZpbmlzaCBhbmQgdGVzdCB0aGUgcGF0Y2ggdjcgdG9kYXkuIFNvIGl0IG1heSBiZQ0KbmV4dCB5
+ZWFyIHdoZW4gSSBhbSBhYmxlIHRvIHNlbmQgaXQuLi4gU29ycnkgZm9yIHRoZSBkZWxheSENCg0K
+DQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
