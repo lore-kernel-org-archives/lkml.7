@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0237C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACECCC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4591206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE71206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469450;
-	bh=HJ0ymcUkdCCjoz9nZLNfodLIvHB94KyevMzMw3Nhzz8=;
+	s=default; t=1577469457;
+	bh=1TsBAZt0kGZestdFokrITKiGHIC4EGqDGcbQA7U+5uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfY0dscQspN0nWHwII1LDn5aag/aNisYj484amaqNFemcVgAjZXRoqceO0iHKoWK4
-	 rxQBJqzlFD1ZpbOG4hAd1zk67Yb46XVgD0diEUSsQZ6X5Mvx4nKxscIKHqnD3D3nUm
-	 t1urBj7fKfciVaQbk8suqcIRwIU4BCuLR2UB0azo=
+	b=W0pZ02kRfQTakXe5blngPqSbW5GVeUjEiXVovGVQo492TZn7r0oGM3D/owiAwtKxt
+	 OpjM1UwFkIAhlj8HPPBGfjyURxh/RkgTr4Fppt5UYnnuEUoD+DRd8zVukZkkwPTooL
+	 9+9DO7mv6EibYA8D7OxLs8SnW+qtDMT+WuxatHGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfL0Rlo (ORCPT
+        id S1728290AbfL0R5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:57:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbfL0Rlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:36 -0500
+        id S1727570AbfL0Rlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5329721775;
-        Fri, 27 Dec 2019 17:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5BE42173E;
+        Fri, 27 Dec 2019 17:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468495;
-        bh=HJ0ymcUkdCCjoz9nZLNfodLIvHB94KyevMzMw3Nhzz8=;
+        s=default; t=1577468503;
+        bh=1TsBAZt0kGZestdFokrITKiGHIC4EGqDGcbQA7U+5uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAh7GBGUU2igbVkSXBMyyXdEGiawjjdwywsuhfOM6+vWGP7H8gN0mRJ2OebqxYjW/
-         sNe6Rwym4m5rmsnlBjh//+C5ldb3IHuvBfE1YSMASIL9UHkCJ4UMMT4eSCfEklZLKo
-         21iTR6Q+Yk37NTTmgwTcIeD2gUdQ2MyVeapKWVio=
+        b=upiifxKDpBTsmHJp8+9npyp+geCT99PTIbix1KKUaM/YWe4OlCfqI0hmBvDg2NNm9
+         QzAJa3u5j9ru70PTFv+bgSBKefQDldRxEi3CN4VOnKTVWURrFpmjnDrqpZ3bBk9Cob
+         2dZm54uo1QDgFU/nNcR+sDP+akIBuA6jwkKPD1qk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Roese <sr@denx.de>, Fabio Estevam <festevam@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 030/187] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
-Date:   Fri, 27 Dec 2019 12:38:18 -0500
-Message-Id: <20191227174055.4923-30-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/187] netfilter: nf_tables_offload: return EOPNOTSUPP if rule specifies no actions
+Date:   Fri, 27 Dec 2019 12:38:25 -0500
+Message-Id: <20191227174055.4923-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,37 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
+[ Upstream commit 81ec61074bcf68acfcb2820cda3ff9d9984419c7 ]
 
-Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
-does not work on the NXP i.MX6ULL EVK. Fix this by adding this
-compatible property to the DT.
+If the rule only specifies the matching side, return EOPNOTSUPP.
+Otherwise, the front-end relies on the drivers to reject this rule.
 
-Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
-Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_offload.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index c2a9dd57e56a..aa86341adaaa 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -215,7 +215,7 @@
- 	flash0: n25q256a@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		compatible = "micron,n25q256a";
-+		compatible = "micron,n25q256a", "jedec,spi-nor";
- 		spi-max-frequency = <29000000>;
- 		spi-rx-bus-width = <4>;
- 		spi-tx-bus-width = <4>;
+diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
+index 6f7eab502e65..e743f811245f 100644
+--- a/net/netfilter/nf_tables_offload.c
++++ b/net/netfilter/nf_tables_offload.c
+@@ -44,6 +44,9 @@ struct nft_flow_rule *nft_flow_rule_create(struct net *net,
+ 		expr = nft_expr_next(expr);
+ 	}
+ 
++	if (num_actions == 0)
++		return ERR_PTR(-EOPNOTSUPP);
++
+ 	flow = nft_flow_rule_alloc(num_actions);
+ 	if (!flow)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.20.1
 
