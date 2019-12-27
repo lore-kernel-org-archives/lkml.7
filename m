@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CEDC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE95C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75BA924656
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DC720740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468727;
-	bh=rf5GDJhkL4Q+n2tNS9aPD1oxmd0VP+VQAoMT3YDuq3A=;
+	s=default; t=1577468729;
+	bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iq48bEZsVz/zalroRyMQ9kzQxrZtmKsw8X23n3uBUPljQh9NWGjZTbV/3cyKjcEfV
-	 NTkvyrMRVbTjl3V9jPcqSoQdTy/xGQWcuSHaBshKQtCLTDycHuXzzHous4ROK+pT/h
-	 puMth07XcnkcbgPbXsGnzdwQ3jw9FybFw8vuMBWc=
+	b=X7o1T0axKZXMDT9hBJFZRiyFa6KzmTttD7XPnIDumh2LOveZ3yGGL44CQ1XkLypMA
+	 OwPjV1wnTzppnykCh0fQTrTs/PxT2NdA9ksZjd09+qzmhd8F765MNiULHbZ1h7klLc
+	 yHZmZTXvDGbBN1ngCYg0d2uo8jrNdDCqqY71Eiv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfL0RpZ (ORCPT
+        id S1728788AbfL0Rp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43920 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfL0RpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:45:20 -0500
+        id S1728139AbfL0RpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5883206CB;
-        Fri, 27 Dec 2019 17:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 363C521D7E;
+        Fri, 27 Dec 2019 17:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468719;
-        bh=rf5GDJhkL4Q+n2tNS9aPD1oxmd0VP+VQAoMT3YDuq3A=;
+        s=default; t=1577468723;
+        bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3oMAdjN87xK1oS9IkJpf375CTNn0Idbja2m8VW7GBYXbnKCWCZ9sJPATWdlGrJI7
-         +mk4i48GHJayvKYNX0Cgv5yyWH3H7XkN4JcU8UqDEhF8jzkn7Lsbrc6d8XxdH6+XcZ
-         PQdu1BcdmgFjvI1t4nfnGAQG3Oq+PgCV50QpQVRY=
+        b=XmX5C18QsZKkEpgY16u5EAVOLmNdDeTO8zXSL/AmrKWcoA22b4p/DKaTgcZ7DAask
+         hOoZsSiliuO00wrg52QykXeexAaNkUe5c7LI36bdLD5Kw0i2KcTJ09rt3/Wo340Q8R
+         YpNZBKi5v1GxHv5Jj9d7NPo2fplOz+WSu9xvTSNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        kbuild test robot <lkp@intel.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 73/84] s390/purgatory: do not build purgatory with kcov, kasan and friends
-Date:   Fri, 27 Dec 2019 12:43:41 -0500
-Message-Id: <20191227174352.6264-73-sashal@kernel.org>
+Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 76/84] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
+Date:   Fri, 27 Dec 2019 12:43:44 -0500
+Message-Id: <20191227174352.6264-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,52 +63,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit c23587c92f6e3260fe3b82bb75b38aa2553b9468 ]
+[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
 
-the purgatory must not rely on functions from the "old" kernel,
-so we must disable kasan and friends. We also need to have a
-separate copy of string.c as the default does not build memcmp
-with KASAN.
+The max data count (mdc) is an unsigned 16-bit integer value as per AR
+documentation and is received via ccw_device_get_mdc() for a specific
+path mask from the CIO layer. The function itself also always returns a
+positive mdc value or 0 in case mdc isn't supported or couldn't be
+determined.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Though, the comment for this function describes a negative return value
+to indicate failures.
+
+As a result, the DASD device driver interprets the return value of
+ccw_device_get_mdc() incorrectly. The error case is essentially a dead
+code path.
+
+To fix this behaviour, check explicitly for a return value of 0 and
+change the comment for ccw_device_get_mdc() accordingly.
+
+This fix merely enables the error code path in the DASD functions
+get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
+stays the same and is still correct.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/purgatory/Makefile | 6 ++++--
- arch/s390/purgatory/string.c | 3 +++
- 2 files changed, 7 insertions(+), 2 deletions(-)
- create mode 100644 arch/s390/purgatory/string.c
+ drivers/s390/block/dasd_eckd.c | 9 +++++----
+ drivers/s390/cio/device_ops.c  | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index ce6a3f75065b..fdccb7689bb9 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -13,8 +13,10 @@ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
- $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
- 	$(call if_changed_rule,as_o_S)
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index f89f9d02e788..108fb1c77e1d 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -1135,7 +1135,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ {
+ 	struct dasd_eckd_private *private = device->private;
+ 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
+-	int tpm, mdc;
++	unsigned int mdc;
++	int tpm;
  
--$(obj)/string.o: $(srctree)/arch/s390/lib/string.c FORCE
--	$(call if_changed_rule,cc_o_c)
-+KCOV_INSTRUMENT := n
-+GCOV_PROFILE := n
-+UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
+ 	if (dasd_nofcx)
+ 		return 0;
+@@ -1149,7 +1150,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ 		return 0;
  
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib
- LDFLAGS_purgatory.ro += -z nodefaultlib
-diff --git a/arch/s390/purgatory/string.c b/arch/s390/purgatory/string.c
-new file mode 100644
-index 000000000000..c98c22a72db7
---- /dev/null
-+++ b/arch/s390/purgatory/string.c
-@@ -0,0 +1,3 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define __HAVE_ARCH_MEMCMP	/* arch function */
-+#include "../lib/string.c"
+ 	mdc = ccw_device_get_mdc(device->cdev, 0);
+-	if (mdc < 0) {
++	if (mdc == 0) {
+ 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
+ 		return 0;
+ 	} else {
+@@ -1160,12 +1161,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
+ {
+ 	struct dasd_eckd_private *private = device->private;
+-	int mdc;
++	unsigned int mdc;
+ 	u32 fcx_max_data;
+ 
+ 	if (private->fcx_max_data) {
+ 		mdc = ccw_device_get_mdc(device->cdev, lpm);
+-		if ((mdc < 0)) {
++		if (mdc == 0) {
+ 			dev_warn(&device->cdev->dev,
+ 				 "Detecting the maximum data size for zHPF "
+ 				 "requests failed (rc=%d) for a new path %x\n",
+diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
+index 4435ae0b3027..f0cae1973f78 100644
+--- a/drivers/s390/cio/device_ops.c
++++ b/drivers/s390/cio/device_ops.c
+@@ -624,7 +624,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
+  * @mask: mask of paths to use
+  *
+  * Return the number of 64K-bytes blocks all paths at least support
+- * for a transport command. Return values <= 0 indicate failures.
++ * for a transport command. Return value 0 indicates failure.
+  */
+ int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
+ {
 -- 
 2.20.1
 
