@@ -2,101 +2,227 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622F3C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4D4C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E35120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577486677;
-	bh=tzJQU5CSSV92rINpY/mBKDQersZHZBVAVKXDHAdiH5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0sR55cd+wIWYRBXapzyU3UwAXnAI6cN+rLa+KfH0YTnqwjSCc7niocrmUekP5aP05
-	 efIHKx7dFZ1UX1XcgxI0FSZwgASnkERrsZSNl4y3P+uQIOHoPFg15sp+Vko0XOkKD4
-	 TC5L557YoSM5Je+71DKi3TCGTLKyhIzqXkcwpqjA=
+	by mail.kernel.org (Postfix) with ESMTP id EE192208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 22:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ccim0X8M";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="ADWlHYhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfL0Wog (ORCPT
+        id S1726220AbfL0W5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 17:44:36 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34700 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL0Wog (ORCPT
+        Fri, 27 Dec 2019 17:57:11 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:36010 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbfL0W5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 17:44:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tzJQU5CSSV92rINpY/mBKDQersZHZBVAVKXDHAdiH5U=; b=Y4GGwVEetsd9jF2EYMdVo/6g2
-        tF4pFXNp7fct+mrZxeQYF2J1wA0CIvDnLXzVoYZ12n+BXqkcElhg9w7gMGgtW+2lXUozNLqDoN48U
-        NCgA5kSLqNndH+oQWjlb70VizzVSFsMRViiSYtFy2Qx8cF3RSvpPeAn1P1PA4uYnc/fug=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ikyLO-0006aP-Sc; Fri, 27 Dec 2019 22:44:30 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4557CD01A22; Fri, 27 Dec 2019 22:44:30 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 22:44:30 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH AUTOSEL 5.4 006/187] ASoC: max98090: exit workaround
- earlier if PLL is locked
-Message-ID: <20191227224430.GO27497@sirena.org.uk>
-References: <20191227174055.4923-1-sashal@kernel.org>
- <20191227174055.4923-6-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="keoAwTxaagou87Dg"
-Content-Disposition: inline
-In-Reply-To: <20191227174055.4923-6-sashal@kernel.org>
-X-Cookie: I have many CHARTS and DIAGRAMS..
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Dec 2019 17:57:10 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 38B718EE10C;
+        Fri, 27 Dec 2019 14:57:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1577487430;
+        bh=K+tf+8cWkcZ4RMhGp2HRRSr87o8eRXh1u1OgW1IKsdM=;
+        h=Subject:From:To:Cc:Date:From;
+        b=ccim0X8MD/TuGqEwu5dhTt2HJ8RKOLNBI766A6L+eSa/aRxY3MV4ltdzzlfMl9lZA
+         K0aYPp7F1i+grf6gu7eHzpl2TjnPrEwpvEj3P3CbsGCgSNc+IBoymCHZFHEjnKkkEL
+         AUZcTXMCZo9Dzj0HNut34IJ2eexOF14AVQII4294=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 49W62Kp4joOS; Fri, 27 Dec 2019 14:57:10 -0800 (PST)
+Received: from jarvis.lan (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id B31A58EE0E9;
+        Fri, 27 Dec 2019 14:57:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1577487429;
+        bh=K+tf+8cWkcZ4RMhGp2HRRSr87o8eRXh1u1OgW1IKsdM=;
+        h=Subject:From:To:Cc:Date:From;
+        b=ADWlHYhPbI2UtW58EuEceEALpxnFX2bzDH6jYLZm2Xtgyymv4vRuFETfdiLAxb10O
+         Mla/Aa/AJlWyEMWnW2HwbXjvljzL+7NSJVMvIBrGbma/p3iA4dki/fu7QxFOcmQbgx
+         MyeQ5hpfCSXCBgNNflWRn1ykzJ8vdRLuqvDwigkg=
+Message-ID: <1577487428.3225.6.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.5-rc3
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 27 Dec 2019 14:57:08 -0800
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Four fixes and one spelling update, all in drivers: 2 in lpfc and the
+rest in mp3sas, cxgbi and target.
 
---keoAwTxaagou87Dg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch is available here:
 
-On Fri, Dec 27, 2019 at 12:37:54PM -0500, Sasha Levin wrote:
-> From: Tzung-Bi Shih <tzungbi@google.com>
->=20
-> [ Upstream commit 6f49919d11690a9b5614445ba30fde18083fdd63 ]
->=20
-> According to the datasheet, PLL lock time typically takes 2 msec and
-> at most takes 7 msec.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Same here and for the other max98090 patch - once things are
-fixed it'll be OK.
+The short changelog is:
 
---keoAwTxaagou87Dg
-Content-Type: application/pgp-signature; name="signature.asc"
+Arnd Bergmann (1):
+      scsi: lpfc: fix build failure with DEBUGFS disabled
 
------BEGIN PGP SIGNATURE-----
+Colin Ian King (1):
+      scsi: lpfc: fix spelling mistakes of asynchronous
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4GiU0ACgkQJNaLcl1U
-h9BNywf+Mf20LwkW7rRkBz/u2G2iLzxF0Wo4sLcbhkGSwAPl7O28cPQetnnlSd5Y
-jpB6WIuBihSRTrI6omXQKXJo7Iq/ROijkzZ96levBTz8gBZNr1qF4lEsDTd91UpA
-fxvqXTmY4drZUTHEXg8oY3KhSsmqA5M0PwbgBZnqP2JwS3rxOOfVWe8QGRuy8m3L
-G2rwkoSCW07Fv4O6uQRkcZWHPZCP+oZsaOet5JHPR2619m5qQmB1pM4sWoFeiTGS
-tNSCYLP0WeFSqgXAS1s37OcFDMmter0Lu4ROAHNo+ezuRj8m7vwoID7iVetqL8u4
-FfBUai/6Gp6ISvEUwTbRenV/T4CfZw==
-=micy
------END PGP SIGNATURE-----
+Dan Carpenter (1):
+      scsi: mpt3sas: Fix double free in attach error handling
 
---keoAwTxaagou87Dg--
+Israel Rukshin (1):
+      scsi: target/iblock: Fix protection error with blocks greater than 512B
+
+Varun Prakash (1):
+      scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
+
+And the diffstat:
+
+ drivers/scsi/cxgbi/libcxgbi.c       |  3 ++-
+ drivers/scsi/lpfc/lpfc_debugfs.c    |  3 +--
+ drivers/scsi/lpfc/lpfc_init.c       |  2 +-
+ drivers/scsi/lpfc/lpfc_sli.c        | 10 +++++-----
+ drivers/scsi/mpt3sas/mpt3sas_base.c |  1 -
+ drivers/target/target_core_iblock.c |  4 +++-
+ 6 files changed, 12 insertions(+), 11 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 0d044c165960..dc9320f37ebf 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -121,7 +121,8 @@ static inline void cxgbi_device_destroy(struct cxgbi_device *cdev)
+ 		"cdev 0x%p, p# %u.\n", cdev, cdev->nports);
+ 	cxgbi_hbas_remove(cdev);
+ 	cxgbi_device_portmap_cleanup(cdev);
+-	cxgbi_ppm_release(cdev->cdev2ppm(cdev));
++	if (cdev->cdev2ppm)
++		cxgbi_ppm_release(cdev->cdev2ppm(cdev));
+ 	if (cdev->pmap.max_connect)
+ 		cxgbi_free_big_mem(cdev->pmap.port_csk);
+ 	kfree(cdev);
+diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
+index 2e6a68d9ea4f..a5ecbce4eda2 100644
+--- a/drivers/scsi/lpfc/lpfc_debugfs.c
++++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+@@ -5385,7 +5385,6 @@ static const struct file_operations lpfc_debugfs_ras_log = {
+ 	.read =         lpfc_debugfs_read,
+ 	.release =      lpfc_debugfs_ras_log_release,
+ };
+-#endif
+ 
+ #undef lpfc_debugfs_op_dumpHBASlim
+ static const struct file_operations lpfc_debugfs_op_dumpHBASlim = {
+@@ -5557,7 +5556,7 @@ static const struct file_operations lpfc_idiag_op_extAcc = {
+ 	.write =        lpfc_idiag_extacc_write,
+ 	.release =      lpfc_idiag_cmd_release,
+ };
+-
++#endif
+ 
+ /* lpfc_idiag_mbxacc_dump_bsg_mbox - idiag debugfs dump bsg mailbox command
+  * @phba: Pointer to HBA context object.
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 6298b1729098..6a04fdb3fbf2 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -5883,7 +5883,7 @@ void lpfc_sli4_async_event_proc(struct lpfc_hba *phba)
+ 			break;
+ 		default:
+ 			lpfc_printf_log(phba, KERN_ERR, LOG_SLI,
+-					"1804 Invalid asynchrous event code: "
++					"1804 Invalid asynchronous event code: "
+ 					"x%x\n", bf_get(lpfc_trailer_code,
+ 					&cq_event->cqe.mcqe_cmpl));
+ 			break;
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index c82b5792da98..625c046ac4ef 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -8555,7 +8555,7 @@ lpfc_sli4_async_mbox_unblock(struct lpfc_hba *phba)
+ 	psli->sli_flag &= ~LPFC_SLI_ASYNC_MBX_BLK;
+ 	spin_unlock_irq(&phba->hbalock);
+ 
+-	/* wake up worker thread to post asynchronlous mailbox command */
++	/* wake up worker thread to post asynchronous mailbox command */
+ 	lpfc_worker_wake_up(phba);
+ }
+ 
+@@ -8823,7 +8823,7 @@ lpfc_sli_issue_mbox_s4(struct lpfc_hba *phba, LPFC_MBOXQ_t *mboxq,
+ 		return rc;
+ 	}
+ 
+-	/* Now, interrupt mode asynchrous mailbox command */
++	/* Now, interrupt mode asynchronous mailbox command */
+ 	rc = lpfc_mbox_cmd_check(phba, mboxq);
+ 	if (rc) {
+ 		lpfc_printf_log(phba, KERN_ERR, LOG_MBOX | LOG_SLI,
+@@ -13112,11 +13112,11 @@ lpfc_cq_event_setup(struct lpfc_hba *phba, void *entry, int size)
+ }
+ 
+ /**
+- * lpfc_sli4_sp_handle_async_event - Handle an asynchroous event
++ * lpfc_sli4_sp_handle_async_event - Handle an asynchronous event
+  * @phba: Pointer to HBA context object.
+  * @cqe: Pointer to mailbox completion queue entry.
+  *
+- * This routine process a mailbox completion queue entry with asynchrous
++ * This routine process a mailbox completion queue entry with asynchronous
+  * event.
+  *
+  * Return: true if work posted to worker thread, otherwise false.
+@@ -13270,7 +13270,7 @@ lpfc_sli4_sp_handle_mbox_event(struct lpfc_hba *phba, struct lpfc_mcqe *mcqe)
+  * @cqe: Pointer to mailbox completion queue entry.
+  *
+  * This routine process a mailbox completion queue entry, it invokes the
+- * proper mailbox complete handling or asynchrous event handling routine
++ * proper mailbox complete handling or asynchronous event handling routine
+  * according to the MCQE's async bit.
+  *
+  * Return: true if work posted to worker thread, otherwise false.
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 848fbec7bda6..45fd8dfb7c40 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -5248,7 +5248,6 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *ioc)
+ 					&ct->chain_buffer_dma);
+ 			if (!ct->chain_buffer) {
+ 				ioc_err(ioc, "chain_lookup: pci_pool_alloc failed\n");
+-				_base_release_memory_pools(ioc);
+ 				goto out;
+ 			}
+ 		}
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 6949ea8bc387..51ffd5c002de 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -646,7 +646,9 @@ iblock_alloc_bip(struct se_cmd *cmd, struct bio *bio,
+ 	}
+ 
+ 	bip->bip_iter.bi_size = bio_integrity_bytes(bi, bio_sectors(bio));
+-	bip_set_seed(bip, bio->bi_iter.bi_sector);
++	/* virtual start sector must be in integrity interval units */
++	bip_set_seed(bip, bio->bi_iter.bi_sector >>
++				  (bi->interval_exp - SECTOR_SHIFT));
+ 
+ 	pr_debug("IBLOCK BIP Size: %u Sector: %llu\n", bip->bip_iter.bi_size,
+ 		 (unsigned long long)bip->bip_iter.bi_sector);
