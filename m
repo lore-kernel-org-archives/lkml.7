@@ -2,189 +2,113 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D665AC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C553EC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFE920828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VsbuEvoe"
+	by mail.kernel.org (Postfix) with ESMTP id 98D9020740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfL0BqI (ORCPT
+        id S1727047AbfL0ByL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:46:08 -0500
-Received: from mail-eopbgr60076.outbound.protection.outlook.com ([40.107.6.76]:32258
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726193AbfL0BqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:46:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IZLqSU5i9LFBMCrcerz+cCZj35Vshrq/GMmEhWywHxxnf1EeDdx9wUbCYibXCMNktbykWovqCuvH2OYmIPKXHLvFlsvnDo7z8UhrkC7KvnZZAIOtTM6XkqXapo+MtYk+Fal6TJRdhU9z2DjG7GxJY2JCUQeRuZITdA2fxMbRQUCgRo9aGXAOH9kjxUxbs8gPI4MtKhtbA5uLDjnp3XwTEBjhmIU3BUOOKZYr3MJqN2UceYTeoIpYCbProTRw3XpkAnIpREklFcAzKMqAkHdD18XpFIgMaRPFTob4GyKZUhFY1vCRl/d786XSpsxpbk5mNjgBxPz2AV8vC3OcU2bYKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qtd8tPSeqTssjbR64Q5CV/YxZyJfUBJybV6hbL303Do=;
- b=dosVoP7Jpc1x7lqTH3/6vaNcpzZAMYCAHQdlvLy8Gv2FDSbtD8S8LoLk0d9cmiIX+G5sSXbo9Qv61gpfzZaibrFJtEpL5GeBUgWtrO5BH5Lh3C42qhQchxbNHz8BtftnMSsu+TaeY8xEnLYeMgNBKvHEF6yUjyH/lNRgJoHQwJsArkfozVIoGUCzsX2T1kPGNwlUI4dli7aPHXt1a3OXT7p1LaV/YgzyODSQYE4LWzZU3zvNFKvA6WyGVf6UspW64jnmnUSw/jTTwhlgrBN+yNpx3kcrbPWSdk4kpDM1m4PFDCGFczkuFUD+3mUcd6DSDUmS0P+Hg3iVApTgSvc+Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qtd8tPSeqTssjbR64Q5CV/YxZyJfUBJybV6hbL303Do=;
- b=VsbuEvoeBh2lvodIlSNsKmIwV+MdobmWV8sU4je8U0as0QqK85NVRCghUX8g00ENqwTCB5k7yjtZwuYLqGX1Xda2J2QWswfvGAaYDZD2ELnD1XO0p5+S1SgEVVEM7EL4i6PMxO5UODzkX/7Wf+0AUmo/2sW3l5Yj3w5hvcQl5s4=
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
- VI1PR04MB4318.eurprd04.prod.outlook.com (52.133.15.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.12; Fri, 27 Dec 2019 01:45:24 +0000
-Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::c7d:58a2:7265:407e]) by VI1PR04MB5327.eurprd04.prod.outlook.com
- ([fe80::c7d:58a2:7265:407e%6]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
- 01:45:24 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Peter Chen <peter.chen@freescale.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] usb: chipidea: host: Disable port power only if
- previously enabled
-Thread-Topic: [PATCH] usb: chipidea: host: Disable port power only if
- previously enabled
-Thread-Index: AQHVvAVIstmi2Z+Az0y8RyzR9GDiKqfNNo6A
-Date:   Fri, 27 Dec 2019 01:45:24 +0000
-Message-ID: <20191227014521.GB5283@b29397-desktop>
-References: <20191226155754.25451-1-linux@roeck-us.net>
-In-Reply-To: <20191226155754.25451-1-linux@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7cf39e7c-a97d-40f7-3a08-08d78a6e712b
-x-ms-traffictypediagnostic: VI1PR04MB4318:|VI1PR04MB4318:
-x-microsoft-antispam-prvs: <VI1PR04MB4318BC516E93CEBE16EF6EF38B2A0@VI1PR04MB4318.eurprd04.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0264FEA5C3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(81166006)(8936002)(33656002)(66946007)(81156014)(1076003)(33716001)(45080400002)(91956017)(66446008)(53546011)(8676002)(6506007)(26005)(66556008)(64756008)(478600001)(66476007)(76116006)(186003)(6486002)(2906002)(6512007)(6916009)(316002)(44832011)(54906003)(71200400001)(86362001)(5660300002)(4326008)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4318;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eKXrxEgw0+m5tZdt5tPcGPtZOg4+34TvzdqEKVx7jYt66kG3qU0QiIOE5w/33+we0Tef1A9JGzh89BCT62bTQ0BUkjOrQGgx08RWFVxntAmufg6waTSJWVg/ZVtrjlndau38gMriyE8Q9RdH4WLI+9FH9sbVn04wf32JDvdACGF0D53YNEU3yFfblaNOQEw8nMUlOHZCLV5DGZ5AZ1YlUlmtKyLdr0ihXRi6T5a2VbhgxrsRaEQagwWJvtz4itlsJIm32zvSB6MokRMWJxSGlZ+4lZfkXS2YPgE61FUp/j+n6fN5DV/BemHBfNx1HCuUfRrNGqZbp2a0H5JaEyg1cif4dRvsMjTMInYf1atsG0Mdwty2Ro0ztwbzxOVaZmntONAajgeg3E5g3sQfnmLzDsn+Hg3BoVGrEobNlcngf5VdrOUf8BSIiN67kWG/llb8
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D0457B39C313C44B844764F716655117@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Dec 2019 20:54:11 -0500
+Received: from trent.utfs.org ([94.185.90.103]:36084 "EHLO trent.utfs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfL0ByL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 20:54:11 -0500
+Received: from localhost (localhost [IPv6:::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by trent.utfs.org (Postfix) with ESMTPS id B7B4465591;
+        Fri, 27 Dec 2019 02:54:09 +0100 (CET)
+Date:   Thu, 26 Dec 2019 17:54:09 -0800 (PST)
+From:   Christian Kujau <lists@nerdbynature.de>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        torvalds@linux-foundation.org
+Subject: [PATCH] Re: filesystem being remounted supports timestamps until
+ 2038
+In-Reply-To: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org>
+Message-ID: <alpine.DEB.2.21.99999.375.1912261445200.21037@trent.utfs.org>
+References: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org>
+User-Agent: Alpine 2.21.99999 (DEB 375 2019-10-29)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cf39e7c-a97d-40f7-3a08-08d78a6e712b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Dec 2019 01:45:24.4289
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OFe4vjPoQpgqasM9+2eDyB1ULJFrrxrotbeugKcpN0JLZKf0jVfFFIwH5OJhhW4s0oPAYVTiWE+Uhfp59HrjjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4318
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-26 07:57:54, Guenter Roeck wrote:
-> On shutdown, ehci_power_off() is called unconditionally to power off
-> each port, even if it was never called to power on the port.
-> For chipidea, this results in a call to ehci_ci_portpower() with a reques=
-t
-> to power off ports even if the port was never powered on.
-> This results in the following warning from the regulator code.
->=20
-> WARNING: CPU: 0 PID: 182 at drivers/regulator/core.c:2596 _regulator_disa=
-ble+0x1a8/0x210
-> unbalanced disables for usb_otg2_vbus
-> Modules linked in:
-> CPU: 0 PID: 182 Comm: init Not tainted 5.4.6 #1
-> Hardware name: Freescale i.MX7 Dual (Device Tree)
-> [<c0313658>] (unwind_backtrace) from [<c030d698>] (show_stack+0x10/0x14)
-> [<c030d698>] (show_stack) from [<c1133afc>] (dump_stack+0xe0/0x10c)
-> [<c1133afc>] (dump_stack) from [<c0349098>] (__warn+0xf4/0x10c)
-> [<c0349098>] (__warn) from [<c0349128>] (warn_slowpath_fmt+0x78/0xbc)
-> [<c0349128>] (warn_slowpath_fmt) from [<c09f36ac>] (_regulator_disable+0x=
-1a8/0x210)
-> [<c09f36ac>] (_regulator_disable) from [<c09f374c>] (regulator_disable+0x=
-38/0xe8)
-> [<c09f374c>] (regulator_disable) from [<c0df7bac>] (ehci_ci_portpower+0x3=
-8/0xdc)
-> [<c0df7bac>] (ehci_ci_portpower) from [<c0db4fa4>] (ehci_port_power+0x50/=
-0xa4)
-> [<c0db4fa4>] (ehci_port_power) from [<c0db5420>] (ehci_silence_controller=
-+0x5c/0xc4)
-> [<c0db5420>] (ehci_silence_controller) from [<c0db7644>] (ehci_stop+0x3c/=
-0xcc)
-> [<c0db7644>] (ehci_stop) from [<c0d5bdc4>] (usb_remove_hcd+0xe0/0x19c)
-> [<c0d5bdc4>] (usb_remove_hcd) from [<c0df7638>] (host_stop+0x38/0xa8)
-> [<c0df7638>] (host_stop) from [<c0df2f34>] (ci_hdrc_remove+0x44/0xe4)
-> ...
->=20
-> Keeping track of the power enable state avoids the warning and traceback.
->=20
-> Fixes: c8679a2fb8dec ("usb: chipidea: host: add portpower override")
-> Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> Cc: Peter Chen <peter.chen@freescale.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/usb/chipidea/host.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> index b45ceb91c735..48e4a5ca1835 100644
-> --- a/drivers/usb/chipidea/host.c
-> +++ b/drivers/usb/chipidea/host.c
-> @@ -26,6 +26,7 @@ static int (*orig_bus_suspend)(struct usb_hcd *hcd);
-> =20
->  struct ehci_ci_priv {
->  	struct regulator *reg_vbus;
-> +	bool enabled;
->  };
-> =20
->  static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enab=
-le)
-> @@ -37,7 +38,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int p=
-ortnum, bool enable)
->  	int ret =3D 0;
->  	int port =3D HCS_N_PORTS(ehci->hcs_params);
-> =20
-> -	if (priv->reg_vbus) {
-> +	if (priv->reg_vbus && enable !=3D priv->enabled) {
->  		if (port > 1) {
->  			dev_warn(dev,
->  				"Not support multi-port regulator control\n");
-> @@ -53,6 +54,7 @@ static int ehci_ci_portpower(struct usb_hcd *hcd, int p=
-ortnum, bool enable)
->  				enable ? "enable" : "disable", ret);
->  			return ret;
->  		}
-> +		priv->enabled =3D enable;
->  	}
-> =20
->  	if (enable && (ci->platdata->phy_mode =3D=3D USBPHY_INTERFACE_MODE_HSIC=
-)) {
-> --=20
+On Fri, 20 Dec 2019, Christian Kujau wrote:
+> I noticed the following messages in my dmesg:
+> 
+>  xfs filesystem being remounted at /mnt/disk supports imestamps until 2038 (0x7fffffff)
+> 
+> These messages get printed over and over again because /mnt/disk is 
+> usually a read-only mount that is remounted (rw) a couple of times a day 
+> for backup purposes.
+> 
+> I see that these messages have been introduced with f8b92ba67c5d ("mount: 
+> Add mount warning for impending timestamp expiry") resp. 0ecee6699064 
+> ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") and I was 
+> wondering if there is any chance to either adjust this to pr_debug (but 
+> then it would still show up in dmesg, right?) or to only warn once when 
+> it's mounted, but not on re-mount?
 
-Acked-by: Peter Chen <peter.chen@nxp.com>
+I realize that "it's the holidays", but it'd be a shame if this gets 
+forgotten :(
 
---=20
+
+# uptime; dmesg | grep -c 2038
+ 14:45:15 up 6 days, 21:16,  1 user,  load average: 0.20, 0.22, 0.27
+350
+
+Attached is a "fix" that changes pr_warn into pr_debug, but that's maybe 
+not what was intended here.
+
 
 Thanks,
-Peter Chen=
+Christian.
+
+
+commit c9a5338b4930cdf99073042de0717db43d7b75be
+Author: Christian Kujau <lists@nerdbynature.de>
+Date:   Thu Dec 26 17:39:57 2019 -0800
+
+    Commit f8b92ba67c5d ("mount: Add mount warning for impending timestamp expiry") resp.
+    0ecee6699064 ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") introduced
+    a pr_warn message and the following gets sent to dmesg on every remount:
+    
+     [...] filesystem being remounted at /mnt supports timestamps until 2038 (0x7fffffff)
+    
+    When file systems are remounted a couple of times per day (e.g. rw/ro for backup
+    purposes), dmesg gets flooded with these messages. Change pr_warn into pr_debug
+    to make it stop.
+    
+    Signed-off-by: Christian Kujau <lists@nerdbynature.de>
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index be601d3a8008..afc6a13e7316 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2478,7 +2478,7 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
+ 
+ 		time64_to_tm(sb->s_time_max, 0, &tm);
+ 
+-		pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
++		pr_debug("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
+ 			sb->s_type->name,
+ 			is_mounted(mnt) ? "remounted" : "mounted",
+ 			mntpath,
+
+
+
+-- BOFH excuse #132:
+
+SCSI Chain overterminated
