@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253AEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905A7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17DE2173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D4021744
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470555;
-	bh=tLns9gbVAwhHpW2u7vZVvshMGi8XSOoUHu7ct+ahSTA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qtY1UY7BGoxmA0DUugFNlwx2IYv0v2PiYaAO5ugxjVgL936FH34Txth/S2kOfpBOE
-	 GJ6Wh6rNw4cdF6zYAwgnVvS0JC9CpZI+1pyy0tZSee9E3s03QFv9A8RVY4f0PsuYvx
-	 YiQTboZzVRlAZC3O4nPFpaQTJa/RFEEOnZjYmPmc=
+	s=default; t=1577470558;
+	bh=B/WPZinwqaU3N5CEePyKCWSzXduU7EUxFTX6m0gZr/s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NwzYrsXU8CCX199nS44/PeB1e5YzRtiN1ZDpoiDdfzstLDwBqWYROhKz/eLU34ZH3
+	 JYZrlCyTVloooNjIw+fXr0EPWciZdvOSgEcoIYP03wH8jPojVbgdF1XxhoHL+ZtHwM
+	 Nu3WaDN/ujRShpThUkAaNgcrFH6Q0L1dtIJG6Yn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfL0SPx (ORCPT
+        id S1727786AbfL0SP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbfL0SPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:52 -0500
+        id S1727134AbfL0SPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CD021582;
-        Fri, 27 Dec 2019 18:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BD421744;
+        Fri, 27 Dec 2019 18:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470551;
-        bh=tLns9gbVAwhHpW2u7vZVvshMGi8XSOoUHu7ct+ahSTA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wgYQpT5d7e0mkB7JhiGDlKLNeO4z+LFsNEYzPRTPE2T9vzU8l4N6V3xfAgWszM2T8
-         BLyd2fg5ZLTCDOqVERaNFpR1fTF1kTAae4GwNkcujIrzIso+468xcu8C2WC2A+YM35
-         h1/UYmGIdMbD7cjecn/ZzyqSo6xqNMU/VOPEh6Xo=
+        s=default; t=1577470553;
+        bh=B/WPZinwqaU3N5CEePyKCWSzXduU7EUxFTX6m0gZr/s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JfXJC/+P+Te4cAnTPKqaUHsFhlHuLP80RocKgWzPr2ZkvMp6OO8fAOY4loBM0Ovcg
+         49JWPQig5CwlzN+bm2ltgodj6QU9hV+plgG39Yq3Rg+PFi13mMAqwHON2v/P2YI+rq
+         wNq5JWEtlpzn59Hm5acoe9Wee1vtTHSS8y/s+56Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/25] locking/spinlock/debug: Fix various data races
-Date:   Fri, 27 Dec 2019 13:15:25 -0500
-Message-Id: <20191227181549.8040-1-sashal@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 03/25] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
+Date:   Fri, 27 Dec 2019 13:15:27 -0500
+Message-Id: <20191227181549.8040-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
+References: <20191227181549.8040-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,143 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 1a365e822372ba24c9da0822bc583894f6f3d821 ]
+[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
 
-This fixes various data races in spinlock_debug. By testing with KCSAN,
-it is observable that the console gets spammed with data races reports,
-suggesting these are extremely frequent.
+Currently we add individual copy of same OPP table for each CPU within
+the cluster. This is redundant and doesn't reflect the reality.
 
-Example data race report:
+We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
+anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
+->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
+operations. It also may cause issues when the vexpress_spc_cpufreq
+driver is built as a module.
 
-  read to 0xffff8ab24f403c48 of 4 bytes by task 221 on cpu 2:
-   debug_spin_lock_before kernel/locking/spinlock_debug.c:85 [inline]
-   do_raw_spin_lock+0x9b/0x210 kernel/locking/spinlock_debug.c:112
-   __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
-   _raw_spin_lock+0x39/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   get_partial_node.isra.0.part.0+0x32/0x2f0 mm/slub.c:1873
-   get_partial_node mm/slub.c:1870 [inline]
-  <snip>
+Since ve_spc_clk_init is built-in device initcall, we should be able to
+use the same topology_core_cpumask to set the opp sharing cpumask via
+dev_pm_opp_set_sharing_cpus and use the same later in the driver via
+dev_pm_opp_get_sharing_cpus.
 
-  write to 0xffff8ab24f403c48 of 4 bytes by task 167 on cpu 3:
-   debug_spin_unlock kernel/locking/spinlock_debug.c:103 [inline]
-   do_raw_spin_unlock+0xc9/0x1a0 kernel/locking/spinlock_debug.c:138
-   __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:159 [inline]
-   _raw_spin_unlock_irqrestore+0x2d/0x50 kernel/locking/spinlock.c:191
-   spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
-   free_debug_processing+0x1b3/0x210 mm/slub.c:1214
-   __slab_free+0x292/0x400 mm/slub.c:2864
-  <snip>
-
-As a side-effect, with KCSAN, this eventually locks up the console, most
-likely due to deadlock, e.g. .. -> printk lock -> spinlock_debug ->
-KCSAN detects data race -> kcsan_print_report() -> printk lock ->
-deadlock.
-
-This fix will 1) avoid the data races, and 2) allow using lock debugging
-together with KCSAN.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Marco Elver <elver@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20191120155715.28089-1-elver@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/spinlock_debug.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
-index 0374a596cffa..95e610e3f7ef 100644
---- a/kernel/locking/spinlock_debug.c
-+++ b/kernel/locking/spinlock_debug.c
-@@ -51,19 +51,19 @@ EXPORT_SYMBOL(__rwlock_init);
+diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
+index 5766ce2be32b..29eb945075e3 100644
+--- a/arch/arm/mach-vexpress/spc.c
++++ b/arch/arm/mach-vexpress/spc.c
+@@ -555,8 +555,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
  
- static void spin_dump(raw_spinlock_t *lock, const char *msg)
+ static int __init ve_spc_clk_init(void)
  {
--	struct task_struct *owner = NULL;
-+	struct task_struct *owner = READ_ONCE(lock->owner);
+-	int cpu;
++	int cpu, cluster;
+ 	struct clk *clk;
++	bool init_opp_table[MAX_CLUSTERS] = { false };
  
--	if (lock->owner && lock->owner != SPINLOCK_OWNER_INIT)
--		owner = lock->owner;
-+	if (owner == SPINLOCK_OWNER_INIT)
-+		owner = NULL;
- 	printk(KERN_EMERG "BUG: spinlock %s on CPU#%d, %s/%d\n",
- 		msg, raw_smp_processor_id(),
- 		current->comm, task_pid_nr(current));
- 	printk(KERN_EMERG " lock: %pS, .magic: %08x, .owner: %s/%d, "
- 			".owner_cpu: %d\n",
--		lock, lock->magic,
-+		lock, READ_ONCE(lock->magic),
- 		owner ? owner->comm : "<none>",
- 		owner ? task_pid_nr(owner) : -1,
--		lock->owner_cpu);
-+		READ_ONCE(lock->owner_cpu));
- 	dump_stack();
- }
+ 	if (!info)
+ 		return 0; /* Continue only if SPC is initialised */
+@@ -582,8 +583,17 @@ static int __init ve_spc_clk_init(void)
+ 			continue;
+ 		}
  
-@@ -80,16 +80,16 @@ static void spin_bug(raw_spinlock_t *lock, const char *msg)
- static inline void
- debug_spin_lock_before(raw_spinlock_t *lock)
- {
--	SPIN_BUG_ON(lock->magic != SPINLOCK_MAGIC, lock, "bad magic");
--	SPIN_BUG_ON(lock->owner == current, lock, "recursion");
--	SPIN_BUG_ON(lock->owner_cpu == raw_smp_processor_id(),
-+	SPIN_BUG_ON(READ_ONCE(lock->magic) != SPINLOCK_MAGIC, lock, "bad magic");
-+	SPIN_BUG_ON(READ_ONCE(lock->owner) == current, lock, "recursion");
-+	SPIN_BUG_ON(READ_ONCE(lock->owner_cpu) == raw_smp_processor_id(),
- 							lock, "cpu recursion");
- }
++		cluster = topology_physical_package_id(cpu_dev->id);
++		if (init_opp_table[cluster])
++			continue;
++
+ 		if (ve_init_opp_table(cpu_dev))
+ 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
++		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
++			 topology_core_cpumask(cpu_dev->id)))
++			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
++		else
++			init_opp_table[cluster] = true;
+ 	}
  
- static inline void debug_spin_lock_after(raw_spinlock_t *lock)
- {
--	lock->owner_cpu = raw_smp_processor_id();
--	lock->owner = current;
-+	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
-+	WRITE_ONCE(lock->owner, current);
- }
- 
- static inline void debug_spin_unlock(raw_spinlock_t *lock)
-@@ -99,8 +99,8 @@ static inline void debug_spin_unlock(raw_spinlock_t *lock)
- 	SPIN_BUG_ON(lock->owner != current, lock, "wrong owner");
- 	SPIN_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
- 							lock, "wrong CPU");
--	lock->owner = SPINLOCK_OWNER_INIT;
--	lock->owner_cpu = -1;
-+	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
-+	WRITE_ONCE(lock->owner_cpu, -1);
- }
- 
- static void __spin_lock_debug(raw_spinlock_t *lock)
-@@ -233,8 +233,8 @@ static inline void debug_write_lock_before(rwlock_t *lock)
- 
- static inline void debug_write_lock_after(rwlock_t *lock)
- {
--	lock->owner_cpu = raw_smp_processor_id();
--	lock->owner = current;
-+	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
-+	WRITE_ONCE(lock->owner, current);
- }
- 
- static inline void debug_write_unlock(rwlock_t *lock)
-@@ -243,8 +243,8 @@ static inline void debug_write_unlock(rwlock_t *lock)
- 	RWLOCK_BUG_ON(lock->owner != current, lock, "wrong owner");
- 	RWLOCK_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
- 							lock, "wrong CPU");
--	lock->owner = SPINLOCK_OWNER_INIT;
--	lock->owner_cpu = -1;
-+	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
-+	WRITE_ONCE(lock->owner_cpu, -1);
- }
- 
- #if 0		/* This can cause lockups */
+ 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
 -- 
 2.20.1
 
