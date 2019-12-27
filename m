@@ -6,36 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F061BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EA4C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34B920838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554A920828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfL0Alz (ORCPT
+        id S1727235AbfL0AmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 19:41:55 -0500
-Received: from mga01.intel.com ([192.55.52.88]:33488 "EHLO mga01.intel.com"
+        Thu, 26 Dec 2019 19:42:01 -0500
+Received: from mga02.intel.com ([134.134.136.20]:16202 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfL0Alg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 19:41:36 -0500
+        id S1727049AbfL0Alf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 19:41:35 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 16:41:33 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 16:41:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
-   d="scan'208";a="219979345"
+   d="scan'208";a="219979354"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
   by orsmga006.jf.intel.com with ESMTP; 26 Dec 2019 16:41:32 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v11 5/8] PCI/AER: Allow clearing Error Status Register in FF mode
-Date:   Thu, 26 Dec 2019 16:39:11 -0800
-Message-Id: <c778a619d164f5202248543dc5eec99c079fb82e.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Huong Nguyen <huong.nguyen@dell.com>,
+        Austin Bolen <Austin.Bolen@dell.com>
+Subject: [PATCH v11 8/8] PCI/ACPI: Enable EDR support
+Date:   Thu, 26 Dec 2019 16:39:14 -0800
+Message-Id: <a61d3930f1524def18b68305c25e5cd75b3728be.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1577400653.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -48,239 +52,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-As per PCI firmware specification r3.2 System Firmware Intermediary
-(SFI) _OSC and DPC Updates ECR
-(https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled
-"DPC Event Handling Implementation Note", page 10, Error Disconnect
-Recover (EDR) support allows OS to handle error recovery and clearing
-Error Registers even in FF mode. So create exception for FF mode checks
-in pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
-and pci_cleanup_aer_error_status_regs() functions when its being called
-from DPC code path.
+As per PCI firmware specification r3.2 Downstream Port Containment
+Related Enhancements ECN, sec 4.5.1, OS must implement following steps
+to enable/use EDR feature.
 
+1. OS can use bit 7 of _OSC Control Field to negotiate control over
+Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
+negotiation, firmware will Set this bit to grant OS control over PCIe
+DPC configuration and Clear it if this feature was requested and denied,
+or was not requested.
+
+2. Also, if OS supports EDR, it should expose its support to BIOS by
+setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
+Control Field it must also expose support for EDR by setting bit 7 of
+_OSC Support Field.
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Keith Busch <keith.busch@intel.com>
+Tested-by: Huong Nguyen <huong.nguyen@dell.com>
+Tested-by: Austin Bolen <Austin.Bolen@dell.com>
 ---
- Documentation/PCI/pcieaer-howto.rst       |  2 +-
- drivers/net/ethernet/intel/ice/ice_main.c |  2 +-
- drivers/ntb/hw/idt/ntb_hw_idt.c           |  2 +-
- drivers/pci/pci.c                         |  2 +-
- drivers/pci/pci.h                         |  2 +-
- drivers/pci/pcie/aer.c                    | 16 ++++++++--------
- drivers/pci/pcie/dpc.c                    |  4 ++--
- drivers/pci/pcie/err.c                    |  2 +-
- drivers/scsi/lpfc/lpfc_attr.c             |  2 +-
- include/linux/aer.h                       | 12 ++++++++----
- 10 files changed, 25 insertions(+), 21 deletions(-)
+ drivers/acpi/pci_root.c         | 9 +++++++++
+ drivers/pci/pcie/portdrv_core.c | 7 +++++--
+ drivers/pci/probe.c             | 1 +
+ include/linux/acpi.h            | 6 ++++--
+ include/linux/pci.h             | 3 ++-
+ 5 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-index 18bdefaafd1a..184c966b61cb 100644
---- a/Documentation/PCI/pcieaer-howto.rst
-+++ b/Documentation/PCI/pcieaer-howto.rst
-@@ -243,7 +243,7 @@ messages to root port when an error is detected.
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index d1e666ef3fcc..134e20474dfd 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -131,6 +131,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
+ 	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
+ 	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
+ 	{ OSC_PCI_MSI_SUPPORT, "MSI" },
++	{ OSC_PCI_EDR_SUPPORT, "EDR" },
+ 	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
+ };
  
- ::
+@@ -141,6 +142,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
+ 	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
+ 	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
+ 	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
++	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
+ };
  
--  int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);`
-+  int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev, bool ff_check);
+ static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
+@@ -440,6 +442,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+ 	if (pci_msi_enabled())
+ 		support |= OSC_PCI_MSI_SUPPORT;
++	if (IS_ENABLED(CONFIG_PCIE_EDR))
++		support |= OSC_PCI_EDR_SUPPORT;
  
- pci_cleanup_aer_uncorrect_error_status cleanups the uncorrectable
- error status register.
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 69bff085acf7..8378dbf3500b 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -3491,7 +3491,7 @@ static pci_ers_result_t ice_pci_err_slot_reset(struct pci_dev *pdev)
- 			result = PCI_ERS_RESULT_DISCONNECT;
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+@@ -487,6 +491,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+ 			control |= OSC_PCI_EXPRESS_AER_CONTROL;
  	}
  
--	err = pci_cleanup_aer_uncorrect_error_status(pdev);
-+	err = pci_cleanup_aer_uncorrect_error_status(pdev, 1);
- 	if (err)
- 		dev_dbg(&pdev->dev,
- 			"pci_cleanup_aer_uncorrect_error_status failed, error %d\n",
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index dcf234680535..9023308be2de 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -2675,7 +2675,7 @@ static int idt_init_pci(struct idt_ntb_dev *ndev)
- 	if (ret != 0)
- 		dev_warn(&pdev->dev, "PCIe AER capability disabled\n");
- 	else /* Cleanup uncorrectable error status before getting to init */
--		pci_cleanup_aer_uncorrect_error_status(pdev);
-+		pci_cleanup_aer_uncorrect_error_status(pdev, 1);
++	if (IS_ENABLED(CONFIG_PCIE_DPC))
++		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
++
+ 	requested = control;
+ 	status = acpi_pci_osc_control_set(handle, &control,
+ 					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+@@ -916,6 +923,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+ 		host_bridge->native_pme = 0;
+ 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+ 		host_bridge->native_ltr = 0;
++	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
++		host_bridge->native_dpc = 0;
  
- 	/* First enable the PCI device */
- 	ret = pcim_enable_device(pdev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e87196cc1a7f..6264244d92bf 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1499,7 +1499,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
+ 	/*
+ 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 5075cb9e850c..009742c865d6 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	/*
+ 	 * With dpc-native, allow Linux to use DPC even if it doesn't have
+ 	 * permission to use AER.
++	 * If EDR support is enabled in OS, then even if AER is not handled in
++	 * OS, DPC service can be enabled.
+ 	 */
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+-	    pci_aer_available() &&
+-	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
++	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
++	    (pci_aer_available() &&
++	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
+ 		services |= PCIE_PORT_SERVICE_DPC;
  
--	pci_cleanup_aer_error_status_regs(dev);
-+	pci_cleanup_aer_error_status_regs(dev, 1);
- 	pci_restore_aer_state(dev);
- 
- 	pci_restore_config_space(dev);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index a0a53bd05a0b..0b4452f72a9a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -646,7 +646,7 @@ void pci_no_aer(void);
- void pci_aer_init(struct pci_dev *dev);
- void pci_aer_exit(struct pci_dev *dev);
- extern const struct attribute_group aer_stats_attr_group;
--void pci_aer_clear_fatal_status(struct pci_dev *dev);
-+void pci_aer_clear_fatal_status(struct pci_dev *dev, bool ff_check);
- void pci_aer_clear_device_status(struct pci_dev *dev);
- #else
- static inline void pci_no_aer(void) { }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 1ca86f2e0166..c64a91b347d2 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -376,7 +376,7 @@ void pci_aer_clear_device_status(struct pci_dev *dev)
- 	pcie_capability_write_word(dev, PCI_EXP_DEVSTA, sta);
+ 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb4312ddd..c9a9c5b42e72 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -598,6 +598,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ 	bridge->native_shpc_hotplug = 1;
+ 	bridge->native_pme = 1;
+ 	bridge->native_ltr = 1;
++	bridge->native_dpc = 1;
  }
  
--int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
-+int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev, bool ff_check)
- {
- 	int pos;
- 	u32 status, sev;
-@@ -385,7 +385,7 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
+ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 0f37a7d5fa77..0a7aaa452a98 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
+ #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
+ #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
+ #define OSC_PCI_MSI_SUPPORT			0x00000010
++#define OSC_PCI_EDR_SUPPORT			0x00000080
+ #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
+-#define OSC_PCI_SUPPORT_MASKS			0x0000011f
++#define OSC_PCI_SUPPORT_MASKS			0x0000019f
  
--	if (pcie_aer_get_firmware_first(dev))
-+	if (ff_check && pcie_aer_get_firmware_first(dev))
- 		return -EIO;
+ /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
+ #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
+@@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
+ #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
+ #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
+ #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
+-#define OSC_PCI_CONTROL_MASKS			0x0000003f
++#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
++#define OSC_PCI_CONTROL_MASKS			0x000000bf
  
- 	/* Clear status bits for ERR_NONFATAL errors only */
-@@ -399,7 +399,7 @@ int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
- }
- EXPORT_SYMBOL_GPL(pci_cleanup_aer_uncorrect_error_status);
+ #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
+ #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c393dff2d66f..0b7c63c7888d 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -510,8 +510,9 @@ struct pci_host_bridge {
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+ 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+ 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+-	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
++	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
  
--void pci_aer_clear_fatal_status(struct pci_dev *dev)
-+void pci_aer_clear_fatal_status(struct pci_dev *dev, bool ff_check)
- {
- 	int pos;
- 	u32 status, sev;
-@@ -408,8 +408,8 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 	if (!pos)
- 		return;
- 
--	if (pcie_aer_get_firmware_first(dev))
--		return;
-+	if (ff_check && pcie_aer_get_firmware_first(dev))
-+		return -EIO;
- 
- 	/* Clear status bits for ERR_FATAL errors only */
- 	pci_read_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, &status);
-@@ -419,7 +419,7 @@ void pci_aer_clear_fatal_status(struct pci_dev *dev)
- 		pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_STATUS, status);
- }
- 
--int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-+int pci_cleanup_aer_error_status_regs(struct pci_dev *dev, bool ff_check)
- {
- 	int pos;
- 	u32 status;
-@@ -432,7 +432,7 @@ int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
- 	if (!pos)
- 		return -EIO;
- 
--	if (pcie_aer_get_firmware_first(dev))
-+	if (ff_check && pcie_aer_get_firmware_first(dev))
- 		return -EIO;
- 
- 	port_type = pci_pcie_type(dev);
-@@ -515,7 +515,7 @@ void pci_aer_init(struct pci_dev *dev)
- 	n = pcie_cap_has_rtctl(dev) ? 5 : 4;
- 	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * n);
- 
--	pci_cleanup_aer_error_status_regs(dev);
-+	pci_cleanup_aer_error_status_regs(dev, 1);
- }
- 
- void pci_aer_exit(struct pci_dev *dev)
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index b19d707db222..e711a3747f48 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -280,8 +280,8 @@ static void dpc_process_error(struct dpc_dev *dpc)
- 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
- 		 aer_get_device_error_info(pdev, &info)) {
- 		aer_print_error(pdev, &info);
--		pci_cleanup_aer_uncorrect_error_status(pdev);
--		pci_aer_clear_fatal_status(pdev);
-+		pci_cleanup_aer_uncorrect_error_status(pdev, 0);
-+		pci_aer_clear_fatal_status(pdev, 0);
- 	}
- 
- 	/* We configure DPC so it only triggers on ERR_FATAL */
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 53cd9200ec2c..043eab17e45d 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -236,7 +236,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	pci_walk_bus(bus, report_resume, &status);
- 
- 	pci_aer_clear_device_status(dev);
--	pci_cleanup_aer_uncorrect_error_status(dev);
-+	pci_cleanup_aer_uncorrect_error_status(dev, 1);
- 	pci_info(dev, "AER: Device recovery successful\n");
- 	return;
- 
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index 4ff82b36a37a..5b37efd29e20 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -4810,7 +4810,7 @@ lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
- 		return -EINVAL;
- 
- 	if (phba->hba_flag & HBA_AER_ENABLED)
--		rc = pci_cleanup_aer_uncorrect_error_status(phba->pcidev);
-+		rc = pci_cleanup_aer_uncorrect_error_status(phba->pcidev, 1);
- 
- 	if (rc == 0)
- 		return strlen(buf);
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index fa19e01f418a..f4f49df500ad 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -44,8 +44,10 @@ struct aer_capability_regs {
- /* PCIe port driver needs this function to enable AER */
- int pci_enable_pcie_error_reporting(struct pci_dev *dev);
- int pci_disable_pcie_error_reporting(struct pci_dev *dev);
--int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
--int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-+int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev,
-+					   bool ff_check);
-+int pci_cleanup_aer_error_status_regs(struct pci_dev *dev,
-+				      bool ff_check);
- void pci_save_aer_state(struct pci_dev *dev);
- void pci_restore_aer_state(struct pci_dev *dev);
- #else
-@@ -57,11 +59,13 @@ static inline int pci_disable_pcie_error_reporting(struct pci_dev *dev)
- {
- 	return -EINVAL;
- }
--static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
-+static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev,
-+							 bool ff_check)
- {
- 	return -EINVAL;
- }
--static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-+static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev,
-+						    bool ff_check)
- {
- 	return -EINVAL;
- }
++	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
+ 			const struct resource *res,
 -- 
 2.21.0
 
