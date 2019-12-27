@@ -2,244 +2,311 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3480BC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 03:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42734C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 03:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A6C2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 03:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B8420828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 03:12:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="O/JO30ST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfL0DEK (ORCPT
+        id S1727140AbfL0DMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 22:04:10 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37781 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfL0DEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 22:04:10 -0500
-Received: by mail-io1-f70.google.com with SMTP id t70so18183283iof.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 19:04:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=BKq6y82YK1MS2p1s3InIrZcquYQwYoYOimO0qr4WA+w=;
-        b=cDETa+d+LA18nAjDKglQYHyxcoRW7lTHtulLbxj9Qz9i2c5AIYkq1nAaWxul15vCou
-         z+kkzc1z2Q3L2UMsDQnxhiUueLUyE+HnBrJVMNqjeY6tSQbiURwNEPHLjVWkmCpoUTBS
-         4tNHTqK9+FdJYWE1XW21uCLlfAbTPwFsb0AnoU5mE642ggxYMDu5hUqhR9CbopOHkaOM
-         JNQ6UVy1Dfxjs9wo88qrEllbLpYnDPqQ9JW+wgokCQxAJ8W4R4/qxfQA/OIL7zsRIEpB
-         301FyK16v3TwZs5ZLkZKoZIVXGu2nqc6f/LqvKs+cogrkvw7NiNGAOyxeFkhdfbJx2TQ
-         tETg==
-X-Gm-Message-State: APjAAAUfTpZ26YK9zDCPmFQCFgjM/Gh901yLzkReaejRGHL1vYZtZ/n4
-        luA1IbqBOw+YYUxDZ4nQ3kv7YknzcucDdDaJD81YqejK4fpe
-X-Google-Smtp-Source: APXvYqwjIlQjFRZwvrBowI52Hjrhx0tMlPPBCvetL/bbs5YOQMU8V85wM+jOipl+hQuqlTyksnX01A72kqaMzQrldzx/nfyPemW/
+        Thu, 26 Dec 2019 22:12:24 -0500
+Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:43559
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726375AbfL0DMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 22:12:24 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TxVzvj22tOi2AAaLJO1LFP+wp+cuAaXTQ3hB3Qqz9GRQ0uekgIsxEVSTLaFoYgUVZBGD5+K5Ge6bcMB03Vf5DvcayCHf+jAqxvPw5ZMJ53oXQEHvbhsmVaI5uP8XhbBjUSDVH9OXpwlXutX2Cet9iB46AXLrucfsidI6uycrFrgEBIFGKStj8BYRTUHMV71bgKID4GE7YCX9c/6J+EFtrPqdEMup2cidltFd5bpN2vCMyBpB7w/XabvMMDsZRyc+j3BNEi9Fp+gqM+x8/dTpPg7ZfTaCXLqQWVV0UztGCNdFD7+9QqijkNsJwrs+AJNO1BEaa5s651APP/5y0uc6Kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M5BRF1UFIXZEgIn00KW+QCNtinnDQrWz6s1HoqFyKyw=;
+ b=cv+Ur3njRM8dN+u0r9RkgP3sbZHnExd5l9WzPxzZCQq3EIIC1323Nbm01ZwU8kyQYdJd2VeANz7bX7RcljLKUuMRlDTmL9qJchGtLOJTLluaMqt7aYRvJM3aW6VMHBTc97KhI1ntkuKKazcgEPB/UK1KA7qAMIE/iG9bu2iZl7vLByQq7TPCz5n81FeSUodw0QqAP8hhPtskKXCJj0DNnDr5n+X9VoKR22aIneZIsHAeKSioYRWTwufkTD1lPczYLWw75Au4nCx5sw6Fvu9IOqjV/ArWCJv1oZQMOouAyCibAfQ7sLwNA9HX4m8N9nUJTSBuOf/37LSLxrhxS5ltww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M5BRF1UFIXZEgIn00KW+QCNtinnDQrWz6s1HoqFyKyw=;
+ b=O/JO30STRx/MY7I5QVOTWo1xuZ7Hid/BAn9PZFloXN4K0SDgDz7NQzoERGnZiOOykH8cVmYzhddYlwYId9E0I8qtPLKhtzp84gaUDRnxODt69lNGRvS6nvIiSS90I+ygPFDnmunECi5qM9MhiPM4iEHdpsCzFWtyormLgfJ8ECc=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
+ VE1PR04MB6685.eurprd04.prod.outlook.com (20.179.233.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Fri, 27 Dec 2019 03:12:19 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc%3]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
+ 03:12:18 +0000
+Received: from localhost.localdomain (119.31.174.73) by SN4PR0601CA0016.namprd06.prod.outlook.com (2603:10b6:803:2f::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Fri, 27 Dec 2019 03:12:12 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "ivan.khoronzhuk@linaro.org" <ivan.khoronzhuk@linaro.org>,
+        Po Liu <po.liu@nxp.com>
+Subject: [v2,net-next] enetc: add support time specific departure base on the
+ qos etf
+Thread-Topic: [v2,net-next] enetc: add support time specific departure base on
+ the qos etf
+Thread-Index: AQHVvGNyrgSmwD+0RU+o/s0aZaT5Dg==
+Date:   Fri, 27 Dec 2019 03:12:18 +0000
+Message-ID: <20191227025547.4452-1-Po.Liu@nxp.com>
+References: <20191223032618.18205-1-Po.Liu@nxp.com>
+In-Reply-To: <20191223032618.18205-1-Po.Liu@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: SN4PR0601CA0016.namprd06.prod.outlook.com
+ (2603:10b6:803:2f::26) To VE1PR04MB6496.eurprd04.prod.outlook.com
+ (2603:10a6:803:11c::29)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6defe49c-c126-419d-a1f9-08d78a7a94ab
+x-ms-traffictypediagnostic: VE1PR04MB6685:|VE1PR04MB6685:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66858135AFEC37578156AEA8922A0@VE1PR04MB6685.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0264FEA5C3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(189003)(199004)(66946007)(186003)(16526019)(26005)(66446008)(64756008)(478600001)(66476007)(52116002)(8936002)(4326008)(66556008)(1076003)(2616005)(86362001)(956004)(316002)(2906002)(5660300002)(6506007)(110136005)(54906003)(71200400001)(81166006)(6486002)(69590400006)(8676002)(36756003)(6512007)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6685;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: N3ojwmVxX+xudoeKLAiFpO69wrntzKXkNljpCD492zkrq7nvBHlCCzsOU2n/q1v6wZegpvNBk2jlejZ0tFnekUeeCZeVVAp6mRy9kkutrmllkD7VZQKg6ZzMNuJrDSmA11rtYJdKGkiY/BYQphzua1nMkTPREdW60yA9VNatUGdpkIls1it2EAIdWUIDYGuhiyRBifyE9IqBVrWa0zia5ST68GlenWnm9jO6RN+EhAnH8YFT59HKS8treJFLh+nGS6PWI+JrIrPbP0bMpRPpspuNzA4w0y1GwaofFEmCNm99iIWnPcyFYGCOmtF9kxZAmdAPNeE1XnpWf9hkaofoJvkV2r00UV2AOvlWomchlvMwHHlo3NGLcse5iT/z8f98V+GvcFFz+nO/aS4EFK3ua7DWiiCyLW5kKWnVn5KhDMtxeXKBJXaBBEmXEjbAP314qAkiXb61d3cThfkSs/KY5Y2X15NM56pHk6JNfypciXrcJ16S+EZ/RGFBwz19MqTj
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6e06:: with SMTP id d6mr31985444ioh.95.1577415849156;
- Thu, 26 Dec 2019 19:04:09 -0800 (PST)
-Date:   Thu, 26 Dec 2019 19:04:09 -0800
-In-Reply-To: <0000000000006233e4059aa1dfb6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005a2979059aa6bf2c@google.com>
-Subject: Re: possible deadlock in do_io_accounting (3)
-From:   syzbot <syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org,
-        casey@schaufler-ca.com, christian@brauner.io,
-        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhocko@suse.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6defe49c-c126-419d-a1f9-08d78a7a94ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Dec 2019 03:12:18.6740
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 23kDafI1/ZUPSlkhGEa7Qtrk89FKzG2TfqSCmYUA464f5ilrhY/N4KTKcqFacCL+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+ENETC implement time specific departure capability, which enables
+the user to specify when a frame can be transmitted. When this
+capability is enabled, the device will delay the transmission of
+the frame so that it can be transmitted at the precisely specified time.
+The delay departure time up to 0.5 seconds in the future. If the
+departure time in the transmit BD has not yet been reached, based
+on the current time, the packet will not be transmitted.
 
-HEAD commit:    46cf053e Linux 5.5-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13f30a3ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=87a1b40b8fcdc9d40bd0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176004aee00000
+This driver was loaded by Qos driver ETF. User could load it by tc
+commands. Here are the example commands:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com
+tc qdisc add dev eth0 root handle 1: mqprio \
+	   num_tc 8 map 0 1 2 3 4 5 6 7 hw 1
+tc qdisc replace dev eth0 parent 1:8 etf \
+	   clockid CLOCK_TAI delta 30000  offload
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-rc3-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.4/9961 is trying to acquire lock:
-ffff888097e6bc50 (&sig->cred_guard_mutex){+.+.}, at:  
-do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
+These example try to set queue mapping first and then set queue 7
+with 30us ahead dequeue time.
 
-but task is already holding lock:
-ffff88809402fd00 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
-fs/seq_file.c:161
+Then user send test frame should set SO_TXTIME feature for socket.
 
-which lock already depends on the new lock.
+There are also some limitations for this feature in hardware:
+- Transmit checksum offloads and time specific departure operation
+are mutually exclusive.
+- Time Aware Shaper feature (Qbv) offload and time specific departure
+operation are mutually exclusive.
 
+Signed-off-by: Po Liu <Po.Liu@nxp.com>
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+changes log:
+v2:
+- fix the csum and time specific deaprture return directly if both
+offloading enabled
 
-the existing dependency chain (in reverse order) is:
+ drivers/net/ethernet/freescale/enetc/enetc.c  | 18 +++++++++++
+ drivers/net/ethernet/freescale/enetc/enetc.h  |  3 ++
+ .../net/ethernet/freescale/enetc/enetc_hw.h   | 10 +++++-
+ .../net/ethernet/freescale/enetc/enetc_qos.c  | 31 +++++++++++++++++++
+ 4 files changed, 61 insertions(+), 1 deletion(-)
 
--> #3 (&p->lock){+.+.}:
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-        seq_read+0x71/0x1170 fs/seq_file.c:161
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_iter_read+0x4a4/0x660 fs/read_write.c:935
-        vfs_readv+0xf0/0x160 fs/read_write.c:997
-        kernel_readv fs/splice.c:365 [inline]
-        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-        do_splice_to+0x127/0x180 fs/splice.c:892
-        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-        do_sendfile+0x597/0xd00 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #2 (sb_writers#4){.+.+}:
-        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
-        __sb_start_write+0x241/0x460 fs/super.c:1674
-        sb_start_write include/linux/fs.h:1650 [inline]
-        mnt_want_write+0x3f/0xc0 fs/namespace.c:354
-        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:21
-        ovl_create_object+0xb3/0x2c0 fs/overlayfs/dir.c:596
-        ovl_create+0x28/0x30 fs/overlayfs/dir.c:627
-        lookup_open+0x12d5/0x1a90 fs/namei.c:3241
-        do_last fs/namei.c:3331 [inline]
-        path_openat+0x14a2/0x4500 fs/namei.c:3537
-        do_filp_open+0x1a1/0x280 fs/namei.c:3567
-        do_sys_open+0x3fe/0x5d0 fs/open.c:1097
-        __do_sys_open fs/open.c:1115 [inline]
-        __se_sys_open fs/open.c:1110 [inline]
-        __x64_sys_open+0x7e/0xc0 fs/open.c:1110
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
-        down_read+0x95/0x430 kernel/locking/rwsem.c:1495
-        inode_lock_shared include/linux/fs.h:801 [inline]
-        do_last fs/namei.c:3330 [inline]
-        path_openat+0x1e37/0x4500 fs/namei.c:3537
-        do_filp_open+0x1a1/0x280 fs/namei.c:3567
-        do_open_execat+0x137/0x690 fs/exec.c:856
-        __do_execve_file.isra.0+0x1702/0x22b0 fs/exec.c:1761
-        do_execveat_common fs/exec.c:1867 [inline]
-        do_execve fs/exec.c:1884 [inline]
-        __do_sys_execve fs/exec.c:1960 [inline]
-        __se_sys_execve fs/exec.c:1955 [inline]
-        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&sig->cred_guard_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2476 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-        validate_chain kernel/locking/lockdep.c:2971 [inline]
-        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
-        do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
-        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
-        proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
-        seq_read+0x4ca/0x1170 fs/seq_file.c:229
-        do_loop_readv_writev fs/read_write.c:714 [inline]
-        do_loop_readv_writev fs/read_write.c:701 [inline]
-        do_iter_read+0x4a4/0x660 fs/read_write.c:935
-        vfs_readv+0xf0/0x160 fs/read_write.c:997
-        kernel_readv fs/splice.c:365 [inline]
-        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-        do_splice_to+0x127/0x180 fs/splice.c:892
-        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-        do_sendfile+0x597/0xd00 fs/read_write.c:1464
-        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-Chain exists of:
-   &sig->cred_guard_mutex --> sb_writers#4 --> &p->lock
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&p->lock);
-                                lock(sb_writers#4);
-                                lock(&p->lock);
-   lock(&sig->cred_guard_mutex);
-
-  *** DEADLOCK ***
-
-2 locks held by syz-executor.4/9961:
-  #0: ffff888098418428 (sb_writers#4){.+.+}, at: file_start_write  
-include/linux/fs.h:2885 [inline]
-  #0: ffff888098418428 (sb_writers#4){.+.+}, at: do_sendfile+0x9b9/0xd00  
-fs/read_write.c:1463
-  #1: ffff88809402fd00 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
-fs/seq_file.c:161
-
-stack backtrace:
-CPU: 1 PID: 9961 Comm: syz-executor.4 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
-  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
-  check_prev_add kernel/locking/lockdep.c:2476 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
-  validate_chain kernel/locking/lockdep.c:2971 [inline]
-  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-  mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
-  do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
-  proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
-  proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
-  seq_read+0x4ca/0x1170 fs/seq_file.c:229
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_loop_readv_writev fs/read_write.c:701 [inline]
-  do_iter_read+0x4a4/0x660 fs/read_write.c:935
-  vfs_readv+0xf0/0x160 fs/read_write.c:997
-  kernel_readv fs/splice.c:365 [inline]
-  default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
-  do_splice_to+0x127/0x180 fs/splice.c:892
-  splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
-  do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
-  do_sendfile+0x597/0xd00 fs/read_write.c:1464
-  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a919
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f38e0f99c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a919
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000006
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000209 R11: 0000000000000246 R12: 00007f38e0f9a6d4
-R13: 00000000004c925e R14: 00000000004e0f88 R15: 00000000ffffffff
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/eth=
+ernet/freescale/enetc/enetc.c
+index 2ee4a2cd4780..8e4dfaf07f0e 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+@@ -149,11 +149,27 @@ static int enetc_map_tx_buffs(struct enetc_bdr *tx_ri=
+ng, struct sk_buff *skb,
+=20
+ 	if (enetc_tx_csum(skb, &temp_bd))
+ 		flags |=3D ENETC_TXBD_FLAGS_CSUM | ENETC_TXBD_FLAGS_L4CS;
++	if (tx_ring->tsd_enable)
++		flags |=3D ENETC_TXBD_FLAGS_TSE | ENETC_TXBD_FLAGS_TXSTART;
++
++	if (flags & ENETC_TXBD_FLAGS_TSE && flags & ENETC_TXBD_FLAGS_CSUM) {
++		dev_err(tx_ring->dev,
++			"Both TXSTART and CSUM enabled not support!");
++		return 0;
++	}
+=20
+ 	/* first BD needs frm_len and offload flags set */
+ 	temp_bd.frm_len =3D cpu_to_le16(skb->len);
+ 	temp_bd.flags =3D flags;
+=20
++	if (flags & ENETC_TXBD_FLAGS_TSE) {
++		u32 temp;
++
++		temp =3D (skb->skb_mstamp_ns >> 5 & ENETC_TXBD_TXSTART_MASK)
++			| (flags << ENETC_TXBD_FLAGS_OFFSET);
++		temp_bd.txstart =3D cpu_to_le32(temp);
++	}
++
+ 	if (flags & ENETC_TXBD_FLAGS_EX) {
+ 		u8 e_flags =3D 0;
+ 		*txbd =3D temp_bd;
+@@ -1505,6 +1521,8 @@ int enetc_setup_tc(struct net_device *ndev, enum tc_s=
+etup_type type,
+ 		return enetc_setup_tc_taprio(ndev, type_data);
+ 	case TC_SETUP_QDISC_CBS:
+ 		return enetc_setup_tc_cbs(ndev, type_data);
++	case TC_SETUP_QDISC_ETF:
++		return enetc_setup_tc_txtime(ndev, type_data);
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/eth=
+ernet/freescale/enetc/enetc.h
+index 7ee0da6d0015..dd4a227ffc7a 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc.h
+@@ -72,6 +72,7 @@ struct enetc_bdr {
+ 	struct enetc_ring_stats stats;
+=20
+ 	dma_addr_t bd_dma_base;
++	u8 tsd_enable; /* Time specific departure */
+ } ____cacheline_aligned_in_smp;
+=20
+ static inline void enetc_bdr_idx_inc(struct enetc_bdr *bdr, int *i)
+@@ -256,8 +257,10 @@ int enetc_send_cmd(struct enetc_si *si, struct enetc_c=
+bd *cbd);
+ int enetc_setup_tc_taprio(struct net_device *ndev, void *type_data);
+ void enetc_sched_speed_set(struct net_device *ndev);
+ int enetc_setup_tc_cbs(struct net_device *ndev, void *type_data);
++int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data);
+ #else
+ #define enetc_setup_tc_taprio(ndev, type_data) -EOPNOTSUPP
+ #define enetc_sched_speed_set(ndev) (void)0
+ #define enetc_setup_tc_cbs(ndev, type_data) -EOPNOTSUPP
++#define enetc_setup_tc_txtime(ndev, type_data) -EOPNOTSUPP
+ #endif
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/=
+ethernet/freescale/enetc/enetc_hw.h
+index 51f543ef37a8..8375cd886dba 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+@@ -358,6 +358,7 @@ union enetc_tx_bd {
+ 				u8 l4_csoff;
+ 				u8 flags;
+ 			}; /* default layout */
++			__le32 txstart;
+ 			__le32 lstatus;
+ 		};
+ 	};
+@@ -378,11 +379,14 @@ union enetc_tx_bd {
+ };
+=20
+ #define ENETC_TXBD_FLAGS_L4CS	BIT(0)
++#define ENETC_TXBD_FLAGS_TSE	BIT(1)
+ #define ENETC_TXBD_FLAGS_W	BIT(2)
+ #define ENETC_TXBD_FLAGS_CSUM	BIT(3)
++#define ENETC_TXBD_FLAGS_TXSTART BIT(4)
+ #define ENETC_TXBD_FLAGS_EX	BIT(6)
+ #define ENETC_TXBD_FLAGS_F	BIT(7)
+-
++#define ENETC_TXBD_TXSTART_MASK GENMASK(24, 0)
++#define ENETC_TXBD_FLAGS_OFFSET 24
+ static inline void enetc_clear_tx_bd(union enetc_tx_bd *txbd)
+ {
+ 	memset(txbd, 0, sizeof(*txbd));
+@@ -615,3 +619,7 @@ struct enetc_cbd {
+ /* Port time gating capability register */
+ #define ENETC_QBV_PTGCAPR_OFFSET	0x11a08
+ #define ENETC_QBV_MAX_GCL_LEN_MASK	GENMASK(15, 0)
++
++/* Port time specific departure */
++#define ENETC_PTCTSDR(n)	(0x1210 + 4 * (n))
++#define ENETC_TSDE		BIT(31)
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net=
+/ethernet/freescale/enetc/enetc_qos.c
+index 9190ffc9f6b2..049f0fb40ac7 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -156,6 +156,11 @@ int enetc_setup_tc_taprio(struct net_device *ndev, voi=
+d *type_data)
+ 	int err;
+ 	int i;
+=20
++	/* TSD and Qbv are mutually exclusive in hardware */
++	for (i =3D 0; i < priv->num_tx_rings; i++)
++		if (priv->tx_ring[i]->tsd_enable)
++			return -EBUSY;
++
+ 	for (i =3D 0; i < priv->num_tx_rings; i++)
+ 		enetc_set_bdr_prio(&priv->si->hw,
+ 				   priv->tx_ring[i]->index,
+@@ -297,3 +302,29 @@ int enetc_setup_tc_cbs(struct net_device *ndev, void *=
+type_data)
+=20
+ 	return 0;
+ }
++
++int enetc_setup_tc_txtime(struct net_device *ndev, void *type_data)
++{
++	struct enetc_ndev_priv *priv =3D netdev_priv(ndev);
++	struct tc_etf_qopt_offload *qopt =3D type_data;
++	u8 tc_nums =3D netdev_get_num_tc(ndev);
++	int tc;
++
++	if (!tc_nums)
++		return -EOPNOTSUPP;
++
++	tc =3D qopt->queue;
++
++	if (tc < 0 || tc > priv->num_tx_rings)
++		return -EINVAL;
++
++	/* TSD and Qbv are mutually exclusive in hardware */
++	if (enetc_rd(&priv->si->hw, ENETC_QBV_PTGCR_OFFSET) & ENETC_QBV_TGE)
++		return -EBUSY;
++
++	priv->tx_ring[tc]->tsd_enable =3D qopt->enable;
++	enetc_port_wr(&priv->si->hw, ENETC_PTCTSDR(tc),
++		      qopt->enable ? ENETC_TSDE : 0);
++
++	return 0;
++}
+--=20
+2.17.1
 
