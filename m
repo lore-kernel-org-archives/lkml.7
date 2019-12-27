@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82494C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBD5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D554206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36D5206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468817;
-	bh=K77zhdQCGo5aAIegA2dbl4U7QWifn6VkpvH5DQ65VY4=;
+	s=default; t=1577468820;
+	bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Y2cfxFdamb9YXdoPzY9aivLtBJ4u42z7vc8kyzQ5lp+Lu00AslO4kPh/H/5frPMD
-	 nL4ueK9H/gdGvVlnWk2iWX2GASxQvzEhZrzCniQNTKBDiAzHNn/dUOdGynjY0Zuo9y
-	 U9v+Hy5iWu7rlInCreyrh5gf0ECe40khPZZpADqc=
+	b=LpgzrZXPspgLCCrfEBWGbW7Kvj2OTNB5A6AipI+BFA/P0lssrZqInjEg8VbhtzgCu
+	 05YInSQBjdSjiZ9Q5bPTvjk4dpw6lIiVJYWajjKVRUMSThyOcUhBQKzhbsS0+0+GQK
+	 lyeiXI0De1M41bx2z5s82nkStdPCzR6jmwKc8HVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfL0RpF (ORCPT
+        id S1728275AbfL0RpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43278 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbfL0Ro5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:57 -0500
+        id S1728128AbfL0Roy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE3121582;
-        Fri, 27 Dec 2019 17:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7E0D206F4;
+        Fri, 27 Dec 2019 17:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468695;
-        bh=K77zhdQCGo5aAIegA2dbl4U7QWifn6VkpvH5DQ65VY4=;
+        s=default; t=1577468693;
+        bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPU7nXQWrMPqkE8GaHj/k2dUr8lxf18gDBDhu16wJK3k59m5+CBOM+UySDGGZO0lR
-         VM7NFVvHFz4vZQjHPV40cBM8AyC08uzWetFdFEhnFnr2IajjJg6jZOULnGORz5V6oZ
-         3S9Xea3dAg1I6LnfWSlLY2my2dF1B4qk+aFxNB2g=
+        b=LOwhL4RmPqCJPSLe0YPC8fbIxbWGSF9SxdfqrDxA+J1FiPAFdtQmGnAjOLjBwDHkE
+         uE8n82/kDqwtcOYBWryNwNq9vlscpragl32f5Rw4m3o0DbL2s3wsFJ23eT6cwcVPXW
+         GbkmBP2e4A4n1s3n0exH/zke6e1iqCXLl5iHd+Eg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 52/84] gtp: do not allow adding duplicate tid and ms_addr pdp context
-Date:   Fri, 27 Dec 2019 12:43:20 -0500
-Message-Id: <20191227174352.6264-52-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 50/84] bnx2x: Fix logic to get total no. of PFs per engine
+Date:   Fri, 27 Dec 2019 12:43:18 -0500
+Message-Id: <20191227174352.6264-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,91 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 6b01b1d9b2d38dc84ac398bfe9f00baff06a31e5 ]
+[ Upstream commit ee699f89bdbaa19c399804504241b5c531b48888 ]
 
-GTP RX packet path lookups pdp context with TID. If duplicate TID pdp
-contexts are existing in the list, it couldn't select correct pdp context.
-So, TID value  should be unique.
-GTP TX packet path lookups pdp context with ms_addr. If duplicate ms_addr pdp
-contexts are existing in the list, it couldn't select correct pdp context.
-So, ms_addr value should be unique.
+Driver doesn't calculate total number of PFs configured on a
+given engine correctly which messed up resources in the PFs
+loaded on that engine, leading driver to exceed configuration
+of resources (like vlan filters etc.) beyond the limit per
+engine, which ended up with asserts from the firmware.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index d178d5bad7e4..7ca96ba00f20 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -931,24 +931,31 @@ static void ipv4_pdp_fill(struct pdp_ctx *pctx, struct genl_info *info)
- 	}
- }
- 
--static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
--			struct genl_info *info)
-+static int gtp_pdp_add(struct gtp_dev *gtp, struct sock *sk,
-+		       struct genl_info *info)
- {
-+	struct pdp_ctx *pctx, *pctx_tid = NULL;
- 	struct net_device *dev = gtp->dev;
- 	u32 hash_ms, hash_tid = 0;
--	struct pdp_ctx *pctx;
-+	unsigned int version;
- 	bool found = false;
- 	__be32 ms_addr;
- 
- 	ms_addr = nla_get_be32(info->attrs[GTPA_MS_ADDRESS]);
- 	hash_ms = ipv4_hashfn(ms_addr) % gtp->hash_size;
-+	version = nla_get_u32(info->attrs[GTPA_VERSION]);
- 
--	hlist_for_each_entry_rcu(pctx, &gtp->addr_hash[hash_ms], hlist_addr) {
--		if (pctx->ms_addr_ip4.s_addr == ms_addr) {
--			found = true;
--			break;
--		}
--	}
-+	pctx = ipv4_pdp_find(gtp, ms_addr);
-+	if (pctx)
-+		found = true;
-+	if (version == GTP_V0)
-+		pctx_tid = gtp0_pdp_find(gtp,
-+					 nla_get_u64(info->attrs[GTPA_TID]));
-+	else if (version == GTP_V1)
-+		pctx_tid = gtp1_pdp_find(gtp,
-+					 nla_get_u32(info->attrs[GTPA_I_TEI]));
-+	if (pctx_tid)
-+		found = true;
- 
- 	if (found) {
- 		if (info->nlhdr->nlmsg_flags & NLM_F_EXCL)
-@@ -956,6 +963,11 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
- 		if (info->nlhdr->nlmsg_flags & NLM_F_REPLACE)
- 			return -EOPNOTSUPP;
- 
-+		if (pctx && pctx_tid)
-+			return -EEXIST;
-+		if (!pctx)
-+			pctx = pctx_tid;
-+
- 		ipv4_pdp_fill(pctx, info);
- 
- 		if (pctx->gtp_version == GTP_V0)
-@@ -1079,7 +1091,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto out_unlock;
- 	}
- 
--	err = ipv4_pdp_add(gtp, sk, info);
-+	err = gtp_pdp_add(gtp, sk, info);
- 
- out_unlock:
- 	rcu_read_unlock();
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+index ee5159ef837e..df5e8c2e8eaf 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+@@ -1113,7 +1113,7 @@ static inline u8 bnx2x_get_path_func_num(struct bnx2x *bp)
+ 		for (i = 0; i < E1H_FUNC_MAX / 2; i++) {
+ 			u32 func_config =
+ 				MF_CFG_RD(bp,
+-					  func_mf_config[BP_PORT(bp) + 2 * i].
++					  func_mf_config[BP_PATH(bp) + 2 * i].
+ 					  config);
+ 			func_num +=
+ 				((func_config & FUNC_MF_CFG_FUNC_HIDE) ? 0 : 1);
 -- 
 2.20.1
 
