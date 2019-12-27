@@ -2,156 +2,190 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0367C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5D0C2D0DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C922080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BD220838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfL0CH1 (ORCPT
+        id S1727161AbfL0CH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:07:27 -0500
+        Thu, 26 Dec 2019 21:07:29 -0500
 Received: from mga17.intel.com ([192.55.52.151]:38918 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfL0CH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:07:26 -0500
+        id S1726115AbfL0CH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:07:29 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:26 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
-   d="scan'208";a="223675006"
+   d="scan'208";a="223675027"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:24 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:27 -0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, jmattson@google.com,
         sean.j.christopherson@intel.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v9 0/7] Introduce support for guest CET feature
-Date:   Fri, 27 Dec 2019 10:11:26 +0800
-Message-Id: <20191227021133.11993-1-weijiang.yang@intel.com>
+Subject: [PATCH v9 2/7] KVM: VMX: Define CET VMCS fields and #CP flag
+Date:   Fri, 27 Dec 2019 10:11:28 +0800
+Message-Id: <20191227021133.11993-3-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20191227021133.11993-1-weijiang.yang@intel.com>
+References: <20191227021133.11993-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Control-flow Enforcement Technology (CET) provides protection against
-Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
-sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+CET(Control-flow Enforcement Technology) is an upcoming Intel(R)
+processor feature that blocks Return/Jump-Oriented Programming(ROP)
+attacks. It provides the following capabilities to defend
+against ROP/JOP style control-flow subversion attacks:
 
-KVM change is required to support guest CET feature.
-This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
-and vmentry/vmexit configuration etc.so that guest kernel can setup CET
-runtime infrastructure based on them. Some CET MSRs and related feature
-flags used reference the definitions in kernel patchset.
+Shadow Stack (SHSTK):
+  A second stack for program which is used exclusively for
+  control transfer operations.
 
-CET kernel patches is here:
-https://lkml.org/lkml/2019/8/13/1110
-https://lkml.org/lkml/2019/8/13/1109
-Note: CET hasn't been supported for nested case now, since CR4.CET
-is fixed to 0 in FIXED1 MSR, actually nested VM cannot enable CET.
+Indirect Branch Tracking (IBT):
+  Code branching protection to defend against jump/call oriented
+  programming.
 
-v8 -> v9:
-- Refactored msr-check functions per Sean's feedback.
-- Fixed a few issues per Sean's suggestion.
-- Rebased patch to kernel-v5.4.
-- Moved CET CPUID feature bits and CR4.CET to last patch.
+Several new CET MSRs are defined in kernel to support CET:
+  MSR_IA32_{U,S}_CET: Controls the CET settings for user
+                      mode and suervisor mode respectively.
 
-v7 -> v8:
-- Addressed Jim and Sean's feedback on: 1) CPUID(0xD,i) enumeration. 2)
-  sanity check when configure guest CET. 3) function improvement.
-- Added more sanity check functions.
-- Set host vmexit default status so that guest won't leak CET status to
-  host when vmexit.
-- Added CR0.WP vs. CR4.CET mutual constrains.
+  MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for
+                            CPL-0,1,2,3 level respectively.
 
-v6 -> v7:
-- Rebased patch to kernel v5.3
-- Sean suggested to change CPUID(0xd, n) enumeration code as alined with
-  existing one, and I think it's better to make the fix as an independent patch 
-  since XSS MSR are being used widely on X86 platforms.
-- Check more host and guest status before configure guest CET
-  per Sean's feedback.
-- Add error-check before guest accesses CET MSRs per Sean's feedback.
-- Other minor fixes suggested by Sean.
+  MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack
+                        pointer table.
 
-v5 -> v6:
-- Rebase patch to kernel v5.2.
-- Move CPUID(0xD, n>=1) helper to a seperate patch.
-- Merge xsave size fix with other patch.
-- Other minor fixes per community feedback.
+Two XSAVES state bits are introduced for CET:
+  IA32_XSS:[bit 11]: For saving/restoring user mode CET states
+  IA32_XSS:[bit 12]: For saving/restoring supervisor mode CET states.
 
-v4 -> v5:
-- Rebase patch to kernel v5.1.
-- Wrap CPUID(0xD, n>=1) code to a helper function.
-- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
-- Add Co-developed-by expression in patch description.
-- Refine patch description.
+Six VMCS fields are introduced for CET:
+  {HOST,GUEST}_S_CET: Stores CET settings for supervisor mode.
+  {HOST,GUEST}_SSP: Stores shadow stack pointer for supervisor mode.
+  {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
+                               table.
 
-v3 -> v4:
-- Add Sean's patch for loading Guest fpu state before access XSAVES
-  managed CET MSRs.
-- Melt down CET bits setting into CPUID configuration patch.
-- Add VMX interface to query Host XSS.
-- Check Host and Guest XSS support bits before set Guest XSS.
-- Make Guest SHSTK and IBT feature enabling independent.
-- Do not report CET support to Guest when Host CET feature is Disabled.
+If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host's CET MSRs are restored
+from below VMCS fields at VM-Exit:
+  HOST_S_CET
+  HOST_SSP
+  HOST_INTR_SSP_TABLE
 
-v2 -> v3:
-- Modified patches to make Guest CET independent to Host enabling.
-- Added patch 8 to add user space access for Guest CET MSR access.
-- Modified code comments and patch description to reflect changes.
+If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest's CET MSRs are loaded
+from below VMCS fields at VM-Entry:
+  GUEST_S_CET
+  GUEST_SSP
+  GUEST_INTR_SSP_TABLE
 
-v1 -> v2:
-- Re-ordered patch sequence, combined one patch.
-- Added more description for CET related VMCS fields.
-- Added Host CET capability check while enabling Guest CET loading bit.
-- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
-- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
-- Added Host and Guest XSS mask check while setting bits for Guest XSS.
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/include/asm/vmx.h      | 8 ++++++++
+ arch/x86/include/uapi/asm/kvm.h | 1 +
+ arch/x86/kvm/x86.c              | 1 +
+ arch/x86/kvm/x86.h              | 5 +++--
+ 4 files changed, 13 insertions(+), 2 deletions(-)
 
-
-PATCH 1    : Fix CPUID(0xD, n) enumeration to support XSS MSR.
-PATCH 2    : Define CET VMCS fields and bits.
-PATCH 3    : Pass through CET MSRs to guest.
-PATCH 4    : Load guest/host CET states on vmentry/vmexit.
-PATCH 5    : Enable update to IA32_XSS for guest.
-PATCH 6    : Load Guest FPU states for XSAVES managed MSRs.
-PATCH 7    : Add user-space CET MSR access interface.
-
-
-
-
-Sean Christopherson (1):
-  KVM: X86: Load guest fpu state when accessing MSRs managed by XSAVES
-
-Yang Weijiang (6):
-  KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i) enumeration
-  KVM: VMX: Define CET VMCS fields and #CP flag
-  KVM: VMX: Pass through CET related MSRs
-  KVM: VMX: Load CET states on vmentry/vmexit
-  KVM: X86: Enable CET bits update in IA32_XSS
-  KVM: X86: Add user-space access interface for CET MSRs
-
- arch/x86/include/asm/kvm_host.h |   6 +-
- arch/x86/include/asm/vmx.h      |   8 +
- arch/x86/include/uapi/asm/kvm.h |   1 +
- arch/x86/kvm/cpuid.c            | 122 ++++++++++-----
- arch/x86/kvm/cpuid.h            |   2 +
- arch/x86/kvm/svm.c              |   7 +
- arch/x86/kvm/vmx/capabilities.h |  10 ++
- arch/x86/kvm/vmx/vmx.c          | 256 +++++++++++++++++++++++++++++++-
- arch/x86/kvm/x86.c              |  36 ++++-
- arch/x86/kvm/x86.h              |  10 +-
- 10 files changed, 412 insertions(+), 46 deletions(-)
-
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 1835767aa335..5b641c30e1b8 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -91,6 +91,7 @@
+ #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+ #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+ #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
++#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
+ 
+ #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+ 
+@@ -104,6 +105,7 @@
+ #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+ #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+ #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
++#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
+ 
+ #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+ 
+@@ -323,6 +325,9 @@ enum vmcs_field {
+ 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
+ 	GUEST_SYSENTER_ESP              = 0x00006824,
+ 	GUEST_SYSENTER_EIP              = 0x00006826,
++	GUEST_S_CET                     = 0x00006828,
++	GUEST_SSP                       = 0x0000682a,
++	GUEST_INTR_SSP_TABLE            = 0x0000682c,
+ 	HOST_CR0                        = 0x00006c00,
+ 	HOST_CR3                        = 0x00006c02,
+ 	HOST_CR4                        = 0x00006c04,
+@@ -335,6 +340,9 @@ enum vmcs_field {
+ 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
+ 	HOST_RSP                        = 0x00006c14,
+ 	HOST_RIP                        = 0x00006c16,
++	HOST_S_CET                      = 0x00006c18,
++	HOST_SSP                        = 0x00006c1a,
++	HOST_INTR_SSP_TABLE             = 0x00006c1c
+ };
+ 
+ /*
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 503d3f42da16..e68d6b448730 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -31,6 +31,7 @@
+ #define MC_VECTOR 18
+ #define XM_VECTOR 19
+ #define VE_VECTOR 20
++#define CP_VECTOR 21
+ 
+ /* Select x86 specific features in <linux/kvm.h> */
+ #define __KVM_HAVE_PIT
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5d530521f11d..a9b1140d0508 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -379,6 +379,7 @@ static int exception_class(int vector)
+ 	case NP_VECTOR:
+ 	case SS_VECTOR:
+ 	case GP_VECTOR:
++	case CP_VECTOR:
+ 		return EXCPT_CONTRIBUTORY;
+ 	default:
+ 		break;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index c29783afebed..402dea669619 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -114,7 +114,7 @@ static inline bool x86_exception_has_error_code(unsigned int vector)
+ {
+ 	static u32 exception_has_error_code = BIT(DF_VECTOR) | BIT(TS_VECTOR) |
+ 			BIT(NP_VECTOR) | BIT(SS_VECTOR) | BIT(GP_VECTOR) |
+-			BIT(PF_VECTOR) | BIT(AC_VECTOR);
++			BIT(PF_VECTOR) | BIT(AC_VECTOR) | BIT(CP_VECTOR);
+ 
+ 	return (1U << vector) & exception_has_error_code;
+ }
+@@ -298,7 +298,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+  * In future, applicable XSS state bits can be added here
+  * to make them available to KVM and guest.
+  */
+-#define KVM_SUPPORTED_XSS	0
++#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER \
++				| XFEATURE_MASK_CET_KERNEL)
+ 
+ extern u64 host_xcr0;
+ 
 -- 
 2.17.2
 
