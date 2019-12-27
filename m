@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA60C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E441C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E5A21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB21206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469800;
-	bh=4YON9OFRZy1HzvpVfNd2cG2zRP0S16fccsztPMSe2kg=;
+	s=default; t=1577469804;
+	bh=KMIQ/vRNYcRb/g7omTSlt/igyCZg5W16R8w+aDwPuGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+vHtW8l8upiN/23KBTeJozsmk3kFtM4ZQ/E+OJdT+1c6xVdQUfaK7X6THAbN15VN
-	 tDkj+EwLa7NWmJUDbtCpyOR6fruHiQULaosq0oFBji5FCFokucsHTwczRHBvs9x5G4
-	 DnoLr1WvKYCco2xwcMaKFjGaayeg65eth+A7uooQ=
+	b=XBZQp6jYyLVQbH0p0wwkWfAsB0ZyuJ796umIfj674UNKB0pNI7Lts9k5oZ/OD4lUi
+	 SKRVH5eEw1qyM7I26x55epZ4PedeRlv921ByS0vmo/wKS/fq0/m0FvqHu34y8qWVrq
+	 HaXKaxJfHLExvCq00MZS8m5b4/GDRJJyT/gIBgpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfL0SDT (ORCPT
+        id S1728656AbfL0SDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:03:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60400 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:03:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbfL0SDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:12 -0500
+        id S1728534AbfL0SDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09759218AC;
-        Fri, 27 Dec 2019 18:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55831206F4;
+        Fri, 27 Dec 2019 18:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469791;
-        bh=4YON9OFRZy1HzvpVfNd2cG2zRP0S16fccsztPMSe2kg=;
+        s=default; t=1577469795;
+        bh=KMIQ/vRNYcRb/g7omTSlt/igyCZg5W16R8w+aDwPuGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCvVwNbgplr+Z+RFLyy4A61Qoq7d/WUz9E1glmPR6evRM3GPm0TIVA7OBsQlPq4ij
-         ABOq7hWVwwasw3fwDX3u07qgA/bvGvYePGfIcx6Z1QwNeRxKZym3g2lYYcnsEoSLD2
-         punLjkozB/joDu+iaEFwhKlriKZ1EhR/OPN3eKw4=
+        b=y93tp1AuolJD9BRla8FQC+rY/b6wzEgMVDkcMU9exnn2vuRgCrrA1xf3yddlat5Wf
+         G+QseBOheSeVH8GkcHdIpMVmZAR8tGGcRiQJMnvq4SBqDKan6bkD8UflAYe57qmKJx
+         UDhbkLn7F2DBUcvmu4GsT5O4/z3N7dkH38O8itSM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 40/57] regulator: rn5t618: fix module aliases
-Date:   Fri, 27 Dec 2019 13:02:05 -0500
-Message-Id: <20191227180222.7076-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 43/57] perf/x86/intel: Fix PT PMI handling
+Date:   Fri, 27 Dec 2019 13:02:08 -0500
+Message-Id: <20191227180222.7076-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -59,34 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
+[ Upstream commit 92ca7da4bdc24d63bb0bcd241c11441ddb63b80a ]
 
-platform device aliases were missing, preventing
-autoloading of module.
+Commit:
 
-Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+
+skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
+also inadvertently skips the active_events bump for PT in that case, which
+is a bug. If there aren't any hardware events at the same time as PT, the
+PMI handler will ignore PT PMIs, as active_events reads zero in that case,
+resulting in the "Uhhuh" spurious NMI warning and PT data loss.
+
+Fix this by always increasing active_events for PT events.
+
+Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rn5t618-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/events/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index 790a4a73ea2c..40b74648bd31 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -154,6 +154,7 @@ static struct platform_driver rn5t618_regulator_driver = {
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 6ed99de2ddf5..c1f7b3cb84a9 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -375,7 +375,7 @@ int x86_add_exclusive(unsigned int what)
+ 	 * LBR and BTS are still mutually exclusive.
+ 	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+-		return 0;
++		goto out;
  
- module_platform_driver(rn5t618_regulator_driver);
+ 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
+ 		mutex_lock(&pmc_reserve_mutex);
+@@ -387,6 +387,7 @@ int x86_add_exclusive(unsigned int what)
+ 		mutex_unlock(&pmc_reserve_mutex);
+ 	}
  
-+MODULE_ALIAS("platform:rn5t618-regulator");
- MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
- MODULE_DESCRIPTION("RN5T618 regulator driver");
- MODULE_LICENSE("GPL v2");
++out:
+ 	atomic_inc(&active_events);
+ 	return 0;
+ 
+@@ -397,11 +398,15 @@ int x86_add_exclusive(unsigned int what)
+ 
+ void x86_del_exclusive(unsigned int what)
+ {
++	atomic_dec(&active_events);
++
++	/*
++	 * See the comment in x86_add_exclusive().
++	 */
+ 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
+ 		return;
+ 
+ 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
+-	atomic_dec(&active_events);
+ }
+ 
+ int x86_setup_perfctr(struct perf_event *event)
 -- 
 2.20.1
 
