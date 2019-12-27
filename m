@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7258C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9A0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9110420828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B6020722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470004;
-	bh=XyFecWqBpKGcklNl7biKtm91cp0rUtKVz8cQNcFWqAs=;
+	s=default; t=1577470010;
+	bh=4FTqzjfn+w4KqdDw37CbAaA3bjTre5V3IOWDORrU7oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WntYKtKV2If54Nt2g5kl74Jk4vNd7xtcsN0shijDxKRMHB4cLoh8RG6eef9cP3PJD
-	 Jq9g/PgF4sWT7Cp8Rr1MaRnnNQvEqftl+Q4dApIIobhcjL1drAsVPuqpcKlDsk3fzZ
-	 232qapLsD101NtFTWVQca8LdrQOk4Lg2UCHa8F3Y=
+	b=0DMYIG77/lWzftmI14ZygniBlVfxWXBRcX8OyikmnlLWvQ3iYStNVk3jiXNSFVUuI
+	 r6B3jRQtpcy8MNRALSeOT5JvNlll/CGEbxUOsz5Jz+/YimhFgCg6HkTLLMJxfLvQyU
+	 e3+ZX/KWLnd6QeyUOdU83Ew4F4qVbUZclz8XzS24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfL0SGn (ORCPT
+        id S1727921AbfL0SCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:06:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:02:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727613AbfL0SCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:45 -0500
+        id S1727769AbfL0SCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BFE1206CB;
-        Fri, 27 Dec 2019 18:02:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7273721775;
+        Fri, 27 Dec 2019 18:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469765;
-        bh=XyFecWqBpKGcklNl7biKtm91cp0rUtKVz8cQNcFWqAs=;
+        s=default; t=1577469760;
+        bh=4FTqzjfn+w4KqdDw37CbAaA3bjTre5V3IOWDORrU7oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p7VB9G4C1ide8gVKI4RnFomv5YOIpwr/qhbWe21raQkitmeMcmZPMNmaI0hu/iPZH
-         v7m4o1bW4y3zerr6/inN36/NKWuOMKmKoZ7VUlZUzP31MX6OdEkRvZ1IDoawuXvceA
-         z3JM0Mm/xw5EbchDuqNRCSM/q6lvgYrodObfoOls=
+        b=ffd+3BTXV2C/zD5kzbRWOHzA0ut8s8IPw6cvs+gLlIF/y7kWfLxoxY8EVd0tReTgI
+         GWnMKqUkYb0BuSRYEIFxKF208I+pU8O7wYk+t3nxF7RtUZPCdkd/xUEbcc9F2/TuiL
+         FNm2o5fEK0ZLfj+vqBZo/WLAet//3h/ShDB8W7fs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/57] af_packet: set defaule value for tmo
-Date:   Fri, 27 Dec 2019 13:01:42 -0500
-Message-Id: <20191227180222.7076-17-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/57] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
+Date:   Fri, 27 Dec 2019 13:01:38 -0500
+Message-Id: <20191227180222.7076-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -60,57 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
+[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
+whose NFT_SET_ELEM_INTERVAL_END flag is set on.
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
-
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 1f86bf0d1649..4e1058159b08 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -593,7 +593,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
- 			msec = 1;
- 			div = ecmd.base.speed / 1000;
- 		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 7ef126489d4e..91490446ebb4 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3917,14 +3917,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
+ 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
+ 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
+ 			return -EINVAL;
+-		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
+-		    flags & NFT_SET_ELEM_INTERVAL_END)
+-			return -EINVAL;
+ 	} else {
+ 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
+ 			return -EINVAL;
+ 	}
  
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
- 
++	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
++	     (nla[NFTA_SET_ELEM_DATA] ||
++	      nla[NFTA_SET_ELEM_OBJREF] ||
++	      nla[NFTA_SET_ELEM_TIMEOUT] ||
++	      nla[NFTA_SET_ELEM_EXPIRATION] ||
++	      nla[NFTA_SET_ELEM_USERDATA] ||
++	      nla[NFTA_SET_ELEM_EXPR]))
++		return -EINVAL;
++
+ 	timeout = 0;
+ 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
+ 		if (!(set->flags & NFT_SET_TIMEOUT))
 -- 
 2.20.1
 
