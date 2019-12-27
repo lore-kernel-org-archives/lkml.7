@@ -2,145 +2,101 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9360C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674B2C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3332080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577410533;
-	bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=CVwx16Ii3qmtVF2SWRPjI4hocx+tpCAejo7aDlvzGcKpoJxLut19rOLIRXxCzXXmK
-	 QiGEQVDQrPHVZ8Ht1BzXcsbcs9Et2Tncuj/wiTx3BAaLV7PCRA2/pwdz+25uDHdSnO
-	 +s55K9QhiXw5jrDUYRGBNLmw4nFnQF7soUvn5uSg=
+	by mail.kernel.org (Postfix) with ESMTP id 4471720882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfL0Bfc (ORCPT
+        id S1727028AbfL0BmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:35:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
+        Thu, 26 Dec 2019 20:42:12 -0500
+Received: from mx.socionext.com ([202.248.49.38]:5569 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfL0Bf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:35:29 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A445B2080D;
-        Fri, 27 Dec 2019 01:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577410528;
-        bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=PeZBHZBkQyRaDfaZDG3vZaRTcEMgVMs9ouVBb87r8KwsXuvhUp2ZIC21Zt29xBQsT
-         lT/+O3ub5mPrstV1Ct2Hj3KSmxl4FiAmwKUDyfOWxO2tFH/yJYTnuM+KWYklR7p7cn
-         Jjf1v0Iv/997dbhwWiiSCHcqaa7+SJneSxhzho7A=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191226224156.GE1908628@ripper>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org> <20191219063719.5AF942146E@mail.kernel.org> <20191220023427.GL448416@yoga> <20191224022042.7DDB120709@mail.kernel.org> <20191226224156.GE1908628@ripper>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-User-Agent: alot/0.8.1
-Date:   Thu, 26 Dec 2019 17:35:27 -0800
-Message-Id: <20191227013528.A445B2080D@mail.kernel.org>
+        id S1726277AbfL0BmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 20:42:11 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 27 Dec 2019 10:42:09 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id ED167603AB;
+        Fri, 27 Dec 2019 10:42:09 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 27 Dec 2019 10:43:02 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 677131A01BB;
+        Fri, 27 Dec 2019 10:42:09 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] clk: uniphier: Add SCSSI clock gate for each channel
+Date:   Fri, 27 Dec 2019 10:42:05 +0900
+Message-Id: <1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-12-26 14:41:56)
-> On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
->=20
-> > Quoting Bjorn Andersson (2019-12-19 18:34:27)
-> > > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
-> > >=20
-> > > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
-> > > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad=
- on the
-> > > > > SoC. Update the definition of these clocks to allow this to be wi=
-red up
-> > > > > to the appropriate clock source.
-> > > > >=20
-> > > > > Retain "xo" as the global named parent to make the change a nop i=
-n the
-> > > > > event that DT doesn't carry the necessary clocks definition.
-> > > >=20
-> > > > Something seems wrong still.
-> > > >=20
-> > > > I wonder if we need to add the XO "active only" clk to the rpm clk
-> > > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really =
-the
-> > > > truth for most of the SoCs out there because it's the only crystal =
-that
-> > > > needs to be on all the time when the CPU is active. The "normal" XO=
- clk
-> > > > will then be on all the time unless deep idle is entered and nobody=
- has
-> > > > turned that on via some clk_prepare() call. That's because we root =
-all
-> > > > other clks through the "normal" XO clk that will be on in deep
-> > > > idle/suspend if someone needs it to be.
-> > > >=20
-> > >=20
-> > > The patch doesn't attempt to address the fact that our representation=
- of
-> > > XO is incomplete, only the fact that CXO2 isn't properly described.
-> > >=20
-> > > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
-> > > presumably is the clock you're referring to here - i.e. the clock
-> > > resource connected to CXO.
-> >=20
-> > I don't mean the buffer clks, but the XO resource specifically. It's the
-> > representation to the RPM that deep sleep/deep idle should or shouldn't
-> > turn off XO and achieve "XO shutdown". Basically it can never be off
-> > when the CPU is active because then the CPU itself wouldn't be clocked,
-> > but when the CPU isn't active we may want to turn it off if nothing is
-> > using it during sleep to clock some sort of wakeup logic or device that
-> > is active when the CPU is idle.
-> >=20
->=20
-> I see. So we're missing the representation of the "raw" CXO in
-> clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
-> should be tied together for us to realize the "XO shutdown"...
+SCSSI has clock gates for each channel in the SoCs newer than Pro4,
+so this adds missing clock gates for channel 1, 2 and 3. And more, this
+moves MCSSI clock ID after SCSSI.
 
-Ok. This is another topic so not important to this patch right now.
+Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+Changes since v1:
+- Add 'Fixes' and 'Acked-by' tags
 
->=20
-> > >=20
-> > > > Did the downstream code explicitly enable this ln_bb_clk in the phy
-> > > > drivers? I think it may have?
-> > > >=20
-> > >=20
-> > > Yes, afaict all downstream drivers consuming a CLKREF also consumes
-> > > LN_BB and ensures that this is enabled. So we've been relying on UFS =
-to
-> > > either not have probed yet or that UFS probed successfully for PCIe a=
-nd
-> > > USB to be functional.
-> > >=20
-> > > So either we need this patch to ensure that the requests propagates
-> > > down, or I need to patch up the PHY drivers to ensure that they also
-> > > vote for the PMIC clock - and I do prefer this patch.
-> >=20
-> > Cool. Yeah seems better to just indicate that the reference clks are
-> > clocked by something else and fix that problem now.
-> >=20
->=20
-> Let me know if I shouldn't interpret this sentence as "let's merge this
-> for now".
+drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Yes I'd like to merge for now but the binding needs to be adjusted.
-Please resend.
+diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
+index 9caa529..3e32db9 100644
+--- a/drivers/clk/uniphier/clk-uniphier-peri.c
++++ b/drivers/clk/uniphier/clk-uniphier-peri.c
+@@ -18,8 +18,8 @@
+ #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
+ 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
+ 
+-#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
+-	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
++#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
++	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
+ 
+ #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
+ 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
+@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_I2C(6, 2),
+ 	UNIPHIER_PERI_CLK_I2C(7, 3),
+ 	UNIPHIER_PERI_CLK_I2C(8, 4),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_FI2C(8, 4),
+ 	UNIPHIER_PERI_CLK_FI2C(9, 5),
+ 	UNIPHIER_PERI_CLK_FI2C(10, 6),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
+-	UNIPHIER_PERI_CLK_MCSSI(12),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
++	UNIPHIER_PERI_CLK_SCSSI(12, 1),
++	UNIPHIER_PERI_CLK_SCSSI(13, 2),
++	UNIPHIER_PERI_CLK_SCSSI(14, 3),
++	UNIPHIER_PERI_CLK_MCSSI(15),
+ 	{ /* sentinel */ }
+ };
+-- 
+2.7.4
 
