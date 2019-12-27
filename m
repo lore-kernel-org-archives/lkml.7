@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A18C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0956AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FC221582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA96420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470639;
-	bh=KQUacGwDkWLuijj1e3YKci1uj1889QRnXqZ6x3PvBYQ=;
+	s=default; t=1577470644;
+	bh=OJzQojtNM/U+7jlRuM5cyiHoItZXroTlSfq4yW1bjJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGN7rpUSvpt8lZWlfYU9K5gNgNSDvCaF03lyU8xNQ+6PEzxJLx353DKNDCkEhXPhh
-	 7wdKrS/V1iExa2EvZlhVywEBfIdEoZ6d+mlzKN2bXpkZzw3lTQS+J6ex/xXXvTK0EL
-	 o41vsOzRkwuexAe7bQRBgcwLs9VpgpUKq7FJb8VM=
+	b=uRqaxuIpA6nN1kb7LtPZO/hzfWi5NUZE0KX8UH7kiQ/YKIlOwTs9gAOG/acUaRhkG
+	 lwlrQsiF4z55MgQT3ovuoD79RaFpf6c+S+6C3DtERoksAtV4Ob5tGCyCsMVsf+2wWq
+	 rqYSjOjM4qNiaFKzfVhjZ8k6A15KRZJlxTDMtG+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfL0SQE (ORCPT
+        id S1728157AbfL0SQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41116 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfL0SQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:01 -0500
+        id S1727161AbfL0SP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9FE21582;
-        Fri, 27 Dec 2019 18:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA77D21927;
+        Fri, 27 Dec 2019 18:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470561;
-        bh=KQUacGwDkWLuijj1e3YKci1uj1889QRnXqZ6x3PvBYQ=;
+        s=default; t=1577470558;
+        bh=OJzQojtNM/U+7jlRuM5cyiHoItZXroTlSfq4yW1bjJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thW6gt99qrNI3F/40bbe9d6bMAO5JD6n7vHxQSx/7sw4f9TRKr0Wd1oCwBdcD3du/
-         JhSpg64d/uCWSqmHOeyfC9p3d4/fHaDQzJTMMQMjsRzo9B44CA+lBxqigFu5kKDIWb
-         5toCBwppHiZdOmXHP+wcWIdUl/YlaxvI2B44ewbY=
+        b=f43LzVSo6soq2m8g2Fj45uL51e+wyhC1weI77s/76JT0Rg7NRuLJEOR/6v5sthnen
+         V/MklPExr2/EvM9xqlXtDOdomQKrkQCaZXTwg9Iw1l4n9/djdD5ZupR9hVCV628IUP
+         Ciz8bEhIjnsrG3eBdK66QcF9QIEoAEDTPEIjzkhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/25] tty: serial: msm_serial: Fix lockup for sysrq and oops
-Date:   Fri, 27 Dec 2019 13:15:33 -0500
-Message-Id: <20191227181549.8040-9-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/25] fjes: fix missed check in fjes_acpi_add
+Date:   Fri, 27 Dec 2019 13:15:31 -0500
+Message-Id: <20191227181549.8040-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -61,70 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e ]
+[ Upstream commit a288f105a03a7e0e629a8da2b31f34ebf0343ee2 ]
 
-As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
-has mentioned the uart driver might cause recursive locking between
-normal printing and the kernel debugging facilities (e.g. sysrq and
-oops).  In the commit it gave out suggestion for fixing recursive
-locking issue: "The solution is to avoid locking in the sysrq case
-and trylock in the oops_in_progress case."
+fjes_acpi_add() misses a check for platform_device_register_simple().
+Add a check to fix it.
 
-This patch follows the suggestion (also used the exactly same code with
-other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
-issue, this can avoid stuck caused by deadlock and print out log for
-sysrq and oops.
-
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 658d439b2292 ("fjes: Introduce FUJITSU Extended Socket Network Device driver")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/fjes/fjes_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 03cac2183579..1a4df5005aec 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -1381,6 +1381,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 	int num_newlines = 0;
- 	bool replaced = false;
- 	void __iomem *tf;
-+	int locked = 1;
- 
- 	if (is_uartdm)
- 		tf = port->membase + UARTDM_TF;
-@@ -1393,7 +1394,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 			num_newlines++;
- 	count += num_newlines;
- 
--	spin_lock(&port->lock);
-+	if (port->sysrq)
-+		locked = 0;
-+	else if (oops_in_progress)
-+		locked = spin_trylock(&port->lock);
-+	else
-+		spin_lock(&port->lock);
+diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+index a539e831b4b1..d8fcdc2414d8 100644
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -149,6 +149,9 @@ static int fjes_acpi_add(struct acpi_device *device)
+ 	/* create platform_device */
+ 	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+ 						   ARRAY_SIZE(fjes_resource));
++	if (IS_ERR(plat_dev))
++		return PTR_ERR(plat_dev);
 +
- 	if (is_uartdm)
- 		msm_reset_dm_count(port, count);
+ 	device->driver_data = plat_dev;
  
-@@ -1429,7 +1436,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
- 		iowrite32_rep(tf, buf, 1);
- 		i += num_chars;
- 	}
--	spin_unlock(&port->lock);
-+
-+	if (locked)
-+		spin_unlock(&port->lock);
- }
- 
- static void msm_console_write(struct console *co, const char *s,
+ 	return 0;
 -- 
 2.20.1
 
