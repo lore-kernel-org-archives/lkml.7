@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715C1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242CAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3BF22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61AE24650
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468701;
-	bh=ety4WDIxk5+X0Oj4j0bFqKYDCMGBAPXqd2/ikjwPEyM=;
+	s=default; t=1577468711;
+	bh=4YON9OFRZy1HzvpVfNd2cG2zRP0S16fccsztPMSe2kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=humqjsH5lZS0MBnD5w9RWwuqQ0vrO+gaPVZeYY4PttbpBX6QbHU4KTuVA0GXdhKQn
-	 AQNL4PZmhEsL04ekp9fyYj0Z0lPWwdr8WpkbWGFLDtAJWtmANEiqmQOxsnxz9DDMoN
-	 NRR6OIFNiYG+SLNdWfCzfevrvxss5cxXr+t/1Nmw=
+	b=XTpoDVfPprjKJ4JJn2LVHW7ftADVuRWF2aIQRVda1ZxpqhzbLIe3rghdHCPuVYmXx
+	 tczfSgDPhQmenn7kFVCK0Ru8L9gKnNMK/hBld5UctUWrWRwC/0A38zR8xz0bqfFRwW
+	 a1+gUjfxy3GcrtpMK/H4CFogDjTjbv65H5VdQq8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfL0RpA (ORCPT
+        id S1728695AbfL0RpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:45:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbfL0Rov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:51 -0500
+        id S1728650AbfL0RpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B2821582;
-        Fri, 27 Dec 2019 17:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD4122522;
+        Fri, 27 Dec 2019 17:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468691;
-        bh=ety4WDIxk5+X0Oj4j0bFqKYDCMGBAPXqd2/ikjwPEyM=;
+        s=default; t=1577468704;
+        bh=4YON9OFRZy1HzvpVfNd2cG2zRP0S16fccsztPMSe2kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCyfsSsEl9ttf3SiskS9iscKQ9upY/TaypTpu6MLWw73COE28wKDmeqEiw8eJODC8
-         brxQTgYzPjZ3VUjlTe54rM4hmWJWwOedn7YWB3x24fNgbIcIWM8VCDTRvcuWOn8tvv
-         PEN7mNZn9yS1bQ2T6nnGB4O2hlBi7wE7p/O1x7MI=
+        b=0TqsUkz3USWO2OfSjss/Qj9e7X8gMgs5+mHrfcr8jzkl4njmQJonSgUtt8rrvsU6u
+         gvOeSps0I/zB3Tn0z7oHtQrq7CHtOL1a2pzs90XgOx7r+SgZrJ68isFFLd3dR/DiSl
+         pv8UhTc0t1PHbbAOvP/gGq3jqgGI1qnNRLPEehGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Sven Auhagen <sven.auhagen@voleatech.de>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 48/84] net: marvell: mvpp2: phylink requires the link interrupt
-Date:   Fri, 27 Dec 2019 12:43:16 -0500
-Message-Id: <20191227174352.6264-48-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 60/84] regulator: rn5t618: fix module aliases
+Date:   Fri, 27 Dec 2019 12:43:28 -0500
+Message-Id: <20191227174352.6264-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -61,54 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit f3f2364ea14d1cf6bf966542f31eadcf178f1577 ]
+[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
 
-phylink requires the MAC to report when its link status changes when
-operating in inband modes.  Failure to report link status changes
-means that phylink has no idea when the link events happen, which
-results in either the network interface's carrier remaining up or
-remaining permanently down.
+platform device aliases were missing, preventing
+autoloading of module.
 
-For example, with a fiber module, if the interface is brought up and
-link is initially established, taking the link down at the far end
-will cut the optical power.  The SFP module's LOS asserts, we
-deactivate the link, and the network interface reports no carrier.
-
-When the far end is brought back up, the SFP module's LOS deasserts,
-but the MAC may be slower to establish link.  If this happens (which
-in my tests is a certainty) then phylink never hears that the MAC
-has established link with the far end, and the network interface is
-stuck reporting no carrier.  This means the interface is
-non-functional.
-
-Avoiding the link interrupt when we have phylink is basically not
-an option, so remove the !port->phylink from the test.
-
-Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/rn5t618-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index a50977ce4076..04bee450eb3d 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -3341,7 +3341,7 @@ static int mvpp2_open(struct net_device *dev)
- 		valid = true;
- 	}
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index 790a4a73ea2c..40b74648bd31 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -154,6 +154,7 @@ static struct platform_driver rn5t618_regulator_driver = {
  
--	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
-+	if (priv->hw_version == MVPP22 && port->link_irq) {
- 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
- 				  dev->name, port);
- 		if (err) {
+ module_platform_driver(rn5t618_regulator_driver);
+ 
++MODULE_ALIAS("platform:rn5t618-regulator");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 regulator driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
