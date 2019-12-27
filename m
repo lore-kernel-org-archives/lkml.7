@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63646C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3514D208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FAD208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469094;
-	bh=GQiAvbWLjMvJk09cCba+syEJkkqYycnVG/FlajrljWk=;
+	s=default; t=1577469095;
+	bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajZbMkuiBRmLChSSJNS0OrPM+CkjngpVzPb9KZlthCRqOCpXvC8t3zdBaMmj0mtBz
-	 gLG/RbRjq18dhuHtCF4tOzMkgLVLlZGZ3ux9CiYoFIpkUBbSZ0PdfXgcAWQFS41Auc
-	 vB85XJuBV5zKbQDj474eiP5KdanGxXnAGHQQpth8=
+	b=nDv6PXw7Y6WL5xXzgfTvt8zio37Km/d60iHbpJD4HY9261ln9GFrd8ztdfgWhEbvx
+	 nPOOirQkA4Vabu9pPjKTOs4Nbo3OSUnh88dgkEgYz4piGjtDuucpv/ssffG8089f+I
+	 s7cpMJ8bNrtjCldYU3jjxcrO5Z9SfKr14qUi6iyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfL0Rvb (ORCPT
+        id S1727995AbfL0Rv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:51:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:51:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbfL0RnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:23 -0500
+        id S1727282AbfL0RnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2BD22522;
-        Fri, 27 Dec 2019 17:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DC4E24125;
+        Fri, 27 Dec 2019 17:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468602;
-        bh=GQiAvbWLjMvJk09cCba+syEJkkqYycnVG/FlajrljWk=;
+        s=default; t=1577468604;
+        bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbsvAOvYBpmkkudEXR6GMX702Y19SmZyyl7TwyV+ZnHw3eXLXpSHjdpkLxJ/KLJP1
-         JBMktf6R8/KUetLhl7HYWbIjA4/bcW9pxttkwvmqayRie1g+/qzBNnuAZKpJzPd68d
-         PiiX22UJT4Ng+pn2jsLcbWbHxfIhXmPptrxAO7Hw=
+        b=gII4N7y/AMMDBz+paF6LyzzfNHh5HTp4FUcYhRcz9P8++44E+fao8vFEmvCw35nBd
+         Cv3xAtACqHji6RP5VbyjIVznzY039hyEkxeFSC5k3VEVwt9sqkvIoauuoVI16rzNIw
+         Ou1TIeYdYcUExeOllQ1ToMd0qYrB8dg1R1q6Oe80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 123/187] ASoC: wm8962: fix lambda value
-Date:   Fri, 27 Dec 2019 12:39:51 -0500
-Message-Id: <20191227174055.4923-123-sashal@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 125/187] spi: nxp-fspi: Ensure width is respected in spi-mem operations
+Date:   Fri, 27 Dec 2019 12:39:53 -0500
+Message-Id: <20191227174055.4923-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,45 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Michael Walle <michael@walle.cc>
 
-[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
+[ Upstream commit 007773e16a6f3f49d1439554078c3ba8af131998 ]
 
-According to user manual, it is required that FLL_LAMBDA > 0
-in all cases (Integer and Franctional modes).
+Make use of a core helper to ensure the desired width is respected
+when calling spi-mem operators.
 
-Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
+Otherwise only the SPI controller will be matched with the flash chip,
+which might lead to wrong widths. Also consider the width specified by
+the user in the device tree.
+
+Fixes: a5356aef6a90 ("spi: spi-mem: Add driver for NXP FlexSPI controller")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20191211195730.26794-1-michael@walle.cc
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-nxp-fspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index 3e5c69fbc33a..d9d59f45833f 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2788,7 +2788,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 501b923f2c27..28ae5229f889 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -439,7 +439,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
+ 	    op->data.nbytes > f->devtype_data->txfifo)
+ 		return false;
  
- 	if (target % Fref == 0) {
- 		fll_div->theta = 0;
--		fll_div->lambda = 0;
-+		fll_div->lambda = 1;
- 	} else {
- 		gcd_fll = gcd(target, fratio * Fref);
+-	return true;
++	return spi_mem_default_supports_op(mem, op);
+ }
  
-@@ -2858,7 +2858,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 		return -EINVAL;
- 	}
- 
--	if (fll_div.theta || fll_div.lambda)
-+	if (fll_div.theta)
- 		fll1 |= WM8962_FLL_FRAC;
- 
- 	/* Stop the FLL while we reconfigure */
+ /* Instead of busy looping invoke readl_poll_timeout functionality. */
 -- 
 2.20.1
 
