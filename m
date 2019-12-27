@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C206C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40F2C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE93120722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E303208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470516;
-	bh=ehWXxgL2qGAl8OpB2pwYtJRf+xpwsJCv8hYXYxukeQk=;
+	s=default; t=1577470523;
+	bh=YQpnEO+zftTcEksKOgn/okVCs3guuDl7CCpC4AedMHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9l5/Y9m/MZKfcUDsUwgSIacMUnowcbh69L3eK0tDraFTinCK6Xd4E4bcIkwMuete
-	 gfzi+6e1pdp5dD/gPEgUJoglm9BKqQYUpUIB/g8Xm/Cm5kZoomv0j1sji78gpc3Hw6
-	 N43NpxNDvTyPOHGyHihja7ZTFF6WX3u6Vc/E/kHc=
+	b=CsyLfLuiGC+z1/zPMjWHWAszu8BMcQ5seFN4DLM+3bIge5IF3fbg9KRHJn9NFH32m
+	 3qt7xHERxXqbIa4hMeukilVW/plGyc7oADiBL2DoDSoURZHdN1PkgbwiuI3PuxdOz+
+	 ArgYzMcagsRnAN6B+aylO8gsHfmURV8D0EFvQPa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfL0SPP (ORCPT
+        id S1727968AbfL0SPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfL0SPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:12 -0500
+        id S1727905AbfL0SPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8D8B222D9;
-        Fri, 27 Dec 2019 18:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9095E20722;
+        Fri, 27 Dec 2019 18:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470511;
-        bh=ehWXxgL2qGAl8OpB2pwYtJRf+xpwsJCv8hYXYxukeQk=;
+        s=default; t=1577470517;
+        bh=YQpnEO+zftTcEksKOgn/okVCs3guuDl7CCpC4AedMHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jphNgaIeTx/SSK+3NWOrAcxbQuFwg+61ouHKHC6ZSoMY5vu0te3+9CL8PnNq6Js6J
-         Xx88ZDqUyBPkpL5iwWSg6rRSxkMozIZwrtVoUWKNl471N2bmt/BplIhEn0K0TnGV/b
-         gcam+z5N16nFHt8ac6o1e1l0+7uNgJAiQnRDKbpM=
+        b=p+XCNGbUwcjRfvoeqywAheztejyaB/I+51dNkOOcEeozrxT9u/OsfmmQQUbMn29XC
+         ckk28Gfpbhu+PuykSarRLbHvqOwPgIpEnT5l3eTAKDKW2yxNp5auDZed1x9k7q1jED
+         bzbDlUwm0clTNOhH1nbv2/q/daljbs2240oanmbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 29/38] perf/x86/intel: Fix PT PMI handling
-Date:   Fri, 27 Dec 2019 13:14:26 -0500
-Message-Id: <20191227181435.7644-29-sashal@kernel.org>
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Bob Liu <bob.liu@oracle.com>, Hulk Robot <hulkci@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 34/38] block: fix memleak when __blk_rq_map_user_iov() is failed
+Date:   Fri, 27 Dec 2019 13:14:31 -0500
+Message-Id: <20191227181435.7644-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -63,74 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 92ca7da4bdc24d63bb0bcd241c11441ddb63b80a ]
+[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
 
-Commit:
+When I doing fuzzy test, get the memleak report:
 
-  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+BUG: memory leak
+unreferenced object 0xffff88837af80000 (size 4096):
+  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
+  backtrace:
+    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
+    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
+    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
+    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
+    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
+    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
+    [<000000004fc670f6>] sg_write+0x5f/0x8c
+    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
+    [<000000008e177714>] vfs_write+0x1c3/0x500
+    [<0000000087d23f34>] ksys_write+0xf9/0x200
+    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
+    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
-also inadvertently skips the active_events bump for PT in that case, which
-is a bug. If there aren't any hardware events at the same time as PT, the
-PMI handler will ignore PT PMIs, as active_events reads zero in that case,
-resulting in the "Uhhuh" spurious NMI warning and PT data loss.
+If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
+the bio(s) which is allocated before this failing will leak. The
+refcount of the bio(s) is init to 1 and increased to 2 by calling
+bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
+the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
 
-Fix this by always increasing active_events for PT events.
-
-Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
-Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ block/blk-map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 1e9f610d36a4..c26cca506f64 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -374,7 +374,7 @@ int x86_add_exclusive(unsigned int what)
- 	 * LBR and BTS are still mutually exclusive.
- 	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
--		return 0;
-+		goto out;
- 
- 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
- 		mutex_lock(&pmc_reserve_mutex);
-@@ -386,6 +386,7 @@ int x86_add_exclusive(unsigned int what)
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
- 
-+out:
- 	atomic_inc(&active_events);
+diff --git a/block/blk-map.c b/block/blk-map.c
+index a8b4f526d8bb..52edbe6b9380 100644
+--- a/block/blk-map.c
++++ b/block/blk-map.c
+@@ -142,7 +142,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
  	return 0;
  
-@@ -396,11 +397,15 @@ int x86_add_exclusive(unsigned int what)
- 
- void x86_del_exclusive(unsigned int what)
- {
-+	atomic_dec(&active_events);
-+
-+	/*
-+	 * See the comment in x86_add_exclusive().
-+	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
- 		return;
- 
- 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
--	atomic_dec(&active_events);
- }
- 
- int x86_setup_perfctr(struct perf_event *event)
+ unmap_rq:
+-	__blk_rq_unmap_user(bio);
++	blk_rq_unmap_user(bio);
+ fail:
+ 	rq->bio = NULL;
+ 	return ret;
 -- 
 2.20.1
 
