@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0A8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D126C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C95206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A5C206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469266;
-	bh=HbygnXdb9+pNdvN77EkwyXpwBKKeuf9al5hOlxjXzp0=;
+	s=default; t=1577469274;
+	bh=/tw67VQLb0mitfMvrosR62AiKJIK6xrq9uKx8NzGIJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f47SgjDmvwIRXof4JHsfQZ6x8CJq1D+FyguVYhGOtg3tu7psmMntaY4w5VnO0ZZxA
-	 5rT7yccosXTc1PoS8G84v4E+3lc46nq0kGqcdOex4ScQKjXdHF377zyVTiPz0rXTpN
-	 HZqIeekfAOB7FkOEgew1iS9Da022csAwkKfUjhy8=
+	b=A8goZiBjmlg7AFeCdVuq5y2CK+ECVn1s1+V6s+S4JRX4HAnAbAtwFQxvLe9M3nHoV
+	 JyR/CX5X59xthZGzADjZh9d93ywZVM92PGLW3Ojq8kUKaaIkzB25NQIdzoCY2l0UvR
+	 Eeh2zoINVdrwQR3M8q1U6PKCDUPU5saM7S7D8wP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfL0RyZ (ORCPT
+        id S1728240AbfL0Ryd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:54:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:54:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfL0Rmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:36 -0500
+        id S1727420AbfL0Rme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB8721744;
-        Fri, 27 Dec 2019 17:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5F822525;
+        Fri, 27 Dec 2019 17:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468556;
-        bh=HbygnXdb9+pNdvN77EkwyXpwBKKeuf9al5hOlxjXzp0=;
+        s=default; t=1577468553;
+        bh=/tw67VQLb0mitfMvrosR62AiKJIK6xrq9uKx8NzGIJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rbDGCuyYvvUim1J9xzF+IMceAMXxQ8F+5IM89wbutNCx3kJIoHOeMGQl5SdXg7Fuz
-         ODWPkbZropg584sA7ECQ1hZ4douOI39vEXHBgMMj15gyqaREUBiqWxbw9RRLWuy5GO
-         W95bLPBID99dE/EHGpRECJmAgAg5ziS4f1t23/ns=
+        b=qEdpzT0cNb/VQRXToLXVkXVs15Vp/19X/7W048v75c9/ID9viUQlHBFITVQBwaoqD
+         8bXqi35DCNNchhyePdL5EV7yVYuRtOUqogGI4jYwQj170P2GLf7IKIeZum12ETDWED
+         vDqp6fPE+OzWnB/89To9Nj2xBrZO3kZaruJSEljk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 082/187] arm64: dts: ls1028a: fix reboot node
-Date:   Fri, 27 Dec 2019 12:39:10 -0500
-Message-Id: <20191227174055.4923-82-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 080/187] samples: bpf: Replace symbol compare of trace_event
+Date:   Fri, 27 Dec 2019 12:39:08 -0500
+Message-Id: <20191227174055.4923-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,48 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit 3f0fb37b22b460e3dec62bee284932881574acb9 ]
+[ Upstream commit bba1b2a890253528c45aa66cf856f289a215bfbc ]
 
-The reboot register isn't located inside the DCFG controller, but in its
-own RST controller. Fix it.
+Previously, when this sample is added, commit 1c47910ef8013
+("samples/bpf: add perf_event+bpf example"), a symbol 'sys_read' and
+'sys_write' has been used without no prefixes. But currently there are
+no exact symbols with these under kallsyms and this leads to failure.
 
-Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+This commit changes exact compare to substring compare to keep compatible
+with exact symbol or prefixed symbol.
+
+Fixes: 1c47910ef8013 ("samples/bpf: add perf_event+bpf example")
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191205080114.19766-2-danieltimlee@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ samples/bpf/trace_event_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index c7dae9ec17da..bb960fe2bb64 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -102,7 +102,7 @@
+diff --git a/samples/bpf/trace_event_user.c b/samples/bpf/trace_event_user.c
+index 16a16eadd509..749a50f2f9f3 100644
+--- a/samples/bpf/trace_event_user.c
++++ b/samples/bpf/trace_event_user.c
+@@ -37,9 +37,9 @@ static void print_ksym(__u64 addr)
+ 	}
  
- 	reboot {
- 		compatible ="syscon-reboot";
--		regmap = <&dcfg>;
-+		regmap = <&rst>;
- 		offset = <0xb0>;
- 		mask = <0x02>;
- 	};
-@@ -161,6 +161,12 @@
- 			big-endian;
- 		};
+ 	printf("%s;", sym->name);
+-	if (!strcmp(sym->name, "sys_read"))
++	if (!strstr(sym->name, "sys_read"))
+ 		sys_read_seen = true;
+-	else if (!strcmp(sym->name, "sys_write"))
++	else if (!strstr(sym->name, "sys_write"))
+ 		sys_write_seen = true;
+ }
  
-+		rst: syscon@1e60000 {
-+			compatible = "syscon";
-+			reg = <0x0 0x1e60000 0x0 0x10000>;
-+			little-endian;
-+		};
-+
- 		scfg: syscon@1fc0000 {
- 			compatible = "fsl,ls1028a-scfg", "syscon";
- 			reg = <0x0 0x1fc0000 0x0 0x10000>;
 -- 
 2.20.1
 
