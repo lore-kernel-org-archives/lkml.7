@@ -2,168 +2,155 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538E5C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB952C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283E620828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D49C20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9A7QNZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfL0CZD (ORCPT
+        id S1727126AbfL0C1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:25:03 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:22666 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfL0CZD (ORCPT
+        Thu, 26 Dec 2019 21:27:08 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46327 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfL0C1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:25:03 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47kVz02JsFzKmbK;
-        Fri, 27 Dec 2019 03:25:00 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id Fl2MTG-TyVrH; Fri, 27 Dec 2019 03:24:55 +0100 (CET)
-Date:   Fri, 27 Dec 2019 13:24:46 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
-        keescook@chromium.org
-Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
-Message-ID: <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
-References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
- <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
- <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
- <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
+        Thu, 26 Dec 2019 21:27:07 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y8so11139127pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 18:27:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HRaliDhVnq/217XrC6XzvYQIHefSB9f5VfV1cfrjUjM=;
+        b=v9A7QNZciiH62Ux6WW7R7xt+ao5jHaKO5BX25D0sUtapTFAFgOI4SFc52AwZFEHshO
+         JDbBh61Ud+suCwpCgAM6o9+NuBGMUWV2qmUUocRwJBDnwJXKWFZHaJX1NBVO9OENU8HS
+         r9O46WduKLe97dPIGfT2QWAl54m0eUhpvDPO9hKJ0NqZfhzEFoI0CGBSoYsIPLZJ36+m
+         IjC458eZoRAZfndRER6z1QjcKv3zefsN5vU9JkklIVU1ahAPpmbP9DjvkCBV7z/oCQTP
+         r9K3rINpALchJw3rSinOw7KYQEr5QZ6fyY9Qx2iT9DM74epROK7155Xfo9ERQcKkpWK1
+         xkgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HRaliDhVnq/217XrC6XzvYQIHefSB9f5VfV1cfrjUjM=;
+        b=bkLgF0cWcb0fPh03d7GlHW3iMwvUvf0fu2avVdq/9CE61lLZf3QrO9t8qkexfm8TDt
+         gwb1uuxmnhqOR5ZhAvin2pDceZuvcM+toZqjuu4kJCulx+IXoj3u/pDDTAn4yxP8aLYx
+         pDYInO7xnQCMebL16CRMKTCjhrCDyQUGGdG3J1WMjFKYllUdWOEE2p9rUZWCggefgR/n
+         x+uMJU/MqQbCssxGqVeOemeYD+2ntoIAn4be+aKJX2H1TNt/2aveIbl5RGFNpBUo7hpx
+         POWa1F7Y3F8IDLySL8D8WRD2h8qbiSXWbke4suGJpdsqyK3+AnxYEKf+q5+vDg3QJpZ7
+         ExIw==
+X-Gm-Message-State: APjAAAUQSNePtCodVEbRjv3vmnECVyL6d7bTpMR4+6DhADRzV1RB3KRa
+        X0QjlTD4n6zREvz89vWH1InqHA==
+X-Google-Smtp-Source: APXvYqz7Pwn5lGym0No+6OsEjVrryh9zt/AGCvff0ordJzYAJnVuW8tN9WwPRMUYgQRsCBMpdTI4qg==
+X-Received: by 2002:a17:902:8481:: with SMTP id c1mr21078144plo.319.1577413627086;
+        Thu, 26 Dec 2019 18:27:07 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h26sm40975182pfr.9.2019.12.26.18.27.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 18:27:06 -0800 (PST)
+Date:   Thu, 26 Dec 2019 18:26:52 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Niklas Cassel <nks@flawful.org>, Andy Gross <agross@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to
+ specify the parent
+Message-ID: <20191227022652.GH1908628@ripper>
+References: <20191125135910.679310-1-niklas.cassel@linaro.org>
+ <20191125135910.679310-8-niklas.cassel@linaro.org>
+ <20191219062339.DC0DE21582@mail.kernel.org>
+ <20191220175616.3wdslb7hm773zb22@flawful.org>
+ <20191224021636.CF47E20643@mail.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="c3fft56kodyqgrhw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
+In-Reply-To: <20191224021636.CF47E20643@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 23 Dec 18:16 PST 2019, Stephen Boyd wrote:
 
---c3fft56kodyqgrhw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Quoting Niklas Cassel (2019-12-20 09:56:16)
+> > On Wed, Dec 18, 2019 at 10:23:39PM -0800, Stephen Boyd wrote:
+> > > This is odd. The clks could be registered with of_clk_hw_register() but
+> > > then we lose the device provider information. Maybe we should search up
+> > > one level to the parent node and if that has a DT node but the
+> > > clk controller device doesn't we should use that instead?
+> > 
+> > Hello Stephen,
+> > 
+> > Having this in the clk core is totally fine with me,
+> > since it solves my problem.
+> > 
+> > Will you cook up a patch, or do you want me to do it?
+> > 
+> 
+> Can you try the patch I appended to my previous mail? I can write
+> something up more proper later this week.
+> 
 
-On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> On December 26, 2019 3:32:29 PM GMT+01:00, Aleksa Sarai <cyphar@cyphar.co=
-m> wrote:
-> >On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> >> On Wed, Dec 25, 2019 at 09:45:33PM +0000, Sargun Dhillon wrote:
-> >> > This patch is a small change in enforcement of the uapi for
-> >> > SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure
-> >which is
-> >> > passed (seccomp_notif), has a flags member. Previously that could
-> >be
-> >> > set to a nonsense value, and we would ignore it. This ensures that
-> >> > no flags are set.
-> >> >=20
-> >> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> >> > Cc: Kees Cook <keescook@chromium.org>
-> >>=20
-> >> I'm fine with this since we soon want to make use of the flag
-> >argument
-> >> when we add a flag to get a pidfd from the seccomp notifier on
-> >receive.
-> >> The major users I could identify already pass in seccomp_notif with
-> >all
-> >> fields set to 0. If we really break users we can always revert; this
-> >> seems very unlikely to me though.
-> >>=20
-> >> One more question below, otherwise:
-> >>=20
-> >> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> >>=20
-> >> > ---
-> >> >  kernel/seccomp.c | 7 +++++++
-> >> >  1 file changed, 7 insertions(+)
-> >> >=20
-> >> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> >> > index 12d2227e5786..455925557490 100644
-> >> > --- a/kernel/seccomp.c
-> >> > +++ b/kernel/seccomp.c
-> >> > @@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct
-> >seccomp_filter *filter,
-> >> >  	struct seccomp_notif unotif;
-> >> >  	ssize_t ret;
-> >> > =20
-> >> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
-> >> > +		return -EFAULT;
-> >> > +
-> >> > +	/* flags is reserved right now, make sure it's unset */
-> >> > +	if (unotif.flags)
-> >> > +		return -EINVAL;
-> >> > +
-> >>=20
-> >> Might it make sense to use
-> >>=20
-> >> 	err =3D copy_struct_from_user(&unotif, sizeof(unotif), buf,
-> >sizeof(unotif));
-> >> 	if (err)
-> >> 		return err;
-> >>=20
-> >> This way we check that the whole struct is 0 and report an error as
-> >soon
-> >> as one of the members is non-zero. That's more drastic but it'd
-> >ensure
-> >> that other fields can be used in the future for whatever purposes.
-> >> It would also let us get rid of the memset() below.=20
-> >
-> >Given that this isn't an extensible struct, it would be simpler to just
-> >do
-> >check_zeroed_user() -- copy_struct_from_user() is overkill. That would
-> >also remove the need for any copy_from_user()s and the memset can be
-> >dropped by just doing
-> >
-> >  struct seccomp_notif unotif =3D {};
-> >
-> >> >  	memset(&unotif, 0, sizeof(unotif));
-> >> > =20
-> >> >  	ret =3D down_interruptible(&filter->notif->request);
-> >> > --=20
-> >> > 2.20.1
-> >> >=20
->=20
-> It is an extensible struct. That's why we have notifier size checking bui=
-lt in.
+Unfortunately we have clocks with no dev, so this fail as below. Adding
+a second check for dev != NULL to your oneliner works fine though.
 
-Ah right, NOTIF_GET_SIZES. I reckon check_zeroed_user() is still a bit
-simpler since none of the fields are used right now (and really, this
-patch should be checking all of them, not just ->flags, if we want to
-use any of them in the future).
+I.e. this ugly hack works fine:
+  core->of_node = np ? : (dev ? dev_of_node(dev->parent) : NULL);
 
-But sure, copy_struct_from_user() also makes sense since it is
-extensible (though I personally do find the whole NOTIF_GET_SIZES thing
-a bit scary -- but that's water under the bridge at this point, and as
-long as userspace is clever enough it shouldn't be a problem).
+Regards,
+Bjorn
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+[    0.000000] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000040
+[    0.000000] Mem abort info:
+[    0.000000]   ESR = 0x96000004
+[    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    0.000000]   SET = 0, FnV = 0
+[    0.000000]   EA = 0, S1PTW = 0
+[    0.000000] Data abort info:
+[    0.000000]   ISV = 0, ISS = 0x00000004
+[    0.000000]   CM = 0, WnR = 0
+[    0.000000] [0000000000000040] user address but active_mm is swapper
+[    0.000000] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191220-00017-g359fd8f91acb-dirty #107
+[    0.000000] Hardware name: Qualcomm Technologies, Inc. QCS404 EVB 4000 (DT)
+[    0.000000] pstate: 80000085 (Nzcv daIf -PAN -UAO)
+[    0.000000] pc : __clk_register (drivers/clk/clk.c:3679)
+[    0.000000] lr : __clk_register (drivers/clk/clk.c:3664)
+[    0.000000] sp : ffffdb6871043d70
+[    0.000000] x29: ffffdb6871043d70 x28: ffff00003ddf4518
+[    0.000000] x27: 0000000000000001 x26: 0000000000000008
+[    0.000000] x25: 0000000000000000 x24: 0000000000000000
+[    0.000000] x23: 0000000000000000 x22: 0000000000000000
+[    0.000000] x21: ffff00003d821080 x20: ffffdb6871043e60
+[    0.000000] x19: ffff00003d822000 x18: 0000000000000014
+[    0.000000] x17: 000000006f7295ba x16: 0000000043d45a86
+[    0.000000] x15: 000000005f0037cd x14: 00000000b22e3fc4
+[    0.000000] x13: 0000000000000001 x12: 0000000000000000
+[    0.000000] x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+[    0.000000] x9 : fefefefefefefeff x8 : 7f7f7f7f7f7f7f7f
+[    0.000000] x7 : 6371606e612c6e77 x6 : ffff00003d821109
+[    0.000000] x5 : 0000000000000000 x4 : ffff00003dd9d060
+[    0.000000] x3 : 0000000000000000 x2 : 0000000000000009
+[    0.000000] x1 : ffff00003ddf47b9 x0 : ffffdb68705b0ee0
+[    0.000000] Call trace:
+[    0.000000] __clk_register (drivers/clk/clk.c:3679)
+[    0.000000] clk_hw_register (./include/linux/err.h:60 drivers/clk/clk.c:3760)
+[    0.000000] clk_hw_register_fixed_rate_with_accuracy (drivers/clk/clk-fixed-rate.c:82)
+[    0.000000] _of_fixed_clk_setup (drivers/clk/clk-fixed-rate.c:98 drivers/clk/clk-fixed-rate.c:173)
+[    0.000000] of_fixed_clk_setup (drivers/clk/clk-fixed-rate.c:193)
+[    0.000000] of_clk_init (drivers/clk/clk.c:4856)
+[    0.000000] time_init (arch/arm64/kernel/time.c:59)
+[    0.000000] start_kernel (init/main.c:697)
 
---c3fft56kodyqgrhw
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgVrawAKCRCdlLljIbnQ
-Eo16APoDf/QAU6RhEHnw3Vc/rhWcWjyvYNIkYYSq/E0u0jngUgD9Gp6dj5ZDccwE
-LSkj5R0pXIHgq93Cgbs9GpwFlRBY7Ao=
-=gXMl
------END PGP SIGNATURE-----
-
---c3fft56kodyqgrhw--
