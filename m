@@ -2,69 +2,90 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654F8C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1C1C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4667520409
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F9C20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaCSuZ44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfL0Cnc (ORCPT
+        id S1727102AbfL0Cq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:43:32 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:51000 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfL0Cnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:43:31 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ikfb8-0002mH-HC; Fri, 27 Dec 2019 10:43:30 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ikfb5-0003If-K7; Fri, 27 Dec 2019 10:43:27 +0800
-Date:   Fri, 27 Dec 2019 10:43:27 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [RFC PATCH v3 0/6] Add TEE interface support to AMD Secure
- Processor driver
-Message-ID: <20191227024327.eoa4vhxcfs7qdwe7@gondor.apana.org.au>
-References: <cover.1575438845.git.Rijo-john.Thomas@amd.com>
- <20191220070439.etvk73fedrijsrgm@gondor.apana.org.au>
- <a0c7cbd0-2195-195b-d753-7cbadfd4a272@amd.com>
+        Thu, 26 Dec 2019 21:46:57 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33166 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfL0Cq4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:46:56 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so12817172qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 18:46:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=2Hv1x68b8uF72qZPygwNHPWxK1D9MzKDqh0OxaP6oOI=;
+        b=OaCSuZ44PA0LdWeOuVkFrholvWC9bErIn/en6QZwNf9L+FHl4AWu1v1JbH4gXdDwbn
+         Z0nw66O2leUQmi80oPajFbGinKO7zUDWmxXGpm0E7OvM9pRxqsdzO3SDhLPQx6Zjd934
+         Ycr5icaoh087v26l2m6LYODHMOjeqXZDUSBdBpJRboZJSVldByQqYuK5BFnO842b9FLx
+         QtfX67/PL9jcrjUGyg7tZzxCYazODBPTfWkmMq8a9owIN0SNpga9b2bRP0m1Q4lcuVQt
+         3ROzAwwm0S+1MPcPhWr+YfABg8oh8xFvvbCt8V+yfoW1UhMp5e6L02UrMFU5bkkKZAET
+         3rUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=2Hv1x68b8uF72qZPygwNHPWxK1D9MzKDqh0OxaP6oOI=;
+        b=Ey3HJweHufMkFo8Fi5NHICjO6aU/cJ0ovIFD+nI+rOkgK3ENu4GB5li/mJtaoDRuHT
+         YdOSPxJOJCQumOPjJqLeFzNYbXH0tKMzGJnW/87MiDHtbXjEOWAQaLHs/bX90V3sVWmp
+         5sBja6YCFsmtJWrj6298ZBb2/2CMBeQaopsdEDOSVRr3aUNU4jeF8p41Ecge/gK1FpQ6
+         ngprqEbmy4zQVgGfxMa0PlU5VDHUIQn++mEdkAg5/YfwpQ19vi/qvPoP5Pgdrg7tLEgO
+         roO/sAL0MiLVVQ9j94uNDEiJ4/Fz1ZvnlRsEYWU9/OnWR5nw0yTC8S2QcfCfLxCbOecL
+         mXtA==
+X-Gm-Message-State: APjAAAVxmVhqTQNiUSyTa2uFoVt8jVpm4u+Fb0D/D97GYdo3iKFGi1Uj
+        CH7retiJ+3RpwsRxNvXYvVkJHqxy
+X-Google-Smtp-Source: APXvYqyV5WbssGxs6t/AbINJ8WaBk8lSHDKGfTZCyAsOSSMhdPG9vd4MR+31MoRlg7OvvNfZyjWsMQ==
+X-Received: by 2002:a37:4dc1:: with SMTP id a184mr41587857qkb.62.1577414815698;
+        Thu, 26 Dec 2019 18:46:55 -0800 (PST)
+Received: from mandalore.localdomain (pool-71-244-100-50.phlapa.fios.verizon.net. [71.244.100.50])
+        by smtp.gmail.com with ESMTPSA id c8sm10087054qtv.61.2019.12.26.18.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 18:46:55 -0800 (PST)
+Date:   Thu, 26 Dec 2019 21:46:38 -0500
+From:   Matthew Hanzelik <mrhanzelik@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: most: core: Fix SPDX License Identifier style issue
+Message-ID: <20191227024638.okfsc2ikeuibujnl@mandalore.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a0c7cbd0-2195-195b-d753-7cbadfd4a272@amd.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 04:25:55PM +0530, Thomas, Rijo-john wrote:
->
-> Thank you for pulling in the changes!
-> Can you also pull in the patch series titled - TEE driver for AMD APUs? It is
-> related to this patch series.
-> 
-> Jens who is the TEE subsystem maintainer has given an Acked-by for the
-> patch series. Please refer link: https://lkml.org/lkml/2019/12/16/608
+Fixed a style issue with the SPDX License Identifier style.
 
-Please resubmit the patches with the acks attached to linux-crypto.
+Signed-off-by: Matthew Hanzelik <mrhanzelik@gmail.com>
+---
+ drivers/staging/most/core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/staging/most/core.h b/drivers/staging/most/core.h
+index 49859aef98df..1380e7586376 100644
+--- a/drivers/staging/most/core.h
++++ b/drivers/staging/most/core.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * most.h - API for component and adapter drivers
+  *
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.24.1
+
