@@ -2,122 +2,182 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5487C2D0DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBADC2D0DD
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FCE22522
+	by mail.kernel.org (Postfix) with ESMTP id 34CF820740
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJXCsoTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbfL0Ae0 (ORCPT
+        id S1727002AbfL0AdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 19:34:26 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46335 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfL0AeZ (ORCPT
+        Thu, 26 Dec 2019 19:33:21 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:35180 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726193AbfL0AdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 19:34:25 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f15so19470125lfl.13;
-        Thu, 26 Dec 2019 16:34:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A0ugGKSdy996G5cCplSFEOG0vQpDh89551RLNUPVsrY=;
-        b=RJXCsoTJsJ6edGiu8VS+CH+D/Dbj3WTIrX4aUJgPw9NYhOJTOvubQ0t/Ibr04akdir
-         Fu6Ai+dWwPh6wOi0pbuhcbNC5hyjwFcF7b9HKCGYnkgyO1gINGyedIAR+CAZ4PPjK5rx
-         NFFn9i4fsO+15oum1AQ5YLYbvJ6MGnp9mUaDgEJvGQGd5PFyjaStWnc6lD+xm66Y78c2
-         UE8yLgl5l7l1Dg1HzL0pO/OTmLbf2sQbEYVaHGLCybnkkT6qEFz7SRBjj1cpeoRvkB8z
-         xcCXdDZL/7k+upNyso0Vnzp8DnU4dvZprpqNC7mv4dpkCwGAqFYcjd9sWfRBreCjAYXf
-         3h8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A0ugGKSdy996G5cCplSFEOG0vQpDh89551RLNUPVsrY=;
-        b=d/X4wM73/3jipHDNmPagUER5eRNXHSIgnKzpGPVIsi8eRaUPxcOBrl+/RAsGhMWAGg
-         WD0hFx45KN5x9kyFjMvIwYMTMbz5g8RNjCWXV4Sael1kV15UhyMvk72a+k6iD0+AS6C9
-         uQxM82A/ku4snT1BSJCJzu3U4xX7mr0XLv20+BNqfIBpiwHG2Mh0o8vOmRMExCE/s8nF
-         3psofsM8ay/k9zyth4OAoMsOe/F0NRdn45FD3EAyVGTBzLa3HcnDuLnp6STbozCWO9Bw
-         97Je39rQWMdfWt9lBN+NjpVIzdmAV8N4uzIsphS2zMYjRo64QyXOTT+UJqOOwQBj68y6
-         TGUQ==
-X-Gm-Message-State: APjAAAUF58XASAQZDpegoa3UXhRgs3bIPxgjC5YhgWHW/xK/VjRO736d
-        5ufABAvsCtNtGftaXaCUhnXkvnUcegsCniMv4Dk=
-X-Google-Smtp-Source: APXvYqxY1gE2xluutA0vYW3bQC/tuQsvTnlKskNTUihkMrt/0z56p8xevQaK89OQG00nOvNGggLiZOMqj1+rHfr3cMA=
-X-Received: by 2002:a19:2d0d:: with SMTP id k13mr26787903lfj.12.1577406863391;
- Thu, 26 Dec 2019 16:34:23 -0800 (PST)
+        Thu, 26 Dec 2019 19:33:20 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@breakpoint.cc>)
+        id 1ikdZ7-0007YP-Up; Fri, 27 Dec 2019 01:33:18 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     <netfilter-devel@vger.kernel.org>
+Cc:     syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, Florian Westphal <fw@strlen.de>
+Subject: [PATCH nf] netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
+Date:   Fri, 27 Dec 2019 01:33:10 +0100
+Message-Id: <20191227003310.16061-1-fw@strlen.de>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <00000000000057fd27059aa1dfca@google.com>
+References: <00000000000057fd27059aa1dfca@google.com>
 MIME-Version: 1.0
-References: <20191224010020.15969-1-rjones@gateworks.com> <20191224010020.15969-2-rjones@gateworks.com>
- <20191226232625.GA2186@bogus>
-In-Reply-To: <20191226232625.GA2186@bogus>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 26 Dec 2019 21:34:06 -0300
-Message-ID: <CAOMZO5Aj+PfzXrYoV8LxKStdQ-B0BLdMV16L3ya0NokozG479g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
- i.MX6DL/Q compatibles
-To:     Rob Herring <robh@kernel.org>
-Cc:     Robert Jones <rjones@gateworks.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+We get crash when the targets checkentry function tries to make
+use of the network namespace pointer for arptables.
 
-On Thu, Dec 26, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 23, 2019 at 05:00:16PM -0800, Robert Jones wrote:
-> > Add the compatible enum entries for Gateworks Ventana boards.
-> >
-> > Signed-off-by: Robert Jones <rjones@gateworks.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index f79683a..a02e980 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -126,6 +126,7 @@ properties:
-> >                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
-> >                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
-> >                - variscite,dt6customboard
-> > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
->
-> Keep entries sorted.
+When the net pointer got added back in 2010, only ip/ip6/ebtables were
+changed to initialize it, so arptables has this set to NULL.
 
-Just for clarification: shouldn't the entries inside fsl.yaml match
-the dtb file names?
+This isn't a problem for normal arptables because no existing
+arptables target has a checkentry function that makes use of par->net.
 
-In case of the i.MX6Q based gateworks board, this should be:
+However, direct users of the setsockopt interface can provide any
+target they want as long as its registered for ARP or UNPSEC protocols.
 
-gw,imx6q-gw51xx
-gw,imx6q-gw52xx
-gw,imx6q-gw53xx
-gw,imx6q-gw5400-a
-gw,imx6q-gw54xx
-gw,imx6q-gw551x
-gw,imx6q-gw552x
-gw,imx6q-gw553x
-gw,imx6q-gw560x
-gw,imx6q-gw5903
-gw,imx6q-gw5904
+syzkaller managed to send a semi-valid arptables rule for RATEEST target
+which is enough to trigger NULL deref:
 
-Please advise.
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
+[..]
+ xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
+ check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
+ find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
+ translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
+ do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
+ do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
+
+Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
+Reported-by: syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+---
+ net/ipv4/netfilter/arp_tables.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
+
+diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
+index 214154b47d56..069f72edb264 100644
+--- a/net/ipv4/netfilter/arp_tables.c
++++ b/net/ipv4/netfilter/arp_tables.c
+@@ -384,10 +384,11 @@ next:		;
+ 	return 1;
+ }
+ 
+-static inline int check_target(struct arpt_entry *e, const char *name)
++static int check_target(struct arpt_entry *e, struct net *net, const char *name)
+ {
+ 	struct xt_entry_target *t = arpt_get_target(e);
+ 	struct xt_tgchk_param par = {
++		.net       = net,
+ 		.table     = name,
+ 		.entryinfo = e,
+ 		.target    = t->u.kernel.target,
+@@ -399,8 +400,9 @@ static inline int check_target(struct arpt_entry *e, const char *name)
+ 	return xt_check_target(&par, t->u.target_size - sizeof(*t), 0, false);
+ }
+ 
+-static inline int
+-find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
++static int
++find_check_entry(struct arpt_entry *e, struct net *net, const char *name,
++		 unsigned int size,
+ 		 struct xt_percpu_counter_alloc_state *alloc_state)
+ {
+ 	struct xt_entry_target *t;
+@@ -419,7 +421,7 @@ find_check_entry(struct arpt_entry *e, const char *name, unsigned int size,
+ 	}
+ 	t->u.kernel.target = target;
+ 
+-	ret = check_target(e, name);
++	ret = check_target(e, net, name);
+ 	if (ret)
+ 		goto err;
+ 	return 0;
+@@ -512,7 +514,9 @@ static inline void cleanup_entry(struct arpt_entry *e)
+ /* Checks and translates the user-supplied table segment (held in
+  * newinfo).
+  */
+-static int translate_table(struct xt_table_info *newinfo, void *entry0,
++static int translate_table(struct net *net,
++			   struct xt_table_info *newinfo,
++			   void *entry0,
+ 			   const struct arpt_replace *repl)
+ {
+ 	struct xt_percpu_counter_alloc_state alloc_state = { 0 };
+@@ -569,7 +573,7 @@ static int translate_table(struct xt_table_info *newinfo, void *entry0,
+ 	/* Finally, each sanity check must pass */
+ 	i = 0;
+ 	xt_entry_foreach(iter, entry0, newinfo->size) {
+-		ret = find_check_entry(iter, repl->name, repl->size,
++		ret = find_check_entry(iter, net, repl->name, repl->size,
+ 				       &alloc_state);
+ 		if (ret != 0)
+ 			break;
+@@ -974,7 +978,7 @@ static int do_replace(struct net *net, const void __user *user,
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, &tmp);
++	ret = translate_table(net, newinfo, loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1149,7 +1153,8 @@ compat_copy_entry_from_user(struct compat_arpt_entry *e, void **dstptr,
+ 	}
+ }
+ 
+-static int translate_compat_table(struct xt_table_info **pinfo,
++static int translate_compat_table(struct net *net,
++				  struct xt_table_info **pinfo,
+ 				  void **pentry0,
+ 				  const struct compat_arpt_replace *compatr)
+ {
+@@ -1217,7 +1222,7 @@ static int translate_compat_table(struct xt_table_info **pinfo,
+ 	repl.num_counters = 0;
+ 	repl.counters = NULL;
+ 	repl.size = newinfo->size;
+-	ret = translate_table(newinfo, entry1, &repl);
++	ret = translate_table(net, newinfo, entry1, &repl);
+ 	if (ret)
+ 		goto free_newinfo;
+ 
+@@ -1270,7 +1275,7 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 		goto free_newinfo;
+ 	}
+ 
+-	ret = translate_compat_table(&newinfo, &loc_cpu_entry, &tmp);
++	ret = translate_compat_table(net, &newinfo, &loc_cpu_entry, &tmp);
+ 	if (ret != 0)
+ 		goto free_newinfo;
+ 
+@@ -1546,7 +1551,7 @@ int arpt_register_table(struct net *net,
+ 	loc_cpu_entry = newinfo->entries;
+ 	memcpy(loc_cpu_entry, repl->entries, repl->size);
+ 
+-	ret = translate_table(newinfo, loc_cpu_entry, repl);
++	ret = translate_table(net, newinfo, loc_cpu_entry, repl);
+ 	if (ret != 0)
+ 		goto out_free;
+ 
+-- 
+2.24.1
+
