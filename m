@@ -5,69 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EFBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A8EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F4F208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84D5208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXH5qj5M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/soRSr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfL0Q1Q (ORCPT
+        id S1727044AbfL0Qcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:27:16 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42898 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Q1Q (ORCPT
+        Fri, 27 Dec 2019 11:32:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37066 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Qcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 11:27:16 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so14642094pgb.9;
-        Fri, 27 Dec 2019 08:27:15 -0800 (PST)
+        Fri, 27 Dec 2019 11:32:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so14944245pfn.4;
+        Fri, 27 Dec 2019 08:32:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
-        b=HXH5qj5MpqkC/Wg91xmZNI6UqZs9+2G5fbf5vxWjkYjYXaMQ1+QVgjvuy4zGOZ/UW3
-         gpLksLNwSeOtENO27U/QUZDCbHJePyWqMGKEiad7Bvel5uFVWCehPSiFZt5becFi1qZG
-         FzblXsQFhzuNEzFqgStKzRKKvag14EK34M/OzUCnapxLmzAE9vGbXczHMLeSW1dDBmk7
-         5uXCrWs51KjE2jlFGiodDLIn8zNrx0jkX3uiJ08bAqO00XAoRrcihi9OsxYQuEbS4UUz
-         RiwV6KT+fB+my5l+asv9xcY0PfJkPW5DNb46SKoZXlMoUkWmUiZNykMeB7fyyL+6JSeK
-         tUcg==
+        bh=1QdqVzsYOwS+jOPMj5b2IqKzhmkXXGuzuKMc39KIXfI=;
+        b=P/soRSr8bWKJYTTfZMa1RvrbJ5s2CQS+xEmQ0vMdtTeog3P+c35HmezJOWil+bPZ+A
+         pVPNvm+9+Gp9WTGQFvV8DciMSIhtQDdiK4FaFGYlrdsDybwXimh0zKSPZ+/33T8XjrCL
+         2Hs/dH6uanrUQEA9j+qaFuX13TjQJNruMuZ5e/dsx98BgXSZAzFkM8q8yPCFrMsJ9Bae
+         AUNeql+mtH6DVRngIH9x7sEmCUcL6LtF59kyuXSJagmCgUD35VY35ZiMScuBOCWfFdeN
+         JXHXtUPBKf+WuME0TNktunIS6doSLaKMSV2yrMAcoVzY3u1VW05PoA/ZbZFn9C+VDpeL
+         gNgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
-        b=VV5DjtSRWJO5qfG5JRAAJOMoGaojuUBxL8W4TGfyuDhSm8MGtLGJQVMY/+qlx/dEG+
-         DzrF8p7d1TFSvNWIgI8Ar8WmNmb82DF6P3+fdwlryCml4ZS5JKfcPmJ4gykc+VZ75rV6
-         hDqJ4x3m90xBON3dEs/ttkjiGxJNdZSCH93inEgSE9MGvT3M4jYIh2gYUzcWw+0/1Y/e
-         l3LeSr3B8hk7ma7hl3TuC6PkbzRpnpAdg+0ucEzoTL9cdHfmP4buR/GfmYuEElwNq5aR
-         FsSrYZOLWEGYrGfyHbtOxyNxVVSEXHhyITufZ4F9rR67JyreoAWyeaQzFGXyC1kqKwXo
-         56qA==
-X-Gm-Message-State: APjAAAVYNB/E+hq2zHzAbAKucV5I8cizS72xHWglRAGZt90kMRrjMwG6
-        1YM+twjdiwEGb+8M4Ofv8uk=
-X-Google-Smtp-Source: APXvYqw2Nt4ErSmudRvoQl6pHm6RVZbj8lourXai9DAfd9L6E9Y/e31fHJcAyz6LaUQiq8nvnZRqFQ==
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr22022265pfg.51.1577464034941;
-        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1QdqVzsYOwS+jOPMj5b2IqKzhmkXXGuzuKMc39KIXfI=;
+        b=JFOSOyn1UtFoIZuOjaJ/2M0GtrRisGhMh5z9SBG0ci+ltMbh69QSqUtpr86MlpXVCo
+         r2QesolbKigRoQURf6yFFEx6f7u99V8CyfYpbTunwZTsW7gxMWzuBDpMfPS+ocXfuxEl
+         sB1QhbNPb0WdrxFiiHkvQG39vhjKE0HVzkmSKGlT1tIf+LXCIFRyp0ZPPrudgZiWw56j
+         bSw3wiwmlZFLxdI047nAYu65uXbarsAzS4zA9I62w+Ov7muaB6YBS+hqcHaGjARNdV3U
+         nK97JUdjePIBqU1pI9ZsK5/l13BU+Ahir2QS38UPkimME6J8WHGlhqWnTFOZ8xEQlmZH
+         jIyg==
+X-Gm-Message-State: APjAAAUd7RSEtIx9J/omLURViWr4sS9cVALRVMwKergrdAyzvB8cBmTO
+        Sr++B92yjEKQ3w7JWfBUHhrkuCAo
+X-Google-Smtp-Source: APXvYqwArPklmxNuInDD/hnfFETdtVAfw4CdlMgwz8ae/ssZWiL6LVQUV2VzZGDlVgykrVKrYIhupA==
+X-Received: by 2002:a63:28c7:: with SMTP id o190mr53845785pgo.394.1577464352062;
+        Fri, 27 Dec 2019 08:32:32 -0800 (PST)
 Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x7sm42874149pfp.93.2019.12.27.08.27.13
+        by smtp.gmail.com with ESMTPSA id d22sm39758837pfo.187.2019.12.27.08.32.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
-Subject: Re: [PATCH 1/1] dmaengine: bcm-sba-raid: Handle mbox_request_channel
- failure
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-References: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
+        Fri, 27 Dec 2019 08:32:31 -0800 (PST)
+Subject: Re: [PATCH net-next v9 02/14] ethtool: helper functions for netlink
+ interface
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+References: <cover.1577457846.git.mkubecek@suse.cz>
+ <cbc22b1063fc4b1779ed33925bc339f4d767e702.1577457846.git.mkubecek@suse.cz>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -123,12 +124,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9qfUATKC9NgZjRvBztfqy4
  a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <3ab7434a-e2da-2767-a20d-4f4ebb48e553@gmail.com>
-Date:   Fri, 27 Dec 2019 08:27:13 -0800
+Message-ID: <56c2e350-09df-98cc-2a82-6360b1e98677@gmail.com>
+Date:   Fri, 27 Dec 2019 08:32:30 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <cbc22b1063fc4b1779ed33925bc339f4d767e702.1577457846.git.mkubecek@suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,12 +140,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 12/27/2019 1:54 AM, Rayagonda Kokatanur wrote:
-> Fix kernel NULL pointer dereference error when mbox_request_channel()
-> fails to allocate channel.
+On 12/27/2019 6:55 AM, Michal Kubecek wrote:
+> Add common request/reply header definition and helpers to parse request
+> header and fill reply header. Provide ethnl_update_* helpers to update
+> structure members from request attributes (to be used for *_SET requests).
 > 
-> Fixes: 4e9f8187aec ("dmaengine: bcm-sba-raid: Use only single mailbox channel")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
