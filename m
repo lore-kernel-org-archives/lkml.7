@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673EAC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD37C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CB020882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCC1208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ys4E5Ao0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nLUHfY3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfL0Fc6 (ORCPT
+        id S1727158AbfL0FdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 00:32:58 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39067 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfL0Fcy (ORCPT
+        Fri, 27 Dec 2019 00:33:04 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42999 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfL0FdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 00:32:54 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so14223385pfs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 21:32:54 -0800 (PST)
+        Fri, 27 Dec 2019 00:33:00 -0500
+Received: by mail-pg1-f194.google.com with SMTP id s64so13906873pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 21:33:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=akm4NfbJgAiIEKZHJ9zU6ThCpH8qtZ85+rrJ2Ji+w5w=;
-        b=Ys4E5Ao0K33XCaNhJOZNGG9eB1LVmFEVbNik0eOadjtEdYVBg6XfirjuF26rOWP7wJ
-         selaNF1Ku4vVNw3OPr/T4qBYMpvnbsD/vACg2AoSzOqhD3Eql1k/x84vD8Z7NaaXpOso
-         twlspk/MZzFumGdwATJ+bq6wfL+RC/8BUi3ofUp6SMVYBwL3kHF3fNXw9lTzE+sPOfg1
-         687E6VVlhERlRsvlslt/q+aG7LpxIK3ZR2gf+h2HUe9uaH5s9tkVTSEwa8AFSC08nziy
-         9tosGaNqpkLQ5fKQ4AvHf2m2vgwGPZZQJanxHaVxlJ/85qMML5RMWtHxqtQ6uSGaYtU4
-         iQIg==
+        bh=CeCsCjetYaq9WLaLyz0l/vASvwsTn/rJXzj0Xq2S4N0=;
+        b=nLUHfY3E5pMaN/KibvmuXbNaq42aQuxH65u3ZO17PcOn2YXEXNxWwRZ1Uwshnr2S+A
+         lVYJhmM9SL4UeG2a1yWFvttGr1Wo/xmIAbIq9BLzf6o6geguJVWtrYcCgOC4gSvhQpHi
+         lf6+PG0dZwBXVEwwPMZAuVTtW9W4YxRzxMV/4x5w1NklBDocWivYi6fgJHI4brndU4xN
+         MMPqLAFb5AwBy+Jk9GUrwJ9qzXxszrZlwXCmLp7l/OP8g0O36xOlipenlvdtD6k2JdK8
+         w2z42alR2lXpGiTRg4hUQl3IAkxVa0wtJWqfuNGJsWeCJElbo7fX2MvECQw3E+b2U2nW
+         O47w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=akm4NfbJgAiIEKZHJ9zU6ThCpH8qtZ85+rrJ2Ji+w5w=;
-        b=onC71v+oaGSgoG1WkAmsedPP3p8mmqQlKA6ycbisfE5t1IefJOG0LKIOMPVFoKwwG4
-         foepwj17i8r51rorGj/wJDgqmb1qArYVa1U6IsSQRrgMnAVjCWx5x9HYjU9gSPbxT9eD
-         XhvIhc1sho2KTfci4n4E0jthly88eHmIbhEvriKj4W83a8SWwnrlJcQjynLSqshN+6td
-         1iZPAk9CXsXelI21x/hDOz5zWR6SSUbjZM4t8cyNwDCo7softYLAS4EVg943rAqmpwJS
-         LtoWjQ+E0D0Ps28en4XmcZNvLcuTuDAP43Q/Lm38v+p9lYLpemfJzm+oU8DuUzBrGuS5
-         aGjg==
-X-Gm-Message-State: APjAAAUp/LSa53BF/E7ycsBxnRMtbqWaXTUwyiU6yUtf2Ef82TrtQdXz
-        VRmSknjPCEHJWR9BR9JX1ak4gA==
-X-Google-Smtp-Source: APXvYqx+CMgYDl2dX4FUqA6dWXrSXTak++ViDH+hxj2wzDWUo0+9QhqR8sb9VKaph1DKqH2BCOwxLg==
-X-Received: by 2002:a63:5809:: with SMTP id m9mr51181799pgb.26.1577424773541;
-        Thu, 26 Dec 2019 21:32:53 -0800 (PST)
+        bh=CeCsCjetYaq9WLaLyz0l/vASvwsTn/rJXzj0Xq2S4N0=;
+        b=eKNsCqFzwWx1avjNS3osIN6yyx+0k7cUjA/B8AZNpcMTbg7iRwUBaL+lKk2pIITWEJ
+         QoKi8BwmzlMFgIdiXgv8Ib6XmuAjaieXKOtpbTV+FRAoanQId2ugSTx3PYOI2RN1Velc
+         3IkjuxO/d3CxzC79ZkC80gGNrFp4COQb2zFtBguR3R8NExRSfr9b54zAf3ysVzeQabr4
+         X8wgb1vUTX/bGwUQXybYt0foCAGgrZm2UkmBHwXzaSHHl7M4MAxg29QYnY8q019Dhp8B
+         LNj1Zibmg2/h5NK/QllZvbqSO7x8XiKwKweUdr3KC7kqxdiMVLyW+P+0zq1xJUxECnq4
+         emWQ==
+X-Gm-Message-State: APjAAAW6klTbDXpUqBhXIwu7kkK3qzjKOk3eJb5qJ5yCjtvJiff1xN4l
+        FnDghbX/EBQEfv+mYZ6tOa+BZQ==
+X-Google-Smtp-Source: APXvYqxzJpBIHGrECrk/Sj1WJfPavf8d17nw7NaVwsIPGGgf0uM1/ScPyfybxlPjCI6MxIUQVcd6NQ==
+X-Received: by 2002:a63:1210:: with SMTP id h16mr51989473pgl.171.1577424779986;
+        Thu, 26 Dec 2019 21:32:59 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c22sm16789196pfo.50.2019.12.26.21.32.52
+        by smtp.gmail.com with ESMTPSA id c22sm16789196pfo.50.2019.12.26.21.32.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 21:32:53 -0800 (PST)
+        Thu, 26 Dec 2019 21:32:59 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,9 +64,9 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>,
         Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil info in IMEM
-Date:   Thu, 26 Dec 2019 21:32:09 -0800
-Message-Id: <20191227053215.423811-3-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 7/8] remoteproc: qcom: q6v5: Add common panic handler
+Date:   Thu, 26 Dec 2019 21:32:14 -0800
+Message-Id: <20191227053215.423811-8-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191227053215.423811-1-bjorn.andersson@linaro.org>
 References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
@@ -77,223 +77,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A region in IMEM is used to communicate load addresses of remoteproc to
-post mortem debug tools. Implement a driver that can be used to store
-this information in order to enable these tools to process collected
-ramdumps.
+Add a common panic handler that invokes a stop request and sleep enough
+to let the remoteproc flush it's caches etc in order to aid post mortem
+debugging.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Added helper to probe defer clients
-- Fixed logical bug in slot scan
-- Added SPDX header in header file
+- None
 
- drivers/remoteproc/Kconfig         |   3 +
- drivers/remoteproc/Makefile        |   1 +
- drivers/remoteproc/qcom_pil_info.c | 150 +++++++++++++++++++++++++++++
- drivers/remoteproc/qcom_pil_info.h |   8 ++
- 4 files changed, 162 insertions(+)
- create mode 100644 drivers/remoteproc/qcom_pil_info.c
- create mode 100644 drivers/remoteproc/qcom_pil_info.h
+ drivers/remoteproc/qcom_q6v5.c | 19 +++++++++++++++++++
+ drivers/remoteproc/qcom_q6v5.h |  1 +
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 94afdde4bc9f..0798602e355a 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
- 	  It's safe to say N here if you're not interested in the Keystone
- 	  DSPs or just want to use a bare minimum kernel.
+diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+index cb0f4a0be032..17167c980e02 100644
+--- a/drivers/remoteproc/qcom_q6v5.c
++++ b/drivers/remoteproc/qcom_q6v5.c
+@@ -6,6 +6,7 @@
+  * Copyright (C) 2014 Sony Mobile Communications AB
+  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+  */
++#include <linux/delay.h>
+ #include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+@@ -15,6 +16,8 @@
+ #include <linux/remoteproc.h>
+ #include "qcom_q6v5.h"
  
-+config QCOM_PIL_INFO
-+	tristate
++#define Q6V5_PANIC_DELAY_MS	200
 +
- config QCOM_RPROC_COMMON
- 	tristate
+ /**
+  * qcom_q6v5_prepare() - reinitialize the qcom_q6v5 context before start
+  * @q6v5:	reference to qcom_q6v5 context to be reinitialized
+@@ -162,6 +165,22 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5)
+ }
+ EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
  
-diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-index 00f09e658cb3..c1b46e9033cb 100644
---- a/drivers/remoteproc/Makefile
-+++ b/drivers/remoteproc/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
- obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
- obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
- obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-+obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
- obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
- obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
- obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
-diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
-new file mode 100644
-index 000000000000..b0897ae9eae5
---- /dev/null
-+++ b/drivers/remoteproc/qcom_pil_info.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2019 Linaro Ltd.
-+ */
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/slab.h>
-+
-+struct pil_reloc_entry {
-+	char name[8];
-+	__le64 base;
-+	__le32 size;
-+} __packed;
-+
-+#define PIL_INFO_SIZE	200
-+#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
-+
-+struct pil_reloc {
-+	struct device *dev;
-+	struct regmap *map;
-+	u32 offset;
-+	int val_bytes;
-+
-+	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
-+};
-+
-+static struct pil_reloc *_reloc;
-+static DEFINE_MUTEX(reloc_mutex);
-+
 +/**
-+ * qcom_pil_info_store() - store PIL information of image in IMEM
-+ * @image:	name of the image
-+ * @base:	base address of the loaded image
-+ * @size:	size of the loaded image
-+ */
-+void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
-+{
-+	struct pil_reloc_entry *entry;
-+	int idx = -1;
-+	int i;
-+
-+	mutex_lock(&reloc_mutex);
-+	if (!_reloc)
-+		goto unlock;
-+
-+	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
-+		if (!_reloc->entries[i].name[0]) {
-+			if (idx == -1)
-+				idx = i;
-+			continue;
-+		}
-+
-+		if (!strncmp(_reloc->entries[i].name, image, 8)) {
-+			idx = i;
-+			goto found;
-+		}
-+	}
-+
-+	if (idx == -1) {
-+		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
-+		goto unlock;
-+	}
-+
-+found:
-+	entry = &_reloc->entries[idx];
-+	stracpy(entry->name, image);
-+	entry->base = base;
-+	entry->size = size;
-+
-+	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
-+			  entry, sizeof(*entry) / _reloc->val_bytes);
-+
-+unlock:
-+	mutex_unlock(&reloc_mutex);
-+}
-+EXPORT_SYMBOL_GPL(qcom_pil_info_store);
-+
-+/**
-+ * qcom_pil_info_available() - query if the pil info is probed
++ * qcom_q6v5_panic() - panic handler to invoke a stop on the remote
++ * @q6v5:	reference to qcom_q6v5 context
 + *
-+ * Return: boolean indicating if the pil info device is probed
++ * Set the stop bit and sleep in order to allow the remote processor to flush
++ * its caches etc for post mortem debugging.
 + */
-+bool qcom_pil_info_available(void)
++void qcom_q6v5_panic(struct qcom_q6v5 *q6v5)
 +{
-+	return !!_reloc;
++	qcom_smem_state_update_bits(q6v5->state,
++				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
++
++	mdelay(Q6V5_PANIC_DELAY_MS);
 +}
-+EXPORT_SYMBOL_GPL(qcom_pil_info_available);
++EXPORT_SYMBOL_GPL(qcom_q6v5_panic);
 +
-+static int pil_reloc_probe(struct platform_device *pdev)
-+{
-+	struct pil_reloc *reloc;
-+
-+	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-+	if (!reloc)
-+		return -ENOMEM;
-+
-+	reloc->dev = &pdev->dev;
-+	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(reloc->map))
-+		return PTR_ERR(reloc->map);
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
-+		return -EINVAL;
-+
-+	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
-+	if (reloc->val_bytes < 0)
-+		return -EINVAL;
-+
-+	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
-+			  sizeof(reloc->entries) / reloc->val_bytes);
-+
-+	mutex_lock(&reloc_mutex);
-+	_reloc = reloc;
-+	mutex_unlock(&reloc_mutex);
-+
-+	return 0;
-+}
-+
-+static int pil_reloc_remove(struct platform_device *pdev)
-+{
-+	mutex_lock(&reloc_mutex);
-+	_reloc = NULL;
-+	mutex_unlock(&reloc_mutex);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pil_reloc_of_match[] = {
-+	{ .compatible = "qcom,pil-reloc-info" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
-+
-+static struct platform_driver pil_reloc_driver = {
-+	.probe = pil_reloc_probe,
-+	.remove = pil_reloc_remove,
-+	.driver = {
-+		.name = "qcom-pil-reloc-info",
-+		.of_match_table = pil_reloc_of_match,
-+	},
-+};
-+module_platform_driver(pil_reloc_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm PIL relocation info");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
-new file mode 100644
-index 000000000000..0372602fae1d
---- /dev/null
-+++ b/drivers/remoteproc/qcom_pil_info.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __QCOM_PIL_INFO_H__
-+#define __QCOM_PIL_INFO_H__
-+
-+void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
-+bool qcom_pil_info_available(void);
-+
-+#endif
+ /**
+  * qcom_q6v5_init() - initializer of the q6v5 common struct
+  * @q6v5:	handle to be initialized
+diff --git a/drivers/remoteproc/qcom_q6v5.h b/drivers/remoteproc/qcom_q6v5.h
+index 7ac92c1e0f49..c37e6fd063e4 100644
+--- a/drivers/remoteproc/qcom_q6v5.h
++++ b/drivers/remoteproc/qcom_q6v5.h
+@@ -42,5 +42,6 @@ int qcom_q6v5_prepare(struct qcom_q6v5 *q6v5);
+ int qcom_q6v5_unprepare(struct qcom_q6v5 *q6v5);
+ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5);
+ int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout);
++void qcom_q6v5_panic(struct qcom_q6v5 *q6v5);
+ 
+ #endif
 -- 
 2.24.0
 
