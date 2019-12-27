@@ -2,53 +2,51 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,NO_DNS_FOR_FROM,SIGNED_OFF_BY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C04C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37BFC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C92524125
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6F720740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468519;
-	bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
+	s=default; t=1577468525;
+	bh=yp7HcX3GTWvd+cFc6ZcLHokQqnbIblK6FTXaFM7Q0RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIaJPI2QFIMKsgfXHrpR3MCZHtnK3ASkXhphzmOipEJ1vpnXanESZwcmTztIcM/So
-	 J6DEozNTxU8/aIOjrnIzMaIXMAO1fwcjKbT+esl0iLGRGoX6f/RkoH+K8Htfr3+c0C
-	 wh2ZXn2MToCaHFAvDgWLYhSsP4yC47t9KMSt2miA=
+	b=py/5gNhS3GSiX0C+epPCe1X/6WyQgiYP5KJ185e/9/H3TbUOLYPba+SUYj2RaEWsi
+	 yRyxBoQp4sFtTC7T5huEl4OHJ78YLsNfAVvW+qZqBfUJAoSQcwj7prnRO0Qd0h1QI3
+	 I32nBc+Lbj5IjU+ifM3AcsWA2p8m0F+gJxwItdzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfL0Rl6 (ORCPT
+        id S1727732AbfL0RmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbfL0Rl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:56 -0500
+        id S1727703AbfL0RmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48CEE22B48;
-        Fri, 27 Dec 2019 17:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC4E218AC;
+        Fri, 27 Dec 2019 17:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468516;
-        bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
+        s=default; t=1577468521;
+        bh=yp7HcX3GTWvd+cFc6ZcLHokQqnbIblK6FTXaFM7Q0RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NeO/Q6dCwVUNNbIphP1CyWFZP1iWckxfpgcffIefAK3QEAzwk22BGzs85cSj0To7z
-         1z2R7N1DDOh+0FlWm5mZRmDVm4r9YtLNZlG7tKAvmT0ZIri0MH1tTTxPD0aatXWTXC
-         lDaNW+izyfy8YejZ5Y8y1ZVQYL81Gf4WLh2mjyaU=
+        b=iedKNX5VH325YidskBgilEHb29mvFHawANRgn9ksrpXgijHipFD7xB8Tzzatn4V3R
+         YuX26igMLAOdDqmO1XVrnhCh6ygp/VjA3oqwep/lkHPesSJ+zEVFn/t9ElIIo439Bn
+         ht1v/yWfrPBgXojXE1b13fK7et/cV2EAITvdpD7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 048/187] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Fri, 27 Dec 2019 12:38:36 -0500
-Message-Id: <20191227174055.4923-48-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>,
+        Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 053/187] af_packet: set defaule value for tmo
+Date:   Fri, 27 Dec 2019 12:38:41 -0500
+Message-Id: <20191227174055.4923-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,38 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
+[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
 
-The MDIO node on Cygnus had an reversed #address-cells and
- #size-cells properties, correct those.
+There is softlockup when using TPACKET_V3:
+...
+NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
+(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
+(mod_timer) from [<c0549c30>]
+(prb_retire_rx_blk_timer_expired+0x68/0x11c)
+(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
+(call_timer_fn+0x90/0x17c)
+(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
+(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
+(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
+(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
+...
 
-Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-Reported-by: Simon Horman <simon.horman@netronome.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+If __ethtool_get_link_ksettings() is failed in
+prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
+is zero and the timer expire for retire_blk_timer is turn to
+mod_timer(&pkc->retire_blk_timer, jiffies + 0),
+which will trigger cpu usage of softirq is 100%.
+
+Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 2dac3efc7640..1bc45cfd5453 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -174,8 +174,8 @@
- 		mdio: mdio@18002000 {
- 			compatible = "brcm,iproc-mdio";
- 			reg = <0x18002000 0x8>;
--			#size-cells = <1>;
--			#address-cells = <0>;
-+			#size-cells = <0>;
-+			#address-cells = <1>;
- 			status = "disabled";
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 82a50e850245..529d4ce945db 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
+ 			msec = 1;
+ 			div = ecmd.base.speed / 1000;
+ 		}
+-	}
++	} else
++		return DEFAULT_PRB_RETIRE_TOV;
  
- 			gphy0: ethernet-phy@0 {
+ 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+ 
 -- 
 2.20.1
 
