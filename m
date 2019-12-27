@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BB4C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4168C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D82321D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB53021D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468872;
-	bh=k6QT/VGBgYhYTKy+MtjXvJgXYzPO5IhqpOqJKnhk06U=;
+	s=default; t=1577468878;
+	bh=ibZBkiorgbSlD1+KaQsW7L6oi5u2W/TPujsZDyZJGks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0NuViv4ClAae0iTdd0skarwBOnTKhUtEv10d6P1Z48wD1jgJlK6IevFoABHL+b/oU
-	 zCg8adRN5FDwWH1+/XTzlxaNHyVTS8PS+XGgPwfsPCmfaMqnMNprVgGiPFrBYImEGT
-	 EWu7/W3cFgNYnoZ6gb9uoLHi7XfYySRDq8dbR9+g=
+	b=UlNCYqBcXOWKbAgIlSvTaW2Z8WWjKHD9eqMJGwL5eYWBmEMrYT0nGHxUhL0oI/1pU
+	 Uug83fsuhJlOSM09SZNFD1Czzaya2eLeltkLYI4gyKXc/oOiu0Bdq9QfigeCPXCz2F
+	 GOm5YIVA3G2zR0+c9rwYmXCp3z8Ac6NDp4hq2uGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbfL0Rrv (ORCPT
+        id S1728588AbfL0Row (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:47:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43242 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbfL0Rox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:53 -0500
+        id S1728470AbfL0Rom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D2520740;
-        Fri, 27 Dec 2019 17:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB857206CB;
+        Fri, 27 Dec 2019 17:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468692;
-        bh=k6QT/VGBgYhYTKy+MtjXvJgXYzPO5IhqpOqJKnhk06U=;
+        s=default; t=1577468681;
+        bh=ibZBkiorgbSlD1+KaQsW7L6oi5u2W/TPujsZDyZJGks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVteVbBtxmYqnQJPjHqMLPjgI2TYRsa9lpBiKfwUIuiSOayTDWouk+7uruepKs3lH
-         70VjEYM87S3jxbMZ5W2UjUqxJlGftEnlLwCDhoIpzlfKnzuPllrxEL9Og+pESkjkEO
-         JU+l4NWn3TENVPM7gkzix2XGD+/s8Uhrxx5GAK/Y=
+        b=kpdLrf3qK6rUpEkzL9OzE4pbMgLWnS8NiZ4b7Wtmo0nJj0H/Yn9UHpKlcUGJYWQGT
+         Pfp0d2+p1PARu18unzdJk9PeUVMro7eH9PSXY8RGhqqzbFl5iZ1KfqK/CEx+ujCfrH
+         GmKmPuXzChHRB1ijaaSeMAGOhDVNj3m9s1TSBBH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 49/84] bnx2x: Do not handle requests from VFs after parity
-Date:   Fri, 27 Dec 2019 12:43:17 -0500
-Message-Id: <20191227174352.6264-49-sashal@kernel.org>
+Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 40/84] net: usb: lan78xx: Fix suspend/resume PHY register access error
+Date:   Fri, 27 Dec 2019 12:43:08 -0500
+Message-Id: <20191227174352.6264-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,86 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
+[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
 
-Parity error from the hardware will cause PF to lose the state
-of their VFs due to PF's internal reload and hardware reset following
-the parity error. Restrict any configuration request from the VFs after
-the parity as it could cause unexpected hardware behavior, only way
-for VFs to recover would be to trigger FLR on VFs and reload them.
+Lan78xx driver accesses the PHY registers through MDIO bus over USB
+connection. When performing a suspend/resume, the PHY registers can be
+accessed before the USB connection is resumed. This will generate an
+error and will prevent the device to resume correctly.
+This patch adds the dependency between the MDIO bus and USB device to
+allow correct handling of suspend/resume.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ drivers/net/usb/lan78xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index af57568c922e..df4f77ad95c4 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -9995,10 +9995,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
-  */
- static void bnx2x_parity_recover(struct bnx2x *bp)
- {
--	bool global = false;
- 	u32 error_recovered, error_unrecovered;
--	bool is_parity;
-+	bool is_parity, global = false;
-+#ifdef CONFIG_BNX2X_SRIOV
-+	int vf_idx;
-+
-+	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
-+		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 50bf4b2080d5..6dd24a1ca10d 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1823,6 +1823,7 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+ 	dev->mdiobus->read = lan78xx_mdiobus_read;
+ 	dev->mdiobus->write = lan78xx_mdiobus_write;
+ 	dev->mdiobus->name = "lan78xx-mdiobus";
++	dev->mdiobus->parent = &dev->udev->dev;
  
-+		if (vf)
-+			vf->state = VF_LOST;
-+	}
-+#endif
- 	DP(NETIF_MSG_HW, "Handling parity\n");
- 	while (1) {
- 		switch (bp->recovery_state) {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-index eb814c65152f..4dc34de1a09a 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
-@@ -139,6 +139,7 @@ struct bnx2x_virtf {
- #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
- #define VF_ENABLED	2	/* VF Enabled */
- #define VF_RESET	3	/* VF FLR'd, pending cleanup */
-+#define VF_LOST		4	/* Recovery while VFs are loaded */
- 
- 	bool flr_clnup_stage;	/* true during flr cleanup */
- 	bool malicious;		/* true if FW indicated so, until FLR */
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-index 8e0a317b31f7..152758a45150 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
-@@ -2114,6 +2114,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
- {
- 	int i;
- 
-+	if (vf->state == VF_LOST) {
-+		/* Just ack the FW and return if VFs are lost
-+		 * in case of parity error. VFs are supposed to be timedout
-+		 * on waiting for PF response.
-+		 */
-+		DP(BNX2X_MSG_IOV,
-+		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
-+
-+		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
-+		return;
-+	}
-+
- 	/* check if tlv type is known */
- 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
- 		/* Lock the per vf op mutex and note the locker's identity.
+ 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
+ 		 dev->udev->bus->busnum, dev->udev->devnum);
 -- 
 2.20.1
 
