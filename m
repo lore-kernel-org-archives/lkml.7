@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EACC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36710C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55CC206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115DD206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469279;
-	bh=mm4956ygG+jablg48bigObr7P6aCT2lVITov/2olgyg=;
+	s=default; t=1577469284;
+	bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUccXubPI7xjYR5G4lrvKEtsG35oXU9HuD5OrE4Fhu4smwpTGcGFDZDOhqkQUupV9
-	 yKhMFJA034ij7YF8XDNvgGeLFpRP5ixYROR/vl0O3V7SXlFmgPiUQDx3KWHEapEDF4
-	 chQSC3lKg3pyxhPaiauFo8VFrkjNIGoXkQl6Sy9M=
+	b=NhbrHl5P6gN1rZPuaiX2mcrvgVyyGXic5QhsCW+B+GoiOO31d8/+9fIQggiAQu9rJ
+	 FadzsD1yWoAX1i+ARE+21Cx5Vd5f3+Z54IlXESkfgK4DoDKm//3xQ/eRiGGKuTlf5m
+	 092CxGUv2c9/PHfU1uMKmMFETE4wu8203aQzGQsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfL0Ryh (ORCPT
+        id S1727896AbfL0Rme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727486AbfL0Rmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:51 -0500
+        id S1727867AbfL0Rm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF3D32173E;
-        Fri, 27 Dec 2019 17:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66772222C3;
+        Fri, 27 Dec 2019 17:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468570;
-        bh=mm4956ygG+jablg48bigObr7P6aCT2lVITov/2olgyg=;
+        s=default; t=1577468549;
+        bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+1sFqnT+Iu8XXP7PuyNOkTG6nLe/LnoNWHIlWnw9Awu0o8JEyEPbevv20fSgOhO6
-         5+lW2G1G/KHHJYyFbVsxfq271y/Ud+Tpmio0U43ygCe1gVPCXrU+BFe2uAwhT0YqVh
-         xRWUY/QZRoGX9Wx1vhH3BDt5k0lxu/D5AzOVE/M8=
+        b=VK4HTcaPQP9gze904siS/AzkWtQpdEZKOM2J+6pKxeqs2qz9dcdFC3pQu/GPQzLeM
+         dKRrW6qt4k0oDNK5H8LT1v8VegmAW4gKISzRKNZW/t8qQJvUiEj+fSCRNqIB6bbfCz
+         RpeUY2bKHE83qm7x2BqbBjMm1fYnUwQQf/FHNmT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 095/187] Btrfs: fix cloning range with a hole when using the NO_HOLES feature
-Date:   Fri, 27 Dec 2019 12:39:23 -0500
-Message-Id: <20191227174055.4923-95-sashal@kernel.org>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 076/187] spi: spi-ti-qspi: Fix a bug when accessing non default CS
+Date:   Fri, 27 Dec 2019 12:39:04 -0500
+Message-Id: <20191227174055.4923-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -58,114 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-[ Upstream commit fcb970581dd900675c4371c2b688a57924a8368c ]
+[ Upstream commit c52c91bb9aa6bd8c38dbf9776158e33038aedd43 ]
 
-When using the NO_HOLES feature if we clone a range that contains a hole
-and a temporary ENOSPC happens while dropping extents from the target
-inode's range, we can end up failing and aborting the transaction with
--EEXIST or with a corrupt file extent item, that has a length greater
-than it should and overlaps with other extents. For example when cloning
-the following range from inode A to inode B:
+When switching ChipSelect from default CS0 to any other CS, driver fails
+to update the bits in system control module register that control which
+CS is mapped for MMIO access. This causes reads to fail when driver
+tries to access QSPI flash on CS1/2/3.
 
-  Inode A:
+Fix this by updating appropriate bits whenever active CS changes.
 
-    extent A1                                          extent A2
-  [ ----------- ]  [ hole, implicit, 4MB length ]  [ ------------- ]
-  0            1MB                                 5MB            6MB
-
-  Range to clone: [1MB, 6MB)
-
-  Inode B:
-
-    extent B1       extent B2        extent B3         extent B4
-  [ ---------- ]  [ --------- ]    [ ---------- ]    [ ---------- ]
-  0           1MB 1MB        2MB   2MB        5MB    5MB         6MB
-
-  Target range: [1MB, 6MB) (same as source, to make it easier to explain)
-
-The following can happen:
-
-1) btrfs_punch_hole_range() gets -ENOSPC from __btrfs_drop_extents();
-
-2) At that point, 'cur_offset' is set to 1MB and __btrfs_drop_extents()
-   set 'drop_end' to 2MB, meaning it was able to drop only extent B2;
-
-3) We then compute 'clone_len' as 'drop_end' - 'cur_offset' = 2MB - 1MB =
-   1MB;
-
-4) We then attempt to insert a file extent item at inode B with a file
-   offset of 5MB, which is the value of clone_info->file_offset. This
-   fails with error -EEXIST because there's already an extent at that
-   offset (extent B4);
-
-5) We abort the current transaction with -EEXIST and return that error
-   to user space as well.
-
-Another example, for extent corruption:
-
-  Inode A:
-
-    extent A1                                           extent A2
-  [ ----------- ]   [ hole, implicit, 10MB length ]  [ ------------- ]
-  0            1MB                                  11MB            12MB
-
-  Inode B:
-
-    extent B1         extent B2
-  [ ----------- ]   [ --------- ]    [ ----------------------------- ]
-  0            1MB 1MB         5MB  5MB                             12MB
-
-  Target range: [1MB, 12MB) (same as source, to make it easier to explain)
-
-1) btrfs_punch_hole_range() gets -ENOSPC from __btrfs_drop_extents();
-
-2) At that point, 'cur_offset' is set to 1MB and __btrfs_drop_extents()
-   set 'drop_end' to 5MB, meaning it was able to drop only extent B2;
-
-3) We then compute 'clone_len' as 'drop_end' - 'cur_offset' = 5MB - 1MB =
-   4MB;
-
-4) We then insert a file extent item at inode B with a file offset of 11MB
-   which is the value of clone_info->file_offset, and a length of 4MB (the
-   value of 'clone_len'). So we get 2 extents items with ranges that
-   overlap and an extent length of 4MB, larger then the extent A2 from
-   inode A (1MB length);
-
-5) After that we end the transaction, balance the btree dirty pages and
-   then start another or join the previous transaction. It might happen
-   that the transaction which inserted the incorrect extent was committed
-   by another task so we end up with extent corruption if a power failure
-   happens.
-
-So fix this by making sure we attempt to insert the extent to clone at
-the destination inode only if we are past dropping the sub-range that
-corresponds to a hole.
-
-Fixes: 690a5dbfc51315 ("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning extents")
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Link: https://lore.kernel.org/r/20191211155216.30212-1-vigneshr@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-ti-qspi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index c332968f9056..eaafd00f93d4 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -2601,8 +2601,8 @@ int btrfs_punch_hole_range(struct inode *inode, struct btrfs_path *path,
- 			}
+diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
+index 3cb65371ae3b..66dcb6128539 100644
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -62,6 +62,7 @@ struct ti_qspi {
+ 	u32 dc;
+ 
+ 	bool mmap_enabled;
++	int current_cs;
+ };
+ 
+ #define QSPI_PID			(0x0)
+@@ -487,6 +488,7 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
+ 				   MEM_CS_EN(spi->chip_select));
+ 	}
+ 	qspi->mmap_enabled = true;
++	qspi->current_cs = spi->chip_select;
+ }
+ 
+ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+@@ -498,6 +500,7 @@ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+ 				   MEM_CS_MASK, 0);
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
+ }
+ 
+ static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
+@@ -543,7 +546,7 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
+ 
+ 	mutex_lock(&qspi->list_lock);
+ 
+-	if (!qspi->mmap_enabled)
++	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select)
+ 		ti_qspi_enable_memory_map(mem->spi);
+ 	ti_qspi_setup_mmap_read(mem->spi, op->cmd.opcode, op->data.buswidth,
+ 				op->addr.nbytes, op->dummy.nbytes);
+@@ -799,6 +802,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
  		}
+ 	}
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
  
--		if (clone_info) {
--			u64 clone_len = drop_end - cur_offset;
-+		if (clone_info && drop_end > clone_info->file_offset) {
-+			u64 clone_len = drop_end - clone_info->file_offset;
- 
- 			ret = btrfs_insert_clone_extent(trans, inode, path,
- 							clone_info, clone_len);
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (!ret)
 -- 
 2.20.1
 
