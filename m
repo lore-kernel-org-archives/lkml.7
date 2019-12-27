@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77FBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A94C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C22B21927
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1022122522
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468603;
-	bh=9zTyihxQT4EJTdsTUMisudEX0jCUFmj216w9xmXXSmU=;
+	s=default; t=1577468608;
+	bh=gfIGQp34RVhSZnYCRMgdzjv+nUlxz9OyufQbnXilM/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TgGm63W8VpwXEy5s+i024Kg2jLa+ER/OKg9A28Yh3d/TDyLLvtVNnxzfsMyJXXFht
-	 LTT+vipVv8k1frluLQoHoLLexpoCY7ZMech0owJJt3bRqOhPnbMjLdkCVpM+ov/r5z
-	 +Dj+xpdgnkg9czpfShMKfUzYmHXKt4eFhORfCwa8=
+	b=LOZyAQ1kj1XIwjxa7KWoKOAeUMjC1MTQD+FeTSR8He2Nh2+9yl0r7rhDmub72U+hK
+	 UCGHBesRXe300E1us8y07o0Vxy7ljRTjnNHfPTErq2nrmHDpJ8saT5PiuDPj2H4HGf
+	 laA9g1rqA12noX8XVJ/Rcq2kJsE2C1+s1DgZZzY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfL0RnW (ORCPT
+        id S1727820AbfL0Rn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:43:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40614 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:43:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbfL0RnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:14 -0500
+        id S1728167AbfL0RnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA072173E;
-        Fri, 27 Dec 2019 17:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5B024654;
+        Fri, 27 Dec 2019 17:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468593;
-        bh=9zTyihxQT4EJTdsTUMisudEX0jCUFmj216w9xmXXSmU=;
+        s=default; t=1577468596;
+        bh=gfIGQp34RVhSZnYCRMgdzjv+nUlxz9OyufQbnXilM/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMNA3qil3CToB4tQM/68dANSpQ99Sjr5X7upQS+dkvjgOdsOjgXoEEFxBjFWOSb9s
-         50H+Pd5YbRXYPQKM1I1IEKhaTVXZU+lUJAM6ehxTy8B9EdoeD3goIZz3buTVa3kpo6
-         Xe7wLsQiMssElfD3Rrvd2LXMigZHqnNwhyWlOPMU=
+        b=r1VPxnSe1OUI1O7HkaE0N3xnMJpRRzeeGSgzQ88gBL3MzYp1ZwqWOTbuAVIFP74Ap
+         lXc/BA1KfQWJPqy5kuFli5Eaelyjhen2r6WndBWRnx2PiYa+QzUxj6eZX+QjWrg7JK
+         E80BLzk5USgWqWEqCefva2FUtq9hvj9/4sVD02DY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Ursula Braun <ubraun@linux.ibm.com>,
+        syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com,
+        Karsten Graul <kgraul@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 115/187] gtp: avoid zero size hashtable
-Date:   Fri, 27 Dec 2019 12:39:43 -0500
-Message-Id: <20191227174055.4923-115-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 117/187] net/smc: add fallback check to connect()
+Date:   Fri, 27 Dec 2019 12:39:45 -0500
+Message-Id: <20191227174055.4923-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,42 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit 6a902c0f31993ab02e1b6ea7085002b9c9083b6a ]
+[ Upstream commit 86434744fedf0cfe07a9eee3f4632c0e25c1d136 ]
 
-GTP default hashtable size is 1024 and userspace could set specific
-hashtable size with IFLA_GTP_PDP_HASHSIZE. If hashtable size is set to 0
-from userspace,  hashtable will not work and panic will occur.
+FASTOPEN setsockopt() or sendmsg() may switch the SMC socket to fallback
+mode. Once fallback mode is active, the native TCP socket functions are
+called. Nevertheless there is a small race window, when FASTOPEN
+setsockopt/sendmsg runs in parallel to a connect(), and switch the
+socket into fallback mode before connect() takes the sock lock.
+Make sure the SMC-specific connect setup is omitted in this case.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+This way a syzbot-reported refcount problem is fixed, triggered by
+different threads running non-blocking connect() and FASTOPEN_KEY
+setsockopt.
+
+Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
+Fixes: 6d6dd528d5af ("net/smc: fix refcount non-blocking connect() -part 2")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/smc/af_smc.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 5450b1099c6d..e5b7d6d2286e 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -667,10 +667,13 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
- 	if (err < 0)
- 		return err;
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 737b49909a7a..6a6d3b2aa5a9 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -854,6 +854,8 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
+ 		goto out;
  
--	if (!data[IFLA_GTP_PDP_HASHSIZE])
-+	if (!data[IFLA_GTP_PDP_HASHSIZE]) {
- 		hashsize = 1024;
--	else
-+	} else {
- 		hashsize = nla_get_u32(data[IFLA_GTP_PDP_HASHSIZE]);
-+		if (!hashsize)
-+			hashsize = 1024;
-+	}
+ 	sock_hold(&smc->sk); /* sock put in passive closing */
++	if (smc->use_fallback)
++		goto out;
+ 	if (flags & O_NONBLOCK) {
+ 		if (schedule_work(&smc->connect_work))
+ 			smc->connect_nonblock = 1;
+@@ -1716,8 +1718,6 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 		sk->sk_err = smc->clcsock->sk->sk_err;
+ 		sk->sk_error_report(sk);
+ 	}
+-	if (rc)
+-		return rc;
  
- 	err = gtp_hashtable_new(gtp, hashsize);
- 	if (err < 0)
+ 	if (optlen < sizeof(int))
+ 		return -EINVAL;
+@@ -1725,6 +1725,8 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 		return -EFAULT;
+ 
+ 	lock_sock(sk);
++	if (rc || smc->use_fallback)
++		goto out;
+ 	switch (optname) {
+ 	case TCP_ULP:
+ 	case TCP_FASTOPEN:
+@@ -1736,15 +1738,14 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 			smc_switch_to_fallback(smc);
+ 			smc->fallback_rsn = SMC_CLC_DECL_OPTUNSUPP;
+ 		} else {
+-			if (!smc->use_fallback)
+-				rc = -EINVAL;
++			rc = -EINVAL;
+ 		}
+ 		break;
+ 	case TCP_NODELAY:
+ 		if (sk->sk_state != SMC_INIT &&
+ 		    sk->sk_state != SMC_LISTEN &&
+ 		    sk->sk_state != SMC_CLOSED) {
+-			if (val && !smc->use_fallback)
++			if (val)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+@@ -1753,7 +1754,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 		if (sk->sk_state != SMC_INIT &&
+ 		    sk->sk_state != SMC_LISTEN &&
+ 		    sk->sk_state != SMC_CLOSED) {
+-			if (!val && !smc->use_fallback)
++			if (!val)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+@@ -1764,6 +1765,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 	default:
+ 		break;
+ 	}
++out:
+ 	release_sock(sk);
+ 
+ 	return rc;
 -- 
 2.20.1
 
