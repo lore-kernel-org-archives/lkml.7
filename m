@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54728C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80154C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC85206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509592176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469790;
-	bh=kkLCG1ig3TWOWoPb25SzWe5lVPKOZSt6PHE83riOQY0=;
+	s=default; t=1577469796;
+	bh=vfwvDSWPrY0aHH2qtgXQ09be4+ozgnBDYPys9QmJ9Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cw23KHj8+Tn0g5vikSCEPpshdiE+Ycd9MJTdCMR7Iiv28RUE+n/uQ+UgEJufwUXV5
-	 8pnG/oAMrvXiW7HZ3zDk953/+Rmu8JL8P9fizAEVlq0nCDO/bPF2VNky694lfqkUJZ
-	 yMKxlKfOWNV8UmunQXfF2EL2BJexnAgxu29RqhxU=
+	b=wgG2FudQy0oOtlqxgDcNKNU6omPChRZqB358p1Hze4a8yV01kHeZiexi0wecZ7sPc
+	 suVwEpcYmGKRTXkHgY46kJhmybilS5C7AhW3TmAugGqh5tv1pQ5uKY2sEF+mDEg5JL
+	 f1j4LyDPXUzg6pGjC1yUDwsHzQErHf4R7su3EaVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfL0SDJ (ORCPT
+        id S1728593AbfL0SDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:03:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:03:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfL0SDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:06 -0500
+        id S1728534AbfL0SDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 304BA20CC7;
-        Fri, 27 Dec 2019 18:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C2E020CC7;
+        Fri, 27 Dec 2019 18:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469784;
-        bh=kkLCG1ig3TWOWoPb25SzWe5lVPKOZSt6PHE83riOQY0=;
+        s=default; t=1577469788;
+        bh=vfwvDSWPrY0aHH2qtgXQ09be4+ozgnBDYPys9QmJ9Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMGhvcrjfNpcmXTcBrMGrGJeC9YDuY1PF6rXv78wmLWeLvzeVY1aF+IF8TvB6B4GK
-         TruXwiciltD56xwVbIOagcdRvVkHOL5iCisC2pp+xxAnf3obK34TPQvyMXny+GtZde
-         rSO7Aix8UpNPrE6+C+wRaOCZqiwMN0B/0IdI6BzY=
+        b=0huMZO7B6uLMbsPHrZthpPn668BKTSuku7tf4Xqu3JaJUfOwx9rDZAJuYWFvv2m8a
+         YSbgNmx9K21exDLiSGoYfSSmLz0kH6AxXep77A8aRkE5ZkpbwN0OxAlKvHdwiJOo6W
+         I11yfONdEGtbSk5zrq9FuQ5ghkI1QcQPd/OKuMO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 34/57] gtp: do not allow adding duplicate tid and ms_addr pdp context
-Date:   Fri, 27 Dec 2019 13:01:59 -0500
-Message-Id: <20191227180222.7076-34-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 37/57] net: usb: lan78xx: Fix error message format specifier
+Date:   Fri, 27 Dec 2019 13:02:02 -0500
+Message-Id: <20191227180222.7076-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -60,91 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit 6b01b1d9b2d38dc84ac398bfe9f00baff06a31e5 ]
+[ Upstream commit 858ce8ca62ea1530f2779d0e3f934b0176e663c3 ]
 
-GTP RX packet path lookups pdp context with TID. If duplicate TID pdp
-contexts are existing in the list, it couldn't select correct pdp context.
-So, TID value  should be unique.
-GTP TX packet path lookups pdp context with ms_addr. If duplicate ms_addr pdp
-contexts are existing in the list, it couldn't select correct pdp context.
-So, ms_addr value should be unique.
+Display the return code as decimal integer.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ drivers/net/usb/lan78xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 5de4053774b8..0522cbdce44a 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -929,24 +929,31 @@ static void ipv4_pdp_fill(struct pdp_ctx *pctx, struct genl_info *info)
- 	}
- }
- 
--static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
--			struct genl_info *info)
-+static int gtp_pdp_add(struct gtp_dev *gtp, struct sock *sk,
-+		       struct genl_info *info)
- {
-+	struct pdp_ctx *pctx, *pctx_tid = NULL;
- 	struct net_device *dev = gtp->dev;
- 	u32 hash_ms, hash_tid = 0;
--	struct pdp_ctx *pctx;
-+	unsigned int version;
- 	bool found = false;
- 	__be32 ms_addr;
- 
- 	ms_addr = nla_get_be32(info->attrs[GTPA_MS_ADDRESS]);
- 	hash_ms = ipv4_hashfn(ms_addr) % gtp->hash_size;
-+	version = nla_get_u32(info->attrs[GTPA_VERSION]);
- 
--	hlist_for_each_entry_rcu(pctx, &gtp->addr_hash[hash_ms], hlist_addr) {
--		if (pctx->ms_addr_ip4.s_addr == ms_addr) {
--			found = true;
--			break;
--		}
--	}
-+	pctx = ipv4_pdp_find(gtp, ms_addr);
-+	if (pctx)
-+		found = true;
-+	if (version == GTP_V0)
-+		pctx_tid = gtp0_pdp_find(gtp,
-+					 nla_get_u64(info->attrs[GTPA_TID]));
-+	else if (version == GTP_V1)
-+		pctx_tid = gtp1_pdp_find(gtp,
-+					 nla_get_u32(info->attrs[GTPA_I_TEI]));
-+	if (pctx_tid)
-+		found = true;
- 
- 	if (found) {
- 		if (info->nlhdr->nlmsg_flags & NLM_F_EXCL)
-@@ -954,6 +961,11 @@ static int ipv4_pdp_add(struct gtp_dev *gtp, struct sock *sk,
- 		if (info->nlhdr->nlmsg_flags & NLM_F_REPLACE)
- 			return -EOPNOTSUPP;
- 
-+		if (pctx && pctx_tid)
-+			return -EEXIST;
-+		if (!pctx)
-+			pctx = pctx_tid;
-+
- 		ipv4_pdp_fill(pctx, info);
- 
- 		if (pctx->gtp_version == GTP_V0)
-@@ -1077,7 +1089,7 @@ static int gtp_genl_new_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto out_unlock;
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 7d1d5b30ecc3..0aa6f3a5612d 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -497,7 +497,7 @@ static int lan78xx_read_stats(struct lan78xx_net *dev,
+ 		}
+ 	} else {
+ 		netdev_warn(dev->net,
+-			    "Failed to read stat ret = 0x%x", ret);
++			    "Failed to read stat ret = %d", ret);
  	}
  
--	err = ipv4_pdp_add(gtp, sk, info);
-+	err = gtp_pdp_add(gtp, sk, info);
- 
- out_unlock:
- 	rcu_read_unlock();
+ 	kfree(stats);
 -- 
 2.20.1
 
