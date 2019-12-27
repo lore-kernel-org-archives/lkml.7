@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BB4C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF0320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEA5208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470795;
-	bh=lNUYq7bp5wkI5mc/7OLg2R0gWlSNmXm1kqXk6M4f69k=;
+	s=default; t=1577470803;
+	bh=QzVwGmtn7+kmEbUT2RUbe9FAnE8w1dD4jj/1TlZ5qE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zu8oivH1//TnngRk9fmNOWsi8rPNtTBLxSdFa8J4FbqpdVrvHWbwTwAk/ARFzsdqQ
-	 XTDxSAdKsTuBu2w6sMhCRy0vdlrkYqAtxwek649yLZNdlWle/xim4yGk7OQP03gmJQ
-	 4dmIjm6ce62wI+av3S/1lN61m2hfDSJr7TEEuVBU=
+	b=CBHqZAkjKS30daFYQxZfalpUUPONZKH4L8L82sXVAEjag7NMBLS0VBW+bcFdhnID6
+	 +f7OF8Ra17JkmuR3PCfqQc8m/MvfuA0DArgWAwy1IOa+u6HK/6BrlTCWXRP/H0ADG7
+	 Cq/IW+U/wtreZEdsoXRh/wRA1SQ6P10gqxlV3hs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfL0STy (ORCPT
+        id S1727531AbfL0SUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:19:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:20:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfL0SOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:14:43 -0500
+        id S1727162AbfL0SOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D5B0218AC;
-        Fri, 27 Dec 2019 18:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA3B2173E;
+        Fri, 27 Dec 2019 18:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470483;
-        bh=lNUYq7bp5wkI5mc/7OLg2R0gWlSNmXm1kqXk6M4f69k=;
+        s=default; t=1577470480;
+        bh=QzVwGmtn7+kmEbUT2RUbe9FAnE8w1dD4jj/1TlZ5qE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GVHOByvfHHjZhz6TjkzVtq3FJItZ3RuR3ETPk+dRNOga7Rqzl3lgTa3nFeYJBTBVp
-         2+RQ6hng9eDc7iXycrD9G4Lrq0XxSA4PyaJpqspAeo9O6GUz6lUfvDY4C2l2og40q3
-         M0jb304OpAGwoXAFCjTz52HBCMOXtTv/weZjx4bg=
+        b=VV4bBcDxX6R2E8kmEPpnZ5/3BFl9A7gICgqNR224vbnryIFKV6XRru1xdTcYrnQmp
+         eYck9btCcH13cG6xIJ/qvwKNH04Tv4pqUPyKYSgvD9Pi8ROn1k9jQy7zEx3QMeZsgV
+         ZtLAyOjD82aNbwjwBdfYMmmtEi6JDn8fE2EW8r6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 05/38] efi/gop: Return EFI_SUCCESS if a usable GOP was found
-Date:   Fri, 27 Dec 2019 13:14:02 -0500
-Message-Id: <20191227181435.7644-5-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/38] netfilter: ctnetlink: netns exit must wait for callbacks
+Date:   Fri, 27 Dec 2019 13:14:00 -0500
+Message-Id: <20191227181435.7644-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -63,54 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit dbd89c303b4420f6cdb689fd398349fc83b059dd ]
+[ Upstream commit 18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb ]
 
-If we've found a usable instance of the Graphics Output Protocol
-(GOP) with a framebuffer, it is possible that one of the later EFI
-calls fails while checking if any support console output. In this
-case status may be an EFI error code even though we found a usable
-GOP.
+Curtis Taylor and Jon Maxwell reported and debugged a crash on 3.10
+based kernel.
 
-Fix this by explicitly return EFI_SUCCESS if a usable GOP has been
-located.
+Crash occurs in ctnetlink_conntrack_events because net->nfnl socket is
+NULL.  The nfnl socket was set to NULL by netns destruction running on
+another cpu.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191206165542.31469-4-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The exiting network namespace calls the relevant destructors in the
+following order:
+
+1. ctnetlink_net_exit_batch
+
+This nulls out the event callback pointer in struct netns.
+
+2. nfnetlink_net_exit_batch
+
+This nulls net->nfnl socket and frees it.
+
+3. nf_conntrack_cleanup_net_list
+
+This removes all remaining conntrack entries.
+
+This is order is correct. The only explanation for the crash so ar is:
+
+cpu1: conntrack is dying, eviction occurs:
+ -> nf_ct_delete()
+   -> nf_conntrack_event_report \
+     -> nf_conntrack_eventmask_report
+       -> notify->fcn() (== ctnetlink_conntrack_events).
+
+cpu1: a. fetches rcu protected pointer to obtain ctnetlink event callback.
+      b. gets interrupted.
+ cpu2: runs netns exit handlers:
+     a runs ctnetlink destructor, event cb pointer set to NULL.
+     b runs nfnetlink destructor, nfnl socket is closed and set to NULL.
+cpu1: c. resumes and trips over NULL net->nfnl.
+
+Problem appears to be that ctnetlink_net_exit_batch only prevents future
+callers of nf_conntrack_eventmask_report() from obtaining the callback.
+It doesn't wait of other cpus that might have already obtained the
+callbacks address.
+
+I don't see anything in upstream kernels that would prevent similar
+crash: We need to wait for all cpus to have exited the event callback.
+
+Fixes: 9592a5c01e79dbc59eb56fa ("netfilter: ctnetlink: netns support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/gop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index 16ed61c023e8..81ffda5d1e48 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -200,7 +200,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index deea281ab169..5e28702c801f 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -3388,6 +3388,9 @@ static void __net_exit ctnetlink_net_exit_batch(struct list_head *net_exit_list)
  
- 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
- 
--	return status;
-+	return EFI_SUCCESS;
+ 	list_for_each_entry(net, net_exit_list, exit_list)
+ 		ctnetlink_net_exit(net);
++
++	/* wait for other cpus until they are done with ctnl_notifiers */
++	synchronize_rcu();
  }
  
- static efi_status_t
-@@ -318,7 +318,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
- 
- 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
- 
--	return status;
-+	return EFI_SUCCESS;
- }
- 
- /*
+ static struct pernet_operations ctnetlink_net_ops = {
 -- 
 2.20.1
 
