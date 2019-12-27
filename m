@@ -2,80 +2,156 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0353C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16228C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B50720882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA37D20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfL0Kip (ORCPT
+        id S1726927AbfL0Kko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 05:38:45 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:60258 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbfL0Kip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 05:38:45 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ikn0s-0007O6-GV; Fri, 27 Dec 2019 18:38:34 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ikn0o-0005nC-B6; Fri, 27 Dec 2019 18:38:30 +0800
-Date:   Fri, 27 Dec 2019 18:38:30 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH V3 1/3] crypto: caam: Add support for i.MX8M Mini
-Message-ID: <20191227103830.savjawvuzjolpfuj@gondor.apana.org.au>
-References: <20191218130616.13860-1-aford173@gmail.com>
+        Fri, 27 Dec 2019 05:40:44 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62862 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfL0Kkn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 05:40:43 -0500
+Received: from 79.184.255.87.ipv4.supernova.orange.pl (79.184.255.87) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 17a46f8e8f570a8f; Fri, 27 Dec 2019 11:40:40 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH] cpuidle: Drop unused cpuidle_driver_ref/unref() functions
+Date:   Fri, 27 Dec 2019 11:40:40 +0100
+Message-ID: <2529185.mvXUDI8C0e@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191218130616.13860-1-aford173@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 07:06:14AM -0600, Adam Ford wrote:
-> The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
-> the driver is restricting the check to just the i.MX8MQ.
-> 
-> This patch expands the check for either i.MX8MQ or i.MX8MM.
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> Tested-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
-> V3:  No Change
-> V2:  Expand the check that forces the setting on imx8mq to also be true for imx8mm
->      Explictly state imx8mm compatiblity instead of making it generic to all imx8m*
->       this is mostly due to lack of other hardware to test
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The cpuidle_driver_ref() and cpuidle_driver_unref() functions are not
+used and the refcnt field in struct cpuidle_driver operated by them
+is not updated anywhere else (so it is permanently equal to 0), so
+drop both of them along with refcnt.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpuidle/driver.c |   46 ----------------------------------------------
+ include/linux/cpuidle.h  |    5 -----
+ 2 files changed, 51 deletions(-)
+
+Index: linux-pm/drivers/cpuidle/driver.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/driver.c
++++ linux-pm/drivers/cpuidle/driver.c
+@@ -155,8 +155,6 @@ static void __cpuidle_driver_init(struct
+ {
+ 	int i;
+ 
+-	drv->refcnt = 0;
+-
+ 	/*
+ 	 * Use all possible CPUs as the default, because if the kernel boots
+ 	 * with some CPUs offline and then we online one of them, the CPU
+@@ -240,9 +238,6 @@ static int __cpuidle_register_driver(str
+  */
+ static void __cpuidle_unregister_driver(struct cpuidle_driver *drv)
+ {
+-	if (WARN_ON(drv->refcnt > 0))
+-		return;
+-
+ 	if (drv->bctimer) {
+ 		drv->bctimer = 0;
+ 		on_each_cpu_mask(drv->cpumask, cpuidle_setup_broadcast_timer,
+@@ -350,47 +345,6 @@ struct cpuidle_driver *cpuidle_get_cpu_d
+ EXPORT_SYMBOL_GPL(cpuidle_get_cpu_driver);
+ 
+ /**
+- * cpuidle_driver_ref - get a reference to the driver.
+- *
+- * Increment the reference counter of the cpuidle driver associated with
+- * the current CPU.
+- *
+- * Returns a pointer to the driver, or NULL if the current CPU has no driver.
+- */
+-struct cpuidle_driver *cpuidle_driver_ref(void)
+-{
+-	struct cpuidle_driver *drv;
+-
+-	spin_lock(&cpuidle_driver_lock);
+-
+-	drv = cpuidle_get_driver();
+-	if (drv)
+-		drv->refcnt++;
+-
+-	spin_unlock(&cpuidle_driver_lock);
+-	return drv;
+-}
+-
+-/**
+- * cpuidle_driver_unref - puts down the refcount for the driver
+- *
+- * Decrement the reference counter of the cpuidle driver associated with
+- * the current CPU.
+- */
+-void cpuidle_driver_unref(void)
+-{
+-	struct cpuidle_driver *drv;
+-
+-	spin_lock(&cpuidle_driver_lock);
+-
+-	drv = cpuidle_get_driver();
+-	if (drv && !WARN_ON(drv->refcnt <= 0))
+-		drv->refcnt--;
+-
+-	spin_unlock(&cpuidle_driver_lock);
+-}
+-
+-/**
+  * cpuidle_driver_state_disabled - Disable or enable an idle state
+  * @drv: cpuidle driver owning the state
+  * @idx: State index
+Index: linux-pm/include/linux/cpuidle.h
+===================================================================
+--- linux-pm.orig/include/linux/cpuidle.h
++++ linux-pm/include/linux/cpuidle.h
+@@ -116,7 +116,6 @@ DECLARE_PER_CPU(struct cpuidle_device, c
+ struct cpuidle_driver {
+ 	const char		*name;
+ 	struct module 		*owner;
+-	int                     refcnt;
+ 
+         /* used by the cpuidle framework to setup the broadcast timer */
+ 	unsigned int            bctimer:1;
+@@ -148,8 +147,6 @@ extern u64 cpuidle_poll_time(struct cpui
+ 
+ extern int cpuidle_register_driver(struct cpuidle_driver *drv);
+ extern struct cpuidle_driver *cpuidle_get_driver(void);
+-extern struct cpuidle_driver *cpuidle_driver_ref(void);
+-extern void cpuidle_driver_unref(void);
+ extern void cpuidle_driver_state_disabled(struct cpuidle_driver *drv, int idx,
+ 					bool disable);
+ extern void cpuidle_unregister_driver(struct cpuidle_driver *drv);
+@@ -187,8 +184,6 @@ static inline u64 cpuidle_poll_time(stru
+ static inline int cpuidle_register_driver(struct cpuidle_driver *drv)
+ {return -ENODEV; }
+ static inline struct cpuidle_driver *cpuidle_get_driver(void) {return NULL; }
+-static inline struct cpuidle_driver *cpuidle_driver_ref(void) {return NULL; }
+-static inline void cpuidle_driver_unref(void) {}
+ static inline void cpuidle_driver_state_disabled(struct cpuidle_driver *drv,
+ 					       int idx, bool disable) { }
+ static inline void cpuidle_unregister_driver(struct cpuidle_driver *drv) { }
+
+
+
