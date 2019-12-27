@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF4EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D63C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7A7206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5296B20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469158;
-	bh=COBC09XpNymQw6b0tBfDvAq6aOaIfPtQHpnj8ZBaIzA=;
+	s=default; t=1577469162;
+	bh=f3gR39sLaLTGQDkCZwgsZ/tN21puVRuwxWc555VPQDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qLfcO1SR4y5m05ldOM6C+EFM9BYkf6t6uzLD+vzIR1T0nbWoulh6pOLbmmwKyZReT
-	 ng5yRycvyBTHR6BD/ZgWG0o+O8MgVnjOMjiZqwTdYsfsqdNI2qA2+huF7mC0WmtPCU
-	 m/sCJ5zwjU5YMwrtOF4PAOjfk8HieZzrsxQ7hl7A=
+	b=Fvo0k3y9/uuAMx5876QdBULB16xUZDio86OxQIECpu2qDvag3qzJgNNKG41S/vxNj
+	 QK6cI19mNXG5Y/ub62yHEV6XwqOhLEwkWulGuRbOGr52MCmL6KYA/dt7scJ7oSL8L3
+	 oq9zkFiAUHgEM0zojR61hvVSjnu61bvAleyG8gKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfL0RnG (ORCPT
+        id S1727872AbfL0Rwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:52:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbfL0RnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:04 -0500
+        id S1728033AbfL0RnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FCC2465A;
-        Fri, 27 Dec 2019 17:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE35D20CC7;
+        Fri, 27 Dec 2019 17:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468583;
-        bh=COBC09XpNymQw6b0tBfDvAq6aOaIfPtQHpnj8ZBaIzA=;
+        s=default; t=1577468584;
+        bh=f3gR39sLaLTGQDkCZwgsZ/tN21puVRuwxWc555VPQDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gs6KXk0XfZ3l/d+jPQp/OWPIjHKYHxlS1gCT2qon0RveVqkO0Ij0TI64gFqxHMbgb
-         ubEgvDgprZMY6e0OA/YnL0VhhZn9FzT2TA3iSIPfLqjSAFiDKbegaNbskYtwWm2cpH
-         mrT9GYl+a/E7L5q3l1Muk6DKtYTSaSUS4v+GvngE=
+        b=Axaf4ipGU++Ua5fj37MjQGSt3NuTbSj/aR3SCH8n8feSlpwpbRV7BgWpbENcf5a1L
+         pjH2FssSujzsd+NZzE2LYzSK/R+7g5RZnkUGqr12UMaEop4z/ZnDZ21Kea/pVeGesY
+         o/7L5mswj2LU1SV/ZP3wSuQVeY8MQFlcbSNUYtwA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Wandun <chenwandun@huawei.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 106/187] habanalabs: remove variable 'val' set but not used
-Date:   Fri, 27 Dec 2019 12:39:34 -0500
-Message-Id: <20191227174055.4923-106-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Sven Auhagen <sven.auhagen@voleatech.de>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 107/187] net: marvell: mvpp2: phylink requires the link interrupt
+Date:   Fri, 27 Dec 2019 12:39:35 -0500
+Message-Id: <20191227174055.4923-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -59,90 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Wandun <chenwandun@huawei.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 68a1fdf2451f38b4ada0607eb6e1303f8a02e0b7 ]
+[ Upstream commit f3f2364ea14d1cf6bf966542f31eadcf178f1577 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+phylink requires the MAC to report when its link status changes when
+operating in inband modes.  Failure to report link status changes
+means that phylink has no idea when the link events happen, which
+results in either the network interface's carrier remaining up or
+remaining permanently down.
 
-drivers/misc/habanalabs/goya/goya.c: In function goya_pldm_init_cpu:
-drivers/misc/habanalabs/goya/goya.c:2195:6: warning: variable val set but not used [-Wunused-but-set-variable]
-drivers/misc/habanalabs/goya/goya.c: In function goya_hw_init:
-drivers/misc/habanalabs/goya/goya.c:2505:6: warning: variable val set but not used [-Wunused-but-set-variable]
+For example, with a fiber module, if the interface is brought up and
+link is initially established, taking the link down at the far end
+will cut the optical power.  The SFP module's LOS asserts, we
+deactivate the link, and the network interface reports no carrier.
 
-Fixes: 9494a8dd8d22 ("habanalabs: add h/w queues module")
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+When the far end is brought back up, the SFP module's LOS deasserts,
+but the MAC may be slower to establish link.  If this happens (which
+in my tests is a certainty) then phylink never hears that the MAC
+has established link with the far end, and the network interface is
+stuck reporting no carrier.  This means the interface is
+non-functional.
+
+Avoiding the link interrupt when we have phylink is basically not
+an option, so remove the !port->phylink from the test.
+
+Fixes: 4bb043262878 ("net: mvpp2: phylink support")
+Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Tested-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 6fba14b81f90..fe3574a83b7c 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2171,7 +2171,7 @@ static int goya_push_linux_to_device(struct hl_device *hdev)
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 111b3b8239e1..ef44c6979a31 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -3674,7 +3674,7 @@ static int mvpp2_open(struct net_device *dev)
+ 		valid = true;
+ 	}
  
- static int goya_pldm_init_cpu(struct hl_device *hdev)
- {
--	u32 val, unit_rst_val;
-+	u32 unit_rst_val;
- 	int rc;
- 
- 	/* Must initialize SRAM scrambler before pushing u-boot to SRAM */
-@@ -2179,14 +2179,14 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
- 
- 	/* Put ARM cores into reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL, CPU_RESET_ASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	/* Reset the CA53 MACRO */
- 	unit_rst_val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, CA53_RESET);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, unit_rst_val);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 
- 	rc = goya_push_uboot_to_device(hdev);
- 	if (rc)
-@@ -2207,7 +2207,7 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
- 	/* Release ARM core 0 from reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL,
- 					CPU_RESET_CORE0_DEASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	return 0;
- }
-@@ -2475,13 +2475,12 @@ int goya_mmu_init(struct hl_device *hdev)
- static int goya_hw_init(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	u32 val;
- 	int rc;
- 
- 	dev_info(hdev->dev, "Starting initialization of H/W\n");
- 
- 	/* Perform read from the device to make sure device is up */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	/*
- 	 * Let's mark in the H/W that we have reached this point. We check
-@@ -2533,7 +2532,7 @@ static int goya_hw_init(struct hl_device *hdev)
- 		goto disable_queues;
- 
- 	/* Perform read from the device to flush all MSI-X configuration */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	return 0;
- 
+-	if (priv->hw_version == MVPP22 && port->link_irq && !port->phylink) {
++	if (priv->hw_version == MVPP22 && port->link_irq) {
+ 		err = request_irq(port->link_irq, mvpp2_link_status_isr, 0,
+ 				  dev->name, port);
+ 		if (err) {
 -- 
 2.20.1
 
