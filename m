@@ -2,121 +2,174 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8473AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE94CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C64222D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8096320740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P03xYqEo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOlXzXld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfL0PWS (ORCPT
+        id S1726927AbfL0P0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:22:18 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44442 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0PWR (ORCPT
+        Fri, 27 Dec 2019 10:26:13 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44506 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0P0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:22:17 -0500
-Received: by mail-qk1-f195.google.com with SMTP id w127so21704129qkb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 07:22:16 -0800 (PST)
+        Fri, 27 Dec 2019 10:26:13 -0500
+Received: by mail-io1-f67.google.com with SMTP id b10so26023953iof.11;
+        Fri, 27 Dec 2019 07:26:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=q/5pToebsXwR45NBxV6wXVjuLILCBYdTY0wd0j924VQ=;
-        b=P03xYqEoVwTNgrLqvA8+7xkPAhykF47NSuY3r6yEgVup1SFamngJvcN6KE2lzUOHt6
-         bP7Bz+pqqDAWkPzohI/LLtWOM1YHwtGJzhBcp3oFXWi7LcghkLcDxUr2PvZ+vp0f/Agd
-         UngIlnKay5C2rJX+YwpGNUMi8YAx/d/LiP9MRWsz5ssHhwPM80PpENEKI3EPyBM+BRlW
-         +xcJr1RfGOimv4DgyG+xB6ehjEbEXgi2LMhtWAQTM+SlAIudN/xHkmLcZ/SiYa60QAv2
-         OhjNkJW0J2ruZkW93qXhDW6aIxSApnp9b3NFs9W3R6mRjjQOnFtE2i6SdsteSZk6rEZI
-         h1XA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DJIL0YuYUVfYInJerjR4DnOY3gJEBdFdGJr7DtfENCk=;
+        b=vOlXzXldgFwU0+9OFb7ycmcB9VbQHATiAAG/oazy3ynoeEtzCxvGd/G2cgvH+0UZRg
+         wWHNtIT63p/zqBsNQGWk8Mq5TayBoKW+2HInSi0yFFEaeUT3WvsiODbhiq8+k+ZNqOOI
+         kqVcRDOuX+EtT7Og2kRtguw9JyUDaBc4uTWNVNs//y2yv1ml5WNNZ8yZNgj5d6cJNd1Q
+         iyXodDPZnI+OPQ02Szc+9wpDNYtLGmC+2QooaE4d8HMQWQ4uW5MqLPmFYEtbENAp8t7U
+         Gk8H5rudXDkFtn3NKdBOjrPtehoCYRI9rviwEaNbNy4YgX01e2eZQKnHUKqOi4yaeDOc
+         z5qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=q/5pToebsXwR45NBxV6wXVjuLILCBYdTY0wd0j924VQ=;
-        b=oEarLfSYbZDmbt1jEXhjf4ZICM7JpjSe7nzHeRjstx9Rvk2d9ReCa0M/06MqTcYBCz
-         d5/4jwgQhiQeKnJOrFwyOiUvrXgKz2C4ZMtgqP7hCxeXbDzpKvU6BEc8EV5anx6u0YLt
-         Ix4kI6DglCVMqJnSATlKZ9IbAa9SFyTAy0ic6S2/VFie74i0D6bo9Z74fvD15QKngzsG
-         zgUFQ3t8Os7Ds4wv9b+llFuWB9KaZ/cL1N7ZsoRRZeevADhIfHTvOk83Pb7gj8NvwIc9
-         IYYIMOjkCmSLPvMoZUqBG+29l/us0JOEm/sYb/HnWjNKOVEfm4mbR2mJy8IWMzzieRI4
-         8xng==
-X-Gm-Message-State: APjAAAWzIY1x5IcPKvjRlc9nWCXZnTSe28fngIlEkb0kSwAJg0mOwf0N
-        L2IFfhTmZVcRVTnwZWWWOQmfSw==
-X-Google-Smtp-Source: APXvYqy6szxex0QEGm5xWs1fnlfx3eTZUBsk/wv3TTEwD2X5K6tXMgEbcDM+cGy9l5fQJ0gVjvHpug==
-X-Received: by 2002:a05:620a:b0f:: with SMTP id t15mr42638632qkg.135.1577460135914;
-        Fri, 27 Dec 2019 07:22:15 -0800 (PST)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id r6sm10569519qtm.63.2019.12.27.07.22.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Dec 2019 07:22:15 -0800 (PST)
-Subject: Re: [Patch v6 4/7] sched/fair: Enable periodic update of average
- thermal pressure
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <qperret@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
- <1576123908-12105-5-git-send-email-thara.gopinath@linaro.org>
- <20191216143932.GT2844@hirez.programming.kicks-ass.net>
- <20191216175901.GA157313@google.com>
- <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
-Cc:     mingo@redhat.com, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5E0621A5.5040901@linaro.org>
-Date:   Fri, 27 Dec 2019 10:22:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DJIL0YuYUVfYInJerjR4DnOY3gJEBdFdGJr7DtfENCk=;
+        b=dK4sS/VhzIo6jURLNVXUwdMdYAs/t/KkLmnsAZTwDEdwlS+ytzzsmrOP9R3+ZyLX0r
+         CnSx6BtADz0k3dEEvQ7Q30KjzHcWB6mlMSJ39oHnDOMcRUPeSDr2j8jLvxMbfwi0pOWJ
+         IFkKN7/kp52B3i2yD2LdVm6GedoaxvSXHZV00JjxW2gm+87PIuy8MjBFI04wMmJbYFXP
+         yeg7pBxSdJ1z7Mvq5sq4OsfuRPC8m0dqO8MfzLueJ4AzlOegoQGpTilz4KvjvtDmgV+D
+         hzawdqhqps/bffiJmcLDd5vKtUnyFEmQRekfHEsaAmEpzaxoJgtqcg9G3IYt/5IUgE1J
+         GAIQ==
+X-Gm-Message-State: APjAAAWgalVn7vWnM5G+XMAzW9OGmZdmgLaTLzaYjMZRKXAzOV6aUgki
+        r2Tt6ojjCk3S2f9NMT/7QxW12pSojWHBvMcMlLs=
+X-Google-Smtp-Source: APXvYqxhPQ7t0bmrcZI2M0kZqxw6arIpX2tLY8urCN6CUDvQ7wvOApfGrSooDSdqHV8U5l4R/M0Vd06J5Hk+6eLQwVE=
+X-Received: by 2002:a02:cdd9:: with SMTP id m25mr40797051jap.123.1577460372276;
+ Fri, 27 Dec 2019 07:26:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <78b0f8a6-462b-acca-7682-f5269fea17c5@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1577456898.git.chris@chrisdown.name> <533d188802d292fa9f7c9e66f26068000346d6c1.1577456898.git.chris@chrisdown.name>
+In-Reply-To: <533d188802d292fa9f7c9e66f26068000346d6c1.1577456898.git.chris@chrisdown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 27 Dec 2019 17:26:01 +0200
+Message-ID: <CAOQ4uxhaMjn2Kusv6o6mJ36RhF7PAdmgW3kncgfov5uys=6VHw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] shmem: Add support for using full width of ino_t
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/2019 07:57 AM, Dietmar Eggemann wrote:
-> On 16/12/2019 18:59, Quentin Perret wrote:
->> On Monday 16 Dec 2019 at 15:39:32 (+0100), Peter Zijlstra wrote:
->>>> @@ -10274,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->>>>  
->>>>  	update_misfit_status(curr, rq);
->>>>  	update_overutilized_status(task_rq(curr));
->>>> +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
->>>>  }
->>>
->>> My objection here is that when the arch does not have support for it,
->>> there is still code generated and runtime overhead associated with it.
->>
->> I guess this function could be stubbed for CONFIG_CPU_THERMAL=n ?
->> That is, reflecting the thermal pressure in the scheduler only makes
->> sense when the thermal infrastructure is enabled to begin with (which is
->> indeed not the case for most archs).
-> 
-> Makes sense to me. If we can agree that 'CPU cooling' is the only actor
-> for thermal (CPU capacity) capping.
-> 
-> thermal_sys-$(CONFIG_CPU_THERMAL)       += cpu_cooling.o
-> 
+On Fri, Dec 27, 2019 at 4:30 PM Chris Down <chris@chrisdown.name> wrote:
+>
+> The new inode64 option now uses get_next_ino_full, which always uses the
+> full width of ino_t (as opposed to get_next_ino, which always uses
+> unsigned int).
+>
+> Using inode64 makes inode number wraparound significantly less likely,
+> at the cost of making some features that rely on the underlying
+> filesystem not setting any of the highest 32 bits (eg. overlayfs' xino)
+> not usable.
 
-Hi All,
-Thanks for all the reviews!
+That's not an accurate statement. overlayfs xino just needs some high
+bits available. Therefore I never had any objection to having tmpfs use
+64bit ino values (from overlayfs perspective). My only objection is to
+use the same pool "irresponsibly" instead of per-sb pool for the heavy
+users.
 
-The other option will be to have a separate
-CONFIG_HAVE_SCHED_THERMAL_PRESSURE. This will ensure that we are not
-tied to cpu cooling thermal infrastructure. What say?
- There is a CONFIG_HAVE_SCHED_AVG_IRQ for irq load average in pelt.c.
+>
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Reported-by: Phyllipe Medeiros <phyllipe@fb.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kernel-team@fb.com
+> ---
+>  include/linux/shmem_fs.h |  1 +
+>  mm/shmem.c               | 41 ++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 40 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index de8e4b71e3ba..d7727d0d687f 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -35,6 +35,7 @@ struct shmem_sb_info {
+>         unsigned char huge;         /* Whether to try for hugepages */
+>         kuid_t uid;                 /* Mount uid for root directory */
+>         kgid_t gid;                 /* Mount gid for root directory */
+> +       bool small_inums;           /* i_ino width unsigned int or ino_t */
+>         struct mempolicy *mpol;     /* default memory policy for mappings */
+>         spinlock_t shrinklist_lock;   /* Protects shrinklist */
+>         struct list_head shrinklist;  /* List of shinkable inodes */
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index ff041cb15550..56cf581ec66d 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -115,11 +115,13 @@ struct shmem_options {
+>         kuid_t uid;
+>         kgid_t gid;
+>         umode_t mode;
+> +       bool small_inums;
+>         int huge;
+>         int seen;
+>  #define SHMEM_SEEN_BLOCKS 1
+>  #define SHMEM_SEEN_INODES 2
+>  #define SHMEM_SEEN_HUGE 4
+> +#define SHMEM_SEEN_INUMS 8
+>  };
+>
+>  #ifdef CONFIG_TMPFS
+> @@ -2248,8 +2250,12 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
+>         inode = new_inode(sb);
+>         if (inode) {
+>                 /* Recycle to avoid 32-bit wraparound where possible */
+> -               if (!inode->i_ino)
+> -                       inode->i_ino = get_next_ino();
+> +               if (!inode->i_ino) {
+> +                       if (sbinfo->small_inums)
+> +                               inode->i_ino = get_next_ino();
+> +                       else
+> +                               inode->i_ino = get_next_ino_full();
+> +               }
 
+Ouch! You set yourself a trap in patch #1 and stepped into it here.
+shmem driver has a single shmem_inode_cachep serving all tmpfs
+instances. You cannot use different ino allocators and recycle ino
+numbers from the same inode cache pool.
+Sorry I did not see it coming...
 
--- 
-Warm Regards
-Thara
+I'm afraid that the recycling method cannot work along side a per-sb
+ino allocator :/ (unless get_next_ino() was a truncated version of the
+same counter as get_next_ino_full()).
+
+You could still apply the recycling method if shmem inode cache was
+never tainted by any other ino allocator, but that will lead to
+unpredictable results for users and quite hard to document behavior.
+
+IOW, I don't see a decent way out besides making shmem ino
+allocator per-sb proper and always *before* adding the per-sb mount
+option inode64.
+
+And because of this, I think the global get_next_ino_full() API is
+a mistake.
+
+Thanks,
+Amir.
