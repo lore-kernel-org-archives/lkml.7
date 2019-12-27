@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DF4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0E0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EC5206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BA0206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469869;
-	bh=gIyIU93aBqwRp4LrB8fM2LEhhTHoiTkDl6m3HJi/KcE=;
+	s=default; t=1577469875;
+	bh=dQ5zkWCBtC4CazlhelINk6MdfqO/vrfYCVq/IjvD/kY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hf1bjhCWTJPqzEEjaZC41Y0tm//iRRwIfK3fazNA5LUiw4biV8viVB4BYqyeAqKZw
-	 bQviQcvnw5kWsKW0aM8YxPgvNE3iJ8MPUswwZ9Aiq8kdiWz80wBTR8KxNAh53jUd2j
-	 DhihZ3dZ57UxhzTVtXsHqMIbF03jVSsv2T9ohRJk=
+	b=tlPhZlGMWEAJRYzXyWQZeXFs6CrncVOTNfOQWRfYSgHnVUsgUdcNjdNiZd82EurgV
+	 ps1GxIxa7Vc1ogvmVRqtqegzePx3kyb6nuQDlqlYDU1p41MaDWWZ2G+UftVWqpDi9i
+	 1hJZE+dS8ZMaluMdKeDSrPEYIyAxxK0o+lOlb+z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfL0SE2 (ORCPT
+        id S1728855AbfL0SEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:04:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60586 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:04:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbfL0SDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:03:21 -0500
+        id S1728626AbfL0SDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:03:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CA8B206F4;
-        Fri, 27 Dec 2019 18:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F337C21582;
+        Fri, 27 Dec 2019 18:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469801;
-        bh=gIyIU93aBqwRp4LrB8fM2LEhhTHoiTkDl6m3HJi/KcE=;
+        s=default; t=1577469798;
+        bh=dQ5zkWCBtC4CazlhelINk6MdfqO/vrfYCVq/IjvD/kY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=seewqgq3KnL/bmKhUCBtM1HnlRE5A3tbjDYt2eFD95lL5okCUe0b5b3QbqpYMXM/4
-         TVI2GbIGgExTp2H5lRfPIp9yj09q/kt4h3TSfjtqJnfBRELeKkSMK6yg2cCqMzUitA
-         +i+4sP6hSEo3LXvUe/D8fbYn95NiylJk8W/MUNlg=
+        b=wZrpwu++MK1Xtid1RESm9XIMnxHksrJ25AeZRMXhXCZw0srIC2Je4uUkz9v6Uuihd
+         O53Hxmd++NMNE/VyXgxn3ByQx0bfEF0F0fI+pfTrJItFp+xNIMzF5ozmjchYInlIKJ
+         we+wAvrG9M8jbCl0PKHKmbT/syz5z3OR234AHxIo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 48/57] net: stmmac: RX buffer size must be 16 byte aligned
-Date:   Fri, 27 Dec 2019 13:02:13 -0500
-Message-Id: <20191227180222.7076-48-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 46/57] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
+Date:   Fri, 27 Dec 2019 13:02:11 -0500
+Message-Id: <20191227180222.7076-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -61,37 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 8d558f0294fe92e04af192e221d0d0f6a180ee7b ]
+[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
 
-We need to align the RX buffer size to at least 16 byte so that IP
-doesn't mis-behave. This is required by HW.
+The kernel may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Changes from v2:
-- Align UP and not DOWN (David)
+net/nfc/nci/uart.c, 349:
+	nci_skb_alloc in nci_uart_default_recv_buf
+net/nfc/nci/uart.c, 255:
+	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
+net/nfc/nci/uart.c, 254:
+	spin_lock in nci_uart_tty_receive
 
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
+(FUNC_PTR) means a function pointer is called.
+
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
+nci_skb_alloc().
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ net/nfc/nci/uart.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 4ef923f1094a..e89466bd432d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -51,7 +51,7 @@
- #include <linux/of_mdio.h>
- #include "dwmac1000.h"
- 
--#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
-+#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
- #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
- 
- /* Module parameters */
+diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
+index 8d104c1db628..6f5addb5225c 100644
+--- a/net/nfc/nci/uart.c
++++ b/net/nfc/nci/uart.c
+@@ -348,7 +348,7 @@ static int nci_uart_default_recv_buf(struct nci_uart *nu, const u8 *data,
+ 			nu->rx_packet_len = -1;
+ 			nu->rx_skb = nci_skb_alloc(nu->ndev,
+ 						   NCI_MAX_PACKET_SIZE,
+-						   GFP_KERNEL);
++						   GFP_ATOMIC);
+ 			if (!nu->rx_skb)
+ 				return -ENOMEM;
+ 		}
 -- 
 2.20.1
 
