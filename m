@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99E9C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB9AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB0D206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE16120CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469415;
-	bh=GmOtnR2Eu61QLEuSN3v9F9H3Vw8HY9Qr0TfA7waih40=;
+	s=default; t=1577469420;
+	bh=7rwKNQPuyOvNkbJa8xITK69Gi8xyKc1iP/xJ7pOhLxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yuyq8rx22rNQxb0HAhR82qmzMbFqMXTrE9EDvdGfOdisOhYyPOG1bhS2QdaWQv8lO
-	 0z96c/TyoIdZd3a4AgBWCS+cSyxQBqq5eZNGEutnxZ/ohMMg65jUFeE8pL11FKq+ou
-	 iXUjmV9pTmU+9XPX9xboru1A+Z8gFopILJzZT1ds=
+	b=H2OX3wpXNBVodxaK8z3IVF5D/Fpy9lpbYvF/fJwEwfGFb9Z7g8Qjymb/OpjkYuSuA
+	 t9e+SXa724+X2rcU27kkfuslsMTEpGOFXOmQpD9yDcIlD4vlx7E7OMh9mhZE/vIIP2
+	 ZFZpw65XytNLwI7WAV2peG5mxPodIPTj2tRJ/nD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbfL0Rly (ORCPT
+        id S1727940AbfL0R46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38240 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbfL0Rlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:47 -0500
+        id S1727636AbfL0Rly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9EA2173E;
-        Fri, 27 Dec 2019 17:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29FFC218AC;
+        Fri, 27 Dec 2019 17:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468507;
-        bh=GmOtnR2Eu61QLEuSN3v9F9H3Vw8HY9Qr0TfA7waih40=;
+        s=default; t=1577468513;
+        bh=7rwKNQPuyOvNkbJa8xITK69Gi8xyKc1iP/xJ7pOhLxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR8G4ot0B1AVQctA4kF2Kbnuxi50B8uNSELE/WBitEq6O3cVYy0wf6egtRAfGvjp3
-         k1HPsVlc4Gs8qjXR8kF8sOTV8L9BNzR5JqDilu9XSgwiJwOGkIVQ4vpxaXxEsJy4CH
-         CYfbaEv79MjKcqUJ76JWe9CB22159W6xViJS1VjA=
+        b=fNpZHnPvsjr15yMJTvIgUhdmdQzuSxYdZUd11EJnwPdn+3ez2jBy/DA932wjqHBwP
+         pn5Iqs79iuu+RsLVdONijMfQDt5fZ7hAR8jtP/hsLVUK7MnclSmIolbXT48AqUGIHt
+         DjXDujJThfbuKlel75RnJRc5854agj66S4I6JIP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 040/187] selftests/ftrace: Fix to check the existence of set_ftrace_filter
-Date:   Fri, 27 Dec 2019 12:38:28 -0500
-Message-Id: <20191227174055.4923-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 046/187] selftests: safesetid: Fix Makefile to set correct test program
+Date:   Fri, 27 Dec 2019 12:38:34 -0500
+Message-Id: <20191227174055.4923-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -63,45 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit fd1baf6ca2ea3550ea47f2bb0bdcf34ec764a779 ]
+[ Upstream commit 8ef1ec0ca32c6f8a87f5b4c24b1db26da67c5609 ]
 
-If we run ftracetest on the kernel with CONFIG_DYNAMIC_FTRACE=n,
-there is no set_ftrace_filter and all test cases are failed, because
-reset_ftrace_filter() returns an error.
-Let's check whether set_ftrace_filter exists in reset_ftrace_filter()
-and clean up only set_ftrace_notrace in initialize_ftrace().
+Fix Makefile to set safesetid-test.sh to TEST_PROGS instead
+of non existing run_tests.sh.
 
+Without this fix, I got following error.
+  ----
+  TAP version 13
+  1..1
+  # selftests: safesetid: run_tests.sh
+  # Warning: file run_tests.sh is missing!
+  not ok 1 selftests: safesetid: run_tests.sh
+  ----
+
+Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ftrace/test.d/functions | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/safesetid/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 86986c4bba54..5d4550591ff9 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -46,6 +46,9 @@ reset_events_filter() { # reset all current setting filters
- }
+diff --git a/tools/testing/selftests/safesetid/Makefile b/tools/testing/selftests/safesetid/Makefile
+index cac42cd36a1b..fa02c4d5ec13 100644
+--- a/tools/testing/selftests/safesetid/Makefile
++++ b/tools/testing/selftests/safesetid/Makefile
+@@ -3,7 +3,7 @@
+ CFLAGS = -Wall -O2
+ LDLIBS = -lcap
  
- reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
-+    if [ ! -f set_ftrace_filter ]; then
-+      return 0
-+    fi
-     echo > set_ftrace_filter
-     grep -v '^#' set_ftrace_filter | while read t; do
- 	tr=`echo $t | cut -d: -f2`
-@@ -93,7 +96,7 @@ initialize_ftrace() { # Reset ftrace to initial-state
-     disable_events
-     [ -f set_event_pid ] && echo > set_event_pid
-     [ -f set_ftrace_pid ] && echo > set_ftrace_pid
--    [ -f set_ftrace_filter ] && echo | tee set_ftrace_*
-+    [ -f set_ftrace_notrace ] && echo > set_ftrace_notrace
-     [ -f set_graph_function ] && echo | tee set_graph_*
-     [ -f stack_trace_filter ] && echo > stack_trace_filter
-     [ -f kprobe_events ] && echo > kprobe_events
+-TEST_PROGS := run_tests.sh
++TEST_PROGS := safesetid-test.sh
+ TEST_GEN_FILES := safesetid-test
+ 
+ include ../lib.mk
 -- 
 2.20.1
 
