@@ -2,185 +2,105 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C37C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D1FC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7033E208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577415409;
-	bh=0YahA+kvULGCzgYTT42hVi0RhV0OrR9aY60pCf42HFs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=I51R8OGX/gNdMJz5JlMYTEhFSXgqjuSW1PbB68Dk8JfLCNv/7GATX2HTRzjmCkqvv
-	 gF8ZGY0tdOHu1TlvvF3ec15pWkm+PKH2A5IodJ6poAZ84/NRJjanAcs5XS985LAH39
-	 sUk24Uyl6MV1g7TryCj61YTJpKMXl0NBP/MPiimc=
+	by mail.kernel.org (Postfix) with ESMTP id 886252080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfL0C4r (ORCPT
+        id S1727198AbfL0C6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:56:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52852 "EHLO mail.kernel.org"
+        Thu, 26 Dec 2019 21:58:06 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:51286 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726115AbfL0C4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:56:47 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0627E2080D;
-        Fri, 27 Dec 2019 02:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577415406;
-        bh=0YahA+kvULGCzgYTT42hVi0RhV0OrR9aY60pCf42HFs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sSeru6vWGtL9u3Fpf4KCIntPCRYwJCs1WtLdg2U6hnAIsq7JAL+R3jxHlMRDKmVF9
-         Z7eN83Ar28MkrbRRvYBbjorunwCzgwxtb7IFCR5ysSpPmUiko2ovtE5ULv/JkhrjkG
-         +k1pqaNG0Fs23lKT4ED8wuVeLQr+QfwwP5raKSCc=
-Date:   Fri, 27 Dec 2019 11:56:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Steven Rostedt <rostedt@goodmis.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 21/22] tracing/boot: Add function tracer filter
- options
-Message-Id: <20191227115639.d6c33d51d2b10f33dbd05796@kernel.org>
-In-Reply-To: <201912270227.Dwa2YddH%lkp@intel.com>
-References: <157736928302.11126.8760178688093051786.stgit@devnote2>
-        <201912270227.Dwa2YddH%lkp@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726115AbfL0C6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:58:06 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ikfow-0002uK-HV; Fri, 27 Dec 2019 10:57:46 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ikfor-0003Np-HV; Fri, 27 Dec 2019 10:57:41 +0800
+Date:   Fri, 27 Dec 2019 10:57:41 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     atul.gupta@chelsio.com, davem@davemloft.net, tglx@linutronix.de,
+        allison@lohutok.net, arjun@chelsio.com,
+        kstewart@linuxfoundation.org, edumazet@google.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: chelsio: chtls: fix possible
+ sleep-in-atomic-context bugs in abort_syn_rcv()
+Message-ID: <20191227025741.lg3iudfo2lktrqvj@gondor.apana.org.au>
+References: <20191218033422.18672-1-baijiaju1990@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218033422.18672-1-baijiaju1990@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Oops, the ftrace_set_filter/notrace_filter depend on CONFIG_DYNAMIC_FTRACE, not CONFIG_FUNCTION_TRACER
-
-Thanks, I'll fix it.
-
-On Fri, 27 Dec 2019 02:05:11 +0800
-kbuild test robot <lkp@intel.com> wrote:
-
-> Hi Masami,
+On Wed, Dec 18, 2019 at 11:34:22AM +0800, Jia-Ju Bai wrote:
+> The driver may sleep while holding a spinlock.
+> The function call path (from bottom to top) in Linux 4.19 is:
 > 
-> I love your patch! Yet something to improve:
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1806: 
+> 	alloc_skb(GFP_KERNEL) in send_abort_rpl
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1925: 
+> 	send_abort_rpl in abort_syn_rcv
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1920: 
+> 	spin_lock in abort_syn_rcv
 > 
-> [auto build test ERROR on trace/for-next]
-> [also build test ERROR on lwn/docs-next linus/master v5.5-rc3]
-> [cannot apply to tip/perf/core next-20191220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1787: 
+> 	alloc_skb(GFP_KERNEL) in send_defer_abort_rpl
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1811: 
+> 	send_defer_abort_rpl in send_abort_rpl
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1925: 
+>     send_abort_rpl in abort_syn_rcv
+> drivers/crypto/chelsio/chtls/chtls_cm.c, 1920: 
+>     spin_lock in abort_syn_rcv
 > 
-> url:    https://github.com/0day-ci/linux/commits/Masami-Hiramatsu/tracing-bootconfig-Boot-time-tracing-and-Extra-boot-config/20191227-002009
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git for-next
-> config: xtensa-allyesconfig (attached as .config)
-> compiler: xtensa-linux-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=xtensa 
+> alloc_skb(GFP_KERNEL) can sleep at runtime.
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+> To fix these possible bugs, GFP_KERNEL is replaced with GFP_ATOMIC.
+> Besides, in send_defer_abort_rpl(), error handling code is added to 
+> handle the failure of alloc_skb().
 > 
-> All error/warnings (new ones prefixed by >>):
+> These bugs are found by a static analysis tool STCheck written by myself.
 > 
->    In file included from kernel/trace/trace_boot.c:9:0:
-> >> include/linux/ftrace.h:719:50: error: expected identifier or '(' before '{' token
->     #define ftrace_set_filter(ops, buf, len, reset) ({ -ENODEV; })
->                                                      ^
-> >> kernel/trace/trace_boot.c:249:12: note: in expansion of macro 'ftrace_set_filter'
->     extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
->                ^~~~~~~~~~~~~~~~~
->    include/linux/ftrace.h:720:51: error: expected identifier or '(' before '{' token
->     #define ftrace_set_notrace(ops, buf, len, reset) ({ -ENODEV; })
->                                                       ^
-> >> kernel/trace/trace_boot.c:251:12: note: in expansion of macro 'ftrace_set_notrace'
->     extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
->                ^~~~~~~~~~~~~~~~~~
-> --
->    In file included from kernel//trace/trace_boot.c:9:0:
-> >> include/linux/ftrace.h:719:50: error: expected identifier or '(' before '{' token
->     #define ftrace_set_filter(ops, buf, len, reset) ({ -ENODEV; })
->                                                      ^
->    kernel//trace/trace_boot.c:249:12: note: in expansion of macro 'ftrace_set_filter'
->     extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
->                ^~~~~~~~~~~~~~~~~
->    include/linux/ftrace.h:720:51: error: expected identifier or '(' before '{' token
->     #define ftrace_set_notrace(ops, buf, len, reset) ({ -ENODEV; })
->                                                       ^
->    kernel//trace/trace_boot.c:251:12: note: in expansion of macro 'ftrace_set_notrace'
->     extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
->                ^~~~~~~~~~~~~~~~~~
-> 
-> vim +/ftrace_set_filter +249 kernel/trace/trace_boot.c
-> 
->    246	
->    247	#ifdef CONFIG_FUNCTION_TRACER
->    248	extern bool ftrace_filter_param __initdata;
->  > 249	extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
->    250				     int len, int reset);
->  > 251	extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
->    252				      int len, int reset);
->    253	static void __init
->    254	trace_boot_set_ftrace_filter(struct trace_array *tr, struct xbc_node *node)
->    255	{
->    256		struct xbc_node *anode;
->    257		const char *p;
->    258		char *q;
->    259	
->    260		xbc_node_for_each_array_value(node, "ftrace.filters", anode, p) {
->    261			q = kstrdup(p, GFP_KERNEL);
->    262			if (!q)
->    263				return;
->    264			if (ftrace_set_filter(tr->ops, q, strlen(q), 0) < 0)
->    265				pr_err("Failed to add %s to ftrace filter\n", p);
->    266			else
->    267				ftrace_filter_param = true;
->    268			kfree(q);
->    269		}
->    270		xbc_node_for_each_array_value(node, "ftrace.notraces", anode, p) {
->    271			q = kstrdup(p, GFP_KERNEL);
->    272			if (!q)
->    273				return;
->    274			if (ftrace_set_notrace(tr->ops, q, strlen(q), 0) < 0)
->    275				pr_err("Failed to add %s to ftrace filter\n", p);
->    276			else
->    277				ftrace_filter_param = true;
->    278			kfree(q);
->    279		}
->    280	}
->    281	#else
->    282	#define trace_boot_set_ftrace_filter(tr, node) do {} while (0)
->    283	#endif
->    284	
-> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 > ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+>  drivers/crypto/chelsio/chtls/chtls_cm.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/crypto/chelsio/chtls/chtls_cm.c b/drivers/crypto/chelsio/chtls/chtls_cm.c
+> index aca75237bbcf..e6e4c3ddc368 100644
+> --- a/drivers/crypto/chelsio/chtls/chtls_cm.c
+> +++ b/drivers/crypto/chelsio/chtls/chtls_cm.c
+> @@ -1805,8 +1805,11 @@ static void send_defer_abort_rpl(struct chtls_dev *cdev, struct sk_buff *skb)
+>  	struct cpl_abort_req_rss *req = cplhdr(skb);
+>  	struct sk_buff *reply_skb;
+>  
+> -	reply_skb = alloc_skb(sizeof(struct cpl_abort_rpl),
+> -			      GFP_KERNEL | __GFP_NOFAIL);
+> +	reply_skb = alloc_skb(sizeof(struct cpl_abort_rpl), GFP_ATOMIC);
+> +	if (!reply_skb) {
+> +		kfree_skb(skb);
+> +		return;
+> +	}
 
+This code now makes no sense because it's just trying the same
+kmalloc twice.  Perhaps it really needs to be deferred as its
+name suggests?
 
+Thanks,
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
