@@ -2,171 +2,169 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703F7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0769CC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3485F20882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y98TrSk5"
+	by mail.kernel.org (Postfix) with ESMTP id DD00F20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfL0GvP (ORCPT
+        id S1726550AbfL0GwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:51:15 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42698 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725936AbfL0GvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:51:14 -0500
-X-UUID: 62efe34c14b547eab5b07d6175880313-20191227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bhYU9ZH9G3H/CFlJU6OWPko4ggU1WP/IycBCw41lHR0=;
-        b=Y98TrSk5oPq0m5fK3gKSvwp4/4qFqusZp7DejO0nolDJrUpRMPsaz6eRpb7ngq2+ZPytrzoNaE3YOn5HezK4EoWx52SGIK4NF3hWaIRZK3quhRbAA+l0S2ZrWzEESYeGsTD1J20997IA6/0PwiT/7HsYMd194qgttd+Nd0hXsY8=;
-X-UUID: 62efe34c14b547eab5b07d6175880313-20191227
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <roger.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 848426680; Fri, 27 Dec 2019 14:51:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Dec 2019 14:50:23 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Dec 2019 14:50:19 +0800
-Message-ID: <1577429450.10290.47.camel@mtksdaap41>
-Subject: Re: [PATCH v5 1/3] dt-bindings: soc: add mtk svs dt-bindings
-From:   Roger Lu <roger.lu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>, <yt.lee@mediatek.com>,
-        Angus Lin <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Nishanth Menon" <nm@ti.com>, <devicetree@vger.kernel.org>,
+        Fri, 27 Dec 2019 01:52:23 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2918 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbfL0GwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:52:22 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 78BE4E4F3F2AAFF53153;
+        Fri, 27 Dec 2019 14:52:16 +0800 (CST)
+Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Dec 2019 14:52:15 +0800
+Received: from [127.0.0.1] (10.173.221.248) by dggeme755-chm.china.huawei.com
+ (10.3.19.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
+ Dec 2019 14:52:15 +0800
+Subject: Re: [PATCH v2 5/6] KVM: arm64: Add interface to support VCPU
+ preempted check
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Date:   Fri, 27 Dec 2019 14:50:50 +0800
-In-Reply-To: <20190930133548.GA24574@bogus>
-References: <20190906100514.30803-1-roger.lu@mediatek.com>
-         <20190906100514.30803-2-roger.lu@mediatek.com>
-         <20190930133548.GA24574@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>, <maz@kernel.org>,
+        <james.morse@arm.com>, <linux@armlinux.org.uk>,
+        <suzuki.poulose@arm.com>, <julien.thierry.kdev@gmail.com>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <steven.price@arm.com>,
+        <daniel.lezcano@linaro.org>
+References: <20191226135833.1052-6-yezengruan@huawei.com>
+ <201912270236.nkxsDrid%lkp@intel.com>
+From:   yezengruan <yezengruan@huawei.com>
+Message-ID: <47879233-4437-4166-b61a-2d1cc8e7e44b@huawei.com>
+Date:   Fri, 27 Dec 2019 14:52:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <201912270236.nkxsDrid%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.248]
+X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVhciBSb2IsDQoNClNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4NCg0KT24gTW9uLCAyMDE5LTA5
-LTMwIGF0IDA4OjM1IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gRnJpLCBTZXAgMDYs
-IDIwMTkgYXQgMDY6MDU6MTNQTSArMDgwMCwgUm9nZXIgTHUgd3JvdGU6DQo+ID4gRG9jdW1lbnQg
-dGhlIGJpbmRpbmcgZm9yIGVuYWJsaW5nIG10ayBzdnMgb24gTWVkaWFUZWsgU29DLg0KPiA+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIEx1IDxyb2dlci5sdUBtZWRpYXRlay5jb20+DQo+ID4g
-LS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL210ay1zdnMudHh0ICAgICB8
-IDg4ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDg4IGluc2VydGlv
-bnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wb3dlci9tdGstc3ZzLnR4dA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvbXRrLXN2cy50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvbXRrLXN2cy50eHQNCj4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNmE3MTk5MmVmMTYyDQo+ID4gLS0t
-IC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlci9tdGstc3ZzLnR4dA0KPiA+IEBAIC0wLDAgKzEsODggQEANCj4gPiArKiBNZWRpYXRlayBT
-bWFydCBWb2x0YWdlIFNjYWxpbmcgKE1USyBTVlMpDQo+ID4gKw0KPiA+ICtUaGlzIGRlc2NyaWJl
-cyB0aGUgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgdGhlIE1USyBTVlMgY29udHJvbGxlciAoYmFu
-aykNCj4gPiArd2hpY2ggaGVscHMgcHJvdmlkZSB0aGUgb3B0aW1pemVkIENQVS9HUFUvQ0NJIHZv
-bHRhZ2VzLiBUaGlzIGRldmljZSBhbHNvDQo+ID4gK25lZWRzIHRoZXJtYWwgZGF0YSB0byBjYWxj
-dWxhdGUgdGhlcm1hbCBzbG9wZSBmb3IgYWNjdXJhdGVseSBjb21wZW5zYXRlDQo+ID4gK3RoZSB2
-b2x0YWdlcyB3aGVuIHRlbXBlcmF0dXJlIGNoYW5nZS4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZToNCj4gPiArICAtICJtZWRpYXRlayxtdDgxODMt
-c3ZzIiA6IEZvciBNVDgxODMgZmFtaWx5IG9mIFNvQ3MNCj4gPiArLSByZWc6IEFkZHJlc3MgcmFu
-Z2Ugb2YgdGhlIE1USyBTVlMgY29udHJvbGxlci4NCj4gPiArLSBpbnRlcnJ1cHRzOiBJUlEgZm9y
-IHRoZSBNVEsgU1ZTIGNvbnRyb2xsZXIuDQo+ID4gKy0gY2xvY2tzLCBjbG9jay1uYW1lczogQ2xv
-Y2tzIG5lZWRlZCBmb3IgdGhlIHN2cyBjb250cm9sbGVyLiByZXF1aXJlZA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIGNsb2NrcyBhcmU6DQo+ID4gKwkJICAgICAgICJtYWluX2NsayI6IE1h
-aW4gY2xvY2sgbmVlZGVkIGZvciByZWdpc3RlciBhY2Nlc3MNCj4gDQo+ICdfY2xrJyBpcyByZWR1
-bmRhbnQuDQoNCk9oIE9rYXkuIEknbGwgcmVtb3ZlIF9jbGsuIFRoYW5rcy4NCg0KPiANCj4gPiAr
-LSBudm1lbS1jZWxsczogUGhhbmRsZSB0byB0aGUgY2FsaWJyYXRpb24gZGF0YSBwcm92aWRlZCBi
-eSBhIG52bWVtIGRldmljZS4NCj4gPiArLSBudm1lbS1jZWxsLW5hbWVzOiBTaG91bGQgYmUgInN2
-cy1jYWxpYnJhdGlvbi1kYXRhIiBhbmQgImNhbGlicmF0aW9uLWRhdGEiDQo+ID4gKw0KPiA+ICtT
-dWJub2RlczoNCj4gPiArLSBzdnNfY3B1X2xpdHRsZTogU1ZTIGJhbmsgZGV2aWNlIG5vZGUgb2Yg
-bGl0dGxlIENQVQ0KPiA+ICsgIGNvbXBhdGlibGU6ICJtZWRpYXRlayxtdDgxODMtc3ZzLWNwdS1s
-aXR0bGUiDQo+ID4gKyAgb3BlcmF0aW5nLXBvaW50cy12MjogT1BQIHRhYmxlIGhvb2tlZCBieSBT
-VlMgbGl0dGxlIENQVSBiYW5rLg0KPiA+ICsJCSAgICAgICBTVlMgd2lsbCBvcHRpbXplIHRoaXMg
-T1BQIHRhYmxlIHZvbHRhZ2UgcGFydC4NCj4gPiArICB2Y3B1LWxpdHRsZS1zdXBwbHk6IFBNSUMg
-YnVjayBvZiBsaXR0bGUgQ1BVDQo+ID4gKy0gc3ZzX2NwdV9iaWc6IFNWUyBiYW5rIGRldmljZSBu
-b2RlIG9mIGJpZyBDUFUNCj4gPiArICBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ4MTgzLXN2cy1j
-cHUtYmlnIg0KPiA+ICsgIG9wZXJhdGluZy1wb2ludHMtdjI6IE9QUCB0YWJsZSBob29rZWQgYnkg
-U1ZTIGJpZyBDUFUgYmFuay4NCj4gPiArCQkgICAgICAgU1ZTIHdpbGwgb3B0aW16ZSB0aGlzIE9Q
-UCB0YWJsZSB2b2x0YWdlIHBhcnQuDQo+ID4gKyAgdmNwdS1iaWctc3VwcGx5OiBQTUlDIGJ1Y2sg
-b2YgYmlnIENQVQ0KPiA+ICstIHN2c19jY2k6IFNWUyBiYW5rIGRldmljZSBub2RlIG9mIENDSQ0K
-PiA+ICsgIGNvbXBhdGlibGU6ICJtZWRpYXRlayxtdDgxODMtc3ZzLWNjaSINCj4gPiArICBvcGVy
-YXRpbmctcG9pbnRzLXYyOiBPUFAgdGFibGUgaG9va2VkIGJ5IFNWUyBDQ0kgYmFuay4NCj4gPiAr
-CQkgICAgICAgU1ZTIHdpbGwgb3B0aW16ZSB0aGlzIE9QUCB0YWJsZSB2b2x0YWdlIHBhcnQuDQo+
-ID4gKyAgdmNjaS1zdXBwbHk6IFBNSUMgYnVjayBvZiBDQ0kNCj4gPiArLSBzdnNfZ3B1OiBTVlMg
-YmFuayBkZXZpY2Ugbm9kZSBvZiBHUFUNCj4gPiArICBjb21wYXRpYmxlOiAibWVkaWF0ZWssbXQ4
-MTgzLXN2cy1ncHUiDQo+ID4gKyAgb3BlcmF0aW5nLXBvaW50cy12MjogT1BQIHRhYmxlIGhvb2tl
-ZCBieSBTVlMgR1BVIGJhbmsuDQo+ID4gKwkJICAgICAgIFNWUyB3aWxsIG9wdGltemUgdGhpcyBP
-UFAgdGFibGUgdm9sdGFnZSBwYXJ0Lg0KPiA+ICsgIHZncHUtc3BwbHk6IFBNSUMgYnVjayBvZiBH
-UFUNCj4gPiArDQo+ID4gK0V4YW1wbGU6DQo+ID4gKw0KPiA+ICsJc3ZzOiBzdnNAMTEwMGIwMDAg
-ew0KPiA+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXN2cyI7DQo+ID4gKwkJcmVn
-ID0gPDAgMHgxMTAwYjAwMCAwIDB4MTAwMD47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJ
-IDEyNyBJUlFfVFlQRV9MRVZFTF9MT1cgMD47DQo+IA0KPiBHSUMgaW50ZXJydXB0cyBhcmUgMyBj
-ZWxscywgeW91IGhhdmUgNC4NCg0KT29wcywgSSdsbCByZW1vdmUgdGhlIGZvdXJ0aCBwYXJhbWV0
-ZXIuIFRoYW5rcyBhIGxvdC4NCg0KPiANCj4gPiArCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19J
-TkZSQV9USEVSTT47DQo+ID4gKwkJY2xvY2stbmFtZXMgPSAibWFpbl9jbGsiOw0KPiA+ICsJCW52
-bWVtLWNlbGxzID0gPCZzdnNfY2FsaWJyYXRpb24+LCA8JnRoZXJtYWxfY2FsaWJyYXRpb24+Ow0K
-PiA+ICsJCW52bWVtLWNlbGwtbmFtZXMgPSAic3ZzLWNhbGlicmF0aW9uLWRhdGEiLCAiY2FsaWJy
-YXRpb24tZGF0YSI7DQo+ID4gKw0KPiA+ICsJCXN2c19jcHVfbGl0dGxlOiBzdnNfY3B1X2xpdHRs
-ZSB7DQo+IA0KPiBEb24ndCB1c2UgJ18nIGluIG5vZGUgbmFtZXMuDQoNCk9rYXkuIEknbGwgcmVw
-bGFjZSBpdCB3aXRoICctJy4gVGhhbmtzLg0KDQo+IA0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE4My1zdnMtY3B1LWxpdHRsZSI7DQo+ID4gKwkJCW9wZXJhdGluZy1wb2ludHMt
-djIgPSA8JmNsdXN0ZXIwX29wcD47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJc3ZzX2NwdV9i
-aWc6IHN2c19jcHVfYmlnIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMt
-c3ZzLWNwdS1iaWciOw0KPiA+ICsJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZjbHVzdGVyMV9v
-cHA+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXN2c19jY2k6IHN2c19jY2kgew0KPiA+ICsJ
-CQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1zdnMtY2NpIjsNCj4gPiArCQkJb3BlcmF0
-aW5nLXBvaW50cy12MiA9IDwmY2NpX29wcD47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJc3Zz
-X2dwdTogc3ZzX2dwdSB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXN2
-cy1ncHUiOw0KPiA+ICsJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RP
-TUFJTl9NRkdfMkQ+Ow0KPiA+ICsJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3Rh
-YmxlPjsNCj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArDQo+ID4gKwkmc3ZzX2NwdV9saXR0bGUg
-ew0KPiA+ICsJCXZjcHUtbGl0dGxlLXN1cHBseSA9IDwmbXQ2MzU4X3Zwcm9jMTJfcmVnPjsNCj4g
-DQo+IEl0J3MgYWxyZWFkeSBkZWZpbmVkIHRvIGhhdmUgT1BQIGFuZCBzdXBwbHkgaW4gdGhlIGNw
-dSBub2Rlcy4gUGFyc2UgdGhlbQ0KPiB0byBnZXQgdGhpcyBpbmZvcm1hdGlvbiByYXRoZXIgdGhh
-biBkdXBsaWNhdGluZyBpdCBoZXJlLg0KPiANCj4gVGhlIHNhbWUgc2hvdWxkIGFwcGx5IHRvIHRo
-ZSBDQ0kgYW5kIEdQVS4NCg0KUGxlYXNlIGxldCBtZSBleHBsYWluIHRoZSByZWFzb24gd2h5IEkg
-YWRkIFNWUyBzdWItbm9kZXMuIEkgZXZlciB0cnkgdG8NCnBhcnNlIG90aGVyIG5vZGVzIHRvIGdl
-dCBkZXNpcmVkIHBvd2VyLWRvbWFpbnMvT1BQIHRhYmxlLiBIb3dldmVyLCBpdA0KbWFrZXMgU1ZT
-IGRyaXZlciBoYXJkZXIgdG8gZGV2ZWxvcCBhbmQgbWFpbnRhaW4uDQoNCjEuIFdoZW4gYSBTVlMt
-Y29udHJvbGxlci1pbml0IHdhbnRzIEdQVV9DT1JFMCdzIE9QUCB0YWJsZSBpbiBvbmUgbm9kZQ0K
-YnV0IGl0IG5lZWRzIHBvd2VyLWRvbWFpbnMoR1BVX01GR18yRCkgaW4gYW5vdGhlciBub2RlLCBp
-dCBiZWNvbWVzDQpjb21wbGljYXRlZCBhbmQgY29uZnVzaW5nIHdoZW4gU1ZTIHN1Yi1ub2RlIHRy
-aWVzIHRvIHBhcnNlIG1hbnkgbm9kZXMuDQpUaGVyZWZvcmUsIHdlIHdhbnQgU1ZTIHN1Yi1ub2Rl
-IHRvIGZvY3VzIG9uIHdoYXQgU1ZTIGJhbmsgcmVxdWlyZXMgYnkNCmhvdyB3ZSBkbyBpbiB0aGlz
-IHBhdGNoLg0KDQoyLiBJbiBoYXJkd2FyZSBwb2ludCBvZiB2aWV3LCBTVlMgY29udHJvbGxlciBk
-ZXBlbmRzIG9uIG90aGVyIGhhcmR3YXJlJ3MNCnBvd2VyIG9ubHkuIEFsbCB0aGUgU1ZTIGNvbnRy
-b2xsZXIgcmVnaXN0ZXJzIGFyZSBpbiBTVlMgaGFyZHdhcmUuIFNvLCB3ZQ0KdGhpbmsgSXQncyBn
-b29kIHRoYXQgU1ZTIHN1Yi1ub2RlIGRlc2NyaWJlcyB3aGF0IFNWUyBjb250cm9sbGVyIHJlcXVp
-cmVzDQppbnN0ZWFkIG9mIGxpbmtpbmcgb3RoZXIgc3Vic3lzIG5vZGVzIGFuZCBwYXJzZSB0aGUg
-cHJvcGVydHkgdGhhdCBTVlMNCmNvbnRyb2xsZXIgbmVlZHMuDQoNCjMuIFdlIHdhbnQgU1ZTIGRy
-aXZlciB0byBoYXZlIGEgZ2VuZXJpYyB3YXkgdG8gYXR0YWluIHN1YnN5cyBkZXZpY2UgZm9yDQp1
-c2luZyAicG1fcnVudGltZSBhbmQgT1BQIGZyYW1ld29yayIgQVBJLiBJZiBTVlMgZHJpdmVyIHRy
-aWVzIHRvIHBhcnNlDQpDUFUobGl0dGxlL2JpZyBjb3JlKSBhbmQgb3RoZXIgc3Vic3lzIGRldmlj
-ZSBub2RlKGUuZyBjY2kvZ3B1KSwgaXQgbWVhbnMNClNWUyBkcml2ZXIgaGFzIHRvIG1haW50YWlu
-IGRpZmZlcmVudCBtZXRob2RvbG9naWVzKGNwdS1zcGVjaWZpYz8NCmRldmZyZXE/IG90aGVycz8p
-IGluIG9yZGVyIHRvIGdldCBDUFUobGl0dGxlL2JpZyBjb3JlKSBhbmQgb3RoZXIgc3Vic3lzDQpk
-ZXZpY2UoZS5nIGNjaS9ncHUpIGZvciB1c2luZyAicG1fcnVudGltZSBhbmQgT1BQIGZyYW1ld29y
-ayIgQVBJLg0KDQo+IA0KPiBSb2INCg0KU2luY2VyZWx5LA0KUm9nZXIgTHUuDQo=
+Hi,
+
+On 2019/12/27 2:51, kbuild test robot wrote:
+> Hi Zengruan,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on kvmarm/next]
+> [also build test ERROR on kvm/linux-next linus/master v5.5-rc3 next-20191220]
+> [cannot apply to arm64/for-next/core]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Zengruan-Ye/KVM-arm64-VCPU-preempted-check-support/20191227-000637
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git next
+> config: arm64-alldefconfig (attached as .config)
+> compiler: aarch64-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=arm64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/spinlock.h:89:0,
+>                     from include/linux/radix-tree.h:16,
+>                     from include/linux/idr.h:15,
+>                     from include/linux/kernfs.h:13,
+>                     from include/linux/sysfs.h:16,
+>                     from include/linux/kobject.h:20,
+>                     from include/linux/of.h:17,
+>                     from include/linux/irqdomain.h:35,
+>                     from include/linux/acpi.h:13,
+>                     from include/acpi/apei.h:9,
+>                     from include/acpi/ghes.h:5,
+>                     from include/linux/arm_sdei.h:8,
+>                     from arch/arm64/kernel/asm-offsets.c:10:
+>    arch/arm64/include/asm/spinlock.h: In function 'vcpu_is_preempted':
+>>> arch/arm64/include/asm/spinlock.h:18:9: error: implicit declaration of function 'pv_vcpu_is_preempted'; did you mean 'vcpu_is_preempted'? [-Werror=implicit-function-declaration]
+>      return pv_vcpu_is_preempted(cpu);
+>             ^~~~~~~~~~~~~~~~~~~~
+>             vcpu_is_preempted
+>    cc1: some warnings being treated as errors
+>    make[2]: *** [arch/arm64/kernel/asm-offsets.s] Error 1
+>    make[2]: Target '__build' not remade because of errors.
+>    make[1]: *** [prepare0] Error 2
+>    make[1]: Target 'prepare' not remade because of errors.
+>    make: *** [sub-make] Error 2
+>    27 real  5 user  7 sys  48.63% cpu 	make prepare
+> 
+> vim +18 arch/arm64/include/asm/spinlock.h
+> 
+>     14	
+>     15	#define vcpu_is_preempted vcpu_is_preempted
+>     16	static inline bool vcpu_is_preempted(long cpu)
+>     17	{
+>   > 18		return pv_vcpu_is_preempted(cpu);
+>     19	}
+>     20	
+> 
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> 
+
+Thanks for posting this, I'll update the code to fix this issue.
+
+Thanks,
+
+Zengruan
+
+
+---
+ arch/arm64/include/asm/spinlock.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/include/asm/spinlock.h b/arch/arm64/include/asm/spinlock.h
+index 45ff1b2949a6..b5d1982414c5 100644
+--- a/arch/arm64/include/asm/spinlock.h
++++ b/arch/arm64/include/asm/spinlock.h
+@@ -12,10 +12,12 @@
+ /* See include/linux/spinlock.h */
+ #define smp_mb__after_spinlock()	smp_mb()
+
++#ifdef CONFIG_PARAVIRT
+ #define vcpu_is_preempted vcpu_is_preempted
+ static inline bool vcpu_is_preempted(long cpu)
+ {
+ 	return pv_vcpu_is_preempted(cpu);
+ }
++#endif // CONFIG_PARAVIRT
+
+ #endif /* __ASM_SPINLOCK_H */
+-- 
+2.19.1
+
+
+
 
