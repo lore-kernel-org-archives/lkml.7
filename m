@@ -2,196 +2,103 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AD3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E28FC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2774208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D963120CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:05:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c5xeiJNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfL0MAL (ORCPT
+        id S1727002AbfL0MFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:00:11 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43678 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfL0MAK (ORCPT
+        Fri, 27 Dec 2019 07:05:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40734 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726354AbfL0MFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:00:10 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6A14E28A693;
-        Fri, 27 Dec 2019 12:00:07 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 13:00:04 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Inki Dae <inki.dae@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/bridge: Fix Exynos DSI after making bridge chain a
- double-linked list
-Message-ID: <20191227130004.69d7dcad@collabora.com>
-In-Reply-To: <20191227110135.4961-1-m.szyprowski@samsung.com>
-References: <CGME20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d@eucas1p1.samsung.com>
-        <20191227110135.4961-1-m.szyprowski@samsung.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 27 Dec 2019 07:05:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577448341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q5XXULvPBCdPqhDyApB0SLhznAFY7NUhBbt1TjCPMF0=;
+        b=c5xeiJNIk2Xt1eNmXEZdOfEsrqPacHEpe1Vu6kIdLv3tb3QhaCwXi24YGCK8tYbkae6yF5
+        Z/0IWjD8g+APBNo2ukKakPERPHeeWVKrxY+cp7iANHexydspF2XOlUcEW/7gQw4PnFqJYI
+        6vEbxL3OroMAwY7CIjPyeGFqxDoW2sw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-RK0DHe2VOkKagDPiSD7irA-1; Fri, 27 Dec 2019 07:05:40 -0500
+X-MC-Unique: RK0DHe2VOkKagDPiSD7irA-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so8369420wrr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 04:05:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q5XXULvPBCdPqhDyApB0SLhznAFY7NUhBbt1TjCPMF0=;
+        b=RiO5MzH8KT3/KJuBhk24qNwBkD9FcBxu7G0hTblPlc5Ocf6lFsCGnYkpkpdv+dCCAK
+         9QQ+xk7hCB9mi5+Wny178MT1bCngqT/D1I1jcVVOcRtxkhLiLnNbSEM/dHt/mXIdpWRs
+         8O9BDE0K5xZyftTFEAMi3qJB9a3HG0PoQZMvY3bpl03E6qJ5hSPUn6vhLoWQDB8iXeiW
+         s3okbJpXdaAs2BvlLZWECONMfVCoqsMVi4fXd2qthX9mWxoNl+yFJ7n+KiwZJ4JnFkIR
+         /mftkn4TQYuXXzX9G7XqQmPr4Y5o/nqEPZB9Q9nPpsns4qrLFp97h1CWWkufuOHUH6un
+         ywuQ==
+X-Gm-Message-State: APjAAAXTHvg3bXw2LhKqIeeSK19vcmlYPTw3dIRNa9LcBYy0XY6Ixpqg
+        Z+D5+6G9qu5+38DdybJUzInAhpt/pSGETDASIKGsKC2uWacqf5QoIu1hSQIYUna4IyEx5gZQThP
+        sVv9GYDWboyr8sj/OZIrJHWzk
+X-Received: by 2002:adf:f850:: with SMTP id d16mr51411904wrq.161.1577448339561;
+        Fri, 27 Dec 2019 04:05:39 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxIUH/iXdbActUcnfV2oV6Gg5J5xnzokN2jSRLSiWh+2/KOUFQxi7yrQhQWMqgwNXmx/uukAw==
+X-Received: by 2002:adf:f850:: with SMTP id d16mr51411867wrq.161.1577448339208;
+        Fri, 27 Dec 2019 04:05:39 -0800 (PST)
+Received: from linux-2.home (2a01cb058918ce00dd1a5a4f9908f2d5.ipv6.abo.wanadoo.fr. [2a01:cb05:8918:ce00:dd1a:5a4f:9908:f2d5])
+        by smtp.gmail.com with ESMTPSA id k13sm33967659wrx.59.2019.12.27.04.05.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2019 04:05:38 -0800 (PST)
+Date:   Fri, 27 Dec 2019 13:05:36 +0100
+From:   Guillaume Nault <gnault@redhat.com>
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     paulus@samba.org, davem@davemloft.net, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ppp: Remove redundant BUG_ON() check in ppp_pernet
+Message-ID: <20191227120536.GA32264@linux-2.home>
+References: <1577243224-1923-1-git-send-email-vulab@iscas.ac.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577243224-1923-1-git-send-email-vulab@iscas.ac.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019 12:01:35 +0100
-Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-
-> Exynos DSI DRM driver uses private calls to out bridge to force certain
-> order of operations during init/exit sequences. This no longer works after
-> conversion of bridge chain to a double-linked list. To fix the regression
-> call bridge related operations manually instead of the generic
-> drm_bridge_chain_*() operations.
-
-I think it'd be worth explaining what the problem is (infinite loop
-caused by list_for_each_entry() use when the bridge is no longer part
-of the chain attached to the encoder).
-
+On Wed, Dec 25, 2019 at 03:07:04AM +0000, Xu Wang wrote:
+> Passing NULL to ppp_pernet causes a crash via BUG_ON.
+> Dereferencing net in net_generic() also has the same effect.
+> This patch removes the redundant BUG_ON check on the same parameter.
 > 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Fixes: 05193dc38197 ("drm/bridge: Make the bridge chain a double-linked list")
-
-We also need to fix that in VC4.
-
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 > ---
-> This patch is a result of the following discussion:
-> https://www.spinics.net/lists/dri-devel/msg239256.html
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+>  drivers/net/ppp/ppp_generic.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 3955f84dc893..f5905c239a86 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -255,7 +255,6 @@ struct exynos_dsi {
->  	struct mipi_dsi_host dsi_host;
->  	struct drm_connector connector;
->  	struct drm_panel *panel;
-> -	struct list_head bridge_chain;
->  	struct drm_bridge *out_bridge;
->  	struct device *dev;
->  
-> @@ -1391,7 +1390,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
->  		if (ret < 0)
->  			goto err_put_sync;
->  	} else {
-> -		drm_bridge_chain_pre_enable(dsi->out_bridge);
-> +		if (dsi->out_bridge->funcs->pre_enable)
-> +			dsi->out_bridge->funcs->pre_enable(dsi->out_bridge);
-
-Okay, so you're calling ->{pre_enable,enable,disable,post_disable}() on
-the first bridge element which only works if the chain contains one
-bridge (see below). Maybe you should keep exynos_dsi.bridge_chain and
-create custom helpers to iterate over chain elements instead of calling
-those hooks only on out_bridge.
-
->  	}
->  
->  	exynos_dsi_set_display_mode(dsi);
-> @@ -1402,7 +1402,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
->  		if (ret < 0)
->  			goto err_display_disable;
->  	} else {
-> -		drm_bridge_chain_enable(dsi->out_bridge);
-> +		if (dsi->out_bridge->funcs->enable)
-> +			dsi->out_bridge->funcs->enable(dsi->out_bridge);
->  	}
->  
->  	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
-> @@ -1427,10 +1428,12 @@ static void exynos_dsi_disable(struct drm_encoder *encoder)
->  	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
->  
->  	drm_panel_disable(dsi->panel);
-> -	drm_bridge_chain_disable(dsi->out_bridge);
-> +	if (dsi->out_bridge->funcs->disable)
-> +		dsi->out_bridge->funcs->disable(dsi->out_bridge);
->  	exynos_dsi_set_display_enable(dsi, false);
->  	drm_panel_unprepare(dsi->panel);
-> -	drm_bridge_chain_post_disable(dsi->out_bridge);
-> +	if (dsi->out_bridge->funcs->post_disable)
-> +		dsi->out_bridge->funcs->post_disable(dsi->out_bridge);
->  	dsi->state &= ~DSIM_STATE_ENABLED;
->  	pm_runtime_put_sync(dsi->dev);
+> diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+> index 3bf8a8b..22cc2cb 100644
+> --- a/drivers/net/ppp/ppp_generic.c
+> +++ b/drivers/net/ppp/ppp_generic.c
+> @@ -296,8 +296,6 @@ static struct class *ppp_class;
+>  /* per net-namespace data */
+>  static inline struct ppp_net *ppp_pernet(struct net *net)
+>  {
+> -	BUG_ON(!net);
+> -
+>  	return net_generic(net, ppp_net_id);
 >  }
-> @@ -1521,9 +1524,11 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
->  
->  	out_bridge  = of_drm_find_bridge(device->dev.of_node);
->  	if (out_bridge) {
-> -		drm_bridge_attach(encoder, out_bridge, NULL);
-> +		out_bridge->dev = drm;
-> +		out_bridge->encoder = encoder;
-> +		if (out_bridge->funcs->attach)
-> +			out_bridge->funcs->attach(out_bridge);
-
-If you don't want to keep the dsi_exynos.bridge_chain field, you should
-probably still use drm_bridge_attach() here and manually reset
-encoder->bridge_chain after checking it only contains a single element.
-Something like:
-
-		drm_bridge_attach(encoder, out_bridge, NULL);
-
-		/*
-		 * FIXME: we need to control the enable/disable
-		 * sequence to make sure the DSI host controller is
-		 * ready to send DSI commands before the
-		 * bridge->pre_enable()/panel->prepare() hooks are
-		 * called (those hooks are allowed to send DSI
-		 * commands). The only way to do that right now is to
-		 * reset the bridge chain so that the core thinks it's
-		 * empty and turns drm_bridge_chain_xxx() calls into
-		 * NOPs. This only works if the chain contains only one
-		 * bridge, otherwise we'd be skipping bridge->xxx()
-		 * calls on other bridges which is wrong.
-		 */
-		WARN_ON(!list_is_singular(&encoder->bridge_chain));
-		INIT_LIST_HEAD(&encoder->bridge_chain);
-
-Calling ->attach() directly might lead to an invalid pointer
-dereference if out_bridge tries to attach to another bridge
-(out_bridge->bridge_node is uninitialized if you don't call
-drm_bridge_attach()).
-
->  		dsi->out_bridge = out_bridge;
-> -		list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
->  	} else {
->  		int ret = exynos_dsi_create_connector(encoder);
->  
-> @@ -1589,7 +1594,6 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
->  		if (dsi->out_bridge->funcs->detach)
->  			dsi->out_bridge->funcs->detach(dsi->out_bridge);
->  		dsi->out_bridge = NULL;
-> -		INIT_LIST_HEAD(&dsi->bridge_chain);
->  	}
->  
->  	if (drm->mode_config.poll_enabled)
-> @@ -1737,7 +1741,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
->  	init_completion(&dsi->completed);
->  	spin_lock_init(&dsi->transfer_lock);
->  	INIT_LIST_HEAD(&dsi->transfer_list);
-> -	INIT_LIST_HEAD(&dsi->bridge_chain);
->  
->  	dsi->dsi_host.ops = &exynos_dsi_ops;
->  	dsi->dsi_host.dev = dev;
+Acked-by: Guillaume Nault <gnault@redhat.com>
 
