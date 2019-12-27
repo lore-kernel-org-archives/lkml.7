@@ -2,189 +2,297 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07838C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 21:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5854C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 21:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D1F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 21:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6348221744
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 21:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx87LvZH"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jnwp4LyK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfL0Vvx (ORCPT
+        id S1726538AbfL0V7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 16:51:53 -0500
-Received: from mail-pj1-f45.google.com ([209.85.216.45]:37362 "EHLO
-        mail-pj1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL0Vvx (ORCPT
+        Fri, 27 Dec 2019 16:59:48 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7912 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbfL0V7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 16:51:53 -0500
-Received: by mail-pj1-f45.google.com with SMTP id m13so5468121pjb.2;
-        Fri, 27 Dec 2019 13:51:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bipz4vy7SWDNj9D55kGyVU3mkpBIdCRTBcqBI4hQgGU=;
-        b=Gx87LvZH/x+KkQ25gdgduhvsGPcxrVMONffhgcNTJN/BkUnVoFo/s/6uUNJJRhEbwH
-         sSgwNKNPYx+tT2KWBWM465Vxrrd2bMkpclphosRR3j3P5c5pnkzg1E9F6OYCSW4diH3h
-         yooKzfW7uKeiTmh/JH7aJHmFocWvvY8gZT1LW0N8Qmn/f9B+UcwL0TCVrbUUv9q1gukH
-         YFYHPcN95ASgHJLisUVdTJs7Mru5ooBpbC632ofoJpaRZYzbGJHmrWzCpCWxi7EgTwZ7
-         9j7ZPBNBTk/RQ96i64BYvPz8KNLkSQ3h6d0busZHibHsW8WfJ23KniVEzmzOcsw8+ydJ
-         WbFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Bipz4vy7SWDNj9D55kGyVU3mkpBIdCRTBcqBI4hQgGU=;
-        b=eFUJ68RC59tcRX5hNrMBWliFAh5ghkcGFIFiC0ora3Ar88I0o7VYqVNbgU1yeRmZTd
-         BYu1ZIfKD56N7xpvKm2O+Rmi6sxFMpmvcqlwqoJAJt239nBIN9O1od+6gIlv7pmLwUIO
-         GaLFqNTXZZDYanY3dWDEqKmd+jc+HgzB6JVBy9oEpd481MakmXwzd0vrTiPe0SDEPKB3
-         Q8XezLkuLbkgqDwUnm5v4RBoh3uXZIQJh2H1AmSTuMZfkw32OeES9q0L5Da1aYchCWAq
-         +CAqEm+C04DOWZtal0mGqODGLfxqx4iwkpu2DROTGj7/ORBvcJBYbOFX+xre+QPd2H7o
-         dHKw==
-X-Gm-Message-State: APjAAAVbGMotAaqHQIqcQm/xjr0s2YsaKoKv7Cana+fEGf/hPLqVKBAb
-        S9cbyQMLMMzAhN0h/TrklGtuyCUx
-X-Google-Smtp-Source: APXvYqzJd43bumA7Cn7p2hGNap8+eqx/PW+APPX3TezsKr3Cu4x65pqWtK8xj9swyc0b8BnSoYFjnw==
-X-Received: by 2002:a17:902:bd41:: with SMTP id b1mr45037625plx.82.1577483512172;
-        Fri, 27 Dec 2019 13:51:52 -0800 (PST)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id u3sm39180110pga.72.2019.12.27.13.51.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 13:51:51 -0800 (PST)
-Subject: Re: linux-next: Fixes tags need some work in the block tree
-To:     Jens Axboe <axboe@kernel.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jaedon Shin <jaedon.shin@gmail.com>
-References: <20191228065553.6ba5d28f@canb.auug.org.au>
- <45665759-a76f-5631-51bd-488b04f6bf03@gmail.com>
- <d3ae7893-9b60-ecc2-4a31-65d009ecbb95@kernel.dk>
- <20191228073959.5b3e73b5@canb.auug.org.au>
- <3e6975e8-0509-c888-5b90-489ca0f40456@kernel.dk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <e90eed94-3c56-3bc8-f118-f46f2dfe0571@gmail.com>
-Date:   Fri, 27 Dec 2019 13:51:49 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 27 Dec 2019 16:59:47 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e067ec30000>; Fri, 27 Dec 2019 13:59:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 27 Dec 2019 13:59:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 27 Dec 2019 13:59:44 -0800
+Received: from [10.2.173.128] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Dec
+ 2019 21:59:42 +0000
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        "Ran Rozenstein" <ranro@mellanox.com>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca> <20191220182939.GA10944@unreal>
+ <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
+ <20191222132357.GF13335@unreal>
+ <49d57efe-85e1-6910-baf5-c18df1382206@nvidia.com>
+ <20191225052612.GA212002@unreal>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <b879d191-a07c-e808-e48f-2b9bd8ba4fa3@nvidia.com>
+Date:   Fri, 27 Dec 2019 13:56:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <3e6975e8-0509-c888-5b90-489ca0f40456@kernel.dk>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20191225052612.GA212002@unreal>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577483971; bh=IFIaph2oMDvVaRtQ/wF5mC8uCNqHDfpzX1NnLSJJfWU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Jnwp4LyK5G4OyAlHqFXM/6sxXOCI4If34UEpvz6n6u2OwfAMQaijJQmVZRPnkYcv8
+         t6Co2ZUFl2m30mevVwaIbJQRdRHaMiESljttUKTiUWoferdeGO/9C05wcDqpRaBU1i
+         hjIQXAbjE9KdO6LqCbbDiY+DdS+YA5zruAmNpSENZxQBmXoKuUdiqQ7VLk36Q18z8i
+         nD0tyz8qBWBYGs/L0lb6Iz7DMDpyAuWrKW1uGmiq07viRzi2Xd/9zbM0ezCa85iFBU
+         dHFV2hY5yuV12z5fgwccb5Ofq52mkdFVCidonl7VgQf8QU5/7c8sthC9x2UhoZEBOW
+         vidFAIIi3hDXA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/27/2019 12:44 PM, Jens Axboe wrote:
-> On 12/27/19 1:39 PM, Stephen Rothwell wrote:
->> Hi Jens,
->>
->> On Fri, 27 Dec 2019 13:29:40 -0700 Jens Axboe <axboe@kernel.dk> wrote:
->>> On 12/27/19 1:27 PM, Florian Fainelli wrote:
->>>> On 12/27/2019 11:55 AM, Stephen Rothwell wrote:  
->>>>>
->>>>> In commit
->>>>>
->>>>>   1a3d78cb6e20 ("ata: ahci_brcm: BCM7425 AHCI requires AHCI_HFLAG_DELAY_ENGINE")
->>>>>
->>>>> Fixes tags
->>>>>
->>>>>   Fixes: 9586114cf1e9 ("ata: ahci_brcmstb: add support MIPS-based platforms")
->>>>>   Fixes: 423be77daabe ("ata: ahci_brcmstb: add quirk for broken ncq")
->>>>>
->>>>> have this problem:
->>>>>
->>>>>   - Target SHA1s do not exist
->>>>>
->>>>> Perhaps you meant
->>>>>
->>>>> Fixes: 1980eb9bd7d7 ("ata: ahci_brcmstb: add support for MIPS-based platforms")
->>>>> Fixes: 7de3244530bf ("ata: ahci_brcmstb: disable NCQ for MIPS-based platforms")  
+On 12/24/19 9:26 PM, Leon Romanovsky wrote:
+...
+>>>> The branch is here (I just tested it and it seems healthy):
 >>>>
->>>> Yes, those are the two that should have been used, the two commits were
->>>> extracted from a downstream tree where the upstream commits ended up
->>>> looking slightly different, my script does not (yet) rewrite those, Jens
->>>> would you want me to resubmit or can you rewrite the commit message in
->>>> place?  
+>>>> git@github.com:johnhubbard/linux.git  pin_user_pages_tracking_v11_with_diags
 >>>
->>> It's too late unfortunately, Linus already pulled it. So we'll have to
->>> live with it, at least the commit titles are correct so it should be
->>> manageable.
+>>> Hi,
+>>>
+>>> We tested the following branch and here comes results:
 >>
->> Unfortunately, even the titles are not correct, so they took me a
->> little time to find the correct commits :-(  This means it will also
->> take the stable maintainers a bit of time.
+>> Thanks for this testing run!
+>>
+>>> [root@server consume_mtts]# (master) $ grep foll_pin /proc/vmstat
+>>> nr_foll_pin_requested 0
+>>> nr_foll_pin_returned 0
+>>>
+>>
+>> Zero pinned pages!
 > 
-> Yeah I see, the 2nd one is not. Gah, that really sucks. I'll let stable
-> know.
-> 
-> Florian, please ensure that future submissions have both the right titles
-> and shas.
+> Maybe we are missing some CONFIG_* option?
+> https://lore.kernel.org/linux-rdma/12a28917-f8c9-5092-2f01-92bb74714cae@nvidia.com/T/#mf900896f5dfc86cdee9246219990c632ed77115f
 
-Definitively, very sorry about that and thank you both.
+
+Ah OK, it must be that CONFIG_DEBUG_VM is not set, thanks!
+
+
+>> ...now I'm confused. Somehow FOLL_PIN and pin_user_pages*() calls are
+>> not happening. And although the backtraces below show some of my new
+>> routines (like try_grab_page), they also confirm the above: there is no
+>> pin_user_page*() call in the stack.
+>>
+>> In particular, it looks like ib_umem_get() is calling through to
+>> get_user_pages*(), rather than pin_user_pages*(). I don't see how this
+>> is possible, because the code on my screen shows ib_umem_get() calling
+>> pin_user_pages_fast().
+>>
+
+It must be that pin_user_pages() is in the call stack, but just not getting
+printed. There's no other way to explain this.
+
+>> Any thoughts or ideas are welcome here.
+>>
+>> However, glossing over all of that and assuming that the new
+>> GUP_PIN_COUNTING_BIAS of 256 is applied, it's interesting that we still
+>> see any overflow. I'm less confident now that this is a true refcount
+>> overflow.
+> 
+> Earlier in this email thread, I posted possible function call chain which
+> doesn't involve refcount overflow, but for some reason the refcount
+> overflow was chosen as a way to explore.
+> 
+
+Well, both of the WARN() calls are asserting that the refcount went negative
+(well, one asserts negative, and the other asserts "<=0"). So it's pretty
+hard to talk our way out of a refcount overflow here.
+
+>>
+>> Also, any information that would get me closer to being able to attempt
+>> my own reproduction of the problem are *very* welcome. :)
+> 
+> It is ancient verification test (~10y) which is not an easy task to
+> make it understandable and standalone :).
+> 
+
+Is this the only test that fails, btw? No other test failures or hints of
+problems?
+
+(Also, maybe hopeless, but can *anyone* on the RDMA list provide some
+characterization of the test, such as how many pins per page, what page
+sizes are used? I'm still hoping to write a test to trigger something
+close to this...)
+
+I do have a couple more ideas for test runs:
+
+1. Reduce GUP_PIN_COUNTING_BIAS to 1. That would turn the whole override of
+page->_refcount into a no-op, and so if all is well (it may not be!) with the
+rest of the patch, then we'd expect this problem to not reappear.
+
+2. Active /proc/vmstat *foll_pin* statistics unconditionally (just for these
+tests, of course), so we can see if there is a get/put mismatch. However, that
+will change the timing, and so it must be attempted independently of (1), in
+order to see if it ends up hiding the repro.
+
+I've updated this branch to implement (1), but not (2), hoping you can give
+this one a spin?
+
+     git@github.com:johnhubbard/linux.git  pin_user_pages_tracking_v11_with_diags
+
+
+thanks,
 -- 
-Florian
+John Hubbard
+NVIDIA
+
+
+>>
+>>> [root@serer consume_mtts]# (master) $ dmesg
+>>> [  425.221459] ------------[ cut here ]------------
+>>> [  425.225894] WARNING: CPU: 1 PID: 6738 at mm/gup.c:61 try_grab_compound_head+0x90/0xa0
+>>> [  425.228021] Modules linked in: mlx5_ib mlx5_core mlxfw mlx4_ib mlx4_en ptp pps_core mlx4_core bonding ip6_gre ip6_tunnel tunnel6 ip_gre gre ip_tunnel rdma_rxe ip6_udp_tunnel udp_tunnel rdma_ucm ib_uverbs ib_ipoib ib_umad ib_srp scsi_transport_srp rpcrdma ib_iser libiscsi scsi_transport_iscsi rdma_cm iw_cm ib_cm ib_core [last unloaded: mlxfw]
+>>> [  425.235266] CPU: 1 PID: 6738 Comm: consume_mtts Tainted: G           O      5.5.0-rc2+ #1
+>>> [  425.237480] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+>>> [  425.239738] RIP: 0010:try_grab_compound_head+0x90/0xa0
+>>> [  425.241170] Code: 06 48 8d 4f 34 f0 0f b1 57 34 74 cd 85 c0 74 cf 8d 14 06 f0 0f b1 11 74 c0 eb f1 8d 14 06 f0 0f b1 11 74 b5 85 c0 75 f3 eb b5 <0f> 0b 31 c0 c3 90 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41
+>>> [  425.245739] RSP: 0018:ffffc900006878a8 EFLAGS: 00010082
+>>> [  425.247124] RAX: 0000000080000001 RBX: 00007f780488a000 RCX: 0000000000000bb0
+>>> [  425.248956] RDX: ffffea000e031087 RSI: 0000000000008a00 RDI: ffffea000dc58000
+>>> [  425.250761] RBP: ffffea000e031080 R08: ffffc90000687974 R09: 000fffffffe00000
+>>> [  425.252661] R10: 0000000000000000 R11: ffff888362560000 R12: 000000000000008a
+>>> [  425.254487] R13: 80000003716000e7 R14: 00007f780488a000 R15: ffffc90000687974
+>>> [  425.256309] FS:  00007f780d9d3740(0000) GS:ffff8883b1c80000(0000) knlGS:0000000000000000
+>>> [  425.258401] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [  425.259949] CR2: 0000000002334048 CR3: 000000039c68c001 CR4: 00000000001606a0
+>>> [  425.261884] Call Trace:
+>>> [  425.262735]  gup_pgd_range+0x517/0x5a0
+>>> [  425.263819]  internal_get_user_pages_fast+0x210/0x250
+>>> [  425.265193]  ib_umem_get+0x298/0x550 [ib_uverbs]
+>>> [  425.266476]  mr_umem_get+0xc9/0x260 [mlx5_ib]
+>>> [  425.267699]  mlx5_ib_reg_user_mr+0xcc/0x7e0 [mlx5_ib]
+>>> [  425.269134]  ? xas_load+0x8/0x80
+>>> [  425.270074]  ? xa_load+0x48/0x90
+>>> [  425.271038]  ? lookup_get_idr_uobject.part.10+0x12/0x70 [ib_uverbs]
+>>> [  425.272757]  ib_uverbs_reg_mr+0x127/0x280 [ib_uverbs]
+>>> [  425.274120]  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xc2/0xf0 [ib_uverbs]
+>>> [  425.276058]  ib_uverbs_cmd_verbs.isra.6+0x5be/0xbe0 [ib_uverbs]
+>>> [  425.277657]  ? uverbs_disassociate_api+0xd0/0xd0 [ib_uverbs]
+>>> [  425.279155]  ? __alloc_pages_nodemask+0x148/0x2b0
+>>> [  425.280445]  ib_uverbs_ioctl+0xc0/0x120 [ib_uverbs]
+>>> [  425.281755]  do_vfs_ioctl+0x9d/0x650
+>>> [  425.282766]  ksys_ioctl+0x70/0x80
+>>> [  425.283745]  __x64_sys_ioctl+0x16/0x20
+>>> [  425.284912]  do_syscall_64+0x42/0x130
+>>> [  425.285973]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>> [  425.287377] RIP: 0033:0x7f780d2df267
+>>> [  425.288449] Code: b3 66 90 48 8b 05 19 3c 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e9 3b 2c 00 f7 d8 64 89 01 48
+>>> [  425.293073] RSP: 002b:00007ffce49a88a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>> [  425.295034] RAX: ffffffffffffffda RBX: 00007ffce49a8938 RCX: 00007f780d2df267
+>>> [  425.296895] RDX: 00007ffce49a8920 RSI: 00000000c0181b01 RDI: 0000000000000003
+>>> [  425.298689] RBP: 00007ffce49a8900 R08: 0000000000000003 R09: 00007f780d9a1010
+>>> [  425.300480] R10: 00000000ffffffff R11: 0000000000000246 R12: 00007f780d9a1150
+>>> [  425.302290] R13: 00007ffce49a8900 R14: 00007ffce49a8ad8 R15: 00007f780468a000
+>>> [  425.304113] ---[ end trace 1ecbefdb403190dd ]---
+>>> [  425.305434] ------------[ cut here ]------------
+>>> [  425.307147] WARNING: CPU: 1 PID: 6738 at mm/gup.c:150 try_grab_page+0x56/0x60
+>>> [  425.309111] Modules linked in: mlx5_ib mlx5_core mlxfw mlx4_ib mlx4_en ptp pps_core mlx4_core bonding ip6_gre ip6_tunnel tunnel6 ip_gre gre ip_tunnel rdma_rxe ip6_udp_tunnel udp_tunnel rdma_ucm ib_uverbs ib_ipoib ib_umad ib_srp scsi_transport_srp rpcrdma ib_iser libiscsi scsi_transport_iscsi rdma_cm iw_cm ib_cm ib_core [last unloaded: mlxfw]
+>>> [  425.316461] CPU: 1 PID: 6738 Comm: consume_mtts Tainted: G        W  O      5.5.0-rc2+ #1
+>>> [  425.318582] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+>>> [  425.320958] RIP: 0010:try_grab_page+0x56/0x60
+>>> [  425.322167] Code: 7e 28 f0 81 47 34 00 01 00 00 c3 48 8b 47 08 48 8d 50 ff a8 01 48 0f 45 fa 8b 47 34 85 c0 7e 0f f0 ff 47 34 b8 01 00 00 00 c3 <0f> 0b 31 c0 c3 0f 0b 31 c0 c3 0f 1f 44 00 00 41 57 41 56 41 55 41
+>>> [  425.326814] RSP: 0018:ffffc90000687830 EFLAGS: 00010282
+>>> [  425.328226] RAX: 0000000000000001 RBX: ffffea000dc58000 RCX: ffffea000e031087
+>>> [  425.330104] RDX: 0000000080000001 RSI: 0000000000040000 RDI: ffffea000dc58000
+>>> [  425.331980] RBP: 00007f7804800000 R08: 000ffffffffff000 R09: 80000003716000e7
+>>> [  425.333898] R10: ffff88834af80120 R11: ffff8883ac16f000 R12: ffff88834af80120
+>>> [  425.335704] R13: ffff88837c0915c0 R14: 0000000000050201 R15: 00007f7804800000
+>>> [  425.337638] FS:  00007f780d9d3740(0000) GS:ffff8883b1c80000(0000) knlGS:0000000000000000
+>>> [  425.339734] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> [  425.341369] CR2: 0000000002334048 CR3: 000000039c68c001 CR4: 00000000001606a0
+>>> [  425.343160] Call Trace:
+>>> [  425.343967]  follow_trans_huge_pmd+0x16f/0x2e0
+>>> [  425.345263]  follow_p4d_mask+0x51c/0x630
+>>> [  425.346344]  __get_user_pages+0x1a1/0x6c0
+>>> [  425.347463]  internal_get_user_pages_fast+0x17b/0x250
+>>> [  425.348918]  ib_umem_get+0x298/0x550 [ib_uverbs]
+>>> [  425.350174]  mr_umem_get+0xc9/0x260 [mlx5_ib]
+>>> [  425.351383]  mlx5_ib_reg_user_mr+0xcc/0x7e0 [mlx5_ib]
+>>> [  425.352849]  ? xas_load+0x8/0x80
+>>> [  425.353776]  ? xa_load+0x48/0x90
+>>> [  425.354730]  ? lookup_get_idr_uobject.part.10+0x12/0x70 [ib_uverbs]
+>>> [  425.356410]  ib_uverbs_reg_mr+0x127/0x280 [ib_uverbs]
+>>> [  425.357843]  ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xc2/0xf0 [ib_uverbs]
+>>> [  425.359749]  ib_uverbs_cmd_verbs.isra.6+0x5be/0xbe0 [ib_uverbs]
+>>> [  425.361405]  ? uverbs_disassociate_api+0xd0/0xd0 [ib_uverbs]
+>>> [  425.362898]  ? __alloc_pages_nodemask+0x148/0x2b0
+>>> [  425.364206]  ib_uverbs_ioctl+0xc0/0x120 [ib_uverbs]
+>>> [  425.365564]  do_vfs_ioctl+0x9d/0x650
+>>> [  425.366567]  ksys_ioctl+0x70/0x80
+>>> [  425.367537]  __x64_sys_ioctl+0x16/0x20
+>>> [  425.368698]  do_syscall_64+0x42/0x130
+>>> [  425.369782]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>> [  425.371117] RIP: 0033:0x7f780d2df267
+>>> [  425.372159] Code: b3 66 90 48 8b 05 19 3c 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d e9 3b 2c 00 f7 d8 64 89 01 48
+>>> [  425.376774] RSP: 002b:00007ffce49a88a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>>> [  425.378740] RAX: ffffffffffffffda RBX: 00007ffce49a8938 RCX: 00007f780d2df267
+>>> [  425.380598] RDX: 00007ffce49a8920 RSI: 00000000c0181b01 RDI: 0000000000000003
+>>> [  425.382411] RBP: 00007ffce49a8900 R08: 0000000000000003 R09: 00007f780d9a1010
+>>> [  425.384312] R10: 00000000ffffffff R11: 0000000000000246 R12: 00007f780d9a1150
+>>> [  425.386132] R13: 00007ffce49a8900 R14: 00007ffce49a8ad8 R15: 00007f780468a000
+>>> [  425.387964] ---[ end trace 1ecbefdb403190de ]---
+>>>
+
