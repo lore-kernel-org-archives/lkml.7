@@ -2,740 +2,212 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE90C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E6C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E45020828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CED821744
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n9BeOn2x"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h43HceZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfL0K4R (ORCPT
+        id S1727050AbfL0LCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 05:56:17 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:40949 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbfL0K4Q (ORCPT
+        Fri, 27 Dec 2019 06:02:19 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:35598 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0LCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 05:56:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577444175; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=9XYxrNMQs0vXbyciOdvVpfaSWWrvel0H/ZYToAsb3SU=; b=n9BeOn2xLDChxb37tQnvicqfsHdNAcYxsHF00yLLf5wGdG0PZBm2JbB3S6g8botOPmHYKNyl
- VM7zcfouVYGi3tgYv9IE5ZiWoZAC2YVwnKBfhPkKng6OmH6N869hqUXEzLgaXCWG8xAvr/7g
- nXCuejua7ibRenThZHJpP6MG2Po=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e05e34e.7fe170574260-smtp-out-n03;
- Fri, 27 Dec 2019 10:56:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C52ADC4479C; Fri, 27 Dec 2019 10:56:12 +0000 (UTC)
-Received: from [10.242.50.228] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rkambl)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBE74C433CB;
-        Fri, 27 Dec 2019 10:56:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBE74C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rkambl@codeaurora.org
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Add critical interrupt and
- cooling maps for TSENS in SC7180.
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sanm@codeaurora.org, sivaa@codeaurora.org, manafm@codeaurora.org
-References: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org>
- <1577106871-19863-2-git-send-email-rkambl@codeaurora.org>
- <20191227062235.GM549437@yoga>
-From:   "Rajeshwari Ravindra Kamble (Temp)" <rkambl@codeaurora.org>
-Message-ID: <a585265c-689a-a0c0-4377-bcf121320df3@codeaurora.org>
-Date:   Fri, 27 Dec 2019 16:26:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20191227062235.GM549437@yoga>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Fri, 27 Dec 2019 06:02:19 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191227110217euoutp017b048c015e8f8f3f2ce185eba65aff12~kNXMUijqy0245202452euoutp01Z
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 11:02:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191227110217euoutp017b048c015e8f8f3f2ce185eba65aff12~kNXMUijqy0245202452euoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1577444537;
+        bh=7IW5udX+iI/ujHDqlQbniwM2i8DuaCoh2oKCz0vZc9k=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=h43HceZ8a0ekUwJA+9LDMrPqT8NlDG8hiJuOb+8HYTJKegZu6ECEN/vZoyo7Qtr4Z
+         vyKRYpl3X2N276x2h9sSu7Hr783Qw2RcpoUyw3pUEiH3HbOJMKtTgGPVuwDVByfDfF
+         O2RfpJ4TFC2c2t2ZzSoHfKZH9KWd2SdAbTzJiBwU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191227110217eucas1p19cfaba571a02e6c727e24ba92a23a1b2~kNXMAgTp11154011540eucas1p1V;
+        Fri, 27 Dec 2019 11:02:17 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id B9.C9.60698.9B4E50E5; Fri, 27
+        Dec 2019 11:02:17 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d~kNXLfY-sA1605716057eucas1p1F;
+        Fri, 27 Dec 2019 11:02:16 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191227110216eusmtrp244914cb7ffdf08dd563e85d7c09fa281~kNXLermgo1574115741eusmtrp2_;
+        Fri, 27 Dec 2019 11:02:16 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-d4-5e05e4b91c39
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.F0.07950.8B4E50E5; Fri, 27
+        Dec 2019 11:02:16 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191227110216eusmtip2251225f2b120d14565874ed25c5b00ff~kNXKuphzW1996819968eusmtip2b;
+        Fri, 27 Dec 2019 11:02:16 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] drm/bridge: Fix Exynos DSI after making bridge chain a
+ double-linked list
+Date:   Fri, 27 Dec 2019 12:01:35 +0100
+Message-Id: <20191227110135.4961-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTYRjG+c7d4eQ0JT+8wqKgSG1ocSQLBaFjSPRnlJdmO3lJp2xOsyBE
+        UXQzr5VzilksFc3bUNNlYstcaGmpgYlLEo00L6VJTiTbdrT++73P+zzv+/LxUahIj3tQifJ0
+        TiGXJosJAdY9ZB3z653HY05Y572Z6dZRnOnQtuHMyNthhJncXCOY8tlSjBkbayeZwjI9yUwY
+        awhGO9aPMC2DFpIxFV9hGq1dgNFWLBKM1ViLhbqwa1N5JNtj0QO2V2ch2eqCKpw1NBUS7KzG
+        jLD6Bx8JtrizCbAbBp+LTpcFITIuOTGDUwScvSpIqOn6jKdpvG4aJ7eQbJAL1cCJgnQQXH7a
+        iKiBgBLRjQAWr75G+eIXgJahdZwvNgDsn5nE9iMTw4V7rgYAFwcXHA1HZHecsTNBS6B6RU2o
+        AUm50dfhE4cdpRdQm6PDYXelo6Bh6wdpZ4w+DAeqN3A7C+kQOPWzD/C7fGFz+4AjDOl6Eu7c
+        f0fwjXCoXf6K8OwKl8ydJM9ecLf3IcIHcgH8MtpC8kURgBM52r2xp+HM6LZtEmW76ShsMwbw
+        chhsLG7B7TKkXeDUygG7jNqwvLsS5WUhLMgX8e4jUGdu/bf25ftxlGcWfuuxkPyTRMP1olW8
+        FPjo/u+qA6AJuHMqZUo8pwyUc5n+SmmKUiWP97+WmmIAtr8z8se82QP6d+JMgKaA2FlYYMRi
+        RLg0Q5mVYgKQQsVuQnk8HiMSyqRZtzhFaqxClcwpTcCTwsTuwsDHi9EiOl6azt3guDROsd9F
+        KCePbFCrCw5SkV6Ft/MiG55XqM6dfFQ1J6nvHJpLlEVp/Ft9AoW5vs53vKPqwmWTkrD2LHl1
+        yd2M7nvmF1PjWFxOMDu+7ckKG57BEu+kC9/1xKdD0f1IxPm2HEzSA2dP5V9Kit04GPo7z7DU
+        lxmh0JR16yKvHI9rfjX9we+MvPZNZbkYUyZIJcdQhVL6F5hfPZs3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsVy+t/xe7o7nrDGGVz6Z2xxa905VouNM9az
+        Wpw+c4rJ4srX92wWk+5PYLE4f34Du0XnxCXsFpd3zWGzmHF+H5PF2iN32S0O9UVbrPi5ldFi
+        xuSXbBY/d81jceDzeH+jld1jx90ljB47Z91l95jdMZPVY9OqTjaP+93HmTyWTLvK5tG3ZRWj
+        x+dNcgGcUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2
+        CXoZc7beYy3olqnYdeUHUwNjs0QXIyeHhICJxOVTncxdjFwcQgJLGSUeX9vPDJGQkTg5rYEV
+        whaW+HOtiw2i6BOjxO2We4wgCTYBQ4mutyAJTg4RgQyJ9olTwSYxC7xmlmi6cwUsISwQJXHk
+        73Z2EJtFQFXiwOzPYFN5BWwkbnzcwwixQV5i9YYDzBMYeRYwMqxiFEktLc5Nzy020itOzC0u
+        zUvXS87P3cQIDPltx35u2cHY9S74EKMAB6MSD6/BDpY4IdbEsuLK3EOMEhzMSiK8eemscUK8
+        KYmVValF+fFFpTmpxYcYTYGWT2SWEk3OB8ZjXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTE
+        ktTs1NSC1CKYPiYOTqkGRol7hw/1rVv5cYXY0gChF7eT+yc5Pcj2mxWWfoshzbFOPWJysKnH
+        H813h6OfctQd6wkxsrF02rFF/mhB9T1Gw5Z5Stal76rcrs9+ysneETclsGKRyb5lxzi3XN5T
+        y1B39tQkAwHG2h+xetu05i2p//at9uXcbsV3BtV9q1KqL0wU5ItXW5t9W4mlOCPRUIu5qDgR
+        ANFAaRaPAgAA
+X-CMS-MailID: 20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d
+References: <CGME20191227110216eucas1p17cbf91afa905852d3c0b1efeec0f6f8d@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Exynos DSI DRM driver uses private calls to out bridge to force certain
+order of operations during init/exit sequences. This no longer works after
+conversion of bridge chain to a double-linked list. To fix the regression
+call bridge related operations manually instead of the generic
+drm_bridge_chain_*() operations.
 
-On 12/27/2019 11:52 AM, Bjorn Andersson wrote:
-> On Mon 23 Dec 05:14 PST 2019, Rajeshwari wrote:
->
-> This patch adds critical interrupt to tsens nodes, add cooling maps,
-> renames nodes and renames labels.
->
-> While the end result looks reasonable I would like to see this split in
-> a few different patches - and perhaps a line or two in the commit
-> message describing the new naming scheme for the renames.
-yeah sure, I'll provide separate patch for renames.
-> Thanks,
-> Rajeshwari
->
->> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 289 +++++++++++++++++++++++++++++------
->>   1 file changed, 239 insertions(+), 50 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 3676bfd..e419ca0 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -10,6 +10,7 @@
->>   #include <dt-bindings/interrupt-controller/arm-gic.h>
->>   #include <dt-bindings/phy/phy-qcom-qusb2.h>
->>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->> +#include <dt-bindings/thermal/thermal.h>
->>   
->>   / {
->>   	interrupt-parent = <&intc>;
->> @@ -78,6 +79,7 @@
->>   			reg = <0x0 0x0>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_0>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_0: l2-cache {
->>   				compatible = "cache";
->> @@ -94,6 +96,7 @@
->>   			reg = <0x0 0x100>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_100>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_100: l2-cache {
->>   				compatible = "cache";
->> @@ -107,6 +110,7 @@
->>   			reg = <0x0 0x200>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_200>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_200: l2-cache {
->>   				compatible = "cache";
->> @@ -120,6 +124,7 @@
->>   			reg = <0x0 0x300>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_300>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_300: l2-cache {
->>   				compatible = "cache";
->> @@ -133,6 +138,7 @@
->>   			reg = <0x0 0x400>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_400>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_400: l2-cache {
->>   				compatible = "cache";
->> @@ -146,6 +152,7 @@
->>   			reg = <0x0 0x500>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_500>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 0>;
->>   			L2_500: l2-cache {
->>   				compatible = "cache";
->> @@ -159,6 +166,7 @@
->>   			reg = <0x0 0x600>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_600>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 1>;
->>   			L2_600: l2-cache {
->>   				compatible = "cache";
->> @@ -172,6 +180,7 @@
->>   			reg = <0x0 0x700>;
->>   			enable-method = "psci";
->>   			next-level-cache = <&L2_700>;
->> +			#cooling-cells = <2>;
->>   			qcom,freq-domain = <&cpufreq_hw 1>;
->>   			L2_700: l2-cache {
->>   				compatible = "cache";
->> @@ -1058,8 +1067,9 @@
->>   			reg = <0 0x0c263000 0 0x1ff>, /* TM */
->>   				<0 0x0c222000 0 0x1ff>; /* SROT */
->>   			#qcom,sensors = <15>;
->> -			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
->> -			interrupt-names = "uplow";
->> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "uplow","critical";
->>   			#thermal-sensor-cells = <1>;
->>   		};
->>   
->> @@ -1068,8 +1078,9 @@
->>   			reg = <0 0x0c265000 0 0x1ff>, /* TM */
->>   				<0 0x0c223000 0 0x1ff>; /* SROT */
->>   			#qcom,sensors = <10>;
->> -			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
->> -			interrupt-names = "uplow";
->> +			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "uplow","critical";
->>   			#thermal-sensor-cells = <1>;
->>   		};
->>   
->> @@ -1301,277 +1312,455 @@
->>   	};
->>   
->>   	thermal-zones {
->> -		cpu0-thermal {
->> +		cpu_0_0-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 1>;
->>   
->>   			trips {
->> -				cpu0_alert0: trip-point0 {
->> +				cpu_0_0_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu0_alert1: trip-point1 {
->> +				cpu_0_0_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu0_crit: cpu_crit {
->> +				cpu_0_0_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_0_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_0_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu1-thermal {
->> +		cpu_0_1-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 2>;
->>   
->>   			trips {
->> -				cpu1_alert0: trip-point0 {
->> +				cpu_0_1_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu1_alert1: trip-point1 {
->> +				cpu_0_1_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu1_crit: cpu_crit {
->> +				cpu_0_1_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_1_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_1_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu2-thermal {
->> +		cpu_0_2-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 3>;
->>   
->>   			trips {
->> -				cpu2_alert0: trip-point0 {
->> +				cpu_0_2_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu2_alert1: trip-point1 {
->> +				cpu_0_2_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu2_crit: cpu_crit {
->> +				cpu_0_2_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_2_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_2_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu3-thermal {
->> +		cpu_0_3-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 4>;
->>   
->>   			trips {
->> -				cpu3_alert0: trip-point0 {
->> +				cpu_0_3_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu3_alert1: trip-point1 {
->> +				cpu_0_3_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu3_crit: cpu_crit {
->> +				cpu_0_3_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_3_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_3_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu4-thermal {
->> +		cpu_0_4-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 5>;
->>   
->>   			trips {
->> -				cpu4_alert0: trip-point0 {
->> +				cpu_0_4_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu4_alert1: trip-point1 {
->> +				cpu_0_4_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu4_crit: cpu_crit {
->> +				cpu_0_4_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_4_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_4_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu5-thermal {
->> +		cpu_0_5-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 6>;
->>   
->>   			trips {
->> -				cpu5_alert0: trip-point0 {
->> +				cpu_0_5_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu5_alert1: trip-point1 {
->> +				cpu_0_5_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu5_crit: cpu_crit {
->> +				cpu_0_5_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_0_5_alert0>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_0_5_alert1>;
->> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu6-thermal {
->> +		cpu_1_0-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 9>;
->>   
->>   			trips {
->> -				cpu6_alert0: trip-point0 {
->> +				cpu_1_0_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu6_alert1: trip-point1 {
->> +				cpu_1_0_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu6_crit: cpu_crit {
->> +				cpu_1_0_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_1_0_alert0>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_1_0_alert1>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu7-thermal {
->> +		cpu_1_1-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 10>;
->>   
->>   			trips {
->> -				cpu7_alert0: trip-point0 {
->> +				cpu_1_1_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu7_alert1: trip-point1 {
->> +				cpu_1_1_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu7_crit: cpu_crit {
->> +				cpu_1_1_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_1_1_alert0>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_1_1_alert1>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu8-thermal {
->> +		cpu_1_2-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 11>;
->>   
->>   			trips {
->> -				cpu8_alert0: trip-point0 {
->> +				cpu_1_2_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu8_alert1: trip-point1 {
->> +				cpu_1_2_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu8_crit: cpu_crit {
->> +				cpu_1_2_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_1_2_alert0>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_1_2_alert1>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		cpu9-thermal {
->> +		cpu_1_3-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->>   			thermal-sensors = <&tsens0 12>;
->>   
->>   			trips {
->> -				cpu9_alert0: trip-point0 {
->> +				cpu_1_3_alert0: trip-point0 {
->>   					temperature = <90000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu9_alert1: trip-point1 {
->> +				cpu_1_3_alert1: trip-point1 {
->>   					temperature = <95000>;
->>   					hysteresis = <2000>;
->>   					type = "passive";
->>   				};
->>   
->> -				cpu9_crit: cpu_crit {
->> +				cpu_1_3_crit: cpu_crit {
->>   					temperature = <110000>;
->>   					hysteresis = <1000>;
->>   					type = "critical";
->>   				};
->>   			};
->> +
->> +			cooling-maps {
->> +				map0 {
->> +					trip = <&cpu_1_3_alert0>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +				map1 {
->> +					trip = <&cpu_1_3_alert1>;
->> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->> +				};
->> +			};
->>   		};
->>   
->> -		aoss0-thermal {
->> +		aoss_0-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> @@ -1586,7 +1775,7 @@
->>   			};
->>   		};
->>   
->> -		cpuss0-thermal {
->> +		cpuss_0-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> @@ -1606,7 +1795,7 @@
->>   			};
->>   		};
->>   
->> -		cpuss1-thermal {
->> +		cpuss_1-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> @@ -1626,7 +1815,7 @@
->>   			};
->>   		};
->>   
->> -		gpuss0-thermal {
->> +		gpuss_0-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> @@ -1641,7 +1830,7 @@
->>   			};
->>   		};
->>   
->> -		gpuss1-thermal {
->> +		gpuss_1-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> @@ -1656,7 +1845,7 @@
->>   			};
->>   		};
->>   
->> -		aoss1-thermal {
->> +		aoss_1-thermal {
->>   			polling-delay-passive = <250>;
->>   			polling-delay = <1000>;
->>   
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Fixes: 05193dc38197 ("drm/bridge: Make the bridge chain a double-linked list")
+---
+This patch is a result of the following discussion:
+https://www.spinics.net/lists/dri-devel/msg239256.html
+---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 3955f84dc893..f5905c239a86 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -255,7 +255,6 @@ struct exynos_dsi {
+ 	struct mipi_dsi_host dsi_host;
+ 	struct drm_connector connector;
+ 	struct drm_panel *panel;
+-	struct list_head bridge_chain;
+ 	struct drm_bridge *out_bridge;
+ 	struct device *dev;
+ 
+@@ -1391,7 +1390,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+ 		if (ret < 0)
+ 			goto err_put_sync;
+ 	} else {
+-		drm_bridge_chain_pre_enable(dsi->out_bridge);
++		if (dsi->out_bridge->funcs->pre_enable)
++			dsi->out_bridge->funcs->pre_enable(dsi->out_bridge);
+ 	}
+ 
+ 	exynos_dsi_set_display_mode(dsi);
+@@ -1402,7 +1402,8 @@ static void exynos_dsi_enable(struct drm_encoder *encoder)
+ 		if (ret < 0)
+ 			goto err_display_disable;
+ 	} else {
+-		drm_bridge_chain_enable(dsi->out_bridge);
++		if (dsi->out_bridge->funcs->enable)
++			dsi->out_bridge->funcs->enable(dsi->out_bridge);
+ 	}
+ 
+ 	dsi->state |= DSIM_STATE_VIDOUT_AVAILABLE;
+@@ -1427,10 +1428,12 @@ static void exynos_dsi_disable(struct drm_encoder *encoder)
+ 	dsi->state &= ~DSIM_STATE_VIDOUT_AVAILABLE;
+ 
+ 	drm_panel_disable(dsi->panel);
+-	drm_bridge_chain_disable(dsi->out_bridge);
++	if (dsi->out_bridge->funcs->disable)
++		dsi->out_bridge->funcs->disable(dsi->out_bridge);
+ 	exynos_dsi_set_display_enable(dsi, false);
+ 	drm_panel_unprepare(dsi->panel);
+-	drm_bridge_chain_post_disable(dsi->out_bridge);
++	if (dsi->out_bridge->funcs->post_disable)
++		dsi->out_bridge->funcs->post_disable(dsi->out_bridge);
+ 	dsi->state &= ~DSIM_STATE_ENABLED;
+ 	pm_runtime_put_sync(dsi->dev);
+ }
+@@ -1521,9 +1524,11 @@ static int exynos_dsi_host_attach(struct mipi_dsi_host *host,
+ 
+ 	out_bridge  = of_drm_find_bridge(device->dev.of_node);
+ 	if (out_bridge) {
+-		drm_bridge_attach(encoder, out_bridge, NULL);
++		out_bridge->dev = drm;
++		out_bridge->encoder = encoder;
++		if (out_bridge->funcs->attach)
++			out_bridge->funcs->attach(out_bridge);
+ 		dsi->out_bridge = out_bridge;
+-		list_splice(&encoder->bridge_chain, &dsi->bridge_chain);
+ 	} else {
+ 		int ret = exynos_dsi_create_connector(encoder);
+ 
+@@ -1589,7 +1594,6 @@ static int exynos_dsi_host_detach(struct mipi_dsi_host *host,
+ 		if (dsi->out_bridge->funcs->detach)
+ 			dsi->out_bridge->funcs->detach(dsi->out_bridge);
+ 		dsi->out_bridge = NULL;
+-		INIT_LIST_HEAD(&dsi->bridge_chain);
+ 	}
+ 
+ 	if (drm->mode_config.poll_enabled)
+@@ -1737,7 +1741,6 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	init_completion(&dsi->completed);
+ 	spin_lock_init(&dsi->transfer_lock);
+ 	INIT_LIST_HEAD(&dsi->transfer_list);
+-	INIT_LIST_HEAD(&dsi->bridge_chain);
+ 
+ 	dsi->dsi_host.ops = &exynos_dsi_ops;
+ 	dsi->dsi_host.dev = dev;
+-- 
+2.17.1
+
