@@ -2,217 +2,130 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B70C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EA1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE23420882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA79820882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JsINGrCx"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="C4XdxFc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfL0GQ5 (ORCPT
+        id S1726491AbfL0GT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:16:57 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3768 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfL0GQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:16:56 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e05a1ca0000>; Thu, 26 Dec 2019 22:16:43 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 26 Dec 2019 22:16:56 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 26 Dec 2019 22:16:56 -0800
-Received: from [10.24.192.96] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Dec
- 2019 06:16:52 +0000
-Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
-To:     JC Kuo <jckuo@nvidia.com>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
- <3f02b1c8-0d2e-700c-d1f5-80f9655f62e0@nvidia.com>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <5fc4c7b7-0005-2b55-71ed-92c249aa35d8@nvidia.com>
-Date:   Fri, 27 Dec 2019 11:48:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 27 Dec 2019 01:19:59 -0500
+Received: from mail-mw2nam12on2040.outbound.protection.outlook.com ([40.107.244.40]:35118
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbfL0GT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:19:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EfoEaSlKKMp9qw1q2LdKecpzNkLGrzdTX+/5x2DydxS4K9dohl9yPKFyXlKoGpqmOhCv0zgSfcsumKftNWpQWPc+Eo1QlflFr0mtneSqyq1P5j0yuIeQfFa2IbeJ1AS+JIMNOOmpEoNJdDMJ4oO6A3r35JgIk6qXwTqLJG7M9dvYWbEvm6tOLd9hTtUWVWwMSqFIwaZAAG0GyQj/OQzcpgbIaqGrAjGvB6Sz9tURqCtUpWeU7cVzTmkQ1q9GBqekA5eQLHuFRhHQYtB4DVKRznAS43KzNuUaSE7qyV6Wj7Xgrking/q92n6MvPCyrHU2UvaS8ixjaCv0rfEHjGzaIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FVxp5Lr18nKG2Neebwv2HAv0aIcWxS3P6ponrcFHiEY=;
+ b=f51QVcLCwlptVFim17sHeuxR+pw3bN56QMwl+k7V6j+CK68VcaTCZnV6mr2Ew+Ba671GxWX4dcxRRxXfA3tbX3l71INNJB7Uo+Be89JDdhto0zIA5N1h8M9Xz6ROvPBqZ+6KrTStXvki/R0dpIvTA9lWRz+5GDoTbm2UgGXJdV4ZI2XS/fANfHX71EqFrKQ/ztmb6WIyFUZSCZ12JPj61SrUH3jJw6YUcDdAgFDE+bT4iwrEV9byfWm+DBzSvmcAdiIOfboNg23mZw2nPmnAq25XHnkC6EyzrTKT/9e1j7MmowY0rhfUEevWc96twAT45htNCEL35wr7tfxwehBMOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FVxp5Lr18nKG2Neebwv2HAv0aIcWxS3P6ponrcFHiEY=;
+ b=C4XdxFc7JOK89v6An6UywgfCdBWzicO9sUzH4i7BRNfDTDM7xVfl4hwHQNaOdVUr5bfOltvAMEsd6RXK0VNJYyoQaJJADzNeqbfp76xaBGCGn/vJPpiDskzlk1N+7JpPDIk07jTyVNiSPdkvyMaTyOP0cwvcvJlCOq6Ug1d1mn8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1366.namprd12.prod.outlook.com (10.168.168.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Fri, 27 Dec 2019 06:19:55 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
+ 06:19:55 +0000
+From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        tee-dev@lists.linaro.org
+Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>
+Subject: [PATCH 1/4] tee: allow compilation of tee subsystem for AMD CPUs
+Date:   Fri, 27 Dec 2019 10:54:00 +0530
+Message-Id: <515ebade213492080b97ed6426c82a0fe22c03ab.1577423898.git.Rijo-john.Thomas@amd.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1577423898.git.Rijo-john.Thomas@amd.com>
+References: <cover.1577423898.git.Rijo-john.Thomas@amd.com>
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0022.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:21::32) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-In-Reply-To: <3f02b1c8-0d2e-700c-d1f5-80f9655f62e0@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577427403; bh=lspnrc2CBLB6URvouestBX0L08KJ5pMq/n+NcpkMWcw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JsINGrCx41ms2ZJQcHJDxvZVJQH7iTCTHYI7dWhg3aUEVCNjgP5G9fM6s8Z+UuZXx
-         har9IArQEy67gcYXcHZztpeOhNTXRLvJSOsCelN6egZFPXac6oszcfrDXqxprmNEop
-         hXYAebDXYdtbieCFmkG2bBex7IrKolUDmvNezXgwD6secct/2Nr+cD818KmkjDvjnt
-         lk1aFUzK/15BC/d+K819/IwS3MoGDUpE517YgJ0clUyXFDXv7z7TZTvbATk8ndTxza
-         teBmYRJnaSkyfoBvBR+FogEi/KSfsUtUsVFatkrPhLb0ZhKvzebmHXMcSmMJ8vGxV6
-         WNvlmsC5rFEUA==
+Received: from andbang1.amd.com (165.204.156.251) by MA1PR0101CA0022.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2581.11 via Frontend Transport; Fri, 27 Dec 2019 06:19:51 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2f5effb5-f0c0-4e45-2ce8-08d78a94ca34
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1366:|CY4PR12MB1366:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB13661CD563B190A501CB74B1CF2A0@CY4PR12MB1366.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+X-Forefront-PRVS: 0264FEA5C3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(81166006)(110136005)(316002)(8676002)(66556008)(478600001)(6486002)(66946007)(5660300002)(186003)(26005)(8936002)(2906002)(81156014)(54906003)(66476007)(4744005)(956004)(4326008)(86362001)(2616005)(6666004)(52116002)(16526019)(7696005)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1366;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 64Y6p/KUikjaVDOMofLOHJtMxZ0VghUthflLXUS3OYptFA0LXeTrmhbAO4i+4VPBNXt9jKuPc81QJPW1UVCmZ0h8WL3kSYYnyWIJ0v9KPdG/ecdmzBrKIUOZvHW2X7JVfc9S1gp2dkrk3XSpJbrMQRrXJq8ufX4mSEAOp0ZNk+/v8hxo/96j0KxnOXZ7PueB/bw3uTh7tCbrHX5XFztxs6bIQPIez9J3HyKd/yZ69T7u6VqWUX99t4HfmSsRnfZ2DNHJ62VRWg/Yw+HkEvWAJSlp8t/VjPG5nTirhnchk6rHHQ6AtxldOqzqPcFWiRu7AxvC2CVmZoMtugofObaeEv/bc7c7hSJusBCtJ3Kt0yGMPECI0wqnDEfzuuFVt6lFrQuLY5AaxyEd7F1xTOv+3w6QrZE5bpn7DscH1ds7OoZ2oFdL0geToViZ1H6DjYuH
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f5effb5-f0c0-4e45-2ce8-08d78a94ca34
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 06:19:55.4771
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: viRhhGRGPZD5BDXoP+A0eljRqskK12XYRtwl1nAKdibSw+ov05/Rh52QwGpXX0OFFBNbryfQb4rhno6C4py0Cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1366
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Allow compilation of tee subsystem for AMD's CPUs which have a dedicated
+AMD Secure Processor for Trusted Execution Environment (TEE).
 
+Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
+---
+ drivers/tee/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 26-12-2019 12:12, JC Kuo wrote:
-> 
-> On 12/18/19 5:16 PM, Nagarjuna Kristam wrote:
->> If usb-role-switch property is present in USB 2 port, register
->> usb-role-switch to receive usb role changes.
->>
->> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
->> ---
->> V2:
->>   - Removed dev_set_drvdata for port->dev.
->>   - Added of_platform_depopulate during error handling and driver removal.
->> ---
->>   drivers/phy/tegra/Kconfig |  1 +
->>   drivers/phy/tegra/xusb.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
->>   drivers/phy/tegra/xusb.h  |  3 +++
->>   3 files changed, 46 insertions(+)
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index f9817c3..df07c4d 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -2,6 +2,7 @@
->>   config PHY_TEGRA_XUSB
->>   	tristate "NVIDIA Tegra XUSB pad controller driver"
->>   	depends on ARCH_TEGRA
->> +	select USB_CONN_GPIO
->>   	help
->>   	  Choose this option if you have an NVIDIA Tegra SoC.
->>   
->> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
->> index f98ec39..dc00b42 100644
->> --- a/drivers/phy/tegra/xusb.c
->> +++ b/drivers/phy/tegra/xusb.c
->> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
->>   	port->dev.type = &tegra_xusb_port_type;
->>   	port->dev.of_node = of_node_get(np);
->>   	port->dev.parent = padctl->dev;
->> +	port->dev.driver = padctl->dev->driver;
->>   
->>   	err = dev_set_name(&port->dev, "%s-%u", name, index);
->>   	if (err < 0)
->> @@ -541,6 +542,10 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
->>   
->>   static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
->>   {
->> +	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
->> +		of_platform_depopulate(&port->dev);
->> +		usb_role_switch_unregister(port->usb_role_sw);
->> +	}
->>   	device_unregister(&port->dev);
->>   }
->>   
->> @@ -551,11 +556,42 @@ static const char *const modes[] = {
->>   	[USB_DR_MODE_OTG] = "otg",
->>   };
->>   
->> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
->> +{
->> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
->> +{
->> +	int err = 0;
->> +	struct usb_role_switch_desc role_sx_desc = {
->> +					.set = tegra_xusb_role_sw_set,
->> +					.fwnode = dev_fwnode(&port->dev),
->> +						   };
->> +
->> +	port->usb_role_sw = usb_role_switch_register(&port->dev,
->> +						&role_sx_desc);
->> +	if (IS_ERR(port->usb_role_sw)) {
->> +		err = PTR_ERR(port->usb_role_sw);
->> +		if (err != EPROBE_DEFER)
->> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
->> +				err);
->> +	}
->> +
->> +	/* populate connector entry */
->> +	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
->> +
->> +	return err;
->> +}
->> +
->>   static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
->>   {
->>   	struct tegra_xusb_port *port = &usb2->base;
->>   	struct device_node *np = port->dev.of_node;
->>   	const char *mode;
->> +	int err;
->>   
->>   	usb2->internal = of_property_read_bool(np, "nvidia,internal");
->>   
->> @@ -572,6 +608,12 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
->>   		usb2->mode = USB_DR_MODE_HOST;
->>   	}
->>   
-> "usb-role-switch" is not required for host mode port. If a otg or a peripheral
-> port doesn't have "usb-role-switch" property, .probe() should abort.
-> 
-> Thanks,
-> JC
-> 
+diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
+index 676ffcb..4f3197d 100644
+--- a/drivers/tee/Kconfig
++++ b/drivers/tee/Kconfig
+@@ -2,7 +2,7 @@
+ # Generic Trusted Execution Environment Configuration
+ config TEE
+ 	tristate "Trusted Execution Environment support"
+-	depends on HAVE_ARM_SMCCC || COMPILE_TEST
++	depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
+ 	select DMA_SHARED_BUFFER
+ 	select GENERIC_ALLOCATOR
+ 	help
+-- 
+1.9.1
 
-Yes, will add the checks accordingly.
--nagarjuna
-
->> +	if (of_property_read_bool(np, "usb-role-switch")) {
->> +		err = tegra_xusb_setup_usb_role_switch(port);
->> +		if (err < 0)
->> +			return err;
->> +	}
->> +
->>   	usb2->supply = devm_regulator_get(&port->dev, "vbus");
->>   	return PTR_ERR_OR_ZERO(usb2->supply);
->>   }
->> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
->> index da94fcc..9f27899 100644
->> --- a/drivers/phy/tegra/xusb.h
->> +++ b/drivers/phy/tegra/xusb.h
->> @@ -12,6 +12,7 @@
->>   #include <linux/workqueue.h>
->>   
->>   #include <linux/usb/otg.h>
->> +#include <linux/usb/role.h>
->>   
->>   /* legacy entry points for backwards-compatibility */
->>   int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
->> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
->>   	struct list_head list;
->>   	struct device dev;
->>   
->> +	struct usb_role_switch *usb_role_sw;
->> +
->>   	const struct tegra_xusb_port_ops *ops;
->>   };
->>   
->>
