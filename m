@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49970C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB5C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC5320722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735DF20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470738;
-	bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
+	s=default; t=1577470742;
+	bh=Oj/wpG56JUdbBfZSiT1X2Q2DY5oUoW8Uja7dfo5KvCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0i1+zgHU1YwHQVoRy5PUF94Ph7tDBMk5KFopDdEPVwVLWhca91tg/ebOhSL95TxM
-	 zElYXyyyBC2HdL1TLK/UxQzhHCHlFAeSaUHD2Va3J0cHsjJi9MkTRp82+2BrGVDrdD
-	 tEEtzC0OnR8fNZ/BqL2067TO3u20b/HcUmmzU1Oo=
+	b=vuaCpDPAqfiBZ7BIO2moLamaIhqo25qbu4Hp+jMVfIjoh0LiZYgLhg74awiLM5k1L
+	 AJWF7XsWzq/262lwnXE4wAJseSQdCqvc7kGlpG8KCCBSBmVdkBBcRXRdF2qHAuxd1B
+	 dwAi63PsSm6/iVpXJCoe1tuHdX0qSan7+wblUd90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfL0SO7 (ORCPT
+        id S1727832AbfL0STB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:14:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39346 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:19:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfL0SOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:14:54 -0500
+        id S1727382AbfL0SO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF7721744;
-        Fri, 27 Dec 2019 18:14:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1387721744;
+        Fri, 27 Dec 2019 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470494;
-        bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
+        s=default; t=1577470498;
+        bh=Oj/wpG56JUdbBfZSiT1X2Q2DY5oUoW8Uja7dfo5KvCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VzLjhrMUqAkHDOHBe8FLeS80UX9VJKxdHQ2fBYUm2KZWgLtfsvFas1B5luaJ64ALJ
-         RA/Uc/T+zH2pYqZewcGUveldXk4qzcWLQMzkTFLUv3/C9zctmKe2LW0ha13DBtZv21
-         kqjK81jtnuSpiZgbHYW+AsiKrIVRziMpD566d0Pw=
+        b=bvB8Akq/EEeN3nj1KrhxXoE8UdQs1AYGiakjTpmSGuhpk4cuzgIyc7qu0WCmiENe8
+         XFUG3zCs0CW0Su8BkVT3ZO5h/Fiqbzfgcmu8rr14z3Lic4k54f3RMAeL0Y/DRBp1E0
+         dXgfbIaIg7deyScN08eyMS2W/gXInX3ejF+9vmv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/38] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Fri, 27 Dec 2019 13:14:11 -0500
-Message-Id: <20191227181435.7644-14-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 18/38] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Fri, 27 Dec 2019 13:14:15 -0500
+Message-Id: <20191227181435.7644-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -61,52 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-Update the DT files accordingly.
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 957840cc7b78..b55c094893c6 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -79,7 +79,7 @@
- 		};
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 1e93dbc88e80..34f70d36b16d 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -345,6 +345,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
  
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
  
- 		panel-timing {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 9d35c3f07cad..21918807c9f6 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -41,7 +41,7 @@
- 	};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
 -- 
 2.20.1
 
