@@ -2,112 +2,86 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A159C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A87C2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20E72080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8FC20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 00:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfL0AGr (ORCPT
+        id S1726994AbfL0ASk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 19:06:47 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52360 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfL0AGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 19:06:46 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ikd9G-0002gt-Vv; Fri, 27 Dec 2019 00:06:35 +0000
-Date:   Fri, 27 Dec 2019 00:06:34 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     David Howells <dhowells@redhat.com>, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: Fix compile warning in afs_dynroot_lookup()
-Message-ID: <20191227000634.GS4203@ZenIV.linux.org.uk>
-References: <1576761291-30121-1-git-send-email-yangtiezhu@loongson.cn>
+        Thu, 26 Dec 2019 19:18:40 -0500
+Received: from mga02.intel.com ([134.134.136.20]:48430 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfL0ASj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 19:18:39 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 16:18:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,360,1571727600"; 
+   d="scan'208";a="208209940"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 26 Dec 2019 16:18:36 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ikdKu-0005u0-65; Fri, 27 Dec 2019 08:18:36 +0800
+Date:   Fri, 27 Dec 2019 08:17:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     kbuild-all@lists.01.org, darrick.wong@oracle.com,
+        bfoster@redhat.com, dchinner@redhat.com, sandeen@sandeen.net,
+        cmaiolino@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+        zhengbin13@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com
+Subject: Re: [PATCH 2/2] xfs: fix stale data exposure problem when punch
+ hole, collapse range or zero range across a delalloc extent
+Message-ID: <201912270810.Hlw06Rxu%lkp@intel.com>
+References: <20191226134721.43797-3-yukuai3@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1576761291-30121-1-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191226134721.43797-3-yukuai3@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 09:14:51PM +0800, Tiezhu Yang wrote:
-> Fix the following compile warning:
-> 
->   CC      fs/afs/dynroot.o
-> fs/afs/dynroot.c: In function ‘afs_dynroot_lookup’:
-> fs/afs/dynroot.c:117:6: warning: ‘len’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->   ret = lookup_one_len(name, dentry->d_parent, len);
->       ^
-> fs/afs/dynroot.c:91:6: note: ‘len’ was declared here
->   int len;
->       ^
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  fs/afs/dynroot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-> index 7503899..303f712 100644
-> --- a/fs/afs/dynroot.c
-> +++ b/fs/afs/dynroot.c
-> @@ -88,7 +88,7 @@ static struct dentry *afs_lookup_atcell(struct dentry *dentry)
->  	struct dentry *ret;
->  	unsigned int seq = 0;
->  	char *name;
-> -	int len;
-> +	int len = 0;
->  
->  	if (!net->ws_cell)
->  		return ERR_PTR(-ENOENT);
+Hi yu,
 
-NAK.  This is really, really wrong - passing zero to lookup_one_len() is
-always a bug.  It's not any better than undefined value; if we *can*
-get to lookup_one_len() call without other assignments to len, we
-are fucked.
+Thank you for the patch! Perhaps something to improve:
 
-As it were, it's a false positive - we have
-                if (cell) {
-                        len = cell->name_len;
-                        memcpy(name, cell->name, len + 1);
-                }
-upstream of
-        if (!cell)
-                goto out_n;
+[auto build test WARNING on xfs-linux/for-next]
+[cannot apply to djwong-xfs/djwong-devel v5.5-rc3 next-20191220]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-        ret = lookup_one_len(name, dentry->d_parent, len);
-so we can't reach the call of lookup_one_len() without having
-hit the assignment to len.
+url:    https://github.com/0day-ci/linux/commits/yu-kuai/fix-stale-data-exposure-problem/20191226-235515
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-BTW, what guarantees that cell->name won't be "@cell"?  The
-things would get rather interesting in that case...  The same
-for net->sysnames in afs_lookup_atsys() - what makes sure
-we won't see "@sys" among those?  David?
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-While we are at it,
-        d = d_splice_alias(inode, dentry);
-        if (!IS_ERR_OR_NULL(d)) {
-                d->d_fsdata = dentry->d_fsdata;
-                trace_afs_lookup(dvnode, &d->d_name,
-                                 inode ? AFS_FS_I(inode) : NULL);
-        } else {
-                trace_afs_lookup(dvnode, &dentry->d_name,
-                                 IS_ERR_OR_NULL(inode) ? NULL
-                                 : AFS_FS_I(inode));
-        }
-is _very_ suspicious-looking - d_splice_alias() consumes
-an inode reference, and if it ends up failing on non-ERR_PTR()
-inode, the inode will be dropped by the time it returns.
-IOW, that AFS_FS_I(inode) in the second branch can bloody
-well point to already freed memory.  Tracepoints: Just Say No...
+
+sparse warnings: (new ones prefixed by >>)
+
+>> fs/xfs/xfs_file.c:790:1: sparse: sparse: symbol 'try_split_da_extent' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
