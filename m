@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBD5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D64C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36D5206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF36A206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468820;
-	bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
+	s=default; t=1577468823;
+	bh=BRBDoL0jBkrn1RFaEcc86qvinIIVWonsh5GoK2iFjM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LpgzrZXPspgLCCrfEBWGbW7Kvj2OTNB5A6AipI+BFA/P0lssrZqInjEg8VbhtzgCu
-	 05YInSQBjdSjiZ9Q5bPTvjk4dpw6lIiVJYWajjKVRUMSThyOcUhBQKzhbsS0+0+GQK
-	 lyeiXI0De1M41bx2z5s82nkStdPCzR6jmwKc8HVw=
+	b=TTXO6QgKYhArI8r/WDLp9Iy9u4BmKqG/AgEOek/lm1PTOONuvuUUH7WPoGXAMwJQo
+	 OxHRihTy2MXuxlli1igc4wW4O/VQr2eJpdbA9ePXYe6jzmla+eh211whSYpHF1utf5
+	 5/LGo0Ye22v8M+y0CNcxZpRcOGDEW/0d6p/Ge110=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfL0RpD (ORCPT
+        id S1728057AbfL0RrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:47:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfL0Roy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:54 -0500
+        id S1728281AbfL0RpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E0D206F4;
-        Fri, 27 Dec 2019 17:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72EB8222C2;
+        Fri, 27 Dec 2019 17:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468693;
-        bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
+        s=default; t=1577468702;
+        bh=BRBDoL0jBkrn1RFaEcc86qvinIIVWonsh5GoK2iFjM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOwhL4RmPqCJPSLe0YPC8fbIxbWGSF9SxdfqrDxA+J1FiPAFdtQmGnAjOLjBwDHkE
-         uE8n82/kDqwtcOYBWryNwNq9vlscpragl32f5Rw4m3o0DbL2s3wsFJ23eT6cwcVPXW
-         GbkmBP2e4A4n1s3n0exH/zke6e1iqCXLl5iHd+Eg=
+        b=gAgOldOoRPtxaoZs1NKP6/9Nar9DKB/DgfHXBYNc66PQgQsxZncOMWH6Wu47MV3Ib
+         pXXefPwaslduUS1CNvLAuto6VFb36h2V8+iF4Ox95Fd6HGq0R14GPHXwa4DEs0x7CJ
+         G72clSqqwVHqlr158iuAJLtIjzJEIHCDltl1sINw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 50/84] bnx2x: Fix logic to get total no. of PFs per engine
-Date:   Fri, 27 Dec 2019 12:43:18 -0500
-Message-Id: <20191227174352.6264-50-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 58/84] rfkill: Fix incorrect check to avoid NULL pointer dereference
+Date:   Fri, 27 Dec 2019 12:43:26 -0500
+Message-Id: <20191227174352.6264-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit ee699f89bdbaa19c399804504241b5c531b48888 ]
+[ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
 
-Driver doesn't calculate total number of PFs configured on a
-given engine correctly which messed up resources in the PFs
-loaded on that engine, leading driver to exceed configuration
-of resources (like vlan filters etc.) beyond the limit per
-engine, which ended up with asserts from the firmware.
+In rfkill_register, the struct rfkill pointer is first derefernced
+and then checked for NULL. This patch removes the BUG_ON and returns
+an error to the caller in case rfkill is NULL.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rfkill/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index ee5159ef837e..df5e8c2e8eaf 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -1113,7 +1113,7 @@ static inline u8 bnx2x_get_path_func_num(struct bnx2x *bp)
- 		for (i = 0; i < E1H_FUNC_MAX / 2; i++) {
- 			u32 func_config =
- 				MF_CFG_RD(bp,
--					  func_mf_config[BP_PORT(bp) + 2 * i].
-+					  func_mf_config[BP_PATH(bp) + 2 * i].
- 					  config);
- 			func_num +=
- 				((func_config & FUNC_MF_CFG_FUNC_HIDE) ? 0 : 1);
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index 1355f5ca8d22..2c0ac44741a0 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1014,10 +1014,13 @@ static void rfkill_sync_work(struct work_struct *work)
+ int __must_check rfkill_register(struct rfkill *rfkill)
+ {
+ 	static unsigned long rfkill_no;
+-	struct device *dev = &rfkill->dev;
++	struct device *dev;
+ 	int error;
+ 
+-	BUG_ON(!rfkill);
++	if (!rfkill)
++		return -EINVAL;
++
++	dev = &rfkill->dev;
+ 
+ 	mutex_lock(&rfkill_global_mutex);
+ 
 -- 
 2.20.1
 
