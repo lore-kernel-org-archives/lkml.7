@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A43C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C04C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B332221582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C92524125
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468512;
-	bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
+	s=default; t=1577468519;
+	bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxLkE38En1wN53MBUW8FyJJWJlLyK1Ary9VoLzAlUokEOscM5IqoqrqF3MLwJm8OR
-	 ngwGeNtngs8Ov2892YuFQf71/0coXuCJwYIm0ZN82Xm2qtdG+CCifkY9kpQYcVYUeb
-	 8gJrq74XvlqhYA9MwPDkFrK1gJ/3KPPy8MNHSd6k=
+	b=eIaJPI2QFIMKsgfXHrpR3MCZHtnK3ASkXhphzmOipEJ1vpnXanESZwcmTztIcM/So
+	 J6DEozNTxU8/aIOjrnIzMaIXMAO1fwcjKbT+esl0iLGRGoX6f/RkoH+K8Htfr3+c0C
+	 wh2ZXn2MToCaHFAvDgWLYhSsP4yC47t9KMSt2miA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfL0Rlv (ORCPT
+        id S1727684AbfL0Rl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbfL0Rln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:43 -0500
+        id S1727494AbfL0Rl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1D9021D7E;
-        Fri, 27 Dec 2019 17:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48CEE22B48;
+        Fri, 27 Dec 2019 17:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468502;
-        bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
+        s=default; t=1577468516;
+        bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+lSwmxyzvLNw+Ybl0hsNaP+Hxhm8XONBVVcEEYEPKnTF3DcPqeDU2ipqyd8HEdFd
-         RmgRgS+VqH32K3L07YYzgH8+aPsDMbXgCbhpO/RjcHbZ+m3OPLWcr4Dt9gs0kAvDjw
-         Wv48DGUs9ULtKc0s6WlnHZYLGZXyc+WjMNDulfR8=
+        b=NeO/Q6dCwVUNNbIphP1CyWFZP1iWckxfpgcffIefAK3QEAzwk22BGzs85cSj0To7z
+         1z2R7N1DDOh+0FlWm5mZRmDVm4r9YtLNZlG7tKAvmT0ZIri0MH1tTTxPD0aatXWTXC
+         lDaNW+izyfy8YejZ5Y8y1ZVQYL81Gf4WLh2mjyaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 036/187] netfilter: nf_tables: skip module reference count bump on object updates
-Date:   Fri, 27 Dec 2019 12:38:24 -0500
-Message-Id: <20191227174055.4923-36-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 048/187] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Date:   Fri, 27 Dec 2019 12:38:36 -0500
+Message-Id: <20191227174055.4923-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,33 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit fd57d0cbe187e93f63777d36e9f49293311d417f ]
+[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
 
-Use __nft_obj_type_get() instead, otherwise there is a module reference
-counter leak.
+The MDIO node on Cygnus had an reversed #address-cells and
+ #size-cells properties, correct those.
 
-Fixes: d62d0ba97b58 ("netfilter: nf_tables: Introduce stateful object update operation")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 4c03c14e46bc..67ca47c7ce54 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -5217,7 +5217,7 @@ static int nf_tables_newobj(struct net *net, struct sock *nlsk,
- 		if (nlh->nlmsg_flags & NLM_F_REPLACE)
- 			return -EOPNOTSUPP;
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 2dac3efc7640..1bc45cfd5453 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -174,8 +174,8 @@
+ 		mdio: mdio@18002000 {
+ 			compatible = "brcm,iproc-mdio";
+ 			reg = <0x18002000 0x8>;
+-			#size-cells = <1>;
+-			#address-cells = <0>;
++			#size-cells = <0>;
++			#address-cells = <1>;
+ 			status = "disabled";
  
--		type = nft_obj_type_get(net, objtype);
-+		type = __nft_obj_type_get(objtype);
- 		nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
- 
- 		return nf_tables_updobj(&ctx, type, nla[NFTA_OBJ_DATA], obj);
+ 			gphy0: ethernet-phy@0 {
 -- 
 2.20.1
 
