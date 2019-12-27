@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE62C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423E0C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D009E208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171102176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469196;
-	bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
+	s=default; t=1577469199;
+	bh=Cm/FXUokmBwUWaazZYSM4VH0fK5k9FrRbUsXO20vaLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xs8DxBDDsW+XE1yG39RKY78WMp05DuBetCxtgherKTIdJSE0TO/LQCNMUK6RKkZyB
-	 s7MZgE9CepgRLU/d8IZr5BBlefgy0ldSSqqWQLrvo15NSO47eMJJrYVrKM+Fm3eYus
-	 FuH8XNRuNLu/qTFtif2ynieXT9fkRP1ROia8RAQ8=
+	b=YDDM5rJ/+m00fttMmczYksF8LDCO/XD8VQb4QlaXutSVKdNioIBi+ix4uO0VVvDYf
+	 84X8oU3RB4B9Zy7y0OUiyo7Tj09++mtfJ8xam4IYwBGLX4Z5gkgq4ilIqdp9iCiOuN
+	 mSZ7aYE85ORy52kmSQwK9YzyJSUoOJ7wtVR1rs1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfL0RxP (ORCPT
+        id S1727516AbfL0Rmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:53:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727582AbfL0Rmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Dec 2019 12:42:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727993AbfL0Rmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E132173E;
-        Fri, 27 Dec 2019 17:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B335B21582;
+        Fri, 27 Dec 2019 17:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468575;
-        bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
+        s=default; t=1577468568;
+        bh=Cm/FXUokmBwUWaazZYSM4VH0fK5k9FrRbUsXO20vaLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRtqvqAktjBMPULcz8XwlXizIn2F5J7R7PXoVf6msmzZ/Ru6ysn9W2gKJwtst4Vqe
-         bpmj2pEUpFS6iwgNgKjH55AAT3L33tCji8raOKo9SDciJK/o5t1TnUxFBotxLZ4gDS
-         BcxEMRBLUsgbuoZd+Zo/5N/Wf1nkOPGimJ8lRIVY=
+        b=yaCmE9o2ffTnqy8VXug5x6RyU8vFhvvVJ8Bf8vKoC7/EKLKz5AFSUDX06sY6if2lx
+         3vfc1DJx4eDRHEUXLMNVwdedYWTrumadSPg/vDb4MmKKK2qRk493L58BTJAzPosY9o
+         HZTL4kx1U89dpAdQUu4JU+NTW+n0CiPd0uBAspSM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Christoph Hellwig <hch@lst.de>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 099/187] ocxl: Fix potential memory leak on context creation
-Date:   Fri, 27 Dec 2019 12:39:27 -0500
-Message-Id: <20191227174055.4923-99-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 093/187] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Fri, 27 Dec 2019 12:39:21 -0500
+Message-Id: <20191227174055.4923-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,57 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 913e73c77d48aeeb50c16450a653dca9c71ae2e2 ]
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-If we couldn't fully init a context, we were leaking memory.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-Fixes: b9721d275cc2 ("ocxl: Allow external drivers to use OpenCAPI contexts")
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191209105513.8566-1-fbarrat@linux.ibm.com
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/ocxl/context.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-index 994563a078eb..de8a66b9d76b 100644
---- a/drivers/misc/ocxl/context.c
-+++ b/drivers/misc/ocxl/context.c
-@@ -10,18 +10,17 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 	int pasid;
- 	struct ocxl_context *ctx;
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index be941d382c8d..14c2c53e3f9e 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -260,6 +260,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
  
--	*context = kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
--	if (!*context)
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
- 		return -ENOMEM;
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
  
--	ctx = *context;
--
- 	ctx->afu = afu;
- 	mutex_lock(&afu->contexts_lock);
- 	pasid = idr_alloc(&afu->contexts_idr, ctx, afu->pasid_base,
- 			afu->pasid_base + afu->pasid_max, GFP_KERNEL);
- 	if (pasid < 0) {
- 		mutex_unlock(&afu->contexts_lock);
-+		kfree(ctx);
- 		return pasid;
- 	}
- 	afu->pasid_count++;
-@@ -43,6 +42,7 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 	 * duration of the life of the context
- 	 */
- 	ocxl_afu_get(afu);
-+	*context = ctx;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(ocxl_context_alloc);
 -- 
 2.20.1
 
