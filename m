@@ -2,225 +2,128 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A469C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7909CC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27822208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387322080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RfBa3CkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfL0CHc (ORCPT
+        id S1727083AbfL0CLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:07:32 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38920 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfL0CHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:07:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
-   d="scan'208";a="223675039"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:30 -0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        sean.j.christopherson@intel.com
-Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v9 4/7] KVM: VMX: Load CET states on vmentry/vmexit
-Date:   Fri, 27 Dec 2019 10:11:30 +0800
-Message-Id: <20191227021133.11993-5-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20191227021133.11993-1-weijiang.yang@intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
+        Thu, 26 Dec 2019 21:11:46 -0500
+Received: from mail-eopbgr40083.outbound.protection.outlook.com ([40.107.4.83]:31401
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726115AbfL0CLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:11:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ATcJNWxl3idoFzGSHykPUeFc69lnDg7McfFZf5IK9wFCmjPDu8dj9WUorMu/z/eKWAm+7ILNMolYBpD92wpFLUgQhe3o29NyC+9Ic+KfK2TOQxuaIkERRMz4d7qKuQp/1nUENcCaEAKa9oq6bHhw02vSFSOeUUfnt4tWM9WI3G6V2ZqP3lC62K5T+S6iFq5F+BYkKjvCpYMVyfQ5gu1/M622WG6lnvysC6ERmgmnSjsPD7Bh5pQWrgeJmwfDbhoFjAEISYFpn+Zyxj5ljNEgSIKs8nTGmpvS7sHwq+8ByUezlKEFDiM7Q3bBf2FUlPV9XKPZA9PD6stKblqA8lOgXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c6SXIiQgP2uAPLgIa/gbTjsfIt3VtJaG54iIOQl0vRk=;
+ b=TBmRDjSnMrPXen5KbkAFzWcKJ+dcExNEMAY9/d1VWIxM44its7DgSDFI5FBDJEJPcNoEeb3lee6yQ83Vx4qdP9CVxET8kRhmhbVBxv1uno3e2+O+TOC6DwxLIABY5z3EGKy0QrXnYrmZCE2rTqaxYGqXON+uFqvAImJG59VkM5OsAJ81ucU+NXUiGtn+JGpyiiFIl0MiWomQWq0YgT7b8ikfZzilFZpBBPw0sauCkCTqFgwebV9SdwuAWhNxkf5i3uR1eG3a3AjGkNSUDoIAmqsI5uTxetiJEYDUKdatPqmi8mrAS6ecXPPhcO+r+B1Q4JYLy7UM9wawmKGs3f+SHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c6SXIiQgP2uAPLgIa/gbTjsfIt3VtJaG54iIOQl0vRk=;
+ b=RfBa3CkWxD0slWRnRcN176hmKvdzneWcL75Ey9D5jpsqa57r745N44FNZIFE0NaCte6Ds7NG3fuetwK/BulNKL7+etShfh+HpY14sBp5O1bQ6jjYMr+QPhXek6IthO/NQvibfYksQYLSUh4tXI7m1g1mh/GweUYeHjbxOTZaffo=
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
+ VE1PR04MB6656.eurprd04.prod.outlook.com (20.179.235.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Fri, 27 Dec 2019 02:11:42 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::b870:829f:748a:4bc%3]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
+ 02:11:41 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "ivan.khoronzhuk@linaro.org" <ivan.khoronzhuk@linaro.org>
+Subject: RE: [EXT] Re: [net-next] enetc: add support time specific departure
+ base on the qos etf
+Thread-Topic: [EXT] Re: [net-next] enetc: add support time specific departure
+ base on the qos etf
+Thread-Index: AQHVuUMFGbRcJW58xE+CKKbOYElKEqfNEJSAgAAvp/A=
+Date:   Fri, 27 Dec 2019 02:11:41 +0000
+Message-ID: <VE1PR04MB64967EB9ED113EF77B48D7E8922A0@VE1PR04MB6496.eurprd04.prod.outlook.com>
+References: <20191223032618.18205-1-Po.Liu@nxp.com>
+ <20191226.150941.618022568387879445.davem@davemloft.net>
+In-Reply-To: <20191226.150941.618022568387879445.davem@davemloft.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: babb86cc-d48e-4cf9-bbcb-08d78a721d55
+x-ms-traffictypediagnostic: VE1PR04MB6656:|VE1PR04MB6656:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6656DB35D6649E7691A38F95922A0@VE1PR04MB6656.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0264FEA5C3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(189003)(199004)(13464003)(8936002)(8676002)(81166006)(81156014)(5660300002)(76116006)(66946007)(33656002)(66446008)(64756008)(66556008)(66476007)(54906003)(186003)(55016002)(7696005)(2906002)(26005)(44832011)(9686003)(478600001)(86362001)(6506007)(53546011)(4326008)(316002)(52536014)(71200400001)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6656;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1Myb1iP9vTtJ4O0izUUY24iUTDMYr06E4YUmQv3nnMWcaSJk6VRK13OEL2gNAaBJKaK4sdSAZr+oovvPTPKHFhmG8wWWMClLLUoeSvsLtFY+Nth9ftiud7RrT7ZXRGqGOVXm/izj0M7Jna6gE81PlWEOUCeyBe2mSrzSp8OIDLqwm1lzrnNNeNjc/BD4xWKDINbgEyc0A12WVA9d+hN5a/NDCZeVSATME7EOF04bVKV37hladfYHBOPX5fzNufGpfaZ6IhSj7QZHh5SOsfuZaeInxn2OvetQX5jAMZQWUF0k9X68SJp3yChrJQYf5gQWvYTPSakyKJNFD9yI96lwBtbh/SFZxsFiR1pt3SoHomBi2md86O21eOIURORtIk5ky28NHZREqv/rCaGNURTS2Os3TTci5gKZb2uBjMocfntGlHO3+xfkq4Jk86i4zGW2IVoHv6HvRl7SJfPDMXWynus6zNKM/yYIgfeyHGorBVVdIhim2m6Y2aE6eDJVJatv
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: babb86cc-d48e-4cf9-bbcb-08d78a721d55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Dec 2019 02:11:41.2621
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ioN/BvVdZc28ANu/mAqUItKpefaWeYRHvy8i6PduhgldtZrLELCICAZbmsuCY+X2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6656
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Load {guest,host} CET state" bit controls whether guest/host
-CET states will be loaded at VM entry/exit. Before doing that,
-KVM needs to check if CET can be enabled both on host and guest.
-
-Note:
-1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
-  similarly, it does not allow CR0.WP to be cleared while CR4.CET = 1.
-  In either case, KVM would inject #GP to guest.
-
-2)SHSTK and IBT features share one control MSR:
-  MSR_IA32_{U,S}_CET, which means it's difficult to hide
-  one feature from another in the case of SHSTK != IBT,
-  after discussed in community, it's agreed to allow Guest
-  control two features independently as it won't introduce
-  security hole.
-
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/kvm/vmx/capabilities.h | 10 ++++++
- arch/x86/kvm/vmx/vmx.c          | 56 +++++++++++++++++++++++++++++++--
- arch/x86/kvm/x86.c              |  3 ++
- 3 files changed, 67 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 7aa69716d516..4a67d35a42a2 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -106,6 +106,16 @@ static inline bool vmx_mpx_supported(void)
- 		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
- }
- 
-+static inline bool cpu_has_load_guest_cet_states_ctrl(void)
-+{
-+	return ((vmcs_config.vmentry_ctrl) & VM_ENTRY_LOAD_GUEST_CET_STATE);
-+}
-+
-+static inline bool cpu_has_load_host_cet_states_ctrl(void)
-+{
-+	return ((vmcs_config.vmexit_ctrl) & VM_EXIT_LOAD_HOST_CET_STATE);
-+}
-+
- static inline bool cpu_has_vmx_tpr_shadow(void)
- {
- 	return vmcs_config.cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 61fc846c7ef3..95063cc7da89 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -44,6 +44,7 @@
- #include <asm/spec-ctrl.h>
- #include <asm/virtext.h>
- #include <asm/vmx.h>
-+#include <asm/cet.h>
- 
- #include "capabilities.h"
- #include "cpuid.h"
-@@ -2445,7 +2446,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_EXIT_LOAD_IA32_EFER |
- 	      VM_EXIT_CLEAR_BNDCFGS |
- 	      VM_EXIT_PT_CONCEAL_PIP |
--	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
-+	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
-+	      VM_EXIT_LOAD_HOST_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
- 				&_vmexit_control) < 0)
- 		return -EIO;
-@@ -2469,7 +2471,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_ENTRY_LOAD_IA32_EFER |
- 	      VM_ENTRY_LOAD_BNDCFGS |
- 	      VM_ENTRY_PT_CONCEAL_PIP |
--	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
-+	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
-+	      VM_ENTRY_LOAD_GUEST_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
- 				&_vmentry_control) < 0)
- 		return -EIO;
-@@ -3027,6 +3030,25 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 	vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
-+bool is_cet_bit_allowed(struct kvm_vcpu *vcpu)
-+{
-+	u64 kvm_xss = kvm_supported_xss();
-+	unsigned long cr0;
-+	bool cet_allowed;
-+
-+	cr0 = kvm_read_cr0(vcpu);
-+
-+	/* Right now, only user-mode CET is supported.*/
-+	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-+		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-+
-+	if ((cr0 & X86_CR0_WP) && cet_allowed)
-+		return true;
-+
-+	return false;
-+}
-+
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -3067,6 +3089,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			return 1;
- 	}
- 
-+	if ((cr4 & X86_CR4_CET) && !is_cet_bit_allowed(vcpu))
-+		return 1;
-+
- 	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
- 		return 1;
- 
-@@ -3930,6 +3955,12 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
- 
- 	if (cpu_has_load_ia32_efer())
- 		vmcs_write64(HOST_IA32_EFER, host_efer);
-+
-+	if (cpu_has_load_host_cet_states_ctrl()) {
-+		vmcs_writel(HOST_S_CET, 0);
-+		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
-+		vmcs_writel(HOST_SSP, 0);
-+	}
- }
- 
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-@@ -6499,7 +6530,9 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
- static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	u64 kvm_xss = kvm_supported_xss();
- 	unsigned long cr3, cr4;
-+	bool cet_allowed;
- 
- 	/* Record the guest's net vcpu time for enforced NMI injections. */
- 	if (unlikely(!enable_vnmi &&
-@@ -6530,6 +6563,25 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 		vmx->loaded_vmcs->host_state.cr3 = cr3;
- 	}
- 
-+	/* Right now, only user-mode CET is supported.*/
-+	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-+		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-+
-+	if (cpu_has_load_guest_cet_states_ctrl() && cet_allowed)
-+		vmcs_set_bits(VM_ENTRY_CONTROLS,
-+			      VM_ENTRY_LOAD_GUEST_CET_STATE);
-+	else
-+		vmcs_clear_bits(VM_ENTRY_CONTROLS,
-+				VM_ENTRY_LOAD_GUEST_CET_STATE);
-+
-+	if (cpu_has_load_host_cet_states_ctrl() && cet_allowed)
-+		vmcs_set_bits(VM_EXIT_CONTROLS,
-+			      VM_EXIT_LOAD_HOST_CET_STATE);
-+	else
-+		vmcs_clear_bits(VM_EXIT_CONTROLS,
-+				VM_EXIT_LOAD_HOST_CET_STATE);
-+
- 	cr4 = cr4_read_shadow();
- 	if (unlikely(cr4 != vmx->loaded_vmcs->host_state.cr4)) {
- 		vmcs_writel(HOST_CR4, cr4);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a9b1140d0508..b27d97eaec24 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -788,6 +788,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- 	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
- 		return 1;
- 
-+	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-+		return 1;
-+
- 	kvm_x86_ops->set_cr0(vcpu, cr0);
- 
- 	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
--- 
-2.17.2
-
+DQoNCg0KQnIsDQpQbyBMaXUNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
+OiBEYXZpZCBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+DQo+IFNlbnQ6IDIwMTnE6jEy1MIy
+N8jVIDc6MTANCj4gVG86IFBvIExpdSA8cG8ubGl1QG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJu
+ZWxAdmdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOw0KPiB2aW5pY2l1cy5n
+b21lc0BpbnRlbC5jb207IENsYXVkaXUgTWFub2lsIDxjbGF1ZGl1Lm1hbm9pbEBueHAuY29tPjsN
+Cj4gVmxhZGltaXIgT2x0ZWFuIDx2bGFkaW1pci5vbHRlYW5AbnhwLmNvbT47IEFsZXhhbmRydSBN
+YXJnaW5lYW4NCj4gPGFsZXhhbmRydS5tYXJnaW5lYW5AbnhwLmNvbT47IFhpYW9saWFuZyBZYW5n
+DQo+IDx4aWFvbGlhbmcueWFuZ18xQG54cC5jb20+OyBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNv
+bT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IEplcnJ5IEh1YW5nIDxqZXJy
+eS5odWFuZ0BueHAuY29tPjsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54cC5jb20+OyBpdmFuLmto
+b3JvbnpodWtAbGluYXJvLm9yZw0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW25ldC1uZXh0XSBlbmV0
+YzogYWRkIHN1cHBvcnQgdGltZSBzcGVjaWZpYyBkZXBhcnR1cmUgYmFzZSBvbg0KPiB0aGUgcW9z
+IGV0Zg0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBGcm9tOiBQbyBMaXUgPHBvLmxp
+dUBueHAuY29tPg0KPiBEYXRlOiBNb24sIDIzIERlYyAyMDE5IDAzOjQyOjM5ICswMDAwDQo+IA0K
+PiA+IC0gVHJhbnNtaXQgY2hlY2tzdW0gb2ZmbG9hZHMgYW5kIHRpbWUgc3BlY2lmaWMgZGVwYXJ0
+dXJlIG9wZXJhdGlvbiBhcmUNCj4gPiBtdXR1YWxseSBleGNsdXNpdmUuDQo+IA0KPiBJIGRvIG5v
+dCBzZWUgYW55dGhpbmcgd2hpY2ggZW5mb3JjZXMgdGhpcyBjb25mbGljdC4NCj4gDQo+IEl0IGxv
+b2tzIHRvIG1lIGxpa2UgaWYgdGhlIHVzZXIgY29uZmlndXJlcyB0aW1lIHNwZWNpZmljIGRlcGFy
+dHVyZSwgYW5kIFRYIFNLQnMgd2lsbA0KPiBiZSBjaGVja3N1bSBvZmZsb2FkZWQsIHRoZSB0aW1l
+IHNwZWNpZmljIGRlcGFydHVyZSB3aWxsIHNpbXBseSBub3QgYmUgcGVyZm9ybWVkLg0KPiANCj4g
+SWYgdHJ1ZSwgdGhpcyBiZWhhdmlvciB3aWxsIGJlIHZlcnkgc3VycHJpc2luZyBmb3IgdGhlIHVz
+ZXIuDQo+IA0KPiBJbnN0ZWFkLCB0aGUgY29uZmlndXJhdGlvbiBvcGVyYXRpb24gdGhhdCBjcmVh
+dGVzIHRoZSBjb25mbGljdCBzaG91bGQgdGhyb3cgYW5kDQo+IGVycm9yIGFuZCBmYWlsLg0KDQpJ
+IHdvdWxkIGZpeCBpdC4NCg0KPiANCj4gVGhhbmsgeW91Lg0K
