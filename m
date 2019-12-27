@@ -2,151 +2,128 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B1DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ECAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C5D206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XH7UgCIl"
+	by mail.kernel.org (Postfix) with ESMTP id BFF0B208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 07:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577430187;
+	bh=pK5NjLlc8HWBe47WJjU0g8KCM1MJ3oftsVNdPgivXf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EFXQFjSkcH5F9q/K2+km5Bc5ByY2G4TSGPsCq5lPYoagu9Zpc8pJox4xd1YwLy6hE
+	 +6Fhz4mujlp5GaMFfe5Ioa08Q8WJnWM5lsxftOcMosTGCIKmMTEFVu9cDesAJfqNrF
+	 LPyp4GHGEhEJeemcuXEsQnfvRtoHl017hgnRoCpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfL0HBK (ORCPT
+        id S1726365AbfL0HDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 02:01:10 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10958 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726483AbfL0HBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 02:01:10 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577430069; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jEq3NH8Tt/tdYJokKq7xs3z1G/fYNQMKHrUk2kxZTyE=;
- b=XH7UgCIlGU1QyDpo/KNS3BFSM9DHsTuGmzRRsxEnS12Oi4n0wlEHcejE1GqB89JyRK30ScQE
- QmAzTtLPSdlhrnczlR7ZDvQDL540fVptjzMJA62sbiSzmV29riTaIneiG9EcyUnxstd3Qil1
- up04KPyLV54bdZKT0ij7MBQabb0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e05ac34.7f01612741b8-smtp-out-n02;
- Fri, 27 Dec 2019 07:01:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 24E47C447A0; Fri, 27 Dec 2019 07:01:07 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 27 Dec 2019 02:03:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfL0HDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 02:03:06 -0500
+Received: from localhost (unknown [106.201.34.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67CA6C4479F;
-        Fri, 27 Dec 2019 07:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822DB206CB;
+        Fri, 27 Dec 2019 07:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577430185;
+        bh=pK5NjLlc8HWBe47WJjU0g8KCM1MJ3oftsVNdPgivXf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CdaRs8QXBYpI2r4LreKJRhblBBK09MHiUsO0+7huZUxbJwstfxXw0v8PjlK68WVVu
+         Gm3c/IV1aFRx0IMm25OXBpy9AO+ZX4NZdOQGZBGcrGp/DBA3am1FSfTILalUud0bn8
+         uX0EQZNbS9o43FCSDVHpn31M8IqMPjLGV3RSijGc=
+Date:   Fri, 27 Dec 2019 12:33:01 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v5 06/17] soundwire: add support for sdw_slave_type
+Message-ID: <20191227070301.GK3006@vkoul-mobl>
+References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+ <20191217210314.20410-7-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 27 Dec 2019 12:31:05 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Taniya Das <tdas@codeaurora.org>, bjorn.andersson@linaro.org
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?Q?Michael_Turquette_=C2=A0?= <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-In-Reply-To: <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
-References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
- <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
-Message-ID: <5b16d051146224c1efad40c4548dd0c4@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217210314.20410-7-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Taniya,
-
-On 2019-12-27 10:12, Taniya Das wrote:
-> The MSS clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
+On 17-12-19, 15:03, Pierre-Louis Bossart wrote:
+> In the existing SoundWire code, the bus does not have any explicit
+> representation for Master Devices - only SoundWire Slaves are exposed.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> In SoundWire, the Master Device provides the clock, synchronization
+> information and command/control channels. When multiple links are
+> supported, a Controller may expose more than one Master Device; they
+> are typically embedded inside a larger audio cluster (be it in an
+> SOC/chipset or an external audio codec), and we need to describe it
+> using the Linux device and driver model.  This will allow for
+> configuration functions to account for external dependencies such as
+> power rails, clock sources or wake-up mechanisms. This transition will
+> also allow for better sysfs support without the reference count issues
+> mentioned in the initial reviews.
+> 
+> In this patch, we first convert the existing code to use an explicit
+> sdw_slave_type and add error checks if this type is not set.
+> 
+> In follow-up patches we can add support for the sdw_master_type.
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  .../devicetree/bindings/clock/qcom,mss.yaml        | 41 
-> ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>  drivers/soundwire/bus_type.c       | 23 ++++++++++++++++++-----
+>  drivers/soundwire/slave.c          |  7 ++++++-
+>  include/linux/soundwire/sdw_type.h |  6 ++++++
+>  3 files changed, 30 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> new file mode 100644
-> index 0000000..05efe2b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+> index 9a0fd3ee1014..9719680a1e48 100644
+> --- a/drivers/soundwire/bus_type.c
+> +++ b/drivers/soundwire/bus_type.c
+> @@ -49,13 +49,26 @@ int sdw_slave_modalias(const struct sdw_slave *slave, char *buf, size_t size)
+>  
+>  static int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  {
+> -	struct sdw_slave *slave = to_sdw_slave_device(dev);
+> +	struct sdw_slave *slave;
+>  	char modalias[32];
+>  
+> -	sdw_slave_modalias(slave, modalias, sizeof(modalias));
+> -
+> -	if (add_uevent_var(env, "MODALIAS=%s", modalias))
+> -		return -ENOMEM;
+> +	if (is_sdw_slave(dev)) {
+> +		slave = to_sdw_slave_device(dev);
 > +
-> +title: Qualcomm Modem Clock Controller Binding
+> +		sdw_slave_modalias(slave, modalias, sizeof(modalias));
 > +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm modem clock control module which supports the clocks.
-> +
-> +properties:
-> +  compatible :
-> +    enum:
-> +       - qcom,sc7180-mss
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  additionalItems: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +
-> +examples:
-> +  # Example of MSS with clock nodes properties for SC7180:
-> +  - |
-> +    clock-controller@41aa000 {
-> +      compatible = "qcom,sc7180-mss";
-> +      reg = <0x041aa000 0x100>;
+> +		if (add_uevent_var(env, "MODALIAS=%s", modalias))
+> +			return -ENOMEM;
+> +	} else {
+> +		/*
+> +		 * We only need to handle uevents for the Slave device
+> +		 * type. This error cannot happen unless the .uevent
+> +		 * callback is set to use this function for a
+> +		 * different device type (e.g. Master or Monitor)
+> +		 */
+> +		dev_err(dev, "uevent for unknown Soundwire type\n");
+> +		return -EINVAL;
 
-Bjorn/me had a discussion about the size
-a while back, we should use the entire
-reg space instead of fragmenting it.
-
-reg = <0x041a8000 0x8000>;
-
-We should just use ^^ instead.
-
-> +      #clock-cells = <1>;
-> +    };
-> +...
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
-> member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+At this point and after next patch, the above code would be a no-op, do
+we want this here, if so why?
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+~Vinod
