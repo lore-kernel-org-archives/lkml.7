@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10355C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253AEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D215220722
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17DE2173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470546;
-	bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdEnJ6pj2BOGKdXoOgMf32jtvzYcmNIp3IIIXpN4m7G0ikF5gF0pkzBGQlM0ITbdA
-	 FtFm+LHh8zwpCyKluzEV7xtSZLtdoTjvUuaZFg4kKcLAdYN/4XQqRwFEvgpdxQGdzX
-	 oebJmSdnev5N8nk01YjHlsd0M7IpJWALPMgY8seA=
+	s=default; t=1577470555;
+	bh=tLns9gbVAwhHpW2u7vZVvshMGi8XSOoUHu7ct+ahSTA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qtY1UY7BGoxmA0DUugFNlwx2IYv0v2PiYaAO5ugxjVgL936FH34Txth/S2kOfpBOE
+	 GJ6Wh6rNw4cdF6zYAwgnVvS0JC9CpZI+1pyy0tZSee9E3s03QFv9A8RVY4f0PsuYvx
+	 YiQTboZzVRlAZC3O4nPFpaQTJa/RFEEOnZjYmPmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbfL0SPp (ORCPT
+        id S1728062AbfL0SPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbfL0SPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:15 -0500
+        id S1727134AbfL0SPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3898C222C3;
-        Fri, 27 Dec 2019 18:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CD021582;
+        Fri, 27 Dec 2019 18:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470515;
-        bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qG01NYOn0Y37GwO8gHApB7RtMv2izzTlXK3jcOEL7HOTytQAO0MDtCGQDxRa2O4d
-         x52toZX6Aff+HdI5lRhiC3srnikgk25R7MwJCENPS88goK+Pnwud9cTEmt0GaqPm3E
-         e7UMkpF8KRIh1dQb4nWe+oEFyHJEbyApqoqxyeG4=
+        s=default; t=1577470551;
+        bh=tLns9gbVAwhHpW2u7vZVvshMGi8XSOoUHu7ct+ahSTA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wgYQpT5d7e0mkB7JhiGDlKLNeO4z+LFsNEYzPRTPE2T9vzU8l4N6V3xfAgWszM2T8
+         BLyd2fg5ZLTCDOqVERaNFpR1fTF1kTAae4GwNkcujIrzIso+468xcu8C2WC2A+YM35
+         h1/UYmGIdMbD7cjecn/ZzyqSo6xqNMU/VOPEh6Xo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 32/38] net: stmmac: RX buffer size must be 16 byte aligned
-Date:   Fri, 27 Dec 2019 13:14:29 -0500
-Message-Id: <20191227181435.7644-32-sashal@kernel.org>
+Cc:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 01/25] locking/spinlock/debug: Fix various data races
+Date:   Fri, 27 Dec 2019 13:15:25 -0500
+Message-Id: <20191227181549.8040-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
-References: <20191227181435.7644-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,37 +62,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Marco Elver <elver@google.com>
 
-[ Upstream commit 8d558f0294fe92e04af192e221d0d0f6a180ee7b ]
+[ Upstream commit 1a365e822372ba24c9da0822bc583894f6f3d821 ]
 
-We need to align the RX buffer size to at least 16 byte so that IP
-doesn't mis-behave. This is required by HW.
+This fixes various data races in spinlock_debug. By testing with KCSAN,
+it is observable that the console gets spammed with data races reports,
+suggesting these are extremely frequent.
 
-Changes from v2:
-- Align UP and not DOWN (David)
+Example data race report:
 
-Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  read to 0xffff8ab24f403c48 of 4 bytes by task 221 on cpu 2:
+   debug_spin_lock_before kernel/locking/spinlock_debug.c:85 [inline]
+   do_raw_spin_lock+0x9b/0x210 kernel/locking/spinlock_debug.c:112
+   __raw_spin_lock include/linux/spinlock_api_smp.h:143 [inline]
+   _raw_spin_lock+0x39/0x40 kernel/locking/spinlock.c:151
+   spin_lock include/linux/spinlock.h:338 [inline]
+   get_partial_node.isra.0.part.0+0x32/0x2f0 mm/slub.c:1873
+   get_partial_node mm/slub.c:1870 [inline]
+  <snip>
+
+  write to 0xffff8ab24f403c48 of 4 bytes by task 167 on cpu 3:
+   debug_spin_unlock kernel/locking/spinlock_debug.c:103 [inline]
+   do_raw_spin_unlock+0xc9/0x1a0 kernel/locking/spinlock_debug.c:138
+   __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:159 [inline]
+   _raw_spin_unlock_irqrestore+0x2d/0x50 kernel/locking/spinlock.c:191
+   spin_unlock_irqrestore include/linux/spinlock.h:393 [inline]
+   free_debug_processing+0x1b3/0x210 mm/slub.c:1214
+   __slab_free+0x292/0x400 mm/slub.c:2864
+  <snip>
+
+As a side-effect, with KCSAN, this eventually locks up the console, most
+likely due to deadlock, e.g. .. -> printk lock -> spinlock_debug ->
+KCSAN detects data race -> kcsan_print_report() -> printk lock ->
+deadlock.
+
+This fix will 1) avoid the data races, and 2) allow using lock debugging
+together with KCSAN.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20191120155715.28089-1-elver@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/spinlock_debug.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 5ac48a594951..a2b7c685cbf1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -55,7 +55,7 @@
- #include <linux/of_mdio.h>
- #include "dwmac1000.h"
+diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
+index 0374a596cffa..95e610e3f7ef 100644
+--- a/kernel/locking/spinlock_debug.c
++++ b/kernel/locking/spinlock_debug.c
+@@ -51,19 +51,19 @@ EXPORT_SYMBOL(__rwlock_init);
  
--#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
-+#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
- #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
+ static void spin_dump(raw_spinlock_t *lock, const char *msg)
+ {
+-	struct task_struct *owner = NULL;
++	struct task_struct *owner = READ_ONCE(lock->owner);
  
- /* Module parameters */
+-	if (lock->owner && lock->owner != SPINLOCK_OWNER_INIT)
+-		owner = lock->owner;
++	if (owner == SPINLOCK_OWNER_INIT)
++		owner = NULL;
+ 	printk(KERN_EMERG "BUG: spinlock %s on CPU#%d, %s/%d\n",
+ 		msg, raw_smp_processor_id(),
+ 		current->comm, task_pid_nr(current));
+ 	printk(KERN_EMERG " lock: %pS, .magic: %08x, .owner: %s/%d, "
+ 			".owner_cpu: %d\n",
+-		lock, lock->magic,
++		lock, READ_ONCE(lock->magic),
+ 		owner ? owner->comm : "<none>",
+ 		owner ? task_pid_nr(owner) : -1,
+-		lock->owner_cpu);
++		READ_ONCE(lock->owner_cpu));
+ 	dump_stack();
+ }
+ 
+@@ -80,16 +80,16 @@ static void spin_bug(raw_spinlock_t *lock, const char *msg)
+ static inline void
+ debug_spin_lock_before(raw_spinlock_t *lock)
+ {
+-	SPIN_BUG_ON(lock->magic != SPINLOCK_MAGIC, lock, "bad magic");
+-	SPIN_BUG_ON(lock->owner == current, lock, "recursion");
+-	SPIN_BUG_ON(lock->owner_cpu == raw_smp_processor_id(),
++	SPIN_BUG_ON(READ_ONCE(lock->magic) != SPINLOCK_MAGIC, lock, "bad magic");
++	SPIN_BUG_ON(READ_ONCE(lock->owner) == current, lock, "recursion");
++	SPIN_BUG_ON(READ_ONCE(lock->owner_cpu) == raw_smp_processor_id(),
+ 							lock, "cpu recursion");
+ }
+ 
+ static inline void debug_spin_lock_after(raw_spinlock_t *lock)
+ {
+-	lock->owner_cpu = raw_smp_processor_id();
+-	lock->owner = current;
++	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
++	WRITE_ONCE(lock->owner, current);
+ }
+ 
+ static inline void debug_spin_unlock(raw_spinlock_t *lock)
+@@ -99,8 +99,8 @@ static inline void debug_spin_unlock(raw_spinlock_t *lock)
+ 	SPIN_BUG_ON(lock->owner != current, lock, "wrong owner");
+ 	SPIN_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
+ 							lock, "wrong CPU");
+-	lock->owner = SPINLOCK_OWNER_INIT;
+-	lock->owner_cpu = -1;
++	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
++	WRITE_ONCE(lock->owner_cpu, -1);
+ }
+ 
+ static void __spin_lock_debug(raw_spinlock_t *lock)
+@@ -233,8 +233,8 @@ static inline void debug_write_lock_before(rwlock_t *lock)
+ 
+ static inline void debug_write_lock_after(rwlock_t *lock)
+ {
+-	lock->owner_cpu = raw_smp_processor_id();
+-	lock->owner = current;
++	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
++	WRITE_ONCE(lock->owner, current);
+ }
+ 
+ static inline void debug_write_unlock(rwlock_t *lock)
+@@ -243,8 +243,8 @@ static inline void debug_write_unlock(rwlock_t *lock)
+ 	RWLOCK_BUG_ON(lock->owner != current, lock, "wrong owner");
+ 	RWLOCK_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
+ 							lock, "wrong CPU");
+-	lock->owner = SPINLOCK_OWNER_INIT;
+-	lock->owner_cpu = -1;
++	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
++	WRITE_ONCE(lock->owner_cpu, -1);
+ }
+ 
+ #if 0		/* This can cause lockups */
 -- 
 2.20.1
 
