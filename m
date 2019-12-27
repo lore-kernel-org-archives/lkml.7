@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C739DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9AAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A521322B48
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037F62464E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468480;
-	bh=Ho1Xlqow1ZoOG2sC7QTQAP4w132qJ+CdPclVM/y0AEk=;
+	s=default; t=1577468483;
+	bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdDmeV5ZDFCdraTlcVL6XvyglvPxN4pi0WH+8wxPMkafFrq/zxVNwdF+VTGldhHkP
-	 2h5CiR4aTJoQV7wi/fZ2mdUVWYY3lB178+vFPJUcqgS/QmdyUi5d1nXskjzYU9hlCw
-	 /+fpjHQRk5t7wCGe3esf4ybCr8EyA5AWBha+OXjk=
+	b=cX8iNvHac5oW7O5otPpoZ+uiKTC1fX9wjN8CcGa0Xy5r36kNjwN70VbIzsrW+XiU1
+	 aJ+7BBEOax1XqS1Gw7eqowhyeT4hw2350Smg4Sx+GdLpv8hBBrYtMLen4XuEi1HdUg
+	 vZnIsIU3hyZ4wm7nGZVPMv6/8ycGobe2VDcVpsIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfL0RlT (ORCPT
+        id S1727417AbfL0RlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfL0RlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:16 -0500
+        id S1727274AbfL0RlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2011B22525;
-        Fri, 27 Dec 2019 17:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA7F022522;
+        Fri, 27 Dec 2019 17:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468475;
-        bh=Ho1Xlqow1ZoOG2sC7QTQAP4w132qJ+CdPclVM/y0AEk=;
+        s=default; t=1577468477;
+        bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdjReN0VJaOLUeDaMuzU7o1bTaP4qlQE2nxOT3cv5+R8I6InkX990p+ouokJ1mqAB
-         CWxGcn+VnULb3dMo18htrizHF+yRvcdrgi8XpO3V+sgjmoCJGoF4cKG/cfC5WY7557
-         hXyiduhG6zvpZEBzVrGMLPSg7EqqlUEBNtmq5FHY=
+        b=IXVP8wlf4jNdEfxK4LYspNXRoWDNqi7GXhi9+3i0/WDYhln3Wmx3kVWpVlEYIOiZB
+         Rm6AajXRBuQ3EdJuDkzfj/gZ65c6pBZi75p/qpa5o426sgplCrsmYgJbCeSciptiM9
+         9NKKoqfq2zcxV8g/EqSpXxaeHtSA5VbGm6N0v4/0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
@@ -48,9 +48,9 @@ Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
         Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 015/187] x86/intel: Disable HPET on Intel Coffee Lake H platforms
-Date:   Fri, 27 Dec 2019 12:38:03 -0500
-Message-Id: <20191227174055.4923-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 016/187] x86/intel: Disable HPET on Intel Ice Lake platforms
+Date:   Fri, 27 Dec 2019 12:38:04 -0500
+Message-Id: <20191227174055.4923-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -65,12 +65,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit f8edbde885bbcab6a2b4a1b5ca614e6ccb807577 ]
+[ Upstream commit e0748539e3d594dd26f0d27a270f14720b22a406 ]
 
-Coffee Lake H SoC has similar behavior as Coffee Lake, skewed HPET timer
-once the SoCs entered PC10.
-
-So let's disable HPET on CFL-H platforms.
+Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
+So let's disable HPET on ICL.
 
 Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
@@ -80,7 +78,7 @@ Cc: bp@alien8.de
 Cc: feng.tang@intel.com
 Cc: harry.pan@intel.com
 Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/20191129062303.18982-1-kai.heng.feng@canonical.com
+Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -88,18 +86,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index 4cba91ec8049..606711f5ebf8 100644
+index 606711f5ebf8..2f9ec14be3b1 100644
 --- a/arch/x86/kernel/early-quirks.c
 +++ b/arch/x86/kernel/early-quirks.c
-@@ -710,6 +710,8 @@ static struct chipset early_qrk[] __initdata = {
- 	 */
- 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+@@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
  		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-+	{ PCI_VENDOR_ID_INTEL, 0x3e20,
-+		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
  	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
  		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x8a12,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
  	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
 -- 
 2.20.1
 
