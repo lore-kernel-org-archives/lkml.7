@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03217C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EDC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D096920CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B135021582
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469480;
-	bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
+	s=default; t=1577469485;
+	bh=48Y6c37aUYq+yUzjSc/A+yLe4EPeG/xv5hB18HSrYFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7Ll62IFafV315g+bc3oYoAszYW26BG3vqbMtfLsJ86EmJmSdTxLEeE8YwdrA5sMl
-	 opt3HYD6h5+xc0c5hvKxE9VmznwtIn8dEpeaOAe0kUKS9KDUzUnKgiHSo3bheQ9IHb
-	 2phmlwz2Wvf0jGl6rPsBk7nq4tT+4SLsb0XzvLz0=
+	b=AI9YU+dlUwzQAMT5tos7ID9j+yJA43p5n8ZkU4CdL/f/zhCbauWcpfqplzHPmzzlv
+	 ZAENY/0mh4hMMIuyHZh1GQTWlF1lifHMCXMB9dogVRu8A/dJmKGyGzu59bGBnXox6l
+	 1nekVSMcA9YEfujdYAYtmQVbfQA1b5znMugUiTYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbfL0R57 (ORCPT
+        id S1727505AbfL0Rlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:57:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbfL0Rlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:37 -0500
+        id S1727447AbfL0Rl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95A5A227BF;
-        Fri, 27 Dec 2019 17:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5482B22522;
+        Fri, 27 Dec 2019 17:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468496;
-        bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
+        s=default; t=1577468488;
+        bh=48Y6c37aUYq+yUzjSc/A+yLe4EPeG/xv5hB18HSrYFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0zE8IFjMgJ9TIuhTYpBtUuuuvEg7KHyUB1ub0N8OQImPjTeAKAPvCjOVtbEEHd5es
-         A5r/QvmBaYsVSbowzQ8EIL6Yu5Z//UGmL8+1myoVK9VND6FNxeutXSYeY94jdjk2by
-         gyZOpA1YGAG2jQ2RbHkMIMzY9l87yNehl5NI3a1M=
+        b=FLqiAxln2MgmfjkXNc4N7BwjXUthudTFwe9R80xlaqOTtOR3SoH0LuHwc3+yFijkp
+         3/nzz7XXTLQEiV8ekxDL1AYMuped9AsOZEV1jNeYXF/iGAivfRqpKpXFBMWcq9umIC
+         DLYXvws5WB+Or16WDKxZhkQSaZRq8C0Q2VXrPNfQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+Cc:     Marco Oliverio <marco.oliverio@tanaza.com>,
+        Rocco Folino <rocco.folino@tanaza.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 031/187] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-Date:   Fri, 27 Dec 2019 12:38:19 -0500
-Message-Id: <20191227174055.4923-31-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 025/187] netfilter: nf_queue: enqueue skbs with NULL dst
+Date:   Fri, 27 Dec 2019 12:38:13 -0500
+Message-Id: <20191227174055.4923-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -63,67 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Marco Oliverio <marco.oliverio@tanaza.com>
 
-[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
+[ Upstream commit 0b9173f4688dfa7c5d723426be1d979c24ce3d51 ]
 
-Currently we add individual copy of same OPP table for each CPU within
-the cluster. This is redundant and doesn't reflect the reality.
+Bridge packets that are forwarded have skb->dst == NULL and get
+dropped by the check introduced by
+b60a77386b1d4868f72f6353d35dabe5fbe981f2 (net: make skb_dst_force
+return true when dst is refcounted).
 
-We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
-anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
-->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
-operations. It also may cause issues when the vexpress_spc_cpufreq
-driver is built as a module.
+To fix this we check skb_dst() before skb_dst_force(), so we don't
+drop skb packet with dst == NULL. This holds also for skb at the
+PRE_ROUTING hook so we remove the second check.
 
-Since ve_spc_clk_init is built-in device initcall, we should be able to
-use the same topology_core_cpumask to set the opp sharing cpumask via
-dev_pm_opp_set_sharing_cpus and use the same later in the driver via
-dev_pm_opp_get_sharing_cpus.
-
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: b60a77386b1d ("net: make skb_dst_force return true when dst is refcounted")
+Signed-off-by: Marco Oliverio <marco.oliverio@tanaza.com>
+Signed-off-by: Rocco Folino <rocco.folino@tanaza.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/netfilter/nf_queue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
-index 354e0e7025ae..1da11bdb1dfb 100644
---- a/arch/arm/mach-vexpress/spc.c
-+++ b/arch/arm/mach-vexpress/spc.c
-@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
- 
- static int __init ve_spc_clk_init(void)
- {
--	int cpu;
-+	int cpu, cluster;
- 	struct clk *clk;
-+	bool init_opp_table[MAX_CLUSTERS] = { false };
- 
- 	if (!info)
- 		return 0; /* Continue only if SPC is initialised */
-@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
- 			continue;
- 		}
- 
-+		cluster = topology_physical_package_id(cpu_dev->id);
-+		if (init_opp_table[cluster])
-+			continue;
-+
- 		if (ve_init_opp_table(cpu_dev))
- 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+			 topology_core_cpumask(cpu_dev->id)))
-+			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
-+		else
-+			init_opp_table[cluster] = true;
+diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+index a2b58de82600..f8f52ff99cfb 100644
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -189,7 +189,7 @@ static int __nf_queue(struct sk_buff *skb, const struct nf_hook_state *state,
+ 		goto err;
  	}
  
- 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
+-	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
++	if (skb_dst(skb) && !skb_dst_force(skb)) {
+ 		status = -ENETDOWN;
+ 		goto err;
+ 	}
 -- 
 2.20.1
 
