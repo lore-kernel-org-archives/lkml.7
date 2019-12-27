@@ -2,113 +2,156 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C553EC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0367C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D9020740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C922080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfL0ByL (ORCPT
+        id S1727028AbfL0CH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:54:11 -0500
-Received: from trent.utfs.org ([94.185.90.103]:36084 "EHLO trent.utfs.org"
+        Thu, 26 Dec 2019 21:07:27 -0500
+Received: from mga17.intel.com ([192.55.52.151]:38918 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbfL0ByL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:54:11 -0500
-Received: from localhost (localhost [IPv6:::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by trent.utfs.org (Postfix) with ESMTPS id B7B4465591;
-        Fri, 27 Dec 2019 02:54:09 +0100 (CET)
-Date:   Thu, 26 Dec 2019 17:54:09 -0800 (PST)
-From:   Christian Kujau <lists@nerdbynature.de>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        torvalds@linux-foundation.org
-Subject: [PATCH] Re: filesystem being remounted supports timestamps until
- 2038
-In-Reply-To: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org>
-Message-ID: <alpine.DEB.2.21.99999.375.1912261445200.21037@trent.utfs.org>
-References: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org>
-User-Agent: Alpine 2.21.99999 (DEB 375 2019-10-29)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1726115AbfL0CH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:07:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
+   d="scan'208";a="223675006"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:24 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v9 0/7] Introduce support for guest CET feature
+Date:   Fri, 27 Dec 2019 10:11:26 +0800
+Message-Id: <20191227021133.11993-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Dec 2019, Christian Kujau wrote:
-> I noticed the following messages in my dmesg:
-> 
->  xfs filesystem being remounted at /mnt/disk supports imestamps until 2038 (0x7fffffff)
-> 
-> These messages get printed over and over again because /mnt/disk is 
-> usually a read-only mount that is remounted (rw) a couple of times a day 
-> for backup purposes.
-> 
-> I see that these messages have been introduced with f8b92ba67c5d ("mount: 
-> Add mount warning for impending timestamp expiry") resp. 0ecee6699064 
-> ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") and I was 
-> wondering if there is any chance to either adjust this to pr_debug (but 
-> then it would still show up in dmesg, right?) or to only warn once when 
-> it's mounted, but not on re-mount?
+Control-flow Enforcement Technology (CET) provides protection against
+Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
+sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
 
-I realize that "it's the holidays", but it'd be a shame if this gets 
-forgotten :(
+KVM change is required to support guest CET feature.
+This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
+and vmentry/vmexit configuration etc.so that guest kernel can setup CET
+runtime infrastructure based on them. Some CET MSRs and related feature
+flags used reference the definitions in kernel patchset.
+
+CET kernel patches is here:
+https://lkml.org/lkml/2019/8/13/1110
+https://lkml.org/lkml/2019/8/13/1109
+Note: CET hasn't been supported for nested case now, since CR4.CET
+is fixed to 0 in FIXED1 MSR, actually nested VM cannot enable CET.
+
+v8 -> v9:
+- Refactored msr-check functions per Sean's feedback.
+- Fixed a few issues per Sean's suggestion.
+- Rebased patch to kernel-v5.4.
+- Moved CET CPUID feature bits and CR4.CET to last patch.
+
+v7 -> v8:
+- Addressed Jim and Sean's feedback on: 1) CPUID(0xD,i) enumeration. 2)
+  sanity check when configure guest CET. 3) function improvement.
+- Added more sanity check functions.
+- Set host vmexit default status so that guest won't leak CET status to
+  host when vmexit.
+- Added CR0.WP vs. CR4.CET mutual constrains.
+
+v6 -> v7:
+- Rebased patch to kernel v5.3
+- Sean suggested to change CPUID(0xd, n) enumeration code as alined with
+  existing one, and I think it's better to make the fix as an independent patch 
+  since XSS MSR are being used widely on X86 platforms.
+- Check more host and guest status before configure guest CET
+  per Sean's feedback.
+- Add error-check before guest accesses CET MSRs per Sean's feedback.
+- Other minor fixes suggested by Sean.
+
+v5 -> v6:
+- Rebase patch to kernel v5.2.
+- Move CPUID(0xD, n>=1) helper to a seperate patch.
+- Merge xsave size fix with other patch.
+- Other minor fixes per community feedback.
+
+v4 -> v5:
+- Rebase patch to kernel v5.1.
+- Wrap CPUID(0xD, n>=1) code to a helper function.
+- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
+- Add Co-developed-by expression in patch description.
+- Refine patch description.
+
+v3 -> v4:
+- Add Sean's patch for loading Guest fpu state before access XSAVES
+  managed CET MSRs.
+- Melt down CET bits setting into CPUID configuration patch.
+- Add VMX interface to query Host XSS.
+- Check Host and Guest XSS support bits before set Guest XSS.
+- Make Guest SHSTK and IBT feature enabling independent.
+- Do not report CET support to Guest when Host CET feature is Disabled.
+
+v2 -> v3:
+- Modified patches to make Guest CET independent to Host enabling.
+- Added patch 8 to add user space access for Guest CET MSR access.
+- Modified code comments and patch description to reflect changes.
+
+v1 -> v2:
+- Re-ordered patch sequence, combined one patch.
+- Added more description for CET related VMCS fields.
+- Added Host CET capability check while enabling Guest CET loading bit.
+- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
+- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+- Added Host and Guest XSS mask check while setting bits for Guest XSS.
 
 
-# uptime; dmesg | grep -c 2038
- 14:45:15 up 6 days, 21:16,  1 user,  load average: 0.20, 0.22, 0.27
-350
-
-Attached is a "fix" that changes pr_warn into pr_debug, but that's maybe 
-not what was intended here.
-
-
-Thanks,
-Christian.
-
-
-commit c9a5338b4930cdf99073042de0717db43d7b75be
-Author: Christian Kujau <lists@nerdbynature.de>
-Date:   Thu Dec 26 17:39:57 2019 -0800
-
-    Commit f8b92ba67c5d ("mount: Add mount warning for impending timestamp expiry") resp.
-    0ecee6699064 ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") introduced
-    a pr_warn message and the following gets sent to dmesg on every remount:
-    
-     [...] filesystem being remounted at /mnt supports timestamps until 2038 (0x7fffffff)
-    
-    When file systems are remounted a couple of times per day (e.g. rw/ro for backup
-    purposes), dmesg gets flooded with these messages. Change pr_warn into pr_debug
-    to make it stop.
-    
-    Signed-off-by: Christian Kujau <lists@nerdbynature.de>
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index be601d3a8008..afc6a13e7316 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2478,7 +2478,7 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
- 
- 		time64_to_tm(sb->s_time_max, 0, &tm);
- 
--		pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
-+		pr_debug("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
- 			sb->s_type->name,
- 			is_mounted(mnt) ? "remounted" : "mounted",
- 			mntpath,
+PATCH 1    : Fix CPUID(0xD, n) enumeration to support XSS MSR.
+PATCH 2    : Define CET VMCS fields and bits.
+PATCH 3    : Pass through CET MSRs to guest.
+PATCH 4    : Load guest/host CET states on vmentry/vmexit.
+PATCH 5    : Enable update to IA32_XSS for guest.
+PATCH 6    : Load Guest FPU states for XSAVES managed MSRs.
+PATCH 7    : Add user-space CET MSR access interface.
 
 
 
--- BOFH excuse #132:
 
-SCSI Chain overterminated
+Sean Christopherson (1):
+  KVM: X86: Load guest fpu state when accessing MSRs managed by XSAVES
+
+Yang Weijiang (6):
+  KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i) enumeration
+  KVM: VMX: Define CET VMCS fields and #CP flag
+  KVM: VMX: Pass through CET related MSRs
+  KVM: VMX: Load CET states on vmentry/vmexit
+  KVM: X86: Enable CET bits update in IA32_XSS
+  KVM: X86: Add user-space access interface for CET MSRs
+
+ arch/x86/include/asm/kvm_host.h |   6 +-
+ arch/x86/include/asm/vmx.h      |   8 +
+ arch/x86/include/uapi/asm/kvm.h |   1 +
+ arch/x86/kvm/cpuid.c            | 122 ++++++++++-----
+ arch/x86/kvm/cpuid.h            |   2 +
+ arch/x86/kvm/svm.c              |   7 +
+ arch/x86/kvm/vmx/capabilities.h |  10 ++
+ arch/x86/kvm/vmx/vmx.c          | 256 +++++++++++++++++++++++++++++++-
+ arch/x86/kvm/x86.c              |  36 ++++-
+ arch/x86/kvm/x86.h              |  10 +-
+ 10 files changed, 412 insertions(+), 46 deletions(-)
+
+-- 
+2.17.2
+
