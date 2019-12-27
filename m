@@ -2,125 +2,106 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1964EC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5042BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E458920838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vn50N8j/"
+	by mail.kernel.org (Postfix) with ESMTP id 19D7620740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577408848;
+	bh=C6uqv3n6xouQOgZTOjhS0LjqoNmIDYF5KwS2ioU6ARY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZyI6hmylhTHGVD2o+9rPQ6Rbd+NeYlDbQCeX1GJgYY1sTpYNyz69EYH/U0GzbXU8g
+	 mNU4Q5dcilAzcBdGy8M3XXbJ7hjSrR42s/m6kX7Kp2zwD5OK1ayW58c8N5TqzuwbwX
+	 NpRahhHu2snY9e3VXqseKNXTS+g0iCsPN0jWJv5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfL0BAz (ORCPT
+        id S1726976AbfL0BH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:00:55 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46787 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfL0BAy (ORCPT
+        Thu, 26 Dec 2019 20:07:27 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57218 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfL0BH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:00:54 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n9so6096455pff.13;
-        Thu, 26 Dec 2019 17:00:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=44qeSbgK4fjxtx3Jl3gaoujj676TRWsAIPJoecKwxeA=;
-        b=Vn50N8j/tjWROXYPVqiazH69KDR9POr+3lErHzubQvZT+V5huf7MhhUleCplm9Lf0K
-         Ymry87zOQmn/Lzunqk2RR5XcdfCgaxFuXRd2HplsnNWWjfXuS+hUiX8VbRrQbH3eJwMR
-         LumeSiMzI40fOSID7NKsz30KTufqFWxUqZrjRqdYcRy3M8/r5wjkeUmJqDucJZkK1iXd
-         BUcE6kMsp78UqW+w89VyVP5n6UlZeo2v19BhO2mo647EO0DO7CMqS9sQy+aglAwHwyKr
-         jjpxDLhi8HPBh56sBy9jsm+eJnihGPaKrS6Jw1ydLXMXlwdGR1/xvNMT+UPF/GTs0D1M
-         EROg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=44qeSbgK4fjxtx3Jl3gaoujj676TRWsAIPJoecKwxeA=;
-        b=PTRVxnOhkAMiZoaapPmAkn8ftKNS27TXkBG35vV+4Y86EB53EE+Bye/mV6KDFObedX
-         xUEXsXucnRMinE8eIRINBFyPP+eo6tBAZry+xaRfgLBz1EnaXa9v88gqP6zNRjxD7Cy2
-         3xeKdmqfOEPytxwKneFeQ4JSt8+FIxClQwx3uhIdvkAGE5jLAthol/NuvuxGP//un/LK
-         qU5rng/6z8vqBDvJPPzzNQh7uYSmZ4hRi9z8MmvsupT4YBlzbRPedjo1W4TWIpiKN4vY
-         sopILbs9kRWOjaNEniY2laR4Z6URa3b5ni7Rk/bK+PiCB5614Rpa9CpcJ/p84OogeA8B
-         PuNg==
-X-Gm-Message-State: APjAAAWs2xyhmzvdc0COCRXl079rG4lLUO0B1f6X24knlppPnS3RlX23
-        QQs2slFUlVW+eD1czNVwhfY=
-X-Google-Smtp-Source: APXvYqxA7fUPenla1wmNjprezXBoLMHCH166OsttVNrdQKg7iRnkv0Mnm7CF9SlsrPU4D+amEYGwXA==
-X-Received: by 2002:a62:f842:: with SMTP id c2mr52061691pfm.104.1577408453895;
-        Thu, 26 Dec 2019 17:00:53 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id 65sm39640144pfu.140.2019.12.26.17.00.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 17:00:53 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     viro@zeniv.linux.org.uk
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fs: seq_file.c: Fix warnings
-Date:   Thu, 26 Dec 2019 22:00:35 -0300
-Message-Id: <20191227010035.854913-3-dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191227010035.854913-1-dwlsalmeida@gmail.com>
-References: <20191227010035.854913-1-dwlsalmeida@gmail.com>
+        Thu, 26 Dec 2019 20:07:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=C6uqv3n6xouQOgZTOjhS0LjqoNmIDYF5KwS2ioU6ARY=; b=HpW7TGec6HMWofJqvOYl3go7F
+        PPRQFn1JYJINXbp7Uz9UxjR3Rlxj0YTv6KYf0cU7UiFbtMhrhe2E5+ZcWWcyl1zgZRxxlfaGovcPY
+        eMa0U9m3JBEsHsb9nX5BLjWjOEv6MFsJQ17V9u2ylQRx861l+f5qoO1+eqRnQlhpeJoqc=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1ike5m-00049F-BN; Fri, 27 Dec 2019 01:07:02 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id B8BD3D01A22; Fri, 27 Dec 2019 01:07:01 +0000 (GMT)
+Date:   Fri, 27 Dec 2019 01:07:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
+        pierre-louis.bossart@linux.intel.com,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v14 2/7] ASoC: amd: Refactoring of DAI from DMA driver
+Message-ID: <20191227010701.GK27497@sirena.org.uk>
+References: <1575553053-18344-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1575553053-18344-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ogUXNSQj4OI1q3LQ"
+Content-Disposition: inline
+In-Reply-To: <1575553053-18344-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Cookie: I have many CHARTS and DIAGRAMS..
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Fix the following warnings:
+--ogUXNSQj4OI1q3LQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-fs/seq_file.c:40: WARNING: Inline strong start-string without end-string.
-fs/seq_file.c:40: WARNING: Inline strong start-string without end-string.
-fs/seq_file.c:40: WARNING: Inline strong start-string without end-string.
-fs/seq_file.c:40: WARNING: Inline strong start-string without end-string
+On Thu, Dec 05, 2019 at 07:07:27PM +0530, Ravulapati Vishnu vardhan rao wrote:
+> ASoC: PCM DMA driver should only have dma ops.
+> So Removed all DAI related functionality.Refactoring
+> the PCM DMA diver code.Added new file containing only DAI ops
 
-By escaping the parenthesis in the affected line. Line breaks were added
-for clarity.
+This doesn't apply against current code, please check and resend.
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
----
- fs/seq_file.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+--ogUXNSQj4OI1q3LQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index 1600034a929b..aad4354ceeb0 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -38,10 +38,18 @@ static void *seq_buf_alloc(unsigned long size)
-  *	@op: method table describing the sequence
-  *
-  *	seq_open() sets @file, associating it with a sequence described
-- *	by @op.  @op->start() sets the iterator up and returns the first
-- *	element of sequence. @op->stop() shuts it down.  @op->next()
-- *	returns the next element of sequence.  @op->show() prints element
-- *	into the buffer.  In case of error ->start() and ->next() return
-+ *	by @op.
-+ *
-+ *	@op->start\(\) sets the iterator up and returns the first
-+ *	element of sequence.
-+ *
-+ *	@op->stop\(\) shuts it down.
-+ *
-+ *	@op->next\(\) returns the next element of sequence.
-+ *
-+ *	@op->show\(\) prints element into the buffer.
-+ *
-+ *	In case of error ->start() and ->next() return
-  *	ERR_PTR(error).  In the end of sequence they return %NULL. ->show()
-  *	returns 0 in case of success and negative number in case of error.
-  *	Returning SEQ_SKIP means "discard this element and move on".
--- 
-2.24.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4FWTQACgkQJNaLcl1U
+h9C6Qgf/YaesCjRBOBWjivS9T9BLZkRe0qF/Ot4xyMlnIT8zYH/XQOQWfdZhzmGO
+wB/fxqKJRXnbupS3ynhCzNHGbl9Uhj+AuFy9Fb8vFYbVwRuHYckTxBRI2ohK6OA9
+/0KDeoGqC7nKKzlYY+R6Z2cBzxNACiVjYPtR/MIrXmjS4GAZ8Lbgdx3pVvA1HDmS
+36fr79im8RG4QFlmeIVUl/ZH+9hOoBa3IcxGPA4Qtie/+KJ1j/0gxwUd5wCWnx1E
+i9rLojdohEqrM1nvw8oy9QZ35qgkylMPClguzkSPmH2xslXaJgKfaTUd7L+ia07N
+sPJt+6bI3gDjJdifhjKOuwUtZ7FiVg==
+=mUn1
+-----END PGP SIGNATURE-----
+
+--ogUXNSQj4OI1q3LQ--
