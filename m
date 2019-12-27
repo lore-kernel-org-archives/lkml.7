@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2926CC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45464C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1623208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC1520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470495;
-	bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
+	s=default; t=1577470501;
+	bh=9EID52D7e5jdDMIxVggjeOppsxxQ4OeaDCj5xbY+c7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9gP/jz6sKuCUbMEbrZ8q+1ojPr0IovrwEgw26BrlSCuFkEY4Wr4+Flet6PinmPAR
-	 rk9RUBweZkq/3+9CUEv0NHbQQSiZZJ+JL6bsC4ufHqJtRA/cN4CosU0JUjJKphFrLb
-	 z7Xu/CRizyg2wHs+X2mgkqEpBLUSwGdCLGSmaDXE=
+	b=o/WCGkVFWZU6V6vs5hKm7JLzcYSzTLE3DvOwE82wOwmgtE1r/OYW7RQES90+JJMRu
+	 kQnynDf+MJ4eCobQhqsCN8VDzc+2ha9SIDwykREgVJIXx8ILjSb8BW9a/Xlvel4mVA
+	 TGy4n/ynPhOxV/HPV0asvbBd5KjhXnATIOVFSKik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfL0SOy (ORCPT
+        id S1727618AbfL0SPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:14:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727393AbfL0SOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:14:50 -0500
+        id S1727471AbfL0SOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEAF120CC7;
-        Fri, 27 Dec 2019 18:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B675208C4;
+        Fri, 27 Dec 2019 18:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470489;
-        bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
+        s=default; t=1577470492;
+        bh=9EID52D7e5jdDMIxVggjeOppsxxQ4OeaDCj5xbY+c7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tV9GlbA+7Vz8OCta+3MkdbPUToWQ6ASmW2HebJChqOccRxgwqIxI1/lw2E7IqoLso
-         dq1K0GTuYU1vQFVwXsH17DZqU0R+HnptfBBxnG3BRtS8+mpB44PVnezmrH9iShqbnl
-         WI6ZwbyklZMSeIvqE0DqNJ1i/nUmj8u4V0F5s4bc=
+        b=le8sKo134EwGqP1oRJSuoiDogzs7a3/4/0aVITapZ/hLK0LulyTJ5d0HyXGWOaJst
+         y1JcHBukbFQm2jjcyKkQY7EvojrrKVAkeE/atBeuD4SuslU7r2OKS2/6J3T84oWga8
+         FOj0O4mCjkPysxXbHiCcRSMNnsbsmxEz9yvxpe78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/38] spi: spi-cavium-thunderx: Add missing pci_release_regions()
-Date:   Fri, 27 Dec 2019 13:14:07 -0500
-Message-Id: <20191227181435.7644-10-sashal@kernel.org>
+Cc:     Netanel Belgazal <netanel@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/38] net: ena: fix napi handler misbehavior when the napi budget is zero
+Date:   Fri, 27 Dec 2019 13:14:10 -0500
+Message-Id: <20191227181435.7644-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -59,42 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Netanel Belgazal <netanel@amazon.com>
 
-[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
+[ Upstream commit 24dee0c7478d1a1e00abdf5625b7f921467325dc ]
 
-The driver forgets to call pci_release_regions() in probe failure
-and remove.
-Add the missed calls to fix it.
+In netpoll the napi handler could be called with budget equal to zero.
+Current ENA napi handler doesn't take that into consideration.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The napi handler handles Rx packets in a do-while loop.
+Currently, the budget check happens only after decrementing the
+budget, therefore the napi handler, in rare cases, could run over
+MAX_INT packets.
+
+In addition to that, this moves all budget related variables to int
+calculation and stop mixing u32 to avoid ambiguity
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-cavium-thunderx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
-index 877937706240..828fbbebc3c4 100644
---- a/drivers/spi/spi-cavium-thunderx.c
-+++ b/drivers/spi/spi-cavium-thunderx.c
-@@ -81,6 +81,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 0780900b37c7..961f31c8356b 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1105,8 +1105,8 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
+ 	struct ena_ring *tx_ring, *rx_ring;
+ 	struct ena_eth_io_intr_reg intr_reg;
  
- error:
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	spi_master_put(master);
- 	return ret;
- }
-@@ -95,6 +96,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
- 		return;
+-	u32 tx_work_done;
+-	u32 rx_work_done;
++	int tx_work_done;
++	int rx_work_done = 0;
+ 	int tx_budget;
+ 	int napi_comp_call = 0;
+ 	int ret;
+@@ -1122,7 +1122,11 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
+ 	}
  
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	/* Put everything in a known state. */
- 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
- }
+ 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
+-	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
++	/* On netpoll the budget is zero and the handler should only clean the
++	 * tx completions.
++	 */
++	if (likely(budget))
++		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
+ 
+ 	if ((budget > rx_work_done) && (tx_budget > tx_work_done)) {
+ 		napi_complete_done(napi, rx_work_done);
 -- 
 2.20.1
 
