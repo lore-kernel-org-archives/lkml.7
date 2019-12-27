@@ -2,175 +2,246 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70077C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E41C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310EF20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577447562;
-	bh=fpxAuj56PtPkXj1kH4oxVP3nuSYEPKqNh67BNwrzLbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f7MEylhJd8xC6HhapudoPlqBylecI+3HlHXoAdwUzdJWpib1FKxZ08XLv1JPOcqd/
-	 3OwKdMd5dpJf9YRdfzj54fH/If0k5wyc0hlJz6KWp4ANf3UAng5rtvbgEgVJvh9hQa
-	 CagaXKU84oyTOT4Y1us+GfarSqKP/Ja0jorVEs1w=
+	by mail.kernel.org (Postfix) with ESMTP id B8818208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfL0Lwl (ORCPT
+        id S1726675AbfL0LzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:52:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfL0Lwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 06:52:41 -0500
-Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 569B5208C4;
-        Fri, 27 Dec 2019 11:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577447560;
-        bh=fpxAuj56PtPkXj1kH4oxVP3nuSYEPKqNh67BNwrzLbU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K6ladlkbq2xNmkwSxOz0zb1jzq/dpn0LveU9V5KElUbc4eaIQUbAq/Llimn2PcVNS
-         djnkcmEGFB7TEMa/wCCIG1zFTkK8gAFpZl3eII6Yf1Wgntu359GOA07TwDBfZulqjE
-         LxMW1yK+5DLJM/CWGWpogwzCRR19OWLP+0sz/C8o=
-Date:   Fri, 27 Dec 2019 12:54:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch,
-        wens@csie.org, jernej.skrabec@siol.net, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-tegra@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com
-Subject: Re: [PATCH] drm: replace IS_ERR and PTR_ERR with PTR_ERR_OR_ZERO
-Message-ID: <20191227115401.agumkfuiwexl2wmx@hendrix.home>
-References: <20191225132042.5491-1-yukuai3@huawei.com>
+        Fri, 27 Dec 2019 06:55:07 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44516 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfL0LzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 06:55:07 -0500
+Received: by mail-io1-f72.google.com with SMTP id t17so14079898ioi.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 03:55:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=9DYpBqvDsj8Xpm3NXpP6+D8e9Iugsb2NDNTFtTkXT0c=;
+        b=QNcVU46M/qvsBAuiEn4QzTzWcS8/7qtQMdwDeQooYoxTzb7D0OmVWnaFQ0jKLdU2f5
+         eu2D8qweFPYK63WZluJe7pwEm1c2oqoY4h9TSyR4FHa9DeVbpkpAvCoKuceEoE5PMlyi
+         b/IxH5aSW0+3sFiGV06ts5c/rnLC8Uh9FL1wvoFuDBbNO6iPhcphe9/VFpotpYt7tP7t
+         24RRY7ZAd29xP493S0RiaN53G6cqbJDvlf3FdO4a2c3FvDzWdl3dDfNuXtjMHoADhumZ
+         AhMIOr0CGtM8CYEcNjSjgleWNCKDMckhez6+XA1qtNt4XB8M+kaToPTHGm6vA4aNjXcu
+         j2ww==
+X-Gm-Message-State: APjAAAVot4gjPbVyLFxg9N/KQbSBmyup21LqEs0avYkHrsuappcooTY/
+        ISTYevXRJX1ydNKehnV5hAoDOjatU+1WDvQaD4xbrabaVizN
+X-Google-Smtp-Source: APXvYqwloHdpdphgT/di+72V/MtMyLlCC1CmolGusY4lnAeIJfdEoh9SCk6htIS5NOxmqaU/s4laVcvHCk802Y+5OZY/wb+IiEgE
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qekez63uoqkeptq7"
-Content-Disposition: inline
-In-Reply-To: <20191225132042.5491-1-yukuai3@huawei.com>
+X-Received: by 2002:a92:5b49:: with SMTP id p70mr42613540ilb.209.1577447705801;
+ Fri, 27 Dec 2019 03:55:05 -0800 (PST)
+Date:   Fri, 27 Dec 2019 03:55:05 -0800
+In-Reply-To: <0000000000006233e4059aa1dfb6@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000027fdb7059aae2ab8@google.com>
+Subject: Re: possible deadlock in do_io_accounting (3)
+From:   syzbot <syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io,
+        kent.overstreet@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has found a reproducer for the following crash on:
 
---qekez63uoqkeptq7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+HEAD commit:    46cf053e Linux 5.5-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1518a6e1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
+dashboard link: https://syzkaller.appspot.com/bug?extid=87a1b40b8fcdc9d40bd0
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15693866e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12847615e00000
 
-On Wed, Dec 25, 2019 at 09:20:42PM +0800, yu kuai wrote:
-> no functional change, just to make the code simpler
->
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  drivers/gpu/drm/omapdrm/dss/hdmi4.c         | 5 +----
->  drivers/gpu/drm/omapdrm/dss/hdmi4_core.c    | 6 ++----
->  drivers/gpu/drm/omapdrm/dss/hdmi5_core.c    | 4 +---
->  drivers/gpu/drm/omapdrm/dss/hdmi_phy.c      | 4 +---
->  drivers/gpu/drm/sun4i/sun4i_dotclock.c      | 4 +---
->  drivers/gpu/drm/sun4i/sun4i_hdmi_i2c.c      | 4 +---
->  drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 4 +---
->  drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c  | 5 +----
->  drivers/gpu/drm/tegra/drm.c                 | 4 +---
->  drivers/gpu/drm/tegra/gem.c                 | 4 +---
->  10 files changed, 11 insertions(+), 33 deletions(-)
->
-> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4.c b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-> index 0f557fad4513..eb71baedf19e 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4.c
-> @@ -587,10 +587,7 @@ static int hdmi_audio_register(struct omap_hdmi *hdmi)
->  		&hdmi->pdev->dev, "omap-hdmi-audio", PLATFORM_DEVID_AUTO,
->  		&pdata, sizeof(pdata));
->
-> -	if (IS_ERR(hdmi->audio_pdev))
-> -		return PTR_ERR(hdmi->audio_pdev);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(hdmi->audio_pdev);
->  }
->
->  /* -----------------------------------------------------------------------------
-> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-> index ea5d5c228534..fdd73fb73653 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
-> @@ -924,8 +924,6 @@ int hdmi4_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
->
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
->  	core->base = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(core->base))
-> -		return PTR_ERR(core->base);
-> -
-> -	return 0;
-> +
-> +	return PTR_ERR_OR_ZERO(core->base);
->  }
-> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-> index ff4d35c8771f..30454bc9de78 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi5_core.c
-> @@ -908,8 +908,6 @@ int hdmi5_core_init(struct platform_device *pdev, struct hdmi_core_data *core)
->
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
->  	core->base = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(core->base))
-> -		return PTR_ERR(core->base);
->
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(core->base);
->  }
-> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-> index 00bbf24488c1..bbc02d5aa8fb 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi_phy.c
-> @@ -191,8 +191,6 @@ int hdmi_phy_init(struct platform_device *pdev, struct hdmi_phy_data *phy,
->
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
->  	phy->base = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(phy->base))
-> -		return PTR_ERR(phy->base);
->
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(phy->base);
->  }
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-> index 417ade3d2565..84c04d8192b3 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
-> @@ -191,10 +191,8 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
->  	dclk->hw.init = &init;
->
->  	tcon->dclk = clk_register(dev, &dclk->hw);
-> -	if (IS_ERR(tcon->dclk))
-> -		return PTR_ERR(tcon->dclk);
->
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(tcon->dclk);
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+87a1b40b8fcdc9d40bd0@syzkaller.appspotmail.com
 
-This has been submitted a couple of times already. It's harder to
-maintain and not easier to read.
+overlayfs: failed to resolve './file0': -2
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-rc3-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor763/9723 is trying to acquire lock:
+ffff8880a95dfed0 (&sig->cred_guard_mutex){+.+.}, at:  
+do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
 
-Please remove sun4i from your patch
+but task is already holding lock:
+ffff8880a24999a0 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
 
-Maxime
+which lock already depends on the new lock.
 
---qekez63uoqkeptq7
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+the existing dependency chain (in reverse order) is:
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgXw2QAKCRDj7w1vZxhR
-xcC0AP41YnCplFDuwO92c5iWckNOenpr5t0CgtMx4SUZvRwRfAEAofLF2tx6/nNv
-2u5zEYJchT5oj2oyNfSR2wa6CCYaMQM=
-=9hHy
------END PGP SIGNATURE-----
+-> #3 (&p->lock){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+        seq_read+0x71/0x1170 fs/seq_file.c:161
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        kernel_readv fs/splice.c:365 [inline]
+        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
+        do_splice_to+0x127/0x180 fs/splice.c:892
+        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
+        do_sendfile+0x597/0xd00 fs/read_write.c:1464
+        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
---qekez63uoqkeptq7--
+-> #2 (sb_writers#3){.+.+}:
+        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+        __sb_start_write+0x241/0x460 fs/super.c:1674
+        sb_start_write include/linux/fs.h:1650 [inline]
+        mnt_want_write+0x3f/0xc0 fs/namespace.c:354
+        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:21
+        ovl_create_object+0xb3/0x2c0 fs/overlayfs/dir.c:596
+        ovl_create+0x28/0x30 fs/overlayfs/dir.c:627
+        lookup_open+0x12d5/0x1a90 fs/namei.c:3241
+        do_last fs/namei.c:3331 [inline]
+        path_openat+0x14a2/0x4500 fs/namei.c:3537
+        do_filp_open+0x1a1/0x280 fs/namei.c:3567
+        do_sys_open+0x3fe/0x5d0 fs/open.c:1097
+        __do_sys_open fs/open.c:1115 [inline]
+        __se_sys_open fs/open.c:1110 [inline]
+        __x64_sys_open+0x7e/0xc0 fs/open.c:1110
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (&ovl_i_mutex_dir_key[depth]){++++}:
+        down_read+0x95/0x430 kernel/locking/rwsem.c:1495
+        inode_lock_shared include/linux/fs.h:801 [inline]
+        do_last fs/namei.c:3330 [inline]
+        path_openat+0x1e37/0x4500 fs/namei.c:3537
+        do_filp_open+0x1a1/0x280 fs/namei.c:3567
+        do_open_execat+0x137/0x690 fs/exec.c:856
+        __do_execve_file.isra.0+0x1702/0x22b0 fs/exec.c:1761
+        do_execveat_common fs/exec.c:1867 [inline]
+        do_execve fs/exec.c:1884 [inline]
+        __do_sys_execve fs/exec.c:1960 [inline]
+        __se_sys_execve fs/exec.c:1955 [inline]
+        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1955
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+        check_prev_add kernel/locking/lockdep.c:2476 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+        validate_chain kernel/locking/lockdep.c:2971 [inline]
+        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+        __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
+        do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
+        proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
+        proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
+        seq_read+0x4ca/0x1170 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        kernel_readv fs/splice.c:365 [inline]
+        default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
+        do_splice_to+0x127/0x180 fs/splice.c:892
+        splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
+        do_sendfile+0x597/0xd00 fs/read_write.c:1464
+        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&p->lock);
+                                lock(sb_writers#3);
+                                lock(&p->lock);
+   lock(&sig->cred_guard_mutex);
+
+  *** DEADLOCK ***
+
+2 locks held by syz-executor763/9723:
+  #0: ffff888098910428 (sb_writers#9){.+.+}, at: file_start_write  
+include/linux/fs.h:2885 [inline]
+  #0: ffff888098910428 (sb_writers#9){.+.+}, at: do_sendfile+0x9b9/0xd00  
+fs/read_write.c:1463
+  #1: ffff8880a24999a0 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
+
+stack backtrace:
+CPU: 0 PID: 9723 Comm: syz-executor763 Not tainted 5.5.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
+  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
+  check_prev_add kernel/locking/lockdep.c:2476 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain kernel/locking/lockdep.c:2971 [inline]
+  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __mutex_lock_common kernel/locking/mutex.c:956 [inline]
+  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1133
+  do_io_accounting+0x1f4/0x820 fs/proc/base.c:2773
+  proc_tgid_io_accounting+0x23/0x30 fs/proc/base.c:2822
+  proc_single_show+0xfd/0x1c0 fs/proc/base.c:756
+  seq_read+0x4ca/0x1170 fs/seq_file.c:229
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  kernel_readv fs/splice.c:365 [inline]
+  default_file_splice_read+0x4fb/0xa20 fs/splice.c:422
+  do_splice_to+0x127/0x180 fs/splice.c:892
+  splice_direct_to_actor+0x320/0xa30 fs/splice.c:971
+  do_splice_direct+0x1da/0x2a0 fs/splice.c:1080
+  do_sendfile+0x597/0xd00 fs/read_write.c:1464
+  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4496d9
+Code: e8 9c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 3b 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f91dddd5db8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000006e5a18 RCX: 00000000004496d9
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000005
+RBP: 00000000006e5a10 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000209 R11: 0000000000000246 R12: 00000000006e5a1c
+R13: 00007ffc82ca42cf R14: 00007f91dddd69c0 R15: 20c49ba5e353f7cf
+
