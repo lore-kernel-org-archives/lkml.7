@@ -2,119 +2,168 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6249FC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538E5C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D3D20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283E620828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfL0CXT (ORCPT
+        id S1727100AbfL0CZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:23:19 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:34816 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726115AbfL0CXS (ORCPT
+        Thu, 26 Dec 2019 21:25:03 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:22666 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbfL0CZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:23:18 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Tm.XzN1_1577413365;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tm.XzN1_1577413365)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 27 Dec 2019 10:22:46 +0800
-Subject: Re: [PATCH v6 0/2] sched/numa: introduce numa locality
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
- <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
-Message-ID: <42800224-ed45-2e37-1960-0da29eb3bc38@linux.alibaba.com>
-Date:   Fri, 27 Dec 2019 10:22:45 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Thu, 26 Dec 2019 21:25:03 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47kVz02JsFzKmbK;
+        Fri, 27 Dec 2019 03:25:00 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id Fl2MTG-TyVrH; Fri, 27 Dec 2019 03:24:55 +0100 (CET)
+Date:   Fri, 27 Dec 2019 13:24:46 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        keescook@chromium.org
+Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
+Message-ID: <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
+References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
+ <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
+ <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
 MIME-Version: 1.0
-In-Reply-To: <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c3fft56kodyqgrhw"
+Content-Disposition: inline
+In-Reply-To: <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks, is there any more comments?
 
-Regards,
-Michael Wang
+--c3fft56kodyqgrhw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/12/13 上午9:43, 王贇 wrote:
-> Since v5:
->   * fix compile failure when NUMA disabled
-> Since v4:
->   * improved documentation
-> Since v3:
->   * fix comments and improved documentation
-> Since v2:
->   * simplified the locality concept & implementation
-> Since v1:
->   * improved documentation
-> 
-> Modern production environment could use hundreds of cgroup to control
-> the resources for different workloads, along with the complicated
-> resource binding.
-> 
-> On NUMA platforms where we have multiple nodes, things become even more
-> complicated, we hope there are more local memory access to improve the
-> performance, and NUMA Balancing keep working hard to achieve that,
-> however, wrong memory policy or node binding could easily waste the
-> effort, result a lot of remote page accessing.
-> 
-> We need to notice such problems, then we got chance to fix it before
-> there are too much damages, however, there are no good monitoring
-> approach yet to help catch the mouse who introduced the remote access.
-> 
-> This patch set is trying to fill in the missing pieces， by introduce
-> the per-cgroup NUMA locality info, with this new statistics, we could
-> achieve the daily monitoring on NUMA efficiency, to give warning when
-> things going too wrong.
-> 
-> Please check the second patch for more details.
-> 
-> Michael Wang (2):
->   sched/numa: introduce per-cgroup NUMA locality info
->   sched/numa: documentation for per-cgroup numa statistics
-> 
->  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  include/linux/sched.h                           |  15 ++
->  include/linux/sched/sysctl.h                    |   6 +
->  init/Kconfig                                    |  11 ++
->  kernel/sched/core.c                             |  75 ++++++++++
->  kernel/sched/fair.c                             |  62 +++++++++
->  kernel/sched/sched.h                            |  12 ++
->  kernel/sysctl.c                                 |  11 ++
->  11 files changed, 384 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-> 
+On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> On December 26, 2019 3:32:29 PM GMT+01:00, Aleksa Sarai <cyphar@cyphar.co=
+m> wrote:
+> >On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> >> On Wed, Dec 25, 2019 at 09:45:33PM +0000, Sargun Dhillon wrote:
+> >> > This patch is a small change in enforcement of the uapi for
+> >> > SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure
+> >which is
+> >> > passed (seccomp_notif), has a flags member. Previously that could
+> >be
+> >> > set to a nonsense value, and we would ignore it. This ensures that
+> >> > no flags are set.
+> >> >=20
+> >> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> >> > Cc: Kees Cook <keescook@chromium.org>
+> >>=20
+> >> I'm fine with this since we soon want to make use of the flag
+> >argument
+> >> when we add a flag to get a pidfd from the seccomp notifier on
+> >receive.
+> >> The major users I could identify already pass in seccomp_notif with
+> >all
+> >> fields set to 0. If we really break users we can always revert; this
+> >> seems very unlikely to me though.
+> >>=20
+> >> One more question below, otherwise:
+> >>=20
+> >> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> >>=20
+> >> > ---
+> >> >  kernel/seccomp.c | 7 +++++++
+> >> >  1 file changed, 7 insertions(+)
+> >> >=20
+> >> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> >> > index 12d2227e5786..455925557490 100644
+> >> > --- a/kernel/seccomp.c
+> >> > +++ b/kernel/seccomp.c
+> >> > @@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct
+> >seccomp_filter *filter,
+> >> >  	struct seccomp_notif unotif;
+> >> >  	ssize_t ret;
+> >> > =20
+> >> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
+> >> > +		return -EFAULT;
+> >> > +
+> >> > +	/* flags is reserved right now, make sure it's unset */
+> >> > +	if (unotif.flags)
+> >> > +		return -EINVAL;
+> >> > +
+> >>=20
+> >> Might it make sense to use
+> >>=20
+> >> 	err =3D copy_struct_from_user(&unotif, sizeof(unotif), buf,
+> >sizeof(unotif));
+> >> 	if (err)
+> >> 		return err;
+> >>=20
+> >> This way we check that the whole struct is 0 and report an error as
+> >soon
+> >> as one of the members is non-zero. That's more drastic but it'd
+> >ensure
+> >> that other fields can be used in the future for whatever purposes.
+> >> It would also let us get rid of the memset() below.=20
+> >
+> >Given that this isn't an extensible struct, it would be simpler to just
+> >do
+> >check_zeroed_user() -- copy_struct_from_user() is overkill. That would
+> >also remove the need for any copy_from_user()s and the memset can be
+> >dropped by just doing
+> >
+> >  struct seccomp_notif unotif =3D {};
+> >
+> >> >  	memset(&unotif, 0, sizeof(unotif));
+> >> > =20
+> >> >  	ret =3D down_interruptible(&filter->notif->request);
+> >> > --=20
+> >> > 2.20.1
+> >> >=20
+>=20
+> It is an extensible struct. That's why we have notifier size checking bui=
+lt in.
+
+Ah right, NOTIF_GET_SIZES. I reckon check_zeroed_user() is still a bit
+simpler since none of the fields are used right now (and really, this
+patch should be checking all of them, not just ->flags, if we want to
+use any of them in the future).
+
+But sure, copy_struct_from_user() also makes sense since it is
+extensible (though I personally do find the whole NOTIF_GET_SIZES thing
+a bit scary -- but that's water under the bridge at this point, and as
+long as userspace is clever enough it shouldn't be a problem).
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--c3fft56kodyqgrhw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgVrawAKCRCdlLljIbnQ
+Eo16APoDf/QAU6RhEHnw3Vc/rhWcWjyvYNIkYYSq/E0u0jngUgD9Gp6dj5ZDccwE
+LSkj5R0pXIHgq93Cgbs9GpwFlRBY7Ao=
+=gXMl
+-----END PGP SIGNATURE-----
+
+--c3fft56kodyqgrhw--
