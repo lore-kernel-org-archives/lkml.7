@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF7EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53693C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406182173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273B021D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470610;
-	bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
+	s=default; t=1577470614;
+	bh=9PSO96laJwfTFN/udnzL7oFhHLs7x63cDkU5jvLE2Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iz3jHZ3M0j7wLqE3o3Vv29qvRCNIk81wNBWudJyFB979eRGjzCzV/kN6tGlVc9IqU
-	 VTl74x4LS2vRnaBxoPtbLCqsHpgfFIxggrmS/wcc8JjqnBEoLFVtmx3rk//AM4kQCM
-	 e7aptuEMcmIxrlM+uOlKJojPMNUYh/degeff35T8=
+	b=l5QupYjKf1uTLgN7HZV3VlceNgQmAe2XCgm30bqqRCRogpxIJigCLXf6ud/1igGt2
+	 h18muWOmKPixUQi94jYJhl4o+VUSsn2kkphFUPkh17FRtXTrc51Iw4az2YqR0EUvEz
+	 U/G8praxH1unCot//JZyGpT7stF0bcYnIVSk9kHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfL0SQK (ORCPT
+        id S1728414AbfL0SQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:16:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:16:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfL0SQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:03 -0500
+        id S1727354AbfL0SQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:16:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9767820CC7;
-        Fri, 27 Dec 2019 18:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9231A208C4;
+        Fri, 27 Dec 2019 18:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470563;
-        bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
+        s=default; t=1577470569;
+        bh=9PSO96laJwfTFN/udnzL7oFhHLs7x63cDkU5jvLE2Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePeOFcNucVBa1B8L6DoNz2jsjFjk7tWOdjT10CozsA1VqXF/iQf9LoMumeysQ8s/a
-         ZrmoMUjhN0ivnzwR130gmMqRld5493nxOD2N4itpm1EeEIk7Tk/9GuMdVIiDuO0pg4
-         yTZjtj3+O1j72XWjyBokzs2Ubq5AOuLmFNw4ZSzQ=
+        b=AruFGMELk/ZI7voBbow4wpdh9hr9CtFCqY/IMgPRtatu6qZFt8AMH/CE0Deco7j/0
+         z2wLewTJiF9K7+cnZ5lhU64a/yYYX9vatcYqZ2V/I6GteWTFAmBLhsMaXdA+3AZ/Ia
+         Rplq1KbLT5v3zy6gnbOI52szzcbHKaSPK/n8tSOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 11/25] powerpc: Ensure that swiotlb buffer is allocated from low memory
-Date:   Fri, 27 Dec 2019 13:15:35 -0500
-Message-Id: <20191227181549.8040-11-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/25] rfkill: Fix incorrect check to avoid NULL pointer dereference
+Date:   Fri, 27 Dec 2019 13:15:40 -0500
+Message-Id: <20191227181549.8040-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
 References: <20191227181549.8040-1-sashal@kernel.org>
@@ -61,46 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
+[ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
 
-Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
-If a system has more physical memory than this limit, the swiotlb
-buffer is not addressable because it is allocated from memblock using
-top-down mode.
+In rfkill_register, the struct rfkill pointer is first derefernced
+and then checked for NULL. This patch removes the BUG_ON and returns
+an error to the caller in case rfkill is NULL.
 
-Force memblock to bottom-up mode before calling swiotlb_init() to
-ensure that the swiotlb buffer is DMA-able.
-
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/mem.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/rfkill/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 1efe5ca5c3bc..5bb2c89d55c8 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -330,6 +330,14 @@ void __init mem_init(void)
- 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index cf5b69ab1829..ad927a6ca2a1 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -941,10 +941,13 @@ static void rfkill_sync_work(struct work_struct *work)
+ int __must_check rfkill_register(struct rfkill *rfkill)
+ {
+ 	static unsigned long rfkill_no;
+-	struct device *dev = &rfkill->dev;
++	struct device *dev;
+ 	int error;
  
- #ifdef CONFIG_SWIOTLB
-+	/*
-+	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
-+	 * 4G. We force memblock to bottom-up mode to ensure that the
-+	 * memory allocated in swiotlb_init() is DMA-able.
-+	 * As it's the last memblock allocation, no need to reset it
-+	 * back to to-down.
-+	 */
-+	memblock_set_bottom_up(true);
- 	swiotlb_init(0);
- #endif
+-	BUG_ON(!rfkill);
++	if (!rfkill)
++		return -EINVAL;
++
++	dev = &rfkill->dev;
+ 
+ 	mutex_lock(&rfkill_global_mutex);
  
 -- 
 2.20.1
