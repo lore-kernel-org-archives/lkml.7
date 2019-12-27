@@ -2,54 +2,52 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D469C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F86C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C520206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697FC20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468860;
-	bh=Ou7652ezwE10mPJn5/Q7RQYllm+/ANrQOvIvtI4e3wk=;
+	s=default; t=1577468864;
+	bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s89Jn3ZNygYB8d1RRW72tNFGQHOxK3LAv5z+gGo4CtWjd89RoCJ39w54d2vUT6mB9
-	 Ba/4aMoXew1yfjiZn4t6VRWwHwNPPILqyHs27VvSzWaBFlulvL4je4CQVNRq7BLdTE
-	 J5h7qwcbDQey+DF9Vyu5UOpjC/WqfN/8BEmM6BBY=
+	b=bdlvCgp5hV8OvfpL+w6IrO5hpbmaV9DlFZglzrLjxzVbvu1xIpsqr66sKzj6OJwcb
+	 NB2+ucx2/Nj5Xet5clMigdXVfILp5grt98bH0RopqP5HARtDcuGn25yrmqpVgmeUhA
+	 NwccGEGx793w9pNfxIszw1Etdci+5lA72sXPYPOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfL0Ro4 (ORCPT
+        id S1728722AbfL0Rrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43138 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:47:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbfL0Rot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:49 -0500
+        id S1728605AbfL0Roz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79D921744;
-        Fri, 27 Dec 2019 17:44:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D880D20740;
+        Fri, 27 Dec 2019 17:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468688;
-        bh=Ou7652ezwE10mPJn5/Q7RQYllm+/ANrQOvIvtI4e3wk=;
+        s=default; t=1577468694;
+        bh=Al7bzgi2unxPyfP1PZlhJR/3qZPvUNIjLvPGQBoa3nU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7+n8pYKilFF3wGdGBAaKfJu6BllKHdOtbOBqNS/iED4fMvhh1CCmxKM/wsD2iD9M
-         EOx9um0VoK0t3D7W8E4Ygj/UQU34W3BZD8Tc+1N9d9u3ip38TU/IlG6HzOSWMLoCpy
-         ned9o0qlXV5cA8jyod6D3in9GLPKPPrTRh0/C5PQ=
+        b=eAhyXW4MWH2HXnNKSTCJyAxyrVHHK4IvmmqxHp69pfO5Uju6X8l8nD0wni5p9VU5k
+         EXHmHmuhponV8LdPTl+BVQljf9QnlSNp3YbxoGbX1PSvNIPVi6fJ4ftX4VQoVRZuI8
+         vBLa6ozMEbyTwdwSIs9GOtttYBlxOqS71qjcqRgo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Firo Yang <firo.yang@suse.com>,
+Cc:     Mahesh Bandewar <maheshb@google.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, rcu@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 46/84] tcp/dccp: fix possible race __inet_lookup_established()
-Date:   Fri, 27 Dec 2019 12:43:14 -0500
-Message-Id: <20191227174352.6264-46-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 51/84] bonding: fix active-backup transition after link failure
+Date:   Fri, 27 Dec 2019 12:43:19 -0500
+Message-Id: <20191227174352.6264-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -62,236 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 8dbd76e79a16b45b2ccb01d2f2e08dbf64e71e40 ]
+[ Upstream commit 5d485ed88d48f8101a2067348e267c0aaf4ed486 ]
 
-Michal Kubecek and Firo Yang did a very nice analysis of crashes
-happening in __inet_lookup_established().
+After the recent fix in commit 1899bb325149 ("bonding: fix state
+transition issue in link monitoring"), the active-backup mode with
+miimon initially come-up fine but after a link-failure, both members
+transition into backup state.
 
-Since a TCP socket can go from TCP_ESTABLISH to TCP_LISTEN
-(via a close()/socket()/listen() cycle) without a RCU grace period,
-I should not have changed listeners linkage in their hash table.
+Following steps to reproduce the scenario (eth1 and eth2 are the
+slaves of the bond):
 
-They must use the nulls protocol (Documentation/RCU/rculist_nulls.txt),
-so that a lookup can detect a socket in a hash list was moved in
-another one.
+    ip link set eth1 up
+    ip link set eth2 down
+    sleep 1
+    ip link set eth2 up
+    ip link set eth1 down
+    cat /sys/class/net/eth1/bonding_slave/state
+    cat /sys/class/net/eth2/bonding_slave/state
 
-Since we added code in commit d296ba60d8e2 ("soreuseport: Resolve
-merge conflict for v4/v6 ordering fix"), we have to add
-hlist_nulls_add_tail_rcu() helper.
-
-Fixes: 3b24d854cb35 ("tcp/dccp: do not touch listener sk_refcnt under synflood")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Michal Kubecek <mkubecek@suse.cz>
-Reported-by: Firo Yang <firo.yang@suse.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Link: https://lore.kernel.org/netdev/20191120083919.GH27852@unicorn.suse.cz/
+Fixes: 1899bb325149 ("bonding: fix state transition issue in link monitoring")
+CC: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rculist_nulls.h | 37 +++++++++++++++++++++++++++++++++++
- include/net/inet_hashtables.h | 12 +++++++++---
- include/net/sock.h            |  5 +++++
- net/ipv4/inet_diag.c          |  3 ++-
- net/ipv4/inet_hashtables.c    | 16 +++++++--------
- net/ipv4/tcp_ipv4.c           |  7 ++++---
- 6 files changed, 65 insertions(+), 15 deletions(-)
+ drivers/net/bonding/bond_main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/include/linux/rculist_nulls.h b/include/linux/rculist_nulls.h
-index bc8206a8f30e..61974c4c566b 100644
---- a/include/linux/rculist_nulls.h
-+++ b/include/linux/rculist_nulls.h
-@@ -100,6 +100,43 @@ static inline void hlist_nulls_add_head_rcu(struct hlist_nulls_node *n,
- 		first->pprev = &n->next;
- }
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 9b8143dca512..f57b86f1373d 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2223,9 +2223,6 @@ static void bond_miimon_commit(struct bonding *bond)
+ 			} else if (BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
+ 				/* make it immediately active */
+ 				bond_set_active_slave(slave);
+-			} else if (slave != primary) {
+-				/* prevent it from being the active one */
+-				bond_set_backup_slave(slave);
+ 			}
  
-+/**
-+ * hlist_nulls_add_tail_rcu
-+ * @n: the element to add to the hash list.
-+ * @h: the list to add to.
-+ *
-+ * Description:
-+ * Adds the specified element to the specified hlist_nulls,
-+ * while permitting racing traversals.
-+ *
-+ * The caller must take whatever precautions are necessary
-+ * (such as holding appropriate locks) to avoid racing
-+ * with another list-mutation primitive, such as hlist_nulls_add_head_rcu()
-+ * or hlist_nulls_del_rcu(), running on this same list.
-+ * However, it is perfectly legal to run concurrently with
-+ * the _rcu list-traversal primitives, such as
-+ * hlist_nulls_for_each_entry_rcu(), used to prevent memory-consistency
-+ * problems on Alpha CPUs.  Regardless of the type of CPU, the
-+ * list-traversal primitive must be guarded by rcu_read_lock().
-+ */
-+static inline void hlist_nulls_add_tail_rcu(struct hlist_nulls_node *n,
-+					    struct hlist_nulls_head *h)
-+{
-+	struct hlist_nulls_node *i, *last = NULL;
-+
-+	/* Note: write side code, so rcu accessors are not needed. */
-+	for (i = h->first; !is_a_nulls(i); i = i->next)
-+		last = i;
-+
-+	if (last) {
-+		n->next = last->next;
-+		n->pprev = &last->next;
-+		rcu_assign_pointer(hlist_next_rcu(last), n);
-+	} else {
-+		hlist_nulls_add_head_rcu(n, h);
-+	}
-+}
-+
- /**
-  * hlist_nulls_for_each_entry_rcu - iterate over rcu list of given type
-  * @tpos:	the type * to use as a loop cursor.
-diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
-index 9141e95529e7..b875dcef173c 100644
---- a/include/net/inet_hashtables.h
-+++ b/include/net/inet_hashtables.h
-@@ -106,13 +106,19 @@ struct inet_bind_hashbucket {
- 	struct hlist_head	chain;
- };
- 
--/*
-- * Sockets can be hashed in established or listening table
-+/* Sockets can be hashed in established or listening table.
-+ * We must use different 'nulls' end-of-chain value for all hash buckets :
-+ * A socket might transition from ESTABLISH to LISTEN state without
-+ * RCU grace period. A lookup in ehash table needs to handle this case.
-  */
-+#define LISTENING_NULLS_BASE (1U << 29)
- struct inet_listen_hashbucket {
- 	spinlock_t		lock;
- 	unsigned int		count;
--	struct hlist_head	head;
-+	union {
-+		struct hlist_head	head;
-+		struct hlist_nulls_head	nulls_head;
-+	};
- };
- 
- /* This is for listening sockets, thus all sockets which possess wildcards. */
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 4545a9ecc219..f359e5c94762 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -721,6 +721,11 @@ static inline void __sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_h
- 	hlist_nulls_add_head_rcu(&sk->sk_nulls_node, list);
- }
- 
-+static inline void __sk_nulls_add_node_tail_rcu(struct sock *sk, struct hlist_nulls_head *list)
-+{
-+	hlist_nulls_add_tail_rcu(&sk->sk_nulls_node, list);
-+}
-+
- static inline void sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
- {
- 	sock_hold(sk);
-diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
-index 5731670c560b..9742b37afe1d 100644
---- a/net/ipv4/inet_diag.c
-+++ b/net/ipv4/inet_diag.c
-@@ -918,11 +918,12 @@ void inet_diag_dump_icsk(struct inet_hashinfo *hashinfo, struct sk_buff *skb,
- 
- 		for (i = s_i; i < INET_LHTABLE_SIZE; i++) {
- 			struct inet_listen_hashbucket *ilb;
-+			struct hlist_nulls_node *node;
- 
- 			num = 0;
- 			ilb = &hashinfo->listening_hash[i];
- 			spin_lock(&ilb->lock);
--			sk_for_each(sk, &ilb->head) {
-+			sk_nulls_for_each(sk, node, &ilb->nulls_head) {
- 				struct inet_sock *inet = inet_sk(sk);
- 
- 				if (!net_eq(sock_net(sk), net))
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index 7be966a60801..900756b3defb 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -560,10 +560,11 @@ static int inet_reuseport_add_sock(struct sock *sk,
- 				   struct inet_listen_hashbucket *ilb)
- {
- 	struct inet_bind_bucket *tb = inet_csk(sk)->icsk_bind_hash;
-+	const struct hlist_nulls_node *node;
- 	struct sock *sk2;
- 	kuid_t uid = sock_i_uid(sk);
- 
--	sk_for_each_rcu(sk2, &ilb->head) {
-+	sk_nulls_for_each_rcu(sk2, node, &ilb->nulls_head) {
- 		if (sk2 != sk &&
- 		    sk2->sk_family == sk->sk_family &&
- 		    ipv6_only_sock(sk2) == ipv6_only_sock(sk) &&
-@@ -599,9 +600,9 @@ int __inet_hash(struct sock *sk, struct sock *osk)
- 	}
- 	if (IS_ENABLED(CONFIG_IPV6) && sk->sk_reuseport &&
- 		sk->sk_family == AF_INET6)
--		hlist_add_tail_rcu(&sk->sk_node, &ilb->head);
-+		__sk_nulls_add_node_tail_rcu(sk, &ilb->nulls_head);
- 	else
--		hlist_add_head_rcu(&sk->sk_node, &ilb->head);
-+		__sk_nulls_add_node_rcu(sk, &ilb->nulls_head);
- 	inet_hash2(hashinfo, sk);
- 	ilb->count++;
- 	sock_set_flag(sk, SOCK_RCU_FREE);
-@@ -650,11 +651,9 @@ void inet_unhash(struct sock *sk)
- 		reuseport_detach_sock(sk);
- 	if (ilb) {
- 		inet_unhash2(hashinfo, sk);
--		 __sk_del_node_init(sk);
--		 ilb->count--;
--	} else {
--		__sk_nulls_del_node_init_rcu(sk);
-+		ilb->count--;
- 	}
-+	__sk_nulls_del_node_init_rcu(sk);
- 	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
- unlock:
- 	spin_unlock_bh(lock);
-@@ -790,7 +789,8 @@ void inet_hashinfo_init(struct inet_hashinfo *h)
- 
- 	for (i = 0; i < INET_LHTABLE_SIZE; i++) {
- 		spin_lock_init(&h->listening_hash[i].lock);
--		INIT_HLIST_HEAD(&h->listening_hash[i].head);
-+		INIT_HLIST_NULLS_HEAD(&h->listening_hash[i].nulls_head,
-+				      i + LISTENING_NULLS_BASE);
- 		h->listening_hash[i].count = 0;
- 	}
- 
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index bfec48849735..5553f6a833f3 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2020,13 +2020,14 @@ static void *listening_get_next(struct seq_file *seq, void *cur)
- 	struct tcp_iter_state *st = seq->private;
- 	struct net *net = seq_file_net(seq);
- 	struct inet_listen_hashbucket *ilb;
-+	struct hlist_nulls_node *node;
- 	struct sock *sk = cur;
- 
- 	if (!sk) {
- get_head:
- 		ilb = &tcp_hashinfo.listening_hash[st->bucket];
- 		spin_lock(&ilb->lock);
--		sk = sk_head(&ilb->head);
-+		sk = sk_nulls_head(&ilb->nulls_head);
- 		st->offset = 0;
- 		goto get_sk;
- 	}
-@@ -2034,9 +2035,9 @@ static void *listening_get_next(struct seq_file *seq, void *cur)
- 	++st->num;
- 	++st->offset;
- 
--	sk = sk_next(sk);
-+	sk = sk_nulls_next(sk);
- get_sk:
--	sk_for_each_from(sk) {
-+	sk_nulls_for_each_from(sk, node) {
- 		if (!net_eq(sock_net(sk), net))
- 			continue;
- 		if (sk->sk_family == afinfo->family)
+ 			netdev_info(bond->dev, "link status definitely up for interface %s, %u Mbps %s duplex\n",
 -- 
 2.20.1
 
