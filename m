@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEEFC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69011C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7F020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F1720CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470684;
-	bh=CML4ynmYXN0xB1zt3WrGElGGQONxilXaUfFuXX/uags=;
+	s=default; t=1577470691;
+	bh=L15HIpr8PyjWt4L4qeeQDUtoArz4zU1Ao4IJyvKdTT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WekF43urGpud/G5S5wvARa+D0KOuHBlrH2bPuosGEj3zfAYihPiSHAka0lnZTFZQa
-	 O6anND9YusCLZodGHhA19/8seHQRQ08I7L/fOz0nVSB8jtVAgTPJ02o901P1X6ImUa
-	 AY2/lZ2/mPLf+0ou3MtxvPonpFklIU9/yYK1PgEY=
+	b=aI8xuFwlb3W6W7/6C0aDjzew+FWXZ5BJrbU2xHv3EROGpsWTsL1ap7ipzYGOJ2U+f
+	 4nBilYRiAZaNfzimo7x4gns3TZu5SIrtNHRAVplJYNT/qaa7Z82ALLsPtzhg10XtW1
+	 Guow4lsPl5tr8+QWmq4mBSGQ/isR4rGkHu6PhBKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbfL0SSC (ORCPT
+        id S1728055AbfL0SSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:18:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:18:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727823AbfL0SPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:10 -0500
+        id S1727274AbfL0SPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD10321744;
-        Fri, 27 Dec 2019 18:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3332208C4;
+        Fri, 27 Dec 2019 18:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470510;
-        bh=CML4ynmYXN0xB1zt3WrGElGGQONxilXaUfFuXX/uags=;
+        s=default; t=1577470509;
+        bh=L15HIpr8PyjWt4L4qeeQDUtoArz4zU1Ao4IJyvKdTT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s3ANMi6aVlcBS3TlycoLbkrtvSYyys6htic8hDnBCEcSSSNcOk8JtKYNeKZIuY9tC
-         6e3C5UTfR05pCVwjmVGHYkXokzfHv5i/MQuYFKXBGuuK4OaLIYyRaFHX8Rhdyz3Nhu
-         m6I7iWgsSp0QLZfU/QRatkois9WfJGog2R2uvJiM=
+        b=VomuapW9dj1JDdnu6QRB+gQu7KA55a+VzPSFV6DqdlGq40TUA8hmE8m1of9JG8Y3K
+         uTT48MemuyAhpWBrE7FFxsuNb3ubTeCaN9xG8LW7nBiLG7OonJm1Skq88TCYvGu2Ca
+         BjBw6qVZUAOvMTSI8Tj5XVSqWQeSlS4+fuCW2CcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Hebb <tommyhebb@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 28/38] kconfig: don't crash on NULL expressions in expr_eq()
-Date:   Fri, 27 Dec 2019 13:14:25 -0500
-Message-Id: <20191227181435.7644-28-sashal@kernel.org>
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 27/38] regulator: rn5t618: fix module aliases
+Date:   Fri, 27 Dec 2019 13:14:24 -0500
+Message-Id: <20191227181435.7644-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
@@ -59,40 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 272a72103012862e3a24ea06635253ead0b6e808 ]
+[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
 
-NULL expressions are taken to always be true, as implemented by the
-expr_is_yes() macro and by several other functions in expr.c. As such,
-they ought to be valid inputs to expr_eq(), which compares two
-expressions.
+platform device aliases were missing, preventing
+autoloading of module.
 
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/expr.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/regulator/rn5t618-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-index ed29bad1f03a..96420b620963 100644
---- a/scripts/kconfig/expr.c
-+++ b/scripts/kconfig/expr.c
-@@ -201,6 +201,13 @@ static int expr_eq(struct expr *e1, struct expr *e2)
- {
- 	int res, old_count;
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index 9c930eb68cda..ffc34e1ee35d 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -127,6 +127,7 @@ static struct platform_driver rn5t618_regulator_driver = {
  
-+	/*
-+	 * A NULL expr is taken to be yes, but there's also a different way to
-+	 * represent yes. expr_is_yes() checks for either representation.
-+	 */
-+	if (!e1 || !e2)
-+		return expr_is_yes(e1) && expr_is_yes(e2);
-+
- 	if (e1->type != e2->type)
- 		return 0;
- 	switch (e1->type) {
+ module_platform_driver(rn5t618_regulator_driver);
+ 
++MODULE_ALIAS("platform:rn5t618-regulator");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 regulator driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
