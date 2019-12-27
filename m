@@ -2,129 +2,193 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8936EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223EEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5252020882
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M7IFwi3J"
+	by mail.kernel.org (Postfix) with ESMTP id E9CAC20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfL0PNt (ORCPT
+        id S1727002AbfL0PPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:13:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50096 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0PNt (ORCPT
+        Fri, 27 Dec 2019 10:15:23 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:32214 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0PPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:13:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mKWmeMq/jXDP6HCH4qqFt/k91vrrbD+r5MY8+5wBr/M=; b=M7IFwi3Jg5BjsBnyGD+4xon2G
-        KIOWGardiBBm18dCoil3NMB6Ob5gQGRG/RwNNx7SAykIKQoaaG8OJvA/YB1x4e8tMgOe4VC5Osjp5
-        FImLXcx4mNey05Wjk20orKXk2m6Z3SiXJFfTee1gdKPbH93TW/SBNPz0yy+LAu4czyGtgnCVw3vKf
-        TG0xBbIqoHl/R7QftEIuH/U6pnpRlrJTT1YejtHxr5Yco3zTrOSUpQULlDB0O4ioXSuKKEtGThxB3
-        IPMHGtXrinZ8ff5eXDLf+xMjC2wKBw89XX/6p/5p5CXNmeF3mykXWpQXhI1oY1yosXiWBiHuLZ+kc
-        yW+S5smIw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ikrJC-0007nM-S5; Fri, 27 Dec 2019 15:13:46 +0000
-Date:   Fri, 27 Dec 2019 07:13:46 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
-Message-ID: <20191227151346.GA10799@bombadil.infradead.org>
-References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
- <20191223231120.GA31820@bombadil.infradead.org>
- <20191224015602.GB7739@richard>
+        Fri, 27 Dec 2019 10:15:22 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47kr3q4F8GzKmfB;
+        Fri, 27 Dec 2019 16:15:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id FoRWcIzpKAMD; Fri, 27 Dec 2019 16:15:13 +0100 (CET)
+Date:   Sat, 28 Dec 2019 02:15:01 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
+Message-ID: <20191227151501.osy2m6o6p6odzk74@yavin.dot.cyphar.com>
+References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
+ <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
+ <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
+ <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
+ <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
+ <20191227114725.xsacnaoaaxdv6yg3@wittgenstein>
+ <CAMp4zn8iMsRvDoDtrotfnEm2_UUULH9VRiR6q9u8CS4qham2Eg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qp3epnoas5ruktga"
 Content-Disposition: inline
-In-Reply-To: <20191224015602.GB7739@richard>
+In-Reply-To: <CAMp4zn8iMsRvDoDtrotfnEm2_UUULH9VRiR6q9u8CS4qham2Eg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 09:56:02AM +0800, Wei Yang wrote:
-> On Mon, Dec 23, 2019 at 03:11:20PM -0800, Matthew Wilcox wrote:
-> >On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
-> >> When page is not NULL, function is called by try_to_unmap_one() with
-> >> TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
-> >> with TTU_SPLIT_HUGE_PMD set:
-> >> 
-> >>   * unmap_page()
-> >>   * shrink_page_list()
-> >> 
-> >> In both case, the page passed to try_to_unmap_one() is PageHead() of the
-> >> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
-> >> aligned, this means the THP is not mapped as PMD THP in this process.
-> >> This could happen when we do mremap() a PMD size range to an un-aligned
-> >> address.
-> >> 
-> >> Currently, this case is handled by following check in __split_huge_pmd()
-> >> luckily.
-> >> 
-> >>   page != pmd_page(*pmd)
-> >> 
-> >> This patch checks the address to skip some work.
-> >
-> >The description here is confusing to me.
-> >
-> 
-> Sorry for the confusion.
-> 
-> Below is my understanding, if not correct or proper, just let me know :-)
-> 
-> According to current comment in __split_huge_pmd(), we check pmd_page with
-> page for migration case. While actually, this check also helps in the
-> following two cases when page already split-ed:
-> 
->    * page just split-ed in place
->    * page split-ed and moved to non-PMD aligned address
-> 
-> In both cases, pmd_page() is pointing to the PTE level page table. That's why
-> we don't split one already split-ed THP page.
-> 
-> If current code really intend to cover these two cases, sorry for my poor
-> understanding.
-> 
-> >> +	/*
-> >> +	 * When page is not NULL, function is called by try_to_unmap_one()
-> >> +	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
-> >> +	 * TTU_SPLIT_HUGE_PMD
-> >> +	 *
-> >> +	 *     unmap_page()
-> >> +	 *     shrink_page_list()
-> >> +	 *
-> >> +	 * In both cases, the "page" here is the PageHead() of a THP.
-> >> +	 *
-> >> +	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
-> >> +	 * is not necessary to split it.
-> >> +	 */
-> >> +	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
-> >> +		return;
-> >
-> >Repeating 75% of it as comments doesn't make it any less confusing.  And
-> >it feels like we're digging a pothole for someone to fall into later.
-> >Why not make it make sense ...
-> >
-> >	if (page && !IS_ALIGNED(address, page_size(page))
-> >		return;
-> 
-> Hmm... Use HPAGE_PMD_SIZE here wants to emphasize we want the address to be
-> PMD aligned. If just use page_size() here, may confuse the audience?
 
-I'm OK with using HPAGE_PMD_SIZE here.  I was trying to future-proof
-this function for supporting 64kB pages with a 4kB page size on ARM,
-but this function will need changes for that anyway, so I'm OK with
-your suggestion.
+--qp3epnoas5ruktga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-12-27, Sargun Dhillon <sargun@sargun.me> wrote:
+> On Fri, Dec 27, 2019 at 6:47 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Fri, Dec 27, 2019 at 01:31:31PM +1100, Aleksa Sarai wrote:
+> > > On 2019-12-27, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > >
+> > > Scratch that -- as Tycho just mentioned, there is un-named padding in
+> > > the struct so check_zeroed_user() is the wrong thing to do. But this
+> >
+> > Hm, I don't think so.
+> > I understood Tycho's point as _if_ there ever is padding then this would
+> > not be zeroed.
+> > Right now, there is no padding since the struct is correctly padded:
+> >
+> > struct seccomp_data {
+> >         int nr;
+> >         __u32 arch;
+> >         __u64 instruction_pointer;
+> >         __u64 args[6];
+> > };
+> >
+> > struct seccomp_notif {
+> >         __u64 id;
+> >         __u32 pid;
+> >         __u32 flags;
+> >         struct seccomp_data data;
+> > };
+> >
+> > which would be - using pahole:
+> >
+> > struct seccomp_data {
+> >         int                        nr;                   /*     0     4=
+ */
+> >         __u32                      arch;                 /*     4     4=
+ */
+> >         __u64                      instruction_pointer;  /*     8     8=
+ */
+> >         __u64                      args[6];              /*    16    48=
+ */
+> >
+> >         /* size: 64, cachelines: 1, members: 4 */
+> > };
+> > struct seccomp_notif {
+> >         __u64                      id;                   /*     0     8=
+ */
+> >         __u32                      pid;                  /*     8     4=
+ */
+> >         __u32                      flags;                /*    12     4=
+ */
+> >         struct seccomp_data data;                        /*    16    64=
+ */
+> >
+> >         /* size: 80, cachelines: 2, members: 4 */
+> >         /* last cacheline: 16 bytes */
+> > };
+> >
+> > The only worry would be a 2byte int type but there's no architecture
+> > we support which does this right now afaict.
+> >
+> > > also will make extensions harder to deal with because (presumably) th=
+ey
+> > > will also have un-named padding, making copy_struct_from_user() the
+> >
+> > This all will be a non-issue if we just use __u64 for extensions.
+> >
+> > My point about using copy_struct_from_user() was that we should verify
+> > that _all_ fields are uninitialized and not just the flags argument
+> > since we might introduce a flags argument that requires another already
+> > existing member in seccomp_notif to be set to a value. We should do this
+> > change now so we don't have to risk breaking someone in the future.
+> >
+> > I'm trying to get at least Mozilla/Firefox off of their crazy
+> > SECCOMP_RET_TRAP way of implementing their broker onto the user notifier
+> > and they will likely need some extensions. That includes the pidfd stuff
+> > for seccomp that Sargun will likely be doing and the new pidfd_getfd()
+> > syscall. So it's not unlikely that we might need other already existing
+> > fields in that struct to be set to some value.
+> >
+> > I don't particulary care how we do it:
+> > - We can do a simple copy_from_user() and check each field individually.
+>=20
+> Just doing a simple copy_from_user, and for now, calling memchr_inv
+> on the whole thing. We can drop the memset, and just leave a note to
+> indicate that if unpadded fields are introduced in the future, this struc=
+ture
+> must be manually zeroed out. Although, this might be laying a trap for
+> ourselves.
+>=20
+> This leaves us in a good position for introducing a flag field in the fut=
+ure.
+> All we have to do is change the memchr_inv from checking on an
+> entire struct basis to checking on a per-field basis.
+
+There is no need to do memchr_inv() on copy_from_user() to check for
+zero-ness. That's the entire point of check_zeroed_user() -- to not need
+to do it that way.
+
+> > - Use copy_struct_from_user().
+> >   That is safe to do right now since there is no padding afaict and
+> >   it'll automatically verify new fields as well.
+> >   If I understand the worry correctly then the argument against
+> >   copy_struct_from_user() here is that there might be padding introduced
+> >   and userspace will not do an explicit memset() but rather rely on an
+> >   empty inializer {} and will _accidently_ pass down a struct which has
+> >   __all fields cleared__ but __uninitialized padding__ and we tell them
+> >   EINVAL? That can only happen if we introduce padding in the struct
+> >   which I'd argue we just don't do. That'll be in line with what we
+> >   require from our ABIs already anyway.
+
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--qp3epnoas5ruktga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgYf8wAKCRCdlLljIbnQ
+ElhMAP4zLWE+r++uvi/UC9ZcIHcddNH68CbKzBsKVgf88RALlAEAgjfH80XjQsXo
+QCVHPhWjgbUafWOoPCP7x97K25qTVAc=
+=aqat
+-----END PGP SIGNATURE-----
+
+--qp3epnoas5ruktga--
