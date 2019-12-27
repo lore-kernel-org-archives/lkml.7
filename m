@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4CFC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC243C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC75222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01DD20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468654;
-	bh=rAMFqApMQxwITHsnu5Pg7D3xR8Q9/+Cve3z8RndOyT0=;
+	s=default; t=1577468666;
+	bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ek0WkxEeOd6hbL2kK1zYn3RUqLDRF0Jnra2W59ASof4vXRSxU7JSI6s4YZ3hDlWt9
-	 mV/k1KgMsPBF4GE4l9HmseA0wX7+mhzhRmnymu2agJsxZJTDm4vjG4DmEDF5wti+2X
-	 61s4O6/MbYWDFHqdUogMdI/Wpjmw4JXT/mAQ+dbU=
+	b=HFsNnklnGqy6nPjFsgtV9E0vNmFYMMfWBKGJwedf15VRlZwwilrHDTwWGQkpPqJSE
+	 8/s81jpJKxbJJNhZgBL/gpEdONxaKLqWWU3dmC5fY9+1SldwclwSvtqNcvkqF9KNYD
+	 gS83vU698tqn4OnyDVYtWSqdXImX2as+MljzYoVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfL0RoN (ORCPT
+        id S1728452AbfL0RoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41960 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbfL0RoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:04 -0500
+        id S1728381AbfL0RoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B3392464B;
-        Fri, 27 Dec 2019 17:44:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED7A24650;
+        Fri, 27 Dec 2019 17:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468643;
-        bh=rAMFqApMQxwITHsnu5Pg7D3xR8Q9/+Cve3z8RndOyT0=;
+        s=default; t=1577468653;
+        bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VedrjPd2maYwbRJA+n0isgUEfHOa/hIiUK5j855qTtwc+FqEe6+kKAfZW2/p6HqpI
-         h1HzVDg+mRm4mS4FB5oq5iQo0jiD6f4l3obz68cUWUT6gMHwwpB2R3SO28uZmBKHtV
-         SZw0LXFIrg5tP+DgA2PiGa/E0WAVLB0ScS+uxy1g=
+        b=NxoVmaFyo2QJlww5vNGwMZPXboHWW3REWjiFWl3wuMNcN3sDo9tFSET8iJ6e9SL4Z
+         bjKbW/gXiPcA+OtCUGI6lpqDBwY1E9sFgK72d2e7KA1YzqxDHkJalhPL7asWVlT8HR
+         VNR+xzo2Sl//KU96XaZxRW0/37BU8cZaVu3EEqe4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 09/84] libtraceevent: Fix lib installation with O=
-Date:   Fri, 27 Dec 2019 12:42:37 -0500
-Message-Id: <20191227174352.6264-9-sashal@kernel.org>
+Cc:     Stefan Roese <sr@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 16/84] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
+Date:   Fri, 27 Dec 2019 12:42:44 -0500
+Message-Id: <20191227174352.6264-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -61,54 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Stefan Roese <sr@denx.de>
 
-[ Upstream commit 587db8ebdac2c5eb3a8851e16b26f2e2711ab797 ]
+[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it fails to install libtraceevent.a and libtraceevent.so.1.1.0 with the
-error:
+Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
+does not work on the NXP i.MX6ULL EVK. Fix this by adding this
+compatible property to the DT.
 
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.a
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.so.1.1.0
-
-  cp: cannot stat 'libtraceevent.a': No such file or directory
-  Makefile:225: recipe for target 'install_lib' failed
-  make: *** [install_lib] Error 1
-
-I used the command:
-
-  make O=../../../obj-trace DESTDIR=~/test prefix==/usr  install
-
-It turns out libtraceevent Makefile, even though it builds in a separate
-folder, searches for libtraceevent.a and libtraceevent.so.1.1.0 in its
-source folder.
-
-So, add the 'OUTPUT' prefix to the source path so that 'make' looks for
-the files in the correct place.
-
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-1-sudipm.mukherjee@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index bca0c9e5452c..05f8a0f27121 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -115,6 +115,7 @@ EVENT_PARSE_VERSION = $(EP_VERSION).$(EP_PATCHLEVEL).$(EP_EXTRAVERSION)
- 
- LIB_TARGET  = libtraceevent.a libtraceevent.so.$(EVENT_PARSE_VERSION)
- LIB_INSTALL = libtraceevent.a libtraceevent.so*
-+LIB_INSTALL := $(addprefix $(OUTPUT),$(LIB_INSTALL))
- 
- INCLUDES = -I. -I $(srctree)/tools/include $(CONFIG_INCLUDES)
- 
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 818021126559..695303435003 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -175,7 +175,7 @@
+ 	flash0: n25q256a@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "micron,n25q256a";
++		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
+ 		reg = <0>;
+ 	};
 -- 
 2.20.1
 
