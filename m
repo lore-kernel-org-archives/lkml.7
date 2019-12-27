@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD93C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7752067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61732176D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468994;
-	bh=jnChr6xfx1BLBTep35l10JmYx7icGyU5b8Qk13BPgbU=;
+	s=default; t=1577469000;
+	bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvQWYnWpq3ROqONa632tDTjtjQXU6zjGASzNmYn/fHdQ19tWxCQFh0mxBEnRkHLRL
-	 WtqA5zM1u82iE3Q6V2yfqaoFaXMXs06sdRdt5wJ1cDEWmCKrI1Onjds1Q976dxLXR6
-	 5f/VXatwCWg87DvGcIWfMmUoYsHviBRHbfP7DBKI=
+	b=qdsfPGMnzbEeNI2kRG75JrAkmTriYOYNYIZtDFxSNwnmBw3AGDteiJNJHofm97x5n
+	 pn8csXL7Giv6lUvnvEfeOQMCzTi+LQYsLIw89P7CBkH9kLRZKbhN7v9atH0DMXLWiV
+	 DFhFeqPy2rllLOuuaKi1JovIybjjPUgjw/it8ry4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfL0Rtx (ORCPT
+        id S1728416AbfL0RoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:49:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbfL0RoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:23 -0500
+        id S1727437AbfL0RoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CB8921582;
-        Fri, 27 Dec 2019 17:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D5F6222C2;
+        Fri, 27 Dec 2019 17:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468663;
-        bh=jnChr6xfx1BLBTep35l10JmYx7icGyU5b8Qk13BPgbU=;
+        s=default; t=1577468648;
+        bh=ibTZwRKS6VoVkzjX7po10SasPNuQ7+a9R/Nk96beczE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AsbrMm2kAT61GaNYw+cTMLuEAR4nluob0qK4YQOehiiRUi+gxhrzP2FJGiAoZIuyJ
-         yEDiv+hCpIdWI61H+jq5E0r304CmKHFGcm8yW7L4h9A6Khtmnea3hybctZub2ayHMX
-         YRGU1HTlO9GdCpsD5xFm+FstUskXMu2u1m1W/MrU=
+        b=wuKoLlWVp84OTmn1+BnhkZfDhTljcIrEBUoqBfYi4dqENm8kdODUECy6eXXO0o+sH
+         6LFTXLwl7wJO47Dj3FOkxn3HsihoEgMcOV3Zhd6ccI+XWgnEgo4dgmJPWklTYH/Dzi
+         NKi9Pgg1RAiCD0cAd1raetGobhARP7t3Kq88U7DY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+Cc:     Marco Oliverio <marco.oliverio@tanaza.com>,
+        Rocco Folino <rocco.folino@tanaza.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/84] selftests/ftrace: Fix multiple kprobe testcase
-Date:   Fri, 27 Dec 2019 12:42:52 -0500
-Message-Id: <20191227174352.6264-24-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/84] netfilter: nf_queue: enqueue skbs with NULL dst
+Date:   Fri, 27 Dec 2019 12:42:40 -0500
+Message-Id: <20191227174352.6264-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -61,46 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Marco Oliverio <marco.oliverio@tanaza.com>
 
-[ Upstream commit 5cc6c8d4a99d0ee4d5466498e258e593df1d3eb6 ]
+[ Upstream commit 0b9173f4688dfa7c5d723426be1d979c24ce3d51 ]
 
-Fix multiple kprobe event testcase to work it correctly.
-There are 2 bugfixes.
- - Since `wc -l FILE` returns not only line number but also
-   FILE filename, following "if" statement always failed.
-   Fix this bug by replacing it with 'cat FILE | wc -l'
- - Since "while do-done loop" block with pipeline becomes a
-   subshell, $N local variable is not update outside of
-   the loop.
-   Fix this bug by using actual target number (256) instead
-   of $N.
+Bridge packets that are forwarded have skb->dst == NULL and get
+dropped by the check introduced by
+b60a77386b1d4868f72f6353d35dabe5fbe981f2 (net: make skb_dst_force
+return true when dst is refcounted).
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+To fix this we check skb_dst() before skb_dst_force(), so we don't
+drop skb packet with dst == NULL. This holds also for skb at the
+PRE_ROUTING hook so we remove the second check.
+
+Fixes: b60a77386b1d ("net: make skb_dst_force return true when dst is refcounted")
+Signed-off-by: Marco Oliverio <marco.oliverio@tanaza.com>
+Signed-off-by: Rocco Folino <rocco.folino@tanaza.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/kprobe/multiple_kprobes.tc      | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nf_queue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-index ce361b9d62cf..da298f191086 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-@@ -25,9 +25,9 @@ while read i; do
-   test $N -eq 256 && break
- done
+diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+index a96a8c16baf9..ee6d98355081 100644
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -174,7 +174,7 @@ static int __nf_queue(struct sk_buff *skb, const struct nf_hook_state *state,
+ 		goto err;
+ 	}
  
--L=`wc -l kprobe_events`
--if [ $L -ne $N ]; then
--  echo "The number of kprobes events ($L) is not $N"
-+L=`cat kprobe_events | wc -l`
-+if [ $L -ne 256 ]; then
-+  echo "The number of kprobes events ($L) is not 256"
-   exit_fail
- fi
- 
+-	if (!skb_dst_force(skb) && state->hook != NF_INET_PRE_ROUTING) {
++	if (skb_dst(skb) && !skb_dst_force(skb)) {
+ 		status = -ENETDOWN;
+ 		goto err;
+ 	}
 -- 
 2.20.1
 
