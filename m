@@ -2,87 +2,215 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676E8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C654EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F0C20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:37:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Y/fnMhtm"
+	by mail.kernel.org (Postfix) with ESMTP id 9948220828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 11:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbfL0Lhi (ORCPT
+        id S1726999AbfL0Lrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:37:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35307 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfL0Lhg (ORCPT
+        Fri, 27 Dec 2019 06:47:32 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:46419 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfL0Lrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 06:37:36 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so25841808wro.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 03:37:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bpIiCK5WqIgrEaa234cHRdees/ayR1lDtho4HV6gLnw=;
-        b=Y/fnMhtmNh8pgB10eb6arwxjSyLM5+I+paY7YL2IY/MObHLoX8vbJpouoENflytyaM
-         WqU+HtXQz4r16r9lvNxZKbTRaCliJrULZE9RAjeLemCG2ImoRtxfc7X+bp7ZCtPIIzbE
-         fkXql1aoW++4m07KH7nGnnx+kQqDJSCp1fHag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bpIiCK5WqIgrEaa234cHRdees/ayR1lDtho4HV6gLnw=;
-        b=QlsiznDsgl0FdAIi2AIKvllbL5CRSBQHNRgRMZKnIMBM+xaDVYcDe4e5ttSKXYhlTB
-         mJ0nGnrT5r5bTPB3BPIXZIk4rb0YSP4WpFkjFIBjYvofs/d1kEoP4GyPdr0fR27iGtdY
-         RB32oDfl/s/D6z9ByAkt6qolkn9rPitu9SoMdvp1YjW7NughVcc9K+RXboeCkgalB4mW
-         0SrUfJAQ8/cRngIuwqG0kSpnc+X4FQZyjBdNDQMp65SBf74pgG0oC8D1HJwQ315xLNJl
-         fy9Zvh3arodqdRn7WWWjgsTJa/+Qgr4evjPt8b+ze/d8jnT/HvUqB5bxk5sn3V5LYXSK
-         nq9A==
-X-Gm-Message-State: APjAAAXcUj0e4S3qnuLDR2KLMBKPL6wBqUA643RUkbKXxsBJB685pWix
-        R9uKI8hUEIABcABR436kZhzFkQ==
-X-Google-Smtp-Source: APXvYqz7YRORD3nJ5nHFQjwcVPr4Hrl8QOet2glGy16vOAsGaad37FExuqc9Dqqfmtsyv49zuqK2bQ==
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr51720244wrb.22.1577446654952;
-        Fri, 27 Dec 2019 03:37:34 -0800 (PST)
-Received: from localhost (host-92-23-123-10.as13285.net. [92.23.123.10])
-        by smtp.gmail.com with ESMTPSA id r15sm10972362wmh.21.2019.12.27.03.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 03:37:34 -0800 (PST)
-Date:   Fri, 27 Dec 2019 11:37:32 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     "zhengbin (A)" <zhengbin13@huawei.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH] fs: inode: Recycle inodenum from volatile inode slabs
-Message-ID: <20191227113732.GB442424@chrisdown.name>
-References: <20191226154808.GA418948@chrisdown.name>
- <CAOQ4uxj8NVwrCTswut+icF2t1-7gtW_cmyuGO7WUWdNZLHOBYA@mail.gmail.com>
- <88698fed-528b-85b2-1d07-e00051d6db60@huawei.com>
+        Fri, 27 Dec 2019 06:47:31 -0500
+Received: from p5b2a6dac.dip0.t-ipconnect.de ([91.42.109.172] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iko5X-0006iS-El; Fri, 27 Dec 2019 11:47:27 +0000
+Date:   Fri, 27 Dec 2019 12:47:26 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        keescook@chromium.org
+Subject: Re: [PATCH] seccomp: Check flags on seccomp_notif is unset
+Message-ID: <20191227114725.xsacnaoaaxdv6yg3@wittgenstein>
+References: <20191225214530.GA27780@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191226115245.usf7z5dkui7ndp4w@wittgenstein>
+ <20191226143229.sbopynwut2hhsiwn@yavin.dot.cyphar.com>
+ <57C06925-0CC6-4251-AD57-8FF1BC28F049@ubuntu.com>
+ <20191227022446.37e64ag4uaqms2w4@yavin.dot.cyphar.com>
+ <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <88698fed-528b-85b2-1d07-e00051d6db60@huawei.com>
+In-Reply-To: <20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhengbin (A) writes:
->How about tmpfs and hugetlbfs use their own get_next_ino? like
->
->static DEFINE_PER_CPU(unsigned int, tmpfs_last_ino),
->
->which can reduce the risk of 32 bit wraparound further.
+On Fri, Dec 27, 2019 at 01:31:31PM +1100, Aleksa Sarai wrote:
+> On 2019-12-27, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > > On December 26, 2019 3:32:29 PM GMT+01:00, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > > >On 2019-12-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
+> > > >> On Wed, Dec 25, 2019 at 09:45:33PM +0000, Sargun Dhillon wrote:
+> > > >> > This patch is a small change in enforcement of the uapi for
+> > > >> > SECCOMP_IOCTL_NOTIF_RECV ioctl. Specificaly, the datastructure
+> > > >which is
+> > > >> > passed (seccomp_notif), has a flags member. Previously that could
+> > > >be
+> > > >> > set to a nonsense value, and we would ignore it. This ensures that
+> > > >> > no flags are set.
+> > > >> > 
+> > > >> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > > >> > Cc: Kees Cook <keescook@chromium.org>
+> > > >> 
+> > > >> I'm fine with this since we soon want to make use of the flag
+> > > >argument
+> > > >> when we add a flag to get a pidfd from the seccomp notifier on
+> > > >receive.
+> > > >> The major users I could identify already pass in seccomp_notif with
+> > > >all
+> > > >> fields set to 0. If we really break users we can always revert; this
+> > > >> seems very unlikely to me though.
+> > > >> 
+> > > >> One more question below, otherwise:
+> > > >> 
+> > > >> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > >> 
+> > > >> > ---
+> > > >> >  kernel/seccomp.c | 7 +++++++
+> > > >> >  1 file changed, 7 insertions(+)
+> > > >> > 
+> > > >> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > > >> > index 12d2227e5786..455925557490 100644
+> > > >> > --- a/kernel/seccomp.c
+> > > >> > +++ b/kernel/seccomp.c
+> > > >> > @@ -1026,6 +1026,13 @@ static long seccomp_notify_recv(struct
+> > > >seccomp_filter *filter,
+> > > >> >  	struct seccomp_notif unotif;
+> > > >> >  	ssize_t ret;
+> > > >> >  
+> > > >> > +	if (copy_from_user(&unotif, buf, sizeof(unotif)))
+> > > >> > +		return -EFAULT;
+> > > >> > +
+> > > >> > +	/* flags is reserved right now, make sure it's unset */
+> > > >> > +	if (unotif.flags)
+> > > >> > +		return -EINVAL;
+> > > >> > +
+> > > >> 
+> > > >> Might it make sense to use
+> > > >> 
+> > > >> 	err = copy_struct_from_user(&unotif, sizeof(unotif), buf,
+> > > >sizeof(unotif));
+> > > >> 	if (err)
+> > > >> 		return err;
+> > > >> 
+> > > >> This way we check that the whole struct is 0 and report an error as
+> > > >soon
+> > > >> as one of the members is non-zero. That's more drastic but it'd
+> > > >ensure
+> > > >> that other fields can be used in the future for whatever purposes.
+> > > >> It would also let us get rid of the memset() below. 
+> > > >
+> > > >Given that this isn't an extensible struct, it would be simpler to just
+> > > >do
+> > > >check_zeroed_user() -- copy_struct_from_user() is overkill. That would
+> > > >also remove the need for any copy_from_user()s and the memset can be
+> > > >dropped by just doing
+> > > >
+> > > >  struct seccomp_notif unotif = {};
+> > > >
+> > > >> >  	memset(&unotif, 0, sizeof(unotif));
+> > > >> >  
+> > > >> >  	ret = down_interruptible(&filter->notif->request);
+> > > >> > -- 
+> > > >> > 2.20.1
+> > > >> > 
+> > > 
+> > > It is an extensible struct. That's why we have notifier size checking built in.
+> > 
+> > Ah right, NOTIF_GET_SIZES. I reckon check_zeroed_user() is still a bit
+> > simpler since none of the fields are used right now (and really, this
+> > patch should be checking all of them, not just ->flags, if we want to
+> > use any of them in the future).
+> 
+> Scratch that -- as Tycho just mentioned, there is un-named padding in
+> the struct so check_zeroed_user() is the wrong thing to do. But this
 
-This won't help by itself, because in the case presented the wraparound almost 
-solely comes from shmem alone.
+Hm, I don't think so.
+I understood Tycho's point as _if_ there ever is padding then this would
+not be zeroed.
+Right now, there is no padding since the struct is correctly padded:
+
+struct seccomp_data {
+	int nr;
+	__u32 arch;
+	__u64 instruction_pointer;
+	__u64 args[6];
+};
+
+struct seccomp_notif {
+	__u64 id;
+	__u32 pid;
+	__u32 flags;
+	struct seccomp_data data;
+};
+
+which would be - using pahole:
+
+struct seccomp_data {
+        int                        nr;                   /*     0     4 */
+        __u32                      arch;                 /*     4     4 */
+        __u64                      instruction_pointer;  /*     8     8 */
+        __u64                      args[6];              /*    16    48 */
+
+        /* size: 64, cachelines: 1, members: 4 */
+};
+struct seccomp_notif {
+        __u64                      id;                   /*     0     8 */
+        __u32                      pid;                  /*     8     4 */
+        __u32                      flags;                /*    12     4 */
+        struct seccomp_data data;                        /*    16    64 */
+
+        /* size: 80, cachelines: 2, members: 4 */
+        /* last cacheline: 16 bytes */
+};
+
+The only worry would be a 2byte int type but there's no architecture
+we support which does this right now afaict.
+
+> also will make extensions harder to deal with because (presumably) they
+> will also have un-named padding, making copy_struct_from_user() the
+
+This all will be a non-issue if we just use __u64 for extensions.
+
+My point about using copy_struct_from_user() was that we should verify
+that _all_ fields are uninitialized and not just the flags argument
+since we might introduce a flags argument that requires another already
+existing member in seccomp_notif to be set to a value. We should do this
+change now so we don't have to risk breaking someone in the future.
+
+I'm trying to get at least Mozilla/Firefox off of their crazy
+SECCOMP_RET_TRAP way of implementing their broker onto the user notifier
+and they will likely need some extensions. That includes the pidfd stuff
+for seccomp that Sargun will likely be doing and the new pidfd_getfd()
+syscall. So it's not unlikely that we might need other already existing
+fields in that struct to be set to some value.
+
+I don't particulary care how we do it:
+- We can do a simple copy_from_user() and check each field individually.
+- Use copy_struct_from_user().
+  That is safe to do right now since there is no padding afaict and
+  it'll automatically verify new fields as well.
+  If I understand the worry correctly then the argument against
+  copy_struct_from_user() here is that there might be padding introduced
+  and userspace will not do an explicit memset() but rather rely on an
+  empty inializer {} and will _accidently_ pass down a struct which has
+  __all fields cleared__ but __uninitialized padding__ and we tell them
+  EINVAL? That can only happen if we introduce padding in the struct
+  which I'd argue we just don't do. That'll be in line with what we
+  require from our ABIs already anyway.
+
+Christian
