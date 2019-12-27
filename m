@@ -2,116 +2,136 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44492C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F61CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1471A2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DECA820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="S6ky3e3m"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ELJvFend"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfL0Sbh (ORCPT
+        id S1727005AbfL0Sh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:31:37 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40684 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Sbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:31:36 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dp13so10321113qvb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 10:31:36 -0800 (PST)
+        Fri, 27 Dec 2019 13:37:28 -0500
+Received: from mail-dm6nam11on2041.outbound.protection.outlook.com ([40.107.223.41]:6095
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726379AbfL0Sh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:37:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EyXIU3c1mKSY21QQA7KAIh5sVNT8xoMOEueKXLoCmHRuCHPxzhSoRmpp4JqvtAA/E7umU3eGSUPATmhulqoiA3nlGFrNuZhSSnktsi3Cs9YTwNAZh9blHtOnkWwonHpeQVR4mE88y1+4jIyxs4N6gXai0UvihvYbSe7xWyymwUZ2t2kN3U8/THcu8SAChvfAlus35tf3cszzXWUcS0AuGCA85Gt0z7x7YCCZuvWqGPcNBoL00MqyNTvvkzDuG2QqJCaXaeMEXsADvL4B+BCErrRGUeZIbtsmSTJtndiT/u5zPy2lpaLiK7M+TDXzpKxkwBqGq9whloqn/yokqaL51g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8854fDKXuI85I3FJ5/M68M5V548PYPZawdyFZxFQSfU=;
+ b=eO7h5J5wF/5NEu1cOvnHMdAbsroJR8xqUhC4JxbTDezmILYuPATBLsEbL2Z32zw+o5GPOVScKw17UDMI+JRJ4DZeTPprpxEMlJqrathXUqxsjUWijDIbt13eDA6vTg6Reeohw85L3AoGbbK4V3co66Z9nbVRycnTwIvj61WGgxFewZYqOnsmjbhax879WghnVPunU0zumGVgZcyuNiewIHutUtXuJp0BSE4xALNAhkdriH6R41Cz2Y9verIKeEsWYYFqyOvHQlFO9UQoi0mx1qwANA6FByum5sR5yYXzhA2bnXVVrGal5rTeg4FM3LW6Z7i5RcISDaSAfTcLMsY1gA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=SAOi4rX0PzzPY1Qd9BMC9D2IASEpSAZxjVF7/BcYdLo=;
-        b=S6ky3e3meAJ7Q4N4XsrW8YT1Rm6tPFtg2HaCkj7ly+J4lV/QNQ58seC3aSbC0FKmsF
-         qDCuZFaTS8jPaWi2MWtRo1ilqvmdUpnhtu2M3TuS2BeEwfecQAR53sK7tSGzegwZr4xQ
-         jXFYIQfn5nTXl7kcLqg9ai65+g0Nbbrc4IYvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=SAOi4rX0PzzPY1Qd9BMC9D2IASEpSAZxjVF7/BcYdLo=;
-        b=RqE0AStf3MSIGvmWznnUPLVbZORrVWQUVM572mWaX4UKAaYp/91hhglPixw1wnR221
-         NGHqwUORUt8JdYy6ORf3IhGpqPbVXMLaC8nqbYeOvRahjac7xYgrq1jvR1gR8uCMe2oT
-         s7OSUJX/LX+6NZiCE33Y2tMIinKm9PC8Cc7/7dxNMtI12kBzA3VJCOpO3pfjarC+53Hj
-         ZVwvk1ZX13yv/oGQVJyNrZWz9yjb12N7mGSTOuoj42bYGvda9fKyRX3lzvtwjngO8jJv
-         Ta7CYQm9WTv1m5dn0UpqIIEmSp1ZjlsIxeRFs5dERppmBNhYyEIrq0dbg45dfbEWkpby
-         wvPQ==
-X-Gm-Message-State: APjAAAWsEJc0nais++qKbFdkk0PiM4zdkDx/Pebowu17GM/gVL+BVp8E
-        azLHzggQ4paCXQA+XWrlC0rPew==
-X-Google-Smtp-Source: APXvYqzips0lhd3HlySbex84ooEnXX60SOSbnq573j02uQZ/feUcY4BBMnytU71xjgPAulLj8evuvA==
-X-Received: by 2002:ad4:4dc3:: with SMTP id cw3mr40752196qvb.130.1577471495835;
-        Fri, 27 Dec 2019 10:31:35 -0800 (PST)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id t2sm10760889qtn.22.2019.12.27.10.31.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 10:31:34 -0800 (PST)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Fri, 27 Dec 2019 13:31:29 -0500 (EST)
-X-X-Sender: vince@macbook-air
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>, mtk.manpages@gmail.com
-Subject: Re: [PATCHSET 0/9] perf: Improve cgroup profiling (v3)
-In-Reply-To: <20191226124659.GA20204@kernel.org>
-Message-ID: <alpine.DEB.2.21.1912271327320.4876@macbook-air>
-References: <20191223060759.841176-1-namhyung@kernel.org> <alpine.DEB.2.21.1912231235090.775@macbook-air> <CAM9d7cj06Hj3hOSdcyTpRWaoBY0wLjPpt7_+CbUqtsF-_08Czg@mail.gmail.com> <20191226124659.GA20204@kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8854fDKXuI85I3FJ5/M68M5V548PYPZawdyFZxFQSfU=;
+ b=ELJvFendP01WmBfUlaBqB/z1iZKUnlXxx67iQCVm7zZv5WSYcT69uMbgJtjvyUe9hwGtugPHN8venpQ4F1na24P4FTegPJQA4+9MK7VFKjV8dHSUMWwNDuMtrmKktr/Re3A5oSwby6Ej+/jOeb7cbtzcOwfcVNOBnq55l+zl5DE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com (20.179.66.155) by
+ BN8PR12MB3217.namprd12.prod.outlook.com (20.179.67.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Fri, 27 Dec 2019 18:37:23 +0000
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029]) by BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029%5]) with mapi id 15.20.2559.017; Fri, 27 Dec 2019
+ 18:37:23 +0000
+Subject: Re: [PATCH 1/4] tee: allow compilation of tee subsystem for AMD CPUs
+To:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        tee-dev@lists.linaro.org
+Cc:     Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>
+References: <cover.1577423898.git.Rijo-john.Thomas@amd.com>
+ <515ebade213492080b97ed6426c82a0fe22c03ab.1577423898.git.Rijo-john.Thomas@amd.com>
+From:   Gary R Hook <ghook@amd.com>
+Message-ID: <13954c4f-378f-a31c-2ee4-2ab0aea632e0@amd.com>
+Date:   Fri, 27 Dec 2019 12:37:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+In-Reply-To: <515ebade213492080b97ed6426c82a0fe22c03ab.1577423898.git.Rijo-john.Thomas@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0701CA0020.namprd07.prod.outlook.com
+ (2603:10b6:803:28::30) To BN8PR12MB2916.namprd12.prod.outlook.com
+ (2603:10b6:408:6a::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from [4.3.2.105] (47.220.193.178) by SN4PR0701CA0020.namprd07.prod.outlook.com (2603:10b6:803:28::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.12 via Frontend Transport; Fri, 27 Dec 2019 18:37:22 +0000
+X-Originating-IP: [47.220.193.178]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 375a0d84-b487-4709-2517-08d78afbd01c
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3217:|BN8PR12MB3217:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3217DD3C601FF476AE089AD4FD2A0@BN8PR12MB3217.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+X-Forefront-PRVS: 0264FEA5C3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(189003)(199004)(66946007)(66556008)(66476007)(110136005)(16576012)(54906003)(956004)(6706004)(6486002)(478600001)(4326008)(52116002)(186003)(2616005)(31696002)(5660300002)(8936002)(2906002)(81166006)(36756003)(8676002)(81156014)(316002)(26005)(53546011)(31686004)(16526019)(78286006)(84106002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR12MB3217;H:BN8PR12MB2916.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dwCashLZmH/JI0ApHiw0wVubIAY3z1GOWAfrNDeaWAiFtYlM37MMAMVWsRPYpYq361Gbt0j++2oKq87HXKQGCSLTJmbztroqHcjMIlCHJZ/I2vchgvdKf1B/pXPruOswlYLRZIJxYjFkdMBrafZyTruZQ6GF+1TOISlI3lvtt2AVRF9/TZy9qhNVNlO3xu6s4Uohnmud5bnj9FB15HQF1qvKLAMn34xf5JZ6yOndJ3Uy0bwF1LhLPZ1hVVhP3PXgLOfPID/gG8gBqhAZv9n60UdZ/M+hA7q/iflfZOKXyy6TFoscfllUQ7rqoZc5qc2vlOXlLV2uRsxthJf75ijYECLu7r/idQsgPZRf1OxXJSY1KUUjyGh75fHKafgNzc/PaAv9ALXueyy3GAdScm618a1ECJw/GXbCd2dQ/ABDXLWHVeKIrb31m+KZj9FujFcr0DUFmzP/ekuNjtYsueT4UyRr2P2vEBQOxADes0zZKo+ZF9Sb2boEK8PeflpFEOpmmX40od9XStKQUGG2XkiL7g==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 375a0d84-b487-4709-2517-08d78afbd01c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 18:37:23.4641
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6YtsAvdRxvZ5Zjtyy7E2kd6Wr2yOUcNc+iMqRu8f2paFkyxQ+obdKuNrXh+biM5V
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3217
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Dec 2019, Arnaldo Carvalho de Melo wrote:
-
-> Em Tue, Dec 24, 2019 at 09:40:04AM +0900, Namhyung Kim escreveu:
-> > On Tue, Dec 24, 2019 at 2:35 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
-> > > On Mon, 23 Dec 2019, Namhyung Kim wrote:
-> > > > This work is to improve cgroup profiling in perf.  Currently it only
-> > > > supports profiling tasks in a specific cgroup and there's no way to
-> > > > identify which cgroup the current sample belongs to.  So I added
-> > > > PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
-> > > > integer having file handle of the cgroup.  And kernel also generates
-> > > > PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
-> > > > cgroup name (path in the cgroup filesystem).  The cgroup id can be
-> > > > read from userspace by name_to_handle_at() system call so it can
-> > > > synthesize the CGROUP event for existing groups.
+On 12/26/19 11:24 PM, Rijo Thomas wrote:
+> Allow compilation of tee subsystem for AMD's CPUs which have a dedicated
+> AMD Secure Processor for Trusted Execution Environment (TEE).
 > 
-> > > so is there a patch to the manpage that describes this new behavior in
-> > > perf_event_open()?
+> Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+> Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+> Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
+> Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
+
+Reviewed-by: Gary R Hook <gary.hook@amd.com>
+
+> ---
+>   drivers/tee/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > Not yet.  I'll cook a patch once it's merged to the Linus' tree.
+> diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
+> index 676ffcb..4f3197d 100644
+> --- a/drivers/tee/Kconfig
+> +++ b/drivers/tee/Kconfig
+> @@ -2,7 +2,7 @@
+>   # Generic Trusted Execution Environment Configuration
+>   config TEE
+>   	tristate "Trusted Execution Environment support"
+> -	depends on HAVE_ARM_SMCCC || COMPILE_TEST
+> +	depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
+>   	select DMA_SHARED_BUFFER
+>   	select GENERIC_ALLOCATOR
+>   	help
 > 
-> Vince, was it ever considered to carry the man page in the kernel
-> sources and then make it so that new features need to come with the
-> respective changes to the man page? I think that would be a good move,
-> you would be the maintainer for that file, what do you think?
 
-While I do a lot of work on the perf_event_open() manpage,  it's part of 
-the linux man-pages project so I don't really control where it is 
-maintained.
-
-I personally do not think it would help much merging into the kernel tree.
-I still think the idea of moving everything into linux-git (such as the  
-"perf" tool) isn't always the best idea and can make it harder for people
-who aren't kernel developers to work on things.
-
-Vince
