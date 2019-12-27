@@ -6,74 +6,75 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557E0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B261AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3125A20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3A520882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfL0JUB (ORCPT
+        id S1727028AbfL0JUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 04:20:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:6016 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfL0JUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 04:20:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 01:20:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,362,1571727600"; 
-   d="scan'208";a="367987606"
-Received: from tchen40-mobl.gar.corp.intel.com (HELO M5530.gar.corp.intel.com) ([10.255.129.32])
-  by orsmga004.jf.intel.com with ESMTP; 27 Dec 2019 01:19:50 -0800
-From:   Harry Pan <harry.pan@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH] perf/x86/intel/rapl: Add Comet Lake support
-Date:   Fri, 27 Dec 2019 17:19:46 +0800
-Message-Id: <20191227171944.1.Id6f3ab98474d7d1dba5b95390b24e0a67368d364@changeid>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 27 Dec 2019 04:20:49 -0500
+Received: from smtp21.cstnet.cn ([159.226.251.21]:58568 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbfL0JUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 04:20:49 -0500
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-01 (Coremail) with SMTP id qwCowAAnF5TkzAVeUKFLCg--.7S3;
+        Fri, 27 Dec 2019 17:20:37 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     srinivas.kandagatla@linaro.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] nvmem: core: Fix a potential use after free
+Date:   Fri, 27 Dec 2019 09:20:34 +0000
+Message-Id: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: qwCowAAnF5TkzAVeUKFLCg--.7S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr4kWF15Cr4Utr1DXr4fZrb_yoW3Jrb_Z3
+        WjgrsxuF18A3Wvkr15GF13Z3y0kFs0qrsYyF10qr95t390qr9rZ3yvv3sxXw1agr4fZF9r
+        XF1qqrsxW345ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbFAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
+        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+        WUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8v_M3UUUUU==
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwIRA1z4i9UIOwAAsS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Comet Lake supports the same RAPL counters like Kaby Lake and Skylake.
-After this, on CML machine the energy counters appear in perf list.
+Free the nvmem structure only after we are done using it.
+This patch just moves the put_device() down a bit to avoid the
+use after free.
 
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/x86/events/intel/rapl.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 5053a403e4ae..09913121e726 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -741,6 +741,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS,	model_hsw),
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,		model_skl),
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE,		model_skl),
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_COMETLAKE_L,		model_skl),
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_COMETLAKE,		model_skl),
- 	{},
- };
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 9f1ee9c..7051d34 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -535,8 +535,8 @@ static struct nvmem_device *__nvmem_device_get(void *data,
+ 
+ static void __nvmem_device_put(struct nvmem_device *nvmem)
+ {
+-	put_device(&nvmem->dev);
+ 	module_put(nvmem->owner);
++	put_device(&nvmem->dev);
+ 	kref_put(&nvmem->refcnt, nvmem_device_release);
+ }
  
 -- 
-2.24.1
+2.7.4
 
