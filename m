@@ -2,153 +2,257 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21C7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA9C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9655621582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577428459;
-	bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lWYIXHkSXsqAb9X5uoFcbdIx8X9DUSIp8hksl8iaC3ZcP+/6UWHwFrm2+7swqpbF4
-	 MBr6JUKTqtGDIVajjo01hqbR470qrQhky4vTsxu51IOO2LY4Q5cxZJPxkX9hXfI6WC
-	 YnJEC9YGQezJngDChW6PFh+vo0ErVxEbrUH7KkIg=
+	by mail.kernel.org (Postfix) with ESMTP id B2480206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Bd37sWm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfL0GeS (ORCPT
+        id S1727040AbfL0GhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:34:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfL0GeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:34:18 -0500
-Received: from localhost (unknown [106.201.34.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7251220828;
-        Fri, 27 Dec 2019 06:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577428457;
-        bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j71b1ORR5isd/iuQCkuKk+CZkf8gXZyRZKiNR9MZgAtgIb1azhbGHN4o6PHKvEBvO
-         10xvGkDVQM+Bk8xfelvhFK+bnnZKiBgkzhXwAPSNKQxR/FvxCtP3ZqX3MW4AuQTi95
-         ceEaiwYCt+BlTKfgKiJO5RABJlP+bu1JKrCSxUOg=
-Date:   Fri, 27 Dec 2019 12:04:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA
- controller driver
-Message-ID: <20191227063411.GG3006@vkoul-mobl>
-References: <1576630620-1977-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
+        Fri, 27 Dec 2019 01:37:23 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11826 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfL0GhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:37:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e05a67c0000>; Thu, 26 Dec 2019 22:36:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 26 Dec 2019 22:37:21 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 26 Dec 2019 22:37:21 -0800
+Received: from [10.24.192.96] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Dec
+ 2019 06:37:17 +0000
+Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
+ <20191219132650.GJ1440537@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <74d94004-2022-3b04-6cd9-d6b1e9eca230@nvidia.com>
+Date:   Fri, 27 Dec 2019 12:09:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20191219132650.GJ1440537@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577428604; bh=bI5VIPedVxKsj8DUcsAVgjGijDib+I6V20ZeTFfznwo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Bd37sWm/MXOKGy4t4m8ch8/ipRZjZP5gjJCczchiQbBXV5KJCJG24OqbHCk3CeaYC
+         G6FZ8qg+6o28cCFymUOXnLx1svvZVdTXzmoagRR62kpLQ7nmyqZFDXNt6siOCJ3YtJ
+         pkU6vJthRrTxi2NjhVtY7aIc/YJlgOVNcL2kvIXJMghHXSnA04hnQ+FkfJm5/bhw+0
+         wUbyRUUZa1WHAjM3Tihjhsq2oAiZKFf3JfedyDL1VkKc9IgcXNYa3qa4HDQhJV0HqA
+         +W19rI953ooUFPuBTocsGde19dCbOHYM7dyXnmZaoX++ADkw2gZ/mOXNRx5OycCtOi
+         SAQXTsBOwgCig==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-12-19, 09:57, Kunihiko Hayashi wrote:
-> This adds external DMA controller driver implemented in Socionext
-> UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
+
+
+On 19-12-2019 18:56, Thierry Reding wrote:
 > 
-> Since this driver does not support the the way to transfer size
-> unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
+> On Wed, Dec 18, 2019 at 02:46:16PM +0530, Nagarjuna Kristam wrote:
+>> If usb-role-switch property is present in USB 2 port, register
+>> usb-role-switch to receive usb role changes.
+>>
+>> Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
+>> ---
+>> V2:
+>>   - Removed dev_set_drvdata for port->dev.
+>>   - Added of_platform_depopulate during error handling and driver removal.
+>> ---
+>>   drivers/phy/tegra/Kconfig |  1 +
+>>   drivers/phy/tegra/xusb.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/phy/tegra/xusb.h  |  3 +++
+>>   3 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index f9817c3..df07c4d 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -2,6 +2,7 @@
+>>   config PHY_TEGRA_XUSB
+>>   	tristate "NVIDIA Tegra XUSB pad controller driver"
+>>   	depends on ARCH_TEGRA
+>> +	select USB_CONN_GPIO
+>>   	help
+>>   	  Choose this option if you have an NVIDIA Tegra SoC.
+>>   
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index f98ec39..dc00b42 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   	port->dev.type = &tegra_xusb_port_type;
+>>   	port->dev.of_node = of_node_get(np);
+>>   	port->dev.parent = padctl->dev;
+>> +	port->dev.driver = padctl->dev->driver;
+>>   
+>>   	err = dev_set_name(&port->dev, "%s-%u", name, index);
+>>   	if (err < 0)
+>> @@ -541,6 +542,10 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   
+>>   static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+>>   {
+>> +	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
+>> +		of_platform_depopulate(&port->dev);
+>> +		usb_role_switch_unregister(port->usb_role_sw);
+>> +	}
+>>   	device_unregister(&port->dev);
+> Nit: I prefer blank lines after blocks for readability.
+> 
+Will update
 
-You mean driver does not support any unaligned bursts?
+>>   }
+>>   
+>> @@ -551,11 +556,42 @@ static const char *const modes[] = {
+>>   	[USB_DR_MODE_OTG] = "otg",
+>>   };
+>>   
+>> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+>> +{
+>> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+> I don't understand what "for role is %d" means here. I think perhaps you
+> meant to simply say "for role %d"? Also, perhaps add parentheses after
+> the "%s" to clarify that you're referring to a function.
+> 
+Yes, intention is to print role, Will update as mentioned "for role %d"
 
-> +static int uniphier_xdmac_probe(struct platform_device *pdev)
-> +{
-> +	struct uniphier_xdmac_device *xdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct dma_device *ddev;
-> +	int irq;
-> +	int nr_chans;
-> +	int i, ret;
-> +
-> +	if (of_property_read_u32(dev->of_node, "dma-channels", &nr_chans))
-> +		return -EINVAL;
-> +	if (nr_chans > XDMAC_MAX_CHANS)
-> +		nr_chans = XDMAC_MAX_CHANS;
-> +
-> +	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
-> +			    GFP_KERNEL);
-> +	if (!xdev)
-> +		return -ENOMEM;
-> +
-> +	xdev->nr_chans = nr_chans;
-> +	xdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(xdev->reg_base))
-> +		return PTR_ERR(xdev->reg_base);
-> +
-> +	ddev = &xdev->ddev;
-> +	ddev->dev = dev;
-> +	dma_cap_zero(ddev->cap_mask);
-> +	dma_cap_set(DMA_MEMCPY, ddev->cap_mask);
-> +	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-> +	ddev->src_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
-> +	ddev->dst_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
-> +	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-> +			   BIT(DMA_MEM_TO_MEM);
-> +	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> +	ddev->max_burst = XDMAC_MAX_WORDS;
-> +	ddev->device_free_chan_resources = uniphier_xdmac_free_chan_resources;
-> +	ddev->device_prep_dma_memcpy = uniphier_xdmac_prep_dma_memcpy;
-> +	ddev->device_prep_slave_sg = uniphier_xdmac_prep_slave_sg;
-> +	ddev->device_config = uniphier_xdmac_slave_config;
-> +	ddev->device_terminate_all = uniphier_xdmac_terminate_all;
-> +	ddev->device_synchronize = uniphier_xdmac_synchronize;
-> +	ddev->device_tx_status = dma_cookie_status;
-> +	ddev->device_issue_pending = uniphier_xdmac_issue_pending;
-> +	INIT_LIST_HEAD(&ddev->channels);
-> +
-> +	for (i = 0; i < nr_chans; i++) {
-> +		ret = uniphier_xdmac_chan_init(xdev, i);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to initialize XDMAC channel %d\n", i);
-> +			return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+>> +{
+>> +	int err = 0;
+>> +	struct usb_role_switch_desc role_sx_desc = {
+>> +					.set = tegra_xusb_role_sw_set,
+>> +					.fwnode = dev_fwnode(&port->dev),
+>> +						   };
+> The indentation here is odd. Use a single tab to indent lines after the
+> opening { and put the closing } on the same column as "struct". Also,
+> the above may become more readable if you follow the "inverse Christmas
+> tree" style of declaring functions, where you order lines by their
+> length, with the longest line first, like so:
+> 
+> 	struct usb_role_switch_desc role_sx_desc = {
+> 		.fwnode = dev_fwnode(&port->dev),
+> 		.set = tegra_xusb_role_sw_set,
+> 	};
+> 	int err = 0;
+> 
+Thanks for inputs, will update accordingly.
 
-so on error for channel N we leave N-1 channels initialized?
+>> +
+>> +	port->usb_role_sw = usb_role_switch_register(&port->dev,
+>> +						&role_sx_desc);
+> &role_sx_desc should be aligned with &port->dev.
+> 
+Will align here and at other places wherever missed.
 
-> +static int uniphier_xdmac_remove(struct platform_device *pdev)
-> +{
-> +	struct uniphier_xdmac_device *xdev = platform_get_drvdata(pdev);
-> +	struct dma_device *ddev = &xdev->ddev;
-> +	struct dma_chan *chan;
-> +	int ret;
-> +
-> +	/*
-> +	 * Before reaching here, almost all descriptors have been freed by the
-> +	 * ->device_free_chan_resources() hook. However, each channel might
-> +	 * be still holding one descriptor that was on-flight at that moment.
-> +	 * Terminate it to make sure this hardware is no longer running. Then,
-> +	 * free the channel resources once again to avoid memory leak.
-> +	 */
-> +	list_for_each_entry(chan, &ddev->channels, device_node) {
-> +		ret = dmaengine_terminate_sync(chan);
-> +		if (ret)
-> +			return ret;
-> +		uniphier_xdmac_free_chan_resources(chan);
+>> +	if (IS_ERR(port->usb_role_sw)) {
+>> +		err = PTR_ERR(port->usb_role_sw);
+>> +		if (err != EPROBE_DEFER)
+>> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
+> Error messages typically start with a lowercase letter (at least in this
+> driver). Also perhaps spell out "switch" above because SW could easily
+> be confused with "software".
+> 
+Will update.
 
-terminating sounds okayish but not freeing here. .ree_chan_resources()
-should have been called already and that should ensure that termination
-is already done...
-
--- 
-~Vinod
+>> +				err);
+> Shouldn't we abort here? Consider the case where this indeed defers
+> probe. If we don't abort here, the of_platform_populate() below will be
+> called multiple times. Shouldn't it only be called when we actually
+> succeed in registering the switch?
+> 
+Yes, we should abort here, "return err;" got moved to next patch during
+re-base. Will move to current patch.
+> Also, looking at usb_role_switch_register(), I don't think it ever can
+> return -EPROBE_DEFER, so I think you can drop that check and print the
+> error unconditionally.
+> 
+> Thierry
+> 
+Will update.
+-Nagarjuna
+>> +	}
+>> +
+>> +	/* populate connector entry */
+>> +	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
+>> +
+>> +	return err;
+>> +}
+>> +
+>>   static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   {
+>>   	struct tegra_xusb_port *port = &usb2->base;
+>>   	struct device_node *np = port->dev.of_node;
+>>   	const char *mode;
+>> +	int err;
+>>   
+>>   	usb2->internal = of_property_read_bool(np, "nvidia,internal");
+>>   
+>> @@ -572,6 +608,12 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   		usb2->mode = USB_DR_MODE_HOST;
+>>   	}
+>>   
+>> +	if (of_property_read_bool(np, "usb-role-switch")) {
+>> +		err = tegra_xusb_setup_usb_role_switch(port);
+>> +		if (err < 0)
+>> +			return err;
+>> +	}
+>> +
+>>   	usb2->supply = devm_regulator_get(&port->dev, "vbus");
+>>   	return PTR_ERR_OR_ZERO(usb2->supply);
+>>   }
+>> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+>> index da94fcc..9f27899 100644
+>> --- a/drivers/phy/tegra/xusb.h
+>> +++ b/drivers/phy/tegra/xusb.h
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/workqueue.h>
+>>   
+>>   #include <linux/usb/otg.h>
+>> +#include <linux/usb/role.h>
+>>   
+>>   /* legacy entry points for backwards-compatibility */
+>>   int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
+>> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
+>>   	struct list_head list;
+>>   	struct device dev;
+>>   
+>> +	struct usb_role_switch *usb_role_sw;
+>> +
+>>   	const struct tegra_xusb_port_ops *ops;
+>>   };
+>>   
+>> -- 
+>> 2.7.4
