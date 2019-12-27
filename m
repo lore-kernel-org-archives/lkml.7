@@ -2,174 +2,157 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE94CC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D3CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8096320740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOlXzXld"
+	by mail.kernel.org (Postfix) with ESMTP id C885420CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfL0P0N (ORCPT
+        id S1726924AbfL0P3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:26:13 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44506 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0P0N (ORCPT
+        Fri, 27 Dec 2019 10:29:20 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:59162 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfL0P3U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:26:13 -0500
-Received: by mail-io1-f67.google.com with SMTP id b10so26023953iof.11;
-        Fri, 27 Dec 2019 07:26:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DJIL0YuYUVfYInJerjR4DnOY3gJEBdFdGJr7DtfENCk=;
-        b=vOlXzXldgFwU0+9OFb7ycmcB9VbQHATiAAG/oazy3ynoeEtzCxvGd/G2cgvH+0UZRg
-         wWHNtIT63p/zqBsNQGWk8Mq5TayBoKW+2HInSi0yFFEaeUT3WvsiODbhiq8+k+ZNqOOI
-         kqVcRDOuX+EtT7Og2kRtguw9JyUDaBc4uTWNVNs//y2yv1ml5WNNZ8yZNgj5d6cJNd1Q
-         iyXodDPZnI+OPQ02Szc+9wpDNYtLGmC+2QooaE4d8HMQWQ4uW5MqLPmFYEtbENAp8t7U
-         Gk8H5rudXDkFtn3NKdBOjrPtehoCYRI9rviwEaNbNy4YgX01e2eZQKnHUKqOi4yaeDOc
-         z5qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DJIL0YuYUVfYInJerjR4DnOY3gJEBdFdGJr7DtfENCk=;
-        b=dK4sS/VhzIo6jURLNVXUwdMdYAs/t/KkLmnsAZTwDEdwlS+ytzzsmrOP9R3+ZyLX0r
-         CnSx6BtADz0k3dEEvQ7Q30KjzHcWB6mlMSJ39oHnDOMcRUPeSDr2j8jLvxMbfwi0pOWJ
-         IFkKN7/kp52B3i2yD2LdVm6GedoaxvSXHZV00JjxW2gm+87PIuy8MjBFI04wMmJbYFXP
-         yeg7pBxSdJ1z7Mvq5sq4OsfuRPC8m0dqO8MfzLueJ4AzlOegoQGpTilz4KvjvtDmgV+D
-         hzawdqhqps/bffiJmcLDd5vKtUnyFEmQRekfHEsaAmEpzaxoJgtqcg9G3IYt/5IUgE1J
-         GAIQ==
-X-Gm-Message-State: APjAAAWgalVn7vWnM5G+XMAzW9OGmZdmgLaTLzaYjMZRKXAzOV6aUgki
-        r2Tt6ojjCk3S2f9NMT/7QxW12pSojWHBvMcMlLs=
-X-Google-Smtp-Source: APXvYqxhPQ7t0bmrcZI2M0kZqxw6arIpX2tLY8urCN6CUDvQ7wvOApfGrSooDSdqHV8U5l4R/M0Vd06J5Hk+6eLQwVE=
-X-Received: by 2002:a02:cdd9:: with SMTP id m25mr40797051jap.123.1577460372276;
- Fri, 27 Dec 2019 07:26:12 -0800 (PST)
+        Fri, 27 Dec 2019 10:29:20 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8AEF2634C86;
+        Fri, 27 Dec 2019 17:28:43 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ikrXf-00017l-PU; Fri, 27 Dec 2019 17:28:43 +0200
+Date:   Fri, 27 Dec 2019 17:28:43 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 3/5] media: i2c: imx290: Add RAW12 mode support
+Message-ID: <20191227152843.GF861@valkosipuli.retiisi.org.uk>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-4-manivannan.sadhasivam@linaro.org>
+ <20191203085417.GB5282@valkosipuli.retiisi.org.uk>
+ <20191215174606.GC11427@Mani-XPS-13-9360>
 MIME-Version: 1.0
-References: <cover.1577456898.git.chris@chrisdown.name> <533d188802d292fa9f7c9e66f26068000346d6c1.1577456898.git.chris@chrisdown.name>
-In-Reply-To: <533d188802d292fa9f7c9e66f26068000346d6c1.1577456898.git.chris@chrisdown.name>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 27 Dec 2019 17:26:01 +0200
-Message-ID: <CAOQ4uxhaMjn2Kusv6o6mJ36RhF7PAdmgW3kncgfov5uys=6VHw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] shmem: Add support for using full width of ino_t
-To:     Chris Down <chris@chrisdown.name>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215174606.GC11427@Mani-XPS-13-9360>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 4:30 PM Chris Down <chris@chrisdown.name> wrote:
->
-> The new inode64 option now uses get_next_ino_full, which always uses the
-> full width of ino_t (as opposed to get_next_ino, which always uses
-> unsigned int).
->
-> Using inode64 makes inode number wraparound significantly less likely,
-> at the cost of making some features that rely on the underlying
-> filesystem not setting any of the highest 32 bits (eg. overlayfs' xino)
-> not usable.
+Hi Manivannan,
 
-That's not an accurate statement. overlayfs xino just needs some high
-bits available. Therefore I never had any objection to having tmpfs use
-64bit ino values (from overlayfs perspective). My only objection is to
-use the same pool "irresponsibly" instead of per-sb pool for the heavy
-users.
+On Sun, Dec 15, 2019 at 11:16:06PM +0530, Manivannan Sadhasivam wrote:
+> Hi Sakari,
+> 
+> On Tue, Dec 03, 2019 at 10:54:17AM +0200, Sakari Ailus wrote:
+> > Hi Manivannan,
+> > 
+> > On Sat, Nov 30, 2019 at 12:35:39AM +0530, Manivannan Sadhasivam wrote:
+> > > IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
+> > > 12 bit formats. Since the driver already supports RAW10 mode, let's add
+> > > the missing RAW12 mode as well.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  drivers/media/i2c/imx290.c | 32 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> > > index e218c959a729..d5bb3a59ac46 100644
+> > > --- a/drivers/media/i2c/imx290.c
+> > > +++ b/drivers/media/i2c/imx290.c
+> > > @@ -75,6 +75,7 @@ struct imx290 {
+> > >  	struct clk *xclk;
+> > >  	struct regmap *regmap;
+> > >  	int nlanes;
+> > > +	u8 bpp;
+> > >  
+> > >  	struct v4l2_subdev sd;
+> > >  	struct v4l2_fwnode_endpoint ep;
+> > > @@ -98,6 +99,7 @@ struct imx290_pixfmt {
+> > >  
+> > >  static const struct imx290_pixfmt imx290_formats[] = {
+> > >  	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
+> > > +	{ MEDIA_BUS_FMT_SRGGB12_1X12 },
+> > >  };
+> > >  
+> > >  static const struct regmap_config imx290_regmap_config = {
+> > > @@ -265,6 +267,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
+> > >  	{ 0x300b, 0x00},
+> > >  };
+> > >  
+> > > +static const struct imx290_regval imx290_12bit_settings[] = {
+> > > +	{ 0x3005, 0x01 },
+> > > +	{ 0x3046, 0x01 },
+> > > +	{ 0x3129, 0x00 },
+> > > +	{ 0x317c, 0x00 },
+> > > +	{ 0x31ec, 0x0e },
+> > > +	{ 0x3441, 0x0c },
+> > > +	{ 0x3442, 0x0c },
+> > > +	{ 0x300a, 0xf0 },
+> > > +	{ 0x300b, 0x00 },
+> > > +};
+> > > +
+> > >  /* supported link frequencies */
+> > >  static const s64 imx290_link_freq[] = {
+> > >  	IMX290_DEFAULT_LINK_FREQ,
+> > > @@ -550,6 +564,21 @@ static int imx290_write_current_format(struct imx290 *imx290,
+> > >  			dev_err(imx290->dev, "Could not set format registers\n");
+> > >  			return ret;
+> > >  		}
+> > > +
+> > > +		imx290->bpp = 10;
+> > > +
+> > > +		break;
+> > > +	case MEDIA_BUS_FMT_SRGGB12_1X12:
+> > > +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
+> > > +						ARRAY_SIZE(
+> > > +							imx290_12bit_settings));
+> > > +		if (ret < 0) {
+> > > +			dev_err(imx290->dev, "Could not set format registers\n");
+> > > +			return ret;
+> > > +		}
+> > > +
+> > > +		imx290->bpp = 12;
+> > > +
+> > >  		break;
+> > >  	default:
+> > >  		dev_err(imx290->dev, "Unknown pixel format\n");
+> > > @@ -910,6 +939,9 @@ static int imx290_probe(struct i2c_client *client)
+> > >  		goto free_err;
+> > >  	}
+> > >  
+> > > +	/* Default bits per pixel value */
+> > > +	imx290->bpp = 10;
+> > 
+> > Where is the format being initialised at the moment? Nowhere?
+> > 
+> > If that is the case, I think it should be fixed before this patch.
+> > 
+> 
+> Sorry, I don't quite understand what you're suggesting here. The bpp
+> is initialised because that's the default bit value at power up and
+> this value is being used below in imx290_calc_pixel_rate(). I'm not sure
+> why we need to initialise the format before set_fmt!
 
->
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Reported-by: Phyllipe Medeiros <phyllipe@fb.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-team@fb.com
-> ---
->  include/linux/shmem_fs.h |  1 +
->  mm/shmem.c               | 41 ++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 40 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index de8e4b71e3ba..d7727d0d687f 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -35,6 +35,7 @@ struct shmem_sb_info {
->         unsigned char huge;         /* Whether to try for hugepages */
->         kuid_t uid;                 /* Mount uid for root directory */
->         kgid_t gid;                 /* Mount gid for root directory */
-> +       bool small_inums;           /* i_ino width unsigned int or ino_t */
->         struct mempolicy *mpol;     /* default memory policy for mappings */
->         spinlock_t shrinklist_lock;   /* Protects shrinklist */
->         struct list_head shrinklist;  /* List of shinkable inodes */
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index ff041cb15550..56cf581ec66d 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -115,11 +115,13 @@ struct shmem_options {
->         kuid_t uid;
->         kgid_t gid;
->         umode_t mode;
-> +       bool small_inums;
->         int huge;
->         int seen;
->  #define SHMEM_SEEN_BLOCKS 1
->  #define SHMEM_SEEN_INODES 2
->  #define SHMEM_SEEN_HUGE 4
-> +#define SHMEM_SEEN_INUMS 8
->  };
->
->  #ifdef CONFIG_TMPFS
-> @@ -2248,8 +2250,12 @@ static struct inode *shmem_get_inode(struct super_block *sb, const struct inode
->         inode = new_inode(sb);
->         if (inode) {
->                 /* Recycle to avoid 32-bit wraparound where possible */
-> -               if (!inode->i_ino)
-> -                       inode->i_ino = get_next_ino();
-> +               if (!inode->i_ino) {
-> +                       if (sbinfo->small_inums)
-> +                               inode->i_ino = get_next_ino();
-> +                       else
-> +                               inode->i_ino = get_next_ino_full();
-> +               }
+Alternatively set_fmt needs to be called then.
 
-Ouch! You set yourself a trap in patch #1 and stepped into it here.
-shmem driver has a single shmem_inode_cachep serving all tmpfs
-instances. You cannot use different ino allocators and recycle ino
-numbers from the same inode cache pool.
-Sorry I did not see it coming...
+It looks like you can call VIDIOC_SUBDEV_G_FMT without the format being
+initialised first, and if that's the case, then it's a driver bug. I don't
+have the sensor so I can't test it.
 
-I'm afraid that the recycling method cannot work along side a per-sb
-ino allocator :/ (unless get_next_ino() was a truncated version of the
-same counter as get_next_ino_full()).
-
-You could still apply the recycling method if shmem inode cache was
-never tainted by any other ino allocator, but that will lead to
-unpredictable results for users and quite hard to document behavior.
-
-IOW, I don't see a decent way out besides making shmem ino
-allocator per-sb proper and always *before* adding the per-sb mount
-option inode64.
-
-And because of this, I think the global get_next_ino_full() API is
-a mistake.
-
-Thanks,
-Amir.
+-- 
+Sakari Ailus
