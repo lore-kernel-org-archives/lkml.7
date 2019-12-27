@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD707C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3015C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B882067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0157222D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469039;
-	bh=lNUYq7bp5wkI5mc/7OLg2R0gWlSNmXm1kqXk6M4f69k=;
+	s=default; t=1577469041;
+	bh=onSEEpP7BW8fkuP5VBJXjlJWYi+LHwQqtVjEOCKfnuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3b+hZ24PqKjcA4s5vm8A9Yc+4Ji0vWWP8qVHKQ3F21NuUnVvexHtEporU8vzv2nY
-	 83Ey3VlWc7Y/HCKqC4Y8birE+RDiNJqeNtm9pqKBi0zOfltRSPcmQswJyQjaau1Pkz
-	 +/kh7sd5ALvqhRMMgDxyNNxaUN83ndu7cfc6HXzQ=
+	b=NXlbB3jEljPb/KIk+plTJ7TWM7avdZ6aaLJsWtTu5xeXRbos8xE2/Uq3jSRqkcVAn
+	 7KK2hXlyC8aqXboyHz0x8XuOJ1OV3MAvA3b8odK7aVJZuEDyDLz9V242OvTzk8KQ4m
+	 yHeaZ9J+h3dy7ABaTO5GYiMXUMA7PCFDoM8Hwvao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfL0Rui (ORCPT
+        id S1728369AbfL0RoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:50:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728365AbfL0RoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Dec 2019 12:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727661AbfL0RoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5D724125;
-        Fri, 27 Dec 2019 17:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E211B2253D;
+        Fri, 27 Dec 2019 17:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468651;
-        bh=lNUYq7bp5wkI5mc/7OLg2R0gWlSNmXm1kqXk6M4f69k=;
+        s=default; t=1577468642;
+        bh=onSEEpP7BW8fkuP5VBJXjlJWYi+LHwQqtVjEOCKfnuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DoempTdmNevdwyn34gCDiVRJQoXRQt0+grQSx9euyEVvwmNadHUFpuqpSmwob9tk9
-         FttaIniW1hbhRLxi+XqoQdGugCHq+gRBJiMfxft7fllo8IaU2l0O/PiH+UZh5XO/RL
-         6x2WWcn6HwVlapYGoFcnI2y1AFpAAg0968ZFLveM=
+        b=VzQiWWWfSQyKJjQQbrbW1u4YeGfBqGApgB1u+vQwufAHduuxbb19xJII7EFm6qT1a
+         IwDrzbTKzndldooFKxBc40eAdZU7BxMeq40fJtJuaEKrrKm2HPW5q//ThaxDccy8kM
+         e4ojwf6vL+ztgnfPNvX3xRI3gGCAJPNqwiH43MGE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 14/84] efi/gop: Return EFI_SUCCESS if a usable GOP was found
-Date:   Fri, 27 Dec 2019 12:42:42 -0500
-Message-Id: <20191227174352.6264-14-sashal@kernel.org>
+Cc:     qize wang <wangqize888888888@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/84] mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
+Date:   Fri, 27 Dec 2019 12:42:36 -0500
+Message-Id: <20191227174352.6264-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,54 +61,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: qize wang <wangqize888888888@gmail.com>
 
-[ Upstream commit dbd89c303b4420f6cdb689fd398349fc83b059dd ]
+[ Upstream commit 1e58252e334dc3f3756f424a157d1b7484464c40 ]
 
-If we've found a usable instance of the Graphics Output Protocol
-(GOP) with a framebuffer, it is possible that one of the later EFI
-calls fails while checking if any support console output. In this
-case status may be an EFI error code even though we found a usable
-GOP.
+mwifiex_process_tdls_action_frame() without checking
+the incoming tdls infomation element's vality before use it,
+this may cause multi heap buffer overflows.
 
-Fix this by explicitly return EFI_SUCCESS if a usable GOP has been
-located.
+Fix them by putting vality check before use it.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191206165542.31469-4-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
+the origin marvell driver code is wrong:
+
+memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
+memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
+
+Fix the bug by changing pos(the address of IE) to
+pos+2 ( the address of IE value ).
+
+Signed-off-by: qize wang <wangqize888888888@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/gop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/tdls.c | 70 +++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index 16ed61c023e8..81ffda5d1e48 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -200,7 +200,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
+index 27779d7317fd..6058c48d56dc 100644
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -956,59 +956,117 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
  
- 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			sta_ptr->tdls_cap.rates_len = pos[1];
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
  
--	return status;
-+	return EFI_SUCCESS;
- }
- 
- static efi_status_t
-@@ -318,7 +318,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
- 
- 	si->capabilities |= VIDEO_CAPABILITY_SKIP_QUIRKS;
- 
--	return status;
-+	return EFI_SUCCESS;
- }
- 
- /*
+ 		case WLAN_EID_EXT_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
++			if (pos[1] > 32 - basic)
++				return;
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+ 			sta_ptr->tdls_cap.rates_len += pos[1];
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
++			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++				return;
++			/* copy the ie's value into ht_capb*/
++			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+ 			       sizeof(struct ieee80211_ht_cap));
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
++			if (pos > end -
++			    sizeof(struct ieee80211_ht_operation) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++				return;
++			/* copy the ie's value into ht_oper*/
++			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > 8)
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], 8));
+ 			break;
+ 		case WLAN_EID_RSN:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > IEEE_MAX_IE_SIZE -
++			    sizeof(struct ieee_types_header))
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (priv->adapter->is_hw_11ac_capable)
+-				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_operation) - 2)
++					return;
++				if (pos[1] !=
++				    sizeof(struct ieee80211_vht_operation))
++					return;
++				/* copy the ie's value into vhtoper*/
++				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
+ 				       sizeof(struct ieee80211_vht_operation));
++			}
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_cap) - 2)
++					return;
++				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++					return;
++				/* copy the ie's value into vhtcap*/
++				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+ 				       sizeof(struct ieee80211_vht_cap));
+ 				sta_ptr->is_11ac_enabled = 1;
+ 			}
+ 			break;
+ 		case WLAN_EID_AID:
+-			if (priv->adapter->is_hw_11ac_capable)
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end - 4)
++					return;
++				if (pos[1] != 2)
++					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
++			}
++			break;
+ 		default:
+ 			break;
+ 		}
 -- 
 2.20.1
 
