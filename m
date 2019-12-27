@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3CBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAEEC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB522173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282A320CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469141;
-	bh=KVVau5kx2AZE+Txbor4CtEyVXuiFUWTZ6k2C6FlSwmQ=;
+	s=default; t=1577469150;
+	bh=KXFzMoosRGn71pIzVBaVLYYeBw7GeuvaqQZzxBF8k0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=efGSzeWSGuBEMFXcmCScs4N+EAim9gzy2AsQBpHsugE0YK7uxYaH10V2VJBxrvbKS
-	 M/X2jmYmuu72gPi5jCWVRQTwLd+wpFi+HMVesOb9XpYmHyQhglO5FgpQrEfeovIUMp
-	 Bwmq4OWwOg+uvZbLGjcOTxNPDGtMMBpF2rrGUNFY=
+	b=ZtJpbixym4PmSmz6z6lTM6kGhdS6BKGOMhZMjUsOL6krzjFjswZ1+3iGLH/XUM6sI
+	 0jBrPhji1fZ0rRXKSF+fr7+9vrL4EHbQWsZF6rgoNq7o0RN5lFKmbRoB/cJFOg/tpu
+	 uqguCnLyjAUCJ/vJUoThrSD8aORb3tvSdQyXhtHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfL0RwU (ORCPT
+        id S1728373AbfL0Rw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:52:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:52:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728134AbfL0RnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:13 -0500
+        id S1728105AbfL0RnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F942176D;
-        Fri, 27 Dec 2019 17:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C4B421582;
+        Fri, 27 Dec 2019 17:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468592;
-        bh=KVVau5kx2AZE+Txbor4CtEyVXuiFUWTZ6k2C6FlSwmQ=;
+        s=default; t=1577468587;
+        bh=KXFzMoosRGn71pIzVBaVLYYeBw7GeuvaqQZzxBF8k0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOaoWtryahjnXNg9PEiqphHAH16n6f1woL+kcPwuSAmFmvHjHu/gI1idwxUJhy7UZ
-         2kRIftp7Un0wNbok+JS0jeJeGT2jkz66X38rrxm8eLXE5Pi5qwg7VB9zuYv9J66GC1
-         ikYtsK55UYs4wVbv9I886ZLHFxYxY212J6+tfANk=
+        b=Shq93OMAaEkFJfTk4/qSrteUOLk3ebIEdKLG0OI67mWWtMH2UOerJ2Qg4OQgXvYHD
+         rSHl8Dihkfb5zcRs0TfjeNHwjyjob1bxiZ2x4P1dk8ZOllITaagFCIk4TlXNpRXmCw
+         5kwlsBxBmT5VeKxqOuIyRw+9e2H06Mg5Yp1OjoyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 114/187] gtp: fix an use-after-free in ipv4_pdp_find()
-Date:   Fri, 27 Dec 2019 12:39:42 -0500
-Message-Id: <20191227174055.4923-114-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 109/187] bnx2x: Do not handle requests from VFs after parity
+Date:   Fri, 27 Dec 2019 12:39:37 -0500
+Message-Id: <20191227174055.4923-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,163 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 94dc550a5062030569d4aa76e10e50c8fc001930 ]
+[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
 
-ipv4_pdp_find() is called in TX packet path of GTP.
-ipv4_pdp_find() internally uses gtp->tid_hash to lookup pdp context.
-In the current code, gtp->tid_hash and gtp->addr_hash are freed by
-->dellink(), which is gtp_dellink().
-But gtp_dellink() would be called while packets are processing.
-So, gtp_dellink() should not free gtp->tid_hash and gtp->addr_hash.
-Instead, dev->priv_destructor() would be used because this callback
-is called after all packet processing safely.
+Parity error from the hardware will cause PF to lose the state
+of their VFs due to PF's internal reload and hardware reset following
+the parity error. Restrict any configuration request from the VFs after
+the parity as it could cause unexpected hardware behavior, only way
+for VFs to recover would be to trigger FLR on VFs and reload them.
 
-Test commands:
-    ip link add veth1 type veth peer name veth2
-    ip a a 172.0.0.1/24 dev veth1
-    ip link set veth1 up
-    ip a a 172.99.0.1/32 dev lo
-
-    gtp-link add gtp1 &
-
-    gtp-tunnel add gtp1 v1 200 100 172.99.0.2 172.0.0.2
-    ip r a  172.99.0.2/32 dev gtp1
-    ip link set gtp1 mtu 1500
-
-    ip netns add ns2
-    ip link set veth2 netns ns2
-    ip netns exec ns2 ip a a 172.0.0.2/24 dev veth2
-    ip netns exec ns2 ip link set veth2 up
-    ip netns exec ns2 ip a a 172.99.0.2/32 dev lo
-    ip netns exec ns2 ip link set lo up
-
-    ip netns exec ns2 gtp-link add gtp2 &
-    ip netns exec ns2 gtp-tunnel add gtp2 v1 100 200 172.99.0.1 172.0.0.1
-    ip netns exec ns2 ip r a 172.99.0.1/32 dev gtp2
-    ip netns exec ns2 ip link set gtp2 mtu 1500
-
-    hping3 172.99.0.2 -2 --flood &
-    ip link del gtp1
-
-Splat looks like:
-[   72.568081][ T1195] BUG: KASAN: use-after-free in ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.568916][ T1195] Read of size 8 at addr ffff8880b9a35d28 by task hping3/1195
-[   72.569631][ T1195]
-[   72.569861][ T1195] CPU: 2 PID: 1195 Comm: hping3 Not tainted 5.5.0-rc1 #199
-[   72.570547][ T1195] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   72.571438][ T1195] Call Trace:
-[   72.571764][ T1195]  dump_stack+0x96/0xdb
-[   72.572171][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.572761][ T1195]  print_address_description.constprop.5+0x1be/0x360
-[   72.573400][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.573971][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.574544][ T1195]  __kasan_report+0x12a/0x16f
-[   72.575014][ T1195]  ? ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.575593][ T1195]  kasan_report+0xe/0x20
-[   72.576004][ T1195]  ipv4_pdp_find.isra.12+0x130/0x170 [gtp]
-[   72.576577][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
-[ ... ]
-[   72.647671][ T1195] BUG: unable to handle page fault for address: ffff8880b9a35d28
-[   72.648512][ T1195] #PF: supervisor read access in kernel mode
-[   72.649158][ T1195] #PF: error_code(0x0000) - not-present page
-[   72.649849][ T1195] PGD a6c01067 P4D a6c01067 PUD 11fb07067 PMD 11f939067 PTE 800fffff465ca060
-[   72.652958][ T1195] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[   72.653834][ T1195] CPU: 2 PID: 1195 Comm: hping3 Tainted: G    B             5.5.0-rc1 #199
-[   72.668062][ T1195] RIP: 0010:ipv4_pdp_find.isra.12+0x86/0x170 [gtp]
-[ ... ]
-[   72.679168][ T1195] Call Trace:
-[   72.679603][ T1195]  gtp_build_skb_ip4+0x199/0x1420 [gtp]
-[   72.681915][ T1195]  ? ipv4_pdp_find.isra.12+0x170/0x170 [gtp]
-[   72.682513][ T1195]  ? lock_acquire+0x164/0x3b0
-[   72.682966][ T1195]  ? gtp_dev_xmit+0x35e/0x890 [gtp]
-[   72.683481][ T1195]  gtp_dev_xmit+0x3c2/0x890 [gtp]
-[ ... ]
-
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index a010e0a11c33..5450b1099c6d 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -640,9 +640,16 @@ static void gtp_link_setup(struct net_device *dev)
- }
- 
- static int gtp_hashtable_new(struct gtp_dev *gtp, int hsize);
--static void gtp_hashtable_free(struct gtp_dev *gtp);
- static int gtp_encap_enable(struct gtp_dev *gtp, struct nlattr *data[]);
- 
-+static void gtp_destructor(struct net_device *dev)
-+{
-+	struct gtp_dev *gtp = netdev_priv(dev);
-+
-+	kfree(gtp->addr_hash);
-+	kfree(gtp->tid_hash);
-+}
-+
- static int gtp_newlink(struct net *src_net, struct net_device *dev,
- 		       struct nlattr *tb[], struct nlattr *data[],
- 		       struct netlink_ext_ack *extack)
-@@ -677,13 +684,15 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
- 
- 	gn = net_generic(dev_net(dev), gtp_net_id);
- 	list_add_rcu(&gtp->list, &gn->gtp_dev_list);
-+	dev->priv_destructor = gtp_destructor;
- 
- 	netdev_dbg(dev, "registered new GTP interface\n");
- 
- 	return 0;
- 
- out_hashtable:
--	gtp_hashtable_free(gtp);
-+	kfree(gtp->addr_hash);
-+	kfree(gtp->tid_hash);
- out_encap:
- 	gtp_encap_disable(gtp);
- 	return err;
-@@ -692,8 +701,13 @@ static int gtp_newlink(struct net *src_net, struct net_device *dev,
- static void gtp_dellink(struct net_device *dev, struct list_head *head)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 192ff8d5da32..cff64e43bdd8 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -9976,10 +9976,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
+  */
+ static void bnx2x_parity_recover(struct bnx2x *bp)
  {
- 	struct gtp_dev *gtp = netdev_priv(dev);
-+	struct pdp_ctx *pctx;
-+	int i;
+-	bool global = false;
+ 	u32 error_recovered, error_unrecovered;
+-	bool is_parity;
++	bool is_parity, global = false;
++#ifdef CONFIG_BNX2X_SRIOV
++	int vf_idx;
 +
-+	for (i = 0; i < gtp->hash_size; i++)
-+		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
-+			pdp_context_delete(pctx);
++	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
++		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
  
--	gtp_hashtable_free(gtp);
- 	list_del_rcu(&gtp->list);
- 	unregister_netdevice_queue(dev, head);
- }
-@@ -771,20 +785,6 @@ static int gtp_hashtable_new(struct gtp_dev *gtp, int hsize)
- 	return -ENOMEM;
- }
++		if (vf)
++			vf->state = VF_LOST;
++	}
++#endif
+ 	DP(NETIF_MSG_HW, "Handling parity\n");
+ 	while (1) {
+ 		switch (bp->recovery_state) {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+index b6ebd92ec565..3a716c015415 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+@@ -139,6 +139,7 @@ struct bnx2x_virtf {
+ #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
+ #define VF_ENABLED	2	/* VF Enabled */
+ #define VF_RESET	3	/* VF FLR'd, pending cleanup */
++#define VF_LOST		4	/* Recovery while VFs are loaded */
  
--static void gtp_hashtable_free(struct gtp_dev *gtp)
--{
--	struct pdp_ctx *pctx;
--	int i;
--
--	for (i = 0; i < gtp->hash_size; i++)
--		hlist_for_each_entry_rcu(pctx, &gtp->tid_hash[i], hlist_tid)
--			pdp_context_delete(pctx);
--
--	synchronize_rcu();
--	kfree(gtp->addr_hash);
--	kfree(gtp->tid_hash);
--}
--
- static struct sock *gtp_encap_enable_socket(int fd, int type,
- 					    struct gtp_dev *gtp)
+ 	bool flr_clnup_stage;	/* true during flr cleanup */
+ 	bool malicious;		/* true if FW indicated so, until FLR */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+index 0752b7fa4d9c..ea0e9394f898 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+@@ -2107,6 +2107,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
  {
+ 	int i;
+ 
++	if (vf->state == VF_LOST) {
++		/* Just ack the FW and return if VFs are lost
++		 * in case of parity error. VFs are supposed to be timedout
++		 * on waiting for PF response.
++		 */
++		DP(BNX2X_MSG_IOV,
++		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
++
++		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
++		return;
++	}
++
+ 	/* check if tlv type is known */
+ 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
+ 		/* Lock the per vf op mutex and note the locker's identity.
 -- 
 2.20.1
 
