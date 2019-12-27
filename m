@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9F9C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C905C2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80F22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A3722522
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468748;
-	bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
+	s=default; t=1577468751;
+	bh=PA4FxnAk4aNpdZ8YIp/EAybWfqD/vW0X7F1oDdtjVRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFTaRs/KPh01UPB+JWZ4uloQLTap/ltmX/2SaDh2wtK4Us2kSut4+S14P6qCIxT5v
-	 Sae5XRl8pl61qzZmWhtUh8pfm+NTWIFv6PwTQ5gx/gG4qdINTb6LyM+NMld7aOWVuZ
-	 cXfKO/PXXXqYLrxnYS9XXjAZ3o2QUK5vzqbp5Q/o=
+	b=llCgOL4uYq6UyIsebNcDrfOL6RylTJm30+CXVKmYOEPAdfrcBKWBnt7rWr5QjygGO
+	 aMDbjSoX0f6pdEPsz70CrYkTROEwh3+pfp8A6agX2vvlNxQY8NguJpZNXsAnfPBL5a
+	 7RFdbfc6fC9CZ2NCgGHp3HAOpHjEBzX5nM8tRPRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfL0Rpr (ORCPT
+        id S1728767AbfL0RpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:45:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbfL0RpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Dec 2019 12:45:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728728AbfL0RpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A6F24125;
-        Fri, 27 Dec 2019 17:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D990B24653;
+        Fri, 27 Dec 2019 17:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468724;
-        bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
+        s=default; t=1577468720;
+        bh=PA4FxnAk4aNpdZ8YIp/EAybWfqD/vW0X7F1oDdtjVRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JepBpyMtxX28PZzRwkb5zTPZVL7sq1H8sqhI6lwWWqaXJn2Yi+RBBfnQuJzAubN+m
-         NlXRvMl5VPA2azpw4KhEh9yQEGoMajl1yco/nqxfHpLIK7neOYdxw6cXZ0bfXdcjU9
-         JIIWhpFuUquY/esd0lCzdEOZaJ8V2yXxc9jSCEsA=
+        b=PTmrLJS84WQ+YPrO9GRHSju0t2ucBZl0NvJWQbxSGZSGMqoxZLAevGgte7UlIuFV8
+         X9+G3UPw287hXDCQ8R2O53iYwrbVT8SZuqZe0fjgxyvs9m2/zV8W1xxYck4Au2QiYY
+         ALO9PJVde7s2VSIHn9CTVwR7WjL7mfDdhDGEofOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Haberland <sth@linux.ibm.com>, Qian Cai <cai@lca.pw>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 77/84] s390/dasd: fix memleak in path handling error case
-Date:   Fri, 27 Dec 2019 12:43:45 -0500
-Message-Id: <20191227174352.6264-77-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Inki Dae <inki.dae@samsung.net>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 74/84] drm/exynos: gsc: add missed component_del
+Date:   Fri, 27 Dec 2019 12:43:42 -0500
+Message-Id: <20191227174352.6264-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,74 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 00b39f698a4f1ee897227cace2e3937fc4412270 ]
+[ Upstream commit 84c92365b20a44c363b95390ea00dfbdd786f031 ]
 
-If for whatever reason the dasd_eckd_check_characteristics() function
-exits after at least some paths have their configuration data
-allocated those data is never freed again. In the error case the
-device->private pointer is set to NULL and dasd_eckd_uncheck_device()
-will exit without freeing the path data because of this NULL pointer.
+The driver forgets to call component_del in remove to match component_add
+in probe.
+Add the missed call to fix it.
 
-Fix by calling dasd_eckd_clear_conf_data() for error cases.
-
-Also use dasd_eckd_clear_conf_data() in dasd_eckd_uncheck_device()
-to avoid code duplication.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Inki Dae <inki.dae@samsung.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_gsc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 108fb1c77e1d..a2e34c853ca9 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -1770,7 +1770,7 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- 	dasd_free_block(device->block);
- 	device->block = NULL;
- out_err1:
--	kfree(private->conf_data);
-+	dasd_eckd_clear_conf_data(device);
- 	kfree(device->private);
- 	device->private = NULL;
- 	return rc;
-@@ -1779,7 +1779,6 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- static void dasd_eckd_uncheck_device(struct dasd_device *device)
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+index 7ba414b52faa..d71188b982cb 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
+@@ -1292,6 +1292,7 @@ static int gsc_remove(struct platform_device *pdev)
  {
- 	struct dasd_eckd_private *private = device->private;
--	int i;
+ 	struct device *dev = &pdev->dev;
  
- 	if (!private)
- 		return;
-@@ -1789,21 +1788,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
- 	private->sneq = NULL;
- 	private->vdsneq = NULL;
- 	private->gneq = NULL;
--	private->conf_len = 0;
--	for (i = 0; i < 8; i++) {
--		kfree(device->path[i].conf_data);
--		if ((__u8 *)device->path[i].conf_data ==
--		    private->conf_data) {
--			private->conf_data = NULL;
--			private->conf_len = 0;
--		}
--		device->path[i].conf_data = NULL;
--		device->path[i].cssid = 0;
--		device->path[i].ssid = 0;
--		device->path[i].chpid = 0;
--	}
--	kfree(private->conf_data);
--	private->conf_data = NULL;
-+	dasd_eckd_clear_conf_data(device);
- }
++	component_del(dev, &gsc_component_ops);
+ 	pm_runtime_dont_use_autosuspend(dev);
+ 	pm_runtime_disable(dev);
  
- static struct dasd_ccw_req *
 -- 
 2.20.1
 
