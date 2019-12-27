@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27206C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E402FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07F82173E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2F22173E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468562;
-	bh=inSHXxAmEMnLtfzgN61sGOZo9j+enNoa1EQvuFtC+xQ=;
+	s=default; t=1577468563;
+	bh=Hf4CZu8uzHRFEMDCzaCNvR32Pby0EsPeIx1M1K2odA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MD/7F7+FXLNJby1+7KirQEg2sxQ3Qmt7XWtInBmfBhvJGb/bLJ2uJlarQh9xCMNNg
-	 fYJ9AvlXFa0YEfaS8QK0jkVyK84AAKr+RmH7W89yBlqdBdCAOpJJCEn0rzt47Uk/bF
-	 WzZC9g3HjX6u25k12V1dCqLk1Q6umwpk+n16GuEc=
+	b=rD8KDcl+0FtZrXqsBREMAURWdwpzygbJdTGsbtWc3M8eUZHhDmdw/4TiZ/deW/1J1
+	 T5JO2OGxX7zhyv0jZ3OKelDtIEnxAFnTgWkDmzHIa1YwXfATUdzPZywF8EeN8esurM
+	 Y4N86In1hGABJ+ZtxBaeyKhpXelhc7MEme/P7KyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfL0Rml (ORCPT
+        id S1727946AbfL0Rml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 27 Dec 2019 12:42:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39554 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:39654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfL0Rmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:35 -0500
+        id S1727910AbfL0Rmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5E0218AC;
-        Fri, 27 Dec 2019 17:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8067320740;
+        Fri, 27 Dec 2019 17:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468554;
-        bh=inSHXxAmEMnLtfzgN61sGOZo9j+enNoa1EQvuFtC+xQ=;
+        s=default; t=1577468558;
+        bh=Hf4CZu8uzHRFEMDCzaCNvR32Pby0EsPeIx1M1K2odA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6rAPHaVRkUH+wV59MSVeXDXe9dT0uYC5f/74nh8e0g1f+PcT+dfeC5a/h6LSZdEE
-         cXXx5/G+cEGzE2FkjWi9xK6/nZXCFXjewJIxV6lqy3Wcref2iTSiOLlVdJQNmTRHS4
-         U45UoS7eH/zkLQd3TdcWHpV6NdBuJeCfwpEEGLkY=
+        b=MRFypKvKGkm+MBoA1sU/gVrkzAZ8XV+KcpecHmtZrIix29fNUESdnlTJO/4zLf/GF
+         Nb4j02rWZRG6pMFoAD8hM5K4TMnw04bwWGxuAW3LlL1/rfJ+FAtHw0OPODCXZonvXW
+         /82XzxFXoioqbHebjOF51Z3+CZrUOKnR+M6hl/ew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 081/187] samples: bpf: fix syscall_tp due to unused syscall
-Date:   Fri, 27 Dec 2019 12:39:09 -0500
-Message-Id: <20191227174055.4923-81-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 084/187] tty: serial: msm_serial: Fix lockup for sysrq and oops
+Date:   Fri, 27 Dec 2019 12:39:12 -0500
+Message-Id: <20191227174055.4923-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,60 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
+[ Upstream commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e ]
 
-Currently, open() is called from the user program and it calls the syscall
-'sys_openat', not the 'sys_open'. This leads to an error of the program
-of user side, due to the fact that the counter maps are zero since no
-function such 'sys_open' is called.
+As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+has mentioned the uart driver might cause recursive locking between
+normal printing and the kernel debugging facilities (e.g. sysrq and
+oops).  In the commit it gave out suggestion for fixing recursive
+locking issue: "The solution is to avoid locking in the sysrq case
+and trylock in the oops_in_progress case."
 
-This commit adds the kernel bpf program which are attached to the
-tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
+This patch follows the suggestion (also used the exactly same code with
+other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+issue, this can avoid stuck caused by deadlock and print out log for
+sysrq and oops.
 
-Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/tty/serial/msm_serial.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
-index 1d78819ffef1..630ce8c4d5a2 100644
---- a/samples/bpf/syscall_tp_kern.c
-+++ b/samples/bpf/syscall_tp_kern.c
-@@ -47,13 +47,27 @@ static __always_inline void count(void *map)
- SEC("tracepoint/syscalls/sys_enter_open")
- int trace_enter_open(struct syscalls_enter_open_args *ctx)
- {
--	count((void *)&enter_open_map);
-+	count(&enter_open_map);
-+	return 0;
-+}
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index 00964b6e4ac1..e0718ee5d42a 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -1580,6 +1580,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 	int num_newlines = 0;
+ 	bool replaced = false;
+ 	void __iomem *tf;
++	int locked = 1;
+ 
+ 	if (is_uartdm)
+ 		tf = port->membase + UARTDM_TF;
+@@ -1592,7 +1593,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 			num_newlines++;
+ 	count += num_newlines;
+ 
+-	spin_lock(&port->lock);
++	if (port->sysrq)
++		locked = 0;
++	else if (oops_in_progress)
++		locked = spin_trylock(&port->lock);
++	else
++		spin_lock(&port->lock);
 +
-+SEC("tracepoint/syscalls/sys_enter_openat")
-+int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
-+{
-+	count(&enter_open_map);
- 	return 0;
+ 	if (is_uartdm)
+ 		msm_reset_dm_count(port, count);
+ 
+@@ -1628,7 +1635,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 		iowrite32_rep(tf, buf, 1);
+ 		i += num_chars;
+ 	}
+-	spin_unlock(&port->lock);
++
++	if (locked)
++		spin_unlock(&port->lock);
  }
  
- SEC("tracepoint/syscalls/sys_exit_open")
- int trace_enter_exit(struct syscalls_exit_open_args *ctx)
- {
--	count((void *)&exit_open_map);
-+	count(&exit_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_exit_openat")
-+int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
-+{
-+	count(&exit_open_map);
- 	return 0;
- }
+ static void msm_console_write(struct console *co, const char *s,
 -- 
 2.20.1
 
