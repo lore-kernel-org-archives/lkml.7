@@ -2,100 +2,113 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADBEC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E73DC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAFC2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F68A21775
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/mUbr70"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btjOcsmz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfL0BYF (ORCPT
+        id S1727047AbfL0B1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:24:05 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35890 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfL0BYF (ORCPT
+        Thu, 26 Dec 2019 20:27:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34374 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfL0B1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:24:05 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n59so4219057pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 17:24:05 -0800 (PST)
+        Thu, 26 Dec 2019 20:27:53 -0500
+Received: by mail-pg1-f193.google.com with SMTP id r11so13705893pgf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 17:27:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bZGwwBs0+6wjFWF5xEm+/9dLXTyLkBQWZ94+6z/JBpE=;
-        b=K/mUbr701M92ISU0kMifSC+j0Z/biy7G5mB4E4nvDyaG4m/U43mBEDO+B/BiZFJzCq
-         5AJ9Ll+vdNnQjturr7JjSFGAmE2HYkq+cDC6gENPBqiZBsWg8XwUlQm9tO7vYA1cRHhT
-         n2HD7XydzDPqnOITnIdoZ2kD13Pvopx37unwWwVBhnyggAZFAKt+TBVS0nQr5WWMR2Wg
-         TiDA8PB57nC2x/WcKnkYvycu+NPefQY85lwEItMETKPDuAjyeIqJqjgi8yHDddraIjUM
-         yJj9Tjb0iKX9+LbxP1JXuPYAVcRrSspr0LkhFnLvhrmdtFcsjXoz0EgNAmVyV0M7PbvN
-         cqrg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yRlWtIcQUsLKShnJr6O+2Jcc7yVY+hw3WSlirQFQtWs=;
+        b=btjOcsmzB3eli/6pjctJta/MabRyX8p1QS6dwLFAxMubblG9fXM8Bf7onRm+8ZDxXU
+         SOsq7s5EreR2eT+mDSaLjY61yRlndP8HeEAhUp7ezBMFy+K/way9A54AMsn2JgGuaIuP
+         STn5JbYY+xgWbvXLOAOhsosDu3SQrCzB5qDrFaB9EWG3/s1eFdYWVgLMtc+pOSgWM5jX
+         EPTGIkidysOVI3UCiTtUw69zbGG8pd+jVt8SE5eTBu8kKWNp/TpmDsU8U67DWKfS41Cj
+         K5u8AtWCGBB5hCGLOwSDa4RICEtQshr5kwkVVYNLJRTvh4ent9GFXM8bvRXtVnZnUGfW
+         Y6/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bZGwwBs0+6wjFWF5xEm+/9dLXTyLkBQWZ94+6z/JBpE=;
-        b=fVbzN/6Q4HTuAyk02PoM/ZFljVr28KmqUnuwIenAIS/RMfnVy9azDISXwyGtG5Usf2
-         T+yEaIniFVx5y96tPUBD/ix0JUQrb/IiU71j9g6V2t3N6fUBh8n/0Ia5R8i/jZ1iWi6E
-         7H+vRpzzCnYUj33v3NvDBCwmGQTFjg8XbFkfEHraUJcdVVvMngb6qgnSZSwOPLuDiDzq
-         13jeV1+r9YBSJ+SauswBGCjL9mhXNgfLyS06KFV3VcHRurl3BsLEkVHE3Q1iIwwFBfOO
-         eqYREoKpJc2vWchoMjAoiyzXc9+Mpm0XwkIkE9q3wFB/64L2luEw0WTLURdokNmUgN7D
-         cAlA==
-X-Gm-Message-State: APjAAAUSeQ95aQx4Fh687p9aKQ+LU6r4oYainrpYkWPMVP6xxH8W3x4k
-        +2fRufiKjAMAQcm5j4MiJgSIjA==
-X-Google-Smtp-Source: APXvYqzh0FoNDYeUyJDwrPL52Vfp1xeNK2adiqJa8UWMQ6lp0+cUi22UsEt4mkLL5pR+BkRNYUOVXQ==
-X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12mr33713668plb.218.1577409844600;
-        Thu, 26 Dec 2019 17:24:04 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n188sm35364210pga.84.2019.12.26.17.24.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yRlWtIcQUsLKShnJr6O+2Jcc7yVY+hw3WSlirQFQtWs=;
+        b=QgMCjfPfjlrzpB4ON0iD7mwzb+LlaAdFKQYeR7laPph79pZMDsrerkqp7pbbGG+ur+
+         uEfoXQa/B7z2x3SQoiu3lMYGjhPidAWH3Nsl1x7X+ghvYZYvtiKiUcStbs/STKuksKeS
+         JqUfi625WU4skBUxwF1nYffKL8G3jtxV8cQG695aJ9JtNC6HsKpgWG3D5tHnvzkWEzeg
+         msgpgHSXBSm0rG31AGJvlsWCIw/b7P8c8qLxJ+05E9+UIB7pnbMPyIQq9jp+WxpXw0dI
+         +xdFn/mbcUfvIDROGrBJ4HL6tGgxgVbkVay9vnkjRUCtyeuuyrn3sCl5Tuwb/AhsyGBe
+         LVqw==
+X-Gm-Message-State: APjAAAUbrtyeyESME3TwzO4P+hjl4hbfVRWYIzFLlK0Uabl/AXv/Jt8L
+        dhzMjxto8/yuXEIlxd1PukQpfg==
+X-Google-Smtp-Source: APXvYqxh78dSzfk4bN9uQtL+xMtUE95dpqDcuu+Cy1dcRpt9DnzYP8G4XdfL7ANBtCsLOLGzENG0Bw==
+X-Received: by 2002:a63:7311:: with SMTP id o17mr49136128pgc.29.1577410072994;
+        Thu, 26 Dec 2019 17:27:52 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s21sm16769185pfe.20.2019.12.26.17.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 17:24:03 -0800 (PST)
-Date:   Thu, 26 Dec 2019 17:23:49 -0800
+        Thu, 26 Dec 2019 17:27:52 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
-Message-ID: <20191227012349.GG1908628@ripper>
-References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>, stable@vger.kernel.org
+Subject: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+Date:   Thu, 26 Dec 2019 17:27:17 -0800
+Message-Id: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06 Nov 16:16 PST 2019, Bjorn Andersson wrote:
+There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+the fixup to only affect the relevant PCIe bridges.
 
-Bjorn, this still applies nicely on linux-next and works as expected.
-Could you please apply it? Or would you like me to resend it with
-people's tags picked up?
+Cc: stable@vger.kernel.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Regards,
-Bjorn
+Stan, I picked up all the suggested device id's from the previous thread and
+added 0x1000 for QCS404. I looked at creating platform specific defines in
+pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+prefer that I do this anyway.
 
-> This adds support necessary for the two PCIe controllers found in Qualcomm
-> SDM845.
-> 
-> Bjorn Andersson (2):
->   dt-bindings: PCI: qcom: Add support for SDM845 PCIe
->   PCI: qcom: Add support for SDM845 PCIe controller
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
->  drivers/pci/controller/dwc/pcie-qcom.c        | 150 ++++++++++++++++++
->  2 files changed, 169 insertions(+)
-> 
-> -- 
-> 2.23.0
-> 
+ drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 5ea527a6bd9f..138e1a2d21cc 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+ {
+ 	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+ 
+ static struct platform_driver qcom_pcie_driver = {
+ 	.probe = qcom_pcie_probe,
+-- 
+2.24.0
+
