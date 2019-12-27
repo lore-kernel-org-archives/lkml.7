@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EBDC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10355C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B27421582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D215220722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470539;
-	bh=Czplure2xZKgEkKI4XC5UMk7izwZoY4ItYjVWnKukSo=;
+	s=default; t=1577470546;
+	bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoqX1bW2UdkkBYi2ewjMj0NGQ4exnSURMv7dpvo0033fiw3rlGwaOGk0e5FwhL94N
-	 2PtirIGgh9cEygIhbLXimYwIRoRhus0uOhtHb5ZKTf4zz81n6Y4+yisgv7R3An1yZW
-	 pURQLgInQUNOcMm6J3pRl2lYrIKiECIglDPiRE90=
+	b=XdEnJ6pj2BOGKdXoOgMf32jtvzYcmNIp3IIIXpN4m7G0ikF5gF0pkzBGQlM0ITbdA
+	 FtFm+LHh8zwpCyKluzEV7xtSZLtdoTjvUuaZFg4kKcLAdYN/4XQqRwFEvgpdxQGdzX
+	 oebJmSdnev5N8nk01YjHlsd0M7IpJWALPMgY8seA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbfL0SPi (ORCPT
+        id S1728061AbfL0SPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:15:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:15:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727910AbfL0SPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:15:18 -0500
+        id S1727889AbfL0SPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:15:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6D06208C4;
-        Fri, 27 Dec 2019 18:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3898C222C3;
+        Fri, 27 Dec 2019 18:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470518;
-        bh=Czplure2xZKgEkKI4XC5UMk7izwZoY4ItYjVWnKukSo=;
+        s=default; t=1577470515;
+        bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtL9+c7ppH2soJS2OhwFLMqgYzdtWqxFuQhJwjPszi+hn+JgI7hbHAH/QRQ/2ixnf
-         RUYg51iuaqZziL7i/x6GOZCf6CBBuAdYdnXlrtuNLw57x3GOCvlXZTxmkBqNXRFQjj
-         wy2r37cIvmWEuwkd/GEaSqeHYZaoMSpTw3MIxqzY=
+        b=2qG01NYOn0Y37GwO8gHApB7RtMv2izzTlXK3jcOEL7HOTytQAO0MDtCGQDxRa2O4d
+         x52toZX6Aff+HdI5lRhiC3srnikgk25R7MwJCENPS88goK+Pnwud9cTEmt0GaqPm3E
+         e7UMkpF8KRIh1dQb4nWe+oEFyHJEbyApqoqxyeG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/38] parisc: Fix compiler warnings in debug_core.c
-Date:   Fri, 27 Dec 2019 13:14:32 -0500
-Message-Id: <20191227181435.7644-35-sashal@kernel.org>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 32/38] net: stmmac: RX buffer size must be 16 byte aligned
+Date:   Fri, 27 Dec 2019 13:14:29 -0500
+Message-Id: <20191227181435.7644-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
 References: <20191227181435.7644-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,48 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
+[ Upstream commit 8d558f0294fe92e04af192e221d0d0f6a180ee7b ]
 
-Fix this compiler warning:
-kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
-arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
-   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
-arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
-   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
-      |                              ^~~~
-kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
-  596 |    atomic_xchg(&kgdb_active, cpu);
-      |    ^~~~~~~~~~~
+We need to align the RX buffer size to at least 16 byte so that IP
+doesn't mis-behave. This is required by HW.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+Changes from v2:
+- Align UP and not DOWN (David)
+
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index 7ada30900807..90253bdc2ee5 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -43,8 +43,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
- **		if (((unsigned long)p & 0xf) == 0)
- **			return __ldcw(p);
- */
--#define xchg(ptr, x) \
--	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
-+#define xchg(ptr, x)							\
-+({									\
-+	__typeof__(*(ptr)) __ret;					\
-+	__typeof__(*(ptr)) _x_ = (x);					\
-+	__ret = (__typeof__(*(ptr)))					\
-+		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
-+	__ret;								\
-+})
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5ac48a594951..a2b7c685cbf1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -55,7 +55,7 @@
+ #include <linux/of_mdio.h>
+ #include "dwmac1000.h"
  
- /* bug catcher for when unsupported size is used - won't link */
- extern void __cmpxchg_called_with_bad_pointer(void);
+-#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
++#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
+ 
+ /* Module parameters */
 -- 
 2.20.1
 
