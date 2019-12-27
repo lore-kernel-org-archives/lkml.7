@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DB4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178D1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D80D22522
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D956821927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469778;
-	bh=w38RP9g4pVLYTTwff97CbeX434OGzPXQHxpZRwf5MVI=;
+	s=default; t=1577469781;
+	bh=xqkKaOTucSjQ9qCswE33SbW2HccblWHySsjfrd72rjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ssq+5OTqZUP7P4x/B1mzeqyDDSeliE/LtijeqI44jDOj9MzVwMNXnUKII0j/pfJtW
-	 yTcMXG0056Ut/7TwD1u8a1JlsUqM70Y/i5P0TVtHeV2wR21nED36yRHreCNjKaNcp1
-	 QLQO+oXLcYaEKeV8Ko5D8v0rflMYms+gKhNs4WMo=
+	b=xzNgS7Bq5nyNVsmEVsDG1mcJ9WsD60hNShtDlKWVGgCYdjeejnWLa/NkIaxmUNwP9
+	 tOx/ni+fhKb3bR4FqIblewpWpWTmfGlF1uXbbwu0h2/2tMBvcINNNdmDmH91Drffqz
+	 9xTJ6O/qDjZMJNjVZu1JTksxCws0yqg6uUqFKpDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfL0SC5 (ORCPT
+        id S1728440AbfL0SC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:02:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59904 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:02:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbfL0SCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:54 -0500
+        id S1728368AbfL0SC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA8920CC7;
-        Fri, 27 Dec 2019 18:02:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 076072176D;
+        Fri, 27 Dec 2019 18:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469773;
-        bh=w38RP9g4pVLYTTwff97CbeX434OGzPXQHxpZRwf5MVI=;
+        s=default; t=1577469776;
+        bh=xqkKaOTucSjQ9qCswE33SbW2HccblWHySsjfrd72rjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hBk7QFQDIKLeqLhbdEiV/j955+FA0Ulde4v8NoPb5ln74MFbuHw18+BvzoP7u97MY
-         mwjxsI2QuX/Sfc8WX/3VIMq1gEvu0VnvttlpemfgNREptdo0IGpNnHijIRCcY4nhvK
-         DhVkIM7yGtIBNuJH1XSu1NNUnOZ6cTmvx+yRz+y0=
+        b=bPJSZhzjtmjsIaMjKsi920fmJgkxDpvLpAJlhqGMeI8PrAqYlpQFOoErPHtHUX4vP
+         w7MiVUkbOmJ/UxxtYs7yEBbegRqTcLgKI6UrWdxKDvREASfw2ve1pErYDz1y/SZ74y
+         wa6Z5L6nhuONK1Of1OMf8YnTNCxa6JN0rAJi+Cco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/57] samples: bpf: Replace symbol compare of trace_event
-Date:   Fri, 27 Dec 2019 13:01:49 -0500
-Message-Id: <20191227180222.7076-24-sashal@kernel.org>
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 27/57] net: usb: lan78xx: Fix suspend/resume PHY register access error
+Date:   Fri, 27 Dec 2019 13:01:52 -0500
+Message-Id: <20191227180222.7076-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -60,43 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-[ Upstream commit bba1b2a890253528c45aa66cf856f289a215bfbc ]
+[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
 
-Previously, when this sample is added, commit 1c47910ef8013
-("samples/bpf: add perf_event+bpf example"), a symbol 'sys_read' and
-'sys_write' has been used without no prefixes. But currently there are
-no exact symbols with these under kallsyms and this leads to failure.
+Lan78xx driver accesses the PHY registers through MDIO bus over USB
+connection. When performing a suspend/resume, the PHY registers can be
+accessed before the USB connection is resumed. This will generate an
+error and will prevent the device to resume correctly.
+This patch adds the dependency between the MDIO bus and USB device to
+allow correct handling of suspend/resume.
 
-This commit changes exact compare to substring compare to keep compatible
-with exact symbol or prefixed symbol.
-
-Fixes: 1c47910ef8013 ("samples/bpf: add perf_event+bpf example")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191205080114.19766-2-danieltimlee@gmail.com
+Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/trace_event_user.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/lan78xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/samples/bpf/trace_event_user.c b/samples/bpf/trace_event_user.c
-index c7d525e5696e..8c7445874662 100644
---- a/samples/bpf/trace_event_user.c
-+++ b/samples/bpf/trace_event_user.c
-@@ -34,9 +34,9 @@ static void print_ksym(__u64 addr)
- 		return;
- 	sym = ksym_search(addr);
- 	printf("%s;", sym->name);
--	if (!strcmp(sym->name, "sys_read"))
-+	if (!strstr(sym->name, "sys_read"))
- 		sys_read_seen = true;
--	else if (!strcmp(sym->name, "sys_write"))
-+	else if (!strstr(sym->name, "sys_write"))
- 		sys_write_seen = true;
- }
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 2229284d16f5..7d1d5b30ecc3 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -1765,6 +1765,7 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
+ 	dev->mdiobus->read = lan78xx_mdiobus_read;
+ 	dev->mdiobus->write = lan78xx_mdiobus_write;
+ 	dev->mdiobus->name = "lan78xx-mdiobus";
++	dev->mdiobus->parent = &dev->udev->dev;
  
+ 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
+ 		 dev->udev->bus->busnum, dev->udev->devnum);
 -- 
 2.20.1
 
