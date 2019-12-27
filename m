@@ -2,141 +2,108 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2B0C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AADC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9062176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1A620882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 13:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pVibluFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfL0NfT (ORCPT
+        id S1726562AbfL0NqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 08:35:19 -0500
-Received: from esgaroth.petrovitsch.at ([78.47.184.11]:2542 "EHLO
-        esgaroth.tuxoid.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0NfS (ORCPT
+        Fri, 27 Dec 2019 08:46:07 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44454 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0NqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 08:35:18 -0500
-X-Greylist: delayed 2548 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Dec 2019 08:35:17 EST
-Received: from [10.68.100.236] (h10-gesig.woeg.acw.at [217.116.178.11] (may be forged))
-        (authenticated bits=0)
-        by esgaroth.tuxoid.at (8.15.2/8.15.2) with ESMTPSA id xBRCqS4g015370
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=NO);
-        Fri, 27 Dec 2019 13:52:28 +0100
-Subject: Re: What is the best way to compare an unsigned and a constant?
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        SeongJae Park <sj38.park@gmail.com>
-References: <20191227123938.5271-1-sjpark@amazon.com>
-From:   Bernd Petrovitsch <bernd@petrovitsch.priv.at>
-Message-ID: <688d8f4b-266f-2c47-d4e9-d0336316a0a9@petrovitsch.priv.at>
-Date:   Fri, 27 Dec 2019 13:52:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191227123938.5271-1-sjpark@amazon.com>
-Content-Type: multipart/mixed;
- boundary="------------D98A0A31D62B0BC2939BAEE9"
-Content-Language: en-US
-X-DCC--Metrics: esgaroth.tuxoid.at 1480; Body=6 Fuz1=6 Fuz2=6
-X-Virus-Scanned: clamav-milter 0.97 at esgaroth.tuxoid.at
-X-Virus-Status: Clean
+        Fri, 27 Dec 2019 08:46:06 -0500
+Received: by mail-qk1-f193.google.com with SMTP id w127so21518811qkb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 05:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=6etHYhtSl6+gXzRLDDVOeZLed1tEXttA1I2y9xptx5o=;
+        b=pVibluFELp7k4SND3Z5PjkskuFcDEeleMyhu5q8UEudXaNsljge7lU3JQfwHJJ1TX7
+         F6s8BebrG3hXu1iJcapwKjPQ9/C5GEB+LZkoThO+FUeysWg5mVzBLhV4Amv+/ZgFst1l
+         znnBHcKy1vu01qdHze6Ng4uc/YW22LUXyF9VPGd34q718iUKq/qdM2lbalyjVMQetBNb
+         cOSkZo8XEtcUAQAGI4P6ciyVfjl+IauE7KBXn0ovpan7wcCxY4N2NC3wVt2aI7wNBk8o
+         rmd7NzBk+lsuym0EqZQ6T2uxOnhUG/PTR6rUMmmMIbhDZpc+GQPWIKk/IFEAmfdH5Zbe
+         Tlrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=6etHYhtSl6+gXzRLDDVOeZLed1tEXttA1I2y9xptx5o=;
+        b=hrkvSJLRyqy/sbAltgXm/Xx7BomlOIcTO0iw+i+4bWwBBSuc6glSiM8uxnq1IMmjMZ
+         TuTm9hdfDhTOvrILVn1YXzUq+JSvEN18CnOv8qqqcm4tGcLInE5YhyAkovoRBq8u+0W2
+         ePxbDnpXjMbZnUx31ES/wWg7/hAV0uqQwahHN88ofg1FUjcO0BwEKR1KmV4yNuzbyMAS
+         GJSPXFl0Yi3n/MMJBFMNVjuMiyCWpeDCwq6bJwI5Yq5V2CRLPw61izINUMbZGhD2bEhr
+         tZ0TfpYLrZYnSMGQ4NvsJDuGP1UkWbVH9dysNXQQv47UAidmYKl3kPC55HgtGhq8PEgS
+         fV6w==
+X-Gm-Message-State: APjAAAVIC3sPDW1BlEL6Qu1TTkE3e3Y5R/+OgOsSg7+6zS9KOcfoekgc
+        uDBf6WlWLNsh3IKniNONN35PoBe5yYM=
+X-Google-Smtp-Source: APXvYqx1ipKxuo/brS6sZTb08L0kWqRCscwQVwKNLbEb/EyIXR5uBSfMmlxGFWE48SR7iT9V4rKUYQ==
+X-Received: by 2002:ae9:c317:: with SMTP id n23mr34496883qkg.356.1577454365616;
+        Fri, 27 Dec 2019 05:46:05 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 16sm9787242qkj.77.2019.12.27.05.46.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2019 05:46:05 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/page_owner: print largest memory consumer when OOM panic occurs
+Date:   Fri, 27 Dec 2019 08:46:03 -0500
+Message-Id: <2EA70B54-A7E1-4C5A-A447-844A3FEA7E93@lca.pw>
+References: <1577432670.4248.3.camel@mtkswgap22>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-mediatek@lists.infradead.org,
+        wsd_upstream@mediatek.com
+In-Reply-To: <1577432670.4248.3.camel@mtkswgap22>
+To:     Miles Chen <miles.chen@mediatek.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------D98A0A31D62B0BC2939BAEE9
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi all!
 
-On 27/12/2019 13:39, SeongJae Park wrote:
-[...]
-> I have a function returning 'unsigned long', and would like to write a =
-kunit
-> test for the function, as below.
+> On Dec 27, 2019, at 2:44 AM, Miles Chen <miles.chen@mediatek.com> wrote:
 >=20
->     unsigned long foo(void)
->     {
->     	return 42;
->     }
+> It's not complete situation.
 >=20
->     static void foo_test(struct kunit *test)
->     {
->         KUNIT_EXPECT_EQ(test, 42, foo());
->     }
+> I've listed different OOM panic situations in previous email [1]
+> and what we can do about them with current information.
+>=20
+> There are some cases which cannot be covered by current information
+> easily.
+> For example: a memory leakage caused by alloc_pages() or vmalloc() with
+> a large size.
+> I keep seeing these issues for years and that's why I built this patch.=20=
 
-For this case: shouldn't=20
-----  snip  ----
-static void foo_test(struct kunit *test)
-{
-     KUNIT_EXPECT_EQ(test, 42ul, foo());
-}
-----  snip  ----
-do the trick?
+> It's like a missing piece of the puzzle.
+>=20
+> To prove that the approach is practical and useful, I have collected
+> real test cases
+> under real devices and posted the test result in the commit message.
+> These are real cases, not my imagination.
 
-MfG,
-	Bernd
---=20
-"I dislike type abstraction if it has no real reason. And saving
-on typing is not a good reason - if your typing speed is the main
-issue when you're coding, you're doing something seriously wrong."
-    - Linus Torvalds
+Of course this may help debug *your* problems in the past, but if that is th=
+e only requirement to merge the debugging patch like this, we would end up w=
+ith endless of those. If your goal is to stop developers from reproducing is=
+sues unnecessarily again using page_owner to debug, then your patch does not=
+ help much for the majority of other developers=E2=80=99 issues.
 
---------------D98A0A31D62B0BC2939BAEE9
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D=3D
-=3DGX6K
------END PGP PUBLIC KEY BLOCK-----
-
---------------D98A0A31D62B0BC2939BAEE9--
+The page_owner is designed to give information about the top candidates that=
+ might cause issues, so it make somewhat sense if it dumps the top 10 greate=
+st memory consumer for example, but that also clutter the OOM report so much=
+, so it is no-go.=
