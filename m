@@ -2,120 +2,97 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D273BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB42C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A3821582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 16:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9232620740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:01:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhCmF3lf"
+	dkim=pass (1024-bit key) header.d=g001.emailsrvr.com header.i=@g001.emailsrvr.com header.b="Bf56xgAv";
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="EE4Dtcpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfL0Qzr (ORCPT
+        id S1726954AbfL0RBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:55:47 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39083 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Qzq (ORCPT
+        Fri, 27 Dec 2019 12:01:16 -0500
+Received: from smtp110.ord1d.emailsrvr.com ([184.106.54.110]:50411 "EHLO
+        smtp110.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726379AbfL0RBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 11:55:46 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q10so14969297pfs.6;
-        Fri, 27 Dec 2019 08:55:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4nsIk431IJE2Vk4G5K7I24soUyvvlcDR7eoVO3tZXDI=;
-        b=WhCmF3lfXiFeaDgdh8Zc4no994MMyy7RRNjNO3kp4sQAtoEC8jvl4bViEffarZPS8Q
-         OyGs55rjGjxyd98MBtFtV3PT+fNXmJS1V6Decc/gOiUrMGsGss+QjIRRV239f0cilRg5
-         tj/DC2EocfQvI9tfDYIzou/z6PgqvIBnysYOA1FQmgiB+eT6uWITC0O9qtgXynTQKyhy
-         tSinIq4wBl4o0ntM7G2w7AFfH98LNAd67r5jUx29l8zoFUSrgrK+32dhYpVg9YXAHGW0
-         /4a0TrPFLvwK4TE7mAJmdwglD3EpKpZ/qaV836dbxYAX1JlbvMQtwo4gTCFC2rJL1+Rc
-         PS5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4nsIk431IJE2Vk4G5K7I24soUyvvlcDR7eoVO3tZXDI=;
-        b=ZMVN+j6RZcdlIOQ9N9iK5nrvQj9Ig5UHOFJmqUxyjXILLW3rAKfMfEigftq6jnQf9K
-         pFG5xqAfUm5zGS0/2jW2YjAYNr09kjekF7xHwxaX0xVm0mLVMdUvlvCpfXX29YR7DGk2
-         5wJSQzgw4SfP+fxfu/dTFLQmJ4Dm3f4ZYtO7Dj1GBU1h2VSV0PWu5wOWUW3io3ZxMAs+
-         pD7OEPfHkVbHVPWupOhxUwSWlDyg4VfjwuhlGP4OzOI85Ey1AQSadJb7gTLTQqgO+laR
-         iKLsaXTKITYjGPdqOjvRoxYO7J3LTyhaDGOlCct931dprbcWa/+dZQChQEZETdF5f/Fj
-         iH+g==
-X-Gm-Message-State: APjAAAXF17Iw8rBisfugdELBoa6rU/hahu4cbAVhXB6BL53TEONDiJ2W
-        bRAgPi5vFqZUZier3i6t9D0=
-X-Google-Smtp-Source: APXvYqyOPBCF3FRS8/uziPFI11Vq570WtF+ynBSOXyBPpYleRxUNXfDxAsungHAaqmCnvy0UyewLqA==
-X-Received: by 2002:aa7:86d4:: with SMTP id h20mr51240296pfo.232.1577465745925;
-        Fri, 27 Dec 2019 08:55:45 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i23sm20166129pfo.11.2019.12.27.08.55.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Dec 2019 08:55:45 -0800 (PST)
-Date:   Fri, 27 Dec 2019 08:55:43 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Peter Chen <peter.chen@freescale.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] usb: chipidea: host: Disable port power only if
- previously enabled
-Message-ID: <20191227165543.GA15950@roeck-us.net>
-References: <20191226155754.25451-1-linux@roeck-us.net>
- <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
+        Fri, 27 Dec 2019 12:01:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=g001.emailsrvr.com;
+        s=20190322-9u7zjiwi; t=1577466075;
+        bh=8ASEO9nb1s4EYQzxV1kAkTa3727cqCnOOe7ocLSymVg=;
+        h=From:To:Subject:Date:From;
+        b=Bf56xgAvmL+QWeNgo80a0UXrlRzHeyeHDNmXeUc44xtLpAIBESlCTFLgob9yR8x6F
+         hvaOP2uYWw8eIz7QozWPrz2WDZdtVlbXmnX/o5tJ/7x7vyuqD7SpsY/CtjN/illg6P
+         BPvLtqigFx+uzQtgoKvAmKc7cbQYd6L2FRTq8Qvg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1577466075;
+        bh=8ASEO9nb1s4EYQzxV1kAkTa3727cqCnOOe7ocLSymVg=;
+        h=From:To:Subject:Date:From;
+        b=EE4Dtcpfgy7khxaSo8J06m4OOlR5f7Dfq3OD/ptrNjgndvs687adT/fwEfE1V4lGt
+         MWDlBnnclaZUtJIsFkk9wz/Rua3HJyZY4czq3/9iwkOz7djtErb2zE3qGpWcbXLwbQ
+         nHUnnfMUE1mzKvWBARAX5pBL3jxIXNiR8MMvy8aE=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp6.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id EB661E0408;
+        Fri, 27 Dec 2019 12:01:13 -0500 (EST)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from konata.homenet (redmecca.plus.com [80.229.15.156])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 27 Dec 2019 12:01:14 -0500
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     devel@driverdev.osuosl.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        H Hartley Sweeten <hartleys@visionengravers.com>,
+        Ian Abbott <abbotti@mev.co.uk>, linux-kernel@vger.kernel.org,
+        Dmytro Fil <monkdaf@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] staging: comedi: adv_pci1710: fix AI channels 16-31 for PCI-1713
+Date:   Fri, 27 Dec 2019 17:00:54 +0000
+Message-Id: <20191227170054.32051-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 02:46:15PM -0500, Alan Stern wrote:
-> On Thu, 26 Dec 2019, Guenter Roeck wrote:
-> 
-> > On shutdown, ehci_power_off() is called unconditionally to power off
-> > each port, even if it was never called to power on the port.
-> > For chipidea, this results in a call to ehci_ci_portpower() with a request
-> > to power off ports even if the port was never powered on.
-> > This results in the following warning from the regulator code.
-> 
-> That's weird -- we should always power-on every port during hub 
-> initialization.
-> 
-That is what I would have assumed, but test code shows that it doesn't
-happen.
+The Advantech PCI-1713 has 32 analog input channels, but an incorrect
+bit-mask in the definition of the `PCI171X_MUX_CHANH(x)` and
+PCI171X_MUX_CHANL(x)` macros is causing channels 16 to 31 to be aliases
+of channels 0 to 15.  Change the bit-mask value from 0xf to 0xff to fix
+it.  Note that the channel numbers will have been range checked already,
+so the bit-mask isn't really needed.
 
-> It looks like there's a bug in hub.c:hub_activate(): The line under
-> HUB_INIT which calls hub_power_on() should call
-> usb_hub_set_port_power() instead.  In fact, the comment near the start
+Fixes: 92c65e5553ed ("staging: comedi: adv_pci1710: define the mux control register bits")
+Reported-by: Dmytro Fil <monkdaf@gmail.com>
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+---
+ drivers/staging/comedi/drivers/adv_pci1710.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-usb_hub_set_port_power() operates on a port of the hub. hub_activate()
-operates on the hub itself, or at least I think it does. I don't know
-how to convert the calls. Also, there are more calls to hub_power_on()
-in the same function.  Can you provide more details on what to do,
-or even better a patch for me to test ?
+diff --git a/drivers/staging/comedi/drivers/adv_pci1710.c b/drivers/staging/comedi/drivers/adv_pci1710.c
+index dbff0f7e7cf5..ddc0dc93d08b 100644
+--- a/drivers/staging/comedi/drivers/adv_pci1710.c
++++ b/drivers/staging/comedi/drivers/adv_pci1710.c
+@@ -46,8 +46,8 @@
+ #define PCI171X_RANGE_UNI	BIT(4)
+ #define PCI171X_RANGE_GAIN(x)	(((x) & 0x7) << 0)
+ #define PCI171X_MUX_REG		0x04	/* W:   A/D multiplexor control */
+-#define PCI171X_MUX_CHANH(x)	(((x) & 0xf) << 8)
+-#define PCI171X_MUX_CHANL(x)	(((x) & 0xf) << 0)
++#define PCI171X_MUX_CHANH(x)	(((x) & 0xff) << 8)
++#define PCI171X_MUX_CHANL(x)	(((x) & 0xff) << 0)
+ #define PCI171X_MUX_CHAN(x)	(PCI171X_MUX_CHANH(x) | PCI171X_MUX_CHANL(x))
+ #define PCI171X_STATUS_REG	0x06	/* R:   status register */
+ #define PCI171X_STATUS_IRQ	BIT(11)	/* 1=IRQ occurred */
+-- 
+2.24.1
 
-Thanks,
-Guenter
-
-> of hub_power_on() is wrong.  It says "Enable power on each port", but
-> in fact it only enables power for ports that had been powered-on
-> previously (i.e., the port's bit in hub->power_bits was set).  
-> Apparently this got messed up in commit ad493e5e5805 ("usb: add usb
-> port auto power off mechanism").
-> 
-> Now, the chipidea driver may still need to be updated, because 
-> ehci_turn_off_all_ports() will still be called during shutdown and it 
-> will try to power-down all ports, even those which are already powered 
-> down (for example, because the port is suspended).
-> 
-> Alan Stern
-> 
