@@ -2,95 +2,99 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4168C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D5AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB53021D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468878;
-	bh=ibZBkiorgbSlD1+KaQsW7L6oi5u2W/TPujsZDyZJGks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlNCYqBcXOWKbAgIlSvTaW2Z8WWjKHD9eqMJGwL5eYWBmEMrYT0nGHxUhL0oI/1pU
-	 Uug83fsuhJlOSM09SZNFD1Czzaya2eLeltkLYI4gyKXc/oOiu0Bdq9QfigeCPXCz2F
-	 GOm5YIVA3G2zR0+c9rwYmXCp3z8Ac6NDp4hq2uGM=
+	by mail.kernel.org (Postfix) with ESMTP id CF49C21D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uh9RYnq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfL0Row (ORCPT
+        id S1728568AbfL0Rou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbfL0Rom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:42 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB857206CB;
-        Fri, 27 Dec 2019 17:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468681;
-        bh=ibZBkiorgbSlD1+KaQsW7L6oi5u2W/TPujsZDyZJGks=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kpdLrf3qK6rUpEkzL9OzE4pbMgLWnS8NiZ4b7Wtmo0nJj0H/Yn9UHpKlcUGJYWQGT
-         Pfp0d2+p1PARu18unzdJk9PeUVMro7eH9PSXY8RGhqqzbFl5iZ1KfqK/CEx+ujCfrH
-         GmKmPuXzChHRB1ijaaSeMAGOhDVNj3m9s1TSBBH4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Birsan <cristian.birsan@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/84] net: usb: lan78xx: Fix suspend/resume PHY register access error
-Date:   Fri, 27 Dec 2019 12:43:08 -0500
-Message-Id: <20191227174352.6264-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
-References: <20191227174352.6264-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Fri, 27 Dec 2019 12:44:50 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45146 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbfL0Rol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:41 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so26629014wrj.12
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 09:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1HXhzt2IyWFOUMdQkirC9Hq8z+cMg4U8grq8VYELPXI=;
+        b=uh9RYnq/w/BeVXC/bTMfScw9j1sOr+DwMV/d5YGPZ/2utrxm7lgf46xnt1SfzvQHet
+         hEMvyDZdfSoqDbwqAMVnBSZCCUU49UK5mDEaTWCGp5TR+BfUAc62GhO6QCmeODv0RmtJ
+         WGbleOTQ72/2GLsbL/rFHzpgXZbOvBIKAggPc45ouC9yuTL1Hs1GhKm77CiFcUohzgR0
+         zWMQJW3J9bY0qzNHzN2xLdb+qWIorbmjjRuUmQEVEw172pmRKcrbIqrjBlHcBJk6AtUb
+         VUtm+Ha70+EGfoPiCo7fP7r66acjaGPoqi3MklnUuhVmoiKHV6+fIf/Dk+9JyiwytEBM
+         bRMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1HXhzt2IyWFOUMdQkirC9Hq8z+cMg4U8grq8VYELPXI=;
+        b=sQc5aHEl78/+at1UtVQA781PH3rkzi49F/qTb94lITXr43kABQpgUqRDKuy7VYmPnH
+         jZWmKW19u94g6Zvev2zXjFdr8D+3Mvb9AUixx4mywWe7HFsN6jHBn+oefBnJ+qzXQL4Y
+         5Fyx1k3XajKgzdMZ3CAZCX0m5bSp73g9hUCCxTltDOzzAJ0ytEcMF6EaS/BRrBB3YIEM
+         7ZaX4wwk/omQ7RIJQRcWH81umWmvkD6y9HawKfLrLEW/PO/yHFOAEJJt6h+8rPNHrSyg
+         S+H/RG5VhFekJBfN6tdTXA57p4YYf+DUPkwTfgWANp0DLHWkjiFmPzUts8TTOuLfdfgj
+         zT2g==
+X-Gm-Message-State: APjAAAWI7/bBrr28euiz3ku6DYAlVH030TjbcPIetJJ1RI6vnbNJKiOy
+        7W/Hb58IxkqoiWrKJXEoYb8=
+X-Google-Smtp-Source: APXvYqwAXW3FrwEfV7yJm1iriKeHgMMSG0nbqsOJyZ0BTuHPUZmQvFPqkjoR55qKgghw26BSNuZHAw==
+X-Received: by 2002:adf:f581:: with SMTP id f1mr53051373wro.264.1577468680310;
+        Fri, 27 Dec 2019 09:44:40 -0800 (PST)
+Received: from debian.lan (host-78-144-219-162.as13285.net. [78.144.219.162])
+        by smtp.gmail.com with ESMTPSA id c68sm11819819wme.13.2019.12.27.09.44.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Dec 2019 09:44:39 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] tty: always relink the port
+Date:   Fri, 27 Dec 2019 17:44:34 +0000
+Message-Id: <20191227174434.12057-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+If the serial device is disconnected and reconnected, it re-enumerates
+properly but does not link it. fwiw, linking means just saving the port
+index, so allow it always as there is no harm in saving the same value
+again even if it tries to relink with the same port.
 
-[ Upstream commit 20032b63586ac6c28c936dff696981159913a13f ]
-
-Lan78xx driver accesses the PHY registers through MDIO bus over USB
-connection. When performing a suspend/resume, the PHY registers can be
-accessed before the USB connection is resumed. This will generate an
-error and will prevent the device to resume correctly.
-This patch adds the dependency between the MDIO bus and USB device to
-allow correct handling of suspend/resume.
-
-Fixes: ce85e13ad6ef ("lan78xx: Update to use phylib instead of mii_if_info.")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
+Reported-by: Kenneth R. Crudup <kenny@panix.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/tty_port.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 50bf4b2080d5..6dd24a1ca10d 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -1823,6 +1823,7 @@ static int lan78xx_mdio_init(struct lan78xx_net *dev)
- 	dev->mdiobus->read = lan78xx_mdiobus_read;
- 	dev->mdiobus->write = lan78xx_mdiobus_write;
- 	dev->mdiobus->name = "lan78xx-mdiobus";
-+	dev->mdiobus->parent = &dev->udev->dev;
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index 5023c85ebc6e..044c3cbdcfa4 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -89,8 +89,7 @@ void tty_port_link_device(struct tty_port *port,
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	if (!driver->ports[index])
+-		driver->ports[index] = port;
++	driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
  
- 	snprintf(dev->mdiobus->id, MII_BUS_ID_SIZE, "usb-%03d:%03d",
- 		 dev->udev->bus->busnum, dev->udev->devnum);
 -- 
-2.20.1
+2.11.0
 
