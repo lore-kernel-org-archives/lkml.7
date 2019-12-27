@@ -2,112 +2,129 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3561EC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8936EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEC6208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5252020882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 15:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MakOBPW5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M7IFwi3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfL0PCX (ORCPT
+        id S1726923AbfL0PNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:02:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36018 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0PCW (ORCPT
+        Fri, 27 Dec 2019 10:13:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50096 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0PNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:02:22 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x184so14862678pfb.3;
-        Fri, 27 Dec 2019 07:02:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=73+uqorZ8jaAi6XI/f6tOg8KY2/JMd0Q3CNU4xqP1XE=;
-        b=MakOBPW5DCVW80P94rr1tK3tbhYsW/TpR2myRnNnGZVV3B9Rx6Upirj/IzKFJvrX+E
-         W3SS+WX4TGUJjgxlKRTXVfdXV2MOZEZ1OXpbTg7acC7qkQ3Gr4IWCUh+f8sYEn/Z7LjT
-         5GCaa/UmZ0G/M2/V3iwpxFE29QrywEa6tIpHy3q32TiBDZfth/i02gEfBEfQpElUaxHx
-         v5VjJ35dxd5s4y873V/T2rOUti9EHiEsC0cyMiJgvWdra+13kku0PA/hWmG6qBH4G8ct
-         FS+xjmuhlcLj83li08KRAoFDM5b1Bs0KXbWQPAEHstbHoUeTzUayunvGbv4Qe96PpC0G
-         qx8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=73+uqorZ8jaAi6XI/f6tOg8KY2/JMd0Q3CNU4xqP1XE=;
-        b=ZmfJPGipjyCBguqpOjOeO6mIlALrkOGSL1Pi62aX97nqLWXDrdJzZIw7rxhmw2SGi5
-         aTWtcFRUriyrs/AVIxcNVIYkNG27ukFdFSaIhr4gD7bASY12+k5kn0pERJcnhqZy+eWM
-         DO1daiWIYt7zUK3F3pefYeQZjtCqsmeKMZXNB+1eGznucIzI65Fwnsvg6xk0VYowiSgw
-         2jD8qm+OavsrV70C/kUbtukUy2Jy7laLf1s4XJczubFe/R0qUfTAiHuquU79xGGMMJ2f
-         8Pq37TXwUa9SR2uWAfDeYzKSAQ2MnfLFYydQBFK2flUmXBrmw66q/0GYHoCq5BAyD2CU
-         Ic0A==
-X-Gm-Message-State: APjAAAVMT17AOxMNIR3OBc9bcMrxuisNmpewTMWSvdUQjWwNf5HYw4QD
-        TUqq5Z6CkvP4yFaoF9Np15Y=
-X-Google-Smtp-Source: APXvYqzaMkpqewd193uc69dXZgD1HXAMLLpVF+ih7JUB6jpryTSsWFGk4Ca6fc4IUMUbXbrw7uj7/w==
-X-Received: by 2002:a62:cdcb:: with SMTP id o194mr53978760pfg.117.1577458942041;
-        Fri, 27 Dec 2019 07:02:22 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id u18sm38877903pgn.9.2019.12.27.07.02.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 07:02:21 -0800 (PST)
-Date:   Fri, 27 Dec 2019 07:02:19 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vladis Dronov <vdronov@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Al Viro <aviro@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ptp: fix the race between the release of ptp_clock
- and cdev
-Message-ID: <20191227150218.GA1435@localhost>
-References: <20191208195340.GX4203@ZenIV.linux.org.uk>
- <20191227022627.24476-1-vdronov@redhat.com>
+        Fri, 27 Dec 2019 10:13:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mKWmeMq/jXDP6HCH4qqFt/k91vrrbD+r5MY8+5wBr/M=; b=M7IFwi3Jg5BjsBnyGD+4xon2G
+        KIOWGardiBBm18dCoil3NMB6Ob5gQGRG/RwNNx7SAykIKQoaaG8OJvA/YB1x4e8tMgOe4VC5Osjp5
+        FImLXcx4mNey05Wjk20orKXk2m6Z3SiXJFfTee1gdKPbH93TW/SBNPz0yy+LAu4czyGtgnCVw3vKf
+        TG0xBbIqoHl/R7QftEIuH/U6pnpRlrJTT1YejtHxr5Yco3zTrOSUpQULlDB0O4ioXSuKKEtGThxB3
+        IPMHGtXrinZ8ff5eXDLf+xMjC2wKBw89XX/6p/5p5CXNmeF3mykXWpQXhI1oY1yosXiWBiHuLZ+kc
+        yW+S5smIw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ikrJC-0007nM-S5; Fri, 27 Dec 2019 15:13:46 +0000
+Date:   Fri, 27 Dec 2019 07:13:46 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
+Subject: Re: [Patch v2] mm/rmap.c: split huge pmd when it really is
+Message-ID: <20191227151346.GA10799@bombadil.infradead.org>
+References: <20191223222856.7189-1-richardw.yang@linux.intel.com>
+ <20191223231120.GA31820@bombadil.infradead.org>
+ <20191224015602.GB7739@richard>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191227022627.24476-1-vdronov@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191224015602.GB7739@richard>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 03:26:27AM +0100, Vladis Dronov wrote:
-> Here cdev is embedded in posix_clock which is embedded in ptp_clock.
-> The race happens because ptp_clock's lifetime is controlled by two
-> refcounts: kref and cdev.kobj in posix_clock. This is wrong.
+On Tue, Dec 24, 2019 at 09:56:02AM +0800, Wei Yang wrote:
+> On Mon, Dec 23, 2019 at 03:11:20PM -0800, Matthew Wilcox wrote:
+> >On Tue, Dec 24, 2019 at 06:28:56AM +0800, Wei Yang wrote:
+> >> When page is not NULL, function is called by try_to_unmap_one() with
+> >> TTU_SPLIT_HUGE_PMD set. There are two cases to call try_to_unmap_one()
+> >> with TTU_SPLIT_HUGE_PMD set:
+> >> 
+> >>   * unmap_page()
+> >>   * shrink_page_list()
+> >> 
+> >> In both case, the page passed to try_to_unmap_one() is PageHead() of the
+> >> THP. If this page's mapping address in process is not HPAGE_PMD_SIZE
+> >> aligned, this means the THP is not mapped as PMD THP in this process.
+> >> This could happen when we do mremap() a PMD size range to an un-aligned
+> >> address.
+> >> 
+> >> Currently, this case is handled by following check in __split_huge_pmd()
+> >> luckily.
+> >> 
+> >>   page != pmd_page(*pmd)
+> >> 
+> >> This patch checks the address to skip some work.
+> >
+> >The description here is confusing to me.
+> >
 > 
-> Make ptp_clock's sysfs device a parent of cdev with cdev_device_add()
-> created especially for such cases. This way the parent device with its
-> ptp_clock is not released until all references to the cdev are released.
-> This adds a requirement that an initialized but not exposed struct
-> device should be provided to posix_clock_register() by a caller instead
-> of a simple dev_t.
+> Sorry for the confusion.
 > 
-> This approach was adopted from the commit 72139dfa2464 ("watchdog: Fix
-> the race between the release of watchdog_core_data and cdev"). See
-> details of the implementation in the commit 233ed09d7fda ("chardev: add
-> helper function to register char devs with a struct device").
+> Below is my understanding, if not correct or proper, just let me know :-)
+> 
+> According to current comment in __split_huge_pmd(), we check pmd_page with
+> page for migration case. While actually, this check also helps in the
+> following two cases when page already split-ed:
+> 
+>    * page just split-ed in place
+>    * page split-ed and moved to non-PMD aligned address
+> 
+> In both cases, pmd_page() is pointing to the PTE level page table. That's why
+> we don't split one already split-ed THP page.
+> 
+> If current code really intend to cover these two cases, sorry for my poor
+> understanding.
+> 
+> >> +	/*
+> >> +	 * When page is not NULL, function is called by try_to_unmap_one()
+> >> +	 * with TTU_SPLIT_HUGE_PMD set. There are two places set
+> >> +	 * TTU_SPLIT_HUGE_PMD
+> >> +	 *
+> >> +	 *     unmap_page()
+> >> +	 *     shrink_page_list()
+> >> +	 *
+> >> +	 * In both cases, the "page" here is the PageHead() of a THP.
+> >> +	 *
+> >> +	 * If the page is not a PMD mapped huge page, e.g. after mremap(), it
+> >> +	 * is not necessary to split it.
+> >> +	 */
+> >> +	if (page && !IS_ALIGNED(address, HPAGE_PMD_SIZE))
+> >> +		return;
+> >
+> >Repeating 75% of it as comments doesn't make it any less confusing.  And
+> >it feels like we're digging a pothole for someone to fall into later.
+> >Why not make it make sense ...
+> >
+> >	if (page && !IS_ALIGNED(address, page_size(page))
+> >		return;
+> 
+> Hmm... Use HPAGE_PMD_SIZE here wants to emphasize we want the address to be
+> PMD aligned. If just use page_size() here, may confuse the audience?
 
-Thanks for digging into this!
-
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-
->  /**
->   * posix_clock_register() - register a new clock
-> - * @clk:   Pointer to the clock. Caller must provide 'ops' and 'release'
-> - * @devid: Allocated device id
-> + * @clk:   Pointer to the clock. Caller must provide 'ops' field
-> + * @dev:   Pointer to the initialized device. Caller must provide
-> + *         'release' filed
-
-field
-
-Thanks,
-Richard
+I'm OK with using HPAGE_PMD_SIZE here.  I was trying to future-proof
+this function for supporting 64kB pages with a 4kB page size on ARM,
+but this function will need changes for that anyway, so I'm OK with
+your suggestion.
