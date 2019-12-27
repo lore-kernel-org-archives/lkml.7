@@ -2,213 +2,746 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21288C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEE1C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D399820CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7599720838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="C+dz5ncZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ds3MWX7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfL0GUQ (ORCPT
+        id S1726365AbfL0GWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:20:16 -0500
-Received: from mail-mw2nam12on2040.outbound.protection.outlook.com ([40.107.244.40]:35118
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbfL0GUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:20:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gu9JZCFtK4a1Or0TpqBIN7v85Lu3h1tCwdF8nL9LLUA0twiX4dm7m1Oom3p8n/wDFznITVo4zAG3p+LMJfdDsIqEGq7deI1QHzEanQod/XUynb+NisSDN+HziEF4LuLzZV22whGENWZBPXud65jY0xWuv+Fa42zS8dF/Fb5gZweGVLmrsT1QfY0Xu/GHz1SmVpUwPYR0ZTSO18BOD5sgi0n1uDGCSUPnkzZRgVE/70K6kf4ow3NVZVi8cdGgTNBUlfL4NGlC9DNdBMPHplqfQOTMycRr1O+Iw21f0Pc51iOaEH79pvwhCBjbpnGOcZ8J8IHJT1JURclRtBnGT0Wm6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R/z5L72yKVgKh3dYAF2b+K7hwaaTHRjAlkF32xi0n3o=;
- b=fZxgxOKHx6bngL0p2fNGk/ee0A5AfFMDAjqiZARNUO61k6+NpBaBCwdxTAi/J8NaEmMQkUK//RL7r/VE7nkFl7NbW+V2lQARiPQvLd92pccp1px/sSzJ1eAiw+8CGg9PQagZjc33VfNN0c+EBhSdvJd18sECeyrCkjEQxgZ7YHQdlq9nUusK/FRe17wJhYCVLgP0zk6e81qGiSGsAKotufrGmeVhDZKCexvy7eGZlCVOCsBJpbLvrBlHdz4tIWlyO3Zwb5Y5svAt6OQyBw0osCEOihocu+8ibmk2QFP+6e1xOwaLclfqcy4w5Y/2+4OealUQMo5RkXtNJKvIjuRT9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 27 Dec 2019 01:22:40 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41819 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfL0GWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:22:40 -0500
+Received: by mail-pl1-f196.google.com with SMTP id bd4so11353828plb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 22:22:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R/z5L72yKVgKh3dYAF2b+K7hwaaTHRjAlkF32xi0n3o=;
- b=C+dz5ncZpjfern75/rhB5h7odhaJuHCBsnGX2AqEUTR6/2Yx9XUulDyzchcWIFScHgXDo7S5JgiLEzZw1jM7Cv4Cx9xNnSEW9bvCwqR3+N8Hi2Zk+bgQEq0CSLtCLGe1aYEwpMZadgYerBmOtUIzk1NhWVYqDntzHJflYWwJidg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1366.namprd12.prod.outlook.com (10.168.168.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.12; Fri, 27 Dec 2019 06:20:07 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
- 06:20:07 +0000
-From:   Rijo Thomas <Rijo-john.Thomas@amd.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tee-dev@lists.linaro.org
-Cc:     Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>
-Subject: [PATCH 4/4] Documentation: tee: add AMD-TEE driver details
-Date:   Fri, 27 Dec 2019 10:54:03 +0530
-Message-Id: <25ce91ed381479fd0003d2b9670093b8c5cbf638.1577423898.git.Rijo-john.Thomas@amd.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1577423898.git.Rijo-john.Thomas@amd.com>
-References: <cover.1577423898.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0022.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::32) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kSr9mOsoSEnmbzL9sPT40m2QkkfYAnlyHFJj5NZPWNU=;
+        b=Ds3MWX7K5VZ17E0RrNX8tRbeEyCEgSWJ4t7WfmNhE1CUEIDnQsmPKJvFp08frN9neN
+         WihaVs0+SolAZRZQmuLgOflrjqtSi3LDnA7l8vfXVPOHl9hNLyZjCCkF6k72yi9ebibP
+         tNb+D8p4SaVyZjWpHQ5MMOuNnIOt/IagCWsfdsSBkesRLPxDphVM/fMs7wMXg6ssiQ3W
+         NXjASXM0J9YfN8ja0cmqEoMSWyTMkL6K5E3MS7hwhu0eW4dkjIrMYVWotzuqkaLcKNMc
+         f+aPKLySIU3Hsuz4qGwLnh8yTALZucvtc7Y0gsxAerTnLOMysM3GY8FvH9hjMDQml8DQ
+         FZdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kSr9mOsoSEnmbzL9sPT40m2QkkfYAnlyHFJj5NZPWNU=;
+        b=DI124rnURyVmJjlF/Xgfj/zKcuxzv5znVd6gIrVk05RGvo0JTKhfCyIM1I2MlMpE3g
+         WfvlAoPvsyw2OCHDygK0iH6L4lLdyaECYDAqDOLkKBepAM7C0RBDKhRGOqTckYYRzRhC
+         hKbUcqD4V4vj6bjZtG3p3l4SlrYpjf9UrTyLCPVsWezduKxle4swIif1Yt4lFReDlKF/
+         GdzLpMYKUtB94MsFWlk6d5AUursdJ1kT4br0PbiEss2HarBzQ5xDw7DVvGM1EoLiDPq1
+         s4PAfIp3EjImjQNoISSvG0sy+ZSUXz0StMd8GlP32/vlDif9JyqG0ZErkuYvk9M+IAR5
+         BPsg==
+X-Gm-Message-State: APjAAAW7o9HZPVnUYVM9aRvHyyVAqvCXtVusoc4BZr74RiCGQ1mCSyEH
+        WC+I1etaic6hw2qVRjIdvADxbw==
+X-Google-Smtp-Source: APXvYqy5NmPkkw2TYwp4DZVgwdJToq40tZNIT3DUjWj4HOafdx8i2VZLXcb55SeUdddApCbH68Wqug==
+X-Received: by 2002:a17:90b:438e:: with SMTP id in14mr23541131pjb.83.1577427758920;
+        Thu, 26 Dec 2019 22:22:38 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g67sm35825321pfb.66.2019.12.26.22.22.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 22:22:38 -0800 (PST)
+Date:   Thu, 26 Dec 2019 22:22:35 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sanm@codeaurora.org, sivaa@codeaurora.org, manafm@codeaurora.org
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180:  Add critical interrupt
+ and cooling maps for TSENS in SC7180.
+Message-ID: <20191227062235.GM549437@yoga>
+References: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org>
+ <1577106871-19863-2-git-send-email-rkambl@codeaurora.org>
 MIME-Version: 1.0
-Received: from andbang1.amd.com (165.204.156.251) by MA1PR0101CA0022.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2581.11 via Frontend Transport; Fri, 27 Dec 2019 06:20:03 +0000
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 001d203f-2754-48af-6bf3-08d78a94d13f
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1366:|CY4PR12MB1366:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1366851581D77E5E7D16AFA9CF2A0@CY4PR12MB1366.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0264FEA5C3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(189003)(199004)(81166006)(110136005)(316002)(8676002)(66556008)(478600001)(6486002)(66946007)(5660300002)(186003)(26005)(8936002)(2906002)(81156014)(966005)(54906003)(66476007)(956004)(4326008)(86362001)(2616005)(52116002)(16526019)(7696005)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1366;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: M2h+IBsvPjZnoXkD63MtdyPHVT9LZToJbYQe/ZMha2H3YMop1cDSDNT48giNC6BWWu2w9N8z/sVG0pBNh/yOofSvFr4T7OqSVuf9TyK+HsRdyFLKjAQwbeEkHlva5KEc5srSgZ2+pboOiWRFcsVrciYRzKFhNKhw4Msd+6HxDro0BLbsSkXmljH3aObFnNFrbrZGXwZffvmTLVC894UDdUT9acHRNeMe3E5ZJu1lOjsPlvJEOw1s8+Ipr5rgzfnj5EFLpnnkx20tXNKOyDMaz8+lOXVhbFG1n0zBzRenL0vUOt5+yEEzPSK/aDfPEdN8mE0C2xonK+sPwgFsLLpWvx8CVjkoB7eaylc9NARBAi/3GWMdVS31LHZkYhfkKLlUkyQwz2z7YgIWefOUTHn3AOzedQ8J3brbxjJmIuc5t9drHbdCZ5+qKn++3p5qAIEbGum42UJ4NUbflXrE6omUwTYlRpE7t16rMdro+wxhgJQ=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 001d203f-2754-48af-6bf3-08d78a94d13f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 06:20:07.0470
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: moB84e99O1mzdBtVtnlJaz06RjetAUjLPaZDflxulY098vqxehrlqgGySbmE87yEjdaSJrQJiP3gaQlzP8YxAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1366
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577106871-19863-2-git-send-email-rkambl@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update tee.txt with AMD-TEE driver details. The driver is written
-to communicate with AMD's TEE.
+On Mon 23 Dec 05:14 PST 2019, Rajeshwari wrote:
 
-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
-Co-developed-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>
-Signed-off-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
----
- Documentation/tee.txt | 81 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+This patch adds critical interrupt to tsens nodes, add cooling maps,
+renames nodes and renames labels.
 
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-index afacdf2..c8fad81 100644
---- a/Documentation/tee.txt
-+++ b/Documentation/tee.txt
-@@ -112,6 +112,83 @@ kernel are handled by the kernel driver. Other RPC messages will be forwarded to
- tee-supplicant without further involvement of the driver, except switching
- shared memory buffer representation.
- 
-+AMD-TEE driver
-+==============
-+
-+The AMD-TEE driver handles the communication with AMD's TEE environment. The
-+TEE environment is provided by AMD Secure Processor.
-+
-+The AMD Secure Processor (formerly called Platform Security Processor or PSP)
-+is a dedicated processor that features ARM TrustZone technology, along with a
-+software-based Trusted Execution Environment (TEE) designed to enable
-+third-party Trusted Applications. This feature is currently enabled only for
-+APUs.
-+
-+The following picture shows a high level overview of AMD-TEE::
-+
-+                                             |
-+    x86                                      |
-+                                             |
-+ User space            (Kernel space)        |    AMD Secure Processor (PSP)
-+ ~~~~~~~~~~            ~~~~~~~~~~~~~~        |    ~~~~~~~~~~~~~~~~~~~~~~~~~~
-+                                             |
-+ +--------+                                  |       +-------------+
-+ | Client |                                  |       | Trusted     |
-+ +--------+                                  |       | Application |
-+     /\                                      |       +-------------+
-+     ||                                      |             /\
-+     ||                                      |             ||
-+     ||                                      |             \/
-+     ||                                      |         +----------+
-+     ||                                      |         |   TEE    |
-+     ||                                      |         | Internal |
-+     \/                                      |         |   API    |
-+ +---------+           +-----------+---------+         +----------+
-+ | TEE     |           | TEE       | AMD-TEE |         | AMD-TEE  |
-+ | Client  |           | subsystem | driver  |         | Trusted  |
-+ | API     |           |           |         |         |   OS     |
-+ +---------+-----------+----+------+---------+---------+----------+
-+ |   Generic TEE API        |      | ASP     |      Mailbox       |
-+ |   IOCTL (TEE_IOC_*)      |      | driver  | Register Protocol  |
-+ +--------------------------+      +---------+--------------------+
-+
-+At the lowest level (in x86), the AMD Secure Processor (ASP) driver uses the
-+CPU to PSP mailbox regsister to submit commands to the PSP. The format of the
-+command buffer is opaque to the ASP driver. It's role is to submit commands to
-+the secure processor and return results to AMD-TEE driver. The interface
-+between AMD-TEE driver and AMD Secure Processor driver can be found in [6].
-+
-+The AMD-TEE driver packages the command buffer payload for processing in TEE.
-+The command buffer format for the different TEE commands can be found in [7].
-+
-+The TEE commands supported by AMD-TEE Trusted OS are:
-+* TEE_CMD_ID_LOAD_TA          - loads a Trusted Application (TA) binary into
-+                                TEE environment.
-+* TEE_CMD_ID_UNLOAD_TA        - unloads TA binary from TEE environment.
-+* TEE_CMD_ID_OPEN_SESSION     - opens a session with a loaded TA.
-+* TEE_CMD_ID_CLOSE_SESSION    - closes session with loaded TA
-+* TEE_CMD_ID_INVOKE_CMD       - invokes a command with loaded TA
-+* TEE_CMD_ID_MAP_SHARED_MEM   - maps shared memory
-+* TEE_CMD_ID_UNMAP_SHARED_MEM - unmaps shared memory
-+
-+AMD-TEE Trusted OS is the firmware running on AMD Secure Processor.
-+
-+The AMD-TEE driver registers itself with TEE subsystem and implements the
-+following driver function callbacks:
-+
-+* get_version - returns the driver implementation id and capability.
-+* open - sets up the driver context data structure.
-+* release - frees up driver resources.
-+* open_session - loads the TA binary and opens session with loaded TA.
-+* close_session -  closes session with loaded TA and unloads it.
-+* invoke_func - invokes a command with loaded TA.
-+
-+cancel_req driver callback is not supported by AMD-TEE.
-+
-+The GlobalPlatform TEE Client API [5] can be used by the user space (client) to
-+talk to AMD's TEE. AMD's TEE provides a secure environment for loading, opening
-+a session, invoking commands and clossing session with TA.
-+
- References
- ==========
- 
-@@ -125,3 +202,7 @@ References
- 
- [5] http://www.globalplatform.org/specificationsdevice.asp look for
-     "TEE Client API Specification v1.0" and click download.
-+
-+[6] include/linux/psp-tee.h
-+
-+[7] drivers/tee/amdtee/amdtee_if.h
--- 
-1.9.1
+While the end result looks reasonable I would like to see this split in
+a few different patches - and perhaps a line or two in the commit
+message describing the new naming scheme for the renames.
 
+Thanks,
+Bjorn
+
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 289 +++++++++++++++++++++++++++++------
+>  1 file changed, 239 insertions(+), 50 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3676bfd..e419ca0 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -78,6 +79,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_0>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -94,6 +96,7 @@
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_100>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -107,6 +110,7 @@
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_200>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -120,6 +124,7 @@
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_300>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -133,6 +138,7 @@
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_400>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -146,6 +152,7 @@
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_500>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -159,6 +166,7 @@
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_600>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -172,6 +180,7 @@
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&L2_700>;
+> +			#cooling-cells = <2>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+> @@ -1058,8 +1067,9 @@
+>  			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+>  				<0 0x0c222000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <15>;
+> -			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow","critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> @@ -1068,8 +1078,9 @@
+>  			reg = <0 0x0c265000 0 0x1ff>, /* TM */
+>  				<0 0x0c223000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <10>;
+> -			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow","critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> @@ -1301,277 +1312,455 @@
+>  	};
+>  
+>  	thermal-zones {
+> -		cpu0-thermal {
+> +		cpu_0_0-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 1>;
+>  
+>  			trips {
+> -				cpu0_alert0: trip-point0 {
+> +				cpu_0_0_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu0_alert1: trip-point1 {
+> +				cpu_0_0_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu0_crit: cpu_crit {
+> +				cpu_0_0_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_0_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_0_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu1-thermal {
+> +		cpu_0_1-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 2>;
+>  
+>  			trips {
+> -				cpu1_alert0: trip-point0 {
+> +				cpu_0_1_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu1_alert1: trip-point1 {
+> +				cpu_0_1_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu1_crit: cpu_crit {
+> +				cpu_0_1_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_1_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_1_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu2-thermal {
+> +		cpu_0_2-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 3>;
+>  
+>  			trips {
+> -				cpu2_alert0: trip-point0 {
+> +				cpu_0_2_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu2_alert1: trip-point1 {
+> +				cpu_0_2_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu2_crit: cpu_crit {
+> +				cpu_0_2_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_2_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_2_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu3-thermal {
+> +		cpu_0_3-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 4>;
+>  
+>  			trips {
+> -				cpu3_alert0: trip-point0 {
+> +				cpu_0_3_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu3_alert1: trip-point1 {
+> +				cpu_0_3_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu3_crit: cpu_crit {
+> +				cpu_0_3_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_3_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_3_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu4-thermal {
+> +		cpu_0_4-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 5>;
+>  
+>  			trips {
+> -				cpu4_alert0: trip-point0 {
+> +				cpu_0_4_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu4_alert1: trip-point1 {
+> +				cpu_0_4_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu4_crit: cpu_crit {
+> +				cpu_0_4_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_4_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_4_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu5-thermal {
+> +		cpu_0_5-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 6>;
+>  
+>  			trips {
+> -				cpu5_alert0: trip-point0 {
+> +				cpu_0_5_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu5_alert1: trip-point1 {
+> +				cpu_0_5_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu5_crit: cpu_crit {
+> +				cpu_0_5_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_0_5_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_0_5_alert1>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu6-thermal {
+> +		cpu_1_0-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 9>;
+>  
+>  			trips {
+> -				cpu6_alert0: trip-point0 {
+> +				cpu_1_0_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu6_alert1: trip-point1 {
+> +				cpu_1_0_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu6_crit: cpu_crit {
+> +				cpu_1_0_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_1_0_alert0>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_1_0_alert1>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu7-thermal {
+> +		cpu_1_1-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 10>;
+>  
+>  			trips {
+> -				cpu7_alert0: trip-point0 {
+> +				cpu_1_1_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu7_alert1: trip-point1 {
+> +				cpu_1_1_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu7_crit: cpu_crit {
+> +				cpu_1_1_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_1_1_alert0>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_1_1_alert1>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu8-thermal {
+> +		cpu_1_2-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 11>;
+>  
+>  			trips {
+> -				cpu8_alert0: trip-point0 {
+> +				cpu_1_2_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu8_alert1: trip-point1 {
+> +				cpu_1_2_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu8_crit: cpu_crit {
+> +				cpu_1_2_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_1_2_alert0>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_1_2_alert1>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		cpu9-thermal {
+> +		cpu_1_3-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+>  			thermal-sensors = <&tsens0 12>;
+>  
+>  			trips {
+> -				cpu9_alert0: trip-point0 {
+> +				cpu_1_3_alert0: trip-point0 {
+>  					temperature = <90000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu9_alert1: trip-point1 {
+> +				cpu_1_3_alert1: trip-point1 {
+>  					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu9_crit: cpu_crit {
+> +				cpu_1_3_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_1_3_alert0>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_1_3_alert1>;
+> +					cooling-device = <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+>  		};
+>  
+> -		aoss0-thermal {
+> +		aoss_0-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> @@ -1586,7 +1775,7 @@
+>  			};
+>  		};
+>  
+> -		cpuss0-thermal {
+> +		cpuss_0-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> @@ -1606,7 +1795,7 @@
+>  			};
+>  		};
+>  
+> -		cpuss1-thermal {
+> +		cpuss_1-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> @@ -1626,7 +1815,7 @@
+>  			};
+>  		};
+>  
+> -		gpuss0-thermal {
+> +		gpuss_0-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> @@ -1641,7 +1830,7 @@
+>  			};
+>  		};
+>  
+> -		gpuss1-thermal {
+> +		gpuss_1-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> @@ -1656,7 +1845,7 @@
+>  			};
+>  		};
+>  
+> -		aoss1-thermal {
+> +		aoss_1-thermal {
+>  			polling-delay-passive = <250>;
+>  			polling-delay = <1000>;
+>  
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
