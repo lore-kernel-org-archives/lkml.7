@@ -2,79 +2,102 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886EFC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621AAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66BC5208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC1D20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfL0GDX (ORCPT
+        id S1727102AbfL0GDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:03:23 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:51606 "EHLO inva021.nxp.com"
+        Fri, 27 Dec 2019 01:03:51 -0500
+Received: from mga18.intel.com ([134.134.136.126]:28316 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfL0GDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:03:19 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DDFE62009E1;
-        Fri, 27 Dec 2019 07:03:17 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E28C42009E4;
-        Fri, 27 Dec 2019 07:03:07 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B23B7402D8;
-        Fri, 27 Dec 2019 14:02:55 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        aisheng.dong@nxp.com, l.stach@pengutronix.de, angus@akkea.ca,
-        cosmin.stoica@nxp.com, gary.bisson@boundarydevices.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: arm: imx: Add the i.MX8MP EVK board
-Date:   Fri, 27 Dec 2019 13:59:45 +0800
-Message-Id: <1577426385-31273-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
-References: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726165AbfL0GDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:03:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 22:03:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
+   d="scan'208";a="250564551"
+Received: from psklarow-mobl.ger.corp.intel.com ([10.252.31.109])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Dec 2019 22:03:44 -0800
+Message-ID: <a16202a5f569c4fd7d7455bbff6ded9b83edcdc2.camel@linux.intel.com>
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of
+ tpm_tis_core_init
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+Date:   Fri, 27 Dec 2019 08:03:44 +0200
+In-Reply-To: <0f355936c954847089d9e8fb579e30bf8ca43a0e.camel@linux.intel.com>
+References: <20191211231758.22263-1-jsnitsel@redhat.com>
+         <20191211235455.24424-1-jsnitsel@redhat.com>
+         <5aef0fbe28ed23b963c53d61445b0bac6f108642.camel@linux.intel.com>
+         <CAPcyv4h60z889bfbiwvVhsj6MxmOPiPY8ZuPB_skxkZx-N+OGw@mail.gmail.com>
+         <20191217020022.knh7uxt4pn77wk5m@cantor>
+         <CAPcyv4iepQup4bwMuWzq6r5gdx83hgYckUWFF7yF=rszjz3dtQ@mail.gmail.com>
+         <5d0763334def7d7ae1e7cf931ef9b14184dce238.camel@linux.intel.com>
+         <20191217171844.huqlj5csr262zkkk@cantor>
+         <37f4ed0d6145dbe1e8724a5d05d0da82b593bf9c.camel@linux.intel.com>
+         <CAPcyv4h8sK+geVvBb1534V9CgdvOnkpPeStV3B8Q1Qdve3is0A@mail.gmail.com>
+         <20191219100747.fhbqmzk7xby3tt3l@cantor>
+         <f0406ed23a9a64bd7c5dc0e0b403151d6157a8cf.camel@linux.intel.com>
+         <0f355936c954847089d9e8fb579e30bf8ca43a0e.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add board binding for i.MX8MP EVK board.
+On Fri, 2019-12-27 at 07:42 +0200, Jarkko Sakkinen wrote:
+> On Fri, 2019-12-27 at 07:09 +0200, Jarkko Sakkinen wrote:
+> > On Thu, 2019-12-19 at 03:07 -0700, Jerry Snitselaar wrote:
+> > > > These patches take a usable system and make it unusable:
+> > > > 
+> > > > 1ea32c83c699 tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before probing for interrupts
+> > > > 5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+> > > > 
+> > > > ...they need to be reverted, or the regression needs to be fixed, but
+> > > > asserting that you fixed something else unrelated does not help.
+> > > > 
+> > > 
+> > > Reverting 1ea32c83c699 ("tpm_tis_core: Set TPM_CHIP_FLAG_IRQ before
+> > > probing for interrupts") would at least allow people impacted by this
+> > > to boot their systems without disabling the tpm, or blacklisting the
+> > > module while we figure this out. From what I can tell the tpm_tis code
+> > > was operating in that state since 570a36097f30 ("tpm: drop 'irq' from
+> > > struct tpm_vendor_specific") until Stefan's patch.
+> > 
+> > I'll formalize a fix based on the reverts.
+> > 
+> > Sorry for the holiday latency.
+> 
+> OK, have a branch now for the PR:
+> 
+> for-linus-v5.5-rc4
+> 
+> Note: now contains the first revert but I'll add another patch if required.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Jerry, can you check this and send me revert to your earlier fix *if*
+required but first test with just this fix applied.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 6f241a3..2d1721f 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -283,6 +283,12 @@ properties:
-               - fsl,imx8mn-evk            # i.MX8MN LPDDR4 EVK Board
-           - const: fsl,imx8mn
- 
-+      - description: i.MX8MP based Boards
-+        items:
-+          - enum:
-+              - fsl,imx8mp-evk            # i.MX8MP EVK Board
-+          - const: fsl,imx8mp
-+
-       - description: i.MX8MQ based Boards
-         items:
-           - enum:
--- 
-2.7.4
+Thanks.
+
+/Jarkko
 
