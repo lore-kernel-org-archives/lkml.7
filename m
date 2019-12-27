@@ -2,116 +2,197 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBE2C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FC9C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9131020CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:10:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V2mtH6pX"
+	by mail.kernel.org (Postfix) with ESMTP id 58F7B20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 09:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfL0JKW (ORCPT
+        id S1726562AbfL0JTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 04:10:22 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53214 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726169AbfL0JKW (ORCPT
+        Fri, 27 Dec 2019 04:19:47 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42462 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726169AbfL0JTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 04:10:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577437820;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ASFV5pJzvuuWxY4tU7Iy4ntnhG1vqYANWCT9adP97F8=;
-        b=V2mtH6pXW0deD9faxJf3TRQaQEXk7TMXt6Pm1u93dz3Vs75qOBd5rYFnx9NBDkIdKXMOK+
-        EUxzKd+8mme6P94CQHY15heXEmcrdUoTj5MP9R/nDTx48yyNjSZbAZztiv2moW9yDGMDlZ
-        xZKmCd8Rof6d+ro9w1JBrO5VKPqzWRs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-t5Hx4NQGNWSKpHAOIKDE5A-1; Fri, 27 Dec 2019 04:10:17 -0500
-X-MC-Unique: t5Hx4NQGNWSKpHAOIKDE5A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35352185432C;
-        Fri, 27 Dec 2019 09:10:15 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 89DFE271A8;
-        Fri, 27 Dec 2019 09:10:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20191227000634.GS4203@ZenIV.linux.org.uk>
-References: <20191227000634.GS4203@ZenIV.linux.org.uk> <1576761291-30121-1-git-send-email-yangtiezhu@loongson.cn>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     dhowells@redhat.com, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: Fix compile warning in afs_dynroot_lookup()
+        Fri, 27 Dec 2019 04:19:46 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 03D5B283C07
+Subject: Re: [PATCH v22 1/2] Documentation: bridge: Add documentation for
+ ps8640 DT properties
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ulrich Hecht <uli@fpond.eu>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191223143538.20327-1-enric.balletbo@collabora.com>
+ <20191223143538.20327-2-enric.balletbo@collabora.com>
+ <9fc5e30b8bc7e160ddc54a2056ca6e57eaebbab4.camel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <9eee88d1-21d4-5571-038f-60bc7fa05d3f@collabora.com>
+Date:   Fri, 27 Dec 2019 10:19:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <12482.1577437812.1@warthog.procyon.org.uk>
-Date:   Fri, 27 Dec 2019 09:10:12 +0000
-Message-ID: <12483.1577437812@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <9fc5e30b8bc7e160ddc54a2056ca6e57eaebbab4.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Hi Ezequiel,
 
-> > -	int len;
-> > +	int len = 0;
-> >  
-> >  	if (!net->ws_cell)
-> >  		return ERR_PTR(-ENOENT);
+On 26/12/19 15:27, Ezequiel Garcia wrote:
+> Hi Enric, Rob,
 > 
-> NAK.  This is really, really wrong - passing zero to lookup_one_len() is
-> always a bug.
+> On Mon, 2019-12-23 at 15:35 +0100, Enric Balletbo i Serra wrote:
+>> From: Jitao Shi <jitao.shi@mediatek.com>
+>>
+>> Add documentation for DT properties supported by
+>> ps8640 DSI-eDP converter.
+>>
+>> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> [..]
+>> +
+>> +  ports:
+>> +    type: object
+>> +    description:
+>> +      A node containing DSI input & output port nodes with endpoint
+>> +      definitions as documented in
+>> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+>> +      Documentation/devicetree/bindings/graph.txt
+>> +    properties:
+>> +      port@0:
+>> +        type: object
+>> +        description: |
+>> +          Video port for DSI input
+>> +
+>> +      port@1:
+>> +        type: object
+>> +        description: |
+>> +          Video port for eDP output (panel or connector).
+>> +
+>> +    required:
+>> +      - port@0
+>> +
+> 
+> Is it correct to require port@0 ? This could be called port@1
+> or port@2, and IIUC it should bind the same.
+> 
 
-You can't create a cell with a name of "" as afs_alloc_cell() will object with
-EINVAL, so if net->ws_cell points to an afs_cell struct, that should never
-have a zero-length name.
+My understanding is that at least the Video port for DSI input is required,
+which makes sense, otherwise you have the chip connected nowhere. port@1 is
+optional because it could be connected to a eDP panel or can just be a connector.
 
-> BTW, what guarantees that cell->name won't be "@cell"?
+About your second question, I am not sure I understand you. You mean that have a
+DT like this should work?
 
-afs_alloc_cell() won't allow that a cell with that that name either.
+            ports {
+                #address-cells = <1>;
+                #size-cells = <0>;
 
-> The same for net->sysnames in afs_lookup_atsys() - what makes sure we won't
-> see "@sys" among those?
+                port@1 {
+                    reg = <0>;
+                    ps8640_in: endpoint {
+                        remote-endpoint = <&dsi0_out>;
+                    };
+                };
 
-afs_proc_sysname_write() checks for it.  Note that @sys substitutions are set
-locally and are not obtained remotely.
+                port@2 {
+                    reg = <1>;
+                    ps8640_out: endpoint {
+                        remote-endpoint = <&panel_in>;
+                   };
+                };
+            };
 
-> While we are at it,
->         d = d_splice_alias(inode, dentry);
->         if (!IS_ERR_OR_NULL(d)) {
->                 d->d_fsdata = dentry->d_fsdata;
->                 trace_afs_lookup(dvnode, &d->d_name,
->                                  inode ? AFS_FS_I(inode) : NULL);
->         } else {
->                 trace_afs_lookup(dvnode, &dentry->d_name,
->                                  IS_ERR_OR_NULL(inode) ? NULL
->                                  : AFS_FS_I(inode));
->         }
-> is _very_ suspicious-looking - d_splice_alias() consumes
-> an inode reference, and if it ends up failing on non-ERR_PTR()
-> inode, the inode will be dropped by the time it returns.
-> IOW, that AFS_FS_I(inode) in the second branch can bloody
-> well point to already freed memory.
 
-Yeah, fair point.  I need to save the fid before calling d_splice_alias().
+Probably yes, because the driver what really looks is the register value, but
+that's odd and probably a bad practice. Also if I am not wrong the convention is
+name the nodes with port@<reg property> (like we do in i2c devices for example)
 
-> Tracepoints: Just Say No...
+port@0 is the label that has the register value to 0.
+port@1 is the label that has the register value to 1.
+...
 
-You can go and argue that one with David Miller if you like.
+Thanks,
+ Enric
 
-David
-
+> Thanks,
+> Ezequiel 
+> 
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - powerdown-gpios
+>> +  - reset-gpios
+>> +  - vdd12-supply
+>> +  - vdd33-supply
+>> +  - ports
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    i2c0 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        ps8640: edp-bridge@18 {
+>> +            compatible = "parade,ps8640";
+>> +            reg = <0x18>;
+>> +            powerdown-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
+>> +            reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
+>> +            vdd12-supply = <&ps8640_fixed_1v2>;
+>> +            vdd33-supply = <&mt6397_vgp2_reg>;
+>> +
+>> +            ports {
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                port@0 {
+>> +                    reg = <0>;
+>> +                    ps8640_in: endpoint {
+>> +                        remote-endpoint = <&dsi0_out>;
+>> +                    };
+>> +                };
+>> +
+>> +                port@1 {
+>> +                    reg = <1>;
+>> +                    ps8640_out: endpoint {
+>> +                        remote-endpoint = <&panel_in>;
+>> +                   };
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> -- 
+>> 2.20.1
+>>
+>>
+> 
+> 
+> 
