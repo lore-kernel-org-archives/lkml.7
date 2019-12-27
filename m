@@ -2,125 +2,126 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9DCC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2BE20828
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC37208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 12:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c0BJF76Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfL0MWA (ORCPT
+        id S1727040AbfL0MkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:22:00 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38838 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfL0MVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 07:21:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 62D25B277;
-        Fri, 27 Dec 2019 12:21:48 +0000 (UTC)
-From:   Michal Rostecki <mrostecki@suse.de>
-To:     bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Michal Rostecki <mrostecki@suse.de>
-Subject: [PATCH bpf-next 1/2] libbpf: Add probe for large INSN limit
-Date:   Fri, 27 Dec 2019 12:06:04 +0100
-Message-Id: <20191227110605.1757-2-mrostecki@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191227110605.1757-1-mrostecki@suse.de>
-References: <20191227110605.1757-1-mrostecki@suse.de>
+        Fri, 27 Dec 2019 07:40:24 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:6410 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0MkX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:40:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1577450423; x=1608986423;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TqWie5+1D5ATHV9gdzwRKMb1Ha1+Oq3U+OrZZ0ZX4K8=;
+  b=c0BJF76Q+2FRXtLoDxL3w2oyG+4VfxeJVHEBJ5iYBlhLkBybKp94vfW8
+   50f5iLB9sxwQQLZnEHVSv3r3InKZfzqupw8/b0tFsOsJTBZirx94YhJNx
+   wytEo6KssBJe83jFcCF2UvL8nhFrAiSTFYMXmpJtCVvVzotP17DlC6P2/
+   8=;
+IronPort-SDR: iD8cDYmZVFb+x36/cyvjanwL1Nwiff6ulXzBAstzWvGZzryhX/RYKugnTo5bTFdu8cDXN7fdyw
+ IR+7ZZjP49Ew==
+X-IronPort-AV: E=Sophos;i="5.69,363,1571702400"; 
+   d="scan'208";a="15731526"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 Dec 2019 12:40:12 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 8EB62A1C8F;
+        Fri, 27 Dec 2019 12:40:09 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 27 Dec 2019 12:40:08 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.242) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 27 Dec 2019 12:40:05 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <brendanhiggins@google.com>
+CC:     <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+        <linux-kernel@vger.kernel.org>, SeongJae Park <sj38.park@gmail.com>
+Subject: What is the best way to compare an unsigned and a constant?
+Date:   Fri, 27 Dec 2019 13:39:38 +0100
+Message-ID: <20191227123938.5271-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.162.242]
+X-ClientProxiedBy: EX13D05UWB004.ant.amazon.com (10.43.161.208) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new probe which checks whether kernel has large maximum
-program size (1M) which was increased in commit c04c0d2b968a ("bpf:
-increase complexity limit and maximum program size").
+Hello,
 
-Based on the similar check in Cilium[0], authored by Daniel Borkmann.
 
-[0] https://github.com/cilium/cilium/commit/657d0f585afd26232cfa5d4e70b6f64d2ea91596
+I have a function returning 'unsigned long', and would like to write a kunit
+test for the function, as below.
 
-Co-authored-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Michal Rostecki <mrostecki@suse.de>
----
- tools/lib/bpf/libbpf.h        |  1 +
- tools/lib/bpf/libbpf.map      |  1 +
- tools/lib/bpf/libbpf_probes.c | 23 +++++++++++++++++++++++
- 3 files changed, 25 insertions(+)
+    unsigned long foo(void)
+    {
+    	return 42;
+    }
 
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index fe592ef48f1b..26bf539f1b3c 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -521,6 +521,7 @@ LIBBPF_API bool bpf_probe_prog_type(enum bpf_prog_type prog_type,
- LIBBPF_API bool bpf_probe_map_type(enum bpf_map_type map_type, __u32 ifindex);
- LIBBPF_API bool bpf_probe_helper(enum bpf_func_id id,
- 				 enum bpf_prog_type prog_type, __u32 ifindex);
-+LIBBPF_API bool bpf_probe_large_insn_limit(__u32 ifindex);
- 
- /*
-  * Get bpf_prog_info in continuous memory
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index e9713a574243..b300d74c921a 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -219,6 +219,7 @@ LIBBPF_0.0.7 {
- 		bpf_object__detach_skeleton;
- 		bpf_object__load_skeleton;
- 		bpf_object__open_skeleton;
-+		bpf_probe_large_insn_limit;
- 		bpf_prog_attach_xattr;
- 		bpf_program__attach;
- 		bpf_program__name;
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index a9eb8b322671..925f95106a52 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -17,6 +17,8 @@
- #include "libbpf.h"
- #include "libbpf_internal.h"
- 
-+#define INSN_REPEAT 4128
-+
- static bool grep(const char *buffer, const char *pattern)
- {
- 	return !!strstr(buffer, pattern);
-@@ -321,3 +323,24 @@ bool bpf_probe_helper(enum bpf_func_id id, enum bpf_prog_type prog_type,
- 
- 	return res;
- }
-+
-+/*
-+ * Probe for availability of kernel commit (5.3):
-+ *
-+ * c04c0d2b968a ("bpf: increase complexity limit and maximum program size")
-+ */
-+bool bpf_probe_large_insn_limit(__u32 ifindex)
-+{
-+	struct bpf_insn insns[INSN_REPEAT + 1];
-+	int i;
-+
-+	for (i = 0; i < INSN_REPEAT; i++)
-+		insns[i] = BPF_MOV64_IMM(BPF_REG_0, 1);
-+	insns[INSN_REPEAT] = BPF_EXIT_INSN();
-+
-+	errno = 0;
-+	probe_load(BPF_PROG_TYPE_SCHED_CLS, insns, ARRAY_SIZE(insns), NULL, 0,
-+		   ifindex);
-+
-+	return errno != E2BIG && errno != EINVAL;
-+}
--- 
-2.16.4
+    static void foo_test(struct kunit *test)
+    {
+        KUNIT_EXPECT_EQ(test, 42, foo());
+    }
 
+However, this kunit gives me below warning for the above code:
+
+    /.../linux/include/linux/kernel.h:842:29: warning: comparison of distinct pointer types lacks a cast
+       (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                                 ^
+    /.../linux/include/kunit/test.h:493:9: note: in expansion of macro ‘__typecheck’
+      ((void)__typecheck(__left, __right));           \
+             ^~~~~~~~~~~
+    /.../linux/include/kunit/test.h:517:2: note: in expansion of macro ‘KUNIT_BASE_BINARY_ASSERTION’
+      KUNIT_BASE_BINARY_ASSERTION(test,           \
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /.../linux/include/kunit/test.h:606:2: note: in expansion of macro ‘KUNIT_BASE_EQ_MSG_ASSERTION’
+      KUNIT_BASE_EQ_MSG_ASSERTION(test,           \
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /.../linux/include/kunit/test.h:616:2: note: in expansion of macro ‘KUNIT_BINARY_EQ_MSG_ASSERTION’
+      KUNIT_BINARY_EQ_MSG_ASSERTION(test,           \
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /.../linux/include/kunit/test.h:979:2: note: in expansion of macro ‘KUNIT_BINARY_EQ_ASSERTION’
+      KUNIT_BINARY_EQ_ASSERTION(test, KUNIT_EXPECTATION, left, right)
+      ^~~~~~~~~~~~~~~~~~~~~~~~~
+    /.../linux/mm/foo-test.h:565:2: note: in expansion of macro ‘KUNIT_EXPECT_EQ’
+      KUNIT_EXPECT_EQ(test, 42, foo());
+      ^~~~~~~~~~~~~~~
+
+I could remove the warning by explicitly type casting the constant as below:
+
+        KUNIT_EXPECT_EQ(test, (unsigned long)42, foo());
+
+However, now 'checkpatch.pl' complains about the type casting as below.
+
+    WARNING: Unnecessary typecast of c90 int constant
+    #565: FILE: mm/foo-test.h:565:
+    +       KUNIT_EXPECT_EQ(test, (unsigned long)42, foo());
+
+Of course, there could be several work-arounds for these warnings, such as
+using 'EXPECT_TRUE(test, 42 == foo())' or casting the function's return value.
+Nonetheless, I'm not sure what is the right way.  Could you please let me know
+what is the recommended way for this case?
+
+
+Thanks,
+SeongJae Park
