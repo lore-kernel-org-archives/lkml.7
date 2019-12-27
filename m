@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBECC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77596C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A694206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51887206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469955;
-	bh=ZMe5PCi44onBsQSMmx6BzVqwcH/iyoiNk7gBWQzdsZE=;
+	s=default; t=1577469961;
+	bh=LaSY8/f8rjl7AmIwdoczWmQ10HHYjsW/aaIre+kdXeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QTAlH2gp3Yq16XLNUAW5WSYe/T9WZk50YiEyLQMmwDnqolWFRSfzoEXLUwRL+ivc6
-	 jyBqu4jpOIKJPiUL7X/LX4oV0M4wdO2VpC2/woUxZMV7bMlFlkTZSiFh3UUacS22oq
-	 rvXJW+dcdxNzx5QpjGpk3RPeQeqMGvtlJwnoH+e8=
+	b=V+e19Tr5lXP+IXyYx55kKXFjDqOGWgu/r0+APSW0KQaz0fmg0JVNebeMBLP/KB574
+	 3mUOB5Nrz8G/AsKfvETnqgiGEGLpzEkI5YX7uUhYJrrcako07ft5/A+xBuTj4aX2mK
+	 Q8A8h139sSDdENS+QiCcqEcrWEv0YRNwNZQJ+eJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfL0SC4 (ORCPT
+        id S1728200AbfL0SGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:02:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:06:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbfL0SCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:52 -0500
+        id S1728338AbfL0SC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDE021927;
-        Fri, 27 Dec 2019 18:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8A320CC7;
+        Fri, 27 Dec 2019 18:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469772;
-        bh=ZMe5PCi44onBsQSMmx6BzVqwcH/iyoiNk7gBWQzdsZE=;
+        s=default; t=1577469775;
+        bh=LaSY8/f8rjl7AmIwdoczWmQ10HHYjsW/aaIre+kdXeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPvrCdYqC5CRsXNeV1rSYi44n0lXpZsdDOsDJcCePn5+vVqOiDeDOQgMBnMYN16wO
-         eDWmCt5T7DFTXV3tQZ8GGsYoMGrp6wPS1puI3M2LGzy0TK/KcJt0oO8PkoZ9Tfx9vU
-         awx8zALydic10fwkmYqW+3gJ/VpqXvx/cL/FG/To=
+        b=bdVC+YSTivx5hUBh8xBHMf0Io/XCMI6+mjsRMy8WjoR7o/Q3/dVRbdaitzuuNJyWh
+         QEetzybWuxobzTebczKJfKD03kRAcvhFLmC8+xIT2e6XcuG7W/geFo6Nvlhxfu8OpJ
+         RECayJRQG9ux0vmHiQN6BUxX6/ILp1eOYcnA5vj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 23/57] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Fri, 27 Dec 2019 13:01:48 -0500
-Message-Id: <20191227180222.7076-23-sashal@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/57] tty: serial: msm_serial: Fix lockup for sysrq and oops
+Date:   Fri, 27 Dec 2019 13:01:51 -0500
+Message-Id: <20191227180222.7076-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
 References: <20191227180222.7076-1-sashal@kernel.org>
@@ -61,52 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+[ Upstream commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e ]
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+has mentioned the uart driver might cause recursive locking between
+normal printing and the kernel debugging facilities (e.g. sysrq and
+oops).  In the commit it gave out suggestion for fixing recursive
+locking issue: "The solution is to avoid locking in the sysrq case
+and trylock in the oops_in_progress case."
 
-Update the DT files accordingly.
+This patch follows the suggestion (also used the exactly same code with
+other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+issue, this can avoid stuck caused by deadlock and print out log for
+sysrq and oops.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/msm_serial.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index afb8eb0a0a16..051823b7e5a1 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -83,7 +83,7 @@
- 		};
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index e937fb189034..77a1f00fe843 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -1588,6 +1588,7 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 	int num_newlines = 0;
+ 	bool replaced = false;
+ 	void __iomem *tf;
++	int locked = 1;
  
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
+ 	if (is_uartdm)
+ 		tf = port->membase + UARTDM_TF;
+@@ -1600,7 +1601,13 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 			num_newlines++;
+ 	count += num_newlines;
  
- 		panel-timing {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 081fa68b6f98..c4279b0b9f12 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -45,7 +45,7 @@
- 	};
+-	spin_lock(&port->lock);
++	if (port->sysrq)
++		locked = 0;
++	else if (oops_in_progress)
++		locked = spin_trylock(&port->lock);
++	else
++		spin_lock(&port->lock);
++
+ 	if (is_uartdm)
+ 		msm_reset_dm_count(port, count);
  
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
+@@ -1636,7 +1643,9 @@ static void __msm_console_write(struct uart_port *port, const char *s,
+ 		iowrite32_rep(tf, buf, 1);
+ 		i += num_chars;
+ 	}
+-	spin_unlock(&port->lock);
++
++	if (locked)
++		spin_unlock(&port->lock);
+ }
  
- 		panel-timing {
+ static void msm_console_write(struct console *co, const char *s,
 -- 
 2.20.1
 
