@@ -2,96 +2,95 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6082C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E7EC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D39821582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577442109;
-	bh=TsgDsmDYdkZqIrtSYX/VEvTtA9J9Ee78lKdv08VCgLs=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=1yzpSwEFBz20ihpbmM/hA/Ml91Y8zUA51SawpMJQsCZy3Tz5MOb/tPXBWuSONucEy
-	 J3ypyyNoUnYm8NzBDBC5a5qC2f4+Vp4NJO0kDELUfCz9HSeLg2Svyvj5+JCvLRt/8X
-	 k8k/QdkezGods/l9VwiI60SOg5VZQxyznFnRf5qc=
+	by mail.kernel.org (Postfix) with ESMTP id 47E03208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 10:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfL0KVs (ORCPT
+        id S1726602AbfL0KW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 05:21:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42876 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfL0KVs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 05:21:48 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so35813457otd.9;
-        Fri, 27 Dec 2019 02:21:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BNozEkFQwJDe/ZH+qVhHoHwdDuhlvg4ivwtzO8Pa6xg=;
-        b=I1jYO6Sf3zSHEdGxe7mJ7K2cxjZrYOo3OJkjeWvSRyariGUUx4GuWa4h/M4bqZmGf6
-         GVDq6UNCLFVpJKtaF/dOkainsyRckz/1sfuwHaR0nEO7cR8TptRUlAC4b0ssozDdcEsk
-         S/glSkQljhZwUwDM0dVdq6HazTOHLCWKYGtj5rBXlDNphCf6QQGoM/hR6lApVmVPo3Ir
-         jYGktUO5uDX0+g7HjLLMKg3ChDKYKOyNjXdsztB2hiNxKliIuOLD033GVORsC7sZkPvj
-         MN5TcQ9kJzMcnYZZ5r5xbAEQwW8Uai0Tt6wneahM5ovC6PoOO1sR+qVAcjc5FPywFEGH
-         hwRA==
-X-Gm-Message-State: APjAAAVY4ekIdLUlk0iGziIjxUntovA1z9g0j34HaEiNEJlmzJWx48Dh
-        LLL60Mh8Ufb7LyXhLT0QoY2hKPzQjbLjHwyrgppw+rV5
-X-Google-Smtp-Source: APXvYqxlydIBPjCsSMvnEjO+VOHBR4LNZQiX+rMNcvWG42Wv+Jgl6P9tBnssQ1bkjK8cb/PRZS646jD50rmGEuixb9E=
-X-Received: by 2002:a05:6830:1e67:: with SMTP id m7mr52522912otr.262.1577442107741;
- Fri, 27 Dec 2019 02:21:47 -0800 (PST)
+        Fri, 27 Dec 2019 05:22:58 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:58892 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726354AbfL0KW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 05:22:58 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 2FAE3FB03;
+        Fri, 27 Dec 2019 11:22:56 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YkqsQVLSeAKP; Fri, 27 Dec 2019 11:22:55 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id BE50549799; Fri, 27 Dec 2019 11:22:54 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: light: vcnl4000: Fix scale for vcnl4040
+Date:   Fri, 27 Dec 2019 11:22:54 +0100
+Message-Id: <6adc62445cac7d16e4688aea905dc1c9cc128488.1577442112.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 27 Dec 2019 11:21:37 +0100
-Message-ID: <CAJZ5v0i02hjtkXqxo=38XByY=G7LEDxdMbagAAvf207tSHXA2w@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.5-rc4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+According to the data sheet the ambient sensor's scale is 0.12 lux/step
+(not 0.024 lux/step as used by vcnl4200) when the integration time is
+80ms. The integration time is currently hardcoded in the driver to that
+value.
 
-Please pull from the tag
+See p. 8 in https://www.vishay.com/docs/84307/designingvcnl4040.pdf
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.5-rc4
+Fixes: 5a441aade5b3 ("light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/iio/light/vcnl4000.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-with top-most commit 2cb7bfc1ca9a34ca148ed77f5f6f07373312bb0a
+diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+index 16dacea9eadf..b0e241aaefb4 100644
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -163,7 +163,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	data->al_scale = 24000;
+ 	data->vcnl4200_al.reg = VCNL4200_AL_DATA;
+ 	data->vcnl4200_ps.reg = VCNL4200_PS_DATA;
+ 	switch (id) {
+@@ -172,11 +171,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+ 		/* show 54ms in total. */
+ 		data->vcnl4200_al.sampling_rate = ktime_set(0, 54000 * 1000);
+ 		data->vcnl4200_ps.sampling_rate = ktime_set(0, 4200 * 1000);
++		data->al_scale = 24000;
+ 		break;
+ 	case VCNL4040_PROD_ID:
+ 		/* Integration time is 80ms, add 10ms. */
+ 		data->vcnl4200_al.sampling_rate = ktime_set(0, 100000 * 1000);
+ 		data->vcnl4200_ps.sampling_rate = ktime_set(0, 100000 * 1000);
++		data->al_scale = 120000;
+ 		break;
+ 	}
+ 	data->vcnl4200_al.last_measurement = ktime_set(0, 0);
+-- 
+2.23.0
 
- Merge tag 'devfreq-fixes-for-5.5-rc4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux
-
-on top of commit 46cf053efec6a3a5f343fead837777efe8252a46
-
- Linux 5.5-rc3
-
-to receive power management fixes for 5.5-rc4.
-
-These fix compile test of the Tegra devfreq driver (Arnd Bergmann)
-and remove redundant Kconfig dependencies from multiple devfreq
-drivers (Leonard Crestez).
-
-Thanks!
-
-
----------------
-
-Arnd Bergmann (1):
-      PM / devfreq: tegra: Add COMMON_CLK dependency
-
-Leonard Crestez (1):
-      PM / devfreq: Drop explicit selection of PM_OPP
-
----------------
-
- drivers/devfreq/Kconfig | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
