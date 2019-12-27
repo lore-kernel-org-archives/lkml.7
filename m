@@ -2,155 +2,398 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB952C2D0DC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEEFC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D49C20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59EA20828
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v9A7QNZc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YFOgVPTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfL0C1I (ORCPT
+        id S1727183AbfL0C1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:27:08 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46327 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbfL0C1H (ORCPT
+        Thu, 26 Dec 2019 21:27:18 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54288 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727130AbfL0C1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:27:07 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so11139127pll.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Dec 2019 18:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HRaliDhVnq/217XrC6XzvYQIHefSB9f5VfV1cfrjUjM=;
-        b=v9A7QNZciiH62Ux6WW7R7xt+ao5jHaKO5BX25D0sUtapTFAFgOI4SFc52AwZFEHshO
-         JDbBh61Ud+suCwpCgAM6o9+NuBGMUWV2qmUUocRwJBDnwJXKWFZHaJX1NBVO9OENU8HS
-         r9O46WduKLe97dPIGfT2QWAl54m0eUhpvDPO9hKJ0NqZfhzEFoI0CGBSoYsIPLZJ36+m
-         IjC458eZoRAZfndRER6z1QjcKv3zefsN5vU9JkklIVU1ahAPpmbP9DjvkCBV7z/oCQTP
-         r9K3rINpALchJw3rSinOw7KYQEr5QZ6fyY9Qx2iT9DM74epROK7155Xfo9ERQcKkpWK1
-         xkgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HRaliDhVnq/217XrC6XzvYQIHefSB9f5VfV1cfrjUjM=;
-        b=bkLgF0cWcb0fPh03d7GlHW3iMwvUvf0fu2avVdq/9CE61lLZf3QrO9t8qkexfm8TDt
-         gwb1uuxmnhqOR5ZhAvin2pDceZuvcM+toZqjuu4kJCulx+IXoj3u/pDDTAn4yxP8aLYx
-         pDYInO7xnQCMebL16CRMKTCjhrCDyQUGGdG3J1WMjFKYllUdWOEE2p9rUZWCggefgR/n
-         x+uMJU/MqQbCssxGqVeOemeYD+2ntoIAn4be+aKJX2H1TNt/2aveIbl5RGFNpBUo7hpx
-         POWa1F7Y3F8IDLySL8D8WRD2h8qbiSXWbke4suGJpdsqyK3+AnxYEKf+q5+vDg3QJpZ7
-         ExIw==
-X-Gm-Message-State: APjAAAUQSNePtCodVEbRjv3vmnECVyL6d7bTpMR4+6DhADRzV1RB3KRa
-        X0QjlTD4n6zREvz89vWH1InqHA==
-X-Google-Smtp-Source: APXvYqz7Pwn5lGym0No+6OsEjVrryh9zt/AGCvff0ordJzYAJnVuW8tN9WwPRMUYgQRsCBMpdTI4qg==
-X-Received: by 2002:a17:902:8481:: with SMTP id c1mr21078144plo.319.1577413627086;
-        Thu, 26 Dec 2019 18:27:07 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h26sm40975182pfr.9.2019.12.26.18.27.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 18:27:06 -0800 (PST)
-Date:   Thu, 26 Dec 2019 18:26:52 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Niklas Cassel <nks@flawful.org>, Andy Gross <agross@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] clk: qcom: apcs-msm8916: use clk_parent_data to
- specify the parent
-Message-ID: <20191227022652.GH1908628@ripper>
-References: <20191125135910.679310-1-niklas.cassel@linaro.org>
- <20191125135910.679310-8-niklas.cassel@linaro.org>
- <20191219062339.DC0DE21582@mail.kernel.org>
- <20191220175616.3wdslb7hm773zb22@flawful.org>
- <20191224021636.CF47E20643@mail.kernel.org>
+        Thu, 26 Dec 2019 21:27:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577413635;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PYcQSCQh7oAU0yIEgdl2BnrZ2rnCHYayz/BUt+Y987A=;
+        b=YFOgVPTsUmDpVNY1EQPN00DuzwQt+zE0iXrBCdL+zHwWPmDWlKUrqipFEf0G52tLJAf5+5
+        qyYGem/eoKlZDQ2Chmca0++q+dHEGF1lDi5DuV5Eu2taAEv7GG0ExlfEvK/eV5CCLgqNM4
+        B5IgunnB2BWcZXwM19tYgE5xf8WnSzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-Ik3MybfsPFiRvE2iK0crRw-1; Thu, 26 Dec 2019 21:27:07 -0500
+X-MC-Unique: Ik3MybfsPFiRvE2iK0crRw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB37C800D53;
+        Fri, 27 Dec 2019 02:27:05 +0000 (UTC)
+Received: from rules.brq.redhat.com (ovpn-200-22.brq.redhat.com [10.40.200.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 49AC06A83B;
+        Fri, 27 Dec 2019 02:27:03 +0000 (UTC)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Cochran <richardcochran@gmail.com>
+Cc:     vdronov@redhat.com, Al Viro <aviro@redhat.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ptp: fix the race between the release of ptp_clock and cdev
+Date:   Fri, 27 Dec 2019 03:26:27 +0100
+Message-Id: <20191227022627.24476-1-vdronov@redhat.com>
+In-Reply-To: <20191208195340.GX4203@ZenIV.linux.org.uk>
+References: <20191208195340.GX4203@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224021636.CF47E20643@mail.kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 23 Dec 18:16 PST 2019, Stephen Boyd wrote:
+In a case when a ptp chardev (like /dev/ptp0) is open but an underlying
+device is removed, closing this file leads to a race. This reproduces
+easily in a kvm virtual machine:
 
-> Quoting Niklas Cassel (2019-12-20 09:56:16)
-> > On Wed, Dec 18, 2019 at 10:23:39PM -0800, Stephen Boyd wrote:
-> > > This is odd. The clks could be registered with of_clk_hw_register() but
-> > > then we lose the device provider information. Maybe we should search up
-> > > one level to the parent node and if that has a DT node but the
-> > > clk controller device doesn't we should use that instead?
-> > 
-> > Hello Stephen,
-> > 
-> > Having this in the clk core is totally fine with me,
-> > since it solves my problem.
-> > 
-> > Will you cook up a patch, or do you want me to do it?
-> > 
-> 
-> Can you try the patch I appended to my previous mail? I can write
-> something up more proper later this week.
-> 
+ts# cat openptp0.c
+int main() { ... fp =3D fopen("/dev/ptp0", "r"); ... sleep(10); }
+ts# uname -r
+5.5.0-rc3-46cf053e
+ts# cat /proc/cmdline
+... slub_debug=3DFZP
+ts# modprobe ptp_kvm
+ts# ./openptp0 &
+[1] 670
+opened /dev/ptp0, sleeping 10s...
+ts# rmmod ptp_kvm
+ts# ls /dev/ptp*
+ls: cannot access '/dev/ptp*': No such file or directory
+ts# ...woken up
+[   48.010809] general protection fault: 0000 [#1] SMP
+[   48.012502] CPU: 6 PID: 658 Comm: openptp0 Not tainted 5.5.0-rc3-46cf0=
+53e #25
+[   48.014624] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), ...
+[   48.016270] RIP: 0010:module_put.part.0+0x7/0x80
+[   48.017939] RSP: 0018:ffffb3850073be00 EFLAGS: 00010202
+[   48.018339] RAX: 000000006b6b6b6b RBX: 6b6b6b6b6b6b6b6b RCX: ffff89a47=
+6c00ad0
+[   48.018936] RDX: fffff65a08d3ea08 RSI: 0000000000000247 RDI: 6b6b6b6b6=
+b6b6b6b
+[   48.019470] ...                                              ^^^ a slu=
+b poison
+[   48.023854] Call Trace:
+[   48.024050]  __fput+0x21f/0x240
+[   48.024288]  task_work_run+0x79/0x90
+[   48.024555]  do_exit+0x2af/0xab0
+[   48.024799]  ? vfs_write+0x16a/0x190
+[   48.025082]  do_group_exit+0x35/0x90
+[   48.025387]  __x64_sys_exit_group+0xf/0x10
+[   48.025737]  do_syscall_64+0x3d/0x130
+[   48.026056]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   48.026479] RIP: 0033:0x7f53b12082f6
+[   48.026792] ...
+[   48.030945] Modules linked in: ptp i6300esb watchdog [last unloaded: p=
+tp_kvm]
+[   48.045001] Fixing recursive fault but reboot is needed!
 
-Unfortunately we have clocks with no dev, so this fail as below. Adding
-a second check for dev != NULL to your oneliner works fine though.
+This happens in:
 
-I.e. this ugly hack works fine:
-  core->of_node = np ? : (dev ? dev_of_node(dev->parent) : NULL);
+static void __fput(struct file *file)
+{   ...
+    if (file->f_op->release)
+        file->f_op->release(inode, file); <<< cdev is kfree'd here
+    if (unlikely(S_ISCHR(inode->i_mode) && inode->i_cdev !=3D NULL &&
+             !(mode & FMODE_PATH))) {
+        cdev_put(inode->i_cdev); <<< cdev fields are accessed here
 
-Regards,
-Bjorn
+Namely:
 
-[    0.000000] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000040
-[    0.000000] Mem abort info:
-[    0.000000]   ESR = 0x96000004
-[    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.000000]   SET = 0, FnV = 0
-[    0.000000]   EA = 0, S1PTW = 0
-[    0.000000] Data abort info:
-[    0.000000]   ISV = 0, ISS = 0x00000004
-[    0.000000]   CM = 0, WnR = 0
-[    0.000000] [0000000000000040] user address but active_mm is swapper
-[    0.000000] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-rc2-next-20191220-00017-g359fd8f91acb-dirty #107
-[    0.000000] Hardware name: Qualcomm Technologies, Inc. QCS404 EVB 4000 (DT)
-[    0.000000] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-[    0.000000] pc : __clk_register (drivers/clk/clk.c:3679)
-[    0.000000] lr : __clk_register (drivers/clk/clk.c:3664)
-[    0.000000] sp : ffffdb6871043d70
-[    0.000000] x29: ffffdb6871043d70 x28: ffff00003ddf4518
-[    0.000000] x27: 0000000000000001 x26: 0000000000000008
-[    0.000000] x25: 0000000000000000 x24: 0000000000000000
-[    0.000000] x23: 0000000000000000 x22: 0000000000000000
-[    0.000000] x21: ffff00003d821080 x20: ffffdb6871043e60
-[    0.000000] x19: ffff00003d822000 x18: 0000000000000014
-[    0.000000] x17: 000000006f7295ba x16: 0000000043d45a86
-[    0.000000] x15: 000000005f0037cd x14: 00000000b22e3fc4
-[    0.000000] x13: 0000000000000001 x12: 0000000000000000
-[    0.000000] x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-[    0.000000] x9 : fefefefefefefeff x8 : 7f7f7f7f7f7f7f7f
-[    0.000000] x7 : 6371606e612c6e77 x6 : ffff00003d821109
-[    0.000000] x5 : 0000000000000000 x4 : ffff00003dd9d060
-[    0.000000] x3 : 0000000000000000 x2 : 0000000000000009
-[    0.000000] x1 : ffff00003ddf47b9 x0 : ffffdb68705b0ee0
-[    0.000000] Call trace:
-[    0.000000] __clk_register (drivers/clk/clk.c:3679)
-[    0.000000] clk_hw_register (./include/linux/err.h:60 drivers/clk/clk.c:3760)
-[    0.000000] clk_hw_register_fixed_rate_with_accuracy (drivers/clk/clk-fixed-rate.c:82)
-[    0.000000] _of_fixed_clk_setup (drivers/clk/clk-fixed-rate.c:98 drivers/clk/clk-fixed-rate.c:173)
-[    0.000000] of_fixed_clk_setup (drivers/clk/clk-fixed-rate.c:193)
-[    0.000000] of_clk_init (drivers/clk/clk.c:4856)
-[    0.000000] time_init (arch/arm64/kernel/time.c:59)
-[    0.000000] start_kernel (init/main.c:697)
+__fput()
+  posix_clock_release()
+    kref_put(&clk->kref, delete_clock) <<< the last reference
+      delete_clock()
+        delete_ptp_clock()
+          kfree(ptp) <<< cdev is embedded in ptp
+  cdev_put
+    module_put(p->owner) <<< *p is kfree'd, bang!
 
+Here cdev is embedded in posix_clock which is embedded in ptp_clock.
+The race happens because ptp_clock's lifetime is controlled by two
+refcounts: kref and cdev.kobj in posix_clock. This is wrong.
+
+Make ptp_clock's sysfs device a parent of cdev with cdev_device_add()
+created especially for such cases. This way the parent device with its
+ptp_clock is not released until all references to the cdev are released.
+This adds a requirement that an initialized but not exposed struct
+device should be provided to posix_clock_register() by a caller instead
+of a simple dev_t.
+
+This approach was adopted from the commit 72139dfa2464 ("watchdog: Fix
+the race between the release of watchdog_core_data and cdev"). See
+details of the implementation in the commit 233ed09d7fda ("chardev: add
+helper function to register char devs with a struct device").
+
+Link: https://lore.kernel.org/linux-fsdevel/20191125125342.6189-1-vdronov=
+@redhat.com/T/#u
+Analyzed-by: Stephen Johnston <sjohnsto@redhat.com>
+Analyzed-by: Vern Lovejoy <vlovejoy@redhat.com>
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
+ drivers/ptp/ptp_clock.c     | 31 ++++++++++++++-----------------
+ drivers/ptp/ptp_private.h   |  2 +-
+ include/linux/posix-clock.h | 19 +++++++++++--------
+ kernel/time/posix-clock.c   | 31 +++++++++++++------------------
+ 4 files changed, 39 insertions(+), 44 deletions(-)
+
+diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+index e60eab7f8a61..61fafe0374ce 100644
+--- a/drivers/ptp/ptp_clock.c
++++ b/drivers/ptp/ptp_clock.c
+@@ -166,9 +166,9 @@ static struct posix_clock_operations ptp_clock_ops =3D=
+ {
+ 	.read		=3D ptp_read,
+ };
+=20
+-static void delete_ptp_clock(struct posix_clock *pc)
++static void ptp_clock_release(struct device *dev)
+ {
+-	struct ptp_clock *ptp =3D container_of(pc, struct ptp_clock, clock);
++	struct ptp_clock *ptp =3D container_of(dev, struct ptp_clock, dev);
+=20
+ 	mutex_destroy(&ptp->tsevq_mux);
+ 	mutex_destroy(&ptp->pincfg_mux);
+@@ -213,7 +213,6 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock=
+_info *info,
+ 	}
+=20
+ 	ptp->clock.ops =3D ptp_clock_ops;
+-	ptp->clock.release =3D delete_ptp_clock;
+ 	ptp->info =3D info;
+ 	ptp->devid =3D MKDEV(major, index);
+ 	ptp->index =3D index;
+@@ -236,15 +235,6 @@ struct ptp_clock *ptp_clock_register(struct ptp_cloc=
+k_info *info,
+ 	if (err)
+ 		goto no_pin_groups;
+=20
+-	/* Create a new device in our class. */
+-	ptp->dev =3D device_create_with_groups(ptp_class, parent, ptp->devid,
+-					     ptp, ptp->pin_attr_groups,
+-					     "ptp%d", ptp->index);
+-	if (IS_ERR(ptp->dev)) {
+-		err =3D PTR_ERR(ptp->dev);
+-		goto no_device;
+-	}
+-
+ 	/* Register a new PPS source. */
+ 	if (info->pps) {
+ 		struct pps_source_info pps;
+@@ -260,8 +250,18 @@ struct ptp_clock *ptp_clock_register(struct ptp_cloc=
+k_info *info,
+ 		}
+ 	}
+=20
+-	/* Create a posix clock. */
+-	err =3D posix_clock_register(&ptp->clock, ptp->devid);
++	/* Initialize a new device of our class in our clock structure. */
++	device_initialize(&ptp->dev);
++	ptp->dev.devt =3D ptp->devid;
++	ptp->dev.class =3D ptp_class;
++	ptp->dev.parent =3D parent;
++	ptp->dev.groups =3D ptp->pin_attr_groups;
++	ptp->dev.release =3D ptp_clock_release;
++	dev_set_drvdata(&ptp->dev, ptp);
++	dev_set_name(&ptp->dev, "ptp%d", ptp->index);
++
++	/* Create a posix clock and link it to the device. */
++	err =3D posix_clock_register(&ptp->clock, &ptp->dev);
+ 	if (err) {
+ 		pr_err("failed to create posix clock\n");
+ 		goto no_clock;
+@@ -273,8 +273,6 @@ struct ptp_clock *ptp_clock_register(struct ptp_clock=
+_info *info,
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+ no_pps:
+-	device_destroy(ptp_class, ptp->devid);
+-no_device:
+ 	ptp_cleanup_pin_groups(ptp);
+ no_pin_groups:
+ 	if (ptp->kworker)
+@@ -304,7 +302,6 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
+ 	if (ptp->pps_source)
+ 		pps_unregister_source(ptp->pps_source);
+=20
+-	device_destroy(ptp_class, ptp->devid);
+ 	ptp_cleanup_pin_groups(ptp);
+=20
+ 	posix_clock_unregister(&ptp->clock);
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 9171d42468fd..6b97155148f1 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -28,7 +28,7 @@ struct timestamp_event_queue {
+=20
+ struct ptp_clock {
+ 	struct posix_clock clock;
+-	struct device *dev;
++	struct device dev;
+ 	struct ptp_clock_info *info;
+ 	dev_t devid;
+ 	int index; /* index into clocks.map */
+diff --git a/include/linux/posix-clock.h b/include/linux/posix-clock.h
+index fe6cfdcfbc26..5cfe13293243 100644
+--- a/include/linux/posix-clock.h
++++ b/include/linux/posix-clock.h
+@@ -69,29 +69,32 @@ struct posix_clock_operations {
+  *
+  * @ops:     Functional interface to the clock
+  * @cdev:    Character device instance for this clock
+- * @kref:    Reference count.
++ * @dev:     Pointer to the clock's device.
+  * @rwsem:   Protects the 'zombie' field from concurrent access.
+  * @zombie:  If 'zombie' is true, then the hardware has disappeared.
+- * @release: A function to free the structure when the reference count r=
+eaches
+- *           zero. May be NULL if structure is statically allocated.
+  *
+  * Drivers should embed their struct posix_clock within a private
+  * structure, obtaining a reference to it during callbacks using
+  * container_of().
++ *
++ * Drivers should supply an initialized but not exposed struct device
++ * to posix_clock_register(). It is used to manage lifetime of the
++ * driver's private structure. It's 'release' field should be set to
++ * a release function for this private structure.
+  */
+ struct posix_clock {
+ 	struct posix_clock_operations ops;
+ 	struct cdev cdev;
+-	struct kref kref;
++	struct device *dev;
+ 	struct rw_semaphore rwsem;
+ 	bool zombie;
+-	void (*release)(struct posix_clock *clk);
+ };
+=20
+ /**
+  * posix_clock_register() - register a new clock
+- * @clk:   Pointer to the clock. Caller must provide 'ops' and 'release'
+- * @devid: Allocated device id
++ * @clk:   Pointer to the clock. Caller must provide 'ops' field
++ * @dev:   Pointer to the initialized device. Caller must provide
++ *         'release' filed
+  *
+  * A clock driver calls this function to register itself with the
+  * clock device subsystem. If 'clk' points to dynamically allocated
+@@ -100,7 +103,7 @@ struct posix_clock {
+  *
+  * Returns zero on success, non-zero otherwise.
+  */
+-int posix_clock_register(struct posix_clock *clk, dev_t devid);
++int posix_clock_register(struct posix_clock *clk, struct device *dev);
+=20
+ /**
+  * posix_clock_unregister() - unregister a clock
+diff --git a/kernel/time/posix-clock.c b/kernel/time/posix-clock.c
+index ec960bb939fd..200fb2d3be99 100644
+--- a/kernel/time/posix-clock.c
++++ b/kernel/time/posix-clock.c
+@@ -14,8 +14,6 @@
+=20
+ #include "posix-timers.h"
+=20
+-static void delete_clock(struct kref *kref);
+-
+ /*
+  * Returns NULL if the posix_clock instance attached to 'fp' is old and =
+stale.
+  */
+@@ -125,7 +123,7 @@ static int posix_clock_open(struct inode *inode, stru=
+ct file *fp)
+ 		err =3D 0;
+=20
+ 	if (!err) {
+-		kref_get(&clk->kref);
++		get_device(clk->dev);
+ 		fp->private_data =3D clk;
+ 	}
+ out:
+@@ -141,7 +139,7 @@ static int posix_clock_release(struct inode *inode, s=
+truct file *fp)
+ 	if (clk->ops.release)
+ 		err =3D clk->ops.release(clk);
+=20
+-	kref_put(&clk->kref, delete_clock);
++	put_device(clk->dev);
+=20
+ 	fp->private_data =3D NULL;
+=20
+@@ -161,38 +159,35 @@ static const struct file_operations posix_clock_fil=
+e_operations =3D {
+ #endif
+ };
+=20
+-int posix_clock_register(struct posix_clock *clk, dev_t devid)
++int posix_clock_register(struct posix_clock *clk, struct device *dev)
+ {
+ 	int err;
+=20
+-	kref_init(&clk->kref);
+ 	init_rwsem(&clk->rwsem);
+=20
+ 	cdev_init(&clk->cdev, &posix_clock_file_operations);
++	err =3D cdev_device_add(&clk->cdev, dev);
++	if (err) {
++		pr_err("%s unable to add device %d:%d\n",
++			dev_name(dev), MAJOR(dev->devt), MINOR(dev->devt));
++		return err;
++	}
+ 	clk->cdev.owner =3D clk->ops.owner;
+-	err =3D cdev_add(&clk->cdev, devid, 1);
++	clk->dev =3D dev;
+=20
+-	return err;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(posix_clock_register);
+=20
+-static void delete_clock(struct kref *kref)
+-{
+-	struct posix_clock *clk =3D container_of(kref, struct posix_clock, kref=
+);
+-
+-	if (clk->release)
+-		clk->release(clk);
+-}
+-
+ void posix_clock_unregister(struct posix_clock *clk)
+ {
+-	cdev_del(&clk->cdev);
++	cdev_device_del(&clk->cdev, clk->dev);
+=20
+ 	down_write(&clk->rwsem);
+ 	clk->zombie =3D true;
+ 	up_write(&clk->rwsem);
+=20
+-	kref_put(&clk->kref, delete_clock);
++	put_device(clk->dev);
+ }
+ EXPORT_SYMBOL_GPL(posix_clock_unregister);
+=20
+--=20
+2.20.1
 
