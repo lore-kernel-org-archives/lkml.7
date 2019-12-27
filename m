@@ -2,122 +2,140 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BE5C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CBFC2D0DC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20597208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290CD20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 01:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q39g+fsc"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WfGHDCEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfL0Bnv (ORCPT
+        id S1727156AbfL0BpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:43:51 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10440 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfL0Bnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:43:50 -0500
-X-UUID: c6e18140a4b74ef9bbbcb995494a1ef6-20191227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=iVUBPxdAAmqV9kehzbTw6Znseih6f2Me+aVvtfsmplg=;
-        b=q39g+fsc6DWoiqAOrrJp0Ah4JWGFl0RMD9oXy5KPx47+ot+Y+6OnbqpmNKSlT50LN6wbSfg5cV5tUP41DrFXJuT/5zag65PCbpicTctG/sXHGf/0S99Fo5kHQuMXs5z7NcMU+pZZUyvfbsbWqtvijjFSuB7qmJY6JWwuydhbRzE=;
-X-UUID: c6e18140a4b74ef9bbbcb995494a1ef6-20191227
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2009527558; Fri, 27 Dec 2019 09:43:43 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Dec 2019 09:42:55 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Dec 2019 09:42:28 +0800
-Message-ID: <1577411015.12599.0.camel@mtksdaap41>
-Subject: Re: [PATCH v11 00/10] Mediatek MT8183 scpsys support
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Date:   Fri, 27 Dec 2019 09:43:35 +0800
-In-Reply-To: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1576813564-23927-1-git-send-email-weiyi.lu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 26 Dec 2019 20:45:08 -0500
+Received: from mail-eopbgr60057.outbound.protection.outlook.com ([40.107.6.57]:14916
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726193AbfL0BpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 20:45:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=obhCQfLfmiFywLtHQlEGYYrTeeZndRtdC2gHC/RkhYS4JiW/32LO0z7dpSP6qcI9GRu5trggodGg3m0vGsW/B/yxSAL004g0c3Hyxi88w96kfTekKLdt2Ddc922sUSsvvpYVVeZd29POod6wcqgWln2Vvu4EN92cpXHc5c6ACfoD5OWg8hlZOUux2nOEfYuE2qfPwCZ4X76KmwrykPN6XMqXbHMhZjt/sx/bwJuygskms4/6L13nh/amoKBr3KpM5yo1mY1ST4HCfwzPGZB5bYkuRodVSfbWD32adqlYHCmnXzoi4pfVqV4jnojTs8AbGIODzXUPAgfYKw+ng2ygAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HXwSoMnnGm+oy+7j9oOIyaHdYEq/UhDHP/RKh2qT4GE=;
+ b=TXcgqACpyhhsUZwqomTL+E5wm+ejlHHuY8gVHW7OhcAvhMU9pt7+VS/jOtrqjHQOlkoW5ySL8kj+wrl4KACWCR9OnsXf8vDBntcJ65OlSv6hPpbtFomHYbjs9wv6x0E092Ek5z/XzhPv5tx5E1pH6t/A3dfEcedo8Kj6spjC+sU5vel6vzRJrJq31LlhZT5xe5RbghMUDSMpnBf33vMCQAg3MWClLDCdixBlWEmwJqxko0+AkGvX0EZwE97UNlX4dkZD6I2HRaiN+/00CDlor+nom13fw31/7IK1/wiQ5Um9PBvrKQbIOqmzy+ay2kwy5iDZCmH9vgi+PjS4KFaIOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HXwSoMnnGm+oy+7j9oOIyaHdYEq/UhDHP/RKh2qT4GE=;
+ b=WfGHDCEQs0Vp3DsMkNlI135bZXj3zOxTb3ghuVZ9VO2G6TqsVV9erw19CYy3uIZ+bAm/hcfci7n7FfAiTcSuwdV2S0fq3vR/A3TMWN2FbWt7g/HWGvU+30IrvHEpMCxiNKVugcrOVvNHZl661dz7evTHDq55WCWmPykooT8Q+GA=
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
+ VI1PR04MB4318.eurprd04.prod.outlook.com (52.133.15.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Fri, 27 Dec 2019 01:45:03 +0000
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::c7d:58a2:7265:407e]) by VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::c7d:58a2:7265:407e%6]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
+ 01:45:03 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     Guenter Roeck <linux@roeck-us.net>,
+        Peter Chen <peter.chen@freescale.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] usb: chipidea: host: Disable port power only if
+ previously enabled
+Thread-Topic: [PATCH] usb: chipidea: host: Disable port power only if
+ previously enabled
+Thread-Index: AQHVvAVIstmi2Z+Az0y8RyzR9GDiKqfM0jmAgABkPAA=
+Date:   Fri, 27 Dec 2019 01:45:03 +0000
+Message-ID: <20191227014459.GA5283@b29397-desktop>
+References: <20191226155754.25451-1-linux@roeck-us.net>
+ <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912261428310.6148-100000@netrider.rowland.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8167a86d-e6bb-4175-5d78-08d78a6e6471
+x-ms-traffictypediagnostic: VI1PR04MB4318:|VI1PR04MB4318:
+x-microsoft-antispam-prvs: <VI1PR04MB4318B3C0F1E2E9D895A303928B2A0@VI1PR04MB4318.eurprd04.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0264FEA5C3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(199004)(189003)(81166006)(8936002)(33656002)(66946007)(81156014)(1076003)(33716001)(91956017)(66446008)(53546011)(8676002)(6506007)(26005)(66556008)(64756008)(478600001)(66476007)(76116006)(186003)(6486002)(2906002)(6512007)(6916009)(316002)(44832011)(54906003)(71200400001)(86362001)(5660300002)(4326008)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4318;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 35LIt9sJBfbWJruPFhdj9SFJQs6uPiV+FcwaS0ipD6v4Rbr9sFrDYZ/gXObOEEV/tT89S4Qh9ZtrZzQdKnI51/tXbK09S+zyheTpbVWtkjW+sZPFcOpCi9f4qkYoR9XGUusdkNAMFU6aOIFpHmqMFK/hq6S1ZNBcmE03O7IJFuWwLKQMLbawAxBTBab5lllLo48LgZ02cJKNpZ6lWAAnw8gweb2S7lhkdsn78DJS4yU4ZUzo2vV1KeXEfw16BTtSF2cJNk1giWNvejQUDibtPNWfbvBmnLc6UaJqS2v/L/YmiCjjexAIt48EWDw/WwtcXpH8heH096yOut0aQezIRh5sK8Le7GZ4/z2EEDQGgDGoYwxD114D7WKcl7RtmsG/lnBoI1vwFJDc49cuuMcMvv6p764GwJD6FRSKh2fAcQQDAfFA9NryXx1uqdnDvdE3
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <31E716C9DA2B6A42927990659E931A94@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 414ECEE29448B676CBD7514817D06CBDD641650F67A9872F26187195874D08222000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8167a86d-e6bb-4175-5d78-08d78a6e6471
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Dec 2019 01:45:03.0592
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zotjv6AD48N277r3QDGvVghcZWUO/dphOtPCFfiMRWVIgqy5+Mj4hgRdefufcDkxmffPPwOce31aNMAAmL3abQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4318
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBGcmksIDIwMTktMTItMjAgYXQgMTE6NDUgKzA4MDAsIFdlaXlpIEx1IHdyb3RlOg0KDQpI
-aSBNYXR0aGlhcywNCkp1c3QgZ2VudGxlIHBpbmcuIE1hbnkgdGhhbmtzLg0KDQoNCj4gVGhpcyBz
-ZXJpZXMgaXMgYmFzZWQgb24gdjUuNS1yYzENCj4gDQo+IGNoYW5nZXMgc2luY2UgdjEwOg0KPiAt
-IHNxdWFzaCBQQVRDSCAwNCBhbmQgUEFUQ0ggMDYgaW4gdjkgaW50byBpdHMgcHJldmlvdXMgcGF0
-Y2gNCj4gLSBhZGQgImlnbm9yZV9jbHJfYWNrIiBmb3IgbXVsdGlwbGUgc3RlcCBidXMgcHJvdGVj
-dGlvbiBjb250cm9sIHRvIGhhdmUgYSBjbGVhbiBkZWZpbml0aW9uIG9mIHBvd2VyIGRvbWFpbiBk
-YXRhDQo+IC0ga2VlcCB0aGUgbWFzayByZWdpc3RlciBiaXQgZGVmaW5pdGlvbnMgYW5kIGRvIHRo
-ZSBzYW1lIGZvciBNVDgxODMNCj4gDQo+IGNoYW5nZXMgc2luY2Ugdjk6DQo+IC0gYWRkIG5ldyBQ
-QVRDSCAwNCBhbmQgUEFUQ0ggMDYgdG8gcmVwbGFjZSBieSBuZXcgbWV0aG9kIGZvciBhbGwgY29t
-cGF0aWJsZXMNCj4gLSBhZGQgbmV3IFBBVENIIDA3IHRvIHJlbW92ZSBpbmZyYWNmZyBtaXNjIGRy
-aXZlcg0KPiAtIG1pbm9yIGNvZGluZyBzeXRsZSBmaXgNCj4gDQo+IGNoYW5nZXMgc2luY2Ugdjc6
-DQo+IC0gcmV3b3JkIGluIGJpbmRpbmcgZG9jdW1lbnQgW1BBVENIIDAyLzE0XQ0KPiAtIGZpeCBl
-cnJvciByZXR1cm4gY2hlY2tpbmcgYnVnIGluIHN1YnN5cyBjbG9jayBjb250cm9sIFtQQVRDSCAx
-MC8xNF0NCj4gLSBhZGQgcG93ZXIgZG9tYWlucyBwcm9wZXJpdHkgdG8gbWZnY2ZnIHBhdGNoIFtQ
-QVRDSCAxNC8xNF0gZnJvbQ0KPiAgIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-MTExMjYxOTkvDQo+IA0KPiBjaGFuZ2VzIHNpbmNlIHY2Og0KPiAtIHJlbW92ZSB0aGUgcGF0Y2gg
-b2YgU1BEWCBsaWNlbnNlIGlkZW50aWZpZXIgYmVjYXVzZSBpdCdzIGFscmVhZHkgZml4ZWQNCj4g
-DQo+IGNoYW5nZXMgc2luY2UgdjU6DQo+IC0gZml4IGRvY3VtZW50YXRpb24gaW4gW1BBVENIIDA0
-LzE0XQ0KPiAtIHJlbW92ZSB1c2VsZXNzIHZhcmlhYmxlIGNoZWNraW5nIGFuZCByZXVzZSBBUEkg
-b2YgY2xvY2sgY29udHJvbCBpbiBbUEFUQ0ggMDYvMTRdDQo+IC0gY29kaW5nIHN0eWxlIGZpeCBv
-ZiBidXMgcHJvdGVjdGlvbiBjb250cm9sIGluIFtQQVRDSCAwOC8xNF0NCj4gLSBmaXggbmFtaW5n
-IG9mIG5ldyBhZGRlZCBkYXRhIGluIFtQQVRDSCAwOS8xNF0NCj4gLSBzbWFsbCByZWZhY3RvciBv
-ZiBtdWx0aXBsZSBzdGVwIGJ1cyBwcm90ZWN0aW9uIGNvbnRyb2wgaW4gW1BBVENIIDEwLzE0XQ0K
-PiANCj4gY2hhbmdlcyBzaW5jZSB2NDoNCj4gLSBhZGQgcHJvcGVydHkgdG8gbXQ4MTgzIHNtaS1j
-b21tb24NCj4gLSBzZXBlcmF0ZSByZWZhY3RvciBwYXRjaGVzIGFuZCBuZXcgYWRkIGZ1bmN0aW9u
-DQo+IC0gYWRkIHBvd2VyIGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUNCj4gDQo+IFdlaXlpIEx1ICgx
-MCk6DQo+ICAgZHQtYmluZGluZ3M6IG1lZGlhdGVrOiBBZGQgcHJvcGVydHkgdG8gbXQ4MTgzIHNt
-aS1jb21tb24NCj4gICBkdC1iaW5kaW5nczogc29jOiBBZGQgTVQ4MTgzIHBvd2VyIGR0LWJpbmRp
-bmdzDQo+ICAgc29jOiBtZWRpYXRlazogQWRkIGJhc2ljX2Nsa19uYW1lIHRvIHNjcF9wb3dlcl9k
-YXRhDQo+ICAgc29jOiBtZWRpYXRlazogQWRkIG11bHRpcGxlIHN0ZXAgYnVzIHByb3RlY3Rpb24g
-Y29udHJvbA0KPiAgIHNvYzogbWVkaWF0ZWs6IFJlbW92ZSBpbmZyYWNmZyBtaXNjIGRyaXZlciBz
-dXBwb3J0DQo+ICAgc29jOiBtZWRpYXRlazogQWRkIHN1YnN5cyBjbG9jayBjb250cm9sIGZvciBi
-dXMgcHJvdGVjdGlvbg0KPiAgIHNvYzogbWVkaWF0ZWs6IEFkZCBleHRyYSBzcmFtIGNvbnRyb2wN
-Cj4gICBzb2M6IG1lZGlhdGVrOiBBZGQgTVQ4MTgzIHNjcHN5cyBzdXBwb3J0DQo+ICAgYXJtNjQ6
-IGR0czogQWRkIHBvd2VyIGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUgb2YgTVQ4MTgzDQo+ICAgYXJt
-NjQ6IGR0czogQWRkIHBvd2VyLWRvbWFpbnMgcHJvcGVyaXR5IHRvIG1mZ2NmZw0KPiANCj4gIC4u
-Li9tZW1vcnktY29udHJvbGxlcnMvbWVkaWF0ZWssc21pLWNvbW1vbi50eHQgICAgIHwgICAyICst
-DQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvc2Nwc3lzLnR4dCAgICB8
-ICAyMCArLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSAgICAg
-ICAgICAgfCAgNjMgKysrDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAxMCAtDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9NYWtlZmlsZSAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMyArLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWluZnJhY2ZnLmMgICAgICAgICAgICAgICAgfCAgNzkgLS0tDQo+ICBkcml2ZXJzL3NvYy9tZWRp
-YXRlay9tdGstc2Nwc3lzLWV4dC5jICAgICAgICAgICAgICB8IDEwMSArKysrDQo+ICBkcml2ZXJz
-L3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgICAgICAgICAgICAgICAgICB8IDU3OCArKysrKysr
-KysrKysrKystLS0tLS0NCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL3NjcHN5cy1leHQuaCAgICAg
-ICAgICAgICAgICAgIHwgIDk1ICsrKysNCj4gIGluY2x1ZGUvZHQtYmluZGluZ3MvcG93ZXIvbXQ4
-MTgzLXBvd2VyLmggICAgICAgICAgIHwgIDI2ICsNCj4gIGluY2x1ZGUvbGludXgvc29jL21lZGlh
-dGVrL2luZnJhY2ZnLmggICAgICAgICAgICAgIHwgIDM5IC0tDQo+ICAxMSBmaWxlcyBjaGFuZ2Vk
-LCA3MzYgaW5zZXJ0aW9ucygrKSwgMjgwIGRlbGV0aW9ucygtKQ0KPiAgZGVsZXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1pbmZyYWNmZy5jDQo+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy1leHQuYw0KPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvc29jL21lZGlhdGVrL3NjcHN5cy1leHQuaA0KPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcG93ZXIvbXQ4MTgzLXBvd2VyLmgNCj4gIGRl
-bGV0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9pbmZyYWNmZy5oDQo+
-IA0KDQoNCg==
+On 19-12-26 14:46:15, Alan Stern wrote:
+> On Thu, 26 Dec 2019, Guenter Roeck wrote:
+>=20
+> > On shutdown, ehci_power_off() is called unconditionally to power off
+> > each port, even if it was never called to power on the port.
+> > For chipidea, this results in a call to ehci_ci_portpower() with a requ=
+est
+> > to power off ports even if the port was never powered on.
+> > This results in the following warning from the regulator code.
+>=20
+> That's weird -- we should always power-on every port during hub=20
+> initialization.
+>=20
+> It looks like there's a bug in hub.c:hub_activate(): The line under
+> HUB_INIT which calls hub_power_on() should call
+> usb_hub_set_port_power() instead.  In fact, the comment near the start
+> of hub_power_on() is wrong.  It says "Enable power on each port", but
+> in fact it only enables power for ports that had been powered-on
+> previously (i.e., the port's bit in hub->power_bits was set). =20
+> Apparently this got messed up in commit ad493e5e5805 ("usb: add usb
+> port auto power off mechanism").
+>=20
+> Now, the chipidea driver may still need to be updated, because=20
+> ehci_turn_off_all_ports() will still be called during shutdown and it=20
+> will try to power-down all ports, even those which are already powered=20
+> down (for example, because the port is suspended).
+>=20
 
+Hi Alan,
+
+When the port is suspended, why it was turned off? If it was turned
+off, how could respond wakeup event?
+
+--=20
+
+Thanks,
+Peter Chen=
