@@ -4,59 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C615C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7878C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48210206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A4A206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469504;
-	bh=PAOUSNAxojEzCiLlv75nNZS799ylz9MjHsY1qAlDUQ4=;
+	s=default; t=1577469508;
+	bh=qM1K8b9ABcWajK0PB6SL3OmVqdsQlj0LkxqO2SEIa10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIcN9re13gwd68i9jAyYx4zAqZ/jxSTEUS9mJ7h9Ocn6ceeoz7Ax8jInWbYwG4K4L
-	 LVxORkbYXKcBpce16w79bmEuhalaY9U9dNQamA8lNkQCrS1STZqoZqqyiQgOvdy9Ds
-	 9K1fjKfdMtjQDNnwW/PRLzLAuahA0TU80ByVYvno=
+	b=BnrP4X5QBBIihINhzuGr46pD8zYA+Y1WYIPlpAOdcerftbQIA46NNG2FQ9sb3voTV
+	 fICnlpieQv2/qLCS9nGBaQRWiz+kuewSwNMPqVWXfTvIt9j2LTHtZRVbLtFyo541XC
+	 +mR7dFUY6xWyda6biOShscFb+t2DxUPG4ChMVQhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfL0R6X (ORCPT
+        id S1728045AbfL0R61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:58:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37622 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:58:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfL0Rl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:26 -0500
+        id S1727408AbfL0RlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F322A22B48;
-        Fri, 27 Dec 2019 17:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8E124125;
+        Fri, 27 Dec 2019 17:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468484;
-        bh=PAOUSNAxojEzCiLlv75nNZS799ylz9MjHsY1qAlDUQ4=;
+        s=default; t=1577468481;
+        bh=qM1K8b9ABcWajK0PB6SL3OmVqdsQlj0LkxqO2SEIa10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4zdVrjxH4agQM6pwN7FRkBdsqmC2+5lQLTXW7cymaVqUQW0lP/4bWnCIGg2t8HaR
-         w2E/vCJ4tJT9T/fgDgceK2cO64RqAsQ1eG/GdsfJf2bf2RkCaNMBCoLIGlghEHPCzi
-         MB5xlSw4XCy59M3XNkwzcxUniX/E2x/rzbhqLwrY=
+        b=1tDmfMPIZ3qTXK6DjOUZanl/GO8RLlnuC5KrCWI0RKGiYnZ3ORQI1MhXdIEstozVc
+         nBXn3rLVgWbihuQoovtzA53+maMPdUUzQKaQdjx9cCJmxZzOIAs0vmKGwdx06i881I
+         gSZ2NAdmLdRDuYnedjhVk92WDCTwwjD5Y+ZasKQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Young <dyoung@redhat.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/187] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
-Date:   Fri, 27 Dec 2019 12:38:10 -0500
-Message-Id: <20191227174055.4923-22-sashal@kernel.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-devel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 020/187] libtraceevent: Copy pkg-config file to output folder when using O=
+Date:   Fri, 27 Dec 2019 12:38:08 -0500
+Message-Id: <20191227174055.4923-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -69,83 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
+[ Upstream commit 15b3904f8e884e0d34d5f09906cf6526d0b889a2 ]
 
-Michael Weiser reported that he got this error during a kexec rebooting:
+When we use 'O=' with make to build libtraceevent in a separate folder
+it still copies 'libtraceevent.pc' to its source folder. Modify the
+Makefile so that it uses the output folder to copy the pkg-config file
+and install from there.
 
-  esrt: Unsupported ESRT version 2904149718861218184.
-
-The ESRT memory stays in EFI boot services data, and it was reserved
-in kernel via efi_mem_reserve().  The initial purpose of the reservation
-is to reuse the EFI boot services data across kexec reboot. For example
-the BGRT image data and some ESRT memory like Michael reported.
-
-But although the memory is reserved it is not updated in the X86 E820 table,
-and kexec_file_load() iterates system RAM in the IO resource list to find places
-for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-initramfs overwrote the ESRT memory and then the failure happened.
-
-Since kexec_file_load() depends on the E820 table being updated, just fix this
-by updating the reserved EFI boot services memory as reserved type in E820.
-
-Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-bypassed in the reservation code path because they are assumed as reserved.
-
-But the reservation is still needed for multiple kexec reboots,
-and it is the only possible case we come here thus just drop the code
-chunk, then everything works without side effects.
-
-On my machine the ESRT memory sits in an EFI runtime data range, it does
-not trigger the problem, but I successfully tested with BGRT instead.
-both kexec_load() and kexec_file_load() work and kdump works as well.
-
-[ mingo: Edited the changelog. ]
-
-Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
-Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kexec@lists.infradead.org
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191115113610.21493-2-sudipm.mukherjee@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/quirks.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/lib/traceevent/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 3b9fd679cea9..aefe845dff59 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 		return;
- 	}
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index d008e64042ce..ecf882308d8a 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -208,10 +208,11 @@ define do_install
+ 	$(INSTALL) $(if $3,-m $3,) $1 '$(DESTDIR_SQ)$2'
+ endef
  
--	/* No need to reserve regions that will never be freed. */
--	if (md.attribute & EFI_MEMORY_RUNTIME)
--		return;
--
- 	size += addr % EFI_PAGE_SIZE;
- 	size = round_up(size, EFI_PAGE_SIZE);
- 	addr = round_down(addr, EFI_PAGE_SIZE);
-@@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	early_memunmap(new, new_size);
- 
- 	efi_memmap_install(new_phys, num_entries);
-+	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	e820__update_table(e820_table);
- }
- 
- /*
+-PKG_CONFIG_FILE = libtraceevent.pc
++PKG_CONFIG_SOURCE_FILE = libtraceevent.pc
++PKG_CONFIG_FILE := $(addprefix $(OUTPUT),$(PKG_CONFIG_SOURCE_FILE))
+ define do_install_pkgconfig_file
+ 	if [ -n "${pkgconfig_dir}" ]; then 					\
+-		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
++		cp -f ${PKG_CONFIG_SOURCE_FILE}.template ${PKG_CONFIG_FILE};	\
+ 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
+ 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
+ 		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
 -- 
 2.20.1
 
