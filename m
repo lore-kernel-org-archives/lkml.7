@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F50BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2C8C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0FA20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FA020CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469014;
-	bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
+	s=default; t=1577469019;
+	bh=GO7tGw4PWBWDUud0LUtRlKZcxaeqxivaTtMUKSsvUI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ipnf1z36UG/MI9NoyL/KeUsyBCWT5P4GJQNzjIib90PL93GAOlZoa+S+xUISTObx+
-	 J+fCYWdIOX5W3U2riIjXVxAbhtk1QeFdsg2hFolhNHX/n1ON9taEt7/7DncYjpil1l
-	 d+/C+XrID362eJoiJdyCSArq1r6/uCy2CLrtnMKA=
+	b=XmTCV2sSRTQ6G9mEJAg/DQvLbzUVhgFj7mfjkmC+ODSoGeeiuQSa45ek5x+Ft5rBR
+	 G5AgOR9YhOwTMhEA0Yf8YsObtIXO7t/WFRXmmw5JQXgMT5dnAwx6j1KSmL7M3eKc8b
+	 yaD3ZoDPTMrHubjDQ/64dirPLQFwuFonILHObmIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfL0RuM (ORCPT
+        id S1728389AbfL0RoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfL0RoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:18 -0500
+        id S1727892AbfL0RoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B192222C2;
-        Fri, 27 Dec 2019 17:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D30621582;
+        Fri, 27 Dec 2019 17:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468657;
-        bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
+        s=default; t=1577468645;
+        bh=GO7tGw4PWBWDUud0LUtRlKZcxaeqxivaTtMUKSsvUI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TeXz8Kfgpu9ydpDJqf3n116U8myZGxkhJo7oN/5fZzs04h0Zs9QjOrIWul1K2dob7
-         1XlZV75xVbltbOKnC4BOGJSksmH+APad1usYPTE1RwsiVT2Y3WBibf7/BjpBxqtpVp
-         6NMgaNMw12KXeIjJ8R4Gc3MSWT/0xAHwsJCZGooA=
+        b=YVELbQLvNvUEp1wqOI4Qr/JqArQ2PX8cDD+EbR02A33JwppmSvntUFNtKdSguWEdH
+         bSygsd8U75u2IyBEEVa5LUbGkRO/EcUgejwMB8xLVqxXbd+PbGEDgwFNfPDofXRbLm
+         Hmn135iH5kDBvDPSvb955NJDECzjhfndOmWpWz/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Dave Young <dyoung@redhat.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/84] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
-Date:   Fri, 27 Dec 2019 12:42:47 -0500
-Message-Id: <20191227174352.6264-19-sashal@kernel.org>
+        platform-driver-x86@vger.kernel.org, x86@kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/84] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
+Date:   Fri, 27 Dec 2019 12:42:38 -0500
+Message-Id: <20191227174352.6264-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,93 +69,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dave Young <dyoung@redhat.com>
 
-[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
+[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
 
-The existing rbtree implementation might store consecutive elements
-where the closing element and the opening element might overlap, eg.
+Michael Weiser reported that he got this error during a kexec rebooting:
 
-	[ a, a+1) [ a+1, a+2)
+  esrt: Unsupported ESRT version 2904149718861218184.
 
-This patch removes the optimization for non-anonymous sets in the exact
-matching case, where it is assumed to stop searching in case that the
-closing element is found. Instead, invalidate candidate interval and
-keep looking further in the tree.
+The ESRT memory stays in EFI boot services data, and it was reserved
+in kernel via efi_mem_reserve().  The initial purpose of the reservation
+is to reuse the EFI boot services data across kexec reboot. For example
+the BGRT image data and some ESRT memory like Michael reported.
 
-The lookup/get operation might return false, while there is an element
-in the rbtree. Moreover, the get operation returns true as if a+2 would
-be in the tree. This happens with named sets after several set updates.
+But although the memory is reserved it is not updated in the X86 E820 table,
+and kexec_file_load() iterates system RAM in the IO resource list to find places
+for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+initramfs overwrote the ESRT memory and then the failure happened.
 
-The existing lookup optimization (that only works for the anonymous
-sets) might not reach the opening [ a+1,... element if the closing
-...,a+1) is found in first place when walking over the rbtree. Hence,
-walking the full tree in that case is needed.
+Since kexec_file_load() depends on the E820 table being updated, just fix this
+by updating the reserved EFI boot services memory as reserved type in E820.
 
-This patch fixes the lookup and get operations.
+Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+bypassed in the reservation code path because they are assumed as reserved.
 
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+But the reservation is still needed for multiple kexec reboots,
+and it is the only possible case we come here thus just drop the code
+chunk, then everything works without side effects.
+
+On my machine the ESRT memory sits in an EFI runtime data range, it does
+not trigger the problem, but I successfully tested with BGRT instead.
+both kexec_load() and kexec_file_load() work and kdump works as well.
+
+[ mingo: Edited the changelog. ]
+
+Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
+Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kexec@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/platform/efi/quirks.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index b3e75f9cb686..0221510328d4 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -77,8 +77,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 				parent = rcu_dereference_raw(parent->rb_left);
- 				continue;
- 			}
--			if (nft_rbtree_interval_end(rbe))
--				goto out;
-+			if (nft_rbtree_interval_end(rbe)) {
-+				if (nft_set_is_anonymous(set))
-+					return false;
-+				parent = rcu_dereference_raw(parent->rb_left);
-+				interval = NULL;
-+				continue;
-+			}
- 
- 			*ext = &rbe->ext;
- 			return true;
-@@ -91,7 +96,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 		*ext = &interval->ext;
- 		return true;
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 844d31cb8a0c..c9873c9168ad 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -259,10 +259,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 		return;
  	}
--out:
-+
- 	return false;
+ 
+-	/* No need to reserve regions that will never be freed. */
+-	if (md.attribute & EFI_MEMORY_RUNTIME)
+-		return;
+-
+ 	size += addr % EFI_PAGE_SIZE;
+ 	size = round_up(size, EFI_PAGE_SIZE);
+ 	addr = round_down(addr, EFI_PAGE_SIZE);
+@@ -292,6 +288,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 	early_memunmap(new, new_size);
+ 
+ 	efi_memmap_install(new_phys, num_entries);
++	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
++	e820__update_table(e820_table);
  }
  
-@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 		} else if (d > 0) {
- 			parent = rcu_dereference_raw(parent->rb_right);
- 		} else {
--			if (!nft_set_elem_active(&rbe->ext, genmask))
-+			if (!nft_set_elem_active(&rbe->ext, genmask)) {
- 				parent = rcu_dereference_raw(parent->rb_left);
-+				continue;
-+			}
- 
- 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
- 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
-@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 				*elem = rbe;
- 				return true;
- 			}
--			return false;
-+
-+			if (nft_rbtree_interval_end(rbe))
-+				interval = NULL;
-+
-+			parent = rcu_dereference_raw(parent->rb_left);
- 		}
- 	}
- 
+ /*
 -- 
 2.20.1
 
