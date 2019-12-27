@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F888C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA36208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B0220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469301;
-	bh=jV0Fn+92D1zShlnjiLkLneWO8c8R5+UdB7LDaQECXz8=;
+	s=default; t=1577469307;
+	bh=0K9cbE1aPc4/ll3AYgNd+gIeX0L4S01M2CUtmrNS0QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rB9vN/kWgGZ4BuaIQtpafNQ3hg7LgLmENRlVwKOJMfG2+F3kEi+1kzZJjTmX3dA+4
-	 3G+tDKsw5ZvzHUzVOipZxSnnpZ4wseDEG2RaL+2ROHjEtuijkLJE86Sj8bjdzRzmku
-	 GzcCxsfbC5BDyBOO0pQ8U/6WCf4bwaUiRPP3u6rI=
+	b=WeSldIGDlrtMO9UewxPOD3xRBjwNQR0xxxar/04DOWM/93J4X8dXMBbAU8Wjxm6DA
+	 rrjFpuK/szsP5QAmUBhNZ+tXcZoeXlMhdIA3XUGg8+fjqmdDgMb7O9iPGM5N9EMMkM
+	 4+rbLMQkUH9ItN32Hm4+eE6CNmqp50Ne3FMHNNqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfL0Ryz (ORCPT
+        id S1728465AbfL0RzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:54:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39374 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:55:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbfL0Rm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:28 -0500
+        id S1727838AbfL0RmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 623A124654;
-        Fri, 27 Dec 2019 17:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF31820740;
+        Fri, 27 Dec 2019 17:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468548;
-        bh=jV0Fn+92D1zShlnjiLkLneWO8c8R5+UdB7LDaQECXz8=;
+        s=default; t=1577468544;
+        bh=0K9cbE1aPc4/ll3AYgNd+gIeX0L4S01M2CUtmrNS0QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6dKqBrRRbDkPe8GU2r6UvAK7TMOPCYJw+q4s9nL0IwnUWGW5eXCRpsXuOrGd+zqz
-         VHLPmJ7mkAbf05tYl0qqjkSRKpCsTH/y1bypGXyNImZPZXBS6yP7iJ2i7zGIbOHxa3
-         m/UFudYQfUsUx0fi1pnjQrRwze7LyNLWtq2S+xX0=
+        b=N4Jy1Osjijb/2yyaAOY1RRuglTfzHrPSpWFyMQn3kgHv9u+nHSpubxgNThP3xcD/9
+         Wqiw9scunyNSRSPjVLECKxlHf+pa1Wp7Tg7XtktDlbFR2dvS8MH8v13573RhmOgQgJ
+         MFYmKbUPtBFTLO7Qs8p1Qux7kDz4lDUwmnfBL6Hk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 075/187] perf header: Fix false warning when there are no duplicate cache entries
-Date:   Fri, 27 Dec 2019 12:39:03 -0500
-Message-Id: <20191227174055.4923-75-sashal@kernel.org>
+Cc:     Paul Chaignon <paul.chaignon@orange.com>,
+        Mahshid Khezri <khezri.mahshid@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 072/187] bpf, mips: Limit to 33 tail calls
+Date:   Fri, 27 Dec 2019 12:39:00 -0500
+Message-Id: <20191227174055.4923-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -59,107 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: Paul Chaignon <paul.chaignon@orange.com>
 
-[ Upstream commit 28707826877f84bce0977845ea529cbdd08e4e8d ]
+[ Upstream commit e49e6f6db04e915dccb494ae10fa14888fea6f89 ]
 
-Before this patch, perf expected that there might be NPROC*4 unique
-cache entries at max, however, it also expected that some of them would
-be shared and/or of the same size, thus the final number of entries
-would be reduced to be lower than NPROC*4. In case the number of entries
-hadn't been reduced (was NPROC*4), the warning was printed.
+All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
+limit at runtime.  In addition, a test was recently added, in tailcalls2,
+to check this limit.
 
-However, some systems might have unusual cache topology, such as the
-following two-processor KVM guest:
+This patch updates the tail call limit in MIPS' JIT compiler to allow
+33 tail calls.
 
-	cpu  level  shared_cpu_list  size
-	  0     1         0           32K
-	  0     1         0           64K
-	  0     2         0           512K
-	  0     3         0           8192K
-	  1     1         1           32K
-	  1     1         1           64K
-	  1     2         1           512K
-	  1     3         1           8192K
-
-This KVM guest has 8 (NPROC*4) unique cache entries, which used to make
-perf printing the message, although there actually aren't "way too many
-cpu caches".
-
-v2: Removing unused argument.
-
-v3: Unifying the way we obtain number of cpus.
-
-v4: Removed '& UINT_MAX' construct which is redundant.
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-LPU-Reference: 20191208162056.20772-1-mpetlan@redhat.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
+Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
+Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/b8eb2caac1c25453c539248e56ca22f74b5316af.1575916815.git.paul.chaignon@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ arch/mips/net/ebpf_jit.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index becc2d109423..d3412f2c0d18 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1089,21 +1089,18 @@ static void cpu_cache_level__fprintf(FILE *out, struct cpu_cache_level *c)
- 	fprintf(out, "L%d %-15s %8s [%s]\n", c->level, c->type, c->size, c->map);
- }
- 
--static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
-+#define MAX_CACHE_LVL 4
-+
-+static int build_caches(struct cpu_cache_level caches[], u32 *cntp)
+diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
+index 46b76751f3a5..3ec69d9cbe88 100644
+--- a/arch/mips/net/ebpf_jit.c
++++ b/arch/mips/net/ebpf_jit.c
+@@ -604,6 +604,7 @@ static void emit_const_to_reg(struct jit_ctx *ctx, int dst, u64 value)
+ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
  {
- 	u32 i, cnt = 0;
--	long ncpus;
- 	u32 nr, cpu;
- 	u16 level;
+ 	int off, b_off;
++	int tcc_reg;
  
--	ncpus = sysconf(_SC_NPROCESSORS_CONF);
--	if (ncpus < 0)
--		return -1;
--
--	nr = (u32)(ncpus & UINT_MAX);
-+	nr = cpu__max_cpu();
- 
- 	for (cpu = 0; cpu < nr; cpu++) {
--		for (level = 0; level < 10; level++) {
-+		for (level = 0; level < MAX_CACHE_LVL; level++) {
- 			struct cpu_cache_level c;
- 			int err;
- 
-@@ -1123,18 +1120,12 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
- 				caches[cnt++] = c;
- 			else
- 				cpu_cache_level__free(&c);
--
--			if (WARN_ONCE(cnt == size, "way too many cpu caches.."))
--				goto out;
- 		}
- 	}
-- out:
- 	*cntp = cnt;
- 	return 0;
- }
- 
--#define MAX_CACHE_LVL 4
--
- static int write_cache(struct feat_fd *ff,
- 		       struct evlist *evlist __maybe_unused)
- {
-@@ -1143,7 +1134,7 @@ static int write_cache(struct feat_fd *ff,
- 	u32 cnt = 0, i, version = 1;
- 	int ret;
- 
--	ret = build_caches(caches, max_caches, &cnt);
-+	ret = build_caches(caches, &cnt);
- 	if (ret)
- 		goto out;
- 
+ 	ctx->flags |= EBPF_SEEN_TC;
+ 	/*
+@@ -616,14 +617,14 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
+ 	b_off = b_imm(this_idx + 1, ctx);
+ 	emit_instr(ctx, bne, MIPS_R_AT, MIPS_R_ZERO, b_off);
+ 	/*
+-	 * if (--TCC < 0)
++	 * if (TCC-- < 0)
+ 	 *     goto out;
+ 	 */
+ 	/* Delay slot */
+-	emit_instr(ctx, daddiu, MIPS_R_T5,
+-		   (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4, -1);
++	tcc_reg = (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4;
++	emit_instr(ctx, daddiu, MIPS_R_T5, tcc_reg, -1);
+ 	b_off = b_imm(this_idx + 1, ctx);
+-	emit_instr(ctx, bltz, MIPS_R_T5, b_off);
++	emit_instr(ctx, bltz, tcc_reg, b_off);
+ 	/*
+ 	 * prog = array->ptrs[index];
+ 	 * if (prog == NULL)
 -- 
 2.20.1
 
