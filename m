@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76082C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FAD208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C5220CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469095;
-	bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
+	s=default; t=1577469102;
+	bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nDv6PXw7Y6WL5xXzgfTvt8zio37Km/d60iHbpJD4HY9261ln9GFrd8ztdfgWhEbvx
-	 nPOOirQkA4Vabu9pPjKTOs4Nbo3OSUnh88dgkEgYz4piGjtDuucpv/ssffG8089f+I
-	 s7cpMJ8bNrtjCldYU3jjxcrO5Z9SfKr14qUi6iyE=
+	b=o1+4eDKJv5uO2/5rtfKNs0nXV0rc58BwSSiqIS+RdbNoaKUuSN0cKezO8fOcTHUua
+	 E4yHRxWSJoHBigxsfC+rohhbD66OgDBUwHSgDC+LkzLbxxi2jHv27sYOg5NYFuH2vq
+	 QGPrcFTI34UM+XUrZVCAS2BnXLlqPYtolXi1Ee1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbfL0Rv1 (ORCPT
+        id S1727422AbfL0Rvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:51:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:51:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfL0RnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:25 -0500
+        id S1728212AbfL0RnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC4E24125;
-        Fri, 27 Dec 2019 17:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA4121927;
+        Fri, 27 Dec 2019 17:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468604;
-        bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
+        s=default; t=1577468601;
+        bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gII4N7y/AMMDBz+paF6LyzzfNHh5HTp4FUcYhRcz9P8++44E+fao8vFEmvCw35nBd
-         Cv3xAtACqHji6RP5VbyjIVznzY039hyEkxeFSC5k3VEVwt9sqkvIoauuoVI16rzNIw
-         Ou1TIeYdYcUExeOllQ1ToMd0qYrB8dg1R1q6Oe80=
+        b=eZiBodEslWwXooQoAL+GORGsHxKD6a8vMljZJXWB8g/Tdc44xN55207ag91jj/vAz
+         VYO1jyETIJpAd27F70kp9ew28HjzR6kBXtHxW/BHYDbe4UeXR4M4ZkG1xY0/PVbIJ0
+         MRbGrYpXMNzpBS7A2APH3wob3/KGpiiWdRg86IvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 125/187] spi: nxp-fspi: Ensure width is respected in spi-mem operations
-Date:   Fri, 27 Dec 2019 12:39:53 -0500
-Message-Id: <20191227174055.4923-125-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 122/187] rfkill: Fix incorrect check to avoid NULL pointer dereference
+Date:   Fri, 27 Dec 2019 12:39:50 -0500
+Message-Id: <20191227174055.4923-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -58,39 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 007773e16a6f3f49d1439554078c3ba8af131998 ]
+[ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
 
-Make use of a core helper to ensure the desired width is respected
-when calling spi-mem operators.
+In rfkill_register, the struct rfkill pointer is first derefernced
+and then checked for NULL. This patch removes the BUG_ON and returns
+an error to the caller in case rfkill is NULL.
 
-Otherwise only the SPI controller will be matched with the flash chip,
-which might lead to wrong widths. Also consider the width specified by
-the user in the device tree.
-
-Fixes: a5356aef6a90 ("spi: spi-mem: Add driver for NXP FlexSPI controller")
-Signed-off-by: Michael Walle <michael@walle.cc>
-Link: https://lore.kernel.org/r/20191211195730.26794-1-michael@walle.cc
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-nxp-fspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rfkill/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-index 501b923f2c27..28ae5229f889 100644
---- a/drivers/spi/spi-nxp-fspi.c
-+++ b/drivers/spi/spi-nxp-fspi.c
-@@ -439,7 +439,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
- 	    op->data.nbytes > f->devtype_data->txfifo)
- 		return false;
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index 0bf9bf1ceb8f..6c089320ae4f 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1002,10 +1002,13 @@ static void rfkill_sync_work(struct work_struct *work)
+ int __must_check rfkill_register(struct rfkill *rfkill)
+ {
+ 	static unsigned long rfkill_no;
+-	struct device *dev = &rfkill->dev;
++	struct device *dev;
+ 	int error;
  
--	return true;
-+	return spi_mem_default_supports_op(mem, op);
- }
+-	BUG_ON(!rfkill);
++	if (!rfkill)
++		return -EINVAL;
++
++	dev = &rfkill->dev;
  
- /* Instead of busy looping invoke readl_poll_timeout functionality. */
+ 	mutex_lock(&rfkill_global_mutex);
+ 
 -- 
 2.20.1
 
