@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AD8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9582C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B453E206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7379D206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469522;
-	bh=9pq68zwuBtcHgShwLeWaVi65N0QZZnhESnqWP6ebRYY=;
+	s=default; t=1577469530;
+	bh=uj5Ey9WFNxyyArdWGA/2RLq9Ho+P3sHFKLdaetsd384=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRg+PvnU7PwPuKQluvIeQFigSslRwj0iwZSuJrrNHabKkmhCzujBj6xJY+Yxzpv5m
-	 4bG2BlSwght5Cjyy/jU3fSSojZ++bCr7pu0ZGIqEnvn6buGorQdGkfCcBHApPyPUjN
-	 ww10n8HvOnP12u8mvLKOtt040KRSqSmHmKfxFmIA=
+	b=xqoMKGyNC9bWRxHQw1OYE4H17S9dkyrthZZC+tlP2UTpn4+ld18mtqVj1TiDq2P98
+	 1g0zLVvBpES8eTiRHiOHooffJsz2pganOvxJw9Om5fPQBCSiibgoPyfOdLeeLpogKM
+	 BvFfu4aBQo4+d9mjYdkDcV8R3o2gLiphfye9Z+VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfL0R6l (ORCPT
+        id S1727357AbfL0RlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfL0RlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:18 -0500
+        id S1727234AbfL0RlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60CD7222D9;
-        Fri, 27 Dec 2019 17:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA8B20CC7;
+        Fri, 27 Dec 2019 17:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468478;
-        bh=9pq68zwuBtcHgShwLeWaVi65N0QZZnhESnqWP6ebRYY=;
+        s=default; t=1577468468;
+        bh=uj5Ey9WFNxyyArdWGA/2RLq9Ho+P3sHFKLdaetsd384=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+CrWXvddHiCedWYvMhpEnmhafou5OEHd+2V0FPEvOdBwdFpeXI1VVRxyXVLil0k8
-         F5GjF3lt7UgV9Y9TJbUXtB9fpURz+rbF8atHx9xYhwyV4CoKdTgUmBf5B0PNJvQ20s
-         zhgeD6mE8TBbYwL7a84CVwEWZ9ChaH9OJuGiY3+8=
+        b=UU6iUmOOjMo8yYB3OiaRInzTpqnP1FMKM9TnV9wDtKCmaplEUUJ+F9XcySyG+DFBE
+         vnqGMV0SbKQBtxqZWXssXQI4knPuoaWH9TU1ibqysWpm/XazbyYdaxZvii5V+bDuHS
+         nSyJnAtP0QhbHR/6/eCn8NpOtrXCgZSVd1tb8Z/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     wenxu <wenxu@ucloud.cn>, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 017/187] netfilter: nf_tables_offload: Check for the NETDEV_UNREGISTER event
-Date:   Fri, 27 Dec 2019 12:38:05 -0500
-Message-Id: <20191227174055.4923-17-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 010/187] spi: fsl: Fix GPIO descriptor support
+Date:   Fri, 27 Dec 2019 12:37:58 -0500
+Message-Id: <20191227174055.4923-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,35 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wenxu <wenxu@ucloud.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit d1f4c966475c6dd2545c6625022cb24e878bee11 ]
+[ Upstream commit f106904968e2a075e64653b9b79dda9f0f070ab5 ]
 
-Check for the NETDEV_UNREGISTER event from the nft_offload_netdev_event
-function, which is the event that actually triggers the clean up.
+This makes the driver actually support looking up GPIO
+descriptor. A coding mistake in the initial descriptor
+support patch was that it was failing to turn on the very
+feature it was implementing. Mea culpa.
 
-Fixes: 06d392cbe3db ("netfilter: nf_tables_offload: remove rules when the device unregisters")
-Signed-off-by: wenxu <wenxu@ucloud.cn>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20191128083718.39177-1-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_offload.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/spi/spi-fsl-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
-index 5f6037695dee..6f7eab502e65 100644
---- a/net/netfilter/nf_tables_offload.c
-+++ b/net/netfilter/nf_tables_offload.c
-@@ -446,6 +446,9 @@ static int nft_offload_netdev_event(struct notifier_block *this,
- 	struct net *net = dev_net(dev);
- 	struct nft_chain *chain;
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 4b80ace1d137..75b765f97df5 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -612,6 +612,7 @@ static struct spi_master * fsl_spi_probe(struct device *dev,
+ 	master->setup = fsl_spi_setup;
+ 	master->cleanup = fsl_spi_cleanup;
+ 	master->transfer_one_message = fsl_spi_do_one_msg;
++	master->use_gpio_descriptors = true;
  
-+	if (event != NETDEV_UNREGISTER)
-+		return NOTIFY_DONE;
-+
- 	mutex_lock(&net->nft.commit_mutex);
- 	chain = __nft_offload_get_chain(dev);
- 	if (chain)
+ 	mpc8xxx_spi = spi_master_get_devdata(master);
+ 	mpc8xxx_spi->max_bits_per_word = 32;
 -- 
 2.20.1
 
