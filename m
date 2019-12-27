@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61426C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FAEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDD221582
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0000E22522
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468467;
-	bh=YaxkqFCakYZ4K615WPGeW/6skKEIyGG3oKjsSvOE7Pc=;
+	s=default; t=1577468472;
+	bh=eSBIlZaB+1Zf9Pp3QrfkfLpJAZHv8lJk20E9gHCjWwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xknJ69vZwy6owOz94eSVpiJwjtISvHe0+YRGo3PdcE55K50Q9hZX3KKke27+IE4E3
-	 zyPNCcSUdo5sYPC5jJOkQZaw+odLMdpxNDUQaBuwVCySgr7TyL/gsciOsLNFoOlMQo
-	 ZnOi8q4Ko0wmaEG7WcxtFz1dvNiWycdpKJG7B5hc=
+	b=M8w1LY/9khxVEl0HQVLnNIHh/d2AclEpBO5Jpb6F91N1W9K23UbUNaB/O8ZQulGM+
+	 XoWLLLA7DcE4+WJAxTqXI0hQ5J8GxAJF3ycg2Ke8VRxlpnwgoPCmkG5R1A1GXZELNi
+	 Wr4tA1MXeIkR1pvK7uN+ojRsbrdWFH+zcDQ1u9gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfL0RlF (ORCPT
+        id S1727273AbfL0RlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36946 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:41:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfL0RlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:03 -0500
+        id S1727175AbfL0RlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:41:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E9F222C2;
-        Fri, 27 Dec 2019 17:41:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8470E21775;
+        Fri, 27 Dec 2019 17:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468462;
-        bh=YaxkqFCakYZ4K615WPGeW/6skKEIyGG3oKjsSvOE7Pc=;
+        s=default; t=1577468466;
+        bh=eSBIlZaB+1Zf9Pp3QrfkfLpJAZHv8lJk20E9gHCjWwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRhjq8fBr/+gad5UQxvDJ1+p6OfyfMJa6IZMOu+5YdyTjPnIoEpmKiDSIe1kMkC6H
-         oYWTDBWj/EimVh3uHGDDiKC/0DRPr/mF05Vw17EdwIPgF2yIOwkYpriqOxVwSbPHfA
-         GBjtfwMUbcUAJl/ghJCYh4SJdwIcaca4werJ+BC8=
+        b=2A+IpCXKvBUrQknVgf9BMGu5246cGCoERKEMHItp7WaD+zlRjyEskmvqx16aG/NTI
+         CzGFxhaIAMUn3NWhSqRZTs0/+pAACqZHuFqkCBbcH6TrW3Zjt+YJjeUkIrz5U8zQp8
+         Vs/JzWsIoppS+n0kIJGBcc6n8VUXlcJPUDZAgObg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzung-Bi Shih <tzungbi@google.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 005/187] ASoC: max98090: remove msleep in PLL unlocked workaround
-Date:   Fri, 27 Dec 2019 12:37:53 -0500
-Message-Id: <20191227174055.4923-5-sashal@kernel.org>
+Cc:     Ganapathi Bhat <gbhat@marvell.com>,
+        huangwen <huangwenabc@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 008/187] mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
+Date:   Fri, 27 Dec 2019 12:37:56 -0500
+Message-Id: <20191227174055.4923-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,55 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzung-Bi Shih <tzungbi@google.com>
+From: Ganapathi Bhat <gbhat@marvell.com>
 
-[ Upstream commit acb874a7c049ec49d8fc66c893170fb42c01bdf7 ]
+[ Upstream commit 3d94a4a8373bf5f45cf5f939e88b8354dbf2311b ]
 
-It was observed Baytrail-based chromebooks could cause continuous PLL
-unlocked when using playback stream and capture stream simultaneously.
-Specifically, starting a capture stream after started a playback stream.
-As a result, the audio data could corrupt or turn completely silent.
+mwifiex_process_country_ie() function parse elements of bss
+descriptor in beacon packet. When processing WLAN_EID_COUNTRY
+element, there is no upper limit check for country_ie_len before
+calling memcpy. The destination buffer domain_info->triplet is an
+array of length MWIFIEX_MAX_TRIPLET_802_11D(83). The remote
+attacker can build a fake AP with the same ssid as real AP, and
+send malicous beacon packet with long WLAN_EID_COUNTRY elemen
+(country_ie_len > 83). Attacker can  force STA connect to fake AP
+on a different channel. When the victim STA connects to fake AP,
+will trigger the heap buffer overflow. Fix this by checking for
+length and if found invalid, don not connect to the AP.
 
-As the datasheet suggested, the maximum PLL lock time should be 7 msec.
-The workaround resets the codec softly by toggling SHDN off and on if
-PLL failed to lock for 10 msec.  Notably, there is no suggested hold
-time for SHDN off.
+This fix addresses CVE-2019-14895.
 
-On Baytrail-based chromebooks, it would easily happen continuous PLL
-unlocked if there is a 10 msec delay between SHDN off and on.  Removes
-the msleep().
-
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Link: https://lore.kernel.org/r/20191122073114.219945-2-tzungbi@google.com
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: huangwen <huangwenabc@gmail.com>
+Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index f6bf4cfbea23..12cb87c0d463 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -2114,10 +2114,16 @@ static void max98090_pll_work(struct work_struct *work)
- 
- 	dev_info_ratelimited(component->dev, "PLL unlocked\n");
- 
-+	/*
-+	 * As the datasheet suggested, the maximum PLL lock time should be
-+	 * 7 msec.  The workaround resets the codec softly by toggling SHDN
-+	 * off and on if PLL failed to lock for 10 msec.  Notably, there is
-+	 * no suggested hold time for SHDN off.
-+	 */
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+index 74e50566db1f..6dd835f1efc2 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -229,6 +229,14 @@ static int mwifiex_process_country_ie(struct mwifiex_private *priv,
+ 			    "11D: skip setting domain info in FW\n");
+ 		return 0;
+ 	}
 +
- 	/* Toggle shutdown OFF then ON */
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, 0);
--	msleep(10);
- 	snd_soc_component_update_bits(component, M98090_REG_DEVICE_SHUTDOWN,
- 			    M98090_SHDNN_MASK, M98090_SHDNN_MASK);
++	if (country_ie_len >
++	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		mwifiex_dbg(priv->adapter, ERROR,
++			    "11D: country_ie_len overflow!, deauth AP\n");
++		return -EINVAL;
++	}
++
+ 	memcpy(priv->adapter->country_code, &country_ie[2], 2);
  
+ 	domain_info->country_code[0] = country_ie[2];
+@@ -272,8 +280,9 @@ int mwifiex_bss_start(struct mwifiex_private *priv, struct cfg80211_bss *bss,
+ 	priv->scan_block = false;
+ 
+ 	if (bss) {
+-		if (adapter->region_code == 0x00)
+-			mwifiex_process_country_ie(priv, bss);
++		if (adapter->region_code == 0x00 &&
++		    mwifiex_process_country_ie(priv, bss))
++			return -EINVAL;
+ 
+ 		/* Allocate and fill new bss descriptor */
+ 		bss_desc = kzalloc(sizeof(struct mwifiex_bssdescriptor),
 -- 
 2.20.1
 
