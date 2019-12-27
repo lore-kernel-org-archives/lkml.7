@@ -2,111 +2,171 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE8DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 04:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A37C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 04:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE4F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 04:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0CE20740
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 04:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rU+dNtJg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P939WHrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfL0ESE (ORCPT
+        id S1727134AbfL0Ef2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 23:18:04 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39499 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfL0ESE (ORCPT
+        Thu, 26 Dec 2019 23:35:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44165 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727047AbfL0Ef2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 23:18:04 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 77so34763787oty.6;
-        Thu, 26 Dec 2019 20:18:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DfKg9SPkUvfybKMjL5YOx3Xk7Ze33G0ys6ahY8byY+s=;
-        b=rU+dNtJgARXnqPDmeFamfL2PeBiWwNJdd1b1/9gD5lxlIpbk3wM1M8i2DGLSpdyAn5
-         09hP+DZJH+kGodPhEGBuSTlLv8nrOITA69yGJ4u/7iAn8i4h00j53Fh2CF/tSVx6n/kv
-         PbRvsXxDcuWi7+t2OHet8bnC8E43P45XWHBMjGDBsXEPtlxColbJbmIJ7pYgmdrTSwGg
-         RAXLRy+b6d2Wnd2X45tYyGtLfho/PPSrdapJiCGwt/Q7eJfTCEbFIe+OL4DtHQxI/HzE
-         Lbtmi3nEDX01sZidPSyAap9LdXkfn6nguD5804uz5q8UJoYbAAQ0vvczr9tqyUMSssjr
-         b8DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DfKg9SPkUvfybKMjL5YOx3Xk7Ze33G0ys6ahY8byY+s=;
-        b=NrKK/X7IyhizCpsWXFgjvxPbGtIxdSOsnU6RCwznoDl5iUBghLHfpelnYoSMRk+Tap
-         vEwW7rS/CO1qVdUm9gHc3QrPJps4tw4VlvOOVxmdJMaiamksHueAGCW0Tj7KWQbeMPON
-         2xHk8orw1rE1ACqbA0BIFCXZ6VFpVgb0m+2boJsi5q2WkgG78E7NhLNZa4qQk+uErfIi
-         +Tr5S/RfS6SqwSCjNrmCgJ0iMJb3XZiMH09nb8pN0Ci9mCqF7rwqImwL9aTtba6g/xdT
-         dKR5cvwi7YMUk1gc2Z8zSIvPTetC+uA8A4j+kyIcE7V36RPwybc5/RSK088JmMgJx7kd
-         FH0Q==
-X-Gm-Message-State: APjAAAXULDk7XDgW+zwDLjSfHk7UrBkX04wPPPTJ3r/qBY3iB4W3txwm
-        2IinTEq62Nf1pF/EkDNzRYvdJNvWocH9EPSzG1+vbd4S
-X-Google-Smtp-Source: APXvYqzAOBWIHURe65cgyn+zIKkk1chLEZEJcKMdb9lioX2df362DLpSsRG620wwmEa5h58dQU+VlMASJZLGZe1hNl8=
-X-Received: by 2002:a9d:53c4:: with SMTP id i4mr42873422oth.48.1577420283259;
- Thu, 26 Dec 2019 20:18:03 -0800 (PST)
+        Thu, 26 Dec 2019 23:35:28 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577421327; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=UWTLJHhMYKjpdzVTqqLlwIAkQzLn0eTzuvQ7iSDt/8Y=; b=P939WHrV9K9pjXt1BbEhs6uY8EnYZeHzswN5MvmIqL3ps8CFaLbp1gdiToNGoiMh8gE3o9fq
+ CP8HkhUIQYuCOOcxO90EtX6mWHi9zAzb0bzxeJpMDeyre0/TnQTb9gTTqdmzXEW+uxY46ndm
+ NR/Ov1MSPhSZTWU7wSC91RhS5Hw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e058a0c.7fb7254fe0a0-smtp-out-n02;
+ Fri, 27 Dec 2019 04:35:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9E671C447A2; Fri, 27 Dec 2019 04:35:23 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 307F9C43383;
+        Fri, 27 Dec 2019 04:35:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 307F9C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+References: <1575447687-9296-1-git-send-email-tdas@codeaurora.org>
+ <0101016ed0006092-b6693b0f-f8c6-428a-9b64-f6e1f4606844-000000@us-west-2.amazonses.com>
+ <20191216180144.GA27463@bogus>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <03538ce3-c172-e895-0fe0-c52362e16dfd@codeaurora.org>
+Date:   Fri, 27 Dec 2019 10:05:15 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <00000000000057fd27059aa1dfca@google.com> <20191227003310.16061-1-fw@strlen.de>
-In-Reply-To: <20191227003310.16061-1-fw@strlen.de>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 26 Dec 2019 20:17:52 -0800
-Message-ID: <CAM_iQpW5stB_BshUJr0O3uDyaxDcqN-13ZqRr7dcmcJcBp-Tfg@mail.gmail.com>
-Subject: Re: [PATCH nf] netfilter: arp_tables: init netns pointer in
- xt_tgchk_param struct
-To:     Florian Westphal <fw@strlen.de>
-Cc:     NetFilter <netfilter-devel@vger.kernel.org>,
-        syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191216180144.GA27463@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 4:37 PM Florian Westphal <fw@strlen.de> wrote:
->
-> We get crash when the targets checkentry function tries to make
-> use of the network namespace pointer for arptables.
->
-> When the net pointer got added back in 2010, only ip/ip6/ebtables were
-> changed to initialize it, so arptables has this set to NULL.
->
-> This isn't a problem for normal arptables because no existing
-> arptables target has a checkentry function that makes use of par->net.
->
-> However, direct users of the setsockopt interface can provide any
-> target they want as long as its registered for ARP or UNPSEC protocols.
->
-> syzkaller managed to send a semi-valid arptables rule for RATEEST target
-> which is enough to trigger NULL deref:
->
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
-> [..]
->  xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
->  check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
->  find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
->  translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
->  do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
->  do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
->
-> Fixes: add67461240c1d ("netfilter: add struct net * to target parameters")
-> Reported-by: syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+Hello Rob,
 
-I was about to send out a same patch.
+Thanks for the review comments.
 
-So:
-Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+On 12/16/2019 11:31 PM, Rob Herring wrote:
+> On Wed, Dec 04, 2019 at 08:21:56AM +0000, Taniya Das wrote:
+>> The MSS clock provider have a bunch of generic properties that
+>> are needed in a device tree. Add a YAML schemas for those.
+>>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,mss.yaml        | 40 ++++++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>> new file mode 100644
+>> index 0000000..4494a6b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
+>> @@ -0,0 +1,40 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> 
+> Dual license new bindings please:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
 
-Thanks.
+Will update the license.
+
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Modem Clock Controller Binding
+>> +
+>> +maintainers:
+>> +  - Taniya Das <tdas@codeaurora.org>
+>> +
+>> +description: |
+>> +  Qualcomm modem clock control module which supports the clocks.
+>> +
+>> +properties:
+>> +  compatible :
+>> +    enum:
+>> +       - qcom,mss-sc7180
+> 
+> Normal order is 'qcom,sc7180-mss'.
+> 
+My bad.
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+> 
+> Add:
+> 
+> additionalItems: false
+> 
+
+Will add it in the next patch.
+
+>> +
+>> +examples:
+>> +  # Example of MSS with clock nodes properties for SC7180:
+>> +  - |
+>> +    clock-controller@41aa000 {
+>> +      compatible = "qcom,sc7180-mss";
+>> +      reg = <0x041aa000 0x100>;
+>> +      reg-names = "cc";
+> 
+> Not documented, nor necessary.
+> 
+
+Will remove this.
+
+>> +      #clock-cells = <1>;
+>> +    };
+>> +...
+>> --
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>>
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
