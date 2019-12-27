@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A12C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5290FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B42206CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDBC206CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469117;
-	bh=ak+X/1y/5tATN8zqkL0VqH/NAk2cwC2AqzyfNUmUMF8=;
+	s=default; t=1577469121;
+	bh=VILDewDdZZ57MJtd8nZfpQtoINtvKmzSvR8cAHZgqHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMMKBKCuxVbX+9wZgHeHPU3eNAfR2AlPrN0QZMqi1MhqVotCiT/m4olh71jMJCmH2
-	 VIfmhXm2SoShzCkYF+a2IM+RSQwPqK524PhjP1Wa+9EYJ9riXTnQ+NygZQZRAodlOU
-	 qT1VSRBhorIIOAbGzknxvFBtIUV6SJVjmlkl3LbM=
+	b=PmyEPjafd/U//hS7amfJdxC+/t2s/aNKixi1coqiWh5SE9ZzS9Pk8K0HBKN/yD1Ut
+	 XyGVlhuiO997o8lloBjl21clT/OdoXwLRCsw+TQIOcuOEdJm4SGLFwYPwzj1nuTI78
+	 r/gWFbjoevWLG9xjvHL1S4T3LL2ouu37bn/XEK8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfL0RnR (ORCPT
+        id S1728398AbfL0Rv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:43:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:51:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727642AbfL0RnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:10 -0500
+        id S1727708AbfL0RnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:43:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88C062173E;
-        Fri, 27 Dec 2019 17:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 702652464B;
+        Fri, 27 Dec 2019 17:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468589;
-        bh=ak+X/1y/5tATN8zqkL0VqH/NAk2cwC2AqzyfNUmUMF8=;
+        s=default; t=1577468597;
+        bh=VILDewDdZZ57MJtd8nZfpQtoINtvKmzSvR8cAHZgqHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEJeP99j2aHAcw/4TvUZcIw5+cb5X8LBXcgPrKaMm8sIqF9VLBI/ZjOjD/s5SxcCc
-         mWjy4v4gqVXFxxc6yrA2J3SM4RLKXPZqV69X4HHAP3qFzKyYlB5yUB4/7MwZuSKB1j
-         kMaAxkmJ7jX/Ax8tXtvY58FGGj291KLPDA4CeeCo=
+        b=zdaKDxIUyvf74v8V5OR3soE65+kl/S/anRy9N3enL5ocl7uNkSYFf1ONYm9xmkVCc
+         ZiiEUkTPGDFBQZ8ixpfHkjvKyId8JWqRzc5MbCRml5Xm5ln7GYtLsrhLvU1DfUQXPs
+         TnoYzjPJz284A2t9RtDXadhy8m0KokwrgGCJfwY4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mahesh Bandewar <maheshb@google.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
+Cc:     Vishal Kulkarni <vishal@chelsio.com>,
+        Herat Ramani <herat@chelsio.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 111/187] bonding: fix active-backup transition after link failure
-Date:   Fri, 27 Dec 2019 12:39:39 -0500
-Message-Id: <20191227174055.4923-111-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 118/187] cxgb4: Fix kernel panic while accessing sge_info
+Date:   Fri, 27 Dec 2019 12:39:46 -0500
+Message-Id: <20191227174055.4923-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,50 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit 5d485ed88d48f8101a2067348e267c0aaf4ed486 ]
+[ Upstream commit 479a0d1376f6d97c60871442911f1394d4446a25 ]
 
-After the recent fix in commit 1899bb325149 ("bonding: fix state
-transition issue in link monitoring"), the active-backup mode with
-miimon initially come-up fine but after a link-failure, both members
-transition into backup state.
+The sge_info debugfs collects offload queue info even when offload
+capability is disabled and leads to panic.
 
-Following steps to reproduce the scenario (eth1 and eth2 are the
-slaves of the bond):
+[  144.139871] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  144.139874] CR2: 0000000000000000 CR3: 000000082d456005 CR4: 00000000001606e0
+[  144.139876] Call Trace:
+[  144.139887]  sge_queue_start+0x12/0x30 [cxgb4]
+[  144.139897]  seq_read+0x1d4/0x3d0
+[  144.139906]  full_proxy_read+0x50/0x70
+[  144.139913]  vfs_read+0x89/0x140
+[  144.139916]  ksys_read+0x55/0xd0
+[  144.139924]  do_syscall_64+0x5b/0x1d0
+[  144.139933]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  144.139936] RIP: 0033:0x7f4b01493990
 
-    ip link set eth1 up
-    ip link set eth2 down
-    sleep 1
-    ip link set eth2 up
-    ip link set eth1 down
-    cat /sys/class/net/eth1/bonding_slave/state
-    cat /sys/class/net/eth2/bonding_slave/state
+Fix this crash by skipping the offload queue access in sge_qinfo when
+offload capability is disabled
 
-Fixes: 1899bb325149 ("bonding: fix state transition issue in link monitoring")
-CC: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Herat Ramani <herat@chelsio.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 62f65573eb04..92df47055d03 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2225,9 +2225,6 @@ static void bond_miimon_commit(struct bonding *bond)
- 			} else if (BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP) {
- 				/* make it immediately active */
- 				bond_set_active_slave(slave);
--			} else if (slave != primary) {
--				/* prevent it from being the active one */
--				bond_set_backup_slave(slave);
- 			}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index ae6a47dd7dc9..fb8ade9a05a9 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -2996,6 +2996,9 @@ static int sge_queue_entries(const struct adapter *adap)
+ 	int tot_uld_entries = 0;
+ 	int i;
  
- 			slave_info(bond->dev, slave->dev, "link status definitely up, %u Mbps %s duplex\n",
++	if (!is_uld(adap))
++		goto lld_only;
++
+ 	mutex_lock(&uld_mutex);
+ 	for (i = 0; i < CXGB4_TX_MAX; i++)
+ 		tot_uld_entries += sge_qinfo_uld_txq_entries(adap, i);
+@@ -3006,6 +3009,7 @@ static int sge_queue_entries(const struct adapter *adap)
+ 	}
+ 	mutex_unlock(&uld_mutex);
+ 
++lld_only:
+ 	return DIV_ROUND_UP(adap->sge.ethqsets, 4) +
+ 	       tot_uld_entries +
+ 	       DIV_ROUND_UP(MAX_CTRL_QUEUES, 4) + 1;
 -- 
 2.20.1
 
