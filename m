@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B285DC2D0C0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0980C3F68F
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBF02080D
+	by mail.kernel.org (Postfix) with ESMTP id D20732080D
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 02:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfL0CHd (ORCPT
+        id S1727266AbfL0CHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Dec 2019 21:07:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38918 "EHLO mga17.intel.com"
+        Thu, 26 Dec 2019 21:07:34 -0500
+Received: from mga17.intel.com ([192.55.52.151]:38924 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbfL0CHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Dec 2019 21:07:30 -0500
+        id S1727162AbfL0CHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:07:34 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:30 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 18:07:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,361,1571727600"; 
-   d="scan'208";a="223675034"
+   d="scan'208";a="223675049"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:28 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 18:07:32 -0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, jmattson@google.com,
         sean.j.christopherson@intel.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v9 3/7] KVM: VMX: Pass through CET related MSRs
-Date:   Fri, 27 Dec 2019 10:11:29 +0800
-Message-Id: <20191227021133.11993-4-weijiang.yang@intel.com>
+Subject: [PATCH v9 6/7] KVM: X86: Load guest fpu state when accessing MSRs managed by XSAVES
+Date:   Fri, 27 Dec 2019 10:11:32 +0800
+Message-Id: <20191227021133.11993-7-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20191227021133.11993-1-weijiang.yang@intel.com>
 References: <20191227021133.11993-1-weijiang.yang@intel.com>
@@ -44,111 +44,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET MSRs pass through Guest directly to enhance performance.
-CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-these MSRs are defined in kernel and re-used here.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-MSR_IA32_U_CET and MSR_IA32_PL3_SSP are used for user mode protection,
-the contents could differ from process to process, therefore,
-kernel needs to save/restore them during context switch, it makes
-sense to pass through them so that the guest kernel can
-use xsaves/xrstors to operate them efficiently. Other MSRs are used
-for non-user mode protection. See CET spec for detailed info.
+A handful of CET MSRs are not context switched through "traditional"
+methods, e.g. VMCS or manual switching, but rather are passed through
+to the guest and are saved and restored by XSAVES/XRSTORS, i.e. the
+guest's FPU state.
 
-The difference between CET VMCS state fields and xsave components is that,
-the former used for CET state storage during VMEnter/VMExit,
-whereas the latter used for state retention between Guest task/process
-switch.
+Load the guest's FPU state if userspace is accessing MSRs whose values
+are managed by XSAVES so that the MSR helper, e.g. vmx_{get,set}_msr(),
+can simply do {RD,WR}MSR to access the guest's value.
 
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Note that guest_cpuid_has() is not queried as host userspace is allowed
+to access MSRs that have not been exposed to the guest, e.g. it might do
+KVM_SET_MSRS prior to KVM_SET_CPUID2.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/cpuid.h   |  2 ++
- arch/x86/kvm/vmx/vmx.c | 48 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ arch/x86/kvm/x86.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index d78a61408243..1d77b880084d 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -27,6 +27,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b27d97eaec24..6dbe77365b22 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -104,6 +104,8 @@ static void enter_smm(struct kvm_vcpu *vcpu);
+ static void __kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags);
+ static void store_regs(struct kvm_vcpu *vcpu);
+ static int sync_regs(struct kvm_vcpu *vcpu);
++static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu);
++static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu);
  
- int cpuid_query_maxphyaddr(struct kvm_vcpu *vcpu);
- 
-+u64 kvm_supported_xss(void);
-+
- static inline int cpuid_maxphyaddr(struct kvm_vcpu *vcpu)
- {
- 	return vcpu->arch.maxphyaddr;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 477173e4a85d..61fc846c7ef3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7091,6 +7091,52 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
- 		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
+ struct kvm_x86_ops *kvm_x86_ops __read_mostly;
+ EXPORT_SYMBOL_GPL(kvm_x86_ops);
+@@ -3129,6 +3131,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
  }
+ EXPORT_SYMBOL_GPL(kvm_get_msr_common);
  
-+static void vmx_update_intercept_for_cet_msr(struct kvm_vcpu *vcpu)
++static bool is_xsaves_msr(u32 index)
 +{
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-+
-+	/*
-+	 * U_CET is required for USER CET, per CET spec., meanwhile U_CET and
-+	 * PL3_SPP are a bundle for USER CET xsaves.
-+	 */
-+	if ((kvm_supported_xss() & XFEATURE_MASK_CET_USER) &&
-+	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))) {
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-+	} else {
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW, true);
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW, true);
-+	}
-+	/*
-+	 * S_CET is required for KERNEL CET, meanwhile PL0_SSP ... PL2_SSP are a bundle
-+	 * for CET KERNEL xsaves.
-+	 */
-+	if ((kvm_supported_xss() & XFEATURE_MASK_CET_KERNEL) &&
-+	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-+	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))) {
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-+		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-+
-+		/* SSP_TAB only available for KERNEL SHSTK.*/
-+		if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+			vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-+						      MSR_TYPE_RW);
-+		else
-+			vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-+						  MSR_TYPE_RW, true);
-+	} else {
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW, true);
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW, true);
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW, true);
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW, true);
-+		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW, true);
-+	}
++	return index == MSR_IA32_U_CET ||
++	       (index >= MSR_IA32_PL0_SSP && index <= MSR_IA32_PL3_SSP);
 +}
 +
- static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+ /*
+  * Read or write a bunch of msrs. All parameters are kernel addresses.
+  *
+@@ -3139,11 +3147,22 @@ static int __msr_io(struct kvm_vcpu *vcpu, struct kvm_msrs *msrs,
+ 		    int (*do_msr)(struct kvm_vcpu *vcpu,
+ 				  unsigned index, u64 *data))
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -7115,6 +7161,8 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
- 			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
- 		update_intel_pt_cfg(vcpu);
-+
-+	vmx_update_intercept_for_cet_msr(vcpu);
- }
++	bool fpu_loaded = false;
+ 	int i;
++	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
++	bool cet_xss = kvm_supported_xss() & cet_bits;
  
- static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+-	for (i = 0; i < msrs->nmsrs; ++i)
++	for (i = 0; i < msrs->nmsrs; ++i) {
++		if (vcpu && !fpu_loaded && cet_xss &&
++		    is_xsaves_msr(entries[i].index)) {
++			kvm_load_guest_fpu(vcpu);
++			fpu_loaded = true;
++		}
+ 		if (do_msr(vcpu, entries[i].index, &entries[i].data))
+ 			break;
++	}
++	if (fpu_loaded)
++		kvm_put_guest_fpu(vcpu);
+ 
+ 	return i;
+ }
 -- 
 2.17.2
 
