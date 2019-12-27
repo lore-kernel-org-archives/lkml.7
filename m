@@ -2,52 +2,53 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90729C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5466C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC0E22B48
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CA9206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469348;
-	bh=pKlEvZStrRWwiobdGwZb/2fTuQEcO/9zO6CNnj/hiDw=;
+	s=default; t=1577469353;
+	bh=S2mj7vV8Qc/c49pbhgd4tw4+L6FzjsTck13YfwNPXjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MlE2BGXKB9Sutp5fQnOz0xn6CSsLGNxwau9K4ZyLguE+75jpWD3+woF0suXhzSKXH
-	 Am7fJyEcpchatyeF3E7WtMQaI8+74rTwmqj07cVbwHXGy8d/sF4IIOm5n+9eqSxk+g
-	 U1Fwnc/oetvcsMFqQ1YqLsa8S1mOZGgAvbSI5xCc=
+	b=DtlFnTa/k3kBGdqXavbTdRhpZo0jXd7T4rB22vAt91pn5YsPV0t/Co1bAcJ3CLn5r
+	 ZalwbZ6krRvWUdfUptjQGhAE+I4KGYUbO96Pr0lDg73Bgcgcg/pw8zd0kCf8ig8DeU
+	 xGj4CvnCifumgEKig68XwIRojK9scr3HLAzaArqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfL0Rzr (ORCPT
+        id S1727756AbfL0RmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:55:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbfL0RmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:13 -0500
+        id S1727126AbfL0RmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6877C24650;
-        Fri, 27 Dec 2019 17:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6199420CC7;
+        Fri, 27 Dec 2019 17:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468533;
-        bh=pKlEvZStrRWwiobdGwZb/2fTuQEcO/9zO6CNnj/hiDw=;
+        s=default; t=1577468525;
+        bh=S2mj7vV8Qc/c49pbhgd4tw4+L6FzjsTck13YfwNPXjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDAzCHXIkPD9AUOj0BnW7WHAI6fSyhz0T0v0zRoWnY32Bk5M/qSBRvwGFUEFuUYHK
-         YG5wdxNAnMujwppG6FTO8dz5X3SP5cyUnb8yy0BO+j3nFzo+aI40HKvwta2HQG0Wrg
-         n4c161equmuKy/YGNSRHElrXf2afIbyw3nYpbxeY=
+        b=HprOG/IhDBp5wyFR+A5d9NaDq1p75jf1GcWPgzL9LInOeq0hQDyionW/NgJY6qpAa
+         X/1+d+kzKslY52L5cAFgX1B0HXjD8kJ9tLetjz+PaoY8A1x+WrsQszK8lJ/ztuHUgy
+         MofMA5dvYJPGJ07d6iyRWB9X3SDqkDXcBKq2Qv24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Curtis Malainey <cujomalainey@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 063/187] ASoC: SOF: Intel: split cht and byt debug window sizes
-Date:   Fri, 27 Dec 2019 12:38:51 -0500
-Message-Id: <20191227174055.4923-63-sashal@kernel.org>
+Cc:     Anders Kaseorg <andersk@mit.edu>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 056/187] Revert "iwlwifi: assign directly to iwl_trans->cfg in QuZ detection"
+Date:   Fri, 27 Dec 2019 12:38:44 -0500
+Message-Id: <20191227174055.4923-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -60,54 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Curtis Malainey <cujomalainey@chromium.org>
+From: Anders Kaseorg <andersk@mit.edu>
 
-[ Upstream commit f84337c3fb8ff4d533ccbed0d2db4e8587d0ff58 ]
+[ Upstream commit db5cce1afc8d2475d2c1c37c2a8267dd0e151526 ]
 
-Turns out SSP 3-5 are only available on cht, to avoid dumping on
-undefined registers let's split the definition.
+This reverts commit 968dcfb4905245dc64d65312c0d17692fa087b99.
 
-Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191210004854.16845-7-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Both that commit and commit 809805a820c6445f7a701ded24fdc6bbc841d1e4
+attempted to fix the same bug (dead assignments to the local variable
+cfg), but they did so in incompatible ways. When they were both merged,
+independently of each other, the combination actually caused the bug to
+reappear, leading to a firmware crash on boot for some cards.
+
+https://bugzilla.kernel.org/show_bug.cgi?id=205719
+
+Signed-off-by: Anders Kaseorg <andersk@mit.edu>
+Acked-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/intel/byt.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/sof/intel/byt.c b/sound/soc/sof/intel/byt.c
-index a1e514f71739..41008c974ac6 100644
---- a/sound/soc/sof/intel/byt.c
-+++ b/sound/soc/sof/intel/byt.c
-@@ -24,7 +24,8 @@
- #define DRAM_OFFSET		0x100000
- #define DRAM_SIZE		(160 * 1024)
- #define SHIM_OFFSET		0x140000
--#define SHIM_SIZE		0x100
-+#define SHIM_SIZE_BYT		0x100
-+#define SHIM_SIZE_CHT		0x118
- #define MBOX_OFFSET		0x144000
- #define MBOX_SIZE		0x1000
- #define EXCEPT_OFFSET		0x800
-@@ -75,7 +76,7 @@ static const struct snd_sof_debugfs_map byt_debugfs[] = {
- 	 SOF_DEBUGFS_ACCESS_D0_ONLY},
- 	{"dram", BYT_DSP_BAR, DRAM_OFFSET, DRAM_SIZE,
- 	 SOF_DEBUGFS_ACCESS_D0_ONLY},
--	{"shim", BYT_DSP_BAR, SHIM_OFFSET, SHIM_SIZE,
-+	{"shim", BYT_DSP_BAR, SHIM_OFFSET, SHIM_SIZE_BYT,
- 	 SOF_DEBUGFS_ACCESS_ALWAYS},
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 040cec17d3ad..b0b7eca1754e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1111,18 +1111,18 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
  
-@@ -102,7 +103,7 @@ static const struct snd_sof_debugfs_map cht_debugfs[] = {
- 	 SOF_DEBUGFS_ACCESS_D0_ONLY},
- 	{"dram", BYT_DSP_BAR, DRAM_OFFSET, DRAM_SIZE,
- 	 SOF_DEBUGFS_ACCESS_D0_ONLY},
--	{"shim", BYT_DSP_BAR, SHIM_OFFSET, SHIM_SIZE,
-+	{"shim", BYT_DSP_BAR, SHIM_OFFSET, SHIM_SIZE_CHT,
- 	 SOF_DEBUGFS_ACCESS_ALWAYS},
- };
+ 	/* same thing for QuZ... */
+ 	if (iwl_trans->hw_rev == CSR_HW_REV_TYPE_QUZ) {
+-		if (iwl_trans->cfg == &iwl_ax101_cfg_qu_hr)
+-			iwl_trans->cfg = &iwl_ax101_cfg_quz_hr;
+-		else if (iwl_trans->cfg == &iwl_ax201_cfg_qu_hr)
+-			iwl_trans->cfg = &iwl_ax201_cfg_quz_hr;
+-		else if (iwl_trans->cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
+-			iwl_trans->cfg = &iwl9461_2ac_cfg_quz_a0_jf_b0_soc;
+-		else if (iwl_trans->cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
+-			iwl_trans->cfg = &iwl9462_2ac_cfg_quz_a0_jf_b0_soc;
+-		else if (iwl_trans->cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
+-			iwl_trans->cfg = &iwl9560_2ac_cfg_quz_a0_jf_b0_soc;
+-		else if (iwl_trans->cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
+-			iwl_trans->cfg = &iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc;
++		if (cfg == &iwl_ax101_cfg_qu_hr)
++			cfg = &iwl_ax101_cfg_quz_hr;
++		else if (cfg == &iwl_ax201_cfg_qu_hr)
++			cfg = &iwl_ax201_cfg_quz_hr;
++		else if (cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
++			cfg = &iwl9461_2ac_cfg_quz_a0_jf_b0_soc;
++		else if (cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
++			cfg = &iwl9462_2ac_cfg_quz_a0_jf_b0_soc;
++		else if (cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
++			cfg = &iwl9560_2ac_cfg_quz_a0_jf_b0_soc;
++		else if (cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
++			cfg = &iwl9560_2ac_160_cfg_quz_a0_jf_b0_soc;
+ 	}
  
+ #endif
 -- 
 2.20.1
 
