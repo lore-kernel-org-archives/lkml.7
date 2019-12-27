@@ -2,78 +2,130 @@ Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A1CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CCBC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB35620838
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C75620838
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 20:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHI9vvVJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2fo9Pe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfL0U1B (ORCPT
+        id S1727140AbfL0U1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 15:27:01 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37624 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfL0U1B (ORCPT
+        Fri, 27 Dec 2019 15:27:21 -0500
+Received: from mail-pj1-f51.google.com ([209.85.216.51]:38879 "EHLO
+        mail-pj1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfL0U1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 15:27:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so15226350pfn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 12:27:00 -0800 (PST)
+        Fri, 27 Dec 2019 15:27:21 -0500
+Received: by mail-pj1-f51.google.com with SMTP id l35so5379235pje.3;
+        Fri, 27 Dec 2019 12:27:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GkUIVOSRB0ui7Tj6XXdW1tapEpmmQozsPyWQm0I5SNk=;
-        b=LHI9vvVJi2FkSw3sqZyRb6OmkyjLywchf1TQDsZ3J4vUuI0a4l1RCbrksgR73xsP3I
-         u+4sLkRTGpqMUXuyr1xxYf+8QwrizUvbrbX0yJjHVjYV8R6yW2fCkAaGPmCDi87C8nUi
-         vm5xWe9ELj1DsGUYw9AwpnXvBICfdEVR1goh70myIVVhAjNur3y4qMsJ13rY6e9vj+LP
-         uajymLh5LrI+QNZjbSbU6MzyEaJCXHf4VURcU5KvjNLA9oVL3Dfszxfl+lEZ84fv88zL
-         +W+jRKf7a9QJUFtG1lqmE/FsPFaai0Q4yPXnVXayONgcscKaYoKRp06GewcGTZxFpVzu
-         Th6g==
+        bh=OZLNJcmp8R8gnBWMafl5r+ZqwwiQRSuzqsWq4+mqLgs=;
+        b=J2fo9Pe4Oq9Mi7P4wT2ypNk5p+ckA/DfH6DfWE8ytuQLGb32WRoh7tpTNib78zvB+f
+         KzBcUDYCYI3UjdOnoHrTcXxcA3anHcQe7bNJJH4JHVewUwEv9jbTxmnlLvvJNi9bLrWm
+         ZeRTvVKTX87EKy6xA95ZH7QUxPoLcaKoJihDbFkPpz3CR6pMXpOyvZRNbSU9JEhQnzkK
+         t7CSvyhbM63w4I8XoP4DPqJChQ7XlCtV3eJ0Hx4tUcB+VFFJlyAuhoDsGRx7hw99Eb+W
+         3gYWWGfvdjblQxiPEhXKYQ/wMr3fUs6/0KJNKKkAmBMvmN+YSzGvcCf0AA/XM1jJoBX7
+         kOcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GkUIVOSRB0ui7Tj6XXdW1tapEpmmQozsPyWQm0I5SNk=;
-        b=NYdl2RHk/IX9KTvG0FQWydpfyictfUNY+4d4eJDLkL8x3HteBKDGmL8wjysyT1o8xT
-         3/tZvojaii3txMjN0UMQ8lTkT5ODAPeWuEN3Dp/HtMT/rFeLNMkrNwfAKKEi3kvWB6PF
-         WnLYSd9zeuOByZTfi5j1EPBvtXb/2zL/IGUdPU1NbgeVgYobyDWShuaIwwNA9k1v+21l
-         nAbLcQdsJK1+Zn3PlrYGPdSdXduqOY4+ez/3tFAtgyRm7nQhzFY4WkjZ8wJDf6/A++/N
-         iqk8AebXUWJc719eeO7Z2PJycgC4dlci+4fnpM67oz5GmaDu9TgWJ66SA9FCeyuRp+VS
-         JMkg==
-X-Gm-Message-State: APjAAAUmEKSAdC105BHiXLkIm2zXaZY6lyXJHUYAZkGsT84Ju1CUjL5C
-        H/lMWb6aaoKaQziF1M8UZnROvA==
-X-Google-Smtp-Source: APXvYqzMFuyFFX1cCQquvaHxVqERuVRKvWiCGeNTeYX+5Z9dpHxR068mYwZLO5ITa/OtBjQVFIouOQ==
-X-Received: by 2002:a63:f901:: with SMTP id h1mr56630767pgi.445.1577478420181;
-        Fri, 27 Dec 2019 12:27:00 -0800 (PST)
-Received: from smuckle.san.corp.google.com ([2620:15c:2d:3:8fbe:ee3b:c81d:238d])
-        by smtp.gmail.com with ESMTPSA id t63sm42038315pfb.70.2019.12.27.12.26.59
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=OZLNJcmp8R8gnBWMafl5r+ZqwwiQRSuzqsWq4+mqLgs=;
+        b=nXW8C7zISSd5mXreI8c13i9+G6sWRCzr2Jm1Ec67qlhwNydVoCACQzOL56f0+CktAB
+         gKUxiVkphEVCb4I3fqHzBI2+eTxWJf+p8gIVF+XsoluoSu0NiJ4ePacIM+rSeJSIKu/P
+         Kze0JImsHX0wiEYU33am/1eL48Bb2/QpKwmQYha2dfrQdEp5xDDzRCI1ZXt1mitNhOi2
+         GYbpWAL/IuoE0Qwf9cIZcRWP5RZNpWqDXGt0tWuIgDtgalNBx33XCSfgGABLAojq/tJo
+         4l4iKB8NgOBCH53ZmgkGn9fLR/VXWHwHEW/PmLDBnpR1jA9C6NtN+U8wbDI+lLbEBo+O
+         /xGw==
+X-Gm-Message-State: APjAAAWhuQP5w9yF/zIdN1gc+/dQZzfyG/1U4l4CBlel6Nf4KzAsbcCK
+        a+9aXKhvdHgaem//BP9KQdM=
+X-Google-Smtp-Source: APXvYqzXxRuWe19CrgmsXIahnZgDR3sDj4qDXf2XOSpZgtShF6MfqFqjaJiEtl6k1PzmNOkp1I2u+g==
+X-Received: by 2002:a17:90a:23ad:: with SMTP id g42mr27956057pje.105.1577478440024;
+        Fri, 27 Dec 2019 12:27:20 -0800 (PST)
+Received: from [10.230.28.123] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u11sm15298491pjr.9.2019.12.27.12.27.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 12:26:59 -0800 (PST)
-Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        kernel-team@android.com
-References: <20191106194625.116692-1-smuckle@google.com>
- <20191106231923.GK8309@piout.net>
- <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
- <20191115133627.GT3572@piout.net>
-From:   Steve Muckle <smuckle@google.com>
-Message-ID: <e43fd369-f0ad-f8bb-be8a-1a3ca038af44@google.com>
-Date:   Fri, 27 Dec 2019 12:26:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 27 Dec 2019 12:27:19 -0800 (PST)
+Subject: Re: linux-next: Fixes tags need some work in the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jaedon Shin <jaedon.shin@gmail.com>
+References: <20191228065553.6ba5d28f@canb.auug.org.au>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <45665759-a76f-5631-51bd-488b04f6bf03@gmail.com>
+Date:   Fri, 27 Dec 2019 12:27:18 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191115133627.GT3572@piout.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191228065553.6ba5d28f@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,66 +133,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(accidentally sent as HTML, resending in text)
 
-On 11/15/19 5:36 AM, Alexandre Belloni wrote:
-> On 06/11/2019 15:37:49-0800, Steve Muckle wrote:
->> On 11/6/19 3:19 PM, Alexandre Belloni wrote:
->>> On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
->>>> Due to distribution constraints it may not be possible to statically
->>>> compile the required RTC driver into the kernel.
->>>>
->>>> Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
->>>> or not) by checking at the end of RTC device registration whether the
->>>> time should be synced.
->>>>
->>>
->>> This does not really help distributions because most of them will still
->>> have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
->>
->> Just for my own edification, why is that? Is rtc0 normally useless on PC for
->> some reason?
->>
-> 
-> On PC, rtc0 is probably fine which is not the case for other
-> architectures where rtc0 is the SoC RTC and is often not battery backed.
-> 
->> On the platforms I'm working with I believe it can be assured that rtc0 will
->> be the correct rtc. That doesn't help typical distributions though.
->>
->> What about a kernel parameter to optionally override the rtc hctosys device
->> at runtime?
->>
-> 
-> What about keeping that in userspace instead which is way easier than
-> messing with kernel parameters?
 
-This should ideally happen before file systems are mounted so I don't 
-see many alternatives for communicating which RTC should be used. 
-Android uses the kernel command line for userspace parameters as well 
-and that's an option but that defeats part of the value of doing it in 
-userspace IMO. There's also device tree but I'm not sure this belongs there.
-
-Hctosys is also saving and restoring the system time on suspend/resume. 
-It seems more efficient to me to do this (which happens very frequently 
-on an Android device) in the kernel as opposed to in userspace.
-
-If I set the initial system time from the rtc in userspace but continue 
-to rely on the hctosys suspend/resume code, as it stands there will be a 
-window after the rtc driver is loaded but before the system time is set 
-where if suspend is entered, the correct time in the rtc will be lost.
->>> Can't you move away from HCTOSYS and do the correct thing in userspace
->>> instead of the crap hctosys is doing?
->>
->> Yes, I just figured it's a small change, and if hctosys can be made to work
->> might as well use that.
+On 12/27/2019 11:55 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> The fact is that hctosys is more related to time keeping than it is to
-> the RTC subsytem. It also does a very poor job setting the system time
-> because adding 0.5s is not the smartest thing to do. The rtc granularity
-> is indeed 1 second but is can be very precisely set.
-No argument with that, but millions of devices successfully rely on it 
-today. AFAICT this simple patch doesn't make anything worse. Together 
-with a change to support a kernel parameter for runtime rtc selection, 
-it should allow RTC drivers to be modularized on many systems. Can it be 
-adopted as a stopgap measure?
+> In commit
+> 
+>   1a3d78cb6e20 ("ata: ahci_brcm: BCM7425 AHCI requires AHCI_HFLAG_DELAY_ENGINE")
+> 
+> Fixes tags
+> 
+>   Fixes: 9586114cf1e9 ("ata: ahci_brcmstb: add support MIPS-based platforms")
+>   Fixes: 423be77daabe ("ata: ahci_brcmstb: add quirk for broken ncq")
+> 
+> have this problem:
+> 
+>   - Target SHA1s do not exist
+> 
+> Perhaps you meant
+> 
+> Fixes: 1980eb9bd7d7 ("ata: ahci_brcmstb: add support for MIPS-based platforms")
+> Fixes: 7de3244530bf ("ata: ahci_brcmstb: disable NCQ for MIPS-based platforms")
+
+Yes, those are the two that should have been used, the two commits were
+extracted from a downstream tree where the upstream commits ended up
+looking slightly different, my script does not (yet) rewrite those, Jens
+would you want me to resubmit or can you rewrite the commit message in
+place?
+
+> 
+> or
+> 
+> Fixes: b46f79bc78e0 ("ata: ahci_brcmstb: add a quirk for MIPS-based platforms")
+> 
+
+-- 
+Florian
