@@ -3,55 +3,223 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1622AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97CB21582
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E591B207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfL1KJn (ORCPT
+        id S1726566AbfL1KML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 05:09:43 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46548 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbfL1KJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 05:09:43 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2EBA8E6CB2E93B2D71F9;
-        Sat, 28 Dec 2019 18:09:38 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 28 Dec
- 2019 18:09:37 +0800
-Subject: Re: [f2fs-dev] [PATCH 4/4] f2fs: free sysfs kobject
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191218200947.20445-1-jaegeuk@kernel.org>
- <20191218200947.20445-4-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <c66c284d-1528-ff0c-41df-552ddbc25235@huawei.com>
-Date:   Sat, 28 Dec 2019 18:09:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 28 Dec 2019 05:12:11 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39798 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfL1KMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 05:12:10 -0500
+Received: from [172.58.30.175] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1il94o-00044A-Ic; Sat, 28 Dec 2019 10:12:07 +0000
+Date:   Sat, 28 Dec 2019 11:11:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v7 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20191228100944.kh22bofbr5oe2kvk@wittgenstein>
+References: <20191226180334.GA29409@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-In-Reply-To: <20191218200947.20445-4-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191226180334.GA29409@ircssh-2.c.rugged-nimbus-611.internal>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/19 4:09, Jaegeuk Kim wrote:
-> Detected kmemleak.
+On Thu, Dec 26, 2019 at 06:03:36PM +0000, Sargun Dhillon wrote:
+> This syscall allows for the retrieval of file descriptors from other
+> processes, based on their pidfd. This is possible using ptrace, and
+> injection of parasitic code to inject code which leverages SCM_RIGHTS
+> to move file descriptors between a tracee and a tracer. Unfortunately,
+> ptrace comes with a high cost of requiring the process to be stopped,
+> and breaks debuggers. This does not require stopping the process under
+> manipulation.
 > 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> One reason to use this is to allow sandboxers to take actions on file
+> descriptors on the behalf of another process. For example, this can be
+> combined with seccomp-bpf's user notification to do on-demand fd
+> extraction and take privileged actions. One such privileged action
+> is binding a socket to a privileged port.
+> 
+> This also adds the syscall to all architectures at the same time.
+> 
+> /* prototype */
+>   /* flags is currently reserved and should be set to 0 */
+>   int sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
+> 
+> /* testing */
+> Ran self-test suite on x86_64
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Fyi, I'm likely going to rewrite/add parts of/to this once I apply.
 
-Thanks,
+A few comments below.
+
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 2278e249141d..4a551f947869 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -578,3 +578,106 @@ void __init pid_idr_init(void)
+>  	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
+>  			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+>  }
+> +
+> +static struct file *__pidfd_fget(struct task_struct *task, int fd)
+> +{
+> +	struct file *file;
+> +	int ret;
+> +
+> +	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)) {
+> +		file = ERR_PTR(-EPERM);
+> +		goto out;
+> +	}
+> +
+> +	file = fget_task(task, fd);
+> +	if (!file)
+> +		file = ERR_PTR(-EBADF);
+> +
+> +out:
+> +	mutex_unlock(&task->signal->cred_guard_mutex);
+> +	return file;
+> +}
+
+Looking at this code now a bit closer, ptrace_may_access() and
+fget_task() both take task_lock(task) so this currently does:
+
+task_lock();
+/* check access */
+task_unlock();
+
+task_lock();
+/* get fd */
+task_unlock();
+
+which doesn't seem great.
+
+I would prefer if we could do:
+task_lock();
+/* check access */
+/* get fd */
+task_unlock();
+
+But ptrace_may_access() doesn't export an unlocked variant so _shrug_.
+
+But we can write this a little cleaner without the goto as:
+
+static struct file *__pidfd_fget(struct task_struct *task, int fd)
+{
+	struct file *file;
+	int ret;
+
+	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+	if (ret)
+		return ERR_PTR(ret);
+
+	if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
+		file = fget_task(task, fd);
+	else
+		file = ERR_PTR(-EPERM);
+	mutex_unlock(&task->signal->cred_guard_mutex);
+
+	return file ?: ERR_PTR(-EBADF);
+}
+
+If you don't like the ?: just do:
+
+if (!file)
+	return ERR_PTR(-EBADF);
+
+return file;
+
+though I prefer the shorter ?: syntax which is perfect for shortcutting
+returns.
+
+> +
+> +static int pidfd_getfd(struct pid *pid, int fd)
+> +{
+> +	struct task_struct *task;
+> +	struct file *file;
+> +	int ret, retfd;
+> +
+> +	task = get_pid_task(pid, PIDTYPE_PID);
+> +	if (!task)
+> +		return -ESRCH;
+> +
+> +	file = __pidfd_fget(task, fd);
+> +	put_task_struct(task);
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+> +
+> +	retfd = get_unused_fd_flags(O_CLOEXEC);
+> +	if (retfd < 0) {
+> +		ret = retfd;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * security_file_receive must come last since it may have side effects
+> +	 * and cannot be reversed.
+> +	 */
+> +	ret = security_file_receive(file);
+
+So I don't understand the comment here. Can you explain what the side
+effects are?
+security_file_receive() is called in two places: net/core/scm.c and
+net/compat.c. In both places it is called _before_ get_unused_fd_flags()
+so I don't know what's special here that would prevent us from doing the
+same. If there's no actual reason, please rewrite this functions as:
+
+static int pidfd_getfd(struct pid *pid, int fd)
+{
+	int ret;
+	struct task_struct *task;
+	struct file *file;
+
+	task = get_pid_task(pid, PIDTYPE_PID);
+	if (!task)
+		return -ESRCH;
+
+	file = __pidfd_fget(task, fd);
+	put_task_struct(task);
+	if (IS_ERR(file))
+		return PTR_ERR(file);
+
+	ret = security_file_receive(file);
+	if (ret) {
+		fput(file);
+		return ret;
+	}
+
+	ret = get_unused_fd_flags(O_CLOEXEC);
+	if (ret < 0)
+		fput(file);
+	else
+		fd_install(ret, file);
+
+	return ret;
+}
