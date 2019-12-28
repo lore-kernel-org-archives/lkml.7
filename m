@@ -2,115 +2,113 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F4EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8EAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF00F208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBCA2176D
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="IA0yXAVG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMNVXsQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfL1SS3 (ORCPT
+        id S1726410AbfL1Sfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 13:18:29 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40169 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfL1SS3 (ORCPT
+        Sat, 28 Dec 2019 13:35:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43161 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfL1Sfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 13:18:29 -0500
-Received: by mail-io1-f66.google.com with SMTP id x1so28317708iop.7
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 10:18:28 -0800 (PST)
+        Sat, 28 Dec 2019 13:35:41 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p27so13028150pli.10;
+        Sat, 28 Dec 2019 10:35:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MZG5qGB/Ymv7HA+XNiXGukSQ3TbbXrFPeer637cNn9g=;
-        b=IA0yXAVG+abRw4Z4X+DWQ8DtbjRWfpIwTBQuZOJLyCBLiiU1ppIZkHaIqkD8EH6FlS
-         sMao0bFQR70l2D0pyb/KJi+9+ENhHK3q4zdEBHgiTBKfY5AEsjyxd2XtPYc+FV5GJtjA
-         4T1cy7yhbN3p0tUte/1Bsjt+5WVPMEs7EnzUPjqIez08ZbTfgNtu5w7N6UJIlsY0J7iP
-         4hio5sUQnLIPc1W4csYsKWqNYTq79flh96weviiNZQ97PoMDT+lgIaRa6dNBP8yf7eP0
-         amKNd0zdTzBMc1qqk2RZonPmVmQ7zzlHAjOJD3kNnyT8oLw2b220qaVNUFrO5cKo+oTP
-         Mslg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HA6ap3YBH12tN/wspc69xBp95EQn1Xx2HPN8PjoD5hA=;
+        b=bMNVXsQnfKQRZaTsu5Z4AlXDdYOeCeNqaFJy6GuQn3oLSfJwG9BLmRwdcgIQlFlbNy
+         EP9p+FhRGyY5d/kNaZZ/FQh+S8zTAaVojQm0ho0mKz/n7SyWATXKht31JKeKnjFN32Cl
+         20d24NLqMfuGPZsWRCGsu8wMeGu885WX5Et9aJxLatjZlj2i2S1qOIbVLOnvxuSk50t3
+         znbIrDGBqKfswBC49tmawJBrxKn+XK0NLWKMu+TT/PmB5Nr0nwBo3MeS0bPy5REXS51M
+         b6k28+Easl0LQeyRJGDG6CTosoeO1HNpHTHKvl8xHyllA3Pu9GHV6gjRRhPvqFP+CHu+
+         BjhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MZG5qGB/Ymv7HA+XNiXGukSQ3TbbXrFPeer637cNn9g=;
-        b=Wsb8389SOFj/ti0BzJLHzGCbXZoSTvcVluoRzYb9jHyEMtiC4KExVhv80pSA5e/FN8
-         aBmX+AbQ476uZ5jcCKga+qX5A4piVzKjPh4En9zLKp4g0k8mJE7NtxcA7IocoeRwP+10
-         ZdK/LsPn3AECeD5GLdVSjsxcwKMx8RTtYh8Ho05/xsdPVSxwCHMzl7p97s2lMve0FEBF
-         is6x9KhbXc92MpXPWQKyoOTA7YdoDl4TXJyINAE74sEwwGvFgMPTDUPcYge1MMRl4R3K
-         Nu6fTFxMchmK+/7YuOUgfOGkNhoI5EeF0zWFhtxnvUF+PtDWSegjSMmkcANoRHALMbmf
-         BRyw==
-X-Gm-Message-State: APjAAAU9DMGGpoolHhrexRghaP782gndFrdVbfsoJZQ3FSuGd7nAPUnn
-        8deJhvh5bc4llkcD89OOOrOMIg==
-X-Google-Smtp-Source: APXvYqwcq2aKETvc20VuwagdVmJO2wF0zZodmKrImSVplTSvllxYHvj7yXMVVu8vWpmwSW6cbEI3lQ==
-X-Received: by 2002:a6b:731a:: with SMTP id e26mr38013162ioh.254.1577557108304;
-        Sat, 28 Dec 2019 10:18:28 -0800 (PST)
-Received: from cisco ([2601:282:902:b340:f166:b50c:bba2:408])
-        by smtp.gmail.com with ESMTPSA id w21sm10299560ioc.34.2019.12.28.10.18.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 10:18:27 -0800 (PST)
-Date:   Sat, 28 Dec 2019 11:18:25 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        jannh@google.com, christian.brauner@ubuntu.com,
-        keescook@chromium.org, cyphar@cyphar.com
-Subject: Re: [PATCH v2 1/2] samples, selftests/seccomp: Zero out seccomp_notif
-Message-ID: <20191228181825.GB6746@cisco>
-References: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HA6ap3YBH12tN/wspc69xBp95EQn1Xx2HPN8PjoD5hA=;
+        b=gzx65Zlbu+qywI1U0Up01jiBVCIgHbjWqN7Ukl5wj5Y1G+58XKxUww+2zVDLTL6gFP
+         0xRmf3VrYXpnD+0KYFknpA3DW+BNZdOO3ELapJqBPTPMSUdeJnJD9YRNMN+wrGZ5AGln
+         lToeY6+/Q8+QZ3FH11cEzho9Whh9URHE6J580/A20BJrLRduHbPcxIMlSmfc+VvmEVKs
+         8bUhFirv+7WfTmNgI/oNgttCW1AfwhTSfk6qJiCht2eq+6GtaKvqyj8YUQR0NKlYsHwv
+         R9R3vLQmjLY/2FaF+Y7cU6bCOSSWXAKNaKtpI/7z2tZYFAUqapN/fV5mfjAeN9lBE//u
+         tFMQ==
+X-Gm-Message-State: APjAAAUuReNFVfdraAy2AJZf4yrpKnpJpCrbGfiN17S7YtBSx1mkTs7L
+        3UHEiiNE4+oi9XGiKPQGhns=
+X-Google-Smtp-Source: APXvYqx4E8Eu7c2uGoKiMs4QJKyvTXmA+WIuNXF86bL2KzPp6818QAcgzM+bVVUzJc2A+S93588ywA==
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr56643250pll.341.1577558140530;
+        Sat, 28 Dec 2019 10:35:40 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id k21sm31679513pfa.63.2019.12.28.10.35.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Dec 2019 10:35:39 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, lftan@altera.com,
+        matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 01/13] mailbox: altera: convert to devm_platform_ioremap_resource
+Date:   Sat, 28 Dec 2019 18:35:26 +0000
+Message-Id: <20191228183538.26189-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 01:48:39AM +0000, Sargun Dhillon wrote:
-> The seccomp_notif structure should be zeroed out prior to calling the
-> SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
-> whether these structures were zeroed out or not, so these worked.
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  samples/seccomp/user-trap.c                   | 2 +-
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
-> index 6d0125ca8af7..0ca8fb37cd79 100644
-> --- a/samples/seccomp/user-trap.c
-> +++ b/samples/seccomp/user-trap.c
-> @@ -298,7 +298,6 @@ int main(void)
->  		req = malloc(sizes.seccomp_notif);
->  		if (!req)
->  			goto out_close;
-> -		memset(req, 0, sizeof(*req));
->  
->  		resp = malloc(sizes.seccomp_notif_resp);
->  		if (!resp)
-> @@ -306,6 +305,7 @@ int main(void)
->  		memset(resp, 0, sizeof(*resp));
+Use devm_platform_ioremap_resource() to simplify code.
 
-I know it's unrelated, but it's probably worth sending a patch to fix
-this to be sizes.seccomp_notif_resp instead of sizeof(*resp), since if
-the kernel is older this will over-zero things. I can do that, or you
-can add the patch to this series, just let me know which.
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/mailbox/mailbox-altera.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-But in any case, this patch is:
+diff --git a/drivers/mailbox/mailbox-altera.c b/drivers/mailbox/mailbox-altera.c
+index 75282666fb06..afb320e9d69c 100644
+--- a/drivers/mailbox/mailbox-altera.c
++++ b/drivers/mailbox/mailbox-altera.c
+@@ -285,7 +285,6 @@ static const struct mbox_chan_ops altera_mbox_ops = {
+ static int altera_mbox_probe(struct platform_device *pdev)
+ {
+ 	struct altera_mbox *mbox;
+-	struct resource	*regs;
+ 	struct mbox_chan *chans;
+ 	int ret;
+ 
+@@ -299,9 +298,7 @@ static int altera_mbox_probe(struct platform_device *pdev)
+ 	if (!chans)
+ 		return -ENOMEM;
+ 
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
++	mbox->mbox_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mbox->mbox_base))
+ 		return PTR_ERR(mbox->mbox_base);
+ 
+-- 
+2.17.1
 
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-
-Cheers,
-
-Tycho
