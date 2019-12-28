@@ -2,101 +2,72 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDE3C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F694C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 08:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1836721582
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 07:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcVDWAGv"
+	by mail.kernel.org (Postfix) with ESMTP id D6D0E207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 08:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfL1HsH (ORCPT
+        id S1726359AbfL1IFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 02:48:07 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45818 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfL1HsG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 02:48:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so28000611wrj.12;
-        Fri, 27 Dec 2019 23:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hxfnZMBs1EEg7q0rSJrZ/QwgArDGkn1GU7trZB2ysxo=;
-        b=IcVDWAGvv3NwbPgy6alH+NmPo2MqsIxTURvGL/WI5jN6mTyp3nhN4Gka3bC97hItnI
-         o3in/nW7Tja1ASm47AYQ9t36ddYobpfx+mFpH9JWOFFeELlGLsFyO+IXwNa+oEc5vsVt
-         3HjI6rwdFK18YGHlgNIoVFdZoE+vRTOAt1doILPt7GrLgp4BnhNZZNa/12TcaqQvguGR
-         qB07U74euKi0+VpI2smpmU/5oSL/fQipvYOD4rUXMwaDeD4c50oBLTgop0OQSXi+s4o1
-         oZ7dWW0xAVZGHOYk49k8cg2mPfO7rkL+9aYlwughmFJQ2ha09o/duP+vfyTKwhQs0RIN
-         hqhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hxfnZMBs1EEg7q0rSJrZ/QwgArDGkn1GU7trZB2ysxo=;
-        b=gnvcD43SYZIMc6eHxAjMV/ofCFRAN/EtS/qi8JQQmIcCu9jhg7ubWftfHX1dWX9jua
-         MYr1gQlghLFcP+2nLES/zccL9rCmSGR3MPC+WU7yZsB6x3NQX/eb6H1fLxSRhhUnx3dK
-         DRUd349LwlJVH3LNX5L0UOh+U86AmCdrVPsX4pMj4pQdLoNPV0iZcCQMXvhPgUuG+Jam
-         O9BGgdiFNDetsLDzQE7mwbMclSK3Z3Bos3Mk7TR3OjJimLSfHo+T9rnyKJWt232QD1C1
-         dyi7sNj+5cVtcH3W/1vlp1C7+2oYLZQ0JNQVKPV1JLzW8uKDtFnSG0Ocqnbjm7JK4NKU
-         XpZw==
-X-Gm-Message-State: APjAAAXvmfGi0WxDN9GkWLqB0daKKmHAkjkW8U4P6jUL7KUzA9FlH6TD
-        0r2YXI/TU/aoZ+UXdxUhFFI=
-X-Google-Smtp-Source: APXvYqzbeDGPi6mv9YGx0XuuDAd8x/X+KAyCAU9avVfvpQmcfji8fwkI4Qi+dD3S4rYyS2qlcAlAUQ==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr50523032wrm.139.1577519284705;
-        Fri, 27 Dec 2019 23:48:04 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s19sm13553258wmj.33.2019.12.27.23.48.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Dec 2019 23:48:04 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, heiko@sntech.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: rockchip: rk3368-lion-haikou: remove identical &uart0 node
-Date:   Sat, 28 Dec 2019 08:47:57 +0100
-Message-Id: <20191228074757.2075-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191220125520.29871-1-jbx6244@gmail.com>
-References: <20191220125520.29871-1-jbx6244@gmail.com>
+        Sat, 28 Dec 2019 03:05:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58480 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfL1IFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 03:05:06 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7C099ABF4;
+        Sat, 28 Dec 2019 08:05:04 +0000 (UTC)
+Date:   Sat, 28 Dec 2019 09:05:02 +0100
+Message-ID: <s5h4kxk6fkh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
+        hui.wang@canonical.com, tomas.espeleta@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: Re: [PATCH v2] ALSA: hda/realtek - Enable the bass speaker of ASUS UX431FLC
+In-Reply-To: <20191227100825.75790-1-chiu@endlessm.com>
+References: <20191227100825.75790-1-chiu@endlessm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two identical &uart0 nodes in this dts file,
-so remove one of them.
+On Fri, 27 Dec 2019 11:08:25 +0100,
+Chris Chiu wrote:
+> 
+> ASUS reported that there's an bass speaker in addition to internal
+> speaker and it uses DAC 0x02. It was not enabled in the commit
+> 436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS
+> UX431FLC") which only enables the amplifier for the front speaker.
+> This commit enables the bass speaker on top of the aforementioned
+> work to improve the acoustic experience.
+> 
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+> 
+> Notes:
+>   v2: 
+>    - Use existing alc285_fixup_speaker2_to_dac1 instead of new fixup function
+>    - Correct the commit hash number in the commit message 
+>    - Remove the redundant fixup ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts | 6 ------
- 1 file changed, 6 deletions(-)
+Could you rebase on the latest for-linus branch?  This patch isn't
+applied cleanly any longer.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-index 8251f3c0d..cbde279ae 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-@@ -83,12 +83,6 @@
- 	status = "okay";
- };
- 
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
--	status = "okay";
--};
--
- &usb_otg {
- 	dr_mode = "otg";
- 	status = "okay";
--- 
-2.11.0
 
+thanks,
+
+Takashi
