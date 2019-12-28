@@ -2,102 +2,120 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCF9C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 01:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7DBC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 01:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD22820828
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 01:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCD521744
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 01:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLKKu4Yg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qz9dvRXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfL1Bj2 (ORCPT
+        id S1726550AbfL1BsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 20:39:28 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34650 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfL1Bj1 (ORCPT
+        Fri, 27 Dec 2019 20:48:11 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39949 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfL1BsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 20:39:27 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so13591710lfc.1;
-        Fri, 27 Dec 2019 17:39:26 -0800 (PST)
+        Fri, 27 Dec 2019 20:48:10 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w21so30641727otj.7;
+        Fri, 27 Dec 2019 17:48:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4+o48AMUaNGbgETwlxDhs0abyiUl4r5Mn6wG6J96sBI=;
-        b=NLKKu4Yg5k+4uu9l7NgN/kiad8P6h5A8IrX4Lj6KmexKSqHcyrWijNV5+hYyP2mEeH
-         NLGi1THYh23HKQ2lybqwRutIRoQV7nsL1W6YyFxI/eYtRDPcjqryRZxWhrR1bvS7jet0
-         jG9F7YN/wi2AlkQo7OMBXVF4nU4PCgRV2mVwhughb3G+TtxuYirnPbzIPEf25xqQdwVt
-         Mhegx0s2aMURjzNdrVE07r/WN0x7yN2Qtjcx9ptkAdVW3xGFiQTjoo9Wx2JYZdN0zuZF
-         AaYfUeiqs3iygRBGcwjM2XLNvdmfh06qXbdbiMu/ykVcLrXWhcOb8qll+2YMh8E2XPBm
-         GMKg==
+        bh=BUwswIF58DB1KtJ+ICQ6+QTX6MPDBcPHFeXQK9tbzOo=;
+        b=Qz9dvRXj5xcgAHNUogdzsS/jQFiXWvqDrC0UFX+jIRAuiUvIi02X585sT03KNfExmk
+         ME8lkirSI3tdcOfDwt6g/v22cTkNnr3TgK7szL2haJoZBLWazRdPqJzpKr6KlEiUt8MC
+         gXDJ+rL3pf9Y9VBdR33I5ziV/W1rmtlLBxHyXD/fVBT6pLyef2O2bFzGXAk8ZTuAReLa
+         0NbxNNdHD1DKjy77hjk2Mc/sO9Hhq2flLFdz5wtfTyhL8fFAdQ78fcunm0AOpTa4wJPr
+         sQUcm5Wc3YjdkVRbbU8mHPz2dK1S/UCd3rXfW6mnCOAkzOyhE+0mh0lJ7Qcaz6MpfeRp
+         RDmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4+o48AMUaNGbgETwlxDhs0abyiUl4r5Mn6wG6J96sBI=;
-        b=DCUtJFGKdr2BsG35Al/dfVWK+rWKcyNAFN+66DiwvzQDtjFvixFz9chnKZEMNlYj18
-         vp36TaY4nRtfMt+zqHypWzOW2oKwJcP4W37FDw1QNXNw/rLt7aTceutbaVEtilqBxiN0
-         xE05CrH2r3ffk4v8N45uqcEYDQtExPVlCTwRaflyVAZK2mHn3lCaz2KvAPsttEGgKMU9
-         PtK+PJLkW0ZFyBjrhUlBRBXJ+1EPhXGepOPOHS+xzTNFgCOAihETMCcLw4K+QbpyvTIg
-         2gnXdFmjzuru3H4156ud3DkaQl0QyL/cy+IS15/e4vj8PhNywbbp9GgHO96OHUT7Zk+7
-         e/ow==
-X-Gm-Message-State: APjAAAXouHe/bYI+2b5GLcOEW4zTrECF3F0cIMwO29cnUnPLEX2VqSdR
-        E2Bbuitz1cBokfKiznp/VHfBimLp2TuVhAxxxOY=
-X-Google-Smtp-Source: APXvYqydB1qXyH+zz0ES+nAhC5c2+sOJfPd8juf7TuwsTrkzTGlJZr7z7xUVwVU7Y5Fj11172EFc8OB1hhFxIY0y+Og=
-X-Received: by 2002:ac2:54b4:: with SMTP id w20mr31692298lfk.67.1577497165626;
- Fri, 27 Dec 2019 17:39:25 -0800 (PST)
+        bh=BUwswIF58DB1KtJ+ICQ6+QTX6MPDBcPHFeXQK9tbzOo=;
+        b=o/fUGSY4wrJWNLxPYEfV316vW3hOwlCbU5gAQKM9eIqQv1EC2eq2BIgrdWaArkbldc
+         hB8k3k6ZggVWhw9vZaB0puv8I6yZl97SfIPLQ6+14KIR3AI1Vi824dsM2M0QnRShYrDg
+         hMAMr90aScA8iiiJigvGKsfY153gHrjmrjABPSP5F3LlwEaoqkB3mOLBFKXKdgg6v3jw
+         O6C4ZesP7V5gcFlqfBwckVEGeewf5p9oCkS6GEcEsSANc+F6dyedqpoTY6fRYBkfjzDq
+         NuYtUPRET1e7FujYpeV0kJwkGPw/UA64slJpR9+CRHz+qwFHcbvLGkuki5VOcKtMMgSG
+         qk+A==
+X-Gm-Message-State: APjAAAVxOYTVd/+YHQRsq3do60FB1Q5HkBjLg3N9Gf+c/u72hOvWhAo6
+        oLup1Q/+QYjfuHMy9oFfL2VlDfPFsgQ6U9ujs/LxtaaBFsl/bA==
+X-Google-Smtp-Source: APXvYqyotEoh+bvefljfUU8znWCWq/Ba+F6QeyxHQfB4vhuphKIJ17iG60Mlrf3hwMRsFAvCE64bmzO5z7MST6LPrH8=
+X-Received: by 2002:a05:6830:159a:: with SMTP id i26mr60947634otr.3.1577497689532;
+ Fri, 27 Dec 2019 17:48:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20191216144907.1931511-1-arnd@arndb.de>
-In-Reply-To: <20191216144907.1931511-1-arnd@arndb.de>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Sat, 28 Dec 2019 12:39:14 +1100
-Message-ID: <CAGRGNgV=vcDTAYpufqk-12pNnJiX79=-aHsMyOBGbXG1YtN=Lw@mail.gmail.com>
-Subject: Re: [PATCH v2] y2038: sparc: remove use of struct timex
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191227181435.7644-1-sashal@kernel.org> <20191227181435.7644-25-sashal@kernel.org>
+In-Reply-To: <20191227181435.7644-25-sashal@kernel.org>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Fri, 27 Dec 2019 17:48:39 -0800
+Message-ID: <CAMrEMU_QfP2fyh6HHf-QXAY=2GktQRaf1z0HPEX=TUcZQoY0Jw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.9 25/38] rfkill: Fix incorrect check to avoid
+ NULL pointer dereference
+To:     Sasha Levin <sashal@kernel.org>, Aditya Pakki <pakki001@umn.edu>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Should the mutex be held during this check? Do you know if any of the
+users need changing to IS_ERR_OR_NULL or should the dev member also be
+checked?
 
-On Tue, Dec 17, 2019 at 1:49 AM Arnd Bergmann <arnd@arndb.de> wrote:
+I'm not sure if this is true of the BUG_ON macros but I have seen
+implementations of similar macros that are used in the conditional
+avoiding the need for a 2nd check.
+
+On Fri, Dec 27, 2019 at 10:18 AM Sasha Levin <sashal@kernel.org> wrote:
 >
-> 'struct timex' is one of the last users of 'struct timeval' and is
-> only referenced in one place in the kernel any more, to convert the
-> user space timex into the kernel-internal version on sparc64, with a
-> different tv_usec member type.
+> From: Aditya Pakki <pakki001@umn.edu>
 >
-> As a preparation for hiding the time_t definition and everything
-> using that in the kernel, change the implementation once more
-> to only convert the timeval member, and then enclose the
-> struct definition in an #ifdef.
+> [ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
 >
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-FWIW this is:
-
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+> In rfkill_register, the struct rfkill pointer is first derefernced
+> and then checked for NULL. This patch removes the BUG_ON and returns
+> an error to the caller in case rfkill is NULL.
+>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
+> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  net/rfkill/core.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+> index 884027f62783..87c35844d7d9 100644
+> --- a/net/rfkill/core.c
+> +++ b/net/rfkill/core.c
+> @@ -940,10 +940,13 @@ static void rfkill_sync_work(struct work_struct *work)
+>  int __must_check rfkill_register(struct rfkill *rfkill)
+>  {
+>         static unsigned long rfkill_no;
+> -       struct device *dev = &rfkill->dev;
+> +       struct device *dev;
+>         int error;
+>
+> -       BUG_ON(!rfkill);
+> +       if (!rfkill)
+> +               return -EINVAL;
+> +
+> +       dev = &rfkill->dev;
+>
+>         mutex_lock(&rfkill_global_mutex);
+>
+> --
+> 2.20.1
+>
