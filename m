@@ -1,4 +1,4 @@
-Return-Path: <SRS0=GVTe=2R=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
@@ -6,59 +6,59 @@ X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC8BC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BE0C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 00:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA75F20740
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Dec 2019 23:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112E0208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 00:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfL0X5I (ORCPT
+        id S1726220AbfL1AKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 18:57:08 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43813 "EHLO mga01.intel.com"
+        Fri, 27 Dec 2019 19:10:12 -0500
+Received: from mga11.intel.com ([192.55.52.93]:57911 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfL0X5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 18:57:08 -0500
+        id S1725306AbfL1AKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 19:10:11 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 15:57:08 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 16:10:10 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,364,1571727600"; 
-   d="scan'208";a="418456292"
+   d="scan'208";a="418459089"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Dec 2019 15:57:05 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 27 Dec 2019 16:10:08 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1ikzTd-0001sD-79; Sat, 28 Dec 2019 07:57:05 +0800
-Date:   Sat, 28 Dec 2019 07:56:48 +0800
+        id 1ikzgG-0006Nm-CP; Sat, 28 Dec 2019 08:10:08 +0800
+Date:   Sat, 28 Dec 2019 08:10:07 +0800
 From:   kbuild test robot <lkp@intel.com>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     kbuild-all@lists.01.org, vkoul@kernel.org,
-        dan.j.williams@intel.com, gregkh@linuxfoundation.org,
-        Gary.Hook@amd.com, Nehal-bakulchandra.Shah@amd.com,
-        Shyam-sundar.S-k@amd.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
- PassThru DMA engine
-Message-ID: <201912280738.zotyIgEi%lkp@intel.com>
-References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     kbuild-all@lists.01.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Willhalm, Thomas" <thomas.willhalm@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Bruggeman, Otto G" <otto.g.bruggeman@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 2/2] thp, shmem: Fix conflict of above-47bit hint address
+ and PMD alignment
+Message-ID: <201912280704.DFqECoHe%lkp@intel.com>
+References: <20191220142548.7118-3-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <20191220142548.7118-3-kirill.shutemov@linux.intel.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sanjay,
+Hi "Kirill,
 
-I love your patch! Perhaps something to improve:
+Thank you for the patch! Perhaps something to improve:
 
 [auto build test WARNING on linus/master]
 [also build test WARNING on v5.5-rc3 next-20191220]
@@ -66,7 +66,7 @@ I love your patch! Perhaps something to improve:
 improve the system. BTW, we also suggest to use '--base' option to specify the
 base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-url:    https://github.com/0day-ci/linux/commits/Sanjay-R-Mehta/Add-AMD-PassThru-DMA-Engine-driver/20191227-234539
+url:    https://github.com/0day-ci/linux/commits/Kirill-A-Shutemov/Fix-two-above-47bit-hint-address-vs-THP-bugs/20191223-221713
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 46cf053efec6a3a5f343fead837777efe8252a46
 reproduce:
         # apt-get install sparse
@@ -80,81 +80,102 @@ Reported-by: kbuild test robot <lkp@intel.com>
 
 sparse warnings: (new ones prefixed by >>)
 
->> drivers/dma/ptdma/ptdma-dev.c:151:25: sparse: sparse: cast from restricted __le32
->> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse: sparse: incorrect type in assignment (different base types)
->> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    expected unsigned int [usertype]
->> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    got restricted __le32 [usertype]
-   drivers/dma/ptdma/ptdma-dev.c:180:21: sparse: sparse: incorrect type in assignment (different base types)
->> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] length
->> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    got unsigned long long [usertype] src_len
-   drivers/dma/ptdma/ptdma-dev.c:182:21: sparse: sparse: incorrect type in assignment (different base types)
->> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] src_lo
->> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    got unsigned int [usertype]
-   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse: sparse: incorrect type in assignment (different base types)
->> drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] dst_lo
-   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    got unsigned int [usertype]
+>> mm/shmem.c:2147:34: sparse: sparse: incorrect type in argument 1 (different base types)
+>> mm/shmem.c:2147:34: sparse:    expected struct file *
+>> mm/shmem.c:2147:34: sparse:    got unsigned long uaddr
 
-vim +151 drivers/dma/ptdma/ptdma-dev.c
+vim +2147 mm/shmem.c
 
-   132	
-   133	static int pt_core_execute_cmd(struct ptdma_desc *desc,
-   134				       struct pt_cmd_queue *cmd_q)
-   135	{
-   136		u32 *mp;
-   137		__le32 *dp;
-   138		u32 tail;
-   139		int	i;
-   140		int ret = 0;
-   141	
-   142		if (desc->dw0.soc) {
-   143			desc->dw0.ioc = 1;
-   144			desc->dw0.soc = 0;
-   145		}
-   146		mutex_lock(&cmd_q->q_mutex);
-   147	
-   148		mp = (u32 *)&cmd_q->qbase[cmd_q->qidx];
-   149		dp = (__le32 *)desc;
-   150		for (i = 0; i < 8; i++)
- > 151			mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
-   152	
-   153		cmd_q->qidx = (cmd_q->qidx + 1) % cmd_queue_length;
-   154	
-   155		/* The data used by this command must be flushed to memory */
-   156		wmb();
-   157	
-   158		/* Write the new tail address back to the queue register */
-   159		tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-   160		iowrite32(tail, cmd_q->reg_tail_lo);
-   161	
-   162		/* Turn the queue back on using our cached control register */
-   163		iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
-   164		mutex_unlock(&cmd_q->q_mutex);
-   165	
-   166		return ret;
-   167	}
-   168	
-   169	int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
-   170				     struct pt_passthru_engine *pt_engine)
-   171	{
-   172		struct ptdma_desc desc;
-   173	
-   174		cmd_q->cmd_error = 0;
-   175	
-   176		memset(&desc, 0, Q_DESC_SIZE);
-   177	
-   178		desc.dw0.val = CMD_DESC_DW0_VAL;
-   179	
- > 180		desc.length = pt_engine->src_len;
-   181	
- > 182		desc.src_lo = lower_32_bits(pt_engine->src_dma);
-   183		desc.dw3.src_hi = upper_32_bits(pt_engine->src_dma);
-   184	
- > 185		desc.dst_lo = lower_32_bits(pt_engine->dst_dma);
-   186		desc.dw5.dst_hi = upper_32_bits(pt_engine->dst_dma);
-   187	
-   188		return pt_core_execute_cmd(&desc, cmd_q);
-   189	}
-   190	
+  2073	
+  2074	unsigned long shmem_get_unmapped_area(struct file *file,
+  2075					      unsigned long uaddr, unsigned long len,
+  2076					      unsigned long pgoff, unsigned long flags)
+  2077	{
+  2078		unsigned long (*get_area)(struct file *,
+  2079			unsigned long, unsigned long, unsigned long, unsigned long);
+  2080		unsigned long addr;
+  2081		unsigned long offset;
+  2082		unsigned long inflated_len;
+  2083		unsigned long inflated_addr;
+  2084		unsigned long inflated_offset;
+  2085	
+  2086		if (len > TASK_SIZE)
+  2087			return -ENOMEM;
+  2088	
+  2089		get_area = current->mm->get_unmapped_area;
+  2090		addr = get_area(file, uaddr, len, pgoff, flags);
+  2091	
+  2092		if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGE_PAGECACHE))
+  2093			return addr;
+  2094		if (IS_ERR_VALUE(addr))
+  2095			return addr;
+  2096		if (addr & ~PAGE_MASK)
+  2097			return addr;
+  2098		if (addr > TASK_SIZE - len)
+  2099			return addr;
+  2100	
+  2101		if (shmem_huge == SHMEM_HUGE_DENY)
+  2102			return addr;
+  2103		if (len < HPAGE_PMD_SIZE)
+  2104			return addr;
+  2105		if (flags & MAP_FIXED)
+  2106			return addr;
+  2107		/*
+  2108		 * Our priority is to support MAP_SHARED mapped hugely;
+  2109		 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
+  2110		 * But if caller specified an address hint and we allocated area there
+  2111		 * successfully, respect that as before.
+  2112		 */
+  2113		if (uaddr == addr)
+  2114			return addr;
+  2115	
+  2116		if (shmem_huge != SHMEM_HUGE_FORCE) {
+  2117			struct super_block *sb;
+  2118	
+  2119			if (file) {
+  2120				VM_BUG_ON(file->f_op != &shmem_file_operations);
+  2121				sb = file_inode(file)->i_sb;
+  2122			} else {
+  2123				/*
+  2124				 * Called directly from mm/mmap.c, or drivers/char/mem.c
+  2125				 * for "/dev/zero", to create a shared anonymous object.
+  2126				 */
+  2127				if (IS_ERR(shm_mnt))
+  2128					return addr;
+  2129				sb = shm_mnt->mnt_sb;
+  2130			}
+  2131			if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER)
+  2132				return addr;
+  2133		}
+  2134	
+  2135		offset = (pgoff << PAGE_SHIFT) & (HPAGE_PMD_SIZE-1);
+  2136		if (offset && offset + len < 2 * HPAGE_PMD_SIZE)
+  2137			return addr;
+  2138		if ((addr & (HPAGE_PMD_SIZE-1)) == offset)
+  2139			return addr;
+  2140	
+  2141		inflated_len = len + HPAGE_PMD_SIZE - PAGE_SIZE;
+  2142		if (inflated_len > TASK_SIZE)
+  2143			return addr;
+  2144		if (inflated_len < len)
+  2145			return addr;
+  2146	
+> 2147		inflated_addr = get_area(uaddr, 0, inflated_len, 0, flags);
+  2148		if (IS_ERR_VALUE(inflated_addr))
+  2149			return addr;
+  2150		if (inflated_addr & ~PAGE_MASK)
+  2151			return addr;
+  2152	
+  2153		inflated_offset = inflated_addr & (HPAGE_PMD_SIZE-1);
+  2154		inflated_addr += offset - inflated_offset;
+  2155		if (inflated_offset > offset)
+  2156			inflated_addr += HPAGE_PMD_SIZE;
+  2157	
+  2158		if (inflated_addr > TASK_SIZE - len)
+  2159			return addr;
+  2160		return inflated_addr;
+  2161	}
+  2162	
 
 ---
 0-DAY kernel test infrastructure                 Open Source Technology Center
