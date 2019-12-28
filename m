@@ -2,98 +2,174 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F578C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E09C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2170E20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD31C208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXzvdD90"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVnktZvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfL1Ohx (ORCPT
+        id S1726359AbfL1PBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 09:37:53 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34774 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfL1Ohw (ORCPT
+        Sat, 28 Dec 2019 10:01:49 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55648 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfL1PBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 09:37:52 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so28690206wrr.1
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 06:37:51 -0800 (PST)
+        Sat, 28 Dec 2019 10:01:48 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so8853488wmj.5;
+        Sat, 28 Dec 2019 07:01:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pyGdJRwo6Y5rfYRQzWh9hhmSSSQyZwjpG1KsAjDx5is=;
-        b=PXzvdD90skNwJyFrE38+JpzWwSgFh+hrdjustCqzWFCtP0ARlY3ABJ4ENx2cclJUlU
-         ev71nYK+nejEJ9Yp/xn7Hgki5Y17JrlqtZVy1mpN8r5dBH+DTydqkbp7YLNlFAj3FB39
-         JAuFzNomus3czQFTIIMv3K/Z2g0BFSuPhFX2Bq8ajxlmMXVZp2m+u0lrB7zgWrgkVjwg
-         CXeM7BD4E9Z8z+gS175fwPKEMoE45ZpFz1eHt2KBcRUXUkfzleFoSd/Oi39qrQQfz2r2
-         AoY9Ay+KQoevv1nmgsHbUcc/9CMiwFxv0OTYaZGTKu8afWw6K2k5FYCo9tioRuvEXiUa
-         y/kQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yC8Wr593B5wtduw4VrkVjj/ZwxY8V1O2vaeIv87237A=;
+        b=bVnktZvqowVmBzHkkb0JPOie+l2SpZIWi0alFHTXC6F/3uqR0LNh6CcsdgK4WQGBT7
+         vHMu6QDUKXNR6VRT0HSYKbrclT9VKVAe3Vf1RS6VJlOnac+LmiZaY5OFFGLsUc3sR5GG
+         ZiGsBCTkLahtxwYU4Z+q5He0lY2wK98WVr5n+TN4XdOICJ4snmDHC0VZmlB2Q8voGnIt
+         SQMbt5fHtjiolFYe1qaK4z88olCwGdzUjzDLwXAqzJMsBFuSC/d8ZgMxICA/3gsbuOdN
+         HtT8f3Y8Nq5jzs6rCJq8b9kHNRm+p8HNRPIZ/BLhrfC3k+Ulw7SWMflugrRCU3mh9UjP
+         3cGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=pyGdJRwo6Y5rfYRQzWh9hhmSSSQyZwjpG1KsAjDx5is=;
-        b=D+aysgN0bjhljQELmVso3WGeC64kq36F3y/PRVzoiln1R2DSsO5+8+3irxpi4jztTL
-         WzxpShYS77DKpzF6eZcW8HKdjMObdxSmYoNpl+fsBxl1AC4PVVp3TA9ABIBlEvdtRmr+
-         59xp3+uUBpZodQjcbKxHLlA7dZDLeDynPlaGJNELTY2ERp1bUEiekTpJ7uXXWE1Sg8Qu
-         b3LWYZVaJ5VKA8XSnDCo9ZpMUsqyhq2W92GeT6aOxdVmvy70eUBSekxXeCYUhh8d0wgP
-         tza9g2vXE/7MDM5nQp4/RCkok+6uqIfziPLbmGzECHtVM6t24cwmmGFt75dLr4HO7c5+
-         7DOA==
-X-Gm-Message-State: APjAAAWH96vDTPR47o+WucnI3B3uvZbKkY8yqaGdCwKHF0PPcx1by6Yo
-        orHoIQrdqsgs0FYBISdHOOM=
-X-Google-Smtp-Source: APXvYqxSqUH0DLFp50ljpmbSMRDYQPOR6MXzvuaJATmfZGd69U33SELNkjs8i7PpsG53EyT5Pde5XQ==
-X-Received: by 2002:adf:806e:: with SMTP id 101mr58779002wrk.300.1577543870961;
-        Sat, 28 Dec 2019 06:37:50 -0800 (PST)
-Received: from localhost.localdomain (dslb-088-070-028-178.088.070.pools.vodafone-ip.de. [88.70.28.178])
-        by smtp.gmail.com with ESMTPSA id u1sm14308940wmc.5.2019.12.28.06.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 06:37:49 -0800 (PST)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
-Date:   Sat, 28 Dec 2019 15:37:25 +0100
-Message-Id: <20191228143725.24455-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        bh=yC8Wr593B5wtduw4VrkVjj/ZwxY8V1O2vaeIv87237A=;
+        b=VM0SUJd/VGO2xkf154axv+9W3PjYr3O0L1023lLXOC8wZ5NP778cH6n3ipeIboAMZ9
+         XeLqyMHtRFvgFgnihu0OIT4zrITj0qvSiBbRuVoZFMin3zIBkTCe3sEEOFbwQSxU6BlE
+         BdjvpCBiy+x5Dl2p7X44l49wYl0A1LFz3YkXi/wA1kJS67XEcGNezL+tkFmRWslG09v2
+         QSKQ0BX7oF9O1w1m0YfizPz3N5G+dmgSR36Kciiq0onh8UyBaZNc/nzyMFua1oHKPVLj
+         Map90cyDF384pXkK3zAHEXGQGz6omq/FsADGIlAnESJYf3NkSSQLMYflBmEu24UpRY9i
+         hNTA==
+X-Gm-Message-State: APjAAAWoYrDYwzDB9C0xz0M0jzzn1X3kVkhs+vrgqjEbv4+muT/n8kcB
+        i6cumg+C1ALuedNgIUb+smA=
+X-Google-Smtp-Source: APXvYqxzyRETFWCnJn23zt24iJDf9apLhnEN+OkRL+WGG0/53gfZkDaWbVVE9rd6Z9oCawAQPrJGZA==
+X-Received: by 2002:a1c:7e0b:: with SMTP id z11mr23123806wmc.88.1577545306424;
+        Sat, 28 Dec 2019 07:01:46 -0800 (PST)
+Received: from [192.168.8.147] (252.165.185.81.rev.sfr.net. [81.185.165.252])
+        by smtp.gmail.com with ESMTPSA id z123sm14770824wme.18.2019.12.28.07.01.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Dec 2019 07:01:45 -0800 (PST)
+Subject: Re: INFO: rcu detected stall in br_handle_frame (2)
+To:     Florian Westphal <fw@strlen.de>,
+        syzbot <syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
+        eric.dumazet@gmail.com
+References: <000000000000f9f9a8059a737d7e@google.com>
+ <20191228111548.GI795@breakpoint.cc>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <30e6a8c6-b857-00b8-24d8-076b92409636@gmail.com>
+Date:   Sat, 28 Dec 2019 07:01:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191228111548.GI795@breakpoint.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device was added to the stand-alone driver on github.
-Add it to the staging driver as well.
 
-Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/os_dep/usb_intf.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-index a7cac0719b8b..b5d42f411dd8 100644
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -37,6 +37,7 @@ static const struct usb_device_id rtw_usb_id_tbl[] = {
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
- 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
- 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
-+	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
- 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
- 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
- 	{}	/* Terminating entry */
--- 
-2.24.1
+On 12/28/19 3:15 AM, Florian Westphal wrote:
+> syzbot <syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com> wrote:
+> 
+> [ CC Eric, fq related ]
+> 
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    7e0165b2 Merge branch 'akpm' (patches from Andrew)
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=116ec09ee00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=1b59a3066828ac4c
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=dc9071cc5a85950bdfce
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159182c1e00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1221218ee00000
+>>
+>> Bisection is inconclusive: the bug happens on the oldest tested release.
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158224c1e00000
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=178224c1e00000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=138224c1e00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com
+>>
+>> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+>> 	(detected by 0, t=10502 jiffies, g=10149, q=201)
+>> rcu: All QSes seen, last rcu_preempt kthread activity 10502
+>> (4294978441-4294967939), jiffies_till_next_fqs=1, root ->qsmask 0x0
+>> sshd            R  running task    26584 10034   9965 0x00000008
+>> Call Trace:
+>>  <IRQ>
+>>  sched_show_task kernel/sched/core.c:5954 [inline]
+> [..]
+> 
+> The reproducer sets up 'fq' sched with TCA_FQ_QUANTUM == 0x80000000
+> 
+> This causes infinite loop in fq_dequeue:
+> 
+> if (f->credit <= 0) {
+>   f->credit += q->quantum;
+>   goto begin;
+> }
+> 
+> ... because f->credit is either 0 or -2147483648.
+> 
+> Eric, what is a 'sane' ->quantum value?
+> 
+> One could simply add a 'quantum > 0 && quantum < INT_MAX'
+> constraint afaics.
+> 
+> If you don't have a better idea/suggestion for an upperlimit INT_MAX
+> would be enough to prevent perpetual <= 0 condition.
+> 
+
+Thanks Florian for the analysis.
+
+I guess we could use a conservative upper bound value of (1 << 20)
+( about 16 64KB packets )
+
+diff --git a/net/sched/sch_fq.c b/net/sched/sch_fq.c
+index ff4c5e9d0d7778d86f20f4bd67cc627eed0713d9..12f1d1c6044fac9db987f7ce3a50a7e2c711358b 100644
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -786,15 +786,20 @@ static int fq_change(struct Qdisc *sch, struct nlattr *opt,
+        if (tb[TCA_FQ_QUANTUM]) {
+                u32 quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
+ 
+-               if (quantum > 0)
++               if (quantum > 0 && quantum <= (1 << 20))
+                        q->quantum = quantum;
+                else
+                        err = -EINVAL;
+        }
+ 
+-       if (tb[TCA_FQ_INITIAL_QUANTUM])
+-               q->initial_quantum = nla_get_u32(tb[TCA_FQ_INITIAL_QUANTUM]);
++       if (tb[TCA_FQ_INITIAL_QUANTUM]) {
++               u32 quantum = nla_get_u32(tb[TCA_FQ_INITIAL_QUANTUM]);
+ 
++               if (quantum > 0 && quantum <= (1 << 20))
++                       q->initial_quantum = quantum;
++               else
++                       err = -EINVAL;
++       }
+        if (tb[TCA_FQ_FLOW_DEFAULT_RATE])
+                pr_warn_ratelimited("sch_fq: defrate %u ignored.\n",
+                                    nla_get_u32(tb[TCA_FQ_FLOW_DEFAULT_RATE]));
 
