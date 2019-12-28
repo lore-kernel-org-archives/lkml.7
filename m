@@ -2,97 +2,104 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1CAC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2420C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCF020748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:34:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5MEbVAI"
+	by mail.kernel.org (Postfix) with ESMTP id BA58720838
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 10:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577529714;
+	bh=BFFr5Pm34/zLJe/ZvSMWrNK6ekgSNljecH5sN9hXx6M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SJCN3FKXgAL4HlhwqoLuTjM1gFjwcHi+jgDAIbGGTXnbIDksJG2PDym5IoLoJOWSD
+	 O+EMfIsJf6HEhESUnXqd5NGHGuhqa4V4dJxVb9eh1Jza/rWSJG3tT9Uhnb8dy4kTDq
+	 JY1lSJeK1ylmLGbr3ikcdgzK70iylCR3/cpQsDhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfL1KeE (ORCPT
+        id S1726395AbfL1Klx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 05:34:04 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:47028 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfL1KeE (ORCPT
+        Sat, 28 Dec 2019 05:41:53 -0500
+Received: from disco-boy.misterjones.org ([51.254.78.96]:53316 "EHLO
+        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfL1Klx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 05:34:04 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so27592776edi.13;
-        Sat, 28 Dec 2019 02:34:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lpAQbHq8g6hcvfoq54Da1G6S7tfv48hgOJnTAd1NDNs=;
-        b=L5MEbVAIdT5xfjKUxKtH7Pi5NGIwnWPsudMdVO+c8vQAZPIXuuu9jvPKIhB4V8vaoj
-         fbzf1xwtlL7SRYzaLM3BpUsM6bZRcnaGojfsFIzSmaVpjzgWjgeishqT4WJeqV6A7l6e
-         Pe/HLjvHVqF7gLB6P30ZBgOscp7t3m100SgyAaaNdOTMyEjkyJZubF8Goak+f6iYKd5F
-         rrfEzH8nmu7XG4ySkLKPJMv8wtKXN8f8enXFm49SRbGSuoOJh92HrRe2vrNz18QXOaFc
-         wDOMi7ldGmelter4N57ICLkNUERfQGCDpUj1PwChsFOvthtbsevxfl0hv/SsbGsPdK6K
-         wJjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lpAQbHq8g6hcvfoq54Da1G6S7tfv48hgOJnTAd1NDNs=;
-        b=FGKN4YllRwMjKTdPnLK3eLVyoqnv6FnAq9QMI+4OICqDc8/Z5PX0UPWGgqTvg5UWc4
-         NCkZv3WPGGu0+cw8ObBgx2vMKx1LALkPI9O1H8J7rRf0cCUvDyl5DWPfo3mOTNDahhS0
-         DxiuhP0Hg5nNsOXM04sEwa5qEkfORtV+6czzT3lFH6Z1sV9e12R/59n91DAM7v91t4LJ
-         BiRtjccqq8lx6zBqj9loLoPk3rPihLveAcPYPDC63VyJ2+LJNMILW6yrr+HhF4sRkHgt
-         sAwMEX8zp2e9TKKU9f1inR1tGPSaMcsFSU6xyTMxnP9XvVRO9ndsn882JQHJnlmkDebU
-         l1hg==
-X-Gm-Message-State: APjAAAUFOuvpg4l3sCtIQqgBYyVssddA0m2xrLogJTxi+hGenFzAsJX3
-        jWilaPECEsz84qwKxC8h2RE=
-X-Google-Smtp-Source: APXvYqwejBvbImOwxjtvBAgWEp4PBHbXfcL4qImmZuBEVyXuen8MZIRRimp2ajrUwFleM63cCvicBQ==
-X-Received: by 2002:aa7:d4d2:: with SMTP id t18mr59379615edr.223.1577529241977;
-        Sat, 28 Dec 2019 02:34:01 -0800 (PST)
-Received: from localhost.localdomain ([85.107.87.79])
-        by smtp.googlemail.com with ESMTPSA id o88sm4223486eda.41.2019.12.28.02.34.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 02:34:01 -0800 (PST)
-From:   isidentical <batuhanosmantaskaya@gmail.com>
-Cc:     isidentical <batuhanosmantaskaya@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/hugetlb: ensure signedness of large numbers
-Date:   Sat, 28 Dec 2019 13:33:56 +0300
-Message-Id: <20191228103357.23904-1-batuhanosmantaskaya@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 28 Dec 2019 05:41:53 -0500
+X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Sat, 28 Dec 2019 05:41:52 EST
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1il9XY-0003x6-Oe; Sat, 28 Dec 2019 10:41:48 +0000
+Date:   Sat, 28 Dec 2019 10:41:47 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Andrew Murray" <Andrew.Murray@arm.com>,
+        Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH v3 28/32] KVM: arm64: GICv4.1: Add direct injection
+ capability to SGI registers
+Message-ID: <20191228104147.0e658aa9@why>
+In-Reply-To: <c009fb1f-f4ec-22d5-ba7d-58426837c8af@huawei.com>
+References: <20191224111055.11836-1-maz@kernel.org>
+        <20191224111055.11836-29-maz@kernel.org>
+        <c009fb1f-f4ec-22d5-ba7d-58426837c8af@huawei.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, tglx@linutronix.de, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, Andrew.Murray@arm.com, rrichter@marvell.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change introduces a sanitity helper for
-numbers that are larger than 2^5.
+On Sat, 28 Dec 2019 17:19:36 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 
-Signed-off-by: isidentical <batuhanosmantaskaya@gmail.com>
----
- include/uapi/asm-generic/hugetlb_encode.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Marc,
+> 
+> On 2019/12/24 19:10, Marc Zyngier wrote:
+> > Most of the GICv3 emulation code that deals with SGIs now has to be
+> > aware of the v4.1 capabilities in order to benefit from it.
+> > 
+> > Add such support, keyed on the interrupt having the hw flag set and
+> > being a SGI.
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---  
+> 
+> > diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+> > index 0d090482720d..6ebf747a7806 100644
+> > --- a/virt/kvm/arm/vgic/vgic-mmio.c
+> > +++ b/virt/kvm/arm/vgic/vgic-mmio.c
+> > @@ -290,6 +345,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,  
+> >   >   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> >   > +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {  
+> > +			/* HW SGI? Ask the GIC to inject it */  
+> 
+> Shouldn't this be "Ask the GIC to clear its pending state"?
 
-diff --git a/include/uapi/asm-generic/hugetlb_encode.h b/include/uapi/asm-generic/hugetlb_encode.h
-index b0f8e87235bd..42c06c62ae17 100644
---- a/include/uapi/asm-generic/hugetlb_encode.h
-+++ b/include/uapi/asm-generic/hugetlb_encode.h
-@@ -31,6 +31,6 @@
- #define HUGETLB_FLAG_ENCODE_512MB	(29 << HUGETLB_FLAG_ENCODE_SHIFT)
- #define HUGETLB_FLAG_ENCODE_1GB		(30 << HUGETLB_FLAG_ENCODE_SHIFT)
- #define HUGETLB_FLAG_ENCODE_2GB		(31 << HUGETLB_FLAG_ENCODE_SHIFT)
--#define HUGETLB_FLAG_ENCODE_16GB	(34 << HUGETLB_FLAG_ENCODE_SHIFT)
-+#define HUGETLB_FLAG_ENCODE_16GB	(UINT32_C(34) << HUGETLB_FLAG_ENCODE_SHIFT)
- 
- #endif /* _ASM_GENERIC_HUGETLB_ENCODE_H_ */
+yeah, a silly copy-paste mistake, thanks for spotting this!
+
+> Otherwise looks good!
+
+Thanks for taking the time to review this work!
+
+	M.
 -- 
-2.20.1
-
+Jazz is not dead. It just smells funny...
