@@ -2,106 +2,191 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C989FC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC84C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989D8207E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577498870;
-	bh=U/nAnG2hJ81tt6C4DRheFtDEpu00ZrtqXVwbAsZZP9M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fRRa17BUaq9sO9QlLUM0NQwFIV63hV+zBZaXnpX4fYpSgnfFo85eDVTRI/ujbTcUJ
-	 p7emBqLu4fNdBmNMCG67gOUBEUntbbCvHTLnkECS1/egHJm91283m1v0xN0udqWBF4
-	 EFDkh+WqqpbGL9V2rjWf9ch/XWvv8SfZCGkerGFs=
+	by mail.kernel.org (Postfix) with ESMTP id 5CEA5208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:25:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfL1CHQ (ORCPT
+        id S1726425AbfL1CZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 21:07:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfL1CHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 21:07:14 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E1C6222C4
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 02:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577498833;
-        bh=U/nAnG2hJ81tt6C4DRheFtDEpu00ZrtqXVwbAsZZP9M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1c6ghWj9lBinB1rJ06SZnLd56bVBBBe9bPlVBfLZzT9lOViU8sgKn5WWYaCABTVCU
-         mV7JlPuz2lmd9hnM4J1CtbAGqIFv9gcLmZftS+0Wi0uiScZE3GN7E8NGM/yYR0L1wd
-         RGzetWX/uhSMgeHn4e0hXigTRJ7NGS4dE6kAfqv4=
-Received: by mail-wm1-f50.google.com with SMTP id b19so9462905wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 18:07:13 -0800 (PST)
-X-Gm-Message-State: APjAAAVqQS7bwEmg0BzGyBUi8zCQQ3PCL1fTPJi21Azv2oE9Uq7utCNB
-        Cutumx8Jj8KXCyl7Rh44LsFzgruv5h69s4eXzeGD9g==
-X-Google-Smtp-Source: APXvYqxn3Rv02S1te2llnFcs0CQZm6YywFRNddMkZ5rLIdJvih5IqiGw4PeCUC2MXu651WWfDw7Wdf6pIKHDbHZ3lio=
-X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr21666330wmi.89.1577498831945;
- Fri, 27 Dec 2019 18:07:11 -0800 (PST)
+        Fri, 27 Dec 2019 21:25:10 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:55514 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfL1CZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 21:25:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id p8so2412148ilp.22
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 18:25:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dkMBOiYFVN/QgBDsRTSBXVQRsjZiREbEFc+AoW++NlU=;
+        b=OtFhSp+Q+Ji3yWOUkNZ4L5iLxxvjBa58E6oi6JWJ13imkyNTLFWlMkhGtmbdDlCCeZ
+         mmfTEEUN0PM41/vffgd0aOiE4i4SYQpt/adTHvBzsP0UV06wx5501G9QZXuPBc9sUfvN
+         vq+/pOmjajOzbIu4oXRWr617OFT99dRFjDUZ+nUtYAJLHS+axqUpadYlcUw7jtxzwuK0
+         tA9hc1zVIb3bDYZjfic4O/tEr4KOMT5bC89YWN0BWpo14PD/QdBppnI+407S80aPCiAj
+         AGMbcLO7iymr40M1uWmbn6evIEevYz7t3c3SapKlnYJSlPHeC3s6TFlK6xHuBuDR+RO+
+         wZUw==
+X-Gm-Message-State: APjAAAWmHXBtFe+2yV12fphCYWN+NP6oqD3Q9sKgRgTfFfvY6Dp8l4i7
+        NOxkyiB8ZqDNmGubhoOZkQiZNFXlCjyIZQmwix1OnB31EJm5
+X-Google-Smtp-Source: APXvYqwLaMv/LswRa53Dmo4Pg4vZYkdsBZ0NheBEGX2oMrsE914+BQPXHwF/NuuEtckYuqCU8X+pmSCe+L3/Xo/fcSNEv2OR9qpW
 MIME-Version: 1.0
-References: <20191226140423.GB3158@mit.edu> <4048434.Q8HajmOrkZ@tauon.chronox.de>
- <20191227130436.GC70060@mit.edu> <15817620.rmTN4T87Wr@tauon.chronox.de> <20191227220857.GD70060@mit.edu>
-In-Reply-To: <20191227220857.GD70060@mit.edu>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 27 Dec 2019 18:06:56 -0800
-X-Gmail-Original-Message-ID: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
-Message-ID: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Stephan Mueller <smueller@chronox.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:680d:: with SMTP id d13mr35421523ioc.188.1577499909040;
+ Fri, 27 Dec 2019 18:25:09 -0800 (PST)
+Date:   Fri, 27 Dec 2019 18:25:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b63799059aba5164@google.com>
+Subject: KASAN: slab-out-of-bounds Read in hsr_debugfs_rename
+From:   syzbot <syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com>
+To:     arvid.brodin@alten.se, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 2:09 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+Hello,
 
-> So if it's just for cryptographers, then let it all be done in
-> userspace, and let's not make it easy for GPG, OpenSSL, etc., to all
-> say, "We want TrueRandom(tm); we won't settle for less".  We can talk
-> about how do we provide the interfaces so that those cryptographers
-> can get the information they need so they can get access to the raw
-> noise sources, separated out and named, and with possibly some way
-> that the noise source can authenticate itself to the Cryptographer's
-> userspace library/application.
->
-> But all of this should probably not be in drivers/char/random.c, and
-> we probably need to figure out a better kernel to userspace interface
-> than what we have with /dev/hwrng.
+syzbot found the following crash on:
 
-I'm thinking of having a real class device and chardev for each hwrng
-device.  Authentication is entirely in userspace: whatever user code
-is involved can look at the sysfs hierarchy and decide to what extent
-it trusts a given source.  This could be done based on bus topology or
-based on anything else.
+HEAD commit:    3c2f450e Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=15853866e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
+dashboard link: https://syzkaller.appspot.com/bug?extid=9328206518f08318a5fd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106d4751e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1775a49ee00000
 
-The kernel could also separately expose various noise sources, and the
-user code can do whatever it wants with them.  But these should be
-explicitly unconditioned, un-entropy-extracted sources -- user code
-can run its favorite algorithm to extract something it believes to be
-useful.  The only conceptually tricky bit is keeping user code like
-this from interfering with the in-kernel RNG.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com
 
---Andy
+8021q: adding VLAN 0 to HW filter on device batadv0
+@: renamed from hsr_slave_0
+==================================================================
+BUG: KASAN: slab-out-of-bounds in hsr_debugfs_rename+0xa8/0xc0  
+net/hsr/hsr_debugfs.c:73
+Read of size 8 at addr ffff88809f7f4cd8 by task syz-executor679/9217
+
+CPU: 1 PID: 9217 Comm: syz-executor679 Not tainted 5.5.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:639
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+  hsr_debugfs_rename+0xa8/0xc0 net/hsr/hsr_debugfs.c:73
+  hsr_netdev_notify+0x6c8/0xa00 net/hsr/hsr_main.c:49
+  notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
+  __raw_notifier_call_chain kernel/notifier.c:361 [inline]
+  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
+  call_netdevice_notifiers_info net/core/dev.c:1893 [inline]
+  call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1878
+  call_netdevice_notifiers_extack net/core/dev.c:1905 [inline]
+  call_netdevice_notifiers net/core/dev.c:1919 [inline]
+  dev_change_name+0x504/0x930 net/core/dev.c:1270
+  do_setlink+0x2d28/0x3720 net/core/rtnetlink.c:2571
+  __rtnl_newlink+0xbf0/0x1790 net/core/rtnetlink.c:3238
+  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
+  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:639 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:659
+  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+  __do_sys_sendmsg net/socket.c:2426 [inline]
+  __se_sys_sendmsg net/socket.c:2424 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4425d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 6b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd616ed1b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004425d9
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 0000000000000003 R08: 00000000bb1414ac R09: 00000000bb1414ac
+R10: 00000000bb1414ac R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000403960 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9217:
+  save_stack+0x23/0x90 mm/kasan/common.c:72
+  set_track mm/kasan/common.c:80 [inline]
+  __kasan_kmalloc mm/kasan/common.c:513 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
+  __do_kmalloc_node mm/slab.c:3616 [inline]
+  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
+  kmalloc_node include/linux/slab.h:579 [inline]
+  kvmalloc_node+0x68/0x100 mm/util.c:574
+  kvmalloc include/linux/mm.h:655 [inline]
+  kvzalloc include/linux/mm.h:663 [inline]
+  alloc_netdev_mqs+0x98/0xde0 net/core/dev.c:9731
+  rtnl_create_link+0x22d/0xab0 net/core/rtnetlink.c:3042
+  __rtnl_newlink+0xfa0/0x1790 net/core/rtnetlink.c:3295
+  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
+  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:639 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:659
+  __sys_sendto+0x262/0x380 net/socket.c:1985
+  __do_sys_sendto net/socket.c:1997 [inline]
+  __se_sys_sendto net/socket.c:1993 [inline]
+  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1993
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff88809f7f4000
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 3288 bytes inside of
+  4096-byte region [ffff88809f7f4000, ffff88809f7f5000)
+The buggy address belongs to the page:
+page:ffffea00027dfd00 refcount:1 mapcount:0 mapping:ffff8880aa402000  
+index:0x0 compound_mapcount: 0
+raw: 00fffe0000010200 ffffea00028eb488 ffffea0002387b08 ffff8880aa402000
+raw: 0000000000000000 ffff88809f7f4000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809f7f4b80: 00 00 00 00 00 00 00 00 07 fc fc fc fc fc fc fc
+  ffff88809f7f4c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ffff88809f7f4c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                                                     ^
+  ffff88809f7f4d00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88809f7f4d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
