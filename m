@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5009AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1149FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAE521744
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EFE21744
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a6kKZ00J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sP0I81aN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfL1Ugq (ORCPT
+        id S1727311AbfL1Ugu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 15:36:46 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35469 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfL1UgK (ORCPT
+        Sat, 28 Dec 2019 15:36:50 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45907 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfL1UgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 15:36:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j1so22496126lja.2;
-        Sat, 28 Dec 2019 12:36:09 -0800 (PST)
+        Sat, 28 Dec 2019 15:36:09 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 203so22855269lfa.12;
+        Sat, 28 Dec 2019 12:36:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lsHEVOVm6Hgf7CUTYE5k3U45djLZB2dELdAM3vwJ98M=;
-        b=a6kKZ00JHZ7dOT42HXD6ynKP10TOxOO3tgUIxmtDwhj08RZkoXijsX16lEXKEY3Nk3
-         0vAH8dOUQdC06KH99J1rMqVl7IpJXKuCN8/nHdkR+gHEObcJLo9urckRcgDsESXeHpfK
-         eVxh4n5FW1eUxNId+pkmES5t9ro0Hz6cN75dwpiqK72gZd5MwSsAm7a989tOFR532x7a
-         g/R9WTHSFeEdZa+2gfqpmRWpJ2Wi5B3H0zSbwbc8NG8Lp5to6pgFUkU2tZ6sF6df6Ads
-         SxbmSh4H9s4BKnCFJyE+mtDPsIZI+4bRXzHJvyBn/LUntBd1BLB55M/5SDlCL2ENTCoH
-         smKw==
+        bh=vdP96Dyf/p3F3EB7Y+X1Y5uzvSNakM1XTGFiEhIgPr8=;
+        b=sP0I81aNHnh3g9QlugZ6vPbt64O/sDi3yeJJCXRHfcWfO7ipswqDstALpIhWmG6NAu
+         M/1g6cL5vLYqXr3FTscMSqsapYGRsPJxaoV8Cr3WyRJ0AFf1mg2bYIfGNH6rrAWMrraz
+         F2iGdRAes5EPjnFnsL7mvYkDbDwTkTZSE84TcfH8dzY1j5FBJHYxznI63WOBRUnGR6/F
+         rhel+q0e++zlQJVizGgHQStKhIYlnRKkqX4mmpC0qIhOgenLTb6sZZlGT1y07vboNXJC
+         K5aUn3hLMU2JDwZMZ5EG2htrwFUBUsjaQbcty/Tf2wB3FfscNiQsfZuw8CsPq6h/HCOr
+         I0YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lsHEVOVm6Hgf7CUTYE5k3U45djLZB2dELdAM3vwJ98M=;
-        b=ntP0YUxC4xenRompY3MqaQffvtIteK3H1JP5FZFB2VFeHKfHJWeOskEfC6Rdza53rw
-         aqWcl5KvZ0va7KDNGvOwSjTbv0AxO9xmUlnIyMiLfmtdDLkboYhhUBcmo21YmZxhZlKe
-         6CtTULZ44x3yNZRd3d8Rminy7VtU8/vcSomgqWsMNlMTwsZDYdLuz9+tGffeAyz7DV0v
-         0oiWgZRf+WYmuiJ5VQr2XRCh4Ei3CAc4wYNAVTJaekSG8yzPMwtDVBOePE386e9RDLFa
-         xSa8haoFN3TCcfNMea0yFmMCTqph0OxS4n2E5Q9Jrvv45Ko/FXQ9nggkxKS5VURb1Juw
-         r2kw==
-X-Gm-Message-State: APjAAAVMorfmbuc1cyH2l1/HFa9RtWhj5TKvTpYh3ylWqv+aDdkmY27t
-        ReBEnfZmoRoRm29Dx//QWrM=
-X-Google-Smtp-Source: APXvYqyq/lho9UxcxMIQZdaLIUaUT+35KUVjrVfC4twVSmOW/HNCeMb4SUjdbQZXZrEqZQvMiGEbLQ==
-X-Received: by 2002:a2e:8595:: with SMTP id b21mr12928547lji.219.1577565368311;
-        Sat, 28 Dec 2019 12:36:08 -0800 (PST)
+        bh=vdP96Dyf/p3F3EB7Y+X1Y5uzvSNakM1XTGFiEhIgPr8=;
+        b=RRJoWUg/4biKotNRBXWOHqpY7JGy4KKejgEXqrVde58XoeVGNSg7EsPBwKL6DXcLGR
+         EOaVFMOk4AGKNuJMDdd+ncTyWM019pIdP/jy8PuxvmVoAkhqdyOJXy1A1uCxo6aFDIRN
+         rA/NhVSwQ4u201g439LSv90yIBRNs2YCv89pE2iDtLwbmou/+9HmqGnsU7CCU93+Sz4s
+         nOOAs4lqhkVPPWfMwa5XFGJxRSjiBU+9rWAEGNvekgqw1vJvssHa7a9fVNP5DN5Gg48E
+         MPWxj7IB565376WHwyuEjOkjcKk0MkoilVdlD0F39HaDXFUMuzO2br5I8jOSe/VB3PuW
+         KlPQ==
+X-Gm-Message-State: APjAAAXehDzu4+ZDbv0H4gyOEod9FXs6G0L88PlIwsXIwrXQCI22CMnq
+        4Wyc2rIG/zEDU3xD4YA+seo=
+X-Google-Smtp-Source: APXvYqx6JMRM+s3kdHpfaKhELpTsuwsI138fCaPkDt1jAVVUu1FwaMaaWbyYRAnf3qd6UCCu1VL3Zg==
+X-Received: by 2002:ac2:54b5:: with SMTP id w21mr32148655lfk.175.1577565366417;
+        Sat, 28 Dec 2019 12:36:06 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.36.07
+        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.36.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 12:36:07 -0800 (PST)
+        Sat, 28 Dec 2019 12:36:06 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Felipe Balbi <balbi@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/16] usb: phy: tegra: Use device-tree notion of reset-GPIO's active-state
-Date:   Sat, 28 Dec 2019 23:33:52 +0300
-Message-Id: <20191228203358.23490-11-digetx@gmail.com>
+Subject: [PATCH v3 08/16] usb: phy: tegra: Use u32 for hardware register variables
+Date:   Sat, 28 Dec 2019 23:33:50 +0300
+Message-Id: <20191228203358.23490-9-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191228203358.23490-1-digetx@gmail.com>
 References: <20191228203358.23490-1-digetx@gmail.com>
@@ -79,159 +79,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is much more intuitive if reset is treated as asserted when GPIO value
-is set to 1. All NVIDIA Tegra device-trees are properly specifying active
-state of the reset-GPIO since 2013, let's clean up that part of the code.
+There is a mix of u32/ULONG usage in the driver's code. Let's switch to
+u32 uniformly, for consistency.
 
+Suggested-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/phy/phy-tegra-usb.c   | 58 ++++++++-----------------------
- include/linux/usb/tegra_usb_phy.h |  3 +-
- 2 files changed, 17 insertions(+), 44 deletions(-)
+ drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-index 1ecd9f7900af..cc6cca4dcecb 100644
+index a3d102f6f81e..0845fc0fb3f8 100644
 --- a/drivers/usb/phy/phy-tegra-usb.c
 +++ b/drivers/usb/phy/phy-tegra-usb.c
-@@ -306,14 +306,7 @@ static int utmip_pad_close(struct tegra_usb_phy *phy)
- 
- static void ulpi_close(struct tegra_usb_phy *phy)
+@@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
+ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
  {
--	int err;
--
--	err = gpio_direction_output(phy->reset_gpio, 0);
--	if (err) {
--		dev_err(phy->u_phy.dev,
--			"ULPI reset GPIO %d direction not asserted: %d\n",
--			phy->reset_gpio, err);
--	}
-+	gpiod_set_value_cansleep(phy->reset_gpio, 1);
- }
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
- static int utmip_pad_power_on(struct tegra_usb_phy *phy)
-@@ -703,12 +696,7 @@ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
- 	u32 val;
+ 	if (phy->soc_config->has_hostpc) {
+ 		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+@@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+ static void set_phcd(struct tegra_usb_phy *phy, bool enable)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	if (phy->soc_config->has_hostpc) {
+ 		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+@@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+ {
+ 	struct tegra_utmip_config *config = phy->config;
+ 	void __iomem *base = phy->pad_regs;
+-	unsigned long val, flags;
++	unsigned long flags;
++	u32 val;
  	int err;
  
--	err = gpio_direction_output(phy->reset_gpio, 0);
--	if (err) {
--		dev_err(phy->u_phy.dev, "GPIO %d not set to 0: %d\n",
--			phy->reset_gpio, err);
--		return err;
--	}
-+	gpiod_set_value_cansleep(phy->reset_gpio, 1);
- 
- 	err = clk_prepare_enable(phy->clk);
- 	if (err)
-@@ -716,12 +704,7 @@ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
- 
- 	usleep_range(5000, 10000);
- 
--	err = gpio_direction_output(phy->reset_gpio, 1);
--	if (err) {
--		dev_err(phy->u_phy.dev, "GPIO %d not set to 1: %d\n",
--			phy->reset_gpio, err);
--		goto disable_clk;
--	}
-+	gpiod_set_value_cansleep(phy->reset_gpio, 0);
- 
- 	usleep_range(1000, 2000);
- 
-@@ -784,8 +767,9 @@ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
- static int ulpi_phy_power_off(struct tegra_usb_phy *phy)
+ 	err = clk_prepare_enable(phy->pad_clk);
+@@ -355,7 +356,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+ static int utmip_pad_power_off(struct tegra_usb_phy *phy)
  {
- 	clk_disable_unprepare(phy->clk);
-+	gpiod_set_value_cansleep(phy->reset_gpio, 1);
- 
--	return gpio_direction_output(phy->reset_gpio, 0);
-+	return 0;
- }
- 
- static void tegra_usb_phy_shutdown(struct usb_phy *u_phy)
-@@ -837,15 +821,7 @@ static int tegra_usb_phy_set_suspend(struct usb_phy *u_phy, int suspend)
- 
- static int ulpi_open(struct tegra_usb_phy *phy)
- {
--	int err;
--
--	err = gpio_direction_output(phy->reset_gpio, 0);
--	if (err) {
--		dev_err(phy->u_phy.dev,
--			"ULPI reset GPIO %d direction not deasserted: %d\n",
--			phy->reset_gpio, err);
--		return err;
--	}
-+	gpiod_set_value_cansleep(phy->reset_gpio, 1);
- 
- 	return 0;
- }
-@@ -1081,6 +1057,7 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
- 	struct tegra_usb_phy *tegra_phy;
- 	enum usb_phy_interface phy_type;
- 	struct reset_control *reset;
-+	struct gpio_desc *gpiod;
- 	struct resource *res;
- 	struct usb_phy *phy;
+ 	void __iomem *base = phy->pad_regs;
+-	unsigned long val, flags;
++	unsigned long flags;
++	u32 val;
  	int err;
-@@ -1158,15 +1135,6 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
- 	case USBPHY_INTERFACE_MODE_ULPI:
- 		tegra_phy->is_ulpi_phy = true;
  
--		tegra_phy->reset_gpio =
--			of_get_named_gpio(np, "nvidia,phy-reset-gpio", 0);
--
--		if (!gpio_is_valid(tegra_phy->reset_gpio)) {
--			dev_err(&pdev->dev,
--				"Invalid GPIO: %d\n", tegra_phy->reset_gpio);
--			return tegra_phy->reset_gpio;
--		}
--
- 		tegra_phy->clk = devm_clk_get(&pdev->dev, "ulpi-link");
- 		err = PTR_ERR_OR_ZERO(tegra_phy->clk);
- 		if (err) {
-@@ -1175,13 +1143,17 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
- 			return err;
- 		}
+ 	if (!utmip_pad_count) {
+@@ -393,7 +395,7 @@ static int utmi_wait_register(void __iomem *reg, u32 mask, u32 result)
+ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
--		err = devm_gpio_request(&pdev->dev, tegra_phy->reset_gpio,
--					"ulpi_phy_reset_b");
-+		gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
-+						    "nvidia,phy-reset-gpio",
-+						    0, GPIOD_OUT_HIGH,
-+						    "ulpi_phy_reset_b");
-+		err = PTR_ERR_OR_ZERO(gpiod);
- 		if (err) {
--			dev_err(&pdev->dev, "Request failed for GPIO %d: %d\n",
--				tegra_phy->reset_gpio, err);
-+			dev_err(&pdev->dev,
-+				"Request failed for reset GPIO: %d\n", err);
- 			return err;
- 		}
-+		tegra_phy->reset_gpio = gpiod;
+ 	/*
+ 	 * The USB driver may have already initiated the phy clock
+@@ -425,7 +427,7 @@ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+ static void utmi_phy_clk_enable(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
- 		phy = devm_otg_ulpi_create(&pdev->dev,
- 					   &ulpi_viewport_access_ops, 0);
-diff --git a/include/linux/usb/tegra_usb_phy.h b/include/linux/usb/tegra_usb_phy.h
-index 0c5c3ea8b2d7..6b857fe13b35 100644
---- a/include/linux/usb/tegra_usb_phy.h
-+++ b/include/linux/usb/tegra_usb_phy.h
-@@ -17,6 +17,7 @@
- #define __TEGRA_USB_PHY_H
+ 	/*
+ 	 * The USB driver may have already initiated the phy clock
+@@ -460,7 +462,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+ {
+ 	struct tegra_utmip_config *config = phy->config;
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 	int err;
  
- #include <linux/clk.h>
-+#include <linux/gpio.h>
- #include <linux/reset.h>
- #include <linux/usb/otg.h>
+ 	val = readl_relaxed(base + USB_SUSP_CTRL);
+@@ -611,7 +613,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
  
-@@ -76,7 +77,7 @@ struct tegra_usb_phy {
- 	struct usb_phy u_phy;
- 	bool is_legacy_phy;
- 	bool is_ulpi_phy;
--	int reset_gpio;
-+	struct gpio_desc *reset_gpio;
- 	struct reset_control *pad_rst;
- };
+ 	utmi_phy_clk_disable(phy);
  
+@@ -646,7 +648,7 @@ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_TX_CFG0);
+ 	val |= UTMIP_HS_DISCON_DISABLE;
+@@ -656,7 +658,7 @@ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+ static void utmi_phy_postresume(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_TX_CFG0);
+ 	val &= ~UTMIP_HS_DISCON_DISABLE;
+@@ -667,7 +669,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+ 				   enum tegra_usb_phy_port_speed port_speed)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+ 	val &= ~UTMIP_DPDM_OBSERVE_SEL(~0);
+@@ -687,7 +689,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 
+ 	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+ 	val &= ~UTMIP_DPDM_OBSERVE;
+@@ -698,7 +700,7 @@ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+ static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
+ {
+ 	void __iomem *base = phy->regs;
+-	unsigned long val;
++	u32 val;
+ 	int err;
+ 
+ 	err = gpio_direction_output(phy->reset_gpio, 0);
 -- 
 2.24.0
 
