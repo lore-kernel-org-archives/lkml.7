@@ -2,154 +2,220 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C16DC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF258C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650DE208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9123D208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BITyB6XZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXNtoDk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfL1Tvf (ORCPT
+        id S1726654AbfL1UF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 14:51:35 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42846 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfL1Tvf (ORCPT
+        Sat, 28 Dec 2019 15:05:29 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36410 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfL1UF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 14:51:35 -0500
-Received: by mail-il1-f194.google.com with SMTP id t2so9577204ilq.9
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 11:51:34 -0800 (PST)
+        Sat, 28 Dec 2019 15:05:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so11145121wma.1;
+        Sat, 28 Dec 2019 12:05:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jgrDpnKqQu8o7QySWZrrmXPDct3+6ttAT3lHQXUR6f4=;
-        b=BITyB6XZ5oqhINwxYA54lZxPQg6t7SFW0QPtjhUKJQi9/XrZpWgj6FE0EJuEHKJUeo
-         QIOxtaYXBr0EqMA1uksYGKj4WO/25CCSMl/5cohGkYtsTmuBFqNemF580ojOiCLVqOve
-         /dQ7famLosR4f1Lk9BRm0dfyfm669HtcfpmHDcGfPRRaVtVFaFgZyqjsbb5I2tdVrfTS
-         Vj/TkMd/22usPPFsWtyYcs+PaidBs9r6FkMxv9fqqecGIwIpdwjrawXVsQGPBqAyF4Ke
-         L67cRIJfGJlNLHdf3U+5cCn+J2/urIWKEcU1NLR/IMnpGf79RZ8eGolHAM231MymOnrf
-         bUNw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EQE2V0MavIjoNa3rWrPGslDKiPQuFVjAyrybXIXUGeY=;
+        b=ZXNtoDk1HoPwPXMqYewft/Zj1tZIXnee1UDRwt/Rc5lS4rPL2mno0dSI5qUC6AJjgx
+         DLkvqXukklYETUJsYlZ5rqOPI/ciM7t0GhFiqJm/n1FGvXmKcQRIT+MAmQu9/lvJZtgb
+         SFnb1TGg6eR8TogkrZH/vJiHTdDPwKaEHwj3WZ5tTOBQvjkezwC+X0AlgPB/4+VL7LMh
+         QMBVD2wWaDxvzYsd3sk8EvT6O+Rc5nDEnIcTUhjY1TX+ZCerx6xnsHxbkKfGZCbtNtI1
+         uquyudBb6Bx49vwRE0mdtHw08r8WF2etiP8lFBIZBGZqzTvWlz1a25KOuZpN9EZHZgMs
+         WBCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jgrDpnKqQu8o7QySWZrrmXPDct3+6ttAT3lHQXUR6f4=;
-        b=mZ+sgXE82BuahhPlM99m9aA9oghiO6woU8LLoAH+0Kslk5O0Xo76Hs0KedIdT/ehbO
-         BoAZSNZQeEY+6Yp93Neb5a13i9K0zY81mb8ckimj9SYkB4ouBZ+NRmRuJ0LZwi/Wm8R9
-         /o9Zl3otPlN/YtMvZatSOtr7c8XrWKifEyIWs1+YDcd5nGVWE3FHhxpiN/W1znaYE7Kd
-         qu5u4I5gxexHBx0T+Rlo8kKi4Af7ai+4xG1RAyrEN5G54U9ZdJceIAb1mdZ9ZRjOjEWc
-         mnVc2PeHxwlRfnM61YsKR2WR9fkhCzh0+sk44ww9Kwt9zEOofwTPrncrRSgZcszJ3mSZ
-         QIYQ==
-X-Gm-Message-State: APjAAAXioJIlcUzHRf01JgZcTAkZ1t64zS92kslc7h5w4vGwKEZY7cY+
-        beP8/7Z1BXtZgrYXubNYnIEm6dUeMD1yPd8qjHU=
-X-Google-Smtp-Source: APXvYqwb+xSqiugn6gmak6DJwQImsEfOyDAalG1XUlTr29NWKv2rB4cGgRJURhBDfYZUEtlE277tUbpbzOQXl5TaGNs=
-X-Received: by 2002:a92:1906:: with SMTP id 6mr52124485ilz.130.1577562694248;
- Sat, 28 Dec 2019 11:51:34 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EQE2V0MavIjoNa3rWrPGslDKiPQuFVjAyrybXIXUGeY=;
+        b=L/iPW3EbeRBNEM9d9Yg1aE9P+DQdipkFVoJRVgEM3jx06rWyY6w6+ZpZEDu2eJYt7a
+         E+RCh2WbgPJpjrPFvZl0A8qXnj47zp//ViLEmCn5XmG/2REWdgRv0g69z4V+X+fGiHLX
+         Zii92rBZ+3ZZDNlXl5cQ5O8IWq5Z3OSw2tD1cAdnLTXABFKmiFB0BiJTBZLujZXQB9Yf
+         YtWH0NP1q9B/ac0XACNTE2voXySC89zcdwMkRTvWqfeaXM93U+8J0ItsUxAJAKxCqHMq
+         6fvJlUPbm/j82ZFfx57ZWF/Rm2nuDe3QtSQnnIOoekMxOIFjBR2xaKprKxS4mV/Ps1ZR
+         vIBg==
+X-Gm-Message-State: APjAAAWDogNS/56U3zFy/R4mCdLIsFLHx+9hbWKxtxhqXX7OBe/0eAzv
+        1r+9F/zReYuOZ29XYpM8LXc=
+X-Google-Smtp-Source: APXvYqyb+qdAahOi3oQdnd9Wk7oYjD7tet+dAL/Tt59wBdUc8wJ10u41Ft7XXDCFxH6N1MuSvtzALg==
+X-Received: by 2002:a1c:a543:: with SMTP id o64mr25649868wme.108.1577563525851;
+        Sat, 28 Dec 2019 12:05:25 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id d10sm40217948wrw.64.2019.12.28.12.05.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Dec 2019 12:05:24 -0800 (PST)
+Date:   Sat, 28 Dec 2019 21:05:23 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Eric Sandeen <sandeen@redhat.com>, David Sterba <dsterba@suse.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+Message-ID: <20191228200523.eaxpwxkpswzuihow@pali>
+References: <20191228143651.bjb4sjirn2q3xup4@pali>
+ <6C6421AB-84B1-4E9D-9E8F-492A704D2A16@dilger.ca>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.99999.375.1912201332260.21037@trent.utfs.org> <alpine.DEB.2.21.99999.375.1912261445200.21037@trent.utfs.org>
-In-Reply-To: <alpine.DEB.2.21.99999.375.1912261445200.21037@trent.utfs.org>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Sat, 28 Dec 2019 11:51:23 -0800
-Message-ID: <CABeXuvqimxsa45ir-zpOQS_1M5buPaT3VMvigqo6oTUgMj0z8g@mail.gmail.com>
-Subject: Re: [PATCH] Re: filesystem being remounted supports timestamps until 2038
-To:     Christian Kujau <lists@nerdbynature.de>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="sqlj2znpmlbywobt"
+Content-Disposition: inline
+In-Reply-To: <6C6421AB-84B1-4E9D-9E8F-492A704D2A16@dilger.ca>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 5:54 PM Christian Kujau <lists@nerdbynature.de> wrote:
->
-> On Fri, 20 Dec 2019, Christian Kujau wrote:
-> > I noticed the following messages in my dmesg:
-> >
-> >  xfs filesystem being remounted at /mnt/disk supports imestamps until 2038 (0x7fffffff)
-> >
-> > These messages get printed over and over again because /mnt/disk is
-> > usually a read-only mount that is remounted (rw) a couple of times a day
-> > for backup purposes.
-> >
-> > I see that these messages have been introduced with f8b92ba67c5d ("mount:
-> > Add mount warning for impending timestamp expiry") resp. 0ecee6699064
-> > ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") and I was
-> > wondering if there is any chance to either adjust this to pr_debug (but
-> > then it would still show up in dmesg, right?) or to only warn once when
-> > it's mounted, but not on re-mount?
 
-The warnings only make sense when you mount the filesystem rw because
-it is the updating of timestamps that fail.
-We can discuss what the log level of such messages should be.
-pr_warn() seems correct to me to serve the purpose of the feature.
-And, warning at the site of remount as rw seems correct also rather
-than at the site of mount.
-Maybe checking if it was already a rw mount and only warning the first
-time might alleviate your problem? Adding Arnd and Al to see if they
-have any suggestions.
+--sqlj2znpmlbywobt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Deepa
+On Saturday 28 December 2019 12:14:57 Andreas Dilger wrote:
+> > On Dec 28, 2019, at 7:36 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> >=20
+> > Hello!
+> >=20
+> > I see that you have introduced in commit 62750d0 two new IOCTLs for
+> > filesyetems: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL.
+> >=20
+> > I would like to ask, are these two new ioctls mean to be generic way for
+> > userspace to get or set fs label independently of which filesystem is
+> > used? Or are they only for btrfs?
+> >=20
+> > Because I was not able to find any documentation for it, what is format
+> > of passed buffer... null-term string? fixed-length? and in which
+> > encoding? utf-8? latin1? utf-16? or filesystem dependent?
+>=20
+> It seems that SETFSLABEL is supported by BtrFS and XFS, and GETFSLABEL
+> also by GFS2.  We were just discussing recently about adding it to ext4,
+> so if you wanted to submit a patch for that it would be welcome.
 
-> I realize that "it's the holidays", but it'd be a shame if this gets
-> forgotten :(
->
->
-> # uptime; dmesg | grep -c 2038
->  14:45:15 up 6 days, 21:16,  1 user,  load average: 0.20, 0.22, 0.27
-> 350
->
-> Attached is a "fix" that changes pr_warn into pr_debug, but that's maybe
-> not what was intended here.
->
->
-> Thanks,
-> Christian.
->
->
-> commit c9a5338b4930cdf99073042de0717db43d7b75be
-> Author: Christian Kujau <lists@nerdbynature.de>
-> Date:   Thu Dec 26 17:39:57 2019 -0800
->
->     Commit f8b92ba67c5d ("mount: Add mount warning for impending timestamp expiry") resp.
->     0ecee6699064 ("fix use-after-free of mount in mnt_warn_timestamp_expiry()") introduced
->     a pr_warn message and the following gets sent to dmesg on every remount:
->
->      [...] filesystem being remounted at /mnt supports timestamps until 2038 (0x7fffffff)
->
->     When file systems are remounted a couple of times per day (e.g. rw/ro for backup
->     purposes), dmesg gets flooded with these messages. Change pr_warn into pr_debug
->     to make it stop.
->
->     Signed-off-by: Christian Kujau <lists@nerdbynature.de>
->
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index be601d3a8008..afc6a13e7316 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2478,7 +2478,7 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
->
->                 time64_to_tm(sb->s_time_max, 0, &tm);
->
-> -               pr_warn("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
-> +               pr_debug("%s filesystem being %s at %s supports timestamps until %04ld (0x%llx)\n",
->                         sb->s_type->name,
->                         is_mounted(mnt) ? "remounted" : "mounted",
->                         mntpath,
->
->
->
-> -- BOFH excuse #132:
->
-> SCSI Chain overterminated
+I have in-progress patches for FAT with following ioctls:
+
+  #define FAT_IOCTL_GET_VOLUME_LABEL(len)      _IOC(_IOC_READ, 'r', 0x14, l=
+en) /* variable length */
+  #define FAT_IOCTL_SET_VOLUME_LABEL           _IOC(_IOC_WRITE, 'r', 0x15, =
+0)  /* variable length, nul term string */
+
+GET ioctl macro takes length of buffer and pass it via standard ioctl
+bits into kernel would know how many bytes can copy to userspace.
+
+And via SET ioctl is passed null term string, so kernel copy from
+userspace whole null term string (with some upper limit to page size or
+1024 bytes).
+
+I plan to finish FAT patches in next month.
+
+> It looks like the label is a NUL-terminated string, up to the length
+> allowed by the various filesystems.  That said, it seems like a bit of
+> a bug that the kernel will return -EFAULT if a string shorter than the
+> maximum size is supplied (256 chars for btrfs).
+
+FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL ioctls now seems like a nice
+general / unified approach, but it has problems which I already mention
+in questions in previous email.
+
+There are basically two kinds of filesystems when looking how filename /
+label should be represented.
+
+First group: file name / label is sequence of bytes (possible null
+termined) without any representation. It can be in any encoding, it is
+up to the user. There is no mapping to Unicode. Examples: ext4
+
+Second group: file name / label is stored in exact encoding (defined
+internally or externally by e.g. code page). There is exact translate
+function to Unicode. For these file system there is either iocharset=3D or
+nls=3D mount option which maps name / label to bytes. Examples: vfat
+(UTF-16LE), ntfs (UTF-16LE), udf (Latin1 and UTF-16BE), iso9660 with
+joliet (UTF-16LE), apfs (UTF-8).
+
+All mentioned file systems by you are in first group, so you probably
+have not hit this "implementation" problem for FS_IOC_GETFSLABEL yet.
+
+And question is, what should FS_IOC_GETFSLABEL returns for file systems
+=66rom second group?
+
+In my implementation for FAT_IOCTL_GET_VOLUME_LABEL I'm reading label
+buffer from filesyetem, then converting this buffer from encoding
+specified in codepage=3D mount option to Unicode and then from Unicode I'm
+converting it to encoding specified in iocharset=3D mount option. Why?
+Because same procedure is used for reading file names from vfat when
+corresponding file name does not have long UTF-16LE vfat entry (label
+on vfat really is not in UTF-16LE but in OEM code page). And I think
+that volume label should be handled in same way like file names.
+
+Is above behavior "label in ioctl would be retrieved in same encoding as
+file names" correct / expected also for FS_IOC_GETFSLABEL?
+
+Or do you have better idea how should filesystems from second group
+implement FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL? (E.g. always in UTF-8
+independently of mount options? Or in filesystem native encoding, so
+sometimes in UTF-16LE, sometimes in UTF-16BE, sometimes in DOS OEM code
+page, sometimes in Latin1? Or something different?)
+
+> The copy_{to,from}_user() function will (I think) return the number of
+> bytes remaining to be copied, so IMHO it would make sense that this is
+> compared to the string length of the label, and not return -EFAULT if
+> the buffer is large enough to hold the actual label.  Otherwise, the
+> caller has to magically know the maximum label size that is returned
+> from any filesystem and/or allocate specific buffer sizes for different
+> filesystem types, which makes it not very useful as a generic interface.
+
+I think that my approach with specifying length in ioctl bits for GET
+ioctl is more flexible. But I do not know if it is even possible to
+change as API is already in kernel.
+
+Also I see there more important bug in that API:
+
+  #define FSLABEL_MAX 256        /* Max chars for the interface; each fs ma=
+y differ */
+
+  git show 62750d040bd13
+
+  "This retains 256 chars as the maximum size through the interface, which
+  is the btrfs limit and AFAIK exceeds any other filesystem's maximum
+  label size."
+
+It has some artificial limit for volume label length. Which filesystems
+was checked that maximal label length cannot be larger?
+
+E.g. on UDF filesystem (supported by Linux kernel for a long time) is
+label stored in 128bit buffer. First byte specifies Unicode encoding,
+last byte specifies used length of buffer. Two possible encodings are
+currently defined: Latin1 and UTF-16BE. Therefore if FS_IOC_GETFSLABEL
+for UDF would use UTF-8 encoding, then maximal length for label is:
+(128-2)*2 =3D 252 plus null byte (*2 because all non-ASCII Latin1
+characters which are one-byte are encoded in UTF-8 by two bytes). Which
+is almost upper limit of API. And this is just first filesytem which
+I checked. I would not be surprised if there is already filesystem which
+maximal length exceed current limit defined by kernel API.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--sqlj2znpmlbywobt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXge1gQAKCRCL8Mk9A+RD
+UrywAKCfx4kgRs+SJOQuyUWBXE7dBIUljQCgra3wY2jmQd4tFIye8imTGHncbKU=
+=vXud
+-----END PGP SIGNATURE-----
+
+--sqlj2znpmlbywobt--
