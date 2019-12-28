@@ -2,58 +2,105 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1859C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962B6C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 07:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC54620722
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766C920838
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 07:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfL1Gu5 (ORCPT
+        id S1726409AbfL1HBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 01:50:57 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48228 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725857AbfL1Gu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 01:50:57 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 34DFF71B53E4CD75E645;
-        Sat, 28 Dec 2019 14:50:54 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 28 Dec
- 2019 14:50:49 +0800
-Subject: Re: [f2fs-dev] [PATCH 2/4] f2fs: don't put new_page twice in
- f2fs_rename
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20191218200947.20445-1-jaegeuk@kernel.org>
- <20191218200947.20445-2-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <049ce80a-d977-d15a-ad56-11ad7f5edd1f@huawei.com>
-Date:   Sat, 28 Dec 2019 14:50:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 28 Dec 2019 02:01:31 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29841 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfL1HBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 02:01:31 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBS71BFU002595;
+        Sat, 28 Dec 2019 08:01:11 +0100
+Date:   Sat, 28 Dec 2019 08:01:11 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Message-ID: <20191228070111.GB2519@1wt.eu>
+References: <20191226140423.GB3158@mit.edu>
+ <4048434.Q8HajmOrkZ@tauon.chronox.de>
+ <20191227130436.GC70060@mit.edu>
+ <15817620.rmTN4T87Wr@tauon.chronox.de>
+ <20191227220857.GD70060@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20191218200947.20445-2-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227220857.GD70060@mit.edu>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/19 4:09, Jaegeuk Kim wrote:
-> In f2fs_rename(), new_page is gone after f2fs_set_link(), but it tries
-> to put again when whiteout is failed and jumped to put_out_dir.
+On Fri, Dec 27, 2019 at 05:08:57PM -0500, Theodore Y. Ts'o wrote:
+> > Or maybe the terminology of TRNG (i.e. "true") is offending. I have no concern 
+> > to have it replaced with some other terminology. Yet, I was just taking one 
+> > well-defined term.
 > 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> But my point is that it *isn't* a well defined term, precisely because
+> it's completely unclear what application programmer can expect when
+> they try to use some hypothetical GRANDOM_TRUERANDOM flag.  What does
+> that *mean*?
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+I've also seen this term used and abused too many times and this bothers
+me because the expectations around it are the cause of the current
+situation.
 
-Thanks,
+Randomness doesn't exist by itself. It's what characterizes the
+unpredictable nature of something. I.e. our inability to model it and
+guess what will happen based on what we know. 200 years ago we'd have
+considered the weather as a true random source. Now we have super
+computers making this moot. In the current state of art we consider
+that cesium decay or tunnel noise are unpredictable and excellent
+random sources, until one day we figure that magnetic fields,
+temperature or gamma rays strongly affect them.
+
+So in practice we should only talk about the complexity of the model we
+rely on. The more complex it is (i.e. the most independent variables it
+relies on), the less predictable it is and the more random it is. Jitter
+entropy and RAM contents are good examples of this: they may be highly
+unpredictable on some platforms and almost constant on others. And for
+sure, software cannot fix this, it can at best make the output *look*
+like it's unpredictable. Once someone can model all variables of the
+environment this is not true random anymore.
+
+That's why the best we can do is to combine as many sources as possible
+hoping that nobody can model enough of them, and produce an output which
+never ever reveals these sources' internal states. *This* is what software
+can and must do. And once the initial entropy is hidden enough and there
+is enough of it, there's no reason for it to ever get depleted if these
+initial bits cannot be guessed nor brute-forced.
+
+And quite frankly I'd rather just speak about the diversity of sources
+than "true" randomness. Just asking a user to press 10 random keys and
+to enter a random word for some operations can break many assumptions
+an attacker could have about the environment, by just adding one extra,
+less controllable, source.
+
+Just my two cents,
+Willy
