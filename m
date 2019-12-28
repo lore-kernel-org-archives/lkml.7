@@ -2,185 +2,204 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFCEC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8D7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF8E208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC94207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 20:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4aLciAa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5DDVujO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfL1Ur5 (ORCPT
+        id S1726796AbfL1UyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 15:47:57 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36598 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfL1Urj (ORCPT
+        Sat, 28 Dec 2019 15:54:23 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37325 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfL1UyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 15:47:39 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r19so29879286ljg.3;
-        Sat, 28 Dec 2019 12:47:37 -0800 (PST)
+        Sat, 28 Dec 2019 15:54:23 -0500
+Received: by mail-io1-f66.google.com with SMTP id k24so19789434ioc.4;
+        Sat, 28 Dec 2019 12:54:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jIEJVFrrx4gky/ZOSTsCbKeEbeTJKbAx8QcAIMAQtco=;
-        b=Z4aLciAa4SH3GG56GphUFmI5dvcpPOPdLZ2vY6B+ZTlLzIi/myT5WxIgydTE7FwEm7
-         N5jZNZurvRCXXJe+Y6WD7o7fJlUKeEK4tJjEAbbmiHrNbR5e62mLcDmORYPA81phwlxG
-         kOvhXL2G3lWdXYiHU0F8JJs6BksLojoMXSsM+74XgAgB6eKyIAHSOSB316ibUnQzf6IL
-         a8gsRIHMyQ3/c/oq18rR9uOtPSOL/7d7j+MboNC2VO5ML76NvnnoYmwtYCKAZJnlru1L
-         muUycFZ2SHEk4FxmfrR3mvsBPFkf18Jjzegm2FWn00yS5lIbBWnUq9H7FjF+4kU6Xd0f
-         CM0Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E76VhA6+/ZrBIyRCsnWyOQg6YbJeoiHUNcjR94zQd3I=;
+        b=E5DDVujOnEp57q7i/BSeK3GVw5XBqaB5InXyuR9+JC9MoAnOW/YC/lPcWcxr0mGQGh
+         L5n6q5e89ePMOLn8nUeTJoy2ECnr4q6Z3dWtqFPrRp8KGmGTZgC8p+Pp5SL+aU/T9EyB
+         TTyzbB+Zq2CWFvPj/SUjqzZ7DT7uejeP/BrtT64i7dFInZRLL3CaSXcTJ1YN6K/0WU4d
+         bnYG9KAOWHyqm0h5MJZrSDAAvpxqSUxo5scFV+/D4LuokGSEooJqHUx19Z5/ilPzwomP
+         EK3oGUGTdJCoNZSfgkYX/d0A7mO47CMqCeqrS/yMv4vnzBzoJX9wjZDHiCBAhLwtEbtY
+         jYmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jIEJVFrrx4gky/ZOSTsCbKeEbeTJKbAx8QcAIMAQtco=;
-        b=JCwMVcG7OANIwicFVOuubmHr/5aBIN+FNnG41xVfVzMF71oYc9HfEnyULodZWgkpts
-         /GE/XkPSk0EK3nVXxBkz0UBUECR4E39ZAGnu15ZLw+bT1vvq7WubhemoQME8Z2S++/XM
-         +tICgerlM18SzBI5IL81Ng3R+rxSkPaNfpMIqBlyR21lzeiSy/A+7oKrx2AjojDrv63k
-         UaXhjsJhuNmJ+Ay0PQkBXvav7qj18SeUyFgwwE/eXx8lUsdwKVtre2BFRxdy6z+EOUA3
-         PHUlq54aFm0SNOs3NEXQ9bD3dvfqWYI9vlR9uvOZc7JiiaKYYTZD8LSCsEQQYPUBvJ7p
-         nIdg==
-X-Gm-Message-State: APjAAAV1NABO543ex+gXzlUvsLPnvE8o1e2qRIsGzLTI/kZuNTmncxxY
-        Cc3lc/d3ocOUqMCHxU4Syoo+YBkf
-X-Google-Smtp-Source: APXvYqyEIX2Bqkh3D/lYkO4osanHP8eNOJOErqxIxITuHT47wuICMUHMUeaP6Xz35otnapNs6N/Oag==
-X-Received: by 2002:a2e:721a:: with SMTP id n26mr32498950ljc.128.1577566057155;
-        Sat, 28 Dec 2019 12:47:37 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g15sm10571219ljl.10.2019.12.28.12.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 12:47:36 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 6/7] dmaengine: tegra-apb: Use devm_request_irq
-Date:   Sat, 28 Dec 2019 23:46:39 +0300
-Message-Id: <20191228204640.25163-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191228204640.25163-1-digetx@gmail.com>
-References: <20191228204640.25163-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E76VhA6+/ZrBIyRCsnWyOQg6YbJeoiHUNcjR94zQd3I=;
+        b=tAGXaUv5RvJ8EczQsa6C8yeCKAfktYpsZEpo7oCbehTwWgAWNFEBLqjmppcxk8VDkW
+         jVia8O61jXypi9Zk/py03l3iXckToCsixoMzXWceQOGJeha+REb3M62vl1axgdMu1fVh
+         K64H8QC90x1AY9UqPhjZBMkF2DpdT0sfwNyWitHGaitjbDIrXsA4nMB7Ve/9w6G0UuQ1
+         i7Z1EiijSJxHRibnEJMa3nQxSy1GmYohdaPkA6xMyqei3KB1UCrPBU0IQS2MeVtKSz7f
+         lOSw0py+7W/UczyUm5v/6zD7M/Va9RVciWfd1hAC8/0mgZ6F8MSfDKAGaCrxjhpz2v/W
+         BuRA==
+X-Gm-Message-State: APjAAAXj2LaDjNjNfBG4tQT67iVrbbtu+K2teXykL/082FV5cPk8HLkc
+        RE/dvWdcaBHst9e+2ltg9MmCZG40kRs1LAaCTvU=
+X-Google-Smtp-Source: APXvYqxQVMMkZRR9L3by6JE1ApXMMCe9ngnyrh6hZRYHV7R0mSIR3UoEtpISeD0e1Po99FUkul6VtibYqggIVtNDLBI=
+X-Received: by 2002:a6b:d219:: with SMTP id q25mr26334114iob.49.1577566462461;
+ Sat, 28 Dec 2019 12:54:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+From:   Dan Williams <dan.j.williams.korg@gmail.com>
+Date:   Sat, 28 Dec 2019 12:54:11 -0800
+Message-ID: <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use resource-managed variant of request_irq for brevity.
+On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
+>
+> Michael Weiser reported he got below error during a kexec rebooting:
+> esrt: Unsupported ESRT version 2904149718861218184.
+>
+> The ESRT memory stays in EFI boot services data, and it was reserved
+> in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> is to reuse the EFI boot services data across kexec reboot. For example
+> the BGRT image data and some ESRT memory like Michael reported.
+>
+> But although the memory is reserved it is not updated in X86 e820 table.
+> And kexec_file_load iterate system ram in io resource list to find places
+> for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> initramfs overwritten the ESRT memory and then the failure happened.
+>
+> Since kexec_file_load depends on the e820 to be updated, just fix this
+> by updating the reserved EFI boot services memory as reserved type in e820.
+>
+> Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> bypassed in the reservation code path because they are assumed as reserved.
+> But the reservation is still needed for multiple kexec reboot.
+> And it is the only possible case we come here thus just drop the code
+> chunk then everything works without side effects.
+>
+> On my machine the ESRT memory sits in an EFI runtime data range, it does
+> not trigger the problem, but I successfully tested with BGRT instead.
+> both kexec_load and kexec_file_load work and kdump works as well.
+>
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  arch/x86/platform/efi/quirks.c |    6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> +++ linux-x86/arch/x86/platform/efi/quirks.c
+> @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+>                 return;
+>         }
+>
+> -       /* No need to reserve regions that will never be freed. */
+> -       if (md.attribute & EFI_MEMORY_RUNTIME)
+> -               return;
+> -
+>         size += addr % EFI_PAGE_SIZE;
+>         size = round_up(size, EFI_PAGE_SIZE);
+>         addr = round_down(addr, EFI_PAGE_SIZE);
+> @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+>         early_memunmap(new, new_size);
+>
+>         efi_memmap_install(new_phys, num_entries);
+> +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> +       e820__update_table(e820_table);
+>  }
+>
+>  /*
+>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/dma/tegra20-apb-dma.c | 35 +++++++++++------------------------
- 1 file changed, 11 insertions(+), 24 deletions(-)
+Bisect says this change (commit af1648984828) is triggering a
+regression, likely not urgent, in my testing of the new efi_fake_mem=
+facility to allow memory to be marked "soft reserved" via the kernel
+command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
+for EFI_MEMORY_SP). The following command line triggers the crash
+signature below:
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index d2353f23b201..194a7faf12ba 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -182,7 +182,6 @@ struct tegra_dma_channel {
- 	char			name[12];
- 	bool			config_init;
- 	int			id;
--	int			irq;
- 	void __iomem		*chan_addr;
- 	spinlock_t		lock;
- 	bool			busy;
-@@ -1383,7 +1382,6 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
- 
- static int tegra_dma_probe(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct tegra_dma *tdma;
- 	int ret;
- 	int i;
-@@ -1449,25 +1447,27 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < cdata->nr_channels; i++) {
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
-+		int irq;
- 
- 		tdc->chan_addr = tdma->base_addr +
- 				 TEGRA_APBDMA_CHANNEL_BASE_ADD_OFFSET +
- 				 (i * cdata->channel_reg_size);
- 
--		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
--		if (!res) {
--			ret = -EINVAL;
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0) {
-+			ret = irq;
- 			dev_err(&pdev->dev, "No irq resource for chan %d\n", i);
--			goto err_irq;
-+			goto err_pm_disable;
- 		}
--		tdc->irq = res->start;
-+
- 		snprintf(tdc->name, sizeof(tdc->name), "apbdma.%d", i);
--		ret = request_irq(tdc->irq, tegra_dma_isr, 0, tdc->name, tdc);
-+		ret = devm_request_irq(&pdev->dev, irq, tegra_dma_isr, 0,
-+				       tdc->name, tdc);
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"request_irq failed with err %d channel %d\n",
- 				ret, i);
--			goto err_irq;
-+			goto err_pm_disable;
- 		}
- 
- 		tdc->dma_chan.device = &tdma->dma_dev;
-@@ -1520,7 +1520,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	if (ret < 0) {
- 		dev_err(&pdev->dev,
- 			"Tegra20 APB DMA driver registration failed %d\n", ret);
--		goto err_irq;
-+		goto err_pm_disable;
- 	}
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node,
-@@ -1537,13 +1537,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 
- err_unregister_dma_dev:
- 	dma_async_device_unregister(&tdma->dma_dev);
--err_irq:
--	while (--i >= 0) {
--		struct tegra_dma_channel *tdc = &tdma->channels[i];
--
--		free_irq(tdc->irq, tdc);
--	}
--
-+err_pm_disable:
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		tegra_dma_runtime_suspend(&pdev->dev);
-@@ -1553,16 +1547,9 @@ static int tegra_dma_probe(struct platform_device *pdev)
- static int tegra_dma_remove(struct platform_device *pdev)
- {
- 	struct tegra_dma *tdma = platform_get_drvdata(pdev);
--	int i;
--	struct tegra_dma_channel *tdc;
- 
- 	dma_async_device_unregister(&tdma->dma_dev);
- 
--	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
--		tdc = &tdma->channels[i];
--		free_irq(tdc->irq, tdc);
--	}
--
- 	pm_runtime_disable(&pdev->dev);
- 	if (!pm_runtime_status_suspended(&pdev->dev))
- 		tegra_dma_runtime_suspend(&pdev->dev);
--- 
-2.24.0
+    efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
 
+However, this command line works ok:
+
+    efi_fake_mem=8G@9G:0x40000
+
+So, something about multiple efi_fake_mem statements interacts badly
+with this change. Nothing obvious occurs to me at the moment, I'll
+keep debugging, but wanted to highlight this in the meantime in case
+someone else sees a deeper issue or the root cause.
+
+BUG: unable to handle page fault for address: ffffffffff281000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 188615067 P4D 188615067 PUD 188617067 PMD 188e4d067 PTE 0
+Oops: 0002 [#1] SMP PTI
+CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0+ #154
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+RIP: 0010:efi_memmap_insert+0xed/0x14b
+Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
+4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
+49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
+RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
+RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
+RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
+RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
+R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
+R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
+FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
+Call Trace:
+ ? efi_arch_mem_reserve+0x149/0x1a6
+ ? bgrt_init+0xbe/0xbe
+ ? bgrt_init+0xbe/0xbe
+ ? acpi_parse_bgrt+0xa/0xd
+ ? acpi_table_parse+0x86/0xb8
+ ? acpi_boot_init+0x494/0x4e3
+ ? acpi_parse_x2apic+0x87/0x87
+ ? setup_acpi_sci+0xa2/0xa2
+ ? setup_arch+0x8db/0x9e1
+ ? start_kernel+0x6a/0x547
+ ? secondary_startup_64+0xb6/0xc0
+Modules linked in:
+CR2: ffffffffff281000
+random: get_random_bytes called from print_oops_end_marker+0x26/0x40
+with crng_init=0
+---[ end trace 2acc14aa0990ee9d ]---
+RIP: 0010:efi_memmap_insert+0xed/0x14b
+Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
+4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
+49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
+RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
+RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
+RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
+RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
+R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
+R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
+FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
+Kernel panic - not syncing: Fatal exception
+---[ end Kernel panic - not syncing: Fatal exception ]---
