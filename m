@@ -2,153 +2,100 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA9C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBDAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C48206A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA30206A4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="pLnScRws"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P66zAWKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfL1TPD (ORCPT
+        id S1726605AbfL1TPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 14:15:03 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41085 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfL1TPC (ORCPT
+        Sat, 28 Dec 2019 14:15:44 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39263 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfL1TPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 14:15:02 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bd4so13060632plb.8
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 11:15:02 -0800 (PST)
+        Sat, 28 Dec 2019 14:15:43 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so16352564pfs.6;
+        Sat, 28 Dec 2019 11:15:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=SvOoylQ6teeU3N0UBqZLiYR+yruKjrC1zR60QXBr0Jk=;
-        b=pLnScRwstsbDt2cv0ddGWf6yaMNWpKrknH6skWGkChcgaiTmUitKYRrHuYguS/eA+Z
-         T8tCsB+r0yhbgkoXjYXZkwVycx4r2xs8EjnfHMAeuGGAxwI/GzURx92gmQThy9mZDNod
-         nkcE1RS6FYftHoddStnJeRDBfn+3VO2SAXPdmWYVaYmoXfhfzRC5YJrP49ppNzSu7MYQ
-         4hdnFEq54tjU9EEdCvESphmKaNqI+meaJkk4kJKpJW7FkmU4ywy46xCYGSDzVmg4pOhQ
-         XVwY2ir5C9ojJJooGkNQSdV70Spvj8OLeZQVBCUppJWYpRIjD2foe+QVzF2Oj6aDpyi+
-         d/Bg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xMhSUaoLvbRS73MvzsX7fmmvsEWEBSbzwEx5SJxXjpA=;
+        b=P66zAWKVsxghJs+uKX+aAsz486sKeQggR9ZD685ZiiotPHnaImkbarQOzpgBExACAr
+         0m+wz7SPPDREENrgJWvRXta8HRU1sgpBWtSZt8ikIWwMkKsHreO1F6PWDIioRYGwYLoO
+         3esKe6vV7tEabVVmBOtTywnHK87UkCTjNIUtmRZV78MGCd8E36NmO4+tBZUNsZF/5JGH
+         P8kQ0M3M2qX1Nwmk0KoeMbbFPNuSBEqWp/TQGJ478HymFQ/YXGIV7X9t89t0ngoSw90I
+         nuxjzkXnFG6bvBRatK6eX0j5ejGnieAEpY3jWrNayVvr1dHhzGTlqT8S227pBDd+K0R4
+         meUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=SvOoylQ6teeU3N0UBqZLiYR+yruKjrC1zR60QXBr0Jk=;
-        b=rFel0Bf8p1zL4wr86Ptgw8wLM68AqN/3fRgJQ5S/u49iKuyxu1b+XwQ9QLA+meVwSz
-         jb4t1DjzX6+hvPIhE5jT9l4DEaw8gpFg6JGIG9CirD23E5X0ta3zKIa0RDiPbTWyVCLz
-         /7hMvHb665J1wOp/igLdR5RZ8uH57+K7PdPgtc4pCr5SCcGKveEA+VQedFP7J230++nH
-         Vlko4QpA2Vt7hthg30dOFAZy2Ol3H9ZEQPwizaV3T6hwR3grjmsEN3uBokqZ+6bfIsfp
-         yGt7sRDGEHdiU9KjoF4M9O4/Jaw1KW1is0NiPeJMwuOkhTNFZUXJvsD3ZrWPdjcrWpWi
-         JU4w==
-X-Gm-Message-State: APjAAAWUMgYbEulcEc7tbnibT/Qo9WjGSfVZZ0HPQVA/eLg8hAneuwji
-        rgnANovwzRn1qxjIPGvRAlO5Ow==
-X-Google-Smtp-Source: APXvYqyoamHQsCeRHXqilswGLkqipjlpOaqzP0LJLs2XsktBWK/VCxaKAst+e04wIclOdDJWT1hqNg==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr33639409pjb.99.1577560502221;
-        Sat, 28 Dec 2019 11:15:02 -0800 (PST)
-Received: from cabot-wlan.adilger.int (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id 199sm47262164pfv.81.2019.12.28.11.15.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Dec 2019 11:15:01 -0800 (PST)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <6C6421AB-84B1-4E9D-9E8F-492A704D2A16@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_39BFD451-41EB-47AD-A778-E1593D3723C6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
-Date:   Sat, 28 Dec 2019 12:14:57 -0700
-In-Reply-To: <20191228143651.bjb4sjirn2q3xup4@pali>
-Cc:     Eric Sandeen <sandeen@redhat.com>, David Sterba <dsterba@suse.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-References: <20191228143651.bjb4sjirn2q3xup4@pali>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xMhSUaoLvbRS73MvzsX7fmmvsEWEBSbzwEx5SJxXjpA=;
+        b=tYQTCv91NRz60KR1tfpATJdF4U29uZpNliA5f5bf5iiBe4+nbOlHiC8m70W6n5ZGrP
+         wQtTfCOQHTCAa4diEhjczGvawi+VAa1tcJnUvxr+AU2wOMWAAVHC+r+tagg6GXa4sE2B
+         mElhD8uAUIEIEoALGXr0FAdP3kQhZdojFI8KWGh7PK6cdjRmAsDmjtDn1OO39WMcDmpa
+         JWoa3I8BkQ6v3ZNnLCNlsViMCr8sy3G8UTCT5dZ5Uf3UYFw9o/5aHji0JgogYVoyQJX8
+         kq6tv+jDyr85mhuhsRhdFBtEsWdg9MCbPEFPMMaGUTBgDOoCpll4ksp9Jpd9kPINBwZk
+         d8Gw==
+X-Gm-Message-State: APjAAAVppDtqikl96MCCozJIZqRvTtS3IO6XXFCLzeP7VTEPewtWKLDd
+        7YdQs6dsGu8XM88LgNZtJL8=
+X-Google-Smtp-Source: APXvYqxB6RVGET87O9fX5SlbjXabkBMlr6aK9Z3y6OEKl6J2YM8VVPP34GRL2M3O5laHsLavAdu6OQ==
+X-Received: by 2002:a65:6842:: with SMTP id q2mr63586845pgt.345.1577560543230;
+        Sat, 28 Dec 2019 11:15:43 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id d2sm18861017pjo.32.2019.12.28.11.15.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Dec 2019 11:15:42 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-remoteproc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] hwspinlock: stm32: convert to devm_platform_ioremap_resource
+Date:   Sat, 28 Dec 2019 19:15:41 +0000
+Message-Id: <20191228191541.26999-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use devm_platform_ioremap_resource() to simplify code.
 
---Apple-Mail=_39BFD451-41EB-47AD-A778-E1593D3723C6
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/hwspinlock/stm32_hwspinlock.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/hwspinlock/stm32_hwspinlock.c b/drivers/hwspinlock/stm32_hwspinlock.c
+index c8eacf4f9692..3ad0ce0da4d9 100644
+--- a/drivers/hwspinlock/stm32_hwspinlock.c
++++ b/drivers/hwspinlock/stm32_hwspinlock.c
+@@ -58,12 +58,10 @@ static int stm32_hwspinlock_probe(struct platform_device *pdev)
+ {
+ 	struct stm32_hwspinlock *hw;
+ 	void __iomem *io_base;
+-	struct resource *res;
+ 	size_t array_size;
+ 	int i, ret;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	io_base = devm_ioremap_resource(&pdev->dev, res);
++	io_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(io_base))
+ 		return PTR_ERR(io_base);
+ 
+-- 
+2.17.1
 
-> On Dec 28, 2019, at 7:36 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com> =
-wrote:
->=20
-> Hello!
->=20
-> I see that you have introduced in commit 62750d0 two new IOCTLs for
-> filesyetems: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL.
->=20
-> I would like to ask, are these two new ioctls mean to be generic way =
-for
-> userspace to get or set fs label independently of which filesystem is
-> used? Or are they only for btrfs?
->=20
-> Because I was not able to find any documentation for it, what is =
-format
-> of passed buffer... null-term string? fixed-length? and in which
-> encoding? utf-8? latin1? utf-16? or filesystem dependent?
-
-It seems that SETFSLABEL is supported by BtrFS and XFS, and GETFSLABEL
-also by GFS2.  We were just discussing recently about adding it to ext4,
-so if you wanted to submit a patch for that it would be welcome.
-
-It looks like the label is a NUL-terminated string, up to the length
-allowed by the various filesystems.  That said, it seems like a bit of
-a bug that the kernel will return -EFAULT if a string shorter than the
-maximum size is supplied (256 chars for btrfs).
-
-The copy_{to,from}_user() function will (I think) return the number of
-bytes remaining to be copied, so IMHO it would make sense that this is
-compared to the string length of the label, and not return -EFAULT if
-the buffer is large enough to hold the actual label.  Otherwise, the
-caller has to magically know the maximum label size that is returned
-from any filesystem and/or allocate specific buffer sizes for different
-filesystem types, which makes it not very useful as a generic interface.
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_39BFD451-41EB-47AD-A778-E1593D3723C6
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl4HqbEACgkQcqXauRfM
-H+Dm2g//SpKpi80w8UEmoN7QCS2u0vUtIkSIkPEnwm2aky+cIYNFUBYhvr3PTH0b
-1dljQ/WDLghsalOBQSYAChYQejuWDqzW8WBF4OmILDB6hK4LGMZorSg8HDyqP5Kv
-XSGBfKo9J1Kz5PViQIihfM9ioTF8iJPzK7kS2tW8/EKNFcJtbgt7s6S1jQOniwbh
-L4SYhyWx1Tt+oFv+kazqzjD/JwI1aBeh9CJrdkV5i4G0HgwVW7C1sjgWNRk20bIx
-NJVhH7AbXzYCkssipSGXY/uKAfbXtsbARtgyOOLmAL2IHBqiwxT9dCR9ev/1NGxn
-FrWxiagxgKdPS8FQ5VnJNS8IYqxSHibMbVjQyLEXbEfHSarQcZ8GMkj4vRaGxeS0
-K75+1dEClvrd8oAUY/UhHEs6aGYjF8OFvimu6UCoWRU9ogoKtdFfJ8G1tASOLCAd
-vuAw2S2xv6ZSgIcZayq4pxCNlUYtq4jPYZ26/Ddz5QqRbaArWOvV7iXYI02uV9pw
-SctIBAvO3nZ45OmHi2MDTGFS6w+IB14XcY9c60oTgM9spmxe1aWvjYRZOUxh1pAN
-g2CKpasJpobdSxhpuQ5lIwxc//kz6GG6wVzUYBI9n4X/Cus7PKutJCdLbim0tvIK
-DPaG8oZwuqpa650DAiJZzZGwUjOOmjRSg4YKrjVjEjmJctbQ0Rg=
-=Qzkb
------END PGP SIGNATURE-----
-
---Apple-Mail=_39BFD451-41EB-47AD-A778-E1593D3723C6--
