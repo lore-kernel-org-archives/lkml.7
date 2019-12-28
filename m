@@ -2,105 +2,55 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA255C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 09:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32E4C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 09:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA8920838
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 09:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C22207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 09:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfL1JTs (ORCPT
+        id S1726416AbfL1J0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 04:19:48 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8641 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725999AbfL1JTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 04:19:48 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CA2A4ECB5E1963F89944;
-        Sat, 28 Dec 2019 17:19:45 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Dec 2019
- 17:19:38 +0800
-Subject: Re: [PATCH v3 28/32] KVM: arm64: GICv4.1: Add direct injection
- capability to SGI registers
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Andrew Murray" <Andrew.Murray@arm.com>,
-        Robert Richter <rrichter@marvell.com>
-References: <20191224111055.11836-1-maz@kernel.org>
- <20191224111055.11836-29-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <c009fb1f-f4ec-22d5-ba7d-58426837c8af@huawei.com>
-Date:   Sat, 28 Dec 2019 17:19:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Sat, 28 Dec 2019 04:26:04 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39297 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfL1J0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 04:26:03 -0500
+Received: from [46.183.103.8] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1il8MB-0001LD-5A; Sat, 28 Dec 2019 09:26:01 +0000
+Date:   Sat, 28 Dec 2019 10:25:34 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        tycho@tycho.ws, jannh@google.com, keescook@chromium.org,
+        cyphar@cyphar.com
+Subject: Re: [PATCH v2 1/2] samples, selftests/seccomp: Zero out seccomp_notif
+Message-ID: <20191228092533.wm6w3r7eyhif5pfi@wittgenstein>
+References: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-In-Reply-To: <20191224111055.11836-29-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2019/12/24 19:10, Marc Zyngier wrote:
-> Most of the GICv3 emulation code that deals with SGIs now has to be
-> aware of the v4.1 capabilities in order to benefit from it.
+On Sat, Dec 28, 2019 at 01:48:39AM +0000, Sargun Dhillon wrote:
+> The seccomp_notif structure should be zeroed out prior to calling the
+> SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
+> whether these structures were zeroed out or not, so these worked.
 > 
-> Add such support, keyed on the interrupt having the hw flag set and
-> being a SGI.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
+> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> Cc: Kees Cook <keescook@chromium.org>
 
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-> index 0d090482720d..6ebf747a7806 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio.c
-> @@ -290,6 +345,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
->   
->   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->   
-> +		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
-> +			/* HW SGI? Ask the GIC to inject it */
-
-Shouldn't this be "Ask the GIC to clear its pending state"?
-
-Otherwise looks good!
-
-
-Thanks,
-Zenghui
-
-> +			int err;
-> +			err = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    false);
-> +			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
-> +
-> +			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +
-> +			continue;
-> +		}
-> +
->   		if (irq->hw)
->   			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
->   		else
-
+Can you please also add a test, that verifies that we catch garbage
+values, please?
