@@ -2,111 +2,115 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B6C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8099FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5538207E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4DD207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQhT8V6i"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="c9BPzEhR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfL1XkX (ORCPT
+        id S1726400AbfL1Xqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 18:40:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726132AbfL1XkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 18:40:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577576421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Is3zCMnykm3YLB/25LcQIuM+CSYuIJcnmCpT0uGhuGA=;
-        b=QQhT8V6iDiWAcnIABm6XtyhMlWHsmokSbTWfCLAOqB0D13RwJKxf8iHiXr0ZTQuNxGoH+6
-        qyJtYKebI6cRpcj4W2TPGxxk5ic+zDbhlbVSdTJ9/mIfgot0VxmiSs4LpHjIhJtH1/mK/u
-        tDQh79mapzmltP7yK0zCY6xHYsAXjTg=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-Evc_6CMBMyGlzQVpu-K4ew-1; Sat, 28 Dec 2019 18:40:19 -0500
-X-MC-Unique: Evc_6CMBMyGlzQVpu-K4ew-1
-Received: by mail-lj1-f198.google.com with SMTP id v1so2670984lja.21
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 15:40:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Is3zCMnykm3YLB/25LcQIuM+CSYuIJcnmCpT0uGhuGA=;
-        b=tI6hf3mD8JL0N4AtjLC7rQXIfIotfcm7TO9ZuuN3H8kMnRRvaTmgvM7FwLSpBjn3AV
-         nJ4KkiHKyNMnA2V6VAnxrIS/UcPEUl9ByFBuUgXrVLgISNEEma1X5pYu8pLWvqHYWHhH
-         jbLyV6PkfkGFkYLmUn77KvmELwLqycwfLgyaUQsJs1iaHSWStO0j5XrzWkKMFx28wU/P
-         2xzhfEjyQ+TYgRsKwH3uvQrCnOym4NxwqtwoP7QAAkK62zXnWp6Tn25kBLowwkkJNbF0
-         0Ga/PWKwfmMrX3rxS3CrENjhrhYyJ3vnPuGnkj1hYLjXiJId3hEwG11v5f6mJyrX0Xar
-         rRTA==
-X-Gm-Message-State: APjAAAVib70faYAyi//1NXODMbt4+uu0Boi5gFSQE69o7+BbZLSqPodn
-        gv7hkPdD9l/acjtZNSuekl5q46rcAMQ5qbQT33yAEBZrb+ZVCYg16iqwbEV3DMp0hJTz9L1kDBR
-        O++VIyB6l27ASKsMqKWWTNTqaN5++1/M/SArOa/Pj
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr31637662ljo.41.1577576418506;
-        Sat, 28 Dec 2019 15:40:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzOuhqb8WZQbccD0PFPulnZMqC/UpEhWcURSgW+wh+/9jktf1hFRczfhVM4qdeQVKbwlm1pads2IcbsEjsmChg=
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr31637641ljo.41.1577576418278;
- Sat, 28 Dec 2019 15:40:18 -0800 (PST)
+        Sat, 28 Dec 2019 18:46:55 -0500
+Received: from mail-dm6nam10on2115.outbound.protection.outlook.com ([40.107.93.115]:44128
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfL1Xqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 18:46:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IK+EX0Q6mIwQITHl6qsH6e7Y2AdA2bplaaIJVax+AX75BuJz7J7/0Z0oxObQmK5j87gz2i2aZoctuKBydrjx7YXcYYmmGGNg8fY6tXM3DjbFo0cfg8BVCDgf26/TVLLWQRF+b9+NM+BY1jJUiJ1o1iqvPWfazF1OnjTtT2itpTZli2c1TDih7q/S6b92CsBGKv3+6x8eHYNTsC1WL6wdgoUsoTprAv2ZQATQvGR57/MvUAi0kG4zhowDQtgHGPErXCHJOKI+ucMByimOH6YKnaaEcC8fih2/rjNrcBRBKg6O7zyMWoxUMr3YhXwUOtyFiTMh4Et7qCcj173yCEM9nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CH9XhAmj/M19pR1mX9L2wRkkzfErzVmgW9+4CIZn2tE=;
+ b=LQQpwzL2XJ/EWdRymhz2aufpWXbG0iP6lZYu3KhlkbyrVoGWcHFt1uERF3KjqzaZwwBpIZssG3PaDUNlgDRfMaMeV/2xkl6zXdDkpn14CqQrg2h6eObMcaQEzOVHPEjerx5ey+SZkgL/CbR9Nyd/ohomZy07+DOpZrtQiQjNu+ChTf8lMISsu/H+unLfvmqU19DBpbVo+Y/G8oLl3bzkm8lVvToh5wcQ0t1dU9aNG+iv6nEiyfI/0eDEf0eDS1kfshHnmync5Ip7wXXG5iuaf0kHP6qhFXkOZne/GXMnVhuUXUUmCm7CXoN3da50SNWxWXaxbfX++UeBaL2HroNoJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CH9XhAmj/M19pR1mX9L2wRkkzfErzVmgW9+4CIZn2tE=;
+ b=c9BPzEhRKafXm43DHKtgRhUFCGsGcAnhmKjmiIcHypbbc3SQA/3Gq2RKwMKbjpvbZkDxnF3Un3yxx94I8YRua3XXTlYyXdw+lu29DFS0qq0xD4es8RdlI3EjZ0MdCs45jb8zBaQfeC8wmnQf3KlQ12Y0PUgIeRbg+iKcHP2uCEY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB0727.namprd21.prod.outlook.com (10.167.110.39) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.1; Sat, 28 Dec 2019 23:46:52 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Sat, 28 Dec 2019
+ 23:46:51 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next, 0/3] Add vmbus dev_num and enable netvsc async probing
+Date:   Sat, 28 Dec 2019 15:46:30 -0800
+Message-Id: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWHPR1201CA0022.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::32) To DM5PR2101MB0901.namprd21.prod.outlook.com
+ (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-References: <1577122577157232@kroah.com> <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
- <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
- <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com> <20191228151526.GA6971@linux.intel.com>
-In-Reply-To: <20191228151526.GA6971@linux.intel.com>
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-Date:   Sat, 28 Dec 2019 16:39:53 -0700
-Message-ID: <CALzcdduip_XX5cRC662YUgRdb4UqcLSg+pomF29NkZdHep6sbg@mail.gmail.com>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
- has been added to the 5.4-stable tree
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR1201CA0022.namprd12.prod.outlook.com (2603:10b6:301:4a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Sat, 28 Dec 2019 23:46:50 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: dc3f0869-66a4-46f5-5319-08d78bf03627
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0727:|DM5PR2101MB0727:|DM5PR2101MB0727:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB07278A7A1379C663200C0ED0AC250@DM5PR2101MB0727.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 02652BD10A
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(366004)(376002)(199004)(189003)(6666004)(478600001)(81156014)(10290500003)(6506007)(8936002)(4326008)(2616005)(36756003)(316002)(81166006)(52116002)(26005)(956004)(8676002)(2906002)(4744005)(5660300002)(66556008)(186003)(66476007)(66946007)(16526019)(6512007)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0727;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: j2Ovl+UU6k2nCV9oU14/KznEnpnl4t7BwqDtYq7GqWZ08u1/g7eaTocNZky94FEzXE9MoIYbEXD/q1LwT6itopZXKHyO4wd1K0IDGrU0TrO3y7wy0luRtxoK4txl4c+xnOQst9D6yK4VrY2bf9uDdmeIobMPcP09u/4d86aC2GrekqiWY8PwPRKNj+4NNcY9m0D07s2uGjkv0oH7cHRo/QiuzPPs2QMvjd2TIf/dO1dAIKlKlRWWnnyhSBSbFMhWZAkclCg1VWJ/6DkmovatDadZzznCpa4oo5YAn/Q7BaEK+mbgrsZvDeeLV51EDyw1ElMI5wtC+LqW/zD7Xn/4X1X4sOlA5npB23ZkW+k0ZfGvb9raeTo+w3FZEgQ0DNHYgyCUhS+dwF+AwErGFqdLPYyDZR8nubtOvshIGb2JsHzOnLxNr4Y69cCea3ttpZow
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc3f0869-66a4-46f5-5319-08d78bf03627
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Dec 2019 23:46:51.6191
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 529gLGuMJcN4ItidXwvtjFmQnI61J8RSwyEcjRUXa2Cj0AUC85qEmM3SJu/190N7qccIM4gVNG+i+Ut7Ylo8dg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0727
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 8:15 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Fri, Dec 27, 2019 at 08:11:50AM +0200, Jarkko Sakkinen wrote:
-> > Dan, please also test the branch and tell if other patches are needed.
-> > I'm a bit blind with this as I don't have direct access to the faulting
-> > hardware. Thanks. [*]
-> >
-> > [*] https://lkml.org/lkml/2019/12/27/12
->
-> Given that:
->
-> 1. I cannot reproduce the bug locally.
-> 2. Neither of the patches have any appropriate tags (tested-by and
->    reviewed-by). [*]
->
-> I'm sorry but how am I expected to include these patches?
->
-> [*] https://patchwork.kernel.org/project/linux-integrity/list/?series=208305
->
-> /Jarkko
->
+Add dev_num for vmbus device based on channel offer sequence.
+Use this number for nic naming, and enable async probing.
 
-Hi Jarkko, sorry I've been under the weather the past couple of days.
-I will try to get some testing of your branch done tomorrow. I'm
-trying to find a system that use tpm_tis and uses interrupts to test
-as well.
+Haiyang Zhang (3):
+  Drivers: hv: vmbus: Add a dev_num variable based on channel offer sequence
+  Drivers: hv: vmbus: Add dev_num to sysfs
+  hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
+
+ Documentation/ABI/stable/sysfs-bus-vmbus |  8 +++++++
+ drivers/hv/channel_mgmt.c                | 40 ++++++++++++++++++++++++++++++--
+ drivers/hv/vmbus_drv.c                   | 13 +++++++++++
+ drivers/net/hyperv/netvsc_drv.c          | 18 +++++++++++---
+ include/linux/hyperv.h                   |  6 +++++
+ 5 files changed, 80 insertions(+), 5 deletions(-)
+
+-- 
+1.8.3.1
 
