@@ -2,44 +2,41 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADFEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB15EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969D9207E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCBA20748
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ltveeDlN"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="U5S7Vu+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfL1M0C (ORCPT
+        id S1726400AbfL1Mua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 07:26:02 -0500
-Received: from mout.web.de ([212.227.17.11]:47723 "EHLO mout.web.de"
+        Sat, 28 Dec 2019 07:50:30 -0500
+Received: from mout.web.de ([217.72.192.78]:55465 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfL1M0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 07:26:02 -0500
+        id S1726187AbfL1Mua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 07:50:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1577535951;
-        bh=n6RC+2F495ghd/0ICzcAKDXGWf8tVEvndTkoVgGfxHE=;
+        s=dbaedf251592; t=1577537424;
+        bh=P/t4loOx1AZXrhxHmvrhi+3XMNCVOGRlEHmFQSjRAb4=;
         h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=ltveeDlNccmcd0mKt4h090+1FqDokYC8PuJCjLghVRe2UmQx/NfDu/GExObQjveuD
-         7xlR/+3n7x1nwDdpSDIVnkOiU0M37m5+neX68OP7ayxyK1Yxhlk9SONtDdXSo0yAfF
-         o1P+c5gA0x9uvLFQd0KHn4odq814agre7KQbl8oY=
+        b=U5S7Vu+wWiZDLURSaw0p68G2/8Jq9Rr9OQleF1lardcC9dCo1q5/RKRLZQHU100Uj
+         n7tiaV39bbA6tHRxl8hVfcJycbpoOMgkk+kJtbjjkRIsoWv0pJDrr7mzDDZEyQ1EIg
+         9CUTJWP2nnq7DXHLCN464wVGzdddBFIRNlQJc6RE=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.3.151]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MGzXS-1ixsku3aa2-00DrXX; Sat, 28
- Dec 2019 13:25:50 +0100
-To:     Xu Wang <vulab@iscas.ac.cn>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
-Subject: Re: nvmem: core: Checking the decrementing of reference counters
+Received: from [192.168.1.2] ([78.48.3.151]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LqDYi-1jOw8u1lBo-00do5g; Sat, 28
+ Dec 2019 13:50:24 +0100
+To:     Xu Wang <vulab@iscas.ac.cn>, linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+References: <1577439272-10362-1-git-send-email-vulab@iscas.ac.cn>
+Subject: Re: [PATCH 2/2] i2c: Fix a potential use after free
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -84,54 +81,54 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <2a95fa07-dfae-54ef-9d19-682bace02e5f@web.de>
-Date:   Sat, 28 Dec 2019 13:25:49 +0100
+Message-ID: <81b35c80-74c2-e14e-4947-f23ec6197b73@web.de>
+Date:   Sat, 28 Dec 2019 13:50:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+In-Reply-To: <1577439272-10362-1-git-send-email-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8JmaXCBanrGdFXwC198kewP5yhXVBp0/zIcjsLSX/6KWvOhh70B
- GANw32gXJ3hT5OdEox4NV4aoCZfBsLyKM7jKM0SjjECngd5VZIFfPG09fkzcijZlCZKok+V
- ccVDe+VPJGM0BTfSJFvYMQacNgP0Viy+6R+XZZ4rFEVTYWm/EvSjvYQ8sqfuMUiRyXtWd5z
- TbAdGtQVpWRrO0WXtpwAw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nycj1l2HX9Q=:8NKg6aYWXtlCZF0mxMQ7Jx
- C8mLYCUaEyMJp9zxn5HSHpPFcGc3CgKjtzUj9uN8hE7BcouCsaQ2xk3ee25ApPGZ3l+9IfLyn
- T6d0ZILfZntrWZKrP8Y4jAL+SP5Cx0z6S4641l4fhGX4c/uQx7K3VfYKM70w8ca36YUKSj5iq
- hQp3yuUTZlzWRyD69xQDDV4VOubHAn7plObShKr9OlJDeLJAYgbVeUU3dDMdYTAvvTPw6rZ81
- nXc74Hqm5+8Qe3MqiPxxw0Y6Vybtt0t06AZYnzGTHbuPjMsrEVBImO4/1Bv2hHiDmTPHXwQUg
- EZL5ppD/uYw3QryuqifcX0TCZFd/hnF5fcur56VGHrQFS+B8+Kvv27BdYZZYorAwXC1ojW6qD
- kcqTg1VccEnY5MA0jFbJEDNXWpgH7KnCSzJTTAN9SKiOy+Ft2dD+hDIxw72viGm6S6kU6Qlrv
- 6D4S5GHIQq7NgtYeerjHlCadDSqTkGKsx7yCvKjlC9xiLK328Uu+wBPBaw7gKbVaLw86HYgeq
- ZeYVxtDDJO1qozhGCS2zgTBsZ3VtBqgCrWBtAX4rJYS5h8IRNBhqAmSit05OwTmMGE4EXSFY0
- s2Xz5hDaHIJ+26OMp9xRjxY4XuAl+AqhjbXyV3Wv+8U6lqOE6txgxbc7J5BWQqzZll2TDAyu2
- 4jec3wxNwwg09+wxcOeUIMGxwIMuT09sx5MaMcnW2un8FjeD2hgIeBlmA7f9U10DXOjUT4xvT
- Fbqn56JFVmETBAeYxHKXaux5a8WgFqzK+4CYFg74l1jszA/bjpjNPOXHvQTGuHVNj+4gwspFH
- CBVCj7yUkUsN1pc9laYSw/Gh73gcQ1KXuVTQsrk4UrcLSsItn486Kic5EvVhEFrKC/oST3nZn
- gmItsVEhHjMg3h9FStEtjSuzN30yB7fB74GlG1iRqcrOEdoEsiYlhRMwV+3hXvOVXpUeDryJP
- BpOdz5DmaViEUN33myFEhaavDNcSSm7OSOkS9c8MIUeHyPAJSGDeSN56R4E1uknhvwmRPW0Ui
- JPAQPfnwFd4EMb3CGYbzuqayotH6HIShZ3KyEyxTpT8opJ4bG992gKitrlc3HfY6afy7XCEeG
- DJQbjgHjIyjy2cmsjNQUcSWV3AnABrVaAhejI+rurx0/xeE11vlozu274NZaS/jK+rCxlc114
- v+C8rLmJDfe8xULk0GseVdLC6icvF1NS/6eRQsVZs0mgCW7Q7zJ87J527x+sAdwlpZaWXQ7vf
- 5uAwzeQBQs13wxhoPFHImB+QTs4MMSZHuw6rhTOM524i4vb44dB5sbRjMuM8=
+X-Provags-ID: V03:K1:PrlI48dhLIRO4YeSVp6+HSERej6UZEC1VTswfIipTcz1KRENdhI
+ UprKZGwX39QOiDTyw/+iAvJ7TdcadlrNykilJhX0Tp40e+WTe+2yilm/ED/DSgcQq1BRBio
+ oeHVdbt6rw5E9tl9n09eMwsdDT8rGWDKfZfcYzEZWlCpTWhQeFXoqXymcNRSDkU/TZo3mAw
+ lZYJ5yIhlQzeQswMxw8OA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hrv+lr/SgQ8=:ClWDXTGwdl8Ujwl4Jr7FZA
+ l5yO5Q5K0olZ+L3A7TyqQ7/ZpTDZH4AAtjve3fKUpEmFGMKKEiZoMvXvwxw0LbRkSQ+HokVrx
+ huECg7bPzrROZ3IGC3KU1kLt+VweIsyQggLuk4oK9Q1QmUxx8QcwrTBpaZ1APe3avDBL/b++9
+ gAWmrYZ61HT/o7uqgL1rxRRBiHhV59uz3MISDdAYMdCE5hLalqO2FdChyg38MnehUuM7VgQPy
+ 4nZqnZRl2ddiO+2Htp/ZPsEqmYfHLgRbwBEjoeOKjpBX3TG/evXYZv9DT3pBgn8By4AUfOEed
+ WyV2MCr7MRsflm2iIyEW1U75jSGFsJOBgGOOsIg3fRW6RXnOqX+zViXBIV7HciTQAGBXszOF4
+ 3JRseR4uG6d4mVGQ1ck2wuDszsTUF+lHOcEVdkDjmshurjd5PnSr2L8aXMMdPG8vI50fRfrq/
+ VBSpQQ77itmbdCNjNc+T4hbmb3/PJWFF1UjAQtascDnxmQ+mVoJ7EGRtNGzaavXQsGYKdVJLF
+ 3NWbkA1xuGDmPvcTDnj9JbO9UaK7ZhKfuDRTmrszHRERzyHC2GeeUlWhHQqdPhAbjOoPVQay6
+ MDRnJ/lH7DF2wWattuV8z1E3RrKPMdPvT1GOZgHMLw/b0W7aGC+PG768ot/3k5vJSkvokjJry
+ LVXjTpjcij+CF13aEVGjxI2izLGdK6pGN8hFe8rhUii4A7oNlT67swDsHF9IGLh5V5rGcwprP
+ prYHa4mk5QzLoVVbdQTU2B+SU1pNwHhtjIJYU7l2kM6o7NoLiYycC0Zo5OROR9ELEP4TaIj7N
+ IbYy8W93hR0qWoRxe3p0eKhU9Bh08PWg7oP1XCCgLTXb/hTtclwP9G6azSKuw/8bdosI8+Ap7
+ EccfvQS/rbLKRbtvUXx+us4RXz8wqi/7iZH3ChdWk1cLNUiu4dRIlU3ojv8h1NNIwKAfkiODT
+ bukJWbi/4JJLsGQ51V2rRphhTZnyE4nWWVgZdl/FOQ5crofV4GcMGzctOo2DYKpPsQc2e7ips
+ CXYeFbfULgKHO2d1ctSRT4XuBtmHTQZD7GuxuQ0+4TUZalvui/+H9P0H8fpDsCVRVrV2hAzLF
+ qIb7jXOZCCArA37yr8XU4fbyRCRLo5+PXDkhw1eid6xI63vBsBtyjnLHruxmbpxV+Lyp2ZG7e
+ iCsaTmXil24tBr7e9gYlns3oRbiNQnJ4Llhc8rOCPneK2C4moMwUUljUQZlBpHn03wkC7Omrm
+ yN50Ikpr3k46ecRQsrDk/5dPSTXamnNK2FTreowOyS0/pND11p3+YqvC5a9Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have taken another look at the implementation of the function =E2=80=9Cn=
-vmem_device_release=E2=80=9D.
-https://elixir.bootlin.com/linux/v5.5-rc3/source/drivers/nvmem/core.c#L421
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/nvmem/core.c?id=3Dbf8d1cd4386535004c4afe7f03d37f9864c9940e#n421
+> Free the adap structure only after we are done using it.
 
-Now I wonder why the statement =E2=80=9Cput_device(&nvmem->dev)=E2=80=9D i=
-s performed here
-after it was also executed by the function =E2=80=9C__nvmem_device_put=E2=
-=80=9D before.
-How often should the device reference count be decremented (at the end)?
+This information can be reasonable.
+
+
+> This patch just moves the put_device() down a bit to avoid the
+> use after free.
+
+I suggest to reconsider such a change because a device reference count
+should eventually be decremented before decrementing the reference count
+for the module which is managed by this programming interface.
+Would you like to clarify the dependencies for such an use case any more?
 
 Regards,
 Markus
