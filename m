@@ -2,97 +2,144 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF60FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 04:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4108CC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 04:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9623720748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 04:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADA9206E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 04:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="mVYrxfdc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvMc8L18"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfL1Dt0 (ORCPT
+        id S1726410AbfL1EVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 22:49:26 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46099 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL1DtZ (ORCPT
+        Fri, 27 Dec 2019 23:21:11 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40574 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfL1EVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 22:49:25 -0500
-Received: by mail-il1-f195.google.com with SMTP id t17so23727616ilm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 19:49:25 -0800 (PST)
+        Fri, 27 Dec 2019 23:21:10 -0500
+Received: by mail-il1-f196.google.com with SMTP id c4so23809845ilo.7;
+        Fri, 27 Dec 2019 20:21:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fW4oSj2ujLoinwXahbBj146hJbvQqiumz2p1q9AEvF8=;
-        b=mVYrxfdc0XAsVAFSGNI6GvI3HPDntzPtAlQuuhh9YSh3zsttcIpdX6ooe9UlKCINN8
-         AEoIFpNDQV84RWnPnUpPbSAvp8ZCumCj4pSsOkDbGMcrUCV4y2Vw/gPl5NKJw5Rqdb/b
-         3oAKiXd3Fv07EbDXpZEOAqFGewQpY4YlPsV5O0fDATY9kdrTpkZGsaqFEn0+79hZlKF+
-         q2+9BmF5MEqQLeaCbXIWlBTGVGixnH74iDFoBhKpQh4mA1GaocFvM+QoMzqXbmN4FnZC
-         jyWA2UsSqlvFRaQ9ALjvT6R92RMl9kbIEPgPIWjjvOyGX1miDAubAyOztZsFGjfyTW+N
-         84nQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/Y+1cix94haqo0ZsZpC+lfYx5UlPd+44CRyWPMgim+0=;
+        b=uvMc8L18MtYcpMksUMB7qhdt6ta+8pxxwRf4JRQ4MRrEtatg2hwCRYSyxP9ezg4zsn
+         xl0DF/XJh4iA6g3yDLdElfMLQ/nyonnvf34uP8qT7EpBUqlgFGEhEjbx2v6FLMnEHXRx
+         YconIRzpP6cIeAS6kLWmuLxIfuZ5udQlE500TIzlXt16SG+kILLlu6CyjurHhQkiK7jg
+         wEDG77Y6hZn13dVyQ+r8AnpEwQOteqoa3vbbn3jAgKCps5gjzE5ZQbxd2kRzRyTfV/sw
+         k12uysvvEko81MtPac+ojvQkcHguHz0jBRBDj6XOzbXZdfJ2JXmgUTOKVcLFN4FwjOfs
+         Y8Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fW4oSj2ujLoinwXahbBj146hJbvQqiumz2p1q9AEvF8=;
-        b=ka49rdWH6jPgEIfnh9J1qdf8snX3bTdg2yypQv9jeFI0CIKVYHGISt179Om4m7ew5W
-         wP29fB4CG+/i3CZw1XkdeUzUJZncTiBhnoTDDHT+tCAkpTKhbbO5vrWexQ0TF+YyfEbA
-         3dviu+rCHhQKERGgKJxp2aAyj7uuFPqPZ9q+Yxo9sbRcLupVeA56UrzmeMTgdHinPW94
-         nMIXiwSJFRJYgRAsXx9P/j1l49xVzQzdJacRnJa98sQOyb+2+M1Wx4zT5MSz7lqwdU22
-         fW8TLU4hQbD2zS0c2aFFTT/9jM4ptC1wgRrE1Z7wpYhHP1c1ZcSvhA4kfJyOcYxGTlns
-         Co1g==
-X-Gm-Message-State: APjAAAWgbUhfuH5Lq79PxNeEmrMXmZLICvVS1soT4OriVdbIEKF9zX3a
-        Iw9ZdJFHv/OJtwtdW+MbEONtKg==
-X-Google-Smtp-Source: APXvYqy95YEE+vlkJ65Homi/8eJPYaJsqJMTy7PymXaZETZnjEU6uKsbnfju/5VySBEuI+U7HJ6M5g==
-X-Received: by 2002:a92:88d0:: with SMTP id m77mr50028181ilh.9.1577504965068;
-        Fri, 27 Dec 2019 19:49:25 -0800 (PST)
-Received: from cisco ([2601:282:902:b340:f166:b50c:bba2:408])
-        by smtp.gmail.com with ESMTPSA id q22sm9864425iot.39.2019.12.27.19.49.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Dec 2019 19:49:24 -0800 (PST)
-Date:   Fri, 27 Dec 2019 20:49:21 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        jannh@google.com, christian.brauner@ubuntu.com,
-        keescook@chromium.org, cyphar@cyphar.com
-Subject: Re: [PATCH v2 2/2] seccomp: Check that seccomp_notif is zeroed out
- by the user
-Message-ID: <20191228034921.GG15663@cisco>
-References: <20191228014849.GA31783@ircssh-2.c.rugged-nimbus-611.internal>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/Y+1cix94haqo0ZsZpC+lfYx5UlPd+44CRyWPMgim+0=;
+        b=C2SRjX/TqxPv3oXaR9/vwII3bzhfULsbaT0OlnbCA8ah/YtRG8K0wEYk8U0k5Nxzl/
+         sgveLO1VWvTZYNYpzWmFWxwtcW+9kuwyMKa9v79gl+VF5fRt5Hh+v6AS8MheHCaJ6oEE
+         N5/g4ptAm0avpYBOJwDVl8Y3lxqbmZwinj4MZRpAz6mzpmAQaeyzB0SUM7O7UJ0zZebg
+         ZU5Jr8i2JGYlpoOtouTXQVVhQJ0htQ4olhfD6iNHjqYLK4hzd111ndQf+w5Fj9putQI9
+         uID2nqm6sF+UtXPXlr2Djlxn6moKg4DKqrhxni/+IKxe0YCYEIL2+Nj6CrJfyZ2Ipgt4
+         /F5Q==
+X-Gm-Message-State: APjAAAUrucoKMpa4s2qHyErjbht72vwQ92IL1HEUhm05d39lez+Mp7+q
+        b1pqe/MaOAgprebTYgRSdTyB8lNEufHzndH04qko4WlM
+X-Google-Smtp-Source: APXvYqyJ5lGmc9fwagJ2Q+v1MFvZ6h3lqArYA5dPe3QObYiTL3r4Sr7jSW2ovhBI1d06meQczKPjuOljWWRS0YGBD80=
+X-Received: by 2002:a92:5c8a:: with SMTP id d10mr50009161ilg.137.1577506870039;
+ Fri, 27 Dec 2019 20:21:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191228014849.GA31783@ircssh-2.c.rugged-nimbus-611.internal>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1577456898.git.chris@chrisdown.name> <533d188802d292fa9f7c9e66f26068000346d6c1.1577456898.git.chris@chrisdown.name>
+ <CAOQ4uxhaMjn2Kusv6o6mJ36RhF7PAdmgW3kncgfov5uys=6VHw@mail.gmail.com> <20191227163536.GC442424@chrisdown.name>
+In-Reply-To: <20191227163536.GC442424@chrisdown.name>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 28 Dec 2019 06:20:58 +0200
+Message-ID: <CAOQ4uxjfqAtFL3N0-qJzO4OCuo0iExoO1-oG+41YrCF-4ch7NA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] shmem: Add support for using full width of ino_t
+To:     Chris Down <chris@chrisdown.name>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kernel-team@fb.com,
+        Hugh Dickins <hughd@google.com>,
+        "zhengbin (A)" <zhengbin13@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 01:48:51AM +0000, Sargun Dhillon wrote:
-> This patch is a small change in enforcement of the uapi for
-> SECCOMP_IOCTL_NOTIF_RECV ioctl. Specifically, the datastructure which
-> is passed (seccomp_notif) must be zeroed out. Previously any of its
-> members could be set to nonsense values, and we would ignore it.
-> 
-> This ensures all fields are set to their zero value.
-> 
-> This relies on the seccomp_notif datastructure to not have
-> any unnamed padding, as it is valid to initialize the datastructure
-> as:
-> 
->   struct seccomp_notif notif = {};
-> 
-> This only initializes named members to their 0-value [1].
-> 
-> [1]: https://lore.kernel.org/lkml/20191227023131.klnobtlfgeqcmvbb@yavin.dot.cyphar.com/
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+On Fri, Dec 27, 2019 at 6:35 PM Chris Down <chris@chrisdown.name> wrote:
+>
+> Amir Goldstein writes:
+> >On Fri, Dec 27, 2019 at 4:30 PM Chris Down <chris@chrisdown.name> wrote:
+> >>
+> >> The new inode64 option now uses get_next_ino_full, which always uses the
+> >> full width of ino_t (as opposed to get_next_ino, which always uses
+> >> unsigned int).
+> >>
+> >> Using inode64 makes inode number wraparound significantly less likely,
+> >> at the cost of making some features that rely on the underlying
+> >> filesystem not setting any of the highest 32 bits (eg. overlayfs' xino)
+> >> not usable.
+> >
+> >That's not an accurate statement. overlayfs xino just needs some high
+> >bits available. Therefore I never had any objection to having tmpfs use
+> >64bit ino values (from overlayfs perspective). My only objection is to
+> >use the same pool "irresponsibly" instead of per-sb pool for the heavy
+> >users.
+>
+> Per-sb get_next_ino is fine, but seems less important if inode64 is used. Or is
+> your point about people who would still be using inode32?
+>
+> I think things have become quite unclear in previous discussions, so I want to
+> make sure we're all on the same page here. Are you saying you would
+> theoretically ack the following series?
+>
+> 1. Recycle volatile slabs in tmpfs/hugetlbfs
+> 2. Make get_next_ino per-sb
+> 3. Make get_next_ino_full (which is also per-sb)
+> 4. Add inode{32,64} to tmpfs
 
-Acked-by: Tycho Andersen <tycho@tycho.ws>
+Not what I meant. On the contrary:
+1. Recycle ino from slab is a nice idea, but it is not applicable
+    along with per-sb ino allocator, so you can't use it for tmpfs
+2. Leave get_next_ino() alone - it is used by things like pipe(2)
+    that you don't want to mess with
+3. Don't create another global ino allocator
+4. inode{32,64} option to tmpfs is the only thing you need
+
+We've made quite a big mess of a problem that is not really that big.
+
+In this thread on zhenbin's patch you have the simple solution that
+Google are using to your problem:
+https://patchwork.kernel.org/patch/11254001/#23014383
+
+The only thing keeping this solution away from upstream according to
+tmpfs maintainer is the concern of breaking legacy 32bit apps.
+
+If you make the high ino bits exposed opt-in by mount and/or Kconfig
+option, then this concern would be mitigated and Google's private
+solution to tmpfs ino could go upstream.
+
+Hugh did not specify if sbinfo->next_ino is incremented under
+sbinfo->stat_lock or some other lock (maybe he can share a link to
+the actual patch?), but shmem_reserve_inode() already takes that
+lock anyway, so I don't see the need to any further micro optimizations.
+
+Chris, I hope the solution I am proposing is clear now and I hope I am
+not leading you by mistake into another trap...
+
+To be clear, solution should be dead simple and contained to tmpfs.
+If you like, you could clone exact same solution to hugetlbfs, but no
+new vfs helpers please.
+
+Thanks,
+Amir.
