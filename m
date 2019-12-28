@@ -2,89 +2,66 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE72CC47409
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7F6C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEC0208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024CE207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 19:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfL1TdE (ORCPT
+        id S1726626AbfL1Tek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 14:33:04 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:52985 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726371AbfL1TdD (ORCPT
+        Sat, 28 Dec 2019 14:34:40 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:59616 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfL1Tek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 14:33:03 -0500
-Received: (qmail 18436 invoked by uid 500); 28 Dec 2019 14:33:01 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 28 Dec 2019 14:33:01 -0500
-Date:   Sat, 28 Dec 2019 14:33:01 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Guenter Roeck <linux@roeck-us.net>
-cc:     Peter Chen <peter.chen@freescale.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] usb: chipidea: host: Disable port power only if previously
- enabled
-In-Reply-To: <20191227165543.GA15950@roeck-us.net>
-Message-ID: <Pine.LNX.4.44L0.1912281431190.18379-100000@netrider.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Sat, 28 Dec 2019 14:34:40 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C9C5815460C1A;
+        Sat, 28 Dec 2019 11:34:39 -0800 (PST)
+Date:   Sat, 28 Dec 2019 11:34:37 -0800 (PST)
+Message-Id: <20191228.113437.849229183154552588.davem@davemloft.net>
+To:     chenzhou10@huawei.com
+Cc:     qiang.zhao@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next] net/wan/fsl_ucc_hdlc: remove set but not used
+ variables 'ut_info' and 'ret'
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191228030947.92765-1-chenzhou10@huawei.com>
+References: <20191228030947.92765-1-chenzhou10@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 28 Dec 2019 11:34:40 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019, Guenter Roeck wrote:
+From: Chen Zhou <chenzhou10@huawei.com>
+Date: Sat, 28 Dec 2019 11:09:47 +0800
 
-> On Thu, Dec 26, 2019 at 02:46:15PM -0500, Alan Stern wrote:
-> > On Thu, 26 Dec 2019, Guenter Roeck wrote:
-> > 
-> > > On shutdown, ehci_power_off() is called unconditionally to power off
-> > > each port, even if it was never called to power on the port.
-> > > For chipidea, this results in a call to ehci_ci_portpower() with a request
-> > > to power off ports even if the port was never powered on.
-> > > This results in the following warning from the regulator code.
-> > 
-> > That's weird -- we should always power-on every port during hub 
-> > initialization.
-> > 
-> That is what I would have assumed, but test code shows that it doesn't
-> happen.
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> > It looks like there's a bug in hub.c:hub_activate(): The line under
-> > HUB_INIT which calls hub_power_on() should call
-> > usb_hub_set_port_power() instead.  In fact, the comment near the start
+> drivers/net/wan/fsl_ucc_hdlc.c: In function ucc_hdlc_irq_handler:
+> drivers/net/wan/fsl_ucc_hdlc.c:643:23:
+> 	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+> drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_suspend:
+> drivers/net/wan/fsl_ucc_hdlc.c:880:23:
+> 	warning: variable ut_info set but not used [-Wunused-but-set-variable]
+> drivers/net/wan/fsl_ucc_hdlc.c: In function uhdlc_resume:
+> drivers/net/wan/fsl_ucc_hdlc.c:925:6:
+> 	warning: variable ret set but not used [-Wunused-but-set-variable]
 > 
-> usb_hub_set_port_power() operates on a port of the hub. hub_activate()
-> operates on the hub itself, or at least I think it does. I don't know
-> how to convert the calls. Also, there are more calls to hub_power_on()
-> in the same function.  Can you provide more details on what to do,
-> or even better a patch for me to test ?
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
-Let's try a slightly different approach.  What happens with this patch?
-
-Alan Stern
-
-
-Index: usb-devel/drivers/usb/core/hub.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/hub.c
-+++ usb-devel/drivers/usb/core/hub.c
-@@ -1065,6 +1065,7 @@ static void hub_activate(struct usb_hub
- 		if (type == HUB_INIT) {
- 			delay = hub_power_on_good_delay(hub);
- 
-+			hub->power_bits[0] = ~0UL;	/* All ports on */
- 			hub_power_on(hub, false);
- 			INIT_DELAYED_WORK(&hub->init_work, hub_init_func2);
- 			queue_delayed_work(system_power_efficient_wq,
-
+Applied.
