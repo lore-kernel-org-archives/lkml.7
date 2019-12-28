@@ -2,137 +2,58 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD97C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1859C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CBA21582
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQ87Up34"
+	by mail.kernel.org (Postfix) with ESMTP id BC54620722
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfL1GoG (ORCPT
+        id S1726378AbfL1Gu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 01:44:06 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47001 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfL1GoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 01:44:05 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n9so7881360pff.13;
-        Fri, 27 Dec 2019 22:44:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=k/Zh0wd0iyh47HJcj26AK+VtSYrhhFOp9r5l6dctHRg=;
-        b=cQ87Up34bttOiGDEXDLiZ+4e4O19HR8fqNNWjDzMEWGjLJeDt12PbmxIzk/sHUID9c
-         yPTUXIf5hAOPK1T2/s1zzolWudNsW/MYZkhVlRhXpj3Q8czVxQcMThExn6rkBiilqYLq
-         dz6cInYDh3jNyF8o/vex+/jNRJSs1g+OnegrFoWJtB/Ygj9clWo4AGnQsxtPXXK+K/mg
-         Jpd7VylXheG7lEVoyg9PUUlvvGYkyMSef7i/+xpgeTk0nUggIvdaAyX7jBWjWjKBLOn/
-         aDjUziw1rZ2zHCWzWzdk0QbXv70r+eWvqiN1mNHhZyUnzLWetCycgQMezieDHqOWEB9M
-         ZCCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=k/Zh0wd0iyh47HJcj26AK+VtSYrhhFOp9r5l6dctHRg=;
-        b=FK2rWTEn6pV6l2yTXeVBouAkt4NWmYtWug4hwDTsB6A1NH/VSxJthyp5EcAK87Urbr
-         99Jn5C54XVE1rIHkJJl/yeM6ZFFyudu/FDI1k56ZYdweO4Dsn7qbdczEc04PfEb5TKVx
-         toUkGHYIdoADH+Lhulr4rfMSbfQb7ggbh6DzWNVH9Y2ikgwU27tH1zEscib5yqr+6/1S
-         74C8R+Ge1+PU2rnjt3EZeo19tXx+18RAIQhAf09QgIr+f+WmF5b/zykFnG4ZSx8c8t/+
-         VjHGZDjVv0guAACduzBMl1D9662q0rL5BBZz6M+jWEeiNZc3cnP25FQOePz0/tGLJKE2
-         /LCA==
-X-Gm-Message-State: APjAAAW53UDrefiJ0Ss4Pgn/DTsv1GR56+6rQU537nWXEiDWnDwwI/Zp
-        0f7a0LWcfQLqT40920u35b8=
-X-Google-Smtp-Source: APXvYqxS56Xo+lxmahknG9q55wIA+ODBR3wY7WgCdNMBd37PV7FVIa4xuPsJ37k352RZ05q1fDWlBA==
-X-Received: by 2002:a65:66d7:: with SMTP id c23mr60290506pgw.40.1577515444820;
-        Fri, 27 Dec 2019 22:44:04 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id q15sm39751585pgi.55.2019.12.27.22.44.03
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 27 Dec 2019 22:44:04 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     kgene@kernel.org, krzk@kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] cpufreq: s3c: avoid use after free issue in xxx_cpufreq_reboot_notifier_evt()
-Date:   Sat, 28 Dec 2019 14:43:59 +0800
-Message-Id: <1577515439-14477-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Sat, 28 Dec 2019 01:50:57 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48228 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbfL1Gu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 01:50:57 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 34DFF71B53E4CD75E645;
+        Sat, 28 Dec 2019 14:50:54 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 28 Dec
+ 2019 14:50:49 +0800
+Subject: Re: [f2fs-dev] [PATCH 2/4] f2fs: don't put new_page twice in
+ f2fs_rename
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191218200947.20445-1-jaegeuk@kernel.org>
+ <20191218200947.20445-2-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <049ce80a-d977-d15a-ad56-11ad7f5edd1f@huawei.com>
+Date:   Sat, 28 Dec 2019 14:50:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191218200947.20445-2-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On 2019/12/19 4:09, Jaegeuk Kim wrote:
+> In f2fs_rename(), new_page is gone after f2fs_set_link(), but it tries
+> to put again when whiteout is failed and jumped to put_out_dir.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
-There is a potential UAF issue in xxx_cpufreq_reboot_notifier_evt() that
-the cpufreq policy of cpu0 has been released before using it. So we should
-make a judgement to avoid it.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- drivers/cpufreq/s3c2416-cpufreq.c | 11 ++++++++++-
- drivers/cpufreq/s5pv210-cpufreq.c | 10 +++++++++-
- 2 files changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cpufreq/s3c2416-cpufreq.c b/drivers/cpufreq/s3c2416-cpufreq.c
-index 1069103..0f576ba 100644
---- a/drivers/cpufreq/s3c2416-cpufreq.c
-+++ b/drivers/cpufreq/s3c2416-cpufreq.c
-@@ -304,6 +304,7 @@ static int s3c2416_cpufreq_reboot_notifier_evt(struct notifier_block *this,
- {
- 	struct s3c2416_data *s3c_freq = &s3c2416_cpufreq;
- 	int ret;
-+	struct cpufreq_policy policy;
- 
- 	mutex_lock(&cpufreq_lock);
- 
-@@ -318,7 +319,15 @@ static int s3c2416_cpufreq_reboot_notifier_evt(struct notifier_block *this,
- 	 */
- 	if (s3c_freq->is_dvs) {
- 		pr_debug("cpufreq: leave dvs on reboot\n");
--		ret = cpufreq_driver_target(cpufreq_cpu_get(0), FREQ_SLEEP, 0);
-+
-+		memset(&policy, 0, sizeof(policy));
-+		ret = cpufreq_get_policy(&policy, 0);
-+		if (ret < 0) {
-+			pr_debug("cpufreq: get no policy for cpu0\n");
-+			return NOTIFY_BAD;
-+		}
-+
-+		ret = cpufreq_driver_target(&policy, FREQ_SLEEP, 0);
- 		if (ret < 0)
- 			return NOTIFY_BAD;
- 	}
-diff --git a/drivers/cpufreq/s5pv210-cpufreq.c b/drivers/cpufreq/s5pv210-cpufreq.c
-index 5d10030..d99b4b1 100644
---- a/drivers/cpufreq/s5pv210-cpufreq.c
-+++ b/drivers/cpufreq/s5pv210-cpufreq.c
-@@ -555,8 +555,16 @@ static int s5pv210_cpufreq_reboot_notifier_event(struct notifier_block *this,
- 						 unsigned long event, void *ptr)
- {
- 	int ret;
-+	struct cpufreq_policy *policy;
- 
--	ret = cpufreq_driver_target(cpufreq_cpu_get(0), SLEEP_FREQ, 0);
-+	policy = cpufreq_cpu_get(0);
-+	if (!policy) {
-+		pr_debug("cpufreq: get no policy for cpu0\n");
-+		return NOTIFY_BAD;
-+	}
-+
-+	ret = cpufreq_driver_target(policy, SLEEP_FREQ, 0);
-+	cpufreq_cpu_put(policy);
- 	if (ret < 0)
- 		return NOTIFY_BAD;
- 
--- 
-1.9.1
-
+Thanks,
