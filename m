@@ -2,159 +2,96 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06841C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 11:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8DEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 11:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D110F20748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 11:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vh/EItAj"
+	by mail.kernel.org (Postfix) with ESMTP id 790CB20748
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 11:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfL1LNq (ORCPT
+        id S1726605AbfL1LPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 06:13:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44685 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfL1LNn (ORCPT
+        Sat, 28 Dec 2019 06:15:54 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:39162 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726248AbfL1LPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 06:13:43 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so28349970wrm.11;
-        Sat, 28 Dec 2019 03:13:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=YHYJcDrGIHRFm53VlzRjbvCMqJEk7QWJgVaPxjySsxc=;
-        b=vh/EItAjQHTrj6A1QVr/MzFGHyyT1AZ/5rFAYS6FzVX0jGjJuT7XEYbILe0wmT223f
-         JymM28x1E4Ce3elN0tD8rYghuKahsyIqZ8535CCo3MI3AWP9vwvX6BBBOR4s9VNBhchn
-         VFpw2LEfI9nEIvdI8Pqwq9nk9L6hnLdRWfFEcsKpyDAvU34serb3ZHwWjNauJQR7oMH6
-         3ViPay0FJPt8yHQZbJooMr8m6//bECsCcIX8jagbicuOVqIK/Md4ww3/bRZUdV6oJJFO
-         XjoyrjN26SgGAufOckjNX9tcqRPeqTxmEs7gIbrFOndjU8scRk/06FaWywGNMMpz1jS8
-         RM7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YHYJcDrGIHRFm53VlzRjbvCMqJEk7QWJgVaPxjySsxc=;
-        b=XejUUGlBfDsQZdh7BHKCxCPE2ZWAp2kkTlU/P/v4T7vxMZROPtraIZGMKuae9p51mi
-         PqFxA7eSfJ362ImEpS02bYaBT7seN0pi043PyeNSlZsdP/5zhpX94BhWcg5eQ7sD/+U+
-         1TVay05K6/FL+F2UR1cwXTcpg6Tiayk5+nVEI9lXQxaUeTs++XwcYoLKa/CXHYvcwcqz
-         9UKP8l8cbJh07XF0fzW8JjI8x4gRCfBBtkv8u+0yrJYlwxDcjLdek8B737+NOLLtVFaT
-         YJTGHaHrxzXV4HGO9y88WHF5yNX4SRIeKT2Vam2kD2AmOen6li1QAQm4M6UWEZxxPIE+
-         upkA==
-X-Gm-Message-State: APjAAAVt9BSMEjMbEwo9Y/Va4g0gmKIU2rWLq497JQ85dMo8dbdVoBV4
-        WLMFE8C2TcKdQYtTIyXp1uw=
-X-Google-Smtp-Source: APXvYqwXnlafFfHpV4myorXxHzbctCqnnbxoeLtbqQwzU3btdl1WbZrKGRtpSufWrgl7Pu7p37rKdQ==
-X-Received: by 2002:a5d:5283:: with SMTP id c3mr57755497wrv.148.1577531621873;
-        Sat, 28 Dec 2019 03:13:41 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id q11sm37432622wrp.24.2019.12.28.03.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 03:13:41 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] io_uring: batch getting pcpu references
-Date:   Sat, 28 Dec 2019 14:13:03 +0300
-Message-Id: <1250dad37e9b73d39066a8b464f6d2cab26eef8a.1577528535.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1577528535.git.asml.silence@gmail.com>
-References: <cover.1577528535.git.asml.silence@gmail.com>
+        Sat, 28 Dec 2019 06:15:54 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1ilA4S-00072O-81; Sat, 28 Dec 2019 12:15:48 +0100
+Date:   Sat, 28 Dec 2019 12:15:48 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     syzbot <syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
+        eric.dumazet@gmail.com
+Subject: Re: INFO: rcu detected stall in br_handle_frame (2)
+Message-ID: <20191228111548.GI795@breakpoint.cc>
+References: <000000000000f9f9a8059a737d7e@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000f9f9a8059a737d7e@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-percpu_ref_tryget() has its own overhead. Instead getting a reference
-for each request, grab a bunch once per io_submit_sqes().
+syzbot <syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com> wrote:
 
-~5% throughput boost for a "submit and wait 128 nops" benchmark.
+[ CC Eric, fq related ]
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+> syzbot found the following crash on:
+> 
+> HEAD commit:    7e0165b2 Merge branch 'akpm' (patches from Andrew)
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=116ec09ee00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=1b59a3066828ac4c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=dc9071cc5a85950bdfce
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159182c1e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1221218ee00000
+> 
+> Bisection is inconclusive: the bug happens on the oldest tested release.
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=158224c1e00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=178224c1e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=138224c1e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com
+> 
+> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> 	(detected by 0, t=10502 jiffies, g=10149, q=201)
+> rcu: All QSes seen, last rcu_preempt kthread activity 10502
+> (4294978441-4294967939), jiffies_till_next_fqs=1, root ->qsmask 0x0
+> sshd            R  running task    26584 10034   9965 0x00000008
+> Call Trace:
+>  <IRQ>
+>  sched_show_task kernel/sched/core.c:5954 [inline]
+[..]
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7fc1158bf9a4..404946080e86 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1080,9 +1080,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
- 	struct io_kiocb *req;
- 
--	if (!percpu_ref_tryget(&ctx->refs))
--		return NULL;
--
- 	if (!state) {
- 		req = kmem_cache_alloc(req_cachep, gfp);
- 		if (unlikely(!req))
-@@ -1141,6 +1138,14 @@ static void io_free_req_many(struct io_ring_ctx *ctx, void **reqs, int *nr)
- 	}
- }
- 
-+static void __io_req_free_empty(struct io_kiocb *req)
-+{
-+	if (likely(!io_is_fallback_req(req)))
-+		kmem_cache_free(req_cachep, req);
-+	else
-+		clear_bit_unlock(0, (unsigned long *) req->ctx->fallback_req);
-+}
-+
- static void __io_free_req(struct io_kiocb *req)
- {
- 	struct io_ring_ctx *ctx = req->ctx;
-@@ -1162,11 +1167,9 @@ static void __io_free_req(struct io_kiocb *req)
- 			wake_up(&ctx->inflight_wait);
- 		spin_unlock_irqrestore(&ctx->inflight_lock, flags);
- 	}
--	percpu_ref_put(&ctx->refs);
--	if (likely(!io_is_fallback_req(req)))
--		kmem_cache_free(req_cachep, req);
--	else
--		clear_bit_unlock(0, (unsigned long *) ctx->fallback_req);
-+
-+	percpu_ref_put(&req->ctx->refs);
-+	__io_req_free_empty(req);
- }
- 
- static bool io_link_cancel_timeout(struct io_kiocb *req)
-@@ -4551,6 +4554,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			return -EBUSY;
- 	}
- 
-+	if (!percpu_ref_tryget_many(&ctx->refs, nr))
-+		return -EAGAIN;
-+
- 	if (nr > IO_PLUG_THRESHOLD) {
- 		io_submit_state_start(&state, nr);
- 		statep = &state;
-@@ -4567,7 +4573,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			break;
- 		}
- 		if (!io_get_sqring(ctx, req, &sqe)) {
--			__io_free_req(req);
-+			__io_req_free_empty(req);
- 			break;
- 		}
- 
-@@ -4598,6 +4604,8 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			break;
- 	}
- 
-+	if (submitted != nr)
-+		percpu_ref_put_many(&ctx->refs, nr - submitted);
- 	if (link)
- 		io_queue_link_head(link);
- 	if (statep)
--- 
-2.24.0
+The reproducer sets up 'fq' sched with TCA_FQ_QUANTUM == 0x80000000
 
+This causes infinite loop in fq_dequeue:
+
+if (f->credit <= 0) {
+  f->credit += q->quantum;
+  goto begin;
+}
+
+... because f->credit is either 0 or -2147483648.
+
+Eric, what is a 'sane' ->quantum value?
+
+One could simply add a 'quantum > 0 && quantum < INT_MAX'
+constraint afaics.
+
+If you don't have a better idea/suggestion for an upperlimit INT_MAX
+would be enough to prevent perpetual <= 0 condition.
