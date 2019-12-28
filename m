@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3828C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717B1C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ED821775
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F602173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKiwJbQk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUXBq1ZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfL1Sf6 (ORCPT
+        id S1726936AbfL1SgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 13:35:58 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52808 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbfL1Sfw (ORCPT
+        Sat, 28 Dec 2019 13:36:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33068 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfL1SgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 13:35:52 -0500
-Received: by mail-pj1-f68.google.com with SMTP id a6so6130419pjh.2;
-        Sat, 28 Dec 2019 10:35:52 -0800 (PST)
+        Sat, 28 Dec 2019 13:36:01 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c13so13039600pls.0;
+        Sat, 28 Dec 2019 10:36:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EpYT0fAEZoJoOZIDpiQY1oBPoWcKuknBnZk8A3TEsPc=;
-        b=vKiwJbQktB/yDQ3otya9rtDE8p6fqKEysJmAKuEUbVtc7Hp/GlMTlnbHpdHzz+23LA
-         K3I/kFAxXFft8S+LDEmic49DQCSn6DnsZQYob/yY+GL3Bi4ZeuqFc0DQb+w1ckRgZ3zb
-         pgsvvlp+r2z8BkO4qGkrViUoLKOVflsuwF8egIx0MaPHzoF19frOrVJReh7w373MN34N
-         dYuV7tmJaDrie72lcADl96GobSb1c5DNNkIDdw/hCM821qi8JusXrbrd6KseHkIVHIje
-         o+PxDKh9YIumZWtaz1bSNUHPoSdfT4o6PQ5zsCEF/oM+PxjaxYThcvTuD1Mgf1lg4MR8
-         LG6w==
+        bh=ADqPq+9Qjf/3isyeDy4/Z1hzrmcF+XODskWY/MSDCzg=;
+        b=pUXBq1ZSttMQqrQedS6P3sf1POS/rPvRylB5k3jq1APu8c7p2pyt0Bi04CAVKALzjF
+         mPkoRNynqJkKKKbubehHQ3+9IO5OqtImXGsEmJpiIFuAWI+EiXbIvwd9UQW4ZMC6M68s
+         ed/W0lBfQ6ox96LOSikKs5fzgb/eLXOyhFgvFViHP8w7Aa50/yH69Z6WSlEjPBQ5YagM
+         w/LDGD63x99SDV9D6NspjiK/aq60dQIlAfRolapH8LpMppixENiGo10ax6WBq8YV7SNS
+         i7kgAhJgTiEjKLctxdjFNGrsF/q0hObxNFxPMyNymGY1GUapBkfBfb8Hl4CV2cGuUYwX
+         45JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EpYT0fAEZoJoOZIDpiQY1oBPoWcKuknBnZk8A3TEsPc=;
-        b=UTRHXMnNakrp4rKcdCL9bd625H2TWTDI91//z/YGJC+nJ5DPm4tLpjS8nci2aUU0GN
-         mC8RFVhe2onOXf+p0WTmLtk9xTYy7PwviY/o1N7lKQ4TP4banZmFvR7+rZ9lduOr8RbQ
-         LWBDcVrxsdb8t5jr03RI1ecUYNTNvKOixtUyiOJa6nPTLtg2yOJRNimPntyhPKa4JalZ
-         DiF7ZRiGLx0si1kj31IVSpx2QE+DSge6BHwmevH1SnhN2KLmbFmuMAaR5hj6+hyEbpRt
-         bdHg3vDjJe1VeZlX3Fk3OerMnPwqP0yFCWUaPjvci6ZYSbb5T9xnk2V50FsqXxL9fKmQ
-         QBkg==
-X-Gm-Message-State: APjAAAVhjPXDxpoULNx6DOm2sQpaE28y6GcLZZ6ZJ0vTrQUEkKlmXKsD
-        oOQPUWs3fDUy/1f2k1lQz9I=
-X-Google-Smtp-Source: APXvYqxaL1bhfI+SzfCWF5xfdSHs4X/qPlTpf9l3TG5tgOk3eb7YlJe0jzmEPnG066uA83lfsS3rzQ==
-X-Received: by 2002:a17:902:bd46:: with SMTP id b6mr58947367plx.239.1577558151829;
-        Sat, 28 Dec 2019 10:35:51 -0800 (PST)
+        bh=ADqPq+9Qjf/3isyeDy4/Z1hzrmcF+XODskWY/MSDCzg=;
+        b=VbGJpVH8xHMTixWSbUXoRn3tx3qqIuH7tyr8vznHylZOVdsT49Omvu3BbMZEVcEaSE
+         RflwwOuDufLB26kE571dkIQWHBhWIJe5/mrIT48nFeiQxxoocUAkBANXhAMnNhfvKSMW
+         G/0iW+nstVj9iJ50MdPzYQzworILd7MAuhbwNIiwV60ai/J1Y6KftJvEg8eKEYzUcM6b
+         Ma/gqrqvGZUCqSm/+FjUWraxBonCyf4Gra9ArQZI0F1atKh8CQ5/KLlOYcASz5gpRKhe
+         APOXivflp+FTa5QjltqnqmdIMO7Y5ulI1Dts5+8EgxsJrfNzlJ5Y6swI9M3PYGYNwOjI
+         /CKA==
+X-Gm-Message-State: APjAAAUyK+Qlh+dSDPm4zQYYCAI6glUYWSiYgoxW5UShW/hA9htcXA57
+        6QDfW4DRNbmylkjQ0SaedFo=
+X-Google-Smtp-Source: APXvYqwLD6B860LYYvLn0ujeh8QzH5CpAMQoA7FqjdVBqgwpvrGi+q9HmCi2Rey62ZR7dzLVq7TOLA==
+X-Received: by 2002:a17:90a:db0f:: with SMTP id g15mr33432010pjv.40.1577558160406;
+        Sat, 28 Dec 2019 10:36:00 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id w5sm40623989pgb.78.2019.12.28.10.35.51
+        by smtp.gmail.com with ESMTPSA id c26sm40294665pfj.101.2019.12.28.10.35.59
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 28 Dec 2019 10:35:51 -0800 (PST)
+        Sat, 28 Dec 2019 10:36:00 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
         f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
@@ -71,9 +71,9 @@ To:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-tegra@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 08/13] mailbox: stm32-ipcc: convert to devm_platform_ioremap_resource
-Date:   Sat, 28 Dec 2019 18:35:33 +0000
-Message-Id: <20191228183538.26189-8-tiny.windzz@gmail.com>
+Subject: [PATCH 13/13] mailbox: armada-37xx-rwtm: convert to devm_platform_ioremap_resource
+Date:   Sat, 28 Dec 2019 18:35:38 +0000
+Message-Id: <20191228183538.26189-13-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191228183538.26189-1-tiny.windzz@gmail.com>
 References: <20191228183538.26189-1-tiny.windzz@gmail.com>
@@ -86,31 +86,32 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/mailbox/stm32-ipcc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/mailbox/armada-37xx-rwtm-mailbox.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
-index ef966887aa15..0a7e9ce0fb31 100644
---- a/drivers/mailbox/stm32-ipcc.c
-+++ b/drivers/mailbox/stm32-ipcc.c
-@@ -205,7 +205,6 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct stm32_ipcc *ipcc;
--	struct resource *res;
- 	unsigned int i;
+diff --git a/drivers/mailbox/armada-37xx-rwtm-mailbox.c b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+index 19f086716dc5..02b7b28e6969 100644
+--- a/drivers/mailbox/armada-37xx-rwtm-mailbox.c
++++ b/drivers/mailbox/armada-37xx-rwtm-mailbox.c
+@@ -143,7 +143,6 @@ static const struct mbox_chan_ops a37xx_mbox_ops = {
+ static int armada_37xx_mbox_probe(struct platform_device *pdev)
+ {
+ 	struct a37xx_mbox *mbox;
+-	struct resource *regs;
+ 	struct mbox_chan *chans;
  	int ret;
- 	u32 ip_ver;
-@@ -235,8 +234,7 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
- 	}
  
- 	/* regs */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ipcc->reg_base = devm_ioremap_resource(dev, res);
-+	ipcc->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ipcc->reg_base))
- 		return PTR_ERR(ipcc->reg_base);
+@@ -156,9 +155,7 @@ static int armada_37xx_mbox_probe(struct platform_device *pdev)
+ 	if (!chans)
+ 		return -ENOMEM;
  
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	mbox->base = devm_ioremap_resource(&pdev->dev, regs);
++	mbox->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mbox->base)) {
+ 		dev_err(&pdev->dev, "ioremap failed\n");
+ 		return PTR_ERR(mbox->base);
 -- 
 2.17.1
 
