@@ -2,191 +2,63 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC84C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C760DC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEA5208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D5E20882
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfL1CZK (ORCPT
+        id S1726378AbfL1CnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 21:25:10 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:55514 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfL1CZK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 21:25:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id p8so2412148ilp.22
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 18:25:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=dkMBOiYFVN/QgBDsRTSBXVQRsjZiREbEFc+AoW++NlU=;
-        b=OtFhSp+Q+Ji3yWOUkNZ4L5iLxxvjBa58E6oi6JWJ13imkyNTLFWlMkhGtmbdDlCCeZ
-         mmfTEEUN0PM41/vffgd0aOiE4i4SYQpt/adTHvBzsP0UV06wx5501G9QZXuPBc9sUfvN
-         vq+/pOmjajOzbIu4oXRWr617OFT99dRFjDUZ+nUtYAJLHS+axqUpadYlcUw7jtxzwuK0
-         tA9hc1zVIb3bDYZjfic4O/tEr4KOMT5bC89YWN0BWpo14PD/QdBppnI+407S80aPCiAj
-         AGMbcLO7iymr40M1uWmbn6evIEevYz7t3c3SapKlnYJSlPHeC3s6TFlK6xHuBuDR+RO+
-         wZUw==
-X-Gm-Message-State: APjAAAWmHXBtFe+2yV12fphCYWN+NP6oqD3Q9sKgRgTfFfvY6Dp8l4i7
-        NOxkyiB8ZqDNmGubhoOZkQiZNFXlCjyIZQmwix1OnB31EJm5
-X-Google-Smtp-Source: APXvYqwLaMv/LswRa53Dmo4Pg4vZYkdsBZ0NheBEGX2oMrsE914+BQPXHwF/NuuEtckYuqCU8X+pmSCe+L3/Xo/fcSNEv2OR9qpW
+        Fri, 27 Dec 2019 21:43:12 -0500
+Received: from mga11.intel.com ([192.55.52.93]:34830 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725957AbfL1CnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 21:43:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 18:43:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,365,1571727600"; 
+   d="scan'208";a="243381779"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Dec 2019 18:43:09 -0800
+Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] iommu/vt-d: Add Kconfig option to enable/disable
+ scalable mode
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <20191112063954.19371-1-baolu.lu@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e8d35743-4f86-5626-e0e3-a107264bc9ba@linux.intel.com>
+Date:   Sat, 28 Dec 2019 10:42:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Received: by 2002:a6b:680d:: with SMTP id d13mr35421523ioc.188.1577499909040;
- Fri, 27 Dec 2019 18:25:09 -0800 (PST)
-Date:   Fri, 27 Dec 2019 18:25:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b63799059aba5164@google.com>
-Subject: KASAN: slab-out-of-bounds Read in hsr_debugfs_rename
-From:   syzbot <syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com>
-To:     arvid.brodin@alten.se, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191112063954.19371-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 11/12/19 2:39 PM, Lu Baolu wrote:
+> This adds Kconfig option INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+> to make it easier for distributions to enable or disable the
+> Intel IOMMU scalable mode by default during kernel build.
+> 
+> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
 
-syzbot found the following crash on:
+Queued for v5.6.
 
-HEAD commit:    3c2f450e Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=15853866e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7f6119e2e3675a73
-dashboard link: https://syzkaller.appspot.com/bug?extid=9328206518f08318a5fd
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=106d4751e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1775a49ee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com
-
-8021q: adding VLAN 0 to HW filter on device batadv0
-@: renamed from hsr_slave_0
-==================================================================
-BUG: KASAN: slab-out-of-bounds in hsr_debugfs_rename+0xa8/0xc0  
-net/hsr/hsr_debugfs.c:73
-Read of size 8 at addr ffff88809f7f4cd8 by task syz-executor679/9217
-
-CPU: 1 PID: 9217 Comm: syz-executor679 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
-  hsr_debugfs_rename+0xa8/0xc0 net/hsr/hsr_debugfs.c:73
-  hsr_netdev_notify+0x6c8/0xa00 net/hsr/hsr_main.c:49
-  notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
-  __raw_notifier_call_chain kernel/notifier.c:361 [inline]
-  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
-  call_netdevice_notifiers_info net/core/dev.c:1893 [inline]
-  call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1878
-  call_netdevice_notifiers_extack net/core/dev.c:1905 [inline]
-  call_netdevice_notifiers net/core/dev.c:1919 [inline]
-  dev_change_name+0x504/0x930 net/core/dev.c:1270
-  do_setlink+0x2d28/0x3720 net/core/rtnetlink.c:2571
-  __rtnl_newlink+0xbf0/0x1790 net/core/rtnetlink.c:3238
-  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
-  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
-  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg net/socket.c:2424 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4425d9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 6b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd616ed1b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004425d9
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 0000000000000003 R08: 00000000bb1414ac R09: 00000000bb1414ac
-R10: 00000000bb1414ac R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000403960 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9217:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
-  __do_kmalloc_node mm/slab.c:3616 [inline]
-  __kmalloc_node+0x4e/0x70 mm/slab.c:3623
-  kmalloc_node include/linux/slab.h:579 [inline]
-  kvmalloc_node+0x68/0x100 mm/util.c:574
-  kvmalloc include/linux/mm.h:655 [inline]
-  kvzalloc include/linux/mm.h:663 [inline]
-  alloc_netdev_mqs+0x98/0xde0 net/core/dev.c:9731
-  rtnl_create_link+0x22d/0xab0 net/core/rtnetlink.c:3042
-  __rtnl_newlink+0xfa0/0x1790 net/core/rtnetlink.c:3295
-  rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
-  rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:659
-  __sys_sendto+0x262/0x380 net/socket.c:1985
-  __do_sys_sendto net/socket.c:1997 [inline]
-  __se_sys_sendto net/socket.c:1993 [inline]
-  __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1993
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff88809f7f4000
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 3288 bytes inside of
-  4096-byte region [ffff88809f7f4000, ffff88809f7f5000)
-The buggy address belongs to the page:
-page:ffffea00027dfd00 refcount:1 mapcount:0 mapping:ffff8880aa402000  
-index:0x0 compound_mapcount: 0
-raw: 00fffe0000010200 ffffea00028eb488 ffffea0002387b08 ffff8880aa402000
-raw: 0000000000000000 ffff88809f7f4000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88809f7f4b80: 00 00 00 00 00 00 00 00 07 fc fc fc fc fc fc fc
-  ffff88809f7f4c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff88809f7f4c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                                     ^
-  ffff88809f7f4d00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff88809f7f4d80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+-baolu
