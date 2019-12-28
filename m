@@ -2,127 +2,106 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A298C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C989FC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA8C207E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989D8207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577498870;
+	bh=U/nAnG2hJ81tt6C4DRheFtDEpu00ZrtqXVwbAsZZP9M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fRRa17BUaq9sO9QlLUM0NQwFIV63hV+zBZaXnpX4fYpSgnfFo85eDVTRI/ujbTcUJ
+	 p7emBqLu4fNdBmNMCG67gOUBEUntbbCvHTLnkECS1/egHJm91283m1v0xN0udqWBF4
+	 EFDkh+WqqpbGL9V2rjWf9ch/XWvv8SfZCGkerGFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfL1CG7 (ORCPT
+        id S1726409AbfL1CHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 21:06:59 -0500
-Received: from mout-p-101.mailbox.org ([80.241.56.151]:43742 "EHLO
-        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfL1CG7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 21:06:59 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Fri, 27 Dec 2019 21:07:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725957AbfL1CHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 21:07:14 -0500
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47l6Wh5jNVzKmbc;
-        Sat, 28 Dec 2019 03:06:56 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id 3Fcw9sovV883; Sat, 28 Dec 2019 03:06:51 +0100 (CET)
-Date:   Sat, 28 Dec 2019 13:06:43 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        tycho@tycho.ws, jannh@google.com, christian.brauner@ubuntu.com,
-        keescook@chromium.org
-Subject: Re: [PATCH v2 2/2] seccomp: Check that seccomp_notif is zeroed out
- by the user
-Message-ID: <20191228020643.jb2kn5wztwnrpr74@yavin.dot.cyphar.com>
-References: <20191228014849.GA31783@ircssh-2.c.rugged-nimbus-611.internal>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E1C6222C4
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 02:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577498833;
+        bh=U/nAnG2hJ81tt6C4DRheFtDEpu00ZrtqXVwbAsZZP9M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1c6ghWj9lBinB1rJ06SZnLd56bVBBBe9bPlVBfLZzT9lOViU8sgKn5WWYaCABTVCU
+         mV7JlPuz2lmd9hnM4J1CtbAGqIFv9gcLmZftS+0Wi0uiScZE3GN7E8NGM/yYR0L1wd
+         RGzetWX/uhSMgeHn4e0hXigTRJ7NGS4dE6kAfqv4=
+Received: by mail-wm1-f50.google.com with SMTP id b19so9462905wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 18:07:13 -0800 (PST)
+X-Gm-Message-State: APjAAAVqQS7bwEmg0BzGyBUi8zCQQ3PCL1fTPJi21Azv2oE9Uq7utCNB
+        Cutumx8Jj8KXCyl7Rh44LsFzgruv5h69s4eXzeGD9g==
+X-Google-Smtp-Source: APXvYqxn3Rv02S1te2llnFcs0CQZm6YywFRNddMkZ5rLIdJvih5IqiGw4PeCUC2MXu651WWfDw7Wdf6pIKHDbHZ3lio=
+X-Received: by 2002:a7b:cbc9:: with SMTP id n9mr21666330wmi.89.1577498831945;
+ Fri, 27 Dec 2019 18:07:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="54mmka6dnelc3rwm"
-Content-Disposition: inline
-In-Reply-To: <20191228014849.GA31783@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20191226140423.GB3158@mit.edu> <4048434.Q8HajmOrkZ@tauon.chronox.de>
+ <20191227130436.GC70060@mit.edu> <15817620.rmTN4T87Wr@tauon.chronox.de> <20191227220857.GD70060@mit.edu>
+In-Reply-To: <20191227220857.GD70060@mit.edu>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 27 Dec 2019 18:06:56 -0800
+X-Gmail-Original-Message-ID: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
+Message-ID: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 27, 2019 at 2:09 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 
---54mmka6dnelc3rwm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> So if it's just for cryptographers, then let it all be done in
+> userspace, and let's not make it easy for GPG, OpenSSL, etc., to all
+> say, "We want TrueRandom(tm); we won't settle for less".  We can talk
+> about how do we provide the interfaces so that those cryptographers
+> can get the information they need so they can get access to the raw
+> noise sources, separated out and named, and with possibly some way
+> that the noise source can authenticate itself to the Cryptographer's
+> userspace library/application.
+>
+> But all of this should probably not be in drivers/char/random.c, and
+> we probably need to figure out a better kernel to userspace interface
+> than what we have with /dev/hwrng.
 
-On 2019-12-28, Sargun Dhillon <sargun@sargun.me> wrote:
-> This patch is a small change in enforcement of the uapi for
-> SECCOMP_IOCTL_NOTIF_RECV ioctl. Specifically, the datastructure which
-> is passed (seccomp_notif) must be zeroed out. Previously any of its
-> members could be set to nonsense values, and we would ignore it.
->=20
-> This ensures all fields are set to their zero value.
->=20
-> This relies on the seccomp_notif datastructure to not have
-> any unnamed padding, as it is valid to initialize the datastructure
-> as:
->=20
->   struct seccomp_notif notif =3D {};
->=20
-> This only initializes named members to their 0-value [1].
->=20
-> [1]: https://lore.kernel.org/lkml/20191227023131.klnobtlfgeqcmvbb@yavin.d=
-ot.cyphar.com/
->=20
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Cc: Kees Cook <keescook@chromium.org>
+I'm thinking of having a real class device and chardev for each hwrng
+device.  Authentication is entirely in userspace: whatever user code
+is involved can look at the sysfs hierarchy and decide to what extent
+it trusts a given source.  This could be done based on bus topology or
+based on anything else.
 
-Looks good.
+The kernel could also separately expose various noise sources, and the
+user code can do whatever it wants with them.  But these should be
+explicitly unconditioned, un-entropy-extracted sources -- user code
+can run its favorite algorithm to extract something it believes to be
+useful.  The only conceptually tricky bit is keeping user code like
+this from interfering with the in-kernel RNG.
 
-Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-
-> ---
->  kernel/seccomp.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index 12d2227e5786..4fd73cbdd01e 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -1026,6 +1026,12 @@ static long seccomp_notify_recv(struct seccomp_fil=
-ter *filter,
->  	struct seccomp_notif unotif;
->  	ssize_t ret;
-> =20
-> +	ret =3D check_zeroed_user(buf, sizeof(unotif));
-> +	if (ret < 0)
-> +		return ret;
-> +	if (!ret)
-> +		return -EINVAL;
-> +
->  	memset(&unotif, 0, sizeof(unotif));
-> =20
->  	ret =3D down_interruptible(&filter->notif->request);
-> --=20
-> 2.20.1
->=20
-
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---54mmka6dnelc3rwm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXga4rwAKCRCdlLljIbnQ
-EnMAAP9Xs8l4Hin1hWv97QM7HT0Sw7QrXAEhmfu1n2Kz+eMk3AD/YAtD/Zr4L7OC
-hJdpl7t6/Bega+Lr5/MbnPjfDdjANQ8=
-=TLug
------END PGP SIGNATURE-----
-
---54mmka6dnelc3rwm--
+--Andy
