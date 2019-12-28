@@ -2,138 +2,94 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141B3C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763D3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC366208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:40:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="naqCNsAA"
+	by mail.kernel.org (Postfix) with ESMTP id 4D157208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfL1Pks (ORCPT
+        id S1726479AbfL1Pla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 10:40:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46300 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfL1Pkr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 10:40:47 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z7so28703180wrl.13
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 07:40:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=S4w6bsun3BCKEVrzWfmPLYVkjYi7T9stUdFG1yttM1w=;
-        b=naqCNsAAJqXRk1bXaQjSLk0bA5uZjvulWTKN18QSlzKo+4vX4MyJESNM8UIg7JgiiO
-         S09Kd+xrgnbx9vnVG2dwevE0PaW7s6syf8h85lx9/77ILy9EQi0wCA7m7TnZX/3sfmmF
-         0wvmQoytMpE8UTHLyR828Q0viN5TJfbV/w8jXcfmcdtuoMCeSxeB0cKq7K0NdykoVToR
-         Dbci88sIkRnfmnMTm0lUVZbjJzRLUR7fEFYJ9vzECmrCRpS6ALKPOhlNIpR8PWYtHgs/
-         pjq60qAMfKYM63mF60VbvQoa8LAGIUY8LCPTfcfX3jSgUZ7Bn7yLu6cl4mRLq7Egdt1d
-         UtTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S4w6bsun3BCKEVrzWfmPLYVkjYi7T9stUdFG1yttM1w=;
-        b=R6pWZkSIGgSS4lJbyrbYwV5zogXd+Sauippnde4zCynRd767JW/gH81fOQX5/RHlbM
-         67wKZoUAFrwlXGeAJ99Ki7DXTyuX6WoDToWqFbJ+EQ0kl7g6ME4we7tN5Jaz+YtnwuVt
-         zlRDNt20Zn7MgkgWqMeiwvfSiM3swqcWtuVsaN9eRIilaxD4u2z9NjYvCbq3bqHW5wvI
-         MlvUkwqtOedsS7hy683HRzK3gACsOzhBXLq8Wyvbzj5F/rghcWetE/mW1a4TF85kGrB8
-         gi3sxA6kLfVOksMgvFPXeVeYGZunUxd0zJPIXeTPXajSc5zcq+Pv669kZky67sMG3hf1
-         WC9w==
-X-Gm-Message-State: APjAAAXwS9bcLYOWBwttw2MNBbCuR4buLUq/v2tzA3TI65XFeG3ZMvRd
-        cKoaUZ1tkP+I5QD2SNA/a0k=
-X-Google-Smtp-Source: APXvYqy28SB3FtkvgCIo4a69wxOECpkxLmipvML1GM5jLGIQosopY4HYVMbjzcayohVXVxFe8HuBlA==
-X-Received: by 2002:a5d:690e:: with SMTP id t14mr55917549wru.65.1577547645550;
-        Sat, 28 Dec 2019 07:40:45 -0800 (PST)
-Received: from zhanggen-UX430UQ.lan ([95.179.219.143])
-        by smtp.gmail.com with ESMTPSA id o7sm14408269wmh.11.2019.12.28.07.40.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Dec 2019 07:40:45 -0800 (PST)
-Date:   Sat, 28 Dec 2019 23:40:39 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     bgolaszewski@baylibre.com, nsekhar@ti.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] board-dm644x-evm: fix 2 missing-check bugs in
- evm_led_setup()
-Message-ID: <20191228154039.GA8713@zhanggen-UX430UQ.lan>
-References: <20191227023921.GA21233@zhanggen-UX430UQ>
- <20191227160142.GW25745@shell.armlinux.org.uk>
- <20191228131930.GA7214@zhanggen-UX430UQ.lan>
- <20191228134824.GX25745@shell.armlinux.org.uk>
+        Sat, 28 Dec 2019 10:41:30 -0500
+Received: from smtp4-g21.free.fr ([212.27.42.4]:21342 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbfL1Pla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 10:41:30 -0500
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 6AC7119F5A8;
+        Sat, 28 Dec 2019 16:41:08 +0100 (CET)
+Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
+ <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
+Date:   Sat, 28 Dec 2019 16:41:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191228134824.GX25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 01:48:24PM +0000, Russell King - ARM Linux admin wrote:
- 
-> This is the old everything-successful path through the code:
-> 
-> 	platform_device_alloc()
-> 	platform_device_add_data()
-> 	platform_device_add()
-> 	evm_led_dev is set to the device
-> 
-> This is the new everything-successful path through the code:
-> 
-> 	platform_device_alloc()
-> 	platform_device_add_data()
-> 	platform_device_add()
-> 	platform_device_put()
-> 	evm_led_dev = NULL
-Thanks for your reply. Adding a return may handle this.
-	successful path:
-	platform_device_alloc()
- 	platform_device_add_data()
- 	platform_device_add()
-	return status
- 	
-	error path:
-	platform_device_put()
- 	evm_led_dev = NULL
-	return status
-correct?
+On 27/12/2019 09:51, Stanimir Varbanov wrote:
 
+> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
+>
+>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+>> the fixup to only affect the relevant PCIe bridges.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>
+>> Stan, I picked up all the suggested device id's from the previous thread and
+>> added 0x1000 for QCS404. I looked at creating platform specific defines in
+>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
+>> prefer that I do this anyway.
 > 
-> And, specifically, the code sequence (I quote from your patch):
+> Looks good,
 > 
-> 	if (status)
-> 		goto err;
-> err:
+> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 > 
-> is very stupid; it might as well not exist at all.
+>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index 5ea527a6bd9f..138e1a2d21cc 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>>  {
+>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>>  }
+>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
 
-Well, you have to admit that the result of platform_device_alloc(),
-platform_device_add_data() and platform_device_add() should be checked,
-and error should be handled.
+Hrmmm... still not CCed on the patch, and still don't think the
+fixup is required(?) for 0x106 and 0x107.
 
-e.g., there are 124 call sites of platform_device_add_data() in Linux. Only 24
-are not checked, and most of them are in arm subsystem.
-
-Look forward to deeper discussion of this problem.
-
-Best,
-Gen
-> 
-> Since other code references evm_led_dev, one can assume that we do
-> not want it to be NULL for the success path. So, taking all this
-> together, your patch is very very wrong, and I also find it very
-> worrying too.
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+Regards.
