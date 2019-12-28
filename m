@@ -2,99 +2,56 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C5BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D708AC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F052168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 02:57:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edvxL2YU"
+	by mail.kernel.org (Postfix) with ESMTP id B08F5208C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfL1C5K (ORCPT
+        id S1726400AbfL1DJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 21:57:10 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34624 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL1C5K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 21:57:10 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x17so12420104pln.1;
-        Fri, 27 Dec 2019 18:57:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pb2DHvI1SXHf14E2JlaRtrDtafVuGp2YeoyLpzVah6Y=;
-        b=edvxL2YU4YXLE7Hn4+Usae7SN/vlPgH2HaFCqGNwS5mDpzAnQmCMvRyzZAzSBgPkRC
-         K4RG1LkVSjPzkjI7hhIrfDo2qmsdxptlOE4QL8vTgF2duNnF62zBdV/NxP4M7kapDPIL
-         KXk6moYe1Ya7F3EckbAbXZ1ffy0jkzR7lj/7TCRqJ87ma9BJGO7x3Z+5Ww521e1TwnN+
-         x6PsP1rbGs5SSdplm0Qtm34eijryNDMY2JQMzkAvzBR8gxf/RLAIayfdvlS05NabaJdM
-         Ba9yf9qqN8pGUghB+H1oA4O4F9oPE9VF9dkHuUtm2qeWQxif9e8uVfC4F+IjVrgtBSkP
-         W2AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pb2DHvI1SXHf14E2JlaRtrDtafVuGp2YeoyLpzVah6Y=;
-        b=QO8priWyUaecPSFUxBGkVnVSpxxNCulf1KEI+0Mh0BLBnLCWnVbkTyGtegX7qLgX4V
-         Et6j1+bNzva72YC530N+K65HAKPi+26a7WWdTkh/aXKRgQLveG1ILgWavcLKbDp+GN3C
-         FN07CCvry7jXcylxP61fAyzUcz33mjenlraBxcw9v+9F/BUEtwg7i2uLSZqyjJaO8r8W
-         0PVnoRGZ+ilvsctv+L6EXdfNXxUZOba2SicVK18XW1YIRoeofc5TB+gRIgjhd9B6r9gQ
-         1lO0DJuAlUbZy3OhXXDqgWnltT3PPz04/H4wAPxAxwz+Idamwgc5FIvYS8u1CNLNeIh8
-         VLAw==
-X-Gm-Message-State: APjAAAVL5/xvcHQKyRdDr98IG5feLgdGgWBVOyN/6lHlwsjLhazSKgc4
-        WWMXzOqgwVC06L+E/AAJ1hs=
-X-Google-Smtp-Source: APXvYqyemc0lwdyanJC2mPL2Sdc4eud3lM6qr0Rnv7r9s3u3dDoRAqqReEWPQyaFv+aheWwpIGJ4lA==
-X-Received: by 2002:a17:902:9a46:: with SMTP id x6mr2915914plv.7.1577501829675;
-        Fri, 27 Dec 2019 18:57:09 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id x22sm40862904pgc.2.2019.12.27.18.57.08
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 27 Dec 2019 18:57:09 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] cpufreq: powernow-k8: avoid use after free issue in cpufreq_notify_transition()
-Date:   Sat, 28 Dec 2019 10:57:04 +0800
-Message-Id: <1577501824-12152-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 27 Dec 2019 22:09:43 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725860AbfL1DJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 22:09:42 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9DF1A5AB8160570B801F;
+        Sat, 28 Dec 2019 11:09:40 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 28 Dec
+ 2019 11:09:38 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: cover f2fs_lock_op in expand_inode_data
+ case
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191218195324.17360-1-jaegeuk@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <74e8531a-942d-4735-ed3b-128be6f733cb@huawei.com>
+Date:   Sat, 28 Dec 2019 11:09:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191218195324.17360-1-jaegeuk@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+On 2019/12/19 3:53, Jaegeuk Kim wrote:
+> We were missing to cover f2fs_lock_op in this case.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
-There is a potential UAF issue in cpufreq_notify_transition() that the
-cpufreq of current cpu has been released before using it. So we should
-make a judgement and avoid it.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
----
- drivers/cpufreq/powernow-k8.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/cpufreq/powernow-k8.c b/drivers/cpufreq/powernow-k8.c
-index 2db2f17..7391eb0 100644
---- a/drivers/cpufreq/powernow-k8.c
-+++ b/drivers/cpufreq/powernow-k8.c
-@@ -913,6 +913,11 @@ static int transition_frequency_fidvid(struct powernow_k8_data *data,
- 	freqs.new = find_khz_freq_from_fid(fid);
- 
- 	policy = cpufreq_cpu_get(smp_processor_id());
-+	if (!policy) {
-+		pr_debug("cpu %d: CPUFreq policy not found\n",
-+			 smp_processor_id());
-+		return 1;
-+	}
- 	cpufreq_cpu_put(policy);
- 
- 	cpufreq_freq_transition_begin(policy, &freqs);
--- 
-1.9.1
-
+Thanks,
