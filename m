@@ -2,110 +2,98 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D49FC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F578C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A1221744
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2170E20838
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWjxboqu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXzvdD90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfL1Ogz (ORCPT
+        id S1726410AbfL1Ohx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 09:36:55 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44480 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfL1Ogz (ORCPT
+        Sat, 28 Dec 2019 09:37:53 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34774 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfL1Ohw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 09:36:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so28670318wrm.11;
-        Sat, 28 Dec 2019 06:36:53 -0800 (PST)
+        Sat, 28 Dec 2019 09:37:52 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so28690206wrr.1
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 06:37:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=LNkv+TomXCKc0rG8jhN2QmjVTjiqndW43S3ATK1GH1s=;
-        b=AWjxboquR+qvc9NDnBy1kiU1wvQe5dt8myS1qxp1DbROokn9qRDyEdsnw37Jz8JDLq
-         9GbteCa43mpjBJV2uF4SebdQIxzh9NP+Tq6hURcuArG1v4Txj4ccJXknKZP3bI1ffHA5
-         vp1U0vmp7sUi4gpfXHCILRvPZaTOtjIl2iN2qhm3GQSLIwF3a6+QPyaUToH5cwYIE3mV
-         DGSZ35H32sFtO7UNZBITnCNsVqxG7A8RdmJNCh5akqfTlUT4MUOvEbh5uH6ee9lngJNX
-         V/zZgMudgPhjsreuCDFJitONaew99sUE1EDDBNguA7uG8dkRYEa+qdEo5TQrfNnSM8lX
-         RADA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pyGdJRwo6Y5rfYRQzWh9hhmSSSQyZwjpG1KsAjDx5is=;
+        b=PXzvdD90skNwJyFrE38+JpzWwSgFh+hrdjustCqzWFCtP0ARlY3ABJ4ENx2cclJUlU
+         ev71nYK+nejEJ9Yp/xn7Hgki5Y17JrlqtZVy1mpN8r5dBH+DTydqkbp7YLNlFAj3FB39
+         JAuFzNomus3czQFTIIMv3K/Z2g0BFSuPhFX2Bq8ajxlmMXVZp2m+u0lrB7zgWrgkVjwg
+         CXeM7BD4E9Z8z+gS175fwPKEMoE45ZpFz1eHt2KBcRUXUkfzleFoSd/Oi39qrQQfz2r2
+         AoY9Ay+KQoevv1nmgsHbUcc/9CMiwFxv0OTYaZGTKu8afWw6K2k5FYCo9tioRuvEXiUa
+         y/kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=LNkv+TomXCKc0rG8jhN2QmjVTjiqndW43S3ATK1GH1s=;
-        b=rVx4H1DM/q9JjWrcEawEp6ETfnuKy7utG0RItXERw/xzDBAcZM4g5gbeuBr3MdaOSh
-         PecT4vwdCbmIs5YBSpZgOWeT+/6YXI5Pnb1goBeJf7BR5vXlehudDboFFWPdW6qn5d4r
-         RTBCvaa+IL0dHf3GDt3EQQOKOU65YB3dN5Fdjzb1ziHVStsCfKbdAk7cOkpH0mqd2mnj
-         TKeSNnpR9auHMyykm0J5woHJQLq5PZvc8QTbHmF75J4asYV60EgxjE588vsO8cVzQdiX
-         HxWZa+BgVD6yHrJWjVkVxL6GkmVpie247tyzQo4b73bWfF8cFAfi9QaAFB7bD42+ATMv
-         nB/g==
-X-Gm-Message-State: APjAAAVW78A0UO73KnC7VXUhGK+xdgrUZX+aipXVQTnwX23+6EYVqA4f
-        /VTD7gF2a1U6NSwvEwHVaS4=
-X-Google-Smtp-Source: APXvYqzinO5afvtRfZ6z9qo7C+TFRfMsYRKvHAx6Q9Q0GnVI2Qcl7JiNMqCOWS/AtWWrKzPjuUgGtA==
-X-Received: by 2002:adf:806e:: with SMTP id 101mr58775959wrk.300.1577543813347;
-        Sat, 28 Dec 2019 06:36:53 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id i8sm38398382wro.47.2019.12.28.06.36.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 28 Dec 2019 06:36:52 -0800 (PST)
-Date:   Sat, 28 Dec 2019 15:36:51 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        David Sterba <dsterba@suse.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
-Message-ID: <20191228143651.bjb4sjirn2q3xup4@pali>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pyGdJRwo6Y5rfYRQzWh9hhmSSSQyZwjpG1KsAjDx5is=;
+        b=D+aysgN0bjhljQELmVso3WGeC64kq36F3y/PRVzoiln1R2DSsO5+8+3irxpi4jztTL
+         WzxpShYS77DKpzF6eZcW8HKdjMObdxSmYoNpl+fsBxl1AC4PVVp3TA9ABIBlEvdtRmr+
+         59xp3+uUBpZodQjcbKxHLlA7dZDLeDynPlaGJNELTY2ERp1bUEiekTpJ7uXXWE1Sg8Qu
+         b3LWYZVaJ5VKA8XSnDCo9ZpMUsqyhq2W92GeT6aOxdVmvy70eUBSekxXeCYUhh8d0wgP
+         tza9g2vXE/7MDM5nQp4/RCkok+6uqIfziPLbmGzECHtVM6t24cwmmGFt75dLr4HO7c5+
+         7DOA==
+X-Gm-Message-State: APjAAAWH96vDTPR47o+WucnI3B3uvZbKkY8yqaGdCwKHF0PPcx1by6Yo
+        orHoIQrdqsgs0FYBISdHOOM=
+X-Google-Smtp-Source: APXvYqxSqUH0DLFp50ljpmbSMRDYQPOR6MXzvuaJATmfZGd69U33SELNkjs8i7PpsG53EyT5Pde5XQ==
+X-Received: by 2002:adf:806e:: with SMTP id 101mr58779002wrk.300.1577543870961;
+        Sat, 28 Dec 2019 06:37:50 -0800 (PST)
+Received: from localhost.localdomain (dslb-088-070-028-178.088.070.pools.vodafone-ip.de. [88.70.28.178])
+        by smtp.gmail.com with ESMTPSA id u1sm14308940wmc.5.2019.12.28.06.37.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Dec 2019 06:37:49 -0800 (PST)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
+Date:   Sat, 28 Dec 2019 15:37:25 +0100
+Message-Id: <20191228143725.24455-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="colws2dljlnl6i4c"
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This device was added to the stand-alone driver on github.
+Add it to the staging driver as well.
 
---colws2dljlnl6i4c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hello!
+diff --git a/drivers/staging/rtl8188eu/os_dep/usb_intf.c b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+index a7cac0719b8b..b5d42f411dd8 100644
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -37,6 +37,7 @@ static const struct usb_device_id rtw_usb_id_tbl[] = {
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
++	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
+-- 
+2.24.1
 
-I see that you have introduced in commit 62750d0 two new IOCTLs for
-filesyetems: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL.
-
-I would like to ask, are these two new ioctls mean to be generic way for
-userspace to get or set fs label independently of which filesystem is
-used? Or are they only for btrfs?
-
-Because I was not able to find any documentation for it, what is format
-of passed buffer... null-term string? fixed-length? and in which
-encoding? utf-8? latin1? utf-16? or filesystem dependent?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---colws2dljlnl6i4c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgdofwAKCRCL8Mk9A+RD
-UhOtAJ4uYIiEZ7JuYou8B7poIoLlwRfYkgCfZaBuMUSd5Qrwzse09H6T52ZtAVE=
-=BiJm
------END PGP SIGNATURE-----
-
---colws2dljlnl6i4c--
