@@ -2,173 +2,136 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B403DC47409
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADFEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816AA20409
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577535201;
-	bh=q49tqPH7tWafvxKLb/LDDT7f3OVFmJjvV/wyX/oHtic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=12aM4mHYISMrBy8e8QjpqIA7sFJSZk2yrupX+ZV5R9qQkHcUKbZLYhPjj/2oTprNk
-	 OhFUiIgOk/qm7TLBQ8cG6lBBjLgnZfmsXEI2xWnLmQsG2BxmBu/n8yX4JAkRObxk93
-	 aBoD8wfA/HzLpkjA5asDVzTJYDzoFZL4sNye5JDg=
+	by mail.kernel.org (Postfix) with ESMTP id 969D9207E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 12:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ltveeDlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfL1MJg (ORCPT
+        id S1726597AbfL1M0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 07:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
+        Sat, 28 Dec 2019 07:26:02 -0500
+Received: from mout.web.de ([212.227.17.11]:47723 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbfL1MJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 07:09:36 -0500
-Received: from localhost (unknown [122.178.200.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0258B20409;
-        Sat, 28 Dec 2019 12:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577534975;
-        bh=q49tqPH7tWafvxKLb/LDDT7f3OVFmJjvV/wyX/oHtic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0j29eL0yns+J51T/AsO3uu9vm2Qk/EnCOtm0eYwpLLSHOMGfkvaFef8K2CS3es/zj
-         ApR0tGsf1JrocGTXpSfpjlxn7P1hlAYAtFVRBlxgqvEEccbMW5V5l+EYHqCcpTk91L
-         eK0ryDmZY5S+JGRd2sw2tei7o/ToyaA/1v/fviyQ=
-Date:   Sat, 28 Dec 2019 17:39:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 08/17] soundwire: add initial definitions
- for sdw_master_device
-Message-ID: <20191228120930.GR3006@vkoul-mobl>
-References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
- <20191217210314.20410-9-pierre-louis.bossart@linux.intel.com>
- <20191227071433.GL3006@vkoul-mobl>
- <1922c494-4641-8c40-192d-758b21014fbc@linux.intel.com>
+        id S1726377AbfL1M0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 07:26:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1577535951;
+        bh=n6RC+2F495ghd/0ICzcAKDXGWf8tVEvndTkoVgGfxHE=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=ltveeDlNccmcd0mKt4h090+1FqDokYC8PuJCjLghVRe2UmQx/NfDu/GExObQjveuD
+         7xlR/+3n7x1nwDdpSDIVnkOiU0M37m5+neX68OP7ayxyK1Yxhlk9SONtDdXSo0yAfF
+         o1P+c5gA0x9uvLFQd0KHn4odq814agre7KQbl8oY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.3.151]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MGzXS-1ixsku3aa2-00DrXX; Sat, 28
+ Dec 2019 13:25:50 +0100
+To:     Xu Wang <vulab@iscas.ac.cn>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        kernel-janitors@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+Subject: Re: nvmem: core: Checking the decrementing of reference counters
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2a95fa07-dfae-54ef-9d19-682bace02e5f@web.de>
+Date:   Sat, 28 Dec 2019 13:25:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1922c494-4641-8c40-192d-758b21014fbc@linux.intel.com>
+In-Reply-To: <1577438434-9945-1-git-send-email-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8JmaXCBanrGdFXwC198kewP5yhXVBp0/zIcjsLSX/6KWvOhh70B
+ GANw32gXJ3hT5OdEox4NV4aoCZfBsLyKM7jKM0SjjECngd5VZIFfPG09fkzcijZlCZKok+V
+ ccVDe+VPJGM0BTfSJFvYMQacNgP0Viy+6R+XZZ4rFEVTYWm/EvSjvYQ8sqfuMUiRyXtWd5z
+ TbAdGtQVpWRrO0WXtpwAw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nycj1l2HX9Q=:8NKg6aYWXtlCZF0mxMQ7Jx
+ C8mLYCUaEyMJp9zxn5HSHpPFcGc3CgKjtzUj9uN8hE7BcouCsaQ2xk3ee25ApPGZ3l+9IfLyn
+ T6d0ZILfZntrWZKrP8Y4jAL+SP5Cx0z6S4641l4fhGX4c/uQx7K3VfYKM70w8ca36YUKSj5iq
+ hQp3yuUTZlzWRyD69xQDDV4VOubHAn7plObShKr9OlJDeLJAYgbVeUU3dDMdYTAvvTPw6rZ81
+ nXc74Hqm5+8Qe3MqiPxxw0Y6Vybtt0t06AZYnzGTHbuPjMsrEVBImO4/1Bv2hHiDmTPHXwQUg
+ EZL5ppD/uYw3QryuqifcX0TCZFd/hnF5fcur56VGHrQFS+B8+Kvv27BdYZZYorAwXC1ojW6qD
+ kcqTg1VccEnY5MA0jFbJEDNXWpgH7KnCSzJTTAN9SKiOy+Ft2dD+hDIxw72viGm6S6kU6Qlrv
+ 6D4S5GHIQq7NgtYeerjHlCadDSqTkGKsx7yCvKjlC9xiLK328Uu+wBPBaw7gKbVaLw86HYgeq
+ ZeYVxtDDJO1qozhGCS2zgTBsZ3VtBqgCrWBtAX4rJYS5h8IRNBhqAmSit05OwTmMGE4EXSFY0
+ s2Xz5hDaHIJ+26OMp9xRjxY4XuAl+AqhjbXyV3Wv+8U6lqOE6txgxbc7J5BWQqzZll2TDAyu2
+ 4jec3wxNwwg09+wxcOeUIMGxwIMuT09sx5MaMcnW2un8FjeD2hgIeBlmA7f9U10DXOjUT4xvT
+ Fbqn56JFVmETBAeYxHKXaux5a8WgFqzK+4CYFg74l1jszA/bjpjNPOXHvQTGuHVNj+4gwspFH
+ CBVCj7yUkUsN1pc9laYSw/Gh73gcQ1KXuVTQsrk4UrcLSsItn486Kic5EvVhEFrKC/oST3nZn
+ gmItsVEhHjMg3h9FStEtjSuzN30yB7fB74GlG1iRqcrOEdoEsiYlhRMwV+3hXvOVXpUeDryJP
+ BpOdz5DmaViEUN33myFEhaavDNcSSm7OSOkS9c8MIUeHyPAJSGDeSN56R4E1uknhvwmRPW0Ui
+ JPAQPfnwFd4EMb3CGYbzuqayotH6HIShZ3KyEyxTpT8opJ4bG992gKitrlc3HfY6afy7XCEeG
+ DJQbjgHjIyjy2cmsjNQUcSWV3AnABrVaAhejI+rurx0/xeE11vlozu274NZaS/jK+rCxlc114
+ v+C8rLmJDfe8xULk0GseVdLC6icvF1NS/6eRQsVZs0mgCW7Q7zJ87J527x+sAdwlpZaWXQ7vf
+ 5uAwzeQBQs13wxhoPFHImB+QTs4MMSZHuw6rhTOM524i4vb44dB5sbRjMuM8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-12-19, 17:38, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 12/27/19 1:14 AM, Vinod Koul wrote:
-> > On 17-12-19, 15:03, Pierre-Louis Bossart wrote:
-> > > Since we want an explicit support for the SoundWire Master device, add
-> > > the definitions, following the Greybus example of a 'Host Device'.
-> > > 
-> > > A parent (such as the Intel audio controller) would use sdw_md_add()
-> > > to create the device, passing a driver as a parameter. The
-> > > sdw_md_release() would be called when put_device() is invoked by the
-> > > parent. We use the shortcut 'md' for 'master device' to avoid very
-> > > long function names.
-> > 
-> > I agree we should not have long name :) but md does not sound great. Can
-> > we drop the device and use sdw_slave and sdw_master for devices and
-> > append _driver when we are talking about drivers...
-> > 
-> > we dont use sd for slave and imo this would gel well with existing names
-> 
-> In SoundWire parlance, both 'Slave' and 'Master' are 'Devices', so yes we do
-> in the standard talk about 'Slave Devices' and 'Master Devices'.
-> 
-> Then we have Linux 'Devices' which can be used for both.
-> 
-> If we use 'sdw_slave', would we be referring to the actual physical part or
-> the Linux device?
-> 
-> FWIW the Greybus example used 'Host Device' and 'hd' as shortcut.
+I have taken another look at the implementation of the function =E2=80=9Cn=
+vmem_device_release=E2=80=9D.
+https://elixir.bootlin.com/linux/v5.5-rc3/source/drivers/nvmem/core.c#L421
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
+ivers/nvmem/core.c?id=3Dbf8d1cd4386535004c4afe7f03d37f9864c9940e#n421
 
-But this messes up consistency in the naming of sdw objects. I am all for
-it, if we do sd for slave and name all structs and APIs accordingly. The key
-is consistency!
+Now I wonder why the statement =E2=80=9Cput_device(&nvmem->dev)=E2=80=9D i=
+s performed here
+after it was also executed by the function =E2=80=9C__nvmem_device_put=E2=
+=80=9D before.
+How often should the device reference count be decremented (at the end)?
 
-So it needs to be sd/md and so on or sdw_slave and sdw_master and so
-on... not a mix of both
-
-> > > --- a/drivers/soundwire/bus_type.c
-> > > +++ b/drivers/soundwire/bus_type.c
-> > > @@ -66,7 +66,10 @@ int sdw_uevent(struct device *dev, struct kobj_uevent_env *env)
-> > >   		 * callback is set to use this function for a
-> > >   		 * different device type (e.g. Master or Monitor)
-> > >   		 */
-> > > -		dev_err(dev, "uevent for unknown Soundwire type\n");
-> > > +		if (is_sdw_master_device(dev))
-> > > +			dev_err(dev, "uevent for SoundWire Master type\n");
-> > 
-> > see below [1]:
-> > 
-> > > +static void sdw_md_release(struct device *dev)
-> > 
-> > sdw_master_release() won't be too long!
-> 
-> yes, but there is no such operation as 'Master Release' in SoundWire.
-> At least the 'md' shortcut conveys the implicit convention that this is a
-> Linux device only.
-> 
-> I really would like to avoid overloading the standard definitions with the
-> Linux ones...
-
-I agree with you on not overloading but from a linux pov, we need names
-which are consistent with each other...
-
-> > > +{
-> > > +	struct sdw_master_device *md = to_sdw_master_device(dev);
-> > > +
-> > > +	kfree(md);
-> > > +}
-> > > +
-> > > +struct device_type sdw_md_type = {
-> > 
-> > sdw_master_type and so on :)
-> > 
-> > > +	.name =		"soundwire_master",
-> > > +	.release =	sdw_md_release,
-> > 
-> > [1]:
-> > There is no uevent added here, so sdw_uevent() will never be called for
-> > this, can you check again if you see the print you added?
-> 
-> as explained this is to avoid errors at a later point. I don't see any harm
-> in providing error checks for a routine that can only be used for 1 of the 3
-> devices defined in the standard?
-> 
-> > > +struct sdw_master_device {
-> > 
-> > we have sdw_slave, so would be better if we call this sdw_master
-> > 
-> > > +	struct device dev;
-> > > +	int link_id;
-> > > +	struct sdw_md_driver *driver;
-> > > +	void *pdata;
-> > 
-> > no sdw_bus pointer and I dont see bus adding this object.. Is there no
-> > link between bus and master device objects?
-> 
-> There is currently no bus device object, see the structure definition it's a
-> pointer to a device (which leads to all sorts of issues because we can't use
-> container_of).
-> 
-> when the master device gets added, that's where the Linux device is created
-> and the pointer saved in the bus structure, with IIRC sdw_add_bus_master().
-> 
-> 
->  	ret = sdw_add_bus_master(&sdw->cdns.bus);
--- 
-~Vinod
+Regards,
+Markus
