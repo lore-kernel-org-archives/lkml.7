@@ -2,157 +2,132 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47CCC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF6C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A661820838
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A97220838
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSbekCGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfL1GPK (ORCPT
+        id S1726416AbfL1GPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 01:15:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:41641 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbfL1GPK (ORCPT
+        Sat, 28 Dec 2019 01:15:38 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34358 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfL1GPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 01:15:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id k9so24471949ili.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 22:15:09 -0800 (PST)
+        Sat, 28 Dec 2019 01:15:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so12553192pln.1;
+        Fri, 27 Dec 2019 22:15:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qe6cSiGPXPhmquRmJ+vPfyD3fRySMNawHDWjAW0LBjw=;
+        b=mSbekCGB4AVcrFqm765lc5SaSM4aAYaisiGXUoW/1H2dX9x3XCyGFhyYGvJ7CAxF0Q
+         i3k//4abu6O5iYqmX0H5lFXruYG78sTBGK3mocMEcU5pUqKdsJ/Qhs8SShcAW1+mvn8k
+         LCvJ1sNGbRlpgMJ+nECm555asbw4gIq1l7liz6zRp12cYiCFQUv45axwicQY0n8WbGDo
+         ZejPXP7ufiq0d0sC5o/MD8vNS6TVAozMG2QFHE5Q0FzQ4cyMBe0jyc8hxb3irxY86sWX
+         AYIl7Le9dcORNFwYb7IkRbUEbB457F+6Urp/7tFbwMHcE6StbYQ5l5MIdz/Vxa1HyEkm
+         pGOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2HOXPV+14RU9R447cOV0dBvVZbunalY8Ec32XNcdQ0Y=;
-        b=HC7hOeNI1qzy2NzNeS56g0V0ywRAddngMRUCsnwcMzXACsMb/JtKyy79N2Ch9PKBDZ
-         hLRXqcFfeUPSymYDN5SkkdkARNN/P1K0UdZBsIQCKs8imgLVl5pBJ/lIGJXDSDx1UFaB
-         GYNjQIWAVlbbKYWwoswSH/gDg6eq8tiS+Xr58DPanzw0aB02aKiO/Hw1/WR59JQPPwho
-         Ktkty0guGkK4freTNElH61EpIaget10p80hIMpCS+DPBEZFdURo76lsD6pwEcH+N4rD5
-         3BNIy9CapsgMSrJm8fkcvCz0InhEcr/bj8ShIyjvU28nV187ur4DctUXS41WDzKQX88A
-         3D6Q==
-X-Gm-Message-State: APjAAAVXHWEKMoszhNiwPX+Agz+kqLdpytJ464ekpcEmmfN/qwdP8vUB
-        DSVNCcEhLvFkbhlwkbPLIqlrJxyVU9fMbkp6MY/GUB5XyZVD
-X-Google-Smtp-Source: APXvYqxckNFrsGfJfYnb+Vcaqz+NOfZ27b0QhIttqwc3dJbOO0t/9X2f0QIiNwKOeX7r1sF44MKOobbKleutPxYIBgGUAetvq61l
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1014:: with SMTP id n20mr47443147ilj.172.1577513709408;
- Fri, 27 Dec 2019 22:15:09 -0800 (PST)
-Date:   Fri, 27 Dec 2019 22:15:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004718ff059abd88ef@google.com>
-Subject: general protection fault in nf_ct_netns_do_get
-From:   syzbot <syzbot+19616eedf6fd8e241e50@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qe6cSiGPXPhmquRmJ+vPfyD3fRySMNawHDWjAW0LBjw=;
+        b=sK5WrDYhvVcuW9mxKeGki681GcSAYAhBdqNrSkp35XBo+8/OtqMm6Qjxju/oOKhyLZ
+         V446Uz2YikTtMfCcW496UShQdvEaU3qgmYsgGIqt7k9YisyqbzKRHXxvelh1RHSj5b2I
+         ieNBtDx9RBy5ZnJynoPUGlISB9XDYW9zJGVTcRbeCWVuZbzfP87glJzmxfWGGN7GsXYU
+         9KI3GYRkIcy1sGQUHnwk/UvNG2SCPLHFYxq0MS/h57vbIawMKH5b6z8eJGEXXYk6zu8s
+         CH0sFyvmx4lpU69lmxbHjBKCm7rh1ns1FpmiFatbeUnkV47SWxCGZZp3nRqwDTZ8vw1k
+         dnHw==
+X-Gm-Message-State: APjAAAXQYBgR0yBymMu6/4vJFEuhQHKEgC0KabOAVZUWbxLl/RDew7uH
+        +JybiF6YEVd4N0puklI5dl8=
+X-Google-Smtp-Source: APXvYqz2bcxQFOhSNl7uvapbX387WUr60/UnSgG+VSIdTO4YpwUM2lqbK73iE31Un0HN1Uc2lN2I/g==
+X-Received: by 2002:a17:90a:300b:: with SMTP id g11mr30676779pjb.123.1577513737609;
+        Fri, 27 Dec 2019 22:15:37 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id x65sm44401182pfb.171.2019.12.27.22.15.36
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 27 Dec 2019 22:15:37 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     mmayer@broadcom.com, rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        f.fainelli@gmail.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH] cpufreq: brcmstb-avs-cpufreq: avoid a stuck risk and UAF issue in brcm_avs_cpufreq_get()
+Date:   Sat, 28 Dec 2019 14:15:30 +0800
+Message-Id: <1577513730-14254-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-syzbot found the following crash on:
+brcm_avs_cpufreq_get() calls cpufreq_cpu_get() to get cpufreq policy,
+meanwhile, it also increments the kobject reference count of policy to
+mark it busy. However, a corresponding call to cpufreq_cpu_put() is
+ignored to decrement the kobject reference count back, which may lead
+to a potential stuck risk that cpuhp thread deadly wait for dropping
+of refcount when cpufreq policy free.
 
-HEAD commit:    46cf053e Linux 5.5-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14188971e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed9d672709340e35
-dashboard link: https://syzkaller.appspot.com/bug?extid=19616eedf6fd8e241e50
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a47ab9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170f2485e00000
+The call trace of stuck risk could be:
+cpufreq_online()	//cpufreq initialization failed, goto out_free_policy.
+    ->cpufreq_policy_free()	//do cpufreq_policy free.
+	->cpufreq_policy_put_kobj()
+            ->kobject_put()	//skip if policy kfref count is not 1.
+                ->cpufreq_sysfs_release()
+                    ->complete()	//complete policy->kobj_unregister.
+                ->wait_for_completion() //wait for policy->kobj_unregister.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19616eedf6fd8e241e50@syzkaller.appspotmail.com
+A simple way to avoid this stuck risk is use cpufreq_cpu_get_raw() instead
+of cpufreq_cpu_get(), since brcmstb-avs driver just want to get cpufreq
+policy in cpufreq_notify_transition().
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9171 Comm: syz-executor797 Not tainted 5.5.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:net_generic include/net/netns/generic.h:45 [inline]
-RIP: 0010:nf_ct_netns_do_get+0xd2/0x7e0  
-net/netfilter/nf_conntrack_proto.c:449
-Code: 22 22 fb 45 84 f6 0f 84 5c 03 00 00 e8 07 21 22 fb 49 8d bc 24 68 13  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 9f 06 00 00 4d 8b b4 24 68 13 00 00 e8 47 59 0e
-RSP: 0018:ffffc90001f177a8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000003 RCX: ffffffff86531056
-RDX: 000000000000026d RSI: ffffffff86530ce9 RDI: 0000000000001368
-RBP: ffffc90001f177e8 R08: ffff88808fd96200 R09: ffffed1015d0703d
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: 0000000000000000
-R13: 000000000000002a R14: 0000000000000001 R15: 0000000000000003
-FS:  00000000009fd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000200008a0 CR3: 0000000093cc3000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  nf_ct_netns_get+0x41/0x150 net/netfilter/nf_conntrack_proto.c:601
-  connmark_tg_check+0x61/0xe0 net/netfilter/xt_connmark.c:106
-  xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
-  check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
-  find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
-  translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
-  do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
-  do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
-  nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
-  nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
-  ip_setsockopt net/ipv4/ip_sockglue.c:1260 [inline]
-  ip_setsockopt+0xdf/0x100 net/ipv4/ip_sockglue.c:1240
-  udp_setsockopt+0x68/0xb0 net/ipv4/udp.c:2639
-  sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
-  __sys_setsockopt+0x261/0x4c0 net/socket.c:2117
-  __do_sys_setsockopt net/socket.c:2133 [inline]
-  __se_sys_setsockopt net/socket.c:2130 [inline]
-  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2130
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441369
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffed53f1838 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000441369
-RDX: 0000000000000060 RSI: 0a02000000000000 RDI: 0000000000000003
-RBP: 00000000006cb018 R08: 0000000000000418 R09: 00000000004002c8
-R10: 0000000020000880 R11: 0000000000000246 R12: 0000000000402bf0
-R13: 0000000000402c80 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 86b70d3f20194272 ]---
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:net_generic include/net/netns/generic.h:45 [inline]
-RIP: 0010:nf_ct_netns_do_get+0xd2/0x7e0  
-net/netfilter/nf_conntrack_proto.c:449
-Code: 22 22 fb 45 84 f6 0f 84 5c 03 00 00 e8 07 21 22 fb 49 8d bc 24 68 13  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 9f 06 00 00 4d 8b b4 24 68 13 00 00 e8 47 59 0e
-RSP: 0018:ffffc90001f177a8 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000003 RCX: ffffffff86531056
-RDX: 000000000000026d RSI: ffffffff86530ce9 RDI: 0000000000001368
-RBP: ffffc90001f177e8 R08: ffff88808fd96200 R09: ffffed1015d0703d
-R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: 0000000000000000
-R13: 000000000000002a R14: 0000000000000001 R15: 0000000000000003
-FS:  00000000009fd880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000200008a0 CR3: 0000000093cc3000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+What's more, there is a potential UAF issue in cpufreq_notify_transition()
+that the cpufreq policy of current cpu has been released before using it.
+So we should make a judgement to avoid it.
 
+Thanks!
+Qiwu
 
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 77b0e5d..31aa76f 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -452,8 +452,17 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ 
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+-	struct private_data *priv = policy->driver_data;
++	struct cpufreq_policy *policy = cpufreq_cpu_get_raw(cpu);
++	struct private_data *priv;
++
++	if (!policy) {
++		dev_warn(dev, "cpu %d: CPUFreq policy not found\n", cpu);
++		return NULL;
++	}
++
++	priv = policy->driver_data;
++	if (!priv || !priv->base)
++		return NULL;
+ 
+ 	return brcm_avs_get_frequency(priv->base);
+ }
+-- 
+1.9.1
+
