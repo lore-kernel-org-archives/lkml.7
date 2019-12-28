@@ -2,156 +2,110 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD829C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D49FC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70651206A4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A1221744
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 14:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikTPpXF2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWjxboqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbfL1O23 (ORCPT
+        id S1726377AbfL1Ogz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 09:28:29 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35099 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfL1O22 (ORCPT
+        Sat, 28 Dec 2019 09:36:55 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44480 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfL1Ogz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 09:28:28 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j1so21982675lja.2;
-        Sat, 28 Dec 2019 06:28:27 -0800 (PST)
+        Sat, 28 Dec 2019 09:36:55 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so28670318wrm.11;
+        Sat, 28 Dec 2019 06:36:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iAuK2SBAgN48OmwXuS6DbfYeXQRIySmXgJ5nwEn6J+0=;
-        b=ikTPpXF27m2ICXJim+rCrrRHWHjsrqOyiZ5r0f9CyoOwRsVnnmB82THtJadZClWkGG
-         4kKt5rbX3X8doChqSkTclrGZtBm3mhfxxifOYHL4JTTlz9/4LMwy7r/zeifzotHVBxcb
-         V5c3yYwAIlYSU34W70FFp6PIGKFWPeore8OIgKxVlxSu0D7I0Yc1qBvt53+we1zdrcZe
-         TBRSGheIXAGofownsYtROn14ZSXV15Vp3RvwanWQ6FAYGiaexfDLHH6nAUiDQKYXbU5s
-         VTJ2Ytz0zUPixs+yOQgjnzOxCbFNS8NUYSAudM6IU5gbmMRwNVF7F+vzbJKTBzZ4t5rn
-         WvBg==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=LNkv+TomXCKc0rG8jhN2QmjVTjiqndW43S3ATK1GH1s=;
+        b=AWjxboquR+qvc9NDnBy1kiU1wvQe5dt8myS1qxp1DbROokn9qRDyEdsnw37Jz8JDLq
+         9GbteCa43mpjBJV2uF4SebdQIxzh9NP+Tq6hURcuArG1v4Txj4ccJXknKZP3bI1ffHA5
+         vp1U0vmp7sUi4gpfXHCILRvPZaTOtjIl2iN2qhm3GQSLIwF3a6+QPyaUToH5cwYIE3mV
+         DGSZ35H32sFtO7UNZBITnCNsVqxG7A8RdmJNCh5akqfTlUT4MUOvEbh5uH6ee9lngJNX
+         V/zZgMudgPhjsreuCDFJitONaew99sUE1EDDBNguA7uG8dkRYEa+qdEo5TQrfNnSM8lX
+         RADA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iAuK2SBAgN48OmwXuS6DbfYeXQRIySmXgJ5nwEn6J+0=;
-        b=LC7qui1GaD+2cKLnidwIYboKgo3jUNIFocBkmfjjOeyMO7+bbU67BJIiOPh4t+0nD3
-         ZHDZSQTxlXnZENWYFEioOMJ63TF99q8JOiPHybFFrvZwTwZxj21YOecIRJcC8PTUjRFo
-         AYTvekks99j7LrU83PbE6+rBuahEWmi2A9Qhl0QFoRk7peS3q1NGf9Jpx1m2iGcmEABo
-         JPJWnuNmEclm+DLfugFpIqEy3Ns11pPy881Hw+DPZwg+/axAF3jb1hLzZ2RBI0MMOpE4
-         EgDOKB8FbhlkoIs8fqwGgb4vZf4aGM9cYQThqFl4P4Z1GfZWqQA9n6Ux1mej4dvJvZcr
-         UIUQ==
-X-Gm-Message-State: APjAAAUT5qAswZw7cA/pUae9MTBXIQ/s3EeJuFnt0wOpDNJk6l9trmEl
-        xHkKrKIkeUNZ+lPfu/seD4m7Ysi9
-X-Google-Smtp-Source: APXvYqwGqwZTitCaAQUNh8JS2PZCo6OVi4od8nkDUpw1fzGBpuBimCLDHKiFLVX9Py5c7NXixEpGEA==
-X-Received: by 2002:a2e:9e55:: with SMTP id g21mr10456969ljk.245.1577543306222;
-        Sat, 28 Dec 2019 06:28:26 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w6sm16026296lfq.95.2019.12.28.06.28.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Dec 2019 06:28:25 -0800 (PST)
-Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
- for audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
- <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
- <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
- <1b79ab92-c163-3857-dd38-df35c509b823@gmail.com>
- <4fd01e04-8240-8562-467d-324f7adbdbdf@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0eaf3942-047b-2412-7843-315842dcf5d1@gmail.com>
-Date:   Sat, 28 Dec 2019 17:28:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=LNkv+TomXCKc0rG8jhN2QmjVTjiqndW43S3ATK1GH1s=;
+        b=rVx4H1DM/q9JjWrcEawEp6ETfnuKy7utG0RItXERw/xzDBAcZM4g5gbeuBr3MdaOSh
+         PecT4vwdCbmIs5YBSpZgOWeT+/6YXI5Pnb1goBeJf7BR5vXlehudDboFFWPdW6qn5d4r
+         RTBCvaa+IL0dHf3GDt3EQQOKOU65YB3dN5Fdjzb1ziHVStsCfKbdAk7cOkpH0mqd2mnj
+         TKeSNnpR9auHMyykm0J5woHJQLq5PZvc8QTbHmF75J4asYV60EgxjE588vsO8cVzQdiX
+         HxWZa+BgVD6yHrJWjVkVxL6GkmVpie247tyzQo4b73bWfF8cFAfi9QaAFB7bD42+ATMv
+         nB/g==
+X-Gm-Message-State: APjAAAVW78A0UO73KnC7VXUhGK+xdgrUZX+aipXVQTnwX23+6EYVqA4f
+        /VTD7gF2a1U6NSwvEwHVaS4=
+X-Google-Smtp-Source: APXvYqzinO5afvtRfZ6z9qo7C+TFRfMsYRKvHAx6Q9Q0GnVI2Qcl7JiNMqCOWS/AtWWrKzPjuUgGtA==
+X-Received: by 2002:adf:806e:: with SMTP id 101mr58775959wrk.300.1577543813347;
+        Sat, 28 Dec 2019 06:36:53 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id i8sm38398382wro.47.2019.12.28.06.36.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Dec 2019 06:36:52 -0800 (PST)
+Date:   Sat, 28 Dec 2019 15:36:51 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Eric Sandeen <sandeen@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        David Sterba <dsterba@suse.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL
+Message-ID: <20191228143651.bjb4sjirn2q3xup4@pali>
 MIME-Version: 1.0
-In-Reply-To: <4fd01e04-8240-8562-467d-324f7adbdbdf@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="colws2dljlnl6i4c"
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.12.2019 00:25, Sowjanya Komatineni пишет:
-> 
-> On 12/22/19 1:18 PM, Dmitry Osipenko wrote:
->> 23.12.2019 00:14, Dmitry Osipenko пишет:
->>> 21.12.2019 01:26, Sowjanya Komatineni пишет:
->>>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
->>>> through Tegra210 and currently Tegra clock driver does initial parent
->>>> configuration for audio mclk "clk_out_1" and enables them by default.
->>>>
->>>> With the move of Tera PMC clocks from clock driver to Tegra PMC
->>>> driver, initial parent configuration for audio clocks are through
->>>> the device tree using assigned-clock-parents property.
->>>>
->>>> Default clock parents can be specified in device tree using
->>>> assigned-clocks and assigned-clock-parents and there is no need
->>>> to have clock driver do parent configuration and enable audio related
->>>> clocks.
->>>>
->>>> This patch has implementation for initial parent configuration in
->>>> audio driver when default parent configuration is not specified in the
->>>> device tree using assigned-clock properties and enables audio clocks
->>>> during the clock rate change.
->>>>
->>>> This patch configures PLLA_OUT0 as parent to extern1 and extern1
->>>> as parent to clk_out_1 and uses clk_out_1 as cdev1 clock to allow
->>>> mclk control from this driver.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>   sound/soc/tegra/tegra_asoc_utils.c | 71
->>>> ++++++++++++++++++++++----------------
->>>>   1 file changed, 41 insertions(+), 30 deletions(-)
->>>>
->>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>>> b/sound/soc/tegra/tegra_asoc_utils.c
->>>> index 38535962029c..fc3135c08f43 100644
->>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>>> @@ -7,6 +7,7 @@
->>>>    */
->>>>     #include <linux/clk.h>
->>>> +#include <linux/clk-provider.h>
->>> This is illegal, it is not a clock provider.
->>>
-> __clk_is_enabled API is used in this patch to disable clock only when
-> its enabled.
 
-As I wrote in the other reply, this is a wrong solution since it works
-around the problem and doesn't solve the root of the problem. Please fix
-it properly in the next version.
+--colws2dljlnl6i4c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> __clk_is_enabled API is from clk-provider.h
+Hello!
 
-That's exactly the reason why it is in clk-provider.h, you absolutely
-cannot use __clk_is_enabled() outside of clk providers because:
+I see that you have introduced in commit 62750d0 two new IOCTLs for
+filesyetems: FS_IOC_GETFSLABEL and FS_IOC_SETFSLABEL.
 
-1. __clk_is_enabled doesn't use any lockings, so you need to be very
-careful when using it
+I would like to ask, are these two new ioctls mean to be generic way for
+userspace to get or set fs label independently of which filesystem is
+used? Or are they only for btrfs?
 
-2. every function that is prefixed with __ is usually meant for internal
-use only
+Because I was not able to find any documentation for it, what is format
+of passed buffer... null-term string? fixed-length? and in which
+encoding? utf-8? latin1? utf-16? or filesystem dependent?
 
-3. tegra_asoc_utils is simply not a clk provider, such cases when you
-need to do hacks in order to achieve something are a good indication
-about that you're likely doing something wrong
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--colws2dljlnl6i4c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgdofwAKCRCL8Mk9A+RD
+UhOtAJ4uYIiEZ7JuYou8B7poIoLlwRfYkgCfZaBuMUSd5Qrwzse09H6T52ZtAVE=
+=BiJm
+-----END PGP SIGNATURE-----
+
+--colws2dljlnl6i4c--
