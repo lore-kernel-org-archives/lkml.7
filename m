@@ -2,81 +2,73 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE30C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE51C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B10208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A904320CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 03:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfL1DQC (ORCPT
+        id S1726315AbfL1D1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Dec 2019 22:16:02 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54284 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbfL1DQC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Dec 2019 22:16:02 -0500
-Received: by mail-il1-f199.google.com with SMTP id t4so24364787ili.21
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 19:16:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=tENWWAE27YTP2yqe1cfIcG9EDWGCKbHOtQOZmBsBGGY=;
-        b=sRWUBIdLjfcZu3WJ+IMMYmCTZnOZMoAY1xid+wiKxUypX126CL2fOiXH9l+/kSt1Qi
-         TQCOJ5WwWUemRuVoa1ZXEGDzr6zjjikvcWTPJk760fhKb3ftYuB0RtGjINTsAmhyHYyX
-         zqJguzWwWlOIY1Cz9kc9vcdeEN9KdfHxTJ0SHH4RdndJ1BcIP9NoKdvbbOqEKgccrxXS
-         12jLtOP0QunA5oA08+6Njdu6TsOKxVhkhXogktnrss/Adayf4hZuQ8NJgXgbfQ9/88rO
-         788/1KQfrvwEs4BZYHqb+VZ0Bk7ZfFcgMqNSV1+WJ3lWBgNUsZob1+pMrjvm1EfkGJhI
-         5G+Q==
-X-Gm-Message-State: APjAAAUEUiZvozq76XEfZYghvtYwPWB9RU/CH/j4+3yK271l4BNeduBy
-        fL2a/n37V58OldR0+4FAWL5YN/L9uERB5eC38uw/DZUApwd1
-X-Google-Smtp-Source: APXvYqxY9e4ExCKBaEkRVOc0Gz/ijRbw/6DBPk1AZLfsryIA7+WPJ0/IOYZQU5ZmHPFx8KUtYJLK3dewq52wTtd7Gg6W58geGSRn
+        Fri, 27 Dec 2019 22:27:24 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24092 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbfL1D1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Dec 2019 22:27:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 19:27:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,365,1571727600"; 
+   d="scan'208";a="243387313"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Dec 2019 19:27:22 -0800
+Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/vt-d: trace: Extend map_sg trace event
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+References: <20191211014255.8020-1-baolu.lu@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <3e78f293-369b-3764-842f-7c1773b9e7b7@linux.intel.com>
+Date:   Sat, 28 Dec 2019 11:26:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Received: by 2002:a92:89c2:: with SMTP id w63mr46971728ilk.252.1577502961862;
- Fri, 27 Dec 2019 19:16:01 -0800 (PST)
-Date:   Fri, 27 Dec 2019 19:16:01 -0800
-In-Reply-To: <089e0825d4a4d2cb2a0562e878f1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ac9246059abb072c@google.com>
-Subject: Re: possible deadlock in sch_direct_xmit
-From:   syzbot <syzbot+29cc278357da941e304e@syzkaller.appspotmail.com>
-To:     ap420073@gmail.com, davem@davemloft.net, ecree@solarflare.com,
-        edumazet@google.com, jhs@mojatatu.com, jiri@mellanox.com,
-        jiri@resnulli.us, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, lucien.xin@gmail.com,
-        mcroce@redhat.com, netdev@vger.kernel.org, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191211014255.8020-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On 12/11/19 9:42 AM, Lu Baolu wrote:
+> Current map_sg stores trace message in a coarse manner. This
+> extends it so that more detailed messages could be traced.
+> 
+> The map_sg trace message looks like:
+> 
+> map_sg: dev=0000:00:17.0 [1/9] dev_addr=0xf8f90000 phys_addr=0x158051000 size=4096
+> map_sg: dev=0000:00:17.0 [2/9] dev_addr=0xf8f91000 phys_addr=0x15a858000 size=4096
+> map_sg: dev=0000:00:17.0 [3/9] dev_addr=0xf8f92000 phys_addr=0x15aa13000 size=4096
+> map_sg: dev=0000:00:17.0 [4/9] dev_addr=0xf8f93000 phys_addr=0x1570f1000 size=8192
+> map_sg: dev=0000:00:17.0 [5/9] dev_addr=0xf8f95000 phys_addr=0x15c6d0000 size=4096
+> map_sg: dev=0000:00:17.0 [6/9] dev_addr=0xf8f96000 phys_addr=0x157194000 size=4096
+> map_sg: dev=0000:00:17.0 [7/9] dev_addr=0xf8f97000 phys_addr=0x169552000 size=4096
+> map_sg: dev=0000:00:17.0 [8/9] dev_addr=0xf8f98000 phys_addr=0x169dde000 size=4096
+> map_sg: dev=0000:00:17.0 [9/9] dev_addr=0xf8f99000 phys_addr=0x148351000 size=4096
+> 
+> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
 
-commit 323ebb61e32b478e2432c5a3cbf9e2ca678a9609
-Author: Edward Cree <ecree@solarflare.com>
-Date:   Tue Aug 6 13:53:55 2019 +0000
+Queued for v5.6.
 
-     net: use listified RX for handling GRO_NORMAL skbs
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14647ab9e00000
-start commit:   c92a9a46
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=46986c099cb53bc6
-dashboard link: https://syzkaller.appspot.com/bug?extid=29cc278357da941e304e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143636c9800000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16856849800000
-
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: net: use listified RX for handling GRO_NORMAL skbs
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+-baolu
