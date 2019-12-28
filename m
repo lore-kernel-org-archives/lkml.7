@@ -2,94 +2,124 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763D3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796E8C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 16:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D157208C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 15:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452F520838
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 16:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BA+DBK1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfL1Pla (ORCPT
+        id S1726364AbfL1QTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 10:41:30 -0500
-Received: from smtp4-g21.free.fr ([212.27.42.4]:21342 "EHLO smtp4-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfL1Pla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 10:41:30 -0500
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 6AC7119F5A8;
-        Sat, 28 Dec 2019 16:41:08 +0100 (CET)
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
-Date:   Sat, 28 Dec 2019 16:41:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 28 Dec 2019 11:19:18 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55593 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfL1QTR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 11:19:17 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d5so6020391pjz.5
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 08:19:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8Z+N/807+ZsOkZBMDVN42U9UfY5gz5RxtiyFOSkakOI=;
+        b=BA+DBK1PqlTEoEn8M7tM2h+N3oiR76NJtjhQT0eP6TGXWdlQ7cGgo4U90Rp7UWRWcB
+         3U16ZpczVLYZMMrJl05JvU6dFvqfriWVcYDuw+k5/pQWZn2KuB+TJYOWz8d9JMLxESF7
+         XNtydTmkY5AezOjRtO7yNxbUXHii/xd8kx6y9EVRyCcIeHYPNUHEr8YYnNZMc6qotokj
+         MmbM7Tpw4Pzgj/e0zrgZ+TAps4ZHw47j5eQqpZlvPGuH8a6zH7vdoM1GLErBe5XoX4hk
+         fH8dZg4cQYRc2AkWjpcJZR4enXSCVA+6fixIGRD4uiqN8xL6PglRDp3IvYGAYb+K5H8T
+         jygQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8Z+N/807+ZsOkZBMDVN42U9UfY5gz5RxtiyFOSkakOI=;
+        b=fKwObrbX+zDd9PdbbbicLtLC+ExaLxuL7QvO4Q92coouCZQw7mf2FckXLDu50/IBnu
+         9z3R8vnTl/56qFxjHAlbnSb2x0jPrsYU343FUDjfwzphucDgZmUk6riA1U2NGaL+NyfR
+         TZZlVC8yF72I5//dB47k1XdgxtA14qr3798SfTbXrvsaT5g9c6KJKyItqP6SFMoLK6f4
+         uT3lNI/CEy+TxaFwCxUOClbvm08+VtTsIpnYu6j6HkVKkYB54M2yoUDv4mQ78ELWysj5
+         LRJYpKo6Sq/XG5ungZjf18tFQyEdSaTFIjdw+8eA+TCiqYVAoDpGyOl1YaLoOXInLVw5
+         vRLw==
+X-Gm-Message-State: APjAAAUnwOk6KCMbcv7BLJ1JVq8Ck7HIpSuKlTjQ4nHWcVfMyIR4Cr/V
+        yVCziegAOSUG809+dY2ew2M=
+X-Google-Smtp-Source: APXvYqxrWpkYGkK3p5y4f4zsKW2hPcHrmE2jQ9thcb+X3PPKcxO/98zEN+u0GqAcUsv7hVw6awBuZQ==
+X-Received: by 2002:a17:90a:b10a:: with SMTP id z10mr34398757pjq.115.1577549956816;
+        Sat, 28 Dec 2019 08:19:16 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id h26sm48304883pfr.9.2019.12.28.08.19.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 28 Dec 2019 08:19:15 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     tiny.windzz@gmail.com, peterz@infradead.org, tglx@linutronix.de,
+        heiko.carstens@de.ibm.com, mark.rutland@arm.com,
+        paulmck@kernel.org, schwidefsky@de.ibm.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] stop_machine: Make stop_cpus static
+Date:   Sat, 28 Dec 2019 16:19:12 +0000
+Message-Id: <20191228161912.24082-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/12/2019 09:51, Stanimir Varbanov wrote:
+The function stop_cpus() is only used internally by the
+stop_machine for stop multiple cpus.
 
-> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
->
->> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
->> the fixup to only affect the relevant PCIe bridges.
->>
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>
->> Stan, I picked up all the suggested device id's from the previous thread and
->> added 0x1000 for QCS404. I looked at creating platform specific defines in
->> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
->> prefer that I do this anyway.
-> 
-> Looks good,
-> 
-> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
->>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 5ea527a6bd9f..138e1a2d21cc 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
->>  {
->>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->>  }
->> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+Make it static.
 
-Hrmmm... still not CCed on the patch, and still don't think the
-fixup is required(?) for 0x106 and 0x107.
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ include/linux/stop_machine.h | 9 ---------
+ kernel/stop_machine.c        | 2 +-
+ 2 files changed, 1 insertion(+), 10 deletions(-)
 
-Regards.
+diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
+index 648298f877da..76d8b09384a7 100644
+--- a/include/linux/stop_machine.h
++++ b/include/linux/stop_machine.h
+@@ -32,7 +32,6 @@ int stop_one_cpu(unsigned int cpu, cpu_stop_fn_t fn, void *arg);
+ int stop_two_cpus(unsigned int cpu1, unsigned int cpu2, cpu_stop_fn_t fn, void *arg);
+ bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
+ 			 struct cpu_stop_work *work_buf);
+-int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg);
+ void stop_machine_park(int cpu);
+ void stop_machine_unpark(int cpu);
+ void stop_machine_yield(const struct cpumask *cpumask);
+@@ -81,14 +80,6 @@ static inline bool stop_one_cpu_nowait(unsigned int cpu,
+ 	return false;
+ }
+ 
+-static inline int stop_cpus(const struct cpumask *cpumask,
+-			    cpu_stop_fn_t fn, void *arg)
+-{
+-	if (cpumask_test_cpu(raw_smp_processor_id(), cpumask))
+-		return stop_one_cpu(raw_smp_processor_id(), fn, arg);
+-	return -ENOENT;
+-}
+-
+ #endif	/* CONFIG_SMP */
+ 
+ /*
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 5d68ec4c4015..865bb0228ab6 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -442,7 +442,7 @@ static int __stop_cpus(const struct cpumask *cpumask,
+  * @cpumask were offline; otherwise, 0 if all executions of @fn
+  * returned 0, any non zero return value if any returned non zero.
+  */
+-int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
++static int stop_cpus(const struct cpumask *cpumask, cpu_stop_fn_t fn, void *arg)
+ {
+ 	int ret;
+ 
+-- 
+2.17.1
+
