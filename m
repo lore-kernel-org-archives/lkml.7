@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0041BC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199C2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D538821775
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92372173E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 18:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nyg2CImH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QR/5gU3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfL1SgD (ORCPT
+        id S1727003AbfL1SgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 13:36:03 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44575 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbfL1Sfv (ORCPT
+        Sat, 28 Dec 2019 13:36:15 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43904 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfL1Sf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 13:35:51 -0500
-Received: by mail-pl1-f193.google.com with SMTP id az3so13017475plb.11;
-        Sat, 28 Dec 2019 10:35:50 -0800 (PST)
+        Sat, 28 Dec 2019 13:35:56 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x6so15232559pfo.10;
+        Sat, 28 Dec 2019 10:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wHDWNkKUY/7HcK7MqADsWD8av4WLf/lhpq+f70oOVx4=;
-        b=Nyg2CImHIlC00wE5qnxxCd4xvhYPSTqURjgeLIlpMMiH+Hv5taQKrd8r720IzIBAGR
-         nZRD2oKDccKM/yuGWeJRcmnj2+SYaO0cStDR4fRrmidSo76bcIhoTbCfYR0PlGyb2fFd
-         emyVPlFXLJi9tObOLVe+/5iePjUhXIrC39i3wjkLInXeLkqTHHH4cYIueyRGCiqVVpT7
-         oqEep1j22vmUS8N8PkBcEdMibggLi1RMRklHW4jnAP49yx6KEcvqsAFIoG939aoRxKDH
-         EFq2ycJTA5aeOUf2Y1/Bge3TG8s9hNorF0D2GyfxQRa3Od50CwHYL7+JIMw4qmOOS3xM
-         G/MA==
+        bh=ui3H4sw6TXQZWyHZyumXfMS536ZRAUjdYlFCGuvHxAE=;
+        b=QR/5gU3bd29uWtBlob2vq9WqKJ3hQUz+QbCW77CdxMCDaWVnA0C/c5Lx8ui8kEF7E4
+         EJow2hD7opQrUZ22y3QHevj4gAvdDrI+hipJ2NNfxEZsOyHb444K1XGg/QZQJkKNH9n6
+         hDfRLiS1l0jR5Krj2XWoSBuz5HpaMLXUGGuvcRI/vccwwizylRM35WopdZZg925EqhPy
+         n0e08sqtH3zgT/f3gSypGJpdp4GCNnBueiPK26DJIb3wHYNUPrqr+S/8LRhfKekIp3Ev
+         qRbJwKA7g1M6NqZUbhNvwoZPWSdTsI5x1Hy7jNncmQnUGUXYbl1tupuGX/2eLm0XD5Ny
+         hmZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wHDWNkKUY/7HcK7MqADsWD8av4WLf/lhpq+f70oOVx4=;
-        b=ZYqR4mIQzrWQnzMMNPokRfbzGcg4w11OPiDw9tjj00fX3ZWbC1w+Y/vam8zoo25vME
-         AHHZ2oI5vP8YquCpTDbyhIUaHbdz57aSZhHqXUOzeosXoEVXApzzXc/nzWA8IhYwTcxq
-         oXAHGaj9UhpiS1NzJN18ofoN1VYVEXEYEOIs3ooMCLSb2XSSY9iZOlG1dmRCZGszitQS
-         1mUv9EfAgZL0weiHB1zttaBqYB4Wl/OCLry1d2ojwNZYPWLDogm84WQ5kzvmNupsFuAb
-         nahR2K5cU5TrTzDDwmHf/u0J/S3BMws9m6kWxwCUhQHqDcLP5DuWcC868+gVmfn7kFnM
-         lDmg==
-X-Gm-Message-State: APjAAAX5fsrhwkzC4e6q+F1yEL0lTmXF8B1xZhGvlDU76JtcKNdfoWnQ
-        VLZ52YvazAwCh+8BoazAHYk=
-X-Google-Smtp-Source: APXvYqzg4HSZcS//Fgz3qJ6tuCit2iLqCHRWiMt5cWev8Yt8+UHZ0o3AuJy9vdLOuNpfASdbLD8YRA==
-X-Received: by 2002:a17:902:b187:: with SMTP id s7mr59226454plr.104.1577558150166;
-        Sat, 28 Dec 2019 10:35:50 -0800 (PST)
+        bh=ui3H4sw6TXQZWyHZyumXfMS536ZRAUjdYlFCGuvHxAE=;
+        b=njHo1OL1fZZIPqBXGNJxQ3cuflRpUJ63Tdytq1Dy6Nfloi1VZBaeDvSG0Vh4c7wOjz
+         PtGPAmYM3Fw9lurVB1pB+QAXWh3ntxCfHkyhiGcQC2VfOskn1FZ1PLmtY+slON4CJFUX
+         x3nSjcdE57+UqCvZQ7OmGTTZZq63kuoIlvNm+PtkuKqY2tUgFMlorMDLTqgaMSWITDg8
+         OFTe0eE5BnQ2XqkAQqrfPNmtkvz6q4MCu5H6AzW9QYHgqSW5EPE/ABbqqMaLQBYtZg6K
+         RJAlFYjIp+tqu8dIv6/fvIiW1LzMNkn1z8hfShrEAbNkqkNQolESrLS/MSzZ0r8pz0qG
+         b8MA==
+X-Gm-Message-State: APjAAAVqs9Wl4/rfdTfMO/z02Re7i97AkUo8MW1pOPYLj5aZkLkoArp1
+        rYJBH6+Ey3ro7WtzPxa6yvg=
+X-Google-Smtp-Source: APXvYqzHr4KeI0b8gMJWBokRn8PKrEYYqhG+ocElUlfVhzxi6A9/q0OMkXH/noLIQBQBJ/jS6urxWg==
+X-Received: by 2002:a62:ed0b:: with SMTP id u11mr60416235pfh.46.1577558155293;
+        Sat, 28 Dec 2019 10:35:55 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id n7sm18754871pjq.8.2019.12.28.10.35.49
+        by smtp.gmail.com with ESMTPSA id w187sm27832830pfw.62.2019.12.28.10.35.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 28 Dec 2019 10:35:49 -0800 (PST)
+        Sat, 28 Dec 2019 10:35:54 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
         f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
@@ -71,9 +71,9 @@ To:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-tegra@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 07/13] mailbox: platform-mhu: convert to devm_platform_ioremap_resource
-Date:   Sat, 28 Dec 2019 18:35:32 +0000
-Message-Id: <20191228183538.26189-7-tiny.windzz@gmail.com>
+Subject: [PATCH 10/13] mailbox: tegra: convert to devm_platform_ioremap_resource
+Date:   Sat, 28 Dec 2019 18:35:35 +0000
+Message-Id: <20191228183538.26189-10-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191228183538.26189-1-tiny.windzz@gmail.com>
 References: <20191228183538.26189-1-tiny.windzz@gmail.com>
@@ -86,31 +86,31 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/mailbox/platform_mhu.c | 4 +---
+ drivers/mailbox/tegra-hsp.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/platform_mhu.c b/drivers/mailbox/platform_mhu.c
-index b6e34952246b..a5922ac0b0bf 100644
---- a/drivers/mailbox/platform_mhu.c
-+++ b/drivers/mailbox/platform_mhu.c
-@@ -117,7 +117,6 @@ static int platform_mhu_probe(struct platform_device *pdev)
- 	int i, err;
- 	struct platform_mhu *mhu;
- 	struct device *dev = &pdev->dev;
+diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+index 834b35dc3b13..6d16e56942ff 100644
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -631,7 +631,6 @@ static int tegra_hsp_request_shared_irq(struct tegra_hsp *hsp)
+ static int tegra_hsp_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_hsp *hsp;
 -	struct resource *res;
- 	int platform_mhu_reg[MHU_CHANS] = {
- 		MHU_SEC_OFFSET, MHU_LP_OFFSET, MHU_HP_OFFSET
- 	};
-@@ -127,8 +126,7 @@ static int platform_mhu_probe(struct platform_device *pdev)
- 	if (!mhu)
- 		return -ENOMEM;
+ 	unsigned int i;
+ 	u32 value;
+ 	int err;
+@@ -645,8 +644,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&hsp->doorbells);
+ 	spin_lock_init(&hsp->lock);
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mhu->base = devm_ioremap_resource(dev, res);
-+	mhu->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mhu->base)) {
- 		dev_err(dev, "ioremap failed\n");
- 		return PTR_ERR(mhu->base);
+-	hsp->regs = devm_ioremap_resource(&pdev->dev, res);
++	hsp->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(hsp->regs))
+ 		return PTR_ERR(hsp->regs);
+ 
 -- 
 2.17.1
 
