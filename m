@@ -2,113 +2,104 @@ Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC4FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 05:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699FDC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E667E20722
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 05:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A6A20722
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 06:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Os6dBwLu"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dosrMYBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfL1F4z (ORCPT
+        id S1726165AbfL1GC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 00:56:55 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33055 "EHLO
+        Sat, 28 Dec 2019 01:02:57 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44623 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfL1F4z (ORCPT
+        with ESMTP id S1725857AbfL1GC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 00:56:55 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z16so15729184pfk.0;
-        Fri, 27 Dec 2019 21:56:55 -0800 (PST)
+        Sat, 28 Dec 2019 01:02:57 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 195so14849715pfw.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Dec 2019 22:02:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7OIpJjie4YKsuRpHRWNnPtvHpiZZJeONgDblU2venY0=;
-        b=Os6dBwLuuObAc/7/lx0paGvtFJn7f+DcAfFDfqrvewjuSi622rIGxd2zWxiaSJrP15
-         zYUuizTGOTald9U/S93HOnMCv6pEPGVU3Lx6eUqgEx3LK3N/VM4nMKac/d9g1+xQizgI
-         xky+PFWQH3edYHW3r5vAIrSCQ6S9vR3psZA6IBuAd7VcfALPbNPPay1N7bLPpPGwsazn
-         5qtQTV15ynI6/HfzCc4qSjZ5QRTX7Q+ddtP4n8ON1M7bSH0B8TyVxDFcuLtfFDsh9xeF
-         dr88AE+D8wFmP9sKsB+ODEuudTVYhjQPFfUqpfw2pyhPpmZ7Wn47ToSXdy6lsz+aBXpk
-         +soQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=02OgeYXQzBdT2lFGeruc0qE3qRxj/P1vmd+xB2uVOWU=;
+        b=dosrMYBmKsUI90ww5BizFf2HLD+EuoUVW2b7uMSItr1MnNX46QglnrkuO1hTcjwxr9
+         MF0uS5UBy8rJPBKsMHiwaYBAL5BwG8DzYMTgNo6RwKGSH2OAd9b/NwSGC2Zk8wMYk0Lw
+         dI82ngPt6gbjLR7oCAZLZTP6i7bEIUXKv3C55m1foXdFFYo7rgeEpGHxGEhZohP216fb
+         /xKFuLbi00poxkQIJbd9nn94VzusyE+Up23SWXxRxRnZkQcDT8KaSBUU7x+RHx5O4ddu
+         TOSldNHQ1teeLsSE3Pxc4dLqjZZxwzJmCjfG3b7ecOWu8Oge0vved4uc7GHvNgQANMaQ
+         Lj5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7OIpJjie4YKsuRpHRWNnPtvHpiZZJeONgDblU2venY0=;
-        b=dmSR8oP9gS3ky31U3bIZzf6maWDpB4Api2yFhImZ4+SpNTHDbVBgE0lF1UgwWi4lIS
-         pIKp+jrDemCvU78UFeocdzN9xu1VQGpXtha+4DDcCmAH2OdWMjX8lIq40A1nzXrZITBL
-         L2WpQeI1lx3s8tehKwnbFwT1eLTeuYsfBCSTQrWUEhywWtKO08F0pnx/QyEOSb6kGeiJ
-         yie895frjw+R89LGa+vm8SjkgTtOQREQlz67Mwaj2W6ykdUE1nynn3LU475Nh8A01PbM
-         XhW7+TzqFn/vF5gnuewuuEJHEEYnVM+7ume91Qh9PLGOiqzuQv+jYVVNcSomDDBejkiF
-         niDQ==
-X-Gm-Message-State: APjAAAXCYTk8//zb0cnQkvtFlSTrwk2/0QnfFHbkJH+Vk2g0KpQzKKTv
-        vjAjjpoFroNMt98GN5KARtg=
-X-Google-Smtp-Source: APXvYqyekuVTw7YXrVQjmQQ33q9y6/ohLU0ZBk261fVIeN3OzrJwL9e0vQEtKIujkMaRJjqZCBn8Bg==
-X-Received: by 2002:a63:7d8:: with SMTP id 207mr59065588pgh.154.1577512614688;
-        Fri, 27 Dec 2019 21:56:54 -0800 (PST)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id 65sm44606224pfu.140.2019.12.27.21.56.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Dec 2019 21:56:54 -0800 (PST)
-Date:   Sat, 28 Dec 2019 11:26:46 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Hannes Reinecke <hare@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] scsi: ufs: sysfs: Use the correct style for SPDX License
- Identifier
-Message-ID: <5ca6287665fe52d8f40062e0eab8561d2b7a5b40.1577511720.git.nishadkamdar@gmail.com>
-References: <cover.1577511720.git.nishadkamdar@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=02OgeYXQzBdT2lFGeruc0qE3qRxj/P1vmd+xB2uVOWU=;
+        b=EPScO8mbGp7xwRTgnb1MWN06DSHXikNOUAj71IFs8zVGNLoIIU5b2llgoYmJP1GfzJ
+         aJ4JE8RUM0CkRn6RTxY7YG/hurH8f0SbYCUTJFlPIzC9TfA96INk0ZUsybq/xgZq6JEt
+         30OVCNVnNV2FkVHV4S1NgSgY1vRbj+cKARNfBIrgOokuwaaN1Uxy2DTiAcw9mbcstsSv
+         mbJgzoeNsy0fIF0US7iKiS6jS3hKG8z5MNtMHu6/GizyeF7f+0XFY7IUemFUr41+Jf2A
+         s7ks/+aZkqhbZmK4u/0/YeOp8xHfMLlKCA8HPcehwrf6gICXXS5EfbGFrDD71upObz9B
+         GkGA==
+X-Gm-Message-State: APjAAAXRHmH9m5ZNjNXn6q8nPt1KR+CEE21c76zi5nbiri9ZdXj7r/Dl
+        cA131Un66CpR7MWMhCKgLw4AzQ==
+X-Google-Smtp-Source: APXvYqxAjVLo/sSKKhyMBHbUx32270yRWvdM/quLSvk9dZ0cErgGQcZ8rJCWkNkFThlKnxQEmfcU/Q==
+X-Received: by 2002:a63:6704:: with SMTP id b4mr60478145pgc.424.1577512976320;
+        Fri, 27 Dec 2019 22:02:56 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id j17sm15348961pfa.28.2019.12.27.22.02.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2019 22:02:55 -0800 (PST)
+Date:   Fri, 27 Dec 2019 22:02:54 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bin Meng <bmeng.cn@gmail.com>, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: reject invalid syscalls below -1
+In-Reply-To: <20191218084757.904971-1-david.abdurachmanov@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1912272201270.194339@viisi.sifive.com>
+References: <20191218084757.904971-1-david.abdurachmanov@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1577511720.git.nishadkamdar@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to UFS Host Controller. It assigns
-explicit block comment to the SPDX License Identifier.
+On Wed, 18 Dec 2019, David Abdurachmanov wrote:
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+> Running "stress-ng --enosys 4 -t 20 -v" showed a large number of kernel oops
+> with "Unable to handle kernel paging request at virtual address" message. This
+> happens when enosys stressor starts testing random non-valid syscalls.
+> 
+> I forgot to redirect any syscall below -1 to sys_ni_syscall.
+> 
+> With the patch kernel oops messages are gone while running stress-ng enosys
+> stressor.
+> 
+> Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
+> Fixes: 5340627e3fe0 ("riscv: add support for SECCOMP and SECCOMP_FILTER")
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/scsi/ufs/ufs-sysfs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+From the thread, I couldn't tell whether you were happy with this patch as 
+it stands or not; the thread seems to have petered out.  So this one has 
+been queued for v5.5-rc; let me know if you didn't intend for that to 
+happen.
 
-diff --git a/drivers/scsi/ufs/ufs-sysfs.h b/drivers/scsi/ufs/ufs-sysfs.h
-index e5621e59a432..0f4e750a6748 100644
---- a/drivers/scsi/ufs/ufs-sysfs.h
-+++ b/drivers/scsi/ufs/ufs-sysfs.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Copyright (C) 2018 Western Digital Corporation
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2018 Western Digital Corporation
-  */
- 
- #ifndef __UFS_SYSFS_H__
--- 
-2.17.1
 
+- Paul
