@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99D8C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59131C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DE920748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24131206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642909;
-	bh=FV/Pmj9ObJekWwE3LH4eF9xL+9DjPRKOWUrNL6WwKPE=;
+	s=default; t=1577642916;
+	bh=aLZtRPo3J/10vYacInLSi2e43+VprTKkpjOLkrQxtFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WkIfJiHrdgeYCrWBHrA2rkfe84SyX7Azy83RuofNkfA5YWnkal+J8vtc622sukyMc
-	 cEaVw4HeRDc/I75DWEZKU1lk3mNKM1C2jgONCLS0g19Z6MfRrpajM5+ySOjBWv0Do2
-	 C/Cn4VUteJ3T1DPXSnnKxFVR2caYPrYlsVm58xtU=
+	b=KlxyhpmIbZnZxN0TAvzwSdvHXFiWU35EmQg9w8oQ9Aa6oh7AmhV6/ewsCop7YaYDH
+	 sWzrgRGoSizpwXpJLc+lVC0i04jzqCEVWa68spIZRiDNJ3RbkWJDp6JySBVnnfiXG+
+	 mgSc4NDKdDRybMa5AkKWGtHmyoVZlUzcQxyENQOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfL2SI2 (ORCPT
+        id S1732470AbfL2SIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:08:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731204AbfL2RrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:10 -0500
+        id S1731199AbfL2RrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF764206A4;
-        Sun, 29 Dec 2019 17:47:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61353206A4;
+        Sun, 29 Dec 2019 17:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641629;
-        bh=FV/Pmj9ObJekWwE3LH4eF9xL+9DjPRKOWUrNL6WwKPE=;
+        s=default; t=1577641626;
+        bh=aLZtRPo3J/10vYacInLSi2e43+VprTKkpjOLkrQxtFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18F5hFlcUAYwM91MOkBpnF6BzSYAHF6BBGG0s6OfyqlZg8hOjjvhCQJQqImSGXKRl
-         wnPP7s8h9eheSTEwioogeFDvfn3LSIosuZiQZPnQyZqjIhj7hGNl+VeYlhi+TUY7wZ
-         cc1mUgyTgYTQ+egKrcdvwXPHgwYVTTY/hi7ntM6o=
+        b=yx1w1B6TgV3dcIlHcdCwrrZy265VBrmN3U25H/2dyztUuZdMw4kIIWxctwM5dWcdi
+         SOINXn0KY67cYFIML1904B+cmKp8oxJQ+H5R7LY6CK5g4YLs3LuWKOk8KbAvGxVXs+
+         5Ih1+6h+HMILwoErSS4F0QlQ5vZFQv7myTfCa/rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
-Date:   Sun, 29 Dec 2019 18:22:39 +0100
-Message-Id: <20191229172708.658173957@linuxfoundation.org>
+Subject: [PATCH 5.4 142/434] ath10k: Correct error handling of dma_map_single()
+Date:   Sun, 29 Dec 2019 18:23:15 +0100
+Message-Id: <20191229172711.169025164@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,44 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
+[ Upstream commit d43810b2c1808ac865aa1a2a2c291644bf95345c ]
 
-If usb_set_interface() failed, iface->cur_altsetting will
-not be assigned and it will be used in flexcop_usb_transfer_init()
-It may lead a NULL pointer dereference.
+The return value of dma_map_single() should be checked for errors using
+dma_mapping_error() and the skb has been dequeued so it needs to be
+freed.
 
-Check usb_set_interface() return value in flexcop_usb_init()
-and return failed to avoid using this NULL pointer.
+This was found when enabling CONFIG_DMA_API_DEBUG and it warned about the
+missing dma_mapping_error() call.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
-index 1a801dc286f8..d1331f828108 100644
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -504,7 +504,13 @@ urb_error:
- static int flexcop_usb_init(struct flexcop_usb *fc_usb)
- {
- 	/* use the alternate setting with the larges buffer */
--	usb_set_interface(fc_usb->udev,0,1);
-+	int ret = usb_set_interface(fc_usb->udev, 0, 1);
-+
-+	if (ret) {
-+		err("set interface failed.");
-+		return ret;
-+	}
-+
- 	switch (fc_usb->udev->speed) {
- 	case USB_SPEED_LOW:
- 		err("cannot handle USB speed because it is too slow.");
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index a40e1a998f4c..2b53ea6ca205 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3903,8 +3903,10 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
+ 			     ar->running_fw->fw_file.fw_features)) {
+ 			paddr = dma_map_single(ar->dev, skb->data,
+ 					       skb->len, DMA_TO_DEVICE);
+-			if (!paddr)
++			if (dma_mapping_error(ar->dev, paddr)) {
++				ieee80211_free_txskb(ar->hw, skb);
+ 				continue;
++			}
+ 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
+ 			if (ret) {
+ 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
 -- 
 2.20.1
 
