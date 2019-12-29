@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126FFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8210C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FDE207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9479C21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642407;
-	bh=0gHSSahcHyO98eDoaLTHCt1zmatxXEaglOV/Fe7U+8c=;
+	s=default; t=1577642409;
+	bh=+vJwoRY9gz06ao2bHJ2aGSRN46Rw1jGM0F1vCeJzzxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qoc1hguXH845VDUxDzYZS/D2tJV0gKpjE9mo2JulSDZ8nsomhQtW+ZKHpQ0Ia4+/T
-	 jm0Rm+ygO+TjmGUg0JKyYhKnBLmTSXEa10GJVqCJxAHURFFK8yGpMl2sJCqp+mPPSV
-	 7HoqzFW4dhaLZxU9J84IL4sHMBxFQmpPDYGUqdVg=
+	b=dymG2qe6olWhAIrEqk2M6lZ5DOA38cnj7XmPOzA9xq8SA3jJ/l/b69HGF7rLXTk1W
+	 W+DDF+RshPu2V1Lu0shyGZzJj2PiPuhD6sJq1PAtcPuigzvHSX8NjPT+G5qAkP5nBt
+	 3YdoESVPwzUHTxL6NcIxWlwgp1kz+5W/iOafKIbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387595AbfL2SAG (ORCPT
+        id S2387409AbfL2R5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:00:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:57:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbfL2R54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:57:56 -0500
+        id S1732878AbfL2R5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:57:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354E1208C4;
-        Sun, 29 Dec 2019 17:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8DD208C4;
+        Sun, 29 Dec 2019 17:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642275;
-        bh=0gHSSahcHyO98eDoaLTHCt1zmatxXEaglOV/Fe7U+8c=;
+        s=default; t=1577642266;
+        bh=+vJwoRY9gz06ao2bHJ2aGSRN46Rw1jGM0F1vCeJzzxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZQ3lQjPlNJ3nyTOA4vIqIV27jVmf2YZNAT1US4H9nEzcbd295CDy9QvZ5m/1lGaDa
-         2RfR51W1if2+mV0Mv2NwpVZcYtoIkPj9BLwU2aFklOOjX1g92im5RJXplOdGXNBLHh
-         QE3dWZ9L3SwqwsDfaUvMkARvHhPU8aW5gigePLgE=
+        b=mnEsEO7jQwFQ5fsFE65mmA8kxLpelgBclDEIu6f+yDX+if5rJ0WI4Nm+mUJwz9Ltb
+         Xr0/OxmPu9q39mHB26Vcb65xfOdrbgcTIFW+ybEAdOnnvIazxZMPBbwYGoS+P7RTKM
+         9TSbyEQYhh82pkGcKkelTH7w8KauZ3hgHcfajMOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Theodore Tso <tytso@mit.edu>,
-        syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 413/434] ext4: validate the debug_want_extra_isize mount option at parse time
-Date:   Sun, 29 Dec 2019 18:27:46 +0100
-Message-Id: <20191229172730.199563165@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 374/434] can: j1939: j1939_sk_bind(): take priv after lock is held
+Date:   Sun, 29 Dec 2019 18:27:07 +0100
+Message-Id: <20191229172726.886265212@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,210 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-commit 9803387c55f7d2ce69aa64340c5fdc6b3027dbc8 upstream.
+commit 00d4e14d2e4caf5f7254a505fee5eeca8cd37bd4 upstream.
 
-Instead of setting s_want_extra_size and then making sure that it is a
-valid value afterwards, validate the field before we set it.  This
-avoids races and other problems when remounting the file system.
+syzbot reproduced following crash:
 
-Link: https://lore.kernel.org/r/20191215063020.GA11512@mit.edu
-Cc: stable@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reported-and-tested-by: syzbot+4a39a025912b265cacef@syzkaller.appspotmail.com
+===============================================================================
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9844 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3828
+Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41
+5f 5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02
+00 0f 85 0b 28 00 00 49 81 3e 20 19 78 8a 0f 84 5f ee ff
+RSP: 0018:ffff888099c3fb48 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000218 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffff888099c3fc60 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff146e1d0 R11: ffff888098720400 R12: 00000000000010c0
+R13: 0000000000000000 R14: 00000000000010c0 R15: 0000000000000000
+FS:  00007f0559e98700(0000) GS:ffff8880ae800000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe4d89e0000 CR3: 0000000099606000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+ _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+ spin_lock_bh include/linux/spinlock.h:343 [inline]
+ j1939_jsk_del+0x32/0x210 net/can/j1939/socket.c:89
+ j1939_sk_bind+0x2ea/0x8f0 net/can/j1939/socket.c:448
+ __sys_bind+0x239/0x290 net/socket.c:1648
+ __do_sys_bind net/socket.c:1659 [inline]
+ __se_sys_bind net/socket.c:1657 [inline]
+ __x64_sys_bind+0x73/0xb0 net/socket.c:1657
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a679
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
+f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
+f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0559e97c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
+RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0559e986d4
+R13: 00000000004c09e9 R14: 00000000004d37d0 R15: 00000000ffffffff
+Modules linked in:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9844 at kernel/locking/mutex.c:1419
+mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
+===============================================================================
+
+This issues was caused by null pointer deference. Where j1939_sk_bind()
+was using currently not existing priv.
+
+Possible scenario may look as following:
+cpu0                                    cpu1
+bind()
+                                        bind()
+ j1939_sk_bind()
+                                         j1939_sk_bind()
+  priv = jsk->priv;
+                                         priv = jsk->priv;
+  lock_sock(sock->sk);
+  priv = j1939_netdev_start(ndev);
+  j1939_jsk_add(priv, jsk);
+    jsk->priv = priv;
+  relase_sock(sock->sk);
+                                         lock_sock(sock->sk);
+                                         j1939_jsk_del(priv, jsk);
+                                         ..... ooops ......
+
+With this patch we move "priv = jsk->priv;" after the lock, to avoid
+assigning of wrong priv pointer.
+
+Reported-by: syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/super.c |  143 +++++++++++++++++++++++++++-----------------------------
- 1 file changed, 69 insertions(+), 74 deletions(-)
+ net/can/j1939/socket.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1887,6 +1887,13 @@ static int handle_mount_opt(struct super
- 		}
- 		sbi->s_commit_interval = HZ * arg;
- 	} else if (token == Opt_debug_want_extra_isize) {
-+		if ((arg & 1) ||
-+		    (arg < 4) ||
-+		    (arg > (sbi->s_inode_size - EXT4_GOOD_OLD_INODE_SIZE))) {
-+			ext4_msg(sb, KERN_ERR,
-+				 "Invalid want_extra_isize %d", arg);
-+			return -1;
-+		}
- 		sbi->s_want_extra_isize = arg;
- 	} else if (token == Opt_max_batch_time) {
- 		sbi->s_max_batch_time = arg;
-@@ -3551,40 +3558,6 @@ int ext4_calculate_overhead(struct super
- 	return 0;
- }
- 
--static void ext4_clamp_want_extra_isize(struct super_block *sb)
--{
--	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	struct ext4_super_block *es = sbi->s_es;
--	unsigned def_extra_isize = sizeof(struct ext4_inode) -
--						EXT4_GOOD_OLD_INODE_SIZE;
--
--	if (sbi->s_inode_size == EXT4_GOOD_OLD_INODE_SIZE) {
--		sbi->s_want_extra_isize = 0;
--		return;
--	}
--	if (sbi->s_want_extra_isize < 4) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		if (ext4_has_feature_extra_isize(sb)) {
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_want_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_want_extra_isize);
--			if (sbi->s_want_extra_isize <
--			    le16_to_cpu(es->s_min_extra_isize))
--				sbi->s_want_extra_isize =
--					le16_to_cpu(es->s_min_extra_isize);
--		}
--	}
--	/* Check if enough inode space is available */
--	if ((sbi->s_want_extra_isize > sbi->s_inode_size) ||
--	    (EXT4_GOOD_OLD_INODE_SIZE + sbi->s_want_extra_isize >
--							sbi->s_inode_size)) {
--		sbi->s_want_extra_isize = def_extra_isize;
--		ext4_msg(sb, KERN_INFO,
--			 "required extra inode space not available");
--	}
--}
--
- static void ext4_set_resv_clusters(struct super_block *sb)
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -423,9 +423,9 @@ static int j1939_sk_bind(struct socket *
  {
- 	ext4_fsblk_t resv_clusters;
-@@ -3792,6 +3765,68 @@ static int ext4_fill_super(struct super_
- 	 */
- 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
+ 	struct sockaddr_can *addr = (struct sockaddr_can *)uaddr;
+ 	struct j1939_sock *jsk = j1939_sk(sock->sk);
+-	struct j1939_priv *priv = jsk->priv;
+-	struct sock *sk = sock->sk;
+-	struct net *net = sock_net(sk);
++	struct j1939_priv *priv;
++	struct sock *sk;
++	struct net *net;
+ 	int ret = 0;
  
-+	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
-+		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
-+		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
-+	} else {
-+		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
-+		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
-+		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
-+			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
-+				 sbi->s_first_ino);
-+			goto failed_mount;
-+		}
-+		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
-+		    (!is_power_of_2(sbi->s_inode_size)) ||
-+		    (sbi->s_inode_size > blocksize)) {
-+			ext4_msg(sb, KERN_ERR,
-+			       "unsupported inode size: %d",
-+			       sbi->s_inode_size);
-+			goto failed_mount;
-+		}
-+		/*
-+		 * i_atime_extra is the last extra field available for
-+		 * [acm]times in struct ext4_inode. Checking for that
-+		 * field should suffice to ensure we have extra space
-+		 * for all three.
-+		 */
-+		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
-+			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
-+			sb->s_time_gran = 1;
-+			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
-+		} else {
-+			sb->s_time_gran = NSEC_PER_SEC;
-+			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
-+		}
-+		sb->s_time_min = EXT4_TIMESTAMP_MIN;
-+	}
-+	if (sbi->s_inode_size > EXT4_GOOD_OLD_INODE_SIZE) {
-+		sbi->s_want_extra_isize = sizeof(struct ext4_inode) -
-+			EXT4_GOOD_OLD_INODE_SIZE;
-+		if (ext4_has_feature_extra_isize(sb)) {
-+			unsigned v, max = (sbi->s_inode_size -
-+					   EXT4_GOOD_OLD_INODE_SIZE);
+ 	ret = j1939_sk_sanity_check(addr, len);
+@@ -434,6 +434,10 @@ static int j1939_sk_bind(struct socket *
+ 
+ 	lock_sock(sock->sk);
+ 
++	priv = jsk->priv;
++	sk = sock->sk;
++	net = sock_net(sk);
 +
-+			v = le16_to_cpu(es->s_want_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_want_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+
-+			v = le16_to_cpu(es->s_min_extra_isize);
-+			if (v > max) {
-+				ext4_msg(sb, KERN_ERR,
-+					 "bad s_min_extra_isize: %d", v);
-+				goto failed_mount;
-+			}
-+			if (sbi->s_want_extra_isize < v)
-+				sbi->s_want_extra_isize = v;
-+		}
-+	}
-+
- 	if (sbi->s_es->s_mount_opts[0]) {
- 		char *s_mount_opts = kstrndup(sbi->s_es->s_mount_opts,
- 					      sizeof(sbi->s_es->s_mount_opts),
-@@ -4030,42 +4065,6 @@ static int ext4_fill_super(struct super_
- 						      has_huge_files);
- 	sb->s_maxbytes = ext4_max_size(sb->s_blocksize_bits, has_huge_files);
- 
--	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV) {
--		sbi->s_inode_size = EXT4_GOOD_OLD_INODE_SIZE;
--		sbi->s_first_ino = EXT4_GOOD_OLD_FIRST_INO;
--	} else {
--		sbi->s_inode_size = le16_to_cpu(es->s_inode_size);
--		sbi->s_first_ino = le32_to_cpu(es->s_first_ino);
--		if (sbi->s_first_ino < EXT4_GOOD_OLD_FIRST_INO) {
--			ext4_msg(sb, KERN_ERR, "invalid first ino: %u",
--				 sbi->s_first_ino);
--			goto failed_mount;
--		}
--		if ((sbi->s_inode_size < EXT4_GOOD_OLD_INODE_SIZE) ||
--		    (!is_power_of_2(sbi->s_inode_size)) ||
--		    (sbi->s_inode_size > blocksize)) {
--			ext4_msg(sb, KERN_ERR,
--			       "unsupported inode size: %d",
--			       sbi->s_inode_size);
--			goto failed_mount;
--		}
--		/*
--		 * i_atime_extra is the last extra field available for [acm]times in
--		 * struct ext4_inode. Checking for that field should suffice to ensure
--		 * we have extra space for all three.
--		 */
--		if (sbi->s_inode_size >= offsetof(struct ext4_inode, i_atime_extra) +
--			sizeof(((struct ext4_inode *)0)->i_atime_extra)) {
--			sb->s_time_gran = 1;
--			sb->s_time_max = EXT4_EXTRA_TIMESTAMP_MAX;
--		} else {
--			sb->s_time_gran = NSEC_PER_SEC;
--			sb->s_time_max = EXT4_NON_EXTRA_TIMESTAMP_MAX;
--		}
--
--		sb->s_time_min = EXT4_TIMESTAMP_MIN;
--	}
--
- 	sbi->s_desc_size = le16_to_cpu(es->s_desc_size);
- 	if (ext4_has_feature_64bit(sb)) {
- 		if (sbi->s_desc_size < EXT4_MIN_DESC_SIZE_64BIT ||
-@@ -4521,8 +4520,6 @@ no_journal:
- 	} else if (ret)
- 		goto failed_mount4a;
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	ext4_set_resv_clusters(sb);
- 
- 	err = ext4_setup_system_zone(sb);
-@@ -5310,8 +5307,6 @@ static int ext4_remount(struct super_blo
- 		goto restore_opts;
- 	}
- 
--	ext4_clamp_want_extra_isize(sb);
--
- 	if ((old_opts.s_mount_opt & EXT4_MOUNT_JOURNAL_CHECKSUM) ^
- 	    test_opt(sb, JOURNAL_CHECKSUM)) {
- 		ext4_msg(sb, KERN_ERR, "changing journal_checksum "
+ 	/* Already bound to an interface? */
+ 	if (jsk->state & J1939_SOCK_BOUND) {
+ 		/* A re-bind() to a different interface is not
 
 
