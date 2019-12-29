@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAA3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD23C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845DC207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A408206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641086;
-	bh=GxvnmZXRfJIH+zPTsb1miOWYEPs2FcYBonFE0hpOGzY=;
+	s=default; t=1577641090;
+	bh=Nra/7ky8F+UGvxyT61ZpxdJkrICPhuOYk4oYQrR0Ex8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NAysx+leftmsq6faGCkFFH+to4acdx0gaaIod7PrymUUeTKMD4vvBETl+mnrEcbGZ
-	 slGfzeYMGEebutuXsTgcRp80umYI+JelomIKVVGyiM08s/r23SlXotAPSkAskWxOud
-	 Ds+UAextXC2RGcUIzPoO+gv7TiLXr45GDvV6/J4g=
+	b=dhl8/TjFH/QUNQaKZorKe8/8ewy477OueiUT9jlGdS/9ORQMqRt8586+vScGcMZQA
+	 LWxr8FPdt5XYWAG3TzY6U0urwX2YrxjJNNP2CTeWDTXPd2k+jGuxMu5F0J6MhlCyj7
+	 zblHbV9vx9hDtxFI2woG719ZUpxEHxceijMrHfeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfL2RiC (ORCPT
+        id S1729720AbfL2Rer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:38:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38522 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfL2Reu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:50 -0500
+        id S1729702AbfL2Rel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1677720409;
-        Sun, 29 Dec 2019 17:34:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4395C21744;
+        Sun, 29 Dec 2019 17:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640890;
-        bh=GxvnmZXRfJIH+zPTsb1miOWYEPs2FcYBonFE0hpOGzY=;
+        s=default; t=1577640880;
+        bh=Nra/7ky8F+UGvxyT61ZpxdJkrICPhuOYk4oYQrR0Ex8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FX6qtolTEYfw8ndOhrGBJhRcVOw02RvxVJHeVtoa5jc1+lLjcPLMQ1alM5l7mPm7s
-         ZVP/d2YkKDT1ZPDLcCEcDnjVD2mDqud0V3qNXkvuiaNXZ2C2cObsEGF1W2EMfbzQ4P
-         RUiJv0sGUYNRv4z9Azah/SEAYsVJyi0GdY4gT62k=
+        b=DMYA9uDnd1vctjX/zmyNcDejTQUDsh2rKLZt3nuS8si30OETAhiQXFX/ZUpMcwDGU
+         8b7Mv+1gcotlQoqnvjwUWesetz1AH4QwSiwH+/lKDXC9xfpEEYNnlmNrGzfplZSPtr
+         92xqf6mt2MXkix7Nz4lcpBWoxCEEMJVUGz24WHp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 182/219] mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED
-Date:   Sun, 29 Dec 2019 18:19:44 +0100
-Message-Id: <20191229162536.627394588@linuxfoundation.org>
+Subject: [PATCH 4.19 128/219] perf probe: Fix to show ranges of variables in functions without entry_pc
+Date:   Sun, 29 Dec 2019 18:18:50 +0100
+Message-Id: <20191229162527.795383818@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,48 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@adapt-ip.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 08a5bdde3812993cb8eb7aa9124703df0de28e4b ]
+[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
 
-Commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
-let STAs send QoS Null frames as PS triggers if the AP was
-a QoS STA.  However, the mac80211 PS stack relies on an
-interface flag IEEE80211_STA_NULLFUNC_ACKED for
-determining trigger frame ACK, which was not being set for
-acked non-QoS Null frames. The effect is an inability to
-trigger hardware sleep via IEEE80211_CONF_PS since the QoS
-Null frame was seemingly never acked.
+Fix to show ranges of variables (--range and --vars option) in functions
+which DIE has only ranges but no entry_pc attribute.
 
-This bug only applies to drivers which set both
-IEEE80211_HW_REPORTS_TX_ACK_STATUS and
-IEEE80211_HW_PS_NULLFUNC_STACK.
+Without this fix:
 
-Detect the acked QoS Null frame to restore STA power save.
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+  	@<clear_tasks_mm_cpumask+0>
+  		(No matched variables)
 
-Fixes: 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
-Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
-Link: https://lore.kernel.org/r/20191119053538.25979-4-thomas@adapt-ip.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+With this fix:
+
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+	@<clear_tasks_mm_cpumask+0>
+		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  (No matched variables)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
+  [root@quaco ~]#
+  [root@quaco ~]# perf trace -e probe:*cpumask
+  ^C[root@quaco ~]#
+
+Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/status.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/status.c b/net/mac80211/status.c
-index 534a604b75c2..f895c656407b 100644
---- a/net/mac80211/status.c
-+++ b/net/mac80211/status.c
-@@ -867,7 +867,8 @@ static void __ieee80211_tx_status(struct ieee80211_hw *hw,
- 			I802_DEBUG_INC(local->dot11FailedCount);
- 	}
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 6e7cb3537ce0..14a3da24a0a8 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1010,7 +1010,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
+ 	bool first = true;
+ 	const char *name;
  
--	if (ieee80211_is_nullfunc(fc) && ieee80211_has_pm(fc) &&
-+	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
-+	    ieee80211_has_pm(fc) &&
- 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
- 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
- 	    local->ps_sdata && !(local->scanning)) {
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1073,7 +1073,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
+ 	bool first = true;
+ 	const char *name;
+ 
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.20.1
 
