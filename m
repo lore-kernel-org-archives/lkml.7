@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0314C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0D7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E255206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286F5207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642934;
-	bh=ay9gmLr2Nl2tg97gYrt/XH5VpXuzO5Kfwb7URfU09fc=;
+	s=default; t=1577642937;
+	bh=DXF7o8ExpQHb1qVoGDDq9vcyp1WYD4pNzRMkR6MRaOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qd9HOH6mapHEQbP+/0FtzCx+fYQjojXlSjr26/26BnjN4ATShQ+gzEsagS6Y+yTBj
-	 khUVtaXhou2efjtuQrV16r4umQorW6qz21kicOPPl532U/0MShIPmvbVMh0AKXWlcS
-	 WgKMbJeJ187KtghYwWf4lw7g4ihCTA5oWJrQlJpY=
+	b=Hd9+WmKTeTjWM666cIH1lIXAzhqaWZLhlm/IzRSa0x5rF0axK6gHCIgzHx6vobh0q
+	 TrlmgtEmwVy9cvb6qPYxPhGd5w0PSTvznXbxH1KgMqO0AA1//ZoS0e2g/ngpsNvubM
+	 InfrKuFAj8bGeKjcrG4927qupo5qeGuQvdYRdjDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfL2Rqq (ORCPT
+        id S1731091AbfL2Rqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:46:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbfL2Rqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:34 -0500
+        id S1731063AbfL2RqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09783206A4;
-        Sun, 29 Dec 2019 17:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE8C206DB;
+        Sun, 29 Dec 2019 17:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641593;
-        bh=ay9gmLr2Nl2tg97gYrt/XH5VpXuzO5Kfwb7URfU09fc=;
+        s=default; t=1577641583;
+        bh=DXF7o8ExpQHb1qVoGDDq9vcyp1WYD4pNzRMkR6MRaOg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e6EqsrJFj/UWcfD7AH0HrF7cUvea3bEDLrDnACyC0dlxqsrtEm/45QgqxetYidAc8
-         1MWx44HfelrHZukvkbwYAi8X5k9it3Zxp0nCnkgoYTnH+Tu0cjGvtZgxrquliwf4C6
-         /5xoREkLzidT9cPFSbCIGXlgaoy2tVT6OB8frGAg=
+        b=HfkHhj7uLpEQZE9cX9y0P8uTzE7K+909E7Z7paUrse02loMe4jFVdq8Agb2f5x0XG
+         cr46VEe9yDtYOpK7brrUXU5M9sINeuKa3wfyMOTFxvQUXggSKSQE6jgE5nA3tjhKxl
+         v0kROcr3IhTQOMJVGaEvupYlCx2MbL7dZOS2Ygn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 130/434] media: ti-vpe: vpe: Make sure YUYV is set as default format
-Date:   Sun, 29 Dec 2019 18:23:03 +0100
-Message-Id: <20191229172710.338550411@linuxfoundation.org>
+Subject: [PATCH 5.4 126/434] ASoC: SOF: enable sync_write in hdac_bus
+Date:   Sun, 29 Dec 2019 18:22:59 +0100
+Message-Id: <20191229172710.067867230@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,51 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
+[ Upstream commit f3416e7144f5d4ba0fc5dcef6ebfff891266c46a ]
 
-v4l2-compliance fails with this message:
+Align SOF HDA implementation with snd-hda-intel driver and enable
+sync_write flag for all supported Intel platforms in SOF. When set,
+a sync is issued after each verb write.
 
-   fail: v4l2-test-formats.cpp(672): \
-	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
-   fail: v4l2-test-formats.cpp(672): \
-	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
-	...
-   test VIDIOC_TRY_FMT: FAIL
+Sync after write has helped to overcome intermittent delays in
+system resume flow on Intel Coffee Lake systems, and most recently
+probe errors related to the HDMI codec on Ice Lake systems.
 
-The default pixel format was setup as pointing to a specific offset in
-the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
-entry. This became false after the addition on the NV21 format (see
-above commid-id)
+Matches the snd-hda-intel driver change done in commit 2756d9143aa5
+("ALSA: hda - Fix intermittent CORB/RIRB stall on Intel chips").
 
-So instead of hard-coding an offset which might change over time we need
-to use a lookup helper instead so we know the default will always be what
-we intended.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191008164443.1358-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/intel/hda.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index e44299008a7b..2b731c8f5459 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -2288,7 +2288,7 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index 06e84679087b..5a5163eef2ef 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -268,6 +268,7 @@ static int hda_init(struct snd_sof_dev *sdev)
  
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
--	s_q_data->fmt = &vpe_formats[2];
-+	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	s_q_data->width = 1920;
- 	s_q_data->height = 1080;
- 	s_q_data->nplanes = 1;
+ 	bus->use_posbuf = 1;
+ 	bus->bdl_pos_adj = 0;
++	bus->sync_write = 1;
+ 
+ 	mutex_init(&hbus->prepare_mutex);
+ 	hbus->pci = pci;
 -- 
 2.20.1
 
