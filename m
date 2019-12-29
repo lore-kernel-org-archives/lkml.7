@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD63C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3148C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8F5206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC577207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643143;
-	bh=r3Wb54eQ9Ab0ydwHvmzu9M4M3rsnxMteryXhsQ++IIs=;
+	s=default; t=1577643145;
+	bh=DX/8eM0CZYV20+MeM7j+89/IvLLfM7OmK+6YPGoJngU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBkQfwbGe+c0CfxOmWi8+oWIH+LGsUY7AlXImk77W/IVzmpQ5r0oq5/o62YLW1SDf
-	 iU/pY+Uh6XI6bKx5w4YwCeh/0LGILXSl+KpWFZUqh9rJ2+53xOFYoMdQ7JjuITjrJX
-	 zfaA0V9C+sU4cqm73PwTHoni95sehJUxudryWpdk=
+	b=RxJVGTIW9gnrNdqlP7hOsPpMwYnXw37HUstif9X6AdIDVa0MkvQ5Ki7nYQYnyITzJ
+	 AlHbJamdabveIm58hdu7NKNPN2k3SnbalMMSF0M9zQVGOOZMi6YwaeFZ9rOfAuMBJU
+	 2Wi7FTxz95s/yGMfQi3WHoTIzIkNY9wvGcaZUQH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733140AbfL2SMV (ORCPT
+        id S1730201AbfL2Rln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:12:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47538 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:41:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730218AbfL2Rlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:41:49 -0500
+        id S1729294AbfL2Rlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:41:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB3F3206A4;
-        Sun, 29 Dec 2019 17:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E7F1206DB;
+        Sun, 29 Dec 2019 17:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641309;
-        bh=r3Wb54eQ9Ab0ydwHvmzu9M4M3rsnxMteryXhsQ++IIs=;
+        s=default; t=1577641299;
+        bh=DX/8eM0CZYV20+MeM7j+89/IvLLfM7OmK+6YPGoJngU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1l6jizZwH7Wi4cT/M8ECLJBHfyZJf1n0hXojB5U8cMekeXRwCDssZGKsmRZ10pcH
-         BTkVUtt6iAoKLxf0oGz1n1QMIVFrn8wJ2DH+XCx+izUhefydryWdoMcVHZEiY9k4h6
-         FJPtSBh0RuF1N0d4zbSqi+lEwbD126j5doWP8QQc=
+        b=IJyl8GvKLSN2rQs1O4+8dOacpKDzhBoECl67dPKiaUknudoJq2HWgGv1mD1PQHEHx
+         9HdqAIKaJGHL4vr+0nN/3SwQYsD/7FOVQh5z4sfWeRSgnbYxzyBqaZ6UX+R89eDkPa
+         3apjhWagjrx/BRXXlhLCsM/LTgCSUVVRoMdx74ac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 013/434] qede: Disable hardware gro when xdp prog is installed
-Date:   Sun, 29 Dec 2019 18:21:06 +0100
-Message-Id: <20191229172703.123415287@linuxfoundation.org>
+Subject: [PATCH 5.4 001/434] af_packet: set defaule value for tmo
+Date:   Sun, 29 Dec 2019 18:20:54 +0100
+Message-Id: <20191229172702.484977936@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,51 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 4c8dc00503db24deaf0b89dddfa84b7cba7cd4ce ]
+[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
 
-commit 18c602dee472 ("qede: Use NETIF_F_GRO_HW.") introduced
-a regression in driver that when xdp program is installed on
-qede device, device's aggregation feature (hardware GRO) is not
-getting disabled, which is unexpected with xdp.
+There is softlockup when using TPACKET_V3:
+...
+NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
+(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
+(mod_timer) from [<c0549c30>]
+(prb_retire_rx_blk_timer_expired+0x68/0x11c)
+(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
+(call_timer_fn+0x90/0x17c)
+(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
+(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
+(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
+(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
+...
 
-Fixes: 18c602dee472 ("qede: Use NETIF_F_GRO_HW.")
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+If __ethtool_get_link_ksettings() is failed in
+prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
+is zero and the timer expire for retire_blk_timer is turn to
+mod_timer(&pkc->retire_blk_timer, jiffies + 0),
+which will trigger cpu usage of softirq is 100%.
+
+Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
+Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1406,6 +1406,7 @@ static int qede_alloc_mem_rxq(struct qed
- 		rxq->rx_buf_seg_size = roundup_pow_of_two(size);
- 	} else {
- 		rxq->rx_buf_seg_size = PAGE_SIZE;
-+		edev->ndev->features &= ~NETIF_F_GRO_HW;
- 	}
- 
- 	/* Allocate the parallel driver ring for Rx buffers */
-@@ -1450,6 +1451,7 @@ static int qede_alloc_mem_rxq(struct qed
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struc
+ 			msec = 1;
+ 			div = ecmd.base.speed / 1000;
  		}
- 	}
+-	}
++	} else
++		return DEFAULT_PRB_RETIRE_TOV;
  
-+	edev->gro_disable = !(edev->ndev->features & NETIF_F_GRO_HW);
- 	if (!edev->gro_disable)
- 		qede_set_tpa_param(rxq);
- err:
-@@ -1702,8 +1704,6 @@ static void qede_init_fp(struct qede_dev
- 		snprintf(fp->name, sizeof(fp->name), "%s-fp-%d",
- 			 edev->ndev->name, queue_id);
- 	}
--
--	edev->gro_disable = !(edev->ndev->features & NETIF_F_GRO_HW);
- }
+ 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
  
- static int qede_set_real_num_queues(struct qede_dev *edev)
 
 
