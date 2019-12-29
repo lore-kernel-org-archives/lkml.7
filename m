@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DE6C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2123C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D13720409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB8820722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640567;
-	bh=d97qlS8VxM98XOMAULtwb8+1EioCF1ED2DucKtX1+jc=;
+	s=default; t=1577640570;
+	bh=yUrwpv0lLsyDAQ/9yE40ZB0yyr49ozxNiQrmwjgfLZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kINYkxK1BuujxIznlYN4+/aAr/p8sNLfmdejUhN+AshczlTbB2Ir+DGISzS87KxVA
-	 g3U2FoLD6yT+5A8kUK5hj6N3ZTliG+BvyFvo61Ok4ZkJQdRLhpDmz5lfD34QAOhnmr
-	 E7AyD1Ele1dfcQGFU8rmbNj9IVGQsHNaF46OmR1c=
+	b=f2O/id51pJvqA/AD9Sv++DDdMHCVOQ55vb9jQI/qruocG0FWn6KNpFtKJsBDfkMjm
+	 fZ3GlTWY63PcKgHxqIhEAh0tf1wqGA7Xz0iEyp/PobLnp2qQsGd17sxF1F0Ni110Vq
+	 fv3w+gnQcXYzmgylrlW0ysPdFycGyItS7W2MvYGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbfL2R3Z (ORCPT
+        id S1728784AbfL2R33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbfL2R3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:22 -0500
+        id S1728033AbfL2R31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36902253D;
-        Sun, 29 Dec 2019 17:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B566620722;
+        Sun, 29 Dec 2019 17:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640561;
-        bh=d97qlS8VxM98XOMAULtwb8+1EioCF1ED2DucKtX1+jc=;
+        s=default; t=1577640566;
+        bh=yUrwpv0lLsyDAQ/9yE40ZB0yyr49ozxNiQrmwjgfLZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOdUGLFBAtxVmJdAYqYj0OxsrpJavr6fdurGxnq/O6at2heDMrTNYBYqGdBDIWtg6
-         QmDtTgImrng9aHbcqjBfglyU/HaQ2uiz+3/NEgVb3v1foUtd4AE05zGbFHE1KQz02D
-         7nSrYHAyEVdsClZSKfuYGv9EmhI/n30Nqv1pH4Og=
+        b=qMrbMYHSGzfT6LbSdIFxxlg9slZLLemdd9jppFKddOGHyZGDgUNVwhnF88dUMCLu6
+         DnM0ncI/QzlFfnKpTHCUqasbDDE3/0Vw562v5AZQz9UhvxLjBsPgdvou+rARUIjJQc
+         gUUNgLPkNdI1Nk8UjWTgfKQ7ONVJVMiTHlOigPsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 006/219] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
-Date:   Sun, 29 Dec 2019 18:16:48 +0100
-Message-Id: <20191229162509.898528863@linuxfoundation.org>
+Subject: [PATCH 4.19 008/219] net: qlogic: Fix error paths in ql_alloc_large_buffers()
+Date:   Sun, 29 Dec 2019 18:16:50 +0100
+Message-Id: <20191229162510.164175872@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -59,90 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
+[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
 
-When doing stress test, we get the following trace:
-kernel BUG at lib/dynamic_queue_limits.c:26!
-Internal error: Oops - BUG: 0 [#1] SMP ARM
-Modules linked in: hip04_eth
-CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
-Hardware name: Hisilicon A15
-task: c3637668 task.stack: de3bc000
-PC is at dql_completed+0x18/0x154
-LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
-pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
-sp : de3bdc2c  ip : 00000000  fp : c020fb10
-r10: 00000000  r9 : c39b4224  r8 : 00000001
-r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
-r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
-Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 32c5387d  Table: 1e189b80  DAC: 55555555
-Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
-Stack: (0xde3bdc2c to 0xde3be000)
-[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
-[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
-[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
-[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
-[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
-[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
-Exception stack(0xde3bdde0 to 0xde3bde28)
-dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
-de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
-de20: 600f0213 ffffffff
-[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-Kernel panic - not syncing: Fatal exception in interrupt
+ql_alloc_large_buffers() has the usual RX buffer allocation
+loop where it allocates skbs and maps them for DMA.  It also
+treats failure as a fatal error.
 
-Pre-modification code:
-int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-{
-[...]
-[1]	priv->tx_head = TX_NEXT(tx_head);
-[2]	count++;
-[3]	netdev_sent_queue(ndev, skb->len);
-[...]
-}
-An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
-tx_head has been updated, but corresponding 'skb->len' has not been
-added to dql_queue.
+There are (at least) three bugs in the error paths:
 
-And then
-hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
+first buffer that couldn't be allocated will have .skb == NULL.
+But the qla_buf[] array is not zero-initialised.
 
-In hip04_tx_reclaim, because tx_head has been updated,
-bytes_compl will plus an additional "skb-> len"
-which has not been added to dql_queue. And then
-trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
+incorrect for the last allocated skb, if DMA mapping failed.
 
-To solve the problem described above, we put
-"netdev_sent_queue(ndev, skb->len);"
-before
-"priv->tx_head = TX_NEXT(tx_head);"
+3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
+ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
+after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
+will double-free it.
 
-Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+The bugs are somewhat inter-twined, so fix them all at once:
+
+* Clear each entry in qla_buf[] before attempting to allocate
+  an skb for it.  This goes half-way to fixing bug 1.
+* Set the .skb field only after the skb is DMA-mapped.  This
+  fixes the rest.
+
+Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
+Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
+Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qla3xxx.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -456,9 +456,9 @@ hip04_mac_start_xmit(struct sk_buff *skb
- 	skb_tx_timestamp(skb);
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -2757,6 +2757,9 @@ static int ql_alloc_large_buffers(struct
+ 	int err;
  
- 	hip04_set_xmit_desc(priv, phys);
--	priv->tx_head = TX_NEXT(tx_head);
- 	count++;
- 	netdev_sent_queue(ndev, skb->len);
-+	priv->tx_head = TX_NEXT(tx_head);
+ 	for (i = 0; i < qdev->num_large_buffers; i++) {
++		lrg_buf_cb = &qdev->lrg_buf[i];
++		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
++
+ 		skb = netdev_alloc_skb(qdev->ndev,
+ 				       qdev->lrg_buffer_len);
+ 		if (unlikely(!skb)) {
+@@ -2767,11 +2770,7 @@ static int ql_alloc_large_buffers(struct
+ 			ql_free_large_buffers(qdev);
+ 			return -ENOMEM;
+ 		} else {
+-
+-			lrg_buf_cb = &qdev->lrg_buf[i];
+-			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
+ 			lrg_buf_cb->index = i;
+-			lrg_buf_cb->skb = skb;
+ 			/*
+ 			 * We save some space to copy the ethhdr from first
+ 			 * buffer
+@@ -2793,6 +2792,7 @@ static int ql_alloc_large_buffers(struct
+ 				return -ENOMEM;
+ 			}
  
- 	stats->tx_bytes += skb->len;
- 	stats->tx_packets++;
++			lrg_buf_cb->skb = skb;
+ 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
+ 			dma_unmap_len_set(lrg_buf_cb, maplen,
+ 					  qdev->lrg_buffer_len -
 
 
