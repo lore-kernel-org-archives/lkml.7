@@ -2,54 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98350C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF93C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6988920748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031F922B48
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643011;
-	bh=dT2u6tnP0SjCCmVPHuAARurqhNxrvVeh29ZCBtjl+Pw=;
+	s=default; t=1577643018;
+	bh=pIp8RpwowoSKyx2OslSBbFDO8SuGHGDfx255sWQtTZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bl5+vVO4k8S5k6Ah9rMFPPMOE25XM4faUUDA50J1ZqlRrtt97qF9bn9draykSj0/P
-	 dMMaaF6JbIeGzfsmo77ly5FaV56iIuc46j8Di68x9FDsvjIhOfak31LdjIAiLTtLCU
-	 1nti4u0kMBzS/+y+JGQshHpYipbVSk72jrmfJLL0=
+	b=qTjU6s0z8HKzldD9afF0/tGk6jDrbSQV7PIoQTmP5dXp8+OzV+5omj6oF9GXQkVTP
+	 h31eXEWp8Bqb8u6YNmjortV4rAlaDX207g9Y8T/krwXK/vkVOcIHpFWjs300Z0KJ/K
+	 LCDjIga32zeIG8tYPvzbRNKqEZ2jOYXS3NICUmZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbfL2SKK (ORCPT
+        id S1732181AbfL2SKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:10:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:10:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfL2Ro7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:44:59 -0500
+        id S1730749AbfL2Ror (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:44:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A70208C4;
-        Sun, 29 Dec 2019 17:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF084206DB;
+        Sun, 29 Dec 2019 17:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641499;
-        bh=dT2u6tnP0SjCCmVPHuAARurqhNxrvVeh29ZCBtjl+Pw=;
+        s=default; t=1577641487;
+        bh=pIp8RpwowoSKyx2OslSBbFDO8SuGHGDfx255sWQtTZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdwvuGzEv3zRHK8zPyogtiopdBOa5PmXKOdIo9UWLZi1jDTCE7gkEdUBBaT69C1J5
-         BcQBHCWqrjZebL2psWnIRWKbtvlO+abP/xjP3OA7yfpNRsmKHcJH52/mwhRr3x4kDC
-         QXingTWNpue6lgvcGeXUecmXmHk8BoRP7x5Z9wyo=
+        b=YsPLVr5sOwro2k1SM1IyimQraAziWc7yUaG8wz84EUVKNAaVgUZRSkeagm3mw7pja
+         49SLmJGiL6a89Q5sgCc94ZneQgVYyYXgxvAuaY90qJI8YVy/x8oA/mpNoDHlO6qB2f
+         qKSjBmP1FGi2zfbtBtHJMtZDt0pcub5bo+jdFZVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikola Cornij <nikola.cornij@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/434] drm/amd/display: Set number of pipes to 1 if the second pipe was disabled
-Date:   Sun, 29 Dec 2019 18:22:23 +0100
-Message-Id: <20191229172707.527745301@linuxfoundation.org>
+Subject: [PATCH 5.4 086/434] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
+Date:   Sun, 29 Dec 2019 18:22:19 +0100
+Message-Id: <20191229172707.260610788@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,44 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 2fef0faa1cdc5d41ce3ef83f7b8f7e7ecb02d700 ]
+[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
 
-[why]
-Some ODM-related register settings are inconsistently updated by VBIOS, causing
-the state in DC to be invalid, which would then end up crashing in certain
-use-cases (such as disable/enable device).
+When building cpupower with clang, the following warning appears:
 
-[how]
-Check the enabled status of the second pipe when determining the number of
-OPTC sources. If the second pipe is disabled, set the number of sources to 1
-regardless of other settings (that may not be updated correctly).
+ utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
+ prior initialization of this subobject [-Winitializer-overrides]
+                 .desc                   = N_("Processor Package C2"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                              ^~~~~~
+ utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
+ is here
+                 .desc                   = N_("Processor Package C9"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                             ^~~~~~
+ 1 warning generated.
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This appears to be a copy and paste or merge mistake because the name
+and id fields both have PC9 in them, not PC2. Remove the second
+assignment to fix the warning.
+
+Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/718
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-index 2137e2be2140..dda90995ba93 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-@@ -287,6 +287,10 @@ void optc2_get_optc_source(struct timing_generator *optc,
- 		*num_of_src_opp = 2;
- 	else
- 		*num_of_src_opp = 1;
-+
-+	/* Work around VBIOS not updating OPTC_NUM_OF_INPUT_SEGMENT */
-+	if (*src_opp_id_1 == 0xf)
-+		*num_of_src_opp = 1;
- }
- 
- void optc2_set_dwb_source(struct timing_generator *optc,
+diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+index 7c7451d3f494..58dbdfd4fa13 100644
+--- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+@@ -39,7 +39,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
+ 	{
+ 		.name			= "PC9",
+ 		.desc			= N_("Processor Package C9"),
+-		.desc			= N_("Processor Package C2"),
+ 		.id			= PC9,
+ 		.range			= RANGE_PACKAGE,
+ 		.get_count_percent	= hsw_ext_get_count_percent,
 -- 
 2.20.1
 
