@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D8CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE46C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2AF222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E6320718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641636;
-	bh=MkNcUybdADWvdamOB6zS++HxLBROXBRnhT7JYiimUjk=;
+	s=default; t=1577641640;
+	bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhP2MyJ11PKik8se82Ia/QZRUGEvFJmY80uoSPWv2g5QiKLvdx7+ecu5zHfjCdw4J
-	 /8KBi2KtI33og0g7Qh6owKr5FaOmXphNuQNV/F2xeIB9IQOXI/3vd4fVAzpdVqZOk8
-	 XaF9I8elqu/IjqC3j4LR+DFsRlUjjubPABuVkWvE=
+	b=lEA1GlnVhs3pCOSZbze5gUBaKxMWHEg/l3R0P3qXEPCo1VSKi4HFyVhclmD8GWptX
+	 N7smGajdDmP+pNTAgDCHotGSBYIS0w0zv07CR87cjhis8+6/oOwaD61rmrOhzaKakE
+	 CMKIreTlsln+Cqd0BeSOR4NHjDvd1u9Jy85FIaYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfL2RrO (ORCPT
+        id S1730963AbfL2RrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57372 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731191AbfL2RrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:05 -0500
+        id S1731212AbfL2RrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A9D206DB;
-        Sun, 29 Dec 2019 17:47:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A81220718;
+        Sun, 29 Dec 2019 17:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641624;
-        bh=MkNcUybdADWvdamOB6zS++HxLBROXBRnhT7JYiimUjk=;
+        s=default; t=1577641631;
+        bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IkxS4Fcd/unKN2KQ6RvGuO6jownTuVbkwc7omb6TVWMCTO8t//2tdHKiA4nSUDyHu
-         ZQRzpd/2JQcFndsmBUpOhKTx1XtCXCspxvEgLMPY8cVKobyGMvtPO07wPnCt1ZDF6x
-         W8TTrO9BTYP5CRjJmghyAG1tM4SA7sHMOef18vbQ=
+        b=CcLWT68gJHp+Kt0EASKoaQ1bpCpOUKEuC9XvbMWUjt95i2q7jJ/9vjho0hWVPKs1U
+         ZUndZCIKxap+tlP9DSAZ+091B8pr6rWwSCRDNdBhVigyjw1jSgzAImrY25ihJFWgd6
+         LY6Ot9k5+frb5iNvOj++BG+w+GIwLXM+px/BkIGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 141/434] x86/mm: Use the correct function type for native_set_fixmap()
-Date:   Sun, 29 Dec 2019 18:23:14 +0100
-Message-Id: <20191229172711.098355004@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 107/434] media: cec-funcs.h: add status_req checks
+Date:   Sun, 29 Dec 2019 18:22:40 +0100
+Message-Id: <20191229172708.732337880@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -68,63 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit f53e2cd0b8ab7d9e390414470bdbd830f660133f ]
+[ Upstream commit 9b211f9c5a0b67afc435b86f75d78273b97db1c5 ]
 
-We call native_set_fixmap indirectly through the function pointer
-struct pv_mmu_ops::set_fixmap, which expects the first parameter to be
-'unsigned' instead of 'enum fixed_addresses'. This patch changes the
-function type for native_set_fixmap to match the pointer, which fixes
-indirect call mismatches with Control-Flow Integrity (CFI) checking.
+The CEC_MSG_GIVE_DECK_STATUS and CEC_MSG_GIVE_TUNER_DEVICE_STATUS commands
+both have a status_req argument: ON, OFF, ONCE. If ON or ONCE, then the
+follower will reply with a STATUS message. Either once or whenever the
+status changes (status_req == ON).
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190913211402.193018-1-samitolvanen@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+If status_req == OFF, then it will stop sending continuous status updates,
+but the follower will *not* send a STATUS message in that case.
+
+This means that if status_req == OFF, then msg->reply should be 0 as well
+since no reply is expected in that case.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fixmap.h | 2 +-
- arch/x86/mm/pgtable.c         | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/uapi/linux/cec-funcs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/fixmap.h b/arch/x86/include/asm/fixmap.h
-index 0c47aa82e2e2..28183ee3cc42 100644
---- a/arch/x86/include/asm/fixmap.h
-+++ b/arch/x86/include/asm/fixmap.h
-@@ -156,7 +156,7 @@ extern pte_t *kmap_pte;
- extern pte_t *pkmap_page_table;
- 
- void __native_set_fixmap(enum fixed_addresses idx, pte_t pte);
--void native_set_fixmap(enum fixed_addresses idx,
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- 		       phys_addr_t phys, pgprot_t flags);
- 
- #ifndef CONFIG_PARAVIRT_XXL
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 3e4b9035bb9a..7bd2c3a52297 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -643,8 +643,8 @@ void __native_set_fixmap(enum fixed_addresses idx, pte_t pte)
- 	fixmaps_set++;
+diff --git a/include/uapi/linux/cec-funcs.h b/include/uapi/linux/cec-funcs.h
+index 8997d5068c08..4511b85c84df 100644
+--- a/include/uapi/linux/cec-funcs.h
++++ b/include/uapi/linux/cec-funcs.h
+@@ -923,7 +923,8 @@ static inline void cec_msg_give_deck_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_DECK_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_DECK_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_DECK_STATUS : 0;
  }
  
--void native_set_fixmap(enum fixed_addresses idx, phys_addr_t phys,
--		       pgprot_t flags)
-+void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-+		       phys_addr_t phys, pgprot_t flags)
- {
- 	/* Sanitize 'prot' against any unsupported bits: */
- 	pgprot_val(flags) &= __default_kernel_pte_mask;
+ static inline void cec_ops_give_deck_status(const struct cec_msg *msg,
+@@ -1027,7 +1028,8 @@ static inline void cec_msg_give_tuner_device_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_TUNER_DEVICE_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_TUNER_DEVICE_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_TUNER_DEVICE_STATUS : 0;
+ }
+ 
+ static inline void cec_ops_give_tuner_device_status(const struct cec_msg *msg,
 -- 
 2.20.1
 
