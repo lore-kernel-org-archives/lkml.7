@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF15C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A15420718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074C0222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641497;
-	bh=NEqqSCMhmsp38+t+pI5W8L7zkUlfIuxnhvqGurEPgjA=;
+	s=default; t=1577641500;
+	bh=sARREdcfm0vpuykptTtJgsr9tgcPOczqT4r1+jCHqY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jBc5BH3PslaNtZeDy5DcZrphD474F80BSabX0vI9JpeIKGdIJCVx3j2ADR+Aj37Cw
-	 CZR/sPeQ2bF5ttn5ZtY2vdY4cckGQZomeUhwIzU484LxcKrSwhmm/F0mudzmZQa8MC
-	 bgn6C8arVJLjP6aa8D5NE36myv5TnWZ0g6i02ruw=
+	b=xTh/n6ftREFz5baE2ewBE6hb4UtIwbDVT5uYqI6Pk01xF9AapAXLwNb9uVuy0YQkN
+	 7ptE2CVlAEAxvkG5VDGlXed2gYM0WSzqvOI+RW0uxIVHkV1Ufcnm9ADc9EpKn7BPEU
+	 Je5ltkBCBRtjiOOWlhyVNYE8U7jYWR8kJF9OOGMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbfL2Ro4 (ORCPT
+        id S1730774AbfL2Ro7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:44:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:44:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbfL2Rox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:44:53 -0500
+        id S1730816AbfL2Roy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:44:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865A3206DB;
-        Sun, 29 Dec 2019 17:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02EF920718;
+        Sun, 29 Dec 2019 17:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641492;
-        bh=NEqqSCMhmsp38+t+pI5W8L7zkUlfIuxnhvqGurEPgjA=;
+        s=default; t=1577641494;
+        bh=sARREdcfm0vpuykptTtJgsr9tgcPOczqT4r1+jCHqY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZiySCqPy9WtA9u674xFIRebPUkJBFqoNItPbhzZHBMW/YKuk2sX32W0WapxGxBzK0
-         ww5Nb7MjU3rxVUBFu/O2e9HQ/c5w/kKw2ygklmXTmGo57ATjzsjMuBdA5y3IFj6S4L
-         jgmG3uTb0uG4LN/k4sFHKJj9b2l7Tu3cP7yx8ETs=
+        b=NEaW044HN50xDcR9gRsi7J+BCjWpWAqm/VZZzuqi7qjqUGtMcgj9iDb7zvcMDg7Yb
+         MgCi2+Q5QsJuaKSoW+EPpAJPL8D8s4+FbKvxxOtmDcg3jgdRIdv/ijM8UUbN+gG2+r
+         65VM/gFluhU/Gbsbdp0zy6M2ks0FgaFiBIPcHO1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
-        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Lukasz Majewski <lukma@denx.de>,
+        Mark Brown <broonie@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/434] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
-Date:   Sun, 29 Dec 2019 18:22:21 +0100
-Message-Id: <20191229172707.393155711@linuxfoundation.org>
+Subject: [PATCH 5.4 062/434] spi: Add call to spi_slave_abort() function when spidev driver is released
+Date:   Sun, 29 Dec 2019 18:21:55 +0100
+Message-Id: <20191229172705.916806713@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,118 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+From: Lukasz Majewski <lukma@denx.de>
 
-[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
+[ Upstream commit 9f918a728cf86b2757b6a7025e1f46824bfe3155 ]
 
-Offchannel management frames were failing:
+This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
+in the slave mode (like NXP's dspi driver for Vybrid SoC).
 
-[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
-[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+When SPI HW works in this mode - the master is responsible for providing
+CS and CLK signals. However, when some fault happens - like for example
+distortion on SPI lines - the SPI Linux driver needs a chance to recover
+from this abnormal situation and prepare itself for next (correct)
+transmission.
 
-This bug appears to have been added between 4.0 (which works for us),
-and 4.4, which does not work.
+This change doesn't pose any threat on drivers working in master mode as
+spi_slave_abort() function checks if SPI slave mode is supported.
 
-I think this is because the tx-offchannel logic gets in a loop when
-ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
-sent to the firmware for transmit.
-
-This patch fixes the problem on 4.9 for me, and now HS20 clients
-can work again with my firmware.
-
-Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
-
-Signed-off-by: Ben Greear <greearb@candelatech.com>
-Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
-[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/spi/spidev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 40889b79fc70..a40e1a998f4c 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3708,7 +3708,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 			 struct ieee80211_vif *vif,
- 			 enum ath10k_hw_txrx_mode txmode,
- 			 enum ath10k_mac_tx_path txpath,
--			 struct sk_buff *skb)
-+			 struct sk_buff *skb, bool noque_offchan)
- {
- 	struct ieee80211_hw *hw = ar->hw;
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-@@ -3738,10 +3738,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 		}
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index 255786f2e844..3ea9d8a3e6e8 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -627,6 +627,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		if (dofree)
+ 			kfree(spidev);
  	}
++#ifdef CONFIG_SPI_SLAVE
++	spi_slave_abort(spidev->spi);
++#endif
+ 	mutex_unlock(&device_list_lock);
  
--	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
-+	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
- 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
--			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
--				   skb);
-+			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
-+				   skb, skb->len);
- 
- 			skb_queue_tail(&ar->offchan_tx_queue, skb);
- 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
-@@ -3803,8 +3803,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 
- 		mutex_lock(&ar->conf_mutex);
- 
--		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
--			   skb);
-+		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
-+			   skb, skb->len);
- 
- 		hdr = (struct ieee80211_hdr *)skb->data;
- 		peer_addr = ieee80211_get_DA(hdr);
-@@ -3850,7 +3850,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
- 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
- 
--		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
- 		if (ret) {
- 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
- 				    ret);
-@@ -3860,8 +3860,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		time_left =
- 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
- 		if (time_left == 0)
--			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
--				    skb);
-+			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
-+				    skb, skb->len);
- 
- 		if (!peer && tmp_peer_created) {
- 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
-@@ -4097,7 +4097,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (unlikely(ret)) {
- 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
- 
-@@ -4378,7 +4378,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
- 		if (is_htt) {
+ 	return 0;
 -- 
 2.20.1
 
