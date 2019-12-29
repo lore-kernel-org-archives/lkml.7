@@ -2,58 +2,55 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4A9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B511324655
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697DA206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642500;
-	bh=bVQlczJ7jMd5MYKQymi1wHv05MZrOyQmM6o85fr2iY0=;
+	s=default; t=1577642509;
+	bh=u53Zuqm+MdMRAsLTirKk63Da+BvkVOKaahC09Hyss4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BkH03DpaBeusOMjrHXv42Lf6W/E9wMpPTk7Y/C+xrG6p9are8DjrzY0ZVF4fNRUFO
-	 3jWbZUl63tpC3bA+WQsgZDwYMkVRBZpvWzbp8La7GvRBmKz5ohwSREDiaolhsN7HQx
-	 dgecKAd5VP7xOV3JamS7OKr7RftCpvSNBT02C5DI=
+	b=YOpIXmXxZBVpBMPhop5Em6zw8zTh0rfh0n5CKy1h80WOWNaC85Xy8ppLv17A2oitZ
+	 JifS0Te3z40+7ujsxefBJgzmBRzqY/ICVAWrhGRvzaOK/0FdiBE52E9aVuTLG6da9k
+	 2+svYXLnwKuasaI9+z1T04Ifq8JG7RX2lhiFOOTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbfL2SBj (ORCPT
+        id S1732990AbfL2Rzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:01:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45164 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732775AbfL2R4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:56:01 -0500
+        id S1732972AbfL2Rzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF09206DB;
-        Sun, 29 Dec 2019 17:56:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99262206DB;
+        Sun, 29 Dec 2019 17:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642160;
-        bh=bVQlczJ7jMd5MYKQymi1wHv05MZrOyQmM6o85fr2iY0=;
+        s=default; t=1577642144;
+        bh=u53Zuqm+MdMRAsLTirKk63Da+BvkVOKaahC09Hyss4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hZy/0RKp1YUt7O5s5iKCBT7oXmTp9W+4q0gIt7nkZn2FUxPxSoNEmjcuTssabk/sX
-         v9NyqgrwQicSm2B3DM7roytBADsz2xVE9r7ZfVrlYm5oNaKbgZENmwhL/nFfZ4SMn/
-         ETHlMjSHvI8sxNsR9FiJj0fw5qwpwfR2C1r0HH6I=
+        b=je7fUUOL+uIGIMLEJfibyb9zecGsXhW1h+qzAdBzjgmqOn3YKlQo2C7MzLEyoYfLe
+         dEs9Ap/AYjBTZtUKGziy1yDOWdUWALcBzhxgr/GZdlJ/lP56XWuGvIak/uSCQacLDK
+         woa+MrXtUCFCTThk7/WDd+jdqwdYcemMzWch1OAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Bundy <christianbundy@fraction.io>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Subject: [PATCH 5.4 365/434] tpm_tis: reserve chip for duration of tpm_tis_core_init
-Date:   Sun, 29 Dec 2019 18:26:58 +0100
-Message-Id: <20191229172726.217301407@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 359/434] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
+Date:   Sun, 29 Dec 2019 18:26:52 +0100
+Message-Id: <20191229172725.816512424@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -66,134 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerry Snitselaar <jsnitsel@redhat.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit 21df4a8b6018b842d4db181a8b24166006bad3cd upstream.
+[ Upstream commit b167191e2a851cb2e4c6ef8b91c83ff73ef41872 ]
 
-Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-issuing commands to the tpm during initialization, just reserve the
-chip after wait_startup, and release it when we are ready to call
-tpm_chip_register.
+Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
+napi_gro_receive()") has applied batched GRO_NORMAL packets processing
+to all napi_gro_receive() users, including mac80211-based drivers.
 
-Cc: Christian Bundy <christianbundy@fraction.io>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
-Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
-Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+However, this change has led to a regression in iwlwifi driver [1][2] as
+it is required for NAPI users to call napi_complete_done() or
+napi_complete() and the end of every polling iteration, whilst iwlwifi
+doesn't use NAPI scheduling at all and just calls napi_gro_flush().
+In that particular case, packets which have not been already flushed
+from napi->rx_list stall in it until at least next Rx cycle.
 
+Fix this by adding a manual flushing of the list to iwlwifi driver right
+before napi_gro_flush() call to mimic napi_complete() logics.
+
+I prefer to open-code gro_normal_list() rather than exporting it for 2
+reasons:
+* to prevent from using it and napi_gro_flush() in any new drivers,
+  as it is the *really* bad way to use NAPI that should be avoided;
+* to keep gro_normal_list() static and don't lose any CC optimizations.
+
+I also don't add the "Fixes:" tag as the mentioned commit was only a
+trigger that only exposed an improper usage of NAPI in this particular
+driver.
+
+[1] https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Acked-by: Luca Coelho <luciano.coelho@intel.com>
+Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Tested-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Reviewed-by: Edward Cree <ecree@solarflare.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_tis_core.c |   35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -899,13 +899,13 @@ int tpm_tis_core_init(struct device *dev
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 19dd075f2f63..041dd75ac72b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1429,6 +1429,7 @@ out_err:
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
++	struct napi_struct *napi;
+ 	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
+@@ -1534,8 +1535,16 @@ out:
+ 	if (unlikely(emergency && count))
+ 		iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
  
- 	if (wait_startup(chip, 0) != 0) {
- 		rc = -ENODEV;
--		goto out_err;
-+		goto err_start;
- 	}
- 
- 	/* Take control of the TPM's interrupt hardware and shut it off */
- 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
- 	if (rc < 0)
--		goto out_err;
-+		goto err_start;
- 
- 	intmask |= TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
- 		   TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
-@@ -914,21 +914,21 @@ int tpm_tis_core_init(struct device *dev
- 
- 	rc = tpm_chip_start(chip);
- 	if (rc)
--		goto out_err;
-+		goto err_start;
+-	if (rxq->napi.poll)
+-		napi_gro_flush(&rxq->napi, false);
++	napi = &rxq->napi;
++	if (napi->poll) {
++		if (napi->rx_count) {
++			netif_receive_skb_list(&napi->rx_list);
++			INIT_LIST_HEAD(&napi->rx_list);
++			napi->rx_count = 0;
++		}
 +
- 	rc = tpm2_probe(chip);
--	tpm_chip_stop(chip);
- 	if (rc)
--		goto out_err;
-+		goto err_probe;
++		napi_gro_flush(napi, false);
++	}
  
- 	rc = tpm_tis_read32(priv, TPM_DID_VID(0), &vendor);
- 	if (rc < 0)
--		goto out_err;
-+		goto err_probe;
- 
- 	priv->manufacturer_id = vendor;
- 
- 	rc = tpm_tis_read8(priv, TPM_RID(0), &rid);
- 	if (rc < 0)
--		goto out_err;
-+		goto err_probe;
- 
- 	dev_info(dev, "%s TPM (device-id 0x%X, rev-id %d)\n",
- 		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2",
-@@ -937,13 +937,13 @@ int tpm_tis_core_init(struct device *dev
- 	probe = probe_itpm(chip);
- 	if (probe < 0) {
- 		rc = -ENODEV;
--		goto out_err;
-+		goto err_probe;
- 	}
- 
- 	/* Figure out the capabilities */
- 	rc = tpm_tis_read32(priv, TPM_INTF_CAPS(priv->locality), &intfcaps);
- 	if (rc < 0)
--		goto out_err;
-+		goto err_probe;
- 
- 	dev_dbg(dev, "TPM interface capabilities (0x%x):\n",
- 		intfcaps);
-@@ -977,10 +977,9 @@ int tpm_tis_core_init(struct device *dev
- 		if (tpm_get_timeouts(chip)) {
- 			dev_err(dev, "Could not get TPM timeouts and durations\n");
- 			rc = -ENODEV;
--			goto out_err;
-+			goto err_probe;
- 		}
- 
--		tpm_chip_start(chip);
- 		chip->flags |= TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
-@@ -991,18 +990,20 @@ int tpm_tis_core_init(struct device *dev
- 		} else {
- 			tpm_tis_probe_irq(chip, intmask);
- 		}
--		tpm_chip_stop(chip);
- 	}
- 
-+	tpm_chip_stop(chip);
-+
- 	rc = tpm_chip_register(chip);
- 	if (rc)
--		goto out_err;
--
--	if (chip->ops->clk_enable != NULL)
--		chip->ops->clk_enable(chip, false);
-+		goto err_start;
- 
- 	return 0;
--out_err:
-+
-+err_probe:
-+	tpm_chip_stop(chip);
-+
-+err_start:
- 	if ((chip->ops != NULL) && (chip->ops->clk_enable != NULL))
- 		chip->ops->clk_enable(chip, false);
- 
+ 	iwl_pcie_rxq_restock(trans, rxq);
+ }
+-- 
+2.20.1
+
 
 
