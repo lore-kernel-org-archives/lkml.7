@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E6BC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12616222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4358B207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641833;
-	bh=LPi1426rsVbv0B6jQmiHlJRqJnNTlgPmM7p/7ONp2Lo=;
+	s=default; t=1577641834;
+	bh=lg1eM6eSNzhc2+nPlAyhsXsY4TfqmfwJx2U1+xYisZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kKP3wh1h8msANXCq1tQgbtQgabeM3D+IGLm0exo2hHcjqPs3MzKGIk3PuZxncMpDF
-	 vq5F0lhWfhsAhqkJc8tpP0z52iyoPM6Kuy0htvmMZZSHcmA+QJSSj2CDhwR9EFLTJK
-	 RPj67uaFF15s7T4SRSeHPMJ0rzkdMrWno/hc2JRk=
+	b=lfySyptyeB5Auxcw20awJR5dE9MY5+pQZjmDqTNessOFvotInpyApOK4a02JuiAI3
+	 Iskb10cpkuFksK8YaYF1Njza0s34/ytEr/0iHxm0o63mEqbPIg6PM1CiF05xkXYwjR
+	 27+XtU8I5BYLWbr4QyqySf44aEkZbKnzUg3cN2RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbfL2Rub (ORCPT
+        id S1731896AbfL2Rud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731882AbfL2Ru3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:29 -0500
+        id S1731446AbfL2Ruc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37E20222C3;
-        Sun, 29 Dec 2019 17:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA72821744;
+        Sun, 29 Dec 2019 17:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641828;
-        bh=LPi1426rsVbv0B6jQmiHlJRqJnNTlgPmM7p/7ONp2Lo=;
+        s=default; t=1577641831;
+        bh=lg1eM6eSNzhc2+nPlAyhsXsY4TfqmfwJx2U1+xYisZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qdli3PaVTf5TmqA2hTNDBWt0NimAVUhHFdguZ1IU5+Rf1Z7UHzlNSSpNdqKLs7Ttd
-         KdFHqvkoz0pds2ZrQBc/rcq+IHs/NTlOOwjZi90XUScIOffscZKKHWepLmSFNz88Q8
-         ncwL8Gxiv0zcd/CjxCw3v4+uuF6cVAuENUSkiD9M=
+        b=WvYULXVG0MjlopPusgd6iRkv/KMCkcOrixp4Nx69EzYI+cTRikEIYh1Y7PoNQKNuR
+         VTHnmaydvDSJpSr+WBJtuNCOJQ+JYGntkWLZulhRgCXVO6FCIG6SjBN+8ox6DdYDph
+         cY9T1rQGNmWaHc9r11/GBPRgQGIAHeWc05/4OlHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 191/434] drm/amd/display: correctly populate dpp refclk in fpga
-Date:   Sun, 29 Dec 2019 18:24:04 +0100
-Message-Id: <20191229172714.509042266@linuxfoundation.org>
+Subject: [PATCH 5.4 227/434] cpufreq: sun50i: Fix CPU speed bin detection
+Date:   Sun, 29 Dec 2019 18:24:40 +0100
+Message-Id: <20191229172716.941563070@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,61 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 952f6c4b5d72d40f93f3deb61239290b357d434e ]
+[ Upstream commit c23734487fb44ee16c1b007ba72d793c085e4ec4 ]
 
-[Why]
-In diags environment we are not programming the DPP DTO
-correctly.
+I have observed failures to boot on Orange Pi 3, because this driver
+determined that my SoC is from the normal bin, but my SoC only works
+reliably with the OPP values for the slowest bin.
 
-[How]
-Populate the dpp refclk in dccg so it can be used to correctly
-program DPP DTO.
+By querying H6 owners, it was found that e-fuse values found in the wild
+are in the range of 1-3, value of 7 was not reported, yet. From this and
+from unused defines in BSP code, it can be assumed that meaning of efuse
+values on H6 actually is:
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+- 1 = slowest bin
+- 2 = normal bin
+- 3 = fastest bin
+
+Vendor code actually treats 0 and 2 as invalid efuse values, but later
+treats all invalid values as a normal bin. This looks like a mistake in
+bin detection code, that was plastered over by a hack in cpufreq code,
+so let's not repeat it here. It probably only works because there are no
+SoCs in the wild with efuse value of 0, and fast bin SoCs are made to
+use normal bin OPP tables, which is also safe.
+
+Let's play it safe and interpret 0 as the slowest bin, but fix detection
+of other bins to match this research. More research will be done before
+actual OPP tables are merged.
+
+Fixes: f328584f7bff ("cpufreq: Add sun50i nvmem based CPU scaling driver")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c | 25 ++++++++++---------------
+ 1 file changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
-index 3e8ac303bd52..23ec283eb07b 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
-@@ -320,6 +320,8 @@ void dcn2_update_clocks_fpga(struct clk_mgr *clk_mgr,
- 		struct dc_state *context,
- 		bool safe_to_lower)
- {
-+	struct clk_mgr_internal *clk_mgr_int = TO_CLK_MGR_INTERNAL(clk_mgr);
+diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+index eca32e443716..9907a165135b 100644
+--- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
++++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+@@ -25,7 +25,7 @@
+ static struct platform_device *cpufreq_dt_pdev, *sun50i_cpufreq_pdev;
+ 
+ /**
+- * sun50i_cpufreq_get_efuse() - Parse and return efuse value present on SoC
++ * sun50i_cpufreq_get_efuse() - Determine speed grade from efuse value
+  * @versions: Set to the value parsed from efuse
+  *
+  * Returns 0 if success.
+@@ -69,21 +69,16 @@ static int sun50i_cpufreq_get_efuse(u32 *versions)
+ 		return PTR_ERR(speedbin);
+ 
+ 	efuse_value = (*speedbin >> NVMEM_SHIFT) & NVMEM_MASK;
+-	switch (efuse_value) {
+-	case 0b0001:
+-		*versions = 1;
+-		break;
+-	case 0b0011:
+-		*versions = 2;
+-		break;
+-	default:
+-		/*
+-		 * For other situations, we treat it as bin0.
+-		 * This vf table can be run for any good cpu.
+-		 */
 +
- 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
- 	/* Min fclk = 1.2GHz since all the extra scemi logic seems to run off of it */
- 	int fclk_adj = new_clocks->fclk_khz > 1200000 ? new_clocks->fclk_khz : 1200000;
-@@ -357,14 +359,18 @@ void dcn2_update_clocks_fpga(struct clk_mgr *clk_mgr,
- 		clk_mgr->clks.dispclk_khz = new_clocks->dispclk_khz;
- 	}
++	/*
++	 * We treat unexpected efuse values as if the SoC was from
++	 * the slowest bin. Expected efuse values are 1-3, slowest
++	 * to fastest.
++	 */
++	if (efuse_value >= 1 && efuse_value <= 3)
++		*versions = efuse_value - 1;
++	else
+ 		*versions = 0;
+-		break;
+-	}
  
--	/* Both fclk and dppclk ref are run on the same scemi clock so we
--	 * need to keep the same value for both
-+	/* Both fclk and ref_dppclk run on the same scemi clock.
-+	 * So take the higher value since the DPP DTO is typically programmed
-+	 * such that max dppclk is 1:1 with ref_dppclk.
- 	 */
- 	if (clk_mgr->clks.fclk_khz > clk_mgr->clks.dppclk_khz)
- 		clk_mgr->clks.dppclk_khz = clk_mgr->clks.fclk_khz;
- 	if (clk_mgr->clks.dppclk_khz > clk_mgr->clks.fclk_khz)
- 		clk_mgr->clks.fclk_khz = clk_mgr->clks.dppclk_khz;
- 
-+	// Both fclk and ref_dppclk run on the same scemi clock.
-+	clk_mgr_int->dccg->ref_dppclk = clk_mgr->clks.fclk_khz;
-+
- 	dm_set_dcn_clocks(clk_mgr->ctx, &clk_mgr->clks);
- }
- 
+ 	kfree(speedbin);
+ 	return 0;
 -- 
 2.20.1
 
