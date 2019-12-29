@@ -2,55 +2,56 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6276C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4229FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEAA227BF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD9C206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642335;
-	bh=SXZtoj1N8So8wM9gNNkosrmKnhPrW8PSoe/zswMBiOs=;
+	s=default; t=1577642339;
+	bh=+hfMZu4utFr+JkBt/yrr4yw7uYIzzkrDyjpekVgkpE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGFFPP096OQf6nRAqPTH1Mi2XqXVLR/9uphSyjsOmlCQ1bYxWpz6UhKeacXQ/Egiz
-	 BwSYvxd4Z+bvkSkf+2lAiNUOMrmqktcgaMQTzSp4qRF+GFeKj7P4wlZwmnzchSTFkK
-	 wDFYAKYf1PLIy4LEoekyVUUongqbCC2Z7xwd08zM=
+	b=yys8pnrfSwpuZNM5Ba/8+Vqwhb57V6YwR0QVqJMqO/W+E7XtZeGSURnaqT72Pw3rU
+	 qPmt9ewTB/CWi4xitXP+iXGpdwopmoObpU0wXxOjBCVvd1Sh8PVYzmRo8spey9u1Qd
+	 5RqVHucO847Pvh/m4U/5sb0Ln5Sod6kjtmZy1YKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387637AbfL2R6y (ORCPT
+        id S2387647AbfL2R66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:58:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbfL2R6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:51 -0500
+        id S1733207AbfL2R6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24EB32253D;
-        Sun, 29 Dec 2019 17:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65F3C24650;
+        Sun, 29 Dec 2019 17:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642330;
-        bh=SXZtoj1N8So8wM9gNNkosrmKnhPrW8PSoe/zswMBiOs=;
+        s=default; t=1577642332;
+        bh=+hfMZu4utFr+JkBt/yrr4yw7uYIzzkrDyjpekVgkpE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fUS2LcbauC8lHEfOOkRKXTV0zBih+U3dhbX3vDklueQBixsooLpfyC9ppwmpV8TIf
-         VeMpx/E+Tl76ENu8X7wD+4E+boJ/NUMJkzA8GxWTGHntWbzG2cE9wSd0PLv0XiPIk4
-         6CmSTFtE/o+XWgHpWk4n8ruMjjLm0AYVxr+hs0QY=
+        b=Q8MHASBiK2BZZ6ZFQH0hl7Ur0xFYQMoG/U0GbG0As7jIXOjpENML/dWdQYq8VxJwi
+         ayDbHoNOcOco1ONufFNHHbJxJflmY15W+LdzAUIVFa+ZxbAxFl7ZzymBFybusn5MmB
+         oqP79XZ1+Yr4v3TOjSHzxi+xd++q3kl2offkfDzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org,
+        "=?UTF-8?q?Jan=20H . =20Sch=C3=B6nherr?=" <jschoenh@amazon.de>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
         linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
-Subject: [PATCH 5.4 422/434] x86/MCE/AMD: Allow Reserved types to be overwritten in smca_banks[]
-Date:   Sun, 29 Dec 2019 18:27:55 +0100
-Message-Id: <20191229172731.152674776@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Yazen Ghannam <Yazen.Ghannam@amd.com>
+Subject: [PATCH 5.4 423/434] x86/mce: Fix possibly incorrect severity calculation on AMD
+Date:   Sun, 29 Dec 2019 18:27:56 +0100
+Message-Id: <20191229172731.249449127@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,96 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Jan H. Schönherr <jschoenh@amazon.de>
 
-commit 966af20929ac24360ba3fac5533eb2ab003747da upstream.
+commit a3a57ddad061acc90bef39635caf2b2330ce8f21 upstream.
 
-Each logical CPU in Scalable MCA systems controls a unique set of MCA
-banks in the system. These banks are not shared between CPUs. The bank
-types and ordering will be the same across CPUs on currently available
-systems.
+The function mce_severity_amd_smca() requires m->bank to be initialized
+for correct operation. Fix the one case, where mce_severity() is called
+without doing so.
 
-However, some CPUs may see a bank as Reserved/Read-as-Zero (RAZ) while
-other CPUs do not. In this case, the bank seen as Reserved on one CPU is
-assumed to be the same type as the bank seen as a known type on another
-CPU.
-
-In general, this occurs when the hardware represented by the MCA bank
-is disabled, e.g. disabled memory controllers on certain models, etc.
-The MCA bank is disabled in the hardware, so there is no possibility of
-getting an MCA/MCE from it even if it is assumed to have a known type.
-
-For example:
-
-Full system:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          UMC
-	 2    |         CS          |          CS
-
-System with hardware disabled:
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         UMC         |          RAZ
-	 2    |         CS          |          CS
-
-For this reason, there is a single, global struct smca_banks[] that is
-initialized at boot time. This array is initialized on each CPU as it
-comes online. However, the array will not be updated if an entry already
-exists.
-
-This works as expected when the first CPU (usually CPU0) has all
-possible MCA banks enabled. But if the first CPU has a subset, then it
-will save a "Reserved" type in smca_banks[]. Successive CPUs will then
-not be able to update smca_banks[] even if they encounter a known bank
-type.
-
-This may result in unexpected behavior. Depending on the system
-configuration, a user may observe issues enumerating the MCA
-thresholding sysfs interface. The issues may be as trivial as sysfs
-entries not being available, or as severe as system hangs.
-
-For example:
-
-	Bank  |  Type seen on CPU0  |  Type seen on CPU1
-	------------------------------------------------
-	 0    |         LS          |          LS
-	 1    |         RAZ         |          UMC
-	 2    |         CS          |          CS
-
-Extend the smca_banks[] entry check to return if the entry is a
-non-reserved type. Otherwise, continue so that CPUs that encounter a
-known bank type can update smca_banks[].
-
-Fixes: 68627a697c19 ("x86/mce/AMD, EDAC/mce_amd: Enumerate Reserved SMCA bank type")
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Fixes: 6bda529ec42e ("x86/mce: Grade uncorrected errors for SMCA-enabled systems")
+Fixes: d28af26faa0b ("x86/MCE: Initialize mce.bank in the case of a fatal error in mce_no_way_out()")
+Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: linux-edac <linux-edac@vger.kernel.org>
 Cc: <stable@vger.kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191121141508.141273-1-Yazen.Ghannam@amd.com
+Cc: Yazen Ghannam <Yazen.Ghannam@amd.com>
+Link: https://lkml.kernel.org/r/20191210000733.17979-4-jschoenh@amazon.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/amd.c |    2 +-
+ arch/x86/kernel/cpu/mce/core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -266,7 +266,7 @@ static void smca_configure(unsigned int
- 	smca_set_misc_banks_map(bank, cpu);
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -814,8 +814,8 @@ static int mce_no_way_out(struct mce *m,
+ 		if (quirk_no_way_out)
+ 			quirk_no_way_out(i, m, regs);
  
- 	/* Return early if this bank was already initialized. */
--	if (smca_banks[bank].hwid)
-+	if (smca_banks[bank].hwid && smca_banks[bank].hwid->hwid_mcatype != 0)
- 		return;
- 
- 	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
++		m->bank = i;
+ 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
+-			m->bank = i;
+ 			mce_read_aux(m, i);
+ 			*msg = tmp;
+ 			return 1;
 
 
