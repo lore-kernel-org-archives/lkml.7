@@ -2,53 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF95FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FECC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACDE207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7739C207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643487;
-	bh=10Bch39nQdG2FDKAX+xNLwifrBrfE1LyaeBkCA4N98E=;
+	s=default; t=1577643495;
+	bh=+2OIqPYWEhzwDaRzZw5OrWASZkpO39ITGj4mIkshvJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dz1MegMvf4AVRHH0Jo5N5AFBn32o5jb+Uunzpa+aMz3vWeWuX3K/22eA3akUFOPzE
-	 edY7+xHMuD9/MFnLwSjuMe2kADUgs2i/niTCWl84OkTRkmLWcoaKdjZYzuuYQiqGEP
-	 ZwA1wa98ojhzS58uIiHkpoK1fBgep3WEPf/MCG8c=
+	b=fClt3SIQkAoQvz6RiTSPsGzOHwMdFdTi8H7dvwOWmixH0wAEevD37WtWuZ2ji5oXN
+	 OUlESZ92dfk0yPILym3nvveErQv5ZXvpAKX4Irv9iMcZjyrZpLJDRIRzl0Bmn8IJbz
+	 emK2lSaiAruFAk4digJQn3pnzDtI1pjLJGu5/Yno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfL2SSG (ORCPT
+        id S1727118AbfL2RVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:18:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38250 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbfL2RWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:10 -0500
+        id S1727056AbfL2RVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EE6222D9;
-        Sun, 29 Dec 2019 17:22:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF66208E4;
+        Sun, 29 Dec 2019 17:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640129;
-        bh=10Bch39nQdG2FDKAX+xNLwifrBrfE1LyaeBkCA4N98E=;
+        s=default; t=1577640108;
+        bh=+2OIqPYWEhzwDaRzZw5OrWASZkpO39ITGj4mIkshvJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o27vU7U9GL5ZlNzwFa7ATH89AuwX+9LEENfpJyYqQdYl3zPJLTks5NywzPoSSJ6Ah
-         wzbJ7UYOWglrJ7Og1a42BWZphlRcssVe5ml3n3e6KqI6UfrV96C0KGhl4t+pt8zem8
-         gwbEzeCEVyPKxJgPol0rljusg4MHhOQQlL7CtPxk=
+        b=eq91J3o1toy3WqJbSBDXU7cABmYTqBRL7N8s6j9L57MKoGBI4IMIPPc1TqURk6g0J
+         0lob7yLeAlYzZJjQ56LY0tvGykZppLf9JUZaOzdeDPySVUVa+Szt7pFiEiTqgz3SWL
+         Dyg75m2GAgVAIyMpxmHDYbs/C8bHzpKnN/QvfiKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 003/161] mod_devicetable: fix PHY module format
-Date:   Sun, 29 Dec 2019 18:17:31 +0100
-Message-Id: <20191229162356.570646860@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 021/161] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Sun, 29 Dec 2019 18:17:49 +0100
+Message-Id: <20191229162403.729799439@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,43 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89 ]
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-When a PHY is probed, if the top bit is set, we end up requesting a
-module with the string "mdio:-10101110000000100101000101010001" -
-the top bit is printed to a signed -1 value. This leads to the module
-not being loaded.
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-Fix the module format string and the macro generating the values for
-it to ensure that we only print unsigned types and the top bit is
-always 0/1. We correctly end up with
-"mdio:10101110000000100101000101010001".
-
-Fixes: 8626d3b43280 ("phylib: Support phy module autoloading")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -519,9 +519,9 @@ struct platform_device_id {
- #define MDIO_NAME_SIZE		32
- #define MDIO_MODULE_PREFIX	"mdio:"
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index 9385eb0b1ee4..cd2bfd7bf048 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -725,7 +725,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
++
+ 		return PTR_ERR(pdata->dvdd10);
+ 	}
  
--#define MDIO_ID_FMT "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d"
-+#define MDIO_ID_FMT "%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u"
- #define MDIO_ID_ARGS(_id) \
--	(_id)>>31, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1,	\
-+	((_id)>>31) & 1, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1, \
- 	((_id)>>27) & 1, ((_id)>>26) & 1, ((_id)>>25) & 1, ((_id)>>24) & 1, \
- 	((_id)>>23) & 1, ((_id)>>22) & 1, ((_id)>>21) & 1, ((_id)>>20) & 1, \
- 	((_id)>>19) & 1, ((_id)>>18) & 1, ((_id)>>17) & 1, ((_id)>>16) & 1, \
+@@ -1344,7 +1346,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++
+ 		return err;
+ 	}
+ 
+-- 
+2.20.1
+
 
 
