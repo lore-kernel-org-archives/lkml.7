@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E14C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B3EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4D4206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488C0207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643355;
-	bh=q1/he2EfXt5nQp9ZqmuO8TiTXA8PEDSCyJ2DCUUTebQ=;
+	s=default; t=1577643359;
+	bh=1kjiACzzmBDRnaMcPKB7BhWUdRlYWY44pWKR3t+0fbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oF834TEszTfav6wRRt+Dc4ixhs+ti2YB99R2VXFfxSx9BTcrXuCpP4h7H22EEb0Mu
-	 Bx4+h1108CzvaNw5W4ShHAbAMexVPs9aWhNIGj4F5KJ5bSwh2y047QVj6TXPQyfWLl
-	 TZcPWfNIKhtIj4WNE9CYUWpCDFRhYwV1Ka9/SX6Y=
+	b=tdwf4TLFvwlrBvEQlD3qUMjmokXvKNWjRcuIgvZAui+LXYTLqLgwq4KP093tKs0Vw
+	 7gdSdX3H44azvbNcdtGYcqiA6QuUQ+z2dWseZANLJBGnUbK9S60e95Y/TL6zfJR6yY
+	 WS7Be0NLxauWzZ/XQT1/QRbMxzr7+JuOJpi3NL+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfL2RZC (ORCPT
+        id S1728441AbfL2SP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbfL2RY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:57 -0500
+        id S1727846AbfL2RY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC9DB20722;
-        Sun, 29 Dec 2019 17:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5898221744;
+        Sun, 29 Dec 2019 17:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640296;
-        bh=q1/he2EfXt5nQp9ZqmuO8TiTXA8PEDSCyJ2DCUUTebQ=;
+        s=default; t=1577640298;
+        bh=1kjiACzzmBDRnaMcPKB7BhWUdRlYWY44pWKR3t+0fbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d12A3Z9sTSnjMHAkPp1H0zh5BUkWb4fU+8rXzROf0P+vyM15CG9whDbNq3rPrNw5s
-         +73hpaOijfZ0/kgqrwesFnHD5jGTb0O+zwhZPqR8vAc9f0YAhce6BoYdLHMIan3HZx
-         Z2nWjtm2LPnmBFbcL8ziwfYtv/9sJxptdSr1XR/4=
+        b=tGuhwH9CyGWuM3CIr9qFvEShbaDJJs6K5ymQbSRIWa9NnQFl4T+psXAlmDuUcw2s7
+         FFSdxWaBgOOJ7bDKSB+pDwmPqmkyO25M+8PpMSOT+QqK2PNFMk+jfdh4Jwvsi3hGeh
+         bvLy43kYzvOYED/tST2VOVzsucAfThhwMDYFB7/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 099/161] perf probe: Fix to probe a function which has no entry pc
-Date:   Sun, 29 Dec 2019 18:19:07 +0100
-Message-Id: <20191229162426.791842131@linuxfoundation.org>
+Subject: [PATCH 4.14 100/161] drm/amdgpu: fix potential double drop fence reference
+Date:   Sun, 29 Dec 2019 18:19:08 +0100
+Message-Id: <20191229162426.880998945@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -63,94 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
+[ Upstream commit 946ab8db6953535a3a88c957db8328beacdfed9d ]
 
-Fix 'perf probe' to probe a function which has no entry pc or low pc but
-only has ranges attribute.
+The object fence is not set to NULL after its reference is dropped. As a
+result, its reference may be dropped again if error occurs after that,
+which may lead to a use after free bug. To avoid the issue, fence is
+explicitly set to NULL after dropping its reference.
 
-probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
-but that doesn't work for the function DIE which has only ranges
-attribute. Use die_entrypc() instead.
-
-Without this fix:
-
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-
-With this:
-
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]#
-
-Using it with 'perf trace':
-
-  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
-
-Doesn't seem to be used in x86_64:
-
-  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
-  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
-  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
-  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
-  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
-  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
-  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
-  $
-
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index b06b05bd488e..aa6b35726976 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1005,7 +1005,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
- 		param->retval = find_probe_point_by_line(pf);
- 	} else if (die_is_func_instance(sp_die)) {
- 		/* Instances always have the entry address */
--		dwarf_entrypc(sp_die, &pf->addr);
-+		die_entrypc(sp_die, &pf->addr);
- 		/* But in some case the entry address is 0 */
- 		if (pf->addr == 0) {
- 			pr_debug("%s has no entry PC. Skipped\n",
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
+index ed8c3739015b..b35b0741fd97 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_test.c
+@@ -125,6 +125,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
+ 		}
+ 
+ 		dma_fence_put(fence);
++		fence = NULL;
+ 
+ 		r = amdgpu_bo_kmap(vram_obj, &vram_map);
+ 		if (r) {
+@@ -170,6 +171,7 @@ static void amdgpu_do_test_moves(struct amdgpu_device *adev)
+ 		}
+ 
+ 		dma_fence_put(fence);
++		fence = NULL;
+ 
+ 		r = amdgpu_bo_kmap(gtt_obj[i], &gtt_map);
+ 		if (r) {
 -- 
 2.20.1
 
