@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8B2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254EAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D6021744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0077421D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640355;
-	bh=uoCCVQ2E57o2gFfchddEt7qarpWnf+VxEsTdlCEr9+Q=;
+	s=default; t=1577640358;
+	bh=+vL5qCyh3Qu4QHvTA6KuZ8NyS0MBsGFdnV6ORna5JkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSpjdczJppogY8NosRyu24inRQ2FLGyW7IGfvxAwDWULXG35z6jhVW5cVZ2QnBFtM
-	 JAvLUVqBhfnZpCsISZgN871nVYFBVBzJauPRO7KzLfC7tACx1mAqh7nhQuCeC54kQT
-	 4hrk44T9oT54U6kSSoDgK7Pn1NCV/sEsb7HfUQFo=
+	b=RmZVCITWcOtTpFYInmIOUznly0OSlXYxcfvqslRXt22zR/BAqtmAtDI5tFFJgshrj
+	 LuhhLVG/RHEJ3DcHxw9ePGdMOWGDWDrKXuPnBrJAXKKWycyIPutVhJbco/hmQFQEyl
+	 3BaJusVQrd7s2ow2DVVz+Qw8g3sFNLtqqz9ZAmaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfL2RZy (ORCPT
+        id S1728094AbfL2RZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfL2RZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:50 -0500
+        id S1728055AbfL2RZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4675222C3;
-        Sun, 29 Dec 2019 17:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B7C207FF;
+        Sun, 29 Dec 2019 17:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640349;
-        bh=uoCCVQ2E57o2gFfchddEt7qarpWnf+VxEsTdlCEr9+Q=;
+        s=default; t=1577640354;
+        bh=+vL5qCyh3Qu4QHvTA6KuZ8NyS0MBsGFdnV6ORna5JkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y82w45mdpUIvw5Az2/09XP8MwdL3jrh3WsLVg2wezDm1RNd6wKvVNezLiUEvK4WyD
-         Ho/1uuep1hgpwaZh2jnVnPId9l7hUz6I7R/H6SzjC/p1ABDNX550NVuY9peybv6enM
-         9gbBuKwPcez2HsjY7sAUBRoSy0mA2Be4KW5wvTjE=
+        b=16+5oVpNAAi9NwnO+3N/irrtUFzIARQZrnnpbaUSvRjvTBH7w/vtwjXY5h5iYKWQe
+         abvoQRkaGjbf1/KYUc0XrhtUnlwx/86fR9p/0iJbgkkVQmc+xykbwkssQt1tH3rM44
+         4iOh7fWWELgBB+OQWPjd+RKH7XS5JqFZEjbLJtmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/161] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Sun, 29 Dec 2019 18:19:27 +0100
-Message-Id: <20191229162434.759414101@linuxfoundation.org>
+Subject: [PATCH 4.14 085/161] media: rcar_drif: fix a memory disclosure
+Date:   Sun, 29 Dec 2019 18:18:53 +0100
+Message-Id: <20191229162424.957260467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,48 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
+like msi2500 and airspy do, the fix initializes it to avoid
+memory disclosures.
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
-
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
-
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/platform/rcar_drif.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index c73e4be9bde3..c31303d13069 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -62,6 +62,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -290,7 +291,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
+diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
+index 522364ff0d5d..3871ed6a1fcb 100644
+--- a/drivers/media/platform/rcar_drif.c
++++ b/drivers/media/platform/rcar_drif.c
+@@ -915,6 +915,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
+ {
+ 	struct rcar_drif_sdr *sdr = video_drvdata(file);
  
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
++	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
+ 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
+ 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
+ 
 -- 
 2.20.1
 
