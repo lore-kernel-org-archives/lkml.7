@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9474BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1458C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E74F207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750D420748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640078;
-	bh=vqN//cymZ68NbhQjoYEXAX0htWcsZybp6qkvWdf5VHI=;
+	s=default; t=1577640083;
+	bh=1i4P+Wkns+sIIvz2JMeKiB0iO7jycglpbw/FVhMOcO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0OUOwjOghK+Kt4EACL53KMyjpHdwt0sqjN/7oTnblhw/Q2BgghOaRVXWW8pOuP0+
-	 Y/xlArPN5Ho+yAoGTXIT1qVuDPU6JiP+Tnh5DRDgTZpUj69lcjXG8EUY9wcD+5Z8KB
-	 pG9/0nuSBtkrFWpLI7Im+pgyPYPbUqNh/Ed14u2A=
+	b=CCd6ARvGwek+cjbcbI7qQbWVGMFieOMFTEeP/d1SvH0B3HldBIlwLkaBGSSvzibxU
+	 xKi0QF6Ucz6mh0SW1LB/UfAwKpp2WPh2faApSx7IzxIQB+t4v0BQtYONjzBC658MMf
+	 v1aVEQoPTEkY3kwm1B+62Z1J2fAHrI/XbHyp1BVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfL2RVR (ORCPT
+        id S1726675AbfL2RVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfL2RVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:17 -0500
+        id S1726264AbfL2RVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CE120748;
-        Sun, 29 Dec 2019 17:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDBA9207FD;
+        Sun, 29 Dec 2019 17:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640076;
-        bh=vqN//cymZ68NbhQjoYEXAX0htWcsZybp6qkvWdf5VHI=;
+        s=default; t=1577640079;
+        bh=1i4P+Wkns+sIIvz2JMeKiB0iO7jycglpbw/FVhMOcO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwNu4EES0PVVqS1m1s2+Q3CuHVsJYC3PbMRLe4KFzgIWDsPJylLktzuv+IguWq8Nl
-         RVyQv2SDNAlzOzloWXubVH4Wbj0oioXy+9mIz4HqIcTypM50JkF4i0jvclTvc7OiZH
-         2IvX5r02yDzoFp9p1P0THeBa2WmX1DS2miMSPz2M=
+        b=11K9Z7/GaYcjCwIaY+1iPtluIyH7XWM+nRzURwSqmettCObjODFnFwQ/XlhgdP42z
+         CVoHwczjEEz85Wj2YD2u49Jb/B3Yd3ci4K6fOCkm4WE2zxDGjc/BZ8MZSSjCC2XhYr
+         EfJovFTqTmM6Eax3Q0r9Yl1hr0g8IfM54ProBvjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org,
+        syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 001/161] af_packet: set defaule value for tmo
-Date:   Sun, 29 Dec 2019 18:17:29 +0100
-Message-Id: <20191229162356.005510929@linuxfoundation.org>
+Subject: [PATCH 4.14 010/161] sctp: fully initialize v4 addr in some functions
+Date:   Sun, 29 Dec 2019 18:17:38 +0100
+Message-Id: <20191229162358.955729034@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,54 +62,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
+[ Upstream commit b6f3320b1d5267e7b583a6d0c88dda518101740c ]
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+Syzbot found a crash:
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
+  BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
+  BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
+  BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+  Call Trace:
+    crc32_body lib/crc32.c:112 [inline]
+    crc32_le_generic lib/crc32.c:179 [inline]
+    __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+    chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
+    crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
+    crc32c+0x150/0x220 lib/libcrc32c.c:47
+    sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
+    __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
+    sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
+    sctp_packet_pack net/sctp/output.c:528 [inline]
+    sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
+    sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
+    sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
+    sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
+    sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
+    sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
+    sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
+    sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+    sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+    sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+    sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
 
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+The issue was caused by transport->ipaddr set with uninit addr param, which
+was passed by:
+
+  sctp_transport_init net/sctp/transport.c:47 [inline]
+  sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
+  sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
+  sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
+
+where 'addr' is set by sctp_v4_from_addr_param(), and it doesn't initialize
+the padding of addr->v4.
+
+Later when calling sctp_make_heartbeat(), hbinfo.daddr(=transport->ipaddr)
+will become the part of skb, and the issue occurs.
+
+This patch is to fix it by initializing the padding of addr->v4 in
+sctp_v4_from_addr_param(), as well as other functions that do the similar
+thing, and these functions shouldn't trust that the caller initializes the
+memory, as Marcelo suggested.
+
+Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sctp/protocol.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -593,7 +593,8 @@ static int prb_calc_retire_blk_tmo(struc
- 			msec = 1;
- 			div = ecmd.base.speed / 1000;
- 		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -253,6 +253,7 @@ static void sctp_v4_from_skb(union sctp_
+ 		sa->sin_port = sh->dest;
+ 		sa->sin_addr.s_addr = ip_hdr(skb)->daddr;
+ 	}
++	memset(sa->sin_zero, 0, sizeof(sa->sin_zero));
+ }
  
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
+ /* Initialize an sctp_addr from a socket. */
+@@ -261,6 +262,7 @@ static void sctp_v4_from_sk(union sctp_a
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = 0;
+ 	addr->v4.sin_addr.s_addr = inet_sk(sk)->inet_rcv_saddr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
  
+ /* Initialize sk->sk_rcv_saddr from sctp_addr. */
+@@ -283,6 +285,7 @@ static void sctp_v4_from_addr_param(unio
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = port;
+ 	addr->v4.sin_addr.s_addr = param->v4.addr.s_addr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
+ 
+ /* Initialize an address parameter from a sctp_addr and return the length
+@@ -307,6 +310,7 @@ static void sctp_v4_dst_saddr(union sctp
+ 	saddr->v4.sin_family = AF_INET;
+ 	saddr->v4.sin_port = port;
+ 	saddr->v4.sin_addr.s_addr = fl4->saddr;
++	memset(saddr->v4.sin_zero, 0, sizeof(saddr->v4.sin_zero));
+ }
+ 
+ /* Compare two addresses exactly. */
+@@ -329,6 +333,7 @@ static void sctp_v4_inaddr_any(union sct
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr->v4.sin_port = port;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
+ 
+ /* Is this a wildcard address? */
 
 
