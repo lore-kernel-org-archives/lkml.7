@@ -2,153 +2,101 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF60BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCC1C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B1E20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08386207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577644584;
+	bh=czUisFJmY3fA8ZbN0nGTyeSLt61Fc6iQHasHh+W7A9s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uhrzilsk8NsSt2psQoXB7swXeGIJPgQmC8r/eVlZ3KGVahxyRA1cU0KVhxyHs0o9Q
+	 //vAVjCMmkQwsnMAo04Ptie5VNTfnqmOrz9ifNUEHMPgbgXilCuBEaUk/WvV7jpS0q
+	 S73yzMuDlc33xOLQME+7m7ttR6oMgMMO7ESr+3wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfL2Sex (ORCPT
+        id S1726974AbfL2SgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:34:53 -0500
-Received: from mx1.yrkesakademin.fi ([85.134.45.194]:15928 "EHLO
-        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfL2Sew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 13:34:52 -0500
-Subject: Re: [PATCH 5.4 249/434] perf probe: Fix to show ranges of variables
- in functions without entry_pc
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-References: <20191229172702.393141737@linuxfoundation.org>
- <20191229172718.427913832@linuxfoundation.org>
-From:   Thomas Backlund <tmb@mageia.org>
-Message-ID: <52cea79f-324f-983d-e3d3-a4ee928a1ff3@mageia.org>
-Date:   Sun, 29 Dec 2019 20:34:48 +0200
+        Sun, 29 Dec 2019 13:36:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbfL2SgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 13:36:22 -0500
+Received: from localhost.localdomain (unknown [194.230.155.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B14820748;
+        Sun, 29 Dec 2019 18:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577644582;
+        bh=czUisFJmY3fA8ZbN0nGTyeSLt61Fc6iQHasHh+W7A9s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OjFGQSfOacDRk3KxbOgA5t0fVE9LjnAFKB5NkdlF/9nppBfYnCELFHBJaz+4IHJLO
+         RQtOn4nEMbEsM0lH3UgCE50zZDEZLtlyNHAe6t7KBYvC/ZpmJGTVvrrGKrY6HmxqTm
+         c1leBBunL0FxfS4RhONrX0bAwo2xFf1DGxWIKnrw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/3] mtd: onenand: samsung: Fix pointer cast -Wpointer-to-int-cast warnings on 64 bit
+Date:   Sun, 29 Dec 2019 19:36:10 +0100
+Message-Id: <20191229183612.22133-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191229172718.427913832@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-WatchGuard-Spam-ID: str=0001.0A0C0204.5E08F1CA.0038,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
-X-WatchGuard-Mail-Client-IP: 85.134.45.194
-X-WatchGuard-Mail-From: tmb@mageia.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Den 29-12-2019 kl. 19:25, skrev Greg Kroah-Hartman:
-> From: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> [ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
-> 
-> Fix to show ranges of variables (--range and --vars option) in functions
-> which DIE has only ranges but no entry_pc attribute.
-> 
-> Without this fix:
-> 
->    # perf probe --range -V clear_tasks_mm_cpumask
->    Available variables at clear_tasks_mm_cpumask
->    	@<clear_tasks_mm_cpumask+0>
->    		(No matched variables)
-> 
-> With this fix:
-> 
->    # perf probe --range -V clear_tasks_mm_cpumask
->    Available variables at clear_tasks_mm_cpumask
-> 	@<clear_tasks_mm_cpumask+0>
-> 		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
-> 
-> Committer testing:
-> 
-> Before:
-> 
->    [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
->    Available variables at clear_tasks_mm_cpumask
->            @<clear_tasks_mm_cpumask+0>
->                    (No matched variables)
->    [root@quaco ~]#
-> 
-> After:
-> 
->    [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
->    Available variables at clear_tasks_mm_cpumask
->            @<clear_tasks_mm_cpumask+0>
->                    [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
->    [root@quaco ~]#
-> 
-> Using it:
-> 
->    [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
->    Added new event:
->      probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
-> 
->    You can now use it in all perf tools, such as:
-> 
->    	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-> 
->    [root@quaco ~]# perf probe -l
->      probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
->    [root@quaco ~]#
->    [root@quaco ~]# perf trace -e probe:*cpumask
->    ^C[root@quaco ~]#
-> 
-> Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   tools/perf/util/dwarf-aux.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 929b7c0567f4..4b1890204e99 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -997,7 +997,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
->   	bool first = true;
->   	const char *name;
->   
-> -	ret = dwarf_entrypc(sp_die, &entry);
-> +	ret = die_entrypc(sp_die, &entry);
->   	if (ret)
->   		return ret;
->   
-> @@ -1060,7 +1060,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
->   	bool first = true;
->   	const char *name;
->   
-> -	ret = dwarf_entrypc(sp_die, &entry);
-> +	ret = die_entrypc(sp_die, &entry);
->   	if (ret)
->   		return ret;
->   
-> 
+iomem pointers should be casted to unsigned long to avoid
+-Wpointer-to-int-cast warnings when compiling on 64-bit platform (e.g.
+with COMPILE_TEST):
 
-Still broken...
+    drivers/mtd/nand/onenand/samsung_mtd.c: In function ‘s3c_onenand_readw’:
+    drivers/mtd/nand/onenand/samsung_mtd.c:251:6: warning:
+        cast from pointer to integer of different size [-Wpointer-to-int-cast]
+      if ((unsigned int) addr < ONENAND_DATARAM && onenand->bootram_command) {
+          ^
 
-/usr/bin/ld: perf-in.o: in function `die_get_var_range':
-/work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/dwarf-aux.c:1085: 
-undefined reference to `die_entrypc'
-/usr/bin/ld: perf-in.o: in function `die_get_var_innermost_scope':
-/work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/dwarf-aux.c:1022: 
-undefined reference to `die_entrypc'
-collect2: error: ld returned 1 exit status
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/mtd/nand/onenand/samsung_mtd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---
-Thomas
+diff --git a/drivers/mtd/nand/onenand/samsung_mtd.c b/drivers/mtd/nand/onenand/samsung_mtd.c
+index 55e5536a5850..70501d031db6 100644
+--- a/drivers/mtd/nand/onenand/samsung_mtd.c
++++ b/drivers/mtd/nand/onenand/samsung_mtd.c
+@@ -248,7 +248,7 @@ static unsigned short s3c_onenand_readw(void __iomem *addr)
+ 	}
+ 
+ 	/* BootRAM access control */
+-	if ((unsigned int) addr < ONENAND_DATARAM && onenand->bootram_command) {
++	if ((unsigned long)addr < ONENAND_DATARAM && onenand->bootram_command) {
+ 		if (word_addr == 0)
+ 			return s3c_read_reg(MANUFACT_ID_OFFSET);
+ 		if (word_addr == 1)
+@@ -289,7 +289,7 @@ static void s3c_onenand_writew(unsigned short value, void __iomem *addr)
+ 	}
+ 
+ 	/* BootRAM access control */
+-	if ((unsigned int)addr < ONENAND_DATARAM) {
++	if ((unsigned long)addr < ONENAND_DATARAM) {
+ 		if (value == ONENAND_CMD_READID) {
+ 			onenand->bootram_command = 1;
+ 			return;
+-- 
+2.17.1
+
