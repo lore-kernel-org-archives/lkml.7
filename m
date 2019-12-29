@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22596C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EF7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCEF207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB170206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641743;
-	bh=BMb8aSFa0ymGFpThUa9sw2CQH9f27gnSqqDzguCeN0w=;
+	s=default; t=1577641745;
+	bh=YE6fA8U4hpcf3Who/RGRmXS2l2nWWlDo7ap4HH8yOzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XWUYiPyr0IrSyDKLZyZPH7SofpVsob3/Kil87B9T2Y3q2tj52PtaIqMGnYYFXjUVD
-	 XaCIXfkSXgRmovpW9kdGx4tTp6TDHz2QX0XNrd/W/oLCRsA0S9ERqW9WMmvWqPAk4p
-	 OmOCvrv5fGqoa1NOlm9v1wm5UingK8XbT694z7vM=
+	b=qDs/twEi1lHBE8VLZ0by+fkRnyAERfOr+rf4m1kuxn9c2VQVZmSnIVEfWMqj0J+HL
+	 ebaak6P+YXPNJGOPzpdWhJwZw5tpEkkuH4xxCpPY4CiwLNiQaKmyhdUI9Lz/+niS/Z
+	 nyCAXvUnl8Gnx4ED2swqp/4VwV5sE/scdXns8dbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbfL2RtB (ORCPT
+        id S1731566AbfL2RtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60508 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730855AbfL2Rsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:53 -0500
+        id S1731261AbfL2Rsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:48:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F5C0207FD;
-        Sun, 29 Dec 2019 17:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57D1D207FF;
+        Sun, 29 Dec 2019 17:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641732;
-        bh=BMb8aSFa0ymGFpThUa9sw2CQH9f27gnSqqDzguCeN0w=;
+        s=default; t=1577641734;
+        bh=YE6fA8U4hpcf3Who/RGRmXS2l2nWWlDo7ap4HH8yOzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbZQbwSGflJCvK38hr9yjeHfArBMX4nhv456WLx3+zGeO7XkZ9Ww7Bh+dAmovXx/T
-         nLA1WYQZMk06LXhPTtekC1kr1oYWopL3vqGtVWx26/D6edDLiVIGbvh3ZbPNu71VDV
-         m2qJug0866MYucjCovM/OH3dtitPo76OMbt0TIbw=
+        b=hduXkThxZdhgXMqS53jFbeKQtno58EJRZ3ffS20Nk9ceQVCyjQ+8l8cDGxodaPK8J
+         bkhXOmg7vtXcdv0g6HMRRHjgAiQMrirCAA7ZgTZdOKWMzzYFh+onu9oXdPQ5kgTkR/
+         iQUgR5uPwfY8KMMfHryxNW+a44g0j7CekAo/t5DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, linuxarm@huawei.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 186/434] drm: Dont free jobs in wait_event_interruptible()
-Date:   Sun, 29 Dec 2019 18:23:59 +0100
-Message-Id: <20191229172714.175026654@linuxfoundation.org>
+Subject: [PATCH 5.4 148/434] perf vendor events arm64: Fix Hisi hip08 DDRC PMU eventname
+Date:   Sun, 29 Dec 2019 18:23:21 +0100
+Message-Id: <20191229172711.582498387@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,116 +67,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Price <steven.price@arm.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 588b9828f0744ca13555c4a35cd0251ac8ad8ad2 ]
+[ Upstream commit 84b0975f4853ba32d2d9b3c19ffa2b947f023fb3 ]
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortunately some free callbacks (notably for Panfrost) do sleep.
+The "EventName" for the DDRC precharge command event is incorrect, so
+fix it.
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
-
-Tested-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Fixes: 5918045c4ed4 ("drm/scheduler: rework job destruction")
-Signed-off-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/337652/
+Fixes: 57cc732479ba ("perf jevents: Add support for Hisi hip08 DDRC PMU aliasing")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1567612484-195727-2-git-send-email-john.garry@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 43 ++++++++++++++------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+ .../perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index f39b97ed4ade..2af64459b3d7 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -632,43 +632,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
-+		return NULL;
- 
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -708,12 +706,19 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		if (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			/* queue timeout for next job */
-+			drm_sched_start_timeout(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+index 0d1556fcdffe..99f4fc425564 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+@@ -15,7 +15,7 @@
+    },
+    {
+ 	    "EventCode": "0x04",
+-	    "EventName": "uncore_hisi_ddrc.flux_wr",
++	    "EventName": "uncore_hisi_ddrc.pre_cmd",
+ 	    "BriefDescription": "DDRC precharge commands",
+ 	    "PublicDescription": "DDRC precharge commands",
+ 	    "Unit": "hisi_sccl,ddrc",
 -- 
 2.20.1
 
