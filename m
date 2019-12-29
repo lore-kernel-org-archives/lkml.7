@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984DFC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C83DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B0B208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE9720409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640276;
-	bh=hmWCdqztjAp1Mjdb0Aca23x/E1Qclg6hUE9U9kkaU/Y=;
+	s=default; t=1577640278;
+	bh=XAC7PQHi96qa4UWxS6o55uWp4UYVdUGfXDnuhqGpsAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r0V2pf3WneHrAu1P5sccm0jT1FVPR/evumv3UpDhqsRBfi6UAVJZVYFXxibj8yhG0
-	 i7cmi4iKd7hC5EOWj48Q/d/VyX+4YE1aEGRpK6ADOkV9/gVwvpCRyGi4kY9jO6RwWl
-	 v2M81fZswUN/9qtPlYLh5ml4c94DFI4vWgXuUc6U=
+	b=ND41eV4sphOd+mB/Fuew4DLhyIhlGl9zSMwhuydowzo1q4CBXpnZdMyJWvHPMLhQW
+	 rd/GBgXcHT/nPSmTwx7AJ0YSTbpvOHvrtpoJf96SP+wflI45qgmpq9fSlHwWIZ/q7i
+	 ZpCtgbtNfbGJW4uG/ugCMQO1HeJjFal+leK8vYx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfL2RYf (ORCPT
+        id S1727775AbfL2RYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:24:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43266 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:24:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727739AbfL2RYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:30 -0500
+        id S1727725AbfL2RYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E4FC20722;
-        Sun, 29 Dec 2019 17:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8AB421744;
+        Sun, 29 Dec 2019 17:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640269;
-        bh=hmWCdqztjAp1Mjdb0Aca23x/E1Qclg6hUE9U9kkaU/Y=;
+        s=default; t=1577640272;
+        bh=XAC7PQHi96qa4UWxS6o55uWp4UYVdUGfXDnuhqGpsAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPeDuZUuaezeYtmMPfUISm5AiKgEngTg8ZbrUPkPfBpG4czRq/ygzxiXpUI0FMmqp
-         4GUXhVEPTABmeH0QID9aUa/iiCc7NiesPafYyJxCMYQE7eyfp6y5J1vK93A4xnBkj4
-         vxa5J9SbA6ONp6qncG1Q1LNqYMvwCTAfMjbhGxRg=
+        b=s4cfU9PCZTn+5kZMO0VXlU6G7YxEx24VHAAmkQ0wnRgUEM5nSeZjGuWv6rgOIx+LA
+         QKbPiGcRKFXyzTdGsXacSew4Mlb7iBFBou+B01ghXLzBpX5GV9kVt0RBjrp7hY/Yv4
+         tfZCsVBjj0mTBRJAxcbotb1MyeVWh/49m54q7+ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 089/161] spi: img-spfi: fix potential double release
-Date:   Sun, 29 Dec 2019 18:18:57 +0100
-Message-Id: <20191229162425.412976487@linuxfoundation.org>
+Subject: [PATCH 4.14 090/161] ALSA: timer: Limit max amount of slave instances
+Date:   Sun, 29 Dec 2019 18:18:58 +0100
+Message-Id: <20191229162425.790607612@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,37 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit e9a8ba9769a0e354341bc6cc01b98aadcea1dfe9 ]
+[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
 
-The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
-are released. As a result, they will be released again, either on the
-error handling branch in the same function or in the corresponding
-remove function, i.e. img_spfi_remove(). This patch fixes the bug by
-setting the two members to NULL.
+The fuzzer tries to open the timer instances as much as possible, and
+this may cause a system hiccup easily.  We've already introduced the
+cap for the max number of available instances for the h/w timers, and
+we should put such a limit also to the slave timers, too.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Link: https://lore.kernel.org/r/1573007769-20131-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch introduces the limit to the multiple opened slave timers.
+The upper limit is hard-coded to 1000 for now, which should suffice
+for any practical usages up to now.
+
+Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-img-spfi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/core/timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
-index 7a37090dabbe..2e65b70c7879 100644
---- a/drivers/spi/spi-img-spfi.c
-+++ b/drivers/spi/spi-img-spfi.c
-@@ -673,6 +673,8 @@ static int img_spfi_probe(struct platform_device *pdev)
- 			dma_release_channel(spfi->tx_ch);
- 		if (spfi->rx_ch)
- 			dma_release_channel(spfi->rx_ch);
-+		spfi->tx_ch = NULL;
-+		spfi->rx_ch = NULL;
- 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
- 	} else {
- 		master->dma_tx = spfi->tx_ch;
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index c60dfd52e8a6..22589a073423 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -88,6 +88,9 @@ static LIST_HEAD(snd_timer_slave_list);
+ /* lock for slave active lists */
+ static DEFINE_SPINLOCK(slave_active_lock);
+ 
++#define MAX_SLAVE_INSTANCES	1000
++static int num_slaves;
++
+ static DEFINE_MUTEX(register_mutex);
+ 
+ static int snd_timer_free(struct snd_timer *timer);
+@@ -266,6 +269,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			err = -EINVAL;
+ 			goto unlock;
+ 		}
++		if (num_slaves >= MAX_SLAVE_INSTANCES) {
++			err = -EBUSY;
++			goto unlock;
++		}
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+ 			err = -ENOMEM;
+@@ -275,6 +282,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
++		num_slaves++;
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+ 			snd_timer_close_locked(timeri, &card_dev_to_put);
+@@ -364,6 +372,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
+ 	struct snd_timer_instance *slave, *tmp;
+ 
+ 	list_del(&timeri->open_list);
++	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
++		num_slaves--;
+ 
+ 	/* force to stop the timer */
+ 	snd_timer_stop(timeri);
 -- 
 2.20.1
 
