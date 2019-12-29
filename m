@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFE3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0720C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477CE206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740A8222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641807;
-	bh=3qZ3zesu2bV1ziOVkNy78TVbF6kGtDhhyFGoCLvY+zk=;
+	s=default; t=1577641809;
+	bh=adnTbLNbCgc7r4M44ql6h79pWXDDmFVkyj8/+tHGYUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r5GWfK9BPw7SV/eKTOLh2NSVoaJ8P/TwtNJntx870h0QzoYaKXhqBBHhQejzMK7DP
-	 BN/0mYz770zz7s9/G0RDHOX2F9BXsh57TNNXJ0VtdtoJH3ibblFwgVwG1dtx6EiseB
-	 Vw9vyx8P0H58rD0RndXEfx9bYh47PIBRFgatO/kY=
+	b=bVWm8n6YTVvTggvD1PmJf0DO3mtghy22+qI/wPe2GpT+GvcXIPtIlqzZOB/p950Y/
+	 ioalKX6VaPC1/uXmIPMCyqPLsB6DApY2PZ/yxxOrsjcKX+bP2rVwAIfyVu9SV6V68A
+	 0v8dQmf1wfMDiST3u+f3P2pcfyFcbr6F2Rr3q53U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbfL2RuG (ORCPT
+        id S1731799AbfL2RuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731742AbfL2RuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:03 -0500
+        id S1731400AbfL2RuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8121024655;
-        Sun, 29 Dec 2019 17:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE61F206A4;
+        Sun, 29 Dec 2019 17:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641802;
-        bh=3qZ3zesu2bV1ziOVkNy78TVbF6kGtDhhyFGoCLvY+zk=;
+        s=default; t=1577641804;
+        bh=adnTbLNbCgc7r4M44ql6h79pWXDDmFVkyj8/+tHGYUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FhCpkbI356fL5ZvNkpiMMIgaJIKheRzV9Lb7rKIGtjIWQ6f/81yVYSbQQ0/rU1+qT
-         Ft+EfWlG1dxltEr5AqZmOefUhZeJTonxBTYJqPltNwtA0yoMTRh9eugyDVl8LBzkOZ
-         3f/iBPf7F5bsTIhT3yHyqFC51YX3GsF31bsS/DlQ=
+        b=0/fVhR8VkpzM78PG8pvEWCi6Vj8P+3wjiQ1xi2zfEUhqsL/UreXaFHSnIeAFmX0O4
+         JYTpP3L5XKVl5keM0M91MnMBAl7TF5BLeDxizbnhsnz7JSln8/UsaCZPLYQQp0Md6l
+         lIOvuCaQPAgxghQf9NZj9P4hdfIrAjumm7wEei9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Nunley <nicholas.d.nunley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 190/434] i40e: initialize ITRN registers with correct values
-Date:   Sun, 29 Dec 2019 18:24:03 +0100
-Message-Id: <20191229172714.442759260@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 217/434] ALSA: bebob: expand sleep just after breaking connections for protocol version 1
+Date:   Sun, 29 Dec 2019 18:24:30 +0100
+Message-Id: <20191229172716.251491974@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,80 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Nunley <nicholas.d.nunley@intel.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 998e5166e604fd37afe94352f7b8c2d816b11049 ]
+[ Upstream commit d3eabe939aee3ffd5b133766a932629a9746298c ]
 
-Since commit 92418fb14750 ("i40e/i40evf: Use usec value instead of reg
-value for ITR defines") the driver tracks the interrupt throttling
-intervals in single usec units, although the actual ITRN/ITR0 registers are
-programmed in 2 usec units. Most register programming flows in the driver
-correctly handle the conversion, although it is currently not applied when
-the registers are initialized to their default values. Most of the time
-this doesn't present a problem since the default values are usually
-immediately overwritten through the standard adaptive throttling mechanism,
-or updated manually by the user, but if adaptive throttling is disabled and
-the interval values are left alone then the incorrect value will persist.
+As long as I investigated, some devices with BeBoB protocol version 1
+can be freezed during several hundreds milliseconds after breaking
+connections. When accessing during the freezed time, any transaction
+is corrupted. In the worst case, the device is going to reboot.
 
-Since the intended default interval of 50 usecs (vs. 100 usecs as
-programmed) performs better for most traffic workloads, this can lead to
-performance regressions.
+I can see this issue in:
+ * Roland FA-66
+ * M-Audio FireWire Solo
 
-This patch adds the correct conversion when writing the initial values to
-the ITRN registers.
+This commit expands sleep just after breaking connections to avoid
+the freezed time as much as possible. I note that the freeze/reboot
+behaviour is similar to below models:
+ * Focusrite Saffire Pro 10 I/O
+ * Focusrite Saffire Pro 26 I/O
 
-Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+The above models certainly reboot after breaking connections.
+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191101131323.17300-2-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ sound/firewire/bebob/bebob_stream.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 6031223eafab..339925af0206 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -3534,14 +3534,14 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
- 		q_vector->rx.target_itr =
- 			ITR_TO_REG(vsi->rx_rings[i]->itr_setting);
- 		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, vector - 1),
--		     q_vector->rx.target_itr);
-+		     q_vector->rx.target_itr >> 1);
- 		q_vector->rx.current_itr = q_vector->rx.target_itr;
+diff --git a/sound/firewire/bebob/bebob_stream.c b/sound/firewire/bebob/bebob_stream.c
+index 6c1497d9f52b..ce07ea0d4e71 100644
+--- a/sound/firewire/bebob/bebob_stream.c
++++ b/sound/firewire/bebob/bebob_stream.c
+@@ -415,15 +415,16 @@ static int make_both_connections(struct snd_bebob *bebob)
+ 	return 0;
+ }
  
- 		q_vector->tx.next_update = jiffies + 1;
- 		q_vector->tx.target_itr =
- 			ITR_TO_REG(vsi->tx_rings[i]->itr_setting);
- 		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, vector - 1),
--		     q_vector->tx.target_itr);
-+		     q_vector->tx.target_itr >> 1);
- 		q_vector->tx.current_itr = q_vector->tx.target_itr;
+-static void
+-break_both_connections(struct snd_bebob *bebob)
++static void break_both_connections(struct snd_bebob *bebob)
+ {
+ 	cmp_connection_break(&bebob->in_conn);
+ 	cmp_connection_break(&bebob->out_conn);
  
- 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
-@@ -3646,11 +3646,11 @@ static void i40e_configure_msi_and_legacy(struct i40e_vsi *vsi)
- 	/* set the ITR configuration */
- 	q_vector->rx.next_update = jiffies + 1;
- 	q_vector->rx.target_itr = ITR_TO_REG(vsi->rx_rings[0]->itr_setting);
--	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr >> 1);
- 	q_vector->rx.current_itr = q_vector->rx.target_itr;
- 	q_vector->tx.next_update = jiffies + 1;
- 	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
--	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr >> 1);
- 	q_vector->tx.current_itr = q_vector->tx.target_itr;
+-	/* These models seems to be in transition state for a longer time. */
+-	if (bebob->maudio_special_quirk != NULL)
+-		msleep(200);
++	// These models seem to be in transition state for a longer time. When
++	// accessing in the state, any transactions is corrupted. In the worst
++	// case, the device is going to reboot.
++	if (bebob->version < 2)
++		msleep(600);
+ }
  
- 	i40e_enable_misc_int_causes(pf);
-@@ -11396,7 +11396,7 @@ static int i40e_setup_misc_vector(struct i40e_pf *pf)
- 
- 	/* associate no queues to the misc vector */
- 	wr32(hw, I40E_PFINT_LNKLST0, I40E_QUEUE_END_OF_LIST);
--	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K);
-+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K >> 1);
- 
- 	i40e_flush(hw);
- 
+ static int
 -- 
 2.20.1
 
