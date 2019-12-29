@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707AEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484AA206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2BA20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642822;
-	bh=zlV9gXt1Og3XOzQDLJ0WVaMtduY/e1aNdRn45bVZsUQ=;
+	s=default; t=1577642825;
+	bh=hJItlzR6r1zQpzAUfVdeiYUkKcPcdYJDurcZKr2/nW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qf6gLKglVP6ejDK1DwlyAP1L5YbvyDStjTxuyEIX9S5dMB1ZxOReOKaYYVhOvQiYN
-	 jSEfkIJ5EPxbKyFEhDmHd8/iTddussoicXCc4/fXK9Fh0p8I1uDYSX0pdK/IGVikcJ
-	 UkA8O2sjrqG2ZtJI8/IU83+Q1YSPO0+QjoOKFLIU=
+	b=eDtK8Wow4k4RpDKdhWjMKzMYa+VI9iamqPqfhvCpRMnTPL5ExmgRteg1KnFTWLZ40
+	 KAuFhimodorwhiZm5lUfnGPyFn/fds+F7lvbJ7LE9zhWlejG4TF1qy3mgW/hcIBiwU
+	 Rw+8Cp2W11v0d1Pns7PNkpAj0VgaEBvLRBFl/YQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbfL2Rs7 (ORCPT
+        id S1732267AbfL2SHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:48:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:07:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731522AbfL2Rsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:50 -0500
+        id S1731522AbfL2RtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADBD621744;
-        Sun, 29 Dec 2019 17:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7EC21D7E;
+        Sun, 29 Dec 2019 17:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641730;
-        bh=zlV9gXt1Og3XOzQDLJ0WVaMtduY/e1aNdRn45bVZsUQ=;
+        s=default; t=1577641739;
+        bh=hJItlzR6r1zQpzAUfVdeiYUkKcPcdYJDurcZKr2/nW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sO9YHA56Znr+4A07i7CAxdy5wCFBKsXaoMk+qEbz5Und8/W8zXEgCnI1Vs14i0BP1
-         x6CG+K0dgJw9acN80mTSexZTuvxdhFIcm4IJEeT9KcVrMBAmqR9ifBkb1VhXbmfxgF
-         DE3nnI+deDTL7H1g7WnOz9gG4kFD3cTZiXK2xh/0=
+        b=nABFooWhyK+9sjOJZ72levMRVakq1yhVkDqNU3hdPhFmClKrQRKJmYPIQmPQWQxWA
+         nhsJccqmxreyiU6Znp1ncc8RBS4JLu5bYLUkRj80amT+HM59vwLFw/Xv6YHk1CUwHZ
+         bLRUyBS+UWydj4TMmqQuk12sG9r02WqlCtBZ/V1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Wang <jinpu.wang@cloud.ionos.com>,
-        NeilBrown <neilb@suse.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Le Ma <le.ma@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 185/434] md/bitmap: avoid race window between md_bitmap_resize and bitmap_file_clear_bit
-Date:   Sun, 29 Dec 2019 18:23:58 +0100
-Message-Id: <20191229172714.106145567@linuxfoundation.org>
+Subject: [PATCH 5.4 150/434] drm/amd/powerplay: avoid disabling ECC if RAS is enabled for VEGA20
+Date:   Sun, 29 Dec 2019 18:23:23 +0100
+Message-Id: <20191229172711.717520140@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,98 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Le Ma <le.ma@amd.com>
 
-[ Upstream commit fadcbd2901a0f7c8721f3bdb69eac95c272dc8ed ]
+[ Upstream commit df9331e561dab0a451cbd6a679ee88a95f306fd6 ]
 
-We need to move "spin_lock_irq(&bitmap->counts.lock)" before unmap previous
-storage, otherwise panic like belows could happen as follows.
+Program THM_BACO_CNTL.SOC_DOMAIN_IDLE=1 will tell VBIOS to disable ECC when
+BACO exit. This can save BACO exit time by PSP on none-ECC SKU. Drop the setting
+for ECC supported SKU.
 
-[  902.353802] sdl: detected capacity change from 1077936128 to 3221225472
-[  902.616948] general protection fault: 0000 [#1] SMP
-[snip]
-[  902.618588] CPU: 12 PID: 33698 Comm: md0_raid1 Tainted: G           O    4.14.144-1-pserver #4.14.144-1.1~deb10
-[  902.618870] Hardware name: Supermicro SBA-7142G-T4/BHQGE, BIOS 3.00       10/24/2012
-[  902.619120] task: ffff9ae1860fc600 task.stack: ffffb52e4c704000
-[  902.619301] RIP: 0010:bitmap_file_clear_bit+0x90/0xd0 [md_mod]
-[  902.619464] RSP: 0018:ffffb52e4c707d28 EFLAGS: 00010087
-[  902.619626] RAX: ffe8008b0d061000 RBX: ffff9ad078c87300 RCX: 0000000000000000
-[  902.619792] RDX: ffff9ad986341868 RSI: 0000000000000803 RDI: ffff9ad078c87300
-[  902.619986] RBP: ffff9ad0ed7a8000 R08: 0000000000000000 R09: 0000000000000000
-[  902.620154] R10: ffffb52e4c707ec0 R11: ffff9ad987d1ed44 R12: ffff9ad0ed7a8360
-[  902.620320] R13: 0000000000000003 R14: 0000000000060000 R15: 0000000000000800
-[  902.620487] FS:  0000000000000000(0000) GS:ffff9ad987d00000(0000) knlGS:0000000000000000
-[  902.620738] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  902.620901] CR2: 000055ff12aecec0 CR3: 0000001005207000 CR4: 00000000000406e0
-[  902.621068] Call Trace:
-[  902.621256]  bitmap_daemon_work+0x2dd/0x360 [md_mod]
-[  902.621429]  ? find_pers+0x70/0x70 [md_mod]
-[  902.621597]  md_check_recovery+0x51/0x540 [md_mod]
-[  902.621762]  raid1d+0x5c/0xeb0 [raid1]
-[  902.621939]  ? try_to_del_timer_sync+0x4d/0x80
-[  902.622102]  ? del_timer_sync+0x35/0x40
-[  902.622265]  ? schedule_timeout+0x177/0x360
-[  902.622453]  ? call_timer_fn+0x130/0x130
-[  902.622623]  ? find_pers+0x70/0x70 [md_mod]
-[  902.622794]  ? md_thread+0x94/0x150 [md_mod]
-[  902.622959]  md_thread+0x94/0x150 [md_mod]
-[  902.623121]  ? wait_woken+0x80/0x80
-[  902.623280]  kthread+0x119/0x130
-[  902.623437]  ? kthread_create_on_node+0x60/0x60
-[  902.623600]  ret_from_fork+0x22/0x40
-[  902.624225] RIP: bitmap_file_clear_bit+0x90/0xd0 [md_mod] RSP: ffffb52e4c707d28
-
-Because mdadm was running on another cpu to do resize, so bitmap_resize was
-called to replace bitmap as below shows.
-
-PID: 38801  TASK: ffff9ad074a90e00  CPU: 0   COMMAND: "mdadm"
-   [exception RIP: queued_spin_lock_slowpath+56]
-   [snip]
--- <NMI exception stack> --
- #5 [ffffb52e60f17c58] queued_spin_lock_slowpath at ffffffff9c0b27b8
- #6 [ffffb52e60f17c58] bitmap_resize at ffffffffc0399877 [md_mod]
- #7 [ffffb52e60f17d30] raid1_resize at ffffffffc0285bf9 [raid1]
- #8 [ffffb52e60f17d50] update_size at ffffffffc038a31a [md_mod]
- #9 [ffffb52e60f17d70] md_ioctl at ffffffffc0395ca4 [md_mod]
-
-And the procedure to keep resize bitmap safe is allocate new storage
-space, then quiesce, copy bits, replace bitmap, and re-start.
-
-However the daemon (bitmap_daemon_work) could happen even the array is
-quiesced, which means when bitmap_file_clear_bit is triggered by raid1d,
-then it thinks it should be fine to access store->filemap since
-counts->lock is held, but resize could change the storage without the
-protection of the lock.
-
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: NeilBrown <neilb@suse.com>
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Le Ma <le.ma@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-bitmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index b092c7b5282f..3ad18246fcb3 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -2139,6 +2139,7 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 		memcpy(page_address(store.sb_page),
- 		       page_address(bitmap->storage.sb_page),
- 		       sizeof(bitmap_super_t));
-+	spin_lock_irq(&bitmap->counts.lock);
- 	md_bitmap_file_unmap(&bitmap->storage);
- 	bitmap->storage = store;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
+index df6ff9252401..b068d1c7b44d 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_baco.c
+@@ -29,7 +29,7 @@
+ #include "vega20_baco.h"
+ #include "vega20_smumgr.h"
  
-@@ -2154,7 +2155,6 @@ int md_bitmap_resize(struct bitmap *bitmap, sector_t blocks,
- 	blocks = min(old_counts.chunks << old_counts.chunkshift,
- 		     chunks << chunkshift);
+-
++#include "amdgpu_ras.h"
  
--	spin_lock_irq(&bitmap->counts.lock);
- 	/* For cluster raid, need to pre-allocate bitmap */
- 	if (mddev_is_clustered(bitmap->mddev)) {
- 		unsigned long page;
+ static const struct soc15_baco_cmd_entry clean_baco_tbl[] =
+ {
+@@ -74,6 +74,7 @@ int vega20_baco_get_state(struct pp_hwmgr *hwmgr, enum BACO_STATE *state)
+ int vega20_baco_set_state(struct pp_hwmgr *hwmgr, enum BACO_STATE state)
+ {
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)(hwmgr->adev);
++	struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
+ 	enum BACO_STATE cur_state;
+ 	uint32_t data;
+ 
+@@ -84,10 +85,11 @@ int vega20_baco_set_state(struct pp_hwmgr *hwmgr, enum BACO_STATE state)
+ 		return 0;
+ 
+ 	if (state == BACO_STATE_IN) {
+-		data = RREG32_SOC15(THM, 0, mmTHM_BACO_CNTL);
+-		data |= 0x80000000;
+-		WREG32_SOC15(THM, 0, mmTHM_BACO_CNTL, data);
+-
++		if (!ras || !ras->supported) {
++			data = RREG32_SOC15(THM, 0, mmTHM_BACO_CNTL);
++			data |= 0x80000000;
++			WREG32_SOC15(THM, 0, mmTHM_BACO_CNTL, data);
++		}
+ 
+ 		if(smum_send_msg_to_smc_with_parameter(hwmgr, PPSMC_MSG_EnterBaco, 0))
+ 			return -EINVAL;
 -- 
 2.20.1
 
