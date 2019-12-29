@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79175C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D377DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50E1B20409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5BF207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640778;
-	bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
+	s=default; t=1577640782;
+	bh=f+oyQdJV2mvKWAwexwUt8dcxFVa+jkYNOVD3dekVTwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mbtxe8Ng20Lvdg8utx64bcPtDsZjQJLfeCsXSxUoYi1lgtb0erWD47rRzNXsSkX/T
-	 ut/aDkV0FNXFXPFepkVbjnjUGENbELWExwGGraGXcUVaccb/2nZ5U8YtAwFP1Ou05i
-	 hzH3tuExUfjDRH/8GgkRyDprc1gEJ6dIVNS+JOwo=
+	b=YAEz8hT8wMxQhiM0uveygaNMUEgukz6yA8q3mRjDkeVSFmdfulZ9+mzFtrfCQ6Jv8
+	 qIUJc7L7wBeAlTpsQ0MARcSru//cg6AVxPcOrMXFMnwW6/Md0BFAB+VILcwc/vObCa
+	 ES6zNnSfA6v1HqiOxCn+DiTQzzDAuwk+YQg4mPyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfL2Rc5 (ORCPT
+        id S1729382AbfL2RdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbfL2Rcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:53 -0500
+        id S1729377AbfL2Rc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C396220409;
-        Sun, 29 Dec 2019 17:32:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E98207FD;
+        Sun, 29 Dec 2019 17:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640772;
-        bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
+        s=default; t=1577640777;
+        bh=f+oyQdJV2mvKWAwexwUt8dcxFVa+jkYNOVD3dekVTwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cYA52psD0BweDFJQ+4SfhzS1eDd7jreeeFNqCIzaVojIPnpbsFTJ34QGabGDUw5Mp
-         0u7c5JNs6X9DmvoSK6P3CPsoE1klVVe+OhdmU17VSRwG1sayp97sOdPx28wNSNluq5
-         mZntUkmxpvk7dga5O+CL7ukhLyRykugOQLL5FTiU=
+        b=S/aJxpT9XCP6XPLxiwKVOOVKubtG6+8M10T2nRM48pGYdBmKufBQVrnd7jtywI5tB
+         zE5BUKn8ezWYPzBH/YihwQgPLdJWIeAAIkD7IwHQMwM7HFE/fAngiSHqFpuYij5T2t
+         93J6/P7K1gzaIfcPj0vpAUdE2kWC9oDBYb8mwlDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/219] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
-Date:   Sun, 29 Dec 2019 18:18:15 +0100
-Message-Id: <20191229162521.505979378@linuxfoundation.org>
+Subject: [PATCH 4.19 095/219] net: phy: dp83867: enable robust auto-mdix
+Date:   Sun, 29 Dec 2019 18:18:17 +0100
+Message-Id: <20191229162521.892610959@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,71 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
+[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+The link detection timeouts can be observed (or link might not be detected
+at all) when dp83867 PHY is configured in manual mode (speed/duplex).
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
+in case dp83867 is configured in manual mode and reduce link detection
+time.
+As per DM: "If link partners are configured to operational modes that are
+not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
+100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
+MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
+Hence, enable this option by default as there are no known reasons
+not to do so.
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/phy/dp83867.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index e8edbf13302a..3856d51c645b 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -84,7 +84,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index eeadfde15940..879096d3ff41 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -86,6 +86,10 @@
+ #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+ #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
  
- static int cpu_psci_cpu_kill(unsigned int cpu)
- {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
++/* CFG3 bits */
++#define DP83867_CFG3_INT_OE			BIT(7)
++#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
++
+ /* CFG4 bits */
+ #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
  
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -94,16 +95,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
- 	 */
+@@ -331,12 +335,13 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 			return ret;
+ 	}
  
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
- 
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
++	val = phy_read(phydev, DP83867_CFG3);
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
+-	if (phy_interrupt_is_valid(phydev)) {
+-		val = phy_read(phydev, DP83867_CFG3);
+-		val |= BIT(7);
+-		phy_write(phydev, DP83867_CFG3, val);
 -	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
++	if (phy_interrupt_is_valid(phydev))
++		val |= DP83867_CFG3_INT_OE;
++
++	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
++	phy_write(phydev, DP83867_CFG3, val);
  
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
+ 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
+ 		dp83867_config_port_mirroring(phydev);
 -- 
 2.20.1
 
