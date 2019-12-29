@@ -2,53 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEADC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DE6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E9820722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D13720409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640563;
-	bh=krKekEn26ZkEStqwok+PHirePK3Z3pAwGhRxdm+ntto=;
+	s=default; t=1577640567;
+	bh=d97qlS8VxM98XOMAULtwb8+1EioCF1ED2DucKtX1+jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ar1KoM5iS5eJ0CBE8o4cc5XkP4cwc0Cw3lM3D02qWZgcWvH8G/mkbxhQgfzUAsFPO
-	 eIIcUViqFEwQszGVCdg69ycdRYP6qcM9L52vnbznUIRAIr1w24tGIoCWAHDCI01MMj
-	 D511xiCq21lb7KePGGAw0IMsSl1CMDRopye02kXQ=
+	b=kINYkxK1BuujxIznlYN4+/aAr/p8sNLfmdejUhN+AshczlTbB2Ir+DGISzS87KxVA
+	 g3U2FoLD6yT+5A8kUK5hj6N3ZTliG+BvyFvo61Ok4ZkJQdRLhpDmz5lfD34QAOhnmr
+	 E7AyD1Ele1dfcQGFU8rmbNj9IVGQsHNaF46OmR1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfL2R3X (ORCPT
+        id S1728524AbfL2R3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53750 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbfL2R3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:19 -0500
+        id S1728764AbfL2R3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AAFB20409;
-        Sun, 29 Dec 2019 17:29:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36902253D;
+        Sun, 29 Dec 2019 17:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640558;
-        bh=krKekEn26ZkEStqwok+PHirePK3Z3pAwGhRxdm+ntto=;
+        s=default; t=1577640561;
+        bh=d97qlS8VxM98XOMAULtwb8+1EioCF1ED2DucKtX1+jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8VDa0IhAxuw0yinGHAE4zLzJc0k++D8XwCDEwEYsrNBqi8UgSYCC42KCovVYjYwt
-         JPix6KzCY0DiZOsbIfjqNnuDXpLM2yL8KLLVTJ813YT/A+4e5Tp/+8nivI+G1nQACU
-         NfaX8COziJGfhTBVpNiXtntja7q+lobY2PuRjkqo=
+        b=BOdUGLFBAtxVmJdAYqYj0OxsrpJavr6fdurGxnq/O6at2heDMrTNYBYqGdBDIWtg6
+         QmDtTgImrng9aHbcqjBfglyU/HaQ2uiz+3/NEgVb3v1foUtd4AE05zGbFHE1KQz02D
+         7nSrYHAyEVdsClZSKfuYGv9EmhI/n30Nqv1pH4Og=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/219] media: ov6650: Fix stored frame format not in sync with hardware
-Date:   Sun, 29 Dec 2019 18:17:25 +0100
-Message-Id: <20191229162514.547872127@linuxfoundation.org>
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 006/219] net: hisilicon: Fix a BUG trigered by wrong bytes_compl
+Date:   Sun, 29 Dec 2019 18:16:48 +0100
+Message-Id: <20191229162509.898528863@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,71 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-[ Upstream commit 3143b459de4cdcce67b36827476c966e93c1cf01 ]
+[ Upstream commit 90b3b339364c76baa2436445401ea9ade040c216 ]
 
-The driver stores frame format settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, those settings are updated before they are actually applied
-on hardware.  If an error occurs on device update, the stored settings
-my not reflect hardware state anymore and consecutive calls to
-.get_fmt() may return incorrect information.  That in turn may affect
-ability of a bridge device to use correct DMA transfer settings if such
-incorrect informmation on active frame format returned by .get_fmt() is
-used.
+When doing stress test, we get the following trace:
+kernel BUG at lib/dynamic_queue_limits.c:26!
+Internal error: Oops - BUG: 0 [#1] SMP ARM
+Modules linked in: hip04_eth
+CPU: 0 PID: 2003 Comm: tDblStackPcap0 Tainted: G           O L  4.4.197 #1
+Hardware name: Hisilicon A15
+task: c3637668 task.stack: de3bc000
+PC is at dql_completed+0x18/0x154
+LR is at hip04_tx_reclaim+0x110/0x174 [hip04_eth]
+pc : [<c041abfc>]    lr : [<bf0003a8>]    psr: 800f0313
+sp : de3bdc2c  ip : 00000000  fp : c020fb10
+r10: 00000000  r9 : c39b4224  r8 : 00000001
+r7 : 00000046  r6 : c39b4000  r5 : 0078f392  r4 : 0078f392
+r3 : 00000047  r2 : 00000000  r1 : 00000046  r0 : df5d5c80
+Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 32c5387d  Table: 1e189b80  DAC: 55555555
+Process tDblStackPcap0 (pid: 2003, stack limit = 0xde3bc190)
+Stack: (0xde3bdc2c to 0xde3be000)
+[<c041abfc>] (dql_completed) from [<bf0003a8>] (hip04_tx_reclaim+0x110/0x174 [hip04_eth])
+[<bf0003a8>] (hip04_tx_reclaim [hip04_eth]) from [<bf0012c0>] (hip04_rx_poll+0x20/0x388 [hip04_eth])
+[<bf0012c0>] (hip04_rx_poll [hip04_eth]) from [<c04c8d9c>] (net_rx_action+0x120/0x374)
+[<c04c8d9c>] (net_rx_action) from [<c021eaf4>] (__do_softirq+0x218/0x318)
+[<c021eaf4>] (__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
+[<c021eea0>] (irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240130>] (msa_irq_exit) from [<c0267ba8>] (__handle_domain_irq+0x110/0x148)
+[<c0267ba8>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0558360>] (__irq_svc+0x40/0x58)
+Exception stack(0xde3bdde0 to 0xde3bde28)
+dde0: 00000000 00008001 c3637668 00000000 00000000 a00f0213 dd3627a0 c0af6380
+de00: c086d380 a00f0213 c0a22a50 de3bde6c 00000002 de3bde30 c0558138 c055813c
+de20: 600f0213 ffffffff
+[<c0558360>] (__irq_svc) from [<c055813c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
+Kernel panic - not syncing: Fatal exception in interrupt
 
-Assuming a failed device update means its state hasn't changed, update
-frame format related settings stored in the device private structure
-only after they are successfully applied so the stored values always
-reflect hardware state as closely as possible.
+Pre-modification code:
+int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+{
+[...]
+[1]	priv->tx_head = TX_NEXT(tx_head);
+[2]	count++;
+[3]	netdev_sent_queue(ndev, skb->len);
+[...]
+}
+An rx interrupt occurs if hip04_mac_start_xmit just executes to the line 2,
+tx_head has been updated, but corresponding 'skb->len' has not been
+added to dql_queue.
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+And then
+hip04_mac_interrupt->__napi_schedule->hip04_rx_poll->hip04_tx_reclaim
+
+In hip04_tx_reclaim, because tx_head has been updated,
+bytes_compl will plus an additional "skb-> len"
+which has not been added to dql_queue. And then
+trigger the BUG_ON(bytes_compl > num_queued - dql->num_completed).
+
+To solve the problem described above, we put
+"netdev_sent_queue(ndev, skb->len);"
+before
+"priv->tx_head = TX_NEXT(tx_head);"
+
+Fixes: a41ea46a9a12 ("net: hisilicon: new hip04 ethernet driver")
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/i2c/ov6650.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index e3433a4fc473..60109442a072 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -613,7 +613,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
- 		return -EINVAL;
- 	}
--	priv->code = code;
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -456,9 +456,9 @@ hip04_mac_start_xmit(struct sk_buff *skb
+ 	skb_tx_timestamp(skb);
  
- 	if (code == MEDIA_BUS_FMT_Y8_1X8 ||
- 			code == MEDIA_BUS_FMT_SBGGR8_1X8) {
-@@ -639,7 +638,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		dev_dbg(&client->dev, "max resolution: CIF\n");
- 		coma_mask |= COMA_QCIF;
- 	}
--	priv->half_scale = half_scale;
+ 	hip04_set_xmit_desc(priv, phys);
+-	priv->tx_head = TX_NEXT(tx_head);
+ 	count++;
+ 	netdev_sent_queue(ndev, skb->len);
++	priv->tx_head = TX_NEXT(tx_head);
  
- 	clkrc = CLKRC_12MHz;
- 	mclk = 12000000;
-@@ -657,8 +655,13 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
- 	if (!ret)
- 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
--	if (!ret)
-+	if (!ret) {
-+		priv->half_scale = half_scale;
-+
- 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
-+	}
-+	if (!ret)
-+		priv->code = code;
- 
- 	if (!ret) {
- 		mf->colorspace	= priv->colorspace;
--- 
-2.20.1
-
+ 	stats->tx_bytes += skb->len;
+ 	stats->tx_packets++;
 
 
