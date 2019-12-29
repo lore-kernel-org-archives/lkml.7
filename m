@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01A3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD3FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C76F20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4565420722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640823;
-	bh=s3kHlEfWLRqEQXphT5lOEhV2MkeoF0X40YheoB6Xd+o=;
+	s=default; t=1577640826;
+	bh=2OwJljtab62BA09g3wnD3zLucHEjleq5lzs8cGC614Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhOiN08JEPOm4p9Tmbv5Lq1g1mmiaQYHAA3gODfABbZUvZzK2+HvQ3m8sPqxNp9zB
-	 scL+lf+ODr9PPGG3m/39MWNRGnBUiCylbVTKJKMAUEeSSfFEDbpiaMDv6pkkL5VWZ1
-	 TvI7tRG5iLJ7BpW5QHN4Ui357E9AZZEZVJtAV+nk=
+	b=exNi3jnf3R1uCzyq602j3KmV5TxS0hCW4H2ZfrlqdnKKgnl/PrY5jUq3x9q4gEbN+
+	 ffaKmA+vrJvvTW28AKrfuXNZ02Ro7SmxD2rgDmFUG5D7VcYcPYmP83puRoHBiFCTbd
+	 ZLRlBngD8/SV+Yc9+970qidiQAxaonBjAr3+/Du4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfL2Rdm (ORCPT
+        id S1729303AbfL2Rdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:33:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbfL2Rdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:36 -0500
+        id S1729289AbfL2Rdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CB6720722;
-        Sun, 29 Dec 2019 17:33:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D653720722;
+        Sun, 29 Dec 2019 17:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640815;
-        bh=s3kHlEfWLRqEQXphT5lOEhV2MkeoF0X40YheoB6Xd+o=;
+        s=default; t=1577640820;
+        bh=2OwJljtab62BA09g3wnD3zLucHEjleq5lzs8cGC614Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oa3a1eh8nMj1lFyc/E64s5krv/At30RRVj2ow5f+g/gP4fZWjAaGzU26tkqYqjELz
-         VXRVhEBk9zLMEV+p3JC3jlO1AMJ5+FtplYeVaBHFAqI1tGBm9bfByn9nTJsgnq2gRC
-         0EtE8ipGalBTSZfX6aOUDJlJs5HZ/Pw76SN9Twzo=
+        b=rBrGfEgzHRZWb6Z+XI8xEa65SRlTeiscnYKCWFpx6paCu+aWSf0MK+9jOfSVv2AkS
+         47FUxT5fOVAL4dFsH0P9q0sgBNWZ2uOAYRBYksdssIS176Z4Yzp2rZiV2GoF2O3RGS
+         KsTH2+uWQXfv1HRjBCcCXU3+Dtu3/Qo1pRNCzB/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Stefan Popa <stefan.popa@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/219] spi: pxa2xx: Add missed security checks
-Date:   Sun, 29 Dec 2019 18:19:12 +0100
-Message-Id: <20191229162531.123802505@linuxfoundation.org>
+Subject: [PATCH 4.19 152/219] iio: dac: ad5446: Add support for new AD5600 DAC
+Date:   Sun, 29 Dec 2019 18:19:14 +0100
+Message-Id: <20191229162531.508791270@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,43 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Stefan Popa <stefan.popa@analog.com>
 
-[ Upstream commit 5eb263ef08b5014cfc2539a838f39d2fd3531423 ]
+[ Upstream commit 6376cbe549fffb378403cee78efd26b8a2c8e450 ]
 
-pxa2xx_spi_init_pdata misses checks for devm_clk_get and
-platform_get_irq.
-Add checks for them to fix the bugs.
+The AD5600 is a single channel, 16-bit resolution, voltage output digital
+to analog converter (DAC). The AD5600 uses a 3-wire SPI interface. It is
+part of the AD5541 family of DACs.
 
-Since ssp->clk and ssp->irq are used in probe, they are mandatory here.
-So we cannot use _optional() for devm_clk_get and platform_get_irq.
+The ad5446 IIO driver implements support for some of these DACs (in the
+AD5441 family), so the change is a simple entry in this driver.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191109080943.30428-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD5600.pdf
+
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/iio/dac/Kconfig  | 4 ++--
+ drivers/iio/dac/ad5446.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index f41333817c50..525388126e26 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1470,7 +1470,13 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
- 	}
+diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+index 80beb64e9e0c..69f4cfa6494b 100644
+--- a/drivers/iio/dac/Kconfig
++++ b/drivers/iio/dac/Kconfig
+@@ -59,8 +59,8 @@ config AD5446
+ 	help
+ 	  Say yes here to build support for Analog Devices AD5300, AD5301, AD5310,
+ 	  AD5311, AD5320, AD5321, AD5444, AD5446, AD5450, AD5451, AD5452, AD5453,
+-	  AD5512A, AD5541A, AD5542A, AD5543, AD5553, AD5601, AD5602, AD5611, AD5612,
+-	  AD5620, AD5621, AD5622, AD5640, AD5641, AD5660, AD5662 DACs
++	  AD5512A, AD5541A, AD5542A, AD5543, AD5553, AD5600, AD5601, AD5602, AD5611,
++	  AD5612, AD5620, AD5621, AD5622, AD5640, AD5641, AD5660, AD5662 DACs
+ 	  as well as Texas Instruments DAC081S101, DAC101S101, DAC121S101.
  
- 	ssp->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(ssp->clk))
-+		return NULL;
-+
- 	ssp->irq = platform_get_irq(pdev, 0);
-+	if (ssp->irq < 0)
-+		return NULL;
-+
- 	ssp->type = type;
- 	ssp->pdev = pdev;
- 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
+ 	  To compile this driver as a module, choose M here: the
+diff --git a/drivers/iio/dac/ad5446.c b/drivers/iio/dac/ad5446.c
+index fd26a4272fc5..d3ce5def4f65 100644
+--- a/drivers/iio/dac/ad5446.c
++++ b/drivers/iio/dac/ad5446.c
+@@ -328,6 +328,7 @@ enum ad5446_supported_spi_device_ids {
+ 	ID_AD5541A,
+ 	ID_AD5512A,
+ 	ID_AD5553,
++	ID_AD5600,
+ 	ID_AD5601,
+ 	ID_AD5611,
+ 	ID_AD5621,
+@@ -382,6 +383,10 @@ static const struct ad5446_chip_info ad5446_spi_chip_info[] = {
+ 		.channel = AD5446_CHANNEL(14, 16, 0),
+ 		.write = ad5446_write,
+ 	},
++	[ID_AD5600] = {
++		.channel = AD5446_CHANNEL(16, 16, 0),
++		.write = ad5446_write,
++	},
+ 	[ID_AD5601] = {
+ 		.channel = AD5446_CHANNEL_POWERDOWN(8, 16, 6),
+ 		.write = ad5446_write,
+@@ -449,6 +454,7 @@ static const struct spi_device_id ad5446_spi_ids[] = {
+ 	{"ad5542a", ID_AD5541A}, /* ad5541a and ad5542a are compatible */
+ 	{"ad5543", ID_AD5541A}, /* ad5541a and ad5543 are compatible */
+ 	{"ad5553", ID_AD5553},
++	{"ad5600", ID_AD5600},
+ 	{"ad5601", ID_AD5601},
+ 	{"ad5611", ID_AD5611},
+ 	{"ad5621", ID_AD5621},
 -- 
 2.20.1
 
