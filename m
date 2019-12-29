@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222F8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27134C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE96B222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0248E207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640348;
-	bh=u1vbAAODFFibUTO2yMqM38STXoTtYukUrreTORXp/oo=;
+	s=default; t=1577640351;
+	bh=/4gVWON24o3gT/sJg+4JO2SrZ5r/nsfaYVwhQp0Oat4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4YquLNlNzISe3DtUmJsbd/mKcJtNDiu/YaOTWX2Vda9oWgma2nzZXlznC7C0H73E
-	 A43MEMmIuh68/xR9mtQKSP96eQUKT+lIXlj9tFuJPTD7ViKr0V+L0buPL8KMhzbvgD
-	 E7TWBBAPXFQ3eAPBObos9xmRuvGzCb84aJQV10H0=
+	b=XlQDi9TxmjHI2Xm89h+TYW8zqi0HtKW9pup97mDYQ+GmnZhidBB4QYEypLN3eILUE
+	 R5w8W++tvrWQThPOX1L9Wgy6QZXMAkQuxmUqkqA/DBy0dKgI+KrCemizYzvFXtPhlS
+	 xUuhMMhsW0EKwvqdYHB+xnfUisDdXMn7ZYPPSn1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfL2RZq (ORCPT
+        id S1728065AbfL2RZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727687AbfL2RZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:40 -0500
+        id S1727706AbfL2RZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A83520409;
-        Sun, 29 Dec 2019 17:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC90220409;
+        Sun, 29 Dec 2019 17:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640339;
-        bh=u1vbAAODFFibUTO2yMqM38STXoTtYukUrreTORXp/oo=;
+        s=default; t=1577640344;
+        bh=/4gVWON24o3gT/sJg+4JO2SrZ5r/nsfaYVwhQp0Oat4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2qiB4Rt8zVakqw5p/5MACHIJKN5YnjL8z9QW1SyKRl1geAYVkIJkLXMNLCj4qytaS
-         NWhbuA6/E9BysF3xbTd7Sx8SG2YLrMRhop27O9F7iPBNPUvlUS/uxRUjiKHLOZ3Owj
-         JjQlzN1IpX5yftFr+IF064G7Jtvykm7EgQoT/lSg=
+        b=u5/ZMhsKjmwBZzqoG6OZtLnKjT4NeVL3yNMPDXWNsiqaUEcgBdhcyispQv0TFTQEe
+         wA1kfZZsKbEuyAtV3qg+sUxfJwtfr6p2dLnQhe1Qpu7VBUcFR/Si1oPKgmBqPr+YTU
+         oIhZyH8/T20rZzF6alqcD7nxyWd8RN+PPLKHRdic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 116/161] parport: load lowlevel driver if ports not found
-Date:   Sun, 29 Dec 2019 18:19:24 +0100
-Message-Id: <20191229162432.956449135@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Borislav Petkov <bp@suse.de>, bhe@redhat.com,
+        d.hatayama@fujitsu.com, dhowells@redhat.com, dyoung@redhat.com,
+        ebiederm@xmission.com, horms@verge.net.au,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>,
+        kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, vgoyal@redhat.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 118/161] x86/crash: Add a forward declaration of struct kimage
+Date:   Sun, 29 Dec 2019 18:19:26 +0100
+Message-Id: <20191229162433.898340980@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,70 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 231ec2f24dad18d021b361045bbd618ba62a274e ]
+[ Upstream commit 112eee5d06007dae561f14458bde7f2a4879ef4e ]
 
-Usually all the distro will load the parport low level driver as part
-of their initialization. But we can get into a situation where all the
-parallel port drivers are built as module and we unload all the modules
-at a later time. Then if we just do "modprobe parport" it will only
-load the parport module and will not load the low level driver which
-will actually register the ports. So, check the bus if there is any
-parport registered, if not, load the low level driver.
+Add a forward declaration of struct kimage to the crash.h header because
+future changes will invoke a crash-specific function from the realmode
+init path and the compiler will complain otherwise like this:
 
-We can get into the above situation with all distro but only Suse has
-setup the alias for "parport_lowlevel" and so it only works in Suse.
-Users of Debian based distro will need to load the lowlevel module
-manually.
+  In file included from arch/x86/realmode/init.c:11:
+  ./arch/x86/include/asm/crash.h:5:32: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      5 | int crash_load_segments(struct kimage *image);
+        |                                ^~~~~~
+  ./arch/x86/include/asm/crash.h:6:37: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      6 | int crash_copy_backup_region(struct kimage *image);
+        |                                     ^~~~~~
+  ./arch/x86/include/asm/crash.h:7:39: warning: ‘struct kimage’ declared inside\
+   parameter list will not be visible outside of this definition or declaration
+      7 | int crash_setup_memmap_entries(struct kimage *image,
+        |
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/r/20191016144540.18810-3-sudipm.mukherjee@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ [ bp: Rewrite the commit message. ]
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: bhe@redhat.com
+Cc: d.hatayama@fujitsu.com
+Cc: dhowells@redhat.com
+Cc: dyoung@redhat.com
+Cc: ebiederm@xmission.com
+Cc: horms@verge.net.au
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jürgen Gross <jgross@suse.com>
+Cc: kexec@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: vgoyal@redhat.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191108090027.11082-4-lijiang@redhat.com
+Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/x86/include/asm/crash.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 7b4ee33c1935..15c81cffd2de 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -230,6 +230,18 @@ static int port_check(struct device *dev, void *dev_drv)
- 	return 0;
- }
+diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
+index a7adb2bfbf0b..6b8ad6fa3979 100644
+--- a/arch/x86/include/asm/crash.h
++++ b/arch/x86/include/asm/crash.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_CRASH_H
+ #define _ASM_X86_CRASH_H
  
-+/*
-+ * Iterates through all the devices connected to the bus and return 1
-+ * if the device is a parallel port.
-+ */
++struct kimage;
 +
-+static int port_detect(struct device *dev, void *dev_drv)
-+{
-+	if (is_parport(dev))
-+		return 1;
-+	return 0;
-+}
-+
- /**
-  *	parport_register_driver - register a parallel port device driver
-  *	@drv: structure describing the driver
-@@ -282,6 +294,15 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
- 		if (ret)
- 			return ret;
- 
-+		/*
-+		 * check if bus has any parallel port registered, if
-+		 * none is found then load the lowlevel driver.
-+		 */
-+		ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-+				       port_detect);
-+		if (!ret)
-+			get_lowlevel_driver();
-+
- 		mutex_lock(&registration_lock);
- 		if (drv->match_port)
- 			bus_for_each_dev(&parport_bus_type, NULL, drv,
+ int crash_load_segments(struct kimage *image);
+ int crash_copy_backup_region(struct kimage *image);
+ int crash_setup_memmap_entries(struct kimage *image,
 -- 
 2.20.1
 
