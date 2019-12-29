@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84E3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC606C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E5521744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4EC206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642416;
-	bh=G10bv3DWKOZiiqCp+6xtRZZKm6/KEpfUH1lOVBOkzJA=;
+	s=default; t=1577642422;
+	bh=GkB5R2UJ6ARn4a70f3TzS5/TimRwnPueAlRS5du8h58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sj8kdXpgZzsJEPdYXNXBSSsFlBDSW6C/TOvxOvXY0/K220gn0MX1z9uDTGimE+508
-	 ivWlRrmo8Cls6yVMN9jNRhT/jDRWdZr2JHjFKn1tjj3cfndv0XTkQE4zecQcyT1Cta
-	 il24Acsa23+CAepdewiMFdApYIB8I2XMlUDmcMg4=
+	b=fz8jyqAwaMnhFKmix48Dw/9nOF3R4TcERuxPmnu/eNj1Bo5+2ROmVHetSqDCLnZdR
+	 6n1IlWOMS2X2DKu+41rTWczeR9L4mDHG4pHuaWwBpIpUxVubDLNiTcSEAiulC6PvSN
+	 zWwo9NoKNNgjKMqYG+s+iPtnU1aqhn0WHj1Upybg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387712AbfL2SAQ (ORCPT
+        id S2387729AbfL2SAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48534 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732584AbfL2R5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:57:44 -0500
+        id S1732557AbfL2R53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:57:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42326206DB;
-        Sun, 29 Dec 2019 17:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D77C8227BF;
+        Sun, 29 Dec 2019 17:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642263;
-        bh=G10bv3DWKOZiiqCp+6xtRZZKm6/KEpfUH1lOVBOkzJA=;
+        s=default; t=1577642249;
+        bh=GkB5R2UJ6ARn4a70f3TzS5/TimRwnPueAlRS5du8h58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vijVtsiuJ5awAfQ/qXlcW72fjAsVKOoEzpbMQrRB4cGTFXS78InOj/QbP5FUyW5z6
-         JehV6ojmTvPaTG2KhYriVdVUmUtRIgaHlc/8q/0Ck6EyrE3JWA9S/j1+ViRJ7AzxVq
-         FjAXeIv+tSY3X768L8JCUuAr/r2RdVIzKP8bEbSU=
+        b=qVEH046f1SXFRAN3PSTM05Pzt4SK50jxt1r2fscrbGGXdU2M3RAIf3ScToVqw3NYA
+         9OYj65scrOQFN8jfrPLIcKYEyoGAjVecy0+2kLHH36Twn3K0kdeOwlmwFUeWG6Zj8+
+         AhP9XHfGewia7aHP+Tr9oOqRJOGqZAdgF34+x5PI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 409/434] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
-Date:   Sun, 29 Dec 2019 18:27:42 +0100
-Message-Id: <20191229172729.867336163@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.4 403/434] staging: comedi: gsc_hpdi: check dma_alloc_coherent() return value
+Date:   Sun, 29 Dec 2019 18:27:36 +0100
+Message-Id: <20191229172729.346408516@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,36 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit c3a5fd15ed0c1494435e4e35fbee734ae46b5073 upstream.
+commit ab42b48f32d4c766420c3499ee9c0289b7028182 upstream.
 
-The usage of readl_poll_timeout is wrong, the 3rd parameter(cond)
-should be "val & LOCK_STATUS" not "val & LOCK_TIMEOUT_US",
-It is not check whether the pll locked, LOCK_STATUS reflects the mask,
-not LOCK_TIMEOUT_US.
+The "auto-attach" handler function `gsc_hpdi_auto_attach()` calls
+`dma_alloc_coherent()` in a loop to allocate some DMA data buffers, and
+also calls it to allocate a buffer for a DMA descriptor chain.  However,
+it does not check the return value of any of these calls.  Change
+`gsc_hpdi_auto_attach()` to return `-ENOMEM` if any of these
+`dma_alloc_coherent()` calls fail.  This will result in the comedi core
+calling the "detach" handler `gsc_hpdi_detach()` as part of the
+clean-up, which will call `gsc_hpdi_free_dma()` to free any allocated
+DMA coherent memory buffers.
 
-Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: <stable@vger.kernel.org> #4.6+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20191216110823.216237-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/imx/clk-pll14xx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/gsc_hpdi.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -153,7 +153,7 @@ static int clk_pll14xx_wait_lock(struct
- {
- 	u32 val;
- 
--	return readl_poll_timeout(pll->base, val, val & LOCK_TIMEOUT_US, 0,
-+	return readl_poll_timeout(pll->base, val, val & LOCK_STATUS, 0,
- 			LOCK_TIMEOUT_US);
- }
- 
+--- a/drivers/staging/comedi/drivers/gsc_hpdi.c
++++ b/drivers/staging/comedi/drivers/gsc_hpdi.c
+@@ -623,6 +623,11 @@ static int gsc_hpdi_auto_attach(struct c
+ 		    dma_alloc_coherent(&pcidev->dev, DMA_BUFFER_SIZE,
+ 				       &devpriv->dio_buffer_phys_addr[i],
+ 				       GFP_KERNEL);
++		if (!devpriv->dio_buffer[i]) {
++			dev_warn(dev->class_dev,
++				 "failed to allocate DMA buffer\n");
++			return -ENOMEM;
++		}
+ 	}
+ 	/* allocate dma descriptors */
+ 	devpriv->dma_desc = dma_alloc_coherent(&pcidev->dev,
+@@ -630,6 +635,11 @@ static int gsc_hpdi_auto_attach(struct c
+ 					       NUM_DMA_DESCRIPTORS,
+ 					       &devpriv->dma_desc_phys_addr,
+ 					       GFP_KERNEL);
++	if (!devpriv->dma_desc) {
++		dev_warn(dev->class_dev,
++			 "failed to allocate DMA descriptors\n");
++		return -ENOMEM;
++	}
+ 	if (devpriv->dma_desc_phys_addr & 0xf) {
+ 		dev_warn(dev->class_dev,
+ 			 " dma descriptors not quad-word aligned (bug)\n");
 
 
