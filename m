@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792EEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C2FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51D7221744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0073621744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640915;
-	bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
+	s=default; t=1577640918;
+	bh=1VQvL9dRksI4IhYJFs1T/qelYf9r1BRQIl3EuaZdVf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjOKj0X53nDajcMKbL1zl+FoAnraGTWSiQFNAg0p5bDqVoC/Jo4wF2mfL0/kthMiO
-	 UOba/Mzt4Py5UlgrICuOZrvWimgeDNRaAcB2f1r7PN41IQ/xGsjIknMsjGDUq1AwFO
-	 wZcPnqxM0kOU3w+PklC195keEQ5m0lYgvqky3QJk=
+	b=qx73PTrM7JJ4+f+XAAOtEsatgt8YEwh39KnKYUFMfysMwtLX8NnW7zh/4zX8na1VG
+	 3QbPFQqPEG0on7nqbdaNBgWrzD4SPXkFsYw7ZYbOPbkKlqXTkQpMaGPWYntLNDfneG
+	 WRKfqEPNX6NnSVjj53oBSkeLGhb2sLfpg/rqV9M0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfL2RfO (ORCPT
+        id S1729502AbfL2RfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:35:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39302 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:35:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbfL2RfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:35:10 -0500
+        id S1728389AbfL2RfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:35:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB0121D7E;
-        Sun, 29 Dec 2019 17:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296E2207FF;
+        Sun, 29 Dec 2019 17:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640910;
-        bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
+        s=default; t=1577640907;
+        bh=1VQvL9dRksI4IhYJFs1T/qelYf9r1BRQIl3EuaZdVf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MWan0OdVx0qNhd0CeF/2KIyTbVGeyoQLmUWhL7IHhB5rEG8IHRSE8cp9ItImKYxNo
-         qGe9S+8TMMLicemsO6fWuv68zyYbh0lyDJWziNycp0CeGiimSJjjDt1ZxztB2HrOaV
-         3RvbRaCvwj7IifCQZX79BZ8MfrMLcLIwXnKAHa3U=
+        b=ScWhn3GGsvmd/iUYzaJHPCKdUNSjF5PRjjjVnIEr/SFDKWGR8ulLQDj1beAZ2B4gi
+         LTmKvWi+EixPMW774JFHu4fV79G9MzhlKbQubcJskRb8+29XSWf7Qly3dn6UPSRNrB
+         DuIMtEEuV0UWRNk4/5gsyogPopQVLNCRZSK2xM6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 172/219] spi: st-ssc4: add missed pm_runtime_disable
-Date:   Sun, 29 Dec 2019 18:19:34 +0100
-Message-Id: <20191229162534.823082996@linuxfoundation.org>
+Subject: [PATCH 4.19 189/219] btrfs: dont prematurely free work in scrub_missing_raid56_worker()
+Date:   Sun, 29 Dec 2019 18:19:51 +0100
+Message-Id: <20191229162538.150206652@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,43 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
+[ Upstream commit 57d4f0b863272ba04ba85f86bfdc0f976f0af91c ]
 
-The driver forgets to call pm_runtime_disable in probe failure
-and remove.
-Add the missed calls to fix it.
+Currently, scrub_missing_raid56_worker() puts and potentially frees
+sblock (which embeds the work item) and then submits a bio through
+scrub_wr_submit(). This is another potential instance of the bug in
+"btrfs: don't prematurely free work in run_ordered_work()". Fix it by
+dropping the reference after we submit the bio.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-st-ssc4.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/scrub.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
-index a4e43fc19ece..5df01ffdef46 100644
---- a/drivers/spi/spi-st-ssc4.c
-+++ b/drivers/spi/spi-st-ssc4.c
-@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 916c39770467..6b6008db3e03 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -2145,14 +2145,13 @@ static void scrub_missing_raid56_worker(struct btrfs_work *work)
+ 		scrub_write_block_to_dev_replace(sblock);
+ 	}
  
- clk_disable:
-+	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(spi_st->clk);
- put_master:
- 	spi_master_put(master);
-@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct spi_st *spi_st = spi_master_get_devdata(master);
+-	scrub_block_put(sblock);
+-
+ 	if (sctx->is_dev_replace && sctx->flush_all_writes) {
+ 		mutex_lock(&sctx->wr_lock);
+ 		scrub_wr_submit(sctx);
+ 		mutex_unlock(&sctx->wr_lock);
+ 	}
  
-+	pm_runtime_disable(&pdev->dev);
-+
- 	clk_disable_unprepare(spi_st->clk);
++	scrub_block_put(sblock);
+ 	scrub_pending_bio_dec(sctx);
+ }
  
- 	pinctrl_pm_select_sleep_state(&pdev->dev);
 -- 
 2.20.1
 
