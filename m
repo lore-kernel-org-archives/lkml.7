@@ -2,53 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53FFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E74B4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9150C222D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE26B222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640389;
-	bh=wsHIFJAmjYWO77Jd3ok2F7ez+zkjjpjrIVuBXZhvvN0=;
+	s=default; t=1577640392;
+	bh=ibYh33WcDqtJFx1fzZSI/8T3+GC6ZOgarCVSzWDpJsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jkn5Qg+pHhWo/v9L+yddQkvZhKP0phWbVKQdOKF50mjYMWpYl7FruesQEsKwhZzNX
-	 W+8AcmrIdYzmAfU9PM6f4qK7FYXf5+zKgq78cR7Rz6Q/0KBZVNTQkySMk7r6VUZIXK
-	 XaSA95PhEAeeP0LByPG1MpL9LcklV2N0DTrkuMDU=
+	b=DOzZZ7oL9LMMwQqhRsNDKy5EcJBkB09v8wDg2j+3fn9BRWTloqg0idvCWdl3qTPjm
+	 Z7+ba+j3L+qXGaz/Jd8L6bVkb/zxOOWI2x3QpIAGGBX1YlnAFwNUv1kgWHeOh8XZLZ
+	 x7gVWZ7pYSRi5hVHYcn7FgNnNwFjiU3+aB5fLEHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfL2R02 (ORCPT
+        id S1728228AbfL2R0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47446 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:26:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbfL2R0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:25 -0500
+        id S1727382AbfL2R0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF023207FF;
-        Sun, 29 Dec 2019 17:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 827F821744;
+        Sun, 29 Dec 2019 17:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640385;
-        bh=wsHIFJAmjYWO77Jd3ok2F7ez+zkjjpjrIVuBXZhvvN0=;
+        s=default; t=1577640390;
+        bh=ibYh33WcDqtJFx1fzZSI/8T3+GC6ZOgarCVSzWDpJsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVVesQKGmM17SwE1e4xHXALx5iiEu5ZYq3Zl3UhYx85jSnyW9LB+vfqi7hdF4bpnq
-         vR7hJyeh56nYWqBxAAoQF0RC1xa7juYou54MnJgnJQy5FZrs7Wl5aIOVo6Qca7Y3pG
-         BuK4XqcF22WgbSXRqa9RXI44zyUyranbMcGXrzIs=
+        b=k6L4F+wdtG9hBqtMvW6Yc17i0LAyasqzmTx5jkPOsdy/lopzUGnuoqznDjvrXZMUs
+         PJrKO/63NuWrl1G8Omba9ddy7bnTmnA4lhFnPbNIkc8S3aDCEDDuOKiEwFvcuTuuCC
+         EBH/xKpWNeD8K4fhvih7UdYpGefbcv50ulqO/pdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 137/161] btrfs: dont prematurely free work in scrub_missing_raid56_worker()
-Date:   Sun, 29 Dec 2019 18:19:45 +0100
-Message-Id: <20191229162440.396998386@linuxfoundation.org>
+        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 139/161] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
+Date:   Sun, 29 Dec 2019 18:19:47 +0100
+Message-Id: <20191229162441.327994797@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,47 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Chaotian Jing <chaotian.jing@mediatek.com>
 
-[ Upstream commit 57d4f0b863272ba04ba85f86bfdc0f976f0af91c ]
+commit 8f34e5bd7024d1ffebddd82d7318b1be17be9e9a upstream.
 
-Currently, scrub_missing_raid56_worker() puts and potentially frees
-sblock (which embeds the work item) and then submits a bio through
-scrub_wr_submit(). This is another potential instance of the bug in
-"btrfs: don't prematurely free work in run_ordered_work()". Fix it by
-dropping the reference after we submit the bio.
+there is a chance that always get response CRC error after HS200 tuning,
+the reason is that need set CMD_TA to 2. this modification is only for
+MT8173.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: stable@vger.kernel.org
+Fixes: 1ede5cb88a29 ("mmc: mediatek: Use data tune for CMD line tune")
+Link: https://lore.kernel.org/r/20191204071958.18553-1-chaotian.jing@mediatek.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/scrub.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/mmc/host/mtk-sd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-index 61192c536e6c..2ebae9773978 100644
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -2421,14 +2421,13 @@ static void scrub_missing_raid56_worker(struct btrfs_work *work)
- 		scrub_write_block_to_dev_replace(sblock);
- 	}
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -212,6 +212,8 @@
+ #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
+ #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
  
--	scrub_block_put(sblock);
--
- 	if (sctx->is_dev_replace && sctx->flush_all_writes) {
- 		mutex_lock(&sctx->wr_lock);
- 		scrub_wr_submit(sctx);
- 		mutex_unlock(&sctx->wr_lock);
- 	}
++#define MSDC_PATCH_BIT1_CMDTA     (0x7 << 3)    /* RW */
++
+ #define MSDC_PAD_TUNE_DATWRDLY	  (0x1f <<  0)	/* RW */
+ #define MSDC_PAD_TUNE_DATRRDLY	  (0x1f <<  8)	/* RW */
+ #define MSDC_PAD_TUNE_CMDRDLY	  (0x1f << 16)  /* RW */
+@@ -1442,6 +1444,7 @@ static int hs400_tune_response(struct mm
  
-+	scrub_block_put(sblock);
- 	scrub_pending_bio_dec(sctx);
- }
+ 	/* select EMMC50 PAD CMD tune */
+ 	sdr_set_bits(host->base + PAD_CMD_TUNE, BIT(0));
++	sdr_set_field(host->base + MSDC_PATCH_BIT1, MSDC_PATCH_BIT1_CMDTA, 2);
  
--- 
-2.20.1
-
+ 	if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
+ 	    mmc->ios.timing == MMC_TIMING_UHS_SDR104)
 
 
