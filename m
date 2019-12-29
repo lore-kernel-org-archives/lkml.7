@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21FC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD816C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A7C207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91967207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641293;
-	bh=m4hHI7jDlSWB/FgJnp1KCl5obLxNslWCKCOV9FQzl+Y=;
+	s=default; t=1577641301;
+	bh=rJ9T0NsU4NCiXEL3LAWvxfY7uGboWhRhsy19r41m7Ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4aOSS+HE0MfJH4P2D2/aHHVfZWPJk1vJsy9KBtXe8YnqVxuJqekb4MCGyKHXkeZk
-	 zni1crwIUUvc/Jx97bjN0pEAgf9tKVPhE2zTN0ng8WoDHpvk0xWuUb5Wt22ELio+sX
-	 HqOssoeCSllHK+CRLeobTD35b4IOAkStPwqrU3bs=
+	b=AQpR4kQQk64RDHtaRH8hXRG4CmTjL5MoCfYkeCNvhcA2d+pHHhgSlVouLW5j3Kwir
+	 S424dXKwD6tYdTuIAxAXfhD72FPhMyiDF/t0D74KRKfikWoOYcyzJfljyPEw0TXnyq
+	 UXLC/qXZgu6YmB5Z1mDzxpiET23vNJ6xQG9RdSbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfL2Rlc (ORCPT
+        id S1730031AbfL2Rlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:41:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728699AbfL2RaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:16 -0500
+        id S1728618AbfL2R34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51D3D20722;
-        Sun, 29 Dec 2019 17:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F3620409;
+        Sun, 29 Dec 2019 17:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640615;
-        bh=m4hHI7jDlSWB/FgJnp1KCl5obLxNslWCKCOV9FQzl+Y=;
+        s=default; t=1577640596;
+        bh=rJ9T0NsU4NCiXEL3LAWvxfY7uGboWhRhsy19r41m7Ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/5G3/AQGndqYF7yzc0gbWL3AWuhcLWp8JXx+TvNNUoJcZnmp7fvP+hm2blhKIsRg
-         PKIx8aTAazAWu3z38x5J5V1x9hiKmskh12pjk/2YOrYVrLys+Ffsz4DOmdJCaXl6If
-         YlaS1ZldmxouJKJp0sKVaTmPyuLIPVn6+NMVbW34=
+        b=g3kwcEtaT99Q6oeZrz4vK41igR08alhjjA7s7cA8vXX7suN/F3lwdbONCDd9AdSm5
+         4aMl+EGWFxyCmayGwaM2YcTBtRmY2/JI+rP3E+AnDKvog4GESaNd6QTiwxevD1f2la
+         v29ZbybXMopcu0iR1azEZUWk3bgY7qzRfNSuvlss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/219] media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel panic
-Date:   Sun, 29 Dec 2019 18:17:50 +0100
-Message-Id: <20191229162516.852303393@linuxfoundation.org>
+Subject: [PATCH 4.19 061/219] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
+Date:   Sun, 29 Dec 2019 18:17:43 +0100
+Message-Id: <20191229162515.953663409@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,59 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit a37980ac5be29b83da67bf7d571c6bd9f90f8e45 ]
+[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
 
-v4l2-compliance fails with this message:
+In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release for skb and
+card->evtbd_ring_vbase is added.
 
-   warn: v4l2-test-formats.cpp(717): \
-   	TRY_FMT cannot handle an invalid pixelformat.
-   test VIDIOC_TRY_FMT: FAIL
-
-This causes the following kernel panic:
-
-Unable to handle kernel paging request at virtual address 56595561
-pgd = ecd80e00
-*pgd=00000000
-Internal error: Oops: 205 [#1] PREEMPT SMP ARM
-...
-CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
-	4.14.62-01715-gc8cd67f49a19 #1
-Hardware name: Generic DRA72X (Flattened Device Tree)
-task: ece44d80 task.stack: ecc6e000
-PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
-LR is at 0x8
-
-Because the driver fails to properly check the 'num_planes' values for
-proper ranges it ends up accessing out of bound data causing the kernel
-panic.
-
-Since this driver only handle single or dual plane pixel format, make
-sure the provided value does not exceed 2 planes.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index ca9095b80309..54f0d9d3cc49 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1646,7 +1646,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 			      &pix->height, MIN_H, MAX_H, H_ALIGN,
- 			      S_ALIGN);
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index 3fe81b2a929a..918c69936540 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -691,8 +691,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
+ 		skb_put(skb, MAX_EVENT_SIZE);
  
--	if (!pix->num_planes)
-+	if (!pix->num_planes || pix->num_planes > 2)
- 		pix->num_planes = fmt->coplanar ? 2 : 1;
- 	else if (pix->num_planes > 1 && !fmt->coplanar)
- 		pix->num_planes = 1;
+ 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
+-					   PCI_DMA_FROMDEVICE))
++					   PCI_DMA_FROMDEVICE)) {
++			kfree_skb(skb);
++			kfree(card->evtbd_ring_vbase);
+ 			return -1;
++		}
+ 
+ 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
+ 
 -- 
 2.20.1
 
