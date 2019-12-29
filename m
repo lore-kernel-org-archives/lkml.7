@@ -2,52 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EABC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C85C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFB820718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA16620718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641066;
-	bh=w2ErK50CqRFsYFArCbbtqfo0yUFwHzVL5IYv2eqk3qg=;
+	s=default; t=1577641070;
+	bh=Z4NeLnHfinDf0dGZbvxosTXYvPNpnBpXnEzp2QUg3tM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iEPKR1PlPmaSCywgs3qxkvpa1+b3zBfOJR4Vimjit5bO2UJpjYS9ajA6LtE7yq+md
-	 MQMNaEN6ak+ykD1jguAYj9sNPbqnEsNLZYfyjes43dK04Nv2/1K4O8K2jppOFDLK0R
-	 DgDI6r6QR7m9vmkXXpadHHN8eUcBJXBbHgZeEtWU=
+	b=Yrz2MNThrjfS7WdOZ+9f/hMSTEgeU5ASSPMm6a8/rI5wivtVQgff9L7cAI0eoI8vH
+	 wVAB3Rm0hw9groE+VyiBvioqlBUarZqQJ4itgdj+Hx3bP8vtWh4DH3UTCBi7/7hLba
+	 wZ52imnre9MYFRRtSurd+MAmIBVnbj+gMUugUlwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfL2RfU (ORCPT
+        id S1729821AbfL2Rht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:35:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39434 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:37:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbfL2RfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:35:15 -0500
+        id S1729516AbfL2RfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:35:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC0C206DB;
-        Sun, 29 Dec 2019 17:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434C9206DB;
+        Sun, 29 Dec 2019 17:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640914;
-        bh=w2ErK50CqRFsYFArCbbtqfo0yUFwHzVL5IYv2eqk3qg=;
+        s=default; t=1577640919;
+        bh=Z4NeLnHfinDf0dGZbvxosTXYvPNpnBpXnEzp2QUg3tM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hgb/1GUGILRKof3aNQvz5whpUIm+Q7Zr05YU0hBeEYnewnveYHEeBuS1h9MnXpQ5J
-         tGu+piec7wgBxqkEPY30X51SwEVnKKV7NV2PAUQLVPOP3UmKFgBzxNGAOD0JxKZZ1q
-         PfQ/CTOua3O/Ybko/dAVIZPE5f0VTSurkQdQCCdE=
+        b=qQGrjiBRZijkkrzl7Ss3U9jl4ey/3hjFnxmC8/1AX79fX24cCj8gDNMq6rBN0JbPQ
+         0eGISxKz/LmIqoDmL5lg6QyNphofF7SEp33xE9l0zT/RSdnVgCVFjM/K5OzU2Sc+EH
+         QTUoWfEvZTx4uRIbupu0PVFBAZiLsekRYNXSZdU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 191/219] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-Date:   Sun, 29 Dec 2019 18:19:53 +0100
-Message-Id: <20191229162538.456000494@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 193/219] usb: xhci: Fix build warning seen with CONFIG_PM=n
+Date:   Sun, 29 Dec 2019 18:19:55 +0100
+Message-Id: <20191229162538.879138816@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,43 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit 8f34e5bd7024d1ffebddd82d7318b1be17be9e9a upstream.
+[ Upstream commit 6056a0f8ede27b296d10ef46f7f677cc9d715371 ]
 
-there is a chance that always get response CRC error after HS200 tuning,
-the reason is that need set CMD_TA to 2. this modification is only for
-MT8173.
+The following build warning is seen if CONFIG_PM is disabled.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: stable@vger.kernel.org
-Fixes: 1ede5cb88a29 ("mmc: mediatek: Use data tune for CMD line tune")
-Link: https://lore.kernel.org/r/20191204071958.18553-1-chaotian.jing@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+drivers/usb/host/xhci-pci.c:498:13: warning:
+	unused function 'xhci_pci_shutdown'
+
+Fixes: f2c710f7dca8 ("usb: xhci: only set D3hot for pci device")
+Cc: Henry Lin <henryl@nvidia.com>
+Cc: stable@vger.kernel.org	# all stable releases with f2c710f7dca8
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20191218011911.6907-1-linux@roeck-us.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/mtk-sd.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/xhci-pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -228,6 +228,7 @@
- #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
- #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 74aeaa61f5c6..075c49cfe60f 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -493,7 +493,6 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
+ 	retval = xhci_resume(xhci, hibernated);
+ 	return retval;
+ }
+-#endif /* CONFIG_PM */
  
-+#define MSDC_PATCH_BIT1_CMDTA     (0x7 << 3)    /* RW */
- #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
+ static void xhci_pci_shutdown(struct usb_hcd *hcd)
+ {
+@@ -506,6 +505,7 @@ static void xhci_pci_shutdown(struct usb_hcd *hcd)
+ 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+ 		pci_set_power_state(pdev, PCI_D3hot);
+ }
++#endif /* CONFIG_PM */
  
- #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
-@@ -1673,6 +1674,7 @@ static int hs400_tune_response(struct mm
+ /*-------------------------------------------------------------------------*/
  
- 	/* select EMMC50 PAD CMD tune */
- 	sdr_set_bits(host->base + PAD_CMD_TUNE, BIT(0));
-+	sdr_set_field(host->base + MSDC_PATCH_BIT1, MSDC_PATCH_BIT1_CMDTA, 2);
- 
- 	if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
- 	    mmc->ios.timing == MMC_TIMING_UHS_SDR104)
+-- 
+2.20.1
+
 
 
