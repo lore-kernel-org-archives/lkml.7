@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B967C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0314C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1324D206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E255206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642929;
-	bh=VAktnDucK6425Kb0ZzoykzYzXO+ljRxDcVp+y1r1LN4=;
+	s=default; t=1577642934;
+	bh=ay9gmLr2Nl2tg97gYrt/XH5VpXuzO5Kfwb7URfU09fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NP4Dih3DdozJHXu/1OwvK/Cx8ODguNxlsj9EHmxeeUYUN8/mrbFbdLTlRWrrIVusM
-	 6tzo9+vT7a18uq8AneT+Ew2Djdvuo2nP7xP8gQNC8SKuEHmuZ9wXFYy/Ve54qqubax
-	 oIygacsyedDpE7VKiX1RKnvlSnZBE6I73oc5tS4o=
+	b=Qd9HOH6mapHEQbP+/0FtzCx+fYQjojXlSjr26/26BnjN4ATShQ+gzEsagS6Y+yTBj
+	 khUVtaXhou2efjtuQrV16r4umQorW6qz21kicOPPl532U/0MShIPmvbVMh0AKXWlcS
+	 WgKMbJeJ187KtghYwWf4lw7g4ihCTA5oWJrQlJpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbfL2Rq4 (ORCPT
+        id S1731127AbfL2Rqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:46:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfL2Rqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:43 -0500
+        id S1730841AbfL2Rqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C64206A4;
-        Sun, 29 Dec 2019 17:46:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09783206A4;
+        Sun, 29 Dec 2019 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641603;
-        bh=VAktnDucK6425Kb0ZzoykzYzXO+ljRxDcVp+y1r1LN4=;
+        s=default; t=1577641593;
+        bh=ay9gmLr2Nl2tg97gYrt/XH5VpXuzO5Kfwb7URfU09fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mvBuMiHfaNct3wMozxlebFWnxLzwVX4w7caeT5rCBzSBN6pGpJ9zJ9MRw8lzBF4u7
-         4pHqOO0FSb91uMwkffgjOnhc86XReQwsY7ZNukyBQXkzYKBnR+TAYYN78eFUam3x93
-         /BeyzEKNTfBm+ZHZeU6KfUEf5V98l1jU0FtzCxI0=
+        b=e6EqsrJFj/UWcfD7AH0HrF7cUvea3bEDLrDnACyC0dlxqsrtEm/45QgqxetYidAc8
+         1MWx44HfelrHZukvkbwYAi8X5k9it3Zxp0nCnkgoYTnH+Tu0cjGvtZgxrquliwf4C6
+         /5xoREkLzidT9cPFSbCIGXlgaoy2tVT6OB8frGAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 133/434] drm/amd/display: Properly round nominal frequency for SPD
-Date:   Sun, 29 Dec 2019 18:23:06 +0100
-Message-Id: <20191229172710.541820093@linuxfoundation.org>
+Subject: [PATCH 5.4 130/434] media: ti-vpe: vpe: Make sure YUYV is set as default format
+Date:   Sun, 29 Dec 2019 18:23:03 +0100
+Message-Id: <20191229172710.338550411@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,61 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit c59802313e84bede954235b3a5dd0dd5325f49c5 ]
+[ Upstream commit e20b248051ca0f90d84b4d9378e4780bc31f16c6 ]
 
-[Why]
-Some displays rely on the SPD verticle frequency maximum value.
-Must round the calculated refresh rate to the nearest integer.
+v4l2-compliance fails with this message:
 
-[How]
-Round the nominal calculated refresh rate to the nearest whole
-integer.
+   fail: v4l2-test-formats.cpp(672): \
+	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+   fail: v4l2-test-formats.cpp(672): \
+	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The default pixel format was setup as pointing to a specific offset in
+the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
+entry. This became false after the addition on the NV21 format (see
+above commid-id)
+
+So instead of hard-coding an offset which might change over time we need
+to use a lookup helper instead so we know the default will always be what
+we intended.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Fixes: 40cc823f7005 ("media: ti-vpe: Add support for NV21 format")
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/modules/freesync/freesync.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index ec70c9b12e1a..0978c698f0f8 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -743,6 +743,10 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 	nominal_field_rate_in_uhz =
- 			mod_freesync_calc_nominal_field_rate(stream);
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index e44299008a7b..2b731c8f5459 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -2288,7 +2288,7 @@ static int vpe_open(struct file *file)
+ 	v4l2_ctrl_handler_setup(hdl);
  
-+	/* Rounded to the nearest Hz */
-+	nominal_field_rate_in_uhz = 1000000ULL *
-+			div_u64(nominal_field_rate_in_uhz + 500000, 1000000);
-+
- 	min_refresh_in_uhz = in_config->min_refresh_in_uhz;
- 	max_refresh_in_uhz = in_config->max_refresh_in_uhz;
- 
-@@ -996,14 +1000,13 @@ unsigned long long mod_freesync_calc_nominal_field_rate(
- 			const struct dc_stream_state *stream)
- {
- 	unsigned long long nominal_field_rate_in_uhz = 0;
-+	unsigned int total = stream->timing.h_total * stream->timing.v_total;
- 
--	/* Calculate nominal field rate for stream */
-+	/* Calculate nominal field rate for stream, rounded up to nearest integer */
- 	nominal_field_rate_in_uhz = stream->timing.pix_clk_100hz / 10;
- 	nominal_field_rate_in_uhz *= 1000ULL * 1000ULL * 1000ULL;
--	nominal_field_rate_in_uhz = div_u64(nominal_field_rate_in_uhz,
--						stream->timing.h_total);
--	nominal_field_rate_in_uhz = div_u64(nominal_field_rate_in_uhz,
--						stream->timing.v_total);
-+
-+	nominal_field_rate_in_uhz =	div_u64(nominal_field_rate_in_uhz, total);
- 
- 	return nominal_field_rate_in_uhz;
- }
+ 	s_q_data = &ctx->q_data[Q_DATA_SRC];
+-	s_q_data->fmt = &vpe_formats[2];
++	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	s_q_data->width = 1920;
+ 	s_q_data->height = 1080;
+ 	s_q_data->nplanes = 1;
 -- 
 2.20.1
 
