@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4721BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23370207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA45206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641273;
-	bh=xgfG21dEu0LH+RzJCNRvuC1/quwx7EIbl/cBnZNiFUs=;
+	s=default; t=1577641279;
+	bh=G5oNyWpNmFEsSlsz7KFmJQDCVyjsY8Q9iaSYiYXTJhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdche0GjB/0DcPXOnc8A1PSqmMJddqYFHyUTlVDMnDIb1Fb0Lv9fapukVtm0AFX5K
-	 S7wkaPIFEDaJFg4RzOfTTDLmjVU9ZaRARG3dEOL3Iwl4qcJtkoDRB9MJT57x6ZsMHh
-	 nCRIL+BDEMrZoihYhtUKV982lF5OIsrRHYbvaHwg=
+	b=w0EEz3C3b2ExCQII5FVcegrm062CCgYOmsWrnLd5uS28RncucN3TPJZgr3cfXO1JM
+	 E5rvqwkgtKRAYk3POgMA1sdB3az3O4A4wYwPKZEk+eGptTm1dh760ngB/1ya8ui13u
+	 /nTMgBXKfj5+NR4drABnL1gC/7Bj70AxolwsUN5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfL2RlL (ORCPT
+        id S1728975AbfL2Ra3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:30:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfL2Rag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:36 -0500
+        id S1728946AbfL2RaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECD3720722;
-        Sun, 29 Dec 2019 17:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B36220722;
+        Sun, 29 Dec 2019 17:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640635;
-        bh=xgfG21dEu0LH+RzJCNRvuC1/quwx7EIbl/cBnZNiFUs=;
+        s=default; t=1577640620;
+        bh=G5oNyWpNmFEsSlsz7KFmJQDCVyjsY8Q9iaSYiYXTJhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpMAJSwxAQmign0cLqI71T/2NzALDl+FhdJgiM3uzAjeoXLlVy5jTcml3/wznsAaV
-         iwB7S7nbnOCFySDm6y0aG+Bnb6O54b751x1okVWt8F6Ja7yfQDiPNJj+okxfvCHtR2
-         5P+rf7Gyb5MyjnijoZjTsHljmsmhFjUlwVhHdQTw=
+        b=LMQ1qED9Rk1ZzN3YmWn9/diRM91NSqJZpIpBXjfLWXtoxMXqpnmauViCMxLOf53+0
+         3LcQaZ9Ff7kMnHKxBCElbCHAgsyP+U29EuR7m1V0tFImLcQS59KSJEpeI2vwwvJZlr
+         Ge3rdoU4UfH0bMwCAoxLrhNmOA4WNW1P5ykpD4vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/219] ath10k: Correct error handling of dma_map_single()
-Date:   Sun, 29 Dec 2019 18:17:57 +0100
-Message-Id: <20191229162517.375855022@linuxfoundation.org>
+Subject: [PATCH 4.19 070/219] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date:   Sun, 29 Dec 2019 18:17:52 +0100
+Message-Id: <20191229162516.981223051@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,42 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit d43810b2c1808ac865aa1a2a2c291644bf95345c ]
+[ Upstream commit 0bac73adea4df8d34048b38f6ff24dc3e73e90b6 ]
 
-The return value of dma_map_single() should be checked for errors using
-dma_mapping_error() and the skb has been dequeued so it needs to be
-freed.
+v4l2-compliance fails with this message:
 
-This was found when enabling CONFIG_DMA_API_DEBUG and it warned about the
-missing dma_mapping_error() call.
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
+   test VIDIOC_TRY_FMT: FAIL
 
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
+
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/mac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 174e0ce31c42..448e3a8c33a6 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3844,8 +3844,10 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
- 			     ar->running_fw->fw_file.fw_features)) {
- 			paddr = dma_map_single(ar->dev, skb->data,
- 					       skb->len, DMA_TO_DEVICE);
--			if (!paddr)
-+			if (dma_mapping_error(ar->dev, paddr)) {
-+				ieee80211_free_txskb(ar->hw, skb);
- 				continue;
-+			}
- 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
- 			if (ret) {
- 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index 7e611501c291..f29074c84915 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -60,6 +60,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
+ 
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 52d5aebe0fb8..a285b9db7ee8 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1685,6 +1685,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
+ 
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
++
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
+ 
 -- 
 2.20.1
 
