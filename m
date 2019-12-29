@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACCFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C33CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66DD20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75929206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641113;
-	bh=kJX2G7T5wQdl0XPbZtK5nUtz7BoS3Xi4JIGt0TkcmMI=;
+	s=default; t=1577641124;
+	bh=OOlNrjQ+wSBaNpDqIhegLR7x23Z1pcUgiLCTmbr5FG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AfYMyaEkJk1/8EUTm+Sv2BNBcxBsDi9J12TqQrvQowWdjoiWFIuZt/jXCPFdPu2Tp
-	 YL1xGQuaO3p37lsd8cgpBK/Hs9yOuCEX4SgHa0ras7qB6fIvM2bKvFVFFMi3xGHfbM
-	 FKHZMgk7LeCE8NFyxiLT6lP86+oZRBdfSCm3Lzy8=
+	b=NHq/4bvpbFpMg0K6UHu/3eEMxO/OD6eWNS7avI6i60r86gyvpIxw1z1q4eKvolg3C
+	 tTOyjoZkJUhK1sdPrQcUWtlkcPQM/UCCwz3nVCYh0z4RX6aZ5Ou/iUBH38mfUORTzK
+	 h6jHsfljINwsMPQHiDD9HIKkVdmIDDk19A47NoJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfL2Rib (ORCPT
+        id S1728766AbfL2Rd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:38:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729618AbfL2ReU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:20 -0500
+        id S1729546AbfL2Rd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF45D20722;
-        Sun, 29 Dec 2019 17:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0658207FF;
+        Sun, 29 Dec 2019 17:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640859;
-        bh=kJX2G7T5wQdl0XPbZtK5nUtz7BoS3Xi4JIGt0TkcmMI=;
+        s=default; t=1577640835;
+        bh=OOlNrjQ+wSBaNpDqIhegLR7x23Z1pcUgiLCTmbr5FG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tdcx/lMbXuQS1GLeB/h8XwHyGWKAI9I5v9UKtcp1uM71QhII8mUCT2clXZqxCWKjM
-         /15aKMvlVs6NV08eSBagctzic/27JzZZaH+0LpByw2s7lxbups8Pd6i/cpjTiWz559
-         iur0lcSJ3ySyEjhxduXEl51My5XL36/jL1ImL3Cw=
+        b=r7Pp3VH/R0dIhj1h0WjTclbgocb14leFDWJJPEbU12K/WfMdiHGXSNM4r43LsrvUQ
+         ZM4wSg3XcuXldRby8xlayxg0QB2qoLIQo740hVU4HSf47aGPendvZJT+B4oEksvMMd
+         NXj05QOf+meAFmkD3k8+y07d3qD5eEs83/ON4vj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        virtualization@lists.linux-foundation.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/219] crypto: virtio - deal with unsupported input sizes
-Date:   Sun, 29 Dec 2019 18:19:29 +0100
-Message-Id: <20191229162534.140940341@linuxfoundation.org>
+Subject: [PATCH 4.19 131/219] perf probe: Fix to probe a function which has no entry pc
+Date:   Sun, 29 Dec 2019 18:18:53 +0100
+Message-Id: <20191229162528.440583637@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -64,65 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
+[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
 
-Return -EINVAL for input sizes that are not a multiple of the AES
-block size, since they are not supported by our CBC chaining mode.
+Fix 'perf probe' to probe a function which has no entry pc or low pc but
+only has ranges attribute.
 
-While at it, remove the pr_err() that reports unsupported key sizes
-being used: we shouldn't spam the kernel log with that.
+probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
+but that doesn't work for the function DIE which has only ranges
+attribute. Use die_entrypc() instead.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Without this fix:
+
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
+    Error: Failed to add events.
+
+With this:
+
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
+  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
+    Error: Failed to add events.
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  [root@quaco ~]#
+
+Using it with 'perf trace':
+
+  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
+
+Doesn't seem to be used in x86_64:
+
+  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
+  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
+  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
+  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
+  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
+  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
+  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
+  $
+
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 2c573d1aaa64..523b712770ac 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -117,8 +117,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
- 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
- 		break;
- 	default:
--		pr_err("virtio_crypto: Unsupported key length: %d\n",
--			key_len);
- 		return -EINVAL;
- 	}
- 	return 0;
-@@ -498,6 +496,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
- 
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
-@@ -518,6 +521,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
- 
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index d0d333c90b35..64d4837c8f82 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1002,7 +1002,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
+ 		param->retval = find_probe_point_by_line(pf);
+ 	} else if (die_is_func_instance(sp_die)) {
+ 		/* Instances always have the entry address */
+-		dwarf_entrypc(sp_die, &pf->addr);
++		die_entrypc(sp_die, &pf->addr);
+ 		/* But in some case the entry address is 0 */
+ 		if (pf->addr == 0) {
+ 			pr_debug("%s has no entry PC. Skipped\n",
 -- 
 2.20.1
 
