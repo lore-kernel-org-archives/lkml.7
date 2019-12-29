@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDACC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA3DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E9321744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CA921744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641358;
-	bh=SO80qTfhuuZnOKrR0zqMqmPghi9X1Dt0wB0Ee1DHsyI=;
+	s=default; t=1577641363;
+	bh=qNId+mJDOfCuB9Q6oTfqRmdaqurH0clH61Pp/JoYDMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MGWrX8zXIElVMkIrjobm/WlhGPxsjr5xicCwRtG0eRpYeBAyKYP+VYVRC66RS5TtR
-	 zL/qfpH/RosbK0w/iODdmY11yK2720OFhplpJz+H4peUDyjl2+7yKQ3ZScFNC5flJB
-	 /5ZL0dfenb7Spi2dTwPAhV9yDeY5Gh52cWdlrOM4=
+	b=ar5sl+9xSVqQazcFEGksM7TfxseZEenR9vyBzCqLJLoS8WTCe2TsCcvNsl3fHycrt
+	 M0gI4mx8l1VGAZnj4kBNdeY+hR0XDagOfC0pyRJiOgu93008G3auGFmv9f5TQWTa0e
+	 OiZlO0OiymmFJtTTum2SUt/S6RT7BLpWxyXHiXTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfL2Rmg (ORCPT
+        id S1730350AbfL2Rmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:42:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48598 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:42:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730285AbfL2RmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:42:24 -0500
+        id S1730318AbfL2Rmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:42:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1824A20718;
-        Sun, 29 Dec 2019 17:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBAC620718;
+        Sun, 29 Dec 2019 17:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641343;
-        bh=SO80qTfhuuZnOKrR0zqMqmPghi9X1Dt0wB0Ee1DHsyI=;
+        s=default; t=1577641353;
+        bh=qNId+mJDOfCuB9Q6oTfqRmdaqurH0clH61Pp/JoYDMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avqHkO0MKaEBJlkD339mMtDajMW/k15GqcDepOjKZzviJke1TywoNDSiYCeO9gpQm
-         Tmm2zWZTIjz7LWdzVa4QnA4HT3wHxf9EpJ4Aoq3ZaevjZWZw3whyniFUf7HRjdPzqC
-         IeCRejNEdgjpeuhmXGJPf4hTHgda2hKBkYn6PYI0=
+        b=yJ5lU6/j0PmvRfV4Jv6tJmNSM6h+5WLxemYLNGUbJPF/OECA0af68S55xGVDpxvi5
+         00LCeLrTLoOVMwKNX4wUkWuy9TXWwM2zQWnPX6RV6VL7p4KiAYeI40irAv2NVY59bm
+         qqQ0CEM2mGT7T1Xq+99JSI/A/TFPjzNkUBAHKy48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 027/434] NFC: nxp-nci: Fix probing without ACPI
-Date:   Sun, 29 Dec 2019 18:21:20 +0100
-Message-Id: <20191229172703.876687020@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 031/434] btrfs: return error pointer from alloc_test_extent_buffer
+Date:   Sun, 29 Dec 2019 18:21:24 +0100
+Message-Id: <20191229172704.108035251@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,38 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 868afbaca1e2a7923e48b5e8c07be34660525db5 ]
+commit b6293c821ea8fa2a631a2112cd86cd435effeb8b upstream.
 
-devm_acpi_dev_add_driver_gpios() returns -ENXIO if CONFIG_ACPI
-is disabled (e.g. on device tree platforms).
-In this case, nxp-nci will silently fail to probe.
+Callers of alloc_test_extent_buffer have not correctly interpreted the
+return value as error pointer, as alloc_test_extent_buffer should behave
+as alloc_extent_buffer. The self-tests were unaffected but
+btrfs_find_create_tree_block could call both functions and that would
+cause problems up in the call chain.
 
-The other NFC drivers only log a debug message if
-devm_acpi_dev_add_driver_gpios() fails.
-Do the same in nxp-nci to fix this problem.
-
-Fixes: ad0acfd69add ("NFC: nxp-nci: Get rid of code duplication in ->probe()")
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: faa2dbf004e8 ("Btrfs: add sanity tests for new qgroup accounting code")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/nfc/nxp-nci/i2c.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nfc/nxp-nci/i2c.c
-+++ b/drivers/nfc/nxp-nci/i2c.c
-@@ -278,7 +278,7 @@ static int nxp_nci_i2c_probe(struct i2c_
+---
+ fs/btrfs/extent_io.c                   |    6 ++++--
+ fs/btrfs/tests/free-space-tree-tests.c |    4 ++--
+ fs/btrfs/tests/qgroup-tests.c          |    4 ++--
+ 3 files changed, 8 insertions(+), 6 deletions(-)
+
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -5066,12 +5066,14 @@ struct extent_buffer *alloc_test_extent_
+ 		return eb;
+ 	eb = alloc_dummy_extent_buffer(fs_info, start);
+ 	if (!eb)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 	eb->fs_info = fs_info;
+ again:
+ 	ret = radix_tree_preload(GFP_NOFS);
+-	if (ret)
++	if (ret) {
++		exists = ERR_PTR(ret);
+ 		goto free_eb;
++	}
+ 	spin_lock(&fs_info->buffer_lock);
+ 	ret = radix_tree_insert(&fs_info->buffer_radix,
+ 				start >> PAGE_SHIFT, eb);
+--- a/fs/btrfs/tests/free-space-tree-tests.c
++++ b/fs/btrfs/tests/free-space-tree-tests.c
+@@ -463,9 +463,9 @@ static int run_test(test_func_t test_fun
+ 	root->fs_info->tree_root = root;
  
- 	r = devm_acpi_dev_add_driver_gpios(dev, acpi_nxp_nci_gpios);
- 	if (r)
--		return r;
-+		dev_dbg(dev, "Unable to add GPIO mapping table\n");
- 
- 	phy->gpiod_en = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
- 	if (IS_ERR(phy->gpiod_en)) {
+ 	root->node = alloc_test_extent_buffer(root->fs_info, nodesize);
+-	if (!root->node) {
++	if (IS_ERR(root->node)) {
+ 		test_std_err(TEST_ALLOC_EXTENT_BUFFER);
+-		ret = -ENOMEM;
++		ret = PTR_ERR(root->node);
+ 		goto out;
+ 	}
+ 	btrfs_set_header_level(root->node, 0);
+--- a/fs/btrfs/tests/qgroup-tests.c
++++ b/fs/btrfs/tests/qgroup-tests.c
+@@ -484,9 +484,9 @@ int btrfs_test_qgroups(u32 sectorsize, u
+ 	 * *cough*backref walking code*cough*
+ 	 */
+ 	root->node = alloc_test_extent_buffer(root->fs_info, nodesize);
+-	if (!root->node) {
++	if (IS_ERR(root->node)) {
+ 		test_err("couldn't allocate dummy buffer");
+-		ret = -ENOMEM;
++		ret = PTR_ERR(root->node);
+ 		goto out;
+ 	}
+ 	btrfs_set_header_level(root->node, 0);
 
 
