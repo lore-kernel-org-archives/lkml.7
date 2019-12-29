@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1BFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06B6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62947207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D0A207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640742;
-	bh=zKupZsP3hwBkIV+DX9F2WhuhPMqFF5B4PJdUbkfqzxs=;
+	s=default; t=1577640745;
+	bh=xfKwsvcvmHgYlI1ldJXlYOch5B0XS55Ja6bDBmwmAHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVlTzpgi36A6X15O6+YFY72oGIiSstvmiAc1Jf1RyPkqkfg1uTWjVB+iNeFC2y/xp
-	 Ek92OLAelQh5YUrdOEoOgukLvkD7entuFMUzg+gak1/jZfbxvB1v1USs/2bBIgiz39
-	 Qp0B7H2NUQmpAmZNJLurZR0XItLv1ph8a51as9U0=
+	b=VVb3Jgvg/c5bIF6lmu3svOFbCy1wUrsmYG2pCOutCbasYJEG7w9lv1QjtKu89+2pC
+	 7TTMeQEF/2egyzWgaZcJAU7tU6b7zUaOy7+HfR8PfHZ/XEOTQsfcrm8rtPZ8B+H4z/
+	 gr2XwIzithoBrNj2J0bjFSzxub13gjCLmV7s8idk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbfL2RcU (ORCPT
+        id S1729051AbfL2RcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfL2RcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:16 -0500
+        id S1729300AbfL2RcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5138D20409;
-        Sun, 29 Dec 2019 17:32:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7E520409;
+        Sun, 29 Dec 2019 17:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640735;
-        bh=zKupZsP3hwBkIV+DX9F2WhuhPMqFF5B4PJdUbkfqzxs=;
+        s=default; t=1577640740;
+        bh=xfKwsvcvmHgYlI1ldJXlYOch5B0XS55Ja6bDBmwmAHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYJYvj7ugvVZAf/Ck9KfrisEKAcb0g8XBT6tGhp8RaYe++Wkm2Rti6EIXsRAQkNx0
-         8HZT6sesEpmzvwZytKQcZ73Oe9SDbeSxy/wDkT76YN94aWYbsVr4m5cYDnFMWcLGGC
-         fXIjd7hmHqz1KzGhhDSjl57r6Bc2Q1PDUOc2pSOM=
+        b=Q/OuuGHy5DCAbNZS3/KngVjNf/uE992i926qOxHL7Z6t4AIPoWYgHqYlrcPr3LLIh
+         P/4I+fpPq9m8jVj2UpQefBjahAkG/5svciPmyy/ypA4T11M6vCkCzc6OMP1Rn7HtwD
+         5n42qV3x1MVoTTOP1D8tqQErEko/7ZmLsC5dyRXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 116/219] media: v4l2-core: fix touch support in v4l_g_fmt
-Date:   Sun, 29 Dec 2019 18:18:38 +0100
-Message-Id: <20191229162526.206349119@linuxfoundation.org>
+Subject: [PATCH 4.19 118/219] rfkill: allocate static minor
+Date:   Sun, 29 Dec 2019 18:18:40 +0100
+Message-Id: <20191229162526.353368525@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,85 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
+[ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
 
-v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
-the v4l2_pix_format structure to default values.This was
-missing in v4l_g_fmt, which would lead to failures in
-v4l2-compliance tests.
+udev has a feature of creating /dev/<node> device-nodes if it finds
+a devnode:<node> modalias. This allows for auto-loading of modules that
+provide the node. This requires to use a statically allocated minor
+number for misc character devices.
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+However, rfkill uses dynamic minor numbers and prevents auto-loading
+of the module. So allocate the next static misc minor number and use
+it for rfkill.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ include/linux/miscdevice.h | 1 +
+ net/rfkill/core.c          | 9 +++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index a4d3e94a400c..7675b645db2e 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1415,10 +1415,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
- 	return ret;
- }
+diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
+index 3247a3dc7934..b06b75776a32 100644
+--- a/include/linux/miscdevice.h
++++ b/include/linux/miscdevice.h
+@@ -57,6 +57,7 @@
+ #define UHID_MINOR		239
+ #define USERIO_MINOR		240
+ #define VHOST_VSOCK_MINOR	241
++#define RFKILL_MINOR		242
+ #define MISC_DYNAMIC_MINOR	255
  
-+static void v4l_pix_format_touch(struct v4l2_pix_format *p)
-+{
-+	/*
-+	 * The v4l2_pix_format structure contains fields that make no sense for
-+	 * touch. Set them to default values in this case.
-+	 */
+ struct device;
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index 1355f5ca8d22..7fbc8314f626 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1328,10 +1328,12 @@ static const struct file_operations rfkill_fops = {
+ 	.llseek		= no_llseek,
+ };
+ 
++#define RFKILL_NAME "rfkill"
 +
-+	p->field = V4L2_FIELD_NONE;
-+	p->colorspace = V4L2_COLORSPACE_RAW;
-+	p->flags = 0;
-+	p->ycbcr_enc = 0;
-+	p->quantization = 0;
-+	p->xfer_func = 0;
-+}
-+
- static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 				struct file *file, void *fh, void *arg)
- {
- 	struct v4l2_format *p = arg;
-+	struct video_device *vfd = video_devdata(file);
- 	int ret = check_fmt(file, p->type);
+ static struct miscdevice rfkill_miscdev = {
+-	.name	= "rfkill",
+ 	.fops	= &rfkill_fops,
+-	.minor	= MISC_DYNAMIC_MINOR,
++	.name	= RFKILL_NAME,
++	.minor	= RFKILL_MINOR,
+ };
  
- 	if (ret)
-@@ -1456,6 +1472,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
- 		/* just in case the driver zeroed it again */
- 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
-+		if (vfd->vfl_type == VFL_TYPE_TOUCH)
-+			v4l_pix_format_touch(&p->fmt.pix);
- 		return ret;
- 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
- 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
-@@ -1491,21 +1509,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
- 	return -EINVAL;
+ static int __init rfkill_init(void)
+@@ -1383,3 +1385,6 @@ static void __exit rfkill_exit(void)
+ 	class_unregister(&rfkill_class);
  }
- 
--static void v4l_pix_format_touch(struct v4l2_pix_format *p)
--{
--	/*
--	 * The v4l2_pix_format structure contains fields that make no sense for
--	 * touch. Set them to default values in this case.
--	 */
--
--	p->field = V4L2_FIELD_NONE;
--	p->colorspace = V4L2_COLORSPACE_RAW;
--	p->flags = 0;
--	p->ycbcr_enc = 0;
--	p->quantization = 0;
--	p->xfer_func = 0;
--}
--
- static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
- 				struct file *file, void *fh, void *arg)
- {
+ module_exit(rfkill_exit);
++
++MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
++MODULE_ALIAS("devname:" RFKILL_NAME);
 -- 
 2.20.1
 
