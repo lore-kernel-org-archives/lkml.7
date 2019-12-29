@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2FBC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF6BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 394B6206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADC420748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643197;
-	bh=LwtmkIgA39GSvV8zVmLxiAG9nBKUFUEetSRTfTnyHRg=;
+	s=default; t=1577643200;
+	bh=neOlvLW/4c6bylgVZVuYDZ4IB8wQc7oI5lVC+tAgjTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kd4wO3QC+14Ex4CRheDXRdohLW7NfciiTLofqbioNtVXn6FEWRcRl3LdH+VGICY/P
-	 O7L5fXmXP2ArtegX0t1QshVjyKR1hnom8cLLGHvTu9VJejU8/AzOIYYXMhkglL/eNR
-	 MZfAQkniV0B2/mqsshbrtXjPoKt+C6+vdYItZv3g=
+	b=yufEUvUdWBv2gRDef9EYTD1rtZOnE2bNMriePTIK48cBhPpnPMS/ZC6m5F0phUUjN
+	 b23av6hgPj+FcFjqWeJhikqOAP4qZ+uqENQMJ7nr134ecxOmGx6e6x/hZNj5a6ZB7Q
+	 Zqd7uKuOTqbiNXSgSIQrJFahVQ610MPtxo50V6tI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbfL2SNQ (ORCPT
+        id S1728605AbfL2R2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:13:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:28:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfL2R2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:33 -0500
+        id S1728585AbfL2R20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6632720409;
-        Sun, 29 Dec 2019 17:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3B020409;
+        Sun, 29 Dec 2019 17:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640512;
-        bh=LwtmkIgA39GSvV8zVmLxiAG9nBKUFUEetSRTfTnyHRg=;
+        s=default; t=1577640505;
+        bh=neOlvLW/4c6bylgVZVuYDZ4IB8wQc7oI5lVC+tAgjTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IoE0BInqDPdmxT0O8Lg6IQAYIid3dNbEYG7LiAfrEMAWl0/XcpKb1f1HlFGIx7QN1
-         SxqAtM1waPPfVw5TbegrIbEbTkST+SAPR7KHqyG7ligkHqsIVWXFYgwKB1oycikiEy
-         Jsi6dSqnLUl5sarOqsxxN1SDPn5ZE0Pp0u2eUiCc=
+        b=MREgH+QyfiBE64+uLjBE7WC9v4yvrNpGTW4cGBDn0paKyonNxetjnlVy0Wf9lJSBZ
+         CwRQ4nWekFpbUpYLwS/Z+wCQNJDqgAIP81NhFoX6PwT/j5X5JZ4xG7lxeWTpf0nzyR
+         xas+eN214aer1waJg3/iSZr7YgtD4FGLwlMkZtb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 026/219] ALSA: hda/ca0132 - Fix work handling in delayed HP detection
-Date:   Sun, 29 Dec 2019 18:17:08 +0100
-Message-Id: <20191229162512.737476923@linuxfoundation.org>
+        stable@vger.kernel.org, Lionel Koenig <lionel.koenig@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 023/219] ALSA: pcm: Avoid possible info leaks from PCM stream buffers
+Date:   Sun, 29 Dec 2019 18:17:05 +0100
+Message-Id: <20191229162512.445230690@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,63 +61,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 42fb6b1d41eb5905d77c06cad2e87b70289bdb76 upstream.
+commit add9d56d7b3781532208afbff5509d7382fb6efe upstream.
 
-CA0132 has the delayed HP jack detection code that is invoked from the
-unsol handler, but it does a few weird things: it contains the cancel
-of a work inside the work handler, and yet it misses the cancel-sync
-call at (runtime-)suspend.  This patch addresses those issues.
+The current PCM code doesn't initialize explicitly the buffers
+allocated for PCM streams, hence it might leak some uninitialized
+kernel data or previous stream contents by mmapping or reading the
+buffer before actually starting the stream.
 
-Fixes: 15c2b3cc09a3 ("ALSA: hda/ca0132 - Fix possible workqueue stall")
+Since this is a common problem, this patch simply adds the clearance
+of the buffer data at hw_params callback.  Although this does only
+zero-clear no matter which format is used, which doesn't mean the
+silence for some formats, but it should be OK because the intention is
+just to clear the previous data on the buffer.
+
+Reported-by: Lionel Koenig <lionel.koenig@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213085111.22855-4-tiwai@suse.de
+Link: https://lore.kernel.org/r/20191211155742.3213-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ sound/core/pcm_native.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -6773,11 +6773,10 @@ static void hp_callback(struct hda_codec
- 	/* Delay enabling the HP amp, to let the mic-detection
- 	 * state machine run.
- 	 */
--	cancel_delayed_work(&spec->unsol_hp_work);
--	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
- 	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
- 	if (tbl)
- 		tbl->block_report = 1;
-+	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
- }
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -752,6 +752,10 @@ static int snd_pcm_hw_params(struct snd_
+ 	while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
+ 		runtime->boundary *= 2;
  
- static void amic_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
-@@ -7411,12 +7410,25 @@ static void ca0132_reboot_notify(struct
- 	codec->patch_ops.free(codec);
- }
- 
-+#ifdef CONFIG_PM
-+static int ca0132_suspend(struct hda_codec *codec)
-+{
-+	struct ca0132_spec *spec = codec->spec;
++	/* clear the buffer for avoiding possible kernel info leaks */
++	if (runtime->dma_area && !substream->ops->copy_user)
++		memset(runtime->dma_area, 0, runtime->dma_bytes);
 +
-+	cancel_delayed_work_sync(&spec->unsol_hp_work);
-+	return 0;
-+}
-+#endif
-+
- static const struct hda_codec_ops ca0132_patch_ops = {
- 	.build_controls = ca0132_build_controls,
- 	.build_pcms = ca0132_build_pcms,
- 	.init = ca0132_init,
- 	.free = ca0132_free,
- 	.unsol_event = snd_hda_jack_unsol_event,
-+#ifdef CONFIG_PM
-+	.suspend = ca0132_suspend,
-+#endif
- 	.reboot_notify = ca0132_reboot_notify,
- };
+ 	snd_pcm_timer_resolution_change(substream);
+ 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
  
 
 
