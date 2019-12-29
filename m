@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8736C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7B3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36DB207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975CE207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640770;
-	bh=B/hzK1s8pmZi/6DHH3MZ5L8Scvw4VTgEaRTBRdd5xF0=;
+	s=default; t=1577640774;
+	bh=37GhvsGRf9iOwK6d9QDIImLR2MRH5h+lFXgn8HZGWhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERnradPVMytrBJk+zSYeaQu3nVJPSIuX93mWhyKNmLr1o9/q4F70xABy7A1P0Vqu7
-	 vNCB5AyG2NB3OeYZNd0ONnLFFS5j6ytOlD7BUyPSc9QyK2Iw+zEoTLR/AzB0LMNigD
-	 bTCUR8hi+m9a9CFaHRbV8nkNLof25CMkZBtSfrgQ=
+	b=AtN5xCa/63iTbqsFDshfEWZvdhYlyYg2i+/LheCZ4qIG5nRbot7ehzcNJWdxZHWUN
+	 +ZvOm34CoVz7WobCJ8Vp2B6BjhoY8MqZrl9EJBBUNAzGHHzxYFEOY+8vau4emCJdRb
+	 zCKAC4V60qhClsYP0aeJskSufK/z/RUyGwTEOARU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfL2Rct (ORCPT
+        id S1727558AbfL2Rcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:32:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbfL2Rcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:45 -0500
+        id S1729358AbfL2Rcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 825BE207FD;
-        Sun, 29 Dec 2019 17:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0009220409;
+        Sun, 29 Dec 2019 17:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640765;
-        bh=B/hzK1s8pmZi/6DHH3MZ5L8Scvw4VTgEaRTBRdd5xF0=;
+        s=default; t=1577640767;
+        bh=37GhvsGRf9iOwK6d9QDIImLR2MRH5h+lFXgn8HZGWhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QT8DOW+2Bqx44PEKu/ra+1UQYvilpWSv6YV6ujx35o7HRdVp8YhKxG7hNbUutHvN7
-         Y++/7/uCsKxqp1NGCz4aFbkKPSEkQjv53cuntIlh4jCpaUFrIFIXLd/0urnRTwMRN8
-         Xt1t0DzF6Ogl84vsc0Vrl3MLz0X3qaByXbNAxzwM=
+        b=K/bi9PJMWvP5H56GIrD+VCDZ7C2oVNZ0apZk1UT/Js1dYeUeIDk9yr5ricp4xXuH7
+         7i8uz9PtFJReIJbSDMn7r+zZMG+jYcJfNqph1O+TUw+ADFMAcbrjWxTBLdqrM0n/++
+         +qyPlfsfK9F2RFbG1NvhUIuA32RGgHli37C2yyn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/219] perf probe: Fix to probe an inline function which has no entry pc
-Date:   Sun, 29 Dec 2019 18:18:49 +0100
-Message-Id: <20191229162527.514542689@linuxfoundation.org>
+Subject: [PATCH 4.19 091/219] media: smiapp: Register sensor after enabling runtime PM on the device
+Date:   Sun, 29 Dec 2019 18:18:13 +0100
+Message-Id: <20191229162521.188293750@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,70 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+[ Upstream commit 90c9e4a4dba9f4de331372e745fb1991c1faa598 ]
 
-Fix perf probe to probe an inlne function which has no entry pc
-or low pc but only has ranges attribute.
+Earlier it was possible that the parts of the driver that assumed runtime
+PM was enabled were being called before runtime PM was enabled in the
+driver's probe function. So enable runtime PM before registering the
+sub-device.
 
-This seems very rare case, but I could find a few examples, as
-same as probe_point_search_cb(), use die_entrypc() to get the
-entry address in probe_point_inline_cb() too.
-
-Without this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-
-With this patch:
-
-  # perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  Failed to get entry address of __amd_put_nb_event_constraints.
-  Probe point '__amd_put_nb_event_constraints' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
-  p:probe/__amd_put_nb_event_constraints _text+33789
-  [root@quaco ~]#
-
-Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/smiapp/smiapp-core.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index c4fe0678e322..d0d333c90b35 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -950,7 +950,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
- 		ret = find_probe_point_lazy(in_die, pf);
- 	else {
- 		/* Get probe address */
--		if (dwarf_entrypc(in_die, &addr) != 0) {
-+		if (die_entrypc(in_die, &addr) != 0) {
- 			pr_warning("Failed to get entry address of %s.\n",
- 				   dwarf_diename(in_die));
- 			return -ENOENT;
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 1236683da8f7..4731e1c72f96 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -3108,19 +3108,23 @@ static int smiapp_probe(struct i2c_client *client,
+ 	if (rval < 0)
+ 		goto out_media_entity_cleanup;
+ 
+-	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
+-	if (rval < 0)
+-		goto out_media_entity_cleanup;
+-
+ 	pm_runtime_set_active(&client->dev);
+ 	pm_runtime_get_noresume(&client->dev);
+ 	pm_runtime_enable(&client->dev);
++
++	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
++	if (rval < 0)
++		goto out_disable_runtime_pm;
++
+ 	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
+ 	pm_runtime_use_autosuspend(&client->dev);
+ 	pm_runtime_put_autosuspend(&client->dev);
+ 
+ 	return 0;
+ 
++out_disable_runtime_pm:
++	pm_runtime_disable(&client->dev);
++
+ out_media_entity_cleanup:
+ 	media_entity_cleanup(&sensor->src->sd.entity);
+ 
 -- 
 2.20.1
 
