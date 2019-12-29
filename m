@@ -2,175 +2,92 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1385C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF668C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E35206E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:37:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/a6FQPd"
+	by mail.kernel.org (Postfix) with ESMTP id B0B0520718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfL2OhD (ORCPT
+        id S1726626AbfL2OuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 09:37:03 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45227 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfL2OhD (ORCPT
+        Sun, 29 Dec 2019 09:50:13 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45667 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726230AbfL2OuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 09:37:03 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 2so17098617pfg.12
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 06:37:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v4zwlw+odKSqE3aBhmsXGeIgNGWe/8QP8KYWJ0WS0T4=;
-        b=H/a6FQPdDtwNA6IpBBIjiujGi46fekF4JBFJcCtTal8mYBJeWu7mHpBr64l3HveywM
-         z2NJl27a7SXfqQ/yDmWhofXWIDphR9FfznfGny4KNfsRA8Zyh5HM+/kCGQGcUVjtZixg
-         DoTZv5fKkKZa5MpOI8SNBjuMevy8CCjfZUVmhEp5z5okyt70tj5PId0cRWrP0c/WwG2j
-         DeSutL/2HOO8ly8AKNL52VWUdw+x0gbpy0dNpX9/1amQDJhCMRos93wkPnuMDVPtHS2C
-         apj2qt37Gn59+W21IVRtSnkVIN2fh5K4dHepb0ZgF4jXdI6Co6iLxcj2m6JSaf66B9YM
-         M4Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v4zwlw+odKSqE3aBhmsXGeIgNGWe/8QP8KYWJ0WS0T4=;
-        b=Q4R0q3J7nB4W+uZdqYmEyErKH1wHzNv4KvzU41w+VcL/jL1T4wm4ZWDuWGmOHMvkur
-         DzTMQrAc/Vga8/TZmqv8CDmSFSUcOPXEbMIvj5FfZa8wP6O4PhFN4rItfOsEOAYRcqpC
-         iP9izygbWvQmR+29BO5mi8OzfQhGhwz6EsE1wP7E7ZOyZENqpNXxo+RJqqdxcT5kW70+
-         f8AK8K1lpaabLsXsLknWWpinsc8LhAJ40h5LUVka8+y/H+R1ttc46BDfevu6afqG6Jge
-         HkMmIafOcC3HQnTt3Pl76e1RDaAc77YVN/6A2w9soiHCryFQGpej5Q70luI6RTIJLxS9
-         u+qQ==
-X-Gm-Message-State: APjAAAUy29XKOxkANdBF8EbUfFwjd18gRmkhSGMDYoTAWKCM3JIKEAdM
-        qRuvri3wves0erDIfC8PadQ=
-X-Google-Smtp-Source: APXvYqz3GsJY58S3hvbZ00NQUWpinbVYDH7+Zzz+T3z9m04BXZQRRk8RPlLWeE4iy5bKpBMOf/4aog==
-X-Received: by 2002:a63:d94b:: with SMTP id e11mr66550963pgj.79.1577630222667;
-        Sun, 29 Dec 2019 06:37:02 -0800 (PST)
-Received: from xndcndeMac-mini.lan ([104.243.28.95])
-        by smtp.gmail.com with ESMTPSA id i9sm47327622pfk.24.2019.12.29.06.36.57
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 29 Dec 2019 06:37:02 -0800 (PST)
-From:   Xiong <xndchn@gmail.com>
-Cc:     Xiong <xndchn@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
-Date:   Sun, 29 Dec 2019 22:36:23 +0800
-Message-Id: <20191229143626.51238-1-xndchn@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Sun, 29 Dec 2019 09:50:12 -0500
+Received: from callcc.thunk.org (96-72-102-169-static.hfc.comcastbusiness.net [96.72.102.169] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBTEn4GM024237
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 29 Dec 2019 09:49:05 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 83EFA420485; Sun, 29 Dec 2019 09:49:04 -0500 (EST)
+Date:   Sun, 29 Dec 2019 09:49:04 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephan Mueller <smueller@chronox.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Message-ID: <20191229144904.GB7177@mit.edu>
+References: <20191226140423.GB3158@mit.edu>
+ <4048434.Q8HajmOrkZ@tauon.chronox.de>
+ <20191227130436.GC70060@mit.edu>
+ <15817620.rmTN4T87Wr@tauon.chronox.de>
+ <20191227220857.GD70060@mit.edu>
+ <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here are some of the common spelling mistakes and typos that I've found
-while fixing up spelling mistakes in the kernel. Most of them still exist
-in more than two source files.
+On Fri, Dec 27, 2019 at 06:06:56PM -0800, Andy Lutomirski wrote:
+> 
+> I'm thinking of having a real class device and chardev for each hwrng
+> device.  Authentication is entirely in userspace: whatever user code
+> is involved can look at the sysfs hierarchy and decide to what extent
+> it trusts a given source.  This could be done based on bus topology or
+> based on anything else.
 
-Signed-off-by: Xiong <xndchn@gmail.com>
----
- scripts/spelling.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Yes, that's what I was thinking.  Another project on my "when I can
+get a round tuit" list is to change how drivers/char/random.c taps
+into the hwrng devices, mixing in a bit from each of these devies in a
+round-robin fashion, instead of just feeding from a single hwrng.
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index 672b5931bc8d..e95aea25f975 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -39,6 +39,8 @@ accout||account
- accquire||acquire
- accquired||acquired
- accross||across
-+accumalate||accumulate
-+accumalator||accumulator
- acessable||accessible
- acess||access
- acessing||accessing
-@@ -106,6 +108,7 @@ alogrithm||algorithm
- alot||a lot
- alow||allow
- alows||allows
-+alreay||already
- alredy||already
- altough||although
- alue||value
-@@ -241,6 +244,7 @@ calender||calendar
- calescing||coalescing
- calle||called
- callibration||calibration
-+callled||called
- calucate||calculate
- calulate||calculate
- cancelation||cancellation
-@@ -311,6 +315,7 @@ compaibility||compatibility
- comparsion||comparison
- compatability||compatibility
- compatable||compatible
-+compatibililty||compatibility
- compatibiliy||compatibility
- compatibilty||compatibility
- compatiblity||compatibility
-@@ -330,6 +335,7 @@ comunication||communication
- conbination||combination
- conditionaly||conditionally
- conditon||condition
-+condtion||condition
- conected||connected
- conector||connector
- connecetd||connected
-@@ -388,6 +394,8 @@ dafault||default
- deafult||default
- deamon||daemon
- debouce||debounce
-+decendant||descendant
-+decendants||descendants
- decompres||decompress
- decsribed||described
- decription||description
-@@ -411,11 +419,13 @@ delare||declare
- delares||declares
- delaring||declaring
- delemiter||delimiter
-+delievered||delivered
- demodualtor||demodulator
- demension||dimension
- dependancies||dependencies
- dependancy||dependency
- dependant||dependent
-+dependend||dependent
- depreacted||deprecated
- depreacte||deprecate
- desactivate||deactivate
-@@ -995,6 +1005,7 @@ peice||piece
- pendantic||pedantic
- peprocessor||preprocessor
- perfoming||performing
-+perfomring||performing
- peripherial||peripheral
- permissons||permissions
- peroid||period
-@@ -1166,6 +1177,8 @@ retreive||retrieve
- retreiving||retrieving
- retrive||retrieve
- retrived||retrieved
-+retrun||return
-+retun||return
- retuned||returned
- reudce||reduce
- reuest||request
--- 
-2.19.1
+> The kernel could also separately expose various noise sources, and the
+> user code can do whatever it wants with them.  But these should be
+> explicitly unconditioned, un-entropy-extracted sources -- user code
+> can run its favorite algorithm to extract something it believes to be
+> useful.  The only conceptually tricky bit is keeping user code like
+> this from interfering with the in-kernel RNG.
 
+The other problem is the unconditioned values of the noise sources may
+leak unacceptable amounts of information about system operation.  The
+most obvious example of this would be keyboard and mouse sources,
+where today we mix in not only the timing information, but the actual
+input values (e.g., the keyboard scancodes) into the entropy pool.
+Exposing this to userspace, even if it is via a privileged system
+call, would be... unwise.
+
+						- Ted
