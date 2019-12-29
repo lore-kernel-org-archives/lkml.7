@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE2C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8319C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5709C20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA47206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643383;
-	bh=sslbX3x4OU3RFp84ix1ezig+c0izi2IYrxJHfiJII88=;
+	s=default; t=1577643395;
+	bh=p7mjhz8gd3jd+JBPn7f9tDNZ2ZJUC7aK1rTtuhAB4Qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7S5n6S/op7aBgKP56VgQ97bpTrQ3i0XJLyrY4/9CpIr3sMsU1uvBL3WwVmHPyNXZ
-	 e+9BQD96oZ2DWsTxlcLgB6ZHiFfxCDu3EYwQPnr9H64W9UeYa1GFdi/2obF1K4Qgyf
-	 cIE4KZgxL4FP100Rt3Qx8s25YvdaXdbAcJn9nGUE=
+	b=TmhJcPzYyUrVnY+JlPwR9n3qe9JN/M3pkIeeat4VFni4jgslgey5rh1ZEFNNeZI9X
+	 7eFZ/YVKxPRFeq+f58lJ5YxQ9gOZj19wAWZjaMJVQc3yZFjbPEgHBEoZmtVASkw8J4
+	 R5uX7HGy5lTJFvyZnmo/cpfXLPifXYtrKv8txoHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfL2RYc (ORCPT
+        id S1732134AbfL2SQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:24:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:16:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfL2RY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:26 -0500
+        id S1727683AbfL2RYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A790C20722;
-        Sun, 29 Dec 2019 17:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4366420722;
+        Sun, 29 Dec 2019 17:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640265;
-        bh=sslbX3x4OU3RFp84ix1ezig+c0izi2IYrxJHfiJII88=;
+        s=default; t=1577640250;
+        bh=p7mjhz8gd3jd+JBPn7f9tDNZ2ZJUC7aK1rTtuhAB4Qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vj2ZkAbwIArV6ESDyMEr5hm4rU42sCMCccL6wFGOqp1dY+FIBhNDIkWLNMEAYk+HO
-         PYukEISyvHHY4XA5pwRaKu4AOBXDoM90VevmFaseKRvBiT189IxWeNqSsTzBqeFUhM
-         jexh6q/jXh2v8L+wNDbzZLe+JoA2eGW6AwOaF+hI=
+        b=x0JpPnSf7/sC+eM/+inzePcUJj2NaIYsD+sFZ9vl5IaVeAQKJcbnwRYn7WBNQmv+o
+         ftyvW630UQ5DfYmbW+s1eTpC7uavPGmJZvZzjaQYZXJBsr5Uq04Y04dcF1yVsLe00K
+         7SrRkLU/tG040JCdH37dquB4a/23gV5hdz2trqNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Elena Petrova <lenaptr@google.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 038/161] pinctrl: devicetree: Avoid taking direct reference to device name string
-Date:   Sun, 29 Dec 2019 18:18:06 +0100
-Message-Id: <20191229162411.529458684@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 078/161] libata: Ensure ata_port probe has completed before detach
+Date:   Sun, 29 Dec 2019 18:18:46 +0100
+Message-Id: <20191229162423.838150494@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,109 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit be4c60b563edee3712d392aaeb0943a768df7023 ]
+[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
 
-When populating the pinctrl mapping table entries for a device, the
-'dev_name' field for each entry is initialised to point directly at the
-string returned by 'dev_name()' for the device and subsequently used by
-'create_pinctrl()' when looking up the mappings for the device being
-probed.
+With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
 
-This is unreliable in the presence of calls to 'dev_set_name()', which may
-reallocate the device name string leaving the pinctrl mappings with a
-dangling reference. This then leads to a use-after-free every time the
-name is dereferenced by a device probe:
+[   23.452574] ------------[ cut here ]------------
+[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
+[   23.466047] Modules linked in:
+[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
+[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
+[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
+[   23.491065] pc : ata_host_detach+0x15c/0x168
+[   23.495322] lr : ata_host_detach+0x88/0x168
+[   23.499491] sp : ffff800011cabb50
+[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
+[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
+[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
+[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
+[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
+[   23.529286] x19: 0000000000000000 x18: 0000000000000004
+[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
+[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
+[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
+[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
+[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
+[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
+[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
+[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
+[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
+[   23.582272] Call trace:
+[   23.584706]  ata_host_detach+0x15c/0x168
+[   23.588616]  ata_pci_remove_one+0x10/0x18
+[   23.592615]  ahci_remove_one+0x20/0x40
+[   23.596356]  pci_device_remove+0x3c/0xe0
+[   23.600267]  really_probe+0xdc/0x3e0
+[   23.603830]  driver_probe_device+0x58/0x100
+[   23.608000]  device_driver_attach+0x6c/0x90
+[   23.612169]  __driver_attach+0x84/0xc8
+[   23.615908]  bus_for_each_dev+0x74/0xc8
+[   23.619730]  driver_attach+0x20/0x28
+[   23.623292]  bus_add_driver+0x148/0x1f0
+[   23.627115]  driver_register+0x60/0x110
+[   23.630938]  __pci_register_driver+0x40/0x48
+[   23.635199]  ahci_pci_driver_init+0x20/0x28
+[   23.639372]  do_one_initcall+0x5c/0x1b0
+[   23.643199]  kernel_init_freeable+0x1a4/0x24c
+[   23.647546]  kernel_init+0x10/0x108
+[   23.651023]  ret_from_fork+0x10/0x18
+[   23.654590] ---[ end trace 634a14b675b71c13 ]---
 
-  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
-  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
-  | Pointer tag: [13], memory tag: [fe]
-  |
-  | Call trace:
-  |  __kasan_report+0x16c/0x1dc
-  |  kasan_report+0x10/0x18
-  |  check_memory_region
-  |  __hwasan_load1_noabort+0x4c/0x54
-  |  strcmp+0x20/0x64
-  |  create_pinctrl+0x18c/0x7f4
-  |  pinctrl_get+0x90/0x114
-  |  devm_pinctrl_get+0x44/0x98
-  |  pinctrl_bind_pins+0x5c/0x450
-  |  really_probe+0x1c8/0x9a4
-  |  driver_probe_device+0x120/0x1d8
+With KASAN also enabled, we may also get many use-after-free reports.
 
-Follow the example of sysfs, and duplicate the device name string before
-stashing it away in the pinctrl mapping entries.
+The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
+attempt to detach the ata_port before it has been probed.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Reported-by: Elena Petrova <lenaptr@google.com>
-Tested-by: Elena Petrova <lenaptr@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191002124206.22928-1-will@kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This is because the ata_ports are async probed, meaning that there is no
+guarantee that the ata_port has probed prior to detach. When the ata_port
+does probe in this scenario, we get all sorts of issues as the detach may
+have already happened.
+
+Fix by ensuring synchronisation with async_synchronize_full(). We could
+alternatively use the cookie returned from the ata_port probe
+async_schedule() call, but that means managing the cookie, so more
+complicated.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/ata/libata-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index c4aa411f5935..3a7c2d6e4d5f 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
- static void dt_free_map(struct pinctrl_dev *pctldev,
- 		     struct pinctrl_map *map, unsigned num_maps)
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index cbb162b683b6..08f67c109429 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -6676,6 +6676,9 @@ void ata_host_detach(struct ata_host *host)
  {
-+	int i;
-+
-+	for (i = 0; i < num_maps; ++i) {
-+		kfree_const(map[i].dev_name);
-+		map[i].dev_name = NULL;
-+	}
-+
- 	if (pctldev) {
- 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 		if (ops->dt_free_map)
-@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 	int i;
  
- 	/* Initialize common mapping table entry fields */
- 	for (i = 0; i < num_maps; i++) {
--		map[i].dev_name = dev_name(p->dev);
-+		const char *devname;
++	/* Ensure ata_port probe has completed */
++	async_synchronize_full();
 +
-+		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
-+		if (!devname)
-+			goto err_free_map;
-+
-+		map[i].dev_name = devname;
- 		map[i].name = statename;
- 		if (pctldev)
- 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
-@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 	for (i = 0; i < host->n_ports; i++)
+ 		ata_port_detach(host->ports[i]);
  
- 	/* Remember the converted mapping table entries */
- 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
--	if (!dt_map) {
--		dt_free_map(pctldev, map, num_maps);
--		return -ENOMEM;
--	}
-+	if (!dt_map)
-+		goto err_free_map;
- 
- 	dt_map->pctldev = pctldev;
- 	dt_map->map = map;
-@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 	list_add_tail(&dt_map->node, &p->dt_maps);
- 
- 	return pinctrl_register_map(map, num_maps, false);
-+
-+err_free_map:
-+	dt_free_map(pctldev, map, num_maps);
-+	return -ENOMEM;
- }
- 
- struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
 -- 
 2.20.1
 
