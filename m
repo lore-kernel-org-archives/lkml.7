@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064CEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC48C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBF720722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB18D20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640514;
-	bh=5kETJTHjj8fr1I/3STdeFFVpzxjlXXfYVesPgu98lA8=;
+	s=default; t=1577640516;
+	bh=gnsOSfTSoOckN7XuhJIMoR3YZh0egb/GLwDrhbJcuJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DsgOnc2zC8yINqNQiiDVXSF987HTdXUIYANZkOpgsgGvj0jYppvrRAqqJl/5iSwN+
-	 mfkcwRDjN5RqyhpFQ/N2fF2yzUo4xdNJkJGSJtgSJdmagtcdnD/AjBWzZQvA3XvajF
-	 6WEMlNwCCtBAUqA8aSjmOKeWkoC1UizcXVz/dO4o=
+	b=Sw2S6mWSJxSci+1I0OVLON04zvOjLnw0nTMvQNc0sPdmZx/O09kqsNFu3scQMuQWq
+	 GfwTFQ8SkrPQxW0Bd5cYz3HiVxYP8HFT5ycazBdsb60T1gXW51h8xsXAclbfn2xysT
+	 +M3iwT+pRNTmHePu2Dcs0VflVdn57yZMpou6boaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfL2R2d (ORCPT
+        id S1728628AbfL2R2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:28:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51946 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:28:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfL2R22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:28 -0500
+        id S1728602AbfL2R2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F27A20409;
-        Sun, 29 Dec 2019 17:28:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD48C20409;
+        Sun, 29 Dec 2019 17:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640507;
-        bh=5kETJTHjj8fr1I/3STdeFFVpzxjlXXfYVesPgu98lA8=;
+        s=default; t=1577640510;
+        bh=gnsOSfTSoOckN7XuhJIMoR3YZh0egb/GLwDrhbJcuJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iwn25XbH0y4nzrYCInOTZCGmxMw3/ZedkOhZTVjCy7SgyKhbWUvFQspTIYXICVTgO
-         C0Io/avgLkjYeGWTSzNKxLG4GelALuYkCf9uKMkf3Rz8bQjUPRrVbdAOS1dW/8FydC
-         +kg/bVihJi2W0fgAvsJm7ZfzrEbFN0Qu9VugEpj4=
+        b=ki+AIR94oLlTy8wf45NfgOm/pnLjbssilKm93KzHc8wff4rgY95b1M9FGvf+r21t6
+         iqnlQD8g9otH8EqtWjexuovAMxfUIZaRIFrPv0OZV4XbxyjnrzjTLlCTq8XD6q3B8x
+         z8RVkXN1RKibv18xJbEVKpGnzsJlB88h9wIV6a+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 024/219] ALSA: hda/ca0132 - Keep power on during processing DSP response
-Date:   Sun, 29 Dec 2019 18:17:06 +0100
-Message-Id: <20191229162512.550619397@linuxfoundation.org>
+Subject: [PATCH 4.19 025/219] ALSA: hda/ca0132 - Avoid endless loop
+Date:   Sun, 29 Dec 2019 18:17:07 +0100
+Message-Id: <20191229162512.678994733@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,39 +60,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 377bc0cfabce0244632dada19060839ced4e6949 upstream.
+commit cb04fc3b6b076f67d228a0b7d096c69ad486c09c upstream.
 
-We need to keep power on while processing the DSP response via unsol
-event.  Each snd_hda_codec_read() call does the power management, so
-it should work normally, but still it's safer to keep the power up for
-the whole function.
+Introduce a timeout to dspio_clear_response_queue() so that it won't
+be caught in an endless loop even if the hardware doesn't respond
+properly.
 
 Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213085111.22855-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20191213085111.22855-3-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_ca0132.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 --- a/sound/pci/hda/patch_ca0132.c
 +++ b/sound/pci/hda/patch_ca0132.c
-@@ -6754,12 +6754,14 @@ static void ca0132_process_dsp_response(
- 	struct ca0132_spec *spec = codec->spec;
+@@ -1683,13 +1683,14 @@ struct scp_msg {
  
- 	codec_dbg(codec, "ca0132_process_dsp_response\n");
-+	snd_hda_power_up_pm(codec);
- 	if (spec->wait_scp) {
- 		if (dspio_get_response_data(codec) >= 0)
- 			spec->wait_scp = 0;
- 	}
+ static void dspio_clear_response_queue(struct hda_codec *codec)
+ {
++	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+ 	unsigned int dummy = 0;
+-	int status = -1;
++	int status;
  
- 	dspio_clear_response_queue(codec);
-+	snd_hda_power_down_pm(codec);
+ 	/* clear all from the response queue */
+ 	do {
+ 		status = dspio_read(codec, &dummy);
+-	} while (status == 0);
++	} while (status == 0 && time_before(jiffies, timeout));
  }
  
- static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
+ static int dspio_get_response_data(struct hda_codec *codec)
 
 
