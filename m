@@ -4,67 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3ABC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3320C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6336B207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7027B20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641898;
-	bh=LxcowDC/0csBoYn9Er4pH7ImDa7kP/A0hOSvLa8tDJo=;
+	s=default; t=1577641901;
+	bh=eCAlv30TFhjQdVxRoptfBqArYcooBSTsH5cy3YcU/18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrlLnizpVymSUjznx0u6kkNFEMw7zmvqWaXdKoXjslHrXq2SIOGuFsEwS6Mv1qDZy
-	 9Ayyd/mpucmx0MG9354j5/bEd0uvJvnlJKdKbafdFmmSV/Hpy/rnaQ6B/QXKynejqA
-	 fmfyagKy7Ix0JDjSPBdFB8BuIJwpiMB/u53Di29Q=
+	b=KK/SzUuq4Wk4Gs3WNpUEpBXPIAmahHZeKWoD3nm8CfovO5k4HMb2qCfTIR/LiLexL
+	 xt+2ToudrZ6BUVoKXZLqcjyh8OuZGXY6/D0czJF42rqaT5NDzIHb6Cze5nKQ7BPuXG
+	 Y2qSE8Z6Tz8r2qEfdELu+hBTdqdk2wLEUQurBxoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbfL2Rvh (ORCPT
+        id S1732132AbfL2Rvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731791AbfL2Rvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:31 -0500
+        id S1732111AbfL2Rvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A802A208C4;
-        Sun, 29 Dec 2019 17:51:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AE1321744;
+        Sun, 29 Dec 2019 17:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641890;
-        bh=LxcowDC/0csBoYn9Er4pH7ImDa7kP/A0hOSvLa8tDJo=;
+        s=default; t=1577641894;
+        bh=eCAlv30TFhjQdVxRoptfBqArYcooBSTsH5cy3YcU/18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vqvc/Bz6t6donwK9mYvVu/snAbGM0n3K/s1QuyC4xaWXq6r+mM9jDFFOzbgsbl9RU
-         mKDvbC52a6kpKIXqfRpBB89bZPmlTpg53La662fUGZr+6p441ClBEXuB+vZt4ud7U6
-         YtMqQjkZ94VAtrqgt+njGxMQlP0QTdxW2Y7eTDD4=
+        b=HhiDcC37nYN79FlVeYYC6bTrMmn20bFrCYHHRAGVEFdpnGNdHlWBlG8mPmIjkPxOf
+         qq9letXu2kcWYePIHZFF7Pqov78Hyb/3GGgEePCV+g5LjXziZ5V00gH6CIMGnUXJoz
+         nHksrH5n1fPKc2SBg9mTk85Tgt9WziPFJUCEWrwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 254/434] perf tools: Splice events onto evlist even on error
-Date:   Sun, 29 Dec 2019 18:25:07 +0100
-Message-Id: <20191229172718.795111361@linuxfoundation.org>
+Subject: [PATCH 5.4 256/434] drm/amd/powerplay: fix struct init in renoir_print_clk_levels
+Date:   Sun, 29 Dec 2019 18:25:09 +0100
+Message-Id: <20191229172718.933456949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -77,74 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-[ Upstream commit 8e8714c3d157568b7a769917a5e05573bbaf5af0 ]
+[ Upstream commit d942070575910fdb687b9c8fd5467704b2f77c24 ]
 
-If event parsing fails the event list is leaked, instead splice the list
-onto the out result and let the caller cleanup.
+drivers/gpu/drm/amd/powerplay/renoir_ppt.c:186:2: error: missing braces
+around initializer [-Werror=missing-braces]
+  SmuMetrics_t metrics = {0};
+    ^
 
-An example input for parse_events found by libFuzzer that reproduces
-this memory leak is 'm{'.
+Fixes: 8b8031703bd7 ("drm/amd/powerplay: implement sysfs for getting dpm clock")
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index b5e2adef49de..d5ea043d3fc4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1927,15 +1927,20 @@ int parse_events(struct evlist *evlist, const char *str,
+diff --git a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+index e62bfba51562..e5283dafc414 100644
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+@@ -183,11 +183,13 @@ static int renoir_print_clk_levels(struct smu_context *smu,
+ 	int i, size = 0, ret = 0;
+ 	uint32_t cur_value = 0, value = 0, count = 0, min = 0, max = 0;
+ 	DpmClocks_t *clk_table = smu->smu_table.clocks_table;
+-	SmuMetrics_t metrics = {0};
++	SmuMetrics_t metrics;
  
- 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
- 	perf_pmu__parse_cleanup();
-+
-+	if (!ret && list_empty(&parse_state.list)) {
-+		WARN_ONCE(true, "WARNING: event parser found nothing\n");
-+		return -1;
-+	}
-+
-+	/*
-+	 * Add list to the evlist even with errors to allow callers to clean up.
-+	 */
-+	perf_evlist__splice_list_tail(evlist, &parse_state.list);
-+
- 	if (!ret) {
- 		struct evsel *last;
+ 	if (!clk_table || clk_type >= SMU_CLK_COUNT)
+ 		return -EINVAL;
  
--		if (list_empty(&parse_state.list)) {
--			WARN_ONCE(true, "WARNING: event parser found nothing\n");
--			return -1;
--		}
--
--		perf_evlist__splice_list_tail(evlist, &parse_state.list);
- 		evlist->nr_groups += parse_state.nr_groups;
- 		last = evlist__last(evlist);
- 		last->cmdline_group_boundary = true;
++	memset(&metrics, 0, sizeof(metrics));
++
+ 	ret = smu_update_table(smu, SMU_TABLE_SMU_METRICS, 0,
+ 			       (void *)&metrics, false);
+ 	if (ret)
 -- 
 2.20.1
 
