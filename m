@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB13C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382EAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F801206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BF8206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641243;
-	bh=JL/ghQOl4XYT1DM+fszLCvjX29XWG3MhLGbwTOZyPEE=;
+	s=default; t=1577641248;
+	bh=IKl3Z/XjmJ//7QNafY/cu/s4LPpoLCIhNTMq43rmXKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIE2DgyUTSUqGVFIfLe8AUrciWWp507c/CrpCh/P2rJO8s4JVGo2MPAlgZcjh4dW6
-	 Yukge5yjK2F18kvZMJymsVuVLbyPDPQT4+s+bjzcOX2sV+eTt0oUB1OJZEh8RPg1CI
-	 35H/cNrYSwaDihYR0GMmu3g7UnQfBwa0AHvrHDRI=
+	b=BMtfBSCGDxUShtmA/1uOuhwdOKSx5y1bF+w87b+fPkrVe5JqOzcX67LFjbe2wN31Z
+	 dufGArHUx4FvtAAQyDqwS36sHFoOutyXKL+M+aZvH/aX0wKHwHSIKjbY1sGcfzhO7v
+	 nTADKJXuKWh5mAZLZQyAm0vfGlcLkrMv48/6MRrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfL2Rkm (ORCPT
+        id S1730171AbfL2Rkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:40:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58762 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:40:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfL2Rb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:31:27 -0500
+        id S1728832AbfL2RbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49D5222C4;
-        Sun, 29 Dec 2019 17:31:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9886207FF;
+        Sun, 29 Dec 2019 17:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640687;
-        bh=JL/ghQOl4XYT1DM+fszLCvjX29XWG3MhLGbwTOZyPEE=;
+        s=default; t=1577640677;
+        bh=IKl3Z/XjmJ//7QNafY/cu/s4LPpoLCIhNTMq43rmXKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LfMN4MarONVT/7SrqF8bpiBK51YTSMG9a1deFkFNzZMSv5Sv8G3p0qNsXzGzYSOcC
-         k/MciqQDQs9OASIWc1Dzlu4f2YH8OCPEujq7PRGdWARQujnZkseVVZcDJ7B9W/j99l
-         bkwAMDp20CERXQQ5De8jFHzvTFLq12oAe+kG46rE=
+        b=rxVPIBVruLS2k7AV/HbIs/oVuOFrGhAmh3qHbbuEus3+ai7muSLLBAxszRQXYESt6
+         zUjPK2RTF4CV/b56gGNFF9FCOZ0NqXiBI/5ghe/m1Y01Nn3z/8OK6WS7L/mWyyG3uh
+         q7cLtRFXquRgaG0RF3kQLTwYZS+DUVV+j/Dp5/B8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/219] ACPI: button: Add DMI quirk for Medion Akoya E2215T
-Date:   Sun, 29 Dec 2019 18:18:20 +0100
-Message-Id: <20191229162522.801968948@linuxfoundation.org>
+Subject: [PATCH 4.19 044/219] media: ov6650: Fix stored crop rectangle not in sync with hardware
+Date:   Sun, 29 Dec 2019 18:17:26 +0100
+Message-Id: <20191229162514.606664845@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,53 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 932e1ba486117de2fcea3df27ad8218ad6c11470 ]
+[ Upstream commit 1463b371aff0682c70141f7521db13cc4bbf3016 ]
 
-The Medion Akoya E2215T's ACPI _LID implementation is quite broken:
+The driver stores crop rectangle settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, crop rectangle width and height settings are not updated
+correctly when rectangle offset settings are applied on hardware.  If
+an error occurs while the device is updated, the stored settings my no
+longer reflect hardware state and consecutive calls to .get_selection()
+as well as .get/set_fmt() may return incorrect information.  That in
+turn may affect ability of a bridge device to use correct DMA transfer
+settings if such incorrect informamtion on active frame format returned
+by .get/set_fmt() is used.
 
- 1. For notifications it uses an ActiveLow Edge GpioInt, rather then
-    an ActiveBoth one, meaning that the device is only notified when the
-    lid is closed, not when it is opened.
+Assuming a failed update of the device means its actual settings haven't
+changed, update crop rectangle width and height settings stored in the
+device private structure correctly while the rectangle offset is
+successfully applied on hardware so the stored values always reflect
+actual hardware state to the extent possible.
 
-2. Matching with this its _LID method simply always returns 0 (closed)
-
-  In order for the Linux LID code to work properly with this implementation,
-  the lid_init_state selection needs to be set to ACPI_BUTTON_LID_INIT_OPEN.
-
-This commit adds a DMI quirk for this.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/button.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/i2c/ov6650.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index a19ff3977ac4..870eb5c7516a 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -91,6 +91,17 @@ static const struct dmi_system_id lid_blacklst[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "BYT70A.YNCHENG.WIN.007"),
- 		},
- 	},
-+	{
-+		/*
-+		 * Medion Akoya E2215T, notification of the LID device only
-+		 * happens on close, not on open and _LID always returns closed.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MEDION"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "E2215T MD60198"),
-+		},
-+		.driver_data = (void *)(long)ACPI_BUTTON_LID_INIT_OPEN,
-+	},
- 	{}
- };
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index 60109442a072..c5aadd8dd23f 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -485,6 +485,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
  
+ 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
++		priv->rect.width += priv->rect.left - sel->r.left;
+ 		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+ 				       (sel->r.left + sel->r.width) >> 1);
+@@ -494,6 +495,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
++		priv->rect.height += priv->rect.top - sel->r.top;
+ 		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+ 				       (sel->r.top + sel->r.height) >> 1);
 -- 
 2.20.1
 
