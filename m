@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7712C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B098FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC77208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870ED207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640701;
-	bh=kf5GFZb2jr/iYcT1559dfHi72Y59J6biQZV9IkhsRyw=;
+	s=default; t=1577640706;
+	bh=KlQYiksmKM5kFTzFIj/mG8dWpKkR4NxVlxj5Oju68XM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1D/xVPHoriy7KgD+xuknyRunME5vIonIIdLYpEdZ/aT2fBQMe7qj2Ca2W43J4clkP
-	 GwS/M8U/5ySYiOfu3F04MfB+aaKXogbO53hR+H0B1gXuFWg6zBsZ3iwS+TyKyFalcu
-	 DVVEvZPtA9FOPazYdrKo8eFcywGunhrwqKDHKCgE=
+	b=dMI5rYTDoYv+yPoOrLNiduZofSdbBG8f6EteVbFSOUqWfnJJ1a41j8PzMw+tdLzW9
+	 mYqb5xuz75Y0PsnzUi9JH0xbysyinCcQAFeBN1fm5hdrvdzgETgL+j4Meoe9602RTb
+	 zbDHNS2CSnQbnu6vIVYz5FfxdMnZ0svvWmO55i3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfL2Rbk (ORCPT
+        id S1729221AbfL2Rbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:31:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59122 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:31:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729191AbfL2Rbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:31:37 -0500
+        id S1729207AbfL2Rbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BC6207FD;
-        Sun, 29 Dec 2019 17:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7784208E4;
+        Sun, 29 Dec 2019 17:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640696;
-        bh=kf5GFZb2jr/iYcT1559dfHi72Y59J6biQZV9IkhsRyw=;
+        s=default; t=1577640704;
+        bh=KlQYiksmKM5kFTzFIj/mG8dWpKkR4NxVlxj5Oju68XM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLR9sN51Hr0aEFNiUiFcMjAwLmZJS3mGUMcAYhKrhWir8lHQrD0JguUU4F0++I+lp
-         rUYdCLwqK4OU55wSTVFkdZ7XbfIdoUA9YwTMj2GAay2AZwy5rI0HD6UQFM5cr8Kcc0
-         32IlOXuRjR4mDDhthYovJ6i73agIE7xlfiFiIRx8=
+        b=1QvF3jNlKyV2iUSgkh1W9+Bf2FeIabX8wGqy+UgZYiWVm7U0Zv5BxZJrNsdmhxf/l
+         U7MhJwoI77yms12uvOQBMhiE97HvYek91w8Xz2aFtr7aWC4bOvkQfW8wC98r3JCLCn
+         cRRcK4YU3onGl90G9f76ChCAecDrOk2JE/qshPXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/219] ALSA: hda/hdmi - implement mst_no_extra_pcms flag
-Date:   Sun, 29 Dec 2019 18:18:24 +0100
-Message-Id: <20191229162523.844585380@linuxfoundation.org>
+Subject: [PATCH 4.19 105/219] s390/mm: add mm_pxd_folded() checks to pxd_free()
+Date:   Sun, 29 Dec 2019 18:18:27 +0100
+Message-Id: <20191229162524.536681246@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -63,90 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-[ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
+[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
 
-To support the DP-MST multiple streams via single connector feature,
-the HDMI driver was extended with the concept of backup PCMs. See
-commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
+Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
+page tables. This is not an issue so far, as those functions will actually
+never be called, since no code will reach them when page tables are folded.
 
-This implementation works fine with snd_hda_intel.c as PCM topology
-is fully managed within the single driver.
+In order to avoid future issues, and to make the s390 code more similar to
+other architectures, add mm_pxd_folded() checks, similar to how it is done
+in pxd_free_tlb().
 
-When the HDA codec driver is used from ASoC components, the concept
-of backup PCMs no longer fits. For ASoC topologies, the physical
-HDMI converters are presented as backend DAIs and these should match
-with hardware capabilities. The ASoC topology may define arbitrary
-PCMs (i.e. frontend DAIs) and have processing elements before eventual
-routing to the HDMI BE DAIs. With backup PCMs, the link between
-FE and BE DAIs would become dynamic and change when monitors are
-(un)plugged. This would lead to modifying the topology every time
-hotplug events happen, which is not currently possible in ASoC and
-there does not seem to be any obvious benefits from this design.
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add tests validating architecture
+page table helpers").
 
-To overcome above problems and enable the HDMI driver to be used
-from ASoC, this patch adds a new mode (mst_no_extra_pcms flags) to
-patch_hdmi.c. In this mode, the codec driver does not assume
-the backup PCMs to be created.
-
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191029134017.18901-2-kai.vehmanen@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_codec.h  |  1 +
- sound/pci/hda/patch_hdmi.c | 19 ++++++++++++++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
+ arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_codec.h b/sound/pci/hda/hda_codec.h
-index 2003403ce1c8..199927694aef 100644
---- a/sound/pci/hda/hda_codec.h
-+++ b/sound/pci/hda/hda_codec.h
-@@ -262,6 +262,7 @@ struct hda_codec {
- 	unsigned int force_pin_prefix:1; /* Add location prefix */
- 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
- 	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
-+	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
+diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
+index 5ee733720a57..67838df3f3f9 100644
+--- a/arch/s390/include/asm/pgalloc.h
++++ b/arch/s390/include/asm/pgalloc.h
+@@ -56,7 +56,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
+ 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
+ 	return (p4d_t *) table;
+ }
+-#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
++
++static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
++{
++	if (!mm_p4d_folded(mm))
++		crst_table_free(mm, (unsigned long *) p4d);
++}
  
- #ifdef CONFIG_PM
- 	unsigned long power_on_acct;
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index c827a2a89cc3..9d5e3c8d62b9 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2063,15 +2063,24 @@ static bool is_hdmi_pcm_attached(struct hdac_device *hdac, int pcm_idx)
- static int generic_hdmi_build_pcms(struct hda_codec *codec)
+ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
  {
- 	struct hdmi_spec *spec = codec->spec;
--	int idx;
-+	int idx, pcm_num;
+@@ -65,7 +70,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
+ 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
+ 	return (pud_t *) table;
+ }
+-#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
++
++static inline void pud_free(struct mm_struct *mm, pud_t *pud)
++{
++	if (!mm_pud_folded(mm))
++		crst_table_free(mm, (unsigned long *) pud);
++}
  
- 	/*
- 	 * for non-mst mode, pcm number is the same as before
--	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
--	 *  dev_num is the device entry number in a pin
--	 *
-+	 * for DP MST mode without extra PCM, pcm number is same
-+	 * for DP MST mode with extra PCMs, pcm number is
-+	 *  (nid number + dev_num - 1)
-+	 * dev_num is the device entry number in a pin
- 	 */
--	for (idx = 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
-+
-+	if (codec->mst_no_extra_pcms)
-+		pcm_num = spec->num_nids;
-+	else
-+		pcm_num = spec->num_nids + spec->dev_num - 1;
-+
-+	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
-+
-+	for (idx = 0; idx < pcm_num; idx++) {
- 		struct hda_pcm *info;
- 		struct hda_pcm_stream *pstr;
+ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
+ {
+@@ -83,6 +93,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
  
+ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+ {
++	if (mm_pmd_folded(mm))
++		return;
+ 	pgtable_pmd_page_dtor(virt_to_page(pmd));
+ 	crst_table_free(mm, (unsigned long *) pmd);
+ }
 -- 
 2.20.1
 
