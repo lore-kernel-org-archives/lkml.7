@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15073C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA5EC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C8F208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C185521744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641733;
-	bh=V4eOyXkk4N9xmbfUukjFxKPeosyoSEs+Nc6oot6P/a0=;
+	s=default; t=1577641736;
+	bh=Bc+4ThAwjEDmbN9IZHF968Zw5Q9/PkRTJXe4suKGGWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dggoK7MBG/qPGtfVLDmuLwf5xVpHQaXVV7g/qnF2uAh9/OmEZHwft6n23sVo/JBmZ
-	 bz8UWYAcfrIpCJzcRS8przfQxEWpTjTWU1ak7NY2ScjPoSULG78PhAw2X9EwcAjunY
-	 DUoOajanAKKhWoZbqO20BNnaXm+9fcWPyvpr1f0Y=
+	b=DV80DltWfQrlU823kRjxLpEPKtTTSfWRTa+j+iuOWLlOuP3TXyLRV7bfSSw5mPdrx
+	 0xFcOsipqZMAW0vq9KX/1f7MkOFGcT69mLSZHLdvPozPcdx/b10mkRthc//xqMmPfX
+	 1u15tQp8/A0r+ZvNtUdqiSng9EEQCzTX/gHp7mfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfL2Rsw (ORCPT
+        id S1731538AbfL2Rsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:48:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731242AbfL2Rsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:46 -0500
+        id S1731517AbfL2Rss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:48:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43C9207FF;
-        Sun, 29 Dec 2019 17:48:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D562207FD;
+        Sun, 29 Dec 2019 17:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641725;
-        bh=V4eOyXkk4N9xmbfUukjFxKPeosyoSEs+Nc6oot6P/a0=;
+        s=default; t=1577641727;
+        bh=Bc+4ThAwjEDmbN9IZHF968Zw5Q9/PkRTJXe4suKGGWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sw2vNdgBuae0HLyWddsyyLJLYQyKPLXmVgx8QfNPeAf7vVl6Sk29ePYp5yuNG3AK8
-         mpBQUWy3SdB110voJHFtGXq9MmQABHH6nBDlFOQ9oHO5XdQq85XoBXzJr5tWORvbbP
-         LrkE+pQxJVtoFrl3dS7kZF5EtO3X/bLYu22hTOc8=
+        b=OasFJQYkAJqvWOQPm9HghrCucMwnLDsAGR84qaLYR6MsCP337liJwEDhl/EbLZ3RU
+         FeYjqC1N2/yIuWtmItmGv4hHNfRSAxtnRWdRYphJgBDc1tX2NL3UMW8Y8iXZE7ww7s
+         4Y5e5wpeeElU+2f8IMfh6tzdh7rM/U2S8dDVNeqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 183/434] md: no longer compare spare disk superblock events in super_load
-Date:   Sun, 29 Dec 2019 18:23:56 +0100
-Message-Id: <20191229172713.972247562@linuxfoundation.org>
+Subject: [PATCH 5.4 184/434] staging: wilc1000: potential corruption in wilc_parse_join_bss_param()
+Date:   Sun, 29 Dec 2019 18:23:57 +0100
+Message-Id: <20191229172714.039031122@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,189 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 6a5cb53aaa4ef515ddeffa04ce18b771121127b4 ]
+[ Upstream commit d59dc92f1bccd5acde793aebdbb4f7121cf3f9af ]
 
-We have a test case as follow:
+The "rates_len" value needs to be capped so that the memcpy() doesn't
+copy beyond the end of the array.
 
-  mdadm -CR /dev/md1 -l 1 -n 4 /dev/sd[a-d] \
-	--assume-clean --bitmap=internal
-  mdadm -S /dev/md1
-  mdadm -A /dev/md1 /dev/sd[b-c] --run --force
-
-  mdadm --zero /dev/sda
-  mdadm /dev/md1 -a /dev/sda
-
-  echo offline > /sys/block/sdc/device/state
-  echo offline > /sys/block/sdb/device/state
-  sleep 5
-  mdadm -S /dev/md1
-
-  echo running > /sys/block/sdb/device/state
-  echo running > /sys/block/sdc/device/state
-  mdadm -A /dev/md1 /dev/sd[a-c] --run --force
-
-When we readd /dev/sda to the array, it started to do recovery.
-After offline the other two disks in md1, the recovery have
-been interrupted and superblock update info cannot be written
-to the offline disks. While the spare disk (/dev/sda) can continue
-to update superblock info.
-
-After stopping the array and assemble it, we found the array
-run fail, with the follow kernel message:
-
-[  172.986064] md: kicking non-fresh sdb from array!
-[  173.004210] md: kicking non-fresh sdc from array!
-[  173.022383] md/raid1:md1: active with 0 out of 4 mirrors
-[  173.022406] md1: failed to create bitmap (-5)
-[  173.023466] md: md1 stopped.
-
-Since both sdb and sdc have the value of 'sb->events' smaller than
-that in sda, they have been kicked from the array. However, the only
-remained disk sda is in 'spare' state before stop and it cannot be
-added to conf->mirrors[] array. In the end, raid array assemble
-and run fail.
-
-In fact, we can use the older disk sdb or sdc to assemble the array.
-That means we should not choose the 'spare' disk as the fresh disk in
-analyze_sbs().
-
-To fix the problem, we do not compare superblock events when it is
-a spare disk, as same as validate_super.
-
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: c5c77ba18ea6 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Adham Abozaeid <adham.abozaeid@microchip.com>
+Link: https://lore.kernel.org/r/20191017091832.GB31278@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 57 +++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 51 insertions(+), 6 deletions(-)
+ drivers/staging/wilc1000/wilc_hif.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index b8dd56b746da..6f0ecfe8eab2 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1156,7 +1156,15 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
- 		rdev->desc_nr = sb->this_disk.number;
- 
- 	if (!refdev) {
--		ret = 1;
-+		/*
-+		 * Insist on good event counter while assembling, except
-+		 * for spares (which don't need an event count)
-+		 */
-+		if (sb->disks[rdev->desc_nr].state & (
-+			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)))
-+			ret = 1;
-+		else
-+			ret = 0;
- 	} else {
- 		__u64 ev1, ev2;
- 		mdp_super_t *refsb = page_address(refdev->sb_page);
-@@ -1172,7 +1180,14 @@ static int super_90_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor
- 		}
- 		ev1 = md_event(sb);
- 		ev2 = md_event(refsb);
--		if (ev1 > ev2)
-+
-+		/*
-+		 * Insist on good event counter while assembling, except
-+		 * for spares (which don't need an event count)
-+		 */
-+		if (sb->disks[rdev->desc_nr].state & (
-+			(1<<MD_DISK_SYNC) | (1 << MD_DISK_ACTIVE)) &&
-+			(ev1 > ev2))
- 			ret = 1;
- 		else
- 			ret = 0;
-@@ -1532,6 +1547,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 	sector_t sectors;
- 	char b[BDEVNAME_SIZE], b2[BDEVNAME_SIZE];
- 	int bmask;
-+	__u64 role;
- 
- 	/*
- 	 * Calculate the position of the superblock in 512byte sectors.
-@@ -1665,8 +1681,20 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 	    sb->level != 0)
- 		return -EINVAL;
- 
-+	role = le16_to_cpu(sb->dev_roles[rdev->desc_nr]);
-+
- 	if (!refdev) {
--		ret = 1;
-+		/*
-+		 * Insist of good event counter while assembling, except for
-+		 * spares (which don't need an event count)
-+		 */
-+		if (rdev->desc_nr >= 0 &&
-+		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
-+			(role < MD_DISK_ROLE_MAX ||
-+			 role == MD_DISK_ROLE_JOURNAL))
-+			ret = 1;
-+		else
-+			ret = 0;
- 	} else {
- 		__u64 ev1, ev2;
- 		struct mdp_superblock_1 *refsb = page_address(refdev->sb_page);
-@@ -1683,7 +1711,14 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 		ev1 = le64_to_cpu(sb->events);
- 		ev2 = le64_to_cpu(refsb->events);
- 
--		if (ev1 > ev2)
-+		/*
-+		 * Insist of good event counter while assembling, except for
-+		 * spares (which don't need an event count)
-+		 */
-+		if (rdev->desc_nr >= 0 &&
-+		    rdev->desc_nr < le32_to_cpu(sb->max_dev) &&
-+			(role < MD_DISK_ROLE_MAX ||
-+			 role == MD_DISK_ROLE_JOURNAL) && ev1 > ev2)
- 			ret = 1;
- 		else
- 			ret = 0;
-@@ -3604,7 +3639,7 @@ abort_free:
-  * Check a full RAID array for plausibility
-  */
- 
--static void analyze_sbs(struct mddev *mddev)
-+static int analyze_sbs(struct mddev *mddev)
- {
- 	int i;
- 	struct md_rdev *rdev, *freshest, *tmp;
-@@ -3625,6 +3660,12 @@ static void analyze_sbs(struct mddev *mddev)
- 			md_kick_rdev_from_array(rdev);
- 		}
- 
-+	/* Cannot find a valid fresh disk */
-+	if (!freshest) {
-+		pr_warn("md: cannot find a valid disk\n");
-+		return -EINVAL;
-+	}
-+
- 	super_types[mddev->major_version].
- 		validate_super(mddev, freshest);
- 
-@@ -3659,6 +3700,8 @@ static void analyze_sbs(struct mddev *mddev)
- 			clear_bit(In_sync, &rdev->flags);
- 		}
+diff --git a/drivers/staging/wilc1000/wilc_hif.c b/drivers/staging/wilc1000/wilc_hif.c
+index d3d9ea284816..77d0732f451b 100644
+--- a/drivers/staging/wilc1000/wilc_hif.c
++++ b/drivers/staging/wilc1000/wilc_hif.c
+@@ -473,6 +473,8 @@ void *wilc_parse_join_bss_param(struct cfg80211_bss *bss,
+ 	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies->data, ies->len);
+ 	if (rates_ie) {
+ 		rates_len = rates_ie[1];
++		if (rates_len > WILC_MAX_RATES_SUPPORTED)
++			rates_len = WILC_MAX_RATES_SUPPORTED;
+ 		param->supp_rates[0] = rates_len;
+ 		memcpy(&param->supp_rates[1], rates_ie + 2, rates_len);
  	}
-+
-+	return 0;
- }
- 
- /* Read a fixed-point number.
-@@ -5577,7 +5620,9 @@ int md_run(struct mddev *mddev)
- 	if (!mddev->raid_disks) {
- 		if (!mddev->persistent)
- 			return -EINVAL;
--		analyze_sbs(mddev);
-+		err = analyze_sbs(mddev);
-+		if (err)
-+			return -EINVAL;
- 	}
- 
- 	if (mddev->level != LEVEL_NONE)
 -- 
 2.20.1
 
