@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706C4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CB0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C96C206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC9720748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643207;
-	bh=A+V3kOd7aM3a0kWmJvDD1+pxWSgMnrzbg/E6ybE+yqU=;
+	s=default; t=1577643211;
+	bh=lZfQ73VqQQtjsTM7v6sL6jXQFcPPf+p/jvKrLBnmzhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHKPpUxQ+lYIVfF0p7I5jT4ion4MP+q+m7t4tPpA89K4G8/GRpGVHE1tbeoPCa55h
-	 qY4eByg9MZ06h20TB0mypCsowzG8Vd5QSGLz2kY8vnorcnPgs7xdeMa+E9fh8jbfJc
-	 6dYkwVSdMkOW/myan84SSvXyoRHFjjqn/TbDMw3g=
+	b=Xw3xuoa15BTLjY+ggEHL18CmmKP6quZRKPtEDyJ4m5EXAQJtHH69wyL/cfI8OBXAi
+	 MaLZSvEqfYEX6lMBUwVnjcaZ8DBGtavDAcWVNGtBYCHhlOn6CEL8pbEbiTHYJAvI9Y
+	 yE4l3DQot1ceKPvRs2KpwDJUZPf1BuYik92TjNUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfL2SN0 (ORCPT
+        id S2387775AbfL2SNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:13:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:13:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728563AbfL2R2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:18 -0500
+        id S1728224AbfL2R2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A82AA20722;
-        Sun, 29 Dec 2019 17:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42FC320409;
+        Sun, 29 Dec 2019 17:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640498;
-        bh=A+V3kOd7aM3a0kWmJvDD1+pxWSgMnrzbg/E6ybE+yqU=;
+        s=default; t=1577640495;
+        bh=lZfQ73VqQQtjsTM7v6sL6jXQFcPPf+p/jvKrLBnmzhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBq7nwYR7XRvgOHCFffCxwQuKjNrZQQhi1QzVp2hQZCD1QmJKu22+VeAwyITno3ND
-         oi19bIB232L9LbnWQ60o7CBrJZq2ayJ9k+mkEL9P41GDAM4k6iPs6bLmkpzYbtZK9N
-         ivCrdkrad+6aHssrtmEiQ/U4iGbukUX7kn0cqCLI=
+        b=mtEyVHnL6J6RHqpjIwDsZGmZHDY7npoVi8FdfLa+HSalI0AMHiEn5YMwnib3eurBh
+         k+DkfXOr+N1GmDgZfKBii/BCDMArJWsmo1uxUXL3WZFT3+xzDQxCkoyzP1aGZVhZNA
+         D7UnHmDO59nuAP/ROmQ0iNUZXdmA9K59P4uQKpDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 003/219] mod_devicetable: fix PHY module format
-Date:   Sun, 29 Dec 2019 18:16:45 +0100
-Message-Id: <20191229162509.633370446@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 020/219] btrfs: do not leak reloc root if we fail to read the fs root
+Date:   Sun, 29 Dec 2019 18:17:02 +0100
+Message-Id: <20191229162512.034950201@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,43 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit d2ed49cf6c13e379c5819aa5ac20e1f9674ebc89 ]
+commit ca1aa2818a53875cfdd175fb5e9a2984e997cce9 upstream.
 
-When a PHY is probed, if the top bit is set, we end up requesting a
-module with the string "mdio:-10101110000000100101000101010001" -
-the top bit is printed to a signed -1 value. This leads to the module
-not being loaded.
+If we fail to read the fs root corresponding with a reloc root we'll
+just break out and free the reloc roots.  But we remove our current
+reloc_root from this list higher up, which means we'll leak this
+reloc_root.  Fix this by adding ourselves back to the reloc_roots list
+so we are properly cleaned up.
 
-Fix the module format string and the macro generating the values for
-it to ensure that we only print unsigned types and the top bit is
-always 0/1. We correctly end up with
-"mdio:10101110000000100101000101010001".
-
-Fixes: 8626d3b43280 ("phylib: Support phy module autoloading")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/mod_devicetable.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -551,9 +551,9 @@ struct platform_device_id {
- #define MDIO_NAME_SIZE		32
- #define MDIO_MODULE_PREFIX	"mdio:"
+---
+ fs/btrfs/relocation.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4474,6 +4474,7 @@ int btrfs_recover_relocation(struct btrf
+ 		fs_root = read_fs_root(fs_info, reloc_root->root_key.offset);
+ 		if (IS_ERR(fs_root)) {
+ 			err = PTR_ERR(fs_root);
++			list_add_tail(&reloc_root->root_list, &reloc_roots);
+ 			goto out_free;
+ 		}
  
--#define MDIO_ID_FMT "%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d"
-+#define MDIO_ID_FMT "%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u%u"
- #define MDIO_ID_ARGS(_id) \
--	(_id)>>31, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1,	\
-+	((_id)>>31) & 1, ((_id)>>30) & 1, ((_id)>>29) & 1, ((_id)>>28) & 1, \
- 	((_id)>>27) & 1, ((_id)>>26) & 1, ((_id)>>25) & 1, ((_id)>>24) & 1, \
- 	((_id)>>23) & 1, ((_id)>>22) & 1, ((_id)>>21) & 1, ((_id)>>20) & 1, \
- 	((_id)>>19) & 1, ((_id)>>18) & 1, ((_id)>>17) & 1, ((_id)>>16) & 1, \
 
 
