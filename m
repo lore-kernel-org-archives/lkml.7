@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D537EC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12898C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A7B21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEADA21D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641751;
-	bh=PxKDTzxJd0BmapdhvCsZmbiWkhn6vUVNz5zhwpX7UeI=;
+	s=default; t=1577641753;
+	bh=iNjo6HCr217/mhNPa+w8+27lJiI8vQm1vwID1yFdPbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inH4ETTD0JwD2pk2UKIdtkg7+9ECg7Gdg2QA1y+93sxgb1Vwfa22vQuWCG6Vnh2rm
-	 KHA4MAdEB2oFC+G/qIX6N4la/afoSGujB+AXEO5kCLHok1Mhcy0qTCMqzyVi4H44WY
-	 0d/VOAOszZDyyOPDjEPSfyxI89Toy52YLbFKIfsA=
+	b=V2pBdX0kbZxkYotMe2O/5y5+kPoNqGPVORl2AtoiNoxcfTJaqcQBxHTTFwl9jN5Lp
+	 T3fpEC5A/n8qruPjYj3o3ZyIyjJhaK3s0bnbmw3Ysz/i9jCjiSaD0ikm1s8YROcyH+
+	 IPCqoGPNzEesSsP+fuQQTzvYyKLEbqX36zW8CWxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfL2RtK (ORCPT
+        id S1731131AbfL2RtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731557AbfL2RtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:02 -0500
+        id S1731273AbfL2RtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828C6206A4;
-        Sun, 29 Dec 2019 17:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C232207FF;
+        Sun, 29 Dec 2019 17:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641742;
-        bh=PxKDTzxJd0BmapdhvCsZmbiWkhn6vUVNz5zhwpX7UeI=;
+        s=default; t=1577641749;
+        bh=iNjo6HCr217/mhNPa+w8+27lJiI8vQm1vwID1yFdPbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHjnwn86VOcEVDoL0CzMdYKJoQr01pu92R9QCAo3+7f9wWz0AljwgQUmjRE/yj0mA
-         Sjbg9D9QwdWmpOEW7qMSEodyM2LXawLXJPcb6PU4rmK+zdfEykWXZe+fn684irSxqF
-         b+RFuQiqz6e5DpiEd2qiL1ufNz1OKCSMKgqG8vOo=
+        b=a8F6sa6QRaWRSmG2DFDjCzQuNALGZboqlh3YTqjN+x2xb7X1RgblxTa3qfGlCcqPv
+         FNApEU6ftPxK9ExFCft16OwD2Zq+K/6729qDgkqVQ/AJNZntFaTEaxQnQATFxM1KPN
+         zeX5ykFve1kZTI6vE2ttZANg6ihFTVx+EhQeILVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 151/434] iio: adc: max1027: Reset the device at probe time
-Date:   Sun, 29 Dec 2019 18:23:24 +0100
-Message-Id: <20191229172711.786178519@linuxfoundation.org>
+Subject: [PATCH 5.4 188/434] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Sun, 29 Dec 2019 18:24:01 +0100
+Message-Id: <20191229172714.310493480@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,40 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
+
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 214883458582..e3be8eedd773 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -458,6 +458,14 @@ static int max1027_probe(struct spi_device *spi)
- 		return ret;
- 	}
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index c9f72b2665f1..43ae4e0c968f 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -81,7 +81,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
-+		return ret;
-+	}
-+
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
+ 
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -91,16 +92,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+ 
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
+ 
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
