@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E06C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0440BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6140320722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF044207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640370;
-	bh=Gxzd+nMb8Gabi3MGjp3PtVgqS/e6IZMNgvEFkStXkzE=;
+	s=default; t=1577640373;
+	bh=wTeLpwQ9NyWe9Ik7bwUjxLI73XPOTIwTnGzR5hpahyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqVus1Q4nxVuJLy/L5LZYJ//Xg23hwjfueYp2XED6qmgMAfFk9+/Ek87XtcXSbbWA
-	 xsVr1KRiracSrUQ+UThrMJ3pBp9r128ls/6lmScSCvyznVUVrP+433pquS3VGBidYo
-	 rpf2mjBNCez+Yi4zj17GdQzqNbHRKrjWQfQFvECI=
+	b=t97AGOJUq01tqY12ZxPk5n0pKHfCK7Xm3X/C03gj29DnQ19uJIYqOQvnoxPjFaWvp
+	 xbU4cFSr+gUwrQtFGnPBNs7kI5xV6H8uc4+srwtrzLcDgjNvOSSNi2fgCoTkzt4l40
+	 lZL33VXvL3dr+Ou1fn9oYl2710rLeQxG25NY/YVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfL2R0J (ORCPT
+        id S1728144AbfL2R0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46720 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:26:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbfL2R0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:06 -0500
+        id S1728123AbfL2R0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3C1207FD;
-        Sun, 29 Dec 2019 17:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0A5207FF;
+        Sun, 29 Dec 2019 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640366;
-        bh=Gxzd+nMb8Gabi3MGjp3PtVgqS/e6IZMNgvEFkStXkzE=;
+        s=default; t=1577640368;
+        bh=wTeLpwQ9NyWe9Ik7bwUjxLI73XPOTIwTnGzR5hpahyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U625g+IwX7Ujao2T+L59XzsmBywl/elAD3nSmYz1GubpbzamZW1SPrxq8uKFn0nhr
-         mTgHpAD2eb1JvUHJImU583a55N4WURszB1Lo2lgItJJtxjEf4DJ9pPNO6+eVajuCKi
-         ni1TEJyyky/n8j4Ji0CfaBJsaKIuC7qoBMHLR/L8=
+        b=WSAQ2+O0qTPSgM0I62BcDSK7Jtx0Y1SdWN9NQ1SS2I7S+9AF3aQEFS5Z3rCtt2F1w
+         l8Ww2TQzHjcFCB+fKDV52sGwPHKfAWdg/TTm7Ok4cTursDK9QTSDQXtOzpoi2qA2Xh
+         HT46jRiLmP6BPagdW6IdCBVQVtsbhdp+Mmk4diKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        virtualization@lists.linux-foundation.org,
-        Ard Biesheuvel <ardb@kernel.org>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 121/161] crypto: virtio - deal with unsupported input sizes
-Date:   Sun, 29 Dec 2019 18:19:29 +0100
-Message-Id: <20191229162435.357748745@linuxfoundation.org>
+Subject: [PATCH 4.14 130/161] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Sun, 29 Dec 2019 18:19:38 +0100
+Message-Id: <20191229162438.205997055@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -64,65 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
+[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
 
-Return -EINVAL for input sizes that are not a multiple of the AES
-block size, since they are not supported by our CBC chaining mode.
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-While at it, remove the pr_err() that reports unsupported key sizes
-being used: we shouldn't spam the kernel log with that.
-
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
-index 5035b0dc1e40..e2231a1a05a1 100644
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -110,8 +110,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
- 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
- 		break;
- 	default:
--		pr_err("virtio_crypto: Unsupported key length: %d\n",
--			key_len);
- 		return -EINVAL;
- 	}
- 	return 0;
-@@ -485,6 +483,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
- 
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
-@@ -505,6 +508,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
- 	/* Use the first data virtqueue as default */
- 	struct data_queue *data_vq = &vcrypto->data_vq[0];
- 
-+	if (!req->nbytes)
-+		return 0;
-+	if (req->nbytes % AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
- 	vc_req->dataq = data_vq;
- 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
- 	vc_sym_req->ablkcipher_ctx = ctx;
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index f6936bb3b7be..1a724263761b 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -276,8 +276,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -297,8 +297,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -324,8 +324,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
 -- 
 2.20.1
 
