@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8999BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC21C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627F6206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A665020718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641650;
-	bh=LLK2WDRQKpbT89PAW7GOLuuF7OI6LutJI+T83UbbLN0=;
+	s=default; t=1577641654;
+	bh=A+EDZ/daJzoXrePzQdsa4QO2qYkne0kKEtRkuHNt4HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjbSwsOZbL9dIf2K/EHBc4Z68UWavXWvWgqE1z10A/MBKbOlVzQrx/4paN9YosJyh
-	 RGx2R6MCiRTaw/yGZMIaDFVOSZY9oDhsyNfGOWg0sTfFI5LahrXlOMbIzPjXVlh7Uj
-	 LsAsrRs/zhpQBnddrO9yI1NFQxz7/IP5FaTx29Zs=
+	b=lq2F8vjvEzddFBV4AqZlevoQgXCgNQ48ZKm+4cURTHG1G2MALXZOXiry7WYVSBsNZ
+	 jHzdM6khar+sHAKBSfQdEB21AZTZDbBSkx4/nqDCZSg6cn3mwAG5VcjkJvhFoGOQ3C
+	 7Ju4yBr/lGNX/wM8nrpDpEyR3nWv8L651aMaHp3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbfL2Rr3 (ORCPT
+        id S1731281AbfL2Rrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58052 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731262AbfL2Rr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:26 -0500
+        id S1731270AbfL2Rr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C920A20718;
-        Sun, 29 Dec 2019 17:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AFD208C4;
+        Sun, 29 Dec 2019 17:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641646;
-        bh=LLK2WDRQKpbT89PAW7GOLuuF7OI6LutJI+T83UbbLN0=;
+        s=default; t=1577641648;
+        bh=A+EDZ/daJzoXrePzQdsa4QO2qYkne0kKEtRkuHNt4HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdwydremUIM9nQLRQ1IgQw6El6DDfQVMFrXr85e33rDZEM4iJS75W/pE7967MVXT+
-         bFDRXfMtdfVSJRhHv6qKFpzqri5JRuIX4Q5iVJ9lPjZCVGoGHJpZa/6ujeN6Tt4OC5
-         HD/BI5d586AKahIJFRz/kwv30Ykb/knjWYSleBts=
+        b=RqsF4iYOZotonfZJeOLyS5n8B/JJh+qUKglu73/jCrgpCGGZl3iROiSK8VW9n8KM7
+         GRfZw2eIoPv/q4ZVx4WM+l3sG4o7+TmxS5KwBAfvebCFj5xRYD1BNfDnyivL2LsKcT
+         e9CLe11nzY2yD7ciC3R8jHmOaGKov23yIB/PDyX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        stable@vger.kernel.org, Szymon Janc <szymon.janc@codecoup.pl>,
+        =?UTF-8?q?S=C3=B6ren=20Beye?= <linux@hypfer.de>,
         Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 153/434] Bluetooth: missed cpu_to_le16 conversion in hci_init4_req
-Date:   Sun, 29 Dec 2019 18:23:26 +0100
-Message-Id: <20191229172711.921929480@linuxfoundation.org>
+Subject: [PATCH 5.4 154/434] Bluetooth: Workaround directed advertising bug in Broadcom controllers
+Date:   Sun, 29 Dec 2019 18:23:27 +0100
+Message-Id: <20191229172711.990077339@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,46 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+From: Szymon Janc <szymon.janc@codecoup.pl>
 
-[ Upstream commit 727ea61a5028f8ac96f75ab34cb1b56e63fd9227 ]
+[ Upstream commit 4c371bb95cf06ded80df0e6139fdd77cee1d9a94 ]
 
-It looks like in hci_init4_req() the request is being
-initialised from cpu-endian data but the packet is specified
-to be little-endian. This causes an warning from sparse due
-to __le16 to u16 conversion.
+It appears that some Broadcom controllers (eg BCM20702A0) reject LE Set
+Advertising Parameters command if advertising intervals provided are not
+within range for undirected and low duty directed advertising.
 
-Fix this by using cpu_to_le16() on the two fields in the packet.
+Workaround this bug by populating min and max intervals with 'valid'
+values.
 
-net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
-net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
-net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
-net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
-net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
-net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
+< HCI Command: LE Set Advertising Parameters (0x08|0x0006) plen 15
+        Min advertising interval: 0.000 msec (0x0000)
+        Max advertising interval: 0.000 msec (0x0000)
+        Type: Connectable directed - ADV_DIRECT_IND (high duty cycle) (0x01)
+        Own address type: Public (0x00)
+        Direct address type: Random (0x01)
+        Direct address: E2:F0:7B:9F:DC:F4 (Static)
+        Channel map: 37, 38, 39 (0x07)
+        Filter policy: Allow Scan Request from Any, Allow Connect Request from Any (0x00)
+> HCI Event: Command Complete (0x0e) plen 4
+      LE Set Advertising Parameters (0x08|0x0006) ncmd 1
+        Status: Invalid HCI Command Parameters (0x12)
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
+Tested-by: Sören Beye <linux@hypfer.de>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/bluetooth/hci_conn.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 04bc79359a17..b2559d4bed81 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -842,8 +842,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
- 	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
- 		struct hci_cp_le_write_def_data_len cp;
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index ad5b0ac1f9ce..7ff92dd4c53c 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -934,6 +934,14 @@ static void hci_req_directed_advertising(struct hci_request *req,
+ 			return;
  
--		cp.tx_len = hdev->le_max_tx_len;
--		cp.tx_time = hdev->le_max_tx_time;
-+		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
-+		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
- 		hci_req_add(req, HCI_OP_LE_WRITE_DEF_DATA_LEN, sizeof(cp), &cp);
- 	}
- 
+ 		memset(&cp, 0, sizeof(cp));
++
++		/* Some controllers might reject command if intervals are not
++		 * within range for undirected advertising.
++		 * BCM20702A0 is known to be affected by this.
++		 */
++		cp.min_interval = cpu_to_le16(0x0020);
++		cp.max_interval = cpu_to_le16(0x0020);
++
+ 		cp.type = LE_ADV_DIRECT_IND;
+ 		cp.own_address_type = own_addr_type;
+ 		cp.direct_addr_type = conn->dst_type;
 -- 
 2.20.1
 
