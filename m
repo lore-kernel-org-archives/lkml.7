@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947A5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE9A20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10B220718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641413;
-	bh=ZeB+9JhSkAaKXyBUi7hHIXfSXFBtWmCxQ4icztn3gQw=;
+	s=default; t=1577641417;
+	bh=e7MPd5L+4UOxxlO77Qm/1g3QIjNW2/XxFjrUC3k2BUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WtMbzjANXA4vhjRb3xyOvpKM//8PmcX4zNx/BOQMWUaX7mLd1lwpGSwplGsmBg5S6
-	 9tJarDpsfxvNRJAbqQVZbFkCPan6jlFCANBKrfW5lNhOswHgVHmZfzjxSUnUz2E7zW
-	 18zVbuZRYUSzK8FaZFytrDuBLnBfsXn9ysKw3C5M=
+	b=LV3j94s4HcnTyXV1p9WOGpJXkRGheOag8YGZ40Pa/30DYO9XlDAtN0H/JHUuHKZ1/
+	 H6fY+w2Mq0HJK6oFcIiu7WwB24Uw9XBYkIvBZI86Qc8e+Zcm0gos3kY0gdYNEWCMf+
+	 rcOSd7XGyW/z4qDqCQGjllns3tu+vXwQ3fTdyZtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfL2Rnc (ORCPT
+        id S1730517AbfL2Rng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbfL2Rn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:26 -0500
+        id S1730491AbfL2Rnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9683207FD;
-        Sun, 29 Dec 2019 17:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28AE206A4;
+        Sun, 29 Dec 2019 17:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641406;
-        bh=ZeB+9JhSkAaKXyBUi7hHIXfSXFBtWmCxQ4icztn3gQw=;
+        s=default; t=1577641411;
+        bh=e7MPd5L+4UOxxlO77Qm/1g3QIjNW2/XxFjrUC3k2BUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGirIoVuLMq9GZB1jNuCEi6SKNPN1/BmhBEIn0pZpIyOUY8kaRXoD/XNIOXstMkf1
-         GOBqN6eebsE9kVAXdERlIFzFo+EZUVdpluo26ldcGIdJgfodMxYbLqi5szs88H1rxA
-         xXsb+xwvp4rUKecf0uU29h/ES5TovHK3fmgKL8D4=
+        b=icwi8ydOd8lB6zTIeb6mmlVMLTCSGJW1VGNeILA0zyuxeIx/fjdML+eaNj2/zcwuy
+         LIRNS6h+ZYvhAZD8ja6O9F4+6L3JurENu13JveWW6Odjer3YRD8f9kgw1fiV6KZFFg
+         Tcyfl4YcZEPeIrXw/LvxVnlcoBph9HZA+MCEo1zY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/434] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
-Date:   Sun, 29 Dec 2019 18:21:44 +0100
-Message-Id: <20191229172705.328843017@linuxfoundation.org>
+Subject: [PATCH 5.4 053/434] iio: max31856: add missing of_node and parent references to iio_dev
+Date:   Sun, 29 Dec 2019 18:21:46 +0100
+Message-Id: <20191229172705.435036592@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Andrea Merello <andrea.merello@gmail.com>
 
-[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
+[ Upstream commit 505ea3ada665c466d0064b11b6e611b7f995517d ]
 
-Silence two warning messages that occur due to -EPROBE_DEFER errors to
-help cleanup the system boot log.
+Adding missing indio_dev->dev.of_node references so that, in case multiple
+max31856 are present, users can get some clues to being able to distinguish
+each of them. While at it, add also the missing parent reference.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/iio/temperature/max31856.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-index 3c7cc5af735c..56df07cdab68 100644
---- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-+++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-@@ -715,7 +715,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
- 	/* 1.0V digital core power regulator  */
- 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
- 	if (IS_ERR(pdata->dvdd10)) {
--		DRM_ERROR("DVDD10 regulator not found\n");
-+		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
-+			DRM_ERROR("DVDD10 regulator not found\n");
-+
- 		return PTR_ERR(pdata->dvdd10);
- 	}
+diff --git a/drivers/iio/temperature/max31856.c b/drivers/iio/temperature/max31856.c
+index f184ba5601d9..73ed550e3fc9 100644
+--- a/drivers/iio/temperature/max31856.c
++++ b/drivers/iio/temperature/max31856.c
+@@ -284,6 +284,8 @@ static int max31856_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, indio_dev);
  
-@@ -1332,7 +1334,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
- 
- 	err = anx78xx_init_pdata(anx78xx);
- 	if (err) {
--		DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			DRM_ERROR("Failed to initialize pdata: %d\n", err);
-+
- 		return err;
- 	}
- 
+ 	indio_dev->info = &max31856_info;
++	indio_dev->dev.parent = &spi->dev;
++	indio_dev->dev.of_node = spi->dev.of_node;
+ 	indio_dev->name = id->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->channels = max31856_channels;
 -- 
 2.20.1
 
