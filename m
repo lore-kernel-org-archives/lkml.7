@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE74FC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AFEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0113206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143CE206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641522;
-	bh=/15pi5qSvB4ceV78bERpn7re2axBK/lYD0PAppSjBj4=;
+	s=default; t=1577641525;
+	bh=+dygn76/IYAa2qso1+W1AAo3SPb0oDeGOQgT+IRdVls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjJCLDnlsNwO3QskSDjNhlDWrJbAXgz3RFNZ0JrXyy0DCVZnX+UySEbJI1hLDLvpS
-	 A8TdN/KqeD/GvSTMoYDwbj3ixJHiangNnRfWkCDxQfpDSxxbIt4aU4c7TrH8fuQ6Kc
-	 7aBzuS2fi2xW4wk6T95Pi09YIhl+Sc2b4xwGcSwE=
+	b=dXwWY0BWt6DxbmANTKrjnALGdt/De9G0V/MWAAEnrsA5vOe4GWX1j5XFaYimSYFvo
+	 4n9eJmDGLaHdNt607nQmqOn992fizjBPSs0X7Ku5ynHA/4AgoX3kpfKPe7YU8M5zmw
+	 8/53z70zVRx19IuailUVCKHHsS0D2sQG3fXefhfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbfL2RpV (ORCPT
+        id S1730892AbfL2RpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54268 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbfL2RpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:19 -0500
+        id S1730547AbfL2RpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E260207FD;
-        Sun, 29 Dec 2019 17:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF385206A4;
+        Sun, 29 Dec 2019 17:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641518;
-        bh=/15pi5qSvB4ceV78bERpn7re2axBK/lYD0PAppSjBj4=;
+        s=default; t=1577641521;
+        bh=+dygn76/IYAa2qso1+W1AAo3SPb0oDeGOQgT+IRdVls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FGQcBkmaFnMJPwh5z/4twO2GO/8MHDZzu5wxl4hzZw4/y4mPAV6ygJpvjPMLBqzdt
-         wNxLkOuI7nUgfIKzUhkuY5D5e/BwpzM7aG8Nhl6xsuaZtcFj+Gx+xeT9wU69Czg3/o
-         lZxH2foV0tD4/HIfTe5N0ldHvzvo3sg8LlgcyrPI=
+        b=jGmyPA4iOnlX7BDHSet/L+Eqix0d9RxuZNSMptYEr1cxXdbSCmkOK/9xkHfvhJrly
+         WFS/JfGKUtGRt0JbAKzvDkqnWB9dfxFnoKCYlDUQQ3iZk9yB6DG4FPWzKdhzt2x3nH
+         Cmo78PUO9gp4GAt3V3UMRdfXAqbSbaL8SyfiMqHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/434] media: venus: Fix occasionally failures to suspend
-Date:   Sun, 29 Dec 2019 18:22:31 +0100
-Message-Id: <20191229172708.099982918@linuxfoundation.org>
+Subject: [PATCH 5.4 063/434] drm/meson: vclk: use the correct G12A frac max value
+Date:   Sun, 29 Dec 2019 18:21:56 +0100
+Message-Id: <20191229172705.970433065@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,55 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 8dbebb2bd01e6f36e9a215dcde99ace70408f2c8 ]
+[ Upstream commit d56276a13c2b9ea287b9fc7cc78bed4c43b286f9 ]
 
-Failure to suspend (venus_suspend_3xx) happens when the system
-is fresh booted and loading venus driver. This happens once and
-after reload the venus driver modules the problem disrepair.
+When calculating the HDMI PLL settings for a DMT mode PHY frequency,
+use the correct max fractional PLL value for G12A VPU.
 
-Fix the failure by skipping the check for WFI and IDLE bits if
-PC_READY is on in control status register.
+With this fix, we can finally setup the 1024x768-60 mode.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 202b9808f8ed ("drm/meson: Add G12A Video Clock setup")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190828132311.23881-1-narmstrong@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/hfi_venus.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/meson/meson_vclk.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-index 7129a2aea09a..0d8855014ab3 100644
---- a/drivers/media/platform/qcom/venus/hfi_venus.c
-+++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-@@ -1472,6 +1472,7 @@ static int venus_suspend_3xx(struct venus_core *core)
- {
- 	struct venus_hfi_device *hdev = to_hfi_priv(core);
- 	struct device *dev = core->dev;
-+	u32 ctrl_status;
- 	bool val;
- 	int ret;
- 
-@@ -1487,6 +1488,10 @@ static int venus_suspend_3xx(struct venus_core *core)
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index ac491a781952..f690793ae2d5 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -638,13 +638,18 @@ static bool meson_hdmi_pll_validate_params(struct meson_drm *priv,
+ 		if (frac >= HDMI_FRAC_MAX_GXBB)
+ 			return false;
+ 	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXM) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL) ||
+-		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		   meson_vpu_is_compatible(priv, VPU_COMPATIBLE_GXL)) {
+ 		/* Empiric supported min/max dividers */
+ 		if (m < 106 || m > 247)
+ 			return false;
+ 		if (frac >= HDMI_FRAC_MAX_GXL)
+ 			return false;
++	} else if (meson_vpu_is_compatible(priv, VPU_COMPATIBLE_G12A)) {
++		/* Empiric supported min/max dividers */
++		if (m < 106 || m > 247)
++			return false;
++		if (frac >= HDMI_FRAC_MAX_G12A)
++			return false;
  	}
  
-+	ctrl_status = venus_readl(hdev, CPU_CS_SCIACMDARG0);
-+	if (ctrl_status & CPU_CS_SCIACMDARG0_PC_READY)
-+		goto power_off;
-+
- 	/*
- 	 * Power collapse sequence for Venus 3xx and 4xx versions:
- 	 * 1. Check for ARM9 and video core to be idle by checking WFI bit
-@@ -1511,6 +1516,7 @@ static int venus_suspend_3xx(struct venus_core *core)
- 	if (ret)
- 		return ret;
- 
-+power_off:
- 	mutex_lock(&hdev->lock);
- 
- 	ret = venus_power_off(hdev);
+ 	return true;
 -- 
 2.20.1
 
