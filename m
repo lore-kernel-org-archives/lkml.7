@@ -2,200 +2,124 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCA2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AA1C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DE320838
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E34C2176D
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TtTxV8fQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUBvHzkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfL2BdV (ORCPT
+        id S1726395AbfL2B7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 20:33:21 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33767 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfL2BdU (ORCPT
+        Sat, 28 Dec 2019 20:59:09 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39590 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfL2B7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 20:33:20 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n25so23159765lfl.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 17:33:18 -0800 (PST)
+        Sat, 28 Dec 2019 20:59:09 -0500
+Received: by mail-pj1-f68.google.com with SMTP id t101so6669453pjb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 17:59:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oxOgqhMXtymlKCx9sWdDrZQ1p0DDEV4Iw4JHMohGHtg=;
-        b=TtTxV8fQD9Irm82p/Y2p8yCZp8HU8E7LZlrKF0zkg3Boqqd20yy9SqLIZdAtjEjAAz
-         QEqX7N+ZEpS6FVOX/SlsvMT4e/oK5/LbN+H6Y6M4E64z5Fe5uv0o+S5lUnY7mJ7wS920
-         e1iu1HqcID7kb/y3h94ZRNfFfZ8qx5FC88CMU72HY+Pe6V2xqIYjnuqG9OcRAMb6telG
-         8Z5xhKkm5BXzaCxR3NLkAzAmMlR44CdRVFrOBC88NCaljw1OIx6O9Kj+i/NlMb1QpIjw
-         vHhbXpdpZFbKFd0vxqT2cpRDLiq2/ftDgi40+Yq26ki1cuI/T45Fug/qe6p0HdF8mXFY
-         OQOw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B0YqCZdtASo8W3+DNsZKxEkKUnEoAfpsuE3h6bg+BKA=;
+        b=SUBvHzkDy3ObczV/2Tibqb/J+Bch+J+BkQLTRD7VEq1pgSLY5siprwnL8ItHD8F9X0
+         CLYNPAl6cuX+YtWyUz4Jv6O3q5S6xdwYdxId7gchqdvDjxrpI174YpeyGAVnq5OCLnYu
+         mjnk8FJDiqHP2OyS9LeyMpUTtRHfWnHiSWEIuaxjubiE/JKwwlviZBeCb1t/7K0h+fYh
+         0vjWt+KfOtPAEGUy76eHmG3OAfy6XCIgbDlBxBVQINB4iZl4afyF3PioZAzKOKODRE1X
+         oQLqq8b0HCjpBZ3AJYpqPIprChvuIUnjenWvUp0O9V64bXJNy2P1yqNwOkoX6pEoUsOG
+         rZuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oxOgqhMXtymlKCx9sWdDrZQ1p0DDEV4Iw4JHMohGHtg=;
-        b=eF5D/O9ewhNXsuX0joW0RbgsUbKv2QAyUQUFEcSpcz31OAXdwCjLspFKjR6oBfPT3Q
-         j6mt7kWsxlrFpyf5s5gXkvj6H4Ri2Og4fSTS09+mO3x1Dg4XcvM/hxvr+ani2TOtxpBl
-         SStsGgDobgfXmPsPJFzhOEeu1CMgdnXoXDzwoyh+yMq6clLvkGEhOXMVjyhN0ZukquUW
-         kDaROO1AztWn+wQiArBDvUVeZ1zvvnBWfRE8AawUdHZ2cONg+bMJsZisK18LdSJA1eRT
-         2rYQ8UtHdq2ic/WpM0Gsnhr6fRpxsaoCJs+TG/e38uhZ+GUfpb/w/YDHeg87GQtqyWvB
-         YJ4Q==
-X-Gm-Message-State: APjAAAW9AfkhnTXR0uhuCTS4ZMCpKW3GFCffLmyNZEQLKp8bldm61oyl
-        ZrAJ7htI4eUMisoDqm6M4fN9fD0L9X4=
-X-Google-Smtp-Source: APXvYqzEiHGahLxXrtb4lwCmMarvZXcYbTlKjJX1BYBK1fxnGrBVJlCriV93zhSGGNv7N0KW1CI54g==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr33443651lfn.113.1577583197756;
-        Sat, 28 Dec 2019 17:33:17 -0800 (PST)
-Received: from localhost.localdomain (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id i4sm15350327ljg.102.2019.12.28.17.33.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B0YqCZdtASo8W3+DNsZKxEkKUnEoAfpsuE3h6bg+BKA=;
+        b=C7VOqMat63Zep3GMJ2VBtAvFlNKFjB/ZIUadzXWPdAvXFqpmr+LjrMwFh9u/MUqalf
+         hJtdLY3XSf+tQs1TM3USo8wZDonwZS2zscj0UdWrXgMkJrk+cDR6XwgFqige0Gh/CuvL
+         GnXwEEjSpQCz83QQDq4M1qrFqRcvfjHxjFgmHqcQ+0oC81m44crvd++Z0O2TiEemNfFr
+         IUj8pEnjfHLXfegRWmyyN0iUuXZ3mXgF2LjCNTelBHjFCT2wwH32Pbq23hgN4piT6xkl
+         TAKpoqTI2l5aJ+kC34QaySMFcdcpIKDAO70G6V4zhdiVISNhjO1Ls7b9pKQSM9FU9ykH
+         Twlw==
+X-Gm-Message-State: APjAAAULyJH87uDPXLwPxXdIhXACtS+VmvgRzLBykOkDJxHL2bZGjtmq
+        LwVVD5I/Q4KjIVt4EAgZgYn/Og==
+X-Google-Smtp-Source: APXvYqwFD0Z6M2ULKf78TvessQAN+owraVNT/WM/LcoBIbydcpRlk+A9rbJjuwmOeeAvLemOFIwgmw==
+X-Received: by 2002:a17:90b:d94:: with SMTP id bg20mr34993201pjb.99.1577584748559;
+        Sat, 28 Dec 2019 17:59:08 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p185sm46804599pfg.61.2019.12.28.17.59.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 17:33:16 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Date:   Sun, 29 Dec 2019 02:30:59 +0100
-Message-Id: <20191229013059.495767-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Sat, 28 Dec 2019 17:59:07 -0800 (PST)
+Date:   Sat, 28 Dec 2019 17:59:04 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     jassisinghbrar@gmail.com, nsaenzjulienne@suse.de,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, lftan@altera.com,
+        matthias.bgg@gmail.com, agross@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 03/13] mailbox: qcom-apcs: convert to
+ devm_platform_ioremap_resource
+Message-ID: <20191229015904.GG3755841@builder>
+References: <20191228183538.26189-1-tiny.windzz@gmail.com>
+ <20191228183538.26189-3-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191228183538.26189-3-tiny.windzz@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+On Sat 28 Dec 10:35 PST 2019, Yangtao Li wrote:
 
-Set up the pin ranges using the new callback.
+> Use devm_platform_ioremap_resource() to simplify code.
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 61 +++++++++++++++------------
- 1 file changed, 35 insertions(+), 26 deletions(-)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 4860bc9a4e48..ffacd77861f7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1160,8 +1160,8 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
- 	return ret;
- }
- 
--static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
--				     const struct intel_community *community)
-+static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
-+				const struct intel_community *community)
- {
- 	int ret = 0, i;
- 
-@@ -1181,6 +1181,24 @@ static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
- 	return ret;
- }
- 
-+static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
-+{
-+	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-+	int ret, i;
-+
-+	for (i = 0; i < pctrl->ncommunities; i++) {
-+		struct intel_community *community = &pctrl->communities[i];
-+
-+		ret = intel_gpio_add_community_ranges(pctrl, community);
-+		if (ret) {
-+			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
- {
- 	const struct intel_community *community;
-@@ -1205,7 +1223,8 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
- 
- static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- {
--	int ret, i;
-+	int ret;
-+	struct gpio_irq_chip *girq;
- 
- 	pctrl->chip = intel_gpio_chip;
- 
-@@ -1214,6 +1233,7 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	pctrl->chip.label = dev_name(pctrl->dev);
- 	pctrl->chip.parent = pctrl->dev;
- 	pctrl->chip.base = -1;
-+	pctrl->chip.add_pin_ranges = intel_gpio_add_pin_ranges;
- 	pctrl->irq = irq;
- 
- 	/* Setup IRQ chip */
-@@ -1225,26 +1245,9 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
- 	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
- 
--	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to register gpiochip\n");
--		return ret;
--	}
--
--	for (i = 0; i < pctrl->ncommunities; i++) {
--		struct intel_community *community = &pctrl->communities[i];
--
--		ret = intel_gpio_add_pin_ranges(pctrl, community);
--		if (ret) {
--			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
--			return ret;
--		}
--	}
--
- 	/*
--	 * We need to request the interrupt here (instead of providing chip
--	 * to the irq directly) because on some platforms several GPIO
--	 * controllers share the same interrupt line.
-+	 * On some platforms several GPIO controllers share the same interrupt
-+	 * line.
- 	 */
- 	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
- 			       IRQF_SHARED | IRQF_NO_THREAD,
-@@ -1254,14 +1257,20 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 		return ret;
- 	}
- 
--	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
--				   handle_bad_irq, IRQ_TYPE_NONE);
-+	girq = &pctrl->chip.irq;
-+	girq->chip = &pctrl->irqchip;
-+	/* This will let us handle the IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
- 	if (ret) {
--		dev_err(pctrl->dev, "failed to add irqchip\n");
-+		dev_err(pctrl->dev, "failed to register gpiochip\n");
- 		return ret;
- 	}
- 
--	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
- 	return 0;
- }
- 
--- 
-2.23.0
-
+> ---
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index eeebafd546e5..0faf69137780 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -49,7 +49,6 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  {
+>  	struct qcom_apcs_ipc *apcs;
+>  	struct regmap *regmap;
+> -	struct resource *res;
+>  	unsigned long offset;
+>  	void __iomem *base;
+>  	unsigned long i;
+> @@ -64,8 +63,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  	if (!apcs)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	base = devm_ioremap_resource(&pdev->dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> -- 
+> 2.17.1
+> 
