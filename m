@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18BDC2D0DC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A927C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD46206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5412B20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642704;
-	bh=yLC3y6gqfz7npKcTqFQgGGREA5dnKxR6PzarNR9950M=;
+	s=default; t=1577642708;
+	bh=adoBnTL3c8ascTWuPdS3qgWuYBBmCMjIas475ss7R6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LePKfgT5d5/t0XCRfGan4ipJ+P1E9PhzuwEZfxR6ws1R5VyY7sPl07C+4asYU2zkZ
-	 b1GL+TmKCp8ndbhjsvk+373CTAX2LtZR88bbct+SUjM88I6Xc+2DTpXjJGwbCMGJhM
-	 I8MmDSfsfByVbL8TaMbjMtEDrKYEsDZFjg+HYW00=
+	b=RairlHitiKF0NmEYwsKG9UtMzQBsClUggv47gw1T5IEqo2TIBLUm1ntIudKay0Hky
+	 8h5rw3B95GEZQhxfUsA/7NNBADedzdRox+cgf49YfoUDxKKgkYLnUIXJbgDk9XNfIa
+	 cCj4e+E4806eU81fsnwMjfCmnJQ7m+1yA6W87Ctw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfL2Rvf (ORCPT
+        id S2387813AbfL2SFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:05:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732084AbfL2Rv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:27 -0500
+        id S1732109AbfL2Rvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E08206A4;
-        Sun, 29 Dec 2019 17:51:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090DB20718;
+        Sun, 29 Dec 2019 17:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641885;
-        bh=yLC3y6gqfz7npKcTqFQgGGREA5dnKxR6PzarNR9950M=;
+        s=default; t=1577641892;
+        bh=adoBnTL3c8ascTWuPdS3qgWuYBBmCMjIas475ss7R6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZsVxtOugMJvgGAaPrcwQdUzfdNH1XhtWolzQI+tvdHd7ye7bqTE9Owpxam4jJB98
-         T9Tag+HVyJ5sFcZveo8JpQQam3qMPb2z6CaeZidNvLEGt9pEPx1qP1UMLUUf25F7uB
-         T8uzoA7dxqvP+7fv4ZCEtc7AaEUo+FT3oAPcUJ6I=
+        b=PvgmAt04gfbsDm9vq9BDgGcujw14s1F4dyDCoQhSKofoM7KfogZCSptWorlrxr5Cc
+         QDr8P4Z2SA4/0gdEvQ7Txw/rxa4HWRnJ5b/E77GzYcJA9s2xxC5gs0CXUDQY9CnXW+
+         OIa5+1t1VJp/zFqUeoHLNz6OxJXnGZeg0ak2dTmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
+        Candice Li <Candice.Li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 235/434] media: vivid: media_device_cleanup was called too early
-Date:   Sun, 29 Dec 2019 18:24:48 +0100
-Message-Id: <20191229172717.489442745@linuxfoundation.org>
+Subject: [PATCH 5.4 255/434] drm/amdgpu: disallow direct upload save restore list from gfx driver
+Date:   Sun, 29 Dec 2019 18:25:08 +0100
+Message-Id: <20191229172718.864808477@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,105 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Hawking Zhang <Hawking.Zhang@amd.com>
 
-[ Upstream commit 8ffd573c25e5fac1daeeffc592e2ed6bc6a3d947 ]
+[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
 
-Running the contrib/test/test-media script in v4l-utils with the vivid argument
-will cause this kernel warning:
+Direct uploading save/restore list via mmio register writes breaks the security
+policy. Instead, the driver should pass s&r list to psp.
 
-[  104.748720] videodev: v4l2_release
-[  104.748731] ------------[ cut here ]------------
-[  104.748750] DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-[  104.748790] WARNING: CPU: 6 PID: 1823 at kernel/locking/mutex.c:938 __mutex_lock+0x919/0xc10
-[  104.748800] Modules linked in: rc_cec vivid v4l2_tpg videobuf2_dma_contig cec rc_core v4l2_dv_timings videobuf2_vmalloc videobuf2_memops
-videobuf2_v4l2 videobuf2_common videodev mc vmw_balloon vmw_vmci button vmwgfx
-[  104.748845] CPU: 6 PID: 1823 Comm: sleep Not tainted 5.4.0-rc1-test-no #150
-[  104.748853] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 07/29/2019
-[  104.748867] RIP: 0010:__mutex_lock+0x919/0xc10
-[  104.748878] Code: 59 83 e8 9a fc 16 ff 44 8b 05 23 61 38 01 45 85 c0 0f 85 ef f7 ff ff 48 c7 c6 a0 1f 87 82 48 c7 c7 a0 1e 87 82 e8 cd bb
-f7 fe <0f> 0b e9 d5 f7 ff ff f6 c3 04 0f 84 3b fd ff ff 49 89 df 41 83 e7
-[  104.748886] RSP: 0018:ffff88811a357b80 EFLAGS: 00010286
-[  104.748895] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  104.748902] RDX: 0000000000000003 RSI: 0000000000000004 RDI: ffffed102346af62
-[  104.748910] RBP: ffff88811a357cf0 R08: ffffffff81217c91 R09: fffffbfff061c271
-[  104.748917] R10: fffffbfff061c270 R11: ffffffff830e1383 R12: ffff8881a46103c0
-[  104.748924] R13: 0000000000000000 R14: ffff8881a4614f90 R15: ffff8881a46153d0
-[  104.748933] FS:  0000000000000000(0000) GS:ffff8881b6780000(0000) knlGS:0000000000000000
-[  104.748940] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  104.748949] CR2: 00007f163fc9ca20 CR3: 0000000003013004 CR4: 00000000001606e0
-[  104.749036] Call Trace:
-[  104.749051]  ? _raw_spin_unlock+0x1f/0x30
-[  104.749067]  ? llist_add_batch+0x33/0x50
-[  104.749081]  ? tick_nohz_tick_stopped+0x19/0x30
-[  104.749130]  ? v4l2_release.cold+0x6c/0xd6 [videodev]
-[  104.749143]  ? mutex_lock_io_nested+0xb80/0xb80
-[  104.749153]  ? vprintk_emit+0xf2/0x220
-[  104.749191]  ? vivid_req_validate+0x40/0x40 [vivid]
-[  104.749201]  ? printk+0xad/0xde
-[  104.749211]  ? kmsg_dump_rewind_nolock+0x54/0x54
-[  104.749226]  ? locks_remove_file+0x78/0x2b0
-[  104.749248]  ? __fsnotify_update_child_dentry_flags.part.0+0x170/0x170
-[  104.749281]  ? vivid_req_validate+0x40/0x40 [vivid]
-[  104.749321]  ? v4l2_release.cold+0x6c/0xd6 [videodev]
-[  104.749361]  v4l2_release.cold+0x6c/0xd6 [videodev]
-[  104.749378]  __fput+0x15a/0x390
-[  104.749393]  task_work_run+0xb2/0xe0
-[  104.749407]  do_exit+0x4d0/0x1200
-[  104.749422]  ? do_user_addr_fault+0x367/0x610
-[  104.749431]  ? release_task+0x990/0x990
-[  104.749449]  ? rwsem_spin_on_owner+0x170/0x170
-[  104.749463]  ? vmacache_find+0xb2/0x100
-[  104.749476]  do_group_exit+0x85/0x130
-[  104.749487]  __x64_sys_exit_group+0x23/0x30
-[  104.749500]  do_syscall_64+0x5e/0x1c0
-[  104.749511]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  104.749520] RIP: 0033:0x7f163fc5c9d6
-[  104.749536] Code: Bad RIP value.
-[  104.749543] RSP: 002b:00007ffe6f3bec58 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-[  104.749553] RAX: ffffffffffffffda RBX: 00007f163fd4d760 RCX: 00007f163fc5c9d6
-[  104.749560] RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-[  104.749567] RBP: 0000000000000000 R08: 00000000000000e7 R09: ffffffffffffff80
-[  104.749574] R10: 00007ffe6f3beb24 R11: 0000000000000246 R12: 00007f163fd4d760
-[  104.749581] R13: 0000000000000002 R14: 00007f163fd56428 R15: 0000000000000000
-[  104.749597] ---[ end trace 66f20f73fc0daf79 ]---
+For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
+twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
+The latter is not allowed.
 
-This is caused by media_device_cleanup() which destroys
-v4l2_dev->mdev->req_queue_mutex. But v4l2_release() tries to lock
-that mutex after media_device_cleanup() is called.
+VG12 is the only exception where the driver still keeps legacy approach for S&R
+list uploading. In theory, this can be elimnated if we have valid srcntl ucode
+for VG12.
 
-By moving media_device_cleanup() to the v4l2_device's release function it is
-guaranteed that the mutex is valid whenever v4l2_release is called.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Candice Li <Candice.Li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vivid/vivid-core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/vivid/vivid-core.c b/drivers/media/platform/vivid/vivid-core.c
-index 53315c8dd2bb..f6a5cdbd74e7 100644
---- a/drivers/media/platform/vivid/vivid-core.c
-+++ b/drivers/media/platform/vivid/vivid-core.c
-@@ -616,6 +616,9 @@ static void vivid_dev_release(struct v4l2_device *v4l2_dev)
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 97cf0b536873..c9ba2ec6d038 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -2930,7 +2930,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
+ 	 * And it's needed by gfxoff feature.
+ 	 */
+ 	if (adev->gfx.rlc.is_rlc_v2_1) {
+-		gfx_v9_1_init_rlc_save_restore_list(adev);
++		if (adev->asic_type == CHIP_VEGA12)
++			gfx_v9_1_init_rlc_save_restore_list(adev);
+ 		gfx_v9_0_enable_save_restore_machine(adev);
+ 	}
  
- 	vivid_free_controls(dev);
- 	v4l2_device_unregister(&dev->v4l2_dev);
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+	media_device_cleanup(&dev->mdev);
-+#endif
- 	vfree(dev->scaled_line);
- 	vfree(dev->blended_line);
- 	vfree(dev->edid);
-@@ -1580,7 +1583,6 @@ static int vivid_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_MEDIA_CONTROLLER
- 		media_device_unregister(&dev->mdev);
--		media_device_cleanup(&dev->mdev);
- #endif
- 
- 		if (dev->has_vid_cap) {
 -- 
 2.20.1
 
