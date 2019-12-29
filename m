@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0B1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6868C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B11206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79E920722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642881;
-	bh=k/9AU8rU7PPXycXy/NxsVp7MyrhVU8fpATF7xvi+yII=;
+	s=default; t=1577642885;
+	bh=kj/yZPUrW6bDog5nRJK82dA37SKoPZyxiB9VlEDIir0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C+2nqAOhJSNPAu0nBgeYsrBpZGZhuGFqWDfRuz9CoRMb5NHugk1a5BJlcnBlQ7VlS
-	 EgrkQM0DU2rDT/ktxK6+H637ScSInTflr2iQ0mdYf5oVgHzKB4OVvDxpHjNYAtd6g2
-	 coT7Em7II3BhT+pmv8A7PRhXArP/fS3067E/LkCI=
+	b=uds9+NID5kZL1vdkySeBmS1bMl+XyZUHj1m87862JojZqKqOzzbTk/EP6KXOvb+Fg
+	 tAn+fUi8yS3+3RS8R9Cm5huW7+0Ifk9piSZN4sZ6crKY78j0JDmzzmOKRlFzxBcyx+
+	 ydFyd+WZJtHy+mokCpeB+5g1zo+8tcO0m/x8SDmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731489AbfL2SIA (ORCPT
+        id S1731293AbfL2Rrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:08:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731032AbfL2Rrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:41 -0500
+        id S1731274AbfL2Rrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24AD721D7E;
-        Sun, 29 Dec 2019 17:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B6F3206A4;
+        Sun, 29 Dec 2019 17:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641660;
-        bh=k/9AU8rU7PPXycXy/NxsVp7MyrhVU8fpATF7xvi+yII=;
+        s=default; t=1577641651;
+        bh=kj/yZPUrW6bDog5nRJK82dA37SKoPZyxiB9VlEDIir0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbtzbkhTh+h80wzwth7C5BHzcj7XjIWoJxKvmqjKmRpCWuAX80rlIKg0aBoxEMnxP
-         g7dAkhIUYzUEqiLUinP7YV7lLsbzlc6P2WVC7BF93jQB3+sJT02euC6k34lsu2JouU
-         5KRbJk2GlIPz4/ynHtIKwODZsN0b/9byqNARw/dM=
+        b=s4/ypVYIJDNO7yBRdSBwhoHzjJQj6Nr3KMamBwJcAwYEvwrwZx/Z9X/Admqi6iExI
+         aZuiVW5LbjeIG0plnLR9I/2luWFItXHyJjl9DjGTJDlGSwyKCz+kslOICjM1wGyybC
+         JI76c2BvcprlSjnhMn0BpRv61b2EdAPw8R6ARxAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, joseph gravenor <joseph.gravenor@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Mattijs Korpershoek <mkorpershoek@baylibre.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 159/434] drm/amd/display: fix header for RN clk mgr
-Date:   Sun, 29 Dec 2019 18:23:32 +0100
-Message-Id: <20191229172712.331862774@linuxfoundation.org>
+Subject: [PATCH 5.4 155/434] Bluetooth: hci_core: fix init for HCI_USER_CHANNEL
+Date:   Sun, 29 Dec 2019 18:23:28 +0100
+Message-Id: <20191229172712.058537748@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,44 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: joseph gravenor <joseph.gravenor@amd.com>
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-[ Upstream commit cd83fa1ea9b9431cf1d57ac4179a11bc4393a5b6 ]
+[ Upstream commit eb8c101e28496888a0dcfe16ab86a1bee369e820 ]
 
-[why]
-Should always MP0_BASE for any register definition from MP per-IP header files.
-I belive the reason the linux version of MP1_BASE works is The 0th element of the 0th table
-of that is identical to the corrisponding value of MP0_BASE in the renoir offset header file.
-The reason we should only use MP0_BASE is There is only one set of per-IP headers MP
-that includes all register definitions related to SMU IP block. This IP includes MP0, MP1, MP2
-and  an ecryption engine that can be used only by MP0. As a result all register definitions from
-MP file should be based only on MP0_BASE data.
+During the setup() stage, HCI device drivers expect the chip to
+acknowledge its setup() completion via vendor specific frames.
 
-[How]
-Change MP1_BASE to MP0_BASE
+If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
+the vendor specific frames are never tranmitted to the driver, as
+they are filtered in hci_rx_work().
 
-Signed-off-by: joseph gravenor <joseph.gravenor@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
+frames if the HCI device is is HCI_INIT state.
+
+[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
+
+Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
-index 50984c1811bb..468c6bb0e311 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr_vbios_smu.c
-@@ -33,7 +33,7 @@
- #include "mp/mp_12_0_0_sh_mask.h"
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index b2559d4bed81..0cc9ce917222 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4440,7 +4440,14 @@ static void hci_rx_work(struct work_struct *work)
+ 			hci_send_to_sock(hdev, skb);
+ 		}
  
- #define REG(reg_name) \
--	(MP1_BASE.instance[0].segment[mm ## reg_name ## _BASE_IDX] + mm ## reg_name)
-+	(MP0_BASE.instance[0].segment[mm ## reg_name ## _BASE_IDX] + mm ## reg_name)
- 
- #define FN(reg_name, field) \
- 	FD(reg_name##__##field)
+-		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
++		/* If the device has been opened in HCI_USER_CHANNEL,
++		 * the userspace has exclusive access to device.
++		 * When device is HCI_INIT, we still need to process
++		 * the data packets to the driver in order
++		 * to complete its setup().
++		 */
++		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
++		    !test_bit(HCI_INIT, &hdev->flags)) {
+ 			kfree_skb(skb);
+ 			continue;
+ 		}
 -- 
 2.20.1
 
