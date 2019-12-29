@@ -2,134 +2,215 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41306C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0793C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108A920748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC65B20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vaJlyE8b"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xUCEkKCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfL2GJB (ORCPT
+        id S1726417AbfL2GOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 01:09:01 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46967 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfL2GJB (ORCPT
+        Sun, 29 Dec 2019 01:14:10 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35124 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfL2GOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 01:09:01 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so16525658pgb.13
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:09:00 -0800 (PST)
+        Sun, 29 Dec 2019 01:14:10 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k16so37510211otb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:14:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PQEq/pXQPWAm+/HQqqVHlxrLAblqW9jzRSmCcXe+hVc=;
-        b=vaJlyE8bstbxQxnAUBACLIH9E3AWWNJirhpiyq4G61nllSMb7fqBJhsL9F3KeEOwSG
-         GrpZeXpXFWSPSeprwkFVen/PpkmbfPpGCEMIB43ySWQZdVELEtmoqMM6Y8K8m1YR/fk0
-         Rh7YqKJjTcIVPTYI/fqj+SqV2qoeE4HlSQkCGuTgqXa5WOjpoc6YDLVPoiuz/XumWGfe
-         8AEMcQmx1SSiV03YR8UidnRFZA6suwkC0MM34oCdketkOXtN8PwfbD9TEkc8iNDm5OjD
-         FVulASlJ1fCdn2I2A/S7vlcVg9gDmXRDJUvJrHIHgxk/JU8G/dRwrG6/eJWXXtVD8+0/
-         aX5A==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NnO+Vz89RyAqBUQNFzWAU5ax1hd+sZfi+vzEk0a2/qU=;
+        b=xUCEkKCSlmZTLinjacI/ef5Yg+vjWFf1Whe8LZ4mckgXjMHt89r3++zhOcHWmm6+eU
+         PozEihiircxlptcyoYngItGLkRV+xHYguUYLYiIIUoiTPacYERMJ9cNd42aeTzKRbNqT
+         06RY+egAx1VSCoSxHveg37DU6g01igNUujATTlp5K7QPrgCRQ02CoNYXMH30NE1b+Yh0
+         nevdEDZUgEcZi8lxy+1pxWV96mLjIuPPTx3WZDBLFSFkjFv6zyiQq75ESx2xn3ZHlN/4
+         K5B83L9moq8B+bX9Hrm+qXTrWHi04OwUpRre1E79AUrExpevej0nli3dg+xK9ek4s8lq
+         JMGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PQEq/pXQPWAm+/HQqqVHlxrLAblqW9jzRSmCcXe+hVc=;
-        b=Alau6TJRgm/8S+XoD12Cf9eRRNw3CdPqCqDI9VGErBpH9z6l27pWTrKRux9AdEqJLC
-         7IArhGfOny42ta5wGRlRDljUP+MkMrIIlXb7GDv9tu2W5q+eWdNbEBUuiZVroIH0fSBi
-         btsPaX0Mgf35thDL6s/O3LlFZPgje7tz2xdD7tHGPJ/gfBkJIdJKy1Np0pBSp1mEnpZ/
-         X0p6bIC2a3Nsd6MHRIiaXANPEyiVaRPuFXIPXSazRLq02SjV1JvRRRfK0Gz+sFhSU+fV
-         5iRogzHCwlHOdpQYbyHl/lPVEPfrtE1btmtpEMdCwJApzNjGyMnQYynmZFiHCeYhi1BP
-         YKLw==
-X-Gm-Message-State: APjAAAX8cx7lhfDvX1dgp8Ey1XwYf4pLjNOe54INrOEuOnIIVMzosjsd
-        SEv4xowAljHPbaylVUxU5c5I3h8naNI=
-X-Google-Smtp-Source: APXvYqwEIg9C9X4H9fXSdY40cModg6G+r8GR11cJ+V73bUm6nsOiyCNuD5QFmcFq/H7Btsgk2mIxrQ==
-X-Received: by 2002:a62:4e0a:: with SMTP id c10mr54791833pfb.181.1577599740493;
-        Sat, 28 Dec 2019 22:09:00 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s131sm28316795pfs.135.2019.12.28.22.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 22:08:59 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>
-Subject: [PATCH] panel: simple: Add BOE NV133FHM-N61
-Date:   Sat, 28 Dec 2019 22:08:23 -0800
-Message-Id: <20191229060823.746255-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NnO+Vz89RyAqBUQNFzWAU5ax1hd+sZfi+vzEk0a2/qU=;
+        b=KhfmxhmkGj8GmRaEA+nccg/e2awrp4zsLxudISZ8JEyOJO26RTHEshLQus4xERKaSN
+         aS5+grv/iJfFTWl1h2O9d+ORXBM+x9Tu0G+2MWNdrXf+wwI19gI57kxHYb7a3Y9/+3dQ
+         6FeYK/CM2KVam2Bf2OLhcnaqE9AWedMdquNOWlYdayjU0RVVIFqp2LWBFgWrKMzbZDoA
+         n0wk6mTwZhclJi/KmtAdTUQF6yRh4Vz/G6KOe9RPCVe9UyaKwM+gfMoLwNqTVTMjr/dz
+         F9b765JiMp5dR3Pouvyms7ygvJ9oLqL2bOkfzS+PvIerv3ZQMAzouh/XwmNBEZ/ONEEC
+         6cQQ==
+X-Gm-Message-State: APjAAAXslT94UJbYF/OJTetSh8RjRp/Q5hy1LRZ+D9o5h+v0PKtaDMM1
+        54hqmq+2w5ypL30oOjWagxbIsyMhcwkESJG75Ql6oQ==
+X-Google-Smtp-Source: APXvYqylXJqmTwB20sKm/0rWy8VEqOIwnRDprMjueOyxNvJGvJhVtnDBPxTPA9BnR6q1JtjrAXrrEcGRFLYL/rnyQAA=
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr68590801otk.363.1577600049062;
+ Sat, 28 Dec 2019 22:14:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com> <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+In-Reply-To: <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 28 Dec 2019 22:13:58 -0800
+Message-ID: <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+To:     Dan Williams <dan.j.williams.korg@gmail.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BOE NV133FHM-N61 panel is a 13.3" 1920x1080 eDP panel, add support
-for it in panel-simple.
+On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
+<dan.j.williams.korg@gmail.com> wrote:
+>
+> On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > Michael Weiser reported he got below error during a kexec rebooting:
+> > esrt: Unsupported ESRT version 2904149718861218184.
+> >
+> > The ESRT memory stays in EFI boot services data, and it was reserved
+> > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > is to reuse the EFI boot services data across kexec reboot. For example
+> > the BGRT image data and some ESRT memory like Michael reported.
+> >
+> > But although the memory is reserved it is not updated in X86 e820 table.
+> > And kexec_file_load iterate system ram in io resource list to find places
+> > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > initramfs overwritten the ESRT memory and then the failure happened.
+> >
+> > Since kexec_file_load depends on the e820 to be updated, just fix this
+> > by updating the reserved EFI boot services memory as reserved type in e820.
+> >
+> > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> > bypassed in the reservation code path because they are assumed as reserved.
+> > But the reservation is still needed for multiple kexec reboot.
+> > And it is the only possible case we come here thus just drop the code
+> > chunk then everything works without side effects.
+> >
+> > On my machine the ESRT memory sits in an EFI runtime data range, it does
+> > not trigger the problem, but I successfully tested with BGRT instead.
+> > both kexec_load and kexec_file_load work and kdump works as well.
+> >
+> > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > ---
+> >  arch/x86/platform/efi/quirks.c |    6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> > +++ linux-x86/arch/x86/platform/efi/quirks.c
+> > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+> >                 return;
+> >         }
+> >
+> > -       /* No need to reserve regions that will never be freed. */
+> > -       if (md.attribute & EFI_MEMORY_RUNTIME)
+> > -               return;
+> > -
+> >         size += addr % EFI_PAGE_SIZE;
+> >         size = round_up(size, EFI_PAGE_SIZE);
+> >         addr = round_down(addr, EFI_PAGE_SIZE);
+> > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+> >         early_memunmap(new, new_size);
+> >
+> >         efi_memmap_install(new_phys, num_entries);
+> > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> > +       e820__update_table(e820_table);
+> >  }
+> >
+> >  /*
+> >
+>
+> Bisect says this change (commit af1648984828) is triggering a
+> regression, likely not urgent, in my testing of the new efi_fake_mem=
+> facility to allow memory to be marked "soft reserved" via the kernel
+> command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
+> for EFI_MEMORY_SP). The following command line triggers the crash
+> signature below:
+>
+>     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+>
+> However, this command line works ok:
+>
+>     efi_fake_mem=8G@9G:0x40000
+>
+> So, something about multiple efi_fake_mem statements interacts badly
+> with this change. Nothing obvious occurs to me at the moment, I'll
+> keep debugging, but wanted to highlight this in the meantime in case
+> someone else sees a deeper issue or the root cause.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Still looking, but this failure does not seem to be specific to the
+"soft reservation" changes. Any update to the efi memmap that pushes
+it over a page boundary triggers this failure. I.e. I can fix the
+problem by over-allocating the efi memmap and then page aligning the
+result. __early_ioremap "should" be handling this case, but it appears
+something else is messing this up.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index d7ae0ede2b6e..3c25e10b719d 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1008,6 +1008,33 @@ static const struct panel_desc boe_nv101wxmn51 = {
- 	},
- };
- 
-+static const struct drm_display_mode boe_nv133fhm_n61_modes = {
-+	.clock = 147840,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 48,
-+	.hsync_end = 1920 + 48 + 32,
-+	.htotal = 1920 + 48 + 32 + 200,
-+	.vdisplay = 1080,
-+	.vsync_start = 1080 + 3,
-+	.vsync_end = 1080 + 3 + 6,
-+	.vtotal = 1080 + 3 + 6 + 31,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc boe_nv133fhm_n61 = {
-+	.modes = &boe_nv133fhm_n61_modes,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 300,
-+		.height = 187,
-+	},
-+	.delay = {
-+		.hpd_absent_delay = 200,
-+		.unprepare = 500,
-+	},
-+};
-+
- static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
- 	.clock = 9000,
- 	.hdisplay = 480,
-@@ -3195,6 +3222,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "boe,nv101wxmn51",
- 		.data = &boe_nv101wxmn51,
-+	}, {
-+		.compatible = "boe,nv133fhm-n61",
-+		.data = &boe_nv133fhm_n61,
- 	}, {
- 		.compatible = "cdtech,s043wq26h-ct7",
- 		.data = &cdtech_s043wq26h_ct7,
--- 
-2.24.0
-
+>
+> BUG: unable to handle page fault for address: ffffffffff281000
+> #PF: supervisor write access in kernel mode
+> #PF: error_code(0x0002) - not-present page
+> PGD 188615067 P4D 188615067 PUD 188617067 PMD 188e4d067 PTE 0
+> Oops: 0002 [#1] SMP PTI
+> CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0+ #154
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> RIP: 0010:efi_memmap_insert+0xed/0x14b
+> Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
+> 4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
+> 49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
+> RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
+> RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
+> RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
+> RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
+> R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
+> R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
+> FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
+> Call Trace:
+>  ? efi_arch_mem_reserve+0x149/0x1a6
+>  ? bgrt_init+0xbe/0xbe
+>  ? bgrt_init+0xbe/0xbe
+>  ? acpi_parse_bgrt+0xa/0xd
+>  ? acpi_table_parse+0x86/0xb8
+>  ? acpi_boot_init+0x494/0x4e3
+>  ? acpi_parse_x2apic+0x87/0x87
+>  ? setup_acpi_sci+0xa2/0xa2
+>  ? setup_arch+0x8db/0x9e1
+>  ? start_kernel+0x6a/0x547
+>  ? secondary_startup_64+0xb6/0xc0
+> Modules linked in:
+> CR2: ffffffffff281000
+> random: get_random_bytes called from print_oops_end_marker+0x26/0x40
+> with crng_init=0
+> ---[ end trace 2acc14aa0990ee9d ]---
+> RIP: 0010:efi_memmap_insert+0xed/0x14b
+> Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
+> 4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
+> 49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
+> RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
+> RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
+> RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
+> RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
+> R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
+> R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
+> FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
+> Kernel panic - not syncing: Fatal exception
+> ---[ end Kernel panic - not syncing: Fatal exception ]---
