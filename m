@@ -2,111 +2,170 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A236CC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BA8C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696E420748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEzg80a4"
+	by mail.kernel.org (Postfix) with ESMTP id 592A821744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfL2WcE (ORCPT
+        id S1726675AbfL2Wh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 17:32:04 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34290 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfL2WcD (ORCPT
+        Sun, 29 Dec 2019 17:37:58 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:62237 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfL2Wh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 17:32:03 -0500
-Received: by mail-qt1-f195.google.com with SMTP id 5so28602224qtz.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 14:32:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=f0XyFhJxaSBsnLc48u6S2zxUb8AEk9qkcHvQljdmaTU=;
-        b=AEzg80a4E/lCAAF6qfluK2eflndpb9glCkRlugCIji4phnCLE+0W2wIJ02plJqYent
-         Jo6nvfIBtX6sJO1WlPmf25BoARnvJL02Y85423L9EGtRGWEDnlpvSXe4Qv7cgt3Lw8tb
-         82/+A/IdCZ4gizrtBYmbcDFzOhBAEOfrfgpL4VaehSFZ9IRtyV36xLGGmBKYR71S3C6F
-         qawZPxmfhLWHkS32iBgCDhRk2X5MvyIpj4ta1qCmN8XIQaxy/d1FD1q/IfmWBzYdXRHh
-         HCiO7xWpa3o5KE/7+NFlC6Mt1mJF6RsMbcedZxgMGbG5khDb6s7nowKOcYxT+6cWHTAj
-         tscQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=f0XyFhJxaSBsnLc48u6S2zxUb8AEk9qkcHvQljdmaTU=;
-        b=iITUdNYTHyKszP2vuCyhK03KJKtNX3EYrI6zL6WnaX/N9Zo8Lsi6gtFV3lTfQ4wfqj
-         wG4S4cueoX5QC7U8eZLGj1OqEy7Y2bsGvk4WbWWKRxNszWKQCF+WP8w2tDz5O0/WnGuz
-         nvgMXJCVAtRbb0HAwC9JZ9lywNHumrKw/NIYSUSqGTbL0prs0JKNzj5x7yne/wBzU9us
-         cidqEpTx8OmKhC67edjmLstmWyUlmRF7lYDsabsDAvHYTj8Fxj6cmcOSpnDPDHuOfBcd
-         YJaxup5MlhErm8McaaZ5qDU95Y9PZAKPOb/Vkj03/KovtxiLaNX+a4SWkMuEiRCBSdN2
-         7VVA==
-X-Gm-Message-State: APjAAAXEDqDm/8GB0Q/50YcLsSZ0VP12bqTa7z8wXIbXyrteUexeuUtB
-        fScAqNmPNvl+0uZvPsRjZQ8=
-X-Google-Smtp-Source: APXvYqxpO+UY6xVlvhzPdiabPUnPbh8CPhFUncrdCpDDSKhobmLc9XNWrPctZmFvwn7U0eUKlvgoCg==
-X-Received: by 2002:ac8:32ec:: with SMTP id a41mr47149306qtb.235.1577658723029;
-        Sun, 29 Dec 2019 14:32:03 -0800 (PST)
-Received: from mandalore.localdomain (pool-71-244-100-50.phlapa.fios.verizon.net. [71.244.100.50])
-        by smtp.gmail.com with ESMTPSA id p185sm11897433qkd.126.2019.12.29.14.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 14:32:02 -0800 (PST)
-Date:   Sun, 29 Dec 2019 17:31:42 -0500
-From:   Matthew Hanzelik <mrhanzelik@gmail.com>
-To:     jerome.pouiller@silabs.com, gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] Staging: wfx: Fix style issues with hif_rx.c
-Message-ID: <20191229223142.5pxmmu7sfwdtcn7d@mandalore.localdomain>
+        Sun, 29 Dec 2019 17:37:58 -0500
+Received: from 79.184.253.116.ipv4.supernova.orange.pl (79.184.253.116) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id fd89ba99d30803d6; Sun, 29 Dec 2019 23:37:55 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge isn't bound to driver
+Date:   Sun, 29 Dec 2019 23:37:55 +0100
+Message-ID: <4466650.2HG2iOLVKt@kreacher>
+In-Reply-To: <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
+References: <20191227092405.29588-1-kai.heng.feng@canonical.com> <1948783.ToaVGCCZch@kreacher> <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the 80 line limit warning on line 79 of hif_rx.c.
+On Friday, December 27, 2019 6:15:26 PM CET Kai-Heng Feng wrote:
+> 
+> > On Dec 27, 2019, at 18:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> > 
+> > On Friday, December 27, 2019 10:24:05 AM CET Kai-Heng Feng wrote:
+> >> We have a Pericom USB add-on card that has three USB controller
+> >> functions 06:00.[0-2], connected to bridge device 05:03.0, which is
+> >> connected to another bridge device 04:00.0:
+> >> 
+> >> -[0000:00]-+-00.0
+> >>           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
+> >>           |                                            +-00.1
+> >>           |                                            \-00.2
+> >> 
+> >> When bridge device (05:03.0) and all three USB controller functions
+> >> (06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
+> >> USB devices into the add-on card.
+> >> 
+> >> This is because the pcieport driver failed to probe on 04:00.0, since
+> >> the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
+> >> there's no native PCIe PME can work for devices connected to it.
+> > 
+> > But in that case the PME driver (drivers/pci/pcie/pme.c) should not bind
+> > to the port in question, so the "can_wakeup" flag should not be set for
+> > the devices under that port.
+> 
+> We can remove the can_wakeup flag for all its child devices once pcieport probe fails, but I think it's not intuitive.
+> 
+> > 
+> >> So let's correctly report runtime wakeup isn't supported when any of
+> >> PCIe bridges isn't bound to pcieport driver.
+> >> 
+> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> drivers/pci/pci.c | 12 ++++++++++++
+> >> 1 file changed, 12 insertions(+)
+> >> 
+> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >> index 951099279192..ca686cfbd65e 100644
+> >> --- a/drivers/pci/pci.c
+> >> +++ b/drivers/pci/pci.c
+> >> @@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
+> >> 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
+> >> 		return false;
+> >> 
+> >> +	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
+> >> +	 * no IRQ for PME.
+> >> +	 */
+> >> +	if (pci_is_pcie(dev)) {
+> >> +		while (bus->parent) {
+> >> +			if (!bus->self->driver)
+> >> +				return false;
+> >> +
+> >> +			bus = bus->parent;
+> >> +		}
+> >> +	}
+> >> +
+> > 
+> > So it looks like device_can_wakeup() returns 'true' for this device, but it
+> > should return 'false'.
+> 
+> The USB controllers can assert PME#, so it actually can wakeup, in a way.
 
-Also fixes the missing blank line warning on line 305 of hif_rx.c after
-the declaration of size_t len.
+Well, that's questionable.
 
-Signed-off-by: Matthew Hanzelik <mrhanzelik@gmail.com>
----
-Changes in v2
- - Make the commit message less vague.
+If there is no known way for the PME to be signaled, we may as well mark the
+device as wakeup-incapable.
 
-Changes in v3
- - Place the break after the cast operator instead of breaking the line up.
+> I think the logical distinction between pci_dev_run_wake() and device_can_wakeup() is that,
+> pci_dev_run_wake() means it can actually do runtime wakeup, while device_can_wakeup()
+> only means it has the capability to wakeup. Am I correct here?
 
- drivers/staging/wfx/hif_rx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Kind of, but the "capability" part is not well defined, so to speak, because
+if the device happens to be located below a PCIe port in a low-power state
+(say D3hot), the PME "support" declared in the config space is clearly
+insufficient.
 
-diff --git a/drivers/staging/wfx/hif_rx.c b/drivers/staging/wfx/hif_rx.c
-index 820de216be0c..b31ef02ea5d4 100644
---- a/drivers/staging/wfx/hif_rx.c
-+++ b/drivers/staging/wfx/hif_rx.c
-@@ -76,7 +76,8 @@ static int hif_multi_tx_confirm(struct wfx_dev *wdev, struct hif_msg *hif,
- 				void *buf)
- {
- 	struct hif_cnf_multi_transmit *body = buf;
--	struct hif_cnf_tx *buf_loc = (struct hif_cnf_tx *) &body->tx_conf_payload;
-+	struct hif_cnf_tx *buf_loc =
-+		(struct hif_cnf_tx *) &body->tx_conf_payload;
- 	struct wfx_vif *wvif = wdev_to_wvif(wdev, hif->interface);
- 	int count = body->num_tx_confs;
- 	int i;
-@@ -302,6 +303,7 @@ static int hif_exception_indication(struct wfx_dev *wdev,
- 				    struct hif_msg *hif, void *buf)
- {
- 	size_t len = hif->len - 4; // drop header
-+
- 	dev_err(wdev->dev, "firmware exception\n");
- 	print_hex_dump_bytes("Dump: ", DUMP_PREFIX_NONE, buf, len);
- 	wdev->chip_frozen = 1;
---
-2.24.1
+> > 
+> > Do you know why the "can_wakeup" flag is set for it?
+> 
+> All PCI devices with PME cap calls device_set_wakeup_capable() in pci_pm_init().
+
+Right, I forgot about that thing.
+
+It is inconsistent with the rest of the code, particularly with
+pci_dev_run_wake(), so I'd try to drop it.
+
+IIRC that would require some other pieces of code to be reworked to avoid
+regressions, though.
+
+> > 
+> >> 	if (device_can_wakeup(&dev->dev))
+> >> 		return true;
+> >> 
+> >> 
+> > 
+> > Moreover, even if the native PME is not supported, there can be an ACPI GPE (or
+> > equivalent) that triggers when WAKE# is asserted by one of the PCIe devices
+> > connected to it, so the test added by this patch cannot be used in general.
+> 
+> Ok. So how to know when both native PME isn't supported and it doesn't use ACPI GPE?
+
+If the PME driver doesn't bind to the device's root port, the native PME cannot
+work.
+
+If there is no wakeup GPE, pci_acpi_setup() will not call
+device_set_wakeup_capable() for the device.
+
+> I thought ACPI GPE only works for devices directly connect to Root Complex, but I can't find the reference now.
+
+No, that's not the case.
+
+It can work for any devices (even old-style PCI, non-PCIe) with PME# connected
+to a dedicated WAKE# pin on the board (which then is represented as an ACPI GPE
+or a GPIO IRQ).
+
+> 
+> Another short-term workaround is to make pci_pme_list_scan() not skip bridge when it's in D3hot:
+
+No, that would not be safe in general.
+
+Basically, pci_finish_runtime_suspend() needs to enable wakeup for devices
+that can do PME even though can_wakeup is not set for them, as long as
+pci_pme_list_scan() can reach them.  That should be sufficient to cover
+all of the practically relevant cases.
+
+
 
