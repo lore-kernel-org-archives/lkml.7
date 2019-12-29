@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7AAC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 20:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62625C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 20:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5482F207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 20:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AA5207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 20:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfL2UpL (ORCPT
+        id S1727260AbfL2Upa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 15:45:11 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:47093 "EHLO
+        Sun, 29 Dec 2019 15:45:30 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55195 "EHLO
         relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfL2UpI (ORCPT
+        with ESMTP id S1726444AbfL2Up3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 15:45:08 -0500
+        Sun, 29 Dec 2019 15:45:29 -0500
 X-Originating-IP: 92.184.100.83
 Received: from localhost (unknown [92.184.100.83])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D21D0E0002;
-        Sun, 29 Dec 2019 20:45:04 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 897D9E0003;
+        Sun, 29 Dec 2019 20:45:27 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Eugen.Hristev@microchip.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4/9] rtc: at91rm9200: move register definitions to C file
-Date:   Sun, 29 Dec 2019 21:44:16 +0100
-Message-Id: <20191229204421.337612-4-alexandre.belloni@bootlin.com>
+Subject: [PATCH 7/9] rtc: at91rm9200: add correction support
+Date:   Sun, 29 Dec 2019 21:44:19 +0100
+Message-Id: <20191229204421.337612-7-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191229204421.337612-1-alexandre.belloni@bootlin.com>
 References: <20191229204421.337612-1-alexandre.belloni@bootlin.com>
@@ -44,152 +44,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header was simply moved from the arm mach folder to drivers/rtc but
-there is not point in having it separated from the driver.
-
-Also remove unused bit definitions and use BIT and GENMASK.
+The sama5d4 and sama5d2 RTCs are able to correct for imprecise crystals, up
+to 1953 ppm.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-at91rm9200.c | 46 ++++++++++++++++++++++-
- drivers/rtc/rtc-at91rm9200.h | 71 ------------------------------------
- 2 files changed, 45 insertions(+), 72 deletions(-)
- delete mode 100644 drivers/rtc/rtc-at91rm9200.h
+ drivers/rtc/rtc-at91rm9200.c | 95 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 91 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
-index bda8e009076f..997734ed9a5b 100644
+index 5e811e04cb21..fe4823e1fd60 100644
 --- a/drivers/rtc/rtc-at91rm9200.c
 +++ b/drivers/rtc/rtc-at91rm9200.c
-@@ -30,7 +30,51 @@
- #include <linux/time.h>
- #include <linux/uaccess.h>
+@@ -36,6 +36,10 @@
+ #define		AT91_RTC_UPDCAL		BIT(1)		/* Update Request Calendar Register */
  
--#include "rtc-at91rm9200.h"
-+#define	AT91_RTC_CR		0x00			/* Control Register */
-+#define		AT91_RTC_UPDTIM		BIT(0)		/* Update Request Time Register */
-+#define		AT91_RTC_UPDCAL		BIT(1)		/* Update Request Calendar Register */
-+
-+#define	AT91_RTC_MR		0x04			/* Mode Register */
-+
-+#define	AT91_RTC_TIMR		0x08			/* Time Register */
-+#define		AT91_RTC_SEC		GENMASK(6, 0)	/* Current Second */
-+#define		AT91_RTC_MIN		GENMASK(14, 8)	/* Current Minute */
-+#define		AT91_RTC_HOUR		GENMASK(21, 16)	/* Current Hour */
-+#define		AT91_RTC_AMPM		BIT(22)		/* Ante Meridiem Post Meridiem Indicator */
-+
-+#define	AT91_RTC_CALR		0x0c			/* Calendar Register */
-+#define		AT91_RTC_CENT		GENMASK(6, 0)	/* Current Century */
-+#define		AT91_RTC_YEAR		GENMASK(15, 8)	/* Current Year */
-+#define		AT91_RTC_MONTH		GENMASK(20, 16)	/* Current Month */
-+#define		AT91_RTC_DAY		GENMASK(23, 21)	/* Current Day */
-+#define		AT91_RTC_DATE		GENMASK(29, 24)	/* Current Date */
-+
-+#define	AT91_RTC_TIMALR		0x10			/* Time Alarm Register */
-+#define		AT91_RTC_SECEN		BIT(7)		/* Second Alarm Enable */
-+#define		AT91_RTC_MINEN		BIT(15)		/* Minute Alarm Enable */
-+#define		AT91_RTC_HOUREN		BIT(23)		/* Hour Alarm Enable */
-+
-+#define	AT91_RTC_CALALR		0x14			/* Calendar Alarm Register */
-+#define		AT91_RTC_MTHEN		BIT(23)		/* Month Alarm Enable */
-+#define		AT91_RTC_DATEEN		BIT(31)		/* Date Alarm Enable */
-+
-+#define	AT91_RTC_SR		0x18			/* Status Register */
-+#define		AT91_RTC_ACKUPD		BIT(0)		/* Acknowledge for Update */
-+#define		AT91_RTC_ALARM		BIT(1)		/* Alarm Flag */
-+#define		AT91_RTC_SECEV		BIT(2)		/* Second Event */
-+#define		AT91_RTC_TIMEV		BIT(3)		/* Time Event */
-+#define		AT91_RTC_CALEV		BIT(4)		/* Calendar Event */
-+
-+#define	AT91_RTC_SCCR		0x1c			/* Status Clear Command Register */
-+#define	AT91_RTC_IER		0x20			/* Interrupt Enable Register */
-+#define	AT91_RTC_IDR		0x24			/* Interrupt Disable Register */
-+#define	AT91_RTC_IMR		0x28			/* Interrupt Mask Register */
-+
-+#define	AT91_RTC_VER		0x2c			/* Valid Entry Register */
-+#define		AT91_RTC_NVTIM		BIT(0)		/* Non valid Time */
-+#define		AT91_RTC_NVCAL		BIT(1)		/* Non valid Calendar */
-+#define		AT91_RTC_NVTIMALR	BIT(2)		/* Non valid Time Alarm */
-+#define		AT91_RTC_NVCALALR	BIT(3)		/* Non valid Calendar Alarm */
+ #define	AT91_RTC_MR		0x04			/* Mode Register */
++#define		AT91_RTC_HRMOD		BIT(0)		/* 12/24 hour mode */
++#define		AT91_RTC_NEGPPM		BIT(4)		/* Negative PPM correction */
++#define		AT91_RTC_CORRECTION	GENMASK(14, 8)	/* Slow clock correction */
++#define		AT91_RTC_HIGHPPM	BIT(15)		/* High PPM correction */
  
+ #define	AT91_RTC_TIMR		0x08			/* Time Register */
+ #define		AT91_RTC_SEC		GENMASK(6, 0)	/* Current Second */
+@@ -77,6 +81,9 @@
+ #define		AT91_RTC_NVTIMALR	BIT(2)		/* Non valid Time Alarm */
+ #define		AT91_RTC_NVCALALR	BIT(3)		/* Non valid Calendar Alarm */
+ 
++#define AT91_RTC_CORR_STEP		1526
++#define AT91_RTC_CORR_STEP_HIGH		30516
++
  #define at91_rtc_read(field) \
  	readl_relaxed(at91_rtc_regs + field)
-diff --git a/drivers/rtc/rtc-at91rm9200.h b/drivers/rtc/rtc-at91rm9200.h
-deleted file mode 100644
-index 8be5289da8e2..000000000000
---- a/drivers/rtc/rtc-at91rm9200.h
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * arch/arm/mach-at91/include/mach/at91_rtc.h
-- *
-- * Copyright (C) 2005 Ivan Kokshaysky
-- * Copyright (C) SAN People
-- *
-- * Real Time Clock (RTC) - System peripheral registers.
-- * Based on AT91RM9200 datasheet revision E.
-- */
--
--#ifndef AT91_RTC_H
--#define AT91_RTC_H
--
--#define	AT91_RTC_CR		0x00			/* Control Register */
--#define		AT91_RTC_UPDTIM		(1 <<  0)		/* Update Request Time Register */
--#define		AT91_RTC_UPDCAL		(1 <<  1)		/* Update Request Calendar Register */
--#define		AT91_RTC_TIMEVSEL	(3 <<  8)		/* Time Event Selection */
--#define			AT91_RTC_TIMEVSEL_MINUTE	(0 << 8)
--#define			AT91_RTC_TIMEVSEL_HOUR		(1 << 8)
--#define			AT91_RTC_TIMEVSEL_DAY24		(2 << 8)
--#define			AT91_RTC_TIMEVSEL_DAY12		(3 << 8)
--#define		AT91_RTC_CALEVSEL	(3 << 16)		/* Calendar Event Selection */
--#define			AT91_RTC_CALEVSEL_WEEK		(0 << 16)
--#define			AT91_RTC_CALEVSEL_MONTH		(1 << 16)
--#define			AT91_RTC_CALEVSEL_YEAR		(2 << 16)
--
--#define	AT91_RTC_MR		0x04			/* Mode Register */
--#define			AT91_RTC_HRMOD		(1 <<  0)		/* 12/24 Hour Mode */
--
--#define	AT91_RTC_TIMR		0x08			/* Time Register */
--#define		AT91_RTC_SEC		(0x7f <<  0)		/* Current Second */
--#define		AT91_RTC_MIN		(0x7f <<  8)		/* Current Minute */
--#define		AT91_RTC_HOUR		(0x3f << 16)		/* Current Hour */
--#define		AT91_RTC_AMPM		(1    << 22)		/* Ante Meridiem Post Meridiem Indicator */
--
--#define	AT91_RTC_CALR		0x0c			/* Calendar Register */
--#define		AT91_RTC_CENT		(0x7f <<  0)		/* Current Century */
--#define		AT91_RTC_YEAR		(0xff <<  8)		/* Current Year */
--#define		AT91_RTC_MONTH		(0x1f << 16)		/* Current Month */
--#define		AT91_RTC_DAY		(7    << 21)		/* Current Day */
--#define		AT91_RTC_DATE		(0x3f << 24)		/* Current Date */
--
--#define	AT91_RTC_TIMALR		0x10			/* Time Alarm Register */
--#define		AT91_RTC_SECEN		(1 <<  7)		/* Second Alarm Enable */
--#define		AT91_RTC_MINEN		(1 << 15)		/* Minute Alarm Enable */
--#define		AT91_RTC_HOUREN		(1 << 23)		/* Hour Alarm Enable */
--
--#define	AT91_RTC_CALALR		0x14			/* Calendar Alarm Register */
--#define		AT91_RTC_MTHEN		(1 << 23)		/* Month Alarm Enable */
--#define		AT91_RTC_DATEEN		(1 << 31)		/* Date Alarm Enable */
--
--#define	AT91_RTC_SR		0x18			/* Status Register */
--#define		AT91_RTC_ACKUPD		(1 <<  0)		/* Acknowledge for Update */
--#define		AT91_RTC_ALARM		(1 <<  1)		/* Alarm Flag */
--#define		AT91_RTC_SECEV		(1 <<  2)		/* Second Event */
--#define		AT91_RTC_TIMEV		(1 <<  3)		/* Time Event */
--#define		AT91_RTC_CALEV		(1 <<  4)		/* Calendar Event */
--
--#define	AT91_RTC_SCCR		0x1c			/* Status Clear Command Register */
--#define	AT91_RTC_IER		0x20			/* Interrupt Enable Register */
--#define	AT91_RTC_IDR		0x24			/* Interrupt Disable Register */
--#define	AT91_RTC_IMR		0x28			/* Interrupt Mask Register */
--
--#define	AT91_RTC_VER		0x2c			/* Valid Entry Register */
--#define		AT91_RTC_NVTIM		(1 <<  0)		/* Non valid Time */
--#define		AT91_RTC_NVCAL		(1 <<  1)		/* Non valid Calendar */
--#define		AT91_RTC_NVTIMALR	(1 <<  2)		/* Non valid Time Alarm */
--#define		AT91_RTC_NVCALALR	(1 <<  3)		/* Non valid Calendar Alarm */
--
--#endif
+ #define at91_rtc_write(field, val) \
+@@ -84,6 +91,7 @@
+ 
+ struct at91_rtc_config {
+ 	bool use_shadow_imr;
++	bool has_correction;
+ };
+ 
+ static const struct at91_rtc_config *at91_rtc_config;
+@@ -293,6 +301,66 @@ static int at91_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 	return 0;
+ }
+ 
++static int at91_rtc_readoffset(struct device *dev, long *offset)
++{
++	u32 mr = at91_rtc_read(AT91_RTC_MR);
++	long val = FIELD_GET(AT91_RTC_CORRECTION, mr);
++
++	if (!val) {
++		*offset = 0;
++		return 0;
++	}
++
++	val++;
++
++	if (mr & AT91_RTC_NEGPPM)
++		val = -val;
++
++	if (mr & AT91_RTC_HIGHPPM)
++		*offset = val * AT91_RTC_CORR_STEP_HIGH;
++	else
++		*offset = val * AT91_RTC_CORR_STEP;
++
++	return 0;
++}
++
++static int at91_rtc_setoffset(struct device *dev, long offset)
++{
++	long mode0, mode1, error0, error1;
++	u32 mr;
++	
++
++	if (offset > AT91_RTC_CORR_STEP_HIGH * 128)
++		return -ERANGE;
++	if (offset < AT91_RTC_CORR_STEP_HIGH * -128)
++		return -ERANGE;
++
++	mr = at91_rtc_read(AT91_RTC_MR);
++	mr &= ~(AT91_RTC_NEGPPM | AT91_RTC_CORRECTION | AT91_RTC_HIGHPPM);
++
++	if (offset < 0) {
++		mr |= AT91_RTC_NEGPPM;
++		offset = -offset;
++	}
++
++	mode0 = DIV_ROUND_CLOSEST(offset, AT91_RTC_CORR_STEP);
++	mode1 = DIV_ROUND_CLOSEST(offset, AT91_RTC_CORR_STEP_HIGH);
++
++	error0 = abs(offset - (mode0 * AT91_RTC_CORR_STEP));
++	error1 = abs(offset - (mode1 * AT91_RTC_CORR_STEP_HIGH));
++
++	if (mode0 > 128 || error0 > error1) {
++		mr |= AT91_RTC_HIGHPPM;
++		mr |= FIELD_PREP(AT91_RTC_CORRECTION, mode1 - 1);
++	} else {
++		mr |= FIELD_PREP(AT91_RTC_CORRECTION, mode0 - 1);
++	}
++
++	at91_rtc_write(AT91_RTC_MR, mr);
++
++	return 0;
++}
++
+ /*
+  * IRQ handler for the RTC
+  */
+@@ -343,6 +411,10 @@ static const struct at91_rtc_config at91sam9x5_config = {
+ 	.use_shadow_imr	= true,
+ };
+ 
++static const struct at91_rtc_config sama5d4_config = {
++	.has_correction = true,
++};
++
+ static const struct of_device_id at91_rtc_dt_ids[] = {
+ 	{
+ 		.compatible = "atmel,at91rm9200-rtc",
+@@ -352,10 +424,10 @@ static const struct of_device_id at91_rtc_dt_ids[] = {
+ 		.data = &at91sam9x5_config,
+ 	}, {
+ 		.compatible = "atmel,sama5d4-rtc",
+-		.data = &at91rm9200_config,
++		.data = &sama5d4_config,
+ 	}, {
+ 		.compatible = "atmel,sama5d2-rtc",
+-		.data = &at91rm9200_config,
++		.data = &sama5d4_config,
+ 	}, {
+ 		/* sentinel */
+ 	}
+@@ -370,6 +442,16 @@ static const struct rtc_class_ops at91_rtc_ops = {
+ 	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
+ };
+ 
++static const struct rtc_class_ops sama5d4_rtc_ops = {
++	.read_time	= at91_rtc_readtime,
++	.set_time	= at91_rtc_settime,
++	.read_alarm	= at91_rtc_readalarm,
++	.set_alarm	= at91_rtc_setalarm,
++	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
++	.set_offset	= at91_rtc_setoffset,
++	.read_offset	= at91_rtc_readoffset,
++};
++
+ /*
+  * Initialize and install RTC driver
+  */
+@@ -416,7 +498,8 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	at91_rtc_write(AT91_RTC_CR, 0);
+-	at91_rtc_write(AT91_RTC_MR, 0);		/* 24 hour mode */
++	at91_rtc_write(AT91_RTC_MR,
++		       at91_rtc_read(AT91_RTC_MR) & ~AT91_RTC_HRMOD);
+ 
+ 	/* Disable all interrupts */
+ 	at91_rtc_write_idr(AT91_RTC_ACKUPD | AT91_RTC_ALARM |
+@@ -437,7 +520,11 @@ static int __init at91_rtc_probe(struct platform_device *pdev)
+ 	if (!device_can_wakeup(&pdev->dev))
+ 		device_init_wakeup(&pdev->dev, 1);
+ 
+-	rtc->ops = &at91_rtc_ops;
++	if (at91_rtc_config->has_correction)
++		rtc->ops = &sama5d4_rtc_ops;
++	else
++		rtc->ops = &at91_rtc_ops;
++
+ 	rtc->range_min = RTC_TIMESTAMP_BEGIN_1900;
+ 	rtc->range_max = RTC_TIMESTAMP_END_2099;
+ 	ret = rtc_register_device(rtc);
 -- 
 2.23.0
 
