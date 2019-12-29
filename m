@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A61C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4473AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3683421744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5C72253D
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642132;
-	bh=G7t/WeT4GtFQazJhgcamZZ+TPFgjsgDlQCleZbc2HnU=;
+	s=default; t=1577642136;
+	bh=4Mzfrn2wNKIAI1Ihcb5rO6qINSLcOWz1XQG8/ZxA7cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBiMlwjbcyncuRcnzk5801TtSq8muIw7nkIZ2UER+FW//87WaeMbgAaOyPPibQVsE
-	 QemYFYTldSGijq71k3ZfkXIqC4WU+AZY1vj8xzmAs7FKpZL6GwuMl2ONef792MIsJu
-	 MVtjgHRuGxK356Ju6t0WD0CGgWHQb9QxoXMO2M08=
+	b=0nDKBMcvmdJRJZDrJN0W/ERdxXRTjvQQgrv4KcHoGz8w0+lNYcxYfCYVmzBLoEbOF
+	 u3dZrXPhybaJVHq6yT7eloAOzoy0Tn+8bOtN1HUfs/mSd1UJmPJhIf/bV2OBdviIgy
+	 wGwZH67bse+iq8HXYt/Sdl3f/0NMapp17TIk9ADE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732929AbfL2Rzb (ORCPT
+        id S1732941AbfL2Rzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44128 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732916AbfL2Rz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:27 -0500
+        id S1732924AbfL2Rza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D22B2206DB;
-        Sun, 29 Dec 2019 17:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506A42467C;
+        Sun, 29 Dec 2019 17:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642127;
-        bh=G7t/WeT4GtFQazJhgcamZZ+TPFgjsgDlQCleZbc2HnU=;
+        s=default; t=1577642129;
+        bh=4Mzfrn2wNKIAI1Ihcb5rO6qINSLcOWz1XQG8/ZxA7cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZfKDosWvxvtmexSQfRw1OBct8WG8YaeX7qZDqIZcNsSWlLBfVTT8hLKsbsPcPdS7B
-         F+UAhULCWcrppieqVslZFECjqAxCfIjqhVmUnWF8+wj1aR1ZR9zHJn8O9D2xEQf7dR
-         X0q+2COgXYahlEiFVpnwkA2KE16BbTso+nSWlQjc=
+        b=avFHVqn8FtpDbNYZqI27eTJ2yUefxbA1UXY+Tah/ESUZoj4sBMurDjIOx+hZ63YEL
+         RVdUsXwlGKAufuv7D0rVkUne0z6VI2wZqfVx3DRlZU0NWkrwH+o+8qHGi+y5E/jXvo
+         y9vwl6rRHvEw+SR+S5xRQqtPN9iZxB83DLoR5cnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 353/434] tools, bpf: Fix build for make -s tools/bpf O=<dir>
-Date:   Sun, 29 Dec 2019 18:26:46 +0100
-Message-Id: <20191229172725.418699596@linuxfoundation.org>
+Subject: [PATCH 5.4 327/434] net: phy: avoid matching all-ones clause 45 PHY IDs
+Date:   Sun, 29 Dec 2019 18:26:20 +0100
+Message-Id: <20191229172723.689874888@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,53 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Monnet <quentin.monnet@netronome.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit a89b2cbf71d64b61e79bbe5cb7ff4664797eeaaf ]
+[ Upstream commit b95e86d846b63b02ecdc94802ddbeaf9005fb6d9 ]
 
-Building selftests with 'make TARGETS=bpf kselftest' was fixed in commit
-55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine
-srctree"). However, by updating $(srctree) in tools/bpf/Makefile for
-in-tree builds only, we leave out the case where we pass an output
-directory to build BPF tools, but $(srctree) is not set. This
-typically happens for:
+We currently match clause 45 PHYs using any ID read from a MMD marked
+as present in the "Devices in package" registers 5 and 6.  However,
+this is incorrect.  45.2 says:
 
-    $ make -s tools/bpf O=/tmp/foo
-    Makefile:40: /tools/build/Makefile.feature: No such file or directory
+  "The definition of the term package is vendor specific and could be
+   a chip, module, or other similar entity."
 
-Fix it by updating $(srctree) in the Makefile not only for out-of-tree
-builds, but also if $(srctree) is empty.
+so a package could be more or less than the whole PHY - a PHY could be
+made up of several modules instantiated onto a single chip such as the
+Marvell 88x3310, or some of the MMDs could be disabled according to
+chip configuration, such as the Broadcom 84881.
 
-Detected with test_bpftool_build.sh.
+In the case of Broadcom 84881, the "Devices in package" registers
+contain 0xc000009b, meaning that there is a PHYXS present in the
+package, but all registers in MMD 4 return 0xffff.  This leads to our
+matching code incorrectly binding this PHY to one of our generic PHY
+drivers.
 
-Fixes: 55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine srctree")
-Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Link: https://lore.kernel.org/bpf/20191119105626.21453-1-quentin.monnet@netronome.com
+This patch changes the way we determine whether to attempt to match a
+MMD identifier, or use it to request a module - if the identifier is
+all-ones, then we skip over it. When reading the identifiers, we
+initialise phydev->c45_ids.device_ids to all-ones, only reading the
+device ID if the "Devices in package" registers indicates we should.
+
+This avoids the generic drivers incorrectly matching on a PHY ID of
+0xffffffff.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/phy/phy_device.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 5d1995fd369c..5535650800ab 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -16,7 +16,13 @@ CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
- # isn't set and when invoked from selftests build, where srctree
- # is set to ".". building_out_of_srctree is undefined for in srctree
- # builds
-+ifeq ($(srctree),)
-+update_srctree := 1
-+endif
- ifndef building_out_of_srctree
-+update_srctree := 1
-+endif
-+ifeq ($(update_srctree),1)
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index adb66a2fae18..14c6b7597b06 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -488,7 +488,7 @@ static int phy_bus_match(struct device *dev, struct device_driver *drv)
+ 
+ 	if (phydev->is_c45) {
+ 		for (i = 1; i < num_ids; i++) {
+-			if (!(phydev->c45_ids.devices_in_package & (1 << i)))
++			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
+ 				continue;
+ 
+ 			if ((phydrv->phy_id & phydrv->phy_id_mask) ==
+@@ -632,7 +632,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
+ 		int i;
+ 
+ 		for (i = 1; i < num_ids; i++) {
+-			if (!(c45_ids->devices_in_package & (1 << i)))
++			if (c45_ids->device_ids[i] == 0xffffffff)
+ 				continue;
+ 
+ 			ret = phy_request_driver_module(dev,
+@@ -812,10 +812,13 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
+  */
+ struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
+ {
+-	struct phy_c45_device_ids c45_ids = {0};
++	struct phy_c45_device_ids c45_ids;
+ 	u32 phy_id = 0;
+ 	int r;
+ 
++	c45_ids.devices_in_package = 0;
++	memset(c45_ids.device_ids, 0xff, sizeof(c45_ids.device_ids));
++
+ 	r = get_phy_id(bus, addr, &phy_id, is_c45, &c45_ids);
+ 	if (r)
+ 		return ERR_PTR(r);
 -- 
 2.20.1
 
