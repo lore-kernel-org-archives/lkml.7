@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CCDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68788C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1035B206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E86F208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641537;
-	bh=XLHbc+6B7ZaNxnPntoPPYwdcBSRIrTnnS8jk5HI9v34=;
+	s=default; t=1577641539;
+	bh=6c9PzHPVAznoCalWlQZAJygTvLl7Fcorlzke+wc/Iew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5vRU35CbvKD4cEYj6zbLKQ8L893Ll+Zy+8Mn9CwDVDPtWgNEpxEGnVMTzNF81FCw
-	 hWZTh2D22OyNWgDPYMFd+VagiCCHpY2Su8YSpKYdDMWsqtVNLPR9XhwMgT4WRbY6XI
-	 zGuh+SUnygfaUFlCDud3Cln/xaFJaxMYTdhLaSuI=
+	b=nNuIqwXVfH4mpBB73mGlv8vVTdMLdeH+bU7+itLhemckUaH9q3X7xPCP+43yUj8vH
+	 AZsUb1Bm0xficC/z/T6jk/qX18LDQztmz7O/XO4lwIhomAJCrHf+6aU+t4SnN5mtWj
+	 UPQ+8La1BZBsmRSpkDvSd873R+BFoNpKBtL9rmwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbfL2Rpf (ORCPT
+        id S1730934AbfL2Rpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54680 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730345AbfL2Rpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:31 -0500
+        id S1728104AbfL2Rpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49BD7206A4;
-        Sun, 29 Dec 2019 17:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00A2206A4;
+        Sun, 29 Dec 2019 17:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641530;
-        bh=XLHbc+6B7ZaNxnPntoPPYwdcBSRIrTnnS8jk5HI9v34=;
+        s=default; t=1577641533;
+        bh=6c9PzHPVAznoCalWlQZAJygTvLl7Fcorlzke+wc/Iew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKceEprBFlJ8BqctqKkeV+fFqH9+Ssjx4DCnKS2mdaPLHG5o13O+zqAl0BVpon1Ff
-         8EZbV/Yr/YfCMSEzDYjyKp1xOEsWXogWzgj/f96xh978U6cJRCYKbpNDw3Ee5jKctU
-         LYNFjkPvY1WhyIBpRRIiZYY6aLBgpCS+pG7XQBvM=
+        b=ileoBedkgMCQFRtLwx/nUk+dAuXlQx61wGVb4JVw1x/kfI4hmMGWD5yZaDmfC5JKU
+         T0f9HIpUrxxWOV72xEgA6STUiHjIakoVKLjzqAoBH6APLLimkm9QP5vqUiLx7cRL4X
+         8a7ig647BVqZrSf6JJUN56P6QozP6CliTEtUzJxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Connor Kuehl <connor.kuehl@canonical.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/434] staging: rtl8188eu: fix possible null dereference
-Date:   Sun, 29 Dec 2019 18:21:58 +0100
-Message-Id: <20191229172706.075779030@linuxfoundation.org>
+Subject: [PATCH 5.4 066/434] rtlwifi: prevent memory leak in rtl_usb_probe
+Date:   Sun, 29 Dec 2019 18:21:59 +0100
+Message-Id: <20191229172706.129248790@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,52 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Connor Kuehl <connor.kuehl@canonical.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 228241944a48113470d3c3b46c88ba7fbe0a274b ]
+[ Upstream commit 3f93616951138a598d930dcaec40f2bfd9ce43bb ]
 
-Inside a nested 'else' block at the beginning of this function is a
-call that assigns 'psta' to the return value of 'rtw_get_stainfo()'.
-If 'rtw_get_stainfo()' returns NULL and the flow of control reaches
-the 'else if' where 'psta' is dereferenced, then we will dereference
-a NULL pointer.
+In rtl_usb_probe if allocation for usb_data fails the allocated hw
+should be released. In addition the allocated rtlpriv->usb_data should
+be released on error handling path.
 
-Fix this by checking if 'psta' is not NULL before reading its
-'psta->qos_option' data member.
-
-Addresses-Coverity: ("Dereference null return value")
-
-Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Link: https://lore.kernel.org/r/20190926150317.5894-1-connor.kuehl@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-index 952f2ab51347..c37591657bac 100644
---- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-@@ -776,7 +776,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, get_bssid(pmlmepriv), ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, pattrib->src, ETH_ALEN);
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 4b59f3b46b28..348b0072cdd6 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -1021,8 +1021,10 @@ int rtl_usb_probe(struct usb_interface *intf,
+ 	rtlpriv->hw = hw;
+ 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
+ 				    GFP_KERNEL);
+-	if (!rtlpriv->usb_data)
++	if (!rtlpriv->usb_data) {
++		ieee80211_free_hw(hw);
+ 		return -ENOMEM;
++	}
  
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
- 			   check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-@@ -784,7 +784,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			memcpy(pwlanhdr->addr2, pattrib->src, ETH_ALEN);
- 			memcpy(pwlanhdr->addr3, get_bssid(pmlmepriv), ETH_ALEN);
- 
--			if (psta->qos_option)
-+			if (psta && psta->qos_option)
- 				qos_option = true;
- 		} else {
- 			RT_TRACE(_module_rtl871x_xmit_c_, _drv_err_, ("fw_state:%x is not allowed to xmit frame\n", get_fwstate(pmlmepriv)));
+ 	/* this spin lock must be initialized early */
+ 	spin_lock_init(&rtlpriv->locks.usb_lock);
+@@ -1083,6 +1085,7 @@ error_out2:
+ 	_rtl_usb_io_handler_release(hw);
+ 	usb_put_dev(udev);
+ 	complete(&rtlpriv->firmware_loading_complete);
++	kfree(rtlpriv->usb_data);
+ 	return -ENODEV;
+ }
+ EXPORT_SYMBOL(rtl_usb_probe);
 -- 
 2.20.1
 
