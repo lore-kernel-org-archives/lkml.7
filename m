@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8210C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15EAC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9479C21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9343C207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642409;
-	bh=+vJwoRY9gz06ao2bHJ2aGSRN46Rw1jGM0F1vCeJzzxY=;
+	s=default; t=1577642411;
+	bh=oSHt2kvUDerda9cXKPcU3g/SnzyMrY6sv0DV/cdFoiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dymG2qe6olWhAIrEqk2M6lZ5DOA38cnj7XmPOzA9xq8SA3jJ/l/b69HGF7rLXTk1W
-	 W+DDF+RshPu2V1Lu0shyGZzJj2PiPuhD6sJq1PAtcPuigzvHSX8NjPT+G5qAkP5nBt
-	 3YdoESVPwzUHTxL6NcIxWlwgp1kz+5W/iOafKIbQ=
+	b=qD9a4rujK3EzSZXBAyXpnqLctzQvgRMx4hGSuDjsmMGOIZCsrNS/9iqNsUTzLq9aD
+	 Aiy1A0GA/5KUEtAqMQPPwRAqqORMv3tQfcRmpX0icvYRdDfHl0Gv2F66fnYKzPX2On
+	 l9M/J1uK0ceheJvpEkFje+Jh9OnMopwlzWOynsgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387409AbfL2R5u (ORCPT
+        id S1732820AbfL2R5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:57:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732878AbfL2R5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:57:47 -0500
+        id S1732971AbfL2R5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:57:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8DD208C4;
-        Sun, 29 Dec 2019 17:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1650D206DB;
+        Sun, 29 Dec 2019 17:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642266;
-        bh=+vJwoRY9gz06ao2bHJ2aGSRN46Rw1jGM0F1vCeJzzxY=;
+        s=default; t=1577642256;
+        bh=oSHt2kvUDerda9cXKPcU3g/SnzyMrY6sv0DV/cdFoiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnEsEO7jQwFQ5fsFE65mmA8kxLpelgBclDEIu6f+yDX+if5rJ0WI4Nm+mUJwz9Ltb
-         Xr0/OxmPu9q39mHB26Vcb65xfOdrbgcTIFW+ybEAdOnnvIazxZMPBbwYGoS+P7RTKM
-         9TSbyEQYhh82pkGcKkelTH7w8KauZ3hgHcfajMOE=
+        b=s0ciwGNPhCU1pM849U/OEHSRxt/9PCvUkvig1oA67CgN872KCTpU3XG4tgR8XAQL8
+         l7CQdhW6U1Ncj2FSabbwGqgH/p6dHAvyK1CKTeWoz6WH2CdTeA5fa0UO0MQmib9SF+
+         1UOxNrEHMfjypx3KEy7PThyz+UpLTWFLx2FXBPwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 374/434] can: j1939: j1939_sk_bind(): take priv after lock is held
-Date:   Sun, 29 Dec 2019 18:27:07 +0100
-Message-Id: <20191229172726.886265212@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 406/434] pinctrl: baytrail: Really serialize all register accesses
+Date:   Sun, 29 Dec 2019 18:27:39 +0100
+Message-Id: <20191229172729.624363409@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,123 +60,387 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 00d4e14d2e4caf5f7254a505fee5eeca8cd37bd4 upstream.
+commit 40ecab551232972a39cdd8b6f17ede54a3fdb296 upstream.
 
-syzbot reproduced following crash:
+Commit 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+added a spinlock around all register accesses because:
 
-===============================================================================
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9844 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3828
-Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41
-5f 5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02
-00 0f 85 0b 28 00 00 49 81 3e 20 19 78 8a 0f 84 5f ee ff
-RSP: 0018:ffff888099c3fb48 EFLAGS: 00010006
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000218 RSI: 0000000000000000 RDI: 0000000000000001
-RBP: ffff888099c3fc60 R08: 0000000000000001 R09: 0000000000000001
-R10: fffffbfff146e1d0 R11: ffff888098720400 R12: 00000000000010c0
-R13: 0000000000000000 R14: 00000000000010c0 R15: 0000000000000000
-FS:  00007f0559e98700(0000) GS:ffff8880ae800000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe4d89e0000 CR3: 0000000099606000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
- _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
- spin_lock_bh include/linux/spinlock.h:343 [inline]
- j1939_jsk_del+0x32/0x210 net/can/j1939/socket.c:89
- j1939_sk_bind+0x2ea/0x8f0 net/can/j1939/socket.c:448
- __sys_bind+0x239/0x290 net/socket.c:1648
- __do_sys_bind net/socket.c:1659 [inline]
- __se_sys_bind net/socket.c:1657 [inline]
- __x64_sys_bind+0x73/0xb0 net/socket.c:1657
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a679
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
-f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01
-f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0559e97c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a679
-RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f0559e986d4
-R13: 00000000004c09e9 R14: 00000000004d37d0 R15: 00000000ffffffff
-Modules linked in:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9844 at kernel/locking/mutex.c:1419
-mutex_trylock+0x279/0x2f0 kernel/locking/mutex.c:1427
-===============================================================================
+"There is a hardware issue in Intel Baytrail where concurrent GPIO register
+ access might result reads of 0xffffffff and writes might get dropped
+ completely."
 
-This issues was caused by null pointer deference. Where j1939_sk_bind()
-was using currently not existing priv.
+Testing has shown that this does not catch all cases, there are still
+2 problems remaining
 
-Possible scenario may look as following:
-cpu0                                    cpu1
-bind()
-                                        bind()
- j1939_sk_bind()
-                                         j1939_sk_bind()
-  priv = jsk->priv;
-                                         priv = jsk->priv;
-  lock_sock(sock->sk);
-  priv = j1939_netdev_start(ndev);
-  j1939_jsk_add(priv, jsk);
-    jsk->priv = priv;
-  relase_sock(sock->sk);
-                                         lock_sock(sock->sk);
-                                         j1939_jsk_del(priv, jsk);
-                                         ..... ooops ......
+1) The original fix uses a spinlock per byt_gpio device / struct,
+additional testing has shown that this is not sufficient concurent
+accesses to 2 different GPIO banks also suffer from the same problem.
 
-With this patch we move "priv = jsk->priv;" after the lock, to avoid
-assigning of wrong priv pointer.
+This commit fixes this by moving to a single global lock.
 
-Reported-by: syzbot+99e9e1b200a1e363237d@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: linux-stable <stable@vger.kernel.org> # >= v5.4
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+2) The original fix did not add a lock around the register accesses in
+the suspend/resume handling.
+
+Since pinctrl-baytrail.c is using normal suspend/resume handlers,
+interrupts are still enabled during suspend/resume handling. Nothing
+should be using the GPIOs when they are being taken down, _but_ the
+GPIOs themselves may still cause interrupts, which are likely to
+use (read) the triggering GPIO. So we need to protect against
+concurrent GPIO register accesses in the suspend/resume handlers too.
+
+This commit fixes this by adding the missing spin_lock / unlock calls.
+
+The 2 fixes together fix the Acer Switch 10 SW5-012 getting completely
+confused after a suspend resume. The DSDT for this device has a bug
+in its _LID method which reprograms the home and power button trigger-
+flags requesting both high and low _level_ interrupts so the IRQs for
+these 2 GPIOs continuously fire. This combined with the saving of
+registers during suspend, triggers concurrent GPIO register accesses
+resulting in saving 0xffffffff as pconf0 value during suspend and then
+when restoring this on resume the pinmux settings get all messed up,
+resulting in various I2C busses being stuck, the wifi no longer working
+and often the tablet simply not coming out of suspend at all.
+
+Cc: stable@vger.kernel.org
+Fixes: 39ce8150a079 ("pinctrl: baytrail: Serialize all register access")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/can/j1939/socket.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c |   81 ++++++++++++++++---------------
+ 1 file changed, 44 insertions(+), 37 deletions(-)
 
---- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -423,9 +423,9 @@ static int j1939_sk_bind(struct socket *
- {
- 	struct sockaddr_can *addr = (struct sockaddr_can *)uaddr;
- 	struct j1939_sock *jsk = j1939_sk(sock->sk);
--	struct j1939_priv *priv = jsk->priv;
--	struct sock *sk = sock->sk;
--	struct net *net = sock_net(sk);
-+	struct j1939_priv *priv;
-+	struct sock *sk;
-+	struct net *net;
- 	int ret = 0;
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -110,7 +110,6 @@ struct byt_gpio {
+ 	struct platform_device *pdev;
+ 	struct pinctrl_dev *pctl_dev;
+ 	struct pinctrl_desc pctl_desc;
+-	raw_spinlock_t lock;
+ 	const struct intel_pinctrl_soc_data *soc_data;
+ 	struct intel_community *communities_copy;
+ 	struct byt_gpio_pin_context *saved_context;
+@@ -549,6 +548,8 @@ static const struct intel_pinctrl_soc_da
+ 	NULL
+ };
  
- 	ret = j1939_sk_sanity_check(addr, len);
-@@ -434,6 +434,10 @@ static int j1939_sk_bind(struct socket *
- 
- 	lock_sock(sock->sk);
- 
-+	priv = jsk->priv;
-+	sk = sock->sk;
-+	net = sock_net(sk);
++static DEFINE_RAW_SPINLOCK(byt_lock);
 +
- 	/* Already bound to an interface? */
- 	if (jsk->state & J1939_SOCK_BOUND) {
- 		/* A re-bind() to a different interface is not
+ static struct intel_community *byt_get_community(struct byt_gpio *vg,
+ 						 unsigned int pin)
+ {
+@@ -658,7 +659,7 @@ static void byt_set_group_simple_mux(str
+ 	unsigned long flags;
+ 	int i;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 
+ 	for (i = 0; i < group.npins; i++) {
+ 		void __iomem *padcfg0;
+@@ -678,7 +679,7 @@ static void byt_set_group_simple_mux(str
+ 		writel(value, padcfg0);
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
+ 
+ static void byt_set_group_mixed_mux(struct byt_gpio *vg,
+@@ -688,7 +689,7 @@ static void byt_set_group_mixed_mux(stru
+ 	unsigned long flags;
+ 	int i;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 
+ 	for (i = 0; i < group.npins; i++) {
+ 		void __iomem *padcfg0;
+@@ -708,7 +709,7 @@ static void byt_set_group_mixed_mux(stru
+ 		writel(value, padcfg0);
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
+ 
+ static int byt_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
+@@ -749,11 +750,11 @@ static void byt_gpio_clear_triggering(st
+ 	unsigned long flags;
+ 	u32 value;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+ 	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
+ 	writel(value, reg);
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
+ 
+ static int byt_gpio_request_enable(struct pinctrl_dev *pctl_dev,
+@@ -765,7 +766,7 @@ static int byt_gpio_request_enable(struc
+ 	u32 value, gpio_mux;
+ 	unsigned long flags;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 
+ 	/*
+ 	 * In most cases, func pin mux 000 means GPIO function.
+@@ -787,7 +788,7 @@ static int byt_gpio_request_enable(struc
+ 			 "pin %u forcibly re-configured as GPIO\n", offset);
+ 	}
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	pm_runtime_get(&vg->pdev->dev);
+ 
+@@ -815,7 +816,7 @@ static int byt_gpio_set_direction(struct
+ 	unsigned long flags;
+ 	u32 value;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 
+ 	value = readl(val_reg);
+ 	value &= ~BYT_DIR_MASK;
+@@ -832,7 +833,7 @@ static int byt_gpio_set_direction(struct
+ 		     "Potential Error: Setting GPIO with direct_irq_en to output");
+ 	writel(value, val_reg);
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	return 0;
+ }
+@@ -901,11 +902,11 @@ static int byt_pin_config_get(struct pin
+ 	u32 conf, pull, val, debounce;
+ 	u16 arg = 0;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	conf = readl(conf_reg);
+ 	pull = conf & BYT_PULL_ASSIGN_MASK;
+ 	val = readl(val_reg);
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
+@@ -932,9 +933,9 @@ static int byt_pin_config_get(struct pin
+ 		if (!(conf & BYT_DEBOUNCE_EN))
+ 			return -EINVAL;
+ 
+-		raw_spin_lock_irqsave(&vg->lock, flags);
++		raw_spin_lock_irqsave(&byt_lock, flags);
+ 		debounce = readl(db_reg);
+-		raw_spin_unlock_irqrestore(&vg->lock, flags);
++		raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 		switch (debounce & BYT_DEBOUNCE_PULSE_MASK) {
+ 		case BYT_DEBOUNCE_PULSE_375US:
+@@ -986,7 +987,7 @@ static int byt_pin_config_set(struct pin
+ 	u32 conf, val, debounce;
+ 	int i, ret = 0;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 
+ 	conf = readl(conf_reg);
+ 	val = readl(val_reg);
+@@ -1094,7 +1095,7 @@ static int byt_pin_config_set(struct pin
+ 	if (!ret)
+ 		writel(conf, conf_reg);
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	return ret;
+ }
+@@ -1119,9 +1120,9 @@ static int byt_gpio_get(struct gpio_chip
+ 	unsigned long flags;
+ 	u32 val;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	val = readl(reg);
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	return !!(val & BYT_LEVEL);
+ }
+@@ -1136,13 +1137,13 @@ static void byt_gpio_set(struct gpio_chi
+ 	if (!reg)
+ 		return;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	old_val = readl(reg);
+ 	if (value)
+ 		writel(old_val | BYT_LEVEL, reg);
+ 	else
+ 		writel(old_val & ~BYT_LEVEL, reg);
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
+ 
+ static int byt_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+@@ -1155,9 +1156,9 @@ static int byt_gpio_get_direction(struct
+ 	if (!reg)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	if (!(value & BYT_OUTPUT_EN))
+ 		return 0;
+@@ -1200,14 +1201,14 @@ static void byt_gpio_dbg_show(struct seq
+ 		const char *label;
+ 		unsigned int pin;
+ 
+-		raw_spin_lock_irqsave(&vg->lock, flags);
++		raw_spin_lock_irqsave(&byt_lock, flags);
+ 		pin = vg->soc_data->pins[i].number;
+ 		reg = byt_gpio_reg(vg, pin, BYT_CONF0_REG);
+ 		if (!reg) {
+ 			seq_printf(s,
+ 				   "Could not retrieve pin %i conf0 reg\n",
+ 				   pin);
+-			raw_spin_unlock_irqrestore(&vg->lock, flags);
++			raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 			continue;
+ 		}
+ 		conf0 = readl(reg);
+@@ -1216,11 +1217,11 @@ static void byt_gpio_dbg_show(struct seq
+ 		if (!reg) {
+ 			seq_printf(s,
+ 				   "Could not retrieve pin %i val reg\n", pin);
+-			raw_spin_unlock_irqrestore(&vg->lock, flags);
++			raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 			continue;
+ 		}
+ 		val = readl(reg);
+-		raw_spin_unlock_irqrestore(&vg->lock, flags);
++		raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 		comm = byt_get_community(vg, pin);
+ 		if (!comm) {
+@@ -1304,9 +1305,9 @@ static void byt_irq_ack(struct irq_data
+ 	if (!reg)
+ 		return;
+ 
+-	raw_spin_lock(&vg->lock);
++	raw_spin_lock(&byt_lock);
+ 	writel(BIT(offset % 32), reg);
+-	raw_spin_unlock(&vg->lock);
++	raw_spin_unlock(&byt_lock);
+ }
+ 
+ static void byt_irq_mask(struct irq_data *d)
+@@ -1330,7 +1331,7 @@ static void byt_irq_unmask(struct irq_da
+ 	if (!reg)
+ 		return;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+ 
+ 	switch (irqd_get_trigger_type(d)) {
+@@ -1353,7 +1354,7 @@ static void byt_irq_unmask(struct irq_da
+ 
+ 	writel(value, reg);
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ }
+ 
+ static int byt_irq_type(struct irq_data *d, unsigned int type)
+@@ -1367,7 +1368,7 @@ static int byt_irq_type(struct irq_data
+ 	if (!reg || offset >= vg->chip.ngpio)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&vg->lock, flags);
++	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+ 
+ 	WARN(value & BYT_DIRECT_IRQ_EN,
+@@ -1389,7 +1390,7 @@ static int byt_irq_type(struct irq_data
+ 	else if (type & IRQ_TYPE_LEVEL_MASK)
+ 		irq_set_handler_locked(d, handle_level_irq);
+ 
+-	raw_spin_unlock_irqrestore(&vg->lock, flags);
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 
+ 	return 0;
+ }
+@@ -1425,9 +1426,9 @@ static void byt_gpio_irq_handler(struct
+ 			continue;
+ 		}
+ 
+-		raw_spin_lock(&vg->lock);
++		raw_spin_lock(&byt_lock);
+ 		pending = readl(reg);
+-		raw_spin_unlock(&vg->lock);
++		raw_spin_unlock(&byt_lock);
+ 		for_each_set_bit(pin, &pending, 32) {
+ 			virq = irq_find_mapping(vg->chip.irq.domain, base + pin);
+ 			generic_handle_irq(virq);
+@@ -1638,8 +1639,6 @@ static int byt_pinctrl_probe(struct plat
+ 		return PTR_ERR(vg->pctl_dev);
+ 	}
+ 
+-	raw_spin_lock_init(&vg->lock);
+-
+ 	ret = byt_gpio_probe(vg);
+ 	if (ret)
+ 		return ret;
+@@ -1654,8 +1653,11 @@ static int byt_pinctrl_probe(struct plat
+ static int byt_gpio_suspend(struct device *dev)
+ {
+ 	struct byt_gpio *vg = dev_get_drvdata(dev);
++	unsigned long flags;
+ 	int i;
+ 
++	raw_spin_lock_irqsave(&byt_lock, flags);
++
+ 	for (i = 0; i < vg->soc_data->npins; i++) {
+ 		void __iomem *reg;
+ 		u32 value;
+@@ -1676,14 +1678,18 @@ static int byt_gpio_suspend(struct devic
+ 		vg->saved_context[i].val = value;
+ 	}
+ 
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 	return 0;
+ }
+ 
+ static int byt_gpio_resume(struct device *dev)
+ {
+ 	struct byt_gpio *vg = dev_get_drvdata(dev);
++	unsigned long flags;
+ 	int i;
+ 
++	raw_spin_lock_irqsave(&byt_lock, flags);
++
+ 	for (i = 0; i < vg->soc_data->npins; i++) {
+ 		void __iomem *reg;
+ 		u32 value;
+@@ -1721,6 +1727,7 @@ static int byt_gpio_resume(struct device
+ 		}
+ 	}
+ 
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 	return 0;
+ }
+ #endif
 
 
