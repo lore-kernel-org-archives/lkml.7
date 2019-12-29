@@ -2,53 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B377C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD39BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71186207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D2120409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640555;
-	bh=vMDcMOVyjv3MlKXLr1PORTqlvOaoEsGFl21R5hElLxY=;
+	s=default; t=1577640560;
+	bh=tYaqDIPhdpG95zKqwXM1lmQaU5drgjlP4IT0TXuAVHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNYLC3W5HkKA/IQBrE0gJ0U2jBv3Rx+QbPuDu0g4OHkh1ptMgTSTE3MDbHavzLnRO
-	 8Mdyz+EpX/hqvN1v5lItPp5GfN86WoUm5RexGx5ckho1jr8AHcxgi+gOnVyC5AJzie
-	 sxqmITh/Z17ozboV7V0OkV1DcziveUbYHhe43fxw=
+	b=yU0qaVqmjtN7XDRwiRIRZuTwT3erwSEWbHWimxkNDbl2QdnXsnlWDik2zAWV8TsSL
+	 PeTztsv3L9m6LehXth3+kgBlCP2I7W2ihhc0XBfhiorxU1OTGdkGeGu5UROqx+ZfzL
+	 chvFTtArdvst1Na75TG52LW87spPd5tgLvvr0GDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfL2R3O (ORCPT
+        id S1728760AbfL2R3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728730AbfL2R3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:12 -0500
+        id S1728730AbfL2R3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8088D20409;
-        Sun, 29 Dec 2019 17:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7F920409;
+        Sun, 29 Dec 2019 17:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640552;
-        bh=vMDcMOVyjv3MlKXLr1PORTqlvOaoEsGFl21R5hElLxY=;
+        s=default; t=1577640554;
+        bh=tYaqDIPhdpG95zKqwXM1lmQaU5drgjlP4IT0TXuAVHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UZAglsrvTHODudUn73t7gZEUs8XowKontrBmcWIZ/ajRNRYf7ooFsJpPWUaj3W6mI
-         cY1LasF0ljiXRy1Ez/D65HVpdhy62Jfhir8KY8S0YxANAj4ynlKrCu/VTyd3j8nPHV
-         8tK3sZh7413CGpcciAtIXoqPdD1lDy/yVCmvf0Qw=
+        b=JdTrQAUGoXw/Nwjdk8WqOutWz+TeDsYtkWg84X53CHM1l9qFjQ7oCjCTC6EYSuJfW
+         ePwqygx3PCdXpUM7rhZbwbMzFvUnALSoRZa0bVsXEnBZ0a9J93iFp2aUrIPCbctB4k
+         m0uXZ2f9PdAlt01KPII7IUtXclgoLE1GlZn7+1MQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 005/219] net: gemini: Fix memory leak in gmac_setup_txqs
-Date:   Sun, 29 Dec 2019 18:16:47 +0100
-Message-Id: <20191229162509.837005119@linuxfoundation.org>
+        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 041/219] media: ov6650: Fix crop rectangle alignment not passed back
+Date:   Sun, 29 Dec 2019 18:17:23 +0100
+Message-Id: <20191229162514.382737411@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,33 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit f37f710353677639bc5d37ee785335994adf2529 ]
+[ Upstream commit 7b188d6ba27a131e7934a51a14ece331c0491f18 ]
 
-In the implementation of gmac_setup_txqs() the allocated desc_ring is
-leaked if TX queue base is not aligned. Release it via
-dma_free_coherent.
+Commit 4f996594ceaf ("[media] v4l2: make vidioc_s_crop const")
+introduced a writable copy of constified user requested crop rectangle
+in order to be able to perform hardware alignments on it.  Later
+on, commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video
+ops") replaced s_crop() video operation using that const argument with
+set_selection() pad operation which had a corresponding argument not
+constified, however the original behavior of the driver was not
+restored.  Since that time, any hardware alignment applied on a user
+requested crop rectangle is not passed back to the user calling
+.set_selection() as it should be.
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix the issue by dropping the copy and replacing all references to it
+with references to the crop rectangle embedded in the user argument.
+
+Fixes: 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cortina/gemini.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/ov6650.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -577,6 +577,8 @@ static int gmac_setup_txqs(struct net_de
+diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+index edded869d792..e3433a4fc473 100644
+--- a/drivers/media/i2c/ov6650.c
++++ b/drivers/media/i2c/ov6650.c
+@@ -469,38 +469,37 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct ov6650 *priv = to_ov6650(client);
+-	struct v4l2_rect rect = sel->r;
+ 	int ret;
  
- 	if (port->txq_dma_base & ~DMA_Q_BASE_MASK) {
- 		dev_warn(geth->dev, "TX queue base is not aligned\n");
-+		dma_free_coherent(geth->dev, len * sizeof(*desc_ring),
-+				  desc_ring, port->txq_dma_base);
- 		kfree(skb_tab);
- 		return -ENOMEM;
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
+ 		return -EINVAL;
+ 
+-	v4l_bound_align_image(&rect.width, 2, W_CIF, 1,
+-			      &rect.height, 2, H_CIF, 1, 0);
+-	v4l_bound_align_image(&rect.left, DEF_HSTRT << 1,
+-			      (DEF_HSTRT << 1) + W_CIF - (__s32)rect.width, 1,
+-			      &rect.top, DEF_VSTRT << 1,
+-			      (DEF_VSTRT << 1) + H_CIF - (__s32)rect.height, 1,
+-			      0);
++	v4l_bound_align_image(&sel->r.width, 2, W_CIF, 1,
++			      &sel->r.height, 2, H_CIF, 1, 0);
++	v4l_bound_align_image(&sel->r.left, DEF_HSTRT << 1,
++			      (DEF_HSTRT << 1) + W_CIF - (__s32)sel->r.width, 1,
++			      &sel->r.top, DEF_VSTRT << 1,
++			      (DEF_VSTRT << 1) + H_CIF - (__s32)sel->r.height,
++			      1, 0);
+ 
+-	ret = ov6650_reg_write(client, REG_HSTRT, rect.left >> 1);
++	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
+ 	if (!ret) {
+-		priv->rect.left = rect.left;
++		priv->rect.left = sel->r.left;
+ 		ret = ov6650_reg_write(client, REG_HSTOP,
+-				(rect.left + rect.width) >> 1);
++				       (sel->r.left + sel->r.width) >> 1);
  	}
+ 	if (!ret) {
+-		priv->rect.width = rect.width;
+-		ret = ov6650_reg_write(client, REG_VSTRT, rect.top >> 1);
++		priv->rect.width = sel->r.width;
++		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
+ 	}
+ 	if (!ret) {
+-		priv->rect.top = rect.top;
++		priv->rect.top = sel->r.top;
+ 		ret = ov6650_reg_write(client, REG_VSTOP,
+-				(rect.top + rect.height) >> 1);
++				       (sel->r.top + sel->r.height) >> 1);
+ 	}
+ 	if (!ret)
+-		priv->rect.height = rect.height;
++		priv->rect.height = sel->r.height;
+ 
+ 	return ret;
+ }
+-- 
+2.20.1
+
 
 
