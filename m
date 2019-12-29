@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D13FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA59C206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EA1206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643292;
-	bh=/+5JrkK3SiQ39LuK5HGutSzDx7JeNEG9a8pMfJQBUuo=;
+	s=default; t=1577643300;
+	bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IjKWS7xhaHcs+2WkOgvcQ37qIS0a7PX5wawRlvkwnyvHyN/zQobh1BjoON/BWTwfL
-	 p4z/tHAggng2VhmCsGRT+1Aqc0XMmUcWabR7iMmxekGVJF9iYnUPwDoCcSWVLyubdJ
-	 pXro7MK7Jnlmw8lMUPrqZoumD+2BYPYIsRmMl80g=
+	b=uziI0Lu/ANiq+MtRuxZaT2lRNJSioHzXG9PFqQ3QJOoyqifiNmLXcyyXzzOQ35l5T
+	 ke7NHvGai5dKfloJcCOid/b65+ZYUQZc/3Y5onWfgfkTvqX7ToIGiQBB9jegr8pfRq
+	 /beAg1Sq0y4nXl87F+hsC5oDi60PRu+gZnsc7yag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbfL2SOt (ORCPT
+        id S2387880AbfL2SO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:14:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:14:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbfL2R0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:23 -0500
+        id S1728152AbfL2R0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D3B221D7E;
-        Sun, 29 Dec 2019 17:26:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EF9207FD;
+        Sun, 29 Dec 2019 17:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640382;
-        bh=/+5JrkK3SiQ39LuK5HGutSzDx7JeNEG9a8pMfJQBUuo=;
+        s=default; t=1577640375;
+        bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2GC865KySFXKGxmohvYSPYIKSxHcwxe6ojvJ+qI1NF6eP1YW1JArJj8d1x4BjOoLU
-         5CgV1XiAogitNmmopr/8NVkf9MoQqRaKvtVqZhaHcWkW1Wa+nJFYwFdFsRyV8ruUD7
-         tHRVCi1rQdrf+/PyYFMomAhUhgTM7cjJV5EuQDEQ=
+        b=ZpDQK4FBT67qWp6u0YIy4mOiWYwJF414x4Fdz2fppYJ+RTKcA+dhtg+cK/CCF7PsG
+         lQEBMow1GcmlKax3m03RbygM83VYvWOopIbwxdVROHz1uvVM1tbLf1ksjykkgp3FFx
+         Tk37sRLvUqXf/c76eSZq5n+KXO92dwaxYtLHw3Zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 136/161] btrfs: dont prematurely free work in reada_start_machine_worker()
-Date:   Sun, 29 Dec 2019 18:19:44 +0100
-Message-Id: <20191229162439.749192017@linuxfoundation.org>
+Subject: [PATCH 4.14 133/161] libtraceevent: Fix memory leakage in copy_filter_type
+Date:   Sun, 29 Dec 2019 18:19:41 +0100
+Message-Id: <20191229162439.168651713@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,64 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit e732fe95e4cad35fc1df278c23a32903341b08b3 ]
+[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
 
-Currently, reada_start_machine_worker() frees the reada_machine_work and
-then calls __reada_start_machine() to do readahead. This is another
-potential instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
+It is necessary to free the memory that we have allocated when error occurs.
 
-There _might_ already be a deadlock here: reada_start_machine_worker()
-can depend on itself through stacked filesystems (__read_start_machine()
--> reada_start_machine_dev() -> reada_tree_block_flagged() ->
-read_extent_buffer_pages() -> submit_one_bio() ->
-btree_submit_bio_hook() -> btrfs_map_bio() -> submit_stripe_bio() ->
-submit_bio() onto a loop device can trigger readahead on the lower
-filesystem).
-
-Either way, let's fix it by freeing the work at the end.
-
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/reada.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/reada.c b/fs/btrfs/reada.c
-index 3a4e15b39cc1..440c0d5d2050 100644
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -734,21 +734,19 @@ static int reada_start_machine_dev(struct btrfs_device *dev)
- static void reada_start_machine_worker(struct btrfs_work *work)
- {
- 	struct reada_machine_work *rmw;
--	struct btrfs_fs_info *fs_info;
- 	int old_ioprio;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 5e10ba796a6f..569bceff5f51 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
  
- 	rmw = container_of(work, struct reada_machine_work, work);
--	fs_info = rmw->fs_info;
--
--	kfree(rmw);
+ 		arg->type = FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
+ 			arg->boolean.value = 0;
  
- 	old_ioprio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
- 				       task_nice_ioprio(current));
- 	set_task_ioprio(current, BTRFS_IOPRIO_READA);
--	__reada_start_machine(fs_info);
-+	__reada_start_machine(rmw->fs_info);
- 	set_task_ioprio(current, old_ioprio);
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
  
--	atomic_dec(&fs_info->reada_works_cnt);
-+	atomic_dec(&rmw->fs_info->reada_works_cnt);
-+
-+	kfree(rmw);
- }
+ 		filter_type->filter = arg;
  
- static void __reada_start_machine(struct btrfs_fs_info *fs_info)
 -- 
 2.20.1
 
