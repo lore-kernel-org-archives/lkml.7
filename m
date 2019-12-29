@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E447C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE57C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AAA207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D18F222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641645;
-	bh=/hfN6siHm7KQjOiqFX4DdWf836lc/u3N4UUXUl5d0Hs=;
+	s=default; t=1577641648;
+	bh=Fs7tE8hT5l6mmwKj3LWtQCZun+onDXT/v+ybQZEiBjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CmnAT2IIAxUWxEORKdB+w0zwF8ILVMcHcjM/1sfPddWjvBY39gzeDnXceibCOZ+xp
-	 bxAQl+qY94Xovf9iRV7fv/fObfZBPPMfG8TO8/N2G+FRqYMnCQmJi289mqGz3Y2oOf
-	 IslP8yRl/lsLnkz9Yu/YbRkKlJBmJMC6tkeHsN8g=
+	b=DIrEvdv4JsD6nGp2/d1rifZVl46a0gtHvYsiGZidMYLJQdkwb1jr6w2zJAoeo1vhM
+	 u5p8YmUo8htdlLicHSPa7p8E+Wpwj8lOqZM4mMfrIURFABZh4fsC5kBMx8ECKzDowq
+	 Gv0IxHC9HPNmFTztoLRY5GMpOMjlHiWpLD9T2CTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfL2RrY (ORCPT
+        id S1731265AbfL2Rr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57754 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731235AbfL2RrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:17 -0500
+        id S1731256AbfL2RrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F83F208C4;
-        Sun, 29 Dec 2019 17:47:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D741206A4;
+        Sun, 29 Dec 2019 17:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641636;
-        bh=/hfN6siHm7KQjOiqFX4DdWf836lc/u3N4UUXUl5d0Hs=;
+        s=default; t=1577641643;
+        bh=Fs7tE8hT5l6mmwKj3LWtQCZun+onDXT/v+ybQZEiBjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OtVjCXxB5BlJbLV0PjJpK1tdAaHfbYrttnqH2KvR56kuTwzqALghC6oyM5hh3758v
-         b1IdsWivw0bQ7IeWCExOvngLd0wupG66ooE936mmoMvbiJB4DIKrltfQyrwKQrNq99
-         LwOqqWxzYcsx2V08l8kUpMZV3H5kgEG72gTeTS+g=
+        b=BNAfi7KBhtrFYgVN4aAEwDQUOy5fmzTouVe1ay8Ouelg7E6UKXxixLniMqy6CCn5p
+         T72btChAEzVjlFV0dHJE0MbFP4TfsJj0zNnBS2DMYg6W2DSso3DO1SnD/GKzrgX+WL
+         zIYGPwyZht+w6LuCtRnAw7IV+06hQqUT385g2CVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>,
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Yakir Yang <ykk@rock-chips.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 109/434] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
-Date:   Sun, 29 Dec 2019 18:22:42 +0100
-Message-Id: <20191229172708.876152596@linuxfoundation.org>
+Subject: [PATCH 5.4 144/434] drm/bridge: dw-hdmi: Restore audio when setting a mode
+Date:   Sun, 29 Dec 2019 18:23:17 +0100
+Message-Id: <20191229172711.307062062@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,58 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Daniel Kurtz <djkurtz@chromium.org>
 
-[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
+[ Upstream commit fadfee3f9d8f114435a8a3e9f83a227600d89de7 ]
 
-The DDC/CI protocol involves sending a multi-byte request to the
-display via I2C, which is typically followed by a multi-byte
-response. The internal I2C controller only allows single byte
-reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
-supported when the internal I2C controller is used. The I2C
-transfers complete without errors, however the data in the response
-is garbage. Abort transfers to/from slave address 0x37 (DDC) with
--EOPNOTSUPP, to make it evident that the communication is failing.
+When setting a new display mode, dw_hdmi_setup() calls
+dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
+the audio clock.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+We should only (re-)enable the audio clock if audio was already enabled
+when setting the new mode.
+
+Without this patch, on RK3288, there will be HDMI audio on some monitors
+if i2s was played to headphone when the monitor was plugged.
+ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
+
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
+Link: https://patchwork.freedesktop.org/patch/msgid/20191008102145.55134-1-cychiang@chromium.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 521d689413c8..3e82d604201e 100644
+index 3e82d604201e..1326f2c734bf 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -36,6 +36,7 @@
- #include "dw-hdmi-cec.h"
- #include "dw-hdmi.h"
+@@ -2033,7 +2033,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
  
-+#define DDC_CI_ADDR		0x37
- #define DDC_SEGMENT_ADDR	0x30
+ 		/* HDMI Initialization Step E - Configure audio */
+ 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
+-		hdmi_enable_audio_clk(hdmi, true);
++		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
+ 	}
  
- #define HDMI_EDID_LEN		512
-@@ -398,6 +399,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
- 	u8 addr = msgs[0].addr;
- 	int i, ret = 0;
- 
-+	if (addr == DDC_CI_ADDR)
-+		/*
-+		 * The internal I2C controller does not support the multi-byte
-+		 * read and write operations needed for DDC/CI.
-+		 * TOFIX: Blacklist the DDC/CI address until we filter out
-+		 * unsupported I2C operations.
-+		 */
-+		return -EOPNOTSUPP;
-+
- 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
- 
- 	for (i = 0; i < num; i++) {
+ 	/* not for DVI mode */
 -- 
 2.20.1
 
