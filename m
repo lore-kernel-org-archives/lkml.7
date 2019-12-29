@@ -2,111 +2,105 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C1BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CD4C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3043208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577618966;
-	bh=oVfGipAAJ2TJZ0pU2FQWz2oq6t/1REI9Q14DB8MlQag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jq3qAwcHIutr1ejq1Pjwda6WGMROql9qsCx3Cpx9S/SOoV2qphRKwjLhXjWSCNeeL
-	 gRirI1KnOiODhaWpFv6jiD64UUjBLb5RZAbWZzxSvW7Kfk4jy7HPLGtXOnQLOwh6WN
-	 JLEagwu5Vgl04likJUwIzToY/WmCPkzI6bojOUgg=
+	by mail.kernel.org (Postfix) with ESMTP id E54DD20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfL2L3V (ORCPT
+        id S1726406AbfL2LwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 06:29:21 -0500
-Received: from disco-boy.misterjones.org ([51.254.78.96]:34214 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfL2L3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 06:29:20 -0500
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ilWl2-00061M-EV; Sun, 29 Dec 2019 11:29:16 +0000
+        Sun, 29 Dec 2019 06:52:14 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50568 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726151AbfL2LwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 06:52:13 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6424DAD22;
+        Sun, 29 Dec 2019 11:52:11 +0000 (UTC)
+Subject: Re: [PATCH 1/2] scsi: mylex: Use the correct style for SPDX License
+ Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Hannes Reinecke <hare@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1577511720.git.nishadkamdar@gmail.com>
+ <88332ad390f985bdebb9f2adaf2d499b0a639753.1577511720.git.nishadkamdar@gmail.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <9f811041-263d-269a-39f9-6ea3be10eff0@suse.de>
+Date:   Sun, 29 Dec 2019 12:52:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 29 Dec 2019 11:29:16 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-In-Reply-To: <68b6541e1f4b447cb6845d16fdab28d9@realtek.com>
-References: <20191228150553.6210-1-james.tai@realtek.com>
- <20191228150553.6210-3-james.tai@realtek.com>
- <6750faa33ee059ec22cf1981e7483186@kernel.org>
- <68b6541e1f4b447cb6845d16fdab28d9@realtek.com>
-Message-ID: <718082aebcc3ab4d9169a4abbe968ec1@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: james.tai@realtek.com, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <88332ad390f985bdebb9f2adaf2d499b0a639753.1577511720.git.nishadkamdar@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-29 07:46, James Tai wrote:
-> Hi Marc,
+On 12/28/19 6:55 AM, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style in
+> header files related to Mylex DAC960/DAC1100 PCI RAID
+> Controllers. It assigns explicit block comment to the
+> SPDX License Identifier.
 > 
-> Thanks for review.
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
 > 
->> > +	timer {
->> > +		compatible = "arm,armv8-timer";
->> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
->> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
->> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
->> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
->> 
->> Nit: At some point, it'd be good to be able to describe the EL2 
->> virtual timer
->> interrupt too. Not specially important, but since these ARMv8.2 CPUs 
->> have it...
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> ---
+>   drivers/scsi/myrb.h | 4 ++--
+>   drivers/scsi/myrs.h | 4 ++--
+>   2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> I will add the EL2 virtual timer interrupt to timer node.
-
-If you do this, please update the binding first, as this interrupt
-is not described there yet.
-
+> diff --git a/drivers/scsi/myrb.h b/drivers/scsi/myrb.h
+> index 9289c19fcb2f..fb8eacfceee8 100644
+> --- a/drivers/scsi/myrb.h
+> +++ b/drivers/scsi/myrb.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - *
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+>    * Linux Driver for Mylex DAC960/AcceleRAID/eXtremeRAID PCI RAID Controllers
+>    *
+>    * Copyright 2017 Hannes Reinecke, SUSE Linux GmbH <hare@suse.com>
+> diff --git a/drivers/scsi/myrs.h b/drivers/scsi/myrs.h
+> index e6702ee85e9f..9f6696d0ddd5 100644
+> --- a/drivers/scsi/myrs.h
+> +++ b/drivers/scsi/myrs.h
+> @@ -1,5 +1,5 @@
+> -/* SPDX-License-Identifier: GPL-2.0
+> - *
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+>    * Linux Driver for Mylex DAC960/AcceleRAID/eXtremeRAID PCI RAID Controllers
+>    *
+>    * This driver supports the newer, SCSI-based firmware interface only.
 > 
->> > +		gic: interrupt-controller@ff100000 {
->> > +			compatible = "arm,gic-v3";
->> > +			reg = <0xff100000 0x10000>,
->> > +			      <0xff140000 0xc0000>;
->> 
->> Are you sure about the size of the GICR region? For 4 CPUs, it should 
->> be
->> 0x80000. Here, you have a range for 6 CPUs.
-> 
-> The GICR region should be 0x80000 because the RTD1319 SoC have only 4 
-> CPUs.
+Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-OK. Please verify that this is actually the case, and that the last
-redistributor (at offset 0x60000) has GICR_TYPER.Last set. I have
-recently seen GICs configured for a larger number of CPUs where
-some of them were disabled in HW, and the DT was wrongly describing
-some of the redistributors only, leading to SW crashes.
+Cheers,
 
-Thanks,
-
-         M.
+Hannes
 -- 
-Jazz is not dead. It just smells funny...
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
