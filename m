@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C15C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53FFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B5B21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9150C222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640386;
-	bh=QLSXoaU+EitGCTeCJX2uXYUbAWclxZysmq/yrb3//AA=;
+	s=default; t=1577640389;
+	bh=wsHIFJAmjYWO77Jd3ok2F7ez+zkjjpjrIVuBXZhvvN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jL+B2ECX3V5oXOY8h3YKWLZLjCJ4sz8hYOUchpvG/k/r8UmbnkBQ9aBOVGhTtTrW7
-	 ntCNS48hvxfW7z1sP5ikwL958E00s+2lQ5ZRx+vt4mlcxD+Nuk1vYWAdmA57hLhpWp
-	 j2BSnBjk/UIjWzWjtZ9ZNW1jSzVk94e8g6SpxWqA=
+	b=Jkn5Qg+pHhWo/v9L+yddQkvZhKP0phWbVKQdOKF50mjYMWpYl7FruesQEsKwhZzNX
+	 W+8AcmrIdYzmAfU9PM6f4qK7FYXf5+zKgq78cR7Rz6Q/0KBZVNTQkySMk7r6VUZIXK
+	 XaSA95PhEAeeP0LByPG1MpL9LcklV2N0DTrkuMDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfL2R0Z (ORCPT
+        id S1728205AbfL2R02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47274 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:26:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbfL2R0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:21 -0500
+        id S1728192AbfL2R0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E33EA207FF;
-        Sun, 29 Dec 2019 17:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF023207FF;
+        Sun, 29 Dec 2019 17:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640380;
-        bh=QLSXoaU+EitGCTeCJX2uXYUbAWclxZysmq/yrb3//AA=;
+        s=default; t=1577640385;
+        bh=wsHIFJAmjYWO77Jd3ok2F7ez+zkjjpjrIVuBXZhvvN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1ktnjLNxjTcT4QAJHdnK59xItBXW/Vdg5hKqJ6338L5C/OM+hwz/zQpbK4aI9vGq
-         K4CSruhXRiBwZNisHT10tirLi0YNokD1KhBKE+lHATGEm7CW05rHpgtxUVCOlcGKUR
-         f47PurbHoozVTnG+e4nUg/zrOX5b/7ejq/6W0X7E=
+        b=mVVesQKGmM17SwE1e4xHXALx5iiEu5ZYq3Zl3UhYx85jSnyW9LB+vfqi7hdF4bpnq
+         vR7hJyeh56nYWqBxAAoQF0RC1xa7juYou54MnJgnJQy5FZrs7Wl5aIOVo6Qca7Y3pG
+         BuK4XqcF22WgbSXRqa9RXI44zyUyranbMcGXrzIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 135/161] net: phy: initialise phydev speed and duplex sanely
-Date:   Sun, 29 Dec 2019 18:19:43 +0100
-Message-Id: <20191229162439.561110593@linuxfoundation.org>
+Subject: [PATCH 4.14 137/161] btrfs: dont prematurely free work in scrub_missing_raid56_worker()
+Date:   Sun, 29 Dec 2019 18:19:45 +0100
+Message-Id: <20191229162440.396998386@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,44 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
+[ Upstream commit 57d4f0b863272ba04ba85f86bfdc0f976f0af91c ]
 
-When a phydev is created, the speed and duplex are set to zero and
--1 respectively, rather than using the predefined SPEED_UNKNOWN and
-DUPLEX_UNKNOWN constants.
+Currently, scrub_missing_raid56_worker() puts and potentially frees
+sblock (which embeds the work item) and then submits a bio through
+scrub_wr_submit(). This is another potential instance of the bug in
+"btrfs: don't prematurely free work in run_ordered_work()". Fix it by
+dropping the reference after we submit the bio.
 
-There is a window at initialisation time where we may report link
-down using the 0/-1 values.  Tidy this up and use the predefined
-constants, so debug doesn't complain with:
-
-"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
-
-when the speed and duplex settings are printed.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/scrub.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index ed7e3c70b511..a98c227a4c2e 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -367,8 +367,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 	mdiodev->device_free = phy_mdio_device_free;
- 	mdiodev->device_remove = phy_mdio_device_remove;
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 61192c536e6c..2ebae9773978 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -2421,14 +2421,13 @@ static void scrub_missing_raid56_worker(struct btrfs_work *work)
+ 		scrub_write_block_to_dev_replace(sblock);
+ 	}
  
--	dev->speed = 0;
--	dev->duplex = -1;
-+	dev->speed = SPEED_UNKNOWN;
-+	dev->duplex = DUPLEX_UNKNOWN;
- 	dev->pause = 0;
- 	dev->asym_pause = 0;
- 	dev->link = 1;
+-	scrub_block_put(sblock);
+-
+ 	if (sctx->is_dev_replace && sctx->flush_all_writes) {
+ 		mutex_lock(&sctx->wr_lock);
+ 		scrub_wr_submit(sctx);
+ 		mutex_unlock(&sctx->wr_lock);
+ 	}
+ 
++	scrub_block_put(sblock);
+ 	scrub_pending_bio_dec(sctx);
+ }
+ 
 -- 
 2.20.1
 
