@@ -2,117 +2,209 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B754FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FCAC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC3C206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642768;
-	bh=VjdN9avP/gm0g+8+wpi7ScxeO9Ik9wXOONwHsKgHv/k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pvbUaCd64lKD488roX8NQx0NOkwi672bgHhn/VYI7mLGV+797TXgcZ16tvAOU4VzC
-	 3Uz7+vbrU9qq+GDWgWEC4S4d2nN88SItsS7o+b08Ov/tl/uzWZNWCPQWTyO05xaBUB
-	 UHlhc2MFRQElgqofLAroCEDCB9v2RXLfMAiBDMVs=
+	by mail.kernel.org (Postfix) with ESMTP id D317F206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DUb9bgO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbfL2SGH (ORCPT
+        id S1731839AbfL2RuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:06:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbfL2RuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E16E206A4;
-        Sun, 29 Dec 2019 17:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641818;
-        bh=VjdN9avP/gm0g+8+wpi7ScxeO9Ik9wXOONwHsKgHv/k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U443CYGAX6cISsri3drkHrZRcQvM8XhV9RTHuU4D6xuCUM1cYTF6qe3SJmAlPGNwE
-         J2kWaNrkHawk33u6gm2R6WtynGNgykZDsnXCJqAxBlVS/iMpPbN88sCIbUYkxTc8fI
-         mwyoVd4Qm6AOYpceJm5ls/QR5nxcK6gfZa3EIAVg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 223/434] ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency
-Date:   Sun, 29 Dec 2019 18:24:36 +0100
-Message-Id: <20191229172716.662287191@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
-References: <20191229172702.393141737@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 29 Dec 2019 12:50:18 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60310 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731800AbfL2RuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBTHirnl115848;
+        Sun, 29 Dec 2019 17:49:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=+xKNiFV7vrb3mgm8D0eOEGk+mvkAClmSIZ+AutFFSMc=;
+ b=DUb9bgO7x6Kf8++8h6LOeFDHI9bMxcixKtqqlR3ye1psZyo3S3+ZMGm4Z59gDxh38Con
+ 7MEC/JOJcJ88c62g8GFZOep/X65uScyjylb+Bz4rK5V5Ytym4JGlrU9xo4gdgO6fxc0w
+ KZGXpCIm67Cgt/jt4AZ00XL+yWsojlAp0zO+/6AMONX/Tr3EkLWMplYf1YbhG0xB2JWt
+ SEwxsgSKU5/UGaqCvRMI3sVRoUZbWEctCCKt+IbidgSqnlXQY97Ome1aMrYICyvobFTP
+ ntig8am1cC43Fr5qZUzgWzUU5b3S9vjVXwUZ7M/vtSJDQiv4kilfgPt4FubGLju96qYh Ig== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2x5y0pbb0h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 29 Dec 2019 17:49:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBTHnC3n147216;
+        Sun, 29 Dec 2019 17:49:59 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2x6gjwvbpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 29 Dec 2019 17:49:59 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBTHnvld008075;
+        Sun, 29 Dec 2019 17:49:57 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 29 Dec 2019 09:49:56 -0800
+Date:   Sun, 29 Dec 2019 20:49:47 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     kbuild-all@lists.01.org, broonie@kernel.org, vigneshr@ti.com,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v5 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+Message-ID: <20191229174947.GB3889@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191226071058.20041-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9485 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912290168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9485 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912290168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Hi "Ramuthevar,Vadivel,
 
-[ Upstream commit f9ad75468453b019b92c5296e6a04bf7c37f49e4 ]
+Thank you for the patch! Perhaps something to improve:
 
-updated solution to the problem reported with randconfig:
+[auto build test WARNING on spi/for-next]
+[cannot apply to v5.5-rc3 next-20191219]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
-turn referenced by the sof-of-dev driver. This creates a reverse
-dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
-is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+url:    https://github.com/0day-ci/linux/commits/Ramuthevar-Vadivel-MuruganX/spi-cadence-quadpsi-Add-support-for-the-Cadence-QSPI-controller/20191226-152805
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-use def_trisate to propagate the right settings without select.
+smatch warnings:
+drivers/spi/spi-cadence-quadspi.c:412 cqspi_read_execute() warn: if statement not indented
+drivers/spi/spi-cadence-quadspi.c:1015 cqspi_probe() error: we previously assumed 'pdata' could be null (see line 1004)
 
-Fixes: f4df4e4042b0 ("ASoC: SOF: imx8: Fix COMPILE_TEST error")
-Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191101173045.27099-6-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+# https://github.com/0day-ci/linux/commit/7d7e98888a40e593dcd442db83b53d92980c036f
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 7d7e98888a40e593dcd442db83b53d92980c036f
+vim +412 drivers/spi/spi-cadence-quadspi.c
+
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  381  static int cqspi_read_execute(struct struct_cqspi *cqspi,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  382  			      const struct spi_mem_op *op, u8 *rxbuf)
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  383  {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  384  	struct platform_device *pdev = cqspi->pdev;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  385  	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  386  	void *reg_base = cqspi->iobase;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  387  	void *ahb_base = cqspi->qspi_ahb_virt;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  388  	u32 rxlen = op->data.nbytes;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  389  	u8 *rxbuf_end = rxbuf + rxlen;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  390  	u32 mod_bytes = rxlen % 4;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  391  	u32 bytes_to_read = 0;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  392  	int remaining = op->data.nbytes;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  393  	unsigned long timeout;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  394  	int ret;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  395  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  396  	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  397  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  398  	mb();/* flush previous writes */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  399  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  400  	writel(pdata->fifo_depth - CQSPI_REG_SRAM_RESV_WORDS,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  401  	       reg_base + CQSPI_REG_SRAMPARTITION);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  402  	/* Clear all interrupts. */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  403  	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  404  	writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  405  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  406  	reinit_completion(&cqspi->transfer_complete);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  407  	writel(CQSPI_REG_INDIRECTRD_START_MASK,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  408  	       reg_base + CQSPI_REG_INDIRECTRD);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  409  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  410  	timeout = msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  411  	while (remaining > 0) {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26 @412  		if (!wait_for_completion_timeout(&cqspi->transfer_complete,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  413  						 timeout))
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  414  		ret = -ETIMEDOUT;
+
+This should be indented and "return -ETIMEDOUT;" or a break or
+something?
+
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  415  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  416  		bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  417  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  418  		while (bytes_to_read != 0) {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  419  			unsigned int word_remain = round_down(remaining, 4);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  420  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  421  			bytes_to_read *= CQSPI_FIFO_WIDTH;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  422  			bytes_to_read = bytes_to_read > remaining ?
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  423  						remaining : bytes_to_read;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  424  			bytes_to_read = round_down(bytes_to_read, 4);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  425  			if (bytes_to_read) {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  426  				ioread32_rep(ahb_base, rxbuf,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  427  					     (bytes_to_read / 4));
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  428  			} else if (!word_remain && mod_bytes) {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  429  				unsigned int temp = ioread32(ahb_base);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  430  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  431  				bytes_to_read = mod_bytes;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  432  				memcpy(rxbuf, &temp, min((unsigned int)
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  433  				       (rxbuf_end - rxbuf), bytes_to_read));
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  434  			}
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  435  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  436  			rxbuf += bytes_to_read;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  437  			remaining -= bytes_to_read;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  438  			bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  439  		}
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  440  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  441  		if (remaining < 0)
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  442  			reinit_completion(&cqspi->transfer_complete);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  443  	}
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  444  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  445  	/* Check indirect done status */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  446  	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  447  				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  448  	if (ret) {
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  449  		dev_err(&pdev->dev,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  450  			"Indirect read completion error (%i)\n", ret);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  451  		goto failrd;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  452  	}
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  453  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  454  	/* Disable interrupt */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  455  	writel(0, reg_base + CQSPI_REG_IRQMASK);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  456  	/* Clear indirect completion status */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  457  	writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base + CQSPI_REG_INDIRECTRD);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  458  
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  459  	return 0;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  460  failrd:
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  461  	/* Disable interrupt */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  462  	writel(0, reg_base + CQSPI_REG_IRQMASK);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  463  	/* Cancel the indirect read */
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  464  	writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  465  	       reg_base + CQSPI_REG_INDIRECTRD);
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  466  	return ret;
+7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  467  }
+
 ---
- sound/soc/sof/imx/Kconfig | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
-index 5acae75f5750..71f318bc2c74 100644
---- a/sound/soc/sof/imx/Kconfig
-+++ b/sound/soc/sof/imx/Kconfig
-@@ -11,8 +11,8 @@ config SND_SOC_SOF_IMX_TOPLEVEL
- 
- if SND_SOC_SOF_IMX_TOPLEVEL
- 
--config SND_SOC_SOF_IMX8
--	tristate "SOF support for i.MX8"
-+config SND_SOC_SOF_IMX8_SUPPORT
-+	bool "SOF support for i.MX8"
- 	depends on IMX_SCU
- 	depends on IMX_DSP
- 	help
-@@ -20,4 +20,8 @@ config SND_SOC_SOF_IMX8
-           Say Y if you have such a device.
-           If unsure select "N".
- 
-+config SND_SOC_SOF_IMX8
-+	def_tristate SND_SOC_SOF_OF
-+	depends on SND_SOC_SOF_IMX8_SUPPORT
-+
- endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
--- 
-2.20.1
-
-
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
