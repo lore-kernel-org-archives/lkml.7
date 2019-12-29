@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B66C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB4C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0D4207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFC820748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643369;
-	bh=0fDGQicYNwv7a2pbNP2cguMX0e2i1aKK401R82Bs2as=;
+	s=default; t=1577643372;
+	bh=pZXhaFFgw5nMF17jEmU8scYBP5GLOUdL9OAxqDFOYeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f04cmtTl3freoqPatNbbb62I4p7l560W4jZYSf6LhPGAd9uuwlpZhU6r79OvGE9tk
-	 nToAulAIpEROIJX1mXGfiP533hRo2pXqf8qN/GSBZ9UjZslnf5gkrgCH5FPHNT1+Sp
-	 bJLn+CEL1uaPOVQ3A2YLEQ47PTYllMVzlRSVxXS8=
+	b=rV07hvFcITrKxrMK3e4oBmXiZ19dfnuJxXOunqNgt1kOAENW/9S2qGaXIbzWRLxV2
+	 ZqUB4WEzTvbmkR7cHscju+JHoiChJFlQpOBnde9y6BgXTbkFSRe4wR6DXn2v1zf9ft
+	 d78WGlh69YM4jasUelD+eOXI+GbwD3Nmf2Todm+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfL2SQI (ORCPT
+        id S1727515AbfL2RYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:16:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43860 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:24:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbfL2RYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:47 -0500
+        id S1727769AbfL2RYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51CE220722;
-        Sun, 29 Dec 2019 17:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40FDD20409;
+        Sun, 29 Dec 2019 17:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640286;
-        bh=0fDGQicYNwv7a2pbNP2cguMX0e2i1aKK401R82Bs2as=;
+        s=default; t=1577640274;
+        bh=pZXhaFFgw5nMF17jEmU8scYBP5GLOUdL9OAxqDFOYeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAWe7OQgT/DnR0GnYqOJOhGHm6JXnvlu1Csr/83O2um9N0auT/lpglKTKfe+FO4eo
-         Iu0GLK2eSbxJ5FzhT6IVR+mONRfzXGYn9w4e9pIw9KtEO1o28SzysImlOzYuGH6a6k
-         gqfyDqtK1fjCzWQGCK5Jxu36KqlrBCj5GQrxfo24=
+        b=SSstCOTTzQQBpL5ymXFpYUhMa58KzDB+81nW1vbaxzHKNczpMEQjsgpsxwcmw06QA
+         0h9onpSWgcTUtG9hRb184JRadeS9x7mVImYJ4Yuo/rdLjU6cuXCcj6Y9Bn/WmQ29GF
+         bFyD8IIzECnKSBiJOaaOmn4wHACUf/8Z5E55zqvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/161] perf probe: Fix to show ranges of variables in functions without entry_pc
-Date:   Sun, 29 Dec 2019 18:19:04 +0100
-Message-Id: <20191229162426.570809592@linuxfoundation.org>
+Subject: [PATCH 4.14 091/161] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
+Date:   Sun, 29 Dec 2019 18:18:59 +0100
+Message-Id: <20191229162425.892456513@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,94 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
+[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
 
-Fix to show ranges of variables (--range and --vars option) in functions
-which DIE has only ranges but no entry_pc attribute.
+This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
+Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
+single memory leak during probe:
 
-Without this fix:
+unreferenced object 0xec13ee40 (size 176):
+  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
+    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
+    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
+    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
+    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
+    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
+    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
+    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
+    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
+    [<ac5fcae4>] process_one_work+0x22c/0x564
+    [<f5e6d3b6>] worker_thread+0x44/0x5d8
+    [<82c7b073>] kthread+0x150/0x154
+    [<b43e1b7d>] ret_from_fork+0x14/0x2c
+    [<794dff30>] 0x0
 
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-  	@<clear_tasks_mm_cpumask+0>
-  		(No matched variables)
+It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
+patch just frees the skb within the function to resolve memleak problem
+by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
+command packet for firmware via the function, applying this patch doesn't
+affect driver behavior.
 
-With this fix:
-
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-	@<clear_tasks_mm_cpumask+0>
-		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  (No matched variables)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
-  [root@quaco ~]#
-  [root@quaco ~]# perf trace -e probe:*cpumask
-  ^C[root@quaco ~]#
-
-Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index e5406e5adb68..21c2ed42ad6b 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1010,7 +1010,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
-@@ -1073,7 +1073,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+index 530e80f0ef0b..1ee7f796113b 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+@@ -1556,6 +1556,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
+    * This is maybe necessary:
+    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
+    */
++	dev_kfree_skb(skb);
++
+ 	return true;
+ }
  
 -- 
 2.20.1
