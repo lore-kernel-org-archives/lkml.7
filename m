@@ -4,62 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B0FC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB02C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5027920718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E2E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642727;
-	bh=6tmKNxe1Z0TJnllgOhiQFzUf3ZvWsAfo8hOMfW09zGc=;
+	s=default; t=1577642731;
+	bh=ap3AHUKIEmcvYddvwtH1dEIGj7mwH/4DWh1+zZwWW0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p1b6FzZ3r+ugUb6hfmG9VWWl6jxUhisa30KIxQdEbmrNn68uLZGpUGyXhDHfHjOEw
-	 QLLTFANbc072z4eDyrRxxCwcb0G2Q+cVlSGX8YOds2mtXiOysPE7P9PxCAk2RdU/QA
-	 b0nbe/4oZs7vsEtyILgcMnDxKD/Y/Pn94yo9rlIA=
+	b=EHjlDL4JSgFu0a70NbMYntkTps/gJDZJv4ZH/LRxxyT6kUWgrCS1MfS/ky5rcJLQ3
+	 IGpWvnXuxLC90TC2Udg925u+fvReRi0EuAvoE95VkMNiChU5o7l+mnZR6Eedci8ONY
+	 2SbVmXXZ94D55hp7QXR1kXoBYs5pAkxd/qmlysqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731763AbfL2RvP (ORCPT
+        id S1732027AbfL2RvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36190 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732036AbfL2RvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:10 -0500
+        id S1732002AbfL2RvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 719C120718;
-        Sun, 29 Dec 2019 17:51:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962FA206A4;
+        Sun, 29 Dec 2019 17:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641868;
-        bh=6tmKNxe1Z0TJnllgOhiQFzUf3ZvWsAfo8hOMfW09zGc=;
+        s=default; t=1577641862;
+        bh=ap3AHUKIEmcvYddvwtH1dEIGj7mwH/4DWh1+zZwWW0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfO09VrkdJdGz3rNyVBlF/qZkmUuq0izIoY/iChXM7Zdowr1PGl0zx20MtD5HJU9b
-         2B8I/LMoi09VXNtErIP2GfgKL5xvYdvVJs+nk6m9R5aoyuiwnhIUfezKNz2tGl6/3K
-         3h7YjrDrF5S8xI+g4tApF1JyRRrZWB6e7jKL7YT4=
+        b=RjPyz5Fa8mQle64ZptOej55Nm8VTYhcZJ/lsv56cmVI33C4cm/lmgwEBWk5AHGyWX
+         sziDwHzoTrDY25J4XUulMhISPrLa47DH5L1YQocVydXZhPVMrlbv3p88aesiLIHOtT
+         dZzmeqShBEmpkJCFCcFNllz/BCDKKcAEyhA7QhLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Feilong Lin <linfeilong@huawei.com>,
-        Hu Shiyuan <hushiyuan@huawei.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Luke Mujica <lukemujica@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Zenghui Yu <yuzenghui@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 246/434] perf jevents: Fix resource leak in process_mapfile() and main()
-Date:   Sun, 29 Dec 2019 18:24:59 +0100
-Message-Id: <20191229172718.225620020@linuxfoundation.org>
+Subject: [PATCH 5.4 243/434] perf probe: Fix to find range-only function instance
+Date:   Sun, 29 Dec 2019 18:24:56 +0100
+Message-Id: <20191229172718.024416823@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -72,105 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 1785fbb73896dbd9d27a406f0d73047df42db710 ]
+[ Upstream commit b77afa1f810f37bd8a36cb1318178dfe2d7af6b6 ]
 
-There are memory leaks and file descriptor resource leaks in
-process_mapfile() and main().
+Fix die_is_func_instance() to find range-only function instance.
 
-Fix this by adding free(), fclose() and free_arch_std_events() on the
-error paths.
+In some case, a function instance can be made without any low PC or
+entry PC, but only with address ranges by optimization.  (e.g. cold text
+partially in "text.unlikely" section) To find such function instance, we
+have to check the range attribute too.
 
-Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Luke Mujica <lukemujica@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
+Link: http://lore.kernel.org/lkml/157190835669.1859.8368628035930950596.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/perf/util/dwarf-aux.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index e2837260ca4d..99e3fd04a5cb 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -758,6 +758,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	char *line, *p;
- 	int line_num;
- 	char *tblname;
-+	int ret = 0;
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index df6cee5c071f..2ec24c3bed44 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -318,10 +318,14 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+ bool die_is_func_instance(Dwarf_Die *dw_die)
+ {
+ 	Dwarf_Addr tmp;
++	Dwarf_Attribute attr_mem;
  
- 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
- 
-@@ -769,6 +770,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	if (!mapfp) {
- 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
- 				fpath);
-+		free(line);
- 		return -1;
- 	}
- 
-@@ -795,7 +797,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 			/* TODO Deal with lines longer than 16K */
- 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
- 					prog, fpath, line_num);
--			return -1;
-+			ret = -1;
-+			goto out;
- 		}
- 		line[strlen(line)-1] = '\0';
- 
-@@ -825,7 +828,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 
- out:
- 	print_mapping_table_suffix(outfp);
--	return 0;
-+	fclose(mapfp);
-+	free(line);
-+	return ret;
+ 	/* Actually gcc optimizes non-inline as like as inlined */
+-	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
++	return !dwarf_func_inline(dw_die) &&
++	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
++		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
  }
- 
- /*
-@@ -1122,6 +1127,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1134,6 +1140,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1151,6 +1158,8 @@ int main(int argc, char *argv[])
- 	if (process_mapfile(eventsfp, mapfile)) {
- 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
- 		/* Make build fail */
-+		fclose(eventsfp);
-+		free_arch_std_events();
- 		return 1;
- 	}
- 
++
+ /**
+  * die_get_data_member_location - Get the data-member offset
+  * @mb_die: a DIE of a member of a data structure
 -- 
 2.20.1
 
