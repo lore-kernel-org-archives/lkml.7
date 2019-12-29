@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E41C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D551C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959F120722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544B120748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642806;
-	bh=ytWfiQ1EfqRy6Ar6b16f09/K+MjWcXgWmfGO5JfBSY4=;
+	s=default; t=1577642810;
+	bh=6XbWCqkB4hUxo6GsZ9rZQDKo+H/nZk4HYO2kNkrHJ24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Urtq1a5Iw6TduEzx0D2xNW40V1Zs2LUv8dz46OY+uvlLcxUH2aR6mdLMmEmwCanTD
-	 v3H8gdCFEXSStsQi/XI0qF9+hmN2zNbWTdkNKRAHI0wRD0ow3oiPqErbBPmhqyqOKI
-	 2aZQdaQCMmaUxtcf6TaH2EvJfWdQld+r1ibqk9K8=
+	b=znPVoSwoHxY7KA/f9AtO+nkUWf2e5YZmquASBSwStrnL0CWYnuQzJo786EgwkShKO
+	 ToAAXii8HqNa42WoNoEMq8aj/Uvrz6mAmYas/5RaGvX8/Cf9+REP2uUli4Mo/TWddR
+	 E2NCqBl5JrArK31lm7mSgfDzSj0tS3nQS/+ZrwpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbfL2RtT (ORCPT
+        id S1731600AbfL2RtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731594AbfL2RtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:16 -0500
+        id S1731589AbfL2RtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBA74206DB;
-        Sun, 29 Dec 2019 17:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0557E222C4;
+        Sun, 29 Dec 2019 17:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641756;
-        bh=ytWfiQ1EfqRy6Ar6b16f09/K+MjWcXgWmfGO5JfBSY4=;
+        s=default; t=1577641751;
+        bh=6XbWCqkB4hUxo6GsZ9rZQDKo+H/nZk4HYO2kNkrHJ24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbjvTjqFMKoIGXrMhSjrcgiyQtFMlJXyGm5MOmFaVwGTmB/8E4yUfYOkooUbZeL+I
-         2P6E1BdQn0xVUbjH2f4XE0ZkRP9YRRunSz6lMep56SVanBOvDuEaQrd3vXSE9NSM6g
-         yyBTvROEpWkfv0tFyE/iEtD11EmxvzvUEbkFWC7o=
+        b=kjVOdzOxasSB6cEGIcXN0NCHIajMtM/1bHTAITMKHZ/2LmEgtjgbeyamYe0zAbv9K
+         cCUilydLDALzspgfiqLkiRwjanVefZoVnYw+jI112AHNSdlyZie5Awy18Y9vvM9o5L
+         jcqvMp+xj5fFtbIB3zgKjopfHuvL0HFPFgFXKXdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Lingling Xu <ling_ling.xu@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 199/434] RDMA/qedr: Fix memory leak in user qp and mr
-Date:   Sun, 29 Dec 2019 18:24:12 +0100
-Message-Id: <20191229172715.047146693@linuxfoundation.org>
+Subject: [PATCH 5.4 197/434] spi: sprd: adi: Add missing lock protection when rebooting
+Date:   Sun, 29 Dec 2019 18:24:10 +0100
+Message-Id: <20191229172714.913851671@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,53 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Lingling Xu <ling_ling.xu@unisoc.com>
 
-[ Upstream commit 24e412c1e00ebfe73619e6b88cbc26c2c7d41b85 ]
+[ Upstream commit 91ea1d70607e374b014b4b9bea771ce661f9f64b ]
 
-User QPs pbl's weren't freed properly.
-MR pbls weren't freed properly.
+When rebooting the system, we should lock the watchdog after
+configuration to make sure the watchdog can reboot the system
+successfully.
 
-Fixes: e0290cce6ac0 ("qedr: Add support for memory registeration verbs")
-Link: https://lore.kernel.org/r/20191027200451.28187-5-michal.kalderon@marvell.com
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Lingling Xu <ling_ling.xu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Link: https://lore.kernel.org/r/7b04711127434555e3a1a86bc6be99860cd86668.1572257085.git.baolin.wang@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/verbs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/spi/spi-sprd-adi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 6f3ce86019b7..a7ccca3c4f89 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -1577,6 +1577,14 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index 9a051286f120..9613cfe3c0a2 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -393,6 +393,9 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
+ 	val |= BIT_WDG_RUN | BIT_WDG_RST;
+ 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
  
- 	ib_umem_release(qp->urq.umem);
- 	qp->urq.umem = NULL;
++	/* Lock the watchdog */
++	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, ~WDG_UNLOCK_KEY);
 +
-+	if (rdma_protocol_roce(&dev->ibdev, 1)) {
-+		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
-+		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
-+	} else {
-+		kfree(qp->usq.pbl_tbl);
-+		kfree(qp->urq.pbl_tbl);
-+	}
- }
+ 	mdelay(1000);
  
- static int qedr_create_user_qp(struct qedr_dev *dev,
-@@ -2673,8 +2681,8 @@ int qedr_dereg_mr(struct ib_mr *ib_mr, struct ib_udata *udata)
- 
- 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
- 
--	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
--		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
-+	if (mr->type != QEDR_MR_DMA)
-+		free_mr_info(dev, &mr->info);
- 
- 	/* it could be user registered memory. */
- 	ib_umem_release(mr->umem);
+ 	dev_emerg(sadi->dev, "Unable to restart system\n");
 -- 
 2.20.1
 
