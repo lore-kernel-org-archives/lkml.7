@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244EEC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A6EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95FC20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ACA222C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640717;
-	bh=Zdm2lWzGzdb9q+A3Dpzyyy8VkTXq2OqbnjRt4PXS9UY=;
+	s=default; t=1577640719;
+	bh=DvxDSge1NwyEUQ8XLZt3RYThuAPqYkl4cBNFYm9y9rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0H9/BgRRTA2dlRanmLGJn9pb6NoFydHgyGqrVCdVVeTWXEJNon49D4Ck8k4QluKw
-	 63nE/mrGwjmw4qs9gVI6we9HOZIhE9/TX2MGbZEbwwqpIDe4iymgU+9RoMBfV2SWSQ
-	 CKHftcmhI6eEefyZT3mCeInXI9TG4JGBVe6OWTGQ=
+	b=ORbNhogTDfnWXSW8LGIuonK97+wZMnaDE50TK2zfMJlaUZIHoxZlldmLTBgNsto1D
+	 5dXlmCYx8GDU7oQOO2UeSrbiwYLEbq5ICqZ3i8kARZbNVnNjTCNotmL6ZVeo28+JMN
+	 +AxP0CVUnO1c8vmaInmGIJLGNwpW/Z+bSrZR0Y10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfL2Rb4 (ORCPT
+        id S1729239AbfL2Rb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:31:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:31:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfL2Rbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:31:49 -0500
+        id S1728854AbfL2Rbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A66920722;
-        Sun, 29 Dec 2019 17:31:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66A6C20722;
+        Sun, 29 Dec 2019 17:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640709;
-        bh=Zdm2lWzGzdb9q+A3Dpzyyy8VkTXq2OqbnjRt4PXS9UY=;
+        s=default; t=1577640713;
+        bh=DvxDSge1NwyEUQ8XLZt3RYThuAPqYkl4cBNFYm9y9rU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVSWndvz0fwzGDrT++2AVBJC5WHRrd2aee2Y8nT/2QDOHQwXB/yQ4Rtqr+SgNxvZ3
-         F0dA+ftVY73Af5hmZegSahYQvM5kv1tIB4hgFeGz/KUmWGBCHGHRglKFR9OaIYb5lZ
-         Tc5S4MmH9D6vCEqQLO1DTKF3+VPkKdE3bg9DGP1s=
+        b=KDut789Zxce2U9zzU547s4guva2l159j2mCcnyF1LhqDxDOgzbJhQ1+5n9yE93HNG
+         lStFU1MJfbLCGHUidBeEKnX1Y5KW9/bv5RcgKj6tOBXSNwcdvUG6ZtPNu95oW2bcEg
+         0/TlrYX4YbY/PfUhVx1JMTbRkhbL1SrVNm/T46jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/219] net: hns3: add struct netdev_queue debug info for TX timeout
-Date:   Sun, 29 Dec 2019 18:18:28 +0100
-Message-Id: <20191229162524.709507582@linuxfoundation.org>
+Subject: [PATCH 4.19 108/219] loop: fix no-unmap write-zeroes request behavior
+Date:   Sun, 29 Dec 2019 18:18:30 +0100
+Message-Id: <20191229162525.032149668@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,39 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 647522a5ef6401dcdb8ec417421e43fb21910167 ]
+[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
 
-When there is a TX timeout, we can tell if the driver or stack
-has stopped the queue by looking at state field, and when has
-the last packet transmited by looking at trans_start field.
+Currently, if the loop device receives a WRITE_ZEROES request, it asks
+the underlying filesystem to punch out the range.  This behavior is
+correct if unmapping is allowed.  However, a NOUNMAP request means that
+the caller doesn't want us to free the storage backing the range, so
+punching out the range is incorrect behavior.
 
-So this patch prints these two field in the
-hns3_get_tx_timeo_queue_info().
+To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
+underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
+the fallocate documentation) required to ensure that the entire range is
+backed by real storage, which suffices for our purposes.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/block/loop.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0788e78747d9..1aaf6e2a3b39 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1474,6 +1474,9 @@ static bool hns3_get_tx_timeo_queue_info(struct net_device *ndev)
- 		    time_after(jiffies,
- 			       (trans_start + ndev->watchdog_timeo))) {
- 			timeout_queue = i;
-+			netdev_info(ndev, "queue state: 0x%lx, delta msecs: %u\n",
-+				    q->state,
-+				    jiffies_to_msecs(jiffies - trans_start));
- 			break;
- 		}
- 	}
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 126c2c514673..9cd231a27328 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -416,18 +416,20 @@ out_free_page:
+ 	return ret;
+ }
+ 
+-static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
++static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
++			int mode)
+ {
+ 	/*
+-	 * We use punch hole to reclaim the free space used by the
+-	 * image a.k.a. discard. However we do not support discard if
+-	 * encryption is enabled, because it may give an attacker
+-	 * useful information.
++	 * We use fallocate to manipulate the space mappings used by the image
++	 * a.k.a. discard/zerorange. However we do not support this if
++	 * encryption is enabled, because it may give an attacker useful
++	 * information.
+ 	 */
+ 	struct file *file = lo->lo_backing_file;
+-	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
+ 	int ret;
+ 
++	mode |= FALLOC_FL_KEEP_SIZE;
++
+ 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+@@ -596,9 +598,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+ 	switch (req_op(rq)) {
+ 	case REQ_OP_FLUSH:
+ 		return lo_req_flush(lo, rq);
+-	case REQ_OP_DISCARD:
+ 	case REQ_OP_WRITE_ZEROES:
+-		return lo_discard(lo, rq, pos);
++		/*
++		 * If the caller doesn't want deallocation, call zeroout to
++		 * write zeroes the range.  Otherwise, punch them out.
++		 */
++		return lo_fallocate(lo, rq, pos,
++			(rq->cmd_flags & REQ_NOUNMAP) ?
++				FALLOC_FL_ZERO_RANGE :
++				FALLOC_FL_PUNCH_HOLE);
++	case REQ_OP_DISCARD:
++		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
+ 	case REQ_OP_WRITE:
+ 		if (lo->transfer)
+ 			return lo_write_transfer(lo, rq, pos);
 -- 
 2.20.1
 
