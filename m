@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB44C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22E6207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EF1222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640871;
-	bh=3MT5Pn4+6qijKisbmLqDKesXReo8INr9hLDSMZh9lrw=;
+	s=default; t=1577640873;
+	bh=0uIBBGWugDnYEAcXZq1W7yPfBYR4A4GTFNtN/6NmIBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRiTak0Xp4q91REy7dCGFpibNHNUm1m42u3bHvfD0WCFpCIuK/sJmVYRJIRLPDP/T
-	 nYrBRtPyU+w28aUNBIzMmHjiGZ+zQaQ3qX00fHO4tNWxSjD0w3JPjbdq9gJ9Y1oGoJ
-	 zPeFSk1wWzan222ORaJbKA93q9tC8dbWAc98mu5g=
+	b=zGpfqzN1dxx305GGkNJQceZUi+SABla1oq9UU/u4kF3c/erAmfSSaA9TNVvlVTp11
+	 hh7Pkb0MA5Js4ecQkTKgI4ZRfTmi6L4BwP/pfm1vVzEFfkZBrUpvekvdF8VxrVNhM9
+	 fAfB5+JmV0jUJOthl/9/1u1kA1Q84Uwx6da4AQIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfL2Rea (ORCPT
+        id S1729672AbfL2Rec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbfL2Re1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:27 -0500
+        id S1729658AbfL2Re3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4D6E20722;
-        Sun, 29 Dec 2019 17:34:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588F121D7E;
+        Sun, 29 Dec 2019 17:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640866;
-        bh=3MT5Pn4+6qijKisbmLqDKesXReo8INr9hLDSMZh9lrw=;
+        s=default; t=1577640868;
+        bh=0uIBBGWugDnYEAcXZq1W7yPfBYR4A4GTFNtN/6NmIBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MtxbrKY/0dxXjPvB4X6tiRnrXU52FiR6Bjse9raU432SRpyGdEgB2IalyzFqTEjla
-         /5Ah52wlz5PNRcpR81VgCZOthcZQpYBQildJEYS4mkATyFDjSHVkq1vBerE0J+8GWO
-         9zql+LWLbkJ5f/3P/4PFdu1oqZcX8PL/OFHREETM=
+        b=RhVWkwWI0rFLIW419whgGFRyTgSoJ+beaCRRvhAK3K/QW+9AomWcky42kEIJQNYWv
+         ERVLpVE9TpdjgdDnzCyQnE4DWbj49cwuwuOCX7ffU3dsORQGRQizRmbD/jmM2JfE3x
+         S01wca6/nBpjjvtJK3bv7gV8cYBv5qudNohcweco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
+        Candice Li <Candice.Li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/219] btrfs: dont prematurely free work in end_workqueue_fn()
-Date:   Sun, 29 Dec 2019 18:19:31 +0100
-Message-Id: <20191229162534.446789038@linuxfoundation.org>
+Subject: [PATCH 4.19 133/219] drm/amdgpu: disallow direct upload save restore list from gfx driver
+Date:   Sun, 29 Dec 2019 18:18:55 +0100
+Message-Id: <20191229162528.855860294@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Hawking Zhang <Hawking.Zhang@amd.com>
 
-[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
+[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
 
-Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
-the work item) and then calls bio_endio(). This is another potential
-instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
+Direct uploading save/restore list via mmio register writes breaks the security
+policy. Instead, the driver should pass s&r list to psp.
 
-In particular, the endio call may depend on other work items. For
-example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
-__btrfs_correct_data_nocsum() -> dio_read_error() ->
-submit_dio_repair_bio(), which submits a bio that is also completed
-through a end_workqueue_fn() work item. However,
-__btrfs_correct_data_nocsum() waits for the newly submitted bio to
-complete, thus it depends on another work item.
+For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
+twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
+The latter is not allowed.
 
-This example currently usually works because we use different workqueue
-helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
-However, it may deadlock with stacked filesystems and is fragile
-overall. The proper fix is to free the work item at the very end of the
-work function, so let's do that.
+VG12 is the only exception where the driver still keeps legacy approach for S&R
+list uploading. In theory, this can be elimnated if we have valid srcntl ucode
+for VG12.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Reviewed-by: Candice Li <Candice.Li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 96296dc7d2ea..e12c37f457e0 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1660,8 +1660,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
- 	bio->bi_status = end_io_wq->status;
- 	bio->bi_private = end_io_wq->private;
- 	bio->bi_end_io = end_io_wq->end_io;
--	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
- 	bio_endio(bio);
-+	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 782411649816..28794b1b15c1 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -2187,7 +2187,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
+ 	 * And it's needed by gfxoff feature.
+ 	 */
+ 	if (adev->gfx.rlc.is_rlc_v2_1) {
+-		gfx_v9_1_init_rlc_save_restore_list(adev);
++		if (adev->asic_type == CHIP_VEGA12)
++			gfx_v9_1_init_rlc_save_restore_list(adev);
+ 		gfx_v9_0_enable_save_restore_machine(adev);
+ 	}
  
- static int cleaner_kthread(void *arg)
 -- 
 2.20.1
 
