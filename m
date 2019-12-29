@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4473AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F38FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5C72253D
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9C9206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642136;
-	bh=4Mzfrn2wNKIAI1Ihcb5rO6qINSLcOWz1XQG8/ZxA7cw=;
+	s=default; t=1577642138;
+	bh=S8SlpLr8wUiokgeBTGg+8fyV1PcseT48fnzXqTlIk3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0nDKBMcvmdJRJZDrJN0W/ERdxXRTjvQQgrv4KcHoGz8w0+lNYcxYfCYVmzBLoEbOF
-	 u3dZrXPhybaJVHq6yT7eloAOzoy0Tn+8bOtN1HUfs/mSd1UJmPJhIf/bV2OBdviIgy
-	 wGwZH67bse+iq8HXYt/Sdl3f/0NMapp17TIk9ADE=
+	b=TmSA3fgRwhTz836qJidt8vgwEy4BDsgcRUni8KdHEB3Y7s06p6I/J+dQfMJNz6Dja
+	 gjNvPuVrFDaAHpB1HAS8MJe5UJj3PcYDLVDBmTNDP7NwXmtpy9u1Fv7jCxKIsayOIH
+	 vnZcGVuNpAjhSCeSfSNqoUIhXsw0bBDR0l5acVR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbfL2Rzf (ORCPT
+        id S1732579AbfL2Rzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44210 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732924AbfL2Rza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:30 -0500
+        id S1732940AbfL2Rzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 506A42467C;
-        Sun, 29 Dec 2019 17:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1463421744;
+        Sun, 29 Dec 2019 17:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642129;
-        bh=4Mzfrn2wNKIAI1Ihcb5rO6qINSLcOWz1XQG8/ZxA7cw=;
+        s=default; t=1577642134;
+        bh=S8SlpLr8wUiokgeBTGg+8fyV1PcseT48fnzXqTlIk3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avFHVqn8FtpDbNYZqI27eTJ2yUefxbA1UXY+Tah/ESUZoj4sBMurDjIOx+hZ63YEL
-         RVdUsXwlGKAufuv7D0rVkUne0z6VI2wZqfVx3DRlZU0NWkrwH+o+8qHGi+y5E/jXvo
-         y9vwl6rRHvEw+SR+S5xRQqtPN9iZxB83DLoR5cnk=
+        b=iD7V4SA/0Q0B7Hw5P3V5z68bNO5RigzwQmPynybyCpmUSOy2xFsqY7EEh4tzjYHrz
+         ZBDgs6QYNiUCIvOJz4s0T2zaNcEIsYakQ826ixao7Bhi6RnsHUrCTEoyAHI5Wl4AM0
+         A71jmBYDnhqADpOqVKdYNeYt1WvWkj/vhswNvHds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Devesh Sharma <devesh.sharma@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 327/434] net: phy: avoid matching all-ones clause 45 PHY IDs
-Date:   Sun, 29 Dec 2019 18:26:20 +0100
-Message-Id: <20191229172723.689874888@linuxfoundation.org>
+Subject: [PATCH 5.4 355/434] RDMA/bnxt_re: Fix stat push into dma buffer on gen p5 devices
+Date:   Sun, 29 Dec 2019 18:26:48 +0100
+Message-Id: <20191229172725.550694083@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,81 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Devesh Sharma <devesh.sharma@broadcom.com>
 
-[ Upstream commit b95e86d846b63b02ecdc94802ddbeaf9005fb6d9 ]
+[ Upstream commit 98998ffe5216c7fa2c0225bb5b049ca5cdf8d195 ]
 
-We currently match clause 45 PHYs using any ID read from a MMD marked
-as present in the "Devices in package" registers 5 and 6.  However,
-this is incorrect.  45.2 says:
+Due to recent advances in the firmware for Broadcom's gen p5 series of
+adaptors the driver code to report hardware counters has been broken
+w.r.t. roce devices.
 
-  "The definition of the term package is vendor specific and could be
-   a chip, module, or other similar entity."
+The new firmware command expects dma length to be specified during stat
+dma buffer allocation.
 
-so a package could be more or less than the whole PHY - a PHY could be
-made up of several modules instantiated onto a single chip such as the
-Marvell 88x3310, or some of the MMDs could be disabled according to
-chip configuration, such as the Broadcom 84881.
-
-In the case of Broadcom 84881, the "Devices in package" registers
-contain 0xc000009b, meaning that there is a PHYXS present in the
-package, but all registers in MMD 4 return 0xffff.  This leads to our
-matching code incorrectly binding this PHY to one of our generic PHY
-drivers.
-
-This patch changes the way we determine whether to attempt to match a
-MMD identifier, or use it to request a module - if the identifier is
-all-ones, then we skip over it. When reading the identifiers, we
-initialise phydev->c45_ids.device_ids to all-ones, only reading the
-device ID if the "Devices in package" registers indicates we should.
-
-This avoids the generic drivers incorrectly matching on a PHY ID of
-0xffffffff.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2792b5b95ed5 ("bnxt_en: Update firmware interface spec. to 1.10.0.89.")
+Link: https://lore.kernel.org/r/1574317343-23300-3-git-send-email-devesh.sharma@broadcom.com
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index adb66a2fae18..14c6b7597b06 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -488,7 +488,7 @@ static int phy_bus_match(struct device *dev, struct device_driver *drv)
- 
- 	if (phydev->is_c45) {
- 		for (i = 1; i < num_ids; i++) {
--			if (!(phydev->c45_ids.devices_in_package & (1 << i)))
-+			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
- 				continue;
- 
- 			if ((phydrv->phy_id & phydrv->phy_id_mask) ==
-@@ -632,7 +632,7 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 		int i;
- 
- 		for (i = 1; i < num_ids; i++) {
--			if (!(c45_ids->devices_in_package & (1 << i)))
-+			if (c45_ids->device_ids[i] == 0xffffffff)
- 				continue;
- 
- 			ret = phy_request_driver_module(dev,
-@@ -812,10 +812,13 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
-  */
- struct phy_device *get_phy_device(struct mii_bus *bus, int addr, bool is_c45)
- {
--	struct phy_c45_device_ids c45_ids = {0};
-+	struct phy_c45_device_ids c45_ids;
- 	u32 phy_id = 0;
- 	int r;
- 
-+	c45_ids.devices_in_package = 0;
-+	memset(c45_ids.device_ids, 0xff, sizeof(c45_ids.device_ids));
-+
- 	r = get_phy_id(bus, addr, &phy_id, is_c45, &c45_ids);
- 	if (r)
- 		return ERR_PTR(r);
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index b31e21588200..27e2df44d043 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -477,6 +477,7 @@ static int bnxt_re_net_stats_ctx_alloc(struct bnxt_re_dev *rdev,
+ 	bnxt_re_init_hwrm_hdr(rdev, (void *)&req, HWRM_STAT_CTX_ALLOC, -1, -1);
+ 	req.update_period_ms = cpu_to_le32(1000);
+ 	req.stats_dma_addr = cpu_to_le64(dma_map);
++	req.stats_dma_length = cpu_to_le16(sizeof(struct ctx_hw_stats_ext));
+ 	req.stat_ctx_flags = STAT_CTX_ALLOC_REQ_STAT_CTX_FLAGS_ROCE;
+ 	bnxt_re_fill_fw_msg(&fw_msg, (void *)&req, sizeof(req), (void *)&resp,
+ 			    sizeof(resp), DFLT_HWRM_CMD_TIMEOUT);
 -- 
 2.20.1
 
