@@ -2,52 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82118C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AA4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4C9207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0480207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643262;
-	bh=I2fkFA/QpkMldfkl3YYRS7NfGdQeEDamEhl0A2SUYTo=;
+	s=default; t=1577643265;
+	bh=5Xgie+60FQk0mG+1cCCfl5sMSjJWibgH5/NSrrUPH7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8RwuOje/8Olxkvn6lLWj+AAH2djthOa6qq5ATdrMbkUVZaKoyqxYx0Ff96UKkrH9
-	 IsZUnWml/CTqn751IR6QkvezGPfjklvWCgqyXDmnymwTQRtQcY1tOLfE+S6oJQR08P
-	 wqXcqKaXgyQZQpnoPWzVvif0KZxOya3dDLU+w8Pw=
+	b=qxeNy5WKkn8N7H17l5xRe6GeHnGfupvMvlvcsiMke8/N5OTmviaAwSisCP1W49urH
+	 jjB1ngs6nt/1YNT4waYtcD71xZ/19xZjqAJSByUP4rrhoRtUTtQ060RfvQ88BiuvYf
+	 cleN7EppilJP9RC7oqi7NDpC5CMGCAzkq9wWIfbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfL2R06 (ORCPT
+        id S1731088AbfL2SOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbfL2R0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:54 -0500
+        id S1728303AbfL2R07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D1420409;
-        Sun, 29 Dec 2019 17:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F6A920409;
+        Sun, 29 Dec 2019 17:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640413;
-        bh=I2fkFA/QpkMldfkl3YYRS7NfGdQeEDamEhl0A2SUYTo=;
+        s=default; t=1577640418;
+        bh=5Xgie+60FQk0mG+1cCCfl5sMSjJWibgH5/NSrrUPH7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weRgg9Tb6qh9XC4Z5Eky7XaFzSGTi8Kcgt90ZYTiCerD5rXMODYtC9b+yYqWIvHut
-         EaRnMOzofg07beVC9JjB8wJm+3skDI9eyRWF+OSJvqlot42AQvbTxJnA4sEnaux3Fo
-         sgwhG1nfNK/DgErACsb8yk8rUo0IeZqyvuGgTt+Q=
+        b=AID1vrl8Ui6/PfIu/Iyl6/A4HspIFw0BLGtsUK5HRt7+c/Fa+CQLnnjgl8N/X4buU
+         WUv8XrpZXyErv+v7H/vUad9VsU0cDWJvqXcJNSfvtnvoeoakEunaOkLdoTST/ZbDTK
+         m2eTuBLXrz9sSC739OHwQKXeFcvo3dDIVenn387A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 148/161] intel_th: pci: Add Elkhart Lake SOC support
-Date:   Sun, 29 Dec 2019 18:19:56 +0100
-Message-Id: <20191229162445.902837887@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 123/161] btrfs: dont prematurely free work in end_workqueue_fn()
+Date:   Sun, 29 Dec 2019 18:19:31 +0100
+Message-Id: <20191229162436.000166789@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,35 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Omar Sandoval <osandov@fb.com>
 
-commit 88385866bab8d5e18c7f45d1023052c783572e03 upstream.
+[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
 
-This adds support for Intel Trace Hub in Elkhart Lake.
+Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+the work item) and then calls bio_endio(). This is another potential
+instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191217115527.74383-3-alexander.shishkin@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In particular, the endio call may depend on other work items. For
+example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+__btrfs_correct_data_nocsum() -> dio_read_error() ->
+submit_dio_repair_bio(), which submits a bio that is also completed
+through a end_workqueue_fn() work item. However,
+__btrfs_correct_data_nocsum() waits for the newly submitted bio to
+complete, thus it depends on another work item.
 
+This example currently usually works because we use different workqueue
+helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+However, it may deadlock with stacked filesystems and is fragile
+overall. The proper fix is to free the work item at the very end of the
+work function, so let's do that.
+
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/disk-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -218,6 +218,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4da6),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Elkhart Lake */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4b26),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 813834552aa1..a8ea56218d6b 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1679,8 +1679,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
+ 	bio->bi_status = end_io_wq->status;
+ 	bio->bi_private = end_io_wq->private;
+ 	bio->bi_end_io = end_io_wq->end_io;
+-	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ 	bio_endio(bio);
++	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+ }
  
+ static int cleaner_kthread(void *arg)
+-- 
+2.20.1
+
 
 
