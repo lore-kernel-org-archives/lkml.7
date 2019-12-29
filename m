@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97C0C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B141C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA97206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376D320748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642924;
-	bh=ehvcL/pHOM57FNFV9+Gcyx74XBJhRnSsmFb4AJnjk3Q=;
+	s=default; t=1577642926;
+	bh=kWWB5RAiW2T/Qt4/+Ox1wAsxd+T2QOiyilqnt0752lY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zv0uuBTjUDK1xe2/5QhM5UzSbyDmbekbtdVJ4B00Po/PlIwPBS5/uG+Z0Qb5KeZir
-	 w9D0Ruf07p2AMZx2zsus9+ptp5nG34TXr9CI9+OV93BebrnnQdbtqG4BC3okDDU5vq
-	 5XvoJWAeJ4CAdtvOqjlAmlXA9S31P3wMkBwILK5s=
+	b=uwtg9PXbWozX8H8achIHpB7FczkXxQCi0lGkaCmmxx88d9d4j+k/oKMukcgIjubFi
+	 wosDfTwkmmkcWrkKwf5Z95KoFTSF2dfJETIApD02h0C4nO5L9MHQm5XPnUxsm6tr88
+	 fJ5euIp9gipFYchReu/rawpXE8zOhmEoCeRiWQI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732622AbfL2SIn (ORCPT
+        id S1732496AbfL2SIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:08:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57222 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:08:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730921AbfL2RrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:00 -0500
+        id S1731188AbfL2RrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C8C206DB;
-        Sun, 29 Dec 2019 17:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD2E0206A4;
+        Sun, 29 Dec 2019 17:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641619;
-        bh=ehvcL/pHOM57FNFV9+Gcyx74XBJhRnSsmFb4AJnjk3Q=;
+        s=default; t=1577641622;
+        bh=kWWB5RAiW2T/Qt4/+Ox1wAsxd+T2QOiyilqnt0752lY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xAFzqrmlmKYKORirjgQoycx86BU4LE8LFFq0PpCwCNDAsKdJg1dcAw/QTTJp6GvZu
-         gRNbBtCXR1ceuRLsqJBa6fWtjvFfglV9s46GbQRdSNi2bJXMGb+on7OhqHgmk1lKcS
-         PKdWsb3odFmURtgnUqPct2OVdxTQfqfgaLskjfKM=
+        b=tsXlY846Cnc390R/m5uQ9FiEaFv0cLjGrO+2ukccRv8gSoP0iBHcRRPglK20doQx5
+         24mUG1E6TyShm0pfKcqNHiYgDHmxNpm/VsvaIxLtR4etGO1BnVvWrXUEMGnHhRuLhx
+         QGgadVc2XYXWeHB5cLn4ei7C2igI6OR+A7b9CS1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Parkin <julian.parkin@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 140/434] drm/amd/display: Program DWB watermarks from correct state
-Date:   Sun, 29 Dec 2019 18:23:13 +0100
-Message-Id: <20191229172711.028798845@linuxfoundation.org>
+Subject: [PATCH 5.4 105/434] tools/memory-model: Fix data race detection for unordered store and load
+Date:   Sun, 29 Dec 2019 18:22:38 +0100
+Message-Id: <20191229172708.585821474@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,91 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Parkin <julian.parkin@amd.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit edb922b022c0c94805c4ffad202b3edff83d76f0 ]
+[ Upstream commit daebf24a8e8c6064cba3a330db9fe9376a137d2c ]
 
-[Why]
-When diags adds a DWB via a stream update, we calculate MMHUBBUB
-paramaters, but dc->current_state has not yet been updated
-when the DWB programming happens. This leads to overflow on
-high bandwidth tests since the incorrect MMHUBBUB arbitration
-parameters are programmed.
+Currently the Linux Kernel Memory Model gives an incorrect response
+for the following litmus test:
 
-[How]
-Pass the updated context down to the (enable|update)_writeback functions
-so that they can use the correct watermarks when programming MMHUBBUB.
+C plain-WWC
 
-Signed-off-by: Julian Parkin <julian.parkin@amd.com>
-Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+{}
+
+P0(int *x)
+{
+	WRITE_ONCE(*x, 2);
+}
+
+P1(int *x, int *y)
+{
+	int r1;
+	int r2;
+	int r3;
+
+	r1 = READ_ONCE(*x);
+	if (r1 == 2) {
+		smp_rmb();
+		r2 = *x;
+	}
+	smp_rmb();
+	r3 = READ_ONCE(*x);
+	WRITE_ONCE(*y, r3 - 1);
+}
+
+P2(int *x, int *y)
+{
+	int r4;
+
+	r4 = READ_ONCE(*y);
+	if (r4 > 0)
+		WRITE_ONCE(*x, 1);
+}
+
+exists (x=2 /\ 1:r2=2 /\ 2:r4=1)
+
+The memory model says that the plain read of *x in P1 races with the
+WRITE_ONCE(*x) in P2.
+
+The problem is that we have a write W and a read R related by neither
+fre or rfe, but rather W ->coe W' ->rfe R, where W' is an intermediate
+write (the WRITE_ONCE() in P0).  In this situation there is no
+particular ordering between W and R, so either a wr-vis link from W to
+R or an rw-xbstar link from R to W would prove that the accesses
+aren't concurrent.
+
+But the LKMM only looks for a wr-vis link, which is equivalent to
+assuming that W must execute before R.  This is not necessarily true
+on non-multicopy-atomic systems, as the WWC pattern demonstrates.
+
+This patch changes the LKMM to accept either a wr-vis or a reverse
+rw-xbstar link as a proof of non-concurrency.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c    | 4 ++--
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 5 +++--
- drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h  | 6 ++++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ tools/memory-model/linux-kernel.cat | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index bf1d7bb90e0f..bb09243758fe 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -423,10 +423,10 @@ bool dc_stream_add_writeback(struct dc *dc,
+diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
+index ea2ff4b94074..2a9b4fe4a84e 100644
+--- a/tools/memory-model/linux-kernel.cat
++++ b/tools/memory-model/linux-kernel.cat
+@@ -197,7 +197,7 @@ empty (wr-incoh | rw-incoh | ww-incoh) as plain-coherence
+ (* Actual races *)
+ let ww-nonrace = ww-vis & ((Marked * W) | rw-xbstar) & ((W * Marked) | wr-vis)
+ let ww-race = (pre-race & co) \ ww-nonrace
+-let wr-race = (pre-race & (co? ; rf)) \ wr-vis
++let wr-race = (pre-race & (co? ; rf)) \ wr-vis \ rw-xbstar^-1
+ let rw-race = (pre-race & fr) \ rw-xbstar
  
- 		if (dwb->funcs->is_enabled(dwb)) {
- 			/* writeback pipe already enabled, only need to update */
--			dc->hwss.update_writeback(dc, stream_status, wb_info);
-+			dc->hwss.update_writeback(dc, stream_status, wb_info, dc->current_state);
- 		} else {
- 			/* Enable writeback pipe from scratch*/
--			dc->hwss.enable_writeback(dc, stream_status, wb_info);
-+			dc->hwss.enable_writeback(dc, stream_status, wb_info, dc->current_state);
- 		}
- 	}
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index b3ae1c41fc69..937a8ba81160 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -1356,7 +1356,8 @@ bool dcn20_update_bandwidth(
- static void dcn20_enable_writeback(
- 		struct dc *dc,
- 		const struct dc_stream_status *stream_status,
--		struct dc_writeback_info *wb_info)
-+		struct dc_writeback_info *wb_info,
-+		struct dc_state *context)
- {
- 	struct dwbc *dwb;
- 	struct mcif_wb *mcif_wb;
-@@ -1373,7 +1374,7 @@ static void dcn20_enable_writeback(
- 	optc->funcs->set_dwb_source(optc, wb_info->dwb_pipe_inst);
- 	/* set MCIF_WB buffer and arbitration configuration */
- 	mcif_wb->funcs->config_mcif_buf(mcif_wb, &wb_info->mcif_buf_params, wb_info->dwb_params.dest_height);
--	mcif_wb->funcs->config_mcif_arb(mcif_wb, &dc->current_state->bw_ctx.bw.dcn.bw_writeback.mcif_wb_arb[wb_info->dwb_pipe_inst]);
-+	mcif_wb->funcs->config_mcif_arb(mcif_wb, &context->bw_ctx.bw.dcn.bw_writeback.mcif_wb_arb[wb_info->dwb_pipe_inst]);
- 	/* Enable MCIF_WB */
- 	mcif_wb->funcs->enable_mcif(mcif_wb);
- 	/* Enable DWB */
-diff --git a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-index 3a938cd414ea..f6cc2d6f576d 100644
---- a/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-+++ b/drivers/gpu/drm/amd/display/dc/inc/hw_sequencer.h
-@@ -321,10 +321,12 @@ struct hw_sequencer_funcs {
- 			struct dc_state *context);
- 	void (*update_writeback)(struct dc *dc,
- 			const struct dc_stream_status *stream_status,
--			struct dc_writeback_info *wb_info);
-+			struct dc_writeback_info *wb_info,
-+			struct dc_state *context);
- 	void (*enable_writeback)(struct dc *dc,
- 			const struct dc_stream_status *stream_status,
--			struct dc_writeback_info *wb_info);
-+			struct dc_writeback_info *wb_info,
-+			struct dc_state *context);
- 	void (*disable_writeback)(struct dc *dc,
- 			unsigned int dwb_pipe_inst);
- #endif
+ flag ~empty (ww-race | wr-race | rw-race) as data-race
 -- 
 2.20.1
 
