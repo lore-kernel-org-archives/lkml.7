@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F8C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77D9206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200F820718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641813;
-	bh=rVbwghDAO8Be9TVox4JBz/nfVabD7sDXev3uYKYqvdY=;
+	s=default; t=1577641816;
+	bh=LmHqfFxiheRtiU4eLA/bg/3osjTRGv2BZcCh/NmvOto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2X/Js+NNKlFu6JSNctZ2rWTltMOC9F13ofBraO4RqH3wjxxiMlij+8ctTMOpYzUh
-	 +JvV6UZTuCcJT00/O9Kt2/yfS27zzPKvpPSAHw+vgEMCPZlMwYSR/BQEAdZs9dHPdh
-	 jrtlpRFQiDVQnR0fRlcOSboSCaq4DCWdVEaGlBuo=
+	b=ve0NpPetFRvSOQAoR6q6esA7sHDBIEIu0r26IRhxwtilXseoy+qCvSxcwRgly9quJ
+	 5+g+Ap3+HieXlQDac8XfrrE9cK/e2Z2KzeKWBfQNvcWPfaAc1RLp5/Xiqfia8bqSgZ
+	 UY1jEaPgoOLIPbheoM00S9uPCFz4MaVtWTtQojJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbfL2RuM (ORCPT
+        id S1731535AbfL2RuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34438 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731400AbfL2RuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:09 -0500
+        id S1731792AbfL2RuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0B4206A4;
-        Sun, 29 Dec 2019 17:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6966A21744;
+        Sun, 29 Dec 2019 17:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641809;
-        bh=rVbwghDAO8Be9TVox4JBz/nfVabD7sDXev3uYKYqvdY=;
+        s=default; t=1577641806;
+        bh=LmHqfFxiheRtiU4eLA/bg/3osjTRGv2BZcCh/NmvOto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEiZ7AdhFDu08x87ipjcrvH8xvwBA7D9H0CLA46h0Iq6OOrk7MVkdELXryWriih2J
-         cliWxsrrkPH+ltTMIvXU3m/dhUm8cUIMpOwlna4ntbvYzMo0aIEaypvX3PSFfqi3zT
-         Gy6j0QZgYGs0fBiFdONf3E/VKoSIsI2zGJXhbfIE=
+        b=mOE9gJ3kwIOJ+b8zohGUmJCwCRU3CkqJuq8pPZsRLOWZEF0XFc2DXq+lsEoPkCu3Y
+         OlRsuJOV4HZmlmujY/bz/8HVCm5NVvuu15V4LHfMePETKP9ioqHjM3D1yYom6VaPmx
+         0e0pRftWy5uIA8XmgC+fh9VubCDw8EvPuUdSwJQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 219/434] libbpf: Fix error handling in bpf_map__reuse_fd()
-Date:   Sun, 29 Dec 2019 18:24:32 +0100
-Message-Id: <20191229172716.385176107@linuxfoundation.org>
+Subject: [PATCH 5.4 218/434] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
+Date:   Sun, 29 Dec 2019 18:24:31 +0100
+Message-Id: <20191229172716.317844159@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,63 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit d1b4574a4b86565325ef2e545eda8dfc9aa07c60 ]
+[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
 
-bpf_map__reuse_fd() was calling close() in the error path before returning
-an error value based on errno. However, close can change errno, so that can
-lead to potentially misleading error messages. Instead, explicitly store
-errno in the err variable before each goto.
+The iio_triggered_buffer_postenable() hook should be called first to
+attach the poll function. The iio_triggered_buffer_predisable() hook is
+called last (as is it should).
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/157269297769.394725.12634985106772698611.stgit@toke.dk
+This change moves iio_triggered_buffer_postenable() to be called first. It
+adds iio_triggered_buffer_predisable() on the error paths of the postenable
+hook.
+For the predisable hook, some code-paths have been changed to make sure
+that the iio_triggered_buffer_predisable() hook gets called in case there
+is an error before it.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e0276520171b..a267cd0c0ce2 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1897,16 +1897,22 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
- 		return -errno;
+diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
+index 5fa78c273a25..65c7c9329b1c 100644
+--- a/drivers/iio/adc/dln2-adc.c
++++ b/drivers/iio/adc/dln2-adc.c
+@@ -524,6 +524,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 	u16 conflict;
+ 	unsigned int trigger_chan;
  
- 	new_fd = open("/", O_RDONLY | O_CLOEXEC);
--	if (new_fd < 0)
-+	if (new_fd < 0) {
-+		err = -errno;
- 		goto err_free_new_name;
-+	}
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
++
+ 	mutex_lock(&dln2->mutex);
  
- 	new_fd = dup3(fd, new_fd, O_CLOEXEC);
--	if (new_fd < 0)
-+	if (new_fd < 0) {
-+		err = -errno;
- 		goto err_close_new_fd;
-+	}
+ 	/* Enable ADC */
+@@ -537,6 +541,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 				(int)conflict);
+ 			ret = -EBUSY;
+ 		}
++		iio_triggered_buffer_predisable(indio_dev);
+ 		return ret;
+ 	}
  
- 	err = zclose(map->fd);
--	if (err)
-+	if (err) {
-+		err = -errno;
- 		goto err_close_new_fd;
-+	}
- 	free(map->name);
+@@ -550,6 +555,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 		if (ret < 0) {
+ 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
++			iio_triggered_buffer_predisable(indio_dev);
+ 			return ret;
+ 		}
+ 	} else {
+@@ -557,12 +563,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 	}
  
- 	map->fd = new_fd;
-@@ -1925,7 +1931,7 @@ err_close_new_fd:
- 	close(new_fd);
- err_free_new_name:
- 	free(new_name);
--	return -errno;
-+	return err;
+-	return iio_triggered_buffer_postenable(indio_dev);
++	return 0;
  }
  
- int bpf_map__resize(struct bpf_map *map, __u32 max_entries)
+ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ {
+-	int ret;
++	int ret, ret2;
+ 	struct dln2_adc *dln2 = iio_priv(indio_dev);
+ 
+ 	mutex_lock(&dln2->mutex);
+@@ -577,12 +583,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
+ 
+ 	mutex_unlock(&dln2->mutex);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
+-		return ret;
+-	}
+ 
+-	return iio_triggered_buffer_predisable(indio_dev);
++	ret2 = iio_triggered_buffer_predisable(indio_dev);
++	if (ret == 0)
++		ret = ret2;
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
 -- 
 2.20.1
 
