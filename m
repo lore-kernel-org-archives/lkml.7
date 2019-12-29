@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E961BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8736C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AF120409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36DB207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640768;
-	bh=+Kf9WqdIqt2OINxaomJUPTrMY0shwAmeuuV8RdUx/7Y=;
+	s=default; t=1577640770;
+	bh=B/hzK1s8pmZi/6DHH3MZ5L8Scvw4VTgEaRTBRdd5xF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUd5lZVAYGwZMbfaSjSK3Q0DbGvt6xfaIShXNmfpcamWmDe5PpwlfefvRVRFQ7NKc
-	 ztn8AevNg9QITKNl+AxYRuqi5S4xSBxaB0RO1ZHRg/I8Hy5EoY6dXep0CLFyJfgfAn
-	 duBQf23Ig2RDXxF8ySx8JgKU/x9wF2sDHAiCGb/w=
+	b=ERnradPVMytrBJk+zSYeaQu3nVJPSIuX93mWhyKNmLr1o9/q4F70xABy7A1P0Vqu7
+	 vNCB5AyG2NB3OeYZNd0ONnLFFS5j6ytOlD7BUyPSc9QyK2Iw+zEoTLR/AzB0LMNigD
+	 bTCUR8hi+m9a9CFaHRbV8nkNLof25CMkZBtSfrgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfL2Rcq (ORCPT
+        id S1729146AbfL2Rct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33342 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:32:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729342AbfL2Rck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:40 -0500
+        id S1729352AbfL2Rcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A51208E4;
-        Sun, 29 Dec 2019 17:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 825BE207FD;
+        Sun, 29 Dec 2019 17:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640760;
-        bh=+Kf9WqdIqt2OINxaomJUPTrMY0shwAmeuuV8RdUx/7Y=;
+        s=default; t=1577640765;
+        bh=B/hzK1s8pmZi/6DHH3MZ5L8Scvw4VTgEaRTBRdd5xF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4RzOkECTfYuK2ft21KL6Wsr7mlbSffYal/MJm5yyIPgt8P8G9vAFfoLRW+mbQadk
-         9Nrs2NPr04WIppI+oTZG/YuE86W8y1na96UwL9pChShmkgIsFsNaX3xpl3CyohMzmC
-         2S/Inl5LjQgZegbt/aVxc8XEVfnnZ5gXDAS4xV2Y=
+        b=QT8DOW+2Bqx44PEKu/ra+1UQYvilpWSv6YV6ujx35o7HRdVp8YhKxG7hNbUutHvN7
+         Y++/7/uCsKxqp1NGCz4aFbkKPSEkQjv53cuntIlh4jCpaUFrIFIXLd/0urnRTwMRN8
+         Xt1t0DzF6Ogl84vsc0Vrl3MLz0X3qaByXbNAxzwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Siewior <bigeasy@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/219] x86/ioapic: Prevent inconsistent state when moving an interrupt
-Date:   Sun, 29 Dec 2019 18:18:12 +0100
-Message-Id: <20191229162520.902452219@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 127/219] perf probe: Fix to probe an inline function which has no entry pc
+Date:   Sun, 29 Dec 2019 18:18:49 +0100
+Message-Id: <20191229162527.514542689@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -63,79 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
+[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
 
-There is an issue with threaded interrupts which are marked ONESHOT
-and using the fasteoi handler:
+Fix perf probe to probe an inlne function which has no entry pc
+or low pc but only has ranges attribute.
 
-  if (IS_ONESHOT())
-    mask_irq();
-  ....
-  cond_unmask_eoi_irq()
-    chip->irq_eoi();
-      if (setaffinity_pending) {
-         mask_ioapic();
-         ...
-	 move_affinity();
-	 unmask_ioapic();
-      }
+This seems very rare case, but I could find a few examples, as
+same as probe_point_search_cb(), use die_entrypc() to get the
+entry address in probe_point_inline_cb() too.
 
-So if setaffinity is pending the interrupt will be moved and then
-unconditionally unmasked at the ioapic level, which is wrong in two
-aspects:
+Without this patch:
 
- 1) It should be kept masked up to the point where the threaded handler
-    finished.
+  # perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
 
- 2) The physical chip state and the software masked state are inconsistent
+With this patch:
 
-Guard both the mask and the unmask with a check for the software masked
-state. If the line is marked masked then the ioapic line is also masked, so
-both mask_ioapic() and unmask_ioapic() can be skipped safely.
+  # perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
-Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints _text+33789
+  [root@quaco ~]#
+
+Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index ab22eded61d2..fa3b85b222e3 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1724,9 +1724,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
- 
- static inline bool ioapic_irqd_mask(struct irq_data *data)
- {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic_irq(data);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic_irq(data);
- 		return true;
- 	}
- 	return false;
-@@ -1763,7 +1764,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
- 		 */
- 		if (!io_apic_level_ack_pending(data->chip_data))
- 			irq_move_masked_irq(data);
--		unmask_ioapic_irq(data);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic_irq(data);
- 	}
- }
- #else
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c4fe0678e322..d0d333c90b35 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -950,7 +950,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+ 		ret = find_probe_point_lazy(in_die, pf);
+ 	else {
+ 		/* Get probe address */
+-		if (dwarf_entrypc(in_die, &addr) != 0) {
++		if (die_entrypc(in_die, &addr) != 0) {
+ 			pr_warning("Failed to get entry address of %s.\n",
+ 				   dwarf_diename(in_die));
+ 			return -ENOENT;
 -- 
 2.20.1
 
