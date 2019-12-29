@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3E3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15504C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7709120722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E288920CC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640210;
-	bh=fN7g6WY2amEW3gqUv3QZ5oQptFJW0G0E2Sh8Gs8Zyko=;
+	s=default; t=1577640213;
+	bh=yIFdXkVSGRRrCTX7plWenPuVps/uZEiThNId3EVH3Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0PcjuT7N+IHt6Y+vZ2nnj6ePlsxngcfzH5N3wXqenDDBvMA3XidoDIM3EymL4aW7f
-	 1mYsS7wTBB2eCwc5W9X/IuTWG7TCcVurCBFRxKd3K9a8MRSe4jnz3isd3C19M7yplg
-	 Pax1tnkRGFOxY9k94kd7l1r6WK9ehoSC1kgXrtSg=
+	b=anIHSFQguOgnggWf34RJ/Db2FGllNX/xX7SsBfTAs8DNxKKHhUcx+1poc6N3+0Q1n
+	 7MESU70RNYHKpaJQc+y3arrCq1mZH3evhVkaQD91lNhPQb3Qaay5pXRfIrXVc7ePnv
+	 HsLxgHqf6hmFWBnBQFM9wo42r1301kI/jEmdGR8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfL2RX3 (ORCPT
+        id S1727554AbfL2RXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbfL2RXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:25 -0500
+        id S1726898AbfL2RXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5353720CC7;
-        Sun, 29 Dec 2019 17:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CCC21D7E;
+        Sun, 29 Dec 2019 17:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640204;
-        bh=fN7g6WY2amEW3gqUv3QZ5oQptFJW0G0E2Sh8Gs8Zyko=;
+        s=default; t=1577640209;
+        bh=yIFdXkVSGRRrCTX7plWenPuVps/uZEiThNId3EVH3Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rm3IJXnyFZQ2T9lo0Hht+OKNQ4qisB8jDmt+MdOJZ++RKfKmsDoi7CQk6TrBZT2ab
-         yNc10YVwckbE3ItaIrM7ioJI2UA1jU0vLUR8t8mz2oCy0zYxnVTsGHMuyfXdEYMZFR
-         rwbEG7X65L43ob42XwwgzJBFE6ojcQ8FCsvevGNU=
+        b=o2b0tbRkKT4wZZ2pn60NXSWxrlyS7W04qh+JORUr+BAt7ZNrhHaKxL+fsnhMEIB+s
+         tsGLRVDNIqWrafmls9ThqR5BH+f+s24oxy2iXJmTnAlDsWUjEgw/H2rNzgb5zkfEnW
+         TfwenQMjiH+QjBRCG3RxX3hZesYGAV0ObjBQGTc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/161] perf report: Add warning when libunwind not compiled in
-Date:   Sun, 29 Dec 2019 18:18:29 +0100
-Message-Id: <20191229162417.955740376@linuxfoundation.org>
+Subject: [PATCH 4.14 063/161] iio: adc: max1027: Reset the device at probe time
+Date:   Sun, 29 Dec 2019 18:18:31 +0100
+Message-Id: <20191229162418.579894961@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -64,56 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
+[ Upstream commit db033831b4f5589f9fcbadb837614a7c4eac0308 ]
 
-We received a user report that call-graph DWARF mode was enabled in
-'perf record' but 'perf report' didn't unwind the callstack correctly.
-The reason was, libunwind was not compiled in.
+All the registers are configured by the driver, let's reset the chip
+at probe time, avoiding any conflict with a possible earlier
+configuration.
 
-We can use 'perf -vv' to check the compiled libraries but it would be
-valuable to report a warning to user directly (especially valuable for
-a perf newbie).
-
-The warning is:
-
-Warning:
-Please install libunwind development packages during the perf build.
-
-Both TUI and stdio are supported.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/iio/adc/max1027.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 4ddb0726eebc..fd4dd12b8f9d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -342,6 +342,13 @@ static int report__setup_sample_type(struct report *rep)
- 				PERF_SAMPLE_BRANCH_ANY))
- 		rep->nonany_branch_mode = true;
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index ebc715927e63..03af02769370 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -462,6 +462,14 @@ static int max1027_probe(struct spi_device *spi)
+ 		goto fail_dev_register;
+ 	}
  
-+#ifndef HAVE_LIBUNWIND_SUPPORT
-+	if (dwarf_callchain_users) {
-+		ui__warning("Please install libunwind development packages "
-+			    "during the perf build.\n");
++	/* Internal reset */
++	st->reg = MAX1027_RST_REG;
++	ret = spi_write(st->spi, &st->reg, 1);
++	if (ret < 0) {
++		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
++		return ret;
 +	}
-+#endif
 +
- 	return 0;
- }
- 
+ 	/* Disable averaging */
+ 	st->reg = MAX1027_AVG_REG;
+ 	ret = spi_write(st->spi, &st->reg, 1);
 -- 
 2.20.1
 
