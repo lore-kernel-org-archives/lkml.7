@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A927C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F70FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5412B20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B396206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642708;
-	bh=adoBnTL3c8ascTWuPdS3qgWuYBBmCMjIas475ss7R6c=;
+	s=default; t=1577642717;
+	bh=Joys5lt38jKI6ug968+zR1DfCk3GIR5YSnutJEDdiww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RairlHitiKF0NmEYwsKG9UtMzQBsClUggv47gw1T5IEqo2TIBLUm1ntIudKay0Hky
-	 8h5rw3B95GEZQhxfUsA/7NNBADedzdRox+cgf49YfoUDxKKgkYLnUIXJbgDk9XNfIa
-	 cCj4e+E4806eU81fsnwMjfCmnJQ7m+1yA6W87Ctw=
+	b=m8TAHexElYpQtfOLFeGcuUQqKRibUf+2td0DUYBB2WylyzIvOG4+zxJXBOdCz0RIt
+	 pczYlgvDT+fuPXLiuQRVC7BDrxWFtG6DXMGBVSevzDYodn6o5DZ7HqKQITiMWtKxO/
+	 IYnjJSndN6kT0FC5alnYfcw6b/ajl9pLxXbfONRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387813AbfL2SFH (ORCPT
+        id S1732070AbfL2RvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:05:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732109AbfL2Rvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:33 -0500
+        id S1732051AbfL2RvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 090DB20718;
-        Sun, 29 Dec 2019 17:51:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F3AE206A4;
+        Sun, 29 Dec 2019 17:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641892;
-        bh=adoBnTL3c8ascTWuPdS3qgWuYBBmCMjIas475ss7R6c=;
+        s=default; t=1577641876;
+        bh=Joys5lt38jKI6ug968+zR1DfCk3GIR5YSnutJEDdiww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvgmAt04gfbsDm9vq9BDgGcujw14s1F4dyDCoQhSKofoM7KfogZCSptWorlrxr5Cc
-         QDr8P4Z2SA4/0gdEvQ7Txw/rxa4HWRnJ5b/E77GzYcJA9s2xxC5gs0CXUDQY9CnXW+
-         OIa5+1t1VJp/zFqUeoHLNz6OxJXnGZeg0ak2dTmU=
+        b=vLqIrkwRKexP5FjWk+9wwXqnINBr+7N8wyLU/xNHF5hj90EID8xfD5VQjBLQf2ZVv
+         R5yyIXTsLEoL5JUU/SPKqlaqZaJeybmwpJlY2ySRIvCr5snfiIGuSS7GfhUFqF9cv3
+         G3YT+Roukxnopn4Bq+nqNJXcFsYwL/S8L53qKNSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
-        Candice Li <Candice.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 255/434] drm/amdgpu: disallow direct upload save restore list from gfx driver
-Date:   Sun, 29 Dec 2019 18:25:08 +0100
-Message-Id: <20191229172718.864808477@linuxfoundation.org>
+Subject: [PATCH 5.4 249/434] perf probe: Fix to show ranges of variables in functions without entry_pc
+Date:   Sun, 29 Dec 2019 18:25:02 +0100
+Message-Id: <20191229172718.427913832@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,42 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hawking Zhang <Hawking.Zhang@amd.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
+[ Upstream commit af04dd2f8ebaa8fbd46f698714acbf43da14da45 ]
 
-Direct uploading save/restore list via mmio register writes breaks the security
-policy. Instead, the driver should pass s&r list to psp.
+Fix to show ranges of variables (--range and --vars option) in functions
+which DIE has only ranges but no entry_pc attribute.
 
-For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
-twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
-The latter is not allowed.
+Without this fix:
 
-VG12 is the only exception where the driver still keeps legacy approach for S&R
-list uploading. In theory, this can be elimnated if we have valid srcntl ucode
-for VG12.
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+  	@<clear_tasks_mm_cpumask+0>
+  		(No matched variables)
 
-Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Reviewed-by: Candice Li <Candice.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+With this fix:
+
+  # perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+	@<clear_tasks_mm_cpumask+0>
+		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  (No matched variables)
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
+  Available variables at clear_tasks_mm_cpumask
+          @<clear_tasks_mm_cpumask+0>
+                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
+  [root@quaco ~]#
+
+Using it:
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
+  [root@quaco ~]#
+  [root@quaco ~]# perf trace -e probe:*cpumask
+  ^C[root@quaco ~]#
+
+Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dwarf-aux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 97cf0b536873..c9ba2ec6d038 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -2930,7 +2930,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
- 	 * And it's needed by gfxoff feature.
- 	 */
- 	if (adev->gfx.rlc.is_rlc_v2_1) {
--		gfx_v9_1_init_rlc_save_restore_list(adev);
-+		if (adev->asic_type == CHIP_VEGA12)
-+			gfx_v9_1_init_rlc_save_restore_list(adev);
- 		gfx_v9_0_enable_save_restore_machine(adev);
- 	}
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 929b7c0567f4..4b1890204e99 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -997,7 +997,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
+ 	bool first = true;
+ 	const char *name;
+ 
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1060,7 +1060,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
+ 	bool first = true;
+ 	const char *name;
+ 
+-	ret = dwarf_entrypc(sp_die, &entry);
++	ret = die_entrypc(sp_die, &entry);
+ 	if (ret)
+ 		return ret;
  
 -- 
 2.20.1
