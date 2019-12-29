@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78688C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029B8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CDC207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C740B207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642545;
-	bh=D5Qa4H1nSm2HtH/589Qc/UxvnnTvxuWd8D1wsrs9Is4=;
+	s=default; t=1577642549;
+	bh=ZLwIHzi1b5Z8dT7Nzzujfrv3RFtNodl2dfwFpq/b1Gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W+4KC9gCBiMLXHCJiuGkOs9z1UGoQd1hqK/uR5fgjNEgn5wnn36+/xmZL91xKhLcN
-	 ub6DuliY2OBL/HlcSU92HWvEPnnpbNMV6FUCa+BEtS+jAqafspe++zhLZP+sV7qhHS
-	 Sfx4kIpfP5DtAUK2Fop8+16JYmaoijjs1IgZZa0U=
+	b=Eo2x9MvqYYt2NtejZ8gFP5t7woZ+rVyLBJmP8JiscVv6zYs4hfczUWDtlcqEJgqTd
+	 kvsFUudzhXNmP1ojWpckg35M6QbxMmuDxLXpz+myaolxgoaMa6VOznVFY/n+KpwR4T
+	 pIVVj943MYODVxDe+7yN+2HXDTA5X6kwfohguk8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732785AbfL2Ry6 (ORCPT
+        id S1732749AbfL2Ryq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732819AbfL2Ryy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:54 -0500
+        id S1732729AbfL2Ryk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69566206A4;
-        Sun, 29 Dec 2019 17:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F26B320718;
+        Sun, 29 Dec 2019 17:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642093;
-        bh=D5Qa4H1nSm2HtH/589Qc/UxvnnTvxuWd8D1wsrs9Is4=;
+        s=default; t=1577642079;
+        bh=ZLwIHzi1b5Z8dT7Nzzujfrv3RFtNodl2dfwFpq/b1Gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lS9qyxs/ZLjqQM+/DCVjefEipReCZjcQNMFrsaLyEVNhjNDzX8oeV5+MCnNcWxTUp
-         3/R0+/nzptm5WvFj1qajy4WkzOtvuRM9MxRKW3fML/wD1PmQD3cejUJKmtfE3Psx48
-         ck+MnuSxVutn+9/5HChwvY6k0B4DWuZQLrgCgu58=
+        b=JBUJMBbJlDad4JEXJvyhY9JD9AxyZPwHaFseIgZ3zfWqjYIapTPjZoaQpPGZv6WTL
+         M/qP5gReYr7hbDu7bNHM1gUn/DRqeXTkJj+6Iiesl7a1KCD0HZbW4hcgEKfmaFtvlh
+         9buVHPhL7oEl4fP/cYhJWTlHQNouL66fRAFOgy+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 340/434] net: ethernet: ti: ale: clean ale tbl on init and intf restart
-Date:   Sun, 29 Dec 2019 18:26:33 +0100
-Message-Id: <20191229172724.551875854@linuxfoundation.org>
+Subject: [PATCH 5.4 334/434] s390/crypto: Fix unsigned variable compared with zero
+Date:   Sun, 29 Dec 2019 18:26:27 +0100
+Message-Id: <20191229172724.154790665@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,40 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7fe579dfb90fcdf0c7722f33c772d5f0d1bc7cb6 ]
+[ Upstream commit 0398d4ab1677f7d8cd43aac2aa29a93dfcf9e2e3 ]
 
-Clean CPSW ALE on init and intf restart (up/down) to avoid reading obsolete
-or garbage entries from ALE table.
+s390_crypto_shash_parmsize() return type is int, it
+should not be stored in a unsigned variable, which
+compared with zero.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 3c2eb6b76cab ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw_ale.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/crypto/sha_common.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 84025dcc78d5..e7c24396933e 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -779,6 +779,7 @@ void cpsw_ale_start(struct cpsw_ale *ale)
- void cpsw_ale_stop(struct cpsw_ale *ale)
- {
- 	del_timer_sync(&ale->timer);
-+	cpsw_ale_control_set(ale, 0, ALE_CLEAR, 1);
- 	cpsw_ale_control_set(ale, 0, ALE_ENABLE, 0);
- }
+diff --git a/arch/s390/crypto/sha_common.c b/arch/s390/crypto/sha_common.c
+index d39e0f079217..686fe7aa192f 100644
+--- a/arch/s390/crypto/sha_common.c
++++ b/arch/s390/crypto/sha_common.c
+@@ -74,14 +74,17 @@ int s390_sha_final(struct shash_desc *desc, u8 *out)
+ 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
+ 	unsigned int bsize = crypto_shash_blocksize(desc->tfm);
+ 	u64 bits;
+-	unsigned int n, mbl_offset;
++	unsigned int n;
++	int mbl_offset;
  
-@@ -862,6 +863,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 					ALE_UNKNOWNVLAN_FORCE_UNTAG_EGRESS;
- 	}
+ 	n = ctx->count % bsize;
+ 	bits = ctx->count * 8;
+-	mbl_offset = s390_crypto_shash_parmsize(ctx->func) / sizeof(u32);
++	mbl_offset = s390_crypto_shash_parmsize(ctx->func);
+ 	if (mbl_offset < 0)
+ 		return -EINVAL;
  
-+	cpsw_ale_control_set(ale, 0, ALE_CLEAR, 1);
- 	return ale;
- }
- 
++	mbl_offset = mbl_offset / sizeof(u32);
++
+ 	/* set total msg bit length (mbl) in CPACF parmblock */
+ 	switch (ctx->func) {
+ 	case CPACF_KLMD_SHA_1:
 -- 
 2.20.1
 
