@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A175C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8060C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C41222D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE68720722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640191;
-	bh=fvMLFG8yuBkK7nSBE8ksWzysVA3V9rPrBM/VglFIglE=;
+	s=default; t=1577640195;
+	bh=b8X487XQmcO66tp1rKOuiR6cuKxqQUfhPhSDjv/68sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pf0ZZSTQ+600pR019rfO6Fi4U7BqR6lUuxvvZ4UEpnQzjZlnjrPeyB55TxA3H4jjN
-	 8zXBIF9bgr/on2n8dIK1JS+tDnciP50zG5A57wXhIy1BD8ElpBL6AFYTwHRDUcTrax
-	 ZvfV1peNU2IX5tJWkCWrOTmes/JcyWyF906oU8wk=
+	b=aMitf4V1uL80ZJjXxOnu5hwjKlqmyuxEknshrla0H+OCY8aXgYl05ke0k4RHDVM+8
+	 1xDXro53yWNKolpQMpVojWm4D2kg78YEtzMki/SMuNNZROLbKD/Z06OU8XWnluhqtM
+	 wK+88kRYW3kVdkyKapSoji8+mYpdhXcxUHLv3pLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfL2RXK (ORCPT
+        id S1727503AbfL2RXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40326 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfL2RXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:06 -0500
+        id S1727054AbfL2RXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCEB21744;
-        Sun, 29 Dec 2019 17:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1290208E4;
+        Sun, 29 Dec 2019 17:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640185;
-        bh=fvMLFG8yuBkK7nSBE8ksWzysVA3V9rPrBM/VglFIglE=;
+        s=default; t=1577640190;
+        bh=b8X487XQmcO66tp1rKOuiR6cuKxqQUfhPhSDjv/68sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0bYr43MBr61yMUM3+p4JP0gDdHj/4y4nJdgu5SuIWyypc8BMlJCd36gRoXViKz2zj
-         9lHd5RmNOEQ6Rls+eBjRqvekykDEZ+FZH4plhLOXW6SmQ2aj59FeEhIMNwklPBkIOa
-         L9wpmkH866adrJkViosZ+sg/n0n+uWmAHriFeJLI=
+        b=C0ZQnQghEeEToLLc7onTgHsNTsj3KohYs/HizKn0Rw3zPgeZ16SSVnj/fSW2K/kCd
+         1EswF7L9l08DLQR0zQLPiK88SuTdNqYJNuTKEGatCrg2VFjUM5bKqvHfe6SaFZ2/pe
+         tkeyEK+/qza3wWO9n/Rpy2lnh+bNrAdPW7yZ+TUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/161] media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel panic
-Date:   Sun, 29 Dec 2019 18:18:22 +0100
-Message-Id: <20191229162415.602142716@linuxfoundation.org>
+Subject: [PATCH 4.14 056/161] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date:   Sun, 29 Dec 2019 18:18:24 +0100
+Message-Id: <20191229162415.920214526@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -64,34 +64,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit a37980ac5be29b83da67bf7d571c6bd9f90f8e45 ]
+[ Upstream commit 0bac73adea4df8d34048b38f6ff24dc3e73e90b6 ]
 
 v4l2-compliance fails with this message:
 
-   warn: v4l2-test-formats.cpp(717): \
-   	TRY_FMT cannot handle an invalid pixelformat.
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
    test VIDIOC_TRY_FMT: FAIL
 
-This causes the following kernel panic:
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
 
-Unable to handle kernel paging request at virtual address 56595561
-pgd = ecd80e00
-*pgd=00000000
-Internal error: Oops: 205 [#1] PREEMPT SMP ARM
-...
-CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
-	4.14.62-01715-gc8cd67f49a19 #1
-Hardware name: Generic DRA72X (Flattened Device Tree)
-task: ece44d80 task.stack: ecc6e000
-PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
-LR is at 0x8
-
-Because the driver fails to properly check the 'num_planes' values for
-proper ranges it ends up accessing out of bound data causing the kernel
-panic.
-
-Since this driver only handle single or dual plane pixel format, make
-sure the provided value does not exceed 2 planes.
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
@@ -99,22 +87,37 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index 7e611501c291..f29074c84915 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -60,6 +60,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
+ 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index a136fb14bf1a..5adafee98e4c 100644
+index 7af66fe95a54..2e8970c7e22d 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1663,7 +1663,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 			      &pix->height, MIN_H, MAX_H, H_ALIGN,
- 			      S_ALIGN);
+@@ -1702,6 +1702,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
  
--	if (!pix->num_planes)
-+	if (!pix->num_planes || pix->num_planes > 2)
- 		pix->num_planes = fmt->coplanar ? 2 : 1;
- 	else if (pix->num_planes > 1 && !fmt->coplanar)
- 		pix->num_planes = 1;
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
++
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
+ 
 -- 
 2.20.1
 
