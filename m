@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC157C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A860C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2486206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A27206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642530;
-	bh=hZhc5CmV4Tv/Xploa8M6cvpJUjCAijh9hbYQXaFjQ9s=;
+	s=default; t=1577642536;
+	bh=OMmq0E4JQP23vd/LKxRBWu2Ka5C0HriFypktdNcNkHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R4agZHtcZpOPvAF1U4EO1n5bS+XKRQWR14kzpNl4YxRIlIvtMNutdk6XJBlQtlIPC
-	 QPEHuAv0z9W8mK4MvTZ/j+H+Ca+11d8Bmidkg/GVEItknlKB6Vyuyk8rvtYcJ0vwuV
-	 BOdqu1dGmJHa/a8kR+SVEQr6y5PsCGuNp1CZxffk=
+	b=CuNLR4aY5sHpXWrAV4v76VWcNqn38gs/FHr6m/R+8cLMiG5j3bMEtS1NQ1M9E/2Xi
+	 NJfDpS+H9yhg7z+AgfD8aymG7PJCfwn9J/+kqzhfvcM/SKOfXM1TjvBQBmRq6GmkQw
+	 obLz5EhsHawD3HCNm3/hJGrf0/othliVC/DeWx7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732884AbfL2RzV (ORCPT
+        id S1732844AbfL2RzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732569AbfL2RzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:18 -0500
+        id S1732830AbfL2RzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599DF21744;
-        Sun, 29 Dec 2019 17:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6178E206A4;
+        Sun, 29 Dec 2019 17:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642117;
-        bh=hZhc5CmV4Tv/Xploa8M6cvpJUjCAijh9hbYQXaFjQ9s=;
+        s=default; t=1577642105;
+        bh=OMmq0E4JQP23vd/LKxRBWu2Ka5C0HriFypktdNcNkHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3vgA0dnkCwgJx+JwnlKWyoZzn9zLr+jj3unluMrbBGHTxARnio2V+jc8iwFNTy9I
-         v0JGSQuLaRqB+axRMwsm0yKUbaIDS2s6HlyF8lWICoPpAPJGVo5z19qi7aUrtJX3/H
-         eu4MeuWejZxVwFQGNG40Y2x9Jo6y6WReYCLze4PE=
+        b=fi4c4LQeCT+XK3AR9ezdvJEnrJTb7wEfotMVh09ceTl6c7J31Hex3KJ2cESCHaeEW
+         YRM4aT+/Evos8lArEZMFsSshAynSY5lmy163gidSBzPsgsQkIno48Y41/U/5K1Kv7w
+         whzk3/xRAcwGu977ct94/2Bl5JQz945bHx3e9C+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Bobroff <sbobroff@linux.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 349/434] drm/amdgpu: fix bad DMA from INTERRUPT_CNTL2
-Date:   Sun, 29 Dec 2019 18:26:42 +0100
-Message-Id: <20191229172725.154079749@linuxfoundation.org>
+Subject: [PATCH 5.4 344/434] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Sun, 29 Dec 2019 18:26:37 +0100
+Message-Id: <20191229172724.820528050@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,40 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 3d0e3ce52ce3eb4b9de3caf9c38dbb5a4d3e13c3 ]
+[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
-
-Fixes: 27ae10641e9c ("drm/amdgpu: add interupt handler implementation for si v3")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/si_ih.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/si_ih.c b/drivers/gpu/drm/amd/amdgpu/si_ih.c
-index 57bb5f9e08b2..88ae27a5a03d 100644
---- a/drivers/gpu/drm/amd/amdgpu/si_ih.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si_ih.c
-@@ -64,7 +64,8 @@ static int si_ih_irq_init(struct amdgpu_device *adev)
- 	u32 interrupt_cntl, ih_cntl, ih_rb_cntl;
- 
- 	si_ih_disable_interrupts(adev);
--	WREG32(INTERRUPT_CNTL2, adev->irq.ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, adev->dummy_page_addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	interrupt_cntl &= ~IH_DUMMY_RD_OVERRIDE;
- 	interrupt_cntl &= ~IH_REQ_NONSNOOP_EN;
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index fcffba5ef927..1369c5fa3087 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -272,8 +272,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -293,8 +293,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -320,8 +320,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
 -- 
 2.20.1
 
