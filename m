@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55140C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23005206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215AD206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641006;
-	bh=AFjYPlIpzkEGggRVPirwZCBV545+xTXlx6K9jP/SMws=;
+	s=default; t=1577641012;
+	bh=QnVmgWYf3XP6d13kHluYYJy18H9hA7bB6ACGz6kfiSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNEPnT+32G77bXgpJbmcch6qAanwEvy0mlvwG788YHYHbNr4Se1EEk/3fMwxCqioo
-	 Hv2ZodpDvORoQBr/QWiAHLXJgaNcgeadYDFACidXHSQDQqGAl6Uc6xZTRYk2Gpuo0K
-	 BKXnGhUjhrFSbTxx2lEh6RoQCPWy7vMwK9qn9RoA=
+	b=jWrpbRDudy9JHXheLCnozl9xe+Tj63cXLnKJINVfCgQ2zjsRKs9tBjf17ISDwUPuu
+	 01TgvFQk66UBydp6vj5VZf5p38K8m3aDNCkYF35CKz8wJCuwQsYcynijmXhrNr7iXS
+	 AmnToOk7SfEDF6QgLDbHiq+MVvt/BExwiLQBgAJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfL2Rgo (ORCPT
+        id S1730100AbfL2Rgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:36:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbfL2Rgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:36:42 -0500
+        id S1729212AbfL2Rgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:36:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BA0A208C4;
-        Sun, 29 Dec 2019 17:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEDD7206CB;
+        Sun, 29 Dec 2019 17:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641001;
-        bh=AFjYPlIpzkEGggRVPirwZCBV545+xTXlx6K9jP/SMws=;
+        s=default; t=1577640999;
+        bh=QnVmgWYf3XP6d13kHluYYJy18H9hA7bB6ACGz6kfiSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZapntQKQQDzTXLtohi+vXmif3HBc/fV8uHnhmd9JY0K1UCsK7qd3TZHBeCMPk5J4k
-         cM4J7LA00M4swlJhpa0xocSp8JqKJRPK5uNmq7ZhqEB/kDEFEpNdKv/bVqPdnTR8mb
-         R0EDeIs5y5QOvw131mrKH+6m4syxHqb3xH8pO8j4=
+        b=PDOajttRJfonNxUC2JmuFtxH0ub++M7J9lGz3esL+bCnKhQwykMGXdyKDcTK61QA8
+         oiciJ4CGeOfQA7M3NkqoD2OmM+DOb76vYe+aaza0JzTFxlr2iNQ7jHecLVBUcO0qLP
+         R5a7Dc68i23xrvi2XFPmjcC9qJh48/d9zoBIbE60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 212/219] powerpc/irq: fix stack overflow verification
-Date:   Sun, 29 Dec 2019 18:20:14 +0100
-Message-Id: <20191229162542.397199524@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 219/219] nbd: fix shutdown and recv work deadlock v2
+Date:   Sun, 29 Dec 2019 18:20:21 +0100
+Message-Id: <20191229162543.385065589@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -59,50 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Mike Christie <mchristi@redhat.com>
 
-commit 099bc4812f09155da77eeb960a983470249c9ce1 upstream.
+commit 1c05839aa973cfae8c3db964a21f9c0eef8fcc21 upstream.
 
-Before commit 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of
-the irq stack"), check_stack_overflow() was called by do_IRQ(), before
-switching to the irq stack.
-In that commit, do_IRQ() was renamed __do_irq(), and is now executing
-on the irq stack, so check_stack_overflow() has just become almost
-useless.
+This fixes a regression added with:
 
-Move check_stack_overflow() call in do_IRQ() to do the check while
-still on the current stack.
+commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4
+Author: Mike Christie <mchristi@redhat.com>
+Date:   Sun Aug 4 14:10:06 2019 -0500
 
-Fixes: 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of the irq stack")
+    nbd: fix max number of supported devs
+
+where we can deadlock during device shutdown. The problem occurs if
+the recv_work's nbd_config_put occurs after nbd_start_device_ioctl has
+returned and the userspace app has droppped its reference via closing
+the device and running nbd_release. The recv_work nbd_config_put call
+would then drop the refcount to zero and try to destroy the config which
+would try to do destroy_workqueue from the recv work.
+
+This patch just has nbd_start_device_ioctl do a flush_workqueue when it
+wakes so we know after the ioctl returns running works have exited. This
+also fixes a possible race where we could try to reuse the device while
+old recv_works are still running.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/e033aa8116ab12b7ca9a9c75189ad0741e3b9b5f.1575872340.git.christophe.leroy@c-s.fr
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/irq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/block/nbd.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -634,8 +634,6 @@ void __do_irq(struct pt_regs *regs)
- 
- 	trace_irq_entry(regs);
- 
--	check_stack_overflow();
--
- 	/*
- 	 * Query the platform PIC for the interrupt & ack it.
- 	 *
-@@ -667,6 +665,8 @@ void do_IRQ(struct pt_regs *regs)
- 	irqtp = hardirq_ctx[raw_smp_processor_id()];
- 	sirqtp = softirq_ctx[raw_smp_processor_id()];
- 
-+	check_stack_overflow();
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1247,10 +1247,10 @@ static int nbd_start_device_ioctl(struct
+ 	mutex_unlock(&nbd->config_lock);
+ 	ret = wait_event_interruptible(config->recv_wq,
+ 					 atomic_read(&config->recv_threads) == 0);
+-	if (ret) {
++	if (ret)
+ 		sock_shutdown(nbd);
+-		flush_workqueue(nbd->recv_workq);
+-	}
++	flush_workqueue(nbd->recv_workq);
 +
- 	/* Already there ? */
- 	if (unlikely(curtp == irqtp || curtp == sirqtp)) {
- 		__do_irq(regs);
+ 	mutex_lock(&nbd->config_lock);
+ 	nbd_bdev_reset(bdev);
+ 	/* user requested, ignore socket errors */
 
 
