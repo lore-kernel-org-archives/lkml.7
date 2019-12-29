@@ -2,53 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CBDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38537C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2E621D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0666420409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640584;
-	bh=0JRoVYLfjOMsUG7MhhFLuHdAGeIoBdfg1ZglyG3ftgI=;
+	s=default; t=1577640588;
+	bh=PbejQvt92Lv8EXKEFReHeQaUQoigtn6bvBp6eI1MK3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHUlPAMqyPbUk4Thqn/sIMtc28Um9dlAbPZV6gjIggR5ccrYylJ0rXOcRCn31V+gU
-	 As+E2NK8izK6vLaYFP+aHizY0cFZ5cxolDsMJzd8+wxRK4Wb8oxZH2vsf+0BpWkN5W
-	 93uX7MHDilSgziyWcEcYioZ3+NDRorzKG+98Xhsw=
+	b=VOjWSVDQH2/Uz1a2tSI8jGhFF9qyzi1ABMZqu1EM65gvUNvSZ2ll4iugTEZi1CBWj
+	 CW6u+6XanaiwX4zowHHBndXaypIGGAH6Asqr09ARYk2wStN/DpNBtEjrPPW9m2U+Xi
+	 jDQeGUsH46lL866VqTBvX28GrWsmKy6Gykg1DFVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbfL2R3m (ORCPT
+        id S1728838AbfL2R3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfL2R3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:36 -0500
+        id S1728556AbfL2R3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A014E20409;
-        Sun, 29 Dec 2019 17:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C50208E4;
+        Sun, 29 Dec 2019 17:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640576;
-        bh=0JRoVYLfjOMsUG7MhhFLuHdAGeIoBdfg1ZglyG3ftgI=;
+        s=default; t=1577640581;
+        bh=PbejQvt92Lv8EXKEFReHeQaUQoigtn6bvBp6eI1MK3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWzzLH8vTly5mJXz0cx91H8QbsuMS6h/JBN1Kw42pQY+6IKIOk5IgO3Ss3wfh4KHz
-         h18VN6u4K4VOljModYMnRLXbKYwHHllqoRENzgtVPcFo71Z/oUTRfrGoEp4rkVHWkj
-         8AgnmPdd+hpJ+EmPq3zqD7mLOgzoEWg+t2CG+o4g=
+        b=DT2Lranbkcz04C7C8M8f7I2wHIr/0/kkhdQBlMnFmq8PuFF5JFJ+wPl6i6+vvSwyn
+         vjdXwC6lTdzgFb6px3VgX0lWJfb5AVIu6Om8HPfyDk+uB+yEQL+UpHjJC5a8+SGRdQ
+         o9h0AxruyoG3h2b/ekII7F8iQFWFMWagpRuT3gpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/219] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
-Date:   Sun, 29 Dec 2019 18:17:27 +0100
-Message-Id: <20191229162514.668674131@linuxfoundation.org>
+Subject: [PATCH 4.19 055/219] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Sun, 29 Dec 2019 18:17:37 +0100
+Message-Id: <20191229162515.513584027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,61 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
+[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 
-When building cpupower with clang, the following warning appears:
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
- utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
- prior initialization of this subobject [-Winitializer-overrides]
-                 .desc                   = N_("Processor Package C2"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                              ^~~~~~
- utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
- is here
-                 .desc                   = N_("Processor Package C9"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                             ^~~~~~
- 1 warning generated.
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-This appears to be a copy and paste or merge mistake because the name
-and id fields both have PC9 in them, not PC2. Remove the second
-assignment to fix the warning.
-
-Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
-Link: https://github.com/ClangBuiltLinux/linux/issues/718
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-index f794d6bbb7e9..3e4ff4a1cdf4 100644
---- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
- 	{
- 		.name			= "PC9",
- 		.desc			= N_("Processor Package C9"),
--		.desc			= N_("Processor Package C2"),
- 		.id			= PC9,
- 		.range			= RANGE_PACKAGE,
- 		.get_count_percent	= hsw_ext_get_count_percent,
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index ac4fddfd0a43..f1807c16438d 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -503,7 +503,13 @@ urb_error:
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
+ {
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
++
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
++
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
 -- 
 2.20.1
 
