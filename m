@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126D3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D49206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D2F206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641822;
-	bh=FmcKULmvubKzpyFssXEJhR9jlH3zBABRcOFRVNTB0lc=;
+	s=default; t=1577641825;
+	bh=93LNHI38Gs19WsUFFgk3wWmM/PpjaHwbpf0hKGhQr+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJHan5yc7Mj6MrZs67zTbD0HHQjNlUjLm9fvZbZNHho+S4N61WOWd3mnewlWAsMEj
-	 hAGNGHizQOigAyVDymfIktHVaAMmIoBzoigfw1fcgrZuHvjfximEi/i/szwaS4mxJV
-	 HHpdoFUlS+coOBUoe8NyPjtgbnHxrAJEaZgKDXHc=
+	b=wWc7xbrldlGNUMRdVDzUC+0g241k7tsj8JoPXpbyfDgrn44QTbJY9ITiGbKzBq7Kh
+	 SmGJ1vts4jVMvAFLwGvowHa8uEjPXmxbap8H4UqwcpYrAOeNwN8V8ug1XFvz3NPl9t
+	 u48+noH78nqm3RA7KCPfUaxd9loFVp6DXqbHJnxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbfL2RuV (ORCPT
+        id S1731864AbfL2RuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731524AbfL2RuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:17 -0500
+        id S1731524AbfL2RuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 070AA206A4;
-        Sun, 29 Dec 2019 17:50:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA8CE24656;
+        Sun, 29 Dec 2019 17:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641816;
-        bh=FmcKULmvubKzpyFssXEJhR9jlH3zBABRcOFRVNTB0lc=;
+        s=default; t=1577641821;
+        bh=93LNHI38Gs19WsUFFgk3wWmM/PpjaHwbpf0hKGhQr+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WF8G199Urc3Uqj2yduQ8IXPdifqwE8eQ9FrcpZiV/7RIuCRR7/CgD2i9QJ31Et68O
-         tG4Y2+f6ZMYm0wFxLK3Zf8EovC9SA0LPEdMctV9IN7foxaCgMbpOawQRcetMirShfj
-         2qAPSH4J53uf6EC068qtkPRDYvv9orkzevqN1sPM=
+        b=tkp9sRR7tg7g7JI8aSvwkvc2TSx6J5dgJgfsWZJHgJ42rtIE7DJoAGRN9ykSzyJCg
+         QDBXldI11s/Q0DGGxssEFqeaoTpzCtdtCc9HlV3qNN79vVLONBnMESDzmqht0pfish
+         thbFvrnyfn1Wqmgc3oiTauyRDB445hVVarP1avJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 222/434] spi: sifive: disable clk when probe fails and remove
-Date:   Sun, 29 Dec 2019 18:24:35 +0100
-Message-Id: <20191229172716.592655591@linuxfoundation.org>
+Subject: [PATCH 5.4 224/434] pinctrl: qcom: sc7180: Add missing tile info in SDC_QDSD_PINGROUP/UFS_RESET
+Date:   Sun, 29 Dec 2019 18:24:37 +0100
+Message-Id: <20191229172716.732458305@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,76 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[ Upstream commit a725272bda77e61c1b4de85c7b0c875b2ea639b6 ]
+[ Upstream commit 81898a44f288607cb3b11a42aed6efb646891c19 ]
 
-The driver forgets to disable and unprepare clk when probe fails and
-remove.
-Add the calls to fix the problem.
+The SDC_QDSD_PINGROUP/UFS_RESET macros are missing the .tile info needed to
+calculate the right register offsets. Adding them here and also
+adjusting the offsets accordingly.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
-Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f2ae04c45b1a ("pinctrl: qcom: Add SC7180 pinctrl driver")
+
+Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Link: https://lore.kernel.org/r/20191021141507.24066-1-rnayak@codeaurora.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-sifive.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
-index 35254bdc42c4..f7c1e20432e0 100644
---- a/drivers/spi/spi-sifive.c
-+++ b/drivers/spi/spi-sifive.c
-@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	if (!cs_bits) {
- 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+index 6399c8a2bc22..d6cfad7417b1 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+@@ -77,6 +77,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = pull,			\
+ 		.drv_bit = drv,				\
+@@ -102,6 +103,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = 3,				\
+ 		.drv_bit = 0,				\
+@@ -1087,14 +1089,14 @@ static const struct msm_pingroup sc7180_groups[] = {
+ 	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
+ 	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
+ 	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
+-	[119] = UFS_RESET(ufs_reset, 0x97f000),
+-	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x97a000, 15, 0),
+-	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x97a000, 13, 6),
+-	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x97a000, 11, 3),
+-	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x97a000, 9, 0),
+-	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x97b000, 14, 6),
+-	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x97b000, 11, 3),
+-	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
++	[119] = UFS_RESET(ufs_reset, 0x7f000),
++	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x7a000, 15, 0),
++	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x7a000, 13, 6),
++	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x7a000, 11, 3),
++	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x7a000, 9, 0),
++	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x7b000, 14, 6),
++	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x7b000, 11, 3),
++	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x7b000, 9, 0),
+ };
  
- 	num_cs = ilog2(cs_bits) + 1;
- 	if (num_cs > SIFIVE_SPI_MAX_CS) {
- 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
- 		ret = -EINVAL;
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	/* Define our master */
-@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 			       dev_name(&pdev->dev), spi);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
-@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "spi_register_master failed\n");
--		goto put_master;
-+		goto disable_clk;
- 	}
- 
- 	return 0;
- 
-+disable_clk:
-+	clk_disable_unprepare(spi->clk);
- put_master:
- 	spi_master_put(master);
- 
-@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
- 
- 	/* Disable all the interrupts just in case */
- 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
-+	clk_disable_unprepare(spi->clk);
- 
- 	return 0;
- }
+ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
 -- 
 2.20.1
 
