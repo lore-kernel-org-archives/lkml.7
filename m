@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B88C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6714FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A335E206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34768206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642001;
-	bh=zGS+aqvAvxMzGQtbGteTq1Bu11ZdWToCeo4/By73nVI=;
+	s=default; t=1577642005;
+	bh=q6zEIwie9rdXxldDaGNMf4+uXkOVStGIjIVv2ZHoWX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h4frkDoxOwV8rURTt6BnIXXoSIZ6NsIvbl6bI9c4gpZJ89g7tjHCG7U36yXflNDYD
-	 z/ptKj4l1N9JEfrhmD7zf24AtTvGc9t8qYwRI72uaQo0Xt7nBeF3RylP56ZEBnNQXp
-	 E4+jEGWjKidxeF78b3qR4oUl13MYHTILFgsfE6gQ=
+	b=qqCCZ8GdBCbcsCOI/0H405tRNYXdGn3R4psK3wZQdCrSt3lhJdTgzY7MabsGhkB4Q
+	 ubCfUkhPaneUg+lIsPVZt+DM45p590Rln57wEVW683WbJ96ocxckSx0+0nTM1d5kFh
+	 oRO8NePLyU4lHzMa3Am8o8oEao/rElya2xBUqOh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732451AbfL2RxT (ORCPT
+        id S1728872AbfL2RxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40178 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732440AbfL2RxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:18 -0500
+        id S1732167AbfL2RxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D217208C4;
-        Sun, 29 Dec 2019 17:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E143206A4;
+        Sun, 29 Dec 2019 17:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641997;
-        bh=zGS+aqvAvxMzGQtbGteTq1Bu11ZdWToCeo4/By73nVI=;
+        s=default; t=1577642000;
+        bh=q6zEIwie9rdXxldDaGNMf4+uXkOVStGIjIVv2ZHoWX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/PE5+ISbURZ+dyOC5f0NA8GLSSdEf7br4qTE0NnVmdcBcBIE37i108/FltGyA1jw
-         fX1Z3gpPaET+EgzzC0HzSDSbTtwSl4YfB+KgebbVPWSxIIR7QT5ZLS1vvQPoQCcEZt
-         XSvuAd9gfXmRc7BVgpIENnEimDUPkCFk0jJ1o7go=
+        b=1AcGmaR0jM3F3epTQkZW5eD5mIt2ofV6YSdNfOzPSnQQ4bJ6cCE+fuhnCltCzexM6
+         gyergfb+BoHJkEd7KfjQLnrIf071ZK2CquoWMoF/raN6/oEecmsqHUKnV+JRsQe6wj
+         N1LmsMwGjvlm6VsSXnlSWq/qh27P6700/ZC+0b1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 299/434] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Sun, 29 Dec 2019 18:25:52 +0100
-Message-Id: <20191229172721.812455633@linuxfoundation.org>
+Subject: [PATCH 5.4 300/434] qtnfmac: fix debugfs support for multiple cards
+Date:   Sun, 29 Dec 2019 18:25:53 +0100
+Message-Id: <20191229172721.878757153@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,67 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit dd4c2260dab04f5ae7bdb79b9470e7da56f48145 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+Fix merge artifact for commit 0b68fe10b8e8 ("qtnfmac: modify debugfs
+to support multiple cards") and finally add debugfs support
+for multiple qtnfmac wireless cards.
 
-This happens due to following sequence of events:
-
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
-
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index bc19d6c16aaa..a7db4f22a077 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2634,6 +2634,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+index 8ae318b5fe54..4824be0c6231 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/pcie/pcie.c
+@@ -130,6 +130,8 @@ static int qtnf_dbg_shm_stats(struct seq_file *s, void *data)
  
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
-+
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+ int qtnf_pcie_fw_boot_done(struct qtnf_bus *bus)
+ {
++	struct qtnf_pcie_bus_priv *priv = get_bus_priv(bus);
++	char card_id[64];
+ 	int ret;
+ 
+ 	bus->fw_state = QTNF_FW_STATE_BOOT_DONE;
+@@ -137,7 +139,9 @@ int qtnf_pcie_fw_boot_done(struct qtnf_bus *bus)
+ 	if (ret) {
+ 		pr_err("failed to attach core\n");
+ 	} else {
+-		qtnf_debugfs_init(bus, DRV_NAME);
++		snprintf(card_id, sizeof(card_id), "%s:%s",
++			 DRV_NAME, pci_name(priv->pdev));
++		qtnf_debugfs_init(bus, card_id);
+ 		qtnf_debugfs_add_entry(bus, "mps", qtnf_dbg_mps_show);
+ 		qtnf_debugfs_add_entry(bus, "msi_enabled", qtnf_dbg_msi_show);
+ 		qtnf_debugfs_add_entry(bus, "shm_stats", qtnf_dbg_shm_stats);
 -- 
 2.20.1
 
