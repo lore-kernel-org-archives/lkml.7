@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99ACC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA62FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98E7207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A49222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640324;
-	bh=RH9A7c904rSK46JHScRYuMlnUBpCefcsT6rcDtKuUAA=;
+	s=default; t=1577640326;
+	bh=OpXXaUBm7C0AZrRZxjqdELJyfpbhRt8IK4+ihg+PJGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OroU8KwXJIaonIU3/OA43r6WAY356qSe8bp7kmhcKsuieOSusFaHg6WiiUNziPCUl
-	 V+7CvXJW0a/Y1TkKzuEaZUORBZ4SsnPdGenGrmgneMb/4kV/8+LQ69rTkd0soQtjJt
-	 iRMCnGdXbgQ95cWTeJq6EP1wij3sosk7O4+8VHlU=
+	b=eURhwfIRq0GykLDvCNcN6Gt4ZnillIGLvzBxWC8nHC08NLVPuYQuhlVa6iEqE6x24
+	 2gNHY+1cE5aJ36FbapWodbOjzbik9V8ipJpikmuOlU+uZyS7ehsyjhFYnZsWz40bRG
+	 zb9DhT8T2FOp0hiN7yK7l9JN6cmkMPwQ6GOWEdKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbfL2RZX (ORCPT
+        id S1727964AbfL2RZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45068 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfL2RZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:20 -0500
+        id S1727952AbfL2RZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F375E20409;
-        Sun, 29 Dec 2019 17:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D64220409;
+        Sun, 29 Dec 2019 17:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640320;
-        bh=RH9A7c904rSK46JHScRYuMlnUBpCefcsT6rcDtKuUAA=;
+        s=default; t=1577640322;
+        bh=OpXXaUBm7C0AZrRZxjqdELJyfpbhRt8IK4+ihg+PJGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ey78qp/S3TY4gYmtSHhtDO9q9mk7rcH64lpKzM3Hkf3EGjCty0lAYM5zBgywDvdMW
-         xvHmLMWJAJDDHQGtEKnEQyzch0GlHU/dk4c8xGtzmNdhY9BvoTROFLsEHAM3ZQmmiH
-         HA+MqCo4Qqlnd243OCcfQq82XOQAjBhiq/7F3r5k=
+        b=BbUFdqeyY9/zLDxCHZKnXk99F07P341JZE1dqqF3BA5X8VuN4U8QA3RfNzCgIvjvk
+         d2l/ug0Hy6xr3E4YfD4ORbXqMyLURR440mR8+K46e91K4lPpSBv/WgljIyJXFpcVAr
+         JSGoIYAcF6JFdcK9T3XEGNfuyIltzA6meC68Q6KU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Johan Hedberg <johan.hedberg@intel.com>,
+        stable@vger.kernel.org, Mike Isely <isely@pobox.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/161] Bluetooth: Fix advertising duplicated flags
-Date:   Sun, 29 Dec 2019 18:18:50 +0100
-Message-Id: <20191229162424.315268969@linuxfoundation.org>
+Subject: [PATCH 4.14 109/161] media: pvrusb2: Fix oops on tear-down when radio support is not present
+Date:   Sun, 29 Dec 2019 18:19:17 +0100
+Message-Id: <20191229162429.979155027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,58 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Mike Isely <isely@pobox.com>
 
-[ Upstream commit 6012b9346d8959194c239fd60a62dfec98d43048 ]
+[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
 
-Instances may have flags set as part of its data in which case the code
-should not attempt to add it again otherwise it can cause duplication:
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-< HCI Command: LE Set Extended Advertising Data (0x08|0x0037) plen 35
-        Handle: 0x00
-        Operation: Complete extended advertising data (0x03)
-        Fragment preference: Minimize fragmentation (0x01)
-        Data length: 0x06
-        Flags: 0x04
-          BR/EDR Not Supported
-        Flags: 0x06
-          LE General Discoverable Mode
-          BR/EDR Not Supported
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+[hverkuil: fix two checkpatch warnings]
+
+Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_request.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index b73ac149de34..759329bec399 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -1095,6 +1095,14 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index 4320bda9352d..e0413db26781 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -915,8 +915,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    (vp->dev_radio &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
+ }
  
- 	instance_flags = get_adv_instance_flags(hdev, instance);
- 
-+	/* If instance already has the flags set skip adding it once
-+	 * again.
-+	 */
-+	if (adv_instance && eir_get_data(adv_instance->adv_data,
-+					 adv_instance->adv_data_len, EIR_FLAGS,
-+					 NULL))
-+		goto skip_flags;
-+
- 	/* The Add Advertising command allows userspace to set both the general
- 	 * and limited discoverable flags.
- 	 */
-@@ -1127,6 +1135,7 @@ static u8 create_instance_adv_data(struct hci_dev *hdev, u8 instance, u8 *ptr)
- 		}
+@@ -990,7 +994,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    (!vp->dev_radio ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
  	}
- 
-+skip_flags:
- 	if (adv_instance) {
- 		memcpy(ptr, adv_instance->adv_data,
- 		       adv_instance->adv_data_len);
+ 	return 0;
 -- 
 2.20.1
 
