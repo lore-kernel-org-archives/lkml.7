@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C003C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4254CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA789206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBA9208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642047;
-	bh=slIrzwraZBUfm6H4g4lg6fDEVVhljIZDF+CRD4sxM20=;
+	s=default; t=1577642050;
+	bh=9KLXc/1txQHe667UL0Yg42BjKUbKOrs44hrd4l3sz2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rp92VgYaTqr8QxjOMeDqldtGEIo6Xvld8xbyRjI1m1XjQnkE1edmp8TlNyvV4IjoV
-	 Sj9N8tBbjA8z/8VvTgaxPHBqWk320Rs4V+X/vaLx5ncIb+Y7vhvSm0Lw2Q03x48ThP
-	 BOnX4xH3W5/sIG9WEry1r9OHb8vqoobpRYMGfnjA=
+	b=b6B+iuLAGVodSllR74tDEksu/HpJNs7S75uIzckXCphHuh3rXRRa0fc7idSNHFDkK
+	 enU1GkM331lWQs3cKgqqKIJveHTCNWrR3woyo+Wqx0KaFfqJbYRa3U9+PgBcOT87ro
+	 0gG8eioHlZl0iCJUMzCrRBJmf2XlFiQszdAG8i8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfL2RyH (ORCPT
+        id S1732035AbfL2RyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732603AbfL2RyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:04 -0500
+        id S1732618AbfL2RyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4B020748;
-        Sun, 29 Dec 2019 17:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CD2A206A4;
+        Sun, 29 Dec 2019 17:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642043;
-        bh=slIrzwraZBUfm6H4g4lg6fDEVVhljIZDF+CRD4sxM20=;
+        s=default; t=1577642046;
+        bh=9KLXc/1txQHe667UL0Yg42BjKUbKOrs44hrd4l3sz2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GHmmgHa18iGUZEx/5pYzfQM9yRKTcaIGh8jFXyWtBrANyVDk/JAel4Nz7qYttDVWA
-         vmN1ZRSLSKnI18s3Jj33+AcccvQ0h/XeT21gV3sv8NujCvopJE6iOTzAA0resxdEVW
-         Pw6aRaHEAhW8OcmeQqT2oC0iN9+pGWxr5gJAAE0o=
+        b=m2e+1vsQVJJNT4LJ00e95up5V3OwhZSP87iEkVI5iCLYoA8+LeGtxOCUWa6RPGW/K
+         t1V9cZ3xJq+Tp6WHqsJ9wtnyI1+53XgVhVE2465tsO/eWFjag0tWlNvI2bIrLdFe4A
+         eU7XXSiC0I1m29Drl0v4BvJ6BdNrxVxA3ZPITDYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 317/434] btrfs: dont prematurely free work in end_workqueue_fn()
-Date:   Sun, 29 Dec 2019 18:26:10 +0100
-Message-Id: <20191229172723.013107086@linuxfoundation.org>
+Subject: [PATCH 5.4 282/434] media: v4l2-ctrl: Lock main_hdl on operations of requests_queued.
+Date:   Sun, 29 Dec 2019 18:25:35 +0100
+Message-Id: <20191229172720.679452422@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,52 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
+[ Upstream commit df4a3e7f88e3b0d7ae46d70b9ff8e3c0ea730785 ]
 
-Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
-the work item) and then calls bio_endio(). This is another potential
-instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
+There's a race condition between the list_del_init in the
+v4l2_ctrl_request_complete, and the list_add_tail in the
+v4l2_ctrl_request_queue, since they can be called in different thread
+and the requests_queued list is not protected by a lock. This can lead
+to that the v4l2_ctrl_handler is still in the requests_queued list while
+the request_is_queued is already set to false, which would cause
+use-after-free if the v4l2_ctrl_handler is later released.
 
-In particular, the endio call may depend on other work items. For
-example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
-__btrfs_correct_data_nocsum() -> dio_read_error() ->
-submit_dio_repair_bio(), which submits a bio that is also completed
-through a end_workqueue_fn() work item. However,
-__btrfs_correct_data_nocsum() waits for the newly submitted bio to
-complete, thus it depends on another work item.
+Fix this by locking the ->lock of main_hdl (which is the owner of the
+requests_queued list) when doing list operations on the
+->requests_queued list.
 
-This example currently usually works because we use different workqueue
-helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
-However, it may deadlock with stacked filesystems and is fragile
-overall. The proper fix is to free the work item at the very end of the
-work function, so let's do that.
-
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 402b61bf345c..3895c21853cc 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1657,8 +1657,8 @@ static void end_workqueue_fn(struct btrfs_work *work)
- 	bio->bi_status = end_io_wq->status;
- 	bio->bi_private = end_io_wq->private;
- 	bio->bi_end_io = end_io_wq->end_io;
--	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
- 	bio_endio(bio);
-+	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 1d8f38824631..cd84dbbf6a89 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -3144,6 +3144,7 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
+ 	struct v4l2_ctrl_handler *prev_hdl = NULL;
+ 	struct v4l2_ctrl_ref *ref_ctrl, *ref_ctrl_prev = NULL;
+ 
++	mutex_lock(main_hdl->lock);
+ 	if (list_empty(&main_hdl->requests_queued))
+ 		goto queue;
+ 
+@@ -3175,18 +3176,22 @@ static void v4l2_ctrl_request_queue(struct media_request_object *obj)
+ queue:
+ 	list_add_tail(&hdl->requests_queued, &main_hdl->requests_queued);
+ 	hdl->request_is_queued = true;
++	mutex_unlock(main_hdl->lock);
  }
  
- static int cleaner_kthread(void *arg)
+ static void v4l2_ctrl_request_unbind(struct media_request_object *obj)
+ {
+ 	struct v4l2_ctrl_handler *hdl =
+ 		container_of(obj, struct v4l2_ctrl_handler, req_obj);
++	struct v4l2_ctrl_handler *main_hdl = obj->priv;
+ 
+ 	list_del_init(&hdl->requests);
++	mutex_lock(main_hdl->lock);
+ 	if (hdl->request_is_queued) {
+ 		list_del_init(&hdl->requests_queued);
+ 		hdl->request_is_queued = false;
+ 	}
++	mutex_unlock(main_hdl->lock);
+ }
+ 
+ static void v4l2_ctrl_request_release(struct media_request_object *obj)
+@@ -4128,9 +4133,11 @@ void v4l2_ctrl_request_complete(struct media_request *req,
+ 		v4l2_ctrl_unlock(ctrl);
+ 	}
+ 
++	mutex_lock(main_hdl->lock);
+ 	WARN_ON(!hdl->request_is_queued);
+ 	list_del_init(&hdl->requests_queued);
+ 	hdl->request_is_queued = false;
++	mutex_unlock(main_hdl->lock);
+ 	media_request_object_complete(obj);
+ 	media_request_object_put(obj);
+ }
 -- 
 2.20.1
 
