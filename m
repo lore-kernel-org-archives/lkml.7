@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7136C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A71CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9CF222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2F320718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641953;
-	bh=aBLMQvqfeX9Ku135nd6I6KGUo7AhcPg0IJ8BkJbpUx4=;
+	s=default; t=1577641957;
+	bh=eQgGoSK8L92lrFgEVaHF+VYPl7BHmvS6Maj48KdwIjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=09J2iftWnhRT+OhaMkwOLK5zu+x9hQaOt4Nmuzx/esblBAEhvS8NYYXJf7A/k1/PX
-	 ot2tRitLuaJc5TtwMYD2BamWqyNy0HEOLnk1WmDo5Q4NithFJ/zpDbhukEBIm9BZdX
-	 qEEqJTzSRnwFpTntu8fwE5kYgU4mSIQuxgB9Gd7s=
+	b=TqXGYtLSwhrbFyOMyQnEWK0gm/e7lR7klhPTs+Lodze7Jh7KT6AZvOUQ6vlVc35cV
+	 tuQPP/keqZ1LnAHbebXWBh4Supem4YCcT+l3ViSteY/9nro3llyeP2EsrZ71+h0JF7
+	 e8vi9YhxTI1alG/JIFYUDfAn6iiRkqcN7I7/ABrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbfL2Rwc (ORCPT
+        id S1732307AbfL2Rwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:52:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:52:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbfL2RwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:52:25 -0500
+        id S1732286AbfL2Rwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:52:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99CC2206DB;
-        Sun, 29 Dec 2019 17:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78997206DB;
+        Sun, 29 Dec 2019 17:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641945;
-        bh=aBLMQvqfeX9Ku135nd6I6KGUo7AhcPg0IJ8BkJbpUx4=;
+        s=default; t=1577641949;
+        bh=eQgGoSK8L92lrFgEVaHF+VYPl7BHmvS6Maj48KdwIjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBNIeE31O3GpVKe5wK3HwBkwDlkOcIdBDnNO0xGBaq7IMbQ5jgUKDtxufsrxYi69U
-         P/ViZaqtfUKEmMLKrc1XZnI8Q4O/eQMqY9nV8pTWDsfEws2Q6U9vyr3O3rRqq3s9pT
-         9tg0P9Sg7d4FDoARbfWI05bT+6ggVfWdOR3ZCWrY=
+        b=jpkz+sLVu89PSE4OeV25IJUybAQf02bdR/KKQTP1mtlS1kC6kuY5ta4KWiiQUA8BJ
+         1BGcBWJkb+3RbB31jQHUKOytGbTClbQcAUL4HhzI7p2k4GWUMVlpoOY4Stf5hAQwqx
+         6rmchgVbh3DjaAR5obLHugrECH2+zv4orZ3LvBjM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 275/434] selftests: net: Fix printf format warnings on arm
-Date:   Sun, 29 Dec 2019 18:25:28 +0100
-Message-Id: <20191229172720.208609637@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 277/434] soundwire: intel: fix PDI/stream mapping for Bulk
+Date:   Sun, 29 Dec 2019 18:25:30 +0100
+Message-Id: <20191229172720.342150950@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,72 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 670cd6849ea36ea4df2f2941cf4717dff8755abe ]
+[ Upstream commit c134f914e9f55b7817e2bae625ec0e5f1379f7cd ]
 
-Fix printf format warnings on arm (and other 32bit arch).
+The previous formula is incorrect for PDI0/1, the mapping is not
+linear but has a discontinuity between PDI1 and PDI2.
 
- - udpgso.c and udpgso_bench_tx use %lu for size_t but it
-   should be unsigned long long on 32bit arch.
+This change has no effect on PCM PDIs (same mapping).
 
- - so_txtime.c uses %ld for int64_t, but it should be
-   unsigned long long on 32bit arch.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Willem de Bruijn <willemb@google.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191022232948.17156-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/so_txtime.c       | 4 ++--
- tools/testing/selftests/net/udpgso.c          | 3 ++-
- tools/testing/selftests/net/udpgso_bench_tx.c | 3 ++-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/soundwire/intel.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
-index 53f598f06647..34df4c8882af 100644
---- a/tools/testing/selftests/net/so_txtime.c
-+++ b/tools/testing/selftests/net/so_txtime.c
-@@ -105,8 +105,8 @@ static void do_recv_one(int fdr, struct timed_send *ts)
- 	tstop = (gettime_ns() - glob_tstart) / 1000;
- 	texpect = ts->delay_us >= 0 ? ts->delay_us : 0;
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 13c54eac0cc3..d1839707128a 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -479,7 +479,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	int pdi_conf = 0;
  
--	fprintf(stderr, "payload:%c delay:%ld expected:%ld (us)\n",
--			rbuf[0], tstop, texpect);
-+	fprintf(stderr, "payload:%c delay:%lld expected:%lld (us)\n",
-+			rbuf[0], (long long)tstop, (long long)texpect);
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
- 	if (rbuf[0] != ts->data)
- 		error(1, 0, "payload mismatch. expected %c", ts->data);
-diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftests/net/udpgso.c
-index 614b31aad168..c66da6ffd6d8 100644
---- a/tools/testing/selftests/net/udpgso.c
-+++ b/tools/testing/selftests/net/udpgso.c
-@@ -440,7 +440,8 @@ static bool __send_one(int fd, struct msghdr *msg, int flags)
- 	if (ret == -1)
- 		error(1, errno, "sendmsg");
- 	if (ret != msg->msg_iov->iov_len)
--		error(1, 0, "sendto: %d != %lu", ret, msg->msg_iov->iov_len);
-+		error(1, 0, "sendto: %d != %llu", ret,
-+			(unsigned long long)msg->msg_iov->iov_len);
- 	if (msg->msg_flags)
- 		error(1, 0, "sendmsg: return flags 0x%x\n", msg->msg_flags);
+ 	/*
+ 	 * Program stream parameters to stream SHIM register
+@@ -508,7 +511,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
+ 	unsigned int link_id = sdw->instance;
+ 	unsigned int conf;
  
-diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c b/tools/testing/selftests/net/udpgso_bench_tx.c
-index ada99496634a..17512a43885e 100644
---- a/tools/testing/selftests/net/udpgso_bench_tx.c
-+++ b/tools/testing/selftests/net/udpgso_bench_tx.c
-@@ -405,7 +405,8 @@ static int send_udp_segment(int fd, char *data)
- 	if (ret == -1)
- 		error(1, errno, "sendmsg");
- 	if (ret != iov.iov_len)
--		error(1, 0, "sendmsg: %u != %lu\n", ret, iov.iov_len);
-+		error(1, 0, "sendmsg: %u != %llu\n", ret,
-+			(unsigned long long)iov.iov_len);
+-	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
++	/* the Bulk and PCM streams are not contiguous */
++	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
++	if (pdi->num >= 2)
++		pdi->intel_alh_id += 2;
  
- 	return 1;
- }
+ 	/* Program Stream config ALH register */
+ 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
 -- 
 2.20.1
 
