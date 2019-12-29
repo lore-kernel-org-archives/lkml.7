@@ -4,77 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E28C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 12:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0FAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 12:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC736206E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 12:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDF3207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 12:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PnbjPwcm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NFSeelGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfL2MMR (ORCPT
+        id S1726543AbfL2MOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 07:12:17 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36099 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfL2MMQ (ORCPT
+        Sun, 29 Dec 2019 07:14:09 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:35571 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfL2MOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 07:12:16 -0500
-Received: by mail-qt1-f194.google.com with SMTP id q20so27958752qtp.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 04:12:16 -0800 (PST)
+        Sun, 29 Dec 2019 07:14:08 -0500
+Received: by mail-qv1-f67.google.com with SMTP id u10so11467535qvi.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 04:14:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=nGWz5AM5inYzBgxg6kj3I2Blj1fXV3aW/S3gsQEojU8=;
-        b=PnbjPwcmu+f1M4IjS4OVgxrtUhLIU0Ogt50LaWkc0w8nx6Wn6CElPIGmfX+ZpmHrjo
-         UuINDbyroy5Tzj6QxXq2Gtg1lORMAbptUSIHwoRjAEM91mNY7UIG/k38aIyz4YKtKEFU
-         y0mQAfT8kU9ZApI5aeUXY043sZTFCH0tuRn4huEH9SsHSReX+SWuEJItypspy4rgaKto
-         CSymFzSPsEJe59T5Gazd1umjasT4MHbmN4gqyzKY3c6SNRMWgadQN9vlSg7eZCyarPLy
-         97jwANzdunhqmPktKAQRvDTNG2ikJuL6ZSB5VbqnpTjLIAtq+c8s0v+NGZtKXXgy6Li4
-         OwTA==
+        bh=3NS0YuGMiOiXrvIw4OA/SAcuSinUcRqRdHd2DvYzoZU=;
+        b=NFSeelGFUGbKCnY4MqSk5IrHuOJpyf1wo+pWVTHkHUds2ORXCZQ9ZdmXN9EihMp0G5
+         lHRNAdHN6dIOmbMgTi4yyntauiOE27BDDXpJKSUPL2oU5yT979aRlmrQE0dZZniw3jiJ
+         pSPph8NB+DQM24IoCts8J/eQ75Dsg0nBWkwQ+LdHJE2UDadceeR6HyFyJ5eEm/8uUVoZ
+         m9ebwScQ2dmn7eZkiD72WzW2SY0LgiDseNBOgNc3498eMD5CXqkFc0N9fgkZlC8KrXlX
+         c9PB701VLPkZaRHo2CNIXoSRKwJB/SoveGPMHsShioMhaty7FQFVOQh319uxfaLWLbTg
+         CAvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nGWz5AM5inYzBgxg6kj3I2Blj1fXV3aW/S3gsQEojU8=;
-        b=QpdPmj2gkVIea/MSzdNsPX/XEhYLIjkxv3jPN3g7GIElZ4uEWbhWurkuFMMSy/g9/P
-         PUCXfDIOqbh1IGWe+f0wPAn9YW1kwPaW3sgsCXkBJETfu88OdIqHULBNRkwSLcyJbDWP
-         5tIDdTUaA+dqrh4UKF9te/Sq0ggUxZ1E5rFqiQmY0ovbPlLwiDlDnolis8kkyN8PecaH
-         fK+TEtePaxv4DmzCsoZSfAbohtDdumZ7jgu4YDGBViAw5xJbx7SmId4nxXpXy8O6GMAR
-         ec2DfapAo6rF5wfH2I1/DUO07mmOzUdn2movwh55/rnATYXSUsibrFm8mUF+ZjDl+vrp
-         Y/3A==
-X-Gm-Message-State: APjAAAUikF/AzFoaJA2fa2+YUu80JETHVnaehi28W/AZBquTObmQwsjW
-        YJ68+TyWMmXoiHrhHkZIFTMxrVrLiRAuY9K43DAA3w==
-X-Google-Smtp-Source: APXvYqxAQYwRbGFcIWe8dI09XkAUHi1OK4gNXwmk+KqpZWY63Vya7Kxw2RZ71yJc4mkiQLhG6IL216Lw+0sekhX+yko=
-X-Received: by 2002:ac8:6784:: with SMTP id b4mr43162165qtp.27.1577621535860;
- Sun, 29 Dec 2019 04:12:15 -0800 (PST)
+        bh=3NS0YuGMiOiXrvIw4OA/SAcuSinUcRqRdHd2DvYzoZU=;
+        b=Yd83D7JYpBXhmQMRk4MyfDdePjN+AkWw5Qrd9rAGQQJmBNFoFimclMHwJXWqHwGsA3
+         QSPyVqy1MNUKfgZyzUFnuZhAKzZcE0iXII7NwKdBu3d0RMb02YZI1EGRwYjUBqj1lUhe
+         uDrCEO4mvYTwC/rJbsiHihAIx64sH8hGlpurSy9uh1JWGTg9+IAczPYLOenPsOyH31xh
+         sgy9iCbF3uL44MM60JRSzIqCqyVNgQbLk1LIHM+ZtnfmUTiy6BdwKi1PSfREZv7qHcn9
+         zmCYyGMHtNJ/cayVkyxvfRgk5EiklM4hrIZaHUIHUr0rZOTgv4/L+B3rr//RcylWxUa8
+         lufw==
+X-Gm-Message-State: APjAAAVEssHRZ59tzZsRSW1dT2PysRlaJGeszdC4rT4AExau5KYydP5t
+        8KUK8hqS950RRw1pgUnIdIrOTIvnkbZSl5Vo+yH04w==
+X-Google-Smtp-Source: APXvYqzVMlGsS4IKEu6R5VeMGANUaqglI5oQ/UGu2nc8eNJ1v9AswUjiKA/FTrq6aO/sNZpWNbxd8BhAN0oCAaC6LsY=
+X-Received: by 2002:ad4:55e8:: with SMTP id bu8mr48113914qvb.61.1577621647544;
+ Sun, 29 Dec 2019 04:14:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191229104325.10132-1-tiny.windzz@gmail.com> <20191229104325.10132-3-tiny.windzz@gmail.com>
-In-Reply-To: <20191229104325.10132-3-tiny.windzz@gmail.com>
+References: <20191210203149.7115-1-tiny.windzz@gmail.com> <CAEExFWvd1Md-guT=wgZ1-G69r71KBn64k2yGh0Vqjh_-D8yGuQ@mail.gmail.com>
+In-Reply-To: <CAEExFWvd1Md-guT=wgZ1-G69r71KBn64k2yGh0Vqjh_-D8yGuQ@mail.gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sun, 29 Dec 2019 13:12:05 +0100
-Message-ID: <CAMpxmJWMjae8vuNA7feLWp1aXte4a3_RTA+C1PoDBkx3EPpO0g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drivers: platform: provide devm_platform_ioremap_resource_nocache()
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
+Date:   Sun, 29 Dec 2019 13:13:56 +0100
+Message-ID: <CAMpxmJUQjyCeNvczx_UKNL6PMnNWAPsY5ptCdz24YLXH_63nRg@mail.gmail.com>
+Subject: Re: [PATCH] drivers: add devm_platform_ioremap_resource_byname() helper
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        suzuki.poulose@arm.com, saravanak@google.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        dan.j.williams@intel.com, Joe Perches <joe@perches.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, mans@mansr.com,
-        Thomas Gleixner <tglx@linutronix.de>, hdegoede@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        ulf.hansson@linaro.org, ztuowen@gmail.com,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        mans@mansr.com, treding@nvidia.com, suzuki.poulose@arm.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,84 +80,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-niedz., 29 gru 2019 o 11:43 Yangtao Li <tiny.windzz@gmail.com> napisa=C5=82=
-(a):
+sob., 28 gru 2019 o 18:39 Frank Lee <tiny.windzz@gmail.com> napisa=C5=82(a)=
+:
 >
-> Provide a nocache variant of devm_platform_ioremap_resource().
+> ping...
 >
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  .../driver-api/driver-model/devres.rst        |  1 +
->  drivers/base/platform.c                       | 19 +++++++++++++++++++
->  include/linux/platform_device.h               |  3 +++
->  3 files changed, 23 insertions(+)
->
-> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documenta=
-tion/driver-api/driver-model/devres.rst
-> index af1b1b9e3a17..3b79a3207490 100644
-> --- a/Documentation/driver-api/driver-model/devres.rst
-> +++ b/Documentation/driver-api/driver-model/devres.rst
-> @@ -320,6 +320,7 @@ IOMAP
->    devm_ioremap_resource_nocache()
->    devm_ioremap_resource_wc()
->    devm_platform_ioremap_resource() : calls devm_ioremap_resource() for p=
-latform device
-> +  devm_platform_ioremap_resource_nocache()
->    devm_platform_ioremap_resource_wc()
->    devm_platform_ioremap_resource_byname()
->    devm_iounmap()
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index cf6b6b722e5c..80f420b9b4d7 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -79,6 +79,25 @@ void __iomem *devm_platform_ioremap_resource(struct pl=
-atform_device *pdev,
->  }
->  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
->
-> +/**
-> + * devm_platform_ioremap_resource_nocache - nocache variant of
-> + *                                         devm_platform_ioremap_resourc=
+> On Wed, Dec 11, 2019 at 4:31 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
+> >
+> > There are currently 300+ instances of using platform_get_resource_bynam=
 e()
-> + *
-> + * @pdev: platform device to use both for memory resource lookup as well=
- as
-> + *        resource management
-> + * @index: resource index
-> + */
-> +void __iomem *
-> +devm_platform_ioremap_resource_nocache(struct platform_device *pdev,
-> +                                      unsigned int index)
-> +{
-> +       struct resource *res;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, index);
-> +       return devm_ioremap_resource_nocache(&pdev->dev, res);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_nocache);
-> +
->  /**
->   * devm_platform_ioremap_resource_wc - write-combined variant of
->   *                                     devm_platform_ioremap_resource()
-> diff --git a/include/linux/platform_device.h b/include/linux/platform_dev=
-ice.h
-> index 276a03c24691..b803e670b1c5 100644
-> --- a/include/linux/platform_device.h
-> +++ b/include/linux/platform_device.h
-> @@ -58,6 +58,9 @@ extern void __iomem *
->  devm_platform_ioremap_resource(struct platform_device *pdev,
->                                unsigned int index);
->  extern void __iomem *
-> +devm_platform_ioremap_resource_nocache(struct platform_device *pdev,
-> +                                      unsigned int index);
-> +extern void __iomem *
->  devm_platform_ioremap_resource_wc(struct platform_device *pdev,
->                                   unsigned int index);
->  extern void __iomem *
-> --
-> 2.17.1
->
+> > and devm_ioremap_resource() together in the kernel tree.
+> >
+> > This patch wraps these two calls in a single helper.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  drivers/base/platform.c         | 22 +++++++++++++++++++++-
+> >  include/linux/platform_device.h |  3 +++
+> >  2 files changed, 24 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index b6c6c7d97d5b..9c4f5e229600 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -60,6 +60,7 @@ struct resource *platform_get_resource(struct platfor=
+m_device *dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(platform_get_resource);
+> >
+> > +#ifdef CONFIG_HAS_IOMEM
+> >  /**
+> >   * devm_platform_ioremap_resource - call devm_ioremap_resource() for a=
+ platform
+> >   *                                 device
+> > @@ -68,7 +69,7 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+> >   *        resource management
+> >   * @index: resource index
+> >   */
+> > -#ifdef CONFIG_HAS_IOMEM
+> > +
+> >  void __iomem *devm_platform_ioremap_resource(struct platform_device *p=
+dev,
+> >                                              unsigned int index)
+> >  {
+> > @@ -78,6 +79,25 @@ void __iomem *devm_platform_ioremap_resource(struct =
+platform_device *pdev,
+> >         return devm_ioremap_resource(&pdev->dev, res);
+> >  }
+> >  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+> > +
+> > +/**
+> > + * devm_platform_ioremap_resource_byname - call devm_ioremap_resource(=
+) for
+> > + *                                        a platform device
+> > + *
+> > + * @pdev: platform device to use both for memory resource lookup as we=
+ll as
+> > + *        resource managemend
+> > + * @name: resource name
+> > + */
+> > +void __iomem *
+> > +devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> > +                                     const char *name)
+> > +{
+> > +       struct resource *res;
+> > +
+> > +       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, name=
+);
+> > +       return devm_ioremap_resource(&pdev->dev, res);
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+> >  #endif /* CONFIG_HAS_IOMEM */
+> >
+> >  static int __platform_get_irq(struct platform_device *dev, unsigned in=
+t num)
+> > diff --git a/include/linux/platform_device.h b/include/linux/platform_d=
+evice.h
+> > index 1b5cec067533..24ff5da9c532 100644
+> > --- a/include/linux/platform_device.h
+> > +++ b/include/linux/platform_device.h
+> > @@ -63,6 +63,9 @@ extern int platform_irq_count(struct platform_device =
+*);
+> >  extern struct resource *platform_get_resource_byname(struct platform_d=
+evice *,
+> >                                                      unsigned int,
+> >                                                      const char *);
+> > +extern void __iomem *
+> > +devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> > +                                     const char *name);
+> >  extern int platform_get_irq_byname(struct platform_device *, const cha=
+r *);
+> >  extern int platform_add_devices(struct platform_device **, int);
+> >
+> > --
+> > 2.17.1
+> >
 
-Please see my response to patch 1/2.
+This exact routine has existed upstream since commit c9c8641d3ebd
+("drivers: provide devm_platform_ioremap_resource_byname()"). What
+version are you working on?
 
 Bart
