@@ -2,53 +2,50 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC51C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2FBC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304B1206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394B6206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643191;
-	bh=YsgsMgpCNoPlVFfGGXF3ihX+a0nBK/I3m6tOfWc9AD8=;
+	s=default; t=1577643197;
+	bh=LwtmkIgA39GSvV8zVmLxiAG9nBKUFUEetSRTfTnyHRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWqIU2AyXdxI9/WSxF/QtBh9YIyn4OW07tZ5QcjSb+bTeXbC9KBcF/4GmOgaihfNs
-	 93V+W6jUizkaLcj15jW02cy6xv+Ucv1aar+6EpNnS1VrZtlyQrR8mVEaxSp9VSsgsc
-	 v9CuLsgQuaaGugM/1PchKSY3gXQ/9mTr80cp9usE=
+	b=Kd4wO3QC+14Ex4CRheDXRdohLW7NfciiTLofqbioNtVXn6FEWRcRl3LdH+VGICY/P
+	 O7L5fXmXP2ArtegX0t1QshVjyKR1hnom8cLLGHvTu9VJejU8/AzOIYYXMhkglL/eNR
+	 MZfAQkniV0B2/mqsshbrtXjPoKt+C6+vdYItZv3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfL2R2n (ORCPT
+        id S1732327AbfL2SNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:28:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfL2R2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:38 -0500
+        id S1728611AbfL2R2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E28C207FF;
-        Sun, 29 Dec 2019 17:28:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6632720409;
+        Sun, 29 Dec 2019 17:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640518;
-        bh=YsgsMgpCNoPlVFfGGXF3ihX+a0nBK/I3m6tOfWc9AD8=;
+        s=default; t=1577640512;
+        bh=LwtmkIgA39GSvV8zVmLxiAG9nBKUFUEetSRTfTnyHRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8Da4b76irEaR+m+SLOF8f+ut97k5b0xOKv2IvalEsl3RCJTVEELWNmikqTZtB+S1
-         5N4ZKi9wR6XrBFLI3ni/G4Gq1yOowzFMelkmJqs4tsE+iecd5XBzC7VLHZlvRsh8So
-         EaPjd+vEFs9G5eeM3YlSIKk4Z1Rxhqcz/C8Yt9Cc=
+        b=IoE0BInqDPdmxT0O8Lg6IQAYIid3dNbEYG7LiAfrEMAWl0/XcpKb1f1HlFGIx7QN1
+         SxqAtM1waPPfVw5TbegrIbEbTkST+SAPR7KHqyG7ligkHqsIVWXFYgwKB1oycikiEy
+         Jsi6dSqnLUl5sarOqsxxN1SDPn5ZE0Pp0u2eUiCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/219] drm/panel: Add missing drm_panel_init() in panel drivers
-Date:   Sun, 29 Dec 2019 18:17:10 +0100
-Message-Id: <20191229162512.889829162@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 026/219] ALSA: hda/ca0132 - Fix work handling in delayed HP detection
+Date:   Sun, 29 Dec 2019 18:17:08 +0100
+Message-Id: <20191229162512.737476923@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,49 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 65abbda8ed7ca48c8807d6b04a77431b438fa659 ]
+commit 42fb6b1d41eb5905d77c06cad2e87b70289bdb76 upstream.
 
-Panels must be initialised with drm_panel_init(). Add the missing
-function call in the panel-raspberrypi-touchscreen.c and
-panel-sitronix-st7789v.c drivers.
+CA0132 has the delayed HP jack detection code that is invoked from the
+unsol handler, but it does a few weird things: it contains the cancel
+of a work inside the work handler, and yet it misses the cancel-sync
+call at (runtime-)suspend.  This patch addresses those issues.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823193245.23876-2-laurent.pinchart@ideasonboard.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 15c2b3cc09a3 ("ALSA: hda/ca0132 - Fix possible workqueue stall")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191213085111.22855-4-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 +
- drivers/gpu/drm/panel/panel-sitronix-st7789v.c        | 1 +
- 2 files changed, 2 insertions(+)
+ sound/pci/hda/patch_ca0132.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 9a2cb8aeab3a..aab6a70ece7f 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -427,6 +427,7 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 		return PTR_ERR(ts->dsi);
- 	}
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -6773,11 +6773,10 @@ static void hp_callback(struct hda_codec
+ 	/* Delay enabling the HP amp, to let the mic-detection
+ 	 * state machine run.
+ 	 */
+-	cancel_delayed_work(&spec->unsol_hp_work);
+-	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
+ 	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
+ 	if (tbl)
+ 		tbl->block_report = 1;
++	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
+ }
  
-+	drm_panel_init(&ts->base);
- 	ts->base.dev = dev;
- 	ts->base.funcs = &rpi_touchscreen_funcs;
+ static void amic_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
+@@ -7411,12 +7410,25 @@ static void ca0132_reboot_notify(struct
+ 	codec->patch_ops.free(codec);
+ }
  
-diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-index 74284e5afc5d..89fa17877b33 100644
---- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-+++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-@@ -380,6 +380,7 @@ static int st7789v_probe(struct spi_device *spi)
- 	spi_set_drvdata(spi, ctx);
- 	ctx->spi = spi;
++#ifdef CONFIG_PM
++static int ca0132_suspend(struct hda_codec *codec)
++{
++	struct ca0132_spec *spec = codec->spec;
++
++	cancel_delayed_work_sync(&spec->unsol_hp_work);
++	return 0;
++}
++#endif
++
+ static const struct hda_codec_ops ca0132_patch_ops = {
+ 	.build_controls = ca0132_build_controls,
+ 	.build_pcms = ca0132_build_pcms,
+ 	.init = ca0132_init,
+ 	.free = ca0132_free,
+ 	.unsol_event = snd_hda_jack_unsol_event,
++#ifdef CONFIG_PM
++	.suspend = ca0132_suspend,
++#endif
+ 	.reboot_notify = ca0132_reboot_notify,
+ };
  
-+	drm_panel_init(&ctx->panel);
- 	ctx->panel.dev = &spi->dev;
- 	ctx->panel.funcs = &st7789v_drm_funcs;
- 
--- 
-2.20.1
-
 
 
