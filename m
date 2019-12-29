@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D9FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBAAC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23714207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BD3207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643068;
-	bh=vhuP7OMP4iiJ6M6gVjJF7OPbuLtw1t3tCsxa6xcODGQ=;
+	s=default; t=1577643072;
+	bh=5d3QfDrXwgi9KKugVFag//9IUJqnFiwLYU7+XprSpko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R8BxnWY16u3EuvjAg4k5RLOFbfmZKRSWwQGF7pcyvAjO7BwHzZ1K+2dFWAdedZHsC
-	 l0e9CvfBGI7dSIsp7N1S1Pti9vWyYHP+Tc9wnfZQQM/4I3oi98y58CDtQ++ZQ09S8g
-	 lExzzOympQ22baIZoglfBi7IPJK/7xv2AJDOL+cg=
+	b=ufbcRWSaDqQy8O/FnWwh9SIWkjfB0M81UQqgVk13Cd1HhGii3Auu8tI2ZqAh1Q/up
+	 6AEE4nb94ais1/vgmtIn2PxcRhh7Q5wiQ6utP1Caolb8eZ4QjdbJVgAL6qH//rTii+
+	 G2C+ZRXZucCGprYVcN3cgTK2ZBdM6Ci6RxVWaZ8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbfL2Rnf (ORCPT
+        id S1730489AbfL2Rna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50892 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730484AbfL2Rn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:29 -0500
+        id S1726741AbfL2RnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B02206A4;
-        Sun, 29 Dec 2019 17:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 019AA208C4;
+        Sun, 29 Dec 2019 17:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641408;
-        bh=vhuP7OMP4iiJ6M6gVjJF7OPbuLtw1t3tCsxa6xcODGQ=;
+        s=default; t=1577641401;
+        bh=5d3QfDrXwgi9KKugVFag//9IUJqnFiwLYU7+XprSpko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWhRRpPEPRhtMWP7yyz0Ivbwy0wu0EIc5+dgrdz8olfpkD8HmdxuQQfI0lhUZzzF7
-         77nABhA+CYP0Lff9w1hPzjp+06mBPfyx3UH1y3PhrBEUBmqpn5mp1BPVFvVJrYNZix
-         oZkr7tEr51SpZIdqahxIHic6C5TZ+BEfx4Lk3iUU=
+        b=ew46ADavzu8m4Yi0GhPw+ipvu2PKfZntcMZLmDQmOUcOhYYRgLih+MFq/Ad2JVnD8
+         GsLwdDf1C/9fPJRnmpoaeN436zdy2Vm8ujiDCHcW7c6BtAJHyXnIJ0abHP+casv5cT
+         TtV9lX0/TNhkP6/q3AnUUWCaR4xbdvc1u7X96UZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jaehyun Chung <jaehyun.chung@amd.com>,
-        Alvin Lee <Alvin.Lee2@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
         Alex Deucher <alexander.deucher@amd.com>,
+        Andres Rodriguez <andresx7@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/434] drm/amd/display: OTC underflow fix
-Date:   Sun, 29 Dec 2019 18:21:45 +0100
-Message-Id: <20191229172705.382904435@linuxfoundation.org>
+Subject: [PATCH 5.4 049/434] drm: Use EOPNOTSUPP, not ENOTSUPP
+Date:   Sun, 29 Dec 2019 18:21:42 +0100
+Message-Id: <20191229172705.220789182@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,40 +67,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaehyun Chung <jaehyun.chung@amd.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 785908cf19c9eb4803f6bf9c0a7447dc3661d5c3 ]
+[ Upstream commit c7581a414d28413c1dd6d116d44859b5a52e0950 ]
 
-[Why] Underflow occurs on some display setups(repro'd on 3x4K HDR) on boot,
-mode set, and hot-plugs with. Underflow occurs because mem clk
-is not set high after disabling pstate switching. This behaviour occurs
-because some calculations assumed displays were synchronized.
+- it's what we recommend in our docs:
 
-[How] Add a condition to check if timing sync is disabled so that
-synchronized vblank can be set to false.
+https://dri.freedesktop.org/docs/drm/gpu/drm-uapi.html#recommended-ioctl-return-values
 
-Signed-off-by: Jaehyun Chung <jaehyun.chung@amd.com>
-Reviewed-by: Alvin Lee <Alvin.Lee2@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+- it's the overwhelmingly used error code for "operation not
+  supported", at least in drm core (slightly less so in drivers):
+
+$ git grep EOPNOTSUPP -- drivers/gpu/drm/*c | wc -l
+83
+$ git grep ENOTSUPP -- drivers/gpu/drm/*c | wc -l
+5
+
+- include/linux/errno.h makes it fairly clear that these are for nfsv3
+  (plus they also have error codes above 512, which is the block with
+  some special behaviour ...)
+
+/* Defined for the NFSv3 protocol */
+
+If the above isn't reflecting current practice, then I guess we should
+at least update the docs.
+
+Noralf commented:
+
+Ben Hutchings made this comment[1] in a thread about use of ENOTSUPP in
+drivers:
+
+  glibc's strerror() returns these strings for ENOTSUPP and EOPNOTSUPP
+  respectively:
+
+  "Unknown error 524"
+  "Operation not supported"
+
+So at least for errors returned to userspace EOPNOTSUPP makes sense.
+
+José asked:
+
+> Hopefully this will not break any userspace
+
+None of the functions in drm_edid.c affected by this reach userspace,
+it's all driver internal.
+
+Same for the mipi function, that error code should be handled by
+drivers. Drivers are supposed to remap "the hw is on fire" to EIO when
+reporting up to userspace, but I think if a driver sees this it would
+be a driver bug.
+v2: Augment commit message with comments from Noralf and José
+
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Acked-by: Noralf Trønnes <noralf@tronnes.org>
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Andres Rodriguez <andresx7@gmail.com>
+Cc: Noralf Trønnes <noralf@tronnes.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190904143942.31756-1-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_edid.c     | 6 +++---
+ drivers/gpu/drm/drm_mipi_dbi.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 6b2f2f1a1c9c..3980c7b78259 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -1765,7 +1765,7 @@ int dcn20_populate_dml_pipes_from_context(
- 			pipe_cnt = i;
- 			continue;
- 		}
--		if (!resource_are_streams_timing_synchronizable(
-+		if (dc->debug.disable_timing_sync || !resource_are_streams_timing_synchronizable(
- 				res_ctx->pipe_ctx[pipe_cnt].stream,
- 				res_ctx->pipe_ctx[i].stream)) {
- 			synchronized_vblank = false;
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 6b0177112e18..3f50b8865db4 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -3722,7 +3722,7 @@ cea_db_offsets(const u8 *cea, int *start, int *end)
+ 		if (*end < 4 || *end > 127)
+ 			return -ERANGE;
+ 	} else {
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	return 0;
+@@ -4191,7 +4191,7 @@ int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads)
+ 
+ 	if (cea_revision(cea) < 3) {
+ 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	if (cea_db_offsets(cea, &start, &end)) {
+@@ -4252,7 +4252,7 @@ int drm_edid_to_speaker_allocation(struct edid *edid, u8 **sadb)
+ 
+ 	if (cea_revision(cea) < 3) {
+ 		DRM_DEBUG_KMS("SAD: wrong CEA revision\n");
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	if (cea_db_offsets(cea, &start, &end)) {
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index c4ee2709a6f3..f8154316a3b0 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -955,7 +955,7 @@ static int mipi_dbi_typec1_command(struct mipi_dbi *dbi, u8 *cmd,
+ 	int ret;
+ 
+ 	if (mipi_dbi_command_is_read(dbi, *cmd))
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	MIPI_DBI_DEBUG_COMMAND(*cmd, parameters, num);
+ 
 -- 
 2.20.1
 
