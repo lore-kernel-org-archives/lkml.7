@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B64C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397C4C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F73920748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02205207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643251;
-	bh=n1sVk3/rhpOZQoCZgCQOlkH9CqjdYrBoMl8MPtfRl5w=;
+	s=default; t=1577643257;
+	bh=mW4EO8dmtkIggbvuTHjWqsJV+OdBn4CaRMcl3crir5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xe0hpnghNaFed9+nCNRgox7QwaOxfTmDj9JiPMbBEfHq6HyhWbaReNMFlSJocrRmo
-	 Aul/t+bM5Lo5+SPPCgOLl+aySfuF63XYBwU4g4cJWDzPdsUrX+aiN9ShaQfdDRCxhj
-	 mGZd3SxPgy+FF9mbnXucio0zllGpPqIYWDaeS4lA=
+	b=UWtp1AriXORuKylYhMNj/Gg5ZypzLOxTudA9F5Xl6ph34xJI52WXzk9fl1XZoF4Dg
+	 I6/5euGOVeO+leBWCoXB/YGwU97rP8CDp/7Gm8UxkqkFcMaUDMISjYPreH0vsouas6
+	 2JArxS+we0K08VV8fzSwEs5P8cVlAii95bgrswEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbfL2SOK (ORCPT
+        id S1728365AbfL2R1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:14:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49776 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:27:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbfL2R12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:28 -0500
+        id S1728352AbfL2R1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E7EA20722;
-        Sun, 29 Dec 2019 17:27:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72FE3207FF;
+        Sun, 29 Dec 2019 17:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640447;
-        bh=n1sVk3/rhpOZQoCZgCQOlkH9CqjdYrBoMl8MPtfRl5w=;
+        s=default; t=1577640425;
+        bh=mW4EO8dmtkIggbvuTHjWqsJV+OdBn4CaRMcl3crir5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIS6BHdFymAyxyKiENp8ERxMqfhNmrJrGB3qggyYp33BDMHvK0rcEFJ+r3oTEaNeL
-         BApPnl0INn4tGbvziBzvdC7aUgqSqkiehjZqvjqSl8dCwJrH9Jj9W2egst9LzrfIuE
-         opkFdxT/silkG3q3c2Gp9jdOji7Qhbw2EQOG5dbc=
+        b=2STaphIvp1TwOv6mD8wpqmDVS+6p+ymD5RnZ3/8wS3f+b7+zUvnULlMrCPNZxJwFP
+         0wCkn+wpoA4H/oYNzIBYgSp5hfmH7YUMMR8hTsGXURmAjkU22InfEVYjIEbSQPHYH9
+         C7bVz0kuQWPn5OpDjMM6d474enPb2McDxab4Hls4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 160/161] mmc: sdhci-of-esdhc: fix P2020 errata handling
-Date:   Sun, 29 Dec 2019 18:20:08 +0100
-Message-Id: <20191229162450.360476445@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.14 152/161] ext4: check for directory entries too close to block end
+Date:   Sun, 29 Dec 2019 18:20:00 +0100
+Message-Id: <20191229162447.625240197@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,47 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+From: Jan Kara <jack@suse.cz>
 
-commit fe0acab448f68c3146235afe03fb932e242ec94c upstream.
+commit 109ba779d6cca2d519c5dd624a3276d03e21948e upstream.
 
-Two previous patches introduced below quirks for P2020 platforms.
-- SDHCI_QUIRK_RESET_AFTER_REQUEST
-- SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
+ext4_check_dir_entry() currently does not catch a case when a directory
+entry ends so close to the block end that the header of the next
+directory entry would not fit in the remaining space. This can lead to
+directory iteration code trying to access address beyond end of current
+buffer head leading to oops.
 
-The patches made a mistake to add them in quirks2 of sdhci_host
-structure, while they were defined for quirks.
-	host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-	host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-
-This patch is to fix them.
-	host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-	host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-
-Fixes: 05cb6b2a66fa ("mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support")
-Fixes: a46e42712596 ("mmc: sdhci-of-esdhc: add erratum eSDHC5 support")
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191216031842.40068-1-yangbo.lu@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191202170213.4761-3-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-esdhc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/dir.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -886,8 +886,8 @@ static int sdhci_esdhc_probe(struct plat
- 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
- 
- 	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
--		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
--		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
-+		host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
-+		host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
- 	}
- 
- 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -76,6 +76,11 @@ int __ext4_check_dir_entry(const char *f
+ 		error_msg = "rec_len is too small for name_len";
+ 	else if (unlikely(((char *) de - buf) + rlen > size))
+ 		error_msg = "directory entry overrun";
++	else if (unlikely(((char *) de - buf) + rlen >
++			  size - EXT4_DIR_REC_LEN(1) &&
++			  ((char *) de - buf) + rlen != size)) {
++		error_msg = "directory entry too close to block end";
++	}
+ 	else if (unlikely(le32_to_cpu(de->inode) >
+ 			le32_to_cpu(EXT4_SB(dir->i_sb)->s_es->s_inodes_count)))
+ 		error_msg = "inode out of bounds";
 
 
