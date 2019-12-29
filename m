@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55431C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE0BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F0C22522
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7C021744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bRiIae4r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFCyuXUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfL2IGr (ORCPT
+        id S1727107AbfL2IGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 03:06:47 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37598 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbfL2IGl (ORCPT
+        Sun, 29 Dec 2019 03:06:48 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39820 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfL2IGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 03:06:41 -0500
-Received: by mail-pg1-f195.google.com with SMTP id q127so16624877pga.4;
-        Sun, 29 Dec 2019 00:06:41 -0800 (PST)
+        Sun, 29 Dec 2019 03:06:43 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b137so16614032pga.6;
+        Sun, 29 Dec 2019 00:06:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QqO5VBiXqI5R/AkeosruSZfCprSjGDAM7LFQWexsUTE=;
-        b=bRiIae4rFd4anfrYHa2h573t4PCyijpCdCIzqXN4J00te79dFDRkflXiaVWf9P/axv
-         z+DsmrszTYuySWTdB6ULOta5nuNYsyR3uMXjYa/TrpX20GJDeDxZV9D6gFgpC5aB9jED
-         elc3AbtukjTYhep55znmAuIrGhh5OuVF090UIpJaVxMb13YlyHeqcOpePr0Qxa5AGotr
-         4mF1TMGUApsiYzXwC/OaIiKBB1yekSF9awgj4zKaIbT+7CGKAl7wqGu+s0RL+WlyRNlU
-         bWuTj6WuXh846VITN/gmh9GRqv1SUvbd9Svau0W5uLjTjE4taI9XKDEZRS0H9L/nSooN
-         ZLNw==
+        bh=SoWTkdw08fKNkZI7zecO4kgB8x71qLQgBx6zKThBhe0=;
+        b=dFCyuXUEKl8LsO/sXPvZkU+TvC3B0fKFaEg+Xuhq2RsKStgue7QzNd3+v2m1LIj1Q6
+         GyT8nsgIoiS5paCLvOprfNHhJJf8ILKkc1PsH61+Yfw00WIDxzhdQUKm1/xl2DPGONBG
+         rQGX+aJSInwpHrshCpyLqFzdlKYyCkP5ur+TESDgxTKjfpjCiHwLZsVxeB6SnhQfzXTW
+         n0cB7pAoxLs+cG1rdlAMhZ0U7ZHPNS0hdpS7eppQErPMN22+CyxKdZJaG4dMb4xncATj
+         ROSFyclMBn6fqhjWus5OZnzNVho2v4s+xwQhpjokIZlG4sZdW6hTJha2E/9YXEVem8Kf
+         LMIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=QqO5VBiXqI5R/AkeosruSZfCprSjGDAM7LFQWexsUTE=;
-        b=ZHNqiQzlCEFEfa3NpV8UFVMWdrjNSM5yeRfRRbesUXBkOkzqEhMwM6JVOcUiNidG47
-         42TcFF1uVlxeHODFjkB7o84XCReIieBuQv7XC39tdZUNvtQRho968HuUR8Oxss9y+iZc
-         kLoy2ZYRdmAHjxnXSQ+NoIEab/OjFaq074/on6Cba4yXqCtHBihQDnGZmuIVwZW7guwj
-         ItrG4mK+kBWKF8Gu44fEL/RHMTHTKp1eVFw3ysefX/lvlpsi84NY35WQVY/a2Mg5IteE
-         DPXBQoA/b7PqLx0VehUZB6aC6IvsBd4szX1O9I1dntW57Nzq33Sd6bHWbAFVHROF02rS
-         ZMwA==
-X-Gm-Message-State: APjAAAWPxTag/wGf+bC0Ju+z3SSaMKP+O0yWzO4mN32+PzcDfZ+hPx1E
-        pe782oyY7aojXE6uHRQ8CKE=
-X-Google-Smtp-Source: APXvYqwFZI+a++Hr3wqoZg0IjafXaKUi175/ltviuoWC/h18dtap63vpF4U0J7a3SLRMilBNfyFKcg==
-X-Received: by 2002:a65:5a8f:: with SMTP id c15mr56634028pgt.259.1577606800818;
-        Sun, 29 Dec 2019 00:06:40 -0800 (PST)
+        bh=SoWTkdw08fKNkZI7zecO4kgB8x71qLQgBx6zKThBhe0=;
+        b=A/3C3AWcLr/PQjdsPgCWRhXiWs24y+6yvpUAh9UvNxte3lfJUJdJBUtkKkyoF+2gVk
+         ZwYtgjAWoxnrGr+ebqOrjQm2K8hXNVHauWkeUVrT9VmJq7CsUoVgfj1QEGyGkQ2n/E72
+         /2geiUPcBRZztnnNwvAxKAJHQG5C2cLFxD4D9GD6LiQ6c9//mFVbshwZmn4o99lMALth
+         QrTNPFEB9EUh+oRFuQj2X5vztNunfyLkzCYEYw7OqDC3vgeiuNTyALFi9YywnjDn+GOb
+         t6JC1NIyGRBTOeLuEZMrt2hkiW85h2UjZrBJD1WOsNQcHSG8ih1WozsXqRTjuBAHNG0u
+         V9fg==
+X-Gm-Message-State: APjAAAU5pnhhHvPoHuUbpGWnih2aqivzUWGuZoIhQNHFB6gE+6+Og04I
+        6klP0FyQsALTN2rmw2fT0d0=
+X-Google-Smtp-Source: APXvYqxFPMe29+XLuDvoRw+OYUFI9Ar/T8F4eKcB2m7F1vCONUQP69zaPfgygh+KUiIyWo1JSp3mCA==
+X-Received: by 2002:a63:6507:: with SMTP id z7mr66588518pgb.322.1577606802890;
+        Sun, 29 Dec 2019 00:06:42 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id z6sm32913761pfa.155.2019.12.29.00.06.40
+        by smtp.gmail.com with ESMTPSA id s1sm42817428pgv.87.2019.12.29.00.06.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 00:06:40 -0800 (PST)
+        Sun, 29 Dec 2019 00:06:42 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, nicolas.ferre@microchip.com,
@@ -75,9 +75,9 @@ To:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
         linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 22/32] pwm: bcm2835: convert to devm_platform_ioremap_resource
-Date:   Sun, 29 Dec 2019 08:06:00 +0000
-Message-Id: <20191229080610.7597-22-tiny.windzz@gmail.com>
+Subject: [PATCH 24/32] pwm: vt8500: convert to devm_platform_ioremap_resource
+Date:   Sun, 29 Dec 2019 08:06:02 +0000
+Message-Id: <20191229080610.7597-24-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191229080610.7597-1-tiny.windzz@gmail.com>
 References: <20191229080610.7597-1-tiny.windzz@gmail.com>
@@ -90,30 +90,30 @@ Use devm_platform_ioremap_resource() to simplify code.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/pwm/pwm-bcm2835.c | 4 +---
+ drivers/pwm/pwm-vt8500.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 91e24f01b54e..9923cd2f069e 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -137,7 +137,6 @@ static const struct pwm_ops bcm2835_pwm_ops = {
- static int bcm2835_pwm_probe(struct platform_device *pdev)
+diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
+index 11d45e56a923..6e36851a22bb 100644
+--- a/drivers/pwm/pwm-vt8500.c
++++ b/drivers/pwm/pwm-vt8500.c
+@@ -193,7 +193,6 @@ MODULE_DEVICE_TABLE(of, vt8500_pwm_dt_ids);
+ static int vt8500_pwm_probe(struct platform_device *pdev)
  {
- 	struct bcm2835_pwm *pc;
--	struct resource *res;
+ 	struct vt8500_chip *chip;
+-	struct resource *r;
+ 	struct device_node *np = pdev->dev.of_node;
  	int ret;
  
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-@@ -146,8 +145,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+@@ -219,8 +218,7 @@ static int vt8500_pwm_probe(struct platform_device *pdev)
+ 		return PTR_ERR(chip->clk);
+ 	}
  
- 	pc->dev = &pdev->dev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pc->base = devm_ioremap_resource(&pdev->dev, res);
-+	pc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pc->base))
- 		return PTR_ERR(pc->base);
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->base = devm_ioremap_resource(&pdev->dev, r);
++	chip->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->base))
+ 		return PTR_ERR(chip->base);
  
 -- 
 2.17.1
