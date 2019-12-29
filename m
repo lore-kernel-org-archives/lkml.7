@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F050CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747D9C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2063222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449DD20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640110;
-	bh=/OftrGjIqofA/1Jh5wjoEAE3U7CtCrQxKG3N/DyesZ0=;
+	s=default; t=1577640114;
+	bh=fM8xVhPwvOcQN6pb87bbxd92F7fym5tpnsk0r0lFxW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBOCpAObck3yEbZ+mY35VEqlbVV1ga8D9LkDZwCZfeLPbfXYkhItUEQzqdrjGQqTf
-	 Kqmhe2B1NlKmcib5WLWVFzeXEllIb/yraiyK+1u+zuePP7m8Cv75etIX0t6h2xfkYF
-	 krIazMqA4cx0YEG/qBBb+OEGxNDKgi389gkzs6gk=
+	b=j6ScVyCK4/JPew4O+qNlMqDHMrt/Yv/bCUrdyDY+D63J2vTXP3SiBAqtj+DzhaFsc
+	 6+k6CrpvDWgG36h9XanpjS9t+enEC//9tiYYTlDkcR83aazjbE0jBUAK5tVb96myBc
+	 2gmzrO8aGXiHTR+ugizFZ8ibYQDdzTFnkohG9Xbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfL2RVt (ORCPT
+        id S1727104AbfL2RVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37300 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfL2RVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:46 -0500
+        id S1727048AbfL2RVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FD920722;
-        Sun, 29 Dec 2019 17:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3BE520722;
+        Sun, 29 Dec 2019 17:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640105;
-        bh=/OftrGjIqofA/1Jh5wjoEAE3U7CtCrQxKG3N/DyesZ0=;
+        s=default; t=1577640110;
+        bh=fM8xVhPwvOcQN6pb87bbxd92F7fym5tpnsk0r0lFxW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qUYVSMC4GczfZaGW5/FBVFKSs17tl4IfklWGZ2UYe4kgGNpwveCfnfJ0TZwq3n2HS
-         AdrtGQsAgdu98pPNOKFnGdnTdBP5PVTQrEYFPjm7d3KUw8x1hxvIGep9tibOSa9AzW
-         r5AAzeQAL1/mGe00FMQhD0Pz0hHHwhO//ER4LOj4=
+        b=OU79URZWfOm2/qgCNp+6i1LVElEpc3oLWIvAWuslzovQhPdgC+P65w5hTYkdDD9Yk
+         jzIysAmON9eSl5TMl+A9dCPBr9VY37Bet8wz4HCCODHFaU1XFogs03UfKwhyZjGGuy
+         5jb5rHv5P0WWe0wV3P4FAGpbGoybkDpwxr8EP/Qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Todd Previte <tprevite@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/161] drm: mst: Fix query_payload ack reply struct
-Date:   Sun, 29 Dec 2019 18:17:48 +0100
-Message-Id: <20191229162403.009203257@linuxfoundation.org>
+Subject: [PATCH 4.14 022/161] iio: light: bh1750: Resolve compiler warning and make code more readable
+Date:   Sun, 29 Dec 2019 18:17:50 +0100
+Message-Id: <20191229162404.703670560@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -66,45 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 268de6530aa18fe5773062367fd119f0045f6e88 ]
+[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
 
-Spec says[1] Allocated_PBN is 16 bits
+Separate the declaration of struct bh1750_chip_info from definition
+of bh1750_chip_info_tbl[] in a single statement as it makes the code
+hard to read, and with the extra newline it makes it look as if the
+bh1750_chip_info_tbl[] had no explicit type.
 
-[1]- DisplayPort 1.2 Spec, Section 2.11.9.8, Table 2-98
+This change also resolves the following compiler warning about the
+unusual position of the static keyword that can be seen when building
+with warnings enabled (W=1):
 
-Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0.6)")
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Todd Previte <tprevite@gmail.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190829165223.129662-1-sean@poorly.run
+drivers/iio/light/bh1750.c:64:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+
+Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
+BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_dp_mst_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/light/bh1750.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index d55abb75f29a..eec6cba204ea 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -313,7 +313,7 @@ struct drm_dp_resource_status_notify {
+diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+index 6c61187e630f..0b7ba02c8d16 100644
+--- a/drivers/iio/light/bh1750.c
++++ b/drivers/iio/light/bh1750.c
+@@ -62,9 +62,9 @@ struct bh1750_chip_info {
  
- struct drm_dp_query_payload_ack_reply {
- 	u8 port_number;
--	u8 allocated_pbn;
-+	u16 allocated_pbn;
- };
+ 	u16 int_time_low_mask;
+ 	u16 int_time_high_mask;
+-}
++};
  
- struct drm_dp_sideband_msg_req_body {
+-static const bh1750_chip_info_tbl[] = {
++static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
+ 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
+ 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
+ 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
 -- 
 2.20.1
 
