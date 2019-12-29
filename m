@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC912C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B731FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F0C24679
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D12222C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640856;
-	bh=Zy0EIN7Ycdnltxskm2fv7N8xJJ4z8nXLUTdw11/3XyA=;
+	s=default; t=1577640863;
+	bh=lnZntBm7+vS9ivFVCtiYcHqf82smGP4ysvQWPpzchOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O1dpCySqN9631BV7z3Gprhp579B2K5bXzY6LrykZbluCmOnFS4cOEutaPFMNqKsHb
-	 mp8yCcUMATn7z4mTCrzcclbNUAsjhdjhV+1q9TeCPMVQCn0N6mwgSAwl2i/kRKCvV7
-	 zKO3J7F+GLogR1u4XcsHuFt5bbDApZAO2zzaJbnM=
+	b=yMoJliJTJBeV2iyzANo02pqh0D0h9M1oAz8yDVhmjJotVqeZHMNfkLWXMOGcr7mWe
+	 WSGu1mkk6HP44yZYrGZBLcP6E6LB1jIg+2iY6LOTD8MbnFh3bM2Pt85Nbtvm18KBlp
+	 mZevGB4fFJGzWz9l2m0rRUVNkbcmv2nHP2/vq0Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfL2ReP (ORCPT
+        id S1729630AbfL2ReW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbfL2ReK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:10 -0500
+        id S1728869AbfL2ReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34441207FF;
-        Sun, 29 Dec 2019 17:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B854207FD;
+        Sun, 29 Dec 2019 17:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640849;
-        bh=Zy0EIN7Ycdnltxskm2fv7N8xJJ4z8nXLUTdw11/3XyA=;
+        s=default; t=1577640856;
+        bh=lnZntBm7+vS9ivFVCtiYcHqf82smGP4ysvQWPpzchOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAmg2zugFyIm+r/12f8kiMrjLSCV+MI0LISfCG7Msye4R8+pzUa1TAhAl5WY1HEuS
-         l2pNq6kMPOWvGlm9sso8UprEHr6gt0d0KKlb98gD1Hpfhyhxrzi2YJda3A5KoiF9f6
-         C0kqe1zLzsFld6NNkDTaOsmGIt1fg5rE19ZYXmxA=
+        b=SLPfqFGjWtFdnGnZiwYcNTaI0O3450Zj2prqZDHPz8+DrnD5gLYOUr7v04vB0vzpR
+         Jvsch4kbk71mt/MPtjkQjmxPownKFJZC1504LuWgAORZy3iT0Wo4fXi7H8kJZ99uvD
+         rIOmMykDPoCEymjMYSGkSLXZr++XJMBGjMKbOMs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Petar Penkov <ppenkov@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 163/219] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Sun, 29 Dec 2019 18:19:25 +0100
-Message-Id: <20191229162533.391056592@linuxfoundation.org>
+Subject: [PATCH 4.19 166/219] tun: fix data-race in gro_normal_list()
+Date:   Sun, 29 Dec 2019 18:19:28 +0100
+Message-Id: <20191229162533.836350462@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,48 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+From: Petar Penkov <ppenkov@google.com>
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+[ Upstream commit c39e342a050a4425348e6fe7f75827c0a1a7ebc5 ]
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+There is a race in the TUN driver between napi_busy_loop and
+napi_gro_frags. This commit resolves the race by adding the NAPI struct
+via netif_tx_napi_add, instead of netif_napi_add, which disables polling
+for the NAPI struct.
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+KCSAN reported:
+BUG: KCSAN: data-race in gro_normal_list.part.0 / napi_busy_loop
 
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
+write to 0xffff8880b5d474b0 of 4 bytes by task 11205 on cpu 0:
+ gro_normal_list.part.0+0x77/0xb0 net/core/dev.c:5682
+ gro_normal_list net/core/dev.c:5678 [inline]
+ gro_normal_one net/core/dev.c:5692 [inline]
+ napi_frags_finish net/core/dev.c:5705 [inline]
+ napi_gro_frags+0x625/0x770 net/core/dev.c:5778
+ tun_get_user+0x2150/0x26a0 drivers/net/tun.c:1976
+ tun_chr_write_iter+0x79/0xd0 drivers/net/tun.c:2022
+ call_write_iter include/linux/fs.h:1895 [inline]
+ do_iter_readv_writev+0x487/0x5b0 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x13b/0x3c0 fs/read_write.c:951
+ vfs_writev+0x118/0x1c0 fs/read_write.c:1015
+ do_writev+0xe3/0x250 fs/read_write.c:1058
+ __do_sys_writev fs/read_write.c:1131 [inline]
+ __se_sys_writev fs/read_write.c:1128 [inline]
+ __x64_sys_writev+0x4e/0x60 fs/read_write.c:1128
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+read to 0xffff8880b5d474b0 of 4 bytes by task 11168 on cpu 1:
+ gro_normal_list net/core/dev.c:5678 [inline]
+ napi_busy_loop+0xda/0x4f0 net/core/dev.c:6126
+ sk_busy_loop include/net/busy_poll.h:108 [inline]
+ __skb_recv_udp+0x4ad/0x560 net/ipv4/udp.c:1689
+ udpv6_recvmsg+0x29e/0xe90 net/ipv6/udp.c:288
+ inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
+ sock_recvmsg_nosec net/socket.c:871 [inline]
+ sock_recvmsg net/socket.c:889 [inline]
+ sock_recvmsg+0x92/0xb0 net/socket.c:885
+ sock_read_iter+0x15f/0x1e0 net/socket.c:967
+ call_read_iter include/linux/fs.h:1889 [inline]
+ new_sync_read+0x389/0x4f0 fs/read_write.c:414
+ __vfs_read+0xb1/0xc0 fs/read_write.c:427
+ vfs_read fs/read_write.c:461 [inline]
+ vfs_read+0x143/0x2c0 fs/read_write.c:446
+ ksys_read+0xd5/0x1b0 fs/read_write.c:587
+ __do_sys_read fs/read_write.c:597 [inline]
+ __se_sys_read fs/read_write.c:595 [inline]
+ __x64_sys_read+0x4c/0x60 fs/read_write.c:595
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 11168 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 943170998b20 ("tun: enable NAPI for TUN/TAP driver")
+Signed-off-by: Petar Penkov <ppenkov@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/tun.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index bfb163419c67..e6a67bc02209 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -62,6 +62,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -360,7 +361,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
- 
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index e1ac1c57089f..bbd92221c6ca 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -319,8 +319,8 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
+ 	tfile->napi_enabled = napi_en;
+ 	tfile->napi_frags_enabled = napi_en && napi_frags;
+ 	if (napi_en) {
+-		netif_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
+-			       NAPI_POLL_WEIGHT);
++		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
++				  NAPI_POLL_WEIGHT);
+ 		napi_enable(&tfile->napi);
+ 	}
+ }
 -- 
 2.20.1
 
