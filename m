@@ -2,386 +2,146 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35579C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A951FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA9B20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B61620722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="MmdB6JBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfL2Jkf (ORCPT
+        id S1726584AbfL2JrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 04:40:35 -0500
-Received: from mailoutvs57.siol.net ([185.57.226.248]:54749 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726476AbfL2Jke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 04:40:34 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 5405F521AA5;
-        Sun, 29 Dec 2019 10:40:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id npAMj_sTePaG; Sun, 29 Dec 2019 10:40:28 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id A6CEB521A9B;
-        Sun, 29 Dec 2019 10:40:28 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 710FA521A9A;
-        Sun, 29 Dec 2019 10:40:28 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [RFC 3/4] drm/sun4i: Reimplement plane z position setting logic
-Date:   Sun, 29 Dec 2019 10:40:28 +0100
-Message-ID: <3994677.ejJDZkT8p0@jernej-laptop>
-In-Reply-To: <20191228202818.69908-4-roman.stratiienko@globallogic.com>
-References: <20191228202818.69908-1-roman.stratiienko@globallogic.com> <20191228202818.69908-4-roman.stratiienko@globallogic.com>
+        Sun, 29 Dec 2019 04:47:07 -0500
+Received: from mail-bn7nam10on2082.outbound.protection.outlook.com ([40.107.92.82]:47841
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726371AbfL2JrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 04:47:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P1Iw3LSd2NdgAKkvU/XdefiNjdvEQy28099I5u/BrO3DCvuGGtVn/HoGHvnxHaeN/J7a2vISwLisHH5Zxmt+7drbXdSYhs47VQs9K2AZue/7ccaVv0xIKPhebSF2lSzGwvMVOATlFhsgKv2d/XrfX4od1ZkQ7+y0BsvfRNmpSrzO88A/4phNRrwYWT9u47FYYj/6O+DPKfEdjQ2AYshN7tFtz8luFFEqx3hfpMjJzBddxhchmfvU76UWUZ3XvbBirRvL8ph4zt8iQnGmrocS/lMeBLrP/Vv/iFuJ36tU+aLDtOM17t868Cq87l+Vgmnq4GnRRyOT8UpYl2qs+usPmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZJwgfoZxnCL2HHCzvbT7xn0nHQcha/HikbS0efY+ZVU=;
+ b=fSUm+pCU0fTAbOH1nhQvp+1/Z0va8tGDO0sh3Yt75OcHqvopHNjim/fWKbW/6TnHQl8zoj2aIzrM3M59BWB7EVmrKrqc1TIrVoQ/RwPUkL2VaIS85eal+w5JN462s/po7f1Wp2+SmW4telcAwXOmT9rnDisX5y+MsbUeP+FTATGE4l4eER8ppe37JASV3s/jFGCsU90NMlHVWJnIsEjipQbOAzfbjaJZ7Yub9Cf0i5ji4I8WsAXMDlJ9otpu3B6aHv6txBUchi0a/F+3/hGemONyqNDFmN48tu3fLBift4T2k4JLzx/oDBZq+KnOwuNF3w7JdE+wC+EsF6fdszCdBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZJwgfoZxnCL2HHCzvbT7xn0nHQcha/HikbS0efY+ZVU=;
+ b=MmdB6JBE78mis6SNCVNlnkzIaH577TSc4ICN7Io1g0zffTMdeS/uPjDhnW+KtvpT5shLVbXhKje1rC8f+OUTXjWTkixshpBmdDe3fC3eaJEBbHIjKSKUXODvVoTWY2s9gonr5FWDsyspcWa0FJIZXUFJ9w+LPKlkM4VMm/2iWJ4=
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (10.255.180.22) by
+ MN2PR11MB4416.namprd11.prod.outlook.com (52.135.36.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Sun, 29 Dec 2019 09:47:02 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::f46c:e5b4:2a85:f0bf%4]) with mapi id 15.20.2581.007; Sun, 29 Dec 2019
+ 09:47:02 +0000
+From:   =?iso-8859-1?Q?J=E9r=F4me_Pouiller?= <Jerome.Pouiller@silabs.com>
+To:     Matthew Hanzelik <mrhanzelik@gmail.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+Subject: Re: [PATCH v2] Staging: wfx: Fix style issues with hif_rx.c
+Thread-Topic: [PATCH v2] Staging: wfx: Fix style issues with hif_rx.c
+Thread-Index: AQHVvRcqbYTdpmaFvEWONRccZN89safQ36YA
+Date:   Sun, 29 Dec 2019 09:47:01 +0000
+Message-ID: <3570432.mCMjMbKv1p@pc-42>
+References: <20191228003818.mmcf4aasks5mqcnr@mandalore.localdomain>
+In-Reply-To: <20191228003818.mmcf4aasks5mqcnr@mandalore.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+x-originating-ip: [88.191.86.106]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5f2c2696-bc9a-4a2b-ab9e-08d78c440e33
+x-ms-traffictypediagnostic: MN2PR11MB4416:
+x-microsoft-antispam-prvs: <MN2PR11MB4416484438A0C81C3997A13793240@MN2PR11MB4416.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0266491E90
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(396003)(346002)(39840400004)(366004)(136003)(199004)(189003)(81166006)(81156014)(9686003)(8676002)(54906003)(66574012)(316002)(86362001)(8936002)(6486002)(6916009)(6512007)(4326008)(71200400001)(33716001)(91956017)(66946007)(64756008)(6506007)(186003)(2906002)(478600001)(76116006)(26005)(66446008)(66476007)(66556008)(5660300002)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4416;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hlOhemrmAq5l5XC+jDigsnIgdnKX1c4PKIr8ZsEiQKijZmG96BvaHJp1cx9i570cRC+Vor+pDQwA089TKrySicpUNTo31pRsPK2yyOXNNcTxZnTcIDKWev2fsq/WurgBGBV3WHG922NmXr0b/Jl8LK5yNLhTbU+lty1K/IyZlyCdFfdBkMqwsAwXcxVWNt3Ig71+qcwNOvT7s8NnxLCfp07nf++alhtcqC0B4A7Wn5mGJeo4zoLMZY5jzSantB2XNkBAZAxHfXbgTpTgipRqj03C89kuIdJEfvHiOshkxxj1ZhyPoj034g//YmQy6XCwG/qkanPHYh17b4zrkqpgZLWU1BL1uIqMHQB3E7w3fpDdnAE/MoYZx9VV+00HtIaWfcNwW1CaLj9ERuOf1VOT8wcdmNddsZLJPuSxAmWGBu6yQZA54j7MS4kqtY7vRY9uV5g0I7o6DSQCBZnDNjcKE0CKzqCVNyVvFq4xaKGHT6bl5SVTdC34Bb/2QHtgOkHW
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <346F119007CB444EA7109F8C5332BF9A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f2c2696-bc9a-4a2b-ab9e-08d78c440e33
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Dec 2019 09:47:01.8327
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UGht1wAH6cbXiiK391hircgdlU62KUYbnPpkrj+vye1arsBiDajwzwi+LCzCuKXPtgAxf6ARhMGRhZrxsFJ4yg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4416
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Dne sobota, 28. december 2019 ob 21:28:17 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> 
-> To set blending channel order register software needs to know state and
-> position of each channel, which impossible at plane commit stage.
-> 
-> Move this procedure to atomic_flush stage, where all necessary information
-> is available.
-> 
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+On Saturday 28 December 2019 01:38:24 CET Matthew Hanzelik wrote:
+> Fixes the 80 character line limit warning on line 79 of hif_rx.c.
+>=20
+> Also fixes the missing blank line warning on line 305 of hif_rx.c after
+> the declaration of size_t len.
+>=20
+> Signed-off-by: Matthew Hanzelik <mrhanzelik@gmail.com>
 > ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 47 +++++++++++++++++++++++++-
->  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  3 ++
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 42 ++++-------------------
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 39 +++------------------
->  4 files changed, 60 insertions(+), 71 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index bb9a665fd053..da84fccf7784
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -307,8 +307,47 @@ static void sun8i_atomic_begin(struct sunxi_engine
-> *engine,
-> 
->  static void sun8i_mixer_commit(struct sunxi_engine *engine)
+> Changes in v2:
+>  - Make the commit message less vague.
+>=20
+>  drivers/staging/wfx/hif_rx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/staging/wfx/hif_rx.c b/drivers/staging/wfx/hif_rx.c
+> index 820de216be0c..1da9a153dda0 100644
+> --- a/drivers/staging/wfx/hif_rx.c
+> +++ b/drivers/staging/wfx/hif_rx.c
+> @@ -76,7 +76,8 @@ static int hif_multi_tx_confirm(struct wfx_dev *wdev, s=
+truct hif_msg *hif,
+>                                 void *buf)
 >  {
-> -	DRM_DEBUG_DRIVER("Committing changes\n");
-> +	struct sun8i_mixer *mixer = engine_to_sun8i_mixer(engine);
-> +	u32 base = sun8i_blender_base(mixer);
-> +	int i, j;
-> +	int channel_by_zpos[4] = {-1, -1, -1, -1};
-> +	u32 route = 0, pipe_ctl = 0;
-> +
-> +	DRM_DEBUG_DRIVER("Update blender routing\n");
+>         struct hif_cnf_multi_transmit *body =3D buf;
+> -       struct hif_cnf_tx *buf_loc =3D (struct hif_cnf_tx *) &body->tx_co=
+nf_payload;
+> +       struct hif_cnf_tx *buf_loc =3D (struct hif_cnf_tx *)
+> +                                     &body->tx_conf_payload;
 
-Use drm_dbg().
+Since cast operator is an unary operator, I would try to avoid line break
+between cast and variable. I suggest to place the break after the '=3D'.
 
-> +	for (i = 0; i < 4; i++)	{
-> +		int zpos = mixer->channel_zpos[i];
 
-channel_zpos can hold 5 elements which is also theoretical maximum for current 
-HW design. Why do you check only 4 elements?
 
-It would be great to introduce a macro like SUN8I_MIXER_MAX_LAYERS so everyone 
-would understand where this number comes from.
-
-> +
-> +		if (zpos >= 0 && zpos < 4)
-> +			channel_by_zpos[zpos] = i;
-> +	}
-> +
-> +	j = 0;
-> +	for (i = 0; i < 4; i++)	{
-> +		int ch = channel_by_zpos[i];
-> +
-> +		if (ch >= 0) {
-> +			pipe_ctl |= SUN8I_MIXER_BLEND_PIPE_CTL_EN(j);
-> +			route |= ch << 
-SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(j);
-> +			j++;
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < 4 && j < 4; i++) {
-> +		int zpos = mixer->channel_zpos[i];
-> 
-> +		if (zpos < 0) {
-> +			route |= i << 
-SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(j);
-> +			j++;
-> +		}
-> +	}
-> +
-> +	regmap_update_bits(mixer->engine.regs, 
-SUN8I_MIXER_BLEND_PIPE_CTL(base),
-> +			   SUN8I_MIXER_BLEND_PIPE_CTL_EN_MSK, 
-pipe_ctl);
-> +
-> +	regmap_write(mixer->engine.regs,
-> +		     SUN8I_MIXER_BLEND_ROUTE(base), route);
-> +
-> +	DRM_DEBUG_DRIVER("Committing changes\n");
-
-Use drm_dbg().
-
->  	regmap_write(engine->regs, SUN8I_MIXER_GLOBAL_DBUFF,
->  		     SUN8I_MIXER_GLOBAL_DBUFF_ENABLE);
->  }
-> @@ -422,6 +461,12 @@ static int sun8i_mixer_bind(struct device *dev, struct
-> device *master, mixer->engine.ops = &sun8i_engine_ops;
->  	mixer->engine.node = dev->of_node;
-> 
-> +	mixer->channel_zpos[0] = -1;
-> +	mixer->channel_zpos[1] = -1;
-> +	mixer->channel_zpos[2] = -1;
-> +	mixer->channel_zpos[3] = -1;
-> +	mixer->channel_zpos[4] = -1;
-> +
-
-for loop would be better, especially using proposed macro.
-
-Best regards,
-Jernej
-
->  	/*
->  	 * While this function can fail, we shouldn't do anything
->  	 * if this happens. Some early DE2 DT entries don't provide
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.h index 915479cc3077..9c2ff87923d8
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> @@ -178,6 +178,9 @@ struct sun8i_mixer {
-> 
->  	struct clk			*bus_clk;
->  	struct clk			*mod_clk;
-> +
-> +	/* -1 means that layer is disabled */
-> +	int channel_zpos[5];
->  };
-> 
->  static inline struct sun8i_mixer *
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index 893076716070..23c2f4b68c89
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -24,12 +24,10 @@
->  #include "sun8i_ui_scaler.h"
-> 
->  static void sun8i_ui_layer_enable(struct sun8i_mixer *mixer, int channel,
-> -				  int overlay, bool enable, 
-unsigned int zpos,
-> -				  unsigned int old_zpos)
-> +				  int overlay, bool enable, 
-unsigned int zpos)
+>         struct wfx_vif *wvif =3D wdev_to_wvif(wdev, hif->interface);
+>         int count =3D body->num_tx_confs;
+>         int i;
+> @@ -302,6 +303,7 @@ static int hif_exception_indication(struct wfx_dev *w=
+dev,
+>                                     struct hif_msg *hif, void *buf)
 >  {
-> -	u32 val, bld_base, ch_base;
-> +	u32 val, ch_base;
-> 
-> -	bld_base = sun8i_blender_base(mixer);
->  	ch_base = sun8i_channel_base(mixer, channel);
-> 
->  	DRM_DEBUG_DRIVER("%sabling channel %d overlay %d\n",
-> @@ -44,32 +42,7 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer
-> *mixer, int channel, SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, overlay),
->  			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN, val);
-> 
-> -	if (!enable || zpos != old_zpos) {
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
-> -				   0);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
-> -				   0);
-> -	}
-> -
-> -	if (enable) {
-> -		val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> -				   val, val);
-> -
-> -		val = channel << 
-SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(zpos);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
-> -				   val);
-> -	}
-> +	mixer->channel_zpos[channel] = enable ? zpos : -1;
->  }
-> 
->  static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, @@ -235,11 +208,9 @@ static void
-> sun8i_ui_layer_atomic_disable(struct drm_plane *plane, struct
-> drm_plane_state *old_state)
->  {
->  	struct sun8i_ui_layer *layer = plane_to_sun8i_ui_layer(plane);
-> -	unsigned int old_zpos = old_state->normalized_zpos;
->  	struct sun8i_mixer *mixer = layer->mixer;
-> 
-> -	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay, 
-false, 0,
-> -			      old_zpos);
-> +	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay, false, 
-0);
->  }
-> 
->  static void sun8i_ui_layer_atomic_update(struct drm_plane *plane,
-> @@ -247,12 +218,11 @@ static void sun8i_ui_layer_atomic_update(struct
-> drm_plane *plane, {
->  	struct sun8i_ui_layer *layer = plane_to_sun8i_ui_layer(plane);
->  	unsigned int zpos = plane->state->normalized_zpos;
-> -	unsigned int old_zpos = old_state->normalized_zpos;
->  	struct sun8i_mixer *mixer = layer->mixer;
-> 
->  	if (!plane->state->visible) {
->  		sun8i_ui_layer_enable(mixer, layer->channel,
-> -				      layer->overlay, false, 0, 
-old_zpos);
-> +				      layer->overlay, false, 0);
->  		return;
->  	}
-> 
-> @@ -263,7 +233,7 @@ static void sun8i_ui_layer_atomic_update(struct
-> drm_plane *plane, sun8i_ui_layer_update_buffer(mixer, layer->channel,
->  				     layer->overlay, plane);
->  	sun8i_ui_layer_enable(mixer, layer->channel, layer->overlay,
-> -			      true, zpos, old_zpos);
-> +			      true, zpos);
->  }
-> 
->  static struct drm_plane_helper_funcs sun8i_ui_layer_helper_funcs = {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index 42d445d23773..97cbc98bf781
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> @@ -17,8 +17,7 @@
->  #include "sun8i_vi_scaler.h"
-> 
->  static void sun8i_vi_layer_enable(struct sun8i_mixer *mixer, int channel,
-> -				  int overlay, bool enable, 
-unsigned int zpos,
-> -				  unsigned int old_zpos)
-> +				  int overlay, bool enable, 
-unsigned int zpos)
->  {
->  	u32 val, bld_base, ch_base;
-> 
-> @@ -37,32 +36,7 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer
-> *mixer, int channel, SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base, overlay),
->  			   SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN, val);
-> 
-> -	if (!enable || zpos != old_zpos) {
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
-> -				   0);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
-> -				   0);
-> -	}
-> -
-> -	if (enable) {
-> -		val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> -				   val, val);
-> -
-> -		val = channel << 
-SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(zpos);
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> -				   
-SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
-> -				   val);
-> -	}
-> +	mixer->channel_zpos[channel] = enable ? zpos : -1;
->  }
-> 
->  static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, @@ -350,11 +324,9 @@ static void
-> sun8i_vi_layer_atomic_disable(struct drm_plane *plane, struct
-> drm_plane_state *old_state)
->  {
->  	struct sun8i_vi_layer *layer = plane_to_sun8i_vi_layer(plane);
-> -	unsigned int old_zpos = old_state->normalized_zpos;
->  	struct sun8i_mixer *mixer = layer->mixer;
-> 
-> -	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay, 
-false, 0,
-> -			      old_zpos);
-> +	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay, false, 
-0);
->  }
-> 
->  static void sun8i_vi_layer_atomic_update(struct drm_plane *plane,
-> @@ -362,12 +334,11 @@ static void sun8i_vi_layer_atomic_update(struct
-> drm_plane *plane, {
->  	struct sun8i_vi_layer *layer = plane_to_sun8i_vi_layer(plane);
->  	unsigned int zpos = plane->state->normalized_zpos;
-> -	unsigned int old_zpos = old_state->normalized_zpos;
->  	struct sun8i_mixer *mixer = layer->mixer;
-> 
->  	if (!plane->state->visible) {
->  		sun8i_vi_layer_enable(mixer, layer->channel,
-> -				      layer->overlay, false, 0, 
-old_zpos);
-> +				      layer->overlay, false, 0);
->  		return;
->  	}
-> 
-> @@ -378,7 +349,7 @@ static void sun8i_vi_layer_atomic_update(struct
-> drm_plane *plane, sun8i_vi_layer_update_buffer(mixer, layer->channel,
->  				     layer->overlay, plane);
->  	sun8i_vi_layer_enable(mixer, layer->channel, layer->overlay,
-> -			      true, zpos, old_zpos);
-> +			      true, zpos);
->  }
-> 
->  static struct drm_plane_helper_funcs sun8i_vi_layer_helper_funcs = {
+>         size_t len =3D hif->len - 4; // drop header
+> +
+>         dev_err(wdev->dev, "firmware exception\n");
+>         print_hex_dump_bytes("Dump: ", DUMP_PREFIX_NONE, buf, len);
+>         wdev->chip_frozen =3D 1;
+Ack.
 
-
-
+--=20
+J=E9r=F4me Pouiller
 
