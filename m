@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B6DC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B95D206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23370207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641270;
-	bh=a7rI37hFikzC3UaiQXhfFe1YXGRjSfgDaiUuxkZ8SEw=;
+	s=default; t=1577641273;
+	bh=xgfG21dEu0LH+RzJCNRvuC1/quwx7EIbl/cBnZNiFUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Mwh93G2Yux+B0z9KFlDnrRSXLTzlcF273opA2BOZZcXgRGqbxgrSwE3jUa7Cnkzx
-	 RlROdMVPYDu5uO8VCgom+kOqchRGUOh3lv2WAUOwsaHwz4X9GM0nV7oa8WFi2HilVh
-	 n9YAPpmA0vNpxH23cWhEeR/h6Daj7uZq2aUxXkyk=
+	b=tdche0GjB/0DcPXOnc8A1PSqmMJddqYFHyUTlVDMnDIb1Fb0Lv9fapukVtm0AFX5K
+	 S7wkaPIFEDaJFg4RzOfTTDLmjVU9ZaRARG3dEOL3Iwl4qcJtkoDRB9MJT57x6ZsMHh
+	 nCRIL+BDEMrZoihYhtUKV982lF5OIsrRHYbvaHwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbfL2RlJ (ORCPT
+        id S1730185AbfL2RlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:41:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfL2Raq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:46 -0500
+        id S1728414AbfL2Rag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C3520722;
-        Sun, 29 Dec 2019 17:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD3720722;
+        Sun, 29 Dec 2019 17:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640645;
-        bh=a7rI37hFikzC3UaiQXhfFe1YXGRjSfgDaiUuxkZ8SEw=;
+        s=default; t=1577640635;
+        bh=xgfG21dEu0LH+RzJCNRvuC1/quwx7EIbl/cBnZNiFUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/zSKrO42mLPA8NkHh4OkFTajauURw57f18wtpm7Nz4r4oJoqhT9gMXiaNytOQ9cj
-         oEOOxVvymtnlw6zOdri1xikwLTgQ8MUFL/hh1TDrWtWKD/hSc71U3hW9jZNQu1UXMx
-         s1X2/rgXFa7fW+e5DzO6lPgbWyhoFs1TKa54YmwU=
+        b=ZpMAJSwxAQmign0cLqI71T/2NzALDl+FhdJgiM3uzAjeoXLlVy5jTcml3/wznsAaV
+         iwB7S7nbnOCFySDm6y0aG+Bnb6O54b751x1okVWt8F6Ja7yfQDiPNJj+okxfvCHtR2
+         5P+rf7Gyb5MyjnijoZjTsHljmsmhFjUlwVhHdQTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Rohloff <ingo.rohloff@lauterbach.com>,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/219] usb: usbfs: Suppress problematic bind and unbind uevents.
-Date:   Sun, 29 Dec 2019 18:18:01 +0100
-Message-Id: <20191229162517.692370357@linuxfoundation.org>
+Subject: [PATCH 4.19 075/219] ath10k: Correct error handling of dma_map_single()
+Date:   Sun, 29 Dec 2019 18:17:57 +0100
+Message-Id: <20191229162517.375855022@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -59,80 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Rohloff <ingo.rohloff@lauterbach.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit abb0b3d96a1f9407dd66831ae33985a386d4200d ]
+[ Upstream commit d43810b2c1808ac865aa1a2a2c291644bf95345c ]
 
-commit 1455cf8dbfd0 ("driver core: emit uevents when device is bound
-to a driver") added bind and unbind uevents when a driver is bound or
-unbound to a physical device.
+The return value of dma_map_single() should be checked for errors using
+dma_mapping_error() and the skb has been dequeued so it needs to be
+freed.
 
-For USB devices which are handled via the generic usbfs layer (via
-libusb for example), this is problematic:
-Each time a user space program calls
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-and then later
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-The kernel will now produce a bind or unbind event, which does not
-really contain any useful information.
+This was found when enabling CONFIG_DMA_API_DEBUG and it warned about the
+missing dma_mapping_error() call.
 
-This allows a user space program to run a DoS attack against programs
-which listen to uevents (in particular systemd/eudev/upowerd):
-A malicious user space program just has to call in a tight loop
-
-   ioctl(usb_fd, USBDEVFS_CLAIMINTERFACE, &usb_intf_nr);
-   ioctl(usb_fd, USBDEVFS_RELEASEINTERFACE, &usb_intf_nr);
-
-With this loop the malicious user space program floods the kernel and
-all programs listening to uevents with tons of bind and unbind
-events.
-
-This patch suppresses uevents for ioctls USBDEVFS_CLAIMINTERFACE and
-USBDEVFS_RELEASEINTERFACE.
-
-Signed-off-by: Ingo Rohloff <ingo.rohloff@lauterbach.com>
-Link: https://lore.kernel.org/r/20191011115518.2801-1-ingo.rohloff@lauterbach.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/devio.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index 29c6414f48f1..00204824bffd 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -739,8 +739,15 @@ static int claimintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	intf = usb_ifnum_to_if(dev, ifnum);
- 	if (!intf)
- 		err = -ENOENT;
--	else
-+	else {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while claiming interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		err = usb_driver_claim_interface(&usbfs_driver, intf, ps);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
-+	}
- 	if (err == 0)
- 		set_bit(ifnum, &ps->ifclaimed);
- 	return err;
-@@ -760,7 +767,13 @@ static int releaseintf(struct usb_dev_state *ps, unsigned int ifnum)
- 	if (!intf)
- 		err = -ENOENT;
- 	else if (test_and_clear_bit(ifnum, &ps->ifclaimed)) {
-+		unsigned int old_suppress;
-+
-+		/* suppress uevents while releasing interface */
-+		old_suppress = dev_get_uevent_suppress(&intf->dev);
-+		dev_set_uevent_suppress(&intf->dev, 1);
- 		usb_driver_release_interface(&usbfs_driver, intf);
-+		dev_set_uevent_suppress(&intf->dev, old_suppress);
- 		err = 0;
- 	}
- 	return err;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 174e0ce31c42..448e3a8c33a6 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3844,8 +3844,10 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
+ 			     ar->running_fw->fw_file.fw_features)) {
+ 			paddr = dma_map_single(ar->dev, skb->data,
+ 					       skb->len, DMA_TO_DEVICE);
+-			if (!paddr)
++			if (dma_mapping_error(ar->dev, paddr)) {
++				ieee80211_free_txskb(ar->hw, skb);
+ 				continue;
++			}
+ 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
+ 			if (ret) {
+ 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
 -- 
 2.20.1
 
