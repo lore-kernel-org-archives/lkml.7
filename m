@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BA4C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697DA206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A708C206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642509;
-	bh=u53Zuqm+MdMRAsLTirKk63Da+BvkVOKaahC09Hyss4A=;
+	s=default; t=1577642519;
+	bh=JCaGLxuX1+7lSZZEo0VAEfdKz+ADCMd4+VgzpVhEvms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOpIXmXxZBVpBMPhop5Em6zw8zTh0rfh0n5CKy1h80WOWNaC85Xy8ppLv17A2oitZ
-	 JifS0Te3z40+7ujsxefBJgzmBRzqY/ICVAWrhGRvzaOK/0FdiBE52E9aVuTLG6da9k
-	 2+svYXLnwKuasaI9+z1T04Ifq8JG7RX2lhiFOOTk=
+	b=BOqLzz5GCpF9X3yJt2B+1VwApCnGbHgJBns7Hh0YzWY+dbm+zpHzWYOKlHwVpOpfq
+	 MswZbCIx604Mhz3+PHaWu/JiIGxRCx0EViA8I5XzS94Ed456UHWx8TjvSLbO2TmZ7Q
+	 qZzKkov/ECF1S4rq0KVLfWzSB6juW0k2Cinh1TU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732990AbfL2Rzr (ORCPT
+        id S2387651AbfL2SB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44710 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:01:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732972AbfL2Rzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:44 -0500
+        id S1732933AbfL2Rzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99262206DB;
-        Sun, 29 Dec 2019 17:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC756206A4;
+        Sun, 29 Dec 2019 17:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642144;
-        bh=u53Zuqm+MdMRAsLTirKk63Da+BvkVOKaahC09Hyss4A=;
+        s=default; t=1577642132;
+        bh=JCaGLxuX1+7lSZZEo0VAEfdKz+ADCMd4+VgzpVhEvms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=je7fUUOL+uIGIMLEJfibyb9zecGsXhW1h+qzAdBzjgmqOn3YKlQo2C7MzLEyoYfLe
-         dEs9Ap/AYjBTZtUKGziy1yDOWdUWALcBzhxgr/GZdlJ/lP56XWuGvIak/uSCQacLDK
-         woa+MrXtUCFCTThk7/WDd+jdqwdYcemMzWch1OAs=
+        b=KR2cRkul356aUH8wuRv3iIPek52IeJb7H/j46rQeeKWyHZTQhtujp0/UzFJrbUccX
+         i7AE7K80APtKZzNhN9RtZI4+5kRWx9HW1eeSV7/SpEneAxa00rsD2abwpAZkymYUIl
+         wXZeGPM++CyrUz2KPeNUaPpOpJILluq15D/AMoMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Devesh Sharma <devesh.sharma@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 359/434] net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling
-Date:   Sun, 29 Dec 2019 18:26:52 +0100
-Message-Id: <20191229172725.816512424@linuxfoundation.org>
+Subject: [PATCH 5.4 354/434] RDMA/bnxt_re: Fix missing le16_to_cpu
+Date:   Sun, 29 Dec 2019 18:26:47 +0100
+Message-Id: <20191229172725.484108806@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,79 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Devesh Sharma <devesh.sharma@broadcom.com>
 
-[ Upstream commit b167191e2a851cb2e4c6ef8b91c83ff73ef41872 ]
+[ Upstream commit fca5b9dc0986aa49b3f0a7cfe24b6c82422ac1d7 ]
 
-Commit 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in
-napi_gro_receive()") has applied batched GRO_NORMAL packets processing
-to all napi_gro_receive() users, including mac80211-based drivers.
+>From sparse:
 
-However, this change has led to a regression in iwlwifi driver [1][2] as
-it is required for NAPI users to call napi_complete_done() or
-napi_complete() and the end of every polling iteration, whilst iwlwifi
-doesn't use NAPI scheduling at all and just calls napi_gro_flush().
-In that particular case, packets which have not been already flushed
-from napi->rx_list stall in it until at least next Rx cycle.
+drivers/infiniband/hw/bnxt_re/main.c:1274:18: warning: cast from restricted __le16
+drivers/infiniband/hw/bnxt_re/main.c:1275:18: warning: cast from restricted __le16
+drivers/infiniband/hw/bnxt_re/main.c:1276:18: warning: cast from restricted __le16
+drivers/infiniband/hw/bnxt_re/main.c:1277:21: warning: restricted __le16 degrades to integer
 
-Fix this by adding a manual flushing of the list to iwlwifi driver right
-before napi_gro_flush() call to mimic napi_complete() logics.
-
-I prefer to open-code gro_normal_list() rather than exporting it for 2
-reasons:
-* to prevent from using it and napi_gro_flush() in any new drivers,
-  as it is the *really* bad way to use NAPI that should be avoided;
-* to keep gro_normal_list() static and don't lose any CC optimizations.
-
-I also don't add the "Fixes:" tag as the mentioned commit was only a
-trigger that only exposed an improper usage of NAPI in this particular
-driver.
-
-[1] https://lore.kernel.org/netdev/PSXP216MB04388962C411CD0B17A86F47804A0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=205647
-
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Acked-by: Luca Coelho <luciano.coelho@intel.com>
-Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Tested-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Reviewed-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2b827ea1926b ("RDMA/bnxt_re: Query HWRM Interface version from FW")
+Link: https://lore.kernel.org/r/1574317343-23300-4-git-send-email-devesh.sharma@broadcom.com
+Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index 19dd075f2f63..041dd75ac72b 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1429,6 +1429,7 @@ out_err:
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
-+	struct napi_struct *napi;
- 	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
-@@ -1534,8 +1535,16 @@ out:
- 	if (unlikely(emergency && count))
- 		iwl_pcie_rxq_alloc_rbs(trans, GFP_ATOMIC, rxq);
- 
--	if (rxq->napi.poll)
--		napi_gro_flush(&rxq->napi, false);
-+	napi = &rxq->napi;
-+	if (napi->poll) {
-+		if (napi->rx_count) {
-+			netif_receive_skb_list(&napi->rx_list);
-+			INIT_LIST_HEAD(&napi->rx_list);
-+			napi->rx_count = 0;
-+		}
-+
-+		napi_gro_flush(napi, false);
-+	}
- 
- 	iwl_pcie_rxq_restock(trans, rxq);
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index 30a54f8aa42c..b31e21588200 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -1270,10 +1270,10 @@ static void bnxt_re_query_hwrm_intf_version(struct bnxt_re_dev *rdev)
+ 		return;
+ 	}
+ 	rdev->qplib_ctx.hwrm_intf_ver =
+-		(u64)resp.hwrm_intf_major << 48 |
+-		(u64)resp.hwrm_intf_minor << 32 |
+-		(u64)resp.hwrm_intf_build << 16 |
+-		resp.hwrm_intf_patch;
++		(u64)le16_to_cpu(resp.hwrm_intf_major) << 48 |
++		(u64)le16_to_cpu(resp.hwrm_intf_minor) << 32 |
++		(u64)le16_to_cpu(resp.hwrm_intf_build) << 16 |
++		le16_to_cpu(resp.hwrm_intf_patch);
  }
+ 
+ static void bnxt_re_ib_unreg(struct bnxt_re_dev *rdev)
 -- 
 2.20.1
 
