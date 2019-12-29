@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC08C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E898C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D360E222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AA820748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641966;
-	bh=z39Fr7ia2l32HzW7ElZsr8NwpVDF8MpryY5I2YrPTSo=;
+	s=default; t=1577641971;
+	bh=DEZkljZFzwxiwPGfqOja9OmDX5YI3wAlVDzUyPwZqIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=heL8oze4OkP8ZoBsS3JJAcf4hktfyOJJ20GrrxE2H6nsm9T9AkC0yhhmVPdJoA1SU
-	 6S2lWlXjMK8ElPBOpkIcKnByxA6SjS8q/WdcrCa8GSH/ZV/s6OvdUDbRiBdy9Nk5wI
-	 7X/jNctk/0Gj8i7jTMyOEh91ZTCGxMu5TOUufjfc=
+	b=kB+widZT49UeZznlNlnmPG0oFZAcBoLDcokH2Hzfr8VnkwZMYAQ3hXN2cFSMCWdo3
+	 j0oobJvUdGi5bYyJwk0fmxBRsL32s8vnuyRZ+9R0ZNONsqKIDnigVSfhfRJNTzWf28
+	 Le0dvQWsmC4vENvApImpRr4PyhTICBaB2alPKiS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbfL2Rwp (ORCPT
+        id S1732068AbfL2Rwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:52:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:52:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731852AbfL2Rwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:52:42 -0500
+        id S1732333AbfL2Rwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:52:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E13206A4;
-        Sun, 29 Dec 2019 17:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D114720718;
+        Sun, 29 Dec 2019 17:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641961;
-        bh=z39Fr7ia2l32HzW7ElZsr8NwpVDF8MpryY5I2YrPTSo=;
+        s=default; t=1577641964;
+        bh=DEZkljZFzwxiwPGfqOja9OmDX5YI3wAlVDzUyPwZqIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFa75ui+++MFYPSFyHEecDxfHx0leIYbH6pNImWEKSyhHWKo0Rak40j2SPzqTsQTo
-         S4voUukX3BiNa48svTBYLlTaIVhCWZySU8xBxx1AwRsSXalxrzk7D4dTS2k0jZqF1E
-         9ljzRCyvR2DLpnnTwq3qZRIUXhKPGQlIdy6/K7Hg=
+        b=sAqF9e44fEa+kcYDenoGmqm9WH+ZjrwN2xYDV5lIezRNY77NS/QU/6nymc4/nCWoB
+         yNi94Blu6/QogTeGJB3VU+wwBPmZBbChJ5PVjYBpuVhOBJF/NoYSroGm1eHEUkuM8X
+         a8kgVDLhIgJnt9MfMKlGXiqsPgtNWhKiCQad0DSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Han Nandor <nandor.han@vaisala.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 242/434] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
-Date:   Sun, 29 Dec 2019 18:24:55 +0100
-Message-Id: <20191229172717.957859542@linuxfoundation.org>
+Subject: [PATCH 5.4 233/434] nvmem: core: fix nvmem_cell_write inline function
+Date:   Sun, 29 Dec 2019 18:24:46 +0100
+Message-Id: <20191229172717.352642814@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,62 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
+[ Upstream commit 9b8303fc6efa724bd6a90656434fbde2cc6ceb2c ]
 
-This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
-Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
-single memory leak during probe:
+nvmem_cell_write's buf argument uses different types based on
+the configuration of CONFIG_NVMEM. The function prototype for
+enabled NVMEM uses 'void *' type, but the static dummy function
+for disabled NVMEM uses 'const char *' instead. Fix the different
+behaviour by always expecting a 'void *' typed buf argument.
 
-unreferenced object 0xec13ee40 (size 176):
-  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
-    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
-    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
-    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
-    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
-    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
-    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
-    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
-    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
-    [<ac5fcae4>] process_one_work+0x22c/0x564
-    [<f5e6d3b6>] worker_thread+0x44/0x5d8
-    [<82c7b073>] kthread+0x150/0x154
-    [<b43e1b7d>] ret_from_fork+0x14/0x2c
-    [<794dff30>] 0x0
-
-It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
-patch just frees the skb within the function to resolve memleak problem
-by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
-command packet for firmware via the function, applying this patch doesn't
-affect driver behavior.
-
-Reported-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Han Nandor <nandor.han@vaisala.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reviewed-By: Han Nandor <nandor.han@vaisala.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20191029114240.14905-2-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/nvmem-consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-index 56cc3bc30860..f070f25bb735 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-@@ -1540,6 +1540,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
-    * This is maybe necessary:
-    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
-    */
-+	dev_kfree_skb(skb);
-+
- 	return true;
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index 8f8be5b00060..5c17cb733224 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
  }
  
+ static inline int nvmem_cell_write(struct nvmem_cell *cell,
+-				    const char *buf, size_t len)
++				   void *buf, size_t len)
+ {
+ 	return -EOPNOTSUPP;
+ }
 -- 
 2.20.1
 
