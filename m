@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C635C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B2BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28108206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F63121744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642400;
-	bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
+	s=default; t=1577642402;
+	bh=EjjsqRq6XbMrEY0Znl/H+gw/v814XcT3VjQoYyQJzvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7eStadImYMWSnohj8czD6hOUWg0gOFvChNvIrbjUQBGWItn9Z6g/u/UihLH+Xv0Z
-	 giq5x4RSiCYnhWRbCXSGpGTHYTox1yRwFSVjHO64IVWC72OzkwnKzKSgQQZehlJUY7
-	 VtTHH+isK6ZXZDcOgsaRvjI2v96rg9TeR6MGveOQ=
+	b=OI7nXQiblTYE2ZbOT4PzM7gyRNepJu2+eA61BN2MQ7X8ZU1PCumk2xB5EeGKiNHGk
+	 HyhU04TVULau111dRiD+rXtAiXt2L/9qZNKZfeV70VtJUpO4odVQcr+nUInbEfCZUY
+	 J4AaePgK6/cpkEQCpKd6sMHRyAHjvRp1E1lq0pJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387761AbfL2R77 (ORCPT
+        id S2387426AbfL2R6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49068 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387463AbfL2R6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:08 -0500
+        id S1732946AbfL2R56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:57:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D81206DB;
-        Sun, 29 Dec 2019 17:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9406D206DB;
+        Sun, 29 Dec 2019 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642287;
-        bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
+        s=default; t=1577642278;
+        bh=EjjsqRq6XbMrEY0Znl/H+gw/v814XcT3VjQoYyQJzvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYiSFv97SUY55HJhBTGPXtyGPJaY3JUvOMb0Bk0bO2cVK7eL/s/mabs4KkUavknTG
-         tqqV7w9oXxfzWaU+fcTlMzMhVoe4zIaIS7Ri0a9fxcbyF53lw+WOanhZM0VAT5E+aF
-         Gpc43ICtrhh+HZu7kyogWwHtZxkwNfPRMhkroUmg=
+        b=rStlHVHmpQg0VNXM3EKfHZe8jMrISU81HxLRCEGg6vMGY8M7qcf73FfSDB63Wfuvq
+         Mz3TeMVPr7A3fqu9lc0RC26kz/DhtdJsAtCuQ5fmDLNRtGgz4k9VmmxtP0wuJt/iK2
+         OnxapwLqEqhy6WtA6opqC8NfGvUhk9Z0lD44PRVk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaolong Huang <butterflyhuangxx@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 377/434] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
-Date:   Sun, 29 Dec 2019 18:27:10 +0100
-Message-Id: <20191229172727.132515054@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 414/434] iocost: over-budget forced IOs should schedule async delay
+Date:   Sun, 29 Dec 2019 18:27:47 +0100
+Message-Id: <20191229172730.302581073@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,52 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolong Huang <butterflyhuangxx@gmail.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
+commit d7bd15a138aef3be227818aad9c501e43c89c8c5 upstream.
 
-Uninitialized Kernel memory can leak to USB devices.
+When over-budget IOs are force-issued through root cgroup,
+iocg_kick_delay() adjusts the async delay accordingly but doesn't
+actually schedule async throttle for the issuing task.  This bug is
+pretty well masked because sooner or later the offending threads are
+gonna get directly throttled on regular IOs or have async delay
+scheduled by mem_cgroup_throttle_swaprate().
 
-Fix this by using kzalloc() instead of kmalloc().
+However, it can affect control quality on filesystem metadata heavy
+operations.  Let's fix it by invoking blkcg_schedule_throttle() when
+iocg_kick_delay() says async delay is needed.
 
-Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
-Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org
+Reported-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ block/blk-iocost.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-@@ -608,7 +608,7 @@ static int kvaser_usb_leaf_simple_cmd_as
- 	struct kvaser_cmd *cmd;
- 	int err;
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -1212,7 +1212,7 @@ static enum hrtimer_restart iocg_waitq_t
+ 	return HRTIMER_NORESTART;
+ }
  
--	cmd = kmalloc(sizeof(*cmd), GFP_ATOMIC);
-+	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
- 	if (!cmd)
- 		return -ENOMEM;
+-static void iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
++static bool iocg_kick_delay(struct ioc_gq *iocg, struct ioc_now *now, u64 cost)
+ {
+ 	struct ioc *ioc = iocg->ioc;
+ 	struct blkcg_gq *blkg = iocg_to_blkg(iocg);
+@@ -1229,11 +1229,11 @@ static void iocg_kick_delay(struct ioc_g
+ 	/* clear or maintain depending on the overage */
+ 	if (time_before_eq64(vtime, now->vnow)) {
+ 		blkcg_clear_delay(blkg);
+-		return;
++		return false;
+ 	}
+ 	if (!atomic_read(&blkg->use_delay) &&
+ 	    time_before_eq64(vtime, now->vnow + vmargin))
+-		return;
++		return false;
  
-@@ -1140,7 +1140,7 @@ static int kvaser_usb_leaf_set_opt_mode(
- 	struct kvaser_cmd *cmd;
- 	int rc;
+ 	/* use delay */
+ 	if (cost) {
+@@ -1250,10 +1250,11 @@ static void iocg_kick_delay(struct ioc_g
+ 	oexpires = ktime_to_ns(hrtimer_get_softexpires(&iocg->delay_timer));
+ 	if (hrtimer_is_queued(&iocg->delay_timer) &&
+ 	    abs(oexpires - expires) <= margin_ns / 4)
+-		return;
++		return true;
  
--	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
-+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
- 	if (!cmd)
- 		return -ENOMEM;
+ 	hrtimer_start_range_ns(&iocg->delay_timer, ns_to_ktime(expires),
+ 			       margin_ns / 4, HRTIMER_MODE_ABS);
++	return true;
+ }
  
-@@ -1206,7 +1206,7 @@ static int kvaser_usb_leaf_flush_queue(s
- 	struct kvaser_cmd *cmd;
- 	int rc;
- 
--	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
-+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
- 	if (!cmd)
- 		return -ENOMEM;
+ static enum hrtimer_restart iocg_delay_timer_fn(struct hrtimer *timer)
+@@ -1739,7 +1740,9 @@ static void ioc_rqos_throttle(struct rq_
+ 	 */
+ 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
+ 		atomic64_add(abs_cost, &iocg->abs_vdebt);
+-		iocg_kick_delay(iocg, &now, cost);
++		if (iocg_kick_delay(iocg, &now, cost))
++			blkcg_schedule_throttle(rqos->q,
++					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
+ 		return;
+ 	}
  
 
 
