@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7301C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6764C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8AB207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9868D20409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640428;
-	bh=xqmpT8M4Y7EMU/GjjouJghEXD0iA5QrDxKWyPVXQU6A=;
+	s=default; t=1577640432;
+	bh=SQfUem9LKoWiyaPB/LHwDpgLiABk0OZo5aZ6uxWIf8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f/ZKngkmxCX8GyULkwgxfYja8ky9tthdWj7jTDFuGVE2msLbMSAz3k092bP+ac9d+
-	 bj8NNAcaQZD5mUuRJ+1MJBk4mUEyZghjEONRVnFCVB6ii7aNm9keDale08fuA13CcZ
-	 sITYCf86xWTGrBakTOwfBzo4fUdN4Hwpr7B69AcA=
+	b=m2xbiD1UlOXbebvtjxA5uKWaQxkKBExVHHHh1Q/DrgoKfjYF1YtxSiXmkzZ5eGu7o
+	 m0XhoEY4zN+S8nOVzoSjWSgNtib97SwJppN+CtukrBoZXzlwjCCafMCFIGpl0guMY/
+	 34wHZZZUrhlgGmGQm1Ca2O9HSyHxUvQrLpRw/y7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfL2R1G (ORCPT
+        id S1728373AbfL2R1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:27:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48894 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:27:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfL2R1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:04 -0500
+        id S1728360AbfL2R1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0607020409;
-        Sun, 29 Dec 2019 17:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E219820409;
+        Sun, 29 Dec 2019 17:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640423;
-        bh=xqmpT8M4Y7EMU/GjjouJghEXD0iA5QrDxKWyPVXQU6A=;
+        s=default; t=1577640428;
+        bh=SQfUem9LKoWiyaPB/LHwDpgLiABk0OZo5aZ6uxWIf8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTPHacsgHDOacvIk8dzlC8dg31FgsHdsR9Yyh3DLd9Y3idqECFkgRQk9OYAh2q7+U
-         pJeFbq7YKTXNeIisMtdmS2aDsUjfI6uAibU0AsgOusu7VV0HYdYzufaehA0L1oFacn
-         i/Uo9ROGU++Z2o46YfGFin54wviO8tmw/kGUZJrM=
+        b=G2s0Z2eOhQHfjk7Sg+kkWPxWhY7w1qnEfCAzlQQ6ClVughGqHe+aVk/naDJfO/mua
+         9glnNuH2Tr+9s/4cfTBAY8Z5MK5IHgZfyTOX8TPFaGJhXr0BB1euIXwou1pQGNHk6m
+         W9XKrzdjiQhnOV7dJK0pCRRVB1GxpcN27CtmtDEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 151/161] ext4: fix ext4_empty_dir() for directories with holes
-Date:   Sun, 29 Dec 2019 18:19:59 +0100
-Message-Id: <20191229162447.013699297@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Theodore Tso <tytso@mit.edu>, stable@kernel.org
+Subject: [PATCH 4.14 153/161] ext4: unlock on error in ext4_expand_extra_isize()
+Date:   Sun, 29 Dec 2019 18:20:01 +0100
+Message-Id: <20191229162448.023040916@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,96 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 64d4ce892383b2ad6d782e080d25502f91bf2a38 upstream.
+commit 7f420d64a08c1dcd65b27be82a27cf2bdb2e7847 upstream.
 
-Function ext4_empty_dir() doesn't correctly handle directories with
-holes and crashes on bh->b_data dereference when bh is NULL. Reorganize
-the loop to use 'offset' variable all the times instead of comparing
-pointers to current direntry with bh->b_data pointer. Also add more
-strict checking of '.' and '..' directory entries to avoid entering loop
-in possibly invalid state on corrupted filesystems.
+We need to unlock the xattr before returning on this error path.
 
-CC: stable@vger.kernel.org
-Fixes: 4e19d6b65fb4 ("ext4: allow directory holes")
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191202170213.4761-2-jack@suse.cz
+Cc: stable@kernel.org # 4.13
+Fixes: c03b45b853f5 ("ext4, project: expand inode extra size if possible")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20191213185010.6k7yl2tck3wlsdkt@kili.mountain
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/namei.c |   32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ fs/ext4/inode.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -2702,7 +2702,7 @@ bool ext4_empty_dir(struct inode *inode)
- {
- 	unsigned int offset;
- 	struct buffer_head *bh;
--	struct ext4_dir_entry_2 *de, *de1;
-+	struct ext4_dir_entry_2 *de;
- 	struct super_block *sb;
- 
- 	if (ext4_has_inline_data(inode)) {
-@@ -2727,19 +2727,25 @@ bool ext4_empty_dir(struct inode *inode)
- 		return true;
- 
- 	de = (struct ext4_dir_entry_2 *) bh->b_data;
--	de1 = ext4_next_entry(de, sb->s_blocksize);
--	if (le32_to_cpu(de->inode) != inode->i_ino ||
--			le32_to_cpu(de1->inode) == 0 ||
--			strcmp(".", de->name) || strcmp("..", de1->name)) {
--		ext4_warning_inode(inode, "directory missing '.' and/or '..'");
-+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
-+				 0) ||
-+	    le32_to_cpu(de->inode) != inode->i_ino || strcmp(".", de->name)) {
-+		ext4_warning_inode(inode, "directory missing '.'");
- 		brelse(bh);
- 		return true;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5874,7 +5874,7 @@ int ext4_expand_extra_isize(struct inode
+ 	error = ext4_journal_get_write_access(handle, iloc->bh);
+ 	if (error) {
+ 		brelse(iloc->bh);
+-		goto out_stop;
++		goto out_unlock;
  	}
--	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize) +
--		 ext4_rec_len_from_disk(de1->rec_len, sb->s_blocksize);
--	de = ext4_next_entry(de1, sb->s_blocksize);
-+	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
-+	de = ext4_next_entry(de, sb->s_blocksize);
-+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
-+				 offset) ||
-+	    le32_to_cpu(de->inode) == 0 || strcmp("..", de->name)) {
-+		ext4_warning_inode(inode, "directory missing '..'");
-+		brelse(bh);
-+		return true;
-+	}
-+	offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
- 	while (offset < inode->i_size) {
--		if ((void *) de >= (void *) (bh->b_data+sb->s_blocksize)) {
-+		if (!(offset & (sb->s_blocksize - 1))) {
- 			unsigned int lblock;
- 			brelse(bh);
- 			lblock = offset >> EXT4_BLOCK_SIZE_BITS(sb);
-@@ -2750,12 +2756,11 @@ bool ext4_empty_dir(struct inode *inode)
- 			}
- 			if (IS_ERR(bh))
- 				return true;
--			de = (struct ext4_dir_entry_2 *) bh->b_data;
- 		}
-+		de = (struct ext4_dir_entry_2 *) (bh->b_data +
-+					(offset & (sb->s_blocksize - 1)));
- 		if (ext4_check_dir_entry(inode, NULL, de, bh,
- 					 bh->b_data, bh->b_size, offset)) {
--			de = (struct ext4_dir_entry_2 *)(bh->b_data +
--							 sb->s_blocksize);
- 			offset = (offset | (sb->s_blocksize - 1)) + 1;
- 			continue;
- 		}
-@@ -2764,7 +2769,6 @@ bool ext4_empty_dir(struct inode *inode)
- 			return false;
- 		}
- 		offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
--		de = ext4_next_entry(de, sb->s_blocksize);
- 	}
- 	brelse(bh);
- 	return true;
+ 
+ 	error = __ext4_expand_extra_isize(inode, new_extra_isize, iloc,
+@@ -5884,8 +5884,8 @@ int ext4_expand_extra_isize(struct inode
+ 	if (!error)
+ 		error = rc;
+ 
++out_unlock:
+ 	ext4_write_unlock_xattr(inode, &no_expand);
+-out_stop:
+ 	ext4_journal_stop(handle);
+ 	return error;
+ }
 
 
