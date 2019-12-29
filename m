@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C85C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4407C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA16620718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB8620718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641070;
-	bh=Z4NeLnHfinDf0dGZbvxosTXYvPNpnBpXnEzp2QUg3tM=;
+	s=default; t=1577641083;
+	bh=wTeLpwQ9NyWe9Ik7bwUjxLI73XPOTIwTnGzR5hpahyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yrz2MNThrjfS7WdOZ+9f/hMSTEgeU5ASSPMm6a8/rI5wivtVQgff9L7cAI0eoI8vH
-	 wVAB3Rm0hw9groE+VyiBvioqlBUarZqQJ4itgdj+Hx3bP8vtWh4DH3UTCBi7/7hLba
-	 wZ52imnre9MYFRRtSurd+MAmIBVnbj+gMUugUlwQ=
+	b=Qq/KCHSEhk996HYOEYmKWA3tLci7BPC1xklAVvFg/XpmvONaC5U+hMCuPlvt6DXBn
+	 +VhpNAjOCunEG9Wg6Ux4VDLGJHGSLCWaG050ldxkfm06akZZb4wV6h79TrXUwo2mf8
+	 X1ugnsFemY91P6hTvU74WGqUbbAktI+jYloFFtzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbfL2Rht (ORCPT
+        id S1729980AbfL2RiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:38:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbfL2RfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:35:20 -0500
+        id S1729729AbfL2Res (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 434C9206DB;
-        Sun, 29 Dec 2019 17:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9FA120722;
+        Sun, 29 Dec 2019 17:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640919;
-        bh=Z4NeLnHfinDf0dGZbvxosTXYvPNpnBpXnEzp2QUg3tM=;
+        s=default; t=1577640888;
+        bh=wTeLpwQ9NyWe9Ik7bwUjxLI73XPOTIwTnGzR5hpahyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQGrjiBRZijkkrzl7Ss3U9jl4ey/3hjFnxmC8/1AX79fX24cCj8gDNMq6rBN0JbPQ
-         0eGISxKz/LmIqoDmL5lg6QyNphofF7SEp33xE9l0zT/RSdnVgCVFjM/K5OzU2Sc+EH
-         QTUoWfEvZTx4uRIbupu0PVFBAZiLsekRYNXSZdU8=
+        b=onP9yjqSiRoaTnOZqyumPmVd5Z55gYwJXJHbNVBiybQKsaO3QlEr44/IMQ76Mevpy
+         1rrIxva3OYWUG9Ta5BoYrHcc4bJmlxtdcuiqBo8eCI1F1zivJHDJuZn35ou67MyYiT
+         w6erUdWmGx31ueDlWO9EPiaGJH3iZznL+2pZSN3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 193/219] usb: xhci: Fix build warning seen with CONFIG_PM=n
-Date:   Sun, 29 Dec 2019 18:19:55 +0100
-Message-Id: <20191229162538.879138816@linuxfoundation.org>
+Subject: [PATCH 4.19 181/219] crypto: sun4i-ss - Fix 64-bit size_t warnings on sun4i-ss-hash.c
+Date:   Sun, 29 Dec 2019 18:19:43 +0100
+Message-Id: <20191229162536.490846003@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,47 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 6056a0f8ede27b296d10ef46f7f677cc9d715371 ]
+[ Upstream commit a7126603d46fe8f01aeedf589e071c6aaa6c6c39 ]
 
-The following build warning is seen if CONFIG_PM is disabled.
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-drivers/usb/host/xhci-pci.c:498:13: warning:
-	unused function 'xhci_pci_shutdown'
-
-Fixes: f2c710f7dca8 ("usb: xhci: only set D3hot for pci device")
-Cc: Henry Lin <henryl@nvidia.com>
-Cc: stable@vger.kernel.org	# all stable releases with f2c710f7dca8
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20191218011911.6907-1-linux@roeck-us.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fixes all of the warnings on sun4i-ss-hash.c.
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 74aeaa61f5c6..075c49cfe60f 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -493,7 +493,6 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
- 	retval = xhci_resume(xhci, hibernated);
- 	return retval;
- }
--#endif /* CONFIG_PM */
- 
- static void xhci_pci_shutdown(struct usb_hcd *hcd)
- {
-@@ -506,6 +505,7 @@ static void xhci_pci_shutdown(struct usb_hcd *hcd)
- 	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
- 		pci_set_power_state(pdev, PCI_D3hot);
- }
-+#endif /* CONFIG_PM */
- 
- /*-------------------------------------------------------------------------*/
- 
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index f6936bb3b7be..1a724263761b 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -276,8 +276,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 			 */
+ 			while (op->len < 64 && i < end) {
+ 				/* how many bytes we can read from current SG */
+-				in_r = min3(mi.length - in_i, end - i,
+-					    64 - op->len);
++				in_r = min(end - i, 64 - op->len);
++				in_r = min_t(size_t, mi.length - in_i, in_r);
+ 				memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 				op->len += in_r;
+ 				i += in_r;
+@@ -297,8 +297,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 		if (mi.length - in_i > 3 && i < end) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    ((mi.length - in_i) / 4) * 4);
++			in_r = min_t(size_t, mi.length - in_i, areq->nbytes - i);
++			in_r = min_t(size_t, ((mi.length - in_i) / 4) * 4, in_r);
+ 			/* how many bytes we can write in the device*/
+ 			todo = min3((u32)(end - i) / 4, rx_cnt, (u32)in_r / 4);
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + in_i, todo);
+@@ -324,8 +324,8 @@ static int sun4i_hash(struct ahash_request *areq)
+ 	if ((areq->nbytes - i) < 64) {
+ 		while (i < areq->nbytes && in_i < mi.length && op->len < 64) {
+ 			/* how many bytes we can read from current SG */
+-			in_r = min3(mi.length - in_i, areq->nbytes - i,
+-				    64 - op->len);
++			in_r = min(areq->nbytes - i, 64 - op->len);
++			in_r = min_t(size_t, mi.length - in_i, in_r);
+ 			memcpy(op->buf + op->len, mi.addr + in_i, in_r);
+ 			op->len += in_r;
+ 			i += in_r;
 -- 
 2.20.1
 
