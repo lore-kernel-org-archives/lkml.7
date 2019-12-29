@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947A5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8BD207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE9A20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641409;
-	bh=ue1JsQLc0tV8J5CrdUYqvCo2m/lptz5ZRPhUMwOMwjc=;
+	s=default; t=1577641413;
+	bh=ZeB+9JhSkAaKXyBUi7hHIXfSXFBtWmCxQ4icztn3gQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7/ssiwBsnIEQ7jL9+xKCvS5TBG+4zwOzomJb2g4/Xsu835ans4RQtiR5bAYfJaBf
-	 5HchOcrmrIerVBUMNgLgo5BocrE/U5U4CCmo1JK604AY46bW1hz5MpFCBnSAI30yDJ
-	 gd+O3oJ9prwqYlqhPzHUy2ES0ClldljHgH9tTWMY=
+	b=WtMbzjANXA4vhjRb3xyOvpKM//8PmcX4zNx/BOQMWUaX7mLd1lwpGSwplGsmBg5S6
+	 9tJarDpsfxvNRJAbqQVZbFkCPan6jlFCANBKrfW5lNhOswHgVHmZfzjxSUnUz2E7zW
+	 18zVbuZRYUSzK8FaZFytrDuBLnBfsXn9ysKw3C5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfL2Rn1 (ORCPT
+        id S1730499AbfL2Rnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50486 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730452AbfL2RnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:17 -0500
+        id S1728981AbfL2Rn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D4D5207FD;
-        Sun, 29 Dec 2019 17:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9683207FD;
+        Sun, 29 Dec 2019 17:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641396;
-        bh=ue1JsQLc0tV8J5CrdUYqvCo2m/lptz5ZRPhUMwOMwjc=;
+        s=default; t=1577641406;
+        bh=ZeB+9JhSkAaKXyBUi7hHIXfSXFBtWmCxQ4icztn3gQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Re7WBTYj/puFN835XIVK5IHfa3q3VfxHjhTAS00/r8b8AC3aFos5/jFMPZg4ZWQs0
-         aX1zRxa9xNOCeyz8Z+EoQ646zLRP9c5xvh3JwBOYIIb3QEMaOl6JAeQ9ldC2Go8QX/
-         e960V2upubh3nZh4XNy+pwSdTQgzSxXrHrDWTBME=
+        b=mGirIoVuLMq9GZB1jNuCEi6SKNPN1/BmhBEIn0pZpIyOUY8kaRXoD/XNIOXstMkf1
+         GOBqN6eebsE9kVAXdERlIFzFo+EZUVdpluo26ldcGIdJgfodMxYbLqi5szs88H1rxA
+         xXsb+xwvp4rUKecf0uU29h/ES5TovHK3fmgKL8D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/434] drm/panel: Add missing drm_panel_init() in panel drivers
-Date:   Sun, 29 Dec 2019 18:21:40 +0100
-Message-Id: <20191229172705.113810375@linuxfoundation.org>
+Subject: [PATCH 5.4 051/434] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Sun, 29 Dec 2019 18:21:44 +0100
+Message-Id: <20191229172705.328843017@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,46 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 65abbda8ed7ca48c8807d6b04a77431b438fa659 ]
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-Panels must be initialised with drm_panel_init(). Add the missing
-function call in the panel-raspberrypi-touchscreen.c and
-panel-sitronix-st7789v.c drivers.
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823193245.23876-2-laurent.pinchart@ideasonboard.com
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 +
- drivers/gpu/drm/panel/panel-sitronix-st7789v.c        | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index b5b14aa059ea..2aa89eaecf6f 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -426,6 +426,7 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
- 		return PTR_ERR(ts->dsi);
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index 3c7cc5af735c..56df07cdab68 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -715,7 +715,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
++
+ 		return PTR_ERR(pdata->dvdd10);
  	}
  
-+	drm_panel_init(&ts->base);
- 	ts->base.dev = dev;
- 	ts->base.funcs = &rpi_touchscreen_funcs;
+@@ -1332,7 +1334,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
  
-diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-index 5e3e92ea9ea6..3b2612ae931e 100644
---- a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-+++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
-@@ -381,6 +381,7 @@ static int st7789v_probe(struct spi_device *spi)
- 	spi_set_drvdata(spi, ctx);
- 	ctx->spi = spi;
- 
-+	drm_panel_init(&ctx->panel);
- 	ctx->panel.dev = &spi->dev;
- 	ctx->panel.funcs = &st7789v_drm_funcs;
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++
+ 		return err;
+ 	}
  
 -- 
 2.20.1
