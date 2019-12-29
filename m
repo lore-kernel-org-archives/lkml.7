@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0D4C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 774F7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4633221744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433A3206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641365;
-	bh=aVGBNafn8ccvV1/KO7hDblzXPn28cCskNHJE9l2KE2o=;
+	s=default; t=1577641368;
+	bh=tDD6UcQO//fPfKO1LLIweRfUJgq9pUxd+d+2vc02hPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/6XagQeUAnx+5/uMxZF9qXI6zROeyspLb7nU5nK/SKVnFq8M3hJha8usDZthbm8i
-	 FVk4tTiU2MUANoxiApbCpFOLl1hwzjTnvivivIMjSegavWkNQmHKvIkW61TZ2EJ0xg
-	 vCOJCxVMCY0vpfHsH4bMJo/R91IqFj9mI/lfgS3c=
+	b=QXLwyFLo9IuWEr0PNAp6PTSOIhS9vZE6Y/X8CWfyuX8h+QhZ0smN3QcXy9g9ZEu8q
+	 7GhZMyeqkcyloFXTaXv09hSqU7Gw1D0xjxfQjfvLCp4jFnKy9p/WkpxLmgNXr7Nym5
+	 UtqWFGPvS8x+/AxdjgppG/Kft12YkEP15qwh51Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfL2Rmk (ORCPT
+        id S1730357AbfL2Rmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:42:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:42:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbfL2Rmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:42:31 -0500
+        id S1730340AbfL2Rml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:42:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41DEF207FD;
-        Sun, 29 Dec 2019 17:42:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23552207FF;
+        Sun, 29 Dec 2019 17:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641350;
-        bh=aVGBNafn8ccvV1/KO7hDblzXPn28cCskNHJE9l2KE2o=;
+        s=default; t=1577641360;
+        bh=tDD6UcQO//fPfKO1LLIweRfUJgq9pUxd+d+2vc02hPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZaVAxK4qe8DUwYt57yNWinwY/Vej2xYbmL5BzG0inlfNW7fyDjIAfumQmpoulQ/4
-         ipYpHyvAvW2KDf3TIG0pd6/RFGcfQiCHTVoDx5s2nbRggBoFMvD+DHYvVFY7KZuWeb
-         c1ZNIZ7gQmUBc6Vgh0QQ+Aed/ehvUf6Wh5aw7Cqc=
+        b=jL/9efnjOciwcysmVgi4NaPszmB5nbnoW/9A8xjJWMD1vaEmFuxJ6Tuq0I4j9loOP
+         OBPQEOQJMYv7LabGWEPbPeHCxNVqfPdjRaX9jDSOfEgOIGWVXu7v2YZT+WuGkjMpab
+         Gm1ZtH1e6WPTEUf07IFmq5OxPHM0ZabgtjvCaino=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 030/434] Btrfs: make tree checker detect checksum items with overlapping ranges
-Date:   Sun, 29 Dec 2019 18:21:23 +0100
-Message-Id: <20191229172704.048754998@linuxfoundation.org>
+Subject: [PATCH 5.4 034/434] btrfs: abort transaction after failed inode updates in create_subvol
+Date:   Sun, 29 Dec 2019 18:21:27 +0100
+Message-Id: <20191229172704.299990660@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,73 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit ad1d8c439978ede77cbf73cbdd11bafe810421a5 upstream.
+commit c7e54b5102bf3614cadb9ca32d7be73bad6cecf0 upstream.
 
-Having checksum items, either on the checksums tree or in a log tree, that
-represent ranges that overlap each other is a sign of a corruption. Such
-case confuses the checksum lookup code and can result in not being able to
-find checksums or find stale checksums.
-
-So add a check for such case.
-
-This is motivated by a recent fix for a case where a log tree had checksum
-items covering ranges that overlap each other due to extent cloning, and
-resulted in missing checksums after replaying the log tree. It also helps
-detect past issues such as stale and outdated checksums due to overlapping,
-commit 27b9a8122ff71a ("Btrfs: fix csum tree corruption, duplicate and
-outdated checksums").
+We can just abort the transaction here, and in fact do that for every
+other failure in this function except these two cases.
 
 CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-checker.c |   18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ fs/btrfs/ioctl.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -243,7 +243,7 @@ static int check_extent_data_item(struct
- }
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -705,11 +705,17 @@ static noinline int create_subvol(struct
  
- static int check_csum_item(struct extent_buffer *leaf, struct btrfs_key *key,
--			   int slot)
-+			   int slot, struct btrfs_key *prev_key)
- {
- 	struct btrfs_fs_info *fs_info = leaf->fs_info;
- 	u32 sectorsize = fs_info->sectorsize;
-@@ -267,6 +267,20 @@ static int check_csum_item(struct extent
- 			btrfs_item_size_nr(leaf, slot), csumsize);
- 		return -EUCLEAN;
- 	}
-+	if (slot > 0 && prev_key->type == BTRFS_EXTENT_CSUM_KEY) {
-+		u64 prev_csum_end;
-+		u32 prev_item_size;
-+
-+		prev_item_size = btrfs_item_size_nr(leaf, slot - 1);
-+		prev_csum_end = (prev_item_size / csumsize) * sectorsize;
-+		prev_csum_end += prev_key->offset;
-+		if (prev_csum_end > key->offset) {
-+			generic_err(leaf, slot - 1,
-+"csum end range (%llu) goes beyond the start range (%llu) of the next csum item",
-+				    prev_csum_end, key->offset);
-+			return -EUCLEAN;
-+		}
+ 	btrfs_i_size_write(BTRFS_I(dir), dir->i_size + namelen * 2);
+ 	ret = btrfs_update_inode(trans, root, dir);
+-	BUG_ON(ret);
++	if (ret) {
++		btrfs_abort_transaction(trans, ret);
++		goto fail;
 +	}
- 	return 0;
- }
  
-@@ -1239,7 +1253,7 @@ static int check_leaf_item(struct extent
- 		ret = check_extent_data_item(leaf, key, slot, prev_key);
- 		break;
- 	case BTRFS_EXTENT_CSUM_KEY:
--		ret = check_csum_item(leaf, key, slot);
-+		ret = check_csum_item(leaf, key, slot, prev_key);
- 		break;
- 	case BTRFS_DIR_ITEM_KEY:
- 	case BTRFS_DIR_INDEX_KEY:
+ 	ret = btrfs_add_root_ref(trans, objectid, root->root_key.objectid,
+ 				 btrfs_ino(BTRFS_I(dir)), index, name, namelen);
+-	BUG_ON(ret);
++	if (ret) {
++		btrfs_abort_transaction(trans, ret);
++		goto fail;
++	}
+ 
+ 	ret = btrfs_uuid_tree_add(trans, root_item->uuid,
+ 				  BTRFS_UUID_KEY_SUBVOL, objectid);
 
 
