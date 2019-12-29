@@ -2,53 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82265C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB32C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DCF206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B1B207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641422;
-	bh=GK0FX52DVvojoAlPdOEo5GgMAzRbExsRiZMwVHqEfTs=;
+	s=default; t=1577641424;
+	bh=f6ZhVK1eiA0UrK8GlBaWaGhwXlBztdh25sCCQyIOgPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qx6BR+max6caVrJJkoKmeEAs2IC5dk7cybJ9CtpAHl0kSBtOBCbzA1PPljhV+nT/2
-	 TroTGOozKNyuylkYm9HUH6cSGZLOMVhKfhQILPOuhH5gdh9Vg9RR/aokAE7cedvnFB
-	 8VCZzf2C8U8iOQUQFMEslqcYaY/zcnrfaC134JYo=
+	b=DxK5B0nlIgD/T1tXdZTuS3MvoKsL+cwckiqsxSLbzNZbBspyOmPdul+rngZ0MxL+k
+	 lm/ZIr7FkhAPkbNFNkbO51AZVYoy4qk7M0xDT1z7mKvhQl0hPreIfEpMXfPz6b+Z6L
+	 VNGyzN8N2k3l9tB3U23Fu6ThbFeh7xni/TNd8Hm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbfL2Rnl (ORCPT
+        id S1730541AbfL2Rnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730515AbfL2Rng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:36 -0500
+        id S1730532AbfL2Rnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93DBF206A4;
-        Sun, 29 Dec 2019 17:43:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 674D8206A4;
+        Sun, 29 Dec 2019 17:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641416;
-        bh=GK0FX52DVvojoAlPdOEo5GgMAzRbExsRiZMwVHqEfTs=;
+        s=default; t=1577641420;
+        bh=f6ZhVK1eiA0UrK8GlBaWaGhwXlBztdh25sCCQyIOgPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPKAWmNQQuw8uRAy3oeGYNorWxsGgRZxnuxGLXWvdpvrgIBb9od6T+GmaVy2WJeZR
-         ktPj+K6jw0woqAGLWjyN6uIk3e6M2ymncDbOk+a1brBbZVrnMzLQmCP56/eKpNNUcc
-         xSjidpKtJGDiECMiPlyoHq/rve59svITgzxqAuEI=
+        b=J2aDsUdvIom8cyFiGhT8zCYN+DxxRqVSNKGgeUcjCMtW/noNbgzZnS13O7dtMBetf
+         ACKvqacoOp5rqATlO70nE5Oz3GIpSDrtjj6XGXp0OISnsQHkOJ4fAuRe2pyO2NigY0
+         ESr8sL5CLRY7tTz4yTAzFhE5vo8IuENExxiveA7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Zhang <Jack.Zhang1@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/434] drm/amdgpu/sriov: add ring_stop before ring_create in psp v11 code
-Date:   Sun, 29 Dec 2019 18:21:48 +0100
-Message-Id: <20191229172705.541439371@linuxfoundation.org>
+        stable@vger.kernel.org, Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 021/434] net: ena: fix issues in setting interrupt moderation params in ethtool
+Date:   Sun, 29 Dec 2019 18:21:14 +0100
+Message-Id: <20191229172703.553315832@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,113 +59,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Zhang <Jack.Zhang1@amd.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 51c0f58e9f6af3a387d14608033e6796a7ad90ee ]
+[ Upstream commit 41c53caa5a61ebc9221b71cc37f4a90549f1121d ]
 
-psp  v11 code missed ring stop in ring create function(VMR)
-while psp v3.1 code had the code. This will cause VM destroy1
-fail and psp ring create fail.
+Issue 1:
+--------
+Reproduction steps:
+1. sudo ethtool -C eth0 rx-usecs 128
+2. sudo ethtool -C eth0 adaptive-rx on
+3. sudo ethtool -C eth0 adaptive-rx off
+4. ethtool -c eth0
 
-For SIOV-VF, ring_stop should not be deleted in ring_create
-function.
+expected output: rx-usecs 128
+actual output: rx-usecs 0
 
-Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
-Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reason for issue:
+In stage 3, ethtool userspace calls first the ena_get_coalesce() handler
+to get the current value of all properties, and then the ena_set_coalesce()
+handler. When ena_get_coalesce() is called the adaptive interrupt
+moderation is still on. There is an if in the code that returns the
+rx_coalesce_usecs only if the adaptive interrupt moderation is off.
+And since it is still on, rx_coalesce_usecs is not set, meaning it
+stays 0.
+
+Solution to issue:
+Remove this if static interrupt moderation intervals have nothing to do
+with dynamic ones.
+
+Issue 2:
+--------
+Reproduction steps:
+1. sudo ethtool -C eth0 adaptive-rx on
+2. sudo ethtool -C eth0 rx-usecs 128
+3. ethtool -c eth0
+
+expected output: rx-usecs 128
+actual output: rx-usecs 0
+
+Reason for issue:
+In stage 2, when ena_set_coalesce() is called, the handler tests if
+rx adaptive interrupt moderation is on, and if it is, it returns before
+getting to the part in the function that sets the rx non-adaptive
+interrupt moderation interval.
+
+Solution to issue:
+Remove the return from the function when rx adaptive interrupt moderation
+is on.
+
+Also cleaned up the fixed code in ena_set_coalesce by grouping together
+adaptive interrupt moderation toggling, and using && instead of nested
+ifs.
+
+Fixes: b3db86dc4b82 ("net: ena: reimplement set/get_coalesce()")
+Fixes: 0eda847953d8 ("net: ena: fix retrieval of nonadaptive interrupt moderation intervals")
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 61 ++++++++++++++------------
- 1 file changed, 34 insertions(+), 27 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |   24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-index 10166104b8a3..d483684db95b 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-@@ -398,6 +398,34 @@ static bool psp_v11_0_support_vmr_ring(struct psp_context *psp)
- 	return false;
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -315,10 +315,9 @@ static int ena_get_coalesce(struct net_d
+ 		ena_com_get_nonadaptive_moderation_interval_tx(ena_dev) *
+ 			ena_dev->intr_delay_resolution;
+ 
+-	if (!ena_com_get_adaptive_moderation_enabled(ena_dev))
+-		coalesce->rx_coalesce_usecs =
+-			ena_com_get_nonadaptive_moderation_interval_rx(ena_dev)
+-			* ena_dev->intr_delay_resolution;
++	coalesce->rx_coalesce_usecs =
++		ena_com_get_nonadaptive_moderation_interval_rx(ena_dev)
++		* ena_dev->intr_delay_resolution;
+ 
+ 	coalesce->use_adaptive_rx_coalesce =
+ 		ena_com_get_adaptive_moderation_enabled(ena_dev);
+@@ -367,12 +366,6 @@ static int ena_set_coalesce(struct net_d
+ 
+ 	ena_update_tx_rings_intr_moderation(adapter);
+ 
+-	if (coalesce->use_adaptive_rx_coalesce) {
+-		if (!ena_com_get_adaptive_moderation_enabled(ena_dev))
+-			ena_com_enable_adaptive_moderation(ena_dev);
+-		return 0;
+-	}
+-
+ 	rc = ena_com_update_nonadaptive_moderation_interval_rx(ena_dev,
+ 							       coalesce->rx_coalesce_usecs);
+ 	if (rc)
+@@ -380,10 +373,13 @@ static int ena_set_coalesce(struct net_d
+ 
+ 	ena_update_rx_rings_intr_moderation(adapter);
+ 
+-	if (!coalesce->use_adaptive_rx_coalesce) {
+-		if (ena_com_get_adaptive_moderation_enabled(ena_dev))
+-			ena_com_disable_adaptive_moderation(ena_dev);
+-	}
++	if (coalesce->use_adaptive_rx_coalesce &&
++	    !ena_com_get_adaptive_moderation_enabled(ena_dev))
++		ena_com_enable_adaptive_moderation(ena_dev);
++
++	if (!coalesce->use_adaptive_rx_coalesce &&
++	    ena_com_get_adaptive_moderation_enabled(ena_dev))
++		ena_com_disable_adaptive_moderation(ena_dev);
+ 
+ 	return 0;
  }
- 
-+static int psp_v11_0_ring_stop(struct psp_context *psp,
-+			      enum psp_ring_type ring_type)
-+{
-+	int ret = 0;
-+	struct amdgpu_device *adev = psp->adev;
-+
-+	/* Write the ring destroy command*/
-+	if (psp_v11_0_support_vmr_ring(psp))
-+		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
-+				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
-+	else
-+		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
-+				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
-+
-+	/* there might be handshake issue with hardware which needs delay */
-+	mdelay(20);
-+
-+	/* Wait for response flag (bit 31) */
-+	if (psp_v11_0_support_vmr_ring(psp))
-+		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
-+				   0x80000000, 0x80000000, false);
-+	else
-+		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
-+				   0x80000000, 0x80000000, false);
-+
-+	return ret;
-+}
-+
- static int psp_v11_0_ring_create(struct psp_context *psp,
- 				enum psp_ring_type ring_type)
- {
-@@ -407,6 +435,12 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
- 	struct amdgpu_device *adev = psp->adev;
- 
- 	if (psp_v11_0_support_vmr_ring(psp)) {
-+		ret = psp_v11_0_ring_stop(psp, ring_type);
-+		if (ret) {
-+			DRM_ERROR("psp_v11_0_ring_stop_sriov failed!\n");
-+			return ret;
-+		}
-+
- 		/* Write low address of the ring to C2PMSG_102 */
- 		psp_ring_reg = lower_32_bits(ring->ring_mem_mc_addr);
- 		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_102, psp_ring_reg);
-@@ -451,33 +485,6 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
- 	return ret;
- }
- 
--static int psp_v11_0_ring_stop(struct psp_context *psp,
--			      enum psp_ring_type ring_type)
--{
--	int ret = 0;
--	struct amdgpu_device *adev = psp->adev;
--
--	/* Write the ring destroy command*/
--	if (psp_v11_0_support_vmr_ring(psp))
--		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
--				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
--	else
--		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
--				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
--
--	/* there might be handshake issue with hardware which needs delay */
--	mdelay(20);
--
--	/* Wait for response flag (bit 31) */
--	if (psp_v11_0_support_vmr_ring(psp))
--		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
--				   0x80000000, 0x80000000, false);
--	else
--		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
--				   0x80000000, 0x80000000, false);
--
--	return ret;
--}
- 
- static int psp_v11_0_ring_destroy(struct psp_context *psp,
- 				 enum psp_ring_type ring_type)
--- 
-2.20.1
-
 
 
