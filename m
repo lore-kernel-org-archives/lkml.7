@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D73C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9D7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E34A206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585A5206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643407;
-	bh=nie5E4wN1HIpMmq7neBcmQuVrAMzR5DezXZ/OIavkYc=;
+	s=default; t=1577643413;
+	bh=+pRBD+DXYf0Vx1wWkRljRenYXMJ40s5kRaus2Nqa6xY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGddLFXBWWGZoFajOhYtN5CgXeIPQqN/YTaxmTx/sz6Pji0fs9TnbdzQnSxLTvzty
-	 dIFDPGumkhsbWQtVJ84VuxnlWbyViGcGC4s71RPdOkUPF/xJ3G38/xKdB8O9YP7NfI
-	 YMEtkx6Rou4xU5Eo8AbEaSG5U/DnQ/zjQXJhKgOc=
+	b=jRL85trxYPiW/GfMTmsHruiEmDr6rgycfmzk6lQGvFu9qGxOkQLNG6AC+lqYstodk
+	 eK0lDQxqnn3atUuWuEB5pfc3CMflKuHDOi9HjZzovfPuTgcGU3hXmSJQMMemHuuASJ
+	 /h7kZFgN2oa3A8DO1b2FG2ZlykrRJ3k26q/Q07yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfL2RX7 (ORCPT
+        id S1728056AbfL2SQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:16:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfL2RXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:52 -0500
+        id S1727632AbfL2RX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDE9F20CC7;
-        Sun, 29 Dec 2019 17:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F248207FD;
+        Sun, 29 Dec 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640231;
-        bh=nie5E4wN1HIpMmq7neBcmQuVrAMzR5DezXZ/OIavkYc=;
+        s=default; t=1577640238;
+        bh=+pRBD+DXYf0Vx1wWkRljRenYXMJ40s5kRaus2Nqa6xY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RcxM5a5xvzgy5RwlznouQhrzm5lu8Nu+lBLlCSHd7eE1DOH8CZIzVP8nTA9KxmGf5
-         +a5qVv4DBQXLm+VWxQMp0FVeUZ1Uf+9e20g7akBA1p70nl+dpNzF7yMcH+oD8iRS9D
-         c0vqvmn/XsL6LIXvgEffTsjTwXlNti+torsks4DI=
+        b=lNqk6H8JMEzM1lSh8fOODJaEYmjFhHaj0iSIlw+n7ZiBIGmQYOg/YgXFhDZRSbWVq
+         lZOQa4yIZpCEknUlFsYJz/bnz/AK6xj9EviirB9U5kioGvJO03g3KEsg7zf6dd2f7e
+         iXp7CKwr9u9jnz2kf05rj0Lauu9y/TJ/e23A1Dco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 071/161] net: phy: dp83867: enable robust auto-mdix
-Date:   Sun, 29 Dec 2019 18:18:39 +0100
-Message-Id: <20191229162421.660580953@linuxfoundation.org>
+Subject: [PATCH 4.14 074/161] net: dsa: LAN9303: select REGMAP when LAN9303 enable
+Date:   Sun, 29 Dec 2019 18:18:42 +0100
+Message-Id: <20191229162422.387073676@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -63,67 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
+[ Upstream commit b6989d248a2d13f02895bae1a9321b3bbccc0283 ]
 
-The link detection timeouts can be observed (or link might not be detected
-at all) when dp83867 PHY is configured in manual mode (speed/duplex).
+When NET_DSA_SMSC_LAN9303=y and NET_DSA_SMSC_LAN9303_MDIO=y,
+below errors can be seen:
+drivers/net/dsa/lan9303_mdio.c:87:23: error: REGMAP_ENDIAN_LITTLE
+undeclared here (not in a function)
+  .reg_format_endian = REGMAP_ENDIAN_LITTLE,
+drivers/net/dsa/lan9303_mdio.c:93:3: error: const struct regmap_config
+has no member named reg_read
+  .reg_read = lan9303_mdio_read,
 
-CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
-in case dp83867 is configured in manual mode and reduce link detection
-time.
-As per DM: "If link partners are configured to operational modes that are
-not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
-100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
-MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
+It should select REGMAP in config NET_DSA_SMSC_LAN9303.
 
-Hence, enable this option by default as there are no known reasons
-not to do so.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: dc7005831523 ("net: dsa: LAN9303: add MDIO managed mode support")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/dsa/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index e03e91d5f1b1..0cbcced0870e 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -84,6 +84,10 @@
- #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MAX	0x0
- #define DP83867_IO_MUX_CFG_IO_IMPEDANCE_MIN	0x1f
- 
-+/* CFG3 bits */
-+#define DP83867_CFG3_INT_OE			BIT(7)
-+#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-+
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-@@ -320,12 +324,13 @@ static int dp83867_config_init(struct phy_device *phydev)
- 			return ret;
- 	}
- 
-+	val = phy_read(phydev, DP83867_CFG3);
- 	/* Enable Interrupt output INT_OE in CFG3 register */
--	if (phy_interrupt_is_valid(phydev)) {
--		val = phy_read(phydev, DP83867_CFG3);
--		val |= BIT(7);
--		phy_write(phydev, DP83867_CFG3, val);
--	}
-+	if (phy_interrupt_is_valid(phydev))
-+		val |= DP83867_CFG3_INT_OE;
-+
-+	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
-+	phy_write(phydev, DP83867_CFG3, val);
- 
- 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
- 		dp83867_config_port_mirroring(phydev);
+diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
+index 83a9bc892a3b..6ae13f2419e3 100644
+--- a/drivers/net/dsa/Kconfig
++++ b/drivers/net/dsa/Kconfig
+@@ -55,6 +55,7 @@ config NET_DSA_QCA8K
+ config NET_DSA_SMSC_LAN9303
+ 	tristate
+ 	select NET_DSA_TAG_LAN9303
++	select REGMAP
+ 	---help---
+ 	  This enables support for the SMSC/Microchip LAN9303 3 port ethernet
+ 	  switch chips.
 -- 
 2.20.1
 
