@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733CAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E321206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753B7206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641130;
-	bh=c15sxyYB7SoT9Non22x2h0tkHHoK/8IWuGc80z7r14I=;
+	s=default; t=1577641137;
+	bh=Arzqb3/X/IZ8grtaS24UjeFEyLCxLAmnvDhGPBlxP38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hCcjE8fSd7aRndsZU2YL2I0Eq4jdu9XIED/zK/B0cH7KrRnitjn1uGIGaSQgJwIq
-	 p72zdb1wfKaHdWb5/HMuZhxW52qP+fVVuTaPQkYN04RjljvGmJNdJte5v9yl8dkUX+
-	 s4hlbD6gK6KAGNj4g6tyCTj5SxkSnF2n0bDA6olk=
+	b=JXQ1JnSFTc+KqN0AtYUPcjjWNMiGa8UEMqmvPA7TI/spmP0hdWPSPLG7kZU8W2xy5
+	 ESn37IXlR8n7mCJOzLpdYgU68FD0QZc64iq5/q/419S95aWnp6oOoUSFQCz5HC67Wn
+	 HxPRQfFwGcR+x8KCIsmJ4bxpXmp45A7PACxRLP1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfL2Rit (ORCPT
+        id S1729507AbfL2Rdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:38:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbfL2Rdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:53 -0500
+        id S1729479AbfL2Rdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4615C20722;
-        Sun, 29 Dec 2019 17:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DCDA20722;
+        Sun, 29 Dec 2019 17:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640832;
-        bh=c15sxyYB7SoT9Non22x2h0tkHHoK/8IWuGc80z7r14I=;
+        s=default; t=1577640817;
+        bh=Arzqb3/X/IZ8grtaS24UjeFEyLCxLAmnvDhGPBlxP38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aPkzb87b2jBEzBJrZySSHVUUqY3+IzuK+b61fTAIHOp33r0LhCNArt0QvVOi00GJb
-         oDxGWxKKKGJKBgj6MrLGHpJmtdUWL1qNhS48BtIBnA+95C3+WxTi4bKaAXNGsVAd7L
-         sM8YoTBTq9jSBGxYCaW1DeMhvV8yXjh050Uu1iB0=
+        b=oB8/5QS+0Bivoth8vWf701lYF/F/DBMy2qfYdMClf7O/bL0FPhQTadmS+sGslM939
+         jhgFsrTd8ydMqDUxd+32ZYmmFC/1ypHdQuyeRN5dhiUa22wv9oZ2TxWgWpzHtSBg0T
+         bc2L0vURRZr6cBtLQC4arYOPpwrzMXIYE4ebiCl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/219] bcache: fix static checker warning in bcache_device_free()
-Date:   Sun, 29 Dec 2019 18:19:19 +0100
-Message-Id: <20191229162532.327225338@linuxfoundation.org>
+Subject: [PATCH 4.19 151/219] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
+Date:   Sun, 29 Dec 2019 18:19:13 +0100
+Message-Id: <20191229162531.379976441@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,97 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Ben Zhang <benzh@chromium.org>
 
-[ Upstream commit 2d8869518a525c9bce5f5268419df9dfbe3dfdeb ]
+[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
 
-Commit cafe56359144 ("bcache: A block layer cache") leads to the
-following static checker warning:
+The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
+while it's streaming audio over SPI. The DSP firmware turns
+on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
+does not believe that register can change by itself. When
+BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
+read the register first before write, so PLL2 power bit is
+cleared by accident.
 
-    ./drivers/md/bcache/super.c:770 bcache_device_free()
-    warn: variable dereferenced before check 'd->disk' (see line 766)
+Marking MX-64h as volatile in regmap solved the issue.
 
-drivers/md/bcache/super.c
-   762  static void bcache_device_free(struct bcache_device *d)
-   763  {
-   764          lockdep_assert_held(&bch_register_lock);
-   765
-   766          pr_info("%s stopped", d->disk->disk_name);
-                                      ^^^^^^^^^
-Unchecked dereference.
-
-   767
-   768          if (d->c)
-   769                  bcache_device_detach(d);
-   770          if (d->disk && d->disk->flags & GENHD_FL_UP)
-                    ^^^^^^^
-Check too late.
-
-   771                  del_gendisk(d->disk);
-   772          if (d->disk && d->disk->queue)
-   773                  blk_cleanup_queue(d->disk->queue);
-   774          if (d->disk) {
-   775                  ida_simple_remove(&bcache_device_idx,
-   776                                    first_minor_to_idx(d->disk->first_minor));
-   777                  put_disk(d->disk);
-   778          }
-   779
-
-It is not 100% sure that the gendisk struct of bcache device will always
-be there, the warning makes sense when there is problem in block core.
-
-This patch tries to remove the static checking warning by checking
-d->disk to avoid NULL pointer deferences.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
+Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ sound/soc/codecs/rt5677.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 14d381cc6d74..2d60bcdb5b9c 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -747,20 +747,28 @@ static inline int idx_to_first_minor(int idx)
- 
- static void bcache_device_free(struct bcache_device *d)
- {
-+	struct gendisk *disk = d->disk;
-+
- 	lockdep_assert_held(&bch_register_lock);
- 
--	pr_info("%s stopped", d->disk->disk_name);
-+	if (disk)
-+		pr_info("%s stopped", disk->disk_name);
-+	else
-+		pr_err("bcache device (NULL gendisk) stopped");
- 
- 	if (d->c)
- 		bcache_device_detach(d);
--	if (d->disk && d->disk->flags & GENHD_FL_UP)
--		del_gendisk(d->disk);
--	if (d->disk && d->disk->queue)
--		blk_cleanup_queue(d->disk->queue);
--	if (d->disk) {
-+
-+	if (disk) {
-+		if (disk->flags & GENHD_FL_UP)
-+			del_gendisk(disk);
-+
-+		if (disk->queue)
-+			blk_cleanup_queue(disk->queue);
-+
- 		ida_simple_remove(&bcache_device_idx,
--				  first_minor_to_idx(d->disk->first_minor));
--		put_disk(d->disk);
-+				  first_minor_to_idx(disk->first_minor));
-+		put_disk(disk);
- 	}
- 
- 	bioset_exit(&d->bio_split);
+diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+index 9b7a1833d331..71b7b881df39 100644
+--- a/sound/soc/codecs/rt5677.c
++++ b/sound/soc/codecs/rt5677.c
+@@ -297,6 +297,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
+ 	case RT5677_I2C_MASTER_CTRL7:
+ 	case RT5677_I2C_MASTER_CTRL8:
+ 	case RT5677_HAP_GENE_CTRL2:
++	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
+ 	case RT5677_PWR_DSP_ST:
+ 	case RT5677_PRIV_DATA:
+ 	case RT5677_ASRC_22:
 -- 
 2.20.1
 
