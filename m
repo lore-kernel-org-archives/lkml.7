@@ -2,128 +2,117 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458D9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7A7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC1721744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HyR8Bdo6"
+	by mail.kernel.org (Postfix) with ESMTP id A761F20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577640159;
+	bh=Q+mLU52vzjo6z2JvOFrRQAknSaHTAd9dKf/wd5AX/V0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bONbgGmfjZszgSX0vDZ1PtS6shVE3TbHr1qhlxgoE03+eDXPeZ5yo9fDS9rFQnKEb
+	 /ppA+TdnzG9p8d/5lUAOlj7+S5BOKTEfZHKdYVmhSNJVlEzcQL+oV66+dRoPULzj7m
+	 Z+s9RmBeUBlS8oO4+i+YeyKZsEUP2sbDcPKhY7Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfL2RWg (ORCPT
+        id S1727366AbfL2RWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:22:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40763 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfL2RWd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:33 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q8so17213431pfh.7
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 09:22:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=d2ZCOXk6pOuLZ4uX0KmFIbD6q4XT8KzNcuufQdURRQw=;
-        b=HyR8Bdo6jGIDQMwbuh/d960hidl00ggcit9R+GdoUC7sCFuZn4d0N/bqmU5Qb6yjL6
-         9UiOvJH387CsLCBCQ2tTppi5Q4vhNbFgIAIXEo889sr+yw8lrOvRRAl4gIvuHTyXx4sP
-         s4Aas7Wk5ioEfpXR0txmfcigTT0OAh+vgPBiSe+cG5nBG9ckLiY/WhLdD33eVnOB3exk
-         1krypmpTg2an+ag88yNu6ZBZU2r4QyJd9IvWOa8N3EnI6CyHDyDQ87Hze9G+JwFvzvkw
-         JrsGmNz9nIeKX8zpT28lMSe9/2cHcdq6Cra7Yg8LuEdMD3bLPJgZw5n0lVJO7UUhr/Cv
-         luCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=d2ZCOXk6pOuLZ4uX0KmFIbD6q4XT8KzNcuufQdURRQw=;
-        b=QFtQ4IKNsZhU1cWkKTsEkTM4pN1PLXS4BIu2ZWiat1rZWh3gQ/VKq+jb0i9usyhA9n
-         FVIGRDgoBAIbF1fmITxOSsS2BvL9fpqFXMqvlUsqeb5Rz4w4YGr1j9bw9WlQtrxViLUj
-         qFeJdbErOOIK89XHtmJLA+mY+Ch8mKJqEyrfvTYFfpvbmYqDelHar6KdeSyBQKEuBKoC
-         RJNGpg4m16pMdMfuWS1bOdZX4n04K1axyFcl40riu5RdC/GiTb1KTL2pb4Ss8T6IDKMK
-         GPs6OZz3xmkskJu5coAgrAmYxojujebtXpqAzoO7xWvwhn3zCIUSQpZnoLlp9VIJSMmF
-         cKrA==
-X-Gm-Message-State: APjAAAVWJUmTlDShH4Wu4ol+VoYaEqseMii02WVhmyRf9WyZFagibnTt
-        8D4kFgkwRTw05/HvdLm89VA5+g==
-X-Google-Smtp-Source: APXvYqxS9B4VPY19ezhDkronqK9tX2Dc3/dG7ZtNqjBtPXUiLRViaQeqCJ3xDgjeHrXpbyuW4w4gjw==
-X-Received: by 2002:a63:1110:: with SMTP id g16mr45710067pgl.84.1577640151958;
-        Sun, 29 Dec 2019 09:22:31 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id j10sm21907911pjb.14.2019.12.29.09.22.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 09:22:31 -0800 (PST)
-Date:   Sun, 29 Dec 2019 09:22:29 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.5-rc4
-Message-ID: <alpine.DEB.2.21.9999.1912290921260.204131@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Sun, 29 Dec 2019 12:22:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfL2RWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:22:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE79F207FD;
+        Sun, 29 Dec 2019 17:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577640151;
+        bh=Q+mLU52vzjo6z2JvOFrRQAknSaHTAd9dKf/wd5AX/V0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D+Q0mvMszmHNCNs0l10c1rL24LMWml53TPrkfXtrSApPE9kxmcEbcnJvAH+AvBWkG
+         woUFmtPzoVYrC3Wt65FZSlIBuHC5StW2j58K3Q3GxiRQMjNDVd5HUOqlg7gRwbuUUS
+         iUM97GWv/xCQHJkK23ROH2eO5/pPir4kRj+Qe210=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 004/161] net: dst: Force 4-byte alignment of dst_metrics
+Date:   Sun, 29 Dec 2019 18:17:32 +0100
+Message-Id: <20191229162356.651766292@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
+References: <20191229162355.500086350@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
+[ Upstream commit 258a980d1ec23e2c786e9536a7dd260bea74bae6 ]
 
-  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
+When storing a pointer to a dst_metrics structure in dst_entry._metrics,
+two flags are added in the least significant bits of the pointer value.
+Hence this assumes all pointers to dst_metrics structures have at least
+4-byte alignment.
 
-are available in the Git repository at:
+However, on m68k, the minimum alignment of 32-bit values is 2 bytes, not
+4 bytes.  Hence in some kernel builds, dst_default_metrics may be only
+2-byte aligned, leading to obscure boot warnings like:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.5-rc4
+    WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x44/0x9a
+    refcount_t: underflow; use-after-free.
+    Modules linked in:
+    CPU: 0 PID: 7 Comm: ksoftirqd/0 Tainted: G        W         5.5.0-rc2-atari-01448-g114a1a1038af891d-dirty #261
+    Stack from 10835e6c:
+	    10835e6c 0038134f 00023fa6 00394b0f 0000001c 00000009 00321560 00023fea
+	    00394b0f 0000001c 001a70f8 00000009 00000000 10835eb4 00000001 00000000
+	    04208040 0000000a 00394b4a 10835ed4 00043aa8 001a70f8 00394b0f 0000001c
+	    00000009 00394b4a 0026aba8 003215a4 00000003 00000000 0026d5a8 00000001
+	    003215a4 003a4361 003238d6 000001f0 00000000 003215a4 10aa3b00 00025e84
+	    003ddb00 10834000 002416a8 10aa3b00 00000000 00000080 000aa038 0004854a
+    Call Trace: [<00023fa6>] __warn+0xb2/0xb4
+     [<00023fea>] warn_slowpath_fmt+0x42/0x64
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<00043aa8>] printk+0x0/0x18
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<0026aba8>] refcount_sub_and_test.constprop.73+0x38/0x3e
+     [<0026d5a8>] ipv4_dst_destroy+0x5e/0x7e
+     [<00025e84>] __local_bh_enable_ip+0x0/0x8e
+     [<002416a8>] dst_destroy+0x40/0xae
 
-for you to fetch changes up to 1833e327a5ea1d1f356fbf6ded0760c9ff4b0594:
+Fix this by forcing 4-byte alignment of all dst_metrics structures.
 
-  riscv: export flush_icache_all to modules (2019-12-27 21:51:01 -0800)
+Fixes: e5fd387ad5b30ca3 ("ipv6: do not overwrite inetpeer metrics prematurely")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/dst.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-----------------------------------------------------------------
-RISC-V updates for v5.5-rc4
-
-One important fix for RISC-V:
-
-- Redirect any incoming syscall with an ID less than -1 to
-  sys_ni_syscall, rather than allowing them to fall through into the
-  syscall handler.
-
-and two minor build fixes:
-
-- Export __asm_copy_{from,to}_user() from where they are defined.
-  This fixes a build error triggered by some randconfigs.
-
-- Export flush_icache_all().  I'd resisted this before, since
-  historically we didn't want modules to be able to flush the I$
-  directly; but apparently everyone else is doing it now.
-
-----------------------------------------------------------------
-David Abdurachmanov (1):
-      riscv: reject invalid syscalls below -1
-
-Luc Van Oostenryck (1):
-      riscv: fix compile failure with EXPORT_SYMBOL() & !MMU
-
-Olof Johansson (1):
-      riscv: export flush_icache_all to modules
-
- arch/riscv/kernel/entry.S       | 1 +
- arch/riscv/kernel/riscv_ksyms.c | 3 ---
- arch/riscv/lib/uaccess.S        | 4 ++++
- arch/riscv/mm/cacheflush.c      | 1 +
- 4 files changed, 6 insertions(+), 3 deletions(-)
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -110,7 +110,7 @@ struct dst_entry {
+ struct dst_metrics {
+ 	u32		metrics[RTAX_MAX];
+ 	refcount_t	refcnt;
+-};
++} __aligned(4);		/* Low pointer bits contain DST_METRICS_FLAGS */
+ extern const struct dst_metrics dst_default_metrics;
+ 
+ u32 *dst_cow_metrics_generic(struct dst_entry *dst, unsigned long old);
 
 
-Kernel object size difference:
-   text	   data	    bss	    dec	    hex	filename
-6896332	2329908	 313920	9540160	 919240	vmlinux.rv64.orig
-6896379	2329908	 313920	9540207	 91926f	vmlinux.rv64.patched
-6656967	1939072	 257576	8853615	 87186f	vmlinux.rv32.orig
-6656994	1939072	 257576	8853642	 87188a	vmlinux.rv32.patched
-1171666	 353368	 130024	1655058	 194112	vmlinux.nommu_virt.orig
-1171674	 353368	 130024	1655066	 19411a	vmlinux.nommu_virt.patched
