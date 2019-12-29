@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF008207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1164820718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641155;
-	bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
+	s=default; t=1577641164;
+	bh=QiEcSKWtt9/YX+Rd2TW93R6G0pJTiBxnRk1De19FmmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JAhRCZfWfN6dl9bSMIgD/Ae135bbuglLKfdboPmL7QqKt2Vq6y29DeUXNhvhsBzyW
-	 2vuRFXcngF8xBM+Ft6wF48G/1AjAbcHuePj+InSWjU+6sW3iXubrOWGkWWwJmdLvFm
-	 hAkN0ThgodZ4XFSFvJkF6R/UELh+qCxOZd4T9zuQ=
+	b=s5X5dSRYJQ4Qpx956wvuNSdeOG3EEr7REyiFDLT9qG0TvNDvU90YMakqY3ArmExzS
+	 tkdVdDtGx2W68Y4VDUdu/Hpbl5lpJZ583nGJYAY+0Gu5SXBsfmHzL+UQnV/uTUaXNz
+	 p/s5nCa+AYuOD1iiTyGzBqUUOAzzeE2ofjHs9lAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfL2RjO (ORCPT
+        id S1729988AbfL2RjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:39:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfL2Rd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:28 -0500
+        id S1728631AbfL2RdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0718222C3;
-        Sun, 29 Dec 2019 17:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F35C24125;
+        Sun, 29 Dec 2019 17:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640808;
-        bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
+        s=default; t=1577640798;
+        bh=QiEcSKWtt9/YX+Rd2TW93R6G0pJTiBxnRk1De19FmmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4GnviJO6fPGfjocjRmASGYfc8IQQc1ssK4ok+9BC38RK3Kd3L0lxfD0HU93Pl51r
-         fhAiIp/bp799466iCCXysXo/fsOdNW4COefoFfN3hfZdNUCkoXrXH/xnYgu6842xl1
-         JpED6cZGPhhoS89lvCAq0BBWPJTmDYCiEgGRIc+k=
+        b=BblYJVIaJ1RDIL+ind1Gzdz5k0L1R4TfAU+yI9QbrNuc8wna/3dFawkIsuzhCZz0q
+         FbiKzSVoFLdbnHHmFeChUwmgOGaRVWFy5iKxqNMdHekSvJxCIERuCRQKdgQCF7f/ZR
+         zVe+w+QyOAGIoFtZ2RvGH7E7hnFRGyC7PmFP8Ics=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Mike Isely <isely@pobox.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 130/219] libsubcmd: Use -O0 with DEBUG=1
-Date:   Sun, 29 Dec 2019 18:18:52 +0100
-Message-Id: <20191229162528.226356542@linuxfoundation.org>
+Subject: [PATCH 4.19 144/219] media: pvrusb2: Fix oops on tear-down when radio support is not present
+Date:   Sun, 29 Dec 2019 18:19:06 +0100
+Message-Id: <20191229162530.188135670@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -64,44 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Clark <James.Clark@arm.com>
+From: Mike Isely <isely@pobox.com>
 
-[ Upstream commit 22bd8f1b5a1dd168ba4eba27cb17643a11012f5d ]
+[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
 
-When a 'make DEBUG=1' build is done, the command parser is still built
-with -O6 and is hard to step through, fix it making it use -O0 in that
-case.
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: nd <nd@arm.com>
-Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
-[ split from a larger patch ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
+
+[hverkuil: fix two checkpatch warnings]
+
+Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index 5b2cd5e58df0..5dbb0dde208c 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -28,7 +28,9 @@ ifeq ($(DEBUG),0)
-   endif
- endif
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index e53a80b589a1..04d334152eae 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -916,8 +916,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    (vp->dev_radio &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
+ }
  
--ifeq ($(CC_NO_CLANG), 0)
-+ifeq ($(DEBUG),1)
-+  CFLAGS += -O0
-+else ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
- else
-   CFLAGS += -O6
+@@ -953,7 +957,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    (!vp->dev_radio ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
+ 	}
+ 	return 0;
 -- 
 2.20.1
 
