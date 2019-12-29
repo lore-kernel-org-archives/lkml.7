@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6873EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29002C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F37C21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0334D20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643121;
-	bh=Ssja3Y0c/d5eWji+2D1G2jA5OFe4e4er6S/JhZowQHI=;
+	s=default; t=1577643125;
+	bh=lgjsUH1UaErPcRtHPJmQgEs/duTqCRqG4fyGowx74+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FEIzt2Vr9YXS4iggLDn3eR8OAypvZ5bCFYGaEYg4hSgwwIBtJJIcdsBh7UaTMF6WI
-	 vxqdD0+0PPlyZ5gsqsSdoVB76BVXdeFPL1MVHKSYeB+M+QUhR3uSDG8Pblj5LsiF3J
-	 BopplpW1fVjAVLtoQ+mSqNBra8J8cFv42BYIiELs=
+	b=Eoh+DjIedBqU3DAtag/7Wrh/PUCr+/uIqPjj7fwdxzhfMMq37T1MCqzUarS7HDlrk
+	 3D654D/9tEyXXmd9aKDWqvN5c3l6zYfAW7Tz/EypuHhAinweg5WX9AWapE5jRb73wG
+	 0ug1bzGwCRCwJ1zmYrUK3Sc2i8aL7S3bCKl46cVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfL2Rm2 (ORCPT
+        id S1733017AbfL2SMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:42:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:12:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfL2RmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:42:16 -0500
+        id S1730299AbfL2Rm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:42:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E50206A4;
-        Sun, 29 Dec 2019 17:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAE9820718;
+        Sun, 29 Dec 2019 17:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641336;
-        bh=Ssja3Y0c/d5eWji+2D1G2jA5OFe4e4er6S/JhZowQHI=;
+        s=default; t=1577641348;
+        bh=lgjsUH1UaErPcRtHPJmQgEs/duTqCRqG4fyGowx74+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L4TkgOUinHVO5uv9xGsO5290RGOT1KBXYn1vYU9lrDNktMllx13RUu5bmVg7Odv81
-         t+RBisIhUelYpruxNGfiD/maSYOtKhc5fdyA2K/e+UI/a8lfhFxlyCtmdO0BSYIF/M
-         4PCzHAAbYaPpwXKesklDF+mHQ934KsfxCdA22ybI=
+        b=1T/7COL+b9bHgAu3b8Cp7VRckaQIzTaA7ZodLK/G+XiZY7CeNgzCiBrLzZ0rZMSye
+         zYC75BM6KRVTkHH8wOAg7J5qkyMIoSxQVH446v6U47hiezTYJa2/R0j87cMP+GcZqQ
+         tWaITiej9Xsg5c2ATkoJwy8u9NfTNWnuKA8dyWW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 009/434] net: qlogic: Fix error paths in ql_alloc_large_buffers()
-Date:   Sun, 29 Dec 2019 18:21:02 +0100
-Message-Id: <20191229172702.909224192@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 029/434] btrfs: do not call synchronize_srcu() in inode_tree_del
+Date:   Sun, 29 Dec 2019 18:21:22 +0100
+Message-Id: <20191229172703.983729188@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,76 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit cad46039e4c99812db067c8ac22a864960e7acc4 ]
+commit f72ff01df9cf5db25c76674cac16605992d15467 upstream.
 
-ql_alloc_large_buffers() has the usual RX buffer allocation
-loop where it allocates skbs and maps them for DMA.  It also
-treats failure as a fatal error.
+Testing with the new fsstress uncovered a pretty nasty deadlock with
+lookup and snapshot deletion.
 
-There are (at least) three bugs in the error paths:
+Process A
+unlink
+ -> final iput
+   -> inode_tree_del
+     -> synchronize_srcu(subvol_srcu)
 
-1. ql_free_large_buffers() assumes that the lrg_buf[] entry for the
-first buffer that couldn't be allocated will have .skb == NULL.
-But the qla_buf[] array is not zero-initialised.
+Process B
+btrfs_lookup  <- srcu_read_lock() acquired here
+  -> btrfs_iget
+    -> find inode that has I_FREEING set
+      -> __wait_on_freeing_inode()
 
-2. ql_free_large_buffers() DMA-unmaps all skbs in lrg_buf[].  This is
-incorrect for the last allocated skb, if DMA mapping failed.
+We're holding the srcu_read_lock() while doing the iget in order to make
+sure our fs root doesn't go away, and then we are waiting for the inode
+to finish freeing.  However because the free'ing process is doing a
+synchronize_srcu() we deadlock.
 
-3. Commit 1acb8f2a7a9f ("net: qlogic: Fix memory leak in
-ql_alloc_large_buffers") added a direct call to dev_kfree_skb_any()
-after the skb is recorded in lrg_buf[], so ql_free_large_buffers()
-will double-free it.
+Fix this by dropping the synchronize_srcu() in inode_tree_del().  We
+don't need people to stop accessing the fs root at this point, we're
+only adding our empty root to the dead roots list.
 
-The bugs are somewhat inter-twined, so fix them all at once:
+A larger much more invasive fix is forthcoming to address how we deal
+with fs roots, but this fixes the immediate problem.
 
-* Clear each entry in qla_buf[] before attempting to allocate
-  an skb for it.  This goes half-way to fixing bug 1.
-* Set the .skb field only after the skb is DMA-mapped.  This
-  fixes the rest.
-
-Fixes: 1357bfcf7106 ("qla3xxx: Dynamically size the rx buffer queue ...")
-Fixes: 0f8ab89e825f ("qla3xxx: Check return code from pci_map_single() ...")
-Fixes: 1acb8f2a7a9f ("net: qlogic: Fix memory leak in ql_alloc_large_buffers")
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy ioctl")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/qlogic/qla3xxx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/qlogic/qla3xxx.c
-+++ b/drivers/net/ethernet/qlogic/qla3xxx.c
-@@ -2756,6 +2756,9 @@ static int ql_alloc_large_buffers(struct
- 	int err;
+---
+ fs/btrfs/inode.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -5697,7 +5697,6 @@ static void inode_tree_add(struct inode
  
- 	for (i = 0; i < qdev->num_large_buffers; i++) {
-+		lrg_buf_cb = &qdev->lrg_buf[i];
-+		memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
-+
- 		skb = netdev_alloc_skb(qdev->ndev,
- 				       qdev->lrg_buffer_len);
- 		if (unlikely(!skb)) {
-@@ -2766,11 +2769,7 @@ static int ql_alloc_large_buffers(struct
- 			ql_free_large_buffers(qdev);
- 			return -ENOMEM;
- 		} else {
--
--			lrg_buf_cb = &qdev->lrg_buf[i];
--			memset(lrg_buf_cb, 0, sizeof(struct ql_rcv_buf_cb));
- 			lrg_buf_cb->index = i;
--			lrg_buf_cb->skb = skb;
- 			/*
- 			 * We save some space to copy the ethhdr from first
- 			 * buffer
-@@ -2792,6 +2791,7 @@ static int ql_alloc_large_buffers(struct
- 				return -ENOMEM;
- 			}
+ static void inode_tree_del(struct inode *inode)
+ {
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	int empty = 0;
  
-+			lrg_buf_cb->skb = skb;
- 			dma_unmap_addr_set(lrg_buf_cb, mapaddr, map);
- 			dma_unmap_len_set(lrg_buf_cb, maplen,
- 					  qdev->lrg_buffer_len -
+@@ -5710,7 +5709,6 @@ static void inode_tree_del(struct inode
+ 	spin_unlock(&root->inode_lock);
+ 
+ 	if (empty && btrfs_root_refs(&root->root_item) == 0) {
+-		synchronize_srcu(&fs_info->subvol_srcu);
+ 		spin_lock(&root->inode_lock);
+ 		empty = RB_EMPTY_ROOT(&root->inode_tree);
+ 		spin_unlock(&root->inode_lock);
 
 
