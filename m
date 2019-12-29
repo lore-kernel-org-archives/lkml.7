@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21783C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB55EC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AD3208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC6D206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642055;
-	bh=4A3ehjHF9P6vDAWWjuf+Usdl29ZrRs5J91uUx6GpqBE=;
+	s=default; t=1577642059;
+	bh=Drohe3c13LJwpE8DxivQc4cKlz2QZ0vz90HB7vIMBqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XF/3ietjEYTGWZ3py8wABc9UnkBmBMpl2mmWsK5WlhMjumJ/l2byMrrloBNa2j2wU
-	 X0KOZEPjThzWiAGhwonZfvs6AJ55j2CuV4tWJAWUVk6QBMY2VzMLxuiuWny4cR3ZHV
-	 J9Kwjbweiv38CLtOU0SY+HraG2mcF+RBXkU5mqn4=
+	b=STAAkQWcvtllparhbjXhHWGs1SYBW6fNtxTtx5glg8X2iPIrvA2q88X/VLu3FJQ8Q
+	 1Jh/YVSIao0FJj5G0+i/2v1wNt0Gf3OftAJKIucZEvLV6JRLAMN+DcUledH8eDTD9r
+	 g94MI4P6bHKQ/5pcbhr3rUQtmP70mHO/WcotePII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbfL2RyO (ORCPT
+        id S1732667AbfL2RyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732635AbfL2RyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:11 -0500
+        id S1732655AbfL2RyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D84F206A4;
-        Sun, 29 Dec 2019 17:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E85A20748;
+        Sun, 29 Dec 2019 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642050;
-        bh=4A3ehjHF9P6vDAWWjuf+Usdl29ZrRs5J91uUx6GpqBE=;
+        s=default; t=1577642055;
+        bh=Drohe3c13LJwpE8DxivQc4cKlz2QZ0vz90HB7vIMBqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGX2eBArJY4cIljiW++MPiaOskWOyExvAHGJpgts+rovX33hL5aS3Lum+9CV7vrhG
-         4y+Si+0Hz6iwseJr7DhvHWyikxOwoxwUE7k5aIiYbiqNXo6j8mkKxphrq8ukNZTDaX
-         upUaZ5cGcjxKdpMCIV+POqWMtrPwO5B8qntDvYwg=
+        b=u1shSOrU+sbGuIxqVZEuFNZhXXpon2AelE7UPIxHEN5kEOx9eWofqj97MCcLmOctt
+         LFQVL9q6NIxyZbR1zS6bO57o7vKCNHmqedyDG3Fdh6UmXPn6GE03GaV0A1F/POK+gy
+         dnocSndvfS4x25GoWRKAb+9OKGGGxPv2613GmXo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar.Eggemann@arm.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        patrick.bellasi@matbug.net, qperret@google.com, surenb@google.com,
-        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 319/434] sched/uclamp: Fix overzealous type replacement
-Date:   Sun, 29 Dec 2019 18:26:12 +0100
-Message-Id: <20191229172723.146393113@linuxfoundation.org>
+Subject: [PATCH 5.4 321/434] spi: st-ssc4: add missed pm_runtime_disable
+Date:   Sun, 29 Dec 2019 18:26:14 +0100
+Message-Id: <20191229172723.293182064@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -68,89 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 7763baace1b738d65efa46d68326c9406311c6bf ]
+[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
 
-Some uclamp helpers had their return type changed from 'unsigned int' to
-'enum uclamp_id' by commit
+The driver forgets to call pm_runtime_disable in probe failure
+and remove.
+Add the missed calls to fix it.
 
-  0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-
-but it happens that some do return a value in the [0, SCHED_CAPACITY_SCALE]
-range, which should really be unsigned int. The affected helpers are
-uclamp_none(), uclamp_rq_max_value() and uclamp_eff_value(). Fix those up.
-
-Note that this doesn't lead to any obj diff using a relatively recent
-aarch64 compiler (8.3-2019.03). The current code of e.g. uclamp_eff_value()
-properly returns an 11 bit value (bits_per(1024)) and doesn't seem to do
-anything funny. I'm still marking this as fixing the above commit to be on
-the safe side.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar.Eggemann@arm.com
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: patrick.bellasi@matbug.net
-Cc: qperret@google.com
-Cc: surenb@google.com
-Cc: tj@kernel.org
-Fixes: 0413d7f33e60 ("sched/uclamp: Always use 'enum uclamp_id' for clamp_id values")
-Link: https://lkml.kernel.org/r/20191115103908.27610-1-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c  | 6 +++---
- kernel/sched/sched.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-st-ssc4.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 44123b4d14e8..8dacda4b0362 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -810,7 +810,7 @@ static inline unsigned int uclamp_bucket_base_value(unsigned int clamp_value)
- 	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
- }
+diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
+index 0c24c494f386..77d26d64541a 100644
+--- a/drivers/spi/spi-st-ssc4.c
++++ b/drivers/spi/spi-st-ssc4.c
+@@ -381,6 +381,7 @@ static int spi_st_probe(struct platform_device *pdev)
+ 	return 0;
  
--static inline enum uclamp_id uclamp_none(enum uclamp_id clamp_id)
-+static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
- {
- 	if (clamp_id == UCLAMP_MIN)
- 		return 0;
-@@ -853,7 +853,7 @@ static inline void uclamp_idle_reset(struct rq *rq, enum uclamp_id clamp_id,
- }
+ clk_disable:
++	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(spi_st->clk);
+ put_master:
+ 	spi_master_put(master);
+@@ -392,6 +393,8 @@ static int spi_st_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct spi_st *spi_st = spi_master_get_devdata(master);
  
- static inline
--enum uclamp_id uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
-+unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
- 				   unsigned int clamp_value)
- {
- 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-@@ -918,7 +918,7 @@ uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
- 	return uc_req;
- }
++	pm_runtime_disable(&pdev->dev);
++
+ 	clk_disable_unprepare(spi_st->clk);
  
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id)
- {
- 	struct uclamp_se uc_eff;
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c8870c5bd7df..49ed949f850c 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2309,7 +2309,7 @@ static inline void cpufreq_update_util(struct rq *rq, unsigned int flags) {}
- #endif /* CONFIG_CPU_FREQ */
- 
- #ifdef CONFIG_UCLAMP_TASK
--enum uclamp_id uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
-+unsigned int uclamp_eff_value(struct task_struct *p, enum uclamp_id clamp_id);
- 
- static __always_inline
- unsigned int uclamp_util_with(struct rq *rq, unsigned int util,
+ 	pinctrl_pm_select_sleep_state(&pdev->dev);
 -- 
 2.20.1
 
