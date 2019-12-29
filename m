@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E15CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1116C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7940D20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAAF208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641551;
-	bh=K9QFq+c8GqpHyIIbuhqi4vkeOg9dl6bOL2jocsocoCM=;
+	s=default; t=1577641555;
+	bh=mIdzJkIw2OYgLtqSIPrHvNBRvba93PhJp+islfrOncg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jUs660qGJKnuGa5h5cpHhRcoGTRVnN3UYN0/Ll1HN3s2ZIxDf1zpUiNPLebo4AJil
-	 3W9kZ5EcXxWkQEcybwa4VJ1KLx8A3AA/VE2XUEEt4vacT7hiaQLQ26t1MH0iKssIpH
-	 Tf5h1GUPb1IuarCBdcT0yvp/59u9UsXbOOu/+skM=
+	b=Z1lYZdkWRErKTWGBTJCrCOp7QZxONm5jJ4FgbidnW4yO9EztheEQykqFUJlPcT8gg
+	 zru0dvdDt22USTr3PSHYACre9Bh+7glxmyrd/uuXE3SUZmtbmeVdBH6hWj8xRmAfMV
+	 sj9wKy7T0VyxANq7RpHiHyEFerbtk14k1VAH+PXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbfL2Rpt (ORCPT
+        id S1730779AbfL2Rpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbfL2Rpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:46 -0500
+        id S1730680AbfL2Rpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7E8206A4;
-        Sun, 29 Dec 2019 17:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26CBD207FF;
+        Sun, 29 Dec 2019 17:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641545;
-        bh=K9QFq+c8GqpHyIIbuhqi4vkeOg9dl6bOL2jocsocoCM=;
+        s=default; t=1577641552;
+        bh=mIdzJkIw2OYgLtqSIPrHvNBRvba93PhJp+islfrOncg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4F4JiR7EZAzN5w9pE2Vrhb7vS3XrLLhYheFXbsGo0Z2K22EtJGvx06ZlEnuSvu2n
-         fC4WuZQDJoHRpNR7cCi3cIZy6bx9wQbLLmkdrwFLcaSCsdMUZQ/DJLr4qb/CeQB+3T
-         2TliU7NR6NwbdLUBEIn60y8OtEpdIJ7nk4N48SdU=
+        b=TIKoP9YSLbeL5B5LRrdlsNYbq4IU7O1+Oj2m3pJsSuc3cQg+sOuzqhXbJUwAJAr3g
+         rWmcTn86o1Y4LMYNJD08a9EWUNt1udkSBMAyNU9/vU4PM6+FRVMBdrAjEZpqN10BaJ
+         Wwv/9nmkebkiUeo6hUO5PFxoJ2hZmxQH2DJPN3Ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 111/434] block: Fix writeback throttling W=1 compiler warnings
-Date:   Sun, 29 Dec 2019 18:22:44 +0100
-Message-Id: <20191229172709.026967003@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 114/434] MIPS: futex: Emit Loongson3 sync workarounds within asm
+Date:   Sun, 29 Dec 2019 18:22:47 +0100
+Message-Id: <20191229172709.236339830@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,126 +61,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Paul Burton <paul.burton@mips.com>
 
-[ Upstream commit 1d200e9d6f635ae894993a7d0f1b9e0b6e522e3b ]
+[ Upstream commit 3c1d3f0979721a39dd2980c97466127ce65aa130 ]
 
-Fix the following compiler warnings:
+Generate the sync instructions required to workaround Loongson3 LL/SC
+errata within inline asm blocks, which feels a little safer than doing
+it from C where strictly speaking the compiler would be well within its
+rights to insert a memory access between the separate asm statements we
+previously had, containing sync & ll instructions respectively.
 
-In file included from ./include/linux/bitmap.h:9,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/cpumask.h:5,
-                 from ./arch/x86/include/asm/msr.h:11,
-                 from ./arch/x86/include/asm/processor.h:21,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:38,
-                 from ./arch/x86/include/asm/preempt.h:7,
-                 from ./include/linux/preempt.h:78,
-                 from ./include/linux/spinlock.h:51,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:6,
-                 from ./include/linux/mm.h:10,
-                 from ./include/linux/bvec.h:13,
-                 from ./include/linux/blk_types.h:10,
-                 from block/blk-wbt.c:23:
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'perf_trace_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_stat' at ./include/trace/events/wbt.h:15:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_lat' at ./include/trace/events/wbt.h:58:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_timer' at ./include/trace/events/wbt.h:126:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In function 'strncpy',
-    inlined from 'trace_event_raw_event_wbt_step' at ./include/trace/events/wbt.h:87:1:
-./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  return __builtin_strncpy(p, q, size);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Johannes Thumshirn <jthumshirn@suse.de>
-Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/wbt.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/mips/include/asm/barrier.h | 13 +++++++------
+ arch/mips/include/asm/futex.h   | 15 +++++++--------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index b048694070e2..37342a13c9cb 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,8 @@ TRACE_EVENT(wbt_stat,
- 	),
+diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrier.h
+index 9228f7386220..fb842965d541 100644
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -218,13 +218,14 @@
+  * ordering will be done by smp_llsc_mb() and friends.
+  */
+ #if defined(CONFIG_WEAK_REORDERING_BEYOND_LLSC) && defined(CONFIG_SMP)
+-#define __WEAK_LLSC_MB		"	sync	\n"
+-#define smp_llsc_mb()		__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
+-#define __LLSC_CLOBBER
++# define __WEAK_LLSC_MB		sync
++# define smp_llsc_mb() \
++	__asm__ __volatile__(__stringify(__WEAK_LLSC_MB) : : :"memory")
++# define __LLSC_CLOBBER
+ #else
+-#define __WEAK_LLSC_MB		"		\n"
+-#define smp_llsc_mb()		do { } while (0)
+-#define __LLSC_CLOBBER		"memory"
++# define __WEAK_LLSC_MB
++# define smp_llsc_mb()		do { } while (0)
++# define __LLSC_CLOBBER		"memory"
+ #endif
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
- 		__entry->rmax		= stat[0].max;
-@@ -67,7 +68,8 @@ TRACE_EVENT(wbt_lat,
- 	),
+ #ifdef CONFIG_CPU_CAVIUM_OCTEON
+diff --git a/arch/mips/include/asm/futex.h b/arch/mips/include/asm/futex.h
+index b83b0397462d..54cf20530931 100644
+--- a/arch/mips/include/asm/futex.h
++++ b/arch/mips/include/asm/futex.h
+@@ -16,6 +16,7 @@
+ #include <asm/barrier.h>
+ #include <asm/compiler.h>
+ #include <asm/errno.h>
++#include <asm/sync.h>
+ #include <asm/war.h>
  
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)		\
+@@ -32,7 +33,7 @@
+ 		"	.set	arch=r4000			\n"	\
+ 		"2:	sc	$1, %2				\n"	\
+ 		"	beqzl	$1, 1b				\n"	\
+-		__WEAK_LLSC_MB						\
++		__stringify(__WEAK_LLSC_MB)				\
+ 		"3:						\n"	\
+ 		"	.insn					\n"	\
+ 		"	.set	pop				\n"	\
+@@ -50,19 +51,19 @@
+ 		  "i" (-EFAULT)						\
+ 		: "memory");						\
+ 	} else if (cpu_has_llsc) {					\
+-		loongson_llsc_mb();					\
+ 		__asm__ __volatile__(					\
+ 		"	.set	push				\n"	\
+ 		"	.set	noat				\n"	\
+ 		"	.set	push				\n"	\
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
++		"	" __SYNC(full, loongson3_war) "		\n"	\
+ 		"1:	"user_ll("%1", "%4")" # __futex_atomic_op\n"	\
+ 		"	.set	pop				\n"	\
+ 		"	" insn	"				\n"	\
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
+ 		"2:	"user_sc("$1", "%2")"			\n"	\
+ 		"	beqz	$1, 1b				\n"	\
+-		__WEAK_LLSC_MB						\
++		__stringify(__WEAK_LLSC_MB)				\
+ 		"3:						\n"	\
+ 		"	.insn					\n"	\
+ 		"	.set	pop				\n"	\
+@@ -147,7 +148,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		"	.set	arch=r4000				\n"
+ 		"2:	sc	$1, %2					\n"
+ 		"	beqzl	$1, 1b					\n"
+-		__WEAK_LLSC_MB
++		__stringify(__WEAK_LLSC_MB)
+ 		"3:							\n"
+ 		"	.insn						\n"
+ 		"	.set	pop					\n"
+@@ -164,13 +165,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		  "i" (-EFAULT)
+ 		: "memory");
+ 	} else if (cpu_has_llsc) {
+-		loongson_llsc_mb();
+ 		__asm__ __volatile__(
+ 		"# futex_atomic_cmpxchg_inatomic			\n"
+ 		"	.set	push					\n"
+ 		"	.set	noat					\n"
+ 		"	.set	push					\n"
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
++		"	" __SYNC(full, loongson3_war) "			\n"
+ 		"1:	"user_ll("%1", "%3")"				\n"
+ 		"	bne	%1, %z4, 3f				\n"
+ 		"	.set	pop					\n"
+@@ -178,8 +179,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
+ 		"2:	"user_sc("$1", "%2")"				\n"
+ 		"	beqz	$1, 1b					\n"
+-		__WEAK_LLSC_MB
+-		"3:							\n"
++		"3:	" __SYNC_ELSE(full, loongson3_war, __WEAK_LLSC_MB) "\n"
+ 		"	.insn						\n"
+ 		"	.set	pop					\n"
+ 		"	.section .fixup,\"ax\"				\n"
+@@ -194,7 +194,6 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		: GCC_OFF_SMALL_ASM() (*uaddr), "Jr" (oldval), "Jr" (newval),
+ 		  "i" (-EFAULT)
+ 		: "memory");
+-		loongson_llsc_mb();
+ 	} else
+ 		return -ENOSYS;
  
-@@ -103,7 +105,8 @@ TRACE_EVENT(wbt_step,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
- 		__entry->window	= div_u64(window, 1000);
-@@ -138,7 +141,8 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strncpy(__entry->name, dev_name(bdi->dev), 32);
-+		strlcpy(__entry->name, dev_name(bdi->dev),
-+			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
- 		__entry->inflight	= inflight;
 -- 
 2.20.1
 
