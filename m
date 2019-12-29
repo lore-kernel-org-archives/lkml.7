@@ -2,97 +2,131 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99663C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B301C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6471B20838
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410C221741
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="voTsJ8vp"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="EVP7Sf6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfL2AN2 (ORCPT
+        id S1726395AbfL2ASV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 19:13:28 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39793 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfL2AN1 (ORCPT
+        Sat, 28 Dec 2019 19:18:21 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35432 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfL2ASV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 19:13:27 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q10so16568019pfs.6
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 16:13:27 -0800 (PST)
+        Sat, 28 Dec 2019 19:18:21 -0500
+Received: by mail-io1-f66.google.com with SMTP id v18so28734360iol.2
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 16:18:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X87rhBd+UktpzxH/iAqEZuIOWe5HFUhDknwlJQzhfXU=;
-        b=voTsJ8vp2x4p14ymxvo5Co8MeX/z1qhzp6bl/TohpgNFc9WxmCWAQwghIETMHTZUv2
-         aBi+BnSePLkURSfUs0w3x8wB/1lGfEB85XpPg3VxQWxOiypONDGLPjgoRliHTozYJrjc
-         yRoUyfLK9/nFxMJRoj16JyEdX717VnqfnWcLa4pdgO6s0z7uvQ34ZS6cJLF9nnZXTKL5
-         3WhHb4l4wcG4r4KUXGcEFfwuinsNVKSd2ArSNHdyMf5JtCzACGd7ANp6hhW5aPt6r2+c
-         H82PthKARn9iHUG3OFb5whwJdGYtXcDx2FkeQ/hwhMbq2vKDV1jz1rES31/Wk8D8bmA4
-         pdfw==
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0TVhVG6FPueBWbxT9lQzkvtYNLfiEe1VkHsG9qF7cLw=;
+        b=EVP7Sf6HkWOiXoLb9OQHzPQdTVjwelJGvS4vCCJrE6c+OKje8z7CBxxD+eSrcXwzrI
+         wS5DHPQgA3ZZk0XwcXGCoMxjsqB49hXO0uta1BdP9GX+EidrZQg2OKzaPXKpU03ti/vW
+         WoQv1haLJ9ffvLberQtQvvrNavWYYIYYDQD/O8r+U8o26AR2DqCq2OHXl51Cpf4lvol0
+         hXqT/J/7EgxrH4QuY6nFvo4lOGS1joXg1leP5EnjlBVuVZWSXRp8UzKXOUbAV44JmRvG
+         MmexE7kz5KFj3zs30EoTqe9VKdGTn0nGJEScB0gwWnzwxhzmQkzn8w0JFYWPRIQ7iC1E
+         dCWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X87rhBd+UktpzxH/iAqEZuIOWe5HFUhDknwlJQzhfXU=;
-        b=UUAQN5BkosVAaKtereWk/PtIrVwy+G0MLjmEkST4aAt1FSUzDGJ1KqqRXHfFGR9bfQ
-         o64Oihqikt+lDfJDfB3x48CVWFywrDxgrZZSqrFHQ8i9SRH0NX9XXeNzk8L+NfE/453m
-         eQGpD7mSGny2kAJWpUgS1lbMq8T20QAVpuT3i4WxLMJVIOil5FTn4QiOUm8rZs5awrWI
-         c3I0Kjgm3DVnBJCrxHUucygtl1M36d5Gq9U6P8Pp87z6rpeCCUwttLFatC8wrOWkRdAf
-         QBnsF6Xk1Zoof5M8wIU5aZmjicFxWTVzhnJkSh3y1YeeYzJkx1V3IOXYsbQzRt7W+rPw
-         /eWg==
-X-Gm-Message-State: APjAAAXpHZg7sKQkb4fu1N6Vrfe+mVSx9r68SUC4oyRnncHTbnTiJyy9
-        Ub1QyNrbZqTSc1nc9G59m7LMPQ==
-X-Google-Smtp-Source: APXvYqxYpEanaEjAq3YfrtPVToWCHD2GjlB8uSTs6QmtEb5DIbUkXwnG3gWJgVXEwxnYGpMG3f/uJQ==
-X-Received: by 2002:a62:e511:: with SMTP id n17mr19323713pff.187.1577578407183;
-        Sat, 28 Dec 2019 16:13:27 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id f81sm46502970pfa.118.2019.12.28.16.13.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0TVhVG6FPueBWbxT9lQzkvtYNLfiEe1VkHsG9qF7cLw=;
+        b=K3KbjJsONQRNoqbfkWSt9++3BHI4bcHnkbciQtqgkE0K2iyUeQN0NTyNmmTYWJyvc7
+         gFUlH0BBzcCKVeh7eo/dAO7uUwgKxnyE0cERiHpbMsBCIYW8HAUPnv8qN/kyNlLyWUl8
+         kLthLaJz/TqPlvdB3WYMrPAaqjBygQ7UrPlXRT6y5hBzSDRWszSS0LL6kAtIjVB2/Dyf
+         cHyUwYG57QIB87wpKdFioagBvrr4Jy6niyj8D7aTx15ZBR6WkGaZ6K2NpJHn72iZHlV1
+         yHFjkF4bWZRTMAiqLYtC+1eANnXLAJu4RpUsOh/zzKFaCzBVDq6MLblcWoT6RERALB4m
+         VUpQ==
+X-Gm-Message-State: APjAAAWSnD3Q3DlhM3sbFhXiF5QHaAl9oErBxHzIaxvxhh+SqFi2CaS+
+        FpZTJApAFcXVhHQeoBtwpOJeJg==
+X-Google-Smtp-Source: APXvYqz3D2CFRJnZ1pTL1abfRRJwvnlpNObu1eijnBoZ2hLXjkFCpXcnDaAlLxOPdtp5Jzuyo22EjQ==
+X-Received: by 2002:a05:6638:a31:: with SMTP id 17mr45396672jao.15.1577578700376;
+        Sat, 28 Dec 2019 16:18:20 -0800 (PST)
+Received: from cisco ([2601:282:902:b340:f166:b50c:bba2:408])
+        by smtp.gmail.com with ESMTPSA id c8sm14934153ilh.58.2019.12.28.16.18.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 16:13:26 -0800 (PST)
-Date:   Sat, 28 Dec 2019 16:13:18 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next, 3/3] hv_netvsc: Name NICs based on vmbus offer
- sequence and use async probe
-Message-ID: <20191228161318.4501bb79@hermes.lan>
-In-Reply-To: <1577576793-113222-4-git-send-email-haiyangz@microsoft.com>
-References: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
-        <1577576793-113222-4-git-send-email-haiyangz@microsoft.com>
+        Sat, 28 Dec 2019 16:18:19 -0800 (PST)
+Date:   Sat, 28 Dec 2019 17:18:18 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: [PATCH v2 1/2] samples, selftests/seccomp: Zero out seccomp_notif
+Message-ID: <20191229001818.GC6746@cisco>
+References: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191228181825.GB6746@cisco>
+ <CAMp4zn91GoB=1eTbc_ux4eNs2-QFm+JocodgFQYUiiXL7H4m9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn91GoB=1eTbc_ux4eNs2-QFm+JocodgFQYUiiXL7H4m9w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Dec 2019 15:46:33 -0800
-Haiyang Zhang <haiyangz@microsoft.com> wrote:
+On Sat, Dec 28, 2019 at 07:10:29PM -0500, Sargun Dhillon wrote:
+> On Sat, Dec 28, 2019 at 1:18 PM Tycho Andersen <tycho@tycho.ws> wrote:
+> >
+> > On Sat, Dec 28, 2019 at 01:48:39AM +0000, Sargun Dhillon wrote:
+> > > The seccomp_notif structure should be zeroed out prior to calling the
+> > > SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
+> > > whether these structures were zeroed out or not, so these worked.
+> > >
+> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  samples/seccomp/user-trap.c                   | 2 +-
+> > >  tools/testing/selftests/seccomp/seccomp_bpf.c | 2 ++
+> > >  2 files changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
+> > > index 6d0125ca8af7..0ca8fb37cd79 100644
+> > > --- a/samples/seccomp/user-trap.c
+> > > +++ b/samples/seccomp/user-trap.c
+> > > @@ -298,7 +298,6 @@ int main(void)
+> > >               req = malloc(sizes.seccomp_notif);
+> > >               if (!req)
+> > >                       goto out_close;
+> > > -             memset(req, 0, sizeof(*req));
+> > >
+> > >               resp = malloc(sizes.seccomp_notif_resp);
+> > >               if (!resp)
+> > > @@ -306,6 +305,7 @@ int main(void)
+> > >               memset(resp, 0, sizeof(*resp));
+> >
+> > I know it's unrelated, but it's probably worth sending a patch to fix
+> > this to be sizes.seccomp_notif_resp instead of sizeof(*resp), since if
+> > the kernel is older this will over-zero things. I can do that, or you
+> > can add the patch to this series, just let me know which.
+> 
+> I was thinking about this, and initially, I chose to make the smaller
+> change. I think it might make more sense to combine the patch,
+> given that the memset behaviour is "incorrect" if we do it based on
+> sizeof(*req), or sizeof(*resp).
+> 
+> I'll go ahead and respin this patch with the change to call memset
+> based on sizes.
 
-> -	net = alloc_etherdev_mq(sizeof(struct net_device_context),
-> -				VRSS_CHANNEL_MAX);
-> +	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
-> +	net = alloc_netdev_mqs(sizeof(struct net_device_context), name,
-> +			       NET_NAME_ENUM, ether_setup,
-> +			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-> +
+I think it would be good to keep it as a separate patch, since it's an
+unrelated bug fix. That way if we have to revert these because of some
+breakage, we won't lose the fix.
 
-Naming is a hard problem, and best left to userspace.
-By choosing ethN as a naming policy, you potentially run into naming
-conflicts with other non netvsc devices like those passed through or
-SR-IOV devices.
+Cheers,
 
-Better to have udev use dev_num and use something like envN or something.
-Udev also handles SRIOV devices in later versions.
-
-Fighting against systemd, netplan, etc is not going to be make friends.
+Tycho
