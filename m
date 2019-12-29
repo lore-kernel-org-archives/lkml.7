@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A70C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE23C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B769A21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B459222C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641454;
-	bh=R+4ytuklSRafxrUveEtwTzxLuNjFjBYUMF+scX5jYCA=;
+	s=default; t=1577641458;
+	bh=ZpwxICIACp40Jb3AmxQbD4EaVFCPBbcl+RoJtG9I554=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3Ac/rmvxbyyXAgcxCppm0dXyl96qd6LSp5MroBku4Vwkd9pC50WL0KAZ5BxCr99q
-	 thHwiYQVREPbjV+6vKJwMZG/Qxni2h2cziwYgm1NYmUrw8KNg0ibBVk8BPR1dQU4tY
-	 /uccstaYTQWmD3IWULde5L14ozDxHbcr1+8gsTAc=
+	b=ZX/7UITt74SJsGf1b9wejMpMi1GZ8V7M7+gfJ5gLnPUKRoO2KmPN8UxfKdagBUjp3
+	 axHWqfES2vo5CwkE7Pop41GQYQvwkWUiCnUGTKa2Hr4wPxoeUA4S0vZ7M6K54p4yvT
+	 Ja0Mop1Q+d6MRDmNsJi8YqpIFMAzBbl2K9tcOlCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfL2RoO (ORCPT
+        id S1730189AbfL2RoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:44:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52148 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:44:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730632AbfL2RoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:44:10 -0500
+        id S1730643AbfL2RoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:44:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5718520718;
-        Sun, 29 Dec 2019 17:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5D4B21D7E;
+        Sun, 29 Dec 2019 17:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641449;
-        bh=R+4ytuklSRafxrUveEtwTzxLuNjFjBYUMF+scX5jYCA=;
+        s=default; t=1577641452;
+        bh=ZpwxICIACp40Jb3AmxQbD4EaVFCPBbcl+RoJtG9I554=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgqvLUM9F4J37DlDZe3qMeD6W5ROKusbDxcwgEwdq16J55tXrrfRKE0DPps4LyaQD
-         HBsNZE7yXjoHSj307xUnMdIohLQNEjPzpWYONnD/xvIrpAnQFM+R1jcbkc9OLthxYT
-         C2E9GPwGNvZy4Uw/md+G0HaaF4BxLWdpeSYo2GMo=
+        b=ZJuMV0Pqa8bFgIRIeuJ8ZL7oZoyu2LZRQDXtUedtw2utQs2nNrTFDBKyqI84oCk6Q
+         86AOlDChOx/2Mzbtg+Y6g+MTeRa8FXHoNhYQ8wCa+rQ+gfO+4Wa9BEwkE33nChmBB1
+         m8IOC8VQ5cV7dk7IQaDLG6csgbfWqFEkB7NZZX2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Mihail Atanassov <mihail.atanassov@arm.com>,
+        "James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Ayan kumar halder <ayan.halder@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/434] IB/iser: bound protection_sg size by data_sg size
-Date:   Sun, 29 Dec 2019 18:22:04 +0100
-Message-Id: <20191229172706.400849973@linuxfoundation.org>
+Subject: [PATCH 5.4 072/434] drm/komeda: Workaround for broken FLIP_COMPLETE timestamps
+Date:   Sun, 29 Dec 2019 18:22:05 +0100
+Message-Id: <20191229172706.453100740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,38 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Mihail Atanassov <Mihail.Atanassov@arm.com>
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+[ Upstream commit f59769c52cd7d158df53487ec2936f5592073340 ]
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+When initially turning a crtc on, drm_reset_vblank_timestamp will
+set the vblank timestamp to 0 for any driver that doesn't provide
+a ->get_vblank_timestamp() hook.
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Unfortunately, the FLIP_COMPLETE event depends on that timestamp,
+and the only way to regenerate a valid one is to have vblank
+interrupts enabled and have a valid in-ISR call to
+drm_crtc_handle_vblank.
+
+Additionally, if the user doesn't request vblanks but _does_ request
+FLIP_COMPLETE events, we still don't have a good timestamp: it'll be the
+same stamp as the last vblank one.
+
+Work around the issue by always enabling vblanks when the CRTC is on.
+Reducing the amount of time that PL0 has to be unmasked would be nice to
+fix at a later time.
+
+Changes since v1 [https://patchwork.freedesktop.org/patch/331727/]:
+ - moved drm_crtc_vblank_put call to the ->atomic_disable() hook
+
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
+Signed-off-by: Ayan kumar halder <ayan.halder@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191001142121.13939-1-mihail.atanassov@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 2e72fc5af157..c4c015c60446 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_dev->attrs.sig_prot_cap;
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+index 624d257da20f..52c42569a111 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+@@ -250,6 +250,7 @@ komeda_crtc_atomic_enable(struct drm_crtc *crtc,
+ {
+ 	komeda_crtc_prepare(to_kcrtc(crtc));
+ 	drm_crtc_vblank_on(crtc);
++	WARN_ON(drm_crtc_vblank_get(crtc));
+ 	komeda_crtc_do_flush(crtc, old);
+ }
  
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
+@@ -319,6 +320,7 @@ komeda_crtc_atomic_disable(struct drm_crtc *crtc,
+ 		}
+ 	}
+ 
++	drm_crtc_vblank_put(crtc);
+ 	drm_crtc_vblank_off(crtc);
+ 	komeda_crtc_unprepare(kcrtc);
+ }
 -- 
 2.20.1
 
