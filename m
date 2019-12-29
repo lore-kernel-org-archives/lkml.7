@@ -2,52 +2,58 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FEBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA71C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655A5207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AE421D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642485;
-	bh=eaOVxwg3RCtRaz2V+Ymf6ZImkfdTDGSZ7nuZByTpowA=;
+	s=default; t=1577642487;
+	bh=JYEC0FLxfLTJWr2lfcvAcwEDiWq3gkkywKw5+hqRJeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DmlPUM8kAw302OdjCOjMc6dkDKwfbM5XQlMPhDNEgt7zVIxrJC9X5Ik/rKYUR3Hev
-	 HnhvjAB+/hc9NH6/CrSxP0J9Ciaey1wTVCMyFMLkyweH7xuF3qcpFSprjOOia7bd4l
-	 ZR4GlLWLXqrh/n+dFFXb6+iQXt9iQgFqvZ37hxqo=
+	b=tFpjllIwawEYQ9wNztVtXl/3/P0fMILn5jmJCb3t6WyT8kxgXVjTrXfR5tYzQrcE7
+	 XorA4XNzZCjeR+08j9STWG9nHDqe0mrMYhfOjV84x0dFQiKqRpQdhjvBZ31dsNzj6z
+	 qR0Vj0annEe95GBIKmYP0fiIQMgFWkNBeVlpLWLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387788AbfL2SBY (ORCPT
+        id S2387779AbfL2SBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:01:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:01:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732744AbfL2R4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:56:10 -0500
+        id S1732568AbfL2R4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:56:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC65208C4;
-        Sun, 29 Dec 2019 17:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642C7208C4;
+        Sun, 29 Dec 2019 17:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642170;
-        bh=eaOVxwg3RCtRaz2V+Ymf6ZImkfdTDGSZ7nuZByTpowA=;
+        s=default; t=1577642175;
+        bh=JYEC0FLxfLTJWr2lfcvAcwEDiWq3gkkywKw5+hqRJeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUT7pZUziTZnSMgghuTo9Udu3moigBXzK6/jFyhlO2HP5aBS1qaf5LbdQpJyVx98+
-         kg5gTp82dOpg0mtpUxKS52toGJqRkbQNq/JUK7uQzYdruaprcEz373h6Rz4vDZsQJv
-         4QCxBg2zMsEPKTJwb3Um2Ixy7HND/3nvBn42BrMk=
+        b=hit0kJofSSODS/6tpnj7f2mguy6BASHdXcGYEwArTExtZJqZFxinJBRWje9hPbTql
+         xWT+STOWr9g5Qs3enV+UjQ8TGjGE8NdyY29rni24OB5TXmmN72Wb9sfiY7dhPpXkeY
+         3yIYRQ2w9qPjRmGV/nzEd/XIF49OCYC/3MoBmUGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 369/434] iommu/vt-d: Fix dmar pte read access not set error
-Date:   Sun, 29 Dec 2019 18:27:02 +0100
-Message-Id: <20191229172726.487422938@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 330/434] x86/insn: Add some Intel instructions to the opcode map
+Date:   Sun, 29 Dec 2019 18:26:23 +0100
+Message-Id: <20191229172723.889360763@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,63 +66,258 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 75d18385394f56db76845d91a192532aba421875 upstream.
+[ Upstream commit b980be189c9badba50634671e2303e92bf28e35a ]
 
-If the default DMA domain of a group doesn't fit a device, it
-will still sit in the group but use a private identity domain.
-When map/unmap/iova_to_phys come through iommu API, the driver
-should still serve them, otherwise, other devices in the same
-group will be impacted. Since identity domain has been mapped
-with the whole available memory space and RMRRs, we don't need
-to worry about the impact on it.
+Add to the opcode map the following instructions:
+        cldemote
+        tpause
+        umonitor
+        umwait
+        movdiri
+        movdir64b
+        enqcmd
+        enqcmds
+        encls
+        enclu
+        enclv
+        pconfig
+        wbnoinvd
 
-Link: https://www.spinics.net/lists/iommu/msg40416.html
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced with private")
-Cc: stable@vger.kernel.org # v5.3+
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+For information about the instructions, refer Intel SDM May 2019
+(325462-070US) and Intel Architecture Instruction Set Extensions
+May 2019 (319433-037).
 
+The instruction decoding can be tested using the perf tools'
+"x86 instruction decoder - new instructions" test as folllows:
+
+  $ perf test -v "new " 2>&1 | grep -i cldemote
+  Decoded ok: 0f 1c 00                    cldemote (%eax)
+  Decoded ok: 0f 1c 05 78 56 34 12        cldemote 0x12345678
+  Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%eax,%ecx,8)
+  Decoded ok: 0f 1c 00                    cldemote (%rax)
+  Decoded ok: 41 0f 1c 00                 cldemote (%r8)
+  Decoded ok: 0f 1c 04 25 78 56 34 12     cldemote 0x12345678
+  Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%rax,%rcx,8)
+  Decoded ok: 41 0f 1c 84 c8 78 56 34 12  cldemote 0x12345678(%r8,%rcx,8)
+  $ perf test -v "new " 2>&1 | grep -i tpause
+  Decoded ok: 66 0f ae f3                 tpause %ebx
+  Decoded ok: 66 0f ae f3                 tpause %ebx
+  Decoded ok: 66 41 0f ae f0              tpause %r8d
+  $ perf test -v "new " 2>&1 | grep -i umonitor
+  Decoded ok: 67 f3 0f ae f0              umonitor %ax
+  Decoded ok: f3 0f ae f0                 umonitor %eax
+  Decoded ok: 67 f3 0f ae f0              umonitor %eax
+  Decoded ok: f3 0f ae f0                 umonitor %rax
+  Decoded ok: 67 f3 41 0f ae f0           umonitor %r8d
+  $ perf test -v "new " 2>&1 | grep -i umwait
+  Decoded ok: f2 0f ae f0                 umwait %eax
+  Decoded ok: f2 0f ae f0                 umwait %eax
+  Decoded ok: f2 41 0f ae f0              umwait %r8d
+  $ perf test -v "new " 2>&1 | grep -i movdiri
+  Decoded ok: 0f 38 f9 03                 movdiri %eax,(%ebx)
+  Decoded ok: 0f 38 f9 88 78 56 34 12     movdiri %ecx,0x12345678(%eax)
+  Decoded ok: 48 0f 38 f9 03              movdiri %rax,(%rbx)
+  Decoded ok: 48 0f 38 f9 88 78 56 34 12  movdiri %rcx,0x12345678(%rax)
+  $ perf test -v "new " 2>&1 | grep -i movdir64b
+  Decoded ok: 66 0f 38 f8 18              movdir64b (%eax),%ebx
+  Decoded ok: 66 0f 38 f8 88 78 56 34 12  movdir64b 0x12345678(%eax),%ecx
+  Decoded ok: 67 66 0f 38 f8 1c           movdir64b (%si),%bx
+  Decoded ok: 67 66 0f 38 f8 8c 34 12     movdir64b 0x1234(%si),%cx
+  Decoded ok: 66 0f 38 f8 18              movdir64b (%rax),%rbx
+  Decoded ok: 66 0f 38 f8 88 78 56 34 12  movdir64b 0x12345678(%rax),%rcx
+  Decoded ok: 67 66 0f 38 f8 18           movdir64b (%eax),%ebx
+  Decoded ok: 67 66 0f 38 f8 88 78 56 34 12       movdir64b 0x12345678(%eax),%ecx
+  $ perf test -v "new " 2>&1 | grep -i enqcmd
+  Decoded ok: f2 0f 38 f8 18              enqcmd (%eax),%ebx
+  Decoded ok: f2 0f 38 f8 88 78 56 34 12  enqcmd 0x12345678(%eax),%ecx
+  Decoded ok: 67 f2 0f 38 f8 1c           enqcmd (%si),%bx
+  Decoded ok: 67 f2 0f 38 f8 8c 34 12     enqcmd 0x1234(%si),%cx
+  Decoded ok: f3 0f 38 f8 18              enqcmds (%eax),%ebx
+  Decoded ok: f3 0f 38 f8 88 78 56 34 12  enqcmds 0x12345678(%eax),%ecx
+  Decoded ok: 67 f3 0f 38 f8 1c           enqcmds (%si),%bx
+  Decoded ok: 67 f3 0f 38 f8 8c 34 12     enqcmds 0x1234(%si),%cx
+  Decoded ok: f2 0f 38 f8 18              enqcmd (%rax),%rbx
+  Decoded ok: f2 0f 38 f8 88 78 56 34 12  enqcmd 0x12345678(%rax),%rcx
+  Decoded ok: 67 f2 0f 38 f8 18           enqcmd (%eax),%ebx
+  Decoded ok: 67 f2 0f 38 f8 88 78 56 34 12       enqcmd 0x12345678(%eax),%ecx
+  Decoded ok: f3 0f 38 f8 18              enqcmds (%rax),%rbx
+  Decoded ok: f3 0f 38 f8 88 78 56 34 12  enqcmds 0x12345678(%rax),%rcx
+  Decoded ok: 67 f3 0f 38 f8 18           enqcmds (%eax),%ebx
+  Decoded ok: 67 f3 0f 38 f8 88 78 56 34 12       enqcmds 0x12345678(%eax),%ecx
+  $ perf test -v "new " 2>&1 | grep -i enqcmds
+  Decoded ok: f3 0f 38 f8 18              enqcmds (%eax),%ebx
+  Decoded ok: f3 0f 38 f8 88 78 56 34 12  enqcmds 0x12345678(%eax),%ecx
+  Decoded ok: 67 f3 0f 38 f8 1c           enqcmds (%si),%bx
+  Decoded ok: 67 f3 0f 38 f8 8c 34 12     enqcmds 0x1234(%si),%cx
+  Decoded ok: f3 0f 38 f8 18              enqcmds (%rax),%rbx
+  Decoded ok: f3 0f 38 f8 88 78 56 34 12  enqcmds 0x12345678(%rax),%rcx
+  Decoded ok: 67 f3 0f 38 f8 18           enqcmds (%eax),%ebx
+  Decoded ok: 67 f3 0f 38 f8 88 78 56 34 12       enqcmds 0x12345678(%eax),%ecx
+  $ perf test -v "new " 2>&1 | grep -i encls
+  Decoded ok: 0f 01 cf                    encls
+  Decoded ok: 0f 01 cf                    encls
+  $ perf test -v "new " 2>&1 | grep -i enclu
+  Decoded ok: 0f 01 d7                    enclu
+  Decoded ok: 0f 01 d7                    enclu
+  $ perf test -v "new " 2>&1 | grep -i enclv
+  Decoded ok: 0f 01 c0                    enclv
+  Decoded ok: 0f 01 c0                    enclv
+  $ perf test -v "new " 2>&1 | grep -i pconfig
+  Decoded ok: 0f 01 c5                    pconfig
+  Decoded ok: 0f 01 c5                    pconfig
+  $ perf test -v "new " 2>&1 | grep -i wbnoinvd
+  Decoded ok: f3 0f 09                    wbnoinvd
+  Decoded ok: f3 0f 09                    wbnoinvd
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/20191115135447.6519-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c |    8 --------
- 1 file changed, 8 deletions(-)
+ arch/x86/lib/x86-opcode-map.txt       | 18 ++++++++++++------
+ tools/arch/x86/lib/x86-opcode-map.txt | 18 ++++++++++++------
+ 2 files changed, 24 insertions(+), 12 deletions(-)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5447,9 +5447,6 @@ static int intel_iommu_map(struct iommu_
- 	int prot = 0;
- 	int ret;
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index e0b85930dd77..0a0e9112f284 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -333,7 +333,7 @@ AVXcode: 1
+ 06: CLTS
+ 07: SYSRET (o64)
+ 08: INVD
+-09: WBINVD
++09: WBINVD | WBNOINVD (F3)
+ 0a:
+ 0b: UD2 (1B)
+ 0c:
+@@ -364,7 +364,7 @@ AVXcode: 1
+ # a ModR/M byte.
+ 1a: BNDCL Gv,Ev (F3) | BNDCU Gv,Ev (F2) | BNDMOV Gv,Ev (66) | BNDLDX Gv,Ev
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+-1c:
++1c: Grp20 (1A),(1C)
+ 1d:
+ 1e:
+ 1f: NOP Ev
+@@ -792,6 +792,8 @@ f3: Grp17 (1A)
+ f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+ f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
++f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
++f9: MOVDIRI My,Gy
+ EndTable
  
--	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
--		return -EINVAL;
--
- 	if (iommu_prot & IOMMU_READ)
- 		prot |= DMA_PTE_READ;
- 	if (iommu_prot & IOMMU_WRITE)
-@@ -5492,8 +5489,6 @@ static size_t intel_iommu_unmap(struct i
- 	/* Cope with horrid API which requires us to unmap more than the
- 	   size argument if it happens to be a large-page mapping. */
- 	BUG_ON(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level));
--	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
--		return 0;
+ Table: 3-byte opcode 2 (0x0f 0x3a)
+@@ -943,9 +945,9 @@ GrpTable: Grp6
+ EndTable
  
- 	if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
- 		size = VTD_PAGE_SIZE << level_to_offset_bits(level);
-@@ -5525,9 +5520,6 @@ static phys_addr_t intel_iommu_iova_to_p
- 	int level = 0;
- 	u64 phys = 0;
+ GrpTable: Grp7
+-0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B)
+-1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B)
+-2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)
++0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
++1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
++2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+ 3: LIDT Ms
+ 4: SMSW Mw/Rv
+ 5: rdpkru (110),(11B) | wrpkru (111),(11B)
+@@ -1020,7 +1022,7 @@ GrpTable: Grp15
+ 3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+ 4: XSAVE | ptwrite Ey (F3),(11B)
+ 5: XRSTOR | lfence (11B)
+-6: XSAVEOPT | clwb (66) | mfence (11B)
++6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B)
+ 7: clflush | clflushopt (66) | sfence (11B)
+ EndTable
  
--	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
--		return 0;
--
- 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
- 	if (pte)
- 		phys = dma_pte_addr(pte);
+@@ -1051,6 +1053,10 @@ GrpTable: Grp19
+ 6: vscatterpf1qps/d Wx (66),(ev)
+ EndTable
+ 
++GrpTable: Grp20
++0: cldemote Mb
++EndTable
++
+ # AMD's Prefetch Group
+ GrpTable: GrpP
+ 0: PREFETCH
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index e0b85930dd77..0a0e9112f284 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -333,7 +333,7 @@ AVXcode: 1
+ 06: CLTS
+ 07: SYSRET (o64)
+ 08: INVD
+-09: WBINVD
++09: WBINVD | WBNOINVD (F3)
+ 0a:
+ 0b: UD2 (1B)
+ 0c:
+@@ -364,7 +364,7 @@ AVXcode: 1
+ # a ModR/M byte.
+ 1a: BNDCL Gv,Ev (F3) | BNDCU Gv,Ev (F2) | BNDMOV Gv,Ev (66) | BNDLDX Gv,Ev
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+-1c:
++1c: Grp20 (1A),(1C)
+ 1d:
+ 1e:
+ 1f: NOP Ev
+@@ -792,6 +792,8 @@ f3: Grp17 (1A)
+ f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+ f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
++f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
++f9: MOVDIRI My,Gy
+ EndTable
+ 
+ Table: 3-byte opcode 2 (0x0f 0x3a)
+@@ -943,9 +945,9 @@ GrpTable: Grp6
+ EndTable
+ 
+ GrpTable: Grp7
+-0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B)
+-1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B)
+-2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B)
++0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
++1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
++2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+ 3: LIDT Ms
+ 4: SMSW Mw/Rv
+ 5: rdpkru (110),(11B) | wrpkru (111),(11B)
+@@ -1020,7 +1022,7 @@ GrpTable: Grp15
+ 3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+ 4: XSAVE | ptwrite Ey (F3),(11B)
+ 5: XRSTOR | lfence (11B)
+-6: XSAVEOPT | clwb (66) | mfence (11B)
++6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B)
+ 7: clflush | clflushopt (66) | sfence (11B)
+ EndTable
+ 
+@@ -1051,6 +1053,10 @@ GrpTable: Grp19
+ 6: vscatterpf1qps/d Wx (66),(ev)
+ EndTable
+ 
++GrpTable: Grp20
++0: cldemote Mb
++EndTable
++
+ # AMD's Prefetch Group
+ GrpTable: GrpP
+ 0: PREFETCH
+-- 
+2.20.1
+
 
 
