@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA6CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC5A206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C90206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642598;
-	bh=A1FOVV26f2ggY+vCfaKrBDnzf+4YILXKM85+hxAUp5w=;
+	s=default; t=1577642605;
+	bh=4RLTZGWTuHombQxFLFmLSGeJYqNI+prrAOZz5HoQzIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONJS+fVVENDh3vjKp4FLNtzH53lwbFn/yQe4kubeNctYcup4Ib3Wh9xHpYQwMjEXR
-	 ByFR2P3LwV4RT5b9lknfryS22RGLxuVXW0hzGJxQhmSyUYvOTLV/OYq8Mcx6FawNqS
-	 CsIqCpO+ZXf6eb6u3DFpo4coJ0K45/CBdzTDq8YA=
+	b=iwtu8IGlqFMYmnvj3KVEoN62rglvGLaH5NXCwZW0ZujFSRahfePMLakZAt+xKX60o
+	 O7+ZuqoCRJUjkcGpBw3+9IYIchfysuaw7IK2xPUyhZpZNHrK4M5S2ZR+OO//TCnd0o
+	 KAvOrTGaufwiI8hAXOJ/bnPSgmjyhoy87WH/kaus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732544AbfL2Rxs (ORCPT
+        id S1732502AbfL2Rxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:53:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbfL2Rxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:44 -0500
+        id S1732485AbfL2Rxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F5221D7E;
-        Sun, 29 Dec 2019 17:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871DC20718;
+        Sun, 29 Dec 2019 17:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642024;
-        bh=A1FOVV26f2ggY+vCfaKrBDnzf+4YILXKM85+hxAUp5w=;
+        s=default; t=1577642012;
+        bh=4RLTZGWTuHombQxFLFmLSGeJYqNI+prrAOZz5HoQzIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B2j0+/46xjfgoXFXUzMBJmckPqwA5VC1E8OIo30DMp/lsLW67FBAV64pbxnaTs7VY
-         P/dmv7UAuxNs2gllxuRHfUzg78QqOPtH0eoEUSp+7N02PKgDajL6IwqLdPxtY3OxTt
-         14yUMgopzZmEWkBX8Q7bNorGkmFEdsRHt/enaJKs=
+        b=no3g1+XrG4SSgAVQUKfJl99v7PpBmV6yKhF7wASfDLljR29718K+5kOeLVcYYMPw7
+         MCZvvKkvpajNPqgJcwNZCc9v4vHhpydZMBpCqaUuxHNIGByWNafh75BzMojnTVIWSv
+         6hZ0sdmkITxOF1wUgbQhOkOFm+YbvHURSg9SoPz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xuerui <wangxuerui@qiniu.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Yuming Han <yuming.han@unisoc.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 309/434] iwlwifi: mvm: fix unaligned read of rx_pkt_status
-Date:   Sun, 29 Dec 2019 18:26:02 +0100
-Message-Id: <20191229172722.478297888@linuxfoundation.org>
+Subject: [PATCH 5.4 305/434] tracing: use kvcalloc for tgid_map array allocation
+Date:   Sun, 29 Dec 2019 18:25:58 +0100
+Message-Id: <20191229172722.211945844@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,48 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <wangxuerui@qiniu.com>
+From: Yuming Han <yuming.han@unisoc.com>
 
-[ Upstream commit c5aaa8be29b25dfe1731e9a8b19fd91b7b789ee3 ]
+[ Upstream commit 6ee40511cb838f9ced002dff7131bca87e3ccbdd ]
 
-This is present since the introduction of iwlmvm.
-Example stack trace on MIPS:
+Fail to allocate memory for tgid_map, because it requires order-6 page.
+detail as:
 
-[<ffffffffc0789328>] iwl_mvm_rx_rx_mpdu+0xa8/0xb88 [iwlmvm]
-[<ffffffffc0632b40>] iwl_pcie_rx_handle+0x420/0xc48 [iwlwifi]
+c3 sh: page allocation failure: order:6,
+   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
+c3 sh cpuset=/ mems_allowed=0
+c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
+c3 Hardware name: Generic DT based system
+c3 Backtrace:
+c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
+c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
+c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
+c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
+c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
+c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
+c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
+c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
+c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
+c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
+c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
+c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
 
-Tested with a Wireless AC 7265 for ~6 months, confirmed to fix the
-problem. No other unaligned accesses are spotted yet.
+Switch to use kvcalloc to avoid unexpected allocation failures.
 
-Signed-off-by: Wang Xuerui <wangxuerui@qiniu.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: http://lkml.kernel.org/r/1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com
+
+Signed-off-by: Yuming Han <yuming.han@unisoc.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-index 0ad8ed23a455..5ee33c8ae9d2 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rx.c
-@@ -60,6 +60,7 @@
-  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *****************************************************************************/
-+#include <asm/unaligned.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
- #include "iwl-trans.h"
-@@ -357,7 +358,7 @@ void iwl_mvm_rx_rx_mpdu(struct iwl_mvm *mvm, struct napi_struct *napi,
- 	rx_res = (struct iwl_rx_mpdu_res_start *)pkt->data;
- 	hdr = (struct ieee80211_hdr *)(pkt->data + sizeof(*rx_res));
- 	len = le16_to_cpu(rx_res->byte_count);
--	rx_pkt_status = le32_to_cpup((__le32 *)
-+	rx_pkt_status = get_unaligned_le32((__le32 *)
- 		(pkt->data + sizeof(*rx_res) + len));
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a0ee9178365..2fa72419bbd7 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4609,7 +4609,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
  
- 	/* Dont use dev_alloc_skb(), we'll have enough headroom once
+ 	if (mask == TRACE_ITER_RECORD_TGID) {
+ 		if (!tgid_map)
+-			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
++			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
+ 					   sizeof(*tgid_map),
+ 					   GFP_KERNEL);
+ 		if (!tgid_map) {
 -- 
 2.20.1
 
