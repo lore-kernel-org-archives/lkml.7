@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C33CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733CAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75929206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E321206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641124;
-	bh=OOlNrjQ+wSBaNpDqIhegLR7x23Z1pcUgiLCTmbr5FG4=;
+	s=default; t=1577641130;
+	bh=c15sxyYB7SoT9Non22x2h0tkHHoK/8IWuGc80z7r14I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NHq/4bvpbFpMg0K6UHu/3eEMxO/OD6eWNS7avI6i60r86gyvpIxw1z1q4eKvolg3C
-	 tTOyjoZkJUhK1sdPrQcUWtlkcPQM/UCCwz3nVCYh0z4RX6aZ5Ou/iUBH38mfUORTzK
-	 h6jHsfljINwsMPQHiDD9HIKkVdmIDDk19A47NoJU=
+	b=0hCcjE8fSd7aRndsZU2YL2I0Eq4jdu9XIED/zK/B0cH7KrRnitjn1uGIGaSQgJwIq
+	 p72zdb1wfKaHdWb5/HMuZhxW52qP+fVVuTaPQkYN04RjljvGmJNdJte5v9yl8dkUX+
+	 s4hlbD6gK6KAGNj4g6tyCTj5SxkSnF2n0bDA6olk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfL2Rd7 (ORCPT
+        id S1729826AbfL2Rit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:33:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbfL2Rd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:56 -0500
+        id S1729521AbfL2Rdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0658207FF;
-        Sun, 29 Dec 2019 17:33:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4615C20722;
+        Sun, 29 Dec 2019 17:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640835;
-        bh=OOlNrjQ+wSBaNpDqIhegLR7x23Z1pcUgiLCTmbr5FG4=;
+        s=default; t=1577640832;
+        bh=c15sxyYB7SoT9Non22x2h0tkHHoK/8IWuGc80z7r14I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7Pp3VH/R0dIhj1h0WjTclbgocb14leFDWJJPEbU12K/WfMdiHGXSNM4r43LsrvUQ
-         ZM4wSg3XcuXldRby8xlayxg0QB2qoLIQo740hVU4HSf47aGPendvZJT+B4oEksvMMd
-         NXj05QOf+meAFmkD3k8+y07d3qD5eEs83/ON4vj4=
+        b=aPkzb87b2jBEzBJrZySSHVUUqY3+IzuK+b61fTAIHOp33r0LhCNArt0QvVOi00GJb
+         oDxGWxKKKGJKBgj6MrLGHpJmtdUWL1qNhS48BtIBnA+95C3+WxTi4bKaAXNGsVAd7L
+         sM8YoTBTq9jSBGxYCaW1DeMhvV8yXjh050Uu1iB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 131/219] perf probe: Fix to probe a function which has no entry pc
-Date:   Sun, 29 Dec 2019 18:18:53 +0100
-Message-Id: <20191229162528.440583637@linuxfoundation.org>
+Subject: [PATCH 4.19 157/219] bcache: fix static checker warning in bcache_device_free()
+Date:   Sun, 29 Dec 2019 18:19:19 +0100
+Message-Id: <20191229162532.327225338@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -63,94 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
+[ Upstream commit 2d8869518a525c9bce5f5268419df9dfbe3dfdeb ]
 
-Fix 'perf probe' to probe a function which has no entry pc or low pc but
-only has ranges attribute.
+Commit cafe56359144 ("bcache: A block layer cache") leads to the
+following static checker warning:
 
-probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
-but that doesn't work for the function DIE which has only ranges
-attribute. Use die_entrypc() instead.
+    ./drivers/md/bcache/super.c:770 bcache_device_free()
+    warn: variable dereferenced before check 'd->disk' (see line 766)
 
-Without this fix:
+drivers/md/bcache/super.c
+   762  static void bcache_device_free(struct bcache_device *d)
+   763  {
+   764          lockdep_assert_held(&bch_register_lock);
+   765
+   766          pr_info("%s stopped", d->disk->disk_name);
+                                      ^^^^^^^^^
+Unchecked dereference.
 
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
+   767
+   768          if (d->c)
+   769                  bcache_device_detach(d);
+   770          if (d->disk && d->disk->flags & GENHD_FL_UP)
+                    ^^^^^^^
+Check too late.
 
-With this:
+   771                  del_gendisk(d->disk);
+   772          if (d->disk && d->disk->queue)
+   773                  blk_cleanup_queue(d->disk->queue);
+   774          if (d->disk) {
+   775                  ida_simple_remove(&bcache_device_idx,
+   776                                    first_minor_to_idx(d->disk->first_minor));
+   777                  put_disk(d->disk);
+   778          }
+   779
 
-  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
-  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
+It is not 100% sure that the gendisk struct of bcache device will always
+be there, the warning makes sense when there is problem in block core.
 
-Committer testing:
+This patch tries to remove the static checking warning by checking
+d->disk to avoid NULL pointer deferences.
 
-Before:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Probe point 'clear_tasks_mm_cpumask' not found.
-    Error: Failed to add events.
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]#
-
-Using it with 'perf trace':
-
-  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
-
-Doesn't seem to be used in x86_64:
-
-  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
-  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
-  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
-  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
-  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
-  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
-  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
-  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
-  $
-
-Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/super.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index d0d333c90b35..64d4837c8f82 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1002,7 +1002,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
- 		param->retval = find_probe_point_by_line(pf);
- 	} else if (die_is_func_instance(sp_die)) {
- 		/* Instances always have the entry address */
--		dwarf_entrypc(sp_die, &pf->addr);
-+		die_entrypc(sp_die, &pf->addr);
- 		/* But in some case the entry address is 0 */
- 		if (pf->addr == 0) {
- 			pr_debug("%s has no entry PC. Skipped\n",
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 14d381cc6d74..2d60bcdb5b9c 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -747,20 +747,28 @@ static inline int idx_to_first_minor(int idx)
+ 
+ static void bcache_device_free(struct bcache_device *d)
+ {
++	struct gendisk *disk = d->disk;
++
+ 	lockdep_assert_held(&bch_register_lock);
+ 
+-	pr_info("%s stopped", d->disk->disk_name);
++	if (disk)
++		pr_info("%s stopped", disk->disk_name);
++	else
++		pr_err("bcache device (NULL gendisk) stopped");
+ 
+ 	if (d->c)
+ 		bcache_device_detach(d);
+-	if (d->disk && d->disk->flags & GENHD_FL_UP)
+-		del_gendisk(d->disk);
+-	if (d->disk && d->disk->queue)
+-		blk_cleanup_queue(d->disk->queue);
+-	if (d->disk) {
++
++	if (disk) {
++		if (disk->flags & GENHD_FL_UP)
++			del_gendisk(disk);
++
++		if (disk->queue)
++			blk_cleanup_queue(disk->queue);
++
+ 		ida_simple_remove(&bcache_device_idx,
+-				  first_minor_to_idx(d->disk->first_minor));
+-		put_disk(d->disk);
++				  first_minor_to_idx(disk->first_minor));
++		put_disk(disk);
+ 	}
+ 
+ 	bioset_exit(&d->bio_split);
 -- 
 2.20.1
 
