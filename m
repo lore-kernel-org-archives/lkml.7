@@ -2,51 +2,54 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C251C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15614C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A1E207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E126E207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641443;
-	bh=aQwAyh+Sp2IeI16kUaqLhGUu5rlmKirX7GMm9Icmtk8=;
+	s=default; t=1577641447;
+	bh=tIVi2pHfOezUp/y8Sz3RUPHHlYUhRouaMh1e4UmHkB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o689PDgbwLx+HM625N/37OAaYXDCRUIOGeq6aWM23nYzt9nX8rj0r3dnms7amy9G7
-	 /BQnYX5J4CgReMfyBTbQBAfvzhXRrH0+ISIoxomgdjDMFGtKrZ0hxSV98so07r9Ni7
-	 Ecv4iR/mhy3qrYdip3R3SVt1it4QUtTZaZBKqtyE=
+	b=TER19q+6H1n45rV6H+IRlui/8idksVhmgc59GhqeJzABkFG2Dxk+AquwY+AUxri4O
+	 rya4+78Gi7nVKFFUIGLn4AWi1fyfvWP2gHruYsOTDrDe8KRRIshXHoTpUcmTmCXa8v
+	 Bq85VVP38knrMR4sjml+bSc6HingfkvLYlaDm5n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfL2RoC (ORCPT
+        id S1730620AbfL2RoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51854 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:44:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbfL2RoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:44:00 -0500
+        id S1730597AbfL2RoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:44:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99406222D9;
-        Sun, 29 Dec 2019 17:43:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22F3320718;
+        Sun, 29 Dec 2019 17:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641440;
-        bh=aQwAyh+Sp2IeI16kUaqLhGUu5rlmKirX7GMm9Icmtk8=;
+        s=default; t=1577641442;
+        bh=tIVi2pHfOezUp/y8Sz3RUPHHlYUhRouaMh1e4UmHkB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vob3vCZy5DcHc9BWXosw9Mq+odQobPQNEQojo5uI8ECW8Hwaz3kkCT/Dcop+PjaSb
-         N3915GAra8E+9XBHjAeNfhtcL/DEpwjWbx6bsduGoEHWN6BNh0149NnO8jWCMtXRWb
-         DMtkueG1MqoiOiDRfA8FidZwIsHRGcnqqvsK/uXc=
+        b=F7Oez4FvdOazaH9C2zKRzHNrnbTP5ZP/ixbrfYGm20ukHukrLiSyDK0bfHfV2m+tO
+         xB1w1dR6ugFxyUKxt4EZyxPlvgLdgybBNdkU5sj0ORpSGNtBSmEviCl1t5840mKQSZ
+         Vm1NVym6ZJfGdlq+mWvN2kzCFtL4XtS45k867Py0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 017/434] selftests: forwarding: Delete IPv6 address at the end
-Date:   Sun, 29 Dec 2019 18:21:10 +0100
-Message-Id: <20191229172703.337144299@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Tsai <martin.tsai@amd.com>,
+        Charlene Liu <Charlene.Liu@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 060/434] drm/amd/display: Handle virtual signal type in disable_link()
+Date:   Sun, 29 Dec 2019 18:21:53 +0100
+Message-Id: <20191229172705.811086209@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,44 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Martin Tsai <martin.tsai@amd.com>
 
-[ Upstream commit 65cb13986229cec02635a1ecbcd1e2dd18353201 ]
+[ Upstream commit 616f5b65f1c02d3d6ae370644670d14c57de2fd8 ]
 
-When creating the second host in h2_create(), two addresses are assigned
-to the interface, but only one is deleted. When running the test twice
-in a row the following error is observed:
+[Why]
+The new implementation changed the behavior to allow process setMode
+to DAL when DAL returns empty mode query for unplugged display.
+This will trigger additional disable_link().
+When unplug HDMI from MST dock, driver will update stream->signal to
+"Virtual". disable_link() will call disable_output() if the signal type
+is not DP and induce other displays on MST dock show black screen.
 
-$ ./router_bridge_vlan.sh
-TEST: ping                                                          [ OK ]
-TEST: ping6                                                         [ OK ]
-TEST: vlan                                                          [ OK ]
-$ ./router_bridge_vlan.sh
-RTNETLINK answers: File exists
-TEST: ping                                                          [ OK ]
-TEST: ping6                                                         [ OK ]
-TEST: vlan                                                          [ OK ]
+[How]
+Don't need to process disable_output() if the signal type is virtual.
 
-Fix this by deleting the address during cleanup.
-
-Fixes: 5b1e7f9ebd56 ("selftests: forwarding: Test routed bridge interface")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Martin Tsai <martin.tsai@amd.com>
+Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/router_bridge_vlan.sh |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/net/forwarding/router_bridge_vlan.sh
-+++ b/tools/testing/selftests/net/forwarding/router_bridge_vlan.sh
-@@ -36,7 +36,7 @@ h2_destroy()
- {
- 	ip -6 route del 2001:db8:1::/64 vrf v$h2
- 	ip -4 route del 192.0.2.0/28 vrf v$h2
--	simple_if_fini $h2 192.0.2.130/28
-+	simple_if_fini $h2 192.0.2.130/28 2001:db8:2::2/64
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index ca20b150afcc..de1b61595ffb 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -2169,8 +2169,10 @@ static void disable_link(struct dc_link *link, enum signal_type signal)
+ 			dp_set_fec_ready(link, false);
+ 		}
+ #endif
+-	} else
+-		link->link_enc->funcs->disable_output(link->link_enc, signal);
++	} else {
++		if (signal != SIGNAL_TYPE_VIRTUAL)
++			link->link_enc->funcs->disable_output(link->link_enc, signal);
++	}
  
- router_create()
+ 	if (signal == SIGNAL_TYPE_DISPLAY_PORT_MST) {
+ 		/* MST disable link only when no stream use the link */
+-- 
+2.20.1
+
 
 
