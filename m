@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254EAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B003EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0077421D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77207207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640358;
-	bh=+vL5qCyh3Qu4QHvTA6KuZ8NyS0MBsGFdnV6ORna5JkU=;
+	s=default; t=1577640360;
+	bh=SO5jFCBQPGyj0zKJ5SiSGQxk3Bo7ULmVJtiiuTwEgZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmZVCITWcOtTpFYInmIOUznly0OSlXYxcfvqslRXt22zR/BAqtmAtDI5tFFJgshrj
-	 LuhhLVG/RHEJ3DcHxw9ePGdMOWGDWDrKXuPnBrJAXKKWycyIPutVhJbco/hmQFQEyl
-	 3BaJusVQrd7s2ow2DVVz+Qw8g3sFNLtqqz9ZAmaI=
+	b=mOjcnIJF+XFcZA2uhdGcv1VYHBGkYC3cf1/ybq8yrzrxLy5OG6dQdZ9AR6z6odeIc
+	 Ol3i+GmeTSNZM2AIi5UOZpoitcXm0o/LhxM49nMEX4Ek+/uf9f/tpeevS9lA/R+GFj
+	 ucG2twY2XVBVUeU53JzkBgChg6yeQdSt/GGzDy9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfL2RZ4 (ORCPT
+        id S1728102AbfL2RZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46258 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728055AbfL2RZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:54 -0500
+        id S1728092AbfL2RZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B7C207FF;
-        Sun, 29 Dec 2019 17:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E707821744;
+        Sun, 29 Dec 2019 17:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640354;
-        bh=+vL5qCyh3Qu4QHvTA6KuZ8NyS0MBsGFdnV6ORna5JkU=;
+        s=default; t=1577640356;
+        bh=SO5jFCBQPGyj0zKJ5SiSGQxk3Bo7ULmVJtiiuTwEgZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16+5oVpNAAi9NwnO+3N/irrtUFzIARQZrnnpbaUSvRjvTBH7w/vtwjXY5h5iYKWQe
-         abvoQRkaGjbf1/KYUc0XrhtUnlwx/86fR9p/0iJbgkkVQmc+xykbwkssQt1tH3rM44
-         4iOh7fWWELgBB+OQWPjd+RKH7XS5JqFZEjbLJtmI=
+        b=1MhWYwgQdhkPEDUUnufm6sc3ly8oKa9cl1SC4qdSdD7Rj9P6zFVxy90U6+TH7iNg/
+         CzEfTMCpF13VmQQMs25zysvMR/CtN2TABT3SfOnPB2VGNHqnPCplJKpiFiuuYMR2sO
+         j/lBtjwM8mWs70WJCSTKzXnE1OFWLceEuc+QIe/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/161] media: rcar_drif: fix a memory disclosure
-Date:   Sun, 29 Dec 2019 18:18:53 +0100
-Message-Id: <20191229162424.957260467@linuxfoundation.org>
+Subject: [PATCH 4.14 086/161] media: v4l2-core: fix touch support in v4l_g_fmt
+Date:   Sun, 29 Dec 2019 18:18:54 +0100
+Message-Id: <20191229162425.060612027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,35 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Vandana BN <bnvandana@gmail.com>
 
-[ Upstream commit d39083234c60519724c6ed59509a2129fd2aed41 ]
+[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
 
-"f->fmt.sdr.reserved" is uninitialized. As other peer drivers
-like msi2500 and airspy do, the fix initializes it to avoid
-memory disclosures.
+v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
+the v4l2_pix_format structure to default values.This was
+missing in v4l_g_fmt, which would lead to failures in
+v4l2-compliance tests.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_drif.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/platform/rcar_drif.c b/drivers/media/platform/rcar_drif.c
-index 522364ff0d5d..3871ed6a1fcb 100644
---- a/drivers/media/platform/rcar_drif.c
-+++ b/drivers/media/platform/rcar_drif.c
-@@ -915,6 +915,7 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 681eef972e63..7cafc8a57950 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1363,10 +1363,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return ret;
+ }
+ 
++static void v4l_pix_format_touch(struct v4l2_pix_format *p)
++{
++	/*
++	 * The v4l2_pix_format structure contains fields that make no sense for
++	 * touch. Set them to default values in this case.
++	 */
++
++	p->field = V4L2_FIELD_NONE;
++	p->colorspace = V4L2_COLORSPACE_RAW;
++	p->flags = 0;
++	p->ycbcr_enc = 0;
++	p->quantization = 0;
++	p->xfer_func = 0;
++}
++
+ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
  {
- 	struct rcar_drif_sdr *sdr = video_drvdata(file);
+ 	struct v4l2_format *p = arg;
++	struct video_device *vfd = video_devdata(file);
+ 	int ret = check_fmt(file, p->type);
  
-+	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
- 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
- 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
+ 	if (ret)
+@@ -1404,6 +1420,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
+ 		/* just in case the driver zeroed it again */
+ 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
++		if (vfd->vfl_type == VFL_TYPE_TOUCH)
++			v4l_pix_format_touch(&p->fmt.pix);
+ 		return ret;
+ 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
+ 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
+@@ -1439,21 +1457,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return -EINVAL;
+ }
  
+-static void v4l_pix_format_touch(struct v4l2_pix_format *p)
+-{
+-	/*
+-	 * The v4l2_pix_format structure contains fields that make no sense for
+-	 * touch. Set them to default values in this case.
+-	 */
+-
+-	p->field = V4L2_FIELD_NONE;
+-	p->colorspace = V4L2_COLORSPACE_RAW;
+-	p->flags = 0;
+-	p->ycbcr_enc = 0;
+-	p->quantization = 0;
+-	p->xfer_func = 0;
+-}
+-
+ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
 -- 
 2.20.1
 
