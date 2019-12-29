@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB571C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3E3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A069F2253D
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7709120722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640205;
-	bh=J46BA9LfusTNVzdmQ4WIT/pDrOIyvsFauuDspAxcfRs=;
+	s=default; t=1577640210;
+	bh=fN7g6WY2amEW3gqUv3QZ5oQptFJW0G0E2Sh8Gs8Zyko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/dR+dpK/IbWtJcu2p07nVjR8yk3VvB4F0JJQBHvCH7csLnBE/cX50dK9DpBlcEqf
-	 9I6Rpe9+eTHI5VI7RRdVzjd+m9SXB084HMVM3mKyPZvgQLHO4lQCjwp4pztnrli7Pi
-	 K3Jn68icj8DbDQDFVdRHxa/MN89v68u4L4iHN1pA=
+	b=0PcjuT7N+IHt6Y+vZ2nnj6ePlsxngcfzH5N3wXqenDDBvMA3XidoDIM3EymL4aW7f
+	 1mYsS7wTBB2eCwc5W9X/IuTWG7TCcVurCBFRxKd3K9a8MRSe4jnz3isd3C19M7yplg
+	 Pax1tnkRGFOxY9k94kd7l1r6WK9ehoSC1kgXrtSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbfL2RXY (ORCPT
+        id S1727546AbfL2RX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40816 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbfL2RXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:20 -0500
+        id S1726898AbfL2RXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D97208E4;
-        Sun, 29 Dec 2019 17:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5353720CC7;
+        Sun, 29 Dec 2019 17:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640199;
-        bh=J46BA9LfusTNVzdmQ4WIT/pDrOIyvsFauuDspAxcfRs=;
+        s=default; t=1577640204;
+        bh=fN7g6WY2amEW3gqUv3QZ5oQptFJW0G0E2Sh8Gs8Zyko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y8LVBUpjJSq8yIfQhRCPqI9cwY7z8bE0W0lXIZlXIUh0aO3DiT3UJzHeYaACHwaZc
-         20ut1LTOlpdOgAJJlRshoHuXIVKyCGtGWiU2tF+/7XywAggJCq5ay4f+ySXCsD9zsS
-         gVn4+6HyGI5ueiHK41Wdo7z4j8qKS8DhVHCZKELA=
+        b=Rm3IJXnyFZQ2T9lo0Hht+OKNQ4qisB8jDmt+MdOJZ++RKfKmsDoi7CQk6TrBZT2ab
+         yNc10YVwckbE3ItaIrM7ioJI2UA1jU0vLUR8t8mz2oCy0zYxnVTsGHMuyfXdEYMZFR
+         rwbEG7X65L43ob42XwwgzJBFE6ojcQ8FCsvevGNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/161] drm/bridge: dw-hdmi: Restore audio when setting a mode
-Date:   Sun, 29 Dec 2019 18:18:27 +0100
-Message-Id: <20191229162417.025260067@linuxfoundation.org>
+Subject: [PATCH 4.14 061/161] perf report: Add warning when libunwind not compiled in
+Date:   Sun, 29 Dec 2019 18:18:29 +0100
+Message-Id: <20191229162417.955740376@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,45 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit fadfee3f9d8f114435a8a3e9f83a227600d89de7 ]
+[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
 
-When setting a new display mode, dw_hdmi_setup() calls
-dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
-the audio clock.
+We received a user report that call-graph DWARF mode was enabled in
+'perf record' but 'perf report' didn't unwind the callstack correctly.
+The reason was, libunwind was not compiled in.
 
-We should only (re-)enable the audio clock if audio was already enabled
-when setting the new mode.
+We can use 'perf -vv' to check the compiled libraries but it would be
+valuable to report a warning to user directly (especially valuable for
+a perf newbie).
 
-Without this patch, on RK3288, there will be HDMI audio on some monitors
-if i2s was played to headphone when the monitor was plugged.
-ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
+The warning is:
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191008102145.55134-1-cychiang@chromium.org
+Warning:
+Please install libunwind development packages during the perf build.
+
+Both TUI and stdio are supported.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-report.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 0febaafb8d89..cc1094f90125 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1743,7 +1743,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 4ddb0726eebc..fd4dd12b8f9d 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -342,6 +342,13 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
- 		/* HDMI Initialization Step E - Configure audio */
- 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
--		hdmi_enable_audio_clk(hdmi, true);
-+		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
- 	}
++#ifndef HAVE_LIBUNWIND_SUPPORT
++	if (dwarf_callchain_users) {
++		ui__warning("Please install libunwind development packages "
++			    "during the perf build.\n");
++	}
++#endif
++
+ 	return 0;
+ }
  
- 	/* not for DVI mode */
 -- 
 2.20.1
 
