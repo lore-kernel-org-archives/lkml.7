@@ -2,96 +2,141 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69000C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF570C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4639C20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24A020748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgHR3+f5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfL2PEV (ORCPT
+        id S1726729AbfL2PFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 10:04:21 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:39295 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfL2PEV (ORCPT
+        Sun, 29 Dec 2019 10:05:49 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36260 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfL2PFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 10:04:21 -0500
-Received: from mail-qv1-f48.google.com ([209.85.219.48]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5lvf-1jo3kv43Gl-017DMl; Sun, 29 Dec 2019 16:04:19 +0100
-Received: by mail-qv1-f48.google.com with SMTP id f16so11620588qvi.4;
-        Sun, 29 Dec 2019 07:04:18 -0800 (PST)
-X-Gm-Message-State: APjAAAXbk/D7K8RJIe9OxqaLwBrHbfDIn4M6nq9xyfxloM7ajJXeYAns
-        cXnZ0wr/qhF7rym/9CR71JpxYlTboCTDzhTmkPQ=
-X-Google-Smtp-Source: APXvYqxUxXT/D/078XI1LlLrxyQBorTz/AC2zq3x4KHkyas9hkBnO2Xi0jo0J8feFrGnUFEBHkIL4pf/yjmbXdEHv6I=
-X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr48140669qvo.222.1577631857753;
- Sun, 29 Dec 2019 07:04:17 -0800 (PST)
+        Sun, 29 Dec 2019 10:05:49 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so31110606ljg.3;
+        Sun, 29 Dec 2019 07:05:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJFIpVK2l7JXb5O04n2/M1EaQnjqMlSNsPUjZ7jwbQg=;
+        b=HgHR3+f5o25GXaOkOvlHmxuo1Bpvp6kkFLcbq666Z3/HlmCnCYnZzNCqKTxrMEzedU
+         2VY8KPlckXzrh1PWs3kjkvEFSHkDjb3pp0FeuahToE+h6nA+u0D/AeYwX+L5Xxg7RHne
+         5MObwlJrqutFM9qqw+fte556N7rci3/oKYmYljMf30u216eWu1VhEO+5DYnDh+qluQPj
+         V0Y3iR9VrGrSoEmyKNf72sPOKCBF/8BfJKokB0AIRJWEbgeiu/Nt/vixARJDNwvXLl8z
+         HpKoJNg6Vjn/WWEQMzfchTsJfRL7bjddFrwpsH9q4mkIV66/EV4ufWyf1zOOWkCUCsNY
+         2nEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RJFIpVK2l7JXb5O04n2/M1EaQnjqMlSNsPUjZ7jwbQg=;
+        b=i3YSR91YtI7CXLsBwhLV2kRYkKiBUpX2PW23YNHGIi4EgIs3aGbpFasPArjXKGbEse
+         Os4B9jje39glIvS/T22++62Q1d8DddDuvWY4zQYAcjt2UyLCZmIlwhMt9BgBSqSIGFur
+         teLAbgVZHqeEIhki7/n5oLBfNpT7GeaAh4APQdm3C4cD9vCL6yPiWkZV+rCt0NmBX6jF
+         fL8O0D2aqIpd6GxsK6BgyAT0wL6XACsEZp/+2LGm246xpVRPrnrzCGd3mFe2gmgDKrMn
+         wCoWtnytwQ9v3LEmO0xkOhsjSGWFViNh7r2nZktcIF0GqODCm9mao01Pr7ggxSjThITu
+         ed/w==
+X-Gm-Message-State: APjAAAXhCkefaTxmwwjIC1nVA6xVPXDAFFzaGVPLEqbjcuj+WygvN7d5
+        jF0uWH3SITs5Pxmwk0/BodQ=
+X-Google-Smtp-Source: APXvYqxUYqdjm3+Kq4VoxnGBV1ftdbjy1Hm09N0pSP0z+s/IcVyFV6uvWfnNZngH3u5evG0k3D6ifQ==
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr34903503ljh.183.1577631946992;
+        Sun, 29 Dec 2019 07:05:46 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id d24sm16169472lja.82.2019.12.29.07.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Dec 2019 07:05:46 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>
+Cc:     linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] ASoC: rt5640: Fix NULL dereference on module unload
+Date:   Sun, 29 Dec 2019 18:04:54 +0300
+Message-Id: <20191229150454.2127-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191229104325.10132-1-tiny.windzz@gmail.com> <CAMpxmJUggb7srWeLNzkcrb+L1THhP4DNH8nkkDaYDEs316ywDQ@mail.gmail.com>
- <CAEExFWt+8FL45kLMWc3odS4GsCRkskD1Z08q6UAF1sYx32Hf-w@mail.gmail.com>
-In-Reply-To: <CAEExFWt+8FL45kLMWc3odS4GsCRkskD1Z08q6UAF1sYx32Hf-w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 29 Dec 2019 16:04:01 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a00nLxqb6ZYt9HswmFRGEXntjRdAfAW9vMnoH4CgSfcZQ@mail.gmail.com>
-Message-ID: <CAK8P3a00nLxqb6ZYt9HswmFRGEXntjRdAfAW9vMnoH4CgSfcZQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lib: devres: provide devm_ioremap_resource_nocache()
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        saravanak@google.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Joe Perches <joe@perches.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:1niLBfWCQdqfI3a4OaicmjCLZyEvRMc4GIw0ZKjj/nxFGrmjlBJ
- lShmrHbayYbiotUIW3mFPnMTQILO+NoQT9zFNefCYz3VDzb65N5FnklnwSXU9zKyRwFCKoj
- cDGYbD0Yg0wXVHsnWa5WNdlZtCUeEqQDwKdEPHN0ShQJJf2WaR1yYxXslw8a7N5qdE/OH6C
- CO7oDQHXRY6563EjxatXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EZhydo4IAP8=:6VxsjYcOzGi+EOA1BvwfZh
- N7GXCeoWTOeY+jeuU67EU6evr9qe2nj/KYu7XAZlTYBQZN9U0bfXKoJlNMf1UFsV00Y4D7g0c
- zc5wnZxNbMuIV8jAKO1jMGLMN+MuOMCBbQx5JpWW9kvJAhcDo8LywMSCPj/z9Fsl26TF4PG26
- uT67kk4TNksTspUNYL/bfAJkAmJUmjPBc6Fv94G5DfegV/usgAcuLy0F5GTg9SXegffCvvw5x
- JW+6VM1BxDV9sdmSgSPrnE8zxJDVAe9yzw1uARH5E3dVLO00f/swu2d8fryFoGdDF8nKglfWS
- 5LipQsHKxlEBW83dBVTlyEgxGPT3YlvGWPX6gBL5bewdGBpMf6gjp4yDctvt8IEpxF2ZfbkLZ
- deyksHRNLcUexwLqPrGszGxXcr9NcAPe9ReQ/fmQ6oOlEGWQoYmJ5CCQD2L8R4H8iQ65I4cOR
- OtTn4AERVjMVdsDLGIUSf6pxfYJZrmsvSgu/igWp52pYcSckGqCz8/KgTM6lbbrtLajmFikms
- CK9gxrxMoylbzLOvmH13QMuex2GPmsCd/hUobrJNv7RofNHwLIG/t1nzucTw1uCPfpd/MCKMs
- 8WMriZmR/FO8jmkmY5pq1J0HUKix3k/kw7vmwTLx0r/JjwfEmaUgxV3CFNzxSzX9wo/h8M7pZ
- yUkUibBSLUrv5cremUUPP+fwGHj4qe1c3iTG6MFQzpkiJ9i9IPR8Of8bW9KjLr4xr25xQlzS/
- ZW6yozsH3tbVKAw3o3E54VJ1MJFf2yaVXFNdu6710romkQEhEvof+uDiCXWV5tHIabyWL40C8
- o7iDGgXVYsTIrsKXC461hm85hcDYVUNE99LNKi+tzLAOnSxEMaQMi7iBsIs30YNJc8CdQqxS7
- rpjmMauV474AO16/57Nw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 3:36 PM Frank Lee <tiny.windzz@gmail.com> wrote:
+The rt5640->jack is NULL if jack is already disabled at the time of
+driver's module unloading.
 
-> Thanks for pointing out!
-> I have seen the use of ioremap_nocache in many architectures,
-> so they are wrong and should be changed to ioremap?
+ Unable to handle kernel NULL pointer dereference at virtual address 00000024
+ ...
+ (rt5640_set_jack [snd_soc_rt5640]) from [<bf86f7ed>] (snd_soc_component_set_jack+0x11/0x1c [snd_soc_core])
+ (snd_soc_component_set_jack [snd_soc_core]) from [<bf8675cf>] (soc_remove_component+0x1b/0x54 [snd_soc_core])
+ (soc_remove_component [snd_soc_core]) from [<bf868859>] (soc_cleanup_card_resources+0xad/0x1cc [snd_soc_core])
+ (soc_cleanup_card_resources [snd_soc_core]) from [<bf86945f>] (snd_soc_unregister_card+0x47/0x78 [snd_soc_core])
+ (snd_soc_unregister_card [snd_soc_core]) from [<bf8b4013>] (tegra_rt5640_remove+0x13/0x1c [snd_soc_tegra_rt5640])
+ (tegra_rt5640_remove [snd_soc_tegra_rt5640]) from [<c0516d2f>] (platform_drv_remove+0x17/0x24)
+ (platform_drv_remove) from [<c0515aed>] (device_release_driver_internal+0x95/0x114)
+ (device_release_driver_internal) from [<c0515bd9>] (driver_detach+0x4d/0x90)
+ (driver_detach) from [<c0514d59>] (bus_remove_driver+0x31/0x70)
+ (bus_remove_driver) from [<bf8b4215>] (tegra_rt5640_driver_exit+0x9/0xdf4 [snd_soc_tegra_rt5640])
+ (tegra_rt5640_driver_exit [snd_soc_tegra_rt5640]) from [<c019336f>] (sys_delete_module+0xe7/0x184)
+ (sys_delete_module) from [<c0101001>] (ret_fast_syscall+0x1/0x28)
 
-Yes, those patches are already part of linux-next.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ sound/soc/codecs/rt5640.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-        Arnd
+diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
+index adbae1f36a8a..b245c44cafbc 100644
+--- a/sound/soc/codecs/rt5640.c
++++ b/sound/soc/codecs/rt5640.c
+@@ -2432,16 +2432,22 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
+ {
+ 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
+ 
+-	disable_irq(rt5640->irq);
+-	rt5640_cancel_work(rt5640);
++	/*
++	 * soc_remove_component() force-disables jack and thus rt5640->jack
++	 * could be NULL at the time of driver's module unloading.
++	 */
++	if (rt5640->jack) {
++		disable_irq(rt5640->irq);
++		rt5640_cancel_work(rt5640);
+ 
+-	if (rt5640->jack->status & SND_JACK_MICROPHONE) {
+-		rt5640_disable_micbias1_ovcd_irq(component);
+-		rt5640_disable_micbias1_for_ovcd(component);
+-		snd_soc_jack_report(rt5640->jack, 0, SND_JACK_BTN_0);
+-	}
++		if (rt5640->jack->status & SND_JACK_MICROPHONE) {
++			rt5640_disable_micbias1_ovcd_irq(component);
++			rt5640_disable_micbias1_for_ovcd(component);
++			snd_soc_jack_report(rt5640->jack, 0, SND_JACK_BTN_0);
++		}
+ 
+-	rt5640->jack = NULL;
++		rt5640->jack = NULL;
++	}
+ }
+ 
+ static int rt5640_set_jack(struct snd_soc_component *component,
+-- 
+2.24.0
+
