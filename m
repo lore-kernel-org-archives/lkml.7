@@ -2,52 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD0C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C4EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0CD7206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D66206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641017;
-	bh=aHv3j7rYRPDzFNDOD/MH+u/hrx39JXvqbLREUVDbUlw=;
+	s=default; t=1577641028;
+	bh=ErSN2XeBm930ThUzSOLtw9CrlGzqk9HcCu7NpCdJGeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xU3vwBkeyyHkDrzflAUjTPvnhq4KaYxXxNh8Bjq0XqR3ezbFlb6vb2sjfDy6WEfoq
-	 4FzkJl+ocZbJ7wdv6vYoKQj6rUYcM8ELP2OcskyIRBZ+1MC5MERbASlPMe/Gyb0XEC
-	 lgz/a0ZlNWS/89T4le81bPpH81p8i43qXUj7LP3w=
+	b=Qy5aHr+DQBLgCjZSQ2y5J98xyHNe4h3FVQtk1AgSTMMagfUmuNay776mthSMcS+a0
+	 OgpKw/8y9DnWR3PDR6utfXoDCvL6RZMLg9tXSJZA/Zna/xmBaD9tbWEa9HK68Gy2mw
+	 q7yt7kJrWWR/HAkWLQycky2SpxpSo/W8FxO/q2C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfL2Rg2 (ORCPT
+        id S1729910AbfL2RhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:37:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729769AbfL2RgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:36:25 -0500
+        id S1729299AbfL2RgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:36:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C659206DB;
-        Sun, 29 Dec 2019 17:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8A5206DB;
+        Sun, 29 Dec 2019 17:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640984;
-        bh=aHv3j7rYRPDzFNDOD/MH+u/hrx39JXvqbLREUVDbUlw=;
+        s=default; t=1577640975;
+        bh=ErSN2XeBm930ThUzSOLtw9CrlGzqk9HcCu7NpCdJGeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wSVTdw34DXLDAyV2D1ujxHmqfrKb+NAZ+fpwPT2aw7MlDiG1LXqtjpqS5jN8N2Yss
-         PlIVV8jKoau1TBwA4s6FKycSSnlzwgqJfcQfSK/3+WXWCXxHa3Wrlx3teCXj97zzCY
-         V/n5uzkZORBlhcRTjj7P7005cP2UsYO3fbPNiuCI=
+        b=VKYMAij3AwFPWJIpaXiQDK0fTCmaeCQOZd+ZPIJOuh8X+EnLdVo1qNOURLk2iO1ZW
+         3pZP//ey3dSQArma8Dmiq+vSpAhpb5QPVBT0qIts7SO+rDZI6a6fEckv2TgcmlNGOQ
+         Cgzl1iPxHAQS4dZ5CCG+v5V8HrompwB0E/B48AiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 213/219] mmc: sdhci-msm: Correct the offset and value for DDR_CONFIG register
-Date:   Sun, 29 Dec 2019 18:20:15 +0100
-Message-Id: <20191229162542.647203338@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 177/219] iwlwifi: check kasprintf() return value
+Date:   Sun, 29 Dec 2019 18:19:39 +0100
+Message-Id: <20191229162535.601060564@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,116 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit fa56ac9792265354b565f28def7164e7d7db2b1e upstream.
+[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
 
-The DDR_CONFIG register offset got updated after a specific
-minor version of sdcc V4. This offset change has not been properly
-taken care of while updating register changes for sdcc V5.
+kasprintf() can fail, we should check the return value.
 
-Correcting proper offset for this register.
-Also updating this register value to reflect the recommended RCLK
-delay.
-
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Link: https://lore.kernel.org/r/0101016ea738ec72-fa0f852d-20f8-474a-80b2-4b0ef63b132c-000000@us-west-2.amazonses.com
-Fixes: f15358885dda ("mmc: sdhci-msm: Define new Register address map")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
+Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-msm.c |   28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/dvm/led.c | 3 +++
+ drivers/net/wireless/intel/iwlwifi/mvm/led.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -108,7 +108,7 @@
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/led.c b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+index 1bbd17ada974..20e16c423990 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
+@@ -185,6 +185,9 @@ void iwl_leds_init(struct iwl_priv *priv)
  
- #define CORE_PWRSAVE_DLL	BIT(3)
- 
--#define DDR_CONFIG_POR_VAL	0x80040853
-+#define DDR_CONFIG_POR_VAL	0x80040873
- 
- 
- #define INVALID_TUNING_PHASE	-1
-@@ -157,8 +157,9 @@ struct sdhci_msm_offset {
- 	u32 core_ddr_200_cfg;
- 	u32 core_vendor_spec3;
- 	u32 core_dll_config_2;
-+	u32 core_dll_config_3;
-+	u32 core_ddr_config_old; /* Applicable to sdcc minor ver < 0x49 */
- 	u32 core_ddr_config;
--	u32 core_ddr_config_2;
- };
- 
- static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
-@@ -186,8 +187,8 @@ static const struct sdhci_msm_offset sdh
- 	.core_ddr_200_cfg = 0x224,
- 	.core_vendor_spec3 = 0x250,
- 	.core_dll_config_2 = 0x254,
--	.core_ddr_config = 0x258,
--	.core_ddr_config_2 = 0x25c,
-+	.core_dll_config_3 = 0x258,
-+	.core_ddr_config = 0x25c,
- };
- 
- static const struct sdhci_msm_offset sdhci_msm_mci_offset = {
-@@ -216,8 +217,8 @@ static const struct sdhci_msm_offset sdh
- 	.core_ddr_200_cfg = 0x184,
- 	.core_vendor_spec3 = 0x1b0,
- 	.core_dll_config_2 = 0x1b4,
--	.core_ddr_config = 0x1b8,
--	.core_ddr_config_2 = 0x1bc,
-+	.core_ddr_config_old = 0x1b8,
-+	.core_ddr_config = 0x1bc,
- };
- 
- struct sdhci_msm_variant_ops {
-@@ -260,6 +261,7 @@ struct sdhci_msm_host {
- 	const struct sdhci_msm_offset *offset;
- 	bool use_cdr;
- 	u32 transfer_mode;
-+	bool updated_ddr_cfg;
- };
- 
- static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
-@@ -931,8 +933,10 @@ out:
- static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
--	u32 dll_status, config;
-+	u32 dll_status, config, ddr_cfg_offset;
- 	int ret;
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
- 	const struct sdhci_msm_offset *msm_offset =
- 					sdhci_priv_msm_offset(host);
- 
-@@ -945,8 +949,11 @@ static int sdhci_msm_cm_dll_sdc4_calibra
- 	 * bootloaders. In the future, if this changes, then the desired
- 	 * values will need to be programmed appropriately.
- 	 */
--	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr +
--			msm_offset->core_ddr_config);
-+	if (msm_host->updated_ddr_cfg)
-+		ddr_cfg_offset = msm_offset->core_ddr_config;
-+	else
-+		ddr_cfg_offset = msm_offset->core_ddr_config_old;
-+	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + ddr_cfg_offset);
- 
- 	if (mmc->ios.enhanced_strobe) {
- 		config = readl_relaxed(host->ioaddr +
-@@ -1862,6 +1869,9 @@ static int sdhci_msm_probe(struct platfo
- 				msm_offset->core_vendor_spec_capabilities0);
- 	}
- 
-+	if (core_major == 1 && core_minor >= 0x49)
-+		msm_host->updated_ddr_cfg = true;
+ 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(priv->hw->wiphy));
++	if (!priv->led.name)
++		return;
 +
- 	/*
- 	 * Power on reset state may trigger power irq if previous status of
- 	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
+ 	priv->led.brightness_set = iwl_led_brightness_set;
+ 	priv->led.blink_set = iwl_led_blink_set;
+ 	priv->led.max_brightness = 1;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+index b27269504a62..072f80c90ce4 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
+@@ -131,6 +131,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
+ 
+ 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(mvm->hw->wiphy));
++	if (!mvm->led.name)
++		return -ENOMEM;
++
+ 	mvm->led.brightness_set = iwl_led_brightness_set;
+ 	mvm->led.max_brightness = 1;
+ 
+-- 
+2.20.1
+
 
 
