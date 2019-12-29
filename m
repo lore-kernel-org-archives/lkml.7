@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F08C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF6FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D44FF207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5ED20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640549;
-	bh=FGZqi5ivswLb220n5ilqCFAaFwASW3EK/q7vSwG7bjQ=;
+	s=default; t=1577640552;
+	bh=Rgirj3H8NYh1nKmJ6SrOmyEmFgV0feelfe6H2rxU0+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVhcDUNSndfz4s98aC3VQafzUyoBPkZSZB2IQvvg2BGeLv7Um01xoSHnpfFdspMa8
-	 lgJJXsnGbDpIp+qFb2XO31Gzh4eWzHumMQ6oHsKwSHcTJ1CI0zuTnRzscC7KEDzw6y
-	 FKakudTIdPCK4nzpTi0Id2C4W6Jeq4RTSEab+Mtg=
+	b=TL0VQUf6gJ3rXHl8mm2CBZNxoiM+PpOARfCwcLrT8Gs+gJPfXj+8LnaNpWjyAd+Ua
+	 e8HanH5yWBKiWNgZIpMBRD8WQ43qz/RdakC0xM79WmJkLlexTN3L7hWJlTniaK3tgU
+	 7czee4AS99OYlZCfE2tRQP+hfQIlX5Rgt2JDkJJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfL2R3I (ORCPT
+        id S1728278AbfL2R3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728723AbfL2R3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:05 -0500
+        id S1728730AbfL2R3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E7EB207FD;
-        Sun, 29 Dec 2019 17:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2CB20722;
+        Sun, 29 Dec 2019 17:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640545;
-        bh=FGZqi5ivswLb220n5ilqCFAaFwASW3EK/q7vSwG7bjQ=;
+        s=default; t=1577640547;
+        bh=Rgirj3H8NYh1nKmJ6SrOmyEmFgV0feelfe6H2rxU0+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkGeM8EWWCusjjVGamKgY4+ZR2pt8r6Ihs3WCj2eUEre7vQbHWgU3IiDiF1pCOMdo
-         0K27Vaox//ue+8Cfa5tiafy6fTIY/Mu2dvFPIAAl/nfng1qIdraPCgks+o3BQl7Qr8
-         lnO9Tm7wtHbahROxxvb0Ge+E9vevizRbHYBai4j8=
+        b=Kvr9aA0Gk4lF0LFudh1RsrdnyS+zeR+IIuAvCICtK3wm+nEtqdInUIpZJl3FutSQS
+         cC4ItQfUXqLarxGI0/Z8n0iZw0ipYdlOEsF5q901wBi58FpV87HJq3G8UJ+R3NqgbR
+         bP/jO6/Dcw35JBKT8MPqOBCWE8Xk8yV7OlRBKlrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/219] IB/iser: bound protection_sg size by data_sg size
-Date:   Sun, 29 Dec 2019 18:17:20 +0100
-Message-Id: <20191229162514.138568292@linuxfoundation.org>
+Subject: [PATCH 4.19 039/219] media: am437x-vpfe: Setting STD to current value is not an error
+Date:   Sun, 29 Dec 2019 18:17:21 +0100
+Message-Id: <20191229162514.206369196@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,38 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Gurtovoy <maxg@mellanox.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 7718cf03c3ce4b6ebd90107643ccd01c952a1fce ]
+[ Upstream commit 13aa21cfe92ce9ebb51824029d89f19c33f81419 ]
 
-In case we don't set the sg_prot_tablesize, the scsi layer assign the
-default size (65535 entries). We should limit this size since we should
-take into consideration the underlaying device capability. This cap is
-considered when calculating the sg_tablesize. Otherwise, for example,
-we can get that /sys/block/sdb/queue/max_segments is 128 and
-/sys/block/sdb/queue/max_integrity_segments is 65535.
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
-Link: https://lore.kernel.org/r/1569359027-10987-1-git-send-email-maxg@mellanox.com
-Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/iser/iscsi_iser.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 3fecd87c9f2b..b4e0ae024575 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -646,6 +646,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		if (ib_conn->pi_support) {
- 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+index b05738a95e55..809320decdeb 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.c
++++ b/drivers/media/platform/am437x/am437x-vpfe.c
+@@ -1848,6 +1848,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
-+			shost->sg_prot_tablesize = shost->sg_tablesize;
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
++
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.20.1
 
