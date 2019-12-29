@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71BEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A27C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 874E6207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC77222C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641723;
-	bh=ZlICTfhJAeAPso8pEaoF3oBpNorlJeqX9lIY6JEgVdU=;
+	s=default; t=1577641728;
+	bh=r9HNGkrrcvcIgewxqzftcT+iHS7Y814AmtaQcyc85as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pGNDFyULJrqwWhkm8o7+0Xp8OptSiswhp9kxkLH+HVyGNolhBYDgUiwPui4PG/KyZ
-	 XMccmyk0MHm0yk7seReZeWb4D+XhwkT57+/SBjackJT7oK+BIxm7PasaSOE7pm0h8i
-	 LUenGKd6DOOybSg2SMyUD5khDfHH1+Hx49ORZibg=
+	b=qy7eQiy7h/wIadoLld0A6Pv7Dx32QA9BynbFN9SdjQktbVVfwVBdpQKxAWh8cDm7D
+	 VyxCl40jbgKRVSLYvP5VIEkD87j5LR9uv3Hj/yJtZh72FgNnecioeVavQd1Ha2orly
+	 mNQC+JXc9fPMxRrZogmpZPgBiYTxUW8wL2g4TUZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbfL2Rsm (ORCPT
+        id S1731509AbfL2Rsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:48:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:48:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730947AbfL2Rsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:36 -0500
+        id S1729297AbfL2Rsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:48:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9C220718;
-        Sun, 29 Dec 2019 17:48:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6B3207FD;
+        Sun, 29 Dec 2019 17:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641715;
-        bh=ZlICTfhJAeAPso8pEaoF3oBpNorlJeqX9lIY6JEgVdU=;
+        s=default; t=1577641723;
+        bh=r9HNGkrrcvcIgewxqzftcT+iHS7Y814AmtaQcyc85as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kSVxLpsAP4dDilJaPp4+le8HYyCHZl1nsQo5djLp0U1C364sMT/BrUFASXOw9evS9
-         moHncZFbapMK2P1ZqBGyzPTyWvQ7Wu0n0Wxvh0zUyX3rxgyXKcvfszf9AmTHGoSFfD
-         y+CvEzzU6DcyfOQBA892+T2Nbri6KTGbqL+Ji0qs=
+        b=qmenAAszLEMlAjlLR2W+LYlnBMoLwIu9eE0uwUa3vhvp6UUtMAik5r+9vjcMmzMjy
+         WMpxRmgDoAZemHVy7LTyiV+gURbzAdj7BhJn7ZFNv9d7ulHTEhAjicLyPKsqRZhDDh
+         fwoSm1vWTYN6xdUNEI9rlXYg73hvjf6IG3hSry/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 180/434] media: imx7-mipi-csis: Add a check for devm_regulator_get
-Date:   Sun, 29 Dec 2019 18:23:53 +0100
-Message-Id: <20191229172713.773353749@linuxfoundation.org>
+Subject: [PATCH 5.4 147/434] perf test: Avoid infinite loop for task exit case
+Date:   Sun, 29 Dec 2019 18:23:20 +0100
+Message-Id: <20191229172711.515478736@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,50 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit a0219deefe9ee5006a28d48522f76b217d198c51 ]
+[ Upstream commit 791ce9c48c79210d2ffcdbe69421e7783b32921f ]
 
-devm_regulator_get may return an error but mipi_csis_phy_init misses
-a check for it.
-This may lead to problems when regulator_set_voltage uses the unchecked
-pointer.
-This patch adds a check for devm_regulator_get to avoid potential risk.
+When executing the task exit testing case, perf gets stuck in an endless
+loop this case and doesn't return back on Arm64 Juno board.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+After digging into this issue, since Juno board has Arm's big.LITTLE
+CPUs, thus the PMUs are not compatible between the big CPUs and little
+CPUs.  This leads to a PMU event that cannot be enabled properly when
+the traced task is migrated from one variant's CPU to another variant.
+Finally, the test case runs into infinite loop for cannot read out any
+event data after return from polling.
+
+Eventually, we need to work out formal solution to allow PMU events can
+be freely migrated from one CPU variant to another, but this is a
+difficult task and a different topic.  This patch tries to fix the Perf
+test case to avoid infinite loop, when the testing detects 1000 times
+retrying for reading empty events, it will directly bail out and return
+failure.  This allows the Perf tool can continue its other test cases.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011091942.29841-2-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/imx/imx7-mipi-csis.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/tests/task-exit.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-index 73d8354e618c..e50b1f88e25b 100644
---- a/drivers/staging/media/imx/imx7-mipi-csis.c
-+++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-@@ -350,6 +350,8 @@ static void mipi_csis_sw_reset(struct csi_state *state)
- static int mipi_csis_phy_init(struct csi_state *state)
- {
- 	state->mipi_phy_regulator = devm_regulator_get(state->dev, "phy");
-+	if (IS_ERR(state->mipi_phy_regulator))
-+		return PTR_ERR(state->mipi_phy_regulator);
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index ca0a6ca43b13..d85c9f608564 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -53,6 +53,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	struct perf_cpu_map *cpus;
+ 	struct perf_thread_map *threads;
+ 	struct mmap *md;
++	int retry_count = 0;
  
- 	return regulator_set_voltage(state->mipi_phy_regulator, 1000000,
- 				     1000000);
-@@ -966,7 +968,10 @@ static int mipi_csis_probe(struct platform_device *pdev)
- 		return ret;
+ 	signal(SIGCHLD, sig_handler);
+ 
+@@ -132,6 +133,13 @@ retry:
+ out_init:
+ 	if (!exited || !nr_exit) {
+ 		evlist__poll(evlist, -1);
++
++		if (retry_count++ > 1000) {
++			pr_debug("Failed after retrying 1000 times\n");
++			err = -1;
++			goto out_free_maps;
++		}
++
+ 		goto retry;
  	}
  
--	mipi_csis_phy_init(state);
-+	ret = mipi_csis_phy_init(state);
-+	if (ret < 0)
-+		return ret;
-+
- 	mipi_csis_phy_reset(state);
- 
- 	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
 2.20.1
 
