@@ -2,234 +2,87 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F023EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDDDC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC37420718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1731D20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 15:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjt/7yut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfL2PcX (ORCPT
+        id S1726675AbfL2PvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 10:32:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35301 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfL2PcW (ORCPT
+        Sun, 29 Dec 2019 10:51:22 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59908 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726410AbfL2PvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 10:32:22 -0500
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1ilaYD-0000ir-5w; Sun, 29 Dec 2019 16:32:17 +0100
-Received: from [IPv6:2001:67c:20a1:1192:74ff:529f:48cb:eb82] (unknown [IPv6:2001:67c:20a1:1192:74ff:529f:48cb:eb82])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id F25F84976C3;
-        Sun, 29 Dec 2019 15:32:14 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-can@vger.kernel.org, wg@grandegger.com,
-        sriram.dash@samsung.com
-References: <20191212161536.23264-1-dmurphy@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH linux-can/testing] can: tcan4x5x: Disable the INH pin
- device-state GPIO is unavailable
-Message-ID: <b0560413-525c-39ba-30ce-816c098e51ab@pengutronix.de>
-Date:   Sun, 29 Dec 2019 16:32:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 29 Dec 2019 10:51:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577634680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BRWNGteotcKw6PBMZ/1BQVqAZD+Ua2e/NHMeORi2fqo=;
+        b=gjt/7yutQWXHZWmTieJLOzDU+VLYNU+2Ki1HRaM6fjv1pV58mmP0GpCkLFuQz3yKR7hEjU
+        X53njaHkEgpwmZlNFRToFdkJWGeuNEpkqK7g737Y5DplbxsfLRuWvxYcKTTFkCXUfZrAt3
+        pBhz5aOyZnr2PS0NBBKrxSj/uzyu+Z4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-vEiv1o1POZu508ME2_5Dnw-1; Sun, 29 Dec 2019 10:51:17 -0500
+X-MC-Unique: vEiv1o1POZu508ME2_5Dnw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3973F100550E;
+        Sun, 29 Dec 2019 15:51:16 +0000 (UTC)
+Received: from krava (ovpn-204-25.brq.redhat.com [10.40.204.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF4F186CB6;
+        Sun, 29 Dec 2019 15:51:14 +0000 (UTC)
+Date:   Sun, 29 Dec 2019 16:51:12 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Francois Saint-Jacques <fsaintjacques@gmail.com>
+Cc:     Steve.MacLean@microsoft.com, eranian@google.com,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v3] perf inject --jit: Remove //anon mmap events
+Message-ID: <20191229155112.GA21785@krava>
+References: <CABNn7+pYPSfduacOATcKT1X_=qs70i7Bc8pELXDahY7BoB9_wQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212161536.23264-1-dmurphy@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="N1nesT42QyOxVEMMoQougOQqY8SIbiSL0"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CABNn7+pYPSfduacOATcKT1X_=qs70i7Bc8pELXDahY7BoB9_wQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---N1nesT42QyOxVEMMoQougOQqY8SIbiSL0
-Content-Type: multipart/mixed; boundary="av7eADa9mYDcTsXodHZDp6AFIW6KEoww7";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
- linux-can@vger.kernel.org, wg@grandegger.com, sriram.dash@samsung.com
-Message-ID: <b0560413-525c-39ba-30ce-816c098e51ab@pengutronix.de>
-Subject: Re: [PATCH linux-can/testing] can: tcan4x5x: Disable the INH pin
- device-state GPIO is unavailable
-References: <20191212161536.23264-1-dmurphy@ti.com>
-In-Reply-To: <20191212161536.23264-1-dmurphy@ti.com>
+On Sat, Dec 28, 2019 at 01:02:13PM -0500, Francois Saint-Jacques wrote:
+> I'd just like to weight in that this patch fixes the issue Steve
+> mentioned. I have a local experiment using LLVM's ORC jit with jitdump
+> support and couldn't get any symbols recognized by perf until applying
+> this patch.
 
---av7eADa9mYDcTsXodHZDp6AFIW6KEoww7
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+great, please reply to the orginal patch post with tested-by
 
-On 12/12/19 5:15 PM, Dan Murphy wrote:
-> If the device state GPIO is not connected to the host then disable the
-> INH output from the TCAN device per section 8.3.5 of the data sheet.
+Arnaldo, could you please check on this one?
+
+there was some discussion about used clockid, but Stephane or
+any other jit guys did not raise any particular concern AFAICS,
+also it's simple enough to revert in case there's any issue
+
+thanks,
+jirka
+
 >=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-
-Applied to linux-can. With some changes...
-
->  drivers/net/can/m_can/tcan4x5x.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/t=
-can4x5x.c
-> index b5d2ea0999c1..6a1f242d1876 100644
-> --- a/drivers/net/can/m_can/tcan4x5x.c
-> +++ b/drivers/net/can/m_can/tcan4x5x.c
-> @@ -102,6 +102,7 @@
->  #define TCAN4X5X_MODE_NORMAL BIT(7)
-> =20
->  #define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
-> +#define TCAN4X5X_DISABLE_INH_MSK	BIT(9)
-> =20
->  #define TCAN4X5X_SW_RESET BIT(2)
-> =20
-> @@ -360,6 +361,15 @@ static int tcan4x5x_disable_wake(struct m_can_clas=
-sdev *cdev)
->  				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
->  }
-> =20
-> +static int tcan4x5x_disable_state(struct m_can_classdev *cdev)
-> +{
-> +	struct tcan4x5x_priv *tcan4x5x =3D cdev->device_data;
-> +
-> +	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
-> +				  TCAN4X5X_DISABLE_INH_MSK, 0x01);
-> +
-
-Removed the stray line while applying.
-
-> +}
-> +
->  static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
->  {
->  	struct tcan4x5x_priv *tcan4x5x =3D cdev->device_data;
-> @@ -383,8 +393,10 @@ static int tcan4x5x_parse_config(struct m_can_clas=
-sdev *cdev)
->  	tcan4x5x->device_state_gpio =3D devm_gpiod_get_optional(cdev->dev,
->  							      "device-state",
->  							      GPIOD_IN);
-> -	if (IS_ERR(tcan4x5x->device_state_gpio))
-> +	if (IS_ERR(tcan4x5x->device_state_gpio)) {
->  		tcan4x5x->device_state_gpio =3D NULL;
-> +		tcan4x5x_disable_state(cdev);
-> +	}
-For some reason, this hunk doesn't apply, due to the additional:
-
->> 	tcan4x5x->power =3D devm_regulator_get_optional(cdev->dev,
->> 						      "vsup");
-
-I've applied the patch manually.
-
-> =20
->  	return 0;
->  }
+> Thank you,
+> Fran=E7ois
 >=20
 
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
-
---av7eADa9mYDcTsXodHZDp6AFIW6KEoww7--
-
---N1nesT42QyOxVEMMoQougOQqY8SIbiSL0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4IxvgACgkQWsYho5Hk
-nSDFkAgAh/d0YN3ZLCS7Edg2Caf0/2aoBAnjAnyPTEMN0T8VxWDaKWme8EOkMSWw
-ypXN1WdSb550yQwpGdmZpbMM8wRBancV5IZ3pwjaw9/cNYVzaCxcXTCWP/BUD13Y
-W9WW1SatZhHlbvDPP9XBFsxXWh7Fyac7lSAsYu/JberBTtDPrJKzXirrGcDEeh4I
-/vCoT3plKv8YAIqFZSjx0CyqGlH5QYQzJnVvYFk40Sp4FMbu8UZ4L4OMQrbL+EtX
-m2fEkFZXI6DfpNHxM3/VfM0DYTt7ip6icFjb3qld559TNx5yf1S+y0qwZ76TPO4I
-1vMMaaRdn2CC9/nPBf+q65T+se4AAw==
-=KyXS
------END PGP SIGNATURE-----
-
---N1nesT42QyOxVEMMoQougOQqY8SIbiSL0--
