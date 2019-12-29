@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9618C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF767C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6C3206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D5320748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643176;
-	bh=qLCkHzYjg1XN8CjF2YR7S7UokIURdV6DJNPAz4I1i/w=;
+	s=default; t=1577643178;
+	bh=nMaQmfACss/jy3HnBrRn9mpVLBHDdBvmtGOMhDk4xhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0/8uz9GB67iff9AG25imQsNNPMCfApLzMmQ8v2dccu23HQ/juMXV5P0nh27Xctid
-	 M3VFcIJH5T4oIlFJ82w7BuQ5frJTx4mo55Xa8iJfIoSfAK8u1eMd9Gwve2B6pwJrqa
-	 IinmTUHZOxiPQ0oeUErQ+QJrAxdjlTbo+i8OJsFc=
+	b=uZuV1GZZofC7S5Zof8BmICT0H1eK69uT14SLAv8IHW8mjK/s6IdydtvlhyE6+tM3q
+	 5m0KOP8QZEV8wbCcubQCctrb6THmWdBVTYS17BwvWYgLj/FQETGFxlJeXvGa+qfNvB
+	 LAbgvCx0VHF5lfzW1+V7/z/zb76ZpAC2MDoatekc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfL2SMz (ORCPT
+        id S1728682AbfL2R2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:12:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:28:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbfL2R3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:03 -0500
+        id S1728659AbfL2R2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248B9208E4;
-        Sun, 29 Dec 2019 17:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2339207FF;
+        Sun, 29 Dec 2019 17:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640542;
-        bh=qLCkHzYjg1XN8CjF2YR7S7UokIURdV6DJNPAz4I1i/w=;
+        s=default; t=1577640530;
+        bh=nMaQmfACss/jy3HnBrRn9mpVLBHDdBvmtGOMhDk4xhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bNhZ4t0JN6z3zmu3sgCRqwgJ1eTfDsaUxM6+3fzBDXsZu6cZoMvgQrMgh4xTFpDTb
-         ZQ3n9a/1b3eQdFLAhPHbfPFnhECKShN5ognvNZc0CNyR/17+bRabHxrjFmdRiXGFKW
-         SAYoqPodRClgmMzj+opQNapqcCkAFlAaiMtAdRgc=
+        b=b6tawmtd7xPIuZbmO9uda20ujFquvAVGEDlYuDLtofsvTBLHMe2rr8WNuWgEIdM6Z
+         IE+mcHrLF+AojlQi99yRcKnVXkhaWdpt693JP/tcgI3aY+tVYf8Azi7bEAl0TC8hE2
+         hkZ7RQX3I8vk5K3feJkJwBBKCpzSdyTwTfGQd82U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anilkumar Kolli <akolli@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Lukasz Majewski <lukma@denx.de>,
+        Mark Brown <broonie@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/219] ath10k: fix backtrace on coredump
-Date:   Sun, 29 Dec 2019 18:17:19 +0100
-Message-Id: <20191229162513.982146155@linuxfoundation.org>
+Subject: [PATCH 4.19 032/219] spi: Add call to spi_slave_abort() function when spidev driver is released
+Date:   Sun, 29 Dec 2019 18:17:14 +0100
+Message-Id: <20191229162513.286262453@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,72 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anilkumar Kolli <akolli@codeaurora.org>
+From: Lukasz Majewski <lukma@denx.de>
 
-[ Upstream commit d98ddae85a4a57124f87960047b1b6419312147f ]
+[ Upstream commit 9f918a728cf86b2757b6a7025e1f46824bfe3155 ]
 
-In a multiradio board with one QCA9984 and one AR9987
-after enabling the crashdump with module parameter
-coredump_mask=7, below backtrace is seen.
+This change is necessary for spidev devices (e.g. /dev/spidev3.0) working
+in the slave mode (like NXP's dspi driver for Vybrid SoC).
 
-vmalloc: allocation failure: 0 bytes
- kworker/u4:0: page allocation failure: order:0, mode:0x80d2
- CPU: 0 PID: 6 Comm: kworker/u4:0 Not tainted 3.14.77 #130
- Workqueue: ath10k_wq ath10k_core_register_work [ath10k_core]
- (unwind_backtrace) from [<c021abf8>] (show_stack+0x10/0x14)
- (dump_stack+0x80/0xa0)
- (warn_alloc_failed+0xd0/0xfc)
- (__vmalloc_node_range+0x1b4/0x1d8)
- (__vmalloc_node+0x34/0x40)
- (vzalloc+0x24/0x30)
- (ath10k_coredump_register+0x6c/0x88 [ath10k_core])
- (ath10k_core_register_work+0x350/0xb34 [ath10k_core])
- (process_one_work+0x20c/0x32c)
- (worker_thread+0x228/0x360)
+When SPI HW works in this mode - the master is responsible for providing
+CS and CLK signals. However, when some fault happens - like for example
+distortion on SPI lines - the SPI Linux driver needs a chance to recover
+from this abnormal situation and prepare itself for next (correct)
+transmission.
 
-This is due to ath10k_hw_mem_layout is not defined for AR9987.
-For coredump undefined hw ramdump_size is 0.
-Check for the ramdump_size before allocation memory.
+This change doesn't pose any threat on drivers working in master mode as
+spi_slave_abort() function checks if SPI slave mode is supported.
 
-Tested on: AR9987, QCA9984
-FW version: 10.4-3.9.0.2-00044
-
-Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Link: https://lore.kernel.org/r/20190924110547.14770-2-lukma@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20190925091143.15468-2-lukma@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/coredump.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/spi/spidev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/coredump.c b/drivers/net/wireless/ath/ath10k/coredump.c
-index 4d28063052fe..385b84f24322 100644
---- a/drivers/net/wireless/ath/ath10k/coredump.c
-+++ b/drivers/net/wireless/ath/ath10k/coredump.c
-@@ -1105,9 +1105,11 @@ static struct ath10k_dump_file_data *ath10k_coredump_build(struct ath10k *ar)
- 		dump_tlv = (struct ath10k_tlv_dump_data *)(buf + sofar);
- 		dump_tlv->type = cpu_to_le32(ATH10K_FW_CRASH_DUMP_RAM_DATA);
- 		dump_tlv->tlv_len = cpu_to_le32(crash_data->ramdump_buf_len);
--		memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
--		       crash_data->ramdump_buf_len);
--		sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		if (crash_data->ramdump_buf_len) {
-+			memcpy(dump_tlv->tlv_data, crash_data->ramdump_buf,
-+			       crash_data->ramdump_buf_len);
-+			sofar += sizeof(*dump_tlv) + crash_data->ramdump_buf_len;
-+		}
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index c5fe08bc34a0..028725573e63 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -634,6 +634,9 @@ static int spidev_release(struct inode *inode, struct file *filp)
+ 		if (dofree)
+ 			kfree(spidev);
  	}
++#ifdef CONFIG_SPI_SLAVE
++	spi_slave_abort(spidev->spi);
++#endif
+ 	mutex_unlock(&device_list_lock);
  
- 	spin_unlock_bh(&ar->data_lock);
-@@ -1154,6 +1156,9 @@ int ath10k_coredump_register(struct ath10k *ar)
- 	if (test_bit(ATH10K_FW_CRASH_DUMP_RAM_DATA, &ath10k_coredump_mask)) {
- 		crash_data->ramdump_buf_len = ath10k_coredump_get_ramdump_size(ar);
- 
-+		if (!crash_data->ramdump_buf_len)
-+			return 0;
-+
- 		crash_data->ramdump_buf = vzalloc(crash_data->ramdump_buf_len);
- 		if (!crash_data->ramdump_buf)
- 			return -ENOMEM;
+ 	return 0;
 -- 
 2.20.1
 
