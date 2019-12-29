@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7813C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1A4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A24207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F522207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643057;
-	bh=LWrPzQ32CmT9f26U2+6H21MNNI2hotPTgpv7WYQc9Ik=;
+	s=default; t=1577643061;
+	bh=Hy8thNt8vNbrrR5ldYeNdOpNSrah51fWhbsF8NdIZOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dbig7oPCZbgPuAsQlhjUobjazutrEWv5XRDZdkK5TRxsAd/SD1C7wEAQjxKHh7pAX
-	 xWIhSuk2C5mE181i8xbMEkTDYqA4MtVajSioYSm+gYVRa9rZwb0Tzq7Hx78o/xwtTL
-	 Bwzo0j9JIXe1eqQ5SNgoHLvVx0T9vf5XDKM8t7Ys=
+	b=r7bfiUvcujBOJ53DyqYcsLymGkww+dMmUM/Zpx+pGD2Cflm4d0FReLzc0mlHkulk9
+	 jJpJT5mOjQ13y0z0EJn14e99Pdu5qSRM1sg2i9/ElOeWdQiOCJxx5iKdr446dYRuUk
+	 Tdn+EgUD2igxuaxPXAF8w/hh6VoHrWtXu2bO7F30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfL2Rnr (ORCPT
+        id S1726509AbfL2Rnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51366 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730187AbfL2Rno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:44 -0500
+        id S1730248AbfL2Rne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50AB206DB;
-        Sun, 29 Dec 2019 17:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD3F206DB;
+        Sun, 29 Dec 2019 17:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641423;
-        bh=LWrPzQ32CmT9f26U2+6H21MNNI2hotPTgpv7WYQc9Ik=;
+        s=default; t=1577641413;
+        bh=Hy8thNt8vNbrrR5ldYeNdOpNSrah51fWhbsF8NdIZOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDcRVVi94P2zpqNTqtjsG/aFet9TiCsJpn2lPj53UE3yhnAbgvS2McOZv1IsUL7M9
-         fgDPBzpIJTp073VCVaZMZSpo6SVa3xa3y57Rq7xQOVi58XGR3UF+hW938ugIFHOy5Q
-         dZy0iWD+ruybIqv+XYB6iluBTFZusR7yVEIxyXXQ=
+        b=afviSKOaUi4TLoFcovQCiZmYsFCA8W/BG2WTUN9nSOTr3fuyVM0zQfv7k78Vnxupq
+         WgMAa9HT01OiMY7JH374GLHgLg+tWxI1xIWsZWug6MDQmF7VGvfs9269WNmsumVz5C
+         4on2Pu6qcXrOXS/kEyiGwUqrnnXGzVswYuYVVcKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 057/434] drm/ttm: return -EBUSY on pipelining with no_gpu_wait (v2)
-Date:   Sun, 29 Dec 2019 18:21:50 +0100
-Message-Id: <20191229172705.648196234@linuxfoundation.org>
+Subject: [PATCH 5.4 054/434] iio: light: bh1750: Resolve compiler warning and make code more readable
+Date:   Sun, 29 Dec 2019 18:21:47 +0100
+Message-Id: <20191229172705.488006391@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,104 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 3084cf46cf8110826a42de8c8ef30e8fa48974c2 ]
+[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
 
-Setting the no_gpu_wait flag means that the allocate BO must be available
-immediately and we can't wait for any GPU operation to finish.
+Separate the declaration of struct bh1750_chip_info from definition
+of bh1750_chip_info_tbl[] in a single statement as it makes the code
+hard to read, and with the extra newline it makes it look as if the
+bh1750_chip_info_tbl[] had no explicit type.
 
-v2: squash in mem leak fix, rebase
+This change also resolves the following compiler warning about the
+unusual position of the static keyword that can be seen when building
+with warnings enabled (W=1):
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drivers/iio/light/bh1750.c:64:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+
+Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
+BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo.c | 44 +++++++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ drivers/iio/light/bh1750.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
-index 98819462f025..f07803699809 100644
---- a/drivers/gpu/drm/ttm/ttm_bo.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo.c
-@@ -926,7 +926,8 @@ EXPORT_SYMBOL(ttm_bo_mem_put);
-  */
- static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
- 				 struct ttm_mem_type_manager *man,
--				 struct ttm_mem_reg *mem)
-+				 struct ttm_mem_reg *mem,
-+				 bool no_wait_gpu)
- {
- 	struct dma_fence *fence;
- 	int ret;
-@@ -935,19 +936,22 @@ static int ttm_bo_add_move_fence(struct ttm_buffer_object *bo,
- 	fence = dma_fence_get(man->move);
- 	spin_unlock(&man->move_lock);
+diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+index 28347df78cff..adb5ab9e3439 100644
+--- a/drivers/iio/light/bh1750.c
++++ b/drivers/iio/light/bh1750.c
+@@ -59,9 +59,9 @@ struct bh1750_chip_info {
  
--	if (fence) {
--		dma_resv_add_shared_fence(bo->base.resv, fence);
-+	if (!fence)
-+		return 0;
+ 	u16 int_time_low_mask;
+ 	u16 int_time_high_mask;
+-}
++};
  
--		ret = dma_resv_reserve_shared(bo->base.resv, 1);
--		if (unlikely(ret)) {
--			dma_fence_put(fence);
--			return ret;
--		}
-+	if (no_wait_gpu)
-+		return -EBUSY;
-+
-+	dma_resv_add_shared_fence(bo->base.resv, fence);
- 
--		dma_fence_put(bo->moving);
--		bo->moving = fence;
-+	ret = dma_resv_reserve_shared(bo->base.resv, 1);
-+	if (unlikely(ret)) {
-+		dma_fence_put(fence);
-+		return ret;
- 	}
- 
-+	dma_fence_put(bo->moving);
-+	bo->moving = fence;
- 	return 0;
- }
- 
-@@ -978,7 +982,7 @@ static int ttm_bo_mem_force_space(struct ttm_buffer_object *bo,
- 			return ret;
- 	} while (1);
- 
--	return ttm_bo_add_move_fence(bo, man, mem);
-+	return ttm_bo_add_move_fence(bo, man, mem, ctx->no_wait_gpu);
- }
- 
- static uint32_t ttm_bo_select_caching(struct ttm_mem_type_manager *man,
-@@ -1120,14 +1124,18 @@ int ttm_bo_mem_space(struct ttm_buffer_object *bo,
- 		if (unlikely(ret))
- 			goto error;
- 
--		if (mem->mm_node) {
--			ret = ttm_bo_add_move_fence(bo, man, mem);
--			if (unlikely(ret)) {
--				(*man->func->put_node)(man, mem);
--				goto error;
--			}
--			return 0;
-+		if (!mem->mm_node)
-+			continue;
-+
-+		ret = ttm_bo_add_move_fence(bo, man, mem, ctx->no_wait_gpu);
-+		if (unlikely(ret)) {
-+			(*man->func->put_node)(man, mem);
-+			if (ret == -EBUSY)
-+				continue;
-+
-+			goto error;
- 		}
-+		return 0;
- 	}
- 
- 	for (i = 0; i < placement->num_busy_placement; ++i) {
+-static const bh1750_chip_info_tbl[] = {
++static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
+ 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
+ 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
+ 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
 -- 
 2.20.1
 
