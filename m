@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551DEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFD0C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301E420718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0CC206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641787;
-	bh=LzEFEz/rwAarUMRtuzFxTzAa7OZ9EE8KIOv5dBfUEak=;
+	s=default; t=1577641791;
+	bh=pY5RMKT8cgvlRPtL4xg+luLIwlAVdWKVgAjk5DNaUYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M9eIzEqTtvnD5SHVYBKxjU+Tj94s29i8Ysp9px8ReXNamlSexnRUQI8spbJk05sV1
-	 Ie3tMP9zy/sprLra1EB2ws4ioMEO3ni2CeugmVMY47k3Qmk+aobs7JMA6MhwiqZWyh
-	 bZhg3Q2Jk1yn5OU8Ev264bFZqRlnNGTO5WPHuvOo=
+	b=JK6gI7ebHiscaO4CdK6CTAvY/1q1zWv5oOrMScZxrJonSjk+rf6S+Ep46DGtiiuiY
+	 Kcr0weMpQ3R/lDEAVji6TfbGXi0agwXMx2uhjkR2cU/hV/dwHp4RQevrecDJpvztMX
+	 9wpjh2TxUjbWN/r78J2a4l1UaXNAn6zk4tEHpG20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfL2Rtp (ORCPT
+        id S1731722AbfL2Rtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33656 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731674AbfL2Rtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:43 -0500
+        id S1731699AbfL2Rtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31AA5206A4;
-        Sun, 29 Dec 2019 17:49:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 926F1206A4;
+        Sun, 29 Dec 2019 17:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641782;
-        bh=LzEFEz/rwAarUMRtuzFxTzAa7OZ9EE8KIOv5dBfUEak=;
+        s=default; t=1577641785;
+        bh=pY5RMKT8cgvlRPtL4xg+luLIwlAVdWKVgAjk5DNaUYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dm4T8j1I2dieWS9lmpeBy0rZtIUmpqEpqpeI7o4gRj9o4K9PGUK3oDWmfQzLZrGqA
-         39+QRBvTSliYZIYUSoSa/utnXFqkPxuahGqzHyRh+9aLo5VIRlnthVED3HjvTMycIt
-         mgCwYJikf65QOsfuCswuI093tSkMEZN8DyOuC+5M=
+        b=Bgnyl2QiF72bnma+jwfGkhU3JZQsx4A3vVoN6hI2XncgXwcUeYmd7urIPGP4ehIN9
+         cPZp/ta5jiLQVo+qgAvV7+By58cT+e8azpNNdATi+TmdLfTv79mxH3t5tm7ZIqz8DH
+         cO5polCKxFQDniAfPyk6aDLPlvgI1+pvaWeVXBQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        stable@vger.kernel.org, Ilya Leoshkevich <iii@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 209/434] s390/time: ensure get_clock_monotonic() returns monotonic values
-Date:   Sun, 29 Dec 2019 18:24:22 +0100
-Message-Id: <20191229172715.710483206@linuxfoundation.org>
+Subject: [PATCH 5.4 210/434] s390: add error handling to perf_callchain_kernel
+Date:   Sun, 29 Dec 2019 18:24:23 +0100
+Message-Id: <20191229172715.778459235@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,63 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 011620688a71f2f1fe9901dbc2479a7c01053196 ]
+[ Upstream commit effb83ccc83a97dbbe5214f4c443522719f05f3a ]
 
-The current implementation of get_clock_monotonic() leaves it up to
-the caller to call the function with preemption disabled. The only
-core kernel caller (sched_clock) however does not disable preemption.
+perf_callchain_kernel stops neither when it encounters a garbage
+address, nor when it runs out of space. Fix both issues using x86
+version as an inspiration.
 
-In order to make sure that all callers of this function see monotonic
-values handle disabling preemption within the function itself.
-
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/timex.h | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/s390/kernel/perf_event.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
-index 64539c221672..0f12a3f91282 100644
---- a/arch/s390/include/asm/timex.h
-+++ b/arch/s390/include/asm/timex.h
-@@ -10,8 +10,9 @@
- #ifndef _ASM_S390_TIMEX_H
- #define _ASM_S390_TIMEX_H
- 
--#include <asm/lowcore.h>
-+#include <linux/preempt.h>
- #include <linux/time64.h>
-+#include <asm/lowcore.h>
- 
- /* The value of the TOD clock for 1.1.1970. */
- #define TOD_UNIX_EPOCH 0x7d91048bca000000ULL
-@@ -186,15 +187,18 @@ extern unsigned char tod_clock_base[16] __aligned(8);
- /**
-  * get_clock_monotonic - returns current time in clock rate units
-  *
-- * The caller must ensure that preemption is disabled.
-  * The clock and tod_clock_base get changed via stop_machine.
-- * Therefore preemption must be disabled when calling this
-- * function, otherwise the returned value is not guaranteed to
-- * be monotonic.
-+ * Therefore preemption must be disabled, otherwise the returned
-+ * value is not guaranteed to be monotonic.
-  */
- static inline unsigned long long get_tod_clock_monotonic(void)
+diff --git a/arch/s390/kernel/perf_event.c b/arch/s390/kernel/perf_event.c
+index fcb6c2e92b07..1e75cc983546 100644
+--- a/arch/s390/kernel/perf_event.c
++++ b/arch/s390/kernel/perf_event.c
+@@ -224,9 +224,13 @@ void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+ 			   struct pt_regs *regs)
  {
--	return get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
-+	unsigned long long tod;
-+
-+	preempt_disable();
-+	tod = get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
-+	preempt_enable();
-+	return tod;
+ 	struct unwind_state state;
++	unsigned long addr;
+ 
+-	unwind_for_each_frame(&state, current, regs, 0)
+-		perf_callchain_store(entry, state.ip);
++	unwind_for_each_frame(&state, current, regs, 0) {
++		addr = unwind_get_return_address(&state);
++		if (!addr || perf_callchain_store(entry, addr))
++			return;
++	}
  }
  
- /**
+ /* Perf definitions for PMU event attributes in sysfs */
 -- 
 2.20.1
 
