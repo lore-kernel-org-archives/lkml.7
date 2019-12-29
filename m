@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140BFC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41306C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53BB20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108A920748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wCYfy+Di"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vaJlyE8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfL2GHg (ORCPT
+        id S1726417AbfL2GJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 01:07:36 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42393 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfL2GHg (ORCPT
+        Sun, 29 Dec 2019 01:09:01 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46967 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfL2GJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 01:07:36 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 4so16806397pfz.9
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:07:36 -0800 (PST)
+        Sun, 29 Dec 2019 01:09:01 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so16525658pgb.13
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:09:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bh9mEGHD8yEkETedFVdZfcZkqXbQcfH7QQFnd8PatL8=;
-        b=wCYfy+DiqvTPeE4PuVoNL2FU1hG+FM4oPNtihtwX6YnVlimuXh+vhNDxWafNVR9xch
-         eV5t0hy8laPj/2d5R+fh89/y9moyIaXH1t1gOsCiWP0RZS/akCygAFGjdwA3HymzELJW
-         YEpOzjae8vfDX/23c3uj/yiMd+8vN3gbY9+90n1EhHVOZ+u6yEG6o+aM13rqXWofVenT
-         fmjFMbLEHpmM/n0NsTefVDwWWg3c/9qQdjR9ZuqCA84Hwp0v9Z/UyjB8JZ9BZmba9lw3
-         YSOeYrz/THMDq254XzNE1uzTgBBsHb0Q5fQbp/1nZ13a4Tjc85PTz7/93UmnCP61kLep
-         FcvA==
+        bh=PQEq/pXQPWAm+/HQqqVHlxrLAblqW9jzRSmCcXe+hVc=;
+        b=vaJlyE8bstbxQxnAUBACLIH9E3AWWNJirhpiyq4G61nllSMb7fqBJhsL9F3KeEOwSG
+         GrpZeXpXFWSPSeprwkFVen/PpkmbfPpGCEMIB43ySWQZdVELEtmoqMM6Y8K8m1YR/fk0
+         Rh7YqKJjTcIVPTYI/fqj+SqV2qoeE4HlSQkCGuTgqXa5WOjpoc6YDLVPoiuz/XumWGfe
+         8AEMcQmx1SSiV03YR8UidnRFZA6suwkC0MM34oCdketkOXtN8PwfbD9TEkc8iNDm5OjD
+         FVulASlJ1fCdn2I2A/S7vlcVg9gDmXRDJUvJrHIHgxk/JU8G/dRwrG6/eJWXXtVD8+0/
+         aX5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bh9mEGHD8yEkETedFVdZfcZkqXbQcfH7QQFnd8PatL8=;
-        b=qt4/+HQu8M/39A1VPLLCynIzpfm0PNuitTQBU/iRBQ6X9gPF8XmKGyLwuvVKU66Q1O
-         v1O6nhnx0dmmor2EWWNQZWRSW64BrpW91BG0cqpV81UcB0zVgRyeil/CDomRH4aOT1GZ
-         Qz+L/nE//yra16quqxKMJJ0FMM5Jn8Brh9bG98hB9CwLUeSDoGwAnBGjWd1uHIteYv68
-         n9Iicpzr9QG6pKibOxtYySXcOGQJFSA4+oqa1c9qUAl7co+3/bVH+efriueeGVojDIHa
-         15W+TG9bPj2ltkfIVrauLnmsTX2CIoR6Zmz68p9e+uekvvhcdg+dPstagUe9TGlDpn4M
-         r9+w==
-X-Gm-Message-State: APjAAAVn4+lhB8Wqyq0qvazZlpj3jsHhtS4mxttw7wW7R9wdHq99ECIs
-        fBv/HF2v3OpdC8Y8M5kCBvzxUQ==
-X-Google-Smtp-Source: APXvYqw7T3nji34vO/btgtEenzlUjOnI1rtxZ6ocaf//g8wgqa3384y+RhDo98oPa4usrISA1a3G8Q==
-X-Received: by 2002:a63:774a:: with SMTP id s71mr64704696pgc.57.1577599655541;
-        Sat, 28 Dec 2019 22:07:35 -0800 (PST)
+        bh=PQEq/pXQPWAm+/HQqqVHlxrLAblqW9jzRSmCcXe+hVc=;
+        b=Alau6TJRgm/8S+XoD12Cf9eRRNw3CdPqCqDI9VGErBpH9z6l27pWTrKRux9AdEqJLC
+         7IArhGfOny42ta5wGRlRDljUP+MkMrIIlXb7GDv9tu2W5q+eWdNbEBUuiZVroIH0fSBi
+         btsPaX0Mgf35thDL6s/O3LlFZPgje7tz2xdD7tHGPJ/gfBkJIdJKy1Np0pBSp1mEnpZ/
+         X0p6bIC2a3Nsd6MHRIiaXANPEyiVaRPuFXIPXSazRLq02SjV1JvRRRfK0Gz+sFhSU+fV
+         5iRogzHCwlHOdpQYbyHl/lPVEPfrtE1btmtpEMdCwJApzNjGyMnQYynmZFiHCeYhi1BP
+         YKLw==
+X-Gm-Message-State: APjAAAX8cx7lhfDvX1dgp8Ey1XwYf4pLjNOe54INrOEuOnIIVMzosjsd
+        SEv4xowAljHPbaylVUxU5c5I3h8naNI=
+X-Google-Smtp-Source: APXvYqwEIg9C9X4H9fXSdY40cModg6G+r8GR11cJ+V73bUm6nsOiyCNuD5QFmcFq/H7Btsgk2mIxrQ==
+X-Received: by 2002:a62:4e0a:: with SMTP id c10mr54791833pfb.181.1577599740493;
+        Sat, 28 Dec 2019 22:09:00 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b193sm37899600pfb.57.2019.12.28.22.07.34
+        by smtp.gmail.com with ESMTPSA id s131sm28316795pfs.135.2019.12.28.22.08.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 22:07:34 -0800 (PST)
+        Sat, 28 Dec 2019 22:08:59 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -63,9 +63,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Rob Clark <robdclark@gmail.com>
-Subject: [PATCH] panel: simple: Add Ivo M133NWF4 R0
-Date:   Sat, 28 Dec 2019 22:06:58 -0800
-Message-Id: <20191229060658.746189-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] panel: simple: Add BOE NV133FHM-N61
+Date:   Sat, 28 Dec 2019 22:08:23 -0800
+Message-Id: <20191229060823.746255-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,43 +74,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The InfoVision Optoelectronics M133NWF4 R0 panel is a 13.3" 1920x1080
-eDP panel, add support for it in panel-simple.
+The BOE NV133FHM-N61 panel is a 13.3" 1920x1080 eDP panel, add support
+for it in panel-simple.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index ba3f85f36c2f..d7ae0ede2b6e 100644
+index d7ae0ede2b6e..3c25e10b719d 100644
 --- a/drivers/gpu/drm/panel/panel-simple.c
 +++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1806,6 +1806,34 @@ static const struct panel_desc innolux_zj070na_01p = {
+@@ -1008,6 +1008,33 @@ static const struct panel_desc boe_nv101wxmn51 = {
  	},
  };
  
-+static const struct drm_display_mode ivo_m133nwf4_r0_mode = {
-+	.clock = 138778,
++static const struct drm_display_mode boe_nv133fhm_n61_modes = {
++	.clock = 147840,
 +	.hdisplay = 1920,
-+	.hsync_start = 1920 + 24,
-+	.hsync_end = 1920 + 24 + 48,
-+	.htotal = 1920 + 24 + 48 + 88,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 200,
 +	.vdisplay = 1080,
 +	.vsync_start = 1080 + 3,
-+	.vsync_end = 1080 + 3 + 12,
-+	.vtotal = 1080 + 3 + 12 + 17,
++	.vsync_end = 1080 + 3 + 6,
++	.vtotal = 1080 + 3 + 6 + 31,
 +	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
 +};
 +
-+static const struct panel_desc ivo_m133nwf4_r0 = {
-+	.modes = &ivo_m133nwf4_r0_mode,
++static const struct panel_desc boe_nv133fhm_n61 = {
++	.modes = &boe_nv133fhm_n61_modes,
 +	.num_modes = 1,
 +	.bpc = 8,
 +	.size = {
-+		.width = 294,
-+		.height = 165,
++		.width = 300,
++		.height = 187,
 +	},
 +	.delay = {
 +		.hpd_absent_delay = 200,
@@ -118,19 +117,19 @@ index ba3f85f36c2f..d7ae0ede2b6e 100644
 +	},
 +};
 +
- static const struct display_timing koe_tx14d24vm1bpa_timing = {
- 	.pixelclock = { 5580000, 5850000, 6200000 },
- 	.hactive = { 320, 320, 320 },
-@@ -3266,6 +3294,9 @@ static const struct of_device_id platform_of_match[] = {
+ static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
+ 	.clock = 9000,
+ 	.hdisplay = 480,
+@@ -3195,6 +3222,9 @@ static const struct of_device_id platform_of_match[] = {
  	}, {
- 		.compatible = "innolux,zj070na-01p",
- 		.data = &innolux_zj070na_01p,
+ 		.compatible = "boe,nv101wxmn51",
+ 		.data = &boe_nv101wxmn51,
 +	}, {
-+		.compatible = "ivo,m133nwf4-r0",
-+		.data = &ivo_m133nwf4_r0,
++		.compatible = "boe,nv133fhm-n61",
++		.data = &boe_nv133fhm_n61,
  	}, {
- 		.compatible = "koe,tx14d24vm1bpa",
- 		.data = &koe_tx14d24vm1bpa,
+ 		.compatible = "cdtech,s043wq26h-ct7",
+ 		.data = &cdtech_s043wq26h_ct7,
 -- 
 2.24.0
 
