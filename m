@@ -2,131 +2,104 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B301C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFCAC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410C221741
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E5F20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:20:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="EVP7Sf6H"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="bIi0LkPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfL2ASV (ORCPT
+        id S1726476AbfL2AUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 19:18:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35432 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfL2ASV (ORCPT
+        Sat, 28 Dec 2019 19:20:11 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46300 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfL2AUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 19:18:21 -0500
-Received: by mail-io1-f66.google.com with SMTP id v18so28734360iol.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 16:18:20 -0800 (PST)
+        Sat, 28 Dec 2019 19:20:11 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n9so8708999pff.13
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 16:20:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0TVhVG6FPueBWbxT9lQzkvtYNLfiEe1VkHsG9qF7cLw=;
-        b=EVP7Sf6HkWOiXoLb9OQHzPQdTVjwelJGvS4vCCJrE6c+OKje8z7CBxxD+eSrcXwzrI
-         wS5DHPQgA3ZZk0XwcXGCoMxjsqB49hXO0uta1BdP9GX+EidrZQg2OKzaPXKpU03ti/vW
-         WoQv1haLJ9ffvLberQtQvvrNavWYYIYYDQD/O8r+U8o26AR2DqCq2OHXl51Cpf4lvol0
-         hXqT/J/7EgxrH4QuY6nFvo4lOGS1joXg1leP5EnjlBVuVZWSXRp8UzKXOUbAV44JmRvG
-         MmexE7kz5KFj3zs30EoTqe9VKdGTn0nGJEScB0gwWnzwxhzmQkzn8w0JFYWPRIQ7iC1E
-         dCWw==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8DnX5yqKDg1aP0+Hxr5DNL1ZfiiJOI2MJ7VQGf4X/Sc=;
+        b=bIi0LkPLfVweNmWGGSgvFoi3qUj6IyYvn0BuETnzJnZJnfdIAb+kUuXzRHji8eWp95
+         5TfVgQlrfsd6zC/qVVU8ZmdWobWniVGzcTmMC4y8pjB5hV8Uvw2FSCZ53DSCZDCk8GAE
+         Y6cvKDJx98316m7wR10b9paYTbutq/LmsB7rd+qwqJnzJ7WQcpP399VmRrvjwstOYhio
+         JKqJR3ch0d04akWP0N2jHIIfF7QwBunu1+5HGSQT19/L6aEdkxV3cs5YtowQymeNU5IQ
+         10XXKvi6mmQURxMPy/BQIC7zlNIP3xZwusjU7VOqryfXsShlvvcL9B8R3TYF3zMWWc1y
+         9GAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0TVhVG6FPueBWbxT9lQzkvtYNLfiEe1VkHsG9qF7cLw=;
-        b=K3KbjJsONQRNoqbfkWSt9++3BHI4bcHnkbciQtqgkE0K2iyUeQN0NTyNmmTYWJyvc7
-         gFUlH0BBzcCKVeh7eo/dAO7uUwgKxnyE0cERiHpbMsBCIYW8HAUPnv8qN/kyNlLyWUl8
-         kLthLaJz/TqPlvdB3WYMrPAaqjBygQ7UrPlXRT6y5hBzSDRWszSS0LL6kAtIjVB2/Dyf
-         cHyUwYG57QIB87wpKdFioagBvrr4Jy6niyj8D7aTx15ZBR6WkGaZ6K2NpJHn72iZHlV1
-         yHFjkF4bWZRTMAiqLYtC+1eANnXLAJu4RpUsOh/zzKFaCzBVDq6MLblcWoT6RERALB4m
-         VUpQ==
-X-Gm-Message-State: APjAAAWSnD3Q3DlhM3sbFhXiF5QHaAl9oErBxHzIaxvxhh+SqFi2CaS+
-        FpZTJApAFcXVhHQeoBtwpOJeJg==
-X-Google-Smtp-Source: APXvYqz3D2CFRJnZ1pTL1abfRRJwvnlpNObu1eijnBoZ2hLXjkFCpXcnDaAlLxOPdtp5Jzuyo22EjQ==
-X-Received: by 2002:a05:6638:a31:: with SMTP id 17mr45396672jao.15.1577578700376;
-        Sat, 28 Dec 2019 16:18:20 -0800 (PST)
-Received: from cisco ([2601:282:902:b340:f166:b50c:bba2:408])
-        by smtp.gmail.com with ESMTPSA id c8sm14934153ilh.58.2019.12.28.16.18.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8DnX5yqKDg1aP0+Hxr5DNL1ZfiiJOI2MJ7VQGf4X/Sc=;
+        b=WfTKfdAhMZDlboUlgiHE5Xyua4YPK4u3CzzKoQ4HGI4IN2xTsJrCxUKOP+6lZjNvx/
+         Ss8tBYjvB4JIrhNMLXjvSWrRvbcpgSxu3J9AJ+giqNnHWUSxgUG3vO1ZvJZhm7fw2Hsl
+         ggoppURiEt8kqRGv1nRUePUBiiVCJj2+E7AqHkMP6XPZ+/CvwMVdeh43fWbtyyLqA2xA
+         hkKXPBezE9hR6WeMxM9Ixajj946SkFqjoylGqrBc7an3dQh/epwzYwky2MepK+yEXqQk
+         k66eAX1PgowWxbWCc5rodniMHyOGPk7S5ZGA9s0YCXjZ4sEcxvvcTZa4YPwRj03aY3me
+         61+g==
+X-Gm-Message-State: APjAAAVkzz57acGtms6KtXMQImHl9VGkfpBk8DxUyXGuaYYTVQ0C1Uak
+        TeNakEXEI+aaEAuz1PCLPYOMSw==
+X-Google-Smtp-Source: APXvYqxI4j+g6GpbU5LuafcxrEo7V/30NAtSlEaIQZTlCwrXkJq7mNtmzs7oezeWAxTkjxjO9gpeRg==
+X-Received: by 2002:a65:50c6:: with SMTP id s6mr64954989pgp.365.1577578810560;
+        Sat, 28 Dec 2019 16:20:10 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id j9sm40064570pfn.152.2019.12.28.16.20.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 16:18:19 -0800 (PST)
-Date:   Sat, 28 Dec 2019 17:18:18 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: [PATCH v2 1/2] samples, selftests/seccomp: Zero out seccomp_notif
-Message-ID: <20191229001818.GC6746@cisco>
-References: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal>
- <20191228181825.GB6746@cisco>
- <CAMp4zn91GoB=1eTbc_ux4eNs2-QFm+JocodgFQYUiiXL7H4m9w@mail.gmail.com>
+        Sat, 28 Dec 2019 16:20:10 -0800 (PST)
+Date:   Sat, 28 Dec 2019 16:20:02 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next, 1/3] Drivers: hv: vmbus: Add a dev_num
+ variable based on channel offer sequence
+Message-ID: <20191228162002.3a603c8b@hermes.lan>
+In-Reply-To: <1577576793-113222-2-git-send-email-haiyangz@microsoft.com>
+References: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
+        <1577576793-113222-2-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn91GoB=1eTbc_ux4eNs2-QFm+JocodgFQYUiiXL7H4m9w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 07:10:29PM -0500, Sargun Dhillon wrote:
-> On Sat, Dec 28, 2019 at 1:18 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> >
-> > On Sat, Dec 28, 2019 at 01:48:39AM +0000, Sargun Dhillon wrote:
-> > > The seccomp_notif structure should be zeroed out prior to calling the
-> > > SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
-> > > whether these structures were zeroed out or not, so these worked.
-> > >
-> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  samples/seccomp/user-trap.c                   | 2 +-
-> > >  tools/testing/selftests/seccomp/seccomp_bpf.c | 2 ++
-> > >  2 files changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
-> > > index 6d0125ca8af7..0ca8fb37cd79 100644
-> > > --- a/samples/seccomp/user-trap.c
-> > > +++ b/samples/seccomp/user-trap.c
-> > > @@ -298,7 +298,6 @@ int main(void)
-> > >               req = malloc(sizes.seccomp_notif);
-> > >               if (!req)
-> > >                       goto out_close;
-> > > -             memset(req, 0, sizeof(*req));
-> > >
-> > >               resp = malloc(sizes.seccomp_notif_resp);
-> > >               if (!resp)
-> > > @@ -306,6 +305,7 @@ int main(void)
-> > >               memset(resp, 0, sizeof(*resp));
-> >
-> > I know it's unrelated, but it's probably worth sending a patch to fix
-> > this to be sizes.seccomp_notif_resp instead of sizeof(*resp), since if
-> > the kernel is older this will over-zero things. I can do that, or you
-> > can add the patch to this series, just let me know which.
-> 
-> I was thinking about this, and initially, I chose to make the smaller
-> change. I think it might make more sense to combine the patch,
-> given that the memset behaviour is "incorrect" if we do it based on
-> sizeof(*req), or sizeof(*resp).
-> 
-> I'll go ahead and respin this patch with the change to call memset
-> based on sizes.
+On Sat, 28 Dec 2019 15:46:31 -0800
+Haiyang Zhang <haiyangz@microsoft.com> wrote:
 
-I think it would be good to keep it as a separate patch, since it's an
-unrelated bug fix. That way if we have to revert these because of some
-breakage, we won't lose the fix.
+> +
+> +next:
+> +	found = false;
+> +
+> +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+> +		if (i == channel->dev_num &&
+> +		    guid_equal(&channel->offermsg.offer.if_type,
+> +			       &newchannel->offermsg.offer.if_type)) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (found) {
+> +		i++;
+> +		goto next;
+> +	}
+> +
 
-Cheers,
+Overall, keeping track of dev_num is a good solution.
 
-Tycho
+I prefer not having a loop coded with goto's. Why not
+a nested loop. Also, there already is a search of the channel
+list in vmbus_process_offer() so why is another lookup needed?
