@@ -2,52 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81110C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B64C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C12207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F73920748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643244;
-	bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
+	s=default; t=1577643251;
+	bh=n1sVk3/rhpOZQoCZgCQOlkH9CqjdYrBoMl8MPtfRl5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=youZiirwox0C50fE+aOV74P0MJkE3G8dNSI98kW9zdfKcffNJ2dsp0eZTnK8bS1AO
-	 2Kylb42L/Ja5CD0ID4bMBRbFSmu0t2byoMzEomZ24KcZPn1Kr4YPy+Jsum1lwJnT5E
-	 wnJu7zuHM7mjFhWcBotqeXZ8gwkxZ9GVIO8W/s+E=
+	b=xe0hpnghNaFed9+nCNRgox7QwaOxfTmDj9JiPMbBEfHq6HyhWbaReNMFlSJocrRmo
+	 Aul/t+bM5Lo5+SPPCgOLl+aySfuF63XYBwU4g4cJWDzPdsUrX+aiN9ShaQfdDRCxhj
+	 mGZd3SxPgy+FF9mbnXucio0zllGpPqIYWDaeS4lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729202AbfL2SOD (ORCPT
+        id S2387827AbfL2SOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:14:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:14:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbfL2R1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:33 -0500
+        id S1728421AbfL2R12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306D320409;
-        Sun, 29 Dec 2019 17:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E7EA20722;
+        Sun, 29 Dec 2019 17:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640452;
-        bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
+        s=default; t=1577640447;
+        bh=n1sVk3/rhpOZQoCZgCQOlkH9CqjdYrBoMl8MPtfRl5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0LpRJuzKlyxawv2iOG7KkD6ANT65rB45LTEG4ZqqDzSR5Ks5v0y4B24UAE+7tfD8
-         Od1FlMDNt4E5lecuGiweskADMt7sU1e5bjLgBhc7Men+wTBiUHtCziK/zcN2gZm9V0
-         eHFbrbdaP1cXQ29jjaMOmwsSjgYCeBAXa8xhP9MA=
+        b=uIS6BHdFymAyxyKiENp8ERxMqfhNmrJrGB3qggyYp33BDMHvK0rcEFJ+r3oTEaNeL
+         BApPnl0INn4tGbvziBzvdC7aUgqSqkiehjZqvjqSl8dCwJrH9Jj9W2egst9LzrfIuE
+         opkFdxT/silkG3q3c2Gp9jdOji7Qhbw2EQOG5dbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/161] spi: st-ssc4: add missed pm_runtime_disable
-Date:   Sun, 29 Dec 2019 18:19:33 +0100
-Message-Id: <20191229162436.693134986@linuxfoundation.org>
+        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 160/161] mmc: sdhci-of-esdhc: fix P2020 errata handling
+Date:   Sun, 29 Dec 2019 18:20:08 +0100
+Message-Id: <20191229162450.360476445@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,45 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
+commit fe0acab448f68c3146235afe03fb932e242ec94c upstream.
 
-The driver forgets to call pm_runtime_disable in probe failure
-and remove.
-Add the missed calls to fix it.
+Two previous patches introduced below quirks for P2020 platforms.
+- SDHCI_QUIRK_RESET_AFTER_REQUEST
+- SDHCI_QUIRK_BROKEN_TIMEOUT_VAL
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The patches made a mistake to add them in quirks2 of sdhci_host
+structure, while they were defined for quirks.
+	host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+	host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+
+This patch is to fix them.
+	host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+	host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+
+Fixes: 05cb6b2a66fa ("mmc: sdhci-of-esdhc: add erratum eSDHC-A001 and A-008358 support")
+Fixes: a46e42712596 ("mmc: sdhci-of-esdhc: add erratum eSDHC5 support")
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191216031842.40068-1-yangbo.lu@nxp.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-st-ssc4.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/host/sdhci-of-esdhc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
-index a4e43fc19ece..5df01ffdef46 100644
---- a/drivers/spi/spi-st-ssc4.c
-+++ b/drivers/spi/spi-st-ssc4.c
-@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
- 	return 0;
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -886,8 +886,8 @@ static int sdhci_esdhc_probe(struct plat
+ 		host->quirks &= ~SDHCI_QUIRK_NO_BUSY_IRQ;
  
- clk_disable:
-+	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(spi_st->clk);
- put_master:
- 	spi_master_put(master);
-@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct spi_st *spi_st = spi_master_get_devdata(master);
+ 	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc")) {
+-		host->quirks2 |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
+-		host->quirks2 |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
++		host->quirks |= SDHCI_QUIRK_RESET_AFTER_REQUEST;
++		host->quirks |= SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+ 	}
  
-+	pm_runtime_disable(&pdev->dev);
-+
- 	clk_disable_unprepare(spi_st->clk);
- 
- 	pinctrl_pm_select_sleep_state(&pdev->dev);
--- 
-2.20.1
-
+ 	if (of_device_is_compatible(np, "fsl,p5040-esdhc") ||
 
 
