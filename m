@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F204C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFE3C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5468E21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477CE206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641805;
-	bh=+uKGfkqX3p9SoCvvXDvnvHaWwHst2Gv0EPmg14apGh0=;
+	s=default; t=1577641807;
+	bh=3qZ3zesu2bV1ziOVkNy78TVbF6kGtDhhyFGoCLvY+zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olHF0RO4OwDaKBvpfJVBTw1hO+VU3syzl++LphJ8Ikoqh+AtXKcwHATyqcCe5wN3c
-	 K7ojf8v1kff09d+kDrRTpRNhjvZL71LY7yWtORJCWBX/V4RxEhw/b6Hf1mjhZHEsdH
-	 3dXYOBQCI2vbRYysw4ykHo7lyA/BbZYlzpzf4C/c=
+	b=r5GWfK9BPw7SV/eKTOLh2NSVoaJ8P/TwtNJntx870h0QzoYaKXhqBBHhQejzMK7DP
+	 BN/0mYz770zz7s9/G0RDHOX2F9BXsh57TNNXJ0VtdtoJH3ibblFwgVwG1dtx6EiseB
+	 Vw9vyx8P0H58rD0RndXEfx9bYh47PIBRFgatO/kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfL2RuE (ORCPT
+        id S1731788AbfL2RuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731729AbfL2RuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:00 -0500
+        id S1731742AbfL2RuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1679720718;
-        Sun, 29 Dec 2019 17:49:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8121024655;
+        Sun, 29 Dec 2019 17:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641799;
-        bh=+uKGfkqX3p9SoCvvXDvnvHaWwHst2Gv0EPmg14apGh0=;
+        s=default; t=1577641802;
+        bh=3qZ3zesu2bV1ziOVkNy78TVbF6kGtDhhyFGoCLvY+zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8aZ/aAnb83RoqJRE2U8qGQxT0w8NPgEPXu6z2wY0FydffpZGYNIiF7MMO54ASE+I
-         kgnUb3H5T6k33ylwqERuTy2W32DdUnIe44+DJ/noJMpuR4Z9VYkyr71ci6Gj0amCt8
-         tehbJc0k9WIr3s5Lqfd6ASciFsNaUBSps6DFTi0w=
+        b=FhCpkbI356fL5ZvNkpiMMIgaJIKheRzV9Lb7rKIGtjIWQ6f/81yVYSbQQ0/rU1+qT
+         Ft+EfWlG1dxltEr5AqZmOefUhZeJTonxBTYJqPltNwtA0yoMTRh9eugyDVl8LBzkOZ
+         3f/iBPf7F5bsTIhT3yHyqFC51YX3GsF31bsS/DlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        stable@vger.kernel.org,
+        Nicholas Nunley <nicholas.d.nunley@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 216/434] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-Date:   Sun, 29 Dec 2019 18:24:29 +0100
-Message-Id: <20191229172716.182448024@linuxfoundation.org>
+Subject: [PATCH 5.4 190/434] i40e: initialize ITRN registers with correct values
+Date:   Sun, 29 Dec 2019 18:24:03 +0100
+Message-Id: <20191229172714.442759260@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,62 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Nicholas Nunley <nicholas.d.nunley@intel.com>
 
-[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+[ Upstream commit 998e5166e604fd37afe94352f7b8c2d816b11049 ]
 
-The definitions for bit field [19:18] of the Peripheral Function Select
-Register 3 were accidentally copied from bit field [20], leading to
-duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
-ET0_ETXD4 functions.
+Since commit 92418fb14750 ("i40e/i40evf: Use usec value instead of reg
+value for ITR defines") the driver tracks the interrupt throttling
+intervals in single usec units, although the actual ITRN/ITR0 registers are
+programmed in 2 usec units. Most register programming flows in the driver
+correctly handle the conversion, although it is currently not applied when
+the registers are initialized to their default values. Most of the time
+this doesn't present a problem since the default values are usually
+immediately overwritten through the standard adaptive throttling mechanism,
+or updated manually by the user, but if adaptive throttling is disabled and
+the interval values are left alone then the incorrect value will persist.
 
-Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
-enum values, and correcting the functions.
+Since the intended default interval of 50 usecs (vs. 100 usecs as
+programmed) performs better for most traffic workloads, this can lead to
+performance regressions.
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
+This patch adds the correct conversion when writing the initial values to
+the ITRN registers.
+
+Signed-off-by: Nicholas Nunley <nicholas.d.nunley@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-index 96f0246ad2f2..82b63208135a 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-@@ -134,7 +134,7 @@ enum {
- 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
- 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
- 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
--	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
-+	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
- 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
- 		GPIO_FN_ET0_ETXD3_A,
- 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 5dfd991ffdaa..dbc36079c381 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -1450,7 +1450,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(ET0_ETXD2_A),
- 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
- 	GPIO_FN(ET0_ETXD3_A),
--	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
-+	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
- 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
- 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
- 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
-@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP3_20 [1] */
- 		FN_EX_WAIT0, FN_TCLK1_B,
- 	    /* IP3_19_18 [2] */
--		FN_RD_WR, FN_TCLK1_B, 0, 0,
-+		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
- 	    /* IP3_17_15 [3] */
- 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
- 		FN_ET0_ETXD3_A, 0, 0, 0,
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 6031223eafab..339925af0206 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -3534,14 +3534,14 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
+ 		q_vector->rx.target_itr =
+ 			ITR_TO_REG(vsi->rx_rings[i]->itr_setting);
+ 		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, vector - 1),
+-		     q_vector->rx.target_itr);
++		     q_vector->rx.target_itr >> 1);
+ 		q_vector->rx.current_itr = q_vector->rx.target_itr;
+ 
+ 		q_vector->tx.next_update = jiffies + 1;
+ 		q_vector->tx.target_itr =
+ 			ITR_TO_REG(vsi->tx_rings[i]->itr_setting);
+ 		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, vector - 1),
+-		     q_vector->tx.target_itr);
++		     q_vector->tx.target_itr >> 1);
+ 		q_vector->tx.current_itr = q_vector->tx.target_itr;
+ 
+ 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
+@@ -3646,11 +3646,11 @@ static void i40e_configure_msi_and_legacy(struct i40e_vsi *vsi)
+ 	/* set the ITR configuration */
+ 	q_vector->rx.next_update = jiffies + 1;
+ 	q_vector->rx.target_itr = ITR_TO_REG(vsi->rx_rings[0]->itr_setting);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr);
++	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr >> 1);
+ 	q_vector->rx.current_itr = q_vector->rx.target_itr;
+ 	q_vector->tx.next_update = jiffies + 1;
+ 	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr);
++	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr >> 1);
+ 	q_vector->tx.current_itr = q_vector->tx.target_itr;
+ 
+ 	i40e_enable_misc_int_causes(pf);
+@@ -11396,7 +11396,7 @@ static int i40e_setup_misc_vector(struct i40e_pf *pf)
+ 
+ 	/* associate no queues to the misc vector */
+ 	wr32(hw, I40E_PFINT_LNKLST0, I40E_QUEUE_END_OF_LIST);
+-	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K);
++	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K >> 1);
+ 
+ 	i40e_flush(hw);
+ 
 -- 
 2.20.1
 
