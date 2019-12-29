@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B27C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D5D20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3936206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643078;
-	bh=loWKuHkkqjOSD2aMPmunp/waJ3OQs3KwgTb3RYmc2z8=;
+	s=default; t=1577643090;
+	bh=w+vHMWWBPEDgNlWv+B8/qbQJZcT7bi4XD7FJH4FTy5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WW4QdzAoYqTSM+5IKLPSjK7qvG2OeSq+W8X94FhGzjzf6f3OutR6NbGiiUpnvW/Dp
-	 40BWd6WRfKO34GO4P5WygcrdYlgxfDscIPoOWvGrkKhEM3qnzzx8Gd5SVBR1+zOySe
-	 E87xqfwSla25wy9CfIpYt8nr8Ls1va6KDIP0kwyA=
+	b=KginqNnxDAbGP4VdRyVxEkS3LHBUKlOnOEJosQycRE3UJg+mZtjPthBBDRXhqcU6Y
+	 Di/WIVnSI6MlDpYt0IT9DAMJZx1vowcPT+r+bY+uze19CL3kRwnWRgkRCOLPatvjJG
+	 w39V0OCaAp5gtEb5Mau7UJJ9okW1zLd2aZ1xC86c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbfL2SLQ (ORCPT
+        id S1731063AbfL2SL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:11:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:11:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbfL2RnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:24 -0500
+        id S1730405AbfL2RnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F2C227BF;
-        Sun, 29 Dec 2019 17:43:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81D321744;
+        Sun, 29 Dec 2019 17:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641403;
-        bh=loWKuHkkqjOSD2aMPmunp/waJ3OQs3KwgTb3RYmc2z8=;
+        s=default; t=1577641387;
+        bh=w+vHMWWBPEDgNlWv+B8/qbQJZcT7bi4XD7FJH4FTy5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rY3V7fZQTaJx9jpYpjawgi6bA71AsxpdYNrqtDtdfIaiaAeCJJJs1ZtKLOh74i6uM
-         fMBHqj7Ee2XRO8nzDRB8spjNQxkx+oMSK53fcPjCB6W6MOQGtFMtr+gu0FMPk8yWrn
-         +ydqizfkeilIsCdrmFmjWU8lMm2avYW6CCKjEy0E=
+        b=MSwamtEqLGY0wkMG0Q0vgEHuEqGsk0W3PbQzDtR2g4FuOWdXQwuTxJn4E2skHcSTY
+         s0QeyFyZgRYtR3qps14V9HCF5EdW1JwsZSFv6Ee+tETTRhokWCnHmIQ1VH6sqHa2jS
+         9TzJhUAdjxMUA0UP1QPchU+BdXkPJITxulCZnJJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jing Zhou <Jing.Zhou@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/434] drm/amd/display: verify stream link before link test
-Date:   Sun, 29 Dec 2019 18:21:43 +0100
-Message-Id: <20191229172705.274515486@linuxfoundation.org>
+        stable@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chia-I Wu <olvaffe@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 044/434] drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper.
+Date:   Sun, 29 Dec 2019 18:21:37 +0100
+Message-Id: <20191229172704.939671668@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,40 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Zhou <Jing.Zhou@amd.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit b131932215c993ea5adf8192d1de2e8d6b23048d ]
+[ Upstream commit 29cf12394c0565d7eb1685bf0c1b4749aa6a8b66 ]
 
-[Why]
-DP1.2 LL CTS test failure.
+Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
+This also makes the ioctl run lockless.
 
-[How]
-The failure is caused by not verify stream link is equal
-to link, only check stream and link is not null.
+v9: fix return value.
+v5: handle lookup failure.
+v2: use reservation_object_test_signaled_rcu for VIRTGPU_WAIT_NOWAIT.
 
-Signed-off-by: Jing Zhou <Jing.Zhou@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20190829103301.3539-3-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c | 28 +++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-index 79438c4f1e20..a519dbc5ecb6 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_hwss.c
-@@ -277,7 +277,8 @@ void dp_retrain_link_dp_test(struct dc_link *link,
- 		if (pipes[i].stream != NULL &&
- 			!pipes[i].top_pipe && !pipes[i].prev_odm_pipe &&
- 			pipes[i].stream->link != NULL &&
--			pipes[i].stream_res.stream_enc != NULL) {
-+			pipes[i].stream_res.stream_enc != NULL &&
-+			pipes[i].stream->link == link) {
- 			udelay(100);
+diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+index 0a88ef11b9d3..a662394f6892 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -463,25 +463,29 @@ out:
+ }
  
- 			pipes[i].stream_res.stream_enc->funcs->dp_blank(
+ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
+-			    struct drm_file *file)
++				 struct drm_file *file)
+ {
+ 	struct drm_virtgpu_3d_wait *args = data;
+-	struct drm_gem_object *gobj = NULL;
+-	struct virtio_gpu_object *qobj = NULL;
++	struct drm_gem_object *obj;
++	long timeout = 15 * HZ;
+ 	int ret;
+-	bool nowait = false;
+ 
+-	gobj = drm_gem_object_lookup(file, args->handle);
+-	if (gobj == NULL)
++	obj = drm_gem_object_lookup(file, args->handle);
++	if (obj == NULL)
+ 		return -ENOENT;
+ 
+-	qobj = gem_to_virtio_gpu_obj(gobj);
+-
+-	if (args->flags & VIRTGPU_WAIT_NOWAIT)
+-		nowait = true;
+-	ret = virtio_gpu_object_wait(qobj, nowait);
++	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
++		ret = dma_resv_test_signaled_rcu(obj->resv, true);
++	} else {
++		ret = dma_resv_wait_timeout_rcu(obj->resv, true, true,
++						timeout);
++	}
++	if (ret == 0)
++		ret = -EBUSY;
++	else if (ret > 0)
++		ret = 0;
+ 
+-	drm_gem_object_put_unlocked(gobj);
++	drm_gem_object_put_unlocked(obj);
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
