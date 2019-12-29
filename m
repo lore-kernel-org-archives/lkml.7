@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD0C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215AD206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CD7206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641012;
-	bh=QnVmgWYf3XP6d13kHluYYJy18H9hA7bB6ACGz6kfiSQ=;
+	s=default; t=1577641017;
+	bh=aHv3j7rYRPDzFNDOD/MH+u/hrx39JXvqbLREUVDbUlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWrpbRDudy9JHXheLCnozl9xe+Tj63cXLnKJINVfCgQ2zjsRKs9tBjf17ISDwUPuu
-	 01TgvFQk66UBydp6vj5VZf5p38K8m3aDNCkYF35CKz8wJCuwQsYcynijmXhrNr7iXS
-	 AmnToOk7SfEDF6QgLDbHiq+MVvt/BExwiLQBgAJM=
+	b=xU3vwBkeyyHkDrzflAUjTPvnhq4KaYxXxNh8Bjq0XqR3ezbFlb6vb2sjfDy6WEfoq
+	 4FzkJl+ocZbJ7wdv6vYoKQj6rUYcM8ELP2OcskyIRBZ+1MC5MERbASlPMe/Gyb0XEC
+	 lgz/a0ZlNWS/89T4le81bPpH81p8i43qXUj7LP3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbfL2Rgu (ORCPT
+        id S1728344AbfL2Rg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:36:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:36:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfL2Rgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:36:39 -0500
+        id S1729769AbfL2RgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:36:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEDD7206CB;
-        Sun, 29 Dec 2019 17:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C659206DB;
+        Sun, 29 Dec 2019 17:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640999;
-        bh=QnVmgWYf3XP6d13kHluYYJy18H9hA7bB6ACGz6kfiSQ=;
+        s=default; t=1577640984;
+        bh=aHv3j7rYRPDzFNDOD/MH+u/hrx39JXvqbLREUVDbUlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PDOajttRJfonNxUC2JmuFtxH0ub++M7J9lGz3esL+bCnKhQwykMGXdyKDcTK61QA8
-         oiciJ4CGeOfQA7M3NkqoD2OmM+DOb76vYe+aaza0JzTFxlr2iNQ7jHecLVBUcO0qLP
-         R5a7Dc68i23xrvi2XFPmjcC9qJh48/d9zoBIbE60=
+        b=wSVTdw34DXLDAyV2D1ujxHmqfrKb+NAZ+fpwPT2aw7MlDiG1LXqtjpqS5jN8N2Yss
+         PlIVV8jKoau1TBwA4s6FKycSSnlzwgqJfcQfSK/3+WXWCXxHa3Wrlx3teCXj97zzCY
+         V/n5uzkZORBlhcRTjj7P7005cP2UsYO3fbPNiuCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 219/219] nbd: fix shutdown and recv work deadlock v2
-Date:   Sun, 29 Dec 2019 18:20:21 +0100
-Message-Id: <20191229162543.385065589@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 213/219] mmc: sdhci-msm: Correct the offset and value for DDR_CONFIG register
+Date:   Sun, 29 Dec 2019 18:20:15 +0100
+Message-Id: <20191229162542.647203338@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -59,55 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <mchristi@redhat.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-commit 1c05839aa973cfae8c3db964a21f9c0eef8fcc21 upstream.
+commit fa56ac9792265354b565f28def7164e7d7db2b1e upstream.
 
-This fixes a regression added with:
+The DDR_CONFIG register offset got updated after a specific
+minor version of sdcc V4. This offset change has not been properly
+taken care of while updating register changes for sdcc V5.
 
-commit e9e006f5fcf2bab59149cb38a48a4817c1b538b4
-Author: Mike Christie <mchristi@redhat.com>
-Date:   Sun Aug 4 14:10:06 2019 -0500
+Correcting proper offset for this register.
+Also updating this register value to reflect the recommended RCLK
+delay.
 
-    nbd: fix max number of supported devs
-
-where we can deadlock during device shutdown. The problem occurs if
-the recv_work's nbd_config_put occurs after nbd_start_device_ioctl has
-returned and the userspace app has droppped its reference via closing
-the device and running nbd_release. The recv_work nbd_config_put call
-would then drop the refcount to zero and try to destroy the config which
-would try to do destroy_workqueue from the recv work.
-
-This patch just has nbd_start_device_ioctl do a flush_workqueue when it
-wakes so we know after the ioctl returns running works have exited. This
-also fixes a possible race where we could try to reuse the device while
-old recv_works are still running.
-
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Link: https://lore.kernel.org/r/0101016ea738ec72-fa0f852d-20f8-474a-80b2-4b0ef63b132c-000000@us-west-2.amazonses.com
+Fixes: f15358885dda ("mmc: sdhci-msm: Define new Register address map")
 Cc: stable@vger.kernel.org
-Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
-Signed-off-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/nbd.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-msm.c |   28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1247,10 +1247,10 @@ static int nbd_start_device_ioctl(struct
- 	mutex_unlock(&nbd->config_lock);
- 	ret = wait_event_interruptible(config->recv_wq,
- 					 atomic_read(&config->recv_threads) == 0);
--	if (ret) {
-+	if (ret)
- 		sock_shutdown(nbd);
--		flush_workqueue(nbd->recv_workq);
--	}
-+	flush_workqueue(nbd->recv_workq);
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -108,7 +108,7 @@
+ 
+ #define CORE_PWRSAVE_DLL	BIT(3)
+ 
+-#define DDR_CONFIG_POR_VAL	0x80040853
++#define DDR_CONFIG_POR_VAL	0x80040873
+ 
+ 
+ #define INVALID_TUNING_PHASE	-1
+@@ -157,8 +157,9 @@ struct sdhci_msm_offset {
+ 	u32 core_ddr_200_cfg;
+ 	u32 core_vendor_spec3;
+ 	u32 core_dll_config_2;
++	u32 core_dll_config_3;
++	u32 core_ddr_config_old; /* Applicable to sdcc minor ver < 0x49 */
+ 	u32 core_ddr_config;
+-	u32 core_ddr_config_2;
+ };
+ 
+ static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
+@@ -186,8 +187,8 @@ static const struct sdhci_msm_offset sdh
+ 	.core_ddr_200_cfg = 0x224,
+ 	.core_vendor_spec3 = 0x250,
+ 	.core_dll_config_2 = 0x254,
+-	.core_ddr_config = 0x258,
+-	.core_ddr_config_2 = 0x25c,
++	.core_dll_config_3 = 0x258,
++	.core_ddr_config = 0x25c,
+ };
+ 
+ static const struct sdhci_msm_offset sdhci_msm_mci_offset = {
+@@ -216,8 +217,8 @@ static const struct sdhci_msm_offset sdh
+ 	.core_ddr_200_cfg = 0x184,
+ 	.core_vendor_spec3 = 0x1b0,
+ 	.core_dll_config_2 = 0x1b4,
+-	.core_ddr_config = 0x1b8,
+-	.core_ddr_config_2 = 0x1bc,
++	.core_ddr_config_old = 0x1b8,
++	.core_ddr_config = 0x1bc,
+ };
+ 
+ struct sdhci_msm_variant_ops {
+@@ -260,6 +261,7 @@ struct sdhci_msm_host {
+ 	const struct sdhci_msm_offset *offset;
+ 	bool use_cdr;
+ 	u32 transfer_mode;
++	bool updated_ddr_cfg;
+ };
+ 
+ static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+@@ -931,8 +933,10 @@ out:
+ static int sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+-	u32 dll_status, config;
++	u32 dll_status, config, ddr_cfg_offset;
+ 	int ret;
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+ 	const struct sdhci_msm_offset *msm_offset =
+ 					sdhci_priv_msm_offset(host);
+ 
+@@ -945,8 +949,11 @@ static int sdhci_msm_cm_dll_sdc4_calibra
+ 	 * bootloaders. In the future, if this changes, then the desired
+ 	 * values will need to be programmed appropriately.
+ 	 */
+-	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr +
+-			msm_offset->core_ddr_config);
++	if (msm_host->updated_ddr_cfg)
++		ddr_cfg_offset = msm_offset->core_ddr_config;
++	else
++		ddr_cfg_offset = msm_offset->core_ddr_config_old;
++	writel_relaxed(DDR_CONFIG_POR_VAL, host->ioaddr + ddr_cfg_offset);
+ 
+ 	if (mmc->ios.enhanced_strobe) {
+ 		config = readl_relaxed(host->ioaddr +
+@@ -1862,6 +1869,9 @@ static int sdhci_msm_probe(struct platfo
+ 				msm_offset->core_vendor_spec_capabilities0);
+ 	}
+ 
++	if (core_major == 1 && core_minor >= 0x49)
++		msm_host->updated_ddr_cfg = true;
 +
- 	mutex_lock(&nbd->config_lock);
- 	nbd_bdev_reset(bdev);
- 	/* user requested, ignore socket errors */
+ 	/*
+ 	 * Power on reset state may trigger power irq if previous status of
+ 	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
 
 
