@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA62FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1722EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A49222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A52208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640326;
-	bh=OpXXaUBm7C0AZrRZxjqdELJyfpbhRt8IK4+ihg+PJGI=;
+	s=default; t=1577640329;
+	bh=lDU8UXd44CAG/20/oHfhgQ3JDQoCzJp8m60+aibTo58=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eURhwfIRq0GykLDvCNcN6Gt4ZnillIGLvzBxWC8nHC08NLVPuYQuhlVa6iEqE6x24
-	 2gNHY+1cE5aJ36FbapWodbOjzbik9V8ipJpikmuOlU+uZyS7ehsyjhFYnZsWz40bRG
-	 zb9DhT8T2FOp0hiN7yK7l9JN6cmkMPwQ6GOWEdKw=
+	b=JnU6tHrL1Fi3rrVI/JvtEDcfDqD3RB/35fr8yBsToJN8oETQnlcFW/9sdQdbJNY4x
+	 Te5O944bGRUygXyOhkNWXsKe4Vn5kqVOjYZ4/mGvgRTA1nL3l351NqF3plGBRzqjHY
+	 nMhDKDlTL0G7B47jaxif4bF+eTcxE30uen3heqmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfL2RZZ (ORCPT
+        id S1727975AbfL2RZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfL2RZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:23 -0500
+        id S1727960AbfL2RZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D64220409;
-        Sun, 29 Dec 2019 17:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA16C21744;
+        Sun, 29 Dec 2019 17:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640322;
-        bh=OpXXaUBm7C0AZrRZxjqdELJyfpbhRt8IK4+ihg+PJGI=;
+        s=default; t=1577640325;
+        bh=lDU8UXd44CAG/20/oHfhgQ3JDQoCzJp8m60+aibTo58=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbUFdqeyY9/zLDxCHZKnXk99F07P341JZE1dqqF3BA5X8VuN4U8QA3RfNzCgIvjvk
-         d2l/ug0Hy6xr3E4YfD4ORbXqMyLURR440mR8+K46e91K4lPpSBv/WgljIyJXFpcVAr
-         JSGoIYAcF6JFdcK9T3XEGNfuyIltzA6meC68Q6KU=
+        b=m78v3ibBCVVYku7bQhjsTyLKnDL6MGXYcQsRY238LREk/9l20gWJUNEqjMNpWXDXt
+         PQRxNcxX3hRKy+S3S5sciT0rhhVeaB7f8NAtCKTMjOmeDr9LvmEe58rhpSH7wNx80Z
+         BEI4B4Plp7D42SpxIcda1FjtHxwUIBKph+1EFb6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Isely <isely@pobox.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 109/161] media: pvrusb2: Fix oops on tear-down when radio support is not present
-Date:   Sun, 29 Dec 2019 18:19:17 +0100
-Message-Id: <20191229162429.979155027@linuxfoundation.org>
+Subject: [PATCH 4.14 110/161] media: si470x-i2c: add missed operations in remove
+Date:   Sun, 29 Dec 2019 18:19:18 +0100
+Message-Id: <20191229162430.180371943@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,57 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Isely <isely@pobox.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
+[ Upstream commit 2df200ab234a86836a8879a05a8007d6b884eb14 ]
 
-In some device configurations there's no radio or radio support in the
-driver.  That's OK, as the driver sets itself up accordingly.  However
-on tear-down in these caes it's still trying to tear down radio
-related context when there isn't anything there, leading to
-dereferences through a null pointer and chaos follows.
+The driver misses calling v4l2_ctrl_handler_free and
+v4l2_device_unregister in remove like what is done in probe failure.
+Add the calls to fix it.
 
-How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-mystery to me.
-
-[hverkuil: fix two checkpatch warnings]
-
-Signed-off-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index 4320bda9352d..e0413db26781 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -915,8 +915,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
- 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
--	    !list_empty(&vp->dev_radio->devbase.fh_list))
-+	    (vp->dev_radio &&
-+	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-+		pvr2_trace(PVR2_TRACE_STRUCT,
-+			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
- 		return;
-+	}
- 	pvr2_v4l2_destroy_no_lock(vp);
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 8ce6f9cff746..b60fb6ed5aeb 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -455,6 +455,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
+ 	video_unregister_device(&radio->videodev);
+ 	kfree(radio);
+ 
++	v4l2_ctrl_handler_free(&radio->hdl);
++	v4l2_device_unregister(&radio->v4l2_dev);
+ 	return 0;
  }
  
-@@ -990,7 +994,8 @@ static int pvr2_v4l2_release(struct file *file)
- 	kfree(fhp);
- 	if (vp->channel.mc_head->disconnect_flag &&
- 	    list_empty(&vp->dev_video->devbase.fh_list) &&
--	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-+	    (!vp->dev_radio ||
-+	     list_empty(&vp->dev_radio->devbase.fh_list))) {
- 		pvr2_v4l2_destroy_no_lock(vp);
- 	}
- 	return 0;
 -- 
 2.20.1
 
