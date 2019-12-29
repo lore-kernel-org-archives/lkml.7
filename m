@@ -2,100 +2,152 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E08C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF8EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA476207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 08:39:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjZhdwZF"
+	by mail.kernel.org (Postfix) with ESMTP id C64A0207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 09:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfL2Iex (ORCPT
+        id S1726417AbfL2JLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 03:34:53 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34083 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfL2Iex (ORCPT
+        Sun, 29 Dec 2019 04:11:25 -0500
+Received: from mailoutvs62.siol.net ([185.57.226.253]:56271 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726366AbfL2JLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 03:34:53 -0500
-Received: by mail-pl1-f194.google.com with SMTP id x17so13520202pln.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 00:34:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KfH/WTQPO3RAECd+zAOPLsSZgZBZzVlcd2UC7GE6hHI=;
-        b=HjZhdwZFBILUa0gDqSqR/mg+0PQwknRsIcB/VLzPUY+J+KMvw9OungGwFD89RHhSkE
-         EJiA7z5nkLPYbEyIuAY3IVyfmsnS/wgwShJmDjEqjBYs8QV3V5WbO7rVqruuxCs02Cxo
-         VG7Beby37w6OC9vJGZWgaOIovtAvtIdP30nxzaWO1bq7UogRyYh2k7x7RloFVcuV/zeR
-         +iMHzyTinyElHp5ankRYcCVfT1dnsQJyFb8acxL7YCOAA5rY1szoL6AxvVVVhjaxPrUb
-         /Q2D4kmslrhN7eMuygWxjfl2NcoZRu8zsz7RP0+riWKuZ/dCw0hkoqjlpbftgg7MPpbf
-         dgSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KfH/WTQPO3RAECd+zAOPLsSZgZBZzVlcd2UC7GE6hHI=;
-        b=bgJgJt60tHd6EDpSinpW6nSt2EtLg1lJFtsV+bWpsvoDFbPixjwJ7oZSviX0F6t9Sa
-         rYgDId1+x7lJYQlnaHgNd6W8DRm7tfsWYQCZ3TWSX8iny9nFSBwtyRI2EZGqlGXP0eDw
-         s9fnihjDaiLNXDGk3EIvUv51EBkbRJ1Ep+gbBWztxybr2cnBy1TqU9L9VUM8o8zbaQdl
-         75cW42U3pHZ7aeyYHUfvbmAxXHumg+N+pg+dVRUEEcSad2SPx2+zat7P34Xg+Ku6+JWp
-         DLnv4ifphynUVrtf4Ezf+G6lTVYiQ915M6U+1WThI1hZJIRpJ+6dW4BV8Pfv79mTzpcn
-         lwRw==
-X-Gm-Message-State: APjAAAVByCundIkezGbxbo5HhzMSK4d0MlOUSoPx9eDEKHCgh2Njcsfj
-        E23OWq8GbCagsy4y/909Xc0=
-X-Google-Smtp-Source: APXvYqzbiowcOGtzTTQUN2pAqzBokwRtvlna4OMKNSR1mYzHhsYfAJP3oRRLZpQCCvEh/oZLdtTBPg==
-X-Received: by 2002:a17:90b:1115:: with SMTP id gi21mr38495722pjb.95.1577608492912;
-        Sun, 29 Dec 2019 00:34:52 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id f30sm43166569pga.20.2019.12.29.00.34.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 00:34:52 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     ira.weiny@intel.com, hubcap@omnibond.com, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] platform: goldfish: pipe: switch to platform_get_irq
-Date:   Sun, 29 Dec 2019 08:34:50 +0000
-Message-Id: <20191229083450.8178-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 29 Dec 2019 04:11:25 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 02CDE52154E;
+        Sun, 29 Dec 2019 10:11:22 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id qbCTLp6YsYnV; Sun, 29 Dec 2019 10:11:21 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 98855521C67;
+        Sun, 29 Dec 2019 10:11:21 +0100 (CET)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 4286F52154E;
+        Sun, 29 Dec 2019 10:11:20 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        roman.stratiienko@globallogic.com
+Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
+Subject: Re: [RFC 1/4] drm/sun4i: Wait for previous mixing process finish before committing next
+Date:   Sun, 29 Dec 2019 10:11:19 +0100
+Message-ID: <7696383.T7Z3S40VBb@jernej-laptop>
+In-Reply-To: <20191228202818.69908-2-roman.stratiienko@globallogic.com>
+References: <20191228202818.69908-1-roman.stratiienko@globallogic.com> <20191228202818.69908-2-roman.stratiienko@globallogic.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
-requesting IRQ's resources, as they can be not ready yet. Using
-platform_get_irq() instead is preferred for getting IRQ even if it
-was not retrieved earlier.
+Hi!
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/platform/goldfish/goldfish_pipe.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Dne sobota, 28. december 2019 ob 21:28:15 CET je 
+roman.stratiienko@globallogic.com napisal(a):
+> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> 
+> Screen composition that requires dynamic layout modification,
+> especially scaling is corrupted when layout changes.
+> 
+> For example if one of the layer scales down, misaligned lines can be
+> observed, and dynamic increasing of destination area makes mixer to hang
+> and draw nothing after drawing modified layer.
+> 
+> After deep investigation it turns that scaler double-buffered registers
+> are not latched by GLB_DBUFFER bit, instead thay are latched immidiately.
+> 
+> Only way to avoid artifacts is to change the registers after mixer finish
+> previous frame.
+> 
+> Similar was made in sunxi BSP - scaler register values was stored into RAM,
+> and moved into registers at sync together with GLB_DBUFFER.
+> 
+> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
 
-diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-index cef0133aa47a..a1ebaec6eea9 100644
---- a/drivers/platform/goldfish/goldfish_pipe.c
-+++ b/drivers/platform/goldfish/goldfish_pipe.c
-@@ -913,11 +913,9 @@ static int goldfish_pipe_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!r)
--		return -EINVAL;
--
--	dev->irq = r->start;
-+	dev->irq = platform_get_irq(pdev, 0);
-+	if (dev->irq < 0)
-+		return dev->irq;
- 
- 	/*
- 	 * Exchange the versions with the host device
--- 
-2.17.1
+Nice catch! However, I'm a bit worried about blocking nature of this solution. 
+What about shadowing scaler registers and applying them in "finish_irq" 
+handler? You see, VI scaler can in some cases consume almost all time between 
+two VSync events. That issue came up on A64 mixer1 with downscaling 4K videos 
+in real time. I imagine that this solution might block for too long in this 
+case.
+
+Check VI coarse scaling code:
+https://elixir.bootlin.com/linux/v5.5-rc3/source/drivers/gpu/drm/sun4i/
+sun8i_vi_layer.c#L144
+
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 15 +++++++++++++++
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h |  2 ++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index 8b803eb903b8..eea4813602b7
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -257,6 +257,20 @@ const struct de2_fmt_info *sun8i_mixer_format_info(u32
+> format) return NULL;
+>  }
+> 
+> +static void sun8i_atomic_begin(struct sunxi_engine *engine,
+> +			       struct drm_crtc_state *old_state)
+> +{
+> +	int reg, ret;
+> +
+> +	ret = regmap_read_poll_timeout(engine->regs, 
+SUN8I_MIXER_GLOBAL_STATUS,
+> +				       reg,
+> +				       !(reg & 
+SUN8I_MIXER_GLOBAL_STATUS_BUSY),
+> +				       200, 100000);
+> +
+> +	if (ret)
+> +		pr_warn("%s: Wait for frame finish timeout\n", __func__);
+
+Newly introduced drm_warn() should be used here.
+
+Best regards,
+Jernej
+
+> +}
+> +
+>  static void sun8i_mixer_commit(struct sunxi_engine *engine)
+>  {
+>  	DRM_DEBUG_DRIVER("Committing changes\n");
+> @@ -310,6 +324,7 @@ static struct drm_plane **sun8i_layers_init(struct
+> drm_device *drm, static const struct sunxi_engine_ops sun8i_engine_ops = {
+>  	.commit		= sun8i_mixer_commit,
+>  	.layers_init	= sun8i_layers_init,
+> +	.atomic_begin	= sun8i_atomic_begin,
+>  };
+> 
+>  static struct regmap_config sun8i_mixer_regmap_config = {
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> b/drivers/gpu/drm/sun4i/sun8i_mixer.h index c6cc94057faf..915479cc3077
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> @@ -25,6 +25,8 @@
+> 
+>  #define SUN8I_MIXER_GLOBAL_DBUFF_ENABLE		BIT(0)
+> 
+> +#define SUN8I_MIXER_GLOBAL_STATUS_BUSY		BIT(4)
+> +
+>  #define DE2_MIXER_UNIT_SIZE			0x6000
+>  #define DE3_MIXER_UNIT_SIZE			0x3000
+
+
+
 
