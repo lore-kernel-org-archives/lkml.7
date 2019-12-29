@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE775C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B96FD207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6A6207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641578;
-	bh=UALRAfUb1syHf2cxpcr7GQZ6l1xgsNRJ/e5U2pJ/Lpc=;
+	s=default; t=1577641583;
+	bh=hXZmK+bkVoyydZcV2t6icF7qk4k967/iyGDHo0RHLoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDc8GCuAN0R2L3PAncE+ZQr7Qxcq/v6fGmAcGMWjZImMttBwoakQcWd3b39HVi6aW
-	 N8mnUFfgkoAHnv7k+ZV/9es9StAR/cRDAvUZGw6PB026OrO07ZOoIuOMv+vOA7kiCU
-	 KdZ9F/ntAD4lh6t9N4DOw1h1rsfJuRq0QAaKKQzA=
+	b=ttBnXTziqsxVzK4w9HDGd21M2wVoOiOcg6Oh+8qrfIiAmJx8dyocqT3mrGIIPmoxF
+	 FZa6NVRAPVPrKxTc5qLTaz8EgfruOOMDR/mLC5uAX2QK67YtcKPKenbkCRPdTmp37q
+	 6WSR8yxCWNPFpJpQMO8AveORmPqbtY1WN6Rr4kXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbfL2RqR (ORCPT
+        id S1731061AbfL2RqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55836 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730206AbfL2RqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:14 -0500
+        id S1731047AbfL2RqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFA4208C4;
-        Sun, 29 Dec 2019 17:46:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 262D824670;
+        Sun, 29 Dec 2019 17:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641574;
-        bh=UALRAfUb1syHf2cxpcr7GQZ6l1xgsNRJ/e5U2pJ/Lpc=;
+        s=default; t=1577641576;
+        bh=hXZmK+bkVoyydZcV2t6icF7qk4k967/iyGDHo0RHLoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=daOYvj3V5HEfWxBw81K2oaHB+qy+Dl0NaiSXdCjLFf3Ud8AeK4bzqEDv7LSklSYaB
-         brzQBYFAnEf0Sde7Pta4mfdkQZtjZwDNx3/LY6M/FMS2UIYJojt1B6SGUV39cjCAHF
-         DA/+NRGUkhXuIYDZcQQokEimskSGLP/f6QqxZmCI=
+        b=wnZdZOiUoTFUkL/jiNdEa+6ORfKTjZxvfFOiI8bVibpx43aAAe1MnSnN/9l8geAIb
+         qB9mz7RNQyoXef7qs8P0orZCTpxibHPRDtR6X76gia8sA7+B7xSnD/Yd2yW74RIdmQ
+         Q6YHVRIYxHxRhsSxsq1A75545PNGbPcLn51x9zJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/434] media: cx88: Fix some error handling path in cx8800_initdev()
-Date:   Sun, 29 Dec 2019 18:22:55 +0100
-Message-Id: <20191229172709.798597690@linuxfoundation.org>
+Subject: [PATCH 5.4 123/434] crypto: inside-secure - Fix a maybe-uninitialized warning
+Date:   Sun, 29 Dec 2019 18:22:56 +0100
+Message-Id: <20191229172709.865939809@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,74 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit e1444e9b0424c70def6352580762d660af50e03f ]
+[ Upstream commit 74e6bd472b6d9e80ec9972989d8991736fe46c51 ]
 
-A call to 'pci_disable_device()' is missing in the error handling path.
-In some cases, a call to 'free_irq()' may also be missing.
+A previous fixup avoided an unused variable warning but replaced
+it with a slightly scarier warning:
 
-Reorder the error handling path, add some new labels and fix the 2 issues
-mentionned above.
+drivers/crypto/inside-secure/safexcel.c:1100:6: error: variable 'irq' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
 
-This way, the error handling path in more in line with 'cx8800_finidev()'
-(i.e. the remove function)
+This is harmless as it is impossible to get into this case, but
+the compiler has no way of knowing that. Add an explicit error
+handling case to make it obvious to both compilers and humans
+reading the source.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Pascal van Leeuwen <pvanleeuwen@verimatrix.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/cx88/cx88-video.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/crypto/inside-secure/safexcel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/pci/cx88/cx88-video.c b/drivers/media/pci/cx88/cx88-video.c
-index dcc0f02aeb70..b8abcd550604 100644
---- a/drivers/media/pci/cx88/cx88-video.c
-+++ b/drivers/media/pci/cx88/cx88-video.c
-@@ -1277,7 +1277,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
- 	core = cx88_core_get(dev->pci);
- 	if (!core) {
- 		err = -EINVAL;
--		goto fail_free;
-+		goto fail_disable;
- 	}
- 	dev->core = core;
- 
-@@ -1323,7 +1323,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
- 				       cc->step, cc->default_value);
- 		if (!vc) {
- 			err = core->audio_hdl.error;
--			goto fail_core;
-+			goto fail_irq;
+diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
+index 294debd435b6..991a4425f006 100644
+--- a/drivers/crypto/inside-secure/safexcel.c
++++ b/drivers/crypto/inside-secure/safexcel.c
+@@ -1120,6 +1120,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+ 				irq_name, irq);
+ 			return irq;
  		}
- 		vc->priv = (void *)cc;
++	} else {
++		return -ENXIO;
  	}
-@@ -1337,7 +1337,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
- 				       cc->step, cc->default_value);
- 		if (!vc) {
- 			err = core->video_hdl.error;
--			goto fail_core;
-+			goto fail_irq;
- 		}
- 		vc->priv = (void *)cc;
- 		if (vc->id == V4L2_CID_CHROMA_AGC)
-@@ -1509,11 +1509,14 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
  
- fail_unreg:
- 	cx8800_unregister_video(dev);
--	free_irq(pci_dev->irq, dev);
- 	mutex_unlock(&core->lock);
-+fail_irq:
-+	free_irq(pci_dev->irq, dev);
- fail_core:
- 	core->v4ldev = NULL;
- 	cx88_core_put(core, dev->pci);
-+fail_disable:
-+	pci_disable_device(pci_dev);
- fail_free:
- 	kfree(dev);
- 	return err;
+ 	ret = devm_request_threaded_irq(dev, irq, handler,
 -- 
 2.20.1
 
