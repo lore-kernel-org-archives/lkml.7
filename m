@@ -2,128 +2,99 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26580C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7F1C32765
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012FB207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C444206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642971;
-	bh=+YBS7n7jqJ53S6HvX93BfgZRfoAttIJ+SIElGBLSgqM=;
+	s=default; t=1577642979;
+	bh=eHJppdsqZbfyeBNq6pfRj/q8VLcN4365pRnJlw03DjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJ6eCX1rcc03xqiIteaBulk8hOxTLt00f0K71k/ClS6lU5i4L36l/LMTQ6efn/4BX
-	 kMHGva9Hxwue3ZSrK7K+hY7VQ0HupI/DSxpwVjUdsegqcOPWKhTO18LDMgNUOxbV8I
-	 ftr0J0PPL7L2w9E6PnlDc00AQlAAu0zuX8LCzKkE=
+	b=2rX5HfphEMuk3UXQrMTtU80UCoantD0XWDVtFuP51w7iPUTbDM4vrmJaqSkilDqDP
+	 vPdVrKpqheiV0JJZGFIT9glqIzUiPc2ySrmbBY01ic7Y+Mj9OJJlWAV3tJoaGHag7N
+	 FN+9GbrGUYFc7IUJfPqIdSfHGsoNwNAvAyv/Rsok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732705AbfL2SJ3 (ORCPT
+        id S1730952AbfL2Rpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:09:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33896 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731365AbfL2SJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 13:09:27 -0500
-Received: from localhost.localdomain (unknown [194.230.155.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730941AbfL2Rpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70560222C2;
-        Sun, 29 Dec 2019 18:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1AD3206A4;
+        Sun, 29 Dec 2019 17:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642966;
-        bh=+YBS7n7jqJ53S6HvX93BfgZRfoAttIJ+SIElGBLSgqM=;
+        s=default; t=1577641540;
+        bh=eHJppdsqZbfyeBNq6pfRj/q8VLcN4365pRnJlw03DjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uMgwPoibTPvXMuBnLasQwLeJludmN8WbGDEYxBWxxnh0U6rfIf1l/FTZyhAcMB23c
-         kDdi/LXORjlV7nRi8wYZhjc3QkRJzJn2u5rEXoEN3hGw07unFOx4hpQDUtK56XXsnb
-         B+2XHtCEwb47/eSsX21hJrZ+L/Q0LdGjKxpIZxh8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] cpuidle: arm: Enable compile testing for some of drivers
-Date:   Sun, 29 Dec 2019 19:09:12 +0100
-Message-Id: <20191229180912.17100-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191229180912.17100-1-krzk@kernel.org>
-References: <20191229180912.17100-1-krzk@kernel.org>
+        b=LHf8QhW3MpBYze3jpaJZQxsG8j4EESRdzXLyBwlYUDNHTYmFQorbjRceo+CFRQ0Ku
+         kQWQl+snk3UTBqAlFRfkDKx/5WxzfZKGbqsJ1ePoBfpvL5kN5rPZEHqyJUR1MQTiNQ
+         ZSbOirK7JuVB+jpW6cOSjYZ/s6pccW5zEc0rbgZs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 059/434] ath10k: add cleanup in ath10k_sta_state()
+Date:   Sun, 29 Dec 2019 18:21:52 +0100
+Message-Id: <20191229172705.757641119@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+References: <20191229172702.393141737@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of cpuidle drivers for ARMv7 can be compile tested on this
-architecture because they do not depend on mach-specific bits.  Enable
-compile testing for big.LITTLE, Kirkwood, Zynq, AT91, Exynos and mvebu
-cpuidle drivers.
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit 334f5b61a6f29834e881923b98d1e27e5ce9620d ]
+
+If 'sta->tdls' is false, no cleanup is executed, leading to memory/resource
+leaks, e.g., 'arsta->tx_stats'. To fix this issue, perform cleanup before
+go to the 'exit' label.
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/Kconfig.arm | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-index a224d33dda7f..62272ecfa771 100644
---- a/drivers/cpuidle/Kconfig.arm
-+++ b/drivers/cpuidle/Kconfig.arm
-@@ -25,7 +25,7 @@ config ARM_PSCI_CPUIDLE
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index a6d21856b7e7..40889b79fc70 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -6549,8 +6549,12 @@ static int ath10k_sta_state(struct ieee80211_hw *hw,
  
- config ARM_BIG_LITTLE_CPUIDLE
- 	bool "Support for ARM big.LITTLE processors"
--	depends on ARCH_VEXPRESS_TC2_PM || ARCH_EXYNOS
-+	depends on ARCH_VEXPRESS_TC2_PM || ARCH_EXYNOS || COMPILE_TEST
- 	depends on MCPM && !ARM64
- 	select ARM_CPU_SUSPEND
- 	select CPU_IDLE_MULTIPLE_DRIVERS
-@@ -51,13 +51,13 @@ config ARM_HIGHBANK_CPUIDLE
+ 		spin_unlock_bh(&ar->data_lock);
  
- config ARM_KIRKWOOD_CPUIDLE
- 	bool "CPU Idle Driver for Marvell Kirkwood SoCs"
--	depends on MACH_KIRKWOOD && !ARM64
-+	depends on (MACH_KIRKWOOD || COMPILE_TEST) && !ARM64
- 	help
- 	  This adds the CPU Idle driver for Marvell Kirkwood SoCs.
+-		if (!sta->tdls)
++		if (!sta->tdls) {
++			ath10k_peer_delete(ar, arvif->vdev_id, sta->addr);
++			ath10k_mac_dec_num_stations(arvif, sta);
++			kfree(arsta->tx_stats);
+ 			goto exit;
++		}
  
- config ARM_ZYNQ_CPUIDLE
- 	bool "CPU Idle Driver for Xilinx Zynq processors"
--	depends on ARCH_ZYNQ && !ARM64
-+	depends on (ARCH_ZYNQ || COMPILE_TEST) && !ARM64
- 	help
- 	  Select this to enable cpuidle on Xilinx Zynq processors.
- 
-@@ -70,19 +70,19 @@ config ARM_U8500_CPUIDLE
- config ARM_AT91_CPUIDLE
- 	bool "Cpu Idle Driver for the AT91 processors"
- 	default y
--	depends on ARCH_AT91 && !ARM64
-+	depends on (ARCH_AT91 || COMPILE_TEST) && !ARM64
- 	help
- 	  Select this to enable cpuidle for AT91 processors.
- 
- config ARM_EXYNOS_CPUIDLE
- 	bool "Cpu Idle Driver for the Exynos processors"
--	depends on ARCH_EXYNOS && !ARM64
-+	depends on (ARCH_EXYNOS || COMPILE_TEST) && !ARM64
- 	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
- 	help
- 	  Select this to enable cpuidle for Exynos processors.
- 
- config ARM_MVEBU_V7_CPUIDLE
- 	bool "CPU Idle Driver for mvebu v7 family processors"
--	depends on ARCH_MVEBU && !ARM64
-+	depends on (ARCH_MVEBU || COMPILE_TEST) && !ARM64
- 	help
- 	  Select this to enable cpuidle on Armada 370, 38x and XP processors.
+ 		ret = ath10k_wmi_update_fw_tdls_state(ar, arvif->vdev_id,
+ 						      WMI_TDLS_ENABLE_ACTIVE);
 -- 
-2.17.1
+2.20.1
+
+
 
