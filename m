@@ -2,58 +2,56 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3148C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736FAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC577207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB7A20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643145;
-	bh=DX/8eM0CZYV20+MeM7j+89/IvLLfM7OmK+6YPGoJngU=;
+	s=default; t=1577643153;
+	bh=QozURXCJBPVksqCydUnS/f/GwhWTAa4O786kDQPZHIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxJVGTIW9gnrNdqlP7hOsPpMwYnXw37HUstif9X6AdIDVa0MkvQ5Ki7nYQYnyITzJ
-	 AlHbJamdabveIm58hdu7NKNPN2k3SnbalMMSF0M9zQVGOOZMi6YwaeFZ9rOfAuMBJU
-	 2Wi7FTxz95s/yGMfQi3WHoTIzIkNY9wvGcaZUQH4=
+	b=Key4JYRZx+euxip0ltQvVPyS7dl/Qstj0yTTXtQxfVqNLaHLHzByKFLkXKAZZWnWk
+	 PsGJjnInYujbSBg3Lkgy4bQPff2JVrMfLlpG7HAvo3YdyOGTbEI/VauvazOb2FVc/k
+	 T/OxtvlOEuQh6pgYIUgBKl0XMPHD8ilcUfUxMfCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfL2Rln (ORCPT
+        id S1728829AbfL2R3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfL2Rlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:41:40 -0500
+        id S1728814AbfL2R3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E7F1206DB;
-        Sun, 29 Dec 2019 17:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A67620409;
+        Sun, 29 Dec 2019 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641299;
-        bh=DX/8eM0CZYV20+MeM7j+89/IvLLfM7OmK+6YPGoJngU=;
+        s=default; t=1577640578;
+        bh=QozURXCJBPVksqCydUnS/f/GwhWTAa4O786kDQPZHIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IJyl8GvKLSN2rQs1O4+8dOacpKDzhBoECl67dPKiaUknudoJq2HWgGv1mD1PQHEHx
-         9HdqAIKaJGHL4vr+0nN/3SwQYsD/7FOVQh5z4sfWeRSgnbYxzyBqaZ6UX+R89eDkPa
-         3apjhWagjrx/BRXXlhLCsM/LTgCSUVVRoMdx74ac=
+        b=Zk/1mbpZwuhIHmCjpn9Q3Stfp0A6n8kQ81UoI89GGcYmtC5XcAxwfY4P28uoqizZQ
+         Dk6T3KSCM2teP1t/WxyDCzPIopRr1L/44n65uU+xUrrMUFizXb9eEvV6lhQ8N9ga+g
+         P8+Ndad1quFq7RM8g7GHdMuzkBs38hur6J6t+0MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Jiangfeng <xiaojiangfeng@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 001/434] af_packet: set defaule value for tmo
-Date:   Sun, 29 Dec 2019 18:20:54 +0100
-Message-Id: <20191229172702.484977936@linuxfoundation.org>
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 054/219] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
+Date:   Sun, 29 Dec 2019 18:17:36 +0100
+Message-Id: <20191229162515.375843539@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
-References: <20191229172702.393141737@linuxfoundation.org>
+In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
+References: <20191229162508.458551679@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,54 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit b43d1f9f7067c6759b1051e8ecb84e82cef569fe ]
+[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
 
-There is softlockup when using TPACKET_V3:
-...
-NMI watchdog: BUG: soft lockup - CPU#2 stuck for 60010ms!
-(__irq_svc) from [<c0558a0c>] (_raw_spin_unlock_irqrestore+0x44/0x54)
-(_raw_spin_unlock_irqrestore) from [<c027b7e8>] (mod_timer+0x210/0x25c)
-(mod_timer) from [<c0549c30>]
-(prb_retire_rx_blk_timer_expired+0x68/0x11c)
-(prb_retire_rx_blk_timer_expired) from [<c027a7ac>]
-(call_timer_fn+0x90/0x17c)
-(call_timer_fn) from [<c027ab6c>] (run_timer_softirq+0x2d4/0x2fc)
-(run_timer_softirq) from [<c021eaf4>] (__do_softirq+0x218/0x318)
-(__do_softirq) from [<c021eea0>] (irq_exit+0x88/0xac)
-(irq_exit) from [<c0240130>] (msa_irq_exit+0x11c/0x1d4)
-(msa_irq_exit) from [<c0209cf0>] (handle_IPI+0x650/0x7f4)
-(handle_IPI) from [<c02015bc>] (gic_handle_irq+0x108/0x118)
-(gic_handle_irq) from [<c0558ee4>] (__irq_usr+0x44/0x5c)
-...
+Inside function max8907_regulator_probe(), variable val could
+be uninitialized if regmap_read() fails. However, val is used
+later in the if statement to decide the content written to
+"pmic", which is potentially unsafe.
 
-If __ethtool_get_link_ksettings() is failed in
-prb_calc_retire_blk_tmo(), msec and tmo will be zero, so tov_in_jiffies
-is zero and the timer expire for retire_blk_timer is turn to
-mod_timer(&pkc->retire_blk_timer, jiffies + 0),
-which will trigger cpu usage of softirq is 100%.
-
-Fixes: f6fb8f100b80 ("af-packet: TPACKET_V3 flexible buffer implementation.")
-Tested-by: Xiao Jiangfeng <xiaojiangfeng@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -544,7 +544,8 @@ static int prb_calc_retire_blk_tmo(struc
- 			msec = 1;
- 			div = ecmd.base.speed / 1000;
+diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
+index 860400d2cd85..a8f2f07239fb 100644
+--- a/drivers/regulator/max8907-regulator.c
++++ b/drivers/regulator/max8907-regulator.c
+@@ -299,7 +299,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
+ 
+ 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
+-	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	if (ret)
++		return ret;
++
+ 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
+ 	    MAX8907_II2RR_VERSION_REV_B) {
+ 		pmic->desc[MAX8907_SD1].min_uV = 637500;
+@@ -336,14 +339,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
  		}
--	}
-+	} else
-+		return DEFAULT_PRB_RETIRE_TOV;
  
- 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
- 
+ 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & MAX8907_MASK_LDO_SEQ) !=
+ 			    MAX8907_MASK_LDO_SEQ)
+ 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
+ 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
+ 						MAX8907_MASK_OUT5V_ENSRC)) !=
+ 			    MAX8907_MASK_OUT5V_ENSRC)
+-- 
+2.20.1
+
 
 
