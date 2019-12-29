@@ -2,51 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82CEC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81110C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2AE207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C12207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643239;
-	bh=OORXKoTj2jb5eERyHJvdewqHrX+uXcuvpVT8e1gscLg=;
+	s=default; t=1577643244;
+	bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A79WPqS/sBNaME19wbJHBBBK3W+Xgamh6y83Wa8199VcFJOMxPXKCw0s8Hp9pg3za
-	 VYgWbMh5jhjxT8qteGbRtOx1G5dmtc8GiUeACwYuzlJI3IpI3o9advo7tGZ1a+WUD7
-	 v4tvwQ31vqc+3uN75HFx7Zt9zhYO9Oh5l1Mea0bI=
+	b=youZiirwox0C50fE+aOV74P0MJkE3G8dNSI98kW9zdfKcffNJ2dsp0eZTnK8bS1AO
+	 2Kylb42L/Ja5CD0ID4bMBRbFSmu0t2byoMzEomZ24KcZPn1Kr4YPy+Jsum1lwJnT5E
+	 wnJu7zuHM7mjFhWcBotqeXZ8gwkxZ9GVIO8W/s+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbfL2R1d (ORCPT
+        id S1729202AbfL2SOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:27:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49586 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:14:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbfL2R1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:23 -0500
+        id S1728434AbfL2R1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97AF320409;
-        Sun, 29 Dec 2019 17:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306D320409;
+        Sun, 29 Dec 2019 17:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640443;
-        bh=OORXKoTj2jb5eERyHJvdewqHrX+uXcuvpVT8e1gscLg=;
+        s=default; t=1577640452;
+        bh=8zHvYP0Gzde2DetqxjP/+n4pV0eXIBIfVJDS6jyzJ5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=You3DEEhvXRf58/J0W5JmFfV6ZxNKYfIwM6+8+H2IQwft883fpZytUE8YZtwYdQmx
-         Fp1f7V77sr+ZlARk+0+YzsuiEWab5jKWdT8nYyHpQFJLXfPkpuzriaGj1EJos8Fz0Y
-         bXq7zUqMeYFqGn8dP47Nx/sENLS3B5w3aBOUfHs8=
+        b=C0LpRJuzKlyxawv2iOG7KkD6ANT65rB45LTEG4ZqqDzSR5Ks5v0y4B24UAE+7tfD8
+         Od1FlMDNt4E5lecuGiweskADMt7sU1e5bjLgBhc7Men+wTBiUHtCziK/zcN2gZm9V0
+         eHFbrbdaP1cXQ29jjaMOmwsSjgYCeBAXa8xhP9MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 159/161] mmc: sdhci: Update the tuning failed messages to pr_debug level
-Date:   Sun, 29 Dec 2019 18:20:07 +0100
-Message-Id: <20191229162449.951014721@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 125/161] spi: st-ssc4: add missed pm_runtime_disable
+Date:   Sun, 29 Dec 2019 18:19:33 +0100
+Message-Id: <20191229162436.693134986@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 2c92dd20304f505b6ef43d206fff21bda8f1f0ae upstream.
+[ Upstream commit cd050abeba2a95fe5374eec28ad2244617bcbab6 ]
 
-Tuning support in DDR50 speed mode was added in SD Specifications Part1
-Physical Layer Specification v3.01. Its not possible to distinguish
-between v3.00 and v3.01 from the SCR and that is why since
-commit 4324f6de6d2e ("mmc: core: enable CMD19 tuning for DDR50 mode")
-tuning failures are ignored in DDR50 speed mode.
+The driver forgets to call pm_runtime_disable in probe failure
+and remove.
+Add the missed calls to fix it.
 
-Cards compatible with v3.00 don't respond to CMD19 in DDR50 and this
-error gets printed during enumeration and also if retune is triggered at
-any time during operation. Update the printk level to pr_debug so that
-these errors don't lead to false error reports.
-
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Cc: stable@vger.kernel.org # v4.4+
-Link: https://lore.kernel.org/r/20191206114326.15856-1-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118024848.21645-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-st-ssc4.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2162,8 +2162,8 @@ static void __sdhci_execute_tuning(struc
- 		sdhci_send_tuning(host, opcode);
+diff --git a/drivers/spi/spi-st-ssc4.c b/drivers/spi/spi-st-ssc4.c
+index a4e43fc19ece..5df01ffdef46 100644
+--- a/drivers/spi/spi-st-ssc4.c
++++ b/drivers/spi/spi-st-ssc4.c
+@@ -385,6 +385,7 @@ static int spi_st_probe(struct platform_device *pdev)
+ 	return 0;
  
- 		if (!host->tuning_done) {
--			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
--				mmc_hostname(host->mmc));
-+			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
-+				 mmc_hostname(host->mmc));
- 			sdhci_abort_tuning(host, opcode);
- 			return;
- 		}
+ clk_disable:
++	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(spi_st->clk);
+ put_master:
+ 	spi_master_put(master);
+@@ -396,6 +397,8 @@ static int spi_st_remove(struct platform_device *pdev)
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct spi_st *spi_st = spi_master_get_devdata(master);
+ 
++	pm_runtime_disable(&pdev->dev);
++
+ 	clk_disable_unprepare(spi_st->clk);
+ 
+ 	pinctrl_pm_select_sleep_state(&pdev->dev);
+-- 
+2.20.1
+
 
 
