@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029B8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00113C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C740B207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC65206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642549;
-	bh=ZLwIHzi1b5Z8dT7Nzzujfrv3RFtNodl2dfwFpq/b1Gs=;
+	s=default; t=1577642554;
+	bh=Jr8t59oHCU9w4yalef6PIXJgCoErclWXFy6+f+VOfrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eo2x9MvqYYt2NtejZ8gFP5t7woZ+rVyLBJmP8JiscVv6zYs4hfczUWDtlcqEJgqTd
-	 kvsFUudzhXNmP1ojWpckg35M6QbxMmuDxLXpz+myaolxgoaMa6VOznVFY/n+KpwR4T
-	 pIVVj943MYODVxDe+7yN+2HXDTA5X6kwfohguk8E=
+	b=yLGptPkhUvEB8DXJWWKfQSmSv+DKPY3z/iiR+gBX5IhCRoTdF/iBAsT2jdrWdzuoj
+	 1vY8NVVX6tfAiCVtEVgrqCH+TonUfeAiCcW0TwAWfiuXeKE1QoqOD6am9nvpg98sl8
+	 8G/oV0B/qz5Chjtaz/PWuzIkpqtA05D25dCqQRlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbfL2Ryq (ORCPT
+        id S2387684AbfL2SCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42732 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:02:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732729AbfL2Ryk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:40 -0500
+        id S1732737AbfL2Rym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F26B320718;
-        Sun, 29 Dec 2019 17:54:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7242D206DB;
+        Sun, 29 Dec 2019 17:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642079;
-        bh=ZLwIHzi1b5Z8dT7Nzzujfrv3RFtNodl2dfwFpq/b1Gs=;
+        s=default; t=1577642081;
+        bh=Jr8t59oHCU9w4yalef6PIXJgCoErclWXFy6+f+VOfrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBUJMBbJlDad4JEXJvyhY9JD9AxyZPwHaFseIgZ3zfWqjYIapTPjZoaQpPGZv6WTL
-         M/qP5gReYr7hbDu7bNHM1gUn/DRqeXTkJj+6Iiesl7a1KCD0HZbW4hcgEKfmaFtvlh
-         9buVHPhL7oEl4fP/cYhJWTlHQNouL66fRAFOgy+A=
+        b=r/oAt46Cqt/pCGHDGq5lRkxZ9EfCTUetNc3LdbbecnwYVOHEjAzJovALdh2kVm0oV
+         urvLL/M96718S/oJdmFYfGzfwkx7wcBCeuVKDi8lgot6dYjFKhMXDmOQIj+5qfO4WW
+         +gnb+e9iYFHTncfslQcMBP4RUDbf3T4AscsIr1OI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 334/434] s390/crypto: Fix unsigned variable compared with zero
-Date:   Sun, 29 Dec 2019 18:26:27 +0100
-Message-Id: <20191229172724.154790665@linuxfoundation.org>
+Subject: [PATCH 5.4 335/434] s390/kasan: support memcpy_real with TRACE_IRQFLAGS
+Date:   Sun, 29 Dec 2019 18:26:28 +0100
+Message-Id: <20191229172724.220761956@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,48 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 0398d4ab1677f7d8cd43aac2aa29a93dfcf9e2e3 ]
+[ Upstream commit 13f9bae579c6bd051e58f326913dd09af1291208 ]
 
-s390_crypto_shash_parmsize() return type is int, it
-should not be stored in a unsigned variable, which
-compared with zero.
+Currently if the kernel is built with CONFIG_TRACE_IRQFLAGS and KASAN
+and used as crash kernel it crashes itself due to
+trace_hardirqs_off/trace_hardirqs_on being called with DAT off. This
+happens because trace_hardirqs_off/trace_hardirqs_on are instrumented and
+kasan code tries to perform access to shadow memory to validate memory
+accesses. Kasan shadow memory is populated with vmemmap, so all accesses
+require DAT on.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 3c2eb6b76cab ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>
+memcpy_real could be called with DAT on or off (with kasan enabled DAT
+is set even before early code is executed).
+
+Make sure that trace_hardirqs_off/trace_hardirqs_on are called with DAT
+on and only actual __memcpy_real is called with DAT off.
+
+Also annotate __memcpy_real and _memcpy_real with __no_sanitize_address
+to avoid further problems due to switching DAT off.
+
+Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/sha_common.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/s390/mm/maccess.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/crypto/sha_common.c b/arch/s390/crypto/sha_common.c
-index d39e0f079217..686fe7aa192f 100644
---- a/arch/s390/crypto/sha_common.c
-+++ b/arch/s390/crypto/sha_common.c
-@@ -74,14 +74,17 @@ int s390_sha_final(struct shash_desc *desc, u8 *out)
- 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
- 	unsigned int bsize = crypto_shash_blocksize(desc->tfm);
- 	u64 bits;
--	unsigned int n, mbl_offset;
-+	unsigned int n;
-+	int mbl_offset;
+diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
+index 1864a8bb9622..59ad7997fed1 100644
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -70,7 +70,7 @@ void notrace s390_kernel_write(void *dst, const void *src, size_t size)
+ 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
+ }
  
- 	n = ctx->count % bsize;
- 	bits = ctx->count * 8;
--	mbl_offset = s390_crypto_shash_parmsize(ctx->func) / sizeof(u32);
-+	mbl_offset = s390_crypto_shash_parmsize(ctx->func);
- 	if (mbl_offset < 0)
- 		return -EINVAL;
+-static int __memcpy_real(void *dest, void *src, size_t count)
++static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
+ {
+ 	register unsigned long _dest asm("2") = (unsigned long) dest;
+ 	register unsigned long _len1 asm("3") = (unsigned long) count;
+@@ -91,19 +91,23 @@ static int __memcpy_real(void *dest, void *src, size_t count)
+ 	return rc;
+ }
  
-+	mbl_offset = mbl_offset / sizeof(u32);
-+
- 	/* set total msg bit length (mbl) in CPACF parmblock */
- 	switch (ctx->func) {
- 	case CPACF_KLMD_SHA_1:
+-static unsigned long _memcpy_real(unsigned long dest, unsigned long src,
+-				  unsigned long count)
++static unsigned long __no_sanitize_address _memcpy_real(unsigned long dest,
++							unsigned long src,
++							unsigned long count)
+ {
+ 	int irqs_disabled, rc;
+ 	unsigned long flags;
+ 
+ 	if (!count)
+ 		return 0;
+-	flags = __arch_local_irq_stnsm(0xf8UL);
++	flags = arch_local_irq_save();
+ 	irqs_disabled = arch_irqs_disabled_flags(flags);
+ 	if (!irqs_disabled)
+ 		trace_hardirqs_off();
++	__arch_local_irq_stnsm(0xf8); // disable DAT
+ 	rc = __memcpy_real((void *) dest, (void *) src, (size_t) count);
++	if (flags & PSW_MASK_DAT)
++		__arch_local_irq_stosm(0x04); // enable DAT
+ 	if (!irqs_disabled)
+ 		trace_hardirqs_on();
+ 	__arch_local_irq_ssm(flags);
 -- 
 2.20.1
 
