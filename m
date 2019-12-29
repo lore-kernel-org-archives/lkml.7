@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4653C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C635C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7BE207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28108206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642394;
-	bh=elpoaO+NxbhLt81HUttiqnFbU9c992t55J6bTfkFNYQ=;
+	s=default; t=1577642400;
+	bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmBwT3jL+I1U31MJZD4yrq23ISoLBryyB6uJl1Vjo0uKfR0gFXhbW3WSE/wurMzB8
-	 SDcu74Aheid9aJlEDkHDnET9KE6oDZ0B6+rkzrn94sWkCUxKvVYtqdwa1Zd4VaiDDe
-	 7xhU771goEuT+PEQ41SNJ0FHy4675fXWNjwR0bvM=
+	b=Y7eStadImYMWSnohj8czD6hOUWg0gOFvChNvIrbjUQBGWItn9Z6g/u/UihLH+Xv0Z
+	 giq5x4RSiCYnhWRbCXSGpGTHYTox1yRwFSVjHO64IVWC72OzkwnKzKSgQQZehlJUY7
+	 VtTHH+isK6ZXZDcOgsaRvjI2v96rg9TeR6MGveOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387752AbfL2R7x (ORCPT
+        id S2387761AbfL2R77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:59:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:59:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387498AbfL2R6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:20 -0500
+        id S2387463AbfL2R6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D43921744;
-        Sun, 29 Dec 2019 17:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D81206DB;
+        Sun, 29 Dec 2019 17:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642299;
-        bh=elpoaO+NxbhLt81HUttiqnFbU9c992t55J6bTfkFNYQ=;
+        s=default; t=1577642287;
+        bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fq16h8rCp1kydnS6eo6XsqWLocI7EwfsLR5l3DfyS149mnOMsHSBnfL0WbOseEtsB
-         nL8mZsEMzzjE9/Qew+mwX3e5l+z0FszbCzK0SJcoBCyPgKqA/EG9KKkW5Zhb4elVjU
-         /+P+nDVsBPq+skvj4DTJXMYH5syAFYeTkDPGq3QI=
+        b=TYiSFv97SUY55HJhBTGPXtyGPJaY3JUvOMb0Bk0bO2cVK7eL/s/mabs4KkUavknTG
+         tqqV7w9oXxfzWaU+fcTlMzMhVoe4zIaIS7Ri0a9fxcbyF53lw+WOanhZM0VAT5E+aF
+         Gpc43ICtrhh+HZu7kyogWwHtZxkwNfPRMhkroUmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 426/434] ocxl: Fix concurrent AFU open and device removal
-Date:   Sun, 29 Dec 2019 18:27:59 +0100
-Message-Id: <20191229172731.523660871@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Xiaolong Huang <butterflyhuangxx@gmail.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 377/434] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
+Date:   Sun, 29 Dec 2019 18:27:10 +0100
+Message-Id: <20191229172727.132515054@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,102 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Xiaolong Huang <butterflyhuangxx@gmail.com>
 
-commit a58d37bce0d21cf7fbd589384c619e465ef2f927 upstream.
+commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
 
-If an ocxl device is unbound through sysfs at the same time its AFU is
-being opened by a user process, the open code may dereference freed
-stuctures, which can lead to kernel oops messages. You'd have to hit a
-tiny time window, but it's possible. It's fairly easy to test by
-making the time window bigger artificially.
+Uninitialized Kernel memory can leak to USB devices.
 
-Fix it with a combination of 2 changes:
-  - when an AFU device is found in the IDR by looking for the device
-    minor number, we should hold a reference on the device until after
-    the context is allocated. A reference on the AFU structure is kept
-    when the context is allocated, so we can release the reference on
-    the device after the context allocation.
-  - with the fix above, there's still another even tinier window,
-    between the time the AFU device is found in the IDR and the
-    reference on the device is taken. We can fix this one by removing
-    the IDR entry earlier, when the device setup is removed, instead
-    of waiting for the 'release' device callback. With proper locking
-    around the IDR.
+Fix this by using kzalloc() instead of kmalloc().
 
-Fixes: 75ca758adbaf ("ocxl: Create a clear delineation between ocxl backend & frontend")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190624144148.32022-1-fbarrat@linux.ibm.com
+Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
+Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
+Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/ocxl/file.c |   23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/misc/ocxl/file.c
-+++ b/drivers/misc/ocxl/file.c
-@@ -18,18 +18,15 @@ static struct class *ocxl_class;
- static struct mutex minors_idr_lock;
- static struct idr minors_idr;
+--- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
++++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
+@@ -608,7 +608,7 @@ static int kvaser_usb_leaf_simple_cmd_as
+ 	struct kvaser_cmd *cmd;
+ 	int err;
  
--static struct ocxl_file_info *find_file_info(dev_t devno)
-+static struct ocxl_file_info *find_and_get_file_info(dev_t devno)
- {
- 	struct ocxl_file_info *info;
+-	cmd = kmalloc(sizeof(*cmd), GFP_ATOMIC);
++	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
+ 	if (!cmd)
+ 		return -ENOMEM;
  
--	/*
--	 * We don't declare an RCU critical section here, as our AFU
--	 * is protected by a reference counter on the device. By the time the
--	 * info reference is removed from the idr, the ref count of
--	 * the device is already at 0, so no user API will access that AFU and
--	 * this function can't return it.
--	 */
-+	mutex_lock(&minors_idr_lock);
- 	info = idr_find(&minors_idr, MINOR(devno));
-+	if (info)
-+		get_device(&info->dev);
-+	mutex_unlock(&minors_idr_lock);
- 	return info;
- }
+@@ -1140,7 +1140,7 @@ static int kvaser_usb_leaf_set_opt_mode(
+ 	struct kvaser_cmd *cmd;
+ 	int rc;
  
-@@ -58,14 +55,16 @@ static int afu_open(struct inode *inode,
+-	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
+ 	if (!cmd)
+ 		return -ENOMEM;
  
- 	pr_debug("%s for device %x\n", __func__, inode->i_rdev);
+@@ -1206,7 +1206,7 @@ static int kvaser_usb_leaf_flush_queue(s
+ 	struct kvaser_cmd *cmd;
+ 	int rc;
  
--	info = find_file_info(inode->i_rdev);
-+	info = find_and_get_file_info(inode->i_rdev);
- 	if (!info)
- 		return -ENODEV;
- 
- 	rc = ocxl_context_alloc(&ctx, info->afu, inode->i_mapping);
--	if (rc)
-+	if (rc) {
-+		put_device(&info->dev);
- 		return rc;
--
-+	}
-+	put_device(&info->dev);
- 	file->private_data = ctx;
- 	return 0;
- }
-@@ -487,7 +486,6 @@ static void info_release(struct device *
- {
- 	struct ocxl_file_info *info = container_of(dev, struct ocxl_file_info, dev);
- 
--	free_minor(info);
- 	ocxl_afu_put(info->afu);
- 	kfree(info);
- }
-@@ -577,6 +575,7 @@ void ocxl_file_unregister_afu(struct ocx
- 
- 	ocxl_file_make_invisible(info);
- 	ocxl_sysfs_unregister_afu(info);
-+	free_minor(info);
- 	device_unregister(&info->dev);
- }
+-	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
++	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
+ 	if (!cmd)
+ 		return -ENOMEM;
  
 
 
