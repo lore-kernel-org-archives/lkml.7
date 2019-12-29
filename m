@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89597C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABD5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE0D222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C55222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642253;
-	bh=XNLQu7vo4RgxkpiuWIgGSBjkOVGIbTAzo/wWbmIZQO0=;
+	s=default; t=1577642257;
+	bh=L8eGvOF5JwPNWE9sNwdaxCjD5C2togTF2mNUFwx7EvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNZVxxKNZLGedSYsrVutKkMMyMc58e57so9usH1yPNr0/luFEOxmnax3g2wpc4Ch+
-	 /DEVzHGqloefZ84yv2ghOT/2k1ViKX7oJNoHGTrfal3KD7Sy+3zgyylcAFxWvR8TKB
-	 mfAFRpy6KpngehOGuD4H600WyI1yxdAwl1Aj+ruQ=
+	b=t44Q0cso4pIXdOKPMU1KpSzGq+SZR6bWR4imXn3gEOL5Htuqpeg9r2EddMRoONwXh
+	 jiqmmCxnJaV3QahEXa8uu3e+ve+QwW6VeA1ihisiOT+TinD+vPvyckER12+tyT0pUW
+	 p45g/0g3wQy9XpkJVbn+zVXT3HUukmrK9gb/6uzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733274AbfL2R5c (ORCPT
+        id S1733285AbfL2R5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:57:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbfL2R51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:57:27 -0500
+        id S1733273AbfL2R5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:57:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 788E421744;
-        Sun, 29 Dec 2019 17:57:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EDA2206DB;
+        Sun, 29 Dec 2019 17:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642246;
-        bh=XNLQu7vo4RgxkpiuWIgGSBjkOVGIbTAzo/wWbmIZQO0=;
+        s=default; t=1577642251;
+        bh=L8eGvOF5JwPNWE9sNwdaxCjD5C2togTF2mNUFwx7EvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCqz05zxw0nBmOcWk7d9XtigukFU3ASQoCzp1Oe9hjOUi7XOdPSlZE1yWf+9P7eCg
-         +7JxFurFZH57UuHJjpmApDuLs0F6dgDO5sebu3Z8pK3cX38feL7OEeRr7H9DXul5HA
-         87T0TLd3E0LBUsvH0oWQFyG8BdapGXSUhtGlDla4=
+        b=w+u3KY9VZS3syw8lmvh/5jh1CySzy3xSJkxG5fv4bjC7iNWqMqF+h1uppahHDw7WF
+         Mqhwif9b3ni4qCv4wByIu/MzSwp+6O58gz5xewA17KsNEwhSiXSyhN7Ns3/recBOwH
+         +Tkn9J4aqE0p9+yf9tUiYEDxbuR4UNOMFUgIIEy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 402/434] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
-Date:   Sun, 29 Dec 2019 18:27:35 +0100
-Message-Id: <20191229172729.247440628@linuxfoundation.org>
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH 5.4 404/434] tty/serial: atmel: fix out of range clock divider handling
+Date:   Sun, 29 Dec 2019 18:27:37 +0100
+Message-Id: <20191229172729.434677485@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,42 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: David Engraf <david.engraf@sysgo.com>
 
-commit 133b2acee3871ae6bf123b8fe34be14464aa3d2c upstream.
+commit cb47b9f8630ae3fa3f5fbd0c7003faba7abdf711 upstream.
 
-At least on the HP Envy x360 15-cp0xxx model the WMI interface
-for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
-otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
+Use MCK_DIV8 when the clock divider is > 65535. Unfortunately the mode
+register was already written thus the clock selection is ignored.
 
-Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
+Fix by doing the baud rate calulation before setting the mode.
 
-We do not care about the contents of the buffer, we just want to know
-if the HPWMI_FEATURE2_QUERY command is supported.
-
-This commits bumps the buffer size, fixing the error.
-
-Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1520703
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 5bf5635ac170 ("tty/serial: atmel: add fractional baud rate support")
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191216085403.17050-1-david.engraf@sysgo.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/hp-wmi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/atmel_serial.c |   43 +++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -300,7 +300,7 @@ static int __init hp_wmi_bios_2008_later
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -2270,27 +2270,6 @@ static void atmel_set_termios(struct uar
+ 		mode |= ATMEL_US_USMODE_NORMAL;
+ 	}
  
- static int __init hp_wmi_bios_2009_later(void)
- {
--	int state = 0;
-+	u8 state[128];
- 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
- 				       sizeof(state), sizeof(state));
- 	if (!ret)
+-	/* set the mode, clock divisor, parity, stop bits and data size */
+-	atmel_uart_writel(port, ATMEL_US_MR, mode);
+-
+-	/*
+-	 * when switching the mode, set the RTS line state according to the
+-	 * new mode, otherwise keep the former state
+-	 */
+-	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
+-		unsigned int rts_state;
+-
+-		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
+-			/* let the hardware control the RTS line */
+-			rts_state = ATMEL_US_RTSDIS;
+-		} else {
+-			/* force RTS line to low level */
+-			rts_state = ATMEL_US_RTSEN;
+-		}
+-
+-		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
+-	}
+-
+ 	/*
+ 	 * Set the baud rate:
+ 	 * Fractional baudrate allows to setup output frequency more
+@@ -2317,6 +2296,28 @@ static void atmel_set_termios(struct uar
+ 
+ 	if (!(port->iso7816.flags & SER_ISO7816_ENABLED))
+ 		atmel_uart_writel(port, ATMEL_US_BRGR, quot);
++
++	/* set the mode, clock divisor, parity, stop bits and data size */
++	atmel_uart_writel(port, ATMEL_US_MR, mode);
++
++	/*
++	 * when switching the mode, set the RTS line state according to the
++	 * new mode, otherwise keep the former state
++	 */
++	if ((old_mode & ATMEL_US_USMODE) != (mode & ATMEL_US_USMODE)) {
++		unsigned int rts_state;
++
++		if ((mode & ATMEL_US_USMODE) == ATMEL_US_USMODE_HWHS) {
++			/* let the hardware control the RTS line */
++			rts_state = ATMEL_US_RTSDIS;
++		} else {
++			/* force RTS line to low level */
++			rts_state = ATMEL_US_RTSEN;
++		}
++
++		atmel_uart_writel(port, ATMEL_US_CR, rts_state);
++	}
++
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_RSTSTA | ATMEL_US_RSTRX);
+ 	atmel_uart_writel(port, ATMEL_US_CR, ATMEL_US_TXEN | ATMEL_US_RXEN);
+ 	atmel_port->tx_stopped = false;
 
 
