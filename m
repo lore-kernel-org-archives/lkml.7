@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952FEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBD9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDAF206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353FB227BF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642327;
-	bh=0muCiBuOOlJaovfLwFWGxQFz4txbwFrvfXyRzNKQnvY=;
+	s=default; t=1577642332;
+	bh=jjSDoosDC2f5Hfu0htQLEoNtBfuF1F+entclPo6rXTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4WF3GXKQNgM2Uz5t0OrBLFdMiz/zQ+GPXM0JVXzg8K26xP0caZb7C3/6BrnqAn7W
-	 kSj9dpmqk0ZGkK/+w3IZSKdgQ60353AH+lzpHYgr5EojwY9kncssqqYdGtii+fad1O
-	 YAIrj/evEUCYKjur7+Ev5z3tXAF1apC7Rbb++DDQ=
+	b=ouQ8V6UT792i/JKlU5HhsW5RwClGYTuJlFx2tdgE+sfnJGmxB+Tx+ga3kuKiRxoEx
+	 PNuBhtELwwgrXjw6KdX9MF7s+P1LhIZG5+pV7PAlncKZxWoSViBsE+BH99hhuoXNC8
+	 WfcuJ2WUiCdAzO8dHA2TG0WDTXGOnEWME7uRrmJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387604AbfL2R6q (ORCPT
+        id S2387625AbfL2R6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49872 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387580AbfL2R6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:42 -0500
+        id S2387607AbfL2R6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A03208C4;
-        Sun, 29 Dec 2019 17:58:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0830206A4;
+        Sun, 29 Dec 2019 17:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642321;
-        bh=0muCiBuOOlJaovfLwFWGxQFz4txbwFrvfXyRzNKQnvY=;
+        s=default; t=1577642328;
+        bh=jjSDoosDC2f5Hfu0htQLEoNtBfuF1F+entclPo6rXTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3T7R/SKD7Tu3vxEgwFos5McIyFBeDcWnuf7/ycmDE8KrL5Tw+W7V4e4KA7XoWFWX
-         FZv30AmbdhbiAdc4QpUT/fYCIXfLIjpMKHFi50OlOsw0cKFeFjsyWbk2K6r05E6vo4
-         UKff3yOX4WtKyg5yJwqOAHwMZOC32aaXEhcbYQdA=
+        b=nq1e6kNOEd5IQw5yVhIOezwGAFrHWFTR/rKe8DxTFW2iZ/rfmp4mMFj9GFf+RYxGJ
+         6Ag7Or4SbvkzbeDHWpTcftxiCbS6VUfqWO/KtJWV2Lj4zEZVSpJnXiF4tgFrPlt41t
+         wqqhZmdh74F9ZePBOgGevCaxNCGAUyDEJBcEfH7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH 5.4 418/434] KVM: arm/arm64: Properly handle faulting of device mappings
-Date:   Sun, 29 Dec 2019 18:27:51 +0100
-Message-Id: <20191229172730.752949737@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Borislav Petkov <bp@suse.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>
+Subject: [PATCH 5.4 421/434] x86/MCE/AMD: Do not use rdmsr_safe_on_cpu() in smca_configure()
+Date:   Sun, 29 Dec 2019 18:27:54 +0100
+Message-Id: <20191229172731.058586083@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,99 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 6d674e28f642e3ff676fbae2d8d1b872814d32b6 upstream.
+commit 246ff09f89e54fdf740a8d496176c86743db3ec7 upstream.
 
-A device mapping is normally always mapped at Stage-2, since there
-is very little gain in having it faulted in.
+... because interrupts are disabled that early and sending IPIs can
+deadlock:
 
-Nonetheless, it is possible to end-up in a situation where the device
-mapping has been removed from Stage-2 (userspace munmaped the VFIO
-region, and the MMU notifier did its job), but present in a userspace
-mapping (userpace has mapped it back at the same address). In such
-a situation, the device mapping will be demand-paged as the guest
-performs memory accesses.
+  BUG: sleeping function called from invalid context at kernel/sched/completion.c:99
+  in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/1
+  no locks held by swapper/1/0.
+  irq event stamp: 0
+  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  hardirqs last disabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+  softirqs last  enabled at (0): [<ffffffff8106dda9>] copy_process+0x8b9/0x1ca0
+  softirqs last disabled at (0): [<0000000000000000>] 0x0
+  Preemption disabled at:
+  [<ffffffff8104703b>] start_secondary+0x3b/0x190
+  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.5.0-rc2+ #1
+  Hardware name: GIGABYTE MZ01-CE1-00/MZ01-CE1-00, BIOS F02 08/29/2018
+  Call Trace:
+   dump_stack
+   ___might_sleep.cold.92
+   wait_for_completion
+   ? generic_exec_single
+   rdmsr_safe_on_cpu
+   ? wrmsr_on_cpus
+   mce_amd_feature_init
+   mcheck_cpu_init
+   identify_cpu
+   identify_secondary_cpu
+   smp_store_cpu_info
+   start_secondary
+   secondary_startup_64
 
-This requires to be careful when dealing with mapping size, cache
-management, and to handle potential execution of a device mapping.
+The function smca_configure() is called only on the current CPU anyway,
+therefore replace rdmsr_safe_on_cpu() with atomic rdmsr_safe() and avoid
+the IPI.
 
-Reported-by: Alexandru Elisei <alexandru.elisei@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Alexandru Elisei <alexandru.elisei@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191211165651.7889-2-maz@kernel.org
+ [ bp: Update commit message. ]
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/157252708836.3876.4604398213417262402.stgit@buzz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/mmu.c |   21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mce/amd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -38,6 +38,11 @@ static unsigned long io_map_base;
- #define KVM_S2PTE_FLAG_IS_IOMAP		(1UL << 0)
- #define KVM_S2_FLAG_LOGGING_ACTIVE	(1UL << 1)
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -269,7 +269,7 @@ static void smca_configure(unsigned int
+ 	if (smca_banks[bank].hwid)
+ 		return;
  
-+static bool is_iomap(unsigned long flags)
-+{
-+	return flags & KVM_S2PTE_FLAG_IS_IOMAP;
-+}
-+
- static bool memslot_is_logging(struct kvm_memory_slot *memslot)
- {
- 	return memslot->dirty_bitmap && !(memslot->flags & KVM_MEM_READONLY);
-@@ -1698,6 +1703,7 @@ static int user_mem_abort(struct kvm_vcp
- 
- 	vma_pagesize = vma_kernel_pagesize(vma);
- 	if (logging_active ||
-+	    (vma->vm_flags & VM_PFNMAP) ||
- 	    !fault_supports_stage2_huge_mapping(memslot, hva, vma_pagesize)) {
- 		force_pte = true;
- 		vma_pagesize = PAGE_SIZE;
-@@ -1760,6 +1766,9 @@ static int user_mem_abort(struct kvm_vcp
- 			writable = false;
+-	if (rdmsr_safe_on_cpu(cpu, MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
++	if (rdmsr_safe(MSR_AMD64_SMCA_MCx_IPID(bank), &low, &high)) {
+ 		pr_warn("Failed to read MCA_IPID for bank %d\n", bank);
+ 		return;
  	}
- 
-+	if (exec_fault && is_iomap(flags))
-+		return -ENOEXEC;
-+
- 	spin_lock(&kvm->mmu_lock);
- 	if (mmu_notifier_retry(kvm, mmu_seq))
- 		goto out_unlock;
-@@ -1781,7 +1790,7 @@ static int user_mem_abort(struct kvm_vcp
- 	if (writable)
- 		kvm_set_pfn_dirty(pfn);
- 
--	if (fault_status != FSC_PERM)
-+	if (fault_status != FSC_PERM && !is_iomap(flags))
- 		clean_dcache_guest_page(pfn, vma_pagesize);
- 
- 	if (exec_fault)
-@@ -1948,9 +1957,8 @@ int kvm_handle_guest_abort(struct kvm_vc
- 	if (kvm_is_error_hva(hva) || (write_fault && !writable)) {
- 		if (is_iabt) {
- 			/* Prefetch Abort on I/O address */
--			kvm_inject_pabt(vcpu, kvm_vcpu_get_hfar(vcpu));
--			ret = 1;
--			goto out_unlock;
-+			ret = -ENOEXEC;
-+			goto out;
- 		}
- 
- 		/*
-@@ -1992,6 +2000,11 @@ int kvm_handle_guest_abort(struct kvm_vc
- 	ret = user_mem_abort(vcpu, fault_ipa, memslot, hva, fault_status);
- 	if (ret == 0)
- 		ret = 1;
-+out:
-+	if (ret == -ENOEXEC) {
-+		kvm_inject_pabt(vcpu, kvm_vcpu_get_hfar(vcpu));
-+		ret = 1;
-+	}
- out_unlock:
- 	srcu_read_unlock(&vcpu->kvm->srcu, idx);
- 	return ret;
 
 
