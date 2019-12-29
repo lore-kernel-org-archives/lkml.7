@@ -7,54 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA67BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3ABC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9669C222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6336B207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641894;
-	bh=xlc7THDxqHOy7omFyY3ozdfR6uXdFyOw7hRsO3wCTyQ=;
+	s=default; t=1577641898;
+	bh=LxcowDC/0csBoYn9Er4pH7ImDa7kP/A0hOSvLa8tDJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqJ2iu0z5cvKeWM1+8PfwRFuqZk+zqOAoXuFxurlh/sp6uPaSCdD2vgwJHCeZbkCW
-	 GN3neiK+NV/oRYOPO/ppAvQGela2uVzY7ZZn7ZKc6j1834xPQcmc7VBK13fzK6UMOA
-	 4vpMmdeQxFY4buIT/TnRvqs0yiJnyuFMQ5baavrY=
+	b=UrlLnizpVymSUjznx0u6kkNFEMw7zmvqWaXdKoXjslHrXq2SIOGuFsEwS6Mv1qDZy
+	 9Ayyd/mpucmx0MG9354j5/bEd0uvJvnlJKdKbafdFmmSV/Hpy/rnaQ6B/QXKynejqA
+	 fmfyagKy7Ix0JDjSPBdFB8BuIJwpiMB/u53Di29Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfL2Rvc (ORCPT
+        id S1731819AbfL2Rvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36810 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731771AbfL2Rv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:28 -0500
+        id S1731791AbfL2Rvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C21820718;
-        Sun, 29 Dec 2019 17:51:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A802A208C4;
+        Sun, 29 Dec 2019 17:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641887;
-        bh=xlc7THDxqHOy7omFyY3ozdfR6uXdFyOw7hRsO3wCTyQ=;
+        s=default; t=1577641890;
+        bh=LxcowDC/0csBoYn9Er4pH7ImDa7kP/A0hOSvLa8tDJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tAF5pXJqwcjxBkfp6g0F4nneIQcSRUirygO0C+BqikVjkQytsOy61Mi8LRf1bxp7
-         Bd9KNRztvlOnHcabRnPzEVn0DctZmn6D5XPyp4rMRFgzn53bPferUhcRP3aWHn0ztu
-         rjdTpq+z/+9hBjh5UzZXETsDEosJzNRLK0HgYU00=
+        b=Vqvc/Bz6t6donwK9mYvVu/snAbGM0n3K/s1QuyC4xaWXq6r+mM9jDFFOzbgsbl9RU
+         mKDvbC52a6kpKIXqfRpBB89bZPmlTpg53La662fUGZr+6p441ClBEXuB+vZt4ud7U6
+         YtMqQjkZ94VAtrqgt+njGxMQlP0QTdxW2Y7eTDD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 253/434] perf tools: Fix cross compile for ARM64
-Date:   Sun, 29 Dec 2019 18:25:06 +0100
-Message-Id: <20191229172718.726560429@linuxfoundation.org>
+Subject: [PATCH 5.4 254/434] perf tools: Splice events onto evlist even on error
+Date:   Sun, 29 Dec 2019 18:25:07 +0100
+Message-Id: <20191229172718.795111361@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -67,65 +77,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 71f699078b154fcb1c9162fd0208ada9ce532ffc ]
+[ Upstream commit 8e8714c3d157568b7a769917a5e05573bbaf5af0 ]
 
-Currently when cross compiling perf tool for ARM64 on my x86 machine I
-get this error:
+If event parsing fails the event list is leaked, instead splice the list
+onto the out result and let the caller cleanup.
 
-  arch/arm64/util/sym-handling.c:9:10: fatal error: gelf.h: No such file or directory
-   #include <gelf.h>
+An example input for parse_events found by libFuzzer that reproduces
+this memory leak is 'm{'.
 
-For the build, libelf is reported off:
-
-  Auto-detecting system features:
-  ...
-  ...                        libelf: [ OFF ]
-
-Indeed, test-libelf is not built successfully:
-
-  more ./build/feature/test-libelf.make.output
-  test-libelf.c:2:10: fatal error: libelf.h: No such file or directory
-   #include <libelf.h>
-          ^~~~~~~~~~
-  compilation terminated.
-
-I have no such problems natively compiling on ARM64, and I did not
-previously have this issue for cross compiling. Fix by relocating the
-gelf.h include.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/1573045254-39833-1-git-send-email-john.garry@huawei.com
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/arch/arm64/util/sym-handling.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
-index 5df788985130..8dfa3e5229f1 100644
---- a/tools/perf/arch/arm64/util/sym-handling.c
-+++ b/tools/perf/arch/arm64/util/sym-handling.c
-@@ -6,9 +6,10 @@
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index b5e2adef49de..d5ea043d3fc4 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1927,15 +1927,20 @@ int parse_events(struct evlist *evlist, const char *str,
  
- #include "symbol.h" // for the elf__needs_adjust_symbols() prototype
- #include <stdbool.h>
--#include <gelf.h>
- 
- #ifdef HAVE_LIBELF_SUPPORT
-+#include <gelf.h>
+ 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+ 	perf_pmu__parse_cleanup();
 +
- bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
- {
- 	return ehdr.e_type == ET_EXEC ||
++	if (!ret && list_empty(&parse_state.list)) {
++		WARN_ONCE(true, "WARNING: event parser found nothing\n");
++		return -1;
++	}
++
++	/*
++	 * Add list to the evlist even with errors to allow callers to clean up.
++	 */
++	perf_evlist__splice_list_tail(evlist, &parse_state.list);
++
+ 	if (!ret) {
+ 		struct evsel *last;
+ 
+-		if (list_empty(&parse_state.list)) {
+-			WARN_ONCE(true, "WARNING: event parser found nothing\n");
+-			return -1;
+-		}
+-
+-		perf_evlist__splice_list_tail(evlist, &parse_state.list);
+ 		evlist->nr_groups += parse_state.nr_groups;
+ 		last = evlist__last(evlist);
+ 		last->cmdline_group_boundary = true;
 -- 
 2.20.1
 
