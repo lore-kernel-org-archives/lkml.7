@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D31BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF47CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7EA21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96394222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640219;
-	bh=YYJYdFm48ZsJMUlQy0NaxXt6BO854VGqsxoxQjZveWs=;
+	s=default; t=1577640223;
+	bh=ABkLrZKoElGRtWFppwkvdptsazTThG4UmudwIkKFSsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjeAn9+RBvqd4Y0jd1qCBSQdLkw71ZdyMyEDjVuPAH9n5R8sm8yYYSkvISt66C5WP
-	 cDCiB449ZMuT5N/JCYQ0jXcCjapKLm3U2LBJh2PI4D8fY+rqhovrjmIxdczPeg2vSk
-	 jafikpd8DccP8z/57OnYo41pN4Z8ThwzJ+fC4lgg=
+	b=SYrxjr78UXuXRjOFaZCpD8IYn8SPf6Yf8EILypXDEuVIsNNPTnd8giJiRyyuTfSC2
+	 mSzTyzMr8CxGuv3YnH7jrjaQ60W2MIWSVjoJinRmpykExV2DG7lD3IOA3e2OuJbD5G
+	 8fep5rgpSiyEhCbvSL8OUHjeg3cSkJkdWyio3DVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfL2RXi (ORCPT
+        id S1727581AbfL2RXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfL2RXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:35 -0500
+        id S1727566AbfL2RXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B1A208E4;
-        Sun, 29 Dec 2019 17:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F1220722;
+        Sun, 29 Dec 2019 17:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640214;
-        bh=YYJYdFm48ZsJMUlQy0NaxXt6BO854VGqsxoxQjZveWs=;
+        s=default; t=1577640216;
+        bh=ABkLrZKoElGRtWFppwkvdptsazTThG4UmudwIkKFSsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lakirUxGO9NxHAHhDHCDCjZdHgwwNicGXduMuaekGFgpbwxPT3VXKcwYF0GC3v4sE
-         vYNlxZnto0qS3bZxFhG5NlQ9rosrHHKPc2aEnZQd85S07dsThZxIKX8yZEB8Dg1gsb
-         G6X0YAQJmm9DVGdtS0XLUXXTNu38ZL6j32EckqWk=
+        b=ZcZj2dwce1c2CdnjHf0pO4UxwdM8CurNiN2EInWS0zDGuGf7m9B7r6iXbkdr1QaH4
+         HBGpyhAPtpfdZQjKWGfx26mxbhSdvvJzcm9G7kDpTwbD63VsDMRvXpDhQGmwcn/2zB
+         hWbZJSwNDr2ym6ywZssvzXhfJn/z2Vs5pSBzyPKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mattijs Korpershoek <mkorpershoek@baylibre.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Benjamin Berg <bberg@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 065/161] Bluetooth: hci_core: fix init for HCI_USER_CHANNEL
-Date:   Sun, 29 Dec 2019 18:18:33 +0100
-Message-Id: <20191229162419.014024111@linuxfoundation.org>
+Subject: [PATCH 4.14 066/161] x86/mce: Lower throttling MCE messages priority to warning
+Date:   Sun, 29 Dec 2019 18:18:34 +0100
+Message-Id: <20191229162419.667121768@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,50 +68,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+From: Benjamin Berg <bberg@redhat.com>
 
-[ Upstream commit eb8c101e28496888a0dcfe16ab86a1bee369e820 ]
+[ Upstream commit 9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7 ]
 
-During the setup() stage, HCI device drivers expect the chip to
-acknowledge its setup() completion via vendor specific frames.
+On modern CPUs it is quite normal that the temperature limits are
+reached and the CPU is throttled. In fact, often the thermal design is
+not sufficient to cool the CPU at full load and limits can quickly be
+reached when a burst in load happens. This will even happen with
+technologies like RAPL limitting the long term power consumption of
+the package.
 
-If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
-the vendor specific frames are never tranmitted to the driver, as
-they are filtered in hci_rx_work().
+Also, these limits are "softer", as Srinivas explains:
 
-Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
-frames if the HCI device is is HCI_INIT state.
+"CPU temperature doesn't have to hit max(TjMax) to get these warnings.
+OEMs ha[ve] an ability to program a threshold where a thermal interrupt
+can be generated. In some systems the offset is 20C+ (Read only value).
 
-[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
+In recent systems, there is another offset on top of it which can be
+programmed by OS, once some agent can adjust power limits dynamically.
+By default this is set to low by the firmware, which I guess the
+prime motivation of Benjamin to submit the patch."
 
-Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
-Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+So these messages do not usually indicate a hardware issue (e.g.
+insufficient cooling). Log them as warnings to avoid confusion about
+their severity.
+
+ [ bp: Massage commit mesage. ]
+
+Signed-off-by: Benjamin Berg <bberg@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Christian Kellner <ckellner@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191009155424.249277-1-bberg@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mcheck/therm_throt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index d6d7364838f4..ff80a9d41ce1 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4215,7 +4215,14 @@ static void hci_rx_work(struct work_struct *work)
- 			hci_send_to_sock(hdev, skb);
- 		}
- 
--		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-+		/* If the device has been opened in HCI_USER_CHANNEL,
-+		 * the userspace has exclusive access to device.
-+		 * When device is HCI_INIT, we still need to process
-+		 * the data packets to the driver in order
-+		 * to complete its setup().
-+		 */
-+		if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL) &&
-+		    !test_bit(HCI_INIT, &hdev->flags)) {
- 			kfree_skb(skb);
- 			continue;
- 		}
+diff --git a/arch/x86/kernel/cpu/mcheck/therm_throt.c b/arch/x86/kernel/cpu/mcheck/therm_throt.c
+index ee229ceee745..ec6a07b04fdb 100644
+--- a/arch/x86/kernel/cpu/mcheck/therm_throt.c
++++ b/arch/x86/kernel/cpu/mcheck/therm_throt.c
+@@ -185,7 +185,7 @@ static void therm_throt_process(bool new_event, int event, int level)
+ 	/* if we just entered the thermal event */
+ 	if (new_event) {
+ 		if (event == THERMAL_THROTTLING_EVENT)
+-			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
++			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
+ 				this_cpu,
+ 				level == CORE_LEVEL ? "Core" : "Package",
+ 				state->count);
 -- 
 2.20.1
 
