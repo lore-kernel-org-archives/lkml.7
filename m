@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBECC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2274AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0C6206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4552206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643422;
-	bh=PcAKD9ssBUMpQE5DjQwgT8CQkJoNyLmjUlTNGM8iyAw=;
+	s=default; t=1577643427;
+	bh=j/zL3L0ZTW9/R0p1OEI97exdIz+cMlX2FZgmmFNH1Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AR4Xkeav5L1/xVkF+IXkglvNiex5MvZeMibjALFSOng2zpkrZ+g+ONFXTNE/bUlXy
-	 55H+Wza7PByMY1Wc2sgLJ2u5//UhM0Idk3Evgx3mCRUJZM7ZfH6gqWM4+zUuZMWLEz
-	 rszC6S+R1RZa8y11/qaXhyx/zf2KLzTIgCRgpDkQ=
+	b=dBzdEx/Ghg0vgBiQJU92TFFhfpiEWJRzThHJgnqFEJ8plSREQPARZmKzntQb+gnCI
+	 5jgs97JWGpPbQEQz23cUREOd3URT222L66ZXzpWwytT41nr7t6AykEx9hTkhmDhabC
+	 4gOEmw9q77CDlib0/pnLrwaD+Qjzm6bzXXZPlp6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387830AbfL2SRB (ORCPT
+        id S1727215AbfL2RX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:17:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41504 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfL2RXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:39 -0500
+        id S1727523AbfL2RXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12E8207FD;
-        Sun, 29 Dec 2019 17:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D818B207FF;
+        Sun, 29 Dec 2019 17:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640219;
-        bh=PcAKD9ssBUMpQE5DjQwgT8CQkJoNyLmjUlTNGM8iyAw=;
+        s=default; t=1577640202;
+        bh=j/zL3L0ZTW9/R0p1OEI97exdIz+cMlX2FZgmmFNH1Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TR6YDzvLja9gwCDUv9VhW4Uuab9ed45/yjWAhXphHTxrY+3Ob2MFVcuMxpCkvSTEg
-         sILF6N2FM0HzyEvp1H+auUWXc24IMLWHphdgteWSCD3nNPygTpAwrDR8celyI0bXE+
-         LdD+GADxk7LZbxT0eRHyWUpGksWwtgh3bkVbwSYA=
+        b=bqpfgQzUE9UKsvkj2WhCPpeGSnfxkLzZdrBv/R50/vOQCZtHUWlMM6BEJv310Ien8
+         6ktfklrzb8I7TDKX1MB16FBCNYP3SqqJLfdZDugDrT+Ih2zWk/y5qjAYasY+KJy/wl
+         kkfurYvjZDlPYslk49jReD3U/4z52UabvPUoQ2mU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/161] drm/gma500: fix memory disclosures due to uninitialized bytes
-Date:   Sun, 29 Dec 2019 18:18:35 +0100
-Message-Id: <20191229162420.205656695@linuxfoundation.org>
+Subject: [PATCH 4.14 060/161] perf test: Report failure for mmap events
+Date:   Sun, 29 Dec 2019 18:18:28 +0100
+Message-Id: <20191229162417.653410127@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,42 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit ec3b7b6eb8c90b52f61adff11b6db7a8db34de19 ]
+[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
 
-"clock" may be copied to "best_clock". Initializing best_clock
-is not sufficient. The fix initializes clock as well to avoid
-memory disclosures and informaiton leaks.
+When fail to mmap events in task exit case, it misses to set 'err' to
+-1; thus the testing will not report failure for it.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191018044150.1899-1-kjlu@umn.edu
+This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
+can report correct result.
+
+Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/gma500/oaktrail_crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/task-exit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_crtc.c b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-index 0fff269d3fe6..42785f3df60f 100644
---- a/drivers/gpu/drm/gma500/oaktrail_crtc.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_crtc.c
-@@ -139,6 +139,7 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
- 	s32 freq_error, min_error = 100000;
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index 89c8e1604ca7..94fe5464bc6f 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -104,6 +104,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	if (perf_evlist__mmap(evlist, 128, true) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
++		err = -1;
+ 		goto out_delete_evlist;
+ 	}
  
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
-@@ -195,6 +196,7 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
- 	int err = target;
- 
- 	memset(best_clock, 0, sizeof(*best_clock));
-+	memset(&clock, 0, sizeof(clock));
- 
- 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
- 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;
 -- 
 2.20.1
 
