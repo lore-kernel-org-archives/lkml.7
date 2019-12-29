@@ -2,54 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEDFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4653C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB118207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7BE207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642390;
-	bh=PnKKzkZ4//sevqYuJFeMTIRsdv9E8VxA6S6lrGh2OZc=;
+	s=default; t=1577642394;
+	bh=elpoaO+NxbhLt81HUttiqnFbU9c992t55J6bTfkFNYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpizjkTNAAsm6KrPmB2aVnquXvwk07C58WiQPCqJnNf8Rt+kEBmTRKUYOsjCawvrP
-	 UYDY4Z/H2OdlzDQ655R1lWfQKMTr5rIUPAPpkzv27NB2Oh7JbBGAYt0TdBq67CGexO
-	 W1YYT7GUNR3IHguyQch9a2OsclRL3Y4SiO5MS+D0=
+	b=RmBwT3jL+I1U31MJZD4yrq23ISoLBryyB6uJl1Vjo0uKfR0gFXhbW3WSE/wurMzB8
+	 SDcu74Aheid9aJlEDkHDnET9KE6oDZ0B6+rkzrn94sWkCUxKvVYtqdwa1Zd4VaiDDe
+	 7xhU771goEuT+PEQ41SNJ0FHy4675fXWNjwR0bvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbfL2R6U (ORCPT
+        id S2387752AbfL2R7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:58:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:59:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387455AbfL2R6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:13 -0500
+        id S2387498AbfL2R6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE99A206DB;
-        Sun, 29 Dec 2019 17:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D43921744;
+        Sun, 29 Dec 2019 17:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642292;
-        bh=PnKKzkZ4//sevqYuJFeMTIRsdv9E8VxA6S6lrGh2OZc=;
+        s=default; t=1577642299;
+        bh=elpoaO+NxbhLt81HUttiqnFbU9c992t55J6bTfkFNYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tz+ljKTvXHM/2db6jobVVqXRg74mMjAHWAq4or64XSlLEunxRiR/ECzP6+otsNSEN
-         n30p66wglhbjtNsrCeKO9Ml1L5q22d6vPnuEU7WQuMf0e2Kyegk30ozF+Iqew1pg77
-         Ha3iMllOq46x4yypyOahVt4pMMaAqklv4Pqb6XLI=
+        b=fq16h8rCp1kydnS6eo6XsqWLocI7EwfsLR5l3DfyS149mnOMsHSBnfL0WbOseEtsB
+         nL8mZsEMzzjE9/Qew+mwX3e5l+z0FszbCzK0SJcoBCyPgKqA/EG9KKkW5Zhb4elVjU
+         /+P+nDVsBPq+skvj4DTJXMYH5syAFYeTkDPGq3QI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 379/434] spi: dw: Correct handling of native chipselect
-Date:   Sun, 29 Dec 2019 18:27:12 +0100
-Message-Id: <20191229172727.288496293@linuxfoundation.org>
+        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 426/434] ocxl: Fix concurrent AFU open and device removal
+Date:   Sun, 29 Dec 2019 18:27:59 +0100
+Message-Id: <20191229172731.523660871@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,65 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit ada9e3fcc175db4538f5b5e05abf5dedf626e550 ]
+commit a58d37bce0d21cf7fbd589384c619e465ef2f927 upstream.
 
-This patch reverts commit 6e0a32d6f376 ("spi: dw: Fix default polarity
-of native chipselect").
+If an ocxl device is unbound through sysfs at the same time its AFU is
+being opened by a user process, the open code may dereference freed
+stuctures, which can lead to kernel oops messages. You'd have to hit a
+tiny time window, but it's possible. It's fairly easy to test by
+making the time window bigger artificially.
 
-The SPI framework always called the set_cs callback with the logic
-level it desired on the chip select line, which is what the drivers
-original handling supported. commit f3186dd87669 ("spi: Optionally
-use GPIO descriptors for CS GPIOs") changed these symantics, but only
-in the case of drivers that also support GPIO chip selects, to true
-meaning apply slave select rather than logic high. This left things in
-an odd state where a driver that only supports hardware chip selects,
-the core would handle polarity but if the driver supported GPIOs as
-well the driver should handle polarity.  At this point the reverted
-change was applied to change the logic in the driver to match new
-system.
+Fix it with a combination of 2 changes:
+  - when an AFU device is found in the IDR by looking for the device
+    minor number, we should hold a reference on the device until after
+    the context is allocated. A reference on the AFU structure is kept
+    when the context is allocated, so we can release the reference on
+    the device after the context allocation.
+  - with the fix above, there's still another even tinier window,
+    between the time the AFU device is found in the IDR and the
+    reference on the device is taken. We can fix this one by removing
+    the IDR entry earlier, when the device setup is removed, instead
+    of waiting for the 'release' device callback. With proper locking
+    around the IDR.
 
-This was then broken by commit 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH
-setting when using native and GPIO CS") which reverted the core back
-to consistently calling set_cs with a logic level.
+Fixes: 75ca758adbaf ("ocxl: Create a clear delineation between ocxl backend & frontend")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Reviewed-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190624144148.32022-1-fbarrat@linux.ibm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This fix reverts the driver code back to its original state to match
-the current core code. This is probably a better fix as a) the set_cs
-callback is always called with consistent symantics and b) the
-inversion for SPI_CS_HIGH can be handled in the core and doesn't need
-to be coded in each driver supporting it.
-
-Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191127153936.29719-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-dw.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/misc/ocxl/file.c |   23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 076652d3d051..45972056ed8c 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -129,10 +129,11 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
- 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
- 	struct chip_data *chip = spi_get_ctldata(spi);
+--- a/drivers/misc/ocxl/file.c
++++ b/drivers/misc/ocxl/file.c
+@@ -18,18 +18,15 @@ static struct class *ocxl_class;
+ static struct mutex minors_idr_lock;
+ static struct idr minors_idr;
  
-+	/* Chip select logic is inverted from spi_set_cs() */
- 	if (chip && chip->cs_control)
--		chip->cs_control(enable);
-+		chip->cs_control(!enable);
+-static struct ocxl_file_info *find_file_info(dev_t devno)
++static struct ocxl_file_info *find_and_get_file_info(dev_t devno)
+ {
+ 	struct ocxl_file_info *info;
  
--	if (enable)
-+	if (!enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
- 	else if (dws->cs_override)
- 		dw_writel(dws, DW_SPI_SER, 0);
--- 
-2.20.1
-
+-	/*
+-	 * We don't declare an RCU critical section here, as our AFU
+-	 * is protected by a reference counter on the device. By the time the
+-	 * info reference is removed from the idr, the ref count of
+-	 * the device is already at 0, so no user API will access that AFU and
+-	 * this function can't return it.
+-	 */
++	mutex_lock(&minors_idr_lock);
+ 	info = idr_find(&minors_idr, MINOR(devno));
++	if (info)
++		get_device(&info->dev);
++	mutex_unlock(&minors_idr_lock);
+ 	return info;
+ }
+ 
+@@ -58,14 +55,16 @@ static int afu_open(struct inode *inode,
+ 
+ 	pr_debug("%s for device %x\n", __func__, inode->i_rdev);
+ 
+-	info = find_file_info(inode->i_rdev);
++	info = find_and_get_file_info(inode->i_rdev);
+ 	if (!info)
+ 		return -ENODEV;
+ 
+ 	rc = ocxl_context_alloc(&ctx, info->afu, inode->i_mapping);
+-	if (rc)
++	if (rc) {
++		put_device(&info->dev);
+ 		return rc;
+-
++	}
++	put_device(&info->dev);
+ 	file->private_data = ctx;
+ 	return 0;
+ }
+@@ -487,7 +486,6 @@ static void info_release(struct device *
+ {
+ 	struct ocxl_file_info *info = container_of(dev, struct ocxl_file_info, dev);
+ 
+-	free_minor(info);
+ 	ocxl_afu_put(info->afu);
+ 	kfree(info);
+ }
+@@ -577,6 +575,7 @@ void ocxl_file_unregister_afu(struct ocx
+ 
+ 	ocxl_file_make_invisible(info);
+ 	ocxl_sysfs_unregister_afu(info);
++	free_minor(info);
+ 	device_unregister(&info->dev);
+ }
+ 
 
 
