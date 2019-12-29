@@ -2,53 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5704AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45394C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3103C207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB15222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640145;
-	bh=J0M+hVSbn3Atgj5jvsgT6mAvuARmsdyTjsgas4eUwH4=;
+	s=default; t=1577640149;
+	bh=0JRoVYLfjOMsUG7MhhFLuHdAGeIoBdfg1ZglyG3ftgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOoVAbLXK8dA6Ha9HeOSGH++QeAjcz1bbERzAysVjwq2C7OnXaHL8asstAVvCrdYf
-	 Vf5fWL9FbBoalpZyh0gS4+bRTN5QswMXc2UGggG9/GPXTJLc0GuXil779wRPa4e6I+
-	 cL1ZVa8AN1gQ5wyfYDDGWIaepfryMUGX6jLZGcIs=
+	b=Vp8nPe+/7MRZjqlPGTFEYrQRCEr+2OdvitCoHjC4aGYUkaSgil0DAsGvPLB5mEY6R
+	 PQbcGBIbHrvurIJqQisGZgw0YpKYqGnacY8ivh7fzcCnUgFLV1Z+YHeZxl8enGITjf
+	 fhCbt76XqjctpcxlUdmBKNEHC0wKrJETZLXMiy+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfL2RWY (ORCPT
+        id S1727307AbfL2RW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:22:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:22:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbfL2RWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:21 -0500
+        id S1727273AbfL2RWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:22:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A924121D7E;
-        Sun, 29 Dec 2019 17:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11B0D21D7E;
+        Sun, 29 Dec 2019 17:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640141;
-        bh=J0M+hVSbn3Atgj5jvsgT6mAvuARmsdyTjsgas4eUwH4=;
+        s=default; t=1577640143;
+        bh=0JRoVYLfjOMsUG7MhhFLuHdAGeIoBdfg1ZglyG3ftgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWI2XDaMx60vnNnRlTpsydmUNgazCLsNsgQOwu94sRJzzcU7GZehT38Co49YBFqz8
-         mAmhlEPDGbssPatTTZ48RsnGMdKaOk4+KIqiW43jnPt9QanCiJdSo2o4gvqRrtBC9q
-         gHqoih1llvYTMP458RYlXytXzlSUPXbgppJDi6hQ=
+        b=vyX8keT2fFZcEIulljVIY4eHOdth9w7v6fNfR1YFBJDeIiZBBJpeybufvlMpC8dar
+         4Ethm69GOSCL9C8LFbPLXKteqNBL2MHGblIRMI4LteKgCxixDMRybxpjk1f/DsxgzU
+         VYooUUos1HZ/WrJi6JtO9YpUDuuycZLdqfYCNjDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 034/161] media: ov6650: Fix stored crop rectangle not in sync with hardware
-Date:   Sun, 29 Dec 2019 18:18:02 +0100
-Message-Id: <20191229162408.819102087@linuxfoundation.org>
+Subject: [PATCH 4.14 035/161] tools/power/cpupower: Fix initializer override in hsw_ext_cstates
+Date:   Sun, 29 Dec 2019 18:18:03 +0100
+Message-Id: <20191229162409.296910978@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,56 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1463b371aff0682c70141f7521db13cc4bbf3016 ]
+[ Upstream commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 ]
 
-The driver stores crop rectangle settings supposed to be in line with
-hardware state in a device private structure.  Since the driver initial
-submission, crop rectangle width and height settings are not updated
-correctly when rectangle offset settings are applied on hardware.  If
-an error occurs while the device is updated, the stored settings my no
-longer reflect hardware state and consecutive calls to .get_selection()
-as well as .get/set_fmt() may return incorrect information.  That in
-turn may affect ability of a bridge device to use correct DMA transfer
-settings if such incorrect informamtion on active frame format returned
-by .get/set_fmt() is used.
+When building cpupower with clang, the following warning appears:
 
-Assuming a failed update of the device means its actual settings haven't
-changed, update crop rectangle width and height settings stored in the
-device private structure correctly while the rectangle offset is
-successfully applied on hardware so the stored values always reflect
-actual hardware state to the extent possible.
+ utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
+ prior initialization of this subobject [-Winitializer-overrides]
+                 .desc                   = N_("Processor Package C2"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                              ^~~~~~
+ utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
+ is here
+                 .desc                   = N_("Processor Package C9"),
+                                              ^~~~~~~~~~~~~~~~~~~~~~
+ ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
+ #define N_(String) gettext_noop(String)
+                                 ^~~~~~
+ ./utils/helpers/helpers.h:23:30: note: expanded from macro
+ 'gettext_noop'
+ #define gettext_noop(String) String
+                             ^~~~~~
+ 1 warning generated.
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This appears to be a copy and paste or merge mistake because the name
+and id fields both have PC9 in them, not PC2. Remove the second
+assignment to fix the warning.
+
+Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
+Link: https://github.com/ClangBuiltLinux/linux/issues/718
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 81fa21ed2599..348296be4925 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -485,6 +485,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 
- 	ret = ov6650_reg_write(client, REG_HSTRT, sel->r.left >> 1);
- 	if (!ret) {
-+		priv->rect.width += priv->rect.left - sel->r.left;
- 		priv->rect.left = sel->r.left;
- 		ret = ov6650_reg_write(client, REG_HSTOP,
- 				       (sel->r.left + sel->r.width) >> 1);
-@@ -494,6 +495,7 @@ static int ov6650_set_selection(struct v4l2_subdev *sd,
- 		ret = ov6650_reg_write(client, REG_VSTRT, sel->r.top >> 1);
- 	}
- 	if (!ret) {
-+		priv->rect.height += priv->rect.top - sel->r.top;
- 		priv->rect.top = sel->r.top;
- 		ret = ov6650_reg_write(client, REG_VSTOP,
- 				       (sel->r.top + sel->r.height) >> 1);
+diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+index f794d6bbb7e9..3e4ff4a1cdf4 100644
+--- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
+@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
+ 	{
+ 		.name			= "PC9",
+ 		.desc			= N_("Processor Package C9"),
+-		.desc			= N_("Processor Package C2"),
+ 		.id			= PC9,
+ 		.range			= RANGE_PACKAGE,
+ 		.get_count_percent	= hsw_ext_get_count_percent,
 -- 
 2.20.1
 
