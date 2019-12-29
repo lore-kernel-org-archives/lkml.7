@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD3C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1024AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8F6207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B99207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643320;
-	bh=mx433DjZrytfBywvkEgPpFDG8hQ7EcwwP1Q+DK/lcS4=;
+	s=default; t=1577643324;
+	bh=isgcq5A8+sNFnXjA/wP+f3ekx4RJuOMulHGj/rL7Qns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ixn71vHWitdbXNiPJoVr7YNhwzbsuL2efazyO/QQsJMN4I2fvnWk0FdAVicpTtca4
-	 rv+tH+A2SY61EhCIdUCPbpUIIc+8b9rRO8b8TtUkL0V2fLDDBBmPljUQk/fDzW4BGK
-	 B/2lrW5TdtyUnL0+wfqToIm/sPs/OzuRYcIB+zac=
+	b=LSZRB23M03bZvIJfkPGbU2CXhDOdaAd4StvzI9Ppt3azWpY2XBbxWLJ7Lje4bpUHv
+	 nRY0XG85GLdRORla/pqaT6VKeMnovOqL7i6UAW+KyKNI0RKf+sS+BSnypQFF1IYGor
+	 1LWHvC0+bP4dw9fuxJqqjPakLuk36oJSMZ8Pym8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfL2RZo (ORCPT
+        id S1728010AbfL2RZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfL2RZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:42 -0500
+        id S1727990AbfL2RZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8EB720409;
-        Sun, 29 Dec 2019 17:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E494F21744;
+        Sun, 29 Dec 2019 17:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640342;
-        bh=mx433DjZrytfBywvkEgPpFDG8hQ7EcwwP1Q+DK/lcS4=;
+        s=default; t=1577640332;
+        bh=isgcq5A8+sNFnXjA/wP+f3ekx4RJuOMulHGj/rL7Qns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAlHwAzg1N10cGwKKQYO+04tCduuaydt0817XE5V1VG1pFXvpvnsVj5RJpGQkP+SH
-         UpIPrS7eDVR+tlqeO3v3yq7JUJ4c6coZStHkrlOvAsdY72bB4XCEjke9421qDRsnl6
-         jw2IRW6RHHCva2KfenrjyWz21VHSCxKxYvTF0Hgw=
+        b=cNv/zsg0YxU9ttCd6ohn4EU7nXemzZbqIDgsyZsVfuACdj0FY1FAYcwaTjhnF16lt
+         uYKxnbnShG4hboCQQuIvs+pvPR/iKsiujFouydYo5R+oZIj7oHoCgByPT9ws91FXDB
+         P8888wx7GfWgfmgYBIKxhCG7sFUbKLDP9LIqEveI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/161] cpufreq: Register drivers only after CPU devices have been registered
-Date:   Sun, 29 Dec 2019 18:19:25 +0100
-Message-Id: <20191229162433.172423934@linuxfoundation.org>
+Subject: [PATCH 4.14 113/161] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
+Date:   Sun, 29 Dec 2019 18:19:21 +0100
+Message-Id: <20191229162431.242349075@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -63,67 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Ben Zhang <benzh@chromium.org>
 
-[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
+[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
 
-The cpufreq core heavily depends on the availability of the struct
-device for CPUs and if they aren't available at the time cpufreq driver
-is registered, we will never succeed in making cpufreq work.
+The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
+while it's streaming audio over SPI. The DSP firmware turns
+on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
+does not believe that register can change by itself. When
+BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
+read the register first before write, so PLL2 power bit is
+cleared by accident.
 
-This happens due to following sequence of events:
+Marking MX-64h as volatile in regmap solved the issue.
 
-- cpufreq_register_driver()
-  - subsys_interface_register()
-  - return 0; //successful registration of driver
-
-... at a later point of time
-
-- register_cpu();
-  - device_register();
-    - bus_probe_device();
-      - sif->add_dev();
-	- cpufreq_add_dev();
-	  - get_cpu_device(); //FAILS
-  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
-  - return 0; //CPU registered successfully
-
-Because the per-cpu variable cpu_sys_devices is set only after the CPU
-device is regsitered, cpufreq will never be able to get it when
-cpufreq_add_dev() is called.
-
-This patch avoids this failure by making sure device structure of at
-least CPU0 is available when the cpufreq driver is registered, else
-return -EPROBE_DEFER.
-
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Ben Zhang <benzh@chromium.org>
+Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
+Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/codecs/rt5677.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 480e8c13567c..c798a1233e6a 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2475,6 +2475,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
- 	if (cpufreq_disabled())
- 		return -ENODEV;
- 
-+	/*
-+	 * The cpufreq core depends heavily on the availability of device
-+	 * structure, make sure they are available before proceeding further.
-+	 */
-+	if (!get_cpu_device(0))
-+		return -EPROBE_DEFER;
-+
- 	if (!driver_data || !driver_data->verify || !driver_data->init ||
- 	    !(driver_data->setpolicy || driver_data->target_index ||
- 		    driver_data->target) ||
+diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+index 1cd20b88a3a9..82ee8f4b965b 100644
+--- a/sound/soc/codecs/rt5677.c
++++ b/sound/soc/codecs/rt5677.c
+@@ -297,6 +297,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
+ 	case RT5677_I2C_MASTER_CTRL7:
+ 	case RT5677_I2C_MASTER_CTRL8:
+ 	case RT5677_HAP_GENE_CTRL2:
++	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
+ 	case RT5677_PWR_DSP_ST:
+ 	case RT5677_PRIV_DATA:
+ 	case RT5677_ASRC_22:
 -- 
 2.20.1
 
