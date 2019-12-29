@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F12C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E0AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C21C206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB75206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640890;
-	bh=uy6XzSnsfF+rRlYvmuxeFt+VH4vVhWNMPLzSt27uK4w=;
+	s=default; t=1577640893;
+	bh=8pxzieCgI+tA0pQaNOHwARrjHhW9WxTRdxKBRkyU30w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfMt8bCfBRInWMVIu9R9BzReyx0rwt1IvmFKwvZiZ0YBcS9OjmZXhL7ApiYs2Yy0a
-	 sPv/7mFcAwPZPToiPK5rUAfGm8tmfXuqVrVTfusAOPwIgykc0pS2OPO/2hcPkBWXb+
-	 9qSzi5orN3sr+7Ed3Q/CkQkUou7p/lNKDZc3T9/w=
+	b=jKrefYyzx4FsWkEVe5a9skXIXdUAxQ4aa2gs6Qgk1gllW/rLpkh3Z5UqPFtB30Yuk
+	 sFGYVbZNGrBaGfg+rCZu2x5LDYtMsEav6WqIcB8tu+FfrVLrughXj2dv9Qu6puea6m
+	 1J+PmeaHwktVJvNcibxHav14WNEbunHpLYbYLdwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbfL2Res (ORCPT
+        id S1729782AbfL2Rew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfL2Ren (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:43 -0500
+        id S1729717AbfL2Req (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A73AA20722;
-        Sun, 29 Dec 2019 17:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2956D206DB;
+        Sun, 29 Dec 2019 17:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640883;
-        bh=uy6XzSnsfF+rRlYvmuxeFt+VH4vVhWNMPLzSt27uK4w=;
+        s=default; t=1577640885;
+        bh=8pxzieCgI+tA0pQaNOHwARrjHhW9WxTRdxKBRkyU30w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VbKDccZLLdcn5wS0bAL2zp3nomrh8d3ZjrY3JxuilpDfSxzELt0dzfWI1hb8dIw7j
-         nidyFFgNs847YkbABOXoRxOmDIm2Te3uNohakyhEEWLQTZPoosGsuYcMZbx/qYUNck
-         xB4tXNNfbYg0Ydp5mhly4Rx0rXGkHGU6FluZ0+Bg=
+        b=daDGsU420ZNhVATFoCA9WO7edtIyA9uGoZyzm1tjNtz6CQNezTnpPDiwBYJWZYiBZ
+         zb1j3cpcqUHV18fTHaIf3hYjgqo03fXsVlhFz8armUfl0sR1+APdzXwhFks5jPgGmo
+         JR02zEW1U4pPeR7l8zoXQ7kZZI/EiI1yZ0Pt4+kQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/219] ASoC: wm2200: add missed operations in remove and probe failure
-Date:   Sun, 29 Dec 2019 18:19:33 +0100
-Message-Id: <20191229162534.724503078@linuxfoundation.org>
+Subject: [PATCH 4.19 180/219] crypto: sun4i-ss - Fix 64-bit size_t warnings
+Date:   Sun, 29 Dec 2019 18:19:42 +0100
+Message-Id: <20191229162536.066360664@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,51 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 2dab09be49a1e7a4dd13cb47d3a1441a2ef33a87 ]
+[ Upstream commit d6e9da21ee8246b5e556b3b153401ab045adb986 ]
 
-This driver misses calls to pm_runtime_disable and regulator_bulk_disable
-in remove and a call to free_irq in probe failure.
-Add the calls to fix it.
+If you try to compile this driver on a 64-bit platform then you
+will get warnings because it mixes size_t with unsigned int which
+only works on 32-bit.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118073633.28237-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch fixes all of the warnings.
+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm2200.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/codecs/wm2200.c b/sound/soc/codecs/wm2200.c
-index deff65161504..0a3b746fb909 100644
---- a/sound/soc/codecs/wm2200.c
-+++ b/sound/soc/codecs/wm2200.c
-@@ -2413,6 +2413,8 @@ static int wm2200_i2c_probe(struct i2c_client *i2c,
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+index 5cf64746731a..22e491857925 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+@@ -81,7 +81,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
+ 	oi = 0;
+ 	oo = 0;
+ 	do {
+-		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
++		todo = min(rx_cnt, ileft);
++		todo = min_t(size_t, todo, (mi.length - oi) / 4);
+ 		if (todo) {
+ 			ileft -= todo;
+ 			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
+@@ -96,7 +97,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
+ 		rx_cnt = SS_RXFIFO_SPACES(spaces);
+ 		tx_cnt = SS_TXFIFO_SPACES(spaces);
  
- err_pm_runtime:
- 	pm_runtime_disable(&i2c->dev);
-+	if (i2c->irq)
-+		free_irq(i2c->irq, wm2200);
- err_reset:
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
-@@ -2429,12 +2431,15 @@ static int wm2200_i2c_remove(struct i2c_client *i2c)
- {
- 	struct wm2200_priv *wm2200 = i2c_get_clientdata(i2c);
- 
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm2200);
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
- 	if (wm2200->pdata.ldo_ena)
- 		gpio_set_value_cansleep(wm2200->pdata.ldo_ena, 0);
-+	regulator_bulk_disable(ARRAY_SIZE(wm2200->core_supplies),
-+			       wm2200->core_supplies);
- 
- 	return 0;
- }
+-		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
++		todo = min(tx_cnt, oleft);
++		todo = min_t(size_t, todo, (mo.length - oo) / 4);
+ 		if (todo) {
+ 			oleft -= todo;
+ 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
+@@ -220,7 +222,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 			 * todo is the number of consecutive 4byte word that we
+ 			 * can read from current SG
+ 			 */
+-			todo = min3(rx_cnt, ileft / 4, (mi.length - oi) / 4);
++			todo = min(rx_cnt, ileft / 4);
++			todo = min_t(size_t, todo, (mi.length - oi) / 4);
+ 			if (todo && !ob) {
+ 				writesl(ss->base + SS_RXFIFO, mi.addr + oi,
+ 					todo);
+@@ -234,8 +237,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 				 * we need to be able to write all buf in one
+ 				 * pass, so it is why we min() with rx_cnt
+ 				 */
+-				todo = min3(rx_cnt * 4 - ob, ileft,
+-					    mi.length - oi);
++				todo = min(rx_cnt * 4 - ob, ileft);
++				todo = min_t(size_t, todo, mi.length - oi);
+ 				memcpy(buf + ob, mi.addr + oi, todo);
+ 				ileft -= todo;
+ 				oi += todo;
+@@ -255,7 +258,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 		spaces = readl(ss->base + SS_FCSR);
+ 		rx_cnt = SS_RXFIFO_SPACES(spaces);
+ 		tx_cnt = SS_TXFIFO_SPACES(spaces);
+-		dev_dbg(ss->dev, "%x %u/%u %u/%u cnt=%u %u/%u %u/%u cnt=%u %u\n",
++		dev_dbg(ss->dev,
++			"%x %u/%zu %u/%u cnt=%u %u/%zu %u/%u cnt=%u %u\n",
+ 			mode,
+ 			oi, mi.length, ileft, areq->cryptlen, rx_cnt,
+ 			oo, mo.length, oleft, areq->cryptlen, tx_cnt, ob);
+@@ -263,7 +267,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 		if (!tx_cnt)
+ 			continue;
+ 		/* todo in 4bytes word */
+-		todo = min3(tx_cnt, oleft / 4, (mo.length - oo) / 4);
++		todo = min(tx_cnt, oleft / 4);
++		todo = min_t(size_t, todo, (mo.length - oo) / 4);
+ 		if (todo) {
+ 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
+ 			oleft -= todo * 4;
+@@ -287,7 +292,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 				 * no more than remaining buffer
+ 				 * no need to test against oleft
+ 				 */
+-				todo = min(mo.length - oo, obl - obo);
++				todo = min_t(size_t,
++					     mo.length - oo, obl - obo);
+ 				memcpy(mo.addr + oo, bufo + obo, todo);
+ 				oleft -= todo;
+ 				obo += todo;
 -- 
 2.20.1
 
