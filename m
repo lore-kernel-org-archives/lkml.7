@@ -2,640 +2,97 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF17FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECC6C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A620722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604A720718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfL2NdT convert rfc822-to-8bit (ORCPT
+        id S1726479AbfL2Njc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 08:33:19 -0500
-Received: from mailoutvs30.siol.net ([185.57.226.221]:60211 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726160AbfL2NdT (ORCPT
+        Sun, 29 Dec 2019 08:39:32 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39894 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726160AbfL2Njb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 08:33:19 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 345EA521E56;
-        Sun, 29 Dec 2019 14:33:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id k4KDYSjbhKdQ; Sun, 29 Dec 2019 14:33:13 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 342E3521E60;
-        Sun, 29 Dec 2019 14:33:13 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id C6491521E56;
-        Sun, 29 Dec 2019 14:33:12 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC 3/4] drm/sun4i: Reimplement plane z position setting logic
-Date:   Sun, 29 Dec 2019 14:33:12 +0100
-Message-ID: <2194917.NG923GbCHz@jernej-laptop>
-In-Reply-To: <CAODwZ7u81WkAZ0=2KuwX56esVLH+nAt0VbpTSmaJcTvMMjGffg@mail.gmail.com>
-References: <20191228202818.69908-1-roman.stratiienko@globallogic.com> <2015568.Icojqenx9y@jernej-laptop> <CAODwZ7u81WkAZ0=2KuwX56esVLH+nAt0VbpTSmaJcTvMMjGffg@mail.gmail.com>
-MIME-Version: 1.0
+        Sun, 29 Dec 2019 08:39:31 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TmAx.Hp_1577626765;
+Received: from 30.39.3.192(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TmAx.Hp_1577626765)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 29 Dec 2019 21:39:26 +0800
+Content-Type: text/plain;
+        charset=gb2312
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
+From:   teawater <teawaterz@linux.alibaba.com>
+In-Reply-To: <20191219112618.GA72828@chrisdown.name>
+Date:   Sun, 29 Dec 2019 21:38:00 +0800
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
 Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1E6A7BC4-A983-4C65-9DA9-4D3A26D4D31D@linux.alibaba.com>
+References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
+ <20191218140952.GA255739@chrisdown.name>
+ <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
+ <20191219112618.GA72828@chrisdown.name>
+To:     Chris Down <chris@chrisdown.name>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne nedelja, 29. december 2019 ob 14:13:06 CET je Roman Stratiienko 
-napisal(a):
-> My proposal is to go with DRM_DEBUG_DRIVER for now.
-> In case stable branches would be interested in these fixes, it will be
-> easier to backport.
 
-Fair enough, but you need to add at least Fixes tag.
 
-Best regards,
-Jernej
-
+> 在 2019年12月19日，19:26，Chris Down <chris@chrisdown.name> 写道：
 > 
-> Also I am using v5.4 for testing since Google AOSP patches does not
-> work correctly with mainline and missing for kernel-next.
-> Maintaining 2 variants will be much harder for me.
+> Hi Hui,
 > 
-> On Sun, Dec 29, 2019 at 3:02 PM Jernej 艩krabec <jernej.skrabec@siol.net> 
-wrote:
-> > Dne nedelja, 29. december 2019 ob 13:47:38 CET je Roman Stratiienko
-> > 
-> > napisal(a):
-> > > On Sun, Dec 29, 2019 at 2:18 PM Jernej 艩krabec <jernej.skrabec@siol.net>
-> > 
-> > wrote:
-> > > > Dne nedelja, 29. december 2019 ob 13:08:19 CET je Roman Stratiienko
-> > > > 
-> > > > napisal(a):
-> > > > > Hello Jernej,
-> > > > > 
-> > > > > Thank you for review.
-> > > > > 
-> > > > > On Sun, Dec 29, 2019 at 11:40 AM Jernej 艩krabec
-> > > > > <jernej.skrabec@siol.net>
-> > > > 
-> > > > wrote:
-> > > > > > Hi!
-> > > > > > 
-> > > > > > Dne sobota, 28. december 2019 ob 21:28:17 CET je
-> > > > > > 
-> > > > > > roman.stratiienko@globallogic.com napisal(a):
-> > > > > > > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > > > > > > 
-> > > > > > > To set blending channel order register software needs to know
-> > > > > > > state
-> > > > > > > and
-> > > > > > > position of each channel, which impossible at plane commit
-> > > > > > > stage.
-> > > > > > > 
-> > > > > > > Move this procedure to atomic_flush stage, where all necessary
-> > > > > > > information
-> > > > > > > is available.
-> > > > > > > 
-> > > > > > > Signed-off-by: Roman Stratiienko
-> > > > > > > <roman.stratiienko@globallogic.com>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > >  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 47
-> > > > > > >  +++++++++++++++++++++++++-
-> > > > > > >  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  3 ++
-> > > > > > >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 42
-> > > > > > >  ++++-------------------
-> > > > > > >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 39
-> > > > > > >  +++------------------
-> > > > > > >  4 files changed, 60 insertions(+), 71 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > > > > b/drivers/gpu/drm/sun4i/sun8i_mixer.c index
-> > > > > > > bb9a665fd053..da84fccf7784
-> > > > > > > 100644
-> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > > > > > > @@ -307,8 +307,47 @@ static void sun8i_atomic_begin(struct
-> > > > > > > sunxi_engine
-> > > > > > > *engine,
-> > > > > > > 
-> > > > > > >  static void sun8i_mixer_commit(struct sunxi_engine *engine)
-> > > > > > >  {
-> > > > > > > 
-> > > > > > > -     DRM_DEBUG_DRIVER("Committing changes\n");
-> > > > > > > +     struct sun8i_mixer *mixer = engine_to_sun8i_mixer(engine);
-> > > > > > > +     u32 base = sun8i_blender_base(mixer);
-> > > > > > > +     int i, j;
-> > > > > > > +     int channel_by_zpos[4] = {-1, -1, -1, -1};
-> > > > > > > +     u32 route = 0, pipe_ctl = 0;
-> > > > > > > +
-> > > > > > > +     DRM_DEBUG_DRIVER("Update blender routing\n");
-> > > > > > 
-> > > > > > Use drm_dbg().
-> > > > > > 
-> > > > > > > +     for (i = 0; i < 4; i++) {
-> > > > > > > +             int zpos = mixer->channel_zpos[i];
-> > > > > > 
-> > > > > > channel_zpos can hold 5 elements which is also theoretical maximum
-> > > > > > for
-> > > > > > current HW design. Why do you check only 4 elements?
-> > > > > 
-> > > > > I'll use plane_cnt as it done in mixer_bind
-> > > > > 
-> > > > > > It would be great to introduce a macro like SUN8I_MIXER_MAX_LAYERS
-> > > > > > so
-> > > > > > everyone would understand where this number comes from.
-> > > > > 
-> > > > > Will do.
-> > > > > 
-> > > > > > > +
-> > > > > > > +             if (zpos >= 0 && zpos < 4)
-> > > > > > > +                     channel_by_zpos[zpos] = i;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     j = 0;
-> > > > > > > +     for (i = 0; i < 4; i++) {
-> > > > > > > +             int ch = channel_by_zpos[i];
-> > > > > > > +
-> > > > > > > +             if (ch >= 0) {
-> > > > > > > +                     pipe_ctl |=
-> > > > > > > SUN8I_MIXER_BLEND_PIPE_CTL_EN(j);
-> > > > > > > +                     route |= ch <<
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(j);
-> > > > > > 
-> > > > > > > +                     j++;
-> > > > > > > +             }
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     for (i = 0; i < 4 && j < 4; i++) {
-> > > > > > > +             int zpos = mixer->channel_zpos[i];
-> > > > > > > 
-> > > > > > > +             if (zpos < 0) {
-> > > > > > > +                     route |= i <<
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(j);
-> > > > > > 
-> > > > > > > +                     j++;
-> > > > > > > +             }
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     regmap_update_bits(mixer->engine.regs,
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL(base),
-> > > > > > 
-> > > > > > > +                        SUN8I_MIXER_BLEND_PIPE_CTL_EN_MSK,
-> > > > > > 
-> > > > > > pipe_ctl);
-> > > > > > 
-> > > > > > > +
-> > > > > > > +     regmap_write(mixer->engine.regs,
-> > > > > > > +                  SUN8I_MIXER_BLEND_ROUTE(base), route);
-> > > > > > > +
-> > > > > > > +     DRM_DEBUG_DRIVER("Committing changes\n");
-> > > > > > 
-> > > > > > Use drm_dbg().
-> > > > > 
-> > > > > According to
-> > > > > https://github.com/torvalds/linux/commit/99a954874e7b9f0c80584765755
-> > > > > 93b3
-> > > > > beb
-> > > > > 5731a5#diff-b0cd2d683c6afbab7bd54173cfd3d3ecR289 ,
-> > > > > DRM_DEBUG_DRIVER uses drm_dbg.
-> > > > > Also, using drm_dbg with category macro would require larger indent,
-> > > > > making harder to fit in 80 chars limit.
-> > > > 
-> > > > From what I can see, category is already defined by macro name. Check
-> > > > here:
-> > > > https://cgit.freedesktop.org/drm/drm-misc/tree/include/drm/drm_print.h
-> > > > #n46
-> > > > 5
-> > > > 
-> > > > So it should be actually shorter.
-> > > 
-> > > Ah, it something very recent.
-> > > drm_dbg also require drm_device struct
-> > > Do you know the best way to extract it from `struct engine`?
-> > 
-> > I don't think there is a way. I guess we can solve this later. Maxime, any
-> > thoughts?
-> > 
-> > Best regards,
-> > Jernej
-> > 
-> > > > > Are there any plans to deprecate DRM_DEBUG_DRIVER macro?
-> > > > 
-> > > > Yes, at least I understand following commit message in such manner:
-> > > > https://cgit.freedesktop.org/drm/drm-misc/commit/?
-> > > > id=93ccfa9a4eca482216c5caf88be77e5ffa0d744a
-> > > > 
-> > > > Best regards,
-> > > > Jernej
-> > > > 
-> > > > > > >       regmap_write(engine->regs, SUN8I_MIXER_GLOBAL_DBUFF,
-> > > > > > >       
-> > > > > > >                    SUN8I_MIXER_GLOBAL_DBUFF_ENABLE);
-> > > > > > >  
-> > > > > > >  }
-> > > > > > > 
-> > > > > > > @@ -422,6 +461,12 @@ static int sun8i_mixer_bind(struct device
-> > > > > > > *dev,
-> > > > > > > struct
-> > > > > > > device *master, mixer->engine.ops = &sun8i_engine_ops;
-> > > > > > > 
-> > > > > > >       mixer->engine.node = dev->of_node;
-> > > > > > > 
-> > > > > > > +     mixer->channel_zpos[0] = -1;
-> > > > > > > +     mixer->channel_zpos[1] = -1;
-> > > > > > > +     mixer->channel_zpos[2] = -1;
-> > > > > > > +     mixer->channel_zpos[3] = -1;
-> > > > > > > +     mixer->channel_zpos[4] = -1;
-> > > > > > > +
-> > > > > > 
-> > > > > > for loop would be better, especially using proposed macro.
-> > > > > 
-> > > > > I'll put it into already existent for-loop below.
-> > > > > 
-> > > > > > Best regards,
-> > > > > > Jernej
-> > > > > > 
-> > > > > > >       /*
-> > > > > > >       
-> > > > > > >        * While this function can fail, we shouldn't do anything
-> > > > > > >        * if this happens. Some early DE2 DT entries don't
-> > > > > > >        provide
-> > > > > > > 
-> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> > > > > > > b/drivers/gpu/drm/sun4i/sun8i_mixer.h index
-> > > > > > > 915479cc3077..9c2ff87923d8
-> > > > > > > 100644
-> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> > > > > > > @@ -178,6 +178,9 @@ struct sun8i_mixer {
-> > > > > > > 
-> > > > > > >       struct clk                      *bus_clk;
-> > > > > > >       struct clk                      *mod_clk;
-> > > > > > > 
-> > > > > > > +
-> > > > > > > +     /* -1 means that layer is disabled */
-> > > > > > > +     int channel_zpos[5];
-> > > > > > > 
-> > > > > > >  };
-> > > > > > >  
-> > > > > > >  static inline struct sun8i_mixer *
-> > > > > > > 
-> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > > > > b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index
-> > > > > > > 893076716070..23c2f4b68c89
-> > > > > > > 100644
-> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> > > > > > > @@ -24,12 +24,10 @@
-> > > > > > > 
-> > > > > > >  #include "sun8i_ui_scaler.h"
-> > > > > > >  
-> > > > > > >  static void sun8i_ui_layer_enable(struct sun8i_mixer *mixer,
-> > > > > > >  int
-> > > > > > >  channel,
-> > > > > > > 
-> > > > > > > -                               int overlay, bool enable,
-> > > > > > 
-> > > > > > unsigned int zpos,
-> > > > > > 
-> > > > > > > -                               unsigned int old_zpos)
-> > > > > > > +                               int overlay, bool enable,
-> > > > > > 
-> > > > > > unsigned int zpos)
-> > > > > > 
-> > > > > > >  {
-> > > > > > > 
-> > > > > > > -     u32 val, bld_base, ch_base;
-> > > > > > > +     u32 val, ch_base;
-> > > > > > > 
-> > > > > > > -     bld_base = sun8i_blender_base(mixer);
-> > > > > > > 
-> > > > > > >       ch_base = sun8i_channel_base(mixer, channel);
-> > > > > > >       
-> > > > > > >       DRM_DEBUG_DRIVER("%sabling channel %d overlay %d\n",
-> > > > > > > 
-> > > > > > > @@ -44,32 +42,7 @@ static void sun8i_ui_layer_enable(struct
-> > > > > > > sun8i_mixer
-> > > > > > > *mixer, int channel, SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base,
-> > > > > > > overlay),
-> > > > > > > 
-> > > > > > >                          SUN8I_MIXER_CHAN_UI_LAYER_ATTR_EN,
-> > > > > > >                          val);
-> > > > > > > 
-> > > > > > > -     if (!enable || zpos != old_zpos) {
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
-> > > > > > 
-> > > > > > > -                                0);
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
-> > > > > > 
-> > > > > > > -                                0);
-> > > > > > > -     }
-> > > > > > > -
-> > > > > > > -     if (enable) {
-> > > > > > > -             val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> > > > > > 
-> > > > > > > -                                val, val);
-> > > > > > > -
-> > > > > > > -             val = channel <<
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(zpos);
-> > > > > > 
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
-> > > > > > 
-> > > > > > > -                                val);
-> > > > > > > -     }
-> > > > > > > +     mixer->channel_zpos[channel] = enable ? zpos : -1;
-> > > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static int sun8i_ui_layer_update_coord(struct sun8i_mixer
-> > > > > > >  *mixer,
-> > > > > > >  int
-> > > > > > > 
-> > > > > > > channel, @@ -235,11 +208,9 @@ static void
-> > > > > > > sun8i_ui_layer_atomic_disable(struct drm_plane *plane, struct
-> > > > > > > drm_plane_state *old_state)
-> > > > > > > 
-> > > > > > >  {
-> > > > > > >  
-> > > > > > >       struct sun8i_ui_layer *layer =
-> > > > > > >       plane_to_sun8i_ui_layer(plane);
-> > > > > > > 
-> > > > > > > -     unsigned int old_zpos = old_state->normalized_zpos;
-> > > > > > > 
-> > > > > > >       struct sun8i_mixer *mixer = layer->mixer;
-> > > > > > > 
-> > > > > > > -     sun8i_ui_layer_enable(mixer, layer->channel,
-> > > > > > > layer->overlay,
-> > > > > > 
-> > > > > > false, 0,
-> > > > > > 
-> > > > > > > -                           old_zpos);
-> > > > > > > +     sun8i_ui_layer_enable(mixer, layer->channel,
-> > > > > > > layer->overlay,
-> > > > > > > false,
-> > > > > > 
-> > > > > > 0);
-> > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static void sun8i_ui_layer_atomic_update(struct drm_plane
-> > > > > > >  *plane,
-> > > > > > > 
-> > > > > > > @@ -247,12 +218,11 @@ static void
-> > > > > > > sun8i_ui_layer_atomic_update(struct
-> > > > > > > drm_plane *plane, {
-> > > > > > > 
-> > > > > > >       struct sun8i_ui_layer *layer =
-> > > > > > >       plane_to_sun8i_ui_layer(plane);
-> > > > > > >       unsigned int zpos = plane->state->normalized_zpos;
-> > > > > > > 
-> > > > > > > -     unsigned int old_zpos = old_state->normalized_zpos;
-> > > > > > > 
-> > > > > > >       struct sun8i_mixer *mixer = layer->mixer;
-> > > > > > >       
-> > > > > > >       if (!plane->state->visible) {
-> > > > > > >       
-> > > > > > >               sun8i_ui_layer_enable(mixer, layer->channel,
-> > > > > > > 
-> > > > > > > -                                   layer->overlay, false, 0,
-> > > > > > 
-> > > > > > old_zpos);
-> > > > > > 
-> > > > > > > +                                   layer->overlay, false, 0);
-> > > > > > > 
-> > > > > > >               return;
-> > > > > > >       
-> > > > > > >       }
-> > > > > > > 
-> > > > > > > @@ -263,7 +233,7 @@ static void
-> > > > > > > sun8i_ui_layer_atomic_update(struct
-> > > > > > > drm_plane *plane, sun8i_ui_layer_update_buffer(mixer,
-> > > > > > > layer->channel,
-> > > > > > > 
-> > > > > > >                                    layer->overlay, plane);
-> > > > > > >       
-> > > > > > >       sun8i_ui_layer_enable(mixer, layer->channel,
-> > > > > > >       layer->overlay,
-> > > > > > > 
-> > > > > > > -                           true, zpos, old_zpos);
-> > > > > > > +                           true, zpos);
-> > > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static struct drm_plane_helper_funcs
-> > > > > > >  sun8i_ui_layer_helper_funcs =
-> > > > > > >  {
-> > > > > > > 
-> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > > > > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index
-> > > > > > > 42d445d23773..97cbc98bf781
-> > > > > > > 100644
-> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> > > > > > > @@ -17,8 +17,7 @@
-> > > > > > > 
-> > > > > > >  #include "sun8i_vi_scaler.h"
-> > > > > > >  
-> > > > > > >  static void sun8i_vi_layer_enable(struct sun8i_mixer *mixer,
-> > > > > > >  int
-> > > > > > >  channel,
-> > > > > > > 
-> > > > > > > -                               int overlay, bool enable,
-> > > > > > 
-> > > > > > unsigned int zpos,
-> > > > > > 
-> > > > > > > -                               unsigned int old_zpos)
-> > > > > > > +                               int overlay, bool enable,
-> > > > > > 
-> > > > > > unsigned int zpos)
-> > > > > > 
-> > > > > > >  {
-> > > > > > >  
-> > > > > > >       u32 val, bld_base, ch_base;
-> > > > > > > 
-> > > > > > > @@ -37,32 +36,7 @@ static void sun8i_vi_layer_enable(struct
-> > > > > > > sun8i_mixer
-> > > > > > > *mixer, int channel, SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> > > > > > > overlay),
-> > > > > > > 
-> > > > > > >                          SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN,
-> > > > > > >                          val);
-> > > > > > > 
-> > > > > > > -     if (!enable || zpos != old_zpos) {
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL_EN(old_zpos),
-> > > > > > 
-> > > > > > > -                                0);
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(old_zpos),
-> > > > > > 
-> > > > > > > -                                0);
-> > > > > > > -     }
-> > > > > > > -
-> > > > > > > -     if (enable) {
-> > > > > > > -             val = SUN8I_MIXER_BLEND_PIPE_CTL_EN(zpos);
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_PIPE_CTL(bld_base),
-> > > > > > 
-> > > > > > > -                                val, val);
-> > > > > > > -
-> > > > > > > -             val = channel <<
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(zpos);
-> > > > > > 
-> > > > > > > -
-> > > > > > > -             regmap_update_bits(mixer->engine.regs,
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE(bld_base),
-> > > > > > 
-> > > > > > > -
-> > > > > > 
-> > > > > > SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(zpos),
-> > > > > > 
-> > > > > > > -                                val);
-> > > > > > > -     }
-> > > > > > > +     mixer->channel_zpos[channel] = enable ? zpos : -1;
-> > > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static int sun8i_vi_layer_update_coord(struct sun8i_mixer
-> > > > > > >  *mixer,
-> > > > > > >  int
-> > > > > > > 
-> > > > > > > channel, @@ -350,11 +324,9 @@ static void
-> > > > > > > sun8i_vi_layer_atomic_disable(struct drm_plane *plane, struct
-> > > > > > > drm_plane_state *old_state)
-> > > > > > > 
-> > > > > > >  {
-> > > > > > >  
-> > > > > > >       struct sun8i_vi_layer *layer =
-> > > > > > >       plane_to_sun8i_vi_layer(plane);
-> > > > > > > 
-> > > > > > > -     unsigned int old_zpos = old_state->normalized_zpos;
-> > > > > > > 
-> > > > > > >       struct sun8i_mixer *mixer = layer->mixer;
-> > > > > > > 
-> > > > > > > -     sun8i_vi_layer_enable(mixer, layer->channel,
-> > > > > > > layer->overlay,
-> > > > > > 
-> > > > > > false, 0,
-> > > > > > 
-> > > > > > > -                           old_zpos);
-> > > > > > > +     sun8i_vi_layer_enable(mixer, layer->channel,
-> > > > > > > layer->overlay,
-> > > > > > > false,
-> > > > > > 
-> > > > > > 0);
-> > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static void sun8i_vi_layer_atomic_update(struct drm_plane
-> > > > > > >  *plane,
-> > > > > > > 
-> > > > > > > @@ -362,12 +334,11 @@ static void
-> > > > > > > sun8i_vi_layer_atomic_update(struct
-> > > > > > > drm_plane *plane, {
-> > > > > > > 
-> > > > > > >       struct sun8i_vi_layer *layer =
-> > > > > > >       plane_to_sun8i_vi_layer(plane);
-> > > > > > >       unsigned int zpos = plane->state->normalized_zpos;
-> > > > > > > 
-> > > > > > > -     unsigned int old_zpos = old_state->normalized_zpos;
-> > > > > > > 
-> > > > > > >       struct sun8i_mixer *mixer = layer->mixer;
-> > > > > > >       
-> > > > > > >       if (!plane->state->visible) {
-> > > > > > >       
-> > > > > > >               sun8i_vi_layer_enable(mixer, layer->channel,
-> > > > > > > 
-> > > > > > > -                                   layer->overlay, false, 0,
-> > > > > > 
-> > > > > > old_zpos);
-> > > > > > 
-> > > > > > > +                                   layer->overlay, false, 0);
-> > > > > > > 
-> > > > > > >               return;
-> > > > > > >       
-> > > > > > >       }
-> > > > > > > 
-> > > > > > > @@ -378,7 +349,7 @@ static void
-> > > > > > > sun8i_vi_layer_atomic_update(struct
-> > > > > > > drm_plane *plane, sun8i_vi_layer_update_buffer(mixer,
-> > > > > > > layer->channel,
-> > > > > > > 
-> > > > > > >                                    layer->overlay, plane);
-> > > > > > >       
-> > > > > > >       sun8i_vi_layer_enable(mixer, layer->channel,
-> > > > > > >       layer->overlay,
-> > > > > > > 
-> > > > > > > -                           true, zpos, old_zpos);
-> > > > > > > +                           true, zpos);
-> > > > > > > 
-> > > > > > >  }
-> > > > > > >  
-> > > > > > >  static struct drm_plane_helper_funcs
-> > > > > > >  sun8i_vi_layer_helper_funcs =
-> > > > > > >  {
+> teawater writes:
+>> Memory.min, low, high can affect the global shrink behavior.  They can help task keep some pages to help protect performance.
+>> 
+>> But what I want is the low priority tasks (the tasks that performance is not very important) do more shrink first.  And when low priority tasks doesn’t have enough pages to be dropped and system need more free page, shrink the high priority task’s pages.  Because at this time, system’s stable is more important than the performance of priority task.
+>> With memory.min and memory.low, I have no idea to config them to support this.  That is why I add global shrink priority.
+> 
+> For sure, that's what I'm suggesting you use memory.{min,low} for -- you define some subset of the cgroup hierarchy as "protected", and then you bias reclaim away from protected cgroups (and thus *towards* unprotected cgroups) by biasing the size of LRU scanning. See my patch that went into 5.4 and the examples in the commit message:
+> 
+>    commit 9783aa9917f8ae24759e67bf882f1aba32fe4ea1
+>    Author: Chris Down <chris@chrisdown.name>
+>    Date:   Sun Oct 6 17:58:32 2019 -0700
+> 
+>        mm, memcg: proportional memory.{low,min} reclaim
+> 
+> You can see how we're using memory.{low,min} to achieve this in this case study[0]. It's not exactly equivalent technically to your solution, but the end goals are similar.
+> 
+> Thanks,
+> 
+> Chris
+> 
+> 0: https://facebookmicrosites.github.io/cgroup2/docs/overview.html#case-study-the-fbtax2-project
 
+Hi Chris,
 
+I have another idea about global shrink priority.
+
+In the memory-constrained and complex multitasking environment such as an Android system may require more complex performance priority.
+For example, the tasks of app in the font, they need high priority because low priority will affect the user experience at once.
+The tasks of app in background should have lower priority than the first one.  And sometime, each app should have different priority.  Because some apps are frequently used.  They should have high priority than other background apps.
+The daemons should have lower priority than background apps.  Because most of them will not affect the user experience.
+
+Do you think this environment is suitable for global shrink priority.
+
+Best,
+Hui
 
 
