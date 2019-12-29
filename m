@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0F5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAD5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBC4206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819A3206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641530;
-	bh=/+a2iRJ9NHIO8tf39rt52D+4AhivlCFfPm+5SjMDWoQ=;
+	s=default; t=1577641534;
+	bh=klA1dm5kgg50maNAiN19KUUA+b6yPhrYEOj84iFAtAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT5C1gQa+d4p4SH8ssRt0VTyFWpAuYKL4mA3SOt803Bx/GQD81phnkTosqzbS7QIL
-	 MeIKX8pcA+vNg9i2Grbv4weFzWJZtGrJ8ZpSCdfZn7RkulMSsMrS6w+o7NVn5gbkoq
-	 X9B44PsoQAUJudqTbgiCW8bEAXP/qADMobd442bk=
+	b=heG7EpZ7r6/MqWs4A1tG2rMKdWhxOrjGF5kQW+er7D6Zj74prirQ+QI8YtnwGlMx0
+	 ILg76ILAvDfkU/YZFpY9R9T8c1H5EL11ginQec/SmQjweHEXoSxhtOrePjnq/7nVAd
+	 UXgGzuX8rEInwOnacQ+w6pnbAt6xjT4Z8DS6W9uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfL2Rp3 (ORCPT
+        id S1730626AbfL2Rpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54532 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730901AbfL2Rp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:26 -0500
+        id S1730909AbfL2Rp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86947206A4;
-        Sun, 29 Dec 2019 17:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4105206DB;
+        Sun, 29 Dec 2019 17:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641526;
-        bh=/+a2iRJ9NHIO8tf39rt52D+4AhivlCFfPm+5SjMDWoQ=;
+        s=default; t=1577641528;
+        bh=klA1dm5kgg50maNAiN19KUUA+b6yPhrYEOj84iFAtAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5EmOQQQkuJ/Radq8Hs5rSGqDUjJPQIv1pFfH1Uc8pzFyO82v+zpW/WXFz578+lH0
-         Op2kNfWGMS2aD4mlKmmDGGSHVjTXRvDdKat+UjExxqZNxJKsXy2jYr/tHAjXRlaA3D
-         dvq08S51CBEBGYeeOvaLXiWD8kWjrnFFZIeZuZcc=
+        b=CYMLlAanXzhTETnBk8ortz1CulWoC0TNyVMfC8bKImWCX1Y2RtUCfoUreu2HXaiMk
+         6Sg7xBPx4i7gGA1UUYmwR20r2s4VQC1BIiA+sbt3D0CM7gRT0yEzmRwT7rp7uZQYX3
+         BmfgF1WJPDz0mNIHc6mt7pfJXEWUV/hooX1hHRwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 100/434] drm/amd/display: fix struct init in update_bounding_box
-Date:   Sun, 29 Dec 2019 18:22:33 +0100
-Message-Id: <20191229172708.239102756@linuxfoundation.org>
+Subject: [PATCH 5.4 064/434] staging: rtl8192u: fix multiple memory leaks on error path
+Date:   Sun, 29 Dec 2019 18:21:57 +0100
+Message-Id: <20191229172706.023536797@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,45 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 960b6f4f2d2e96d5f7ffe2854e0040b46cafbd36 ]
+[ Upstream commit ca312438cf176a16d4b89350cade8789ba8d7133 ]
 
-dcn20_resource.c:2636:9: error: missing braces around initializer [-Werror=missing-braces]
-  struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-         ^
+In rtl8192_tx on error handling path allocated urbs and also skb should
+be released.
 
-Fixes: 7ed4e6352c16f ("drm/amd/display: Add DCN2 HW Sequencer and Resource")
-
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Link: https://lore.kernel.org/r/20190920025137.29407-1-navid.emamdoost@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8192u/r8192U_core.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index ebe67c34dabf..78b2cc2e122f 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -3041,7 +3041,7 @@ static void cap_soc_clocks(
- static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st *bb,
- 		struct pp_smu_nv_clock_table *max_clocks, unsigned int *uclk_states, unsigned int num_states)
- {
--	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES] = {0};
-+	struct _vcs_dpi_voltage_scaling_st calculated_states[MAX_CLOCK_LIMIT_STATES];
- 	int i;
- 	int num_calculated_states = 0;
- 	int min_dcfclk = 0;
-@@ -3049,6 +3049,8 @@ static void update_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_
- 	if (num_states == 0)
- 		return;
+diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
+index 2821411878ce..511136dce3a4 100644
+--- a/drivers/staging/rtl8192u/r8192U_core.c
++++ b/drivers/staging/rtl8192u/r8192U_core.c
+@@ -1422,7 +1422,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		(struct tx_fwinfo_819x_usb *)(skb->data + USB_HWDESC_HEADER_LEN);
+ 	struct usb_device *udev = priv->udev;
+ 	int pend;
+-	int status;
++	int status, rt = -1;
+ 	struct urb *tx_urb = NULL, *tx_urb_zero = NULL;
+ 	unsigned int idx_pipe;
  
-+	memset(calculated_states, 0, sizeof(calculated_states));
+@@ -1566,8 +1566,10 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 		}
+ 		if (bSend0Byte) {
+ 			tx_urb_zero = usb_alloc_urb(0, GFP_ATOMIC);
+-			if (!tx_urb_zero)
+-				return -ENOMEM;
++			if (!tx_urb_zero) {
++				rt = -ENOMEM;
++				goto error;
++			}
+ 			usb_fill_bulk_urb(tx_urb_zero, udev,
+ 					  usb_sndbulkpipe(udev, idx_pipe),
+ 					  &zero, 0, tx_zero_isr, dev);
+@@ -1577,7 +1579,7 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 					 "Error TX URB for zero byte %d, error %d",
+ 					 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 					 status);
+-				return -1;
++				goto error;
+ 			}
+ 		}
+ 		netif_trans_update(dev);
+@@ -1588,7 +1590,12 @@ short rtl8192_tx(struct net_device *dev, struct sk_buff *skb)
+ 	RT_TRACE(COMP_ERR, "Error TX URB %d, error %d",
+ 		 atomic_read(&priv->tx_pending[tcb_desc->queue_index]),
+ 		 status);
+-	return -1;
 +
- 	if (dc->bb_overrides.min_dcfclk_mhz > 0)
- 		min_dcfclk = dc->bb_overrides.min_dcfclk_mhz;
- 	else
++error:
++	dev_kfree_skb_any(skb);
++	usb_free_urb(tx_urb);
++	usb_free_urb(tx_urb_zero);
++	return rt;
+ }
+ 
+ static short rtl8192_usb_initendpoints(struct net_device *dev)
 -- 
 2.20.1
 
