@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB4C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10A1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFC820748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882DA20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643372;
-	bh=pZXhaFFgw5nMF17jEmU8scYBP5GLOUdL9OAxqDFOYeg=;
+	s=default; t=1577643376;
+	bh=I/BUJr3XFw+UyUsBbw4u/u7TibAB3o7/bA8FzQztPWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rV07hvFcITrKxrMK3e4oBmXiZ19dfnuJxXOunqNgt1kOAENW/9S2qGaXIbzWRLxV2
-	 ZqUB4WEzTvbmkR7cHscju+JHoiChJFlQpOBnde9y6BgXTbkFSRe4wR6DXn2v1zf9ft
-	 d78WGlh69YM4jasUelD+eOXI+GbwD3Nmf2Todm+k=
+	b=naHpcSwcfAHtPtXo1ahMN3HqvsRuBaXH+DGkeulT5gCkvNvnalNbfE4dcOcawSNlS
+	 xHHVoev4BYTBxaCiGPGnvKi2YUdRvdYmPaauXU3eB8qb7yvd80SwocDUV5kQjWyjGb
+	 NsqjRocuv51r0Gkxclcq6LGLJzbNGmWjyCAocFyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbfL2RYq (ORCPT
+        id S1731937AbfL2SQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:24:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43416 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:16:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbfL2RYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:35 -0500
+        id S1727259AbfL2RYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40FDD20409;
-        Sun, 29 Dec 2019 17:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D792021744;
+        Sun, 29 Dec 2019 17:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640274;
-        bh=pZXhaFFgw5nMF17jEmU8scYBP5GLOUdL9OAxqDFOYeg=;
+        s=default; t=1577640284;
+        bh=I/BUJr3XFw+UyUsBbw4u/u7TibAB3o7/bA8FzQztPWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SSstCOTTzQQBpL5ymXFpYUhMa58KzDB+81nW1vbaxzHKNczpMEQjsgpsxwcmw06QA
-         0h9onpSWgcTUtG9hRb184JRadeS9x7mVImYJ4Yuo/rdLjU6cuXCcj6Y9Bn/WmQ29GF
-         bFyD8IIzECnKSBiJOaaOmn4wHACUf/8Z5E55zqvc=
+        b=aF5EzOdGQ48gA+Jw0RSQBTL2WFGSmTsFj2mwBLxQQlhv1nRjlZh2yUAF91L/OJJS9
+         nPVH1PCMWekEc+7w3WftyMgJHKkl4uH3EYTkKA4AEC2eVcXanoTFAxnyx5zQBR4P6A
+         X1XGoJf8SuSmWgJmvO0GlYQZgVSmko8SxcLE744g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/161] rtlwifi: fix memory leak in rtl92c_set_fw_rsvdpagepkt()
-Date:   Sun, 29 Dec 2019 18:18:59 +0100
-Message-Id: <20191229162425.892456513@linuxfoundation.org>
+Subject: [PATCH 4.14 095/161] perf probe: Fix to probe an inline function which has no entry pc
+Date:   Sun, 29 Dec 2019 18:19:03 +0100
+Message-Id: <20191229162426.515945216@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,62 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 5174f1e41074b5186608badc2e89441d021e8c08 ]
+[ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
 
-This leak was found by testing the EDIMAX EW-7612 on Raspberry Pi 3B+ with
-Linux 5.4-rc5 (multi_v7_defconfig + rtlwifi + kmemleak) and noticed a
-single memory leak during probe:
+Fix perf probe to probe an inlne function which has no entry pc
+or low pc but only has ranges attribute.
 
-unreferenced object 0xec13ee40 (size 176):
-  comm "kworker/u8:1", pid 36, jiffies 4294939321 (age 5580.790s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<fc1bbb3e>] __netdev_alloc_skb+0x9c/0x164
-    [<863dfa6e>] rtl92c_set_fw_rsvdpagepkt+0x254/0x340 [rtl8192c_common]
-    [<9572be0d>] rtl92cu_set_hw_reg+0xf48/0xfa4 [rtl8192cu]
-    [<116df4d8>] rtl_op_bss_info_changed+0x234/0x96c [rtlwifi]
-    [<8933575f>] ieee80211_bss_info_change_notify+0xb8/0x264 [mac80211]
-    [<d4061e86>] ieee80211_assoc_success+0x934/0x1798 [mac80211]
-    [<e55adb56>] ieee80211_rx_mgmt_assoc_resp+0x174/0x314 [mac80211]
-    [<5974629e>] ieee80211_sta_rx_queued_mgmt+0x3f4/0x7f0 [mac80211]
-    [<d91091c6>] ieee80211_iface_work+0x208/0x318 [mac80211]
-    [<ac5fcae4>] process_one_work+0x22c/0x564
-    [<f5e6d3b6>] worker_thread+0x44/0x5d8
-    [<82c7b073>] kthread+0x150/0x154
-    [<b43e1b7d>] ret_from_fork+0x14/0x2c
-    [<794dff30>] 0x0
+This seems very rare case, but I could find a few examples, as
+same as probe_point_search_cb(), use die_entrypc() to get the
+entry address in probe_point_inline_cb() too.
 
-It is because 8192cu doesn't implement usb_cmd_send_packet(), and this
-patch just frees the skb within the function to resolve memleak problem
-by now. Since 8192cu doesn't turn on fwctrl_lps that needs to download
-command packet for firmware via the function, applying this patch doesn't
-affect driver behavior.
+Without this patch:
 
-Reported-by: Stefan Wahren <wahrenst@gmx.net>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+  # perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+
+With this patch:
+
+  # perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  Failed to get entry address of __amd_put_nb_event_constraints.
+  Probe point '__amd_put_nb_event_constraints' not found.
+    Error: Failed to add events.
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+  p:probe/__amd_put_nb_event_constraints _text+33789
+  [root@quaco ~]#
+
+Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-index 530e80f0ef0b..1ee7f796113b 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-@@ -1556,6 +1556,8 @@ static bool usb_cmd_send_packet(struct ieee80211_hw *hw, struct sk_buff *skb)
-    * This is maybe necessary:
-    * rtlpriv->cfg->ops->fill_tx_cmddesc(hw, buffer, 1, 1, skb);
-    */
-+	dev_kfree_skb(skb);
-+
- 	return true;
- }
- 
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 5fee71e960a6..b06b05bd488e 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -953,7 +953,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+ 		ret = find_probe_point_lazy(in_die, pf);
+ 	else {
+ 		/* Get probe address */
+-		if (dwarf_entrypc(in_die, &addr) != 0) {
++		if (die_entrypc(in_die, &addr) != 0) {
+ 			pr_warning("Failed to get entry address of %s.\n",
+ 				   dwarf_diename(in_die));
+ 			return -ENOENT;
 -- 
 2.20.1
 
