@@ -2,174 +2,175 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB15AC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1385C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809CD206E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E35206E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yb35NC83"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/a6FQPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfL2Ogu (ORCPT
+        id S1726659AbfL2OhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 09:36:50 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33957 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfL2Ogu (ORCPT
+        Sun, 29 Dec 2019 09:37:03 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45227 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfL2OhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 09:36:50 -0500
-Received: by mail-io1-f66.google.com with SMTP id z193so29496906iof.1;
-        Sun, 29 Dec 2019 06:36:49 -0800 (PST)
+        Sun, 29 Dec 2019 09:37:03 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so17098617pfg.12
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 06:37:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6P+l8FSlWBBte5aUxpeVJfQc+EhiRf7R8DtYJ/9CnDI=;
-        b=Yb35NC83I5I7rr0g/aKTefVU+PtUCvsF58AputPF9VqGwwq7HGoXHrAnRrVrLe38i6
-         Gf+D4lTUnef2r3wkZf8VDdia0LNTt235huRgflqorMssYPMYr4l/m6KB9VUllvTHAePW
-         XZxc3+rT+021SRw9QkIi+UjCsHh8uScYVEdAEpn3zWCGELqGQB8Dw1qIKGvIsB8Z30o3
-         Een5bv+OzDYelHKWETGXB1Y6ckk3cqOgz6cetWgeyFrVQU7yQLgq96zKokez/fP+j1bY
-         EiGvFTHWhctAmC6rvvxPIA2/Xb5MnX1T/0Ee826qf8wcEzcS/R38qKb5dX66aPlORovX
-         AkaQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v4zwlw+odKSqE3aBhmsXGeIgNGWe/8QP8KYWJ0WS0T4=;
+        b=H/a6FQPdDtwNA6IpBBIjiujGi46fekF4JBFJcCtTal8mYBJeWu7mHpBr64l3HveywM
+         z2NJl27a7SXfqQ/yDmWhofXWIDphR9FfznfGny4KNfsRA8Zyh5HM+/kCGQGcUVjtZixg
+         DoTZv5fKkKZa5MpOI8SNBjuMevy8CCjfZUVmhEp5z5okyt70tj5PId0cRWrP0c/WwG2j
+         DeSutL/2HOO8ly8AKNL52VWUdw+x0gbpy0dNpX9/1amQDJhCMRos93wkPnuMDVPtHS2C
+         apj2qt37Gn59+W21IVRtSnkVIN2fh5K4dHepb0ZgF4jXdI6Co6iLxcj2m6JSaf66B9YM
+         M4Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6P+l8FSlWBBte5aUxpeVJfQc+EhiRf7R8DtYJ/9CnDI=;
-        b=dHd+XkXPUYGqM6wCsrnEdg8L8R+9gscNq7oUstvGwKsPlPG0XB5vIg4YfseZ9dNyUE
-         NLBRQdEMjlPzvoZgca+Rint2qy1J2PTXXsMm+dexd+zxZM+9kYv30PSStzjnhXuofNfx
-         5JQlrYsJ+Rn1LzH4ZCN0onNlSFL9ND5Ez/3Qent63JqLnSxt8TO1w0U/FIPpmoldcMm/
-         fHTKTTL3s0fow+ngbx2CET7yvZS1Kg92Y4qpprW+nBI/XLUZT1NSyjVGbsDI/TE+ic19
-         UtzpppOa/7If1FYJC9U9ubq/mhfDgTK+2angkXIFBamQT7aZZnbmA1i0XUfsdPRbedwR
-         mQ7A==
-X-Gm-Message-State: APjAAAUIKY6nOJSRn7em8FFaUBN5rNm51skxDvpdqschSB9AIdigaJej
-        enoYxms5qLoItnGARLNo/MF1mDJsFXC7e98BeHs=
-X-Google-Smtp-Source: APXvYqyNz1FemOTTeZVrJPqsxKYy5wfDrBT8NhLYyVBm5RrFtVEGvc5exe5evt0DbAlmISUi6IF2gqQQe/GiWx36UOg=
-X-Received: by 2002:a02:3ece:: with SMTP id s197mr48415001jas.30.1577630209372;
- Sun, 29 Dec 2019 06:36:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20191229104325.10132-1-tiny.windzz@gmail.com> <CAMpxmJUggb7srWeLNzkcrb+L1THhP4DNH8nkkDaYDEs316ywDQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJUggb7srWeLNzkcrb+L1THhP4DNH8nkkDaYDEs316ywDQ@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sun, 29 Dec 2019 22:36:38 +0800
-Message-ID: <CAEExFWt+8FL45kLMWc3odS4GsCRkskD1Z08q6UAF1sYx32Hf-w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lib: devres: provide devm_ioremap_resource_nocache()
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        suzuki.poulose@arm.com, saravanak@google.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        dan.j.williams@intel.com, Joe Perches <joe@perches.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>, mans@mansr.com,
-        Thomas Gleixner <tglx@linutronix.de>, hdegoede@redhat.com,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v4zwlw+odKSqE3aBhmsXGeIgNGWe/8QP8KYWJ0WS0T4=;
+        b=Q4R0q3J7nB4W+uZdqYmEyErKH1wHzNv4KvzU41w+VcL/jL1T4wm4ZWDuWGmOHMvkur
+         DzTMQrAc/Vga8/TZmqv8CDmSFSUcOPXEbMIvj5FfZa8wP6O4PhFN4rItfOsEOAYRcqpC
+         iP9izygbWvQmR+29BO5mi8OzfQhGhwz6EsE1wP7E7ZOyZENqpNXxo+RJqqdxcT5kW70+
+         f8AK8K1lpaabLsXsLknWWpinsc8LhAJ40h5LUVka8+y/H+R1ttc46BDfevu6afqG6Jge
+         HkMmIafOcC3HQnTt3Pl76e1RDaAc77YVN/6A2w9soiHCryFQGpej5Q70luI6RTIJLxS9
+         u+qQ==
+X-Gm-Message-State: APjAAAUy29XKOxkANdBF8EbUfFwjd18gRmkhSGMDYoTAWKCM3JIKEAdM
+        qRuvri3wves0erDIfC8PadQ=
+X-Google-Smtp-Source: APXvYqz3GsJY58S3hvbZ00NQUWpinbVYDH7+Zzz+T3z9m04BXZQRRk8RPlLWeE4iy5bKpBMOf/4aog==
+X-Received: by 2002:a63:d94b:: with SMTP id e11mr66550963pgj.79.1577630222667;
+        Sun, 29 Dec 2019 06:37:02 -0800 (PST)
+Received: from xndcndeMac-mini.lan ([104.243.28.95])
+        by smtp.gmail.com with ESMTPSA id i9sm47327622pfk.24.2019.12.29.06.36.57
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sun, 29 Dec 2019 06:37:02 -0800 (PST)
+From:   Xiong <xndchn@gmail.com>
+Cc:     Xiong <xndchn@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, ztuowen@gmail.com,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
+Date:   Sun, 29 Dec 2019 22:36:23 +0800
+Message-Id: <20191229143626.51238-1-xndchn@gmail.com>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 8:11 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> niedz., 29 gru 2019 o 11:43 Yangtao Li <tiny.windzz@gmail.com> napisa=C5=
-=82(a):
-> >
-> > Provide a variant of devm_ioremap_resource() for nocache ioremap.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  Documentation/driver-api/driver-model/devres.rst |  1 +
-> >  include/linux/device.h                           |  2 ++
-> >  lib/devres.c                                     | 15 +++++++++++++++
-> >  3 files changed, 18 insertions(+)
-> >
-> > diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documen=
-tation/driver-api/driver-model/devres.rst
-> > index 13046fcf0a5d..af1b1b9e3a17 100644
-> > --- a/Documentation/driver-api/driver-model/devres.rst
-> > +++ b/Documentation/driver-api/driver-model/devres.rst
-> > @@ -317,6 +317,7 @@ IOMAP
-> >    devm_ioremap_uc()
-> >    devm_ioremap_wc()
-> >    devm_ioremap_resource() : checks resource, requests memory region, i=
-oremaps
-> > +  devm_ioremap_resource_nocache()
-> >    devm_ioremap_resource_wc()
-> >    devm_platform_ioremap_resource() : calls devm_ioremap_resource() for=
- platform device
-> >    devm_platform_ioremap_resource_wc()
-> > diff --git a/include/linux/device.h b/include/linux/device.h
-> > index 96ff76731e93..3aa353aa52e2 100644
-> > --- a/include/linux/device.h
-> > +++ b/include/linux/device.h
-> > @@ -962,6 +962,8 @@ extern void devm_free_pages(struct device *dev, uns=
-igned long addr);
-> >
-> >  void __iomem *devm_ioremap_resource(struct device *dev,
-> >                                     const struct resource *res);
-> > +void __iomem *devm_ioremap_resource_nocache(struct device *dev,
-> > +                                           const struct resource *res)=
-;
-> >  void __iomem *devm_ioremap_resource_wc(struct device *dev,
-> >                                        const struct resource *res);
-> >
-> > diff --git a/lib/devres.c b/lib/devres.c
-> > index f56070cf970b..a182f8479fbf 100644
-> > --- a/lib/devres.c
-> > +++ b/lib/devres.c
-> > @@ -188,6 +188,21 @@ void __iomem *devm_ioremap_resource(struct device =
-*dev,
-> >  }
-> >  EXPORT_SYMBOL(devm_ioremap_resource);
-> >
-> > +/**
-> > + * devm_ioremap_resource_nocache() - nocache variant of
-> > + *                                   devm_ioremap_resource()
-> > + * @dev: generic device to handle the resource for
-> > + * @res: resource to be handled
-> > + *
-> > + * Returns a pointer to the remapped memory or an ERR_PTR() encoded er=
-ror code
-> > + * on failure.
-> > + */
-> > +void __iomem *devm_ioremap_resource_nocache(struct device *dev,
-> > +                                           const struct resource *res)
-> > +{
-> > +       return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_NC);
-> > +}
-> > +
-> >  /**
-> >   * devm_ioremap_resource_wc() - write-combined variant of
-> >   *                             devm_ioremap_resource()
-> > --
-> > 2.17.1
-> >
->
-> This has been discussed before. The nocache variants of ioremap() are
-> being phased out as they're only ever needed on one obscure
-> architecture IIRC. This is not needed, rather we should convert all
-> nocache calls to regular ioremap().
+Here are some of the common spelling mistakes and typos that I've found
+while fixing up spelling mistakes in the kernel. Most of them still exist
+in more than two source files.
 
-Thanks for pointing out!
-I have seen the use of ioremap_nocache in many architectures,
-so they are wrong and should be changed to ioremap?
+Signed-off-by: Xiong <xndchn@gmail.com>
+---
+ scripts/spelling.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Yangtao
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index 672b5931bc8d..e95aea25f975 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -39,6 +39,8 @@ accout||account
+ accquire||acquire
+ accquired||acquired
+ accross||across
++accumalate||accumulate
++accumalator||accumulator
+ acessable||accessible
+ acess||access
+ acessing||accessing
+@@ -106,6 +108,7 @@ alogrithm||algorithm
+ alot||a lot
+ alow||allow
+ alows||allows
++alreay||already
+ alredy||already
+ altough||although
+ alue||value
+@@ -241,6 +244,7 @@ calender||calendar
+ calescing||coalescing
+ calle||called
+ callibration||calibration
++callled||called
+ calucate||calculate
+ calulate||calculate
+ cancelation||cancellation
+@@ -311,6 +315,7 @@ compaibility||compatibility
+ comparsion||comparison
+ compatability||compatibility
+ compatable||compatible
++compatibililty||compatibility
+ compatibiliy||compatibility
+ compatibilty||compatibility
+ compatiblity||compatibility
+@@ -330,6 +335,7 @@ comunication||communication
+ conbination||combination
+ conditionaly||conditionally
+ conditon||condition
++condtion||condition
+ conected||connected
+ conector||connector
+ connecetd||connected
+@@ -388,6 +394,8 @@ dafault||default
+ deafult||default
+ deamon||daemon
+ debouce||debounce
++decendant||descendant
++decendants||descendants
+ decompres||decompress
+ decsribed||described
+ decription||description
+@@ -411,11 +419,13 @@ delare||declare
+ delares||declares
+ delaring||declaring
+ delemiter||delimiter
++delievered||delivered
+ demodualtor||demodulator
+ demension||dimension
+ dependancies||dependencies
+ dependancy||dependency
+ dependant||dependent
++dependend||dependent
+ depreacted||deprecated
+ depreacte||deprecate
+ desactivate||deactivate
+@@ -995,6 +1005,7 @@ peice||piece
+ pendantic||pedantic
+ peprocessor||preprocessor
+ perfoming||performing
++perfomring||performing
+ peripherial||peripheral
+ permissons||permissions
+ peroid||period
+@@ -1166,6 +1177,8 @@ retreive||retrieve
+ retreiving||retrieving
+ retrive||retrieve
+ retrived||retrieved
++retrun||return
++retun||return
+ retuned||returned
+ reudce||reduce
+ reuest||request
+-- 
+2.19.1
 
->
-> Bart
