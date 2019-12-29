@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244ABC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CC8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF220206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E50E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642572;
-	bh=P61QWLWfS4hyBBBw0N+MpWxMOTCStmytRmlp+EWR2Ys=;
+	s=default; t=1577642579;
+	bh=UZCOrNCSYzLLHQQCAcwBP86yz0fqplT9ITOoRdzBppw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XoKJWaxoeWnaQbtOdnH4ow7VjnTbqU95niq2Os7Z86zCj4i0Lyds0jIjjpuuQ4Inn
-	 dKbpCGBBmx7evl87Al1qusK58/BvVkEfuPSdES9WeEIl3avPNtYeAgP6PdZqJ9emUY
-	 VisD+66saNir3+Up6tTCarfYWeVU1lSEpBZr/uFc=
+	b=d8f3C2+ChDYHhmFsiJlbb3O3Oos0W+YGTOm/kK7LoNLm207YvdAZPQOMwxrSpsmXX
+	 fjv2Fay+udWCDsqJReqEWuxZT/xmzvpAHmiZdSUh38uaY4uoKQrgXh+ZVx9Ys2fWJI
+	 ushUBo+vJZpRSYNExDQSy/5cIMsFhsVT5DuYvnaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733025AbfL2SCu (ORCPT
+        id S2387800AbfL2SC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54496 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:02:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbfL2SCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 13:02:46 -0500
+        id S1732674AbfL2RyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF95222C4;
-        Sun, 29 Dec 2019 18:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E4821744;
+        Sun, 29 Dec 2019 17:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642565;
-        bh=P61QWLWfS4hyBBBw0N+MpWxMOTCStmytRmlp+EWR2Ys=;
+        s=default; t=1577642065;
+        bh=UZCOrNCSYzLLHQQCAcwBP86yz0fqplT9ITOoRdzBppw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZBtcKr5Dz1gVU+nP8kLgMfivhs6a8V6dgersW2C2fUfCYA3z/TM2QPG3ODXN+Zlc
-         2K7cwIV/LoiwL5I6+LC99MY/vKCi24SHzBh6SFY4qqphjrezboKFZtICoU/MhLfrQT
-         Gv9IFhybohMFh9o7Xx61kmxJ/a29sRKzV+MmUvgs=
+        b=ySzmk82yG41ouG4TD8ri0a+QryqBBZINeo9cWZBuF1zj09jAEFwqFUoKCXMbwElKe
+         A7c5M1EX50Bi+8yM01ho9eeNVYLhj7sTTc/ku/DS/PSb0KsVjhtkLmZ+sR+/pbYTxM
+         Gz95lwDQ+niMT1dTFQ1CQc95U4VYEBxi79MpMg4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@suse.de>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/434] media: i2c: ov2659: Fix missing 720p register config
-Date:   Sun, 29 Dec 2019 18:22:16 +0100
-Message-Id: <20191229172707.062745653@linuxfoundation.org>
+Subject: [PATCH 5.4 284/434] EDAC/ghes: Fix grain calculation
+Date:   Sun, 29 Dec 2019 18:25:37 +0100
+Message-Id: <20191229172720.814013410@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,46 +64,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Robert Richter <rrichter@marvell.com>
 
-[ Upstream commit 9d669fbfca20e6035ead814e55d9ef1a6b500540 ]
+[ Upstream commit 7088e29e0423d3195e09079b4f849ec4837e5a75 ]
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+The current code to convert a physical address mask to a grain
+(defined as granularity in bytes) is:
 
-This was not done properly for the 720p case.
+	e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This is broken in several ways:
+
+1) It calculates to wrong grain values. E.g., a physical address mask
+of ~0xfff should give a grain of 0x1000. Without considering
+PAGE_MASK, there is an off-by-one. Things are worse when also
+filtering it with ~PAGE_MASK. This will calculate to a grain with the
+upper bits set. In the example it even calculates to ~0.
+
+2) The grain does not depend on and is unrelated to the kernel's
+page-size. The page-size only matters when unmapping memory in
+memory_failure(). Smaller grains are wrongly rounded up to the
+page-size, on architectures with a configurable page-size (e.g. arm64)
+this could round up to the even bigger page-size of the hypervisor.
+
+Fix this with:
+
+	e->grain = ~mem_err->physical_addr_mask + 1;
+
+The grain_bits are defined as:
+
+	grain = 1 << grain_bits;
+
+Change also the grain_bits calculation accordingly, it is the same
+formula as in edac_mc.c now and the code can be unified.
+
+The value in ->physical_addr_mask coming from firmware is assumed to
+be contiguous, but this is not sanity-checked. However, in case the
+mask is non-contiguous, a conversion to grain_bits effectively
+converts the grain bit mask to a power of 2 by rounding it up.
+
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20191106093239.25517-11-rrichter@marvell.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/edac/ghes_edac.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 70bf63b9dbd0..e1ff38009cf0 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 296e714bf553..523dd56a798c 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -231,6 +231,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	/* Cleans the error report buffer */
+ 	memset(e, 0, sizeof (*e));
+ 	e->error_count = 1;
++	e->grain = 1;
+ 	strcpy(e->label, "unknown label");
+ 	e->msg = pvt->msg;
+ 	e->other_detail = pvt->other_detail;
+@@ -326,7 +327,7 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
  
+ 	/* Error grain */
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_PA_MASK)
+-		e->grain = ~(mem_err->physical_addr_mask & ~PAGE_MASK);
++		e->grain = ~mem_err->physical_addr_mask + 1;
+ 
+ 	/* Memory error location, mapped on e->location */
+ 	p = e->location;
+@@ -442,8 +443,13 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) = '\0';
+ 
++	/* Sanity-check driver-supplied grain value. */
++	if (WARN_ON_ONCE(!e->grain))
++		e->grain = 1;
++
++	grain_bits = fls_long(e->grain - 1);
++
+ 	/* Generate the trace event */
+-	grain_bits = fls_long(e->grain);
+ 	snprintf(pvt->detail_location, sizeof(pvt->detail_location),
+ 		 "APEI location: %s %s", e->location, e->other_detail);
+ 	trace_mc_event(type, e->msg, e->label, e->error_count,
 -- 
 2.20.1
 
