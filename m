@@ -2,152 +2,169 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5E9C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E6FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872C420720
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9C3208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NtWfhfM8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n7iOptnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfL2ECy (ORCPT
+        id S1726535AbfL2Edg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 23:02:54 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13421 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfL2ECy (ORCPT
+        Sat, 28 Dec 2019 23:33:36 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1482 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfL2Edf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 23:02:54 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e08255f0000>; Sat, 28 Dec 2019 20:02:39 -0800
+        Sat, 28 Dec 2019 23:33:35 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e082c900000>; Sat, 28 Dec 2019 20:33:21 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 28 Dec 2019 20:02:53 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 28 Dec 2019 20:33:34 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 28 Dec 2019 20:02:53 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Dec
- 2019 04:02:52 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sun, 29 Dec 2019 04:02:52 +0000
-Received: from dhcp-10-19-66-63.nvidia.com (Not Verified[10.19.66.63]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e08256a0000>; Sat, 28 Dec 2019 20:02:52 -0800
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V1] nvmem: core: fix memory abort in cleanup path
-Date:   Sat, 28 Dec 2019 20:02:42 -0800
-Message-ID: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        by hqpgpgate102.nvidia.com on Sat, 28 Dec 2019 20:33:34 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Dec
+ 2019 04:33:33 +0000
+Subject: Re: [PATCH v11 00/25] mm/gup: track dma-pinned pages: FOLL_PIN
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        "Ran Rozenstein" <ranro@mellanox.com>
+References: <20191216222537.491123-1-jhubbard@nvidia.com>
+ <20191219132607.GA410823@unreal>
+ <a4849322-8e17-119e-a664-80d9f95d850b@nvidia.com>
+ <20191219210743.GN17227@ziepe.ca> <20191220182939.GA10944@unreal>
+ <1001a5fc-a71d-9c0f-1090-546c4913d8a2@nvidia.com>
+ <20191222132357.GF13335@unreal>
+ <49d57efe-85e1-6910-baf5-c18df1382206@nvidia.com>
+ <20191225052612.GA212002@unreal>
+ <b879d191-a07c-e808-e48f-2b9bd8ba4fa3@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <612aa292-ec45-295c-b56c-c622876620fa@nvidia.com>
+Date:   Sat, 28 Dec 2019 20:33:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <b879d191-a07c-e808-e48f-2b9bd8ba4fa3@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577592159; bh=OK1RKNnphUt5ZOJF1ejSbTS7CSZIPsea8rpQM1Q5/WI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=NtWfhfM8/noJc6lGVZgm6Pbi5qoU/9iv96uDFZJz4lNcu53oLVhsFnZG7bk751rrB
-         7T9+2oCpzWR09XftIVc6vUaOTejiswqj927N7xVJgpTGOfqR/7GRbtwv6U+EJEEp+Z
-         1HiGa0GUtS2xdie4Vce7y1RbqWwowgUSNaMYgbwbMDclGAAHexdswQ4+By2cWkturi
-         V4ScO15tEssJS+GODMxYX0i5JUPqSlMeC/gq3Lo/YQYmFSvoRyCtnznzaQLDi2X6qO
-         XO1jmCqxRcYMOQRJthtsVX/Jb0E1MfaNkrEerd1T/QCWAPW0T770fOkRoylPN5q6JI
-         sML8bHIfoz0hw==
+        t=1577594001; bh=CS/Y1CGyDS+9QLfc4LRardH5VS56W/PAJOyfRY2LjTc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=n7iOptnwN3ZVsCu/0DXie5ShRcR4/jOzIn6W7P3uTBxVaZt8ko4Dms+OE9l2tNSxe
+         95GOtrfVtIDr0VsAlD/d/zPWSpFCkJY5UP5Eb2ss2F3NEgv4iTUN6NL2VHU+RtQqVi
+         nFPi4CTJq0hll0B94/tPBP/T736se/ycwi7dWWtNiIfcgsX/aG2ZU9RUFFoSuSYe5B
+         fwPDB3yWJZmxzNFs+zKaKVZ1e+/lnxSIdtwRl5XP/Vm1rz2l41lunDXgCSZTy/8O/h
+         ByGzcgSVg+SF9TRzjsSZ/pWRsIBTO2VIGDe+IjvB1qU+Q0EIsH+JijQJxdtnLBWoeO
+         bb0/oQMKrQ56Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-nvmem_cell_info_to_nvmem_cell implementation has static
-allocation of name. nvmem_add_cells_from_of() call may
-return error and kfree name results in memory abort. Use
-kasprintf() instead of assigning pointer and prevent kfree crash.
+On 12/27/19 1:56 PM, John Hubbard wrote:
+...
+>> It is ancient verification test (~10y) which is not an easy task to
+>> make it understandable and standalone :).
+>>
+>=20
+> Is this the only test that fails, btw? No other test failures or hints of
+> problems?
+>=20
+> (Also, maybe hopeless, but can *anyone* on the RDMA list provide some
+> characterization of the test, such as how many pins per page, what page
+> sizes are used? I'm still hoping to write a test to trigger something
+> close to this...)
+>=20
+> I do have a couple more ideas for test runs:
+>=20
+> 1. Reduce GUP_PIN_COUNTING_BIAS to 1. That would turn the whole override =
+of
+> page->_refcount into a no-op, and so if all is well (it may not be!) with=
+ the
+> rest of the patch, then we'd expect this problem to not reappear.
+>=20
+> 2. Active /proc/vmstat *foll_pin* statistics unconditionally (just for th=
+ese
+> tests, of course), so we can see if there is a get/put mismatch. However,=
+ that
+> will change the timing, and so it must be attempted independently of (1),=
+ in
+> order to see if it ends up hiding the repro.
+>=20
+> I've updated this branch to implement (1), but not (2), hoping you can gi=
+ve
+> this one a spin?
+>=20
+> =C2=A0=C2=A0=C2=A0 git@github.com:johnhubbard/linux.git=C2=A0 pin_user_pa=
+ges_tracking_v11_with_diags
+>=20
+>=20
 
-[    8.076461] Unable to handle kernel paging request at virtual address ffffffffffe44888
-[    8.084762] Mem abort info:
-[    8.087694]   ESR = 0x96000006
-[    8.090906]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    8.096476]   SET = 0, FnV = 0
-[    8.099683]   EA = 0, S1PTW = 0
-[    8.102976] Data abort info:
-[    8.106004]   ISV = 0, ISS = 0x00000006
-[    8.110026]   CM = 0, WnR = 0
-[    8.113154] swapper pgtable: 64k pages, 48-bit VAs, pgdp=00000000815d0000
-[    8.120279] [ffffffffffe44888] pgd=0000000081d30803, pud=0000000081d30803, pmd=0000000000000000
-[    8.129429] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[    8.135257] Modules linked in:
-[    8.138456] CPU: 2 PID: 43 Comm: kworker/2:1 Tainted: G S                5.5.0-rc3-tegra-00051-g6989dd3-dirty #3   [    8.149098] Hardware name: quill (DT)
-[    8.152968] Workqueue: events deferred_probe_work_func
-[    8.158350] pstate: a0000005 (NzCv daif -PAN -UAO)
-[    8.163386] pc : kfree+0x38/0x278
-[    8.166873] lr : nvmem_cell_drop+0x68/0x80
-[    8.171154] sp : ffff80001284f9d0
-[    8.174620] x29: ffff80001284f9d0 x28: ffff0001f677e830
-[    8.180189] x27: ffff800011b0b000 x26: ffff0001c36e1008
-[    8.185755] x25: ffff8000112ad000 x24: ffff8000112c9000
-[    8.191311] x23: ffffffffffffffea x22: ffff800010adc7f0
-[    8.196865] x21: ffffffffffe44880 x20: ffff800011b0b068
-[    8.202424] x19: ffff80001122d380 x18: ffffffffffffffff
-[    8.207987] x17: 00000000d5cb4756 x16: 0000000070b193b8
-[    8.213550] x15: ffff8000119538c8 x14: 0720072007200720
-[    8.219120] x13: 07200720076e0772 x12: 07750762072d0765
-[    8.224685] x11: 0773077507660765 x10: 072f073007300730
-[    8.230253] x9 : 0730073207380733 x8 : 0000000000000151
-[    8.235818] x7 : 07660765072f0720 x6 : ffff0001c00e0f00
-[    8.241382] x5 : 0000000000000000 x4 : ffff0001c0b43800
-[    8.247007] x3 : ffff800011b0b068 x2 : 0000000000000000
-[    8.252567] x1 : 0000000000000000 x0 : ffffffdfffe00000
-[    8.258126] Call trace:
-[    8.260705]  kfree+0x38/0x278
-[    8.263827]  nvmem_cell_drop+0x68/0x80
-[    8.267773]  nvmem_device_remove_all_cells+0x2c/0x50
-[    8.272988]  nvmem_register.part.9+0x520/0x628
-[    8.277655]  devm_nvmem_register+0x48/0xa0
-[    8.281966]  tegra_fuse_probe+0x140/0x1f0
-[    8.286181]  platform_drv_probe+0x50/0xa0
-[    8.290397]  really_probe+0x108/0x348
-[    8.294243]  driver_probe_device+0x58/0x100
-[    8.298618]  __device_attach_driver+0x90/0xb0
-[    8.303172]  bus_for_each_drv+0x64/0xc8
-[    8.307184]  __device_attach+0xd8/0x138
-[    8.311195]  device_initial_probe+0x10/0x18
-[    8.315562]  bus_probe_device+0x90/0x98
-[    8.319572]  deferred_probe_work_func+0x74/0xb0
-[    8.324304]  process_one_work+0x1e0/0x358
-[    8.328490]  worker_thread+0x208/0x488
-[    8.332411]  kthread+0x118/0x120
-[    8.335783]  ret_from_fork+0x10/0x18
-[    8.339561] Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
-[    8.345939] ---[ end trace 49b1303c6b83198e ]---
+Also, looking ahead:
 
-Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_node.name")
+a) if the problem disappears with the latest above test, then we likely hav=
+e
+   a huge page refcount overflow, and there are a couple of different ways =
+to
+   fix it.=20
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/nvmem/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+b) if it still reproduces with the above, then it's some other random mista=
+ke,
+   and in that case I'd be inclined to do a sort of guided (or classic, ung=
+uided)
+   git bisect of the series. Because it could be any of several patches.
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 9f1ee9c..0fc66e1 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
- 	cell->nvmem = nvmem;
- 	cell->offset = info->offset;
- 	cell->bytes = info->bytes;
--	cell->name = info->name;
-+	cell->name = kasprintf(GFP_KERNEL, "%s", info->name);
- 
- 	cell->bit_offset = info->bit_offset;
- 	cell->nbits = info->nbits;
--- 
-2.7.4
+   If that's too much trouble, then I'd have to fall back to submitting a f=
+ew
+   patches at a time and working my way up to the tracking patch...
 
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
