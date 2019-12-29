@@ -2,170 +2,102 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98166C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643EBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60523206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289D720748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LP8ET5Ud"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="QYExPAle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfL2OAJ (ORCPT
+        id S1726596AbfL2OCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 09:00:09 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40651 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfL2OAJ (ORCPT
+        Sun, 29 Dec 2019 09:02:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38156 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfL2OCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 09:00:09 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so30504993wrn.7;
-        Sun, 29 Dec 2019 06:00:07 -0800 (PST)
+        Sun, 29 Dec 2019 09:02:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u2so12248399wmc.3
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 06:02:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chrisdown.name; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7CWd2Rx8Vc6NPJBS0gYo2M8ZKUeKMMZulpcbCZ9zB+s=;
-        b=LP8ET5UdT7fnJQGQE0h5RAKRz275MIjg4OfL8Bpf7Y4vU7SC+AAavtptDGgNx0W6GF
-         24mylDjHeTyhV7cnzBPGSJgeWB+EDtwW8mou+N0UAYHxHnWpkhkaHjQRWPKYVwwL5Zd8
-         KKhaEa7VD9BIsLovkA0Eeav6QUaXdjt6OrI+Oif0GKh0leOxWWiy26Blnp4U2s7G1Do6
-         kYoSVdp0nFFfNd784hKoKl/MJ5+z2jEWuwiagLWyLVjHGLKdGyW+N++Fajwe1B05cqYV
-         zOKdp07I0Sjj8dtxYAqywLmP0DyF4qwQ+/pY53lOiH1Q2DbNWCZlG/L542ie4trzUZcK
-         in+g==
+         :content-disposition:in-reply-to;
+        bh=tVdSh5eigGfpfZbcGPOwFmTu1bT8ccSTdspsY1KsgDw=;
+        b=QYExPAlecIZL1gnZxQC2xAYNOQMYgcCITRyrl9YRy7vqXB90bkcdXQ0PNNPKj+EfIY
+         XbxHnw6z/MYyt8nlFYs49bKYSGMGMdpvYQ4QZkCFEDPLndQdvuyJElvqaxMHi909zBA1
+         Yn5uZ2Ws6avDpxFA76+O6cfBw5jIPVmBer4XQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7CWd2Rx8Vc6NPJBS0gYo2M8ZKUeKMMZulpcbCZ9zB+s=;
-        b=IYDvFcEWOIv2O1CqQKqJckGcFF1z6XkF0XCcJUS3EjHNDu0ODaak8EMn7ilYSnVjqG
-         KSM+2jByOBd+kDfiAzzOJEydTpvlll9n2SuoKiCKOUciXLmjoMHesT/cLsVq0sHww0dL
-         ShoEAxxxP8Z7cR6UC825wTzM4ARQia2Lp0uYwBHrfG6KjP26E09jIvvCCjlbPiJ/exfq
-         6CebNqMPCTDvP3AFgZwFH/yY+eIGXQYMnVz5d0/myzlPGlXQFGSPcPIbi4xmYIIHpsxn
-         MpmeexM6QJv3rUK+6XpxZxkCsuZ2AgPzuopef8+lJO5zWC/jYAvROpEfLG+lpCSS253Y
-         g9/g==
-X-Gm-Message-State: APjAAAUye8mPJ26p/xvwi7jzEjpRHmkGLE6C4hKSi2i10x8MVsawLyi9
-        gqgNVFpttK4ruxbW9zHbUX4=
-X-Google-Smtp-Source: APXvYqzvPBvGyLeDEA2oV/tdS9cPcN2+ZpkJ4+ocqfUYTJpr/zgBxuKiyDe1ntw4hJKNfLeNSSkj8w==
-X-Received: by 2002:adf:fd43:: with SMTP id h3mr24487506wrs.169.1577628007010;
-        Sun, 29 Dec 2019 06:00:07 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id r6sm42068829wrq.92.2019.12.29.06.00.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 06:00:06 -0800 (PST)
-Date:   Sun, 29 Dec 2019 15:00:05 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v8 09/13] exfat: add misc operations
-Message-ID: <20191229140005.qrffmjnmizstjkh4@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062737epcas1p3c0f9e408640148c9186b84efc6d6658b@epcas1p3.samsung.com>
- <20191220062419.23516-10-namjae.jeon@samsung.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=tVdSh5eigGfpfZbcGPOwFmTu1bT8ccSTdspsY1KsgDw=;
+        b=YGjQ+/vpJRAqNAT1A/gmgM8boW+XhAm6/8yVVyr/MhZcelWaphDWFtZ9P2/zOqjbC3
+         Ym+htSnyA0k+P+TiE31b+gEHGHXqGgh+g4SGY1DgJpy/36z28DBRXfaPA0GVvKdslZ9g
+         QPdwVRdv36pimrOpHVHrF9zmshiZdYs001tT0Ajtsar8w5MJ3sLsf54QJzN1Ycfcp+E+
+         6tt0O+xnqVQ98PfymYEO8pvtlPfDc77kX5lHo1ewwjLL3R+2hLWPLWQZ4nsTWjNqc3mI
+         5jec97/l8eKYL4LedbjdyurbOCOfsCBDgr0+SYZt/tfruGPKEjwa14G8/tTBFvDoDc3x
+         fYBg==
+X-Gm-Message-State: APjAAAWHU90cbG5NIuFp4VkByAqt6fZHY8Py2MMdXq79/W4//UI3uti5
+        KX7426+nan4VmrdQCPs4PfsLMg==
+X-Google-Smtp-Source: APXvYqzNnjbex6gASub1IyimjZc4FxGDCLJz7YROfS76oah0trC8AF8rFLAB3RLixdYFxjp7xmhazg==
+X-Received: by 2002:a1c:5444:: with SMTP id p4mr28918356wmi.33.1577628162525;
+        Sun, 29 Dec 2019 06:02:42 -0800 (PST)
+Received: from localhost ([185.69.145.27])
+        by smtp.gmail.com with ESMTPSA id d16sm44864362wrg.27.2019.12.29.06.02.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Dec 2019 06:02:41 -0800 (PST)
+Date:   Sun, 29 Dec 2019 14:02:40 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     teawater <teawaterz@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
+Message-ID: <20191229140240.GB612003@chrisdown.name>
+References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
+ <20191218140952.GA255739@chrisdown.name>
+ <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
+ <20191219112618.GA72828@chrisdown.name>
+ <1E6A7BC4-A983-4C65-9DA9-4D3A26D4D31D@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="o5ddwdsvztwdyzxl"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191220062419.23516-10-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1E6A7BC4-A983-4C65-9DA9-4D3A26D4D31D@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Hui,
 
---o5ddwdsvztwdyzxl
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+teawater writes:
+>In the memory-constrained and complex multitasking environment such as an Android system may require more complex performance priority.
+>For example, the tasks of app in the font, they need high priority because low priority will affect the user experience at once.
+>The tasks of app in background should have lower priority than the first one.  And sometime, each app should have different priority.  Because some apps are frequently used.  They should have high priority than other background apps.
+>The daemons should have lower priority than background apps.  Because most of them will not affect the user experience.
 
-On Friday 20 December 2019 01:24:15 Namjae Jeon wrote:
-> This adds the implementation of misc operations for exfat.
->=20
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/misc.c | 240 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 240 insertions(+)
->  create mode 100644 fs/exfat/misc.c
->=20
-> diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-> new file mode 100644
-> index 000000000000..2fa182cd4ff2
-> --- /dev/null
-> +++ b/fs/exfat/misc.c
+In general I don't think it's meaningful to speculate about whether it would 
+help or not without data and evidence gathering. It would really depend on how 
+the system is composed overall. Is this a real problem you're seeing, or just 
+something hypothetical?
 
-=2E..
+If there is a real case to discuss, we can certainly discuss it. That said, at 
+the very least I think the API needs to be easier to reason about rather than 
+just exposing mm internals, and there needs to be a demonstration that it 
+solves a real problem and existing controls are insufficient :-)
 
-> +/* Convert linear UNIX date to a FAT time/date pair. */
-> +void exfat_time_unix2fat(struct exfat_sb_info *sbi, struct timespec64 *t=
-s,
-> +		struct exfat_date_time *tp)
-> +{
-> +	time_t second =3D ts->tv_sec;
-> +	time_t day, month, year;
-> +	time_t ld; /* leap day */
-> +
-> +	if (!sbi->options.tz_utc)
-> +		second -=3D sys_tz.tz_minuteswest * SECS_PER_MIN;
-> +
-> +	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
-> +	if (second < UNIX_SECS_1980) {
-> +		tp->second  =3D 0;
-> +		tp->minute  =3D 0;
-> +		tp->hour =3D 0;
-> +		tp->day  =3D 1;
-> +		tp->month  =3D 1;
-> +		tp->year =3D 0;
-> +		return;
-> +	}
-> +#if (BITS_PER_LONG =3D=3D 64)
-> +	if (second >=3D UNIX_SECS_2108) {
-> +		tp->second  =3D 59;
-> +		tp->minute  =3D 59;
-> +		tp->hour =3D 23;
-> +		tp->day  =3D 31;
-> +		tp->month  =3D 12;
-> +		tp->year =3D 127;
-> +		return;
-> +	}
-> +#endif
+Thanks,
 
-Hello! Why is this code #if-ed? Kernel supports 64 bit long long
-integers also for 32 bit platforms.
-
-Function parameter struct timespec64 *ts is already 64 bit. so above
-#if-code looks really suspicious.
-
-> +
-> +	day =3D second / SECS_PER_DAY - DAYS_DELTA_DECADE;
-> +	year =3D day / 365;
-> +
-> +	MAKE_LEAP_YEAR(ld, year);
-> +	if (year * 365 + ld > day)
-> +		year--;
-> +
-> +	MAKE_LEAP_YEAR(ld, year);
-> +	day -=3D year * 365 + ld;
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---o5ddwdsvztwdyzxl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgixYwAKCRCL8Mk9A+RD
-UrL7AKCCZpXpghQmLjXT12GlDiQnZrtZqQCeOtO1ZAc8ycv+mwxPtum98ybnRT8=
-=FbCv
------END PGP SIGNATURE-----
-
---o5ddwdsvztwdyzxl--
+Chris
