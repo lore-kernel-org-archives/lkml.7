@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3214C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEDAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE3E208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B11207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640229;
-	bh=Mq9VskrSu3psdoanu/znBpGa5FKozlRw0yU7aJzuzVM=;
+	s=default; t=1577640234;
+	bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKz5n5BclGRDFjob1amC9HN8rugyQ0H/k+78j7mTSXy1M4OEWo3Q+CIU4Ry0D42TI
-	 pgHHtiuFaZOhQHs7ravVjU8/bFpG4OeJewUm2VLRpEiClsPCNJGiC5624d0XBicU6u
-	 mwaQrxHXrFZxsacm149lFxIb7R5PtEY3kCdzvqBs=
+	b=0xq1gw7zHiLkszqB3QuOaRJdaix81NlpfPv6pNtoei88LEIh8wjBjba3ycGH8wFSj
+	 U9aGeK4QvWyZ+gGznhbqk84B1XItA+g8M2cBrDUQd/wmR+zCV6Ux7q9G9PVmBX1hP/
+	 Syy3XPIvp0Lc5higCgY/tHGDOAUXZY0OPCKuWZYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfL2RXs (ORCPT
+        id S1727616AbfL2RXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41686 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfL2RXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:44 -0500
+        id S1727264AbfL2RXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79593208E4;
-        Sun, 29 Dec 2019 17:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AA1E207FD;
+        Sun, 29 Dec 2019 17:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640223;
-        bh=Mq9VskrSu3psdoanu/znBpGa5FKozlRw0yU7aJzuzVM=;
+        s=default; t=1577640228;
+        bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiiYbcMpnS092qLTGpL5uhrWpFJv729XVWwKwJ66ohKDhwh8EEfpz59uxTlanQ/f1
-         f6RAeRrVuqDnOmJqI3xnLmsQ745g+SXBywhACZuHhoqfQ6VtRGB3zB0Zy0aNKwcKB6
-         7ptKu5xoCeSFsiFwK/xTUr9Ulr+AvJKaS8RvRiEY=
+        b=XQhfK39cTUEHHtXENBuMpG5zX/OFrLLx5gxOpvG3zPNzcpyKeX1VZG08FYSYRTHtS
+         6wNv1htRzapgWX14Pdz9ccNXaqeUNnwA52Utf3kGIUuBwYNtvSQD7eS8DEjj4LAqfR
+         SihGWI48e9gGPry3NgAXMPTqNKIgY5dQbT1J6820=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Chiu <chiu@endlessm.com>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 068/161] rtl8xxxu: fix RTL8723BU connection failure issue after warm reboot
-Date:   Sun, 29 Dec 2019 18:18:36 +0100
-Message-Id: <20191229162420.614179235@linuxfoundation.org>
+Subject: [PATCH 4.14 070/161] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Sun, 29 Dec 2019 18:18:38 +0100
+Message-Id: <20191229162421.416747049@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,71 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Chiu <chiu@endlessm.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 0eeb91ade90ce06d2fa1e2fcb55e3316b64c203c ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-The RTL8723BU has problems connecting to AP after each warm reboot.
-Sometimes it returns no scan result, and in most cases, it fails
-the authentication for unknown reason. However, it works totally
-fine after cold reboot.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Compare the value of register SYS_CR and SYS_CLK_MAC_CLK_ENABLE
-for cold reboot and warm reboot, the registers imply that the MAC
-is already powered and thus some procedures are skipped during
-driver initialization. Double checked the vendor driver, it reads
-the SYS_CR and SYS_CLK_MAC_CLK_ENABLE also but doesn't skip any
-during initialization based on them. This commit only tells the
-RTL8723BU to do full initialization without checking MAC status.
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h       | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 1 +
- drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 +++
- 3 files changed, 5 insertions(+)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index 95e3993d8a33..a895b6fd6f85 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -1349,6 +1349,7 @@ struct rtl8xxxu_fileops {
- 	u8 has_s0s1:1;
- 	u8 has_tx_report:1;
- 	u8 gen2_thermal_meter:1;
-+	u8 needs_full_init:1;
- 	u32 adda_1t_init;
- 	u32 adda_1t_path_on;
- 	u32 adda_2t_path_on_a;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-index c4b86a84a721..27e97df996c7 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
-@@ -1673,6 +1673,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
- 	.has_s0s1 = 1,
- 	.has_tx_report = 1,
- 	.gen2_thermal_meter = 1,
-+	.needs_full_init = 1,
- 	.adda_1t_init = 0x01c00014,
- 	.adda_1t_path_on = 0x01c00014,
- 	.adda_2t_path_on_a = 0x01c00014,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 91b01ca32e75..b58bf8e2cad2 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -3905,6 +3905,9 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 	else
- 		macpower = true;
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index e8edbf13302a..3856d51c645b 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -84,7 +84,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
-+	if (fops->needs_full_init)
-+		macpower = false;
-+
- 	ret = fops->power_on(priv);
- 	if (ret < 0) {
- 		dev_warn(dev, "%s: Failed power on\n", __func__);
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
+ 
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -94,16 +95,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
+ 
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
+ 
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
