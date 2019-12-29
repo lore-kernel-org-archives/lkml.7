@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0901EC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B294C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEC421744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730B3208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642169;
-	bh=/T7HwT5cQHY2Nk1h2a8PJTQcmCfQYDDMv5go85/bY/o=;
+	s=default; t=1577642172;
+	bh=5pN0LP0+rabHyB/A/H0CgO5PTb6Xqph+/bQbJyuN+a8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3/HLdKYYZ9WxhJYpCf6i9iQlBb3DXcMq16Dlc4VfqBBSZwpGuLkt6PENdgVwleRr
-	 uA8PxpwBCMWktP8vMZFYKKn1pLIGVLkZZi9r+ivP4NnUFSyt78/PYH41bQ8WdPcnSy
-	 7Zy+F6YgDdxrFFA2m50gSnGuShKHKa9lC3evOOto=
+	b=p/hPevw04IVZ/kLNkTc3HuHGLGRdct0vlPr+lf1a5JCaO15tZlDgzSen14oh8Amjb
+	 1eGubo1WLrsf/Zq8LEpbvURkF9RBui3cfI6h1P4whCo5dxMk5txFbAUOEU39HRG4n+
+	 o/+k3cGpYNdYDVNJmmxWtHuS53x/JvPr8cqsjA30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbfL2R4I (ORCPT
+        id S1733038AbfL2R4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:56:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45128 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732681AbfL2Rz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:58 -0500
+        id S1732723AbfL2R4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:56:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B6021D7E;
-        Sun, 29 Dec 2019 17:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5198208C4;
+        Sun, 29 Dec 2019 17:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642158;
-        bh=/T7HwT5cQHY2Nk1h2a8PJTQcmCfQYDDMv5go85/bY/o=;
+        s=default; t=1577642165;
+        bh=5pN0LP0+rabHyB/A/H0CgO5PTb6Xqph+/bQbJyuN+a8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1lJMCfOS5NCy+DE8drEiWrMj5El7B00/1H7gJcF1NdGo07UebBk5TLKKR4Jh8FkG
-         BzVfrwqegf2wF8m0vqxGpwlw6D31pRvw7CkZunL/03Dbj7Ht4COG2vUbKEqVk8hkvd
-         ttH3/SD8fhgnwBLYA5UPlg4IhvwVh1bIaZBuNApk=
+        b=NQ4RoMPhQVzIdZeEGKi9uiO6k0mjACyPvA+ddYvX1UuT5a4bmmxdrm4RHszTzfDKH
+         n5yS1U/dQCX85vPECnfFbHM/oHFFwhLHbCgI6BIKggNd1GRbzqDOspa7yxqliX+Hh/
+         5BAdirXqhaPokGt45syQV13HGU6TFKdilHG0LoYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chaotian Jing <chaotian.jing@mediatek.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 364/434] mmc: mediatek: fix CMD_TA to 2 for MT8173 HS200/HS400 mode
-Date:   Sun, 29 Dec 2019 18:26:57 +0100
-Message-Id: <20191229172726.150815354@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Qian Cai <cai@lca.pw>, Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 367/434] iommu: fix KASAN use-after-free in iommu_insert_resv_region
+Date:   Sun, 29 Dec 2019 18:27:00 +0100
+Message-Id: <20191229172726.351162300@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,43 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaotian Jing <chaotian.jing@mediatek.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit 8f34e5bd7024d1ffebddd82d7318b1be17be9e9a upstream.
+commit 4c80ba392bf603d468ea827d902f8e7b2505fbf4 upstream.
 
-there is a chance that always get response CRC error after HS200 tuning,
-the reason is that need set CMD_TA to 2. this modification is only for
-MT8173.
+In case the new region gets merged into another one, the nr list node is
+freed.  Checking its type while completing the merge algorithm leads to
+a use-after-free.  Use new->type instead.
 
-Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Tested-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: stable@vger.kernel.org
-Fixes: 1ede5cb88a29 ("mmc: mediatek: Use data tune for CMD line tune")
-Link: https://lore.kernel.org/r/20191204071958.18553-1-chaotian.jing@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 4dbd258ff63e ("iommu: Revisit iommu_insert_resv_region() implementation")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Stable <stable@vger.kernel.org> #v5.3+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/mtk-sd.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/iommu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -228,6 +228,7 @@
- #define MSDC_PATCH_BIT_SPCPUSH    (0x1 << 29)	/* RW */
- #define MSDC_PATCH_BIT_DECRCTMO   (0x1 << 30)	/* RW */
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -312,8 +312,8 @@ int iommu_insert_resv_region(struct iomm
+ 	list_for_each_entry_safe(iter, tmp, regions, list) {
+ 		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
  
-+#define MSDC_PATCH_BIT1_CMDTA     (0x7 << 3)    /* RW */
- #define MSDC_PATCH_BIT1_STOP_DLY  (0xf << 8)    /* RW */
- 
- #define MSDC_PATCH_BIT2_CFGRESP   (0x1 << 15)   /* RW */
-@@ -1881,6 +1882,7 @@ static int hs400_tune_response(struct mm
- 
- 	/* select EMMC50 PAD CMD tune */
- 	sdr_set_bits(host->base + PAD_CMD_TUNE, BIT(0));
-+	sdr_set_field(host->base + MSDC_PATCH_BIT1, MSDC_PATCH_BIT1_CMDTA, 2);
- 
- 	if (mmc->ios.timing == MMC_TIMING_MMC_HS200 ||
- 	    mmc->ios.timing == MMC_TIMING_UHS_SDR104)
+-		/* no merge needed on elements of different types than @nr */
+-		if (iter->type != nr->type) {
++		/* no merge needed on elements of different types than @new */
++		if (iter->type != new->type) {
+ 			list_move_tail(&iter->list, &stack);
+ 			continue;
+ 		}
 
 
