@@ -2,115 +2,98 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083BAC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C016C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE935207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4230E208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 11:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNFNjOW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQ29jlrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfL2KpG (ORCPT
+        id S1726388AbfL2LRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 05:45:06 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41370 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfL2KpG (ORCPT
+        Sun, 29 Dec 2019 06:17:13 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41042 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfL2LRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 05:45:06 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so25674255ioo.8;
-        Sun, 29 Dec 2019 02:45:05 -0800 (PST)
+        Sun, 29 Dec 2019 06:17:12 -0500
+Received: by mail-pf1-f195.google.com with SMTP id w62so16994661pfw.8;
+        Sun, 29 Dec 2019 03:17:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=Gb+ONSF3piDYqauQDyCRW7orC1MjUr6i6hl9Z1quPME=;
-        b=PNFNjOW0KqxeL09lLhXsrTTDSzd6SsVOoyS77t3cXLn1ztSzUtmLCMslU+TpoZsEGt
-         UhlrF4VLGJmKv4PfluHNrqfxfzMa+EoeNmuVKRFdfyJrFvs38pBwRPeiFc8R6JfPw09c
-         C2FKOjsdvXG7/fSeth3jH3Fddsdklf/u6AddHhcaA2kTOogA1xV+st97GSfSW+o8wZa0
-         GgECIUuDiLBcIEqavM3P+VqeJojsNIgP+Cc5U1Elbqg0ItREImJtrYJZONvY2vk32Ncz
-         fJIQbgiOkF8tMu0MUDXWUfXAr6/jSKjoGGWhBY7o63jYb/50wYWFVdJwQajAWjI8PltS
-         3Xog==
+        h=from:to:cc:subject:date:message-id;
+        bh=9kYL0AbI0K/3Y35gdAZ0mqdn7JZ3azuVmXkrAEbJZuQ=;
+        b=JQ29jlrFR8SmXfg0BMdcNCVX/kFNDiG4O7lwF5Hpi9xG51ONSXfv6ZhILyXCGQR+Y8
+         ft9/y2PpOKfbHaeFDCr2mIm6KIOJqoPnXtqSBe7xhTclymKj8lz1AgKEAxmou9HFt51Q
+         R2L/FH5jjlcRrtjRTqIvMRbdRhfQwSBB3Mu3MOn/VRW+ySpog/PHlA9dY8ZC9+Ma1HKT
+         EiaLAy40oeAdF9Y7j/d5yqESi7wK/TxtZ0NYloopLqJpj0eQAuLPOBQJWyqRZSFps1UG
+         BXKSi2o/+KFGXSjVzj2R3zyTO4W4esoTeslIVVrWeYu3J45RgFXbLW8zwJsMBZX8m+3N
+         pPCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=Gb+ONSF3piDYqauQDyCRW7orC1MjUr6i6hl9Z1quPME=;
-        b=Yb/Bb7vTDRhb1v/XB2KHAxfkeWYF1oRzFghEgH71fyScM1j4o8bJ68qTDbO7xoGhzT
-         O/0KzrqzlmNISlEj/nqy1enDr8208PWW4SxumtLpz9SyaRwSGtBCQHdkbWL+0hmy9Hif
-         EZ5Yeqz//E7qqXYWYBHHbP176Sm+ZdGASWd8kik3ODTmcsLLayhYgCEpqgQ6QC06S7Z8
-         El+eEjZyH/+4GkSCFlPtXPbumDMWSumpYAcabcvNDcJEMvUFT3/pqm9KDomxOAcnXytC
-         Z2nvvHUIZfTCvvsgRcjq9Drw8VPlx8WqD0YMABFzWNBsa7JskFRit5JGI9HYOB4JLsDc
-         3I3w==
-X-Gm-Message-State: APjAAAV/sIwfG8ysonxqVNGXySrOjZqmkGiRH2FchdRO46ku0eYi/MSP
-        9Uz+rMVNrWYHbYtr/sSCz/INv+eAxlPj6LbfWqA=
-X-Google-Smtp-Source: APXvYqyLQj+vclB/xrWDh2FyNJJ9gsRkYWFqmhBkC++9MnOALJskz0muhMT/WIOfrsPWkz+D8aRFol3RhCLTz+Xlutk=
-X-Received: by 2002:a6b:b941:: with SMTP id j62mr43177730iof.168.1577616305444;
- Sun, 29 Dec 2019 02:45:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20191229104325.10132-1-tiny.windzz@gmail.com> <20191229104325.10132-2-tiny.windzz@gmail.com>
-In-Reply-To: <20191229104325.10132-2-tiny.windzz@gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sun, 29 Dec 2019 18:44:54 +0800
-Message-ID: <CAEExFWujEpQ0F4bGi9Z94=ymRh5nx_3ftwUZfwLhPvaAbHNCrw@mail.gmail.com>
-Subject: Re: [PATCH] platform: goldfish: pipe: switch to platform_get_irq
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bgolaszewski@baylibre.com, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        matti.vaittinen@fi.rohmeurope.com, phil.edworthy@renesas.com,
-        suzuki.poulose@arm.com, saravanak@google.com,
-        heikki.krogerus@linux.intel.com, dan.j.williams@intel.com,
-        Joe Perches <joe@perches.com>, jeffrey.t.kirsher@intel.com,
-        mans@mansr.com, tglx@linutronix.de, hdegoede@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, ztuowen@gmail.com,
-        sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9kYL0AbI0K/3Y35gdAZ0mqdn7JZ3azuVmXkrAEbJZuQ=;
+        b=p4TooFZYNZPl/z/OqkKaVDpm2aeIo54n1LLGFVhlfUusEjZHPg8zl6826KV3FVZJqD
+         RtLmC0DE7LbfmLER1bzpZefXpDCMTineTwuzVd5Cdo8hRA+PtqDQb6ATWWR8JACfqJu9
+         MsVp4e49sXXNPwUXJaTFot/5afcCpseOeSVucgxC5lGt2N2cyU0R+eQNr5X8MUsAUWZp
+         PfwmjvISpFftN/olUbfWoslIBtkbCdOAgThDbt0i3YigZwIqIyer7Rt9mc9caUJyiCsd
+         4kwa0ajTssI6lEHp0D+UrF7OiZsEJH5XeDWoVwKrSztTM3uQTssvNxRXQ+StufALT84y
+         nVOQ==
+X-Gm-Message-State: APjAAAU135Iz+uekTAVzZvu9zUYQRcXM6mK5koD3unfnKcOiFun3dVzD
+        0Nuj7bnlhBxVz+0HmxAued8=
+X-Google-Smtp-Source: APXvYqzmFJSzaHjRWVCpHp2zsBHqqe7XHajN63Yudc2qAPEpuZfxjnD0DoLGNIQpwwh8FSkBtsOyew==
+X-Received: by 2002:a63:551a:: with SMTP id j26mr65069179pgb.370.1577618231815;
+        Sun, 29 Dec 2019 03:17:11 -0800 (PST)
+Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
+        by smtp.gmail.com with ESMTPSA id d1sm20867030pjx.6.2019.12.29.03.17.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Dec 2019 03:17:10 -0800 (PST)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     linux@armlinux.org.uk, mripard@kernel.org, wens@csie.org,
+        catalin.marinas@arm.com, will@kernel.org,
+        clabbe.montjoie@gmail.com, tiny.windzz@gmail.com, plaes@plaes.org,
+        shawnguo@kernel.org, olof@lixom.net, Anson.Huang@nxp.com,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        anarsoul@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, p.zabel@pengutronix.de
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH 1/2] arm64: defconfig: Enable CONFIG_SUN8I_THERMAL
+Date:   Sun, 29 Dec 2019 11:17:06 +0000
+Message-Id: <20191229111707.16574-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ignore this, I posted it just now...
+Many sunxi based board needs CONFIG_SUN8I_THERMAL for thermal support.
 
-On Sun, Dec 29, 2019 at 6:43 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
-> requesting IRQ's resources, as they can be not ready yet. Using
-> platform_get_irq() instead is preferred for getting IRQ even if it
-> was not retrieved earlier.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/platform/goldfish/goldfish_pipe.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
-> index cef0133aa47a..a1ebaec6eea9 100644
-> --- a/drivers/platform/goldfish/goldfish_pipe.c
-> +++ b/drivers/platform/goldfish/goldfish_pipe.c
-> @@ -913,11 +913,9 @@ static int goldfish_pipe_probe(struct platform_device *pdev)
->                 return -EINVAL;
->         }
->
-> -       r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> -       if (!r)
-> -               return -EINVAL;
-> -
-> -       dev->irq = r->start;
-> +       dev->irq = platform_get_irq(pdev, 0);
-> +       if (dev->irq < 0)
-> +               return dev->irq;
->
->         /*
->          * Exchange the versions with the host device
-> --
-> 2.17.1
->
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6a83ba2aea3e..c3c1cc900d4d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -438,6 +438,7 @@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_THERMAL_EMULATION=y
+ CONFIG_QORIQ_THERMAL=m
++CONFIG_SUN8I_THERMAL=y
+ CONFIG_ROCKCHIP_THERMAL=m
+ CONFIG_RCAR_THERMAL=y
+ CONFIG_RCAR_GEN3_THERMAL=y
+-- 
+2.17.1
+
