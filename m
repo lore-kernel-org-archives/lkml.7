@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8319C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0789DC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA47206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5C8206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643395;
-	bh=p7mjhz8gd3jd+JBPn7f9tDNZ2ZJUC7aK1rTtuhAB4Qw=;
+	s=default; t=1577643400;
+	bh=Y6B4UcocmHODRSr5NfFddhSUmsIQrX+k0n9K1yXol78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmhJcPzYyUrVnY+JlPwR9n3qe9JN/M3pkIeeat4VFni4jgslgey5rh1ZEFNNeZI9X
-	 7eFZ/YVKxPRFeq+f58lJ5YxQ9gOZj19wAWZjaMJVQc3yZFjbPEgHBEoZmtVASkw8J4
-	 R5uX7HGy5lTJFvyZnmo/cpfXLPifXYtrKv8txoHE=
+	b=OCyYmp1Zx+4MVqZ3WIzhwXHCfJIpG9bZXzOts8R5VVnym8AQrXPockLChODYgIypa
+	 Izx59pc+SUGYWPJF9/eBvhAF1Zw32osW1fYo2VRenAS2SVdi+StwXU/PJk65JTZmv2
+	 NQbk1uB2c6SRbbfrYNvZVSBKsz+3PmejlvVMBFFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbfL2SQe (ORCPT
+        id S1727650AbfL2RYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:16:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:24:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727683AbfL2RYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:11 -0500
+        id S1727212AbfL2RXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4366420722;
-        Sun, 29 Dec 2019 17:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EA3D207FD;
+        Sun, 29 Dec 2019 17:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640250;
-        bh=p7mjhz8gd3jd+JBPn7f9tDNZ2ZJUC7aK1rTtuhAB4Qw=;
+        s=default; t=1577640233;
+        bh=Y6B4UcocmHODRSr5NfFddhSUmsIQrX+k0n9K1yXol78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0JpPnSf7/sC+eM/+inzePcUJj2NaIYsD+sFZ9vl5IaVeAQKJcbnwRYn7WBNQmv+o
-         ftyvW630UQ5DfYmbW+s1eTpC7uavPGmJZvZzjaQYZXJBsr5Uq04Y04dcF1yVsLe00K
-         7SrRkLU/tG040JCdH37dquB4a/23gV5hdz2trqNY=
+        b=vqV1GTMy6k5OLz1u44kHQ80dszzvkP0MGZ9KEx0tLsiC3aDpTNu8f6Kn3tA5VqOc1
+         Jl1QL9eBMbuURMEgJtZwXSb2vndYnhCoBqYhBCnY0t4GEIgOe3IHU5gamJSdemPCcN
+         izOJkYDc1M4wSij0K0KOsJ7xjoUx9vYS1O6/+HmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 078/161] libata: Ensure ata_port probe has completed before detach
-Date:   Sun, 29 Dec 2019 18:18:46 +0100
-Message-Id: <20191229162423.838150494@linuxfoundation.org>
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 072/161] RDMA/qedr: Fix memory leak in user qp and mr
+Date:   Sun, 29 Dec 2019 18:18:40 +0100
+Message-Id: <20191229162421.774776080@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,93 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 130f4caf145c3562108b245a576db30b916199d2 ]
+[ Upstream commit 24e412c1e00ebfe73619e6b88cbc26c2c7d41b85 ]
 
-With CONFIG_DEBUG_TEST_DRIVER_REMOVE set, we may find the following WARN:
+User QPs pbl's weren't freed properly.
+MR pbls weren't freed properly.
 
-[   23.452574] ------------[ cut here ]------------
-[   23.457190] WARNING: CPU: 59 PID: 1 at drivers/ata/libata-core.c:6676 ata_host_detach+0x15c/0x168
-[   23.466047] Modules linked in:
-[   23.469092] CPU: 59 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc1-00010-g5b83fd27752b-dirty #296
-[   23.477776] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
-[   23.486286] pstate: a0c00009 (NzCv daif +PAN +UAO)
-[   23.491065] pc : ata_host_detach+0x15c/0x168
-[   23.495322] lr : ata_host_detach+0x88/0x168
-[   23.499491] sp : ffff800011cabb50
-[   23.502792] x29: ffff800011cabb50 x28: 0000000000000007
-[   23.508091] x27: ffff80001137f068 x26: ffff8000112c0c28
-[   23.513390] x25: 0000000000003848 x24: ffff0023ea185300
-[   23.518689] x23: 0000000000000001 x22: 00000000000014c0
-[   23.523987] x21: 0000000000013740 x20: ffff0023bdc20000
-[   23.529286] x19: 0000000000000000 x18: 0000000000000004
-[   23.534584] x17: 0000000000000001 x16: 00000000000000f0
-[   23.539883] x15: ffff0023eac13790 x14: ffff0023eb76c408
-[   23.545181] x13: 0000000000000000 x12: ffff0023eac13790
-[   23.550480] x11: ffff0023eb76c228 x10: 0000000000000000
-[   23.555779] x9 : ffff0023eac13798 x8 : 0000000040000000
-[   23.561077] x7 : 0000000000000002 x6 : 0000000000000001
-[   23.566376] x5 : 0000000000000002 x4 : 0000000000000000
-[   23.571674] x3 : ffff0023bf08a0bc x2 : 0000000000000000
-[   23.576972] x1 : 3099674201f72700 x0 : 0000000000400284
-[   23.582272] Call trace:
-[   23.584706]  ata_host_detach+0x15c/0x168
-[   23.588616]  ata_pci_remove_one+0x10/0x18
-[   23.592615]  ahci_remove_one+0x20/0x40
-[   23.596356]  pci_device_remove+0x3c/0xe0
-[   23.600267]  really_probe+0xdc/0x3e0
-[   23.603830]  driver_probe_device+0x58/0x100
-[   23.608000]  device_driver_attach+0x6c/0x90
-[   23.612169]  __driver_attach+0x84/0xc8
-[   23.615908]  bus_for_each_dev+0x74/0xc8
-[   23.619730]  driver_attach+0x20/0x28
-[   23.623292]  bus_add_driver+0x148/0x1f0
-[   23.627115]  driver_register+0x60/0x110
-[   23.630938]  __pci_register_driver+0x40/0x48
-[   23.635199]  ahci_pci_driver_init+0x20/0x28
-[   23.639372]  do_one_initcall+0x5c/0x1b0
-[   23.643199]  kernel_init_freeable+0x1a4/0x24c
-[   23.647546]  kernel_init+0x10/0x108
-[   23.651023]  ret_from_fork+0x10/0x18
-[   23.654590] ---[ end trace 634a14b675b71c13 ]---
-
-With KASAN also enabled, we may also get many use-after-free reports.
-
-The issue is that when CONFIG_DEBUG_TEST_DRIVER_REMOVE is set, we may
-attempt to detach the ata_port before it has been probed.
-
-This is because the ata_ports are async probed, meaning that there is no
-guarantee that the ata_port has probed prior to detach. When the ata_port
-does probe in this scenario, we get all sorts of issues as the detach may
-have already happened.
-
-Fix by ensuring synchronisation with async_synchronize_full(). We could
-alternatively use the cookie returned from the ata_port probe
-async_schedule() call, but that means managing the cookie, so more
-complicated.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: e0290cce6ac0 ("qedr: Add support for memory registeration verbs")
+Link: https://lore.kernel.org/r/20191027200451.28187-5-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/qedr/verbs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index cbb162b683b6..08f67c109429 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -6676,6 +6676,9 @@ void ata_host_detach(struct ata_host *host)
- {
- 	int i;
- 
-+	/* Ensure ata_port probe has completed */
-+	async_synchronize_full();
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 7f4cc9336442..656e7c1a4449 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -1343,6 +1343,14 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
+ 	if (qp->urq.umem)
+ 		ib_umem_release(qp->urq.umem);
+ 	qp->urq.umem = NULL;
 +
- 	for (i = 0; i < host->n_ports; i++)
- 		ata_port_detach(host->ports[i]);
++	if (rdma_protocol_roce(&dev->ibdev, 1)) {
++		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
++		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
++	} else {
++		kfree(qp->usq.pbl_tbl);
++		kfree(qp->urq.pbl_tbl);
++	}
+ }
  
+ static int qedr_create_user_qp(struct qedr_dev *dev,
+@@ -2331,8 +2339,8 @@ int qedr_dereg_mr(struct ib_mr *ib_mr)
+ 
+ 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
+ 
+-	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
+-		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
++	if (mr->type != QEDR_MR_DMA)
++		free_mr_info(dev, &mr->info);
+ 
+ 	/* it could be user registered memory. */
+ 	if (mr->umem)
 -- 
 2.20.1
 
