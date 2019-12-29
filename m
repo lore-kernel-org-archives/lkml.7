@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AE2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DDCC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B26B206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BE320718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642691;
-	bh=jU+bs6JHKUBkA3CAVzOZSRkySZdaooYcCs0khCtU7R0=;
+	s=default; t=1577642701;
+	bh=LE9cdr8eK35EQnzMPDAGO/gXk9BabTnFaFTDvZSMwoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khg9dulzk99hZE24WsHUzh0jwc9h7sA+WCZEARYI1yscyjZ5uJOJbBk9Nm16DTv1q
-	 FMrihwdUci7EL+SLzDAE+3nRAayEWbEcLM+D5a2SVLmf8pxDSOOC97XSVavKocx0vl
-	 U8q8Cwte1/Q6T6klH6K9pJ2puuhBJ6Tv/8XLCxDc=
+	b=hIZICbW85ECXOj1En+lT0Qy56I2IR5Kt2exq/q9HP7IAeZq4jApbKJO7xRNTXhFWf
+	 zrQ0JmwMQjWVpRzOdbI/blo3NYkN/uSv1xO79fyna4F4BuaAv1c1I9ME4tnIElzhki
+	 rv7hB9k2DQJSzIji59pbFo4+PxBqoTjVwqPWMivo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfL2Rv5 (ORCPT
+        id S2387807AbfL2SE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731640AbfL2Rvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:48 -0500
+        id S1732137AbfL2Rvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DAAC208C4;
-        Sun, 29 Dec 2019 17:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A21208C4;
+        Sun, 29 Dec 2019 17:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641906;
-        bh=jU+bs6JHKUBkA3CAVzOZSRkySZdaooYcCs0khCtU7R0=;
+        s=default; t=1577641902;
+        bh=LE9cdr8eK35EQnzMPDAGO/gXk9BabTnFaFTDvZSMwoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eF4Opo+cIQPDbrVfLY4atuRVvIlpA96KUn4xLKAv+VjfRbEW7pLBy8I0UNUrikyUe
-         gmAn8/giMTplJZqIvGuA6Y5Ip4KlHp626buWZEwBIyTkUc+8sp+KlZspJnGfbLYp2n
-         8Ym5siER3dcGLP8uz6atLRB129Y5NfrCuYW/rrpw=
+        b=q83Xjd2TYW0nIhxzxWJWsMpVZDOjpFZvPcikWHT2rIZenZFZsbU+sWz4SmTILk1TD
+         /lfcEOeHtLuWG/FVQpZLChahx32Fuzpiv7DL/+G0Y+gbqJj1JLajemnOVM83+yLUUk
+         9PDJAdxEKT5Y+lkRx3TdakfUzH/AtZVXGMKG7euI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        stable@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 261/434] perf probe: Skip overlapped location on searching variables
-Date:   Sun, 29 Dec 2019 18:25:14 +0100
-Message-Id: <20191229172719.272992173@linuxfoundation.org>
+Subject: [PATCH 5.4 259/434] xen/gntdev: Use select for DMA_SHARED_BUFFER
+Date:   Sun, 29 Dec 2019 18:25:12 +0100
+Message-Id: <20191229172719.139077677@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,102 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
+[ Upstream commit fa6614d8ef13c63aac52ad7c07c5e69ce4aba3dd ]
 
-Since debuginfo__find_probes() callback function can be called with  the
-location which already passed, the callback function must filter out
-such overlapped locations.
+DMA_SHARED_BUFFER can not be enabled by the user (it represents a library
+set in the kernel). The kconfig convention is to use select for such
+symbols so they are turned on implicitly when the user enables a kconfig
+that needs them.
 
-add_probe_trace_event() has already done it by commit 1a375ae7659a
-("perf probe: Skip same probe address for a given line"), but
-add_available_vars() doesn't. Thus perf probe -v shows same address
-repeatedly as below:
+Otherwise the XEN_GNTDEV_DMABUF kconfig is overly difficult to enable.
 
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-
-With this fix, perf probe -V shows it correctly:
-
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-
-Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 932d6562179e ("xen/gntdev: Add initial support for dma-buf UAPI")
+Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/xen/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 4079ed617f53..e4ef8f4935b2 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1425,6 +1425,18 @@ error:
- 	return DIE_FIND_CB_END;
- }
+diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+index 79cc75096f42..a50dadd01093 100644
+--- a/drivers/xen/Kconfig
++++ b/drivers/xen/Kconfig
+@@ -141,7 +141,8 @@ config XEN_GNTDEV
  
-+static bool available_var_finder_overlap(struct available_var_finder *af)
-+{
-+	int i;
-+
-+	for (i = 0; i < af->nvls; i++) {
-+		if (af->pf.addr == af->vls[i].point.address)
-+			return true;
-+	}
-+	return false;
-+
-+}
-+
- /* Add a found vars into available variables list */
- static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- {
-@@ -1435,6 +1447,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	Dwarf_Die die_mem;
- 	int ret;
- 
-+	/*
-+	 * For some reason (e.g. different column assigned to same address),
-+	 * this callback can be called with the address which already passed.
-+	 * Ignore it first.
-+	 */
-+	if (available_var_finder_overlap(af))
-+		return 0;
-+
- 	/* Check number of tevs */
- 	if (af->nvls == af->max_vls) {
- 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
+ config XEN_GNTDEV_DMABUF
+ 	bool "Add support for dma-buf grant access device driver extension"
+-	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC && DMA_SHARED_BUFFER
++	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC
++	select DMA_SHARED_BUFFER
+ 	help
+ 	  Allows userspace processes and kernel modules to use Xen backed
+ 	  dma-buf implementation. With this extension grant references to
 -- 
 2.20.1
 
