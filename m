@@ -2,179 +2,128 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38F3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458D9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E60D21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640153;
-	bh=97AH1xh1Qq9DnQUA/Gr+AylmYm9mAMeokZWHItaRuCU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dYX8SzN6ui0j8aVKXa4Ugqp4Yef1NaLcVRIzKqFknRmeQTj7L5qBf7edmjNeMPSPP
-	 QgfT/4g7knKOzX+GRKqJAIcnKRNm512o5UB59oOZy1eu63nqzoJXZf/AyoaQgSgfXt
-	 v0mY1TWG9wW4LzCvceXpfb+R0lZ7mjgh4YiBzq00=
+	by mail.kernel.org (Postfix) with ESMTP id 1BC1721744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="HyR8Bdo6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfL2RWc (ORCPT
+        id S1727354AbfL2RWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:22:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726658AbfL2RW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45DF7207FD;
-        Sun, 29 Dec 2019 17:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640148;
-        bh=97AH1xh1Qq9DnQUA/Gr+AylmYm9mAMeokZWHItaRuCU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1jj6rfpkVl4H/xM6tL/Q4zk6Wg6Nm2GuvDb9/ONnNKl4NgsiILsdVwu+GpbWK/vyD
-         rMCIeiSKykUnAnjQztYxTCYqXP6XDblcHZG8btvhICTmOr+O7zYPiYokY8OHCl1LhD
-         D6rctMGyvP8KWCTd+4qPZRFfEB68FurT6sS+lbCM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
-        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 037/161] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
-Date:   Sun, 29 Dec 2019 18:18:05 +0100
-Message-Id: <20191229162410.991105696@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
-References: <20191229162355.500086350@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 29 Dec 2019 12:22:36 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40763 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfL2RWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:22:33 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q8so17213431pfh.7
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 09:22:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=d2ZCOXk6pOuLZ4uX0KmFIbD6q4XT8KzNcuufQdURRQw=;
+        b=HyR8Bdo6jGIDQMwbuh/d960hidl00ggcit9R+GdoUC7sCFuZn4d0N/bqmU5Qb6yjL6
+         9UiOvJH387CsLCBCQ2tTppi5Q4vhNbFgIAIXEo889sr+yw8lrOvRRAl4gIvuHTyXx4sP
+         s4Aas7Wk5ioEfpXR0txmfcigTT0OAh+vgPBiSe+cG5nBG9ckLiY/WhLdD33eVnOB3exk
+         1krypmpTg2an+ag88yNu6ZBZU2r4QyJd9IvWOa8N3EnI6CyHDyDQ87Hze9G+JwFvzvkw
+         JrsGmNz9nIeKX8zpT28lMSe9/2cHcdq6Cra7Yg8LuEdMD3bLPJgZw5n0lVJO7UUhr/Cv
+         luCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=d2ZCOXk6pOuLZ4uX0KmFIbD6q4XT8KzNcuufQdURRQw=;
+        b=QFtQ4IKNsZhU1cWkKTsEkTM4pN1PLXS4BIu2ZWiat1rZWh3gQ/VKq+jb0i9usyhA9n
+         FVIGRDgoBAIbF1fmITxOSsS2BvL9fpqFXMqvlUsqeb5Rz4w4YGr1j9bw9WlQtrxViLUj
+         qFeJdbErOOIK89XHtmJLA+mY+Ch8mKJqEyrfvTYFfpvbmYqDelHar6KdeSyBQKEuBKoC
+         RJNGpg4m16pMdMfuWS1bOdZX4n04K1axyFcl40riu5RdC/GiTb1KTL2pb4Ss8T6IDKMK
+         GPs6OZz3xmkskJu5coAgrAmYxojujebtXpqAzoO7xWvwhn3zCIUSQpZnoLlp9VIJSMmF
+         cKrA==
+X-Gm-Message-State: APjAAAVWJUmTlDShH4Wu4ol+VoYaEqseMii02WVhmyRf9WyZFagibnTt
+        8D4kFgkwRTw05/HvdLm89VA5+g==
+X-Google-Smtp-Source: APXvYqxS9B4VPY19ezhDkronqK9tX2Dc3/dG7ZtNqjBtPXUiLRViaQeqCJ3xDgjeHrXpbyuW4w4gjw==
+X-Received: by 2002:a63:1110:: with SMTP id g16mr45710067pgl.84.1577640151958;
+        Sun, 29 Dec 2019 09:22:31 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id j10sm21907911pjb.14.2019.12.29.09.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Dec 2019 09:22:31 -0800 (PST)
+Date:   Sun, 29 Dec 2019 09:22:29 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V updates for v5.5-rc4
+Message-ID: <alpine.DEB.2.21.9999.1912290921260.204131@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Greear <greearb@candelatech.com>
+Linus,
 
-[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
 
-Offchannel management frames were failing:
+  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
 
-[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
-[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
-[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
-[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+are available in the Git repository at:
 
-This bug appears to have been added between 4.0 (which works for us),
-and 4.4, which does not work.
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.5-rc4
 
-I think this is because the tx-offchannel logic gets in a loop when
-ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
-sent to the firmware for transmit.
+for you to fetch changes up to 1833e327a5ea1d1f356fbf6ded0760c9ff4b0594:
 
-This patch fixes the problem on 4.9 for me, and now HS20 clients
-can work again with my firmware.
+  riscv: export flush_icache_all to modules (2019-12-27 21:51:01 -0800)
 
-Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
+----------------------------------------------------------------
+RISC-V updates for v5.5-rc4
 
-Signed-off-by: Ben Greear <greearb@candelatech.com>
-Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
-[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+One important fix for RISC-V:
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index dff34448588f..ea47ad4b2343 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -3627,7 +3627,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 			 struct ieee80211_vif *vif,
- 			 enum ath10k_hw_txrx_mode txmode,
- 			 enum ath10k_mac_tx_path txpath,
--			 struct sk_buff *skb)
-+			 struct sk_buff *skb, bool noque_offchan)
- {
- 	struct ieee80211_hw *hw = ar->hw;
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
-@@ -3655,10 +3655,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
- 		}
- 	}
- 
--	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
-+	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
- 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
--			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
--				   skb);
-+			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
-+				   skb, skb->len);
- 
- 			skb_queue_tail(&ar->offchan_tx_queue, skb);
- 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
-@@ -3720,8 +3720,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 
- 		mutex_lock(&ar->conf_mutex);
- 
--		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
--			   skb);
-+		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
-+			   skb, skb->len);
- 
- 		hdr = (struct ieee80211_hdr *)skb->data;
- 		peer_addr = ieee80211_get_DA(hdr);
-@@ -3767,7 +3767,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
- 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
- 
--		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
- 		if (ret) {
- 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
- 				    ret);
-@@ -3777,8 +3777,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
- 		time_left =
- 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
- 		if (time_left == 0)
--			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
--				    skb);
-+			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
-+				    skb, skb->len);
- 
- 		if (!peer && tmp_peer_created) {
- 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
-@@ -3957,7 +3957,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (unlikely(ret)) {
- 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
- 
-@@ -4239,7 +4239,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
- 		spin_unlock_bh(&ar->htt.tx_lock);
- 	}
- 
--	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
-+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
- 	if (ret) {
- 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
- 		if (is_htt) {
--- 
-2.20.1
+- Redirect any incoming syscall with an ID less than -1 to
+  sys_ni_syscall, rather than allowing them to fall through into the
+  syscall handler.
+
+and two minor build fixes:
+
+- Export __asm_copy_{from,to}_user() from where they are defined.
+  This fixes a build error triggered by some randconfigs.
+
+- Export flush_icache_all().  I'd resisted this before, since
+  historically we didn't want modules to be able to flush the I$
+  directly; but apparently everyone else is doing it now.
+
+----------------------------------------------------------------
+David Abdurachmanov (1):
+      riscv: reject invalid syscalls below -1
+
+Luc Van Oostenryck (1):
+      riscv: fix compile failure with EXPORT_SYMBOL() & !MMU
+
+Olof Johansson (1):
+      riscv: export flush_icache_all to modules
+
+ arch/riscv/kernel/entry.S       | 1 +
+ arch/riscv/kernel/riscv_ksyms.c | 3 ---
+ arch/riscv/lib/uaccess.S        | 4 ++++
+ arch/riscv/mm/cacheflush.c      | 1 +
+ 4 files changed, 6 insertions(+), 3 deletions(-)
 
 
-
+Kernel object size difference:
+   text	   data	    bss	    dec	    hex	filename
+6896332	2329908	 313920	9540160	 919240	vmlinux.rv64.orig
+6896379	2329908	 313920	9540207	 91926f	vmlinux.rv64.patched
+6656967	1939072	 257576	8853615	 87186f	vmlinux.rv32.orig
+6656994	1939072	 257576	8853642	 87188a	vmlinux.rv32.patched
+1171666	 353368	 130024	1655058	 194112	vmlinux.nommu_virt.orig
+1171674	 353368	 130024	1655066	 19411a	vmlinux.nommu_virt.patched
