@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92384C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F19C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9CC208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4980A20CC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640198;
-	bh=c0xtsXZSrHsHyDNoVSZX+RebIQBhrqBKY/aFIfqMpbY=;
+	s=default; t=1577640202;
+	bh=d0/54zHd7bFo7CaWOxGyfNacHyy66MG5DTVPdEA80z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0VmcA9mUm1Tyr8+W3JUyhBUSibd/76ig586KSNmo1ZzO2z8jroMqbX4pzrwbz8YpL
-	 CLsxdlaO/cTvENxmSxkB5K8p1omOIchtPmFCEY6G7xF4lGuFRF9MFD1VXYYZM7jrGF
-	 3ruWjUsVvQ9U83Qdmrlfz/5SbtUzJJZcem1IAVtQ=
+	b=mZf5l+KBP2hIdiONiGhqI3u8ifxiPH8CbvbWklxZuMABUnbqZxoIlaQo1bxJed/2D
+	 z7VMHsuLDo73f1tjF3kd4LnpmAMGtwgHRJ2OoCyc/r98vH9kio/O53l5r2t7rphm9F
+	 IcX/vngmfB8abbGJpQ6UEH5t3673mkwl3pjue7co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfL2RXR (ORCPT
+        id S1727520AbfL2RXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727498AbfL2RXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:13 -0500
+        id S1727507AbfL2RXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773A020722;
-        Sun, 29 Dec 2019 17:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3C49207FF;
+        Sun, 29 Dec 2019 17:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640192;
-        bh=c0xtsXZSrHsHyDNoVSZX+RebIQBhrqBKY/aFIfqMpbY=;
+        s=default; t=1577640195;
+        bh=d0/54zHd7bFo7CaWOxGyfNacHyy66MG5DTVPdEA80z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJBeXMr0JzqnHxuRC/GIEa1cvT2d4/YsnG8WMEji7eeRC7+EuWNexT7sgDn5HDlwL
-         dp2y7LZn7uaqnqlCPri0i6q2bQegbi07CmKWfdnoYZ+bPr+QKn4JToV677D4hsMg0w
-         IBBbH/hlkazVNhzM8go2Bq8l8yTG2tiqc3p4j/lA=
+        b=AJn1w6UH1+tj5XoFY4IP7ZmHg1YIGqbqaBxBeRqnbAxhSXX1U+nB2tXoX2i1yveDE
+         rcJEM85W66dHlqv0PVdKtjPMEVFf6rxRXl5tORcF5l7Q/cmdpWTMKFkRt3biKeYmq7
+         Gi6d5KQL6gcPgJEIJcHXBs8W8hvYcG3QT4Mpf3vg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        stable@vger.kernel.org,
+        Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 057/161] extcon: sm5502: Reset registers during initialization
-Date:   Sun, 29 Dec 2019 18:18:25 +0100
-Message-Id: <20191229162416.218186727@linuxfoundation.org>
+Subject: [PATCH 4.14 040/161] usb: renesas_usbhs: add suspend event support in gadget mode
+Date:   Sun, 29 Dec 2019 18:18:08 +0100
+Message-Id: <20191229162411.724779098@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,61 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
 
-[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
+[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
 
-On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-seems to keep interrupts enabled for SM5502 when booting Linux.
-Changing the cable state (i.e. plugging in a cable) - until the driver
-is loaded - will therefore produce an interrupt that is never read.
+When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
+will be generated and Suspended state bit is set in interrupt status
+register. Interrupt handler will call driver->suspend(composite_suspend)
+if suspended state bit is set. composite_suspend will call
+ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
+by user space application via /dev/ep0.
 
-In this situation, the cable state will be stuck forever on the
-initial state because SM5502 stops sending interrupts.
-This can be avoided by clearing those pending interrupts after
-the driver has been loaded.
+To be able to detect host detach, extend the DVSQ_MASK to cover the
+Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
+Register 0 (INTSTS0) register and perform appropriate action in the
+DVST interrupt handler (usbhsg_irq_dev_state).
 
-One way to do this is to reset all registers to default state
-by writing to SM5502_REG_RESET. This ensures that we start from
-a clean state, with all interrupts disabled.
+Without this commit, disconnection of the phone from R-Car-H3 ES2.0
+Salvator-X CN9 port is not recognized and reverse role switch does
+not happen. If phone is connected again it does not enumerate.
 
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+With this commit, disconnection will be recognized and reverse role
+switch will happen by a user space application. If phone is connected
+again it will enumerate properly and will become visible in the output
+of 'lsusb'.
+
+Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-sm5502.c | 4 ++++
- drivers/extcon/extcon-sm5502.h | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/usb/renesas_usbhs/common.h     |  3 ++-
+ drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index 106ef0297b53..1a1ee3db3455 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -69,6 +69,10 @@ struct sm5502_muic_info {
- /* Default value of SM5502 register to bring up MUIC device. */
- static struct reg_data sm5502_reg_data[] = {
- 	{
-+		.reg = SM5502_REG_RESET,
-+		.val = SM5502_REG_RESET_MASK,
-+		.invert = true,
-+	}, {
- 		.reg = SM5502_REG_CONTROL,
- 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
- 		.invert = false,
-diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-index 974b53222f56..12f8b01e5753 100644
---- a/drivers/extcon/extcon-sm5502.h
-+++ b/drivers/extcon/extcon-sm5502.h
-@@ -241,6 +241,8 @@ enum sm5502_reg {
- #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
- 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index b8620aa6b72e..8424c165f732 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -163,11 +163,12 @@ struct usbhs_priv;
+ #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
+ #define VALID	(1 << 3)	/* USB Request Receive */
  
-+#define SM5502_REG_RESET_MASK			(0x1)
+-#define DVSQ_MASK		(0x3 << 4)	/* Device State */
++#define DVSQ_MASK		(0x7 << 4)	/* Device State */
+ #define  POWER_STATE		(0 << 4)
+ #define  DEFAULT_STATE		(1 << 4)
+ #define  ADDRESS_STATE		(2 << 4)
+ #define  CONFIGURATION_STATE	(3 << 4)
++#define  SUSPENDED_STATE	(4 << 4)
+ 
+ #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
+ #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index 0dedb0d91dcc..b27f2135b66d 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -465,12 +465,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
+ {
+ 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
++	int state = usbhs_status_get_device_state(irq_state);
+ 
+ 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
+ 
+-	dev_dbg(dev, "state = %x : speed : %d\n",
+-		usbhs_status_get_device_state(irq_state),
+-		gpriv->gadget.speed);
++	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
 +
- /* SM5502 Interrupts */
- enum sm5502_irq {
- 	/* INT1 */
++	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
++	    (state & SUSPENDED_STATE)) {
++		if (gpriv->driver && gpriv->driver->suspend)
++			gpriv->driver->suspend(&gpriv->gadget);
++		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
