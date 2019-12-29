@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6FCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E886C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B73208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8A5208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641886;
-	bh=jphEfFQKijuTGRj65Je5DlIlgMQ3inR2NKTRNZ5w+bg=;
+	s=default; t=1577641889;
+	bh=vwhE9Lb82quyMJwQCSJAsu3MVGD0hjqpeFiWyHf1JvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yb77ldxmeKlofpGi00uhqn+peEJGo2GN2JzjAu19iH065Svkeke/gqbkW6DcSL898
-	 af+O6JB9+m87Abc2QqM+GEiGhq3F+Et8hKgkikVeO2Mnorml6s4Dcn7r442wnd0KM7
-	 I2CBBPidfwMH8MWnqkFhroVXuK91STWkNvBz8MVw=
+	b=o67GqHXuEZmJPoz4BCnZSeti73gfWYXkQMpvqXXxthpVmMvZrwNTGSL89uoJI262Y
+	 vb3Xok6auQHeEpcZOeq/LYrqX24ahhS0B7/TBP1PDXuCUCSmqdkG2oTcw9HVeoXb4Y
+	 mCDHbvm51NOOZIuS9gjvgv7QFLckHJcfw2Y+LJdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbfL2RvY (ORCPT
+        id S1732091AbfL2Rv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:51:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36500 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732058AbfL2RvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:19 -0500
+        id S1732072AbfL2RvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13D6220718;
-        Sun, 29 Dec 2019 17:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC59920718;
+        Sun, 29 Dec 2019 17:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641878;
-        bh=jphEfFQKijuTGRj65Je5DlIlgMQ3inR2NKTRNZ5w+bg=;
+        s=default; t=1577641883;
+        bh=vwhE9Lb82quyMJwQCSJAsu3MVGD0hjqpeFiWyHf1JvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dph/aR9kmTABLKmzc9o4iyXqeZokKrMvYZ8l1bNdhDBGffQ3twAikzVZHw9CI9kw2
-         arJMBkkQnS+3HMh/6mnDp9PL/oc1ckqJBaN0OuF7Y1dAYmMTzxsUw8DqDLFMOoYPr3
-         V0tgNQOYqCCuc3/QGaql8cZgSFpuSkOuveWEWTt4=
+        b=G/qJeZwGfx/0YjGbq/H9L802+sT6FhNjf15grShWiCtAQQoyf3V0dgpgBmY6JAgMN
+         TodghggUZqaxbPpwEBQY3PA5UcDJHmW5aNDGgRvqir43ycaQJL2kLAg7tQAWqwZIeD
+         9I28VekhTv4jhOtM2+K5sLGKWTgS9vTXZJFlaDPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 250/434] perf probe: Fix to show inlined function callsite without entry_pc
-Date:   Sun, 29 Dec 2019 18:25:03 +0100
-Message-Id: <20191229172718.511624671@linuxfoundation.org>
+Subject: [PATCH 5.4 252/434] perf probe: Fix to probe a function which has no entry pc
+Date:   Sun, 29 Dec 2019 18:25:05 +0100
+Message-Id: <20191229172718.657510315@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -64,108 +65,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 18e21eb671dc87a4f0546ba505a89ea93598a634 ]
+[ Upstream commit 5d16dbcc311d91267ddb45c6da4f187be320ecee ]
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+Fix 'perf probe' to probe a function which has no entry pc or low pc but
+only has ranges attribute.
 
-Without this:
+probe_point_search_cb() uses dwarf_entrypc() to get the probe address,
+but that doesn't work for the function DIE which has only ranges
+attribute. Use die_entrypc() instead.
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+Without this fix:
 
-With this patch:
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
+    Error: Failed to add events.
 
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
+With this:
+
+  # perf probe -k ../build-x86_64/vmlinux -D clear_tasks_mm_cpumask:0
+  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
 
 Committer testing:
 
 Before:
 
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
+    Error: Failed to add events.
   [root@quaco ~]#
 
 After:
 
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
   Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask)
 
   You can now use it in all perf tools, such as:
 
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
 
   [root@quaco ~]#
 
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
+Using it with 'perf trace':
 
-Using it:
+  [root@quaco ~]# perf trace -e probe:clear_tasks_mm_cpumask
 
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
+Doesn't seem to be used in x86_64:
 
-Ok, Intel system here... :-)
+  $ find . -name "*.c" | xargs grep clear_tasks_mm_cpumask
+  ./kernel/cpu.c: * clear_tasks_mm_cpumask - Safely clear tasks' mm_cpumask for a CPU
+  ./kernel/cpu.c:void clear_tasks_mm_cpumask(int cpu)
+  ./arch/xtensa/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/csky/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/sh/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/arm/kernel/smp.c:	clear_tasks_mm_cpumask(cpu);
+  ./arch/powerpc/mm/nohash/mmu_context.c:	clear_tasks_mm_cpumask(cpu);
+  $ find . -name "*.h" | xargs grep clear_tasks_mm_cpumask
+  ./include/linux/cpu.h:void clear_tasks_mm_cpumask(int cpu);
+  $ find . -name "*.S" | xargs grep clear_tasks_mm_cpumask
+  $
 
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: e1ecbbc3fa83 ("perf probe: Fix to handle optimized not-inlined functions")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157199319438.8075.4695576954550638618.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
+ tools/perf/util/probe-finder.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 4b1890204e99..08aba015e072 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -673,7 +673,7 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 7857ae7a10b7..4079ed617f53 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -994,7 +994,7 @@ static int probe_point_search_cb(Dwarf_Die *sp_die, void *data)
+ 		param->retval = find_probe_point_by_line(pf);
+ 	} else if (die_is_func_instance(sp_die)) {
+ 		/* Instances always have the entry address */
+-		dwarf_entrypc(sp_die, &pf->addr);
++		die_entrypc(sp_die, &pf->addr);
+ 		/* But in some case the entry address is 0 */
+ 		if (pf->addr == 0) {
+ 			pr_debug("%s has no entry PC. Skipped\n",
 -- 
 2.20.1
 
