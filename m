@@ -2,54 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCCDC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433B8C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2DF222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD98222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640527;
-	bh=OEryQMCDO0h3nxDcpCjCIVho6fs03Rb0teB4tkP6A74=;
+	s=default; t=1577640531;
+	bh=XEw1MLkKkBAfT6/DF5ZElitYttQJBPi1wQ5u08eLZhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hNT/3+YVjybQveqtFQAkbjOYYgoFi/nufy70KN6TcRVyGQSyDumqlhFsaap51yVJe
-	 aiOvgv99tsKRDTtNhT2J3VltHUX4x1f45v+Kl5GRipHDlhZpTAHi5zTCgAThX/tfrz
-	 fxAwnvtk4XYoxEUfo8ZSVj09sA9/qtNsfEFHTH6A=
+	b=zkFFWJRwm9uZDuP3tOOI92qaGBL7TVMbtouMx2Idpm+RArs2W7cuw5z5to473Xuam
+	 L9QZb8TRI6dVBqU6vkHqahcmA1M0c0Ie0epjfWtYxDuRWSV8S6oEYO1NCaZvxtZG2c
+	 WOBDPAJrg64LNnuKFyp72bGwWmz1EAwLyQM/m6tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfL2R2q (ORCPT
+        id S1728670AbfL2R2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:28:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:28:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728645AbfL2R2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:43 -0500
+        id S1728659AbfL2R2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76961222D9;
-        Sun, 29 Dec 2019 17:28:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01724207FF;
+        Sun, 29 Dec 2019 17:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640522;
-        bh=OEryQMCDO0h3nxDcpCjCIVho6fs03Rb0teB4tkP6A74=;
+        s=default; t=1577640525;
+        bh=XEw1MLkKkBAfT6/DF5ZElitYttQJBPi1wQ5u08eLZhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GgxpEeHqhzOoBFsyrbwa5m+Xv1iEAvt7BtVcJafxs1ipQ2GWhy0AB55mTRuMC/u/o
-         bMPBEw8Uyd8XBcEsSup6B54NFKYmw3AfjinvrruxAErRgyf/8V2P3nQR5oZMf3e9Bd
-         HmUvoVE7OCDH3KHkrA2QvsVx5jijj1EYhDHfSPjY=
+        b=vfNDBqnxMouWrrM6S8FqSf285F6zy4XF2UZ9vaayVZ3ichYsWfWcey+4HZREOsuap
+         OGotBmQpArHiHaEdVXRAkzPtfANJsmRgKl1bEjYoX8ui/qJKRE0xhc/Q2MFqL4K47h
+         KirKsT1I4Oza78K7svViGRmDl5ED2Ujix3HRaUcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/219] iio: light: bh1750: Resolve compiler warning and make code more readable
-Date:   Sun, 29 Dec 2019 18:17:12 +0100
-Message-Id: <20191229162513.029169275@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 004/219] net: dst: Force 4-byte alignment of dst_metrics
+Date:   Sun, 29 Dec 2019 18:16:46 +0100
+Message-Id: <20191229162509.732442011@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,51 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit f552fde983d378e7339f9ea74a25f918563bf0d3 ]
+[ Upstream commit 258a980d1ec23e2c786e9536a7dd260bea74bae6 ]
 
-Separate the declaration of struct bh1750_chip_info from definition
-of bh1750_chip_info_tbl[] in a single statement as it makes the code
-hard to read, and with the extra newline it makes it look as if the
-bh1750_chip_info_tbl[] had no explicit type.
+When storing a pointer to a dst_metrics structure in dst_entry._metrics,
+two flags are added in the least significant bits of the pointer value.
+Hence this assumes all pointers to dst_metrics structures have at least
+4-byte alignment.
 
-This change also resolves the following compiler warning about the
-unusual position of the static keyword that can be seen when building
-with warnings enabled (W=1):
+However, on m68k, the minimum alignment of 32-bit values is 2 bytes, not
+4 bytes.  Hence in some kernel builds, dst_default_metrics may be only
+2-byte aligned, leading to obscure boot warnings like:
 
-drivers/iio/light/bh1750.c:64:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+    WARNING: CPU: 0 PID: 7 at lib/refcount.c:28 refcount_warn_saturate+0x44/0x9a
+    refcount_t: underflow; use-after-free.
+    Modules linked in:
+    CPU: 0 PID: 7 Comm: ksoftirqd/0 Tainted: G        W         5.5.0-rc2-atari-01448-g114a1a1038af891d-dirty #261
+    Stack from 10835e6c:
+	    10835e6c 0038134f 00023fa6 00394b0f 0000001c 00000009 00321560 00023fea
+	    00394b0f 0000001c 001a70f8 00000009 00000000 10835eb4 00000001 00000000
+	    04208040 0000000a 00394b4a 10835ed4 00043aa8 001a70f8 00394b0f 0000001c
+	    00000009 00394b4a 0026aba8 003215a4 00000003 00000000 0026d5a8 00000001
+	    003215a4 003a4361 003238d6 000001f0 00000000 003215a4 10aa3b00 00025e84
+	    003ddb00 10834000 002416a8 10aa3b00 00000000 00000080 000aa038 0004854a
+    Call Trace: [<00023fa6>] __warn+0xb2/0xb4
+     [<00023fea>] warn_slowpath_fmt+0x42/0x64
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<00043aa8>] printk+0x0/0x18
+     [<001a70f8>] refcount_warn_saturate+0x44/0x9a
+     [<0026aba8>] refcount_sub_and_test.constprop.73+0x38/0x3e
+     [<0026d5a8>] ipv4_dst_destroy+0x5e/0x7e
+     [<00025e84>] __local_bh_enable_ip+0x0/0x8e
+     [<002416a8>] dst_destroy+0x40/0xae
 
-Related to commit 3a11fbb037a1 ("iio: light: add support for ROHM
-BH1710/BH1715/BH1721/BH1750/BH1751 ambient light sensors").
+Fix this by forcing 4-byte alignment of all dst_metrics structures.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e5fd387ad5b30ca3 ("ipv6: do not overwrite inetpeer metrics prematurely")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iio/light/bh1750.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/dst.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index a814828e69f5..5f5d54ce882b 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -62,9 +62,9 @@ struct bh1750_chip_info {
+--- a/include/net/dst.h
++++ b/include/net/dst.h
+@@ -93,7 +93,7 @@ struct dst_entry {
+ struct dst_metrics {
+ 	u32		metrics[RTAX_MAX];
+ 	refcount_t	refcnt;
+-};
++} __aligned(4);		/* Low pointer bits contain DST_METRICS_FLAGS */
+ extern const struct dst_metrics dst_default_metrics;
  
- 	u16 int_time_low_mask;
- 	u16 int_time_high_mask;
--}
-+};
- 
--static const bh1750_chip_info_tbl[] = {
-+static const struct bh1750_chip_info bh1750_chip_info_tbl[] = {
- 	[BH1710] = { 140, 1022, 300, 400,  250000000, 2, 0x001F, 0x03E0 },
- 	[BH1721] = { 140, 1020, 300, 400,  250000000, 2, 0x0010, 0x03E0 },
- 	[BH1750] = { 31,  254,  69,  1740, 57500000,  1, 0x001F, 0x00E0 },
--- 
-2.20.1
-
+ u32 *dst_cow_metrics_generic(struct dst_entry *dst, unsigned long old);
 
 
