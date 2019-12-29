@@ -2,52 +2,53 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A81C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE9AC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD47206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055DF21D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642164;
-	bh=b/hV8Vu8G7wwdS/CvXDnTg35vphamOTHlBhwkOQLbSw=;
+	s=default; t=1577642167;
+	bh=6w5Mp700T+oUr+mAfo2QJAurvqTx7c9BUWomuOfLvjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oucJJlKq+vmMlX47kWFXmdAWbeVp4hRBkVWciVYVbeqpxPZSfk08ZiZCeRB/UcdPU
-	 lGk2hSsxQIxwJ400xMvSos1338qFh/ykyYfcVHVsSuFHZWYN45efeGpFfxVh49b+Jm
-	 dTDRDJcPv/SIPMsLOEM7TtvLXNsJa/67ShNAzS48=
+	b=rcB1Gr0nCrhkMrmG/9BcakOv1fz2EqRXNLCqIo+Mdgnolmj/phcReCFcfJJDBJl6q
+	 Yclts9AkZBbyBkLConEhFOLz2TT5GhilA2fILsyO6lWNh59B6Bl27O1XgCnea4k+ak
+	 QWo2NEev6aPV/RFE2knz/b1dUPB4XJYAjyzpn/3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732794AbfL2R4D (ORCPT
+        id S1733020AbfL2R4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:56:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44974 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732658AbfL2Rzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:54 -0500
+        id S1733013AbfL2Rz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E9821744;
-        Sun, 29 Dec 2019 17:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D3B206DB;
+        Sun, 29 Dec 2019 17:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642153;
-        bh=b/hV8Vu8G7wwdS/CvXDnTg35vphamOTHlBhwkOQLbSw=;
+        s=default; t=1577642156;
+        bh=6w5Mp700T+oUr+mAfo2QJAurvqTx7c9BUWomuOfLvjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I0Ffz/CYCvjkgkqM1g1+ArKqqdMfZsCN+azECfgBhKW+WBirgbibS+qt4WrftJi7d
-         ik+DoXW4fBlOOC+F3ABo8mEqJoC7Gq87Ezs+DCBwkkeBZBb+6yWpt5VEwUSriIink6
-         trxnSKgGDVPd0Yhv5plz1PoSefaaLGDzKksP6Kug=
+        b=fCciJXhxUNzneDOWxEExJRhye+7fD5MrEHctdnYwmQtqeQ8nKtvO6YVcak9RBNNE5
+         lAQTPixfhKbLv4DvN3LtqPiFNYeD/8ZburVNENz4O8npIfGURSXvuH00BQ9SP4GiZm
+         Lvw9p3qSs5W7EdYxl8WIh7SpyrZRWyo3RGFG8IAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 363/434] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
-Date:   Sun, 29 Dec 2019 18:26:56 +0100
-Message-Id: <20191229172726.084696220@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 328/434] firmware_loader: Fix labels with comma for builtin firmware
+Date:   Sun, 29 Dec 2019 18:26:21 +0100
+Message-Id: <20191229172723.757283624@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,42 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 07bcc411567cb96f9d1fc84fff8d387118a2920d upstream.
+[ Upstream commit 553671b7685972ca671da5f71cf6414b54376e13 ]
 
-This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
+Some firmware images contain a comma, such as:
+EXTRA_FIRMWARE "brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt"
+as Broadcom firmware simply tags the device tree compatible
+string at the end of the firmware parameter file. And the
+compatible string contains a comma.
 
-This commit aims to treat SD High speed and SDR25 as the same while
-setting UHS Timings in HOST_CONTROL2 which leads to failures with some
-SD cards in AM65x. Revert this commit.
+This doesn't play well with gas:
 
-The issue this commit was trying to fix can be implemented in a platform
-specific callback instead of common sdhci code.
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S: Assembler messages:
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:4: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_bin:'
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:9: Error: bad instruction `_fw_brcm_brcmfmac4334_sdio_samsung,gt_s7710_txt_name:'
+drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.S:15: Error: can't resolve `.rodata' {.rodata section} - `_fw_brcm_brcmfmac4334_sdio_samsung' {*UND* section}
+make[6]: *** [../scripts/Makefile.build:357: drivers/base/firmware_loader/builtin/brcm/brcmfmac4334-sdio.samsung,gt-s7710.txt.gen.o] Error 1
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20191128110422.25917-1-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+We need to get rid of the comma from the labels used by the
+assembly stub generator.
+
+Replacing a comma using GNU Make subst requires a helper
+variable.
+
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191115225911.3260-1-linus.walleij@linaro.org
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/base/firmware_loader/builtin/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1871,9 +1871,7 @@ void sdhci_set_uhs_signaling(struct sdhc
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_SD_HS ||
--		 timing == MMC_TIMING_MMC_HS ||
--		 timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+diff --git a/drivers/base/firmware_loader/builtin/Makefile b/drivers/base/firmware_loader/builtin/Makefile
+index 37e5ae387400..4a66888e7253 100644
+--- a/drivers/base/firmware_loader/builtin/Makefile
++++ b/drivers/base/firmware_loader/builtin/Makefile
+@@ -8,7 +8,8 @@ fwdir := $(addprefix $(srctree)/,$(filter-out /%,$(fwdir)))$(filter /%,$(fwdir))
+ obj-y  := $(addsuffix .gen.o, $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE)))
+ 
+ FWNAME    = $(patsubst $(obj)/%.gen.S,%,$@)
+-FWSTR     = $(subst /,_,$(subst .,_,$(subst -,_,$(FWNAME))))
++comma     := ,
++FWSTR     = $(subst $(comma),_,$(subst /,_,$(subst .,_,$(subst -,_,$(FWNAME)))))
+ ASM_WORD  = $(if $(CONFIG_64BIT),.quad,.long)
+ ASM_ALIGN = $(if $(CONFIG_64BIT),3,2)
+ PROGBITS  = $(if $(CONFIG_ARM),%,@)progbits
+-- 
+2.20.1
+
 
 
