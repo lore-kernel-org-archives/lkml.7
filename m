@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D13FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5705FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EA1206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D67E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643300;
-	bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
+	s=default; t=1577643305;
+	bh=XktTSAd02PzNSs9Fr+ngFpJyUsg0zvuHqJMAgGXLKbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uziI0Lu/ANiq+MtRuxZaT2lRNJSioHzXG9PFqQ3QJOoyqifiNmLXcyyXzzOQ35l5T
-	 ke7NHvGai5dKfloJcCOid/b65+ZYUQZc/3Y5onWfgfkTvqX7ToIGiQBB9jegr8pfRq
-	 /beAg1Sq0y4nXl87F+hsC5oDi60PRu+gZnsc7yag=
+	b=C16x+w5udKUq9ta/H2iPac6p9ZaKSKEJAMG4Qj63uT2ekbStMdrCRToAX87htYN7z
+	 FYTgyj6AEqLkY209b6Kh2dd8pLKKTv8/WrymY4Pfn5alPrb8PiyDfnobcw2KXY8JXh
+	 UQsqKtyc5CTV9/q5PkozX5pmRjtUfUCfLJBXpWQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbfL2SO6 (ORCPT
+        id S2387885AbfL2SPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:14:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47086 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:15:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbfL2R0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:16 -0500
+        id S1728113AbfL2R0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23EF9207FD;
-        Sun, 29 Dec 2019 17:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 199F720409;
+        Sun, 29 Dec 2019 17:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640375;
-        bh=vorHKAAlo2Q/D/7oNeovywhUHPTU36ycKOYuHV/ww9s=;
+        s=default; t=1577640363;
+        bh=XktTSAd02PzNSs9Fr+ngFpJyUsg0zvuHqJMAgGXLKbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpDQK4FBT67qWp6u0YIy4mOiWYwJF414x4Fdz2fppYJ+RTKcA+dhtg+cK/CCF7PsG
-         lQEBMow1GcmlKax3m03RbygM83VYvWOopIbwxdVROHz1uvVM1tbLf1ksjykkgp3FFx
-         Tk37sRLvUqXf/c76eSZq5n+KXO92dwaxYtLHw3Zg=
+        b=TlnSVbJCrlNaBCUIUsEgcJu6L/ubsHcjBPJb/6NDFLapLrl8RbP5k5xQjjvyUfqop
+         pEstNE5KPb2a0RRKK2KDptGUL+NlXrC4hbc4PVoohygf3QfDFbbaJy1VcnOQx3/8Hv
+         q2sJ9vGy7MK9s7fNmVlrK19Am1aFRz8WZ7YxQ/Ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 133/161] libtraceevent: Fix memory leakage in copy_filter_type
-Date:   Sun, 29 Dec 2019 18:19:41 +0100
-Message-Id: <20191229162439.168651713@linuxfoundation.org>
+Subject: [PATCH 4.14 079/161] loop: fix no-unmap write-zeroes request behavior
+Date:   Sun, 29 Dec 2019 18:18:47 +0100
+Message-Id: <20191229162424.024626860@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,53 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 10992af6bf46a2048ad964985a5b77464e5563b1 ]
+[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
 
-It is necessary to free the memory that we have allocated when error occurs.
+Currently, if the loop device receives a WRITE_ZEROES request, it asks
+the underlying filesystem to punch out the range.  This behavior is
+correct if unmapping is allowed.  However, a NOUNMAP request means that
+the caller doesn't want us to free the storage backing the range, so
+punching out the range is incorrect behavior.
 
-Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
+underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
+the fallocate documentation) required to ensure that the entire range is
+backed by real storage, which suffices for our purposes.
+
+Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/parse-filter.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/block/loop.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 5e10ba796a6f..569bceff5f51 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1492,8 +1492,10 @@ static int copy_filter_type(struct event_filter *filter,
- 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
- 		/* Add trivial event */
- 		arg = allocate_arg();
--		if (arg == NULL)
-+		if (arg == NULL) {
-+			free(str);
- 			return -1;
-+		}
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index ec61dd873c93..453e3728e657 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -414,18 +414,20 @@ out_free_page:
+ 	return ret;
+ }
  
- 		arg->type = FILTER_ARG_BOOLEAN;
- 		if (strcmp(str, "TRUE") == 0)
-@@ -1502,8 +1504,11 @@ static int copy_filter_type(struct event_filter *filter,
- 			arg->boolean.value = 0;
+-static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
++static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
++			int mode)
+ {
+ 	/*
+-	 * We use punch hole to reclaim the free space used by the
+-	 * image a.k.a. discard. However we do not support discard if
+-	 * encryption is enabled, because it may give an attacker
+-	 * useful information.
++	 * We use fallocate to manipulate the space mappings used by the image
++	 * a.k.a. discard/zerorange. However we do not support this if
++	 * encryption is enabled, because it may give an attacker useful
++	 * information.
+ 	 */
+ 	struct file *file = lo->lo_backing_file;
+-	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
+ 	int ret;
  
- 		filter_type = add_filter_type(filter, event->id);
--		if (filter_type == NULL)
-+		if (filter_type == NULL) {
-+			free(str);
-+			free_arg(arg);
- 			return -1;
-+		}
- 
- 		filter_type->filter = arg;
- 
++	mode |= FALLOC_FL_KEEP_SIZE;
++
+ 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+@@ -565,9 +567,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
+ 	switch (req_op(rq)) {
+ 	case REQ_OP_FLUSH:
+ 		return lo_req_flush(lo, rq);
+-	case REQ_OP_DISCARD:
+ 	case REQ_OP_WRITE_ZEROES:
+-		return lo_discard(lo, rq, pos);
++		/*
++		 * If the caller doesn't want deallocation, call zeroout to
++		 * write zeroes the range.  Otherwise, punch them out.
++		 */
++		return lo_fallocate(lo, rq, pos,
++			(rq->cmd_flags & REQ_NOUNMAP) ?
++				FALLOC_FL_ZERO_RANGE :
++				FALLOC_FL_PUNCH_HOLE);
++	case REQ_OP_DISCARD:
++		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
+ 	case REQ_OP_WRITE:
+ 		if (lo->transfer)
+ 			return lo_write_transfer(lo, rq, pos);
 -- 
 2.20.1
 
