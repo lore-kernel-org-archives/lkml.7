@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08F9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEB2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3DB207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF008207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641150;
-	bh=hErX01WQcNAc051sgKA5yrAyeSkxng0vTKBxomDpqHs=;
+	s=default; t=1577641155;
+	bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjGLq6//uhdOIYMeyeqoGAa5IF7cLInlbsuvjN78DC/0DN7jKy8azbgYlIGGajAA0
-	 10P5jo6UYk/c3+hfao9k4RGVOjhTVcfT8oeisbUk+iv5LJTRjaT2BsT6KkV6x78HO2
-	 U2p36npFxIuQFP/E5oEANqAtRBJu705wvXJXGiNw=
+	b=JAhRCZfWfN6dl9bSMIgD/Ae135bbuglLKfdboPmL7QqKt2Vq6y29DeUXNhvhsBzyW
+	 2vuRFXcngF8xBM+Ft6wF48G/1AjAbcHuePj+InSWjU+6sW3iXubrOWGkWWwJmdLvFm
+	 hAkN0ThgodZ4XFSFvJkF6R/UELh+qCxOZd4T9zuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfL2Rdc (ORCPT
+        id S1729879AbfL2RjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35018 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:39:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbfL2RdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:21 -0500
+        id S1729231AbfL2Rd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1F7420409;
-        Sun, 29 Dec 2019 17:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0718222C3;
+        Sun, 29 Dec 2019 17:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640801;
-        bh=hErX01WQcNAc051sgKA5yrAyeSkxng0vTKBxomDpqHs=;
+        s=default; t=1577640808;
+        bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNhpKiA1suwzIaI6hisaodxBbyfpGD41B+aaw/1JEt+jNr+IOehFQoIfR0rCh8tMW
-         SFDVHQB02eTsgIqxfyADSPnr2sgi0Z11p04VgxzAlKdGlDFWIobqluOYHgLMWmKxOz
-         wbJ1JgCx1nZ7xWeJCmq+gUdq1CAY7LyzNwJ3j+lM=
+        b=Y4GnviJO6fPGfjocjRmASGYfc8IQQc1ssK4ok+9BC38RK3Kd3L0lxfD0HU93Pl51r
+         fhAiIp/bp799466iCCXysXo/fsOdNW4COefoFfN3hfZdNUCkoXrXH/xnYgu6842xl1
+         JpED6cZGPhhoS89lvCAq0BBWPJTmDYCiEgGRIc+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 145/219] soundwire: intel: fix PDI/stream mapping for Bulk
-Date:   Sun, 29 Dec 2019 18:19:07 +0100
-Message-Id: <20191229162530.282595058@linuxfoundation.org>
+        stable@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 130/219] libsubcmd: Use -O0 with DEBUG=1
+Date:   Sun, 29 Dec 2019 18:18:52 +0100
+Message-Id: <20191229162528.226356542@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,51 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: James Clark <James.Clark@arm.com>
 
-[ Upstream commit c134f914e9f55b7817e2bae625ec0e5f1379f7cd ]
+[ Upstream commit 22bd8f1b5a1dd168ba4eba27cb17643a11012f5d ]
 
-The previous formula is incorrect for PDI0/1, the mapping is not
-linear but has a discontinuity between PDI1 and PDI2.
+When a 'make DEBUG=1' build is done, the command parser is still built
+with -O6 and is hard to step through, fix it making it use -O0 in that
+case.
 
-This change has no effect on PCM PDIs (same mapping).
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191022232948.17156-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: nd <nd@arm.com>
+Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+[ split from a larger patch ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/intel.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/lib/subcmd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 29bc99c4a7b6..e49d3c810677 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -352,7 +352,10 @@ intel_pdi_shim_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	unsigned int link_id = sdw->instance;
- 	int pdi_conf = 0;
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e58df0..5dbb0dde208c 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -28,7 +28,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
--	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
-+	/* the Bulk and PCM streams are not contiguous */
-+	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
-+	if (pdi->num >= 2)
-+		pdi->intel_alh_id += 2;
- 
- 	/*
- 	 * Program stream parameters to stream SHIM register
-@@ -381,7 +384,10 @@ intel_pdi_alh_configure(struct sdw_intel *sdw, struct sdw_cdns_pdi *pdi)
- 	unsigned int link_id = sdw->instance;
- 	unsigned int conf;
- 
--	pdi->intel_alh_id = (link_id * 16) + pdi->num + 5;
-+	/* the Bulk and PCM streams are not contiguous */
-+	pdi->intel_alh_id = (link_id * 16) + pdi->num + 3;
-+	if (pdi->num >= 2)
-+		pdi->intel_alh_id += 2;
- 
- 	/* Program Stream config ALH register */
- 	conf = intel_readl(alh, SDW_ALH_STRMZCFG(pdi->intel_alh_id));
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS += -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
+ else
+   CFLAGS += -O6
 -- 
 2.20.1
 
