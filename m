@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEDAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAEFC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B11207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A1F22525
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640234;
-	bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
+	s=default; t=1577640237;
+	bh=UcLj21KbTmfij9dhrxgXikQYoPDlI2o6g70sRvaZz3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0xq1gw7zHiLkszqB3QuOaRJdaix81NlpfPv6pNtoei88LEIh8wjBjba3ycGH8wFSj
-	 U9aGeK4QvWyZ+gGznhbqk84B1XItA+g8M2cBrDUQd/wmR+zCV6Ux7q9G9PVmBX1hP/
-	 Syy3XPIvp0Lc5higCgY/tHGDOAUXZY0OPCKuWZYQ=
+	b=ZAZfLW9U6KoZ+IhrC6KNkBBI8CKBzbid6Yd94xk7PUdp77ERFRhqJQEtg4aaKcb8Y
+	 kwNNkyecrNHXLEVU2jb6yzX38adlkb3qovI7mZZ7t2YQELf1hNfLY2EsrCMht8+7Xh
+	 g71j/eUlddT8X8cz5gOrYw8QX325F7lX0jMiaVjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfL2RXx (ORCPT
+        id S1727629AbfL2RX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfL2RXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:23:49 -0500
+        id S1727595AbfL2RXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:23:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AA1E207FD;
-        Sun, 29 Dec 2019 17:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9E3121D7E;
+        Sun, 29 Dec 2019 17:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640228;
-        bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
+        s=default; t=1577640226;
+        bh=UcLj21KbTmfij9dhrxgXikQYoPDlI2o6g70sRvaZz3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQhfK39cTUEHHtXENBuMpG5zX/OFrLLx5gxOpvG3zPNzcpyKeX1VZG08FYSYRTHtS
-         6wNv1htRzapgWX14Pdz9ccNXaqeUNnwA52Utf3kGIUuBwYNtvSQD7eS8DEjj4LAqfR
-         SihGWI48e9gGPry3NgAXMPTqNKIgY5dQbT1J6820=
+        b=wNy8uPdzscwOWWUBaHrzwCUEX/91sQIsVFa3tz1getVgiSJQBKlAdBtjf51CgQ2Mn
+         ZlL0qPPAVAZMjxomR5qsnTXhYpVppW0G0R9WBhboWcPYhcUfQKDYchy1TyOc6L6MR9
+         KxGMJCCuK1rNf+wEqd4QfWwnXjX2XJco8MxrHz3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/161] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
-Date:   Sun, 29 Dec 2019 18:18:38 +0100
-Message-Id: <20191229162421.416747049@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 069/161] x86/ioapic: Prevent inconsistent state when moving an interrupt
+Date:   Sun, 29 Dec 2019 18:18:37 +0100
+Message-Id: <20191229162421.186747087@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,71 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
+[ Upstream commit df4393424af3fbdcd5c404077176082a8ce459c4 ]
 
-In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
-cores need to be shut down. At present, the CPU hotplug operation is
-serialised, and the CPU cores can only be shut down one by one. In this
-process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
-cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
-need to be shut down, it will take a long time.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
-change the wait interval from 10 ms to max 1 ms and use usleep_range()
-instead of msleep() for more accurate timer.
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
 
-In addition, reducing the time interval will increase the messages
-output, so remove the "Retry ..." message, instead, track time and
-output to the the sucessful message.
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/psci.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index e8edbf13302a..3856d51c645b 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -84,7 +84,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index 566b7bc5deaa..2271adbc3c42 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -1690,9 +1690,10 @@ static bool io_apic_level_ack_pending(struct mp_chip_data *data)
  
- static int cpu_psci_cpu_kill(unsigned int cpu)
+ static inline bool ioapic_irqd_mask(struct irq_data *data)
  {
--	int err, i;
-+	int err;
-+	unsigned long start, end;
- 
- 	if (!psci_ops.affinity_info)
- 		return 0;
-@@ -94,16 +95,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
- 	 * while it is dying. So, try again a few times.
- 	 */
- 
--	for (i = 0; i < 10; i++) {
-+	start = jiffies;
-+	end = start + msecs_to_jiffies(100);
-+	do {
- 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
- 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
--			pr_info("CPU%d killed.\n", cpu);
-+			pr_info("CPU%d killed (polled %d ms)\n", cpu,
-+				jiffies_to_msecs(jiffies - start));
- 			return 0;
- 		}
- 
--		msleep(10);
--		pr_info("Retrying again to check for CPU kill\n");
--	}
-+		usleep_range(100, 1000);
-+	} while (time_before(jiffies, end));
- 
- 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
- 			cpu, err);
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic_irq(data);
++		if (!irqd_irq_masked(data))
++			mask_ioapic_irq(data);
+ 		return true;
+ 	}
+ 	return false;
+@@ -1729,7 +1730,9 @@ static inline void ioapic_irqd_unmask(struct irq_data *data, bool masked)
+ 		 */
+ 		if (!io_apic_level_ack_pending(data->chip_data))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic_irq(data);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic_irq(data);
+ 	}
+ }
+ #else
 -- 
 2.20.1
 
