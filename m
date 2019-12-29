@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763C9C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E85C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510C920409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0E8207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640615;
-	bh=2mELMA7+IYIye6ehOomFskH1dETTtE40+RJWTuQmDBQ=;
+	s=default; t=1577640618;
+	bh=XULRCn4MQfOMAG3MTAgULKQzrpC210gPhhJ7gGFrWks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nn3dcbIBBT5yZOBP9nlHodo4rcGdBsuhzvmWI8GiL18ztXR48SiaJZubi5e0ghYZ1
-	 mSS07ZYdbMT+Z+0msJ+aVbEU80zDwW+etHtkfi548Pq7FB9A4biP1bqsPfRZxNyRuI
-	 M13YWSA4d9DY5k2IZsbFKSKO0AD04En2tSiCdv2s=
+	b=GWA8RiVeRzwoQNj6577F7w8wWFEoDi+gxpZQEezpWFG6X4S52bMPH84ufJySTGZYK
+	 L/ab9JqfqvXzq7RYww+bg6uURC21IkHQZHkFuznsaYBIJwXnNix0IStU3WYoW/KCcE
+	 h59uQD8MZ3HE7MiGuBZbBDgWQxoYphY6tPZcW8hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfL2RaO (ORCPT
+        id S1728702AbfL2RaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:30:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:30:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728843AbfL2RaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:04 -0500
+        id S1728191AbfL2RaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0821A20722;
-        Sun, 29 Dec 2019 17:30:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCA73207FF;
+        Sun, 29 Dec 2019 17:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640603;
-        bh=2mELMA7+IYIye6ehOomFskH1dETTtE40+RJWTuQmDBQ=;
+        s=default; t=1577640608;
+        bh=XULRCn4MQfOMAG3MTAgULKQzrpC210gPhhJ7gGFrWks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZeUldcFHKiU12FPzu7N4yNWvwTqZ9ZJZMoXe7cKWycypChz8HsLc5oZhFbXGN0AD
-         b5oCC5zzCgenkI7fG3ZowLkcUpM8EpxJ4Igg/V69D0gn5Kc9h2ve17BA6Fso2Y8gvz
-         Onp9wVW6HwYyssStEhwK+eHMQSqNCjVJXzMNl2O8=
+        b=icMFOnKsNOoV6blMkOIa4OctgLAcytzQSNF1k62pzy7kSFa1pylSlGDn0/H1QT5GL
+         GTunVv01SDdAl+RaCjDhhdraYkel042vyUJR0xB0736oVvxWhrI4xZQ3rJsFkAqXtv
+         XhOZrcvJyxyuCrM4AhYk6qymzj55f642AmEze11A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/219] media: venus: core: Fix msm8996 frequency table
-Date:   Sun, 29 Dec 2019 18:17:28 +0100
-Message-Id: <20191229162514.740141876@linuxfoundation.org>
+Subject: [PATCH 4.19 065/219] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Sun, 29 Dec 2019 18:17:47 +0100
+Message-Id: <20191229162516.443038902@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,60 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit c690435ed07901737e5c007a65ec59f53b33eb71 ]
+[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
 
-In downstream driver, there are two frequency tables defined,
-one for the encoder and one for the decoder:
+v4l2-compliance warns with this message:
 
-/* Encoders /
-<972000 490000000 0x55555555>, / 4k UHD @ 30 /
-<489600 320000000 0x55555555>, / 1080p @ 60 /
-<244800 150000000 0x55555555>, / 1080p @ 30 /
-<108000 75000000 0x55555555>, / 720p @ 30 */
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-/* Decoders /
-<1944000 490000000 0xffffffff>, / 4k UHD @ 60 /
-< 972000 320000000 0xffffffff>, / 4k UHD @ 30 /
-< 489600 150000000 0xffffffff>, / 1080p @ 60 /
-< 244800 75000000 0xffffffff>; / 1080p @ 30 */
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
 
-It shows that encoder always needs a higher clock than decoder.
-
-In current venus driver, the unified frequency table is aligned
-with the downstream decoder table which causes performance issues
-in encoding scenarios. Fix that by aligning frequency table on
-worst case (encoding).
-
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/venus/core.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 5b8350e87e75..60069869596c 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -430,10 +430,11 @@ static const struct venus_resources msm8916_res = {
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 69c0e14cccb1..76d699e94b00 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -352,20 +352,25 @@ enum {
  };
  
- static const struct freq_tbl msm8996_freq_table[] = {
--	{ 1944000, 490000000 },	/* 4k UHD @ 60 */
--	{  972000, 320000000 },	/* 4k UHD @ 30 */
--	{  489600, 150000000 },	/* 1080p @ 60 */
--	{  244800,  75000000 },	/* 1080p @ 30 */
-+	{ 1944000, 520000000 },	/* 4k UHD @ 60 (decode only) */
-+	{  972000, 520000000 },	/* 4k UHD @ 30 */
-+	{  489600, 346666667 },	/* 1080p @ 60 */
-+	{  244800, 150000000 },	/* 1080p @ 30 */
-+	{  108000,  75000000 },	/* 720p @ 30 */
- };
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
  
- static const struct reg_val msm8996_reg_preset[] = {
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1591,9 +1596,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
 -- 
 2.20.1
 
