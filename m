@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE5AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AFAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6532206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B710206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642938;
-	bh=7n4dLVhug/MW4tU0tHSU9xP1KOHu9yfjbj2Fml1wVEs=;
+	s=default; t=1577642941;
+	bh=70Q2f7zgI0zRReY+zVJRjmuubznEVSAcDvfwhLtWdz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bCo2fC511zCukJPxnjf6F5VX2e7Aw7RKVE/PEQlVnSKCb2arr1eyI3P4wm3EEX34b
-	 k66ab5CK4x4+2B87TOuzg+KI/8QkJ/U3jUGrqVEobhItNtXERTrvirrgVHoe55NCcK
-	 nag+JH3SBLioPEe/2uLFnOifwBvbYDS1FV448Ec4=
+	b=MNcjESC6A209rJJ4NGoynAyFYBBa8B9oP9ZEucdsBdgMaf08Hn6kfAXdgct7BiYI2
+	 yEDbEXov5n622jaUT24Ws2vKo+g6/Khu0TKcsFvFxVtxlDluLflOrbT1gZRahUOSR0
+	 fRK1A5hUTLLH6WTXEr6J/PocXMYdGkoLkflDpyF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbfL2Rq3 (ORCPT
+        id S1731441AbfL2SJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56060 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:09:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfL2RqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:22 -0500
+        id S1731081AbfL2Rq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C45207FD;
-        Sun, 29 Dec 2019 17:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4355D206A4;
+        Sun, 29 Dec 2019 17:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641581;
-        bh=7n4dLVhug/MW4tU0tHSU9xP1KOHu9yfjbj2Fml1wVEs=;
+        s=default; t=1577641588;
+        bh=70Q2f7zgI0zRReY+zVJRjmuubznEVSAcDvfwhLtWdz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MID9bwUAVAHuZiKGFir+8JKd7FnvZBSY1eKWiGhvAktyRinaJ6pnJDz1rjrgvvCfa
-         3zk3au3HafgKLR5p2azZ5+WdrWCedoxalgA9bcyc7++JRJtTkCG7/1ryKTtQitw+sZ
-         wY76eZSqq0syV7jQ9zD2IbP9oBExzgiLWRP4ICAg=
+        b=g+q8zRYgw4wtNrAJVNrN5EdsSRYy5r/hak7CKSFGohjCE4+F12xrzE88sinHZsHqX
+         Jld2reH/cGd3FLAJFLzclRH+VHGziziH08AUbAZlIf83JaHWAOU2xgKQyIjjUM3EcM
+         pc6/valMazOS92KztMOrIJmR3CyUxsGFxcUZY5IE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 125/434] misc: fastrpc: fix memory leak from miscdev->name
-Date:   Sun, 29 Dec 2019 18:22:58 +0100
-Message-Id: <20191229172710.001573260@linuxfoundation.org>
+Subject: [PATCH 5.4 128/434] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Sun, 29 Dec 2019 18:23:01 +0100
+Message-Id: <20191229172710.202551807@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,53 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 2d10d2d170723e9278282458a6704552dcb77eac ]
+[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
 
-Fix a memory leak in miscdev->name by using devm_variant
+v4l2-compliance warns with this message:
 
-Orignally reported by kmemleak:
-    [<ffffff80088b74d8>] kmemleak_alloc+0x50/0x84
-    [<ffffff80081e015c>] __kmalloc_track_caller+0xe8/0x168
-    [<ffffff8008371ab0>] kvasprintf+0x78/0x100
-    [<ffffff8008371c6c>] kasprintf+0x50/0x74
-    [<ffffff8008507f2c>] fastrpc_rpmsg_probe+0xd8/0x20c
-    [<ffffff80086b63b4>] rpmsg_dev_probe+0xa8/0x148
-    [<ffffff80084de50c>] really_probe+0x208/0x248
-    [<ffffff80084de2dc>] driver_probe_device+0x98/0xc0
-    [<ffffff80084dec6c>] __device_attach_driver+0x9c/0xac
-    [<ffffff80084dca8c>] bus_for_each_drv+0x60/0x8c
-    [<ffffff80084de64c>] __device_attach+0x8c/0x100
-    [<ffffff80084de6e0>] device_initial_probe+0x20/0x28
-    [<ffffff80084dcbd0>] bus_probe_device+0x34/0x7c
-    [<ffffff80084da32c>] device_add+0x420/0x498
-    [<ffffff80084da680>] device_register+0x24/0x2c
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20191009144123.24583-3-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/fastrpc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 1b1a794d639d..842f2210dc7e 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -1430,8 +1430,8 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 		return -ENOMEM;
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 5ba72445584d..328976a52941 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -338,20 +338,25 @@ enum {
+ };
  
- 	data->miscdev.minor = MISC_DYNAMIC_MINOR;
--	data->miscdev.name = kasprintf(GFP_KERNEL, "fastrpc-%s",
--				domains[domain_id]);
-+	data->miscdev.name = devm_kasprintf(rdev, GFP_KERNEL, "fastrpc-%s",
-+					    domains[domain_id]);
- 	data->miscdev.fops = &fastrpc_fops;
- 	err = misc_register(&data->miscdev);
- 	if (err)
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
+ 
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1574,9 +1579,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
 -- 
 2.20.1
 
