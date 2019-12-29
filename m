@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C96C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753B7206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8049206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641137;
-	bh=Arzqb3/X/IZ8grtaS24UjeFEyLCxLAmnvDhGPBlxP38=;
+	s=default; t=1577641146;
+	bh=9i1Jr+SvpKUsKxC8Rk9QFn7n63t/QgZ4Xh1bVFlNJec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXQ1JnSFTc+KqN0AtYUPcjjWNMiGa8UEMqmvPA7TI/spmP0hdWPSPLG7kZU8W2xy5
-	 ESn37IXlR8n7mCJOzLpdYgU68FD0QZc64iq5/q/419S95aWnp6oOoUSFQCz5HC67Wn
-	 HxPRQfFwGcR+x8KCIsmJ4bxpXmp45A7PACxRLP1o=
+	b=Plhna5zo5Ywnec3O9buU26hg59Z6ba0dyZAwZNQB6aoS3iSmaMt17T07OCRRIrw2y
+	 x7qNcS/DtPFtSHWxCCw37WZTjgPXpDOEia63yz9/khJRm3CsPd597RtDNeTCg8cgvn
+	 UY0QZ0Pz8YFVomVtv+uS5qSibI9Ecx5nRjbCB+ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfL2Rdo (ORCPT
+        id S1729471AbfL2Rdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:33:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729479AbfL2Rdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:38 -0500
+        id S1729447AbfL2Rd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DCDA20722;
-        Sun, 29 Dec 2019 17:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F06E20722;
+        Sun, 29 Dec 2019 17:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640817;
-        bh=Arzqb3/X/IZ8grtaS24UjeFEyLCxLAmnvDhGPBlxP38=;
+        s=default; t=1577640806;
+        bh=9i1Jr+SvpKUsKxC8Rk9QFn7n63t/QgZ4Xh1bVFlNJec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oB8/5QS+0Bivoth8vWf701lYF/F/DBMy2qfYdMClf7O/bL0FPhQTadmS+sGslM939
-         jhgFsrTd8ydMqDUxd+32ZYmmFC/1ypHdQuyeRN5dhiUa22wv9oZ2TxWgWpzHtSBg0T
-         bc2L0vURRZr6cBtLQC4arYOPpwrzMXIYE4ebiCl8=
+        b=zLHybNG5EzzXwZzHQqFKR+NQCyIMEsLlq6b2/s0JuXa1gHOHhWPwWfxNfdU65ZQDm
+         s8upNUdAHKnv/K0+pPx4BWFBCq/VTHMG/sh/Xib37HfgJJJBevRvsYxZdXIzJKIix5
+         6lqKJygJ7l1lncomwdfY1wKXzDNXTpBbto3PKzh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 151/219] ASoC: rt5677: Mark reg RT5677_PWR_ANLG2 as volatile
-Date:   Sun, 29 Dec 2019 18:19:13 +0100
-Message-Id: <20191229162531.379976441@linuxfoundation.org>
+Subject: [PATCH 4.19 147/219] ice: delay less
+Date:   Sun, 29 Dec 2019 18:19:09 +0100
+Message-Id: <20191229162530.604506591@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,41 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Zhang <benzh@chromium.org>
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-[ Upstream commit eabf424f7b60246c76dcb0ea6f1e83ef9abbeaa6 ]
+[ Upstream commit 88bb432a55de8ae62106305083a8bfbb23b01ad2 ]
 
-The codec dies when RT5677_PWR_ANLG2(MX-64h) is set to 0xACE1
-while it's streaming audio over SPI. The DSP firmware turns
-on PLL2 (MX-64 bit 8) when SPI streaming starts.  However regmap
-does not believe that register can change by itself. When
-BST1 (bit 15) is turned on with regmap_update_bits(), it doesn't
-read the register first before write, so PLL2 power bit is
-cleared by accident.
+Shorten the delay for SQ responses, but increase the number of loops.
+Max delay time is unchanged, but some operations complete much more
+quickly.
 
-Marking MX-64h as volatile in regmap solved the issue.
+In the process, add a new define to make the delay count and delay time
+more explicit. Add comments to make things more explicit.
 
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Curtis Malainey <cujomalainey@chromium.org>
-Link: https://lore.kernel.org/r/20191106011335.223061-6-cujomalainey@chromium.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This fixes a problem with VF resets failing on with many VFs.
+
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5677.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/ice/ice_controlq.c | 2 +-
+ drivers/net/ethernet/intel/ice/ice_controlq.h | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 9b7a1833d331..71b7b881df39 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -297,6 +297,7 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
- 	case RT5677_I2C_MASTER_CTRL7:
- 	case RT5677_I2C_MASTER_CTRL8:
- 	case RT5677_HAP_GENE_CTRL2:
-+	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
- 	case RT5677_PWR_DSP_ST:
- 	case RT5677_PRIV_DATA:
- 	case RT5677_ASRC_22:
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.c b/drivers/net/ethernet/intel/ice/ice_controlq.c
+index 89f18fe18fe3..921cc0c9a30d 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.c
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.c
+@@ -911,7 +911,7 @@ ice_sq_send_cmd(struct ice_hw *hw, struct ice_ctl_q_info *cq,
+ 		if (ice_sq_done(hw, cq))
+ 			break;
+ 
+-		mdelay(1);
++		udelay(ICE_CTL_Q_SQ_CMD_USEC);
+ 		total_delay++;
+ 	} while (total_delay < cq->sq_cmd_timeout);
+ 
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.h b/drivers/net/ethernet/intel/ice/ice_controlq.h
+index ea02b89243e2..0f2cdb06e6ef 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.h
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.h
+@@ -30,8 +30,9 @@ enum ice_ctl_q {
+ 	ICE_CTL_Q_ADMIN,
+ };
+ 
+-/* Control Queue default settings */
+-#define ICE_CTL_Q_SQ_CMD_TIMEOUT	250  /* msecs */
++/* Control Queue timeout settings - max delay 250ms */
++#define ICE_CTL_Q_SQ_CMD_TIMEOUT	2500  /* Count 2500 times */
++#define ICE_CTL_Q_SQ_CMD_USEC		100   /* Check every 100usec */
+ 
+ struct ice_ctl_q_ring {
+ 	void *dma_head;			/* Virtual address to dma head */
 -- 
 2.20.1
 
