@@ -2,127 +2,273 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D476C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F82EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA02D206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641193;
-	bh=DeAFUOqIJW9mvBBsACK0JeC7VLRp80XShrXQniWA2dA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ur09/ErqwUDpfbvzYSc/wB+b1Dfz2Hhj4SlGksRqTnOEw4lfAWNn9QKVhAK7gEA7f
-	 3QZKXK7N93yg/IQJCvy7MWHERhhT5ha17fjJ4SoZ5APBr8kS+utbxLNiINQHBB3Bf1
-	 wMYp+WiOlW1VWo9sDhqE2YIji/GfjPWgwGysL2Wc=
+	by mail.kernel.org (Postfix) with ESMTP id 1456B206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfL2Rjv (ORCPT
+        id S1730068AbfL2Rj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:39:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbfL2Rc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832B3207FF;
-        Sun, 29 Dec 2019 17:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640748;
-        bh=DeAFUOqIJW9mvBBsACK0JeC7VLRp80XShrXQniWA2dA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VnBNp0UD/S0ENeFVjIl9TUDN3kXj3akZQRa1e+QVesCSBquv8Zvyvdcx9fDu9RdW1
-         jr0KbniI6VFnpfx/UKJOKR6GBO0WbX9D/FBRmOyDN7tFi2yQumAFAyf3YgMC+MhynN
-         AkQM+2e781+m14gJbadOpjXVB+8R9xaSwzp1mR44=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/219] ALSA: timer: Limit max amount of slave instances
-Date:   Sun, 29 Dec 2019 18:18:43 +0100
-Message-Id: <20191229162526.773826147@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
-References: <20191229162508.458551679@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 29 Dec 2019 12:39:59 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36592 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbfL2RcS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:18 -0500
+Received: from [172.58.107.62] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ilcQI-0005a0-Au; Sun, 29 Dec 2019 17:32:15 +0000
+Date:   Sun, 29 Dec 2019 18:32:04 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
+        Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jed Davis <jld@mozilla.com>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20191229173202.55apy2dpv7qj7gov@wittgenstein>
+References: <20191226180334.GA29409@ircssh-2.c.rugged-nimbus-611.internal>
+ <20191228100944.kh22bofbr5oe2kvk@wittgenstein>
+ <CAMp4zn9LyGw=BNiLNRgZXAbFdi87pSjy1YmDXvFvwmA=u3yDyw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn9LyGw=BNiLNRgZXAbFdi87pSjy1YmDXvFvwmA=u3yDyw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Sat, Dec 28, 2019 at 08:03:23AM -0500, Sargun Dhillon wrote:
+> On Sat, Dec 28, 2019 at 5:12 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Thu, Dec 26, 2019 at 06:03:36PM +0000, Sargun Dhillon wrote:
+> > > This syscall allows for the retrieval of file descriptors from other
+> > > processes, based on their pidfd. This is possible using ptrace, and
+> > > injection of parasitic code to inject code which leverages SCM_RIGHTS
+> > > to move file descriptors between a tracee and a tracer. Unfortunately,
+> > > ptrace comes with a high cost of requiring the process to be stopped,
+> > > and breaks debuggers. This does not require stopping the process under
+> > > manipulation.
+> > >
+> > > One reason to use this is to allow sandboxers to take actions on file
+> > > descriptors on the behalf of another process. For example, this can be
+> > > combined with seccomp-bpf's user notification to do on-demand fd
+> > > extraction and take privileged actions. One such privileged action
+> > > is binding a socket to a privileged port.
+> > >
+> > > This also adds the syscall to all architectures at the same time.
+> > >
+> > > /* prototype */
+> > >   /* flags is currently reserved and should be set to 0 */
+> > >   int sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
+> > >
+> > > /* testing */
+> > > Ran self-test suite on x86_64
+> >
+> > Fyi, I'm likely going to rewrite/add parts of/to this once I apply.
+> >
+> > A few comments below.
+> >
+> > > diff --git a/kernel/pid.c b/kernel/pid.c
+> > > index 2278e249141d..4a551f947869 100644
+> > > --- a/kernel/pid.c
+> > > +++ b/kernel/pid.c
+> > > @@ -578,3 +578,106 @@ void __init pid_idr_init(void)
+> > >       init_pid_ns.pid_cachep = KMEM_CACHE(pid,
+> > >                       SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+> > >  }
+> > > +
+> > > +static struct file *__pidfd_fget(struct task_struct *task, int fd)
+> > > +{
+> > > +     struct file *file;
+> > > +     int ret;
+> > > +
+> > > +     ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> > > +     if (ret)
+> > > +             return ERR_PTR(ret);
+> > > +
+> > > +     if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)) {
+> > > +             file = ERR_PTR(-EPERM);
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     file = fget_task(task, fd);
+> > > +     if (!file)
+> > > +             file = ERR_PTR(-EBADF);
+> > > +
+> > > +out:
+> > > +     mutex_unlock(&task->signal->cred_guard_mutex);
+> > > +     return file;
+> > > +}
+> >
+> > Looking at this code now a bit closer, ptrace_may_access() and
+> > fget_task() both take task_lock(task) so this currently does:
+> >
+> > task_lock();
+> > /* check access */
+> > task_unlock();
+> >
+> > task_lock();
+> > /* get fd */
+> > task_unlock();
+> >
+> > which doesn't seem great.
+> >
+> > I would prefer if we could do:
+> > task_lock();
+> > /* check access */
+> > /* get fd */
+> > task_unlock();
+> >
+> > But ptrace_may_access() doesn't export an unlocked variant so _shrug_.
+> Right, it seems intentional that __ptrace_may_access isn't exported. We
+> can always change that later?
 
-[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
+Yeah, it's just something I noted and it's not a big deal in my book. It
+just would be nicer to only have to lock once. ptrace would need to
+expose an unlocked variant and fget_task() would need to be removed
+completely and then grabbing the file via fget or sm. But as I said it's
+ok to do it like this rn.
 
-The fuzzer tries to open the timer instances as much as possible, and
-this may cause a system hiccup easily.  We've already introduced the
-cap for the max number of available instances for the h/w timers, and
-we should put such a limit also to the slave timers, too.
+> 
+> >
+> > But we can write this a little cleaner without the goto as:
+> >
+> > static struct file *__pidfd_fget(struct task_struct *task, int fd)
+> > {
+> >         struct file *file;
+> >         int ret;
+> >
+> >         ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> >         if (ret)
+> >                 return ERR_PTR(ret);
+> >
+> >         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
+> >                 file = fget_task(task, fd);
+> >         else
+> >                 file = ERR_PTR(-EPERM);
+> >         mutex_unlock(&task->signal->cred_guard_mutex);
+> >
+> >         return file ?: ERR_PTR(-EBADF);
+> > }
+> >
+> > If you don't like the ?: just do:
+> >
+> > if (!file)
+> >         return ERR_PTR(-EBADF);
+> >
+> > return file;
+> >
+> > though I prefer the shorter ?: syntax which is perfect for shortcutting
+> > returns.
+> >
+> > > +
+> > > +static int pidfd_getfd(struct pid *pid, int fd)
+> > > +{
+> > > +     struct task_struct *task;
+> > > +     struct file *file;
+> > > +     int ret, retfd;
+> > > +
+> > > +     task = get_pid_task(pid, PIDTYPE_PID);
+> > > +     if (!task)
+> > > +             return -ESRCH;
+> > > +
+> > > +     file = __pidfd_fget(task, fd);
+> > > +     put_task_struct(task);
+> > > +     if (IS_ERR(file))
+> > > +             return PTR_ERR(file);
+> > > +
+> > > +     retfd = get_unused_fd_flags(O_CLOEXEC);
+> > > +     if (retfd < 0) {
+> > > +             ret = retfd;
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     /*
+> > > +      * security_file_receive must come last since it may have side effects
+> > > +      * and cannot be reversed.
+> > > +      */
+> > > +     ret = security_file_receive(file);
+> >
+> > So I don't understand the comment here. Can you explain what the side
+> > effects are?
+> The LSM can modify the LSM blob, or emit an (audit) event, even though
+> the operation as a whole failed. Smack will report that file_receive
+> successfully happened even though it could not have happened,
+> because we were unable to provision a file descriptor.
 
-This patch introduces the limit to the multiple opened slave timers.
-The upper limit is hard-coded to 1000 for now, which should suffice
-for any practical usages up to now.
+So this either sounds like a bug in Smack or a design choice by the LSM
+framework in general and also that it might apply to a lot of other
+hooks too? But I'm not qualified to assess that.
 
-Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/core/timer.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Modifying an LSM blob, emitting an audit event may very well happen but
+there are places all over the kernel were security hooks are called and
+they are not the last point of failure (capable hooks come to mind
+right away). My point being just because an audit event that happened
+from an LSM indicating that e.g. a file receive event happened cannot be
+intended to be equivalent == "was successful". That is not reality right
+now when looking at net/* where security_file_receive() is called too
+and surely can only be guaranteed from the actual codepaths that does the
+file receive.
+So I'd argue let's just use the clean version where we call
+security_file_receive() before allocing the new fd just like net/* does
+and make the code simpler and easier to maintain.
 
-diff --git a/sound/core/timer.c b/sound/core/timer.c
-index 86a31e69fc7d..b5dc51030316 100644
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -88,6 +88,9 @@ static LIST_HEAD(snd_timer_slave_list);
- /* lock for slave active lists */
- static DEFINE_SPINLOCK(slave_active_lock);
- 
-+#define MAX_SLAVE_INSTANCES	1000
-+static int num_slaves;
-+
- static DEFINE_MUTEX(register_mutex);
- 
- static int snd_timer_free(struct snd_timer *timer);
-@@ -266,6 +269,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
- 			err = -EINVAL;
- 			goto unlock;
- 		}
-+		if (num_slaves >= MAX_SLAVE_INSTANCES) {
-+			err = -EBUSY;
-+			goto unlock;
-+		}
- 		timeri = snd_timer_instance_new(owner, NULL);
- 		if (!timeri) {
- 			err = -ENOMEM;
-@@ -275,6 +282,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
- 		timeri->slave_id = tid->device;
- 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
- 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
-+		num_slaves++;
- 		err = snd_timer_check_slave(timeri);
- 		if (err < 0) {
- 			snd_timer_close_locked(timeri, &card_dev_to_put);
-@@ -364,6 +372,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
- 	struct snd_timer_instance *slave, *tmp;
- 
- 	list_del(&timeri->open_list);
-+	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
-+		num_slaves--;
- 
- 	/* force to stop the timer */
- 	snd_timer_stop(timeri);
--- 
-2.20.1
-
-
-
+> 
+> Apparmor does similar, and also manipulates the LSM blob,
+> although that is undone by closing the file.
+> 
+> 
+> > security_file_receive() is called in two places: net/core/scm.c and
+> > net/compat.c. In both places it is called _before_ get_unused_fd_flags()
+> > so I don't know what's special here that would prevent us from doing the
+> > same. If there's no actual reason, please rewrite this functions as:
+> >
+> > static int pidfd_getfd(struct pid *pid, int fd)
+> > {
+> >         int ret;
+> >         struct task_struct *task;
+> >         struct file *file;
+> >
+> >         task = get_pid_task(pid, PIDTYPE_PID);
+> >         if (!task)
+> >                 return -ESRCH;
+> >
+> >         file = __pidfd_fget(task, fd);
+> >         put_task_struct(task);
+> >         if (IS_ERR(file))
+> >                 return PTR_ERR(file);
+> >
+> >         ret = security_file_receive(file);
+> >         if (ret) {
+> >                 fput(file);
+> >                 return ret;
+> >         }
+> >
+> >         ret = get_unused_fd_flags(O_CLOEXEC);
+> >         if (ret < 0)
+> >                 fput(file);
+> >         else
+> >                 fd_install(ret, file);
+> >
+> >         return ret;
+> > }
