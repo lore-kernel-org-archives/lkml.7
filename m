@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1075C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9292FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA31207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65CA921D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640659;
-	bh=TfimsuIF6EybkJwgJ0GEs0c71QsnFaT5U9YqQV7DJUU=;
+	s=default; t=1577640662;
+	bh=RKLEm9PlR81UA7wmHYsEU8VmAXF5mFu8+ABQWU+JktQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pc1J0+EEc9IAGtkSMdgjhAFZ93Zq+VATL7N5EvRMmmyegFz8XgyykEylTNuD4j1ny
-	 7aSn9yRY488IRiy9uGzNNgFO9AmW/hRnU39+rcsJghMijNoutk2/D7yMPsC1/0+jRx
-	 7Wc705LD0Y1dZX34yAPUsdV9+YBGQAxmen6FQU04=
+	b=EnZFyGNY7osfG/8+MtaNw0SlDb5w7DMzcA7ADL0B0n6WqZmQEpGy2ecHKMGV0EBoM
+	 vSMZyE9u9qZuaBMmZ+InZMADZHo2xVC99C5AciKA/sH3itxKIHBNoiuqWSuJPne884
+	 21ZDMJVzUSIdEjCiJ1zDjQFq9Oui2mLEAAZti3ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfL2Ra6 (ORCPT
+        id S1728808AbfL2RbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:30:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:31:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfL2Rax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:53 -0500
+        id S1729057AbfL2Ra6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8A6207FF;
-        Sun, 29 Dec 2019 17:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EC22207FD;
+        Sun, 29 Dec 2019 17:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640653;
-        bh=TfimsuIF6EybkJwgJ0GEs0c71QsnFaT5U9YqQV7DJUU=;
+        s=default; t=1577640658;
+        bh=RKLEm9PlR81UA7wmHYsEU8VmAXF5mFu8+ABQWU+JktQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PBD3CipqAIzU4R1wILrmEqJmOW11ycnflAtx3Ark2vWiA6FzdMfFqgoXQ57jeLXZ4
-         8irZa/BdtbN1tZdm+HFM8CFTvfPw7GemjjBWNQfMz7ldxqF9urwOtTlN0+oxXrDU5h
-         UOoRuF2cEkfzfAzPM2moZnKjzAkRzpczku3yKsZE=
+        b=aCmqXWWGBtR45dD79hPmQiJ4t0UtKmNqNCKhKPpJ8IO2Oah9Q1g/z+NMzZoN5M4Yu
+         aggmetRmI2btMc1E0PKM+tmlLVm9DC4Tgn1+upo7NoHv6rDJSqoDZ4OEGpM2NRiOwq
+         Dglol3O/sWt72bMTCl/0OMLXLpB9zxHLjeAZ7mPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Szymon Janc <szymon.janc@codecoup.pl>,
-        =?UTF-8?q?S=C3=B6ren=20Beye?= <linux@hypfer.de>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/219] Bluetooth: Workaround directed advertising bug in Broadcom controllers
-Date:   Sun, 29 Dec 2019 18:18:04 +0100
-Message-Id: <20191229162517.979966167@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Elena Petrova <lenaptr@google.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 048/219] pinctrl: devicetree: Avoid taking direct reference to device name string
+Date:   Sun, 29 Dec 2019 18:17:30 +0100
+Message-Id: <20191229162514.870990774@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,57 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Szymon Janc <szymon.janc@codecoup.pl>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 4c371bb95cf06ded80df0e6139fdd77cee1d9a94 ]
+[ Upstream commit be4c60b563edee3712d392aaeb0943a768df7023 ]
 
-It appears that some Broadcom controllers (eg BCM20702A0) reject LE Set
-Advertising Parameters command if advertising intervals provided are not
-within range for undirected and low duty directed advertising.
+When populating the pinctrl mapping table entries for a device, the
+'dev_name' field for each entry is initialised to point directly at the
+string returned by 'dev_name()' for the device and subsequently used by
+'create_pinctrl()' when looking up the mappings for the device being
+probed.
 
-Workaround this bug by populating min and max intervals with 'valid'
-values.
+This is unreliable in the presence of calls to 'dev_set_name()', which may
+reallocate the device name string leaving the pinctrl mappings with a
+dangling reference. This then leads to a use-after-free every time the
+name is dereferenced by a device probe:
 
-< HCI Command: LE Set Advertising Parameters (0x08|0x0006) plen 15
-        Min advertising interval: 0.000 msec (0x0000)
-        Max advertising interval: 0.000 msec (0x0000)
-        Type: Connectable directed - ADV_DIRECT_IND (high duty cycle) (0x01)
-        Own address type: Public (0x00)
-        Direct address type: Random (0x01)
-        Direct address: E2:F0:7B:9F:DC:F4 (Static)
-        Channel map: 37, 38, 39 (0x07)
-        Filter policy: Allow Scan Request from Any, Allow Connect Request from Any (0x00)
-> HCI Event: Command Complete (0x0e) plen 4
-      LE Set Advertising Parameters (0x08|0x0006) ncmd 1
-        Status: Invalid HCI Command Parameters (0x12)
+  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
+  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
+  | Pointer tag: [13], memory tag: [fe]
+  |
+  | Call trace:
+  |  __kasan_report+0x16c/0x1dc
+  |  kasan_report+0x10/0x18
+  |  check_memory_region
+  |  __hwasan_load1_noabort+0x4c/0x54
+  |  strcmp+0x20/0x64
+  |  create_pinctrl+0x18c/0x7f4
+  |  pinctrl_get+0x90/0x114
+  |  devm_pinctrl_get+0x44/0x98
+  |  pinctrl_bind_pins+0x5c/0x450
+  |  really_probe+0x1c8/0x9a4
+  |  driver_probe_device+0x120/0x1d8
 
-Signed-off-by: Szymon Janc <szymon.janc@codecoup.pl>
-Tested-by: Sören Beye <linux@hypfer.de>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Follow the example of sysfs, and duplicate the device name string before
+stashing it away in the pinctrl mapping entries.
+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: Elena Petrova <lenaptr@google.com>
+Tested-by: Elena Petrova <lenaptr@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191002124206.22928-1-will@kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_conn.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 15d1cb5aee18..f5c27065ad44 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -931,6 +931,14 @@ static void hci_req_directed_advertising(struct hci_request *req,
- 			return;
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 2969ff3162c3..177ee1136e34 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
+ static void dt_free_map(struct pinctrl_dev *pctldev,
+ 		     struct pinctrl_map *map, unsigned num_maps)
+ {
++	int i;
++
++	for (i = 0; i < num_maps; ++i) {
++		kfree_const(map[i].dev_name);
++		map[i].dev_name = NULL;
++	}
++
+ 	if (pctldev) {
+ 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+ 		if (ops->dt_free_map)
+@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
  
- 		memset(&cp, 0, sizeof(cp));
+ 	/* Initialize common mapping table entry fields */
+ 	for (i = 0; i < num_maps; i++) {
+-		map[i].dev_name = dev_name(p->dev);
++		const char *devname;
 +
-+		/* Some controllers might reject command if intervals are not
-+		 * within range for undirected advertising.
-+		 * BCM20702A0 is known to be affected by this.
-+		 */
-+		cp.min_interval = cpu_to_le16(0x0020);
-+		cp.max_interval = cpu_to_le16(0x0020);
++		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
++		if (!devname)
++			goto err_free_map;
 +
- 		cp.type = LE_ADV_DIRECT_IND;
- 		cp.own_address_type = own_addr_type;
- 		cp.direct_addr_type = conn->dst_type;
++		map[i].dev_name = devname;
+ 		map[i].name = statename;
+ 		if (pctldev)
+ 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
+@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 
+ 	/* Remember the converted mapping table entries */
+ 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
+-	if (!dt_map) {
+-		dt_free_map(pctldev, map, num_maps);
+-		return -ENOMEM;
+-	}
++	if (!dt_map)
++		goto err_free_map;
+ 
+ 	dt_map->pctldev = pctldev;
+ 	dt_map->map = map;
+@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+ 	list_add_tail(&dt_map->node, &p->dt_maps);
+ 
+ 	return pinctrl_register_map(map, num_maps, false);
++
++err_free_map:
++	dt_free_map(pctldev, map, num_maps);
++	return -ENOMEM;
+ }
+ 
+ struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
 -- 
 2.20.1
 
