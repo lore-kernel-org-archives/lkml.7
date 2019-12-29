@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF40C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A538EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AADD206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F35E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642286;
-	bh=IyPu3MbB6w5uYj8Crjut7fmRYmeipanSJO0+eXlVHjs=;
+	s=default; t=1577642290;
+	bh=u1xUVPSbajSdVquSn0p+XxUCG3BSguvRB7U0kTOJMsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRBfA7aXRtMoommNCTBpwXLwXfA/+EUfMJ7EbmWwpMBA8W3S36g0qy/pOKaMjBijA
-	 O4mUZETcc1NmQQI/D6+ASSljgfRySMuFE2okfbXB3XFPqx/lnm9X3zsfOQ3LAIUncB
-	 iX1Kgq+cwN68VNgeme37xzT407WSxCF5nHEw7cHs=
+	b=Bvdn/TRkZisngUSg5WmRxu+WdSKPQHm5jJDoxKgkP/z2BVQ9ca7XTUAhw2BtXgQjt
+	 SDfV1d3Rr6/dWh603P3ci7x4vvzBzN9vdRNi5CsfDegnn3qtBPkEe/s1z8PDG3siEH
+	 9qb+sEy97um96OJOluNrpR3FjArDHmfLiNpcpAO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387458AbfL2R6E (ORCPT
+        id S1732773AbfL2R6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:58:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48912 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387443AbfL2R6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:01 -0500
+        id S2387443AbfL2R6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECFBD206DB;
-        Sun, 29 Dec 2019 17:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C289A206A4;
+        Sun, 29 Dec 2019 17:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642280;
-        bh=IyPu3MbB6w5uYj8Crjut7fmRYmeipanSJO0+eXlVHjs=;
+        s=default; t=1577642285;
+        bh=u1xUVPSbajSdVquSn0p+XxUCG3BSguvRB7U0kTOJMsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9zaTt3zrTL7Cjfo3iLq5ZiCSucf6vLUwE0ab/8gRVLWcJIc2Ne4GpDjsnErl1Fd5
-         nBiGCGZNJ1RwMzV8Pm71s34GOs/DavDxNFC9J2KUYPCmwtIE8k+ILI29cTL9bfL81r
-         Ws3U/NiTlGoJye2GOCAOD2RnWErctyQxNbVl8sZs=
+        b=WhdFDU/e8q2MpfZ/ZDjQNHFFeltDp8cauY89xL3kQiaCSfrjCiqCZQxAMu8r1Lfm8
+         P7I/SkwJL7hguYavDHztS5aitjg6A9JzpVB47/4n6kSohxlX9AgVwtiCQpoKwDFsua
+         gEwocYziFbPZoQWwiM3cNh5nR4O9SptWn5wAnk14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcus Comstedt <marcus@mc.pp.se>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 415/434] KVM: PPC: Book3S HV: Fix regression on big endian hosts
-Date:   Sun, 29 Dec 2019 18:27:48 +0100
-Message-Id: <20191229172730.414961353@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.4 376/434] can: flexcan: poll MCR_LPM_ACK instead of GPR ACK for stop mode acknowledgment
+Date:   Sun, 29 Dec 2019 18:27:09 +0100
+Message-Id: <20191229172727.051447498@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,48 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Comstedt <marcus@mc.pp.se>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-commit 228b607d8ea1b7d4561945058d5692709099d432 upstream.
+commit 048e3a34a2e7669bf475eb56c7345ad9d8d2b8e3 upstream.
 
-VCPU_CR is the offset of arch.regs.ccr in kvm_vcpu.
-arch/powerpc/include/asm/kvm_host.h defines arch.regs as a struct
-pt_regs, and arch/powerpc/include/asm/ptrace.h defines the ccr field
-of pt_regs as "unsigned long ccr".  Since unsigned long is 64 bits, a
-64-bit load needs to be used to load it, unless an endianness specific
-correction offset is added to access the desired subpart.  In this
-case there is no reason to _not_ use a 64 bit load though.
+Stop Mode is entered when Stop Mode is requested at chip level and
+MCR[LPM_ACK] is asserted by the FlexCAN.
 
-Fixes: 6c85b7bc637b ("powerpc/kvm: Use UV_RETURN ucall to return to ultravisor")
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Marcus Comstedt <marcus@mc.pp.se>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191215094900.46740-1-marcus@mc.pp.se
+Double check with IP owner, the MCR[LPM_ACK] bit should be polled for
+stop mode acknowledgment, not the acknowledgment from chip level which
+is used to gate flexcan clocks.
+
+This patch depends on:
+
+    b7603d080ffc ("can: flexcan: add low power enter/exit acknowledgment helper")
+
+Fixes: 5f186c257fa4 (can: flexcan: fix stop mode acknowledgment)
+Tested-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: linux-stable <stable@vger.kernel.org> # >= v5.0
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv_rmhandlers.S |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/flexcan.c |   17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -1117,7 +1117,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
- 	ld	r7, VCPU_GPR(R7)(r4)
- 	bne	ret_to_ultra
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -407,7 +407,6 @@ static void flexcan_enable_wakeup_irq(st
+ static inline int flexcan_enter_stop_mode(struct flexcan_priv *priv)
+ {
+ 	struct flexcan_regs __iomem *regs = priv->regs;
+-	unsigned int ackval;
+ 	u32 reg_mcr;
  
--	lwz	r0, VCPU_CR(r4)
-+	ld	r0, VCPU_CR(r4)
- 	mtcr	r0
+ 	reg_mcr = priv->read(&regs->mcr);
+@@ -418,36 +417,24 @@ static inline int flexcan_enter_stop_mod
+ 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+ 			   1 << priv->stm.req_bit, 1 << priv->stm.req_bit);
  
- 	ld	r0, VCPU_GPR(R0)(r4)
-@@ -1137,7 +1137,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
-  *   R3 = UV_RETURN
-  */
- ret_to_ultra:
--	lwz	r0, VCPU_CR(r4)
-+	ld	r0, VCPU_CR(r4)
- 	mtcr	r0
+-	/* get stop acknowledgment */
+-	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
+-				     ackval, ackval & (1 << priv->stm.ack_bit),
+-				     0, FLEXCAN_TIMEOUT_US))
+-		return -ETIMEDOUT;
+-
+-	return 0;
++	return flexcan_low_power_enter_ack(priv);
+ }
  
- 	ld	r0, VCPU_GPR(R3)(r4)
+ static inline int flexcan_exit_stop_mode(struct flexcan_priv *priv)
+ {
+ 	struct flexcan_regs __iomem *regs = priv->regs;
+-	unsigned int ackval;
+ 	u32 reg_mcr;
+ 
+ 	/* remove stop request */
+ 	regmap_update_bits(priv->stm.gpr, priv->stm.req_gpr,
+ 			   1 << priv->stm.req_bit, 0);
+ 
+-	/* get stop acknowledgment */
+-	if (regmap_read_poll_timeout(priv->stm.gpr, priv->stm.ack_gpr,
+-				     ackval, !(ackval & (1 << priv->stm.ack_bit)),
+-				     0, FLEXCAN_TIMEOUT_US))
+-		return -ETIMEDOUT;
+ 
+ 	reg_mcr = priv->read(&regs->mcr);
+ 	reg_mcr &= ~FLEXCAN_MCR_SLF_WAK;
+ 	priv->write(reg_mcr, &regs->mcr);
+ 
+-	return 0;
++	return flexcan_low_power_exit_ack(priv);
+ }
+ 
+ static inline void flexcan_error_irq_enable(const struct flexcan_priv *priv)
 
 
