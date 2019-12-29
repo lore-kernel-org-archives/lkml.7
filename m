@@ -2,113 +2,49 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE918C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC6FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4A3207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:07:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="NBT0hgYP"
+	by mail.kernel.org (Postfix) with ESMTP id 5115C20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 01:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfL2BHS (ORCPT
+        id S1726371AbfL2BUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 20:07:18 -0500
-Received: from mail-mw2nam12on2093.outbound.protection.outlook.com ([40.107.244.93]:52831
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        Sat, 28 Dec 2019 20:20:06 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39098 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726248AbfL2BHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 20:07:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jEnsigEW7AkHP+BIaVLHTSbpXO9lK0nVcwm+DtQdRGlc1JSzDDmbyiR2kCXEarDJajbM/MD4kqXQscOYuy2QAwq6UWufN9Vn0LCc8rEmZwP9uu3yYCb9tQrqDU7sy5EDzMS/aNhXCSbcE2SbJ4owf0GYs39fRQ0HxcFEl/Yt2DVuL+OP/P2iBQzamIEjdhgtojymO8FMnzyvG5lXhcT6eVsjjksBElm2VgA5l8RQup3r9pUI4UlADMgBVysL0SJ9A3ZcfcQaB3GZiB9wZzJrNtQO6CgfAGj+QCFkj2zIF72gdGf1kOM6JgV3tbFepl/BDYTmIxT7fqCwCxZZ8seBZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4H3NJmF6i5VrGBGM4B/muwj06rH5n1nohU3LZ5oSDW4=;
- b=W1lcFrx4lkZLYwzVUeydGzeIilF0DgWsw7JEl5TjXcTDwb+gZTgIv8oTO7PtFMGUigbB8bn0BnojdBUOFy3autb5i+oIkqek5oAYvTy+l0zYwBA93SKl76jThxrSjPIglHj4PGS41NtnJdNuFtHViBazvlBHFwFFRoLFw968/I9qw2BAYRaYDxDm5cgmtmbSFZ73TTM+a1TASSzHA2wS8Tco70Yko2YeHkGBMM95wfo+n2vDqZjGRT8Wx/s/xL+8T4tR+v1Y15i39BLlUxeeDpDAMjW1+LY2rO7SEM0AYQVgXOkrXCFGqML1kdq0qCoshB9uHAtznUcRByC8iwoJNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4H3NJmF6i5VrGBGM4B/muwj06rH5n1nohU3LZ5oSDW4=;
- b=NBT0hgYPqBE66u7PKf8lMex56d0FLq5kSRr5iCJNlXSo9AI5RU4cv/tEjoaezPwh2hlAc0DYtXNnSqPNbGzp0k1KSaLJah3ppE25z5kW/fVUHd1hyDBH56NVe45ln/ouaEO7zFt82xt79K6tck32WMPHHhFc/L1BV8JveAlTdBw=
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com (20.179.23.160) by
- MN2PR21MB1216.namprd21.prod.outlook.com (20.179.20.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.3; Sun, 29 Dec 2019 01:06:35 +0000
-Received: from MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::d15a:1864:efcd:6215]) by MN2PR21MB1375.namprd21.prod.outlook.com
- ([fe80::d15a:1864:efcd:6215%8]) with mapi id 15.20.2602.009; Sun, 29 Dec 2019
- 01:06:35 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next, 1/3] Drivers: hv: vmbus: Add a dev_num variable
- based on channel offer sequence
-Thread-Topic: [PATCH net-next, 1/3] Drivers: hv: vmbus: Add a dev_num variable
- based on channel offer sequence
-Thread-Index: AQHVvdkhLyg9j1bIO0OUHtBIsB4tRqfQP7oAgAAKl2A=
-Date:   Sun, 29 Dec 2019 01:06:35 +0000
-Message-ID: <MN2PR21MB13755046D790AA59DFA9EB5BCA240@MN2PR21MB1375.namprd21.prod.outlook.com>
-References: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
-        <1577576793-113222-2-git-send-email-haiyangz@microsoft.com>
- <20191228162002.3a603c8b@hermes.lan>
-In-Reply-To: <20191228162002.3a603c8b@hermes.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-12-29T01:06:33.7814625Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=409072ba-85ba-4fce-887b-cbc5478647ed;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 08acaa89-fcbd-438c-1535-08d78bfb59ae
-x-ms-traffictypediagnostic: MN2PR21MB1216:|MN2PR21MB1216:|MN2PR21MB1216:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR21MB121609EB0EB12CCD8F06933BCA240@MN2PR21MB1216.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0266491E90
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(136003)(346002)(366004)(39860400002)(199004)(189003)(13464003)(52536014)(8990500004)(8676002)(66946007)(6916009)(71200400001)(186003)(86362001)(81166006)(26005)(54906003)(2906002)(81156014)(8936002)(66556008)(76116006)(64756008)(66476007)(316002)(66446008)(4326008)(478600001)(5660300002)(55016002)(33656002)(53546011)(9686003)(7696005)(10290500003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1216;H:MN2PR21MB1375.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yrGvYzgmzkCVmF5E9b43v0gxvx8G/IEdVWwxD/vIwHi6RPzbY0N135QtayqjAcx7s8j7Ip5KSsbPD8byvnQ4yY1ntWgezrOGA+x8RiFPOJ8AS73pVyz9h1hFheTo9yFxXX3yDHKsfwPjpk/Gw6I9xefWNK6nndElZjElcS5oXUhgN80hKQOS7kND0n1X2RRzTZe9gMiRksFZqZEoaU/QT7aQ/GTS34TiXeKeaPipxYlGHgDwkBb+G0WnJM/zHt0qStTBghwNwNbSlSEdbf7Pscf5G2CtA3oDvC1QLIUyT1w6G7v+8/rHkiAUtlXEeZRulSjv5PUDLMovxzfJ8NYspJPk2uy3uFGx3IXcDt2fGJ6K4Mtv1fzagoy9vBMXZsTyh4IvpgS3r9+dzeQCjzXkLrTZ4gpA8zJnl/N+r4oVbKMsBRO0uo8P+RrLm/6NF8kBhkKjmCxbXp97q3UvP94DoKlweySFR1JypGo+F9Kud//L5A1V+1FZZN4RCgE4d1Ri
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726187AbfL2BUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 20:20:06 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 25958FD4288C79342CE4;
+        Sun, 29 Dec 2019 09:20:04 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Dec 2019
+ 09:19:56 +0800
+Subject: Re: [PATCH] drm/v3d: remove duplicated kfree in v3d_submit_cl_ioctl
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <linux-kernel@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        "David Airlie" <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
+        Yi Zhang <yi.zhang@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>
+References: <20191225131715.3527-1-yukuai3@huawei.com>
+ <0db93c30-2c87-9824-31be-a15c0d141ab5@web.de>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <23c5fdc5-b5ee-fd61-4c33-5e4442cdf305@huawei.com>
+Date:   Sun, 29 Dec 2019 09:19:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08acaa89-fcbd-438c-1535-08d78bfb59ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Dec 2019 01:06:35.2734
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uHJbbcKw3kszi6Rh735E+a8flpU5oU0HnXUR2fHHpi1toEnw2k+HXcE/FQHPNkVXTtZs5NaHet4YqBNhVd4dQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1216
+In-Reply-To: <0db93c30-2c87-9824-31be-a15c0d141ab5@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.220.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -116,58 +52,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Sent: Saturday, December 28, 2019 7:20 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.o=
-rg;
-> KY Srinivasan <kys@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH net-next, 1/3] Drivers: hv: vmbus: Add a dev_num vari=
-able
-> based on channel offer sequence
->=20
-> On Sat, 28 Dec 2019 15:46:31 -0800
-> Haiyang Zhang <haiyangz@microsoft.com> wrote:
->=20
-> > +
-> > +next:
-> > +	found =3D false;
-> > +
-> > +	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
-> > +		if (i =3D=3D channel->dev_num &&
-> > +		    guid_equal(&channel->offermsg.offer.if_type,
-> > +			       &newchannel->offermsg.offer.if_type)) {
-> > +			found =3D true;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	if (found) {
-> > +		i++;
-> > +		goto next;
-> > +	}
-> > +
->=20
-> Overall, keeping track of dev_num is a good solution.
->=20
-> I prefer not having a loop coded with goto's. Why not
-> a nested loop.
-Sure, I can use a nested loop.
+On 2019/12/29 4:45, Markus Elfring wrote:
+>> v3d_submit_cl_ioctl call kfree() with variable 'bin' twice.
+> 
+> I would prefer a wording like “kfree() was called for the same variable twice
+> within an if branch.”.
+> 
+> 
+>> Fix it by removing the latter one.
+> 
+> I find the wording “Delete a duplicate function call.” more appropriate.
+> 
+Thank you for your advise, I'll make changes in V2 patch.
 
-> Also, there already is a search of the channel
-> list in vmbus_process_offer() so why is another lookup needed?
-vmbus_process_offer() looks for the if_instance and if_type matches
-to determine if this is a subchannel vs primary channel. The loop=20
-terminates at different condition from hv_set_devnum().
-So I didn't re-use the existing loop.
+> Please add the tag “Fixes” to your change description.
 
-And this kind of search happens only during channel offering, and
-doesn't impact performance much.
+I got the results from "git blame":
+git blame -L 570,575 drivers/gpu/drm/v3d/v3d_gem.c
+a783a09ee76d6 (Eric Anholt        2019-04-16 15:58:53 -0700 570) 
+        if (ret) {
+0d352a3a8a1f2 (Iago Toral Quiroga 2019-09-16 09:11:25 +0200 571) 
+                kfree(bin);
+a783a09ee76d6 (Eric Anholt        2019-04-16 15:58:53 -0700 572) 
+                v3d_job_put(&render->base);
+29cd13cfd7624 (Navid Emamdoost    2019-10-21 13:52:49 -0500 573) 
+                kfree(bin);
+a783a09ee76d6 (Eric Anholt        2019-04-16 15:58:53 -0700 574) 
+                return ret;
+a783a09ee76d6 (Eric Anholt        2019-04-16 15:58:53 -0700 575) 
+        }
 
-Thanks,
-- Haiyang
+The first kfree belong to the patch 0d352a3a8a1f2 :
+commit 0d352a3a8a1f26168d09f7073e61bb4b328e3bb9
+Author: Iago Toral Quiroga <itoral@igalia.com>
+Date:   Mon Sep 16 09:11:25 2019 +0200
 
+     drm/v3d: don't leak bin job if v3d_job_init fails.
+
+     If the initialization of the job fails we need to kfree() it
+     before returning.
+
+     Signed-off-by: Iago Toral Quiroga <itoral@igalia.com>
+     Signed-off-by: Eric Anholt <eric@anholt.net>
+     Link: 
+https://patchwork.freedesktop.org/patch/msgid/20190916071125.5255-1-itoral@igalia.com
+     Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+     Reviewed-by: Eric Anholt <eric@anholt.net>
+
+diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+index 5d80507b539b..fb32cda18ffe 100644
+--- a/drivers/gpu/drm/v3d/v3d_gem.c
++++ b/drivers/gpu/drm/v3d/v3d_gem.c
+@@ -563,6 +563,7 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+                 ret = v3d_job_init(v3d, file_priv, &bin->base,
+                                    v3d_job_free, args->in_sync_bcl);
+                 if (ret) {
++                       kfree(bin);
+                         v3d_job_put(&render->base);
+                         return ret;
+                 }
+
+And the second belong to 29cd13cfd7624:
+commit 29cd13cfd7624726d9e6becbae9aa419ef35af7f
+Author: Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Mon Oct 21 13:52:49 2019 -0500
+
+     drm/v3d: Fix memory leak in v3d_submit_cl_ioctl
+
+     In the impelementation of v3d_submit_cl_ioctl() there are two memory
+     leaks. One is when allocation for bin fails, and the other is when bin
+     initialization fails. If kcalloc fails to allocate memory for bin then
+     render->base should be put. Also, if v3d_job_init() fails to initialize
+     bin->base then allocated memory for bin should be released.
+
+     Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+     Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+     Reviewed-by: Eric Anholt <eric@anholt.net>
+     Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+     Link: 
+https://patchwork.freedesktop.org/patch/msgid/20191021185250.26130-1-navid.emamdoost@gmail.com
+
+diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+index 5d80507b539b..19c092d75266 100644
+--- a/drivers/gpu/drm/v3d/v3d_gem.c
++++ b/drivers/gpu/drm/v3d/v3d_gem.c
+@@ -557,13 +557,16 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void 
+*data,
+
+         if (args->bcl_start != args->bcl_end) {
+                 bin = kcalloc(1, sizeof(*bin), GFP_KERNEL);
+-               if (!bin)
++               if (!bin) {
++                       v3d_job_put(&render->base);
+                         return -ENOMEM;
++               }
+
+                 ret = v3d_job_init(v3d, file_priv, &bin->base,
+                                    v3d_job_free, args->in_sync_bcl);
+                 if (ret) {
+                         v3d_job_put(&render->base);
++                       kfree(bin);
+                         return ret;
+                 }
+
+It seems the two patches fix the same memory leak, but I have no idea 
+how thet get together without conflict.
+
+Thanks
+Yu Kuai
 
