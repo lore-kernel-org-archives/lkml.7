@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DD9C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B435C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA31C21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5390724125
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640174;
-	bh=cGJoQaBLeDWQxSAkGHpykO2M28PK5xPPF5XrwpBF+GI=;
+	s=default; t=1577640178;
+	bh=xi2FPHfQ1DwUJkkDXeIFqp5zIvdo5B1XzYZZ0VLlqUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwhycd+3GM0YYVX7Yx3nORkZP3HVE6602aYCjd07Z7RC9USyXvf72a4YBmWk4itLL
-	 klPnJrn01sI8NSsDGuLO+McKUeuckjtolZPGjqr0TzlRG1zq5olr/WtaEb1Fa7Coe4
-	 OY71mzwocQQaHyfrwiqCPK1Ffbu1RDq/Kf4Cxg34=
+	b=mQeWdryrt2a+t1En637oIkg1vLSFSeevLk1OC1zi3UY5db6dCwtSmPv0wS37kd7oS
+	 RAiW0kOZzs0XHz5OK40M5MJpJSkDDfm0Y78o9ASwvQJ2lIRo8z+F9C06g+RndgCcyD
+	 PUxzUr+dcyQboTE9mzAEo6cMA8TRQPRgR2K5JOKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfL2RWx (ORCPT
+        id S1727454AbfL2RW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:22:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:22:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfL2RWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:48 -0500
+        id S1727002AbfL2RWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:22:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4ED7207FD;
-        Sun, 29 Dec 2019 17:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B4620CC7;
+        Sun, 29 Dec 2019 17:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640168;
-        bh=cGJoQaBLeDWQxSAkGHpykO2M28PK5xPPF5XrwpBF+GI=;
+        s=default; t=1577640173;
+        bh=xi2FPHfQ1DwUJkkDXeIFqp5zIvdo5B1XzYZZ0VLlqUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lnw4DO42JVya9yN+hiyk5AaFQQd47UZHS1GM0iJMGH37nolRpoL4SP4REm7bl9LhF
-         XuPTCrMudCbvdYNgWHPmYiJiD2OlElzxLYZpX33c237jYDCWFuQgQ3uVyhBlSq8oFy
-         NiH7Jrb5nqXUTIhoD7lROwRdtAImCSDnKWtg+teI=
+        b=RT1QXYw4Jh4oavRD1AifI8v7aFa/6Y8i6sFV8QQmlx3lBubLNWUT1wCDRGYpn/qU7
+         EOyzVF6SrTibldy8AYSv0LN13HDIExlZDhowfKbmBT40SlckyR6muxVEP+Zlc3zBa3
+         4YtQ5dEZaHXIVt2GHuYCMh/43cOBBNyke0Nm7+QA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/161] selftests/bpf: Correct path to include msg + path
-Date:   Sun, 29 Dec 2019 18:18:07 +0100
-Message-Id: <20191229162411.621058361@linuxfoundation.org>
+Subject: [PATCH 4.14 049/161] media: cx88: Fix some error handling path in cx8800_initdev()
+Date:   Sun, 29 Dec 2019 18:18:17 +0100
+Message-Id: <20191229162413.598625208@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,67 +62,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit c588146378962786ddeec817f7736a53298a7b01 ]
+[ Upstream commit e1444e9b0424c70def6352580762d660af50e03f ]
 
-The "path" buf is supposed to contain path + printf msg up to 24 bytes.
-It will be cut anyway, but compiler generates truncation warns like:
+A call to 'pci_disable_device()' is missing in the error handling path.
+In some cases, a call to 'free_irq()' may also be missing.
 
-"
-samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c: In
-function ‘setup_cgroup_environment’:
-samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:34:
-warning: ‘/cgroup.controllers’ directive output may be truncated
-writing 19 bytes into a region of size between 1 and 4097
-[-Wformat-truncation=]
-snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
-				  ^~~~~~~~~~~~~~~~~~~
-samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:52:2:
-note: ‘snprintf’ output between 20 and 4116 bytes into a destination
-of size 4097
-snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:34:
-warning: ‘/cgroup.subtree_control’ directive output may be truncated
-writing 23 bytes into a region of size between 1 and 4097
-[-Wformat-truncation=]
-snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
-				  ^~~~~~~~~~~~~~~~~~~~~~~
-cgroup_path);
-samples/bpf/../../tools/testing/selftests/bpf/cgroup_helpers.c:72:2:
-note: ‘snprintf’ output between 24 and 4120 bytes into a destination
-of size 4097
-snprintf(path, sizeof(path), "%s/cgroup.subtree_control",
-cgroup_path);
-"
+Reorder the error handling path, add some new labels and fix the 2 issues
+mentionned above.
 
-In order to avoid warns, lets decrease buf size for cgroup workdir on
-24 bytes with assumption to include also "/cgroup.subtree_control" to
-the address. The cut will never happen anyway.
+This way, the error handling path in more in line with 'cx8800_finidev()'
+(i.e. the remove function)
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20191002120404.26962-3-ivan.khoronzhuk@linaro.org
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/cgroup_helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/cx88/cx88-video.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/samples/bpf/cgroup_helpers.c b/samples/bpf/cgroup_helpers.c
-index 09afaddfc9ba..b5c09cd6c7bd 100644
---- a/samples/bpf/cgroup_helpers.c
-+++ b/samples/bpf/cgroup_helpers.c
-@@ -43,7 +43,7 @@
-  */
- int setup_cgroup_environment(void)
- {
--	char cgroup_workdir[PATH_MAX + 1];
-+	char cgroup_workdir[PATH_MAX - 24];
+diff --git a/drivers/media/pci/cx88/cx88-video.c b/drivers/media/pci/cx88/cx88-video.c
+index 7d25ecd4404b..1748812bd7e5 100644
+--- a/drivers/media/pci/cx88/cx88-video.c
++++ b/drivers/media/pci/cx88/cx88-video.c
+@@ -1310,7 +1310,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 	core = cx88_core_get(dev->pci);
+ 	if (!core) {
+ 		err = -EINVAL;
+-		goto fail_free;
++		goto fail_disable;
+ 	}
+ 	dev->core = core;
  
- 	format_cgroup_path(cgroup_workdir, "");
+@@ -1356,7 +1356,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 				       cc->step, cc->default_value);
+ 		if (!vc) {
+ 			err = core->audio_hdl.error;
+-			goto fail_core;
++			goto fail_irq;
+ 		}
+ 		vc->priv = (void *)cc;
+ 	}
+@@ -1370,7 +1370,7 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
+ 				       cc->step, cc->default_value);
+ 		if (!vc) {
+ 			err = core->video_hdl.error;
+-			goto fail_core;
++			goto fail_irq;
+ 		}
+ 		vc->priv = (void *)cc;
+ 		if (vc->id == V4L2_CID_CHROMA_AGC)
+@@ -1533,11 +1533,14 @@ static int cx8800_initdev(struct pci_dev *pci_dev,
  
+ fail_unreg:
+ 	cx8800_unregister_video(dev);
+-	free_irq(pci_dev->irq, dev);
+ 	mutex_unlock(&core->lock);
++fail_irq:
++	free_irq(pci_dev->irq, dev);
+ fail_core:
+ 	core->v4ldev = NULL;
+ 	cx88_core_put(core, dev->pci);
++fail_disable:
++	pci_disable_device(pci_dev);
+ fail_free:
+ 	kfree(dev);
+ 	return err;
 -- 
 2.20.1
 
