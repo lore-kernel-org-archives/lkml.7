@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE46C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E447C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E6320718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AAA207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641640;
-	bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
+	s=default; t=1577641645;
+	bh=/hfN6siHm7KQjOiqFX4DdWf836lc/u3N4UUXUl5d0Hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lEA1GlnVhs3pCOSZbze5gUBaKxMWHEg/l3R0P3qXEPCo1VSKi4HFyVhclmD8GWptX
-	 N7smGajdDmP+pNTAgDCHotGSBYIS0w0zv07CR87cjhis8+6/oOwaD61rmrOhzaKakE
-	 CMKIreTlsln+Cqd0BeSOR4NHjDvd1u9Jy85FIaYw=
+	b=CmnAT2IIAxUWxEORKdB+w0zwF8ILVMcHcjM/1sfPddWjvBY39gzeDnXceibCOZ+xp
+	 bxAQl+qY94Xovf9iRV7fv/fObfZBPPMfG8TO8/N2G+FRqYMnCQmJi289mqGz3Y2oOf
+	 IslP8yRl/lsLnkz9Yu/YbRkKlJBmJMC6tkeHsN8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbfL2RrT (ORCPT
+        id S1731257AbfL2RrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731212AbfL2RrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:12 -0500
+        id S1731235AbfL2RrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A81220718;
-        Sun, 29 Dec 2019 17:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F83F208C4;
+        Sun, 29 Dec 2019 17:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641631;
-        bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
+        s=default; t=1577641636;
+        bh=/hfN6siHm7KQjOiqFX4DdWf836lc/u3N4UUXUl5d0Hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcLWT68gJHp+Kt0EASKoaQ1bpCpOUKEuC9XvbMWUjt95i2q7jJ/9vjho0hWVPKs1U
-         ZUndZCIKxap+tlP9DSAZ+091B8pr6rWwSCRDNdBhVigyjw1jSgzAImrY25ihJFWgd6
-         LY6Ot9k5+frb5iNvOj++BG+w+GIwLXM+px/BkIGg=
+        b=OtVjCXxB5BlJbLV0PjJpK1tdAaHfbYrttnqH2KvR56kuTwzqALghC6oyM5hh3758v
+         b1IdsWivw0bQ7IeWCExOvngLd0wupG66ooE936mmoMvbiJB4DIKrltfQyrwKQrNq99
+         LwOqqWxzYcsx2V08l8kUpMZV3H5kgEG72gTeTS+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 107/434] media: cec-funcs.h: add status_req checks
-Date:   Sun, 29 Dec 2019 18:22:40 +0100
-Message-Id: <20191229172708.732337880@linuxfoundation.org>
+Subject: [PATCH 5.4 109/434] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
+Date:   Sun, 29 Dec 2019 18:22:42 +0100
+Message-Id: <20191229172708.876152596@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,52 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 9b211f9c5a0b67afc435b86f75d78273b97db1c5 ]
+[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
 
-The CEC_MSG_GIVE_DECK_STATUS and CEC_MSG_GIVE_TUNER_DEVICE_STATUS commands
-both have a status_req argument: ON, OFF, ONCE. If ON or ONCE, then the
-follower will reply with a STATUS message. Either once or whenever the
-status changes (status_req == ON).
+The DDC/CI protocol involves sending a multi-byte request to the
+display via I2C, which is typically followed by a multi-byte
+response. The internal I2C controller only allows single byte
+reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
+supported when the internal I2C controller is used. The I2C
+transfers complete without errors, however the data in the response
+is garbage. Abort transfers to/from slave address 0x37 (DDC) with
+-EOPNOTSUPP, to make it evident that the communication is failing.
 
-If status_req == OFF, then it will stop sending continuous status updates,
-but the follower will *not* send a STATUS message in that case.
-
-This means that if status_req == OFF, then msg->reply should be 0 as well
-since no reply is expected in that case.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/cec-funcs.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/uapi/linux/cec-funcs.h b/include/uapi/linux/cec-funcs.h
-index 8997d5068c08..4511b85c84df 100644
---- a/include/uapi/linux/cec-funcs.h
-+++ b/include/uapi/linux/cec-funcs.h
-@@ -923,7 +923,8 @@ static inline void cec_msg_give_deck_status(struct cec_msg *msg,
- 	msg->len = 3;
- 	msg->msg[1] = CEC_MSG_GIVE_DECK_STATUS;
- 	msg->msg[2] = status_req;
--	msg->reply = reply ? CEC_MSG_DECK_STATUS : 0;
-+	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
-+				CEC_MSG_DECK_STATUS : 0;
- }
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 521d689413c8..3e82d604201e 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -36,6 +36,7 @@
+ #include "dw-hdmi-cec.h"
+ #include "dw-hdmi.h"
  
- static inline void cec_ops_give_deck_status(const struct cec_msg *msg,
-@@ -1027,7 +1028,8 @@ static inline void cec_msg_give_tuner_device_status(struct cec_msg *msg,
- 	msg->len = 3;
- 	msg->msg[1] = CEC_MSG_GIVE_TUNER_DEVICE_STATUS;
- 	msg->msg[2] = status_req;
--	msg->reply = reply ? CEC_MSG_TUNER_DEVICE_STATUS : 0;
-+	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
-+				CEC_MSG_TUNER_DEVICE_STATUS : 0;
- }
++#define DDC_CI_ADDR		0x37
+ #define DDC_SEGMENT_ADDR	0x30
  
- static inline void cec_ops_give_tuner_device_status(const struct cec_msg *msg,
+ #define HDMI_EDID_LEN		512
+@@ -398,6 +399,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
+ 	u8 addr = msgs[0].addr;
+ 	int i, ret = 0;
+ 
++	if (addr == DDC_CI_ADDR)
++		/*
++		 * The internal I2C controller does not support the multi-byte
++		 * read and write operations needed for DDC/CI.
++		 * TOFIX: Blacklist the DDC/CI address until we filter out
++		 * unsupported I2C operations.
++		 */
++		return -EOPNOTSUPP;
++
+ 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
+ 
+ 	for (i = 0; i < num; i++) {
 -- 
 2.20.1
 
