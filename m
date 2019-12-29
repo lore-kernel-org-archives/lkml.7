@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7B3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79175C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975CE207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E1B20409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640774;
-	bh=37GhvsGRf9iOwK6d9QDIImLR2MRH5h+lFXgn8HZGWhw=;
+	s=default; t=1577640778;
+	bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtN5xCa/63iTbqsFDshfEWZvdhYlyYg2i+/LheCZ4qIG5nRbot7ehzcNJWdxZHWUN
-	 +ZvOm34CoVz7WobCJ8Vp2B6BjhoY8MqZrl9EJBBUNAzGHHzxYFEOY+8vau4emCJdRb
-	 zCKAC4V60qhClsYP0aeJskSufK/z/RUyGwTEOARU=
+	b=Mbtxe8Ng20Lvdg8utx64bcPtDsZjQJLfeCsXSxUoYi1lgtb0erWD47rRzNXsSkX/T
+	 ut/aDkV0FNXFXPFepkVbjnjUGENbELWExwGGraGXcUVaccb/2nZ5U8YtAwFP1Ou05i
+	 hzH3tuExUfjDRH/8GgkRyDprc1gEJ6dIVNS+JOwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfL2Rcx (ORCPT
+        id S1729376AbfL2Rc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33624 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:32:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbfL2Rcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:47 -0500
+        id S1729368AbfL2Rcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0009220409;
-        Sun, 29 Dec 2019 17:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C396220409;
+        Sun, 29 Dec 2019 17:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640767;
-        bh=37GhvsGRf9iOwK6d9QDIImLR2MRH5h+lFXgn8HZGWhw=;
+        s=default; t=1577640772;
+        bh=9RACWVCjpjTDOoaoIHWooaa+6h52XFm/sW+01Hb6ZPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K/bi9PJMWvP5H56GIrD+VCDZ7C2oVNZ0apZk1UT/Js1dYeUeIDk9yr5ricp4xXuH7
-         7i8uz9PtFJReIJbSDMn7r+zZMG+jYcJfNqph1O+TUw+ADFMAcbrjWxTBLdqrM0n/++
-         +qyPlfsfK9F2RFbG1NvhUIuA32RGgHli37C2yyn4=
+        b=cYA52psD0BweDFJQ+4SfhzS1eDd7jreeeFNqCIzaVojIPnpbsFTJ34QGabGDUw5Mp
+         0u7c5JNs6X9DmvoSK6P3CPsoE1klVVe+OhdmU17VSRwG1sayp97sOdPx28wNSNluq5
+         mZntUkmxpvk7dga5O+CL7ukhLyRykugOQLL5FTiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/219] media: smiapp: Register sensor after enabling runtime PM on the device
-Date:   Sun, 29 Dec 2019 18:18:13 +0100
-Message-Id: <20191229162521.188293750@linuxfoundation.org>
+Subject: [PATCH 4.19 093/219] arm64: psci: Reduce the waiting time for cpu_psci_cpu_kill()
+Date:   Sun, 29 Dec 2019 18:18:15 +0100
+Message-Id: <20191229162521.505979378@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,54 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 90c9e4a4dba9f4de331372e745fb1991c1faa598 ]
+[ Upstream commit bfcef4ab1d7ee8921bc322109b1692036cc6cbe0 ]
 
-Earlier it was possible that the parts of the driver that assumed runtime
-PM was enabled were being called before runtime PM was enabled in the
-driver's probe function. So enable runtime PM before registering the
-sub-device.
+In cases like suspend-to-disk and suspend-to-ram, a large number of CPU
+cores need to be shut down. At present, the CPU hotplug operation is
+serialised, and the CPU cores can only be shut down one by one. In this
+process, if PSCI affinity_info() does not return LEVEL_OFF quickly,
+cpu_psci_cpu_kill() needs to wait for 10ms. If hundreds of CPU cores
+need to be shut down, it will take a long time.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Normally, there is no need to wait 10ms in cpu_psci_cpu_kill(). So
+change the wait interval from 10 ms to max 1 ms and use usleep_range()
+instead of msleep() for more accurate timer.
+
+In addition, reducing the time interval will increase the messages
+output, so remove the "Retry ..." message, instead, track time and
+output to the the sucessful message.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/psci.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 1236683da8f7..4731e1c72f96 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -3108,19 +3108,23 @@ static int smiapp_probe(struct i2c_client *client,
- 	if (rval < 0)
- 		goto out_media_entity_cleanup;
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index e8edbf13302a..3856d51c645b 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -84,7 +84,8 @@ static void cpu_psci_cpu_die(unsigned int cpu)
  
--	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
--	if (rval < 0)
--		goto out_media_entity_cleanup;
--
- 	pm_runtime_set_active(&client->dev);
- 	pm_runtime_get_noresume(&client->dev);
- 	pm_runtime_enable(&client->dev);
-+
-+	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
-+	if (rval < 0)
-+		goto out_disable_runtime_pm;
-+
- 	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
- 	pm_runtime_use_autosuspend(&client->dev);
- 	pm_runtime_put_autosuspend(&client->dev);
+ static int cpu_psci_cpu_kill(unsigned int cpu)
+ {
+-	int err, i;
++	int err;
++	unsigned long start, end;
  
- 	return 0;
+ 	if (!psci_ops.affinity_info)
+ 		return 0;
+@@ -94,16 +95,18 @@ static int cpu_psci_cpu_kill(unsigned int cpu)
+ 	 * while it is dying. So, try again a few times.
+ 	 */
  
-+out_disable_runtime_pm:
-+	pm_runtime_disable(&client->dev);
-+
- out_media_entity_cleanup:
- 	media_entity_cleanup(&sensor->src->sd.entity);
+-	for (i = 0; i < 10; i++) {
++	start = jiffies;
++	end = start + msecs_to_jiffies(100);
++	do {
+ 		err = psci_ops.affinity_info(cpu_logical_map(cpu), 0);
+ 		if (err == PSCI_0_2_AFFINITY_LEVEL_OFF) {
+-			pr_info("CPU%d killed.\n", cpu);
++			pr_info("CPU%d killed (polled %d ms)\n", cpu,
++				jiffies_to_msecs(jiffies - start));
+ 			return 0;
+ 		}
  
+-		msleep(10);
+-		pr_info("Retrying again to check for CPU kill\n");
+-	}
++		usleep_range(100, 1000);
++	} while (time_before(jiffies, end));
+ 
+ 	pr_warn("CPU%d may not have shut down cleanly (AFFINITY_INFO reports %d)\n",
+ 			cpu, err);
 -- 
 2.20.1
 
