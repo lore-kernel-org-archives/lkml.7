@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEFAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B754FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C839206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC3C206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642745;
-	bh=kOl/wCCk7HSsLd79eEaxf+4dfnRKyYvAobj4NSmG0hQ=;
+	s=default; t=1577642768;
+	bh=VjdN9avP/gm0g+8+wpi7ScxeO9Ik9wXOONwHsKgHv/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqhA+tVWzmW7GFkng3FK14zG3oNMdhOkHQ5Y+Z/+w29MJom1pzAniFN10id1HH3p+
-	 +fwGAfiuXtADz0TXj3IQli4wOQ3UQBrpq0vBDFiIlN5HN9iLbt8DKwZfHQx6+/sZqX
-	 w7ZZ6yS31Rlwkgr7sPsIWFGTwofVzUnxK1oZGwMg=
+	b=pvbUaCd64lKD488roX8NQx0NOkwi672bgHhn/VYI7mLGV+797TXgcZ16tvAOU4VzC
+	 3Uz7+vbrU9qq+GDWgWEC4S4d2nN88SItsS7o+b08Ov/tl/uzWZNWCPQWTyO05xaBUB
+	 UHlhc2MFRQElgqofLAroCEDCB9v2RXLfMAiBDMVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731974AbfL2Ruz (ORCPT
+        id S1732024AbfL2SGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:06:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731652AbfL2Rux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:53 -0500
+        id S1731840AbfL2RuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30D8420718;
-        Sun, 29 Dec 2019 17:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E16E206A4;
+        Sun, 29 Dec 2019 17:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641852;
-        bh=kOl/wCCk7HSsLd79eEaxf+4dfnRKyYvAobj4NSmG0hQ=;
+        s=default; t=1577641818;
+        bh=VjdN9avP/gm0g+8+wpi7ScxeO9Ik9wXOONwHsKgHv/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMSr3q7vpqe7G0pjqfDCarl52sDxb5fY4G05klIeGoW+bvrEdx2BzV9Yz/dtLdtub
-         TRsT4OkcwUs0juylTVYx+HQk1T+aE4lk69ko4kIv//Bh1H2oaHKyARUbPHoiCdCI9A
-         badZSb9CU4lFB7bsB+rITjgV9M+8WIfaqFvp2qLg=
+        b=U443CYGAX6cISsri3drkHrZRcQvM8XhV9RTHuU4D6xuCUM1cYTF6qe3SJmAlPGNwE
+         J2kWaNrkHawk33u6gm2R6WtynGNgykZDsnXCJqAxBlVS/iMpPbN88sCIbUYkxTc8fI
+         mwyoVd4Qm6AOYpceJm5ls/QR5nxcK6gfZa3EIAVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 195/434] regulator: core: Release coupled_rdevs on regulator_init_coupling() error
-Date:   Sun, 29 Dec 2019 18:24:08 +0100
-Message-Id: <20191229172714.780177897@linuxfoundation.org>
+Subject: [PATCH 5.4 223/434] ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency
+Date:   Sun, 29 Dec 2019 18:24:36 +0100
+Message-Id: <20191229172716.662287191@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,34 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 26c2c997aa1a6c5522f6619910ba025e53e69763 ]
+[ Upstream commit f9ad75468453b019b92c5296e6a04bf7c37f49e4 ]
 
-This patch fixes memory leak which should happen if regulator's coupling
-fails to initialize.
+updated solution to the problem reported with randconfig:
 
-Fixes: d8ca7d184b33 ("regulator: core: Introduce API for regulators coupling customization")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20191025002240.25288-1-digetx@gmail.com
+CONFIG_SND_SOC_SOF_IMX depends on CONFIG_SND_SOC_SOF, but is in
+turn referenced by the sof-of-dev driver. This creates a reverse
+dependency that manifests in a link error when CONFIG_SND_SOC_SOF_OF
+is built-in but CONFIG_SND_SOC_SOF_IMX=m:
+
+sound/soc/sof/sof-of-dev.o:(.data+0x118): undefined reference to `sof_imx8_ops'
+
+use def_trisate to propagate the right settings without select.
+
+Fixes: f4df4e4042b0 ("ASoC: SOF: imx8: Fix COMPILE_TEST error")
+Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191101173045.27099-6-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/sof/imx/Kconfig | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index a46be221dbdc..51ce280c1ce1 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5198,6 +5198,7 @@ unset_supplies:
- 	regulator_remove_coupling(rdev);
- 	mutex_unlock(&regulator_list_mutex);
- wash:
-+	kfree(rdev->coupling_desc.coupled_rdevs);
- 	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 5acae75f5750..71f318bc2c74 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -11,8 +11,8 @@ config SND_SOC_SOF_IMX_TOPLEVEL
+ 
+ if SND_SOC_SOF_IMX_TOPLEVEL
+ 
+-config SND_SOC_SOF_IMX8
+-	tristate "SOF support for i.MX8"
++config SND_SOC_SOF_IMX8_SUPPORT
++	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+ 	depends on IMX_DSP
+ 	help
+@@ -20,4 +20,8 @@ config SND_SOC_SOF_IMX8
+           Say Y if you have such a device.
+           If unsure select "N".
+ 
++config SND_SOC_SOF_IMX8
++	def_tristate SND_SOC_SOF_OF
++	depends on SND_SOC_SOF_IMX8_SUPPORT
++
+ endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
 -- 
 2.20.1
 
