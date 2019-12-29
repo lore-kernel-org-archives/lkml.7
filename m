@@ -1,157 +1,121 @@
-Return-Path: <SRS0=tgXE=2S=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2ABC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80A0C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E25F2173E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Dec 2019 23:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C2720838
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 00:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RoLH+d5g"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="Flo9H/by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfL1XsC (ORCPT
+        id S1726359AbfL2ALI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 18:48:02 -0500
-Received: from mail-dm6nam10on2097.outbound.protection.outlook.com ([40.107.93.97]:20832
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726220AbfL1Xr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 18:47:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Prnfla+iVBnvNEtt2a3lsPwnNDRBj4jGRJB11TQ4FPFaFTgVaNfnnlOrs26MlDJIpR1pdQGpSFJdZ8DeoRrqeoskYV80zoYbWkOZ9IPwR5SToBTWLjCsrH6fJvpmUZCqNzQCeFcjDMj6Vypynm49cIl8qU2ceAFIn4rbAOHscBObRjfUkwmi6Dxd/Sab7jIDs4YXNtbg5DICybr+8I17HAWXt4/MFKhUALsg/5K/hyIE5BQZR374nPwPbTsKEYGFsYDM8zIuFUEcnGxjcBir3Cd9ZCCBekqgMWKeGwVVohLIJWV0AbPfyLu7p8Oyx0BJDnYwS6F5PbAsplUnAo/9Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC1OJtV9c+6pbcT1qAqDjwkX3KsbzOKvcHWvlDdV9Lo=;
- b=cSGHk2D8StxR1OYLuwsgCa46PexZP7sXafNx3QKrEoMgsuGmJhM4B4sHF2J0LOAD5/qGwnM07HDRgTFmB6++yCBc5mHCznvmTUtVWxJpUVoH7vMiD4cuFJsc9+a2dH7IXdJlHnzXTnfYCelZutLfyfUJW/2JEfSdNIRmzWQwedF2+hi8btK3+zpfBtSQ9O0eyIStGxO1yTbM9lAx25Zur2NlxTZHaNnqltZcpVHpZCjqZGoRsLYrK1sRruv5eIhjGhO30H/ysBA2KVP0zDLTjLPghnVQl2InJd1048p9cQfS/kCEQeB/Piun1Mkt4g6wZjuPBd0hf+cJzWnnhtW13g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC1OJtV9c+6pbcT1qAqDjwkX3KsbzOKvcHWvlDdV9Lo=;
- b=RoLH+d5gsQLY+SUqXOUwXZt0Fo/WblU5XFsnp9Fwm1wicyfMTpoekcluhZNWZhHrYUrdL0hJq2ufRTNmEclpPhh5Gj3n2Q4nFBwcrKulLLHgFi+SBdu3EivM+0JRahsaC5JmoGJrzwCPuerGhviyzS3nq3aiTcnI7zO5rsoWEfE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB0727.namprd21.prod.outlook.com (10.167.110.39) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.1; Sat, 28 Dec 2019 23:47:20 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Sat, 28 Dec 2019
- 23:47:20 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next, 3/3] hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
-Date:   Sat, 28 Dec 2019 15:46:33 -0800
-Message-Id: <1577576793-113222-4-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
-References: <1577576793-113222-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR1201CA0022.namprd12.prod.outlook.com
- (2603:10b6:301:4a::32) To DM5PR2101MB0901.namprd21.prod.outlook.com
- (2603:10b6:4:a7::30)
+        Sat, 28 Dec 2019 19:11:08 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45135 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfL2ALI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Dec 2019 19:11:08 -0500
+Received: by mail-ed1-f66.google.com with SMTP id v28so28852096edw.12
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 16:11:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vvh824TZBnegJvSkK9xRvfwQduMxT+onfQ7CGqFsH/0=;
+        b=Flo9H/byGBYPx88NBrUk0p/S0kSMWqsqM20WhXB+e8Gs4ezuPPD6d5/sRxYjir/GdL
+         qQtvdeJVpjFwAZA46/fvMNCnVIH+1g3wJjEybGdrC4kN3wkR0LA6w0TP6Lj8G4iJsVbm
+         5BEKgNETR7pEOOQNEQ/1FZoIwXB15hLxbGZeo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vvh824TZBnegJvSkK9xRvfwQduMxT+onfQ7CGqFsH/0=;
+        b=BgbvzedI7RA0AhzlxgnImoCFxKf6/THkbc34JVsRDnL1u2vGmPhsPCb79pPQ3Q6dCZ
+         MwAoRaq/+SNd0e0KJL8ywURKCLCrYc+HgL0dFYDzTtf0ecHD9qqxliyBMU9a4R8in9jz
+         uDMnDsgOCxpNg8kre7dML6SlMMxwG6QYN/PP6hxFJ8TDduzNdIM6uaZl85ofJSkXhht8
+         s36MffBxFFOPkIIxnPG8eypVrbxWWyYrbal/OXYG/OMTOTdx0kGj0AKgH7d1rr6wglzz
+         QhXhNIyF5pxYsiCZ5d3WIRJiqJULls3LeDSPQiDXFVUcbYM6VRNQaBrOlDAW0GSIWtct
+         AV2A==
+X-Gm-Message-State: APjAAAWtVTis0zlYoMciTyCy4NyOBzuflm+AFQm2YHcEOZZdnpORtgrS
+        zgzEOgLARQrS/oiyq7XFnTTF++mcbl2aen1rgNX+5A==
+X-Google-Smtp-Source: APXvYqzOB5yH7dZk4bwrTsn7INBIkA6k8Lm79RJV2L22B4Ra+1C3I+kKbxUBH9HEmK/i+WEbfdRW24yd7NwQjfB2oCw=
+X-Received: by 2002:aa7:d714:: with SMTP id t20mr63876652edq.93.1577578265781;
+ Sat, 28 Dec 2019 16:11:05 -0800 (PST)
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR1201CA0022.namprd12.prod.outlook.com (2603:10b6:301:4a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Sat, 28 Dec 2019 23:47:19 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 993b18b2-1654-44e7-abe2-08d78bf04739
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0727:|DM5PR2101MB0727:|DM5PR2101MB0727:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB0727E6F9310D17AB95CAD5E8AC250@DM5PR2101MB0727.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 02652BD10A
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(366004)(376002)(199004)(189003)(6666004)(478600001)(81156014)(10290500003)(6506007)(8936002)(4326008)(2616005)(36756003)(316002)(81166006)(52116002)(26005)(956004)(8676002)(2906002)(5660300002)(66556008)(186003)(66476007)(66946007)(16526019)(6512007)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0727;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S7+iRUM9cDwDaeFVyX6Y/16axMFsrqw2cdUqVJPwRE/MGMF4cHMtdT+OJ4WchU2a23t/Q1odZ7WAkl5SQQG/tLLcLC7svkp+gtw3nQMuOER+gMLZ59ioUDxrb/UlO6x3Ke0duCZcvo9VZ14LgRODEn33k9k5hYH1Hs9QQsO3S+Ag7jPP36Qw5BnTJvpoXVRUa1F0hOQPle1LFkpm7YtUouvJTGUlBxDBsP4EGI19fDgxfLh9yOBud200oWY+XsiFDRq5jvs1soREsb0BPdIs/QfPPt7a3DdX5KjWX0tEOq5FxTS0CltaufJRsQisSsPMye1qBBSV/gycu0ib6V0+tg+sw+2rSGreZCZZ0/DuxCHm8fQKFCiTHKi3m0+MKfEGXEEXAPNmbQQFApvg89BEYoIWbGDbHrTIUSGJho4qRBUjZUfW4F71/BBAwVJnP5ey
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 993b18b2-1654-44e7-abe2-08d78bf04739
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Dec 2019 23:47:20.0877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ic/dY7y3VufFc9Jg/5Ew0tZzRaS8HmfPQHkC8cfona7VVLEKR7IViWcqlBc1SOFpcmxNR8BafUqs0ZO5/TWFww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0727
+References: <20191228014837.GA31774@ircssh-2.c.rugged-nimbus-611.internal> <20191228181825.GB6746@cisco>
+In-Reply-To: <20191228181825.GB6746@cisco>
+From:   Sargun Dhillon <sargun@sargun.me>
+Date:   Sat, 28 Dec 2019 19:10:29 -0500
+Message-ID: <CAMp4zn91GoB=1eTbc_ux4eNs2-QFm+JocodgFQYUiiXL7H4m9w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] samples, selftests/seccomp: Zero out seccomp_notif
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dev_num field in vmbus channel structure is assigned to the first
-available number when the channel is offered. So netvsc driver uses it
-for NIC naming based on channel offer sequence. Now re-enable the async
-probing mode for faster probing.
+On Sat, Dec 28, 2019 at 1:18 PM Tycho Andersen <tycho@tycho.ws> wrote:
+>
+> On Sat, Dec 28, 2019 at 01:48:39AM +0000, Sargun Dhillon wrote:
+> > The seccomp_notif structure should be zeroed out prior to calling the
+> > SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
+> > whether these structures were zeroed out or not, so these worked.
+> >
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > ---
+> >  samples/seccomp/user-trap.c                   | 2 +-
+> >  tools/testing/selftests/seccomp/seccomp_bpf.c | 2 ++
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
+> > index 6d0125ca8af7..0ca8fb37cd79 100644
+> > --- a/samples/seccomp/user-trap.c
+> > +++ b/samples/seccomp/user-trap.c
+> > @@ -298,7 +298,6 @@ int main(void)
+> >               req = malloc(sizes.seccomp_notif);
+> >               if (!req)
+> >                       goto out_close;
+> > -             memset(req, 0, sizeof(*req));
+> >
+> >               resp = malloc(sizes.seccomp_notif_resp);
+> >               if (!resp)
+> > @@ -306,6 +305,7 @@ int main(void)
+> >               memset(resp, 0, sizeof(*resp));
+>
+> I know it's unrelated, but it's probably worth sending a patch to fix
+> this to be sizes.seccomp_notif_resp instead of sizeof(*resp), since if
+> the kernel is older this will over-zero things. I can do that, or you
+> can add the patch to this series, just let me know which.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+I was thinking about this, and initially, I chose to make the smaller
+change. I think it might make more sense to combine the patch,
+given that the memset behaviour is "incorrect" if we do it based on
+sizeof(*req), or sizeof(*resp).
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index f3f9eb8..39c412f 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *dev,
- 	struct net_device_context *net_device_ctx;
- 	struct netvsc_device_info *device_info = NULL;
- 	struct netvsc_device *nvdev;
-+	char name[IFNAMSIZ];
- 	int ret = -ENOMEM;
- 
--	net = alloc_etherdev_mq(sizeof(struct net_device_context),
--				VRSS_CHANNEL_MAX);
-+	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
-+	net = alloc_netdev_mqs(sizeof(struct net_device_context), name,
-+			       NET_NAME_ENUM, ether_setup,
-+			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-+
- 	if (!net)
- 		goto no_net;
- 
-@@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *dev,
- 		net->max_mtu = ETH_DATA_LEN;
- 
- 	ret = register_netdevice(net);
-+
-+	if (ret == -EEXIST) {
-+		pr_info("NIC name %s exists, request another name.\n",
-+			net->name);
-+		strlcpy(net->name, "eth%d", IFNAMSIZ);
-+		ret = register_netdevice(net);
-+	}
-+
- 	if (ret != 0) {
- 		pr_err("Unable to register netdev.\n");
- 		goto register_failed;
-@@ -2496,7 +2508,7 @@ static int netvsc_resume(struct hv_device *dev)
- 	.suspend = netvsc_suspend,
- 	.resume = netvsc_resume,
- 	.driver = {
--		.probe_type = PROBE_FORCE_SYNCHRONOUS,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
- 
--- 
-1.8.3.1
+I'll go ahead and respin this patch with the change to call memset
+based on sizes.
 
+>
+> But in any case, this patch is:
+>
+> Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+>
+> Cheers,
+>
+> Tycho
