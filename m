@@ -2,300 +2,152 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6B7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 03:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5E9C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81265206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 03:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872C420720
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 04:08:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1mkTqQV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NtWfhfM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfL2Dlb (ORCPT
+        id S1726396AbfL2ECy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 22:41:31 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42811 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfL2Dlb (ORCPT
+        Sat, 28 Dec 2019 23:02:54 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13421 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfL2ECy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 22:41:31 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p9so13357182plk.9
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 19:41:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3nYzbiySbBMWr0PTl27fhW8zMhEg+ip2bE0c5QuOqsI=;
-        b=S1mkTqQVQ4HAOpRtLQ3Z5Ot5b91O27ZQMN1tfWr/raiqea/k8s8N8PSIaJbI0eVc+o
-         wD+9B5R9McHSd/EBOEFNTwMwNZyMuEOmazjgDRZrCxYZkvptsX+YD8lU+ylSMOYJuhmT
-         uhfTLW8UQwhkfZwVgyUt8hK+WXYDwKOl04yZZXQHrg9BDI1LGlE7lnhTovBU6JXXW755
-         vVHv8fXhfmO1BF5s+YfNchQ8A2UWPm06AjsXzN2ZBfpNZlmXLK5y0yd179I0qNPiBypn
-         laZ5sIZHqIfpuW33OA/0j/F1GAFFktKbhWvKszbcSgCZ270SwxYVASQkEY//HhAop+Pr
-         3SaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3nYzbiySbBMWr0PTl27fhW8zMhEg+ip2bE0c5QuOqsI=;
-        b=ZML5doqNot0crZrj/S+3sfcy0tDT2D8XtUuvJ0cvhoAGCMXfBuC8ti33EhCDrOFclQ
-         KyTSKLQPU3JVoKnPZ0t7X3EQBtHCs6/TF9EkuIJYzVs7h/at7EcN+ifKmJFktH+BYCt9
-         ycgEJKQdjFfJsbkyc0KJ3HhPyQcNtT0p7xV92UL4oh8YYoWs1WJZaVtrEkja2YXsg1R6
-         Jd/YapRYVY6TAWuUAakBVTwASOG1rYLvn7Lpm+CLl8YFjseGInj45yStRls0hmnkm3dy
-         PoyACuYUszWnlRRREoRUht9vi03/97irn3KkQ+c5s8SHi/oNplRLlWURklfYFy1cEApR
-         Rr1A==
-X-Gm-Message-State: APjAAAU+dz9GhcrOLQdZNrDk2yaIebk5bbu71JD7tsfE/OTVhLKUaeYn
-        xQ7EUnvNJGNmF0tl4AlFxldkk+luFvs=
-X-Google-Smtp-Source: APXvYqx2y3B/ZHSUs+Yq+AjalZ9qvoYa/EeRtB3Ey/8PQ54ZGkoeZ7JZ0pjNRy1k0Qim7ZgoA659iA==
-X-Received: by 2002:a17:902:82c3:: with SMTP id u3mr57953226plz.73.1577590889282;
-        Sat, 28 Dec 2019 19:41:29 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u23sm45938315pfm.29.2019.12.28.19.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 19:41:28 -0800 (PST)
-Date:   Sat, 28 Dec 2019 19:41:26 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
-        sivaprak@codeaurora.org
-Subject: Re: [PATCH V2 1/7] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-Message-ID: <20191229034126.GO3755841@builder>
-References: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
- <1576752109-24497-2-git-send-email-sricharan@codeaurora.org>
+        Sat, 28 Dec 2019 23:02:54 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e08255f0000>; Sat, 28 Dec 2019 20:02:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 28 Dec 2019 20:02:53 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 28 Dec 2019 20:02:53 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 29 Dec
+ 2019 04:02:52 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sun, 29 Dec 2019 04:02:52 +0000
+Received: from dhcp-10-19-66-63.nvidia.com (Not Verified[10.19.66.63]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e08256a0000>; Sat, 28 Dec 2019 20:02:52 -0800
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+Subject: [PATCH V1] nvmem: core: fix memory abort in cleanup path
+Date:   Sat, 28 Dec 2019 20:02:42 -0800
+Message-ID: <1577592162-14817-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576752109-24497-2-git-send-email-sricharan@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577592159; bh=OK1RKNnphUt5ZOJF1ejSbTS7CSZIPsea8rpQM1Q5/WI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=NtWfhfM8/noJc6lGVZgm6Pbi5qoU/9iv96uDFZJz4lNcu53oLVhsFnZG7bk751rrB
+         7T9+2oCpzWR09XftIVc6vUaOTejiswqj927N7xVJgpTGOfqR/7GRbtwv6U+EJEEp+Z
+         1HiGa0GUtS2xdie4Vce7y1RbqWwowgUSNaMYgbwbMDclGAAHexdswQ4+By2cWkturi
+         V4ScO15tEssJS+GODMxYX0i5JUPqSlMeC/gq3Lo/YQYmFSvoRyCtnznzaQLDi2X6qO
+         XO1jmCqxRcYMOQRJthtsVX/Jb0E1MfaNkrEerd1T/QCWAPW0T770fOkRoylPN5q6JI
+         sML8bHIfoz0hw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 19 Dec 02:41 PST 2019, Sricharan R wrote:
+nvmem_cell_info_to_nvmem_cell implementation has static
+allocation of name. nvmem_add_cells_from_of() call may
+return error and kfree name results in memory abort. Use
+kasprintf() instead of assigning pointer and prevent kfree crash.
 
-> Add device tree binding Documentation details for ipq6018
-> pinctrl driver.
-> 
-> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> ---
-> 
-> [V2] Splitted dt bindings and driver into different patches. Added missing bindings,
->      and some style changes.
-> 
->  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 172 +++++++++++++++++++++
->  1 file changed, 172 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
-> new file mode 100644
-> index 0000000..745a11e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
-> @@ -0,0 +1,172 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
-> +
-> +maintainers:
-> +  - Sricharan R <sricharan@codeaurora.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  IPQ6018 platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ipq6018-pinctrl
-> +  reg:
-> +    maxItems: 1
-> +  interrupts:
-> +    Description: Specifies the TLMM summary IRQ
-> +    maxItems: 1
-> +  interrupt-controller: true
-> +  '#interrupt-cells':
-> +    Description:
-> +      Specifies the PIN numbers and Flags, as defined in defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
-> +    const: 2
-> +  gpio-controller: true
-> +  '#gpio-cells':
-> +    Description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +  gpio-ranges:
-> +    Description: Documentation/devicetree/bindings/gpio/gpio.txt
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    Description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    Properties:
-> +      pins:
-> +        allOf:
-> +          $ref: /schemas/types.yaml#/definitions/string
-> +          enum:
-> +            gpio0-gpio80
-> +            sdc1_clk
-> +            sdc1_cmd
-> +            sdc1_data
-> +            sdc2_clk
-> +            sdc2_cmd
-> +            sdc2_data
-> +            qdsd_cmd
-> +            qdsd_data0
-> +            qdsd_data1
-> +            qdsd_data2
-> +            qdsd_data3
-> +        Description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +
-> +      function:
-> +        allOf:
-> +          $ref: /schemas/types.yaml#/definitions/string
-> +          enum:
-> +            adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
-> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
-> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
-> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
-> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
-> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
-> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
-> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
-> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
-> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
-> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
-> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
-> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
-> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
-> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
-> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
-> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
-> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
-> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
-> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
-> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
-> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
-> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
-> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
-> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
-> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst
-> +        Description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +      bias-disable:
+[    8.076461] Unable to handle kernel paging request at virtual address ffffffffffe44888
+[    8.084762] Mem abort info:
+[    8.087694]   ESR = 0x96000006
+[    8.090906]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    8.096476]   SET = 0, FnV = 0
+[    8.099683]   EA = 0, S1PTW = 0
+[    8.102976] Data abort info:
+[    8.106004]   ISV = 0, ISS = 0x00000006
+[    8.110026]   CM = 0, WnR = 0
+[    8.113154] swapper pgtable: 64k pages, 48-bit VAs, pgdp=00000000815d0000
+[    8.120279] [ffffffffffe44888] pgd=0000000081d30803, pud=0000000081d30803, pmd=0000000000000000
+[    8.129429] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[    8.135257] Modules linked in:
+[    8.138456] CPU: 2 PID: 43 Comm: kworker/2:1 Tainted: G S                5.5.0-rc3-tegra-00051-g6989dd3-dirty #3   [    8.149098] Hardware name: quill (DT)
+[    8.152968] Workqueue: events deferred_probe_work_func
+[    8.158350] pstate: a0000005 (NzCv daif -PAN -UAO)
+[    8.163386] pc : kfree+0x38/0x278
+[    8.166873] lr : nvmem_cell_drop+0x68/0x80
+[    8.171154] sp : ffff80001284f9d0
+[    8.174620] x29: ffff80001284f9d0 x28: ffff0001f677e830
+[    8.180189] x27: ffff800011b0b000 x26: ffff0001c36e1008
+[    8.185755] x25: ffff8000112ad000 x24: ffff8000112c9000
+[    8.191311] x23: ffffffffffffffea x22: ffff800010adc7f0
+[    8.196865] x21: ffffffffffe44880 x20: ffff800011b0b068
+[    8.202424] x19: ffff80001122d380 x18: ffffffffffffffff
+[    8.207987] x17: 00000000d5cb4756 x16: 0000000070b193b8
+[    8.213550] x15: ffff8000119538c8 x14: 0720072007200720
+[    8.219120] x13: 07200720076e0772 x12: 07750762072d0765
+[    8.224685] x11: 0773077507660765 x10: 072f073007300730
+[    8.230253] x9 : 0730073207380733 x8 : 0000000000000151
+[    8.235818] x7 : 07660765072f0720 x6 : ffff0001c00e0f00
+[    8.241382] x5 : 0000000000000000 x4 : ffff0001c0b43800
+[    8.247007] x3 : ffff800011b0b068 x2 : 0000000000000000
+[    8.252567] x1 : 0000000000000000 x0 : ffffffdfffe00000
+[    8.258126] Call trace:
+[    8.260705]  kfree+0x38/0x278
+[    8.263827]  nvmem_cell_drop+0x68/0x80
+[    8.267773]  nvmem_device_remove_all_cells+0x2c/0x50
+[    8.272988]  nvmem_register.part.9+0x520/0x628
+[    8.277655]  devm_nvmem_register+0x48/0xa0
+[    8.281966]  tegra_fuse_probe+0x140/0x1f0
+[    8.286181]  platform_drv_probe+0x50/0xa0
+[    8.290397]  really_probe+0x108/0x348
+[    8.294243]  driver_probe_device+0x58/0x100
+[    8.298618]  __device_attach_driver+0x90/0xb0
+[    8.303172]  bus_for_each_drv+0x64/0xc8
+[    8.307184]  __device_attach+0xd8/0x138
+[    8.311195]  device_initial_probe+0x10/0x18
+[    8.315562]  bus_probe_device+0x90/0x98
+[    8.319572]  deferred_probe_work_func+0x74/0xb0
+[    8.324304]  process_one_work+0x1e0/0x358
+[    8.328490]  worker_thread+0x208/0x488
+[    8.332411]  kthread+0x118/0x120
+[    8.335783]  ret_from_fork+0x10/0x18
+[    8.339561] Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
+[    8.345939] ---[ end trace 49b1303c6b83198e ]---
 
-Is there any way to inherit these from some common definition?
+Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_node.name")
 
-> +        type: boolean
-> +        Description:
-> +          The specified pins should be configured as no pull.
-> +      bias-pull-down:
-> +        type: boolean
-> +        Description:
-> +          The specified pins should be configured as pull down.
-> +      bias-pull-up:
-> +        type: boolean
-> +        Description:
-> +          The specified pins should be configured as pull up.
-> +      output-high:
-> +        type: boolean
-> +        Description:
-> +          The specified pins are configured in output mode, driven high.
-> +          This option is not available for sdc pins.
-> +      output-low:
-> +        type: boolean
-> +        Description:
-> +          The specified pins are configured in output mode, driven low.
-> +          This option is not available for sdc pins.
-> +      drive-strength:
-> +        allOf:
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +        Description:
-> +          elects the drive strength for the specified pins, in mA.
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Selects?
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 9f1ee9c..0fc66e1 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -110,7 +110,7 @@ static int nvmem_cell_info_to_nvmem_cell(struct nvmem_device *nvmem,
+ 	cell->nvmem = nvmem;
+ 	cell->offset = info->offset;
+ 	cell->bytes = info->bytes;
+-	cell->name = info->name;
++	cell->name = kasprintf(GFP_KERNEL, "%s", info->name);
+ 
+ 	cell->bit_offset = info->bit_offset;
+ 	cell->nbits = info->nbits;
+-- 
+2.7.4
 
-> +
-> +    required:
-> +      - pins
-> +      - function
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +example:
-> +        tlmm: pinctrl@1000000 {
-> +                compatible = "qcom,ipq6018-pinctrl";
-> +                reg = <0x1000000 0x300000>;
-> +                interrupts = <0 208 0>;
-
-<GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>
-
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-> +                interrupt-controller;
-> +                #interrupt-cells = <2>;
-> +
-> +                uart_pins: uart_pins {
-
-s/_/- in the node name.
-
-> +                        mux {
-> +                                pins = "gpio4", "gpio5";
-> +                                function = "blsp_uart2";
-
-Duplicate the function definition in tx and rx and drop the "mux" node.
-
-Regards,
-Bjorn
-
-> +                        };
-> +
-> +                        tx {
-> +                                pins = "gpio4";
-> +                                drive-strength = <4>;
-> +                                bias-disable;
-> +                        };
-> +
-> +                        rx {
-> +                                pins = "gpio5";
-> +                                drive-strength = <2>;
-> +                                bias-pull-up;
-> +                        };
-> +                };
-> +        };
-> -- 
-> 1.9.1
