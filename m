@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552E9C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995FEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B966207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BACE20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641846;
-	bh=OVcBZ1vI0n9gYNNKGvvB/lsUyK3SeL6T/OeQLbRzZts=;
+	s=default; t=1577641849;
+	bh=ZkIBtwBjEDbbhwugtThGzhgGGUDvFbuITYStAhQMrmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhH40+S4lxfqBO2XMcivg9kVFw7Wt8zObClaLA/U8KR0DRh5RL2o8pu0+JMedzpbe
-	 80perXly2KtbPLOKChHf0QxXWc5JrMdFiC6/VgOtBQbac4l+AM6A+vFrz4tAbUU5hT
-	 BLwDZ1Ka+NSboHTRVzA2NHINmUMrDXLb7ihIas8c=
+	b=IY7pr/asjT2Jjz1AQVgh7p+msm8TKw+aoYqx//j0QSVai9Gt2XHav9aUrmqPnNobq
+	 /AxE/86MzVAz/E0HpejEtwwBdxLcHjKswc/b28J2MV3aUdj4HnIHtayksXL6+lIvjh
+	 CDqtjK/8jj83x0SVfASFRRoZ8Eib3uHFZFkeCfko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbfL2Ruo (ORCPT
+        id S1731953AbfL2Rur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731929AbfL2Run (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:43 -0500
+        id S1731929AbfL2Ruq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDAA207FF;
-        Sun, 29 Dec 2019 17:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20338207FD;
+        Sun, 29 Dec 2019 17:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641843;
-        bh=OVcBZ1vI0n9gYNNKGvvB/lsUyK3SeL6T/OeQLbRzZts=;
+        s=default; t=1577641845;
+        bh=ZkIBtwBjEDbbhwugtThGzhgGGUDvFbuITYStAhQMrmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zgA2N28GIcQJwpGAAn+eiYO70n51MFwP4VL+k78MWOe8ORt0cwSOQ9rMUwxODFvkN
-         9DdCJZoLAqU0nznSA0yeNNCe8360VoJ/8cDJSneAvTa0jXbBw24S3vyir53jB/nrg8
-         6hFt6xnLEat/Y3DmXGKocklT5ODqbeUksiiA3fUc=
+        b=hjTQ5J246Tro2vjmVMUX6Dix1mSOsu0W9WkiCqM/GqhcGNsYx4wuXMlTF7BnWZslO
+         fZOziYcQAaRwTd+VJoAFZBbHCIb4ZkoRnTRtVDyYSok7kPppgm+M1w3oI33mBIfDV8
+         K7yYt9T703jkDox1F+w4PrxniNyXhGfZohyctZlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        stable@vger.kernel.org, Jaroslaw Gawin <jaroslawx.gawin@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 232/434] nvmem: imx-ocotp: reset error status on probe
-Date:   Sun, 29 Dec 2019 18:24:45 +0100
-Message-Id: <20191229172717.282542486@linuxfoundation.org>
+Subject: [PATCH 5.4 192/434] i40e: Wrong Advertised FEC modes after set FEC to AUTO
+Date:   Sun, 29 Dec 2019 18:24:05 +0100
+Message-Id: <20191229172714.576002535@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,39 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jaroslaw Gawin <jaroslawx.gawin@intel.com>
 
-[ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
+[ Upstream commit e42b7e9cefca9dd008cbafffca97285cf264f72d ]
 
-If software running before the OCOTP driver is loaded left the
-controller with the error status pending, the driver will never
-be able to complete the read timing setup. Reset the error status
-on probe to make sure the controller is in usable state.
+Fix display of parameters "Configured FEC encodings:" and "Advertised
+FEC modes:" in ethtool.  Implemented by setting proper FEC bits in
+“advertising” bitmask of link_modes struct and “fec” bitmask in
+ethtool_fecparam struct. Without this patch wrong FEC settings
+can be shown.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jaroslaw Gawin <jaroslawx.gawin@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/imx-ocotp.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/intel/i40e/i40e_common.c | 13 ++++++--
+ .../net/ethernet/intel/i40e/i40e_ethtool.c    | 32 +++++++++----------
+ 2 files changed, 26 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index dff2f3c357f5..fc40555ca4cd 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -521,6 +521,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
+index 7560f06768e0..3160b5bbe672 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_common.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
+@@ -2571,9 +2571,16 @@ noinline_for_stack i40e_status i40e_update_link_info(struct i40e_hw *hw)
+ 		if (status)
+ 			return status;
  
-+	clk_prepare_enable(priv->clk);
-+	imx_ocotp_clr_err_if_set(priv->base);
-+	clk_disable_unprepare(priv->clk);
-+
- 	priv->params = of_device_get_match_data(&pdev->dev);
- 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
- 	imx_ocotp_nvmem_config.dev = dev;
+-		hw->phy.link_info.req_fec_info =
+-			abilities.fec_cfg_curr_mod_ext_info &
+-			(I40E_AQ_REQUEST_FEC_KR | I40E_AQ_REQUEST_FEC_RS);
++		if (abilities.fec_cfg_curr_mod_ext_info &
++		    I40E_AQ_ENABLE_FEC_AUTO)
++			hw->phy.link_info.req_fec_info =
++				(I40E_AQ_REQUEST_FEC_KR |
++				 I40E_AQ_REQUEST_FEC_RS);
++		else
++			hw->phy.link_info.req_fec_info =
++				abilities.fec_cfg_curr_mod_ext_info &
++				(I40E_AQ_REQUEST_FEC_KR |
++				 I40E_AQ_REQUEST_FEC_RS);
+ 
+ 		memcpy(hw->phy.link_info.module_type, &abilities.module_type,
+ 		       sizeof(hw->phy.link_info.module_type));
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+index 41e1240acaea..b577e6adf3bf 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+@@ -722,7 +722,14 @@ static void i40e_get_settings_link_up_fec(u8 req_fec_info,
+ 	ethtool_link_ksettings_add_link_mode(ks, supported, FEC_RS);
+ 	ethtool_link_ksettings_add_link_mode(ks, supported, FEC_BASER);
+ 
+-	if (I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) {
++	if ((I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) &&
++	    (I40E_AQ_SET_FEC_REQUEST_KR & req_fec_info)) {
++		ethtool_link_ksettings_add_link_mode(ks, advertising,
++						     FEC_NONE);
++		ethtool_link_ksettings_add_link_mode(ks, advertising,
++						     FEC_BASER);
++		ethtool_link_ksettings_add_link_mode(ks, advertising, FEC_RS);
++	} else if (I40E_AQ_SET_FEC_REQUEST_RS & req_fec_info) {
+ 		ethtool_link_ksettings_add_link_mode(ks, advertising, FEC_RS);
+ 	} else if (I40E_AQ_SET_FEC_REQUEST_KR & req_fec_info) {
+ 		ethtool_link_ksettings_add_link_mode(ks, advertising,
+@@ -730,12 +737,6 @@ static void i40e_get_settings_link_up_fec(u8 req_fec_info,
+ 	} else {
+ 		ethtool_link_ksettings_add_link_mode(ks, advertising,
+ 						     FEC_NONE);
+-		if (I40E_AQ_SET_FEC_AUTO & req_fec_info) {
+-			ethtool_link_ksettings_add_link_mode(ks, advertising,
+-							     FEC_RS);
+-			ethtool_link_ksettings_add_link_mode(ks, advertising,
+-							     FEC_BASER);
+-		}
+ 	}
+ }
+ 
+@@ -1437,6 +1438,7 @@ static int i40e_get_fec_param(struct net_device *netdev,
+ 	struct i40e_hw *hw = &pf->hw;
+ 	i40e_status status = 0;
+ 	int err = 0;
++	u8 fec_cfg;
+ 
+ 	/* Get the current phy config */
+ 	memset(&abilities, 0, sizeof(abilities));
+@@ -1448,18 +1450,16 @@ static int i40e_get_fec_param(struct net_device *netdev,
+ 	}
+ 
+ 	fecparam->fec = 0;
+-	if (abilities.fec_cfg_curr_mod_ext_info & I40E_AQ_SET_FEC_AUTO)
++	fec_cfg = abilities.fec_cfg_curr_mod_ext_info;
++	if (fec_cfg & I40E_AQ_SET_FEC_AUTO)
+ 		fecparam->fec |= ETHTOOL_FEC_AUTO;
+-	if ((abilities.fec_cfg_curr_mod_ext_info &
+-	     I40E_AQ_SET_FEC_REQUEST_RS) ||
+-	    (abilities.fec_cfg_curr_mod_ext_info &
+-	     I40E_AQ_SET_FEC_ABILITY_RS))
++	else if (fec_cfg & (I40E_AQ_SET_FEC_REQUEST_RS |
++		 I40E_AQ_SET_FEC_ABILITY_RS))
+ 		fecparam->fec |= ETHTOOL_FEC_RS;
+-	if ((abilities.fec_cfg_curr_mod_ext_info &
+-	     I40E_AQ_SET_FEC_REQUEST_KR) ||
+-	    (abilities.fec_cfg_curr_mod_ext_info & I40E_AQ_SET_FEC_ABILITY_KR))
++	else if (fec_cfg & (I40E_AQ_SET_FEC_REQUEST_KR |
++		 I40E_AQ_SET_FEC_ABILITY_KR))
+ 		fecparam->fec |= ETHTOOL_FEC_BASER;
+-	if (abilities.fec_cfg_curr_mod_ext_info == 0)
++	if (fec_cfg == 0)
+ 		fecparam->fec |= ETHTOOL_FEC_OFF;
+ 
+ 	if (hw->phy.link_info.fec_info & I40E_AQ_CONFIG_FEC_KR_ENA)
 -- 
 2.20.1
 
