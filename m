@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79615C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4377C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525A0207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED60207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640182;
-	bh=91vvcdX+0hMfJZVORuLc6wL3UNlL+IYuBxoelPw28Jw=;
+	s=default; t=1577640184;
+	bh=BnM3JxEX8BwEsYFRVewNHqghO/nfDAldXYA6Zt6W9XU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKnRGNRr/qOBYA2TMlLAnMrF55VjGXytK5zqrOQqHWaHzYChrNOrhsGi7sAUiIgUG
-	 oTVdYsM/sog8OzJuc3ebnXBOuDu0y9wefXhO1c324ioEmGIyawCfdHpUsaXKBQC8dg
-	 Jj83DI9QEqC1ZQWuGkxndFSXuT+HH4phZpg2JMfQ=
+	b=TzmyAtl2+s7VSRzINLYoG6jRfQqFmp+5E0sSb0RDnoHMV+p59F5H7GAcQhqj7QLTx
+	 0QUkR4hH/el7jNCNgKXZ+DBLFYc6WzH1sKdAXU7CoKGC1lduvfPoS1+CMZBR9eui+J
+	 xndH3bKm8Quqad2uyuUJF3IwGuYjEXV8k5c+YNg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfL2RXA (ORCPT
+        id S1727473AbfL2RXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:23:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:23:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfL2RW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:22:56 -0500
+        id S1726667AbfL2RW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:22:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490BD21744;
-        Sun, 29 Dec 2019 17:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E835A22525;
+        Sun, 29 Dec 2019 17:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640175;
-        bh=91vvcdX+0hMfJZVORuLc6wL3UNlL+IYuBxoelPw28Jw=;
+        s=default; t=1577640178;
+        bh=BnM3JxEX8BwEsYFRVewNHqghO/nfDAldXYA6Zt6W9XU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1LLTFj8/aKrsZWxyHA3t/NjJM5COoyh3sPzaRz8uKOukalrsJV6J41MpPKdYhXic
-         Prpb9FBMW0YwXT1AXpkup7Kr1L1qPW+1ozWpK3GcgSUtbn/pTtf9/MqnBXOczy3tO9
-         tb74i5VKKBHfhTeaaXL65sIO5rAievs1SHJgbcBE=
+        b=Cu935IsfVG0WJoiGOAhupKtHWKNh0WP6vlODCMFJWuRSZhNFGrXk40tFZPLRkKYMr
+         ikmzp16zwHUggn3vgHN8W+y7E0EDlWveC+gSENR59kB3RJzbx9zx0DBkiygDAJwAzO
+         OqxJwwh0nc6qJApWnT4Ma2qqpQg0YFgD5CrnBciA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Nikhil Devshatwar <nikhil.nd@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/161] media: ti-vpe: vpe: Fix Motion Vector vpdma stride
-Date:   Sun, 29 Dec 2019 18:18:18 +0100
-Message-Id: <20191229162413.726378197@linuxfoundation.org>
+Subject: [PATCH 4.14 051/161] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Sun, 29 Dec 2019 18:18:19 +0100
+Message-Id: <20191229162414.410510489@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -64,101 +64,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 102af9b9922f658f705a4b0deaccabac409131bf ]
+[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
 
-commit 3dc2046ca78b ("[media] media: ti-vpe: vpe: allow use of user
-specified stride") and commit da4414eaed15 ("[media] media: ti-vpe: vpdma:
-add support for user specified stride") resulted in the Motion Vector
-stride to be the same as the image stride.
+v4l2-compliance warns with this message:
 
-This caused memory corruption in the output image as mentioned in
-commit 00db969964c8 ("[media] media: ti-vpe: vpe: Fix line stride
-for output motion vector").
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-Fixes: 3dc2046ca78b ("[media] media: ti-vpe: vpe: allow use of user specified stride")
-Fixes: da4414eaed15 ("[media] media: ti-vpe: vpdma: add support for user specified stride")
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
+
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Nikhil Devshatwar <nikhil.nd@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 45bd10544189..19c0a2614635 100644
+index 19c0a2614635..4dc08f5a6081 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1044,11 +1044,14 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
+@@ -352,20 +352,25 @@ enum {
+ };
  
- 	if (port == VPE_PORT_MV_OUT) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
- 		q_data = &ctx->q_data[Q_DATA_SRC];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1075,6 +1078,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
+ 
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
  	}
  
- 	if (q_data->flags & Q_DATA_FRAME_1D)
-@@ -1086,7 +1090,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 			   MAX_W, MAX_H);
- 
- 	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
--			  q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
-+			  stride, &q_data->c_rect,
- 			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
- 			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
- }
-@@ -1105,10 +1109,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
- 
- 	if (port == VPE_PORT_MV_IN) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1135,6 +1142,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
- 
- 		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB) {
- 			/*
-@@ -1170,10 +1178,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
- 		frame_height /= 2;
- 
--	vpdma_add_in_dtd(&ctx->desc_list, q_data->width,
--			 q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
--		vpdma_fmt, dma_addr, p_data->channel, field, flags, frame_width,
--		frame_height, 0, 0);
-+	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
-+			 &q_data->c_rect, vpdma_fmt, dma_addr,
-+			 p_data->channel, field, flags, frame_width,
-+			 frame_height, 0, 0);
+ 	return NULL;
  }
  
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
  /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1608,9 +1613,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
 -- 
 2.20.1
 
