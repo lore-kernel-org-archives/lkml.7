@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD71C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB047C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420B7207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F382208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 10:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDo1FQhJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDe/04/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfL2Kn3 (ORCPT
+        id S1726578AbfL2Kna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 05:43:29 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46339 "EHLO
+        Sun, 29 Dec 2019 05:43:30 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41588 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfL2Kn2 (ORCPT
+        with ESMTP id S1726476AbfL2Kn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 05:43:28 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n9so9105622pff.13;
-        Sun, 29 Dec 2019 02:43:28 -0800 (PST)
+        Sun, 29 Dec 2019 05:43:29 -0500
+Received: by mail-pf1-f196.google.com with SMTP id w62so16975621pfw.8;
+        Sun, 29 Dec 2019 02:43:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/LBWm4l954ZJKYAq92ROSgs+ZenxsvmleMIDLun91dw=;
-        b=JDo1FQhJmYfRsBhu2Wu5bzNCLN4BfQFrKawakq4ZNnqh7F8Bsr6MgKwGPrM0pAR747
-         m3u4NwVzc3JNdNqCzhc7xlR6vgxKUQJm3RGytfYs+GVN5q4jrvIwJtr98v5hHyWOv6kJ
-         tH72oN8HVcqC83u+yzUDQbtjG3qxrSaUUOo+52bMet/bCSHR2s5cjWaZ3hJLfQEoVOuz
-         9/uo5azGXWZAJr1m6IyShiTy5DZYmpkjKV7hVcfZcjpJadbuNNacjdrTEEVgWC1ybfSc
-         6YDzfy1ftuBRFyb1IqkIfmx+2KpyM9aQ2WL9QqGjuf2raJbFb4lcxJbt4hJrNOersus1
-         N0nQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KfH/WTQPO3RAECd+zAOPLsSZgZBZzVlcd2UC7GE6hHI=;
+        b=FDe/04/l9yK8IA/6QqwpbWhZUzluJkbsGQjywcYB2FDblu1uRPpIv4NCxRwV4Zy143
+         dSbJ49VE1dz51O4kMA8aMGgZVhFjI1UU3wPppXOWgyF74JppWCQGJR+aKcdx9fh8ZMrN
+         zWj5oS8YJ1K7E7cYWTLaUN450rUnMAQeOKfRUszQIDbB1Hl02+WWckG1Lx+UwRJ0a6sz
+         evUsxsQXPN0CcnC4JQSeUenOVRFSLxR02hr13KRbvtpJbgjoFB1X9oBlzmQuJ82uWPKY
+         36z7ZanEDTdBVF+rQe8I/bzw06QseB0BlZflyQCyxejJg/5KUq4HKR6F43Rfh8L2cbit
+         z+gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/LBWm4l954ZJKYAq92ROSgs+ZenxsvmleMIDLun91dw=;
-        b=emNUP0AyHfVIuzK4kaWi7LHuRUr0B57SIuLdZP20GGOX2QRllAiFBbOUirGtp3WsqZ
-         1Z12EjPaTJBrPnW9xrT2JvaQ/gGCgBC8VoEI5+z2zKMWoiAKeqMmhvoYVoqOf7SRE6UW
-         tnc21/S0bTBjUSr9KlWz2lhvNjKzDIMH5x7rx/Con7pTYfLO0q/5GAPehowgL+FAB+W6
-         JA7GPMKYChDllUce6lHsFskBlp/11hGskqRntxfETEH6xjAMQU+PyG34QEPfhbDoUI2N
-         lKTja/fOsnXuz9H1vd/A9Rs6mlKiPDZFm/1EqG5/837Gq1soGQZx8ia0z9bgFGPdcUuY
-         5ejA==
-X-Gm-Message-State: APjAAAUYgPDH+eJuuUa6PeoD4cCgbGoOB0JxBKkD1w3qPxI8UB6rXOOu
-        t3TcgIbVCgX+oXNVyNRbmBA=
-X-Google-Smtp-Source: APXvYqwmLa+NDFvL01yeV8iEdrmHYiAHIwhIXMGs0MMC5H0Tu9B6S4fgYf9kUCPaPVzVAPi3Q4M2Rg==
-X-Received: by 2002:a62:d407:: with SMTP id a7mr62077586pfh.242.1577616208086;
-        Sun, 29 Dec 2019 02:43:28 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KfH/WTQPO3RAECd+zAOPLsSZgZBZzVlcd2UC7GE6hHI=;
+        b=hsEt9v+5Vu7bRNZb52WyiA0S/4pcmPz6cj8dEI5c2qA6ecwJsfvDz2xZVgaReKp0uJ
+         nMA2mdU7WBqBJLpfdfyVqO5ecq7vvdkQvSJDoLIufQgICAD9yzY3DrWflDIGCTIpIvq8
+         OUUIDokTphRO1Jq4MXLC/RKVr+5mxr8kzIuB4s1/XLaF9qHvyAkuQP+EPee47Wjk2p9S
+         j9bVhiVg5F5WzT/65RMGX5q/M2YlsEnbH4kzG0g3EJlbaAeH45jlumxqIk7b7gCkZCP7
+         SIzxYm6liZECS8zrrSYtBX4HaXXtb5FWiBdHdlvfe0T3mOzMNOk7tSkNymW4p3jSPjDC
+         2Qrg==
+X-Gm-Message-State: APjAAAUpWWkd5mPmPM0aOcEsT8KDOen6tGr/EpxuBdCkDiouZuLOH1DF
+        OkhdaB8BJ7LMUTY0qs/VwEs=
+X-Google-Smtp-Source: APXvYqwymhuy1y05JGC5Cx5fr3Bj8oUlR665vj/lUDz59KKc+AuODbNbeuiAgOVLL2CuZisSTVM4EA==
+X-Received: by 2002:a63:d00f:: with SMTP id z15mr65191432pgf.143.1577616209060;
+        Sun, 29 Dec 2019 02:43:29 -0800 (PST)
 Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id b22sm20643677pjb.4.2019.12.29.02.43.26
+        by smtp.gmail.com with ESMTPSA id b128sm43732589pga.43.2019.12.29.02.43.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 02:43:27 -0800 (PST)
+        Sun, 29 Dec 2019 02:43:28 -0800 (PST)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     corbet@lwn.net, gregkh@linuxfoundation.org,
         bgolaszewski@baylibre.com, arnd@arndb.de, sboyd@kernel.org,
@@ -68,75 +69,46 @@ To:     corbet@lwn.net, gregkh@linuxfoundation.org,
         sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 1/2] lib: devres: provide devm_ioremap_resource_nocache()
-Date:   Sun, 29 Dec 2019 10:43:23 +0000
-Message-Id: <20191229104325.10132-1-tiny.windzz@gmail.com>
+Subject: [PATCH] platform: goldfish: pipe: switch to platform_get_irq
+Date:   Sun, 29 Dec 2019 10:43:24 +0000
+Message-Id: <20191229104325.10132-2-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191229104325.10132-1-tiny.windzz@gmail.com>
+References: <20191229104325.10132-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a variant of devm_ioremap_resource() for nocache ioremap.
+platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
+requesting IRQ's resources, as they can be not ready yet. Using
+platform_get_irq() instead is preferred for getting IRQ even if it
+was not retrieved earlier.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- Documentation/driver-api/driver-model/devres.rst |  1 +
- include/linux/device.h                           |  2 ++
- lib/devres.c                                     | 15 +++++++++++++++
- 3 files changed, 18 insertions(+)
+ drivers/platform/goldfish/goldfish_pipe.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 13046fcf0a5d..af1b1b9e3a17 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -317,6 +317,7 @@ IOMAP
-   devm_ioremap_uc()
-   devm_ioremap_wc()
-   devm_ioremap_resource() : checks resource, requests memory region, ioremaps
-+  devm_ioremap_resource_nocache()
-   devm_ioremap_resource_wc()
-   devm_platform_ioremap_resource() : calls devm_ioremap_resource() for platform device
-   devm_platform_ioremap_resource_wc()
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 96ff76731e93..3aa353aa52e2 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -962,6 +962,8 @@ extern void devm_free_pages(struct device *dev, unsigned long addr);
+diff --git a/drivers/platform/goldfish/goldfish_pipe.c b/drivers/platform/goldfish/goldfish_pipe.c
+index cef0133aa47a..a1ebaec6eea9 100644
+--- a/drivers/platform/goldfish/goldfish_pipe.c
++++ b/drivers/platform/goldfish/goldfish_pipe.c
+@@ -913,11 +913,9 @@ static int goldfish_pipe_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- void __iomem *devm_ioremap_resource(struct device *dev,
- 				    const struct resource *res);
-+void __iomem *devm_ioremap_resource_nocache(struct device *dev,
-+					    const struct resource *res);
- void __iomem *devm_ioremap_resource_wc(struct device *dev,
- 				       const struct resource *res);
+-	r = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+-	if (!r)
+-		return -EINVAL;
+-
+-	dev->irq = r->start;
++	dev->irq = platform_get_irq(pdev, 0);
++	if (dev->irq < 0)
++		return dev->irq;
  
-diff --git a/lib/devres.c b/lib/devres.c
-index f56070cf970b..a182f8479fbf 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -188,6 +188,21 @@ void __iomem *devm_ioremap_resource(struct device *dev,
- }
- EXPORT_SYMBOL(devm_ioremap_resource);
- 
-+/**
-+ * devm_ioremap_resource_nocache() - nocache variant of
-+ *				      devm_ioremap_resource()
-+ * @dev: generic device to handle the resource for
-+ * @res: resource to be handled
-+ *
-+ * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
-+ * on failure.
-+ */
-+void __iomem *devm_ioremap_resource_nocache(struct device *dev,
-+					    const struct resource *res)
-+{
-+	return __devm_ioremap_resource(dev, res, DEVM_IOREMAP_NC);
-+}
-+
- /**
-  * devm_ioremap_resource_wc() - write-combined variant of
-  *				devm_ioremap_resource()
+ 	/*
+ 	 * Exchange the versions with the host device
 -- 
 2.17.1
 
