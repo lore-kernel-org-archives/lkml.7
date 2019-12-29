@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE52C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B50CC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA4F206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3102E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642037;
-	bh=5Aatdt9T1YwoKNVkHiZ89dfSs7IX6Rd1QNeQytPodtw=;
+	s=default; t=1577642039;
+	bh=oYXQTWvyH4yBWYkoSSVx9Y69YbQsbQ3yP4IUKIK1D8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NufN7Yq5Rcg2Uk+pfUrWd5RK0uAvMCcMF8sD2HBkbPtZMpjJ9VRXGS0DcEyFRfb3S
-	 lf12+dI+VAFx6RPNKnrDBTpn5/dP2SuVu4OO0Bwp1fF4IBoi0lv4d7C3oNkk7DKsGu
-	 b0ZjyssBlM3tBZvlBR5/L3sTQSJuXKI9usWVS4rw=
+	b=NbrMmTh0t8WvTBwLAfL7ykt/GTdQXu7kievzVnlY0UTIuANUaFUiB8XvWfDlUeolF
+	 DLZ2twEnGOf459vfIwJYFZs+2bBHd761tXUGaYsAKm75K0TTxSejt9Ja6v/IxJ2qYr
+	 8yC3QnIwhrOGX54ivn239RTlNOPp4j0cr10vM8do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732573AbfL2Rx4 (ORCPT
+        id S1732583AbfL2Rx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41106 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:53:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732549AbfL2Rxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:52 -0500
+        id S1732572AbfL2Rx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C538206DB;
-        Sun, 29 Dec 2019 17:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA097206DB;
+        Sun, 29 Dec 2019 17:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642031;
-        bh=5Aatdt9T1YwoKNVkHiZ89dfSs7IX6Rd1QNeQytPodtw=;
+        s=default; t=1577642036;
+        bh=oYXQTWvyH4yBWYkoSSVx9Y69YbQsbQ3yP4IUKIK1D8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=URVwPoPQw6fxA9uIVopjrIuOWu6WbNjDUIYR+/Hh/GKUS4XQTpNMtvApoCLBwGy2a
-         ykhBRPy6JVfVOC3DKPYpMCpwfZKefEaLVMFBPBShrzwr6Dsq+r17fBpOjQesK6nAua
-         tmpQExEQ+fy/GFaEw1rkTMfoRsTx5MA4hMRuVFbI=
+        b=zYZ06k4Ho+P0mAo7CPXNHu3annACHMHB029TIGJG9uezmAO6sainkHjRpBW28upGa
+         X9/w2q0Ul8fDM+C9Hrttu87Gb03ICIaSisM2nO/mfP6njjzZVs5sOWDkU4CY+LAJi4
+         nf3g2v8NkF8RkhaxNwuv0NdNLM8Mdfc1PfXfSfmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 312/434] spi: tegra20-slink: add missed clk_unprepare
-Date:   Sun, 29 Dec 2019 18:26:05 +0100
-Message-Id: <20191229172722.679262449@linuxfoundation.org>
+Subject: [PATCH 5.4 314/434] xhci-pci: Allow host runtime PM as default also for Intel Ice Lake xHCI
+Date:   Sun, 29 Dec 2019 18:26:07 +0100
+Message-Id: <20191229172722.812454048@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,51 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 04358e40ba96d687c0811c21d9dede73f5244a98 ]
+[ Upstream commit 07a594f353655b1628f598add352e7e754f44869 ]
 
-The driver misses calling clk_unprepare in probe failure and remove.
-Add the calls to fix it.
+Intel Ice Lake has two xHCI controllers one on PCH and the other as part
+of the CPU itself. The latter is also part of the so called Type C
+Subsystem (TCSS) sharing ACPI power resources with the PCIe root ports
+and the Thunderbolt controllers. In order to put the whole TCSS block
+into D3cold the xHCI needs to be runtime suspended as well when idle.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191115083122.12278-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+For this reason allow runtime PM as default for Ice Lake TCSS xHCI
+controller.
+
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1573836603-10871-5-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra20-slink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 111fffc91435..374a2a32edcd 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1073,7 +1073,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = clk_enable(tspi->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
--		goto exit_free_master;
-+		goto exit_clk_unprepare;
- 	}
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 1904ef56f61c..2907fe4d78dd 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -48,6 +48,7 @@
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI		0x15e9
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI		0x15ec
+ #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI		0x15f0
++#define PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI		0x8a13
  
- 	spi_irq = platform_get_irq(pdev, 0);
-@@ -1146,6 +1146,8 @@ exit_free_irq:
- 	free_irq(spi_irq, tspi);
- exit_clk_disable:
- 	clk_disable(tspi->clk);
-+exit_clk_unprepare:
-+	clk_unprepare(tspi->clk);
- exit_free_master:
- 	spi_master_put(master);
- 	return ret;
-@@ -1159,6 +1161,7 @@ static int tegra_slink_remove(struct platform_device *pdev)
- 	free_irq(tspi->irq, tspi);
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+@@ -212,7 +213,8 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI ||
+ 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI ||
+-	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI))
++	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI ||
++	     pdev->device == PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI))
+ 		xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
  
- 	clk_disable(tspi->clk);
-+	clk_unprepare(tspi->clk);
- 
- 	if (tspi->tx_dma_chan)
- 		tegra_slink_deinit_dma_param(tspi, false);
+ 	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
 -- 
 2.20.1
 
