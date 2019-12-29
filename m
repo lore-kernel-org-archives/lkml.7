@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3105CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300FB20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA48206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641944;
-	bh=j44f73gwqbJcZBdtGldOULfgT2Xt/JKfufiLxElfShA=;
+	s=default; t=1577641948;
+	bh=tIEprq/X8LCOfj6Dzv/fgrd/+pnK3pCK2ScBJt+MR4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JbmJfjhkMjnuKpYwtee8fTn6+PtAKZmux8N8XFGumNbe6hlLumpG2DpNA4u+9T2Sf
-	 x8/A54hKO5CbfZLQnQg0IaAq/O1kgJozl+n7xl8EK1U/S8sidMcdMlDA3C6boo5Px+
-	 rLHD8rIonsxOTuNJK3j3/m8wpWTt36SNzLO9fwCo=
+	b=dtvtVSO6PsuavGiaflS/JVznxZlnQmI2oT/u1WRmsSITLod4JsXxpHbbElSsANXF2
+	 VReRtw002yVNw7JiSIHkBd8p1tRXPlLolH4fNSdEv1W1eeNC8LumjlPYH/ylD4yBE7
+	 c8QAurfyDLBdORQeoliF0zLxjsix609pJQvY/qfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbfL2RwW (ORCPT
+        id S1731794AbfL2Rw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:52:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:52:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732231AbfL2RwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:52:16 -0500
+        id S1732247AbfL2RwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:52:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06224206A4;
-        Sun, 29 Dec 2019 17:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C43DA206A4;
+        Sun, 29 Dec 2019 17:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641935;
-        bh=j44f73gwqbJcZBdtGldOULfgT2Xt/JKfufiLxElfShA=;
+        s=default; t=1577641940;
+        bh=tIEprq/X8LCOfj6Dzv/fgrd/+pnK3pCK2ScBJt+MR4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FaM4FiA/D1zKFAA+3i0pz7A0Zj3iEhWjMvJjGy3dnb41tnzBSgC3xxPOHsHyF5xjk
-         noY+hk28+6jXwQqb3wGC2bB9FaPTT9VyAWUVirheXNvSHKPysV4x/EFEG8CaNeVc/L
-         9rM6j5ZzrGVyKAymfClWs7Zb8hhDJemoV4Y+V1Fo=
+        b=ydCx1ugm/dOYkf1nGI/LkXS7v1/u+MwTXlNZSwKLf/wmoqbG4OQwuXVb/QhhpxHnJ
+         ht9EqLmX/4asXTbxLp5jDqwrJDeA5lMSWNOqmeK1+TtluLpGkTVfWOfxHnSGjV+zbg
+         9H9/NhhvA4pESmLdFmUrut2GUSPTFK+25RiXVLsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        stable@vger.kernel.org, Hou Bao Hou <houbao@codeaurora.org>,
+        Anilkumar Kolli <akolli@codeaurora.org>,
+        Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 272/434] media: exynos4-is: fix wrong mdev and v4l2 dev order in error path
-Date:   Sun, 29 Dec 2019 18:25:25 +0100
-Message-Id: <20191229172720.007799985@linuxfoundation.org>
+Subject: [PATCH 5.4 273/434] ath10k: fix get invalid tx rate for Mesh metric
+Date:   Sun, 29 Dec 2019 18:25:26 +0100
+Message-Id: <20191229172720.074538410@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,77 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 4d741cbd58bf889c8a68cf6e592a7892b5c2802e ]
+[ Upstream commit 05a11003a56507023f18d3249a4d4d119c0a3e9c ]
 
-When driver is built as module and probe during insmod is deferred
-because of sensor subdevs, there is NULL pointer deference because
-mdev is cleaned up and then access it from v4l2_device_unregister().
-Fix the wrong mdev and v4l2 dev order in error path of probe.
+ath10k does not provide transmit rate info per MSDU
+in tx completion, mark that as -1 so mac80211
+will ignore the rates. This fixes mac80211 update Mesh
+link metric with invalid transmit rate info.
 
-This fixes below null pointer deference:
-   Unable to handle kernel NULL pointer dereference at virtual address 00000000
-   pgd = ca026f68
-   [00000000] *pgd=00000000
-   Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-   [...]
-   Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-   PC is at ida_free+0x7c/0x160
-   LR is at xas_start+0x44/0x204
-   [...]
-   [<c0dafd60>] (ida_free) from [<c083c20c>] (__media_device_unregister_entity+0x18/0xc0)
-   [<c083c20c>] (__media_device_unregister_entity) from [<c083c2e0>] (media_device_unregister_entity+0x2c/0x38)
-   [<c083c2e0>] (media_device_unregister_entity) from [<c0843404>] (v4l2_device_release+0xd0/0x104)
-   [<c0843404>] (v4l2_device_release) from [<c0632558>] (device_release+0x28/0x98)
-   [<c0632558>] (device_release) from [<c0db1204>] (kobject_put+0xa4/0x208)
-   [<c0db1204>] (kct_put) from [<bf00bac4>] (fimc_capture_subdev_unregistered+0x58/0x6c [s5p_fimc])
-   [<bf00bac4>] (fimc_capture_subdev_unregistered [s5p_fimc]) from [<c084a1cc>] (v4l2_device_unregister_subdev+0x6c/0xa8)
-   [<c084a1cc>] (v4l2_device_unregister_subdev) from [<c084a350>] (v4l2_device_unregister+0x64/0x94)
-   [<c084a350>] (v4l2_device_unregister) from [<bf0101ac>] (fimc_md_probe+0x4ec/0xaf8 [s5p_fimc])
-   [...]
+Tested HW: QCA9984
+Tested FW: 10.4-3.9.0.2-00035
 
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Fixes: 9832e155f1ed ("[media] media-device: split media initialization and registration")
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Hou Bao Hou <houbao@codeaurora.org>
+Signed-off-by: Anilkumar Kolli <akolli@codeaurora.org>
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/txrx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index a838189d4490..9aaf3b8060d5 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1457,12 +1457,12 @@ static int fimc_md_probe(struct platform_device *pdev)
- 	ret = v4l2_device_register(dev, &fmd->v4l2_dev);
- 	if (ret < 0) {
- 		v4l2_err(v4l2_dev, "Failed to register v4l2_device: %d\n", ret);
--		return ret;
-+		goto err_md;
- 	}
+diff --git a/drivers/net/wireless/ath/ath10k/txrx.c b/drivers/net/wireless/ath/ath10k/txrx.c
+index 4102df016931..39abf8b12903 100644
+--- a/drivers/net/wireless/ath/ath10k/txrx.c
++++ b/drivers/net/wireless/ath/ath10k/txrx.c
+@@ -95,6 +95,8 @@ int ath10k_txrx_tx_unref(struct ath10k_htt *htt,
  
- 	ret = fimc_md_get_clocks(fmd);
- 	if (ret)
--		goto err_md;
-+		goto err_v4l2dev;
+ 	info = IEEE80211_SKB_CB(msdu);
+ 	memset(&info->status, 0, sizeof(info->status));
++	info->status.rates[0].idx = -1;
++
+ 	trace_ath10k_txrx_tx_unref(ar, tx_done->msdu_id);
  
- 	ret = fimc_md_get_pinctrl(fmd);
- 	if (ret < 0) {
-@@ -1519,9 +1519,10 @@ err_m_ent:
- 	fimc_md_unregister_entities(fmd);
- err_clk:
- 	fimc_md_put_clocks(fmd);
-+err_v4l2dev:
-+	v4l2_device_unregister(&fmd->v4l2_dev);
- err_md:
- 	media_device_cleanup(&fmd->media_dev);
--	v4l2_device_unregister(&fmd->v4l2_dev);
- 	return ret;
- }
- 
+ 	if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
 -- 
 2.20.1
 
