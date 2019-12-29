@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70C8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C02C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843D7207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363C7207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643506;
-	bh=iPj0zluIWzyqWRoO57oi2l4TB1Hqdaa8CAffhmRVyYI=;
+	s=default; t=1577643509;
+	bh=s5B3lJwV4LMC3f0kVupUoUXC08V/vbxtaHQo17eQX2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoS9BTWGKfrpPtmyA3d81IkDF93MpA6/6juR7T1f/mKghBheBEQd8w106t+LRgQWh
-	 PoOzg/rSJOTPORDZaWhi8FdZLxdqqRmUayRAu3f+Irc8Xg5NCNycThvAsxGd/EQU+t
-	 47bIzmZIoR0lhOYZaSW2GGvOdnFwNFhBpkoidy8Y=
+	b=2crvEtoa9prbCvmGU4J37iXe3Afj/xwO+WP7jFCh1a4sGabigq5UicaPqza/27fTf
+	 ctzwjjnpwcXE0eU8xJewy+uUgk5Un/fTNtGgO1H0I1qwkPgF2+zVlacCzJ7cd27sYN
+	 YuLNdDaxj6DATunI35zP0HDTxy+KrlDugNHNPaZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387808AbfL2SSZ (ORCPT
+        id S1726811AbfL2RV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37130 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbfL2RVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:41 -0500
+        id S1726720AbfL2RVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9240E20722;
-        Sun, 29 Dec 2019 17:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C866208E4;
+        Sun, 29 Dec 2019 17:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640101;
-        bh=iPj0zluIWzyqWRoO57oi2l4TB1Hqdaa8CAffhmRVyYI=;
+        s=default; t=1577640084;
+        bh=s5B3lJwV4LMC3f0kVupUoUXC08V/vbxtaHQo17eQX2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vY8Pqi3SDRIC0bj8HI1LCMx4SBxHPp0lvYQjGk48zD0UOGZICgJ0HDsOBWlJyN8am
-         7f1rnja+ARjNrLRHgNkF2fGFbqZ4tys1CRTDi0mDQrqRg2ZXfzUsKl0GJV+5nBFSuP
-         1WWSOrTfHpudxT7EVnk2NPYeH3b6qsyOj7MjwHgI=
+        b=c8gKmsQRRYFnmJRq/pME30Q0a6TdkVo7IU/R7DpScabXe5dL2MlsKbae9Yn7eA/A4
+         jRaiZW91Gc9iI0sTLpi+nepAKdTbY0kP4B2a3fkbQsFZbggHCC1R/CuiQsvc1y/lUM
+         BrBWVW9x/brJk3DST2XzCPhU6Fez3LjjRlMnamBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 019/161] ALSA: hda/ca0132 - Avoid endless loop
-Date:   Sun, 29 Dec 2019 18:17:47 +0100
-Message-Id: <20191229162402.698914747@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 012/161] btrfs: do not call synchronize_srcu() in inode_tree_del
+Date:   Sun, 29 Dec 2019 18:17:40 +0100
+Message-Id: <20191229162359.542920188@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -58,42 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit cb04fc3b6b076f67d228a0b7d096c69ad486c09c upstream.
+commit f72ff01df9cf5db25c76674cac16605992d15467 upstream.
 
-Introduce a timeout to dspio_clear_response_queue() so that it won't
-be caught in an endless loop even if the hardware doesn't respond
-properly.
+Testing with the new fsstress uncovered a pretty nasty deadlock with
+lookup and snapshot deletion.
 
-Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213085111.22855-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Process A
+unlink
+ -> final iput
+   -> inode_tree_del
+     -> synchronize_srcu(subvol_srcu)
+
+Process B
+btrfs_lookup  <- srcu_read_lock() acquired here
+  -> btrfs_iget
+    -> find inode that has I_FREEING set
+      -> __wait_on_freeing_inode()
+
+We're holding the srcu_read_lock() while doing the iget in order to make
+sure our fs root doesn't go away, and then we are waiting for the inode
+to finish freeing.  However because the free'ing process is doing a
+synchronize_srcu() we deadlock.
+
+Fix this by dropping the synchronize_srcu() in inode_tree_del().  We
+don't need people to stop accessing the fs root at this point, we're
+only adding our empty root to the dead roots list.
+
+A larger much more invasive fix is forthcoming to address how we deal
+with fs roots, but this fixes the immediate problem.
+
+Fixes: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy ioctl")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/inode.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -1300,13 +1300,14 @@ struct scp_msg {
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -5729,7 +5729,6 @@ static void inode_tree_add(struct inode
  
- static void dspio_clear_response_queue(struct hda_codec *codec)
+ static void inode_tree_del(struct inode *inode)
  {
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
- 	unsigned int dummy = 0;
--	int status = -1;
-+	int status;
+-	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_root *root = BTRFS_I(inode)->root;
+ 	int empty = 0;
  
- 	/* clear all from the response queue */
- 	do {
- 		status = dspio_read(codec, &dummy);
--	} while (status == 0);
-+	} while (status == 0 && time_before(jiffies, timeout));
- }
+@@ -5742,7 +5741,6 @@ static void inode_tree_del(struct inode
+ 	spin_unlock(&root->inode_lock);
  
- static int dspio_get_response_data(struct hda_codec *codec)
+ 	if (empty && btrfs_root_refs(&root->root_item) == 0) {
+-		synchronize_srcu(&fs_info->subvol_srcu);
+ 		spin_lock(&root->inode_lock);
+ 		empty = RB_EMPTY_ROOT(&root->inode_tree);
+ 		spin_unlock(&root->inode_lock);
 
 
