@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BB1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D58FC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98B621744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DBCB222C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642362;
-	bh=mwqyoTpvLEDwEPow5Q3vEsE2nvTb/nf7aFQzJfPSppc=;
+	s=default; t=1577642366;
+	bh=WykSmhYdnsgPQhUMrZIU+I+RjGPaVkLcpYFOzRu3ne4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rzt4xb467ppOrrkVlOpf/2kPf6tAR11R+wZwYuYdK2R6Tke+nmhoxAAB8bC8xCCS9
-	 5LlW03Dfgeh4BRnM9u+x4YiMSfyqr2NVW+jpjSeZjJUoE3nWvTi2uEk0LLS+jUVOtR
-	 2GTPCZO9madkjWPo4DyA1ceeS0WwJBAOKXysnNNY=
+	b=uUyzNLGO1rvFvAfwUbQfBB4MDicgZiYeIrWP/OJI2sC4SUfV8MK2wEwLOUA6DYZ6V
+	 LO5biPxLubL9vhds6Qtw41RkkR7dqwyLHrT9esuXITCSdNxO3F9i+W+yDpIEfYeluL
+	 Tk/G4FeV8CDmawO2iDhM+Hr/gYMKPn1ncyM/Ztko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbfL2R7V (ORCPT
+        id S2387614AbfL2R6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50318 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387639AbfL2R6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:55 -0500
+        id S1733057AbfL2R6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0B32208C4;
-        Sun, 29 Dec 2019 17:58:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AAB208C4;
+        Sun, 29 Dec 2019 17:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642335;
-        bh=mwqyoTpvLEDwEPow5Q3vEsE2nvTb/nf7aFQzJfPSppc=;
+        s=default; t=1577642325;
+        bh=WykSmhYdnsgPQhUMrZIU+I+RjGPaVkLcpYFOzRu3ne4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkHaFJ921ajfi7iiuQLtRmaWqvKxMRtwnftUnFByRD5NhyahsEVregMeYWigrgHf8
-         T8LOfPgR4uhE1sIv4NZme2gNRC6ZmAPEb/KzfVg/7v3BqInc/aK5u7nKffbt8m2wGe
-         n/TOjCyJQrcJnmFUW+8q1QytCiFqPt3R2aqSEa2Y=
+        b=XT+fLv6I81kAmNVJsW+wU73noWH5yZUwQSwEJv4Eg2X59CDsR2q12PZ4Zym+HAwKE
+         uv3SajrcB3msOJb7jQyRyDjNI8kvakWzC1PECUCxaQlAJPANrOBkqQHwsPM6xQyxPt
+         dt0uDF43nHiIZvq77tzclxz7GDI6OsCAMwke1tqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parth Shah <parth@linux.ibm.com>,
-        Ihor Pasichnyk <Ihor.Pasichnyk@ibm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Phil Auld <pauld@redhat.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 424/434] powerpc/vcpu: Assume dedicated processors as non-preempt
-Date:   Sun, 29 Dec 2019 18:27:57 +0100
-Message-Id: <20191229172731.329602151@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 420/434] x86/intel: Disable HPET on Intel Coffee Lake H platforms
+Date:   Sun, 29 Dec 2019 18:27:53 +0100
+Message-Id: <20191229172730.961529008@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -66,160 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 14c73bd344da60abaf7da3ea2e7733ddda35bbac upstream.
+commit f8edbde885bbcab6a2b4a1b5ca614e6ccb807577 upstream.
 
-With commit 247f2f6f3c70 ("sched/core: Don't schedule threads on
-pre-empted vCPUs"), the scheduler avoids preempted vCPUs to schedule
-tasks on wakeup. This leads to wrong choice of CPU, which in-turn
-leads to larger wakeup latencies. Eventually, it leads to performance
-regression in latency sensitive benchmarks like soltp, schbench etc.
+Coffee Lake H SoC has similar behavior as Coffee Lake, skewed HPET timer
+once the SoCs entered PC10.
 
-On Powerpc, vcpu_is_preempted() only looks at yield_count. If the
-yield_count is odd, the vCPU is assumed to be preempted. However
-yield_count is increased whenever the LPAR enters CEDE state (idle).
-So any CPU that has entered CEDE state is assumed to be preempted.
+So let's disable HPET on CFL-H platforms.
 
-Even if vCPU of dedicated LPAR is preempted/donated, it should have
-right of first-use since they are supposed to own the vCPU.
-
-On a Power9 System with 32 cores:
-  # lscpu
-  Architecture:        ppc64le
-  Byte Order:          Little Endian
-  CPU(s):              128
-  On-line CPU(s) list: 0-127
-  Thread(s) per core:  8
-  Core(s) per socket:  1
-  Socket(s):           16
-  NUMA node(s):        2
-  Model:               2.2 (pvr 004e 0202)
-  Model name:          POWER9 (architected), altivec supported
-  Hypervisor vendor:   pHyp
-  Virtualization type: para
-  L1d cache:           32K
-  L1i cache:           32K
-  L2 cache:            512K
-  L3 cache:            10240K
-  NUMA node0 CPU(s):   0-63
-  NUMA node1 CPU(s):   64-127
-
-  # perf stat -a -r 5 ./schbench
-  v5.4                               v5.4 + patch
-  Latency percentiles (usec)         Latency percentiles (usec)
-        50.0000th: 45                      50.0th: 45
-        75.0000th: 62                      75.0th: 63
-        90.0000th: 71                      90.0th: 74
-        95.0000th: 77                      95.0th: 78
-        *99.0000th: 91                     *99.0th: 82
-        99.5000th: 707                     99.5th: 83
-        99.9000th: 6920                    99.9th: 86
-        min=0, max=10048                   min=0, max=96
-  Latency percentiles (usec)         Latency percentiles (usec)
-        50.0000th: 45                      50.0th: 46
-        75.0000th: 61                      75.0th: 64
-        90.0000th: 72                      90.0th: 75
-        95.0000th: 79                      95.0th: 79
-        *99.0000th: 691                    *99.0th: 83
-        99.5000th: 3972                    99.5th: 85
-        99.9000th: 8368                    99.9th: 91
-        min=0, max=16606                   min=0, max=117
-  Latency percentiles (usec)         Latency percentiles (usec)
-        50.0000th: 45                      50.0th: 46
-        75.0000th: 61                      75.0th: 64
-        90.0000th: 71                      90.0th: 75
-        95.0000th: 77                      95.0th: 79
-        *99.0000th: 106                    *99.0th: 83
-        99.5000th: 2364                    99.5th: 84
-        99.9000th: 7480                    99.9th: 90
-        min=0, max=10001                   min=0, max=95
-  Latency percentiles (usec)         Latency percentiles (usec)
-        50.0000th: 45                      50.0th: 47
-        75.0000th: 62                      75.0th: 65
-        90.0000th: 72                      90.0th: 75
-        95.0000th: 78                      95.0th: 79
-        *99.0000th: 93                     *99.0th: 84
-        99.5000th: 108                     99.5th: 85
-        99.9000th: 6792                    99.9th: 90
-        min=0, max=17681                   min=0, max=117
-  Latency percentiles (usec)         Latency percentiles (usec)
-        50.0000th: 46                      50.0th: 45
-        75.0000th: 62                      75.0th: 64
-        90.0000th: 73                      90.0th: 75
-        95.0000th: 79                      95.0th: 79
-        *99.0000th: 113                    *99.0th: 82
-        99.5000th: 2724                    99.5th: 83
-        99.9000th: 6184                    99.9th: 93
-        min=0, max=9887                    min=0, max=111
-
-   Performance counter stats for 'system wide' (5 runs):
-
-  context-switches    43,373  ( +-  0.40% )   44,597 ( +-  0.55% )
-  cpu-migrations       1,211  ( +-  5.04% )      220 ( +-  6.23% )
-  page-faults         15,983  ( +-  5.21% )   15,360 ( +-  3.38% )
-
-Waiman Long suggested using static_keys.
-
-Fixes: 247f2f6f3c70 ("sched/core: Don't schedule threads on pre-empted vCPUs")
-Cc: stable@vger.kernel.org # v4.18+
-Reported-by: Parth Shah <parth@linux.ibm.com>
-Reported-by: Ihor Pasichnyk <Ihor.Pasichnyk@ibm.com>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Acked-by: Waiman Long <longman@redhat.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Phil Auld <pauld@redhat.com>
-Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Tested-by: Parth Shah <parth@linux.ibm.com>
-[mpe: Move the key and setting of the key to pseries/setup.c]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191213035036.6913-1-mpe@ellerman.id.au
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: feng.tang@intel.com
+Cc: harry.pan@intel.com
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/20191129062303.18982-1-kai.heng.feng@canonical.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/spinlock.h    |    4 +++-
- arch/powerpc/platforms/pseries/setup.c |    7 +++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/kernel/early-quirks.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -36,10 +36,12 @@
- #endif
- 
- #ifdef CONFIG_PPC_PSERIES
-+DECLARE_STATIC_KEY_FALSE(shared_processor);
-+
- #define vcpu_is_preempted vcpu_is_preempted
- static inline bool vcpu_is_preempted(int cpu)
- {
--	if (!firmware_has_feature(FW_FEATURE_SPLPAR))
-+	if (!static_branch_unlikely(&shared_processor))
- 		return false;
- 	return !!(be32_to_cpu(lppaca_of(cpu).yield_count) & 1);
- }
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -74,6 +74,9 @@
- #include "pseries.h"
- #include "../../../../drivers/pci/pci.h"
- 
-+DEFINE_STATIC_KEY_FALSE(shared_processor);
-+EXPORT_SYMBOL_GPL(shared_processor);
-+
- int CMO_PrPSP = -1;
- int CMO_SecPSP = -1;
- unsigned long CMO_PageSize = (ASM_CONST(1) << IOMMU_PAGE_SHIFT_4K);
-@@ -758,6 +761,10 @@ static void __init pSeries_setup_arch(vo
- 
- 	if (firmware_has_feature(FW_FEATURE_LPAR)) {
- 		vpa_init(boot_cpuid);
-+
-+		if (lppaca_shared_proc(get_lppaca()))
-+			static_branch_enable(&shared_processor);
-+
- 		ppc_md.power_save = pseries_lpar_idle;
- 		ppc_md.enable_pmcs = pseries_lpar_enable_pmcs;
- #ifdef CONFIG_PCI_IOV
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -710,6 +710,8 @@ static struct chipset early_qrk[] __init
+ 	 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3e20,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
 
 
