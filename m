@@ -2,53 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B7CC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A81C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E5021744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CD47206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642161;
-	bh=u9A/2TLMZQ8DdEHh04gD6YE8RFGrBOOudAH5jdn0k5c=;
+	s=default; t=1577642164;
+	bh=b/hV8Vu8G7wwdS/CvXDnTg35vphamOTHlBhwkOQLbSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmh2zr5BW9f0kiIr1ro/8tHOJnoR4Z2wF+6jjwUSSK2+JofOSnX9yuajHU7XBGHH0
-	 xdlrELY8IYeUBiQ0CrI417HMjShHLsVQ6Ag4DKK3YtaiIFrXhIu+eqgK7ci1t8Dulc
-	 Fks40N8D9mTiB3J78yJhVXWNPsJD/ZLTBKioWGpk=
+	b=oucJJlKq+vmMlX47kWFXmdAWbeVp4hRBkVWciVYVbeqpxPZSfk08ZiZCeRB/UcdPU
+	 lGk2hSsxQIxwJ400xMvSos1338qFh/ykyYfcVHVsSuFHZWYN45efeGpFfxVh49b+Jm
+	 dTDRDJcPv/SIPMsLOEM7TtvLXNsJa/67ShNAzS48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732772AbfL2R4A (ORCPT
+        id S1732794AbfL2R4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:56:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733005AbfL2Rzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:51 -0500
+        id S1732658AbfL2Rzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDB1206DB;
-        Sun, 29 Dec 2019 17:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E9821744;
+        Sun, 29 Dec 2019 17:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642151;
-        bh=u9A/2TLMZQ8DdEHh04gD6YE8RFGrBOOudAH5jdn0k5c=;
+        s=default; t=1577642153;
+        bh=b/hV8Vu8G7wwdS/CvXDnTg35vphamOTHlBhwkOQLbSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D473GNGf/AHLsk3T9omXtgcAZCgjo3prJmYTZjEyus+EhxQkcWVWKsEZRgGvOKkgx
-         bMJq6TRyKULqwDx1LI0hhrqksU2QC/EjjAl/XOcPl902wkjUIsAYF2tZyUuAcfIX4H
-         7RxYNpQGILivn2C28qValVi9kcvyIwv0pAfKBCJY=
+        b=I0Ffz/CYCvjkgkqM1g1+ArKqqdMfZsCN+azECfgBhKW+WBirgbibS+qt4WrftJi7d
+         ik+DoXW4fBlOOC+F3ABo8mEqJoC7Gq87Ezs+DCBwkkeBZBb+6yWpt5VEwUSriIink6
+         trxnSKgGDVPd0Yhv5plz1PoSefaaLGDzKksP6Kug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
-        Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 362/434] btrfs: dont prematurely free work in scrub_missing_raid56_worker()
-Date:   Sun, 29 Dec 2019 18:26:55 +0100
-Message-Id: <20191229172726.017909858@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 363/434] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
+Date:   Sun, 29 Dec 2019 18:26:56 +0100
+Message-Id: <20191229172726.084696220@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,47 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 57d4f0b863272ba04ba85f86bfdc0f976f0af91c ]
+commit 07bcc411567cb96f9d1fc84fff8d387118a2920d upstream.
 
-Currently, scrub_missing_raid56_worker() puts and potentially frees
-sblock (which embeds the work item) and then submits a bio through
-scrub_wr_submit(). This is another potential instance of the bug in
-"btrfs: don't prematurely free work in run_ordered_work()". Fix it by
-dropping the reference after we submit the bio.
+This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commit aims to treat SD High speed and SDR25 as the same while
+setting UHS Timings in HOST_CONTROL2 which leads to failures with some
+SD cards in AM65x. Revert this commit.
+
+The issue this commit was trying to fix can be implemented in a platform
+specific callback instead of common sdhci code.
+
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20191128110422.25917-1-faiz_abbas@ti.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/scrub.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/mmc/host/sdhci.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-index f7d4e03f4c5d..a0770a6aee00 100644
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -2149,14 +2149,13 @@ static void scrub_missing_raid56_worker(struct btrfs_work *work)
- 		scrub_write_block_to_dev_replace(sblock);
- 	}
- 
--	scrub_block_put(sblock);
--
- 	if (sctx->is_dev_replace && sctx->flush_all_writes) {
- 		mutex_lock(&sctx->wr_lock);
- 		scrub_wr_submit(sctx);
- 		mutex_unlock(&sctx->wr_lock);
- 	}
- 
-+	scrub_block_put(sblock);
- 	scrub_pending_bio_dec(sctx);
- }
- 
--- 
-2.20.1
-
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1871,9 +1871,7 @@ void sdhci_set_uhs_signaling(struct sdhc
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
+ 	else if (timing == MMC_TIMING_UHS_SDR12)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+-	else if (timing == MMC_TIMING_SD_HS ||
+-		 timing == MMC_TIMING_MMC_HS ||
+-		 timing == MMC_TIMING_UHS_SDR25)
++	else if (timing == MMC_TIMING_UHS_SDR25)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
+ 	else if (timing == MMC_TIMING_UHS_SDR50)
+ 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
 
 
