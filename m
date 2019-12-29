@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930F8C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E41C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEF820722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959F120722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642800;
-	bh=iaRKoO/NwOSQZ2zS1eIaHYnh0kIVL7zYHYUjEcLWo2A=;
+	s=default; t=1577642806;
+	bh=ytWfiQ1EfqRy6Ar6b16f09/K+MjWcXgWmfGO5JfBSY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8cNTD+unIFxOdNxumTVBP26AZkx4CXvM6Tg29gMxH7DMYvmGszyfOpW+hdaK0qqZ
-	 bYPIdwwm/zWC5Qq+5eC4kSJVLfY4VzDPnVx0gDFoxjZs3LjTaVW/cX7dLkvWDAJsKm
-	 Q0l+rheigaKxxv7h0q1rmP9XanY+k6LWVcIbRk58=
+	b=Urtq1a5Iw6TduEzx0D2xNW40V1Zs2LUv8dz46OY+uvlLcxUH2aR6mdLMmEmwCanTD
+	 v3H8gdCFEXSStsQi/XI0qF9+hmN2zNbWTdkNKRAHI0wRD0ow3oiPqErbBPmhqyqOKI
+	 2aZQdaQCMmaUxtcf6TaH2EvJfWdQld+r1ibqk9K8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfL2Rtd (ORCPT
+        id S1731618AbfL2RtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfL2Rtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:31 -0500
+        id S1731594AbfL2RtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60FE120718;
-        Sun, 29 Dec 2019 17:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBA74206DB;
+        Sun, 29 Dec 2019 17:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641770;
-        bh=iaRKoO/NwOSQZ2zS1eIaHYnh0kIVL7zYHYUjEcLWo2A=;
+        s=default; t=1577641756;
+        bh=ytWfiQ1EfqRy6Ar6b16f09/K+MjWcXgWmfGO5JfBSY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzgGrJu1jp7gLwYsV5PfAfzPPb3+gJwGLo1WqzbF6KAQDx4Tb3KyK9rR2M1hd2VFD
-         Mbo9QRCZ2QEOw0LEcUKJ0ZbmMG1aluQS1fX1SrXAaxDfQOUkhI/tFCp6EUD715U+fP
-         OMNtawfbdWtHLX7GW1SHLtBSgceqoOrczCU4d5Kk=
+        b=EbjvTjqFMKoIGXrMhSjrcgiyQtFMlJXyGm5MOmFaVwGTmB/8E4yUfYOkooUbZeL+I
+         2P6E1BdQn0xVUbjH2f4XE0ZkRP9YRRunSz6lMep56SVanBOvDuEaQrd3vXSE9NSM6g
+         yyBTvROEpWkfv0tFyE/iEtD11EmxvzvUEbkFWC7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 205/434] net: dsa: LAN9303: select REGMAP when LAN9303 enable
-Date:   Sun, 29 Dec 2019 18:24:18 +0100
-Message-Id: <20191229172715.444896792@linuxfoundation.org>
+Subject: [PATCH 5.4 199/434] RDMA/qedr: Fix memory leak in user qp and mr
+Date:   Sun, 29 Dec 2019 18:24:12 +0100
+Message-Id: <20191229172715.047146693@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,41 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit b6989d248a2d13f02895bae1a9321b3bbccc0283 ]
+[ Upstream commit 24e412c1e00ebfe73619e6b88cbc26c2c7d41b85 ]
 
-When NET_DSA_SMSC_LAN9303=y and NET_DSA_SMSC_LAN9303_MDIO=y,
-below errors can be seen:
-drivers/net/dsa/lan9303_mdio.c:87:23: error: REGMAP_ENDIAN_LITTLE
-undeclared here (not in a function)
-  .reg_format_endian = REGMAP_ENDIAN_LITTLE,
-drivers/net/dsa/lan9303_mdio.c:93:3: error: const struct regmap_config
-has no member named reg_read
-  .reg_read = lan9303_mdio_read,
+User QPs pbl's weren't freed properly.
+MR pbls weren't freed properly.
 
-It should select REGMAP in config NET_DSA_SMSC_LAN9303.
-
-Fixes: dc7005831523 ("net: dsa: LAN9303: add MDIO managed mode support")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e0290cce6ac0 ("qedr: Add support for memory registeration verbs")
+Link: https://lore.kernel.org/r/20191027200451.28187-5-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/qedr/verbs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index f6232ce8481f..685e12b05a7c 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -77,6 +77,7 @@ config NET_DSA_REALTEK_SMI
- config NET_DSA_SMSC_LAN9303
- 	tristate
- 	select NET_DSA_TAG_LAN9303
-+	select REGMAP
- 	---help---
- 	  This enables support for the SMSC/Microchip LAN9303 3 port ethernet
- 	  switch chips.
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 6f3ce86019b7..a7ccca3c4f89 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -1577,6 +1577,14 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
+ 
+ 	ib_umem_release(qp->urq.umem);
+ 	qp->urq.umem = NULL;
++
++	if (rdma_protocol_roce(&dev->ibdev, 1)) {
++		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
++		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
++	} else {
++		kfree(qp->usq.pbl_tbl);
++		kfree(qp->urq.pbl_tbl);
++	}
+ }
+ 
+ static int qedr_create_user_qp(struct qedr_dev *dev,
+@@ -2673,8 +2681,8 @@ int qedr_dereg_mr(struct ib_mr *ib_mr, struct ib_udata *udata)
+ 
+ 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
+ 
+-	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
+-		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
++	if (mr->type != QEDR_MR_DMA)
++		free_mr_info(dev, &mr->info);
+ 
+ 	/* it could be user registered memory. */
+ 	ib_umem_release(mr->umem);
 -- 
 2.20.1
 
