@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3118FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7951EC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D93C21D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB6321744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642199;
-	bh=S51rkQSe3fqX9zTUh2WQGGWKBoj1jAt3CYqQB7zmTNU=;
+	s=default; t=1577642206;
+	bh=ZMqCIdRgmDagksk5OjgQOF9UYnHcAGns2/yanPaNiiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMJtOOpnutrrqrNKwpVsrgVnPkLD6ABBi+7SpYDZo0NwBCMXwCDBJHLQnHSY6HqcB
-	 3V36DlIYnfEw3+Tl1IxHT/RwI6L44iACMc16jSwtbZClmeWrC5ZegvVpvsl38y29hJ
-	 8b9miDsZNO9nwNq+VugKxyKAnbmsQzNIN8yLEBe4=
+	b=rAk8DdnUgCMWz/xwTT+ZBsJ1YRF28qvrY16i4wj/8ZUFeo9xF31p18Eo7xbEhxakA
+	 WEIx/FDG+QKNu3LVIuNjIZONjrnUojjp3Y8h6mVMv3Z17loebbSIbwT5zKF18gj2Qx
+	 +fxu/vNlzdsF0lYQ7Wfji0YdIYENEsxSML9aXVDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfL2R4h (ORCPT
+        id S1732555AbfL2R4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733075AbfL2R43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:56:29 -0500
+        id S1733101AbfL2R4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:56:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF736208C4;
-        Sun, 29 Dec 2019 17:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96794206DB;
+        Sun, 29 Dec 2019 17:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642189;
-        bh=S51rkQSe3fqX9zTUh2WQGGWKBoj1jAt3CYqQB7zmTNU=;
+        s=default; t=1577642199;
+        bh=ZMqCIdRgmDagksk5OjgQOF9UYnHcAGns2/yanPaNiiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgW2cRBIVceVKf4zMdxeJGXoR6VNd6hZGvc4nRRGSXnp9pZLhw9L1xrJzeQxiNuvy
-         bxP47fhOAKefsWCGQDnvI192IoI5lYNqG2ZgVh+3CnNAUVFPBaOYltTqN7I4B8pnER
-         eFEx6Y9Fa34GsUOcLq0/FoZAr6EzPymqP/j3vkM4=
+        b=YY21ce567GaPhYPgRBlnig+s3A3OMD6OGKrGsyZgp0oNok8kbDKZuouNNjEfQAo3w
+         q9JL5AKaQRroPwW9T05T/48y3SnRUrWc0FrSzY0EuWnt2rUDHdnbFXSwefGC2qnQhE
+         wnFoBa348p3W8pqtQAOZI+ZaNhqyvTc6Fv0EnhPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 380/434] spi: cadence: Correct handling of native chipselect
-Date:   Sun, 29 Dec 2019 18:27:13 +0100
-Message-Id: <20191229172727.367467017@linuxfoundation.org>
+Subject: [PATCH 5.4 384/434] RDMA/siw: Fix post_recv QP state locking
+Date:   Sun, 29 Dec 2019 18:27:17 +0100
+Message-Id: <20191229172727.687648782@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,63 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Bernard Metzler <bmt@zurich.ibm.com>
 
-[ Upstream commit 61acd19f9c56fa0809285346bd0bd4a926ab0da0 ]
+[ Upstream commit 0edefddbae396e50eb7887d279d0c4bb4d7a6384 ]
 
-To fix a regression on the Cadence SPI driver, this patch reverts
-commit 6046f5407ff0 ("spi: cadence: Fix default polarity of native
-chipselect").
+Do not release qp state lock if not previously acquired.
 
-This patch was not the correct fix for the issue. The SPI framework
-calls the set_cs line with the logic level it desires on the chip select
-line, as such the old is_high handling was correct. However, this was
-broken by the fact that before commit 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH
-setting when using native and GPIO CS") all controllers that offered
-the use of a GPIO chip select had SPI_CS_HIGH applied, even for hardware
-chip selects. This caused the value passed into the driver to be inverted.
-Which unfortunately makes it look like a logical enable the chip select
-value.
-
-Since the core was corrected to not unconditionally apply SPI_CS_HIGH,
-the Cadence driver, whilst using the hardware chip select, will deselect
-the chip select every time we attempt to communicate with the device,
-which results in failed communications.
-
-Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191126164140.6240-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: cf049bb31f71 ("RDMA/siw: Fix SQ/RQ drain logic")
+Link: https://lore.kernel.org/r/20191025142903.20625-1-bmt@zurich.ibm.com
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-cadence.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/sw/siw/siw_verbs.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/spi/spi-cadence.c b/drivers/spi/spi-cadence.c
-index c36587b42e95..82a0ee09cbe1 100644
---- a/drivers/spi/spi-cadence.c
-+++ b/drivers/spi/spi-cadence.c
-@@ -168,16 +168,16 @@ static void cdns_spi_init_hw(struct cdns_spi *xspi)
- /**
-  * cdns_spi_chipselect - Select or deselect the chip select line
-  * @spi:	Pointer to the spi_device structure
-- * @enable:	Select (1) or deselect (0) the chip select line
-+ * @is_high:	Select(0) or deselect (1) the chip select line
-  */
--static void cdns_spi_chipselect(struct spi_device *spi, bool enable)
-+static void cdns_spi_chipselect(struct spi_device *spi, bool is_high)
- {
- 	struct cdns_spi *xspi = spi_master_get_devdata(spi->master);
- 	u32 ctrl_reg;
- 
- 	ctrl_reg = cdns_spi_read(xspi, CDNS_SPI_CR);
- 
--	if (!enable) {
-+	if (is_high) {
- 		/* Deselect the slave */
- 		ctrl_reg |= CDNS_SPI_CR_SSCTRL;
- 	} else {
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index 7d0a7edc533d..1b1a40db529c 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -988,7 +988,6 @@ int siw_post_receive(struct ib_qp *base_qp, const struct ib_recv_wr *wr,
+ 	}
+ 	if (!qp->kernel_verbs) {
+ 		siw_dbg_qp(qp, "no kernel post_recv for user mapped sq\n");
+-		up_read(&qp->state_lock);
+ 		*bad_wr = wr;
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
