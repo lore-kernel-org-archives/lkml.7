@@ -7,49 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B731FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1471DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D12222C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50EC207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640863;
-	bh=lnZntBm7+vS9ivFVCtiYcHqf82smGP4ysvQWPpzchOQ=;
+	s=default; t=1577640867;
+	bh=OrYIig8dP4ppL3UK+OMTrtPbODAkZQUMfRytpXlRnhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yMoJliJTJBeV2iyzANo02pqh0D0h9M1oAz8yDVhmjJotVqeZHMNfkLWXMOGcr7mWe
-	 WSGu1mkk6HP44yZYrGZBLcP6E6LB1jIg+2iY6LOTD8MbnFh3bM2Pt85Nbtvm18KBlp
-	 mZevGB4fFJGzWz9l2m0rRUVNkbcmv2nHP2/vq0Ek=
+	b=hnMmUpqpzR+2Tf825wzhj9xKzUSwzwixRneUtPq5dIWo8FvWyfWhZMGKhrpmd6dkM
+	 Kd6ufTMgQe0KQL5Rs67zHb8Vlc5UYlq4EdyODcreMFQM/02kqD9j0lJHeelnolOUJ7
+	 N4Uy6fqbB9eqPvFtpO1YoyWsXa8YdUClJ9KthW94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfL2ReW (ORCPT
+        id S1729644AbfL2ReZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728869AbfL2ReR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:17 -0500
+        id S1729626AbfL2ReX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B854207FD;
-        Sun, 29 Dec 2019 17:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E880207FD;
+        Sun, 29 Dec 2019 17:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640856;
-        bh=lnZntBm7+vS9ivFVCtiYcHqf82smGP4ysvQWPpzchOQ=;
+        s=default; t=1577640861;
+        bh=OrYIig8dP4ppL3UK+OMTrtPbODAkZQUMfRytpXlRnhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLPfqFGjWtFdnGnZiwYcNTaI0O3450Zj2prqZDHPz8+DrnD5gLYOUr7v04vB0vzpR
-         Jvsch4kbk71mt/MPtjkQjmxPownKFJZC1504LuWgAORZy3iT0Wo4fXi7H8kJZ99uvD
-         rIOmMykDPoCEymjMYSGkSLXZr++XJMBGjMKbOMs4=
+        b=OmZ26Gw3SZcuY60Rk9ckRU2i8XKOWVd9UaFkFjrFj+brHIzUwifY61kYzmoTgkkpT
+         5R43oB4opO1mosmeOQDoFaH8UihFj0m1U18ZFapea432IdAlGA3CYX5XdHMnST3TOc
+         fzDpKagU2szRXfiwHo746pk1LzIGPD309khr9j1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petar Penkov <ppenkov@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/219] tun: fix data-race in gro_normal_list()
-Date:   Sun, 29 Dec 2019 18:19:28 +0100
-Message-Id: <20191229162533.836350462@linuxfoundation.org>
+Subject: [PATCH 4.19 132/219] perf tools: Splice events onto evlist even on error
+Date:   Sun, 29 Dec 2019 18:18:54 +0100
+Message-Id: <20191229162528.519923158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,90 +77,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petar Penkov <ppenkov@google.com>
+From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit c39e342a050a4425348e6fe7f75827c0a1a7ebc5 ]
+[ Upstream commit 8e8714c3d157568b7a769917a5e05573bbaf5af0 ]
 
-There is a race in the TUN driver between napi_busy_loop and
-napi_gro_frags. This commit resolves the race by adding the NAPI struct
-via netif_tx_napi_add, instead of netif_napi_add, which disables polling
-for the NAPI struct.
+If event parsing fails the event list is leaked, instead splice the list
+onto the out result and let the caller cleanup.
 
-KCSAN reported:
-BUG: KCSAN: data-race in gro_normal_list.part.0 / napi_busy_loop
+An example input for parse_events found by libFuzzer that reproduces
+this memory leak is 'm{'.
 
-write to 0xffff8880b5d474b0 of 4 bytes by task 11205 on cpu 0:
- gro_normal_list.part.0+0x77/0xb0 net/core/dev.c:5682
- gro_normal_list net/core/dev.c:5678 [inline]
- gro_normal_one net/core/dev.c:5692 [inline]
- napi_frags_finish net/core/dev.c:5705 [inline]
- napi_gro_frags+0x625/0x770 net/core/dev.c:5778
- tun_get_user+0x2150/0x26a0 drivers/net/tun.c:1976
- tun_chr_write_iter+0x79/0xd0 drivers/net/tun.c:2022
- call_write_iter include/linux/fs.h:1895 [inline]
- do_iter_readv_writev+0x487/0x5b0 fs/read_write.c:693
- do_iter_write fs/read_write.c:970 [inline]
- do_iter_write+0x13b/0x3c0 fs/read_write.c:951
- vfs_writev+0x118/0x1c0 fs/read_write.c:1015
- do_writev+0xe3/0x250 fs/read_write.c:1058
- __do_sys_writev fs/read_write.c:1131 [inline]
- __se_sys_writev fs/read_write.c:1128 [inline]
- __x64_sys_writev+0x4e/0x60 fs/read_write.c:1128
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff8880b5d474b0 of 4 bytes by task 11168 on cpu 1:
- gro_normal_list net/core/dev.c:5678 [inline]
- napi_busy_loop+0xda/0x4f0 net/core/dev.c:6126
- sk_busy_loop include/net/busy_poll.h:108 [inline]
- __skb_recv_udp+0x4ad/0x560 net/ipv4/udp.c:1689
- udpv6_recvmsg+0x29e/0xe90 net/ipv6/udp.c:288
- inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
- sock_recvmsg_nosec net/socket.c:871 [inline]
- sock_recvmsg net/socket.c:889 [inline]
- sock_recvmsg+0x92/0xb0 net/socket.c:885
- sock_read_iter+0x15f/0x1e0 net/socket.c:967
- call_read_iter include/linux/fs.h:1889 [inline]
- new_sync_read+0x389/0x4f0 fs/read_write.c:414
- __vfs_read+0xb1/0xc0 fs/read_write.c:427
- vfs_read fs/read_write.c:461 [inline]
- vfs_read+0x143/0x2c0 fs/read_write.c:446
- ksys_read+0xd5/0x1b0 fs/read_write.c:587
- __do_sys_read fs/read_write.c:597 [inline]
- __se_sys_read fs/read_write.c:595 [inline]
- __x64_sys_read+0x4c/0x60 fs/read_write.c:595
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 11168 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 943170998b20 ("tun: enable NAPI for TUN/TAP driver")
-Signed-off-by: Petar Penkov <ppenkov@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/tun.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index e1ac1c57089f..bbd92221c6ca 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -319,8 +319,8 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
- 	tfile->napi_enabled = napi_en;
- 	tfile->napi_frags_enabled = napi_en && napi_frags;
- 	if (napi_en) {
--		netif_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
--			       NAPI_POLL_WEIGHT);
-+		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
-+				  NAPI_POLL_WEIGHT);
- 		napi_enable(&tfile->napi);
- 	}
- }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 1a7c76d2baa8..7ea1a230e89d 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1843,15 +1843,20 @@ int parse_events(struct perf_evlist *evlist, const char *str,
+ 
+ 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
+ 	perf_pmu__parse_cleanup();
++
++	if (!ret && list_empty(&parse_state.list)) {
++		WARN_ONCE(true, "WARNING: event parser found nothing\n");
++		return -1;
++	}
++
++	/*
++	 * Add list to the evlist even with errors to allow callers to clean up.
++	 */
++	perf_evlist__splice_list_tail(evlist, &parse_state.list);
++
+ 	if (!ret) {
+ 		struct perf_evsel *last;
+ 
+-		if (list_empty(&parse_state.list)) {
+-			WARN_ONCE(true, "WARNING: event parser found nothing\n");
+-			return -1;
+-		}
+-
+-		perf_evlist__splice_list_tail(evlist, &parse_state.list);
+ 		evlist->nr_groups += parse_state.nr_groups;
+ 		last = perf_evlist__last(evlist);
+ 		last->cmdline_group_boundary = true;
 -- 
 2.20.1
 
