@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F00DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D7C206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444E520718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641602;
-	bh=OmVNh+I9msLYeT6pr1K0otaBp055Gs61/fQ5o2xIgXA=;
+	s=default; t=1577641609;
+	bh=vT/i1m2Czml8juZm5CYiD+AUEueXnzfNcVpXVGiBCyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t08pUR6YOvOX/HraHgDl8DlTuGV6O9k/UA390Fo2pN3jeEkC/X4Us9wQBr+BZW/GX
-	 JVAZ8oUnWKvT6Fzoe0QDajB65t257afSXTQmfCKRUlR+GZVPSSbJy1psubrWBq5PvF
-	 4Bkeg7udqxfR+L4Sn2SAtNQk0u15AmmhC7FoKE7A=
+	b=Mk/Z3b2h24RMeFmvYANf0vVpY7ospbfkt7cKkh6S4KJE82TO79FeWhDn4Ld17NHiP
+	 BNhXX/QCd+jvCbDCBR3xOPWrTVkS70kObHZjXk3n5j0JSF+kax+/vgXC2VQFzFZ0Sr
+	 V2zdXHjYAx5BjXkUO8IMEFIrY+hIuiZLavS3/I00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfL2Rqk (ORCPT
+        id S1731138AbfL2Rqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:46:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731092AbfL2Rqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:31 -0500
+        id S1731105AbfL2Rqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EAC620718;
-        Sun, 29 Dec 2019 17:46:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CAEC20718;
+        Sun, 29 Dec 2019 17:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641591;
-        bh=OmVNh+I9msLYeT6pr1K0otaBp055Gs61/fQ5o2xIgXA=;
+        s=default; t=1577641595;
+        bh=vT/i1m2Czml8juZm5CYiD+AUEueXnzfNcVpXVGiBCyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RPm3hZU9OxangMsXT+RaSEEc+/OIo3N5ye7neUw8IftbEQjowh335bZRpCXNYVeHj
-         KnQCzWeECafdCl9x/CsYF4OQO0/N081G+8hd8o0QxX+/qi/q4o88SzV8m/UNyhFa3k
-         RH8WcS5cYKcLYvqvpJkZAUHXBfoGpkKgSyMDvXiI=
+        b=ALACHXSuZeh1HMXeOVHocF5Q1kXs5YUixomJDktEKcnOnvegNongONQ18gwSvxKU6
+         sbAqieVugnvBdAvcZ7nqwGmmayJS6x0eut40Fyq7q6OgiryWNfoCtUv2/PqKwUkt2m
+         tzxU3u1B1FMk+0J/Z+u1edJMJVBei8Rzls0kJX1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/434] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Sun, 29 Dec 2019 18:23:02 +0100
-Message-Id: <20191229172710.271508540@linuxfoundation.org>
+Subject: [PATCH 5.4 104/434] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
+Date:   Sun, 29 Dec 2019 18:22:37 +0100
+Message-Id: <20191229172708.516185193@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,48 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit 2444846c0dbfa4ead21b621e4300ec32c90fbf38 ]
+[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
 
-v4l2-compliance fails with this message:
+Inside function max8907_regulator_probe(), variable val could
+be uninitialized if regmap_read() fails. However, val is used
+later in the if statement to decide the content written to
+"pmic", which is potentially unsafe.
 
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
-
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
-
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 328976a52941..e44299008a7b 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1417,6 +1417,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
+diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
+index 76152aaa330b..96dc0eea7659 100644
+--- a/drivers/regulator/max8907-regulator.c
++++ b/drivers/regulator/max8907-regulator.c
+@@ -296,7 +296,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
  
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
+ 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
+-	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
++	if (ret)
++		return ret;
++
+ 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
+ 	    MAX8907_II2RR_VERSION_REV_B) {
+ 		pmic->desc[MAX8907_SD1].min_uV = 637500;
+@@ -333,14 +336,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
+ 		}
  
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_IS_INTERLACED) {
+ 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & MAX8907_MASK_LDO_SEQ) !=
+ 			    MAX8907_MASK_LDO_SEQ)
+ 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
+ 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
+-			regmap_read(config.regmap, pmic->desc[i].enable_reg,
++			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
+ 				    &val);
++			if (ret)
++				return ret;
++
+ 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
+ 						MAX8907_MASK_OUT5V_ENSRC)) !=
+ 			    MAX8907_MASK_OUT5V_ENSRC)
 -- 
 2.20.1
 
