@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82265C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10B220718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DCF206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641417;
-	bh=e7MPd5L+4UOxxlO77Qm/1g3QIjNW2/XxFjrUC3k2BUc=;
+	s=default; t=1577641422;
+	bh=GK0FX52DVvojoAlPdOEo5GgMAzRbExsRiZMwVHqEfTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LV3j94s4HcnTyXV1p9WOGpJXkRGheOag8YGZ40Pa/30DYO9XlDAtN0H/JHUuHKZ1/
-	 H6fY+w2Mq0HJK6oFcIiu7WwB24Uw9XBYkIvBZI86Qc8e+Zcm0gos3kY0gdYNEWCMf+
-	 rcOSd7XGyW/z4qDqCQGjllns3tu+vXwQ3fTdyZtE=
+	b=Qx6BR+max6caVrJJkoKmeEAs2IC5dk7cybJ9CtpAHl0kSBtOBCbzA1PPljhV+nT/2
+	 TroTGOozKNyuylkYm9HUH6cSGZLOMVhKfhQILPOuhH5gdh9Vg9RR/aokAE7cedvnFB
+	 8VCZzf2C8U8iOQUQFMEslqcYaY/zcnrfaC134JYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbfL2Rng (ORCPT
+        id S1730531AbfL2Rnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:43:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730491AbfL2Rnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:31 -0500
+        id S1730515AbfL2Rng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:43:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C28AE206A4;
-        Sun, 29 Dec 2019 17:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93DBF206A4;
+        Sun, 29 Dec 2019 17:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641411;
-        bh=e7MPd5L+4UOxxlO77Qm/1g3QIjNW2/XxFjrUC3k2BUc=;
+        s=default; t=1577641416;
+        bh=GK0FX52DVvojoAlPdOEo5GgMAzRbExsRiZMwVHqEfTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icwi8ydOd8lB6zTIeb6mmlVMLTCSGJW1VGNeILA0zyuxeIx/fjdML+eaNj2/zcwuy
-         LIRNS6h+ZYvhAZD8ja6O9F4+6L3JurENu13JveWW6Odjer3YRD8f9kgw1fiV6KZFFg
-         Tcyfl4YcZEPeIrXw/LvxVnlcoBph9HZA+MCEo1zY=
+        b=BPKAWmNQQuw8uRAy3oeGYNorWxsGgRZxnuxGLXWvdpvrgIBb9od6T+GmaVy2WJeZR
+         ktPj+K6jw0woqAGLWjyN6uIk3e6M2ymncDbOk+a1brBbZVrnMzLQmCP56/eKpNNUcc
+         xSjidpKtJGDiECMiPlyoHq/rve59svITgzxqAuEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Merello <andrea.merello@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Jack Zhang <Jack.Zhang1@amd.com>,
+        Feifei Xu <Feifei.Xu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/434] iio: max31856: add missing of_node and parent references to iio_dev
-Date:   Sun, 29 Dec 2019 18:21:46 +0100
-Message-Id: <20191229172705.435036592@linuxfoundation.org>
+Subject: [PATCH 5.4 055/434] drm/amdgpu/sriov: add ring_stop before ring_create in psp v11 code
+Date:   Sun, 29 Dec 2019 18:21:48 +0100
+Message-Id: <20191229172705.541439371@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,34 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Merello <andrea.merello@gmail.com>
+From: Jack Zhang <Jack.Zhang1@amd.com>
 
-[ Upstream commit 505ea3ada665c466d0064b11b6e611b7f995517d ]
+[ Upstream commit 51c0f58e9f6af3a387d14608033e6796a7ad90ee ]
 
-Adding missing indio_dev->dev.of_node references so that, in case multiple
-max31856 are present, users can get some clues to being able to distinguish
-each of them. While at it, add also the missing parent reference.
+psp  v11 code missed ring stop in ring create function(VMR)
+while psp v3.1 code had the code. This will cause VM destroy1
+fail and psp ring create fail.
 
-Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+For SIOV-VF, ring_stop should not be deleted in ring_create
+function.
+
+Signed-off-by: Jack Zhang <Jack.Zhang1@amd.com>
+Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/temperature/max31856.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/psp_v11_0.c | 61 ++++++++++++++------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/iio/temperature/max31856.c b/drivers/iio/temperature/max31856.c
-index f184ba5601d9..73ed550e3fc9 100644
---- a/drivers/iio/temperature/max31856.c
-+++ b/drivers/iio/temperature/max31856.c
-@@ -284,6 +284,8 @@ static int max31856_probe(struct spi_device *spi)
- 	spi_set_drvdata(spi, indio_dev);
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+index 10166104b8a3..d483684db95b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+@@ -398,6 +398,34 @@ static bool psp_v11_0_support_vmr_ring(struct psp_context *psp)
+ 	return false;
+ }
  
- 	indio_dev->info = &max31856_info;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->dev.of_node = spi->dev.of_node;
- 	indio_dev->name = id->name;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = max31856_channels;
++static int psp_v11_0_ring_stop(struct psp_context *psp,
++			      enum psp_ring_type ring_type)
++{
++	int ret = 0;
++	struct amdgpu_device *adev = psp->adev;
++
++	/* Write the ring destroy command*/
++	if (psp_v11_0_support_vmr_ring(psp))
++		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
++				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
++	else
++		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
++				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
++
++	/* there might be handshake issue with hardware which needs delay */
++	mdelay(20);
++
++	/* Wait for response flag (bit 31) */
++	if (psp_v11_0_support_vmr_ring(psp))
++		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
++				   0x80000000, 0x80000000, false);
++	else
++		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
++				   0x80000000, 0x80000000, false);
++
++	return ret;
++}
++
+ static int psp_v11_0_ring_create(struct psp_context *psp,
+ 				enum psp_ring_type ring_type)
+ {
+@@ -407,6 +435,12 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
+ 	struct amdgpu_device *adev = psp->adev;
+ 
+ 	if (psp_v11_0_support_vmr_ring(psp)) {
++		ret = psp_v11_0_ring_stop(psp, ring_type);
++		if (ret) {
++			DRM_ERROR("psp_v11_0_ring_stop_sriov failed!\n");
++			return ret;
++		}
++
+ 		/* Write low address of the ring to C2PMSG_102 */
+ 		psp_ring_reg = lower_32_bits(ring->ring_mem_mc_addr);
+ 		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_102, psp_ring_reg);
+@@ -451,33 +485,6 @@ static int psp_v11_0_ring_create(struct psp_context *psp,
+ 	return ret;
+ }
+ 
+-static int psp_v11_0_ring_stop(struct psp_context *psp,
+-			      enum psp_ring_type ring_type)
+-{
+-	int ret = 0;
+-	struct amdgpu_device *adev = psp->adev;
+-
+-	/* Write the ring destroy command*/
+-	if (psp_v11_0_support_vmr_ring(psp))
+-		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_101,
+-				     GFX_CTRL_CMD_ID_DESTROY_GPCOM_RING);
+-	else
+-		WREG32_SOC15(MP0, 0, mmMP0_SMN_C2PMSG_64,
+-				     GFX_CTRL_CMD_ID_DESTROY_RINGS);
+-
+-	/* there might be handshake issue with hardware which needs delay */
+-	mdelay(20);
+-
+-	/* Wait for response flag (bit 31) */
+-	if (psp_v11_0_support_vmr_ring(psp))
+-		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_101),
+-				   0x80000000, 0x80000000, false);
+-	else
+-		ret = psp_wait_for(psp, SOC15_REG_OFFSET(MP0, 0, mmMP0_SMN_C2PMSG_64),
+-				   0x80000000, 0x80000000, false);
+-
+-	return ret;
+-}
+ 
+ static int psp_v11_0_ring_destroy(struct psp_context *psp,
+ 				 enum psp_ring_type ring_type)
 -- 
 2.20.1
 
