@@ -2,122 +2,128 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C02C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D214C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363C7207E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643509;
-	bh=s5B3lJwV4LMC3f0kVupUoUXC08V/vbxtaHQo17eQX2I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2crvEtoa9prbCvmGU4J37iXe3Afj/xwO+WP7jFCh1a4sGabigq5UicaPqza/27fTf
-	 ctzwjjnpwcXE0eU8xJewy+uUgk5Un/fTNtGgO1H0I1qwkPgF2+zVlacCzJ7cd27sYN
-	 YuLNdDaxj6DATunI35zP0HDTxy+KrlDugNHNPaZ0=
+	by mail.kernel.org (Postfix) with ESMTP id 3CFC820748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfL2RV1 (ORCPT
+        id S1726761AbfL2ScU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfL2RVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C866208E4;
-        Sun, 29 Dec 2019 17:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640084;
-        bh=s5B3lJwV4LMC3f0kVupUoUXC08V/vbxtaHQo17eQX2I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8gKmsQRRYFnmJRq/pME30Q0a6TdkVo7IU/R7DpScabXe5dL2MlsKbae9Yn7eA/A4
-         jRaiZW91Gc9iI0sTLpi+nepAKdTbY0kP4B2a3fkbQsFZbggHCC1R/CuiQsvc1y/lUM
-         BrBWVW9x/brJk3DST2XzCPhU6Fez3LjjRlMnamBg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 012/161] btrfs: do not call synchronize_srcu() in inode_tree_del
-Date:   Sun, 29 Dec 2019 18:17:40 +0100
-Message-Id: <20191229162359.542920188@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
-References: <20191229162355.500086350@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 29 Dec 2019 13:32:20 -0500
+Received: from mx1.yrkesakademin.fi ([85.134.45.194]:15805 "EHLO
+        mx1.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfL2ScU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 13:32:20 -0500
+Subject: Re: [PATCH 5.4 248/434] perf probe: Fix to probe an inline function
+ which has no entry pc
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <stable@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191229172718.360610159@linuxfoundation.org>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <5d71d994-9fa1-9d99-b045-751f8a48c51a@mageia.org>
+Date:   Sun, 29 Dec 2019 20:32:16 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191229172718.360610159@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WatchGuard-Spam-ID: str=0001.0A0C0207.5E08F132.008E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.194
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+Den 29-12-2019 kl. 19:25, skrev Greg Kroah-Hartman:
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> [ Upstream commit eb6933b29d20bf2c3053883d409a53f462c1a3ac ]
+> 
+> Fix perf probe to probe an inlne function which has no entry pc
+> or low pc but only has ranges attribute.
+> 
+> This seems very rare case, but I could find a few examples, as
+> same as probe_point_search_cb(), use die_entrypc() to get the
+> entry address in probe_point_inline_cb() too.
+> 
+> Without this patch:
+> 
+>    # perf probe -D __amd_put_nb_event_constraints
+>    Failed to get entry address of __amd_put_nb_event_constraints.
+>    Probe point '__amd_put_nb_event_constraints' not found.
+>      Error: Failed to add events.
+> 
+> With this patch:
+> 
+>    # perf probe -D __amd_put_nb_event_constraints
+>    p:probe/__amd_put_nb_event_constraints amd_put_event_constraints+43
+> 
+> Committer testing:
+> 
+> Before:
+> 
+>    [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+>    Failed to get entry address of __amd_put_nb_event_constraints.
+>    Probe point '__amd_put_nb_event_constraints' not found.
+>      Error: Failed to add events.
+>    [root@quaco ~]#
+> 
+> After:
+> 
+>    [root@quaco ~]# perf probe -D __amd_put_nb_event_constraints
+>    p:probe/__amd_put_nb_event_constraints _text+33789
+>    [root@quaco ~]#
+> 
+> Fixes: 4ea42b181434 ("perf: Add perf probe subcommand, a kprobe-event setup helper")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: http://lore.kernel.org/lkml/157199320336.8075.16189530425277588587.stgit@devnote2
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   tools/perf/util/probe-finder.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 7c8d30fb2b99..7857ae7a10b7 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -942,7 +942,7 @@ static int probe_point_inline_cb(Dwarf_Die *in_die, void *data)
+>   		ret = find_probe_point_lazy(in_die, pf);
+>   	else {
+>   		/* Get probe address */
+> -		if (dwarf_entrypc(in_die, &addr) != 0) {
+> +		if (die_entrypc(in_die, &addr) != 0) {
+>   			pr_warning("Failed to get entry address of %s.\n",
+>   				   dwarf_diename(in_die));
+>   			return -ENOENT;
+> 
 
-commit f72ff01df9cf5db25c76674cac16605992d15467 upstream.
-
-Testing with the new fsstress uncovered a pretty nasty deadlock with
-lookup and snapshot deletion.
-
-Process A
-unlink
- -> final iput
-   -> inode_tree_del
-     -> synchronize_srcu(subvol_srcu)
-
-Process B
-btrfs_lookup  <- srcu_read_lock() acquired here
-  -> btrfs_iget
-    -> find inode that has I_FREEING set
-      -> __wait_on_freeing_inode()
-
-We're holding the srcu_read_lock() while doing the iget in order to make
-sure our fs root doesn't go away, and then we are waiting for the inode
-to finish freeing.  However because the free'ing process is doing a
-synchronize_srcu() we deadlock.
-
-Fix this by dropping the synchronize_srcu() in inode_tree_del().  We
-don't need people to stop accessing the fs root at this point, we're
-only adding our empty root to the dead roots list.
-
-A larger much more invasive fix is forthcoming to address how we deal
-with fs roots, but this fixes the immediate problem.
-
-Fixes: 76dda93c6ae2 ("Btrfs: add snapshot/subvolume destroy ioctl")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/inode.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -5729,7 +5729,6 @@ static void inode_tree_add(struct inode
- 
- static void inode_tree_del(struct inode *inode)
- {
--	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_root *root = BTRFS_I(inode)->root;
- 	int empty = 0;
- 
-@@ -5742,7 +5741,6 @@ static void inode_tree_del(struct inode
- 	spin_unlock(&root->inode_lock);
- 
- 	if (empty && btrfs_root_refs(&root->root_item) == 0) {
--		synchronize_srcu(&fs_info->subvol_srcu);
- 		spin_lock(&root->inode_lock);
- 		empty = RB_EMPTY_ROOT(&root->inode_tree);
- 		spin_unlock(&root->inode_lock);
 
 
+Still broken...
+
+/usr/bin/ld: perf-in.o: in function `probe_point_inline_cb':
+/work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/probe-finder.c:960: 
+undefined reference to `die_entrypc'
+collect2: error: ld returned 1 exit status
+make[2]: *** [Makefile.perf:609: perf] Error 1
+
+--
+Thomas
