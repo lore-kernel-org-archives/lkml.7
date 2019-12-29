@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C46C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54081C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD85206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C877207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641762;
-	bh=aWlCl/ryZkRTK0vYOF2eA9khOn2Ewqb/RCuumN9MEtQ=;
+	s=default; t=1577641765;
+	bh=IIvtXK4zljKP9WSSZCo7XgAgIVI9zg8nm3j28BEUGsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=en22AHzzNa3shNGy06HOJAAyszXbPZfMF6q5aaLAGJgiulU0LSspHe3INHklfnEln
-	 Ty4Oka4SsqS5haVcXsJdMU4ROiI/P3VY9kwsffRfDDOiQr/VHkj4NSkj09/3ajq7XN
-	 26prawut/5vA5yoTVXYPJykEyYDPRhE6YXhPa1GI=
+	b=sIi0Jvrhr8KOxbKBY0G9e9NjRtduhHkRXnK6+TvBTd8uvQhwrIo7q1sqyRGJCsEz4
+	 OQ+hyTOubzftCuyoU/QQBrbGGPlJd334m+6FHEx+S10JpZvfD60XFpu8R0ESxYAUgn
+	 xylWlYhXSmysGSuFvKKphM7hYyNB7SIB2CTmveC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfL2RtV (ORCPT
+        id S1731636AbfL2RtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33040 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731617AbfL2RtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:19 -0500
+        id S1731624AbfL2RtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD7A20718;
-        Sun, 29 Dec 2019 17:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD28021D7E;
+        Sun, 29 Dec 2019 17:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641758;
-        bh=aWlCl/ryZkRTK0vYOF2eA9khOn2Ewqb/RCuumN9MEtQ=;
+        s=default; t=1577641761;
+        bh=IIvtXK4zljKP9WSSZCo7XgAgIVI9zg8nm3j28BEUGsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZV1oDgnyB57YpdE9CykZzPaAR0ICzw3IfrJiHw7YfW49XjJB7EDXSiAupXtVEWPi
-         y43eEVOTCWf0AyFiH2aJ9ld5Lxa88JfQ3B+FDGS1aeAUyIngyC6KwdeODTOhkwib4W
-         7QZ9J54IcgrZzWiuS5M3VqWLtHbBO4UqU0fd/MBc=
+        b=k6ekKA4zEA2QG0Xf1q8oxOabjTzLbDQRJYn2SmmDW9ar5wUGgbX7OBaTIhuibUM6t
+         f406G7eHdkEbIZriQtbt9ufCqnvDxOQC9WThe0C+/0XLPe+r76oYk4b+ClDd/g20XF
+         NT9iclnmtak1sKNFA6RurjPQiqMby/bpmr8rd+Yw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 200/434] RDMA/hns: Fix memory leak on context on error return path
-Date:   Sun, 29 Dec 2019 18:24:13 +0100
-Message-Id: <20191229172715.113944936@linuxfoundation.org>
+Subject: [PATCH 5.4 201/434] RDMA/qedr: Fix srqs xarray initialization
+Date:   Sun, 29 Dec 2019 18:24:14 +0100
+Message-Id: <20191229172715.180533685@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,59 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 994195e1537074f56df216a9309f6e366cb35b67 ]
+[ Upstream commit 73ab512f720298aabe23b34110e3f6a8545b0ba5 ]
 
-Currently, the error return path when the call to function
-dev->dfx->query_cqc_info fails will leak object 'context'. Fix this by
-making the error return path via 'err' return return codes rather than
--EMSGSIZE, set ret appropriately for all error return paths and for the
-memory leak now return via 'err' rather than just returning without
-freeing context.
+There was a missing initialization for the srqs xarray.
+SRQs xarray can also be called from irq context when searching
+for an element and uses the xa_XXX_irq apis, therefore should
+be initialized with IRQ flags.
 
-Link: https://lore.kernel.org/r/20191024131034.19989-1-colin.king@canonical.com
-Addresses-Coverity: ("Resource leak")
-Fixes: e1c9a0dc2939 ("RDMA/hns: Dump detailed driver-specific CQ")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 9fd15987ed27 ("qedr: Convert srqidr to XArray")
+Link: https://lore.kernel.org/r/20191027200451.28187-2-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_restrack.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/qedr/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_restrack.c b/drivers/infiniband/hw/hns/hns_roce_restrack.c
-index 0a31d0a3d657..06871731ac43 100644
---- a/drivers/infiniband/hw/hns/hns_roce_restrack.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_restrack.c
-@@ -98,11 +98,15 @@ static int hns_roce_fill_res_cq_entry(struct sk_buff *msg,
- 		goto err;
+diff --git a/drivers/infiniband/hw/qedr/main.c b/drivers/infiniband/hw/qedr/main.c
+index dc71b6e16a07..b462eaca1ee3 100644
+--- a/drivers/infiniband/hw/qedr/main.c
++++ b/drivers/infiniband/hw/qedr/main.c
+@@ -357,6 +357,7 @@ static int qedr_alloc_resources(struct qedr_dev *dev)
+ 		return -ENOMEM;
  
- 	table_attr = nla_nest_start(msg, RDMA_NLDEV_ATTR_DRIVER);
--	if (!table_attr)
-+	if (!table_attr) {
-+		ret = -EMSGSIZE;
- 		goto err;
-+	}
+ 	spin_lock_init(&dev->sgid_lock);
++	xa_init_flags(&dev->srqs, XA_FLAGS_LOCK_IRQ);
  
--	if (hns_roce_fill_cq(msg, context))
-+	if (hns_roce_fill_cq(msg, context)) {
-+		ret = -EMSGSIZE;
- 		goto err_cancel_table;
-+	}
- 
- 	nla_nest_end(msg, table_attr);
- 	kfree(context);
-@@ -113,7 +117,7 @@ err_cancel_table:
- 	nla_nest_cancel(msg, table_attr);
- err:
- 	kfree(context);
--	return -EMSGSIZE;
-+	return ret;
- }
- 
- int hns_roce_fill_res_entry(struct sk_buff *msg,
+ 	if (IS_IWARP(dev)) {
+ 		xa_init_flags(&dev->qps, XA_FLAGS_LOCK_IRQ);
 -- 
 2.20.1
 
