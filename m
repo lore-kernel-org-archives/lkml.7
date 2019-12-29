@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7F8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411FAC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B852207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A900208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640671;
-	bh=7Q4nsvkaGlRoybFthltF/3PxgZHKzpaUX9ZtKI5A5Cs=;
+	s=default; t=1577640675;
+	bh=WHsWUyjkT6BtcW+ctw78vQlYzOCMH3wIY6zzM3e/Ubk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1f6ReZVIa/fzTTgudj89DmKNRYwJx0sbAmJN+JM7RqkxkW2aADM5ctVp+QMXkpHs
-	 QbskY0hW37i7htRQupGjIFT7IFf/nPzkPK1Vv0CkYiTPzGje1TYuP4fAMa3iEh/HvX
-	 mbHoXcnAM9pSYOfhRfJSBmv01NDxSQQtwmEOh7jg=
+	b=Fe5b4lgJJgVTw1vD+42WoHNPmAJ4vh/olhPjsjCm5DS7Spk2cPxZx/Fo8eg4s/sks
+	 5wvsx1rSKNDHeHBH0Y3PvCUS/6/cap9qe6o2sKqScg5qkMTU3yTK4qrxgDALq4K9Ud
+	 ggZChL4GqWOvX95LnRv1Kobtz9fRrF//SDwrw/VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfL2RbK (ORCPT
+        id S1729122AbfL2RbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:31:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57918 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:31:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729084AbfL2RbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:31:05 -0500
+        id S1729102AbfL2RbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B75F820409;
-        Sun, 29 Dec 2019 17:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A150520409;
+        Sun, 29 Dec 2019 17:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640665;
-        bh=7Q4nsvkaGlRoybFthltF/3PxgZHKzpaUX9ZtKI5A5Cs=;
+        s=default; t=1577640670;
+        bh=WHsWUyjkT6BtcW+ctw78vQlYzOCMH3wIY6zzM3e/Ubk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDmICpeb6twfcVpFcwzYVu7wd7+uAKFJpAYz6QfpT5LOPumjSMsRqMeSLJ0+pGeVm
-         ht2yuAO862lioCKcsveBVGYr75Q5zDkTl0xUPRsuztxfeeWrRwFZuA0j3ly1ufSSX5
-         ZJdm893+bmqiLe83+Fymq5eOOHt7lHtzixcKuR7Q=
+        b=YAc24KRsGbBgdS6uIPt1PuyADBBuju5qVedlWe6wdij+1P8rk9VJ17d08BexqSyM9
+         OJB0ZgeRtE+cC31EOuj7aNqYyEcrTGs4kDKhi1ti1k4hFebBBjpRcc34pPhXWs1yf6
+         wteiBgCazhJZNZdHFo8GkmzT/Zjlaui7oXOrPGWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/219] drm/amdkfd: fix a potential NULL pointer dereference (v2)
-Date:   Sun, 29 Dec 2019 18:17:31 +0100
-Message-Id: <20191229162514.935680587@linuxfoundation.org>
+Subject: [PATCH 4.19 051/219] media: venus: Fix occasionally failures to suspend
+Date:   Sun, 29 Dec 2019 18:17:33 +0100
+Message-Id: <20191229162515.108617394@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,42 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-[ Upstream commit 81de29d842ccb776c0f77aa3e2b11b07fff0c0e2 ]
+[ Upstream commit 8dbebb2bd01e6f36e9a215dcde99ace70408f2c8 ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+Failure to suspend (venus_suspend_3xx) happens when the system
+is fresh booted and loading venus driver. This happens once and
+after reload the venus driver modules the problem disrepair.
 
-v2 (Felix Kuehling):
-* Fix compile error (kfifo_free instead of fifo_free)
-* Return proper error code
+Fix the failure by skipping the check for WFI and IDLE bits if
+PC_READY is on in control status register.
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/platform/qcom/venus/hfi_venus.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-index c56ac47cd318..bc47f6a44456 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
-@@ -62,6 +62,11 @@ int kfd_interrupt_init(struct kfd_dev *kfd)
+diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+index 124085556b94..fbcc67c10993 100644
+--- a/drivers/media/platform/qcom/venus/hfi_venus.c
++++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+@@ -1484,6 +1484,7 @@ static int venus_suspend_3xx(struct venus_core *core)
+ {
+ 	struct venus_hfi_device *hdev = to_hfi_priv(core);
+ 	struct device *dev = core->dev;
++	u32 ctrl_status;
+ 	bool val;
+ 	int ret;
+ 
+@@ -1499,6 +1500,10 @@ static int venus_suspend_3xx(struct venus_core *core)
+ 		return -EINVAL;
  	}
  
- 	kfd->ih_wq = alloc_workqueue("KFD IH", WQ_HIGHPRI, 1);
-+	if (unlikely(!kfd->ih_wq)) {
-+		kfifo_free(&kfd->ih_fifo);
-+		dev_err(kfd_chardev(), "Failed to allocate KFD IH workqueue\n");
-+		return -ENOMEM;
-+	}
- 	spin_lock_init(&kfd->interrupt_lock);
++	ctrl_status = venus_readl(hdev, CPU_CS_SCIACMDARG0);
++	if (ctrl_status & CPU_CS_SCIACMDARG0_PC_READY)
++		goto power_off;
++
+ 	/*
+ 	 * Power collapse sequence for Venus 3xx and 4xx versions:
+ 	 * 1. Check for ARM9 and video core to be idle by checking WFI bit
+@@ -1523,6 +1528,7 @@ static int venus_suspend_3xx(struct venus_core *core)
+ 	if (ret)
+ 		return ret;
  
- 	INIT_WORK(&kfd->interrupt_work, interrupt_wq);
++power_off:
+ 	mutex_lock(&hdev->lock);
+ 
+ 	ret = venus_power_off(hdev);
 -- 
 2.20.1
 
