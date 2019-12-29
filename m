@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F6EC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A708C206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22C8207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642519;
-	bh=JCaGLxuX1+7lSZZEo0VAEfdKz+ADCMd4+VgzpVhEvms=;
+	s=default; t=1577642527;
+	bh=fNiXTEGDcvUF3M392SCaoc00rIAL2EBcPiYfH/i1u/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BOqLzz5GCpF9X3yJt2B+1VwApCnGbHgJBns7Hh0YzWY+dbm+zpHzWYOKlHwVpOpfq
-	 MswZbCIx604Mhz3+PHaWu/JiIGxRCx0EViA8I5XzS94Ed456UHWx8TjvSLbO2TmZ7Q
-	 qZzKkov/ECF1S4rq0KVLfWzSB6juW0k2Cinh1TU4=
+	b=gs41AKQHY5Mq2WQ6Y2v56kAcbhPBcXJfqHMGNQJ8n+Chy5wu6MlKgo3yKtgJY01yZ
+	 66lHei7Diz5UUUlEuJCMfWQ1qxc4vIndQLmenr/fQzNeD9yuTV+iPC+c3l/G6NM1rU
+	 blUfRibwge02PmfOwbwhJQHYCytc9UwbuZlC+T/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387651AbfL2SB6 (ORCPT
+        id S1732893AbfL2RzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:01:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732933AbfL2Rzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:32 -0500
+        id S1732867AbfL2RzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC756206A4;
-        Sun, 29 Dec 2019 17:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEEF7206A4;
+        Sun, 29 Dec 2019 17:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642132;
-        bh=JCaGLxuX1+7lSZZEo0VAEfdKz+ADCMd4+VgzpVhEvms=;
+        s=default; t=1577642115;
+        bh=fNiXTEGDcvUF3M392SCaoc00rIAL2EBcPiYfH/i1u/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KR2cRkul356aUH8wuRv3iIPek52IeJb7H/j46rQeeKWyHZTQhtujp0/UzFJrbUccX
-         i7AE7K80APtKZzNhN9RtZI4+5kRWx9HW1eeSV7/SpEneAxa00rsD2abwpAZkymYUIl
-         wXZeGPM++CyrUz2KPeNUaPpOpJILluq15D/AMoMY=
+        b=mMFayy8FTisEOcSSwWIGMniEf7m8KT9b0Me6YoUGn7d1jUpICeTlxDVCh3FnUfeVv
+         O4CLePUqsNRWtGQCO6XQzdnl2hhB3GFxc3+iR9TnhXbu0ikAfXKNXy3Zi5g8Nhvus/
+         ZcsRzZxtsabPy1qdN0eCktGgxaHdNL9liYSiDOvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Devesh Sharma <devesh.sharma@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 354/434] RDMA/bnxt_re: Fix missing le16_to_cpu
-Date:   Sun, 29 Dec 2019 18:26:47 +0100
-Message-Id: <20191229172725.484108806@linuxfoundation.org>
+Subject: [PATCH 5.4 348/434] mips: fix build when "48 bits virtual memory" is enabled
+Date:   Sun, 29 Dec 2019 18:26:41 +0100
+Message-Id: <20191229172725.087362055@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,45 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devesh Sharma <devesh.sharma@broadcom.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit fca5b9dc0986aa49b3f0a7cfe24b6c82422ac1d7 ]
+[ Upstream commit 3ed6751bb8fa89c3014399bb0414348499ee202a ]
 
->From sparse:
+With CONFIG_MIPS_VA_BITS_48=y the build fails miserably:
 
-drivers/infiniband/hw/bnxt_re/main.c:1274:18: warning: cast from restricted __le16
-drivers/infiniband/hw/bnxt_re/main.c:1275:18: warning: cast from restricted __le16
-drivers/infiniband/hw/bnxt_re/main.c:1276:18: warning: cast from restricted __le16
-drivers/infiniband/hw/bnxt_re/main.c:1277:21: warning: restricted __le16 degrades to integer
+  CC      arch/mips/kernel/asm-offsets.s
+In file included from arch/mips/include/asm/pgtable.h:644,
+                 from include/linux/mm.h:99,
+                 from arch/mips/kernel/asm-offsets.c:15:
+include/asm-generic/pgtable.h:16:2: error: #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+ #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+  ^~~~~
+include/asm-generic/pgtable.h:390:28: error: unknown type name 'p4d_t'; did you mean 'pmd_t'?
+ static inline int p4d_same(p4d_t p4d_a, p4d_t p4d_b)
+                            ^~~~~
+                            pmd_t
 
-Fixes: 2b827ea1926b ("RDMA/bnxt_re: Query HWRM Interface version from FW")
-Link: https://lore.kernel.org/r/1574317343-23300-4-git-send-email-devesh.sharma@broadcom.com
-Signed-off-by: Devesh Sharma <devesh.sharma@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+[ ... more such errors ... ]
+
+scripts/Makefile.build:99: recipe for target 'arch/mips/kernel/asm-offsets.s' failed
+make[2]: *** [arch/mips/kernel/asm-offsets.s] Error 1
+
+This happens because when CONFIG_MIPS_VA_BITS_48 enables 4th level of the
+page tables, but neither pgtable-nop4d.h nor 5level-fixup.h are included to
+cope with the 5th level.
+
+Replace #ifdef conditions around includes of the pgtable-nop{m,u}d.h with
+explicit CONFIG_PGTABLE_LEVELS and add include of 5level-fixup.h for the
+case when CONFIG_PGTABLE_LEVELS==4
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/mips/include/asm/pgtable-64.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index 30a54f8aa42c..b31e21588200 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -1270,10 +1270,10 @@ static void bnxt_re_query_hwrm_intf_version(struct bnxt_re_dev *rdev)
- 		return;
- 	}
- 	rdev->qplib_ctx.hwrm_intf_ver =
--		(u64)resp.hwrm_intf_major << 48 |
--		(u64)resp.hwrm_intf_minor << 32 |
--		(u64)resp.hwrm_intf_build << 16 |
--		resp.hwrm_intf_patch;
-+		(u64)le16_to_cpu(resp.hwrm_intf_major) << 48 |
-+		(u64)le16_to_cpu(resp.hwrm_intf_minor) << 32 |
-+		(u64)le16_to_cpu(resp.hwrm_intf_build) << 16 |
-+		le16_to_cpu(resp.hwrm_intf_patch);
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index 93a9dce31f25..813dfe5f45a5 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -18,10 +18,12 @@
+ #include <asm/fixmap.h>
+ 
+ #define __ARCH_USE_5LEVEL_HACK
+-#if defined(CONFIG_PAGE_SIZE_64KB) && !defined(CONFIG_MIPS_VA_BITS_48)
++#if CONFIG_PGTABLE_LEVELS == 2
+ #include <asm-generic/pgtable-nopmd.h>
+-#elif !(defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_MIPS_VA_BITS_48))
++#elif CONFIG_PGTABLE_LEVELS == 3
+ #include <asm-generic/pgtable-nopud.h>
++#else
++#include <asm-generic/5level-fixup.h>
+ #endif
+ 
+ /*
+@@ -216,6 +218,9 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
+ 	return pgd_val(pgd);
  }
  
- static void bnxt_re_ib_unreg(struct bnxt_re_dev *rdev)
++#define pgd_phys(pgd)		virt_to_phys((void *)pgd_val(pgd))
++#define pgd_page(pgd)		(pfn_to_page(pgd_phys(pgd) >> PAGE_SHIFT))
++
+ static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
+ {
+ 	return (pud_t *)pgd_page_vaddr(*pgd) + pud_index(address);
 -- 
 2.20.1
 
