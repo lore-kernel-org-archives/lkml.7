@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5BAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B93CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665A7206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36694206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641620;
-	bh=n66rELhtRP7TuDCSuJ2fjZ2102XfdZBQlIS6TWQiDGU=;
+	s=default; t=1577641622;
+	bh=4HuciwyFX8Ae4TZ0WTYJrGWObwnCBGqD5+qppSi9StI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qAXTnNqBBBZ/Lp4tThYdYLJOoiBZitxh1WRy8cflHhjSXwknGCfh5O9lvtIcxvvlh
-	 9W+QnvoTSilUpuBZQwNw9FyJizxjNjWnhMsbq4I30LzlyZmpfE13lpHYolDYXkutGM
-	 ip2/U0tgvI4AGx4pvdwiUzpar7I5bIsAMDjzUoAQ=
+	b=iBQSE8uYjiHQ9x2HJIAVJ8zUWQQ2rppS/oegF2HSY1kRzgbYN5McrKhMpCawL6yeK
+	 MICuGRr4uZuHYjDlBGCATGE6swQQuAukKtNaT9jECQ665u8ipcmF3E6WvlzfOiz6/r
+	 YuXlhLqBHK1RJQ2mOS2t1zSnFn/Q7J3p8wSnSAro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbfL2Rq6 (ORCPT
+        id S1731184AbfL2RrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:46:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731124AbfL2Rqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:45 -0500
+        id S1730899AbfL2Rqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A01820718;
-        Sun, 29 Dec 2019 17:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8280D206A4;
+        Sun, 29 Dec 2019 17:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641605;
-        bh=n66rELhtRP7TuDCSuJ2fjZ2102XfdZBQlIS6TWQiDGU=;
+        s=default; t=1577641608;
+        bh=4HuciwyFX8Ae4TZ0WTYJrGWObwnCBGqD5+qppSi9StI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+0gUGqdwfcb1pHzQHzIRqeWHS9GiBIPY72YdVNGM8bl3e5/MPKzD6PkDpcQEWvJo
-         0ALBAr6SoGrxkimHHUw7xJG4V3OXB9+Vyrg11Q/wzXW7JGo5R0/Qh+/MEV3iXpNaO6
-         duVs5WpUjd9kWlfE545ZyXSeCBk4Ilog669EBcrQ=
+        b=lmTBaSmq+DBpFVOue18p5YJoPP7gSsYJuht9rpHL+iZu8CaDzeOLmW8SOA2JAecr+
+         Xt1hI91VuJ9wg5ESMZ7hoRAq8Xg7dY7Jbu4YFhJvn7X7pRlSw7+2A9m23Z+EbW1Qot
+         k3x2gVBIQYiuN8vVsMyfwXOYJw8vKChNxKbctem8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josip Pavic <Josip.Pavic@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/434] drm/amd/display: wait for set pipe mcp command completion
-Date:   Sun, 29 Dec 2019 18:23:07 +0100
-Message-Id: <20191229172710.609979700@linuxfoundation.org>
+Subject: [PATCH 5.4 135/434] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date:   Sun, 29 Dec 2019 18:23:08 +0100
+Message-Id: <20191229172710.680773149@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,42 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josip Pavic <Josip.Pavic@amd.com>
+From: Benoit Parrot <bparrot@ti.com>
 
-[ Upstream commit 15caeabc5787c15babad7ee444afe9c26df1c8b3 ]
+[ Upstream commit 0bac73adea4df8d34048b38f6ff24dc3e73e90b6 ]
 
-[Why]
-When the driver sends a pipe set command to the DMCU FW, it does not wait
-for the command to complete. This can lead to unpredictable behavior if,
-for example, the driver were to request a pipe disable to the FW via MCP,
-then power down some hardware before the firmware has completed processing
-the command.
+v4l2-compliance fails with this message:
 
-[How]
-Wait for the DMCU FW to finish processing set pipe commands
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
+   test VIDIOC_TRY_FMT: FAIL
 
-Signed-off-by: Josip Pavic <Josip.Pavic@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
+
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_abm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-index 58bd131d5b48..7700a855d77c 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_abm.c
-@@ -77,6 +77,9 @@ static bool dce_abm_set_pipe(struct abm *abm, uint32_t controller_id)
- 	/* notifyDMCUMsg */
- 	REG_UPDATE(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT, 1);
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index 28bc94129348..9bacfd603250 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -57,6 +57,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
  
-+	REG_WAIT(MASTER_COMM_CNTL_REG, MASTER_COMM_INTERRUPT, 0,
-+			1, 80000);
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 512660b4ee63..8b14ba4a3d9e 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1668,6 +1668,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
+ 
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
 +
- 	return true;
- }
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
  
 -- 
 2.20.1
