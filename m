@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAC7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE35BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A5B20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A984207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640104;
-	bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
+	s=default; t=1577640106;
+	bh=MSocyokPp3ZBQPuiFkwpp/yyVPhPPFHCNn/SqQAV7Hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UX6Rh6IVkr3IvqzgsdzudOII6Mws2xhJo/UFWVZoRh0srR/QCP4I1iIM8aDNMA43K
-	 brY/XT+b8rKEpsg/zG3JoI/n6LC6GGQNei8kH7hZwIE/dVB3maZeJl7ew5JhpAelA/
-	 ljR0tyOk4KOJyUmY/pwhaiUk5re3GRF0a7fqO3II=
+	b=l9DZXsyHTlIYy+KcHX56IXTG7TnbANTF6QeklRYZHCk625lISsu54neCyEgkSihdC
+	 +M1LMciKtPn3PwwFf5Ybfrz85wvALu90N4MzCZVeihAZ6JlGDFJz41DeTR3rD58KOP
+	 7wbVSzUkl6BZiM3fNwRg5K2zO+zwbLswOrngMMRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfL2RVn (ORCPT
+        id S1727047AbfL2RVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbfL2RVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:39 -0500
+        id S1727018AbfL2RVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BDC207FF;
-        Sun, 29 Dec 2019 17:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFA9720722;
+        Sun, 29 Dec 2019 17:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640098;
-        bh=BJfAgA/szN1AYgs2fr/TD2yZN9lPFjDUIRPYNSfyyGI=;
+        s=default; t=1577640103;
+        bh=MSocyokPp3ZBQPuiFkwpp/yyVPhPPFHCNn/SqQAV7Hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xi4W2QvElWjarHGkbV1dCPYpht7mAlCcRZucv7p7ZHnffRo2RdKOC/5LR0jQbBfrP
-         f/mDw2Ti8zJbistyuV+I+hPKxC1ULut4RH9AlpRmMU3HSP4K0RvKyBERgUkCaLBphI
-         7XY0F9tQMbkjuR7NUTZWZI4DwTsVkoi3OLSnwUfY=
+        b=TAs55hQkfx40Y/lFrq8WmgEfZP25LRhihZnBdup6ubuhyHMoMUwDYXscW0j2GFWGI
+         j59jUXQ4IkEBgKhvCLwrhQfjsj/ZhYgUXwT/4dwAn2j4a2Fqn26e/HBVjntXtchc5g
+         nTi1oZrAOeCi+FrdOoqH3OWYmlu/8PkxMsGid5T0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 018/161] ALSA: hda/ca0132 - Keep power on during processing DSP response
-Date:   Sun, 29 Dec 2019 18:17:46 +0100
-Message-Id: <20191229162402.491302828@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 002/161] fjes: fix missed check in fjes_acpi_add
+Date:   Sun, 29 Dec 2019 18:17:30 +0100
+Message-Id: <20191229162356.313058740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -58,41 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 377bc0cfabce0244632dada19060839ced4e6949 upstream.
+[ Upstream commit a288f105a03a7e0e629a8da2b31f34ebf0343ee2 ]
 
-We need to keep power on while processing the DSP response via unsol
-event.  Each snd_hda_codec_read() call does the power management, so
-it should work normally, but still it's safer to keep the power up for
-the whole function.
+fjes_acpi_add() misses a check for platform_device_register_simple().
+Add a check to fix it.
 
-Fixes: a73d511c4867 ("ALSA: hda/ca0132: Add unsol handler for DSP and jack detection")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191213085111.22855-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 658d439b2292 ("fjes: Introduce FUJITSU Extended Socket Network Device driver")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_ca0132.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/fjes/fjes_main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -4424,12 +4424,14 @@ static void ca0132_process_dsp_response(
- 	struct ca0132_spec *spec = codec->spec;
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -181,6 +181,9 @@ static int fjes_acpi_add(struct acpi_dev
+ 	/* create platform_device */
+ 	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+ 						   ARRAY_SIZE(fjes_resource));
++	if (IS_ERR(plat_dev))
++		return PTR_ERR(plat_dev);
++
+ 	device->driver_data = plat_dev;
  
- 	codec_dbg(codec, "ca0132_process_dsp_response\n");
-+	snd_hda_power_up_pm(codec);
- 	if (spec->wait_scp) {
- 		if (dspio_get_response_data(codec) >= 0)
- 			spec->wait_scp = 0;
- 	}
- 
- 	dspio_clear_response_queue(codec);
-+	snd_hda_power_down_pm(codec);
- }
- 
- static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
+ 	return 0;
 
 
