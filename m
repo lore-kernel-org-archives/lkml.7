@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7A1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBD3C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93CE207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8F6207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643315;
-	bh=jUav1XY2M0fVrUY8q5d77WNolTAeTgi8EvgTzW6dYrw=;
+	s=default; t=1577643320;
+	bh=mx433DjZrytfBywvkEgPpFDG8hQ7EcwwP1Q+DK/lcS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dsGNiTHpbTGOrxP8PQJ62ZHULt5XhxGq73mdmfnwFZOGHqXN1em/paeKM2rFH/wRb
-	 HH/RO1xxFAk9z3/KKBkF+YCCX29Mf5di4WNexePp66bVVXS14kuy1UhPVT+FjkVv4G
-	 0NyQ/JTDVU6/+mVrH0IPmEmMcOt+zXcKGCxEDfm4=
+	b=Ixn71vHWitdbXNiPJoVr7YNhwzbsuL2efazyO/QQsJMN4I2fvnWk0FdAVicpTtca4
+	 rv+tH+A2SY61EhCIdUCPbpUIIc+8b9rRO8b8TtUkL0V2fLDDBBmPljUQk/fDzW4BGK
+	 B/2lrW5TdtyUnL0+wfqToIm/sPs/OzuRYcIB+zac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732663AbfL2SPP (ORCPT
+        id S1728040AbfL2RZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:15:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfL2RZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:52 -0500
+        id S1727646AbfL2RZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F262222C4;
-        Sun, 29 Dec 2019 17:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8EB720409;
+        Sun, 29 Dec 2019 17:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640351;
-        bh=jUav1XY2M0fVrUY8q5d77WNolTAeTgi8EvgTzW6dYrw=;
+        s=default; t=1577640342;
+        bh=mx433DjZrytfBywvkEgPpFDG8hQ7EcwwP1Q+DK/lcS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nxwvsKVOQL8PjmY8a8O2/9nQb7/IPP1KjcEnIkiqmSR+uGKVfaDhpEtP219m1qc1O
-         5A+iNMb03tWRiZn/Q3nQ8jYpZM/e3s3xqjcqXkdejDpgWO+qmoqjSZTEDK+Q8VQTjR
-         9WHzMWKT/RKArawsCU/p7ZpPbFx5EiKkqns3qwRI=
+        b=tAlHwAzg1N10cGwKKQYO+04tCduuaydt0817XE5V1VG1pFXvpvnsVj5RJpGQkP+SH
+         UpIPrS7eDVR+tlqeO3v3yq7JUJ4c6coZStHkrlOvAsdY72bB4XCEjke9421qDRsnl6
+         jw2IRW6RHHCva2KfenrjyWz21VHSCxKxYvTF0Hgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/161] ixgbe: protect TX timestamping from API misuse
-Date:   Sun, 29 Dec 2019 18:18:52 +0100
-Message-Id: <20191229162424.608628789@linuxfoundation.org>
+Subject: [PATCH 4.14 117/161] cpufreq: Register drivers only after CPU devices have been registered
+Date:   Sun, 29 Dec 2019 18:19:25 +0100
+Message-Id: <20191229162433.172423934@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -62,44 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
+[ Upstream commit 46770be0cf94149ca48be87719bda1d951066644 ]
 
-HW timestamping can only be requested for a packet if the NIC is first
-setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
-driver still allowed TX packets to request HW timestamping. In this
-situation, we see 'clearing Tx Timestamp hang' noise in the log.
+The cpufreq core heavily depends on the availability of the struct
+device for CPUs and if they aren't available at the time cpufreq driver
+is registered, we will never succeed in making cpufreq work.
 
-Fix this by checking that the NIC is configured for HW TX timestamping
-before accepting a HW TX timestamping request.
+This happens due to following sequence of events:
 
-Similar-to:
-   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
-   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
+- cpufreq_register_driver()
+  - subsys_interface_register()
+  - return 0; //successful registration of driver
 
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+... at a later point of time
+
+- register_cpu();
+  - device_register();
+    - bus_probe_device();
+      - sif->add_dev();
+	- cpufreq_add_dev();
+	  - get_cpu_device(); //FAILS
+  - per_cpu(cpu_sys_devices, num) = &cpu->dev; //used by get_cpu_device()
+  - return 0; //CPU registered successfully
+
+Because the per-cpu variable cpu_sys_devices is set only after the CPU
+device is regsitered, cpufreq will never be able to get it when
+cpufreq_add_dev() is called.
+
+This patch avoids this failure by making sure device structure of at
+least CPU0 is available when the cpufreq driver is registered, else
+return -EPROBE_DEFER.
+
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Co-developed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 4801d96c4fa9..0edfd199937d 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -8379,7 +8379,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 480e8c13567c..c798a1233e6a 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2475,6 +2475,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	    adapter->ptp_clock) {
--		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
-+		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
-+		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
- 					   &adapter->state)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
++	/*
++	 * The cpufreq core depends heavily on the availability of device
++	 * structure, make sure they are available before proceeding further.
++	 */
++	if (!get_cpu_device(0))
++		return -EPROBE_DEFER;
++
+ 	if (!driver_data || !driver_data->verify || !driver_data->init ||
+ 	    !(driver_data->setpolicy || driver_data->target_index ||
+ 		    driver_data->target) ||
 -- 
 2.20.1
 
