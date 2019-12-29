@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A30C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C90206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF16E206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642605;
-	bh=4RLTZGWTuHombQxFLFmLSGeJYqNI+prrAOZz5HoQzIU=;
+	s=default; t=1577642607;
+	bh=D/u4B5LWGmIghCZb5lG0OvNphq9rWCBj2Uw1qGjZrmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iwtu8IGlqFMYmnvj3KVEoN62rglvGLaH5NXCwZW0ZujFSRahfePMLakZAt+xKX60o
-	 O7+ZuqoCRJUjkcGpBw3+9IYIchfysuaw7IK2xPUyhZpZNHrK4M5S2ZR+OO//TCnd0o
-	 KAvOrTGaufwiI8hAXOJ/bnPSgmjyhoy87WH/kaus=
+	b=aVlIiKAqQf3hjDziuKfEMIRfKLaz6j1DlcW1XhX3t+U1mnRlH461wBkOtnRjpz5+H
+	 Va8kzjr+Gisfz7KQtEF/soEomcfIrZ8ViqpoadNUUY+HSmHxs2UffOa0BxaDNE5Y6p
+	 jy4x2bbLAb5/YlGvNgsATKAdCVz5e/Zln+JkIwaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732502AbfL2Rxg (ORCPT
+        id S1732493AbfL2Rxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:53:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732485AbfL2Rxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:32 -0500
+        id S1732476AbfL2Rxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871DC20718;
-        Sun, 29 Dec 2019 17:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A347206DB;
+        Sun, 29 Dec 2019 17:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642012;
-        bh=4RLTZGWTuHombQxFLFmLSGeJYqNI+prrAOZz5HoQzIU=;
+        s=default; t=1577642009;
+        bh=D/u4B5LWGmIghCZb5lG0OvNphq9rWCBj2Uw1qGjZrmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=no3g1+XrG4SSgAVQUKfJl99v7PpBmV6yKhF7wASfDLljR29718K+5kOeLVcYYMPw7
-         MCZvvKkvpajNPqgJcwNZCc9v4vHhpydZMBpCqaUuxHNIGByWNafh75BzMojnTVIWSv
-         6hZ0sdmkITxOF1wUgbQhOkOFm+YbvHURSg9SoPz8=
+        b=jwL6z3CUVmTJCNekmhUAaSqUjKIjNuuZNQuP9uB/GYAdFanbraoJ4XZaVaP++Rs9M
+         o1z86l64lU1vK9BSMu3fPe8zvTxwpC9eSchBiAaoie/jAxZB0OZHkCV1twadHIN0gd
+         AHLUslBs3AoDNLSTp7CQvjviQ5AG0GDFlgC3dM8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuming Han <yuming.han@unisoc.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Daniel Kranzdorf <dkkranzd@amazon.com>,
+        Firas JahJah <firasj@amazon.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 305/434] tracing: use kvcalloc for tgid_map array allocation
-Date:   Sun, 29 Dec 2019 18:25:58 +0100
-Message-Id: <20191229172722.211945844@linuxfoundation.org>
+Subject: [PATCH 5.4 304/434] RDMA/efa: Clear the admin command buffer prior to its submission
+Date:   Sun, 29 Dec 2019 18:25:57 +0100
+Message-Id: <20191229172722.145740585@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,57 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuming Han <yuming.han@unisoc.com>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit 6ee40511cb838f9ced002dff7131bca87e3ccbdd ]
+[ Upstream commit 64c264872b8879e2ab9017eefe9514d4c045c60e ]
 
-Fail to allocate memory for tgid_map, because it requires order-6 page.
-detail as:
+We cannot rely on the entry memcpy as we only copy the actual size of the
+command, the rest of the bytes must be memset to zero.
 
-c3 sh: page allocation failure: order:6,
-   mode:0x140c0c0(GFP_KERNEL), nodemask=(null)
-c3 sh cpuset=/ mems_allowed=0
-c3 CPU: 3 PID: 5632 Comm: sh Tainted: G        W  O    4.14.133+ #10
-c3 Hardware name: Generic DT based system
-c3 Backtrace:
-c3 [<c010bdbc>] (dump_backtrace) from [<c010c08c>](show_stack+0x18/0x1c)
-c3 [<c010c074>] (show_stack) from [<c0993c54>](dump_stack+0x84/0xa4)
-c3 [<c0993bd0>] (dump_stack) from [<c0229858>](warn_alloc+0xc4/0x19c)
-c3 [<c0229798>] (warn_alloc) from [<c022a6e4>](__alloc_pages_nodemask+0xd18/0xf28)
-c3 [<c02299cc>] (__alloc_pages_nodemask) from [<c0248344>](kmalloc_order+0x20/0x38)
-c3 [<c0248324>] (kmalloc_order) from [<c0248380>](kmalloc_order_trace+0x24/0x108)
-c3 [<c024835c>] (kmalloc_order_trace) from [<c01e6078>](set_tracer_flag+0xb0/0x158)
-c3 [<c01e5fc8>] (set_tracer_flag) from [<c01e6404>](trace_options_core_write+0x7c/0xcc)
-c3 [<c01e6388>] (trace_options_core_write) from [<c0278b1c>](__vfs_write+0x40/0x14c)
-c3 [<c0278adc>] (__vfs_write) from [<c0278e10>](vfs_write+0xc4/0x198)
-c3 [<c0278d4c>] (vfs_write) from [<c027906c>](SyS_write+0x6c/0xd0)
-c3 [<c0279000>] (SyS_write) from [<c01079a0>](ret_fast_syscall+0x0/0x54)
+Currently providing non-zero memory will not have any user visible impact.
+However, since admin commands are extendable (in a backwards compatible
+way) everything beyond the size of the command must be cleared to prevent
+issues in the future.
 
-Switch to use kvcalloc to avoid unexpected allocation failures.
-
-Link: http://lkml.kernel.org/r/1571888070-24425-1-git-send-email-chunyan.zhang@unisoc.com
-
-Signed-off-by: Yuming Han <yuming.han@unisoc.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 0420e542569b ("RDMA/efa: Implement functions that submit and complete admin commands")
+Link: https://lore.kernel.org/r/20191112092608.46964-1-galpress@amazon.com
+Reviewed-by: Daniel Kranzdorf <dkkranzd@amazon.com>
+Reviewed-by: Firas JahJah <firasj@amazon.com>
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/efa/efa_com.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6a0ee9178365..2fa72419bbd7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4609,7 +4609,7 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+diff --git a/drivers/infiniband/hw/efa/efa_com.c b/drivers/infiniband/hw/efa/efa_com.c
+index 3c412bc5b94f..0778f4f7dccd 100644
+--- a/drivers/infiniband/hw/efa/efa_com.c
++++ b/drivers/infiniband/hw/efa/efa_com.c
+@@ -317,6 +317,7 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
+ 						       struct efa_admin_acq_entry *comp,
+ 						       size_t comp_size_in_bytes)
+ {
++	struct efa_admin_aq_entry *aqe;
+ 	struct efa_comp_ctx *comp_ctx;
+ 	u16 queue_size_mask;
+ 	u16 cmd_id;
+@@ -350,7 +351,9 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
  
- 	if (mask == TRACE_ITER_RECORD_TGID) {
- 		if (!tgid_map)
--			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
-+			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
- 					   sizeof(*tgid_map),
- 					   GFP_KERNEL);
- 		if (!tgid_map) {
+ 	reinit_completion(&comp_ctx->wait_event);
+ 
+-	memcpy(&aq->sq.entries[pi], cmd, cmd_size_in_bytes);
++	aqe = &aq->sq.entries[pi];
++	memset(aqe, 0, sizeof(*aqe));
++	memcpy(aqe, cmd, cmd_size_in_bytes);
+ 
+ 	aq->sq.pc++;
+ 	atomic64_inc(&aq->stats.submitted_cmd);
 -- 
 2.20.1
 
