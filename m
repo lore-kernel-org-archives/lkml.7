@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6FAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B1C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524C6206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24006206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641778;
-	bh=w6iSnY7I0kCH9waKfL1HKUjv26aKQS+yqBaDUpDii+I=;
+	s=default; t=1577641783;
+	bh=s0Y+GvtnvVitArBrGqBdrj6By6sFAH1+aDXh7/NF/Ck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgUTjml4PH4Zrk8ukp7dWDL0SGbXFd2IgTCFVku1EuLUZeWkmGqRX/jNDt6qFvKYQ
-	 cPPGWmUhtGjHsVmkjjirHKzeZ8/gdTU47q1mhr0uvJypB0BmRey3vVKx7PTg+IWl3z
-	 wisNuyJe1utJJHMqJ8wqnHiaxbliwXQYa4B5xt0I=
+	b=N06ITlTTlBZsbixEVN1uU9TVq8eCLo8qK2u96+pK9NQl1fmndEmrwMFje0nYQRViI
+	 KxnL+REmZBYMNxNITYMTT0VOKKsAgJdybkrmQ4MeySBTnRumsrVClKbok2vyOpXsna
+	 jJFU3yEvjOA8nSVprJWTrTSpnGgkD7opHXvRJc8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731682AbfL2Rth (ORCPT
+        id S1731690AbfL2Rtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:49:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731665AbfL2Rte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:34 -0500
+        id S1731674AbfL2Rtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FF9208C4;
-        Sun, 29 Dec 2019 17:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7B4207FD;
+        Sun, 29 Dec 2019 17:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641773;
-        bh=w6iSnY7I0kCH9waKfL1HKUjv26aKQS+yqBaDUpDii+I=;
+        s=default; t=1577641775;
+        bh=s0Y+GvtnvVitArBrGqBdrj6By6sFAH1+aDXh7/NF/Ck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sq6plOo0igIVcSl4z5DgEXXGlRJAqjsqmqyGK1P81qiADmnc9hkJ6XTZvAbI3daCs
-         7MoPqMm7W0FT2Oz/5NhFhBV6/EXfdZSNL8Ej9YdA4y0th+tvPmNNu8jEhmRhAK/K1K
-         OH2hPNCM1qJIr93KZbt86PBIJigww4Ilzp7Zomkg=
+        b=Kl93DhZ5i1FGPYMCFinDxExFYbHr+v1E5h74WzQ1aq95dEyBV9czhRmjd2uMwtBKo
+         KHTdrmtGNoYoHItfdtCm9jq0Yn/QVrCfSDQkbImN9Rfmr/jqhv2MvINvlF2C/09tEv
+         GSdtEJntb3Q8GTr7JHxAm758F0hQh+m9hgoeypRs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Zhan Liu <zhan.liu@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 206/434] ALSA: hda/hdmi - implement mst_no_extra_pcms flag
-Date:   Sun, 29 Dec 2019 18:24:19 +0100
-Message-Id: <20191229172715.511452367@linuxfoundation.org>
+Subject: [PATCH 5.4 189/434] drm/amd/display: setting the DIG_MODE to the correct value.
+Date:   Sun, 29 Dec 2019 18:24:02 +0100
+Message-Id: <20191229172714.376523867@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,90 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Zhan liu <zhan.liu@amd.com>
 
-[ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
+[ Upstream commit 967a3b85bac91c55eff740e61bf270c2732f48b2 ]
 
-To support the DP-MST multiple streams via single connector feature,
-the HDMI driver was extended with the concept of backup PCMs. See
-commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
+[Why]
+This patch is for fixing Navi14 HDMI display pink screen issue.
 
-This implementation works fine with snd_hda_intel.c as PCM topology
-is fully managed within the single driver.
+[How]
+Call stream->link->link_enc->funcs->setup twice. This is setting
+the DIG_MODE to the correct value after having been overridden by
+the call to transmitter control.
 
-When the HDA codec driver is used from ASoC components, the concept
-of backup PCMs no longer fits. For ASoC topologies, the physical
-HDMI converters are presented as backend DAIs and these should match
-with hardware capabilities. The ASoC topology may define arbitrary
-PCMs (i.e. frontend DAIs) and have processing elements before eventual
-routing to the HDMI BE DAIs. With backup PCMs, the link between
-FE and BE DAIs would become dynamic and change when monitors are
-(un)plugged. This would lead to modifying the topology every time
-hotplug events happen, which is not currently possible in ASoC and
-there does not seem to be any obvious benefits from this design.
-
-To overcome above problems and enable the HDMI driver to be used
-from ASoC, this patch adds a new mode (mst_no_extra_pcms flags) to
-patch_hdmi.c. In this mode, the codec driver does not assume
-the backup PCMs to be created.
-
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191029134017.18901-2-kai.vehmanen@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Zhan Liu <zhan.liu@amd.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hda_codec.h  |  1 +
- sound/pci/hda/patch_hdmi.c | 19 ++++++++++++++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/sound/hda_codec.h b/include/sound/hda_codec.h
-index 9a0393cf024c..ac18f428eda6 100644
---- a/include/sound/hda_codec.h
-+++ b/include/sound/hda_codec.h
-@@ -254,6 +254,7 @@ struct hda_codec {
- 	unsigned int force_pin_prefix:1; /* Add location prefix */
- 	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
- 	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
-+	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index efc1d30544bb..067f5579f452 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -2769,6 +2769,15 @@ void core_link_enable_stream(
+ 					CONTROLLER_DP_TEST_PATTERN_VIDEOMODE,
+ 					COLOR_DEPTH_UNDEFINED);
  
- #ifdef CONFIG_PM
- 	unsigned long power_on_acct;
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 488c17c9f375..74f809b6fa31 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2082,15 +2082,24 @@ static bool is_hdmi_pcm_attached(struct hdac_device *hdac, int pcm_idx)
- static int generic_hdmi_build_pcms(struct hda_codec *codec)
- {
- 	struct hdmi_spec *spec = codec->spec;
--	int idx;
-+	int idx, pcm_num;
- 
- 	/*
- 	 * for non-mst mode, pcm number is the same as before
--	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
--	 *  dev_num is the device entry number in a pin
--	 *
-+	 * for DP MST mode without extra PCM, pcm number is same
-+	 * for DP MST mode with extra PCMs, pcm number is
-+	 *  (nid number + dev_num - 1)
-+	 * dev_num is the device entry number in a pin
- 	 */
--	for (idx = 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
++		/* This second call is needed to reconfigure the DIG
++		 * as a workaround for the incorrect value being applied
++		 * from transmitter control.
++		 */
++		if (!dc_is_virtual_signal(pipe_ctx->stream->signal))
++			stream->link->link_enc->funcs->setup(
++				stream->link->link_enc,
++				pipe_ctx->stream->signal);
 +
-+	if (codec->mst_no_extra_pcms)
-+		pcm_num = spec->num_nids;
-+	else
-+		pcm_num = spec->num_nids + spec->dev_num - 1;
-+
-+	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
-+
-+	for (idx = 0; idx < pcm_num; idx++) {
- 		struct hda_pcm *info;
- 		struct hda_pcm_stream *pstr;
- 
+ #ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
+ 		if (pipe_ctx->stream->timing.flags.DSC) {
+ 			if (dc_is_dp_signal(pipe_ctx->stream->signal) ||
 -- 
 2.20.1
 
