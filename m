@@ -2,52 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A1C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF4C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3936206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8134206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643090;
-	bh=w+vHMWWBPEDgNlWv+B8/qbQJZcT7bi4XD7FJH4FTy5o=;
+	s=default; t=1577643092;
+	bh=J011jsk8+8CVo/CuBSlInnxf+uzT+GCmNPqICo3oCT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KginqNnxDAbGP4VdRyVxEkS3LHBUKlOnOEJosQycRE3UJg+mZtjPthBBDRXhqcU6Y
-	 Di/WIVnSI6MlDpYt0IT9DAMJZx1vowcPT+r+bY+uze19CL3kRwnWRgkRCOLPatvjJG
-	 w39V0OCaAp5gtEb5Mau7UJJ9okW1zLd2aZ1xC86c=
+	b=Jik3oDzF0SFS/T3+swGy+l0br+ezy10i4Zx4wTxm1IeQLVxdeIkLMHdLgSdMNQeZ0
+	 jozRXcLBN9xckLsEINA8QXAC8q+l2AQbtFZHAEsrWOJundwlz+wMxEJkhIyzxNjg1S
+	 /fse1jd/PfRcw37V/zGkJwztlcMecZYnGF/+iLdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfL2SL3 (ORCPT
+        id S1730408AbfL2RnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:11:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:43:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbfL2RnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:43:07 -0500
+        id S1729136AbfL2Rmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:42:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81D321744;
-        Sun, 29 Dec 2019 17:43:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B1F620718;
+        Sun, 29 Dec 2019 17:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641387;
-        bh=w+vHMWWBPEDgNlWv+B8/qbQJZcT7bi4XD7FJH4FTy5o=;
+        s=default; t=1577641375;
+        bh=J011jsk8+8CVo/CuBSlInnxf+uzT+GCmNPqICo3oCT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSwamtEqLGY0wkMG0Q0vgEHuEqGsk0W3PbQzDtR2g4FuOWdXQwuTxJn4E2skHcSTY
-         s0QeyFyZgRYtR3qps14V9HCF5EdW1JwsZSFv6Ee+tETTRhokWCnHmIQ1VH6sqHa2jS
-         9TzJhUAdjxMUA0UP1QPchU+BdXkPJITxulCZnJJE=
+        b=NwG7/hEPlb3DAiDNiboaPAISkhEcYImA1VnDaWJceOAABKXIGbmVEGNmSlKeVTo1w
+         q4enMdgruwaIS7U86wS6AD6KL2DL7KD1+RPy85zyV+OzWr2NRkG1CUKMBS5mFQ/f7p
+         jae581v9qTPaC9Aj3T1kMBIWHlAFPL4x45ULLs18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chia-I Wu <olvaffe@gmail.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/434] drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper.
-Date:   Sun, 29 Dec 2019 18:21:37 +0100
-Message-Id: <20191229172704.939671668@linuxfoundation.org>
+        stable@vger.kernel.org, Lionel Koenig <lionel.koenig@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 039/434] ALSA: pcm: Avoid possible info leaks from PCM stream buffers
+Date:   Sun, 29 Dec 2019 18:21:32 +0100
+Message-Id: <20191229172704.633648787@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,74 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 29cf12394c0565d7eb1685bf0c1b4749aa6a8b66 ]
+commit add9d56d7b3781532208afbff5509d7382fb6efe upstream.
 
-Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
-This also makes the ioctl run lockless.
+The current PCM code doesn't initialize explicitly the buffers
+allocated for PCM streams, hence it might leak some uninitialized
+kernel data or previous stream contents by mmapping or reading the
+buffer before actually starting the stream.
 
-v9: fix return value.
-v5: handle lookup failure.
-v2: use reservation_object_test_signaled_rcu for VIRTGPU_WAIT_NOWAIT.
+Since this is a common problem, this patch simply adds the clearance
+of the buffer data at hw_params callback.  Although this does only
+zero-clear no matter which format is used, which doesn't mean the
+silence for some formats, but it should be OK because the intention is
+just to clear the previous data on the buffer.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190829103301.3539-3-kraxel@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Lionel Koenig <lionel.koenig@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191211155742.3213-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/virtio/virtgpu_ioctl.c | 28 +++++++++++++++-----------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ sound/core/pcm_native.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-index 0a88ef11b9d3..a662394f6892 100644
---- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-@@ -463,25 +463,29 @@ out:
- }
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -705,6 +705,10 @@ static int snd_pcm_hw_params(struct snd_
+ 	while (runtime->boundary * 2 <= LONG_MAX - runtime->buffer_size)
+ 		runtime->boundary *= 2;
  
- static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
--			    struct drm_file *file)
-+				 struct drm_file *file)
- {
- 	struct drm_virtgpu_3d_wait *args = data;
--	struct drm_gem_object *gobj = NULL;
--	struct virtio_gpu_object *qobj = NULL;
-+	struct drm_gem_object *obj;
-+	long timeout = 15 * HZ;
- 	int ret;
--	bool nowait = false;
++	/* clear the buffer for avoiding possible kernel info leaks */
++	if (runtime->dma_area && !substream->ops->copy_user)
++		memset(runtime->dma_area, 0, runtime->dma_bytes);
++
+ 	snd_pcm_timer_resolution_change(substream);
+ 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_SETUP);
  
--	gobj = drm_gem_object_lookup(file, args->handle);
--	if (gobj == NULL)
-+	obj = drm_gem_object_lookup(file, args->handle);
-+	if (obj == NULL)
- 		return -ENOENT;
- 
--	qobj = gem_to_virtio_gpu_obj(gobj);
--
--	if (args->flags & VIRTGPU_WAIT_NOWAIT)
--		nowait = true;
--	ret = virtio_gpu_object_wait(qobj, nowait);
-+	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
-+		ret = dma_resv_test_signaled_rcu(obj->resv, true);
-+	} else {
-+		ret = dma_resv_wait_timeout_rcu(obj->resv, true, true,
-+						timeout);
-+	}
-+	if (ret == 0)
-+		ret = -EBUSY;
-+	else if (ret > 0)
-+		ret = 0;
- 
--	drm_gem_object_put_unlocked(gobj);
-+	drm_gem_object_put_unlocked(obj);
- 	return ret;
- }
- 
--- 
-2.20.1
-
 
 
