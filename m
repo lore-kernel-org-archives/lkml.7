@@ -2,52 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29D7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17988C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0C4207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B86207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640924;
-	bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
+	s=default; t=1577640932;
+	bh=c9b6OKlQqOcUvreMwfz4Fjqz6vFxAyl9R2MOdBqkuX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nw7rnEe3Hp7mL4CZxH6W6kRiI7vBEy4f4BsA/Eu568DXDOzd4P5DyQ6Ty8Ca3dQxq
-	 yjMFDq7o+HVbf/qaNBbbu6PoSRilIlO0G7CRP3niL90Em2nc/MuyMDEDlRjg5IsWxp
-	 VxMKdIQWKMf3QSSRkgMCsif5xL3mgersiqerP46M=
+	b=MKvFqWEUQ6uJIBugi3ktbHCecpHx37qw4iBalIgnpw1KtRhyDrvO6Dini3LKgA+5R
+	 GscZ0LKhuu79pbRj8WfVmbRkzUajmMxnJKIBpvJ8vAsrU17pWObBUH801fovfuBN/q
+	 Se6/4mt84tBWGBEZ+LA98ibJWLkHaTC5ThscTcaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbfL2RfX (ORCPT
+        id S1729882AbfL2Rfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:35:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39516 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:35:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbfL2RfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:35:17 -0500
+        id S1729860AbfL2Rf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:35:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7332207FF;
-        Sun, 29 Dec 2019 17:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A024C20722;
+        Sun, 29 Dec 2019 17:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640917;
-        bh=nFsxqlSW5MdU86iOP42+FaKJBOzsfHU8mpAvyNypAEk=;
+        s=default; t=1577640927;
+        bh=c9b6OKlQqOcUvreMwfz4Fjqz6vFxAyl9R2MOdBqkuX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i8tmatJ2ULk4TpY7w12TeOL0OPljzGbhyhrdSxnaFhAfBSCD2aPSEJ3uMTbCQMe6j
-         BVoIay4iHghN0YCmzDi7bwuUiJkPSVqwA1CGazpzLwpuriyyaGI2yoneozkF+mPlbZ
-         BVQ/RxITy2o3c8CL0QG0Khz/Ov6b9NDDHNrXWWuM=
+        b=vyZNBg+jmaeL623pYmQhRmxEq/cDnmxsEdOnMe0UuOgxOaPV5Kv5pAlFgR7pJ1gE1
+         WJ8cq3hsFSWzEmwDGki3PnHI4ZpOYq0D7dI7DK4HpEcFAOP5PYojmlaha+sUpeKULK
+         MDkvAYL94TEooN+1LoU5Yh9FNRS1Pkn6pL+Ol7v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xiaolong Huang <butterflyhuangxx@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.19 192/219] can: kvaser_usb: kvaser_usb_leaf: Fix some info-leaks to USB devices
-Date:   Sun, 29 Dec 2019 18:19:54 +0100
-Message-Id: <20191229162538.700059491@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 196/219] btrfs: return error pointer from alloc_test_extent_buffer
+Date:   Sun, 29 Dec 2019 18:19:58 +0100
+Message-Id: <20191229162539.453938271@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,52 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolong Huang <butterflyhuangxx@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit da2311a6385c3b499da2ed5d9be59ce331fa93e9 upstream.
+[ Upstream commit b6293c821ea8fa2a631a2112cd86cd435effeb8b ]
 
-Uninitialized Kernel memory can leak to USB devices.
+Callers of alloc_test_extent_buffer have not correctly interpreted the
+return value as error pointer, as alloc_test_extent_buffer should behave
+as alloc_extent_buffer. The self-tests were unaffected but
+btrfs_find_create_tree_block could call both functions and that would
+cause problems up in the call chain.
 
-Fix this by using kzalloc() instead of kmalloc().
-
-Signed-off-by: Xiaolong Huang <butterflyhuangxx@gmail.com>
-Fixes: 7259124eac7d ("can: kvaser_usb: Split driver into kvaser_usb_core.c and kvaser_usb_leaf.c")
-Cc: linux-stable <stable@vger.kernel.org> # >= v4.19
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: faa2dbf004e8 ("Btrfs: add sanity tests for new qgroup accounting code")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/btrfs/extent_io.c                   | 6 ++++--
+ fs/btrfs/tests/free-space-tree-tests.c | 4 ++--
+ fs/btrfs/tests/qgroup-tests.c          | 4 ++--
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-@@ -608,7 +608,7 @@ static int kvaser_usb_leaf_simple_cmd_as
- 	struct kvaser_cmd *cmd;
- 	int err;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 88fc5a0c573f..fed44390c049 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4888,12 +4888,14 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
+ 		return eb;
+ 	eb = alloc_dummy_extent_buffer(fs_info, start);
+ 	if (!eb)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 	eb->fs_info = fs_info;
+ again:
+ 	ret = radix_tree_preload(GFP_NOFS);
+-	if (ret)
++	if (ret) {
++		exists = ERR_PTR(ret);
+ 		goto free_eb;
++	}
+ 	spin_lock(&fs_info->buffer_lock);
+ 	ret = radix_tree_insert(&fs_info->buffer_radix,
+ 				start >> PAGE_SHIFT, eb);
+diff --git a/fs/btrfs/tests/free-space-tree-tests.c b/fs/btrfs/tests/free-space-tree-tests.c
+index 89346da890cf..de8fef91ac48 100644
+--- a/fs/btrfs/tests/free-space-tree-tests.c
++++ b/fs/btrfs/tests/free-space-tree-tests.c
+@@ -462,9 +462,9 @@ static int run_test(test_func_t test_func, int bitmaps, u32 sectorsize,
+ 	root->fs_info->tree_root = root;
  
--	cmd = kmalloc(sizeof(*cmd), GFP_ATOMIC);
-+	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
- 	if (!cmd)
- 		return -ENOMEM;
- 
-@@ -1140,7 +1140,7 @@ static int kvaser_usb_leaf_set_opt_mode(
- 	struct kvaser_cmd *cmd;
- 	int rc;
- 
--	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
-+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
- 	if (!cmd)
- 		return -ENOMEM;
- 
-@@ -1206,7 +1206,7 @@ static int kvaser_usb_leaf_flush_queue(s
- 	struct kvaser_cmd *cmd;
- 	int rc;
- 
--	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
-+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
- 	if (!cmd)
- 		return -ENOMEM;
- 
+ 	root->node = alloc_test_extent_buffer(root->fs_info, nodesize);
+-	if (!root->node) {
++	if (IS_ERR(root->node)) {
+ 		test_err("couldn't allocate dummy buffer");
+-		ret = -ENOMEM;
++		ret = PTR_ERR(root->node);
+ 		goto out;
+ 	}
+ 	btrfs_set_header_level(root->node, 0);
+diff --git a/fs/btrfs/tests/qgroup-tests.c b/fs/btrfs/tests/qgroup-tests.c
+index 412b910b04cc..d07dd26194b1 100644
+--- a/fs/btrfs/tests/qgroup-tests.c
++++ b/fs/btrfs/tests/qgroup-tests.c
+@@ -484,9 +484,9 @@ int btrfs_test_qgroups(u32 sectorsize, u32 nodesize)
+ 	 * *cough*backref walking code*cough*
+ 	 */
+ 	root->node = alloc_test_extent_buffer(root->fs_info, nodesize);
+-	if (!root->node) {
++	if (IS_ERR(root->node)) {
+ 		test_err("couldn't allocate dummy buffer");
+-		ret = -ENOMEM;
++		ret = PTR_ERR(root->node);
+ 		goto out;
+ 	}
+ 	btrfs_set_header_level(root->node, 0);
+-- 
+2.20.1
+
 
 
