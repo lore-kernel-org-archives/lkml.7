@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F3C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A588FC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEB3222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7381321D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640642;
-	bh=y4YmVfrhMhPsaeYQtxL6N+JN6WbVBq+cvS8DDysVOb4=;
+	s=default; t=1577640645;
+	bh=F+RVtGEVmdod50DfTH1VyNi8CRxmTqjjFgd97kF6+zU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QDkXvsViNakncoLSClzOHTRLu9T5sAhlHUuX6gBdJt2UBUy6Dh4hwLYiDg/SX0Lwn
-	 6U2CMYFcmMZC+Iv6aPRnc7qJJHfgH30cNnC797G6YZUbiV3ncylyFyon6LxwKTkq/u
-	 MWZhQwoVOOCocFH90+3cQV5xeleIVA4Ls1ZmnGXM=
+	b=wpucXVsB0NMfmYet+NgSdm6dTtkh6/TUie2KVh/c/pxTEcVMp9DWnLUEaSn6gDXQh
+	 I2+fxoY5TNpWVdsLlhRriAJ5bJwWoOQuuVKhKCFAfVHFgSnLMAE8dWLn19umUbbnwb
+	 U8c9lTIEKSc0/BISjtfkcgrUsHkiS0vp261hdZWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfL2Ral (ORCPT
+        id S1728756AbfL2Rao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:30:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56944 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:30:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfL2Rai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:38 -0500
+        id S1728740AbfL2Ral (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A7720722;
-        Sun, 29 Dec 2019 17:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC7DC208E4;
+        Sun, 29 Dec 2019 17:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640637;
-        bh=y4YmVfrhMhPsaeYQtxL6N+JN6WbVBq+cvS8DDysVOb4=;
+        s=default; t=1577640640;
+        bh=F+RVtGEVmdod50DfTH1VyNi8CRxmTqjjFgd97kF6+zU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JPM+CyEWsegUD/NLGeFv9QQKmKa+8Ppgo/EwejoA4+jpzuIJtWPSnKfPp3YB+41WY
-         NoondVZ37gUKTE1L8aLNamoXvXNyYoT5oDdTDs0ggc4YJS03joEv9GQDvHHk6Y59GM
-         QdFaM171gHiLRVlEVZ5hWIti4XfN6n+xJMsbcNMs=
+        b=TzX9LG70BOjc+bcLzvQFQ+LU0OfSxHA/ahCXqiytZeYDR/H5o1iRjLmlzhxwHaLOf
+         TD0RsPylpXwXuoqkxom5jQoxRgiu7fEctyHPlOks1tD+aVxl3YtrwC+2MAJTVSQMsz
+         ga66bgOpuLKxkYXApWqR6rXV3peLt/ZeNsd1aGLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 076/219] drm/bridge: dw-hdmi: Restore audio when setting a mode
-Date:   Sun, 29 Dec 2019 18:17:58 +0100
-Message-Id: <20191229162517.488181114@linuxfoundation.org>
+Subject: [PATCH 4.19 077/219] perf test: Report failure for mmap events
+Date:   Sun, 29 Dec 2019 18:17:59 +0100
+Message-Id: <20191229162517.555116819@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,45 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit fadfee3f9d8f114435a8a3e9f83a227600d89de7 ]
+[ Upstream commit 6add129c5d9210ada25217abc130df0b7096ee02 ]
 
-When setting a new display mode, dw_hdmi_setup() calls
-dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
-the audio clock.
+When fail to mmap events in task exit case, it misses to set 'err' to
+-1; thus the testing will not report failure for it.
 
-We should only (re-)enable the audio clock if audio was already enabled
-when setting the new mode.
+This patch sets 'err' to -1 when fails to mmap events, thus Perf tool
+can report correct result.
 
-Without this patch, on RK3288, there will be HDMI audio on some monitors
-if i2s was played to headphone when the monitor was plugged.
-ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
-
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191008102145.55134-1-cychiang@chromium.org
+Fixes: d723a55096b8 ("perf test: Add test case for checking number of EXIT events")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20191011091942.29841-1-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/task-exit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index fb396d550275..2a0a1654d3ce 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1757,7 +1757,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
- 
- 		/* HDMI Initialization Step E - Configure audio */
- 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
--		hdmi_enable_audio_clk(hdmi, true);
-+		hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
+diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
+index e92fa6029ac7..788b0805d2f1 100644
+--- a/tools/perf/tests/task-exit.c
++++ b/tools/perf/tests/task-exit.c
+@@ -105,6 +105,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 	if (perf_evlist__mmap(evlist, 128) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
++		err = -1;
+ 		goto out_delete_evlist;
  	}
  
- 	/* not for DVI mode */
 -- 
 2.20.1
 
