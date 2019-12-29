@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AFAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14136C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B710206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9846206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642941;
-	bh=70Q2f7zgI0zRReY+zVJRjmuubznEVSAcDvfwhLtWdz0=;
+	s=default; t=1577642953;
+	bh=pliYlUNXHghI6QwxkH/AydJq0XEv46ot49j8tJd7hec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNcjESC6A209rJJ4NGoynAyFYBBa8B9oP9ZEucdsBdgMaf08Hn6kfAXdgct7BiYI2
-	 yEDbEXov5n622jaUT24Ws2vKo+g6/Khu0TKcsFvFxVtxlDluLflOrbT1gZRahUOSR0
-	 fRK1A5hUTLLH6WTXEr6J/PocXMYdGkoLkflDpyF8=
+	b=ARieJobyRyocdYGiuajTg689drqv4XQRUxc7oyNdgRuWfFMgeKvyGu7IEDfJo/ZOy
+	 nIwcGOCIKWUebEDC5uoN5EGBI9IQ4co1ER5P/bbL8b44r01Hc0gW7NIdMhbniNHxT1
+	 cQohB9O4bV1g+j76bfudtMj7SMKAJL1bfnVRSW0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbfL2SJB (ORCPT
+        id S1731601AbfL2SJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:09:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56286 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:09:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731081AbfL2Rq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:29 -0500
+        id S1730731AbfL2RqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4355D206A4;
-        Sun, 29 Dec 2019 17:46:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 613C8206DB;
+        Sun, 29 Dec 2019 17:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641588;
-        bh=70Q2f7zgI0zRReY+zVJRjmuubznEVSAcDvfwhLtWdz0=;
+        s=default; t=1577641571;
+        bh=pliYlUNXHghI6QwxkH/AydJq0XEv46ot49j8tJd7hec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+q8zRYgw4wtNrAJVNrN5EdsSRYy5r/hak7CKSFGohjCE4+F12xrzE88sinHZsHqX
-         Jld2reH/cGd3FLAJFLzclRH+VHGziziH08AUbAZlIf83JaHWAOU2xgKQyIjjUM3EcM
-         pc6/valMazOS92KztMOrIJmR3CyUxsGFxcUZY5IE=
+        b=Zuzzw/HQQuUJuyd3zFa7DKCBPIeVvqCF14KFXrVcLCuWPR88Axma+lRHX/e4XmaFQ
+         I6gZ8HGLwwHR48yL/9Y+je0Lacyb2yE4eYiUjaNdN25gtQ5uPHe6mapuAkWHsEoKWw
+         CpdXZol5XHJgwZS6zUXreW5DQMMxX2F0w8+GdnoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benoit Parrot <bparrot@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 128/434] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
-Date:   Sun, 29 Dec 2019 18:23:01 +0100
-Message-Id: <20191229172710.202551807@linuxfoundation.org>
+Subject: [PATCH 5.4 121/434] team: call RCU read lock when walking the port_list
+Date:   Sun, 29 Dec 2019 18:22:54 +0100
+Message-Id: <20191229172709.730653086@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,79 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benoit Parrot <bparrot@ti.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 06bec72b250b2cb3ba96fa45c2b8e0fb83745517 ]
+[ Upstream commit c17e26ddc79596230834345be80fcad6c619e9ec ]
 
-v4l2-compliance warns with this message:
+Before reading the team port list, we need to acquire the RCU read lock.
+Also change list_for_each_entry() to list_for_each_entry_rcu().
 
-   warn: v4l2-test-formats.cpp(717): \
- 	TRY_FMT cannot handle an invalid pixelformat.
-   warn: v4l2-test-formats.cpp(718): \
- 	This may or may not be a problem. For more information see:
-   warn: v4l2-test-formats.cpp(719): \
- 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
-	...
-   test VIDIOC_TRY_FMT: FAIL
+v2:
+repost the patch to net-next and remove fixes flag as this is a cosmetic
+change.
 
-We need to make sure that the returns a valid pixel format in all
-instance. Based on the v4l2 framework convention drivers must return a
-valid pixel format when the requested pixel format is either invalid or
-not supported.
-
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/team/team.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 5ba72445584d..328976a52941 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -338,20 +338,25 @@ enum {
- };
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index 8156b33ee3e7..ca70a1d840eb 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2074,7 +2074,8 @@ static int team_ethtool_get_link_ksettings(struct net_device *dev,
+ 	cmd->base.duplex = DUPLEX_UNKNOWN;
+ 	cmd->base.port = PORT_OTHER;
  
- /* find our format description corresponding to the passed v4l2_format */
--static struct vpe_fmt *find_format(struct v4l2_format *f)
-+static struct vpe_fmt *__find_format(u32 fourcc)
- {
- 	struct vpe_fmt *fmt;
- 	unsigned int k;
- 
- 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
- 		fmt = &vpe_formats[k];
--		if (fmt->fourcc == f->fmt.pix.pixelformat)
-+		if (fmt->fourcc == fourcc)
- 			return fmt;
+-	list_for_each_entry(port, &team->port_list, list) {
++	rcu_read_lock();
++	list_for_each_entry_rcu(port, &team->port_list, list) {
+ 		if (team_port_txable(port)) {
+ 			if (port->state.speed != SPEED_UNKNOWN)
+ 				speed += port->state.speed;
+@@ -2083,6 +2084,8 @@ static int team_ethtool_get_link_ksettings(struct net_device *dev,
+ 				cmd->base.duplex = port->state.duplex;
+ 		}
  	}
- 
- 	return NULL;
- }
- 
-+static struct vpe_fmt *find_format(struct v4l2_format *f)
-+{
-+	return __find_format(f->fmt.pix.pixelformat);
-+}
++	rcu_read_unlock();
 +
- /*
-  * there is one vpe_dev structure in the driver, it is shared by
-  * all instances.
-@@ -1574,9 +1579,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 	unsigned int stride = 0;
+ 	cmd->base.speed = speed ? : SPEED_UNKNOWN;
  
- 	if (!fmt || !(fmt->types & type)) {
--		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
-+		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
- 			pix->pixelformat);
--		return -EINVAL;
-+		fmt = __find_format(V4L2_PIX_FMT_YUYV);
- 	}
- 
- 	if (pix->field != V4L2_FIELD_NONE && pix->field != V4L2_FIELD_ALTERNATE
+ 	return 0;
 -- 
 2.20.1
 
