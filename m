@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F2DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B49BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E81C222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C1620718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642096;
-	bh=r4drbKus9o7E4e65lWGg21h6B6VQGYU7jpaonTNlv+U=;
+	s=default; t=1577642100;
+	bh=e0Jf8XfCt+ro6en0WD9ghdHlLEAs8kS8RebIWIpPM1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcqo8uX54DV+Q6desEQNEHoJ51mwsxLOXcRZZ3g8vi4lJ9pE9u0266QQ8iYagIsWT
-	 12Emw8RLeCUZGabB3RHcUEs394SqC5DpXyUgZCDC5j8XO6tRsU+a32n21bbsH5pzAu
-	 ZW2ZN8XGZ00pDxGF78NPDEWyQ5uAwvyIjScZoTSI=
+	b=wLzj2NnUdg9mOCC5YHkqeaINHDwAoH81wOrn5t3gmdztTsjiH20HCZMxM7EdSupIz
+	 F4ROHhmx6vnBkHMEfPcnrFRUymtQcRy7qXzpVMCKzjwYDlAjP/MfYJ0QuUJ8nQLSSs
+	 R0mz8DB6E0TAbQIqIavBVlG7NECVoP3A02ejzknk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732823AbfL2Ryz (ORCPT
+        id S1732802AbfL2Ry7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732283AbfL2Ryw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:52 -0500
+        id S1732494AbfL2Ry4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0686720718;
-        Sun, 29 Dec 2019 17:54:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3FC220718;
+        Sun, 29 Dec 2019 17:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642091;
-        bh=r4drbKus9o7E4e65lWGg21h6B6VQGYU7jpaonTNlv+U=;
+        s=default; t=1577642096;
+        bh=e0Jf8XfCt+ro6en0WD9ghdHlLEAs8kS8RebIWIpPM1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+9YLcbi30Sjzwmxn1NJqSlI0u3/MuycboTUNm9pU9eTBSWrW8vhjm7TXp6rFyHLt
-         jQ3seTGmN7cDmAMT4WoIXs0m8tc9Hg4YI/KK/tY/T0FqjBL/PpTBMa8fy4k1hfMCT6
-         Yd5diClLELPrvNPPEwCbgdVbEgLbVsbTCndDv8uE=
+        b=vPb3x+Rcewjk/+GCCXsEN24+PlQXEfcViHQUPnfK5KfY3FHcwZxIY8obLP8FraKF0
+         Pf93v27jGcAzijhrdT2rf2Bo5yNxHMEv3rq5nPCHes8jfK9HBVOcm2Rg1687mRAL+9
+         NEpfHksONuR/rV2UYRW6W+lkFS0/Cq60KdZWuscE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 339/434] ASoC: soc-pcm: check symmetry before hw_params
-Date:   Sun, 29 Dec 2019 18:26:32 +0100
-Message-Id: <20191229172724.486261658@linuxfoundation.org>
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 341/434] mt76: fix possible out-of-bound access in mt7615_fill_txs/mt7603_fill_txs
+Date:   Sun, 29 Dec 2019 18:26:34 +0100
+Message-Id: <20191229172724.619423269@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,60 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 5cca59516de5df9de6bdecb328dd55fb5bcccb41 ]
+[ Upstream commit e8b970c8e367e85fab9b8ac4f36080e5d653c38e ]
 
-This reverts commit 957ce0c6b8a1f (ASoC: soc-pcm: check symmetry after
-hw_params).
+Fix possible out-of-bound access of status rates array in
+mt7615_fill_txs/mt7603_fill_txs routines
 
-That commit cause soc_pcm_params_symmetry can't take effect.
-cpu_dai->rate, cpu_dai->channels and cpu_dai->sample_bits
-are updated in the middle of soc_pcm_hw_params, so move
-soc_pcm_params_symmetry to the end of soc_pcm_hw_params is
-not a good solution, for judgement of symmetry in the function
-is always true.
-
-FIXME:
-According to the comments of that commit, I think the case
-described in the commit should disable symmetric_rates
-in Back-End, rather than changing the position of
-soc_pcm_params_symmetry.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Link: https://lore.kernel.org/r/1573555602-5403-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: c5211e997eca ("mt76: mt7603: rework and fix tx status reporting")
+Fixes: 4af81f02b49c ("mt76: mt7615: sync with mt7603 rate control changes")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c | 4 +++-
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index cdce96a3051b..a6e96cf1d8ff 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -877,6 +877,11 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 	int i, ret = 0;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index c328192307c4..ff3f3d98b625 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -1032,8 +1032,10 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
+ 			    cur_rate->flags != info->status.rates[i].flags)) {
+ 			i++;
+-			if (i == ARRAY_SIZE(info->status.rates))
++			if (i == ARRAY_SIZE(info->status.rates)) {
++				i--;
+ 				break;
++			}
  
- 	mutex_lock_nested(&rtd->card->pcm_mutex, rtd->card->pcm_subclass);
-+
-+	ret = soc_pcm_params_symmetry(substream, params);
-+	if (ret)
-+		goto out;
-+
- 	if (rtd->dai_link->ops->hw_params) {
- 		ret = rtd->dai_link->ops->hw_params(substream, params);
- 		if (ret < 0) {
-@@ -958,9 +963,6 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 	}
- 	component = NULL;
+ 			info->status.rates[i] = *cur_rate;
+ 			info->status.rates[i].count = 0;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index e07ce2c10013..111e38ff954a 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -914,8 +914,10 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ 		if (idx && (cur_rate->idx != info->status.rates[i].idx ||
+ 			    cur_rate->flags != info->status.rates[i].flags)) {
+ 			i++;
+-			if (i == ARRAY_SIZE(info->status.rates))
++			if (i == ARRAY_SIZE(info->status.rates)) {
++				i--;
+ 				break;
++			}
  
--	ret = soc_pcm_params_symmetry(substream, params);
--        if (ret)
--		goto component_err;
- out:
- 	mutex_unlock(&rtd->card->pcm_mutex);
- 	return ret;
+ 			info->status.rates[i] = *cur_rate;
+ 			info->status.rates[i].count = 0;
 -- 
 2.20.1
 
