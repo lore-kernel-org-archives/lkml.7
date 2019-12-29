@@ -2,51 +2,54 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49637C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEDFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EC2206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB118207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642385;
-	bh=irBTXJO5M41OcAwgoz9Wl6r8hqKKns6HU2jay+CD41M=;
+	s=default; t=1577642390;
+	bh=PnKKzkZ4//sevqYuJFeMTIRsdv9E8VxA6S6lrGh2OZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUXY7RtZfVpuESO5ofaGH9iwjiHY63FL6ZjMgODh0vNL20U76HBYdZgBWuL6Ysg0T
-	 mWVeSsQ2jvJ7cBbcmc2CYrTK5MAxUHEwmLZl+I1Nxc5fDLCk5WP+bwdSrIJtkNkk76
-	 GY3i+w78pdWqf9UQHflKRJrs3YK5Hhu37VTCzK6w=
+	b=RpizjkTNAAsm6KrPmB2aVnquXvwk07C58WiQPCqJnNf8Rt+kEBmTRKUYOsjCawvrP
+	 UYDY4Z/H2OdlzDQ655R1lWfQKMTr5rIUPAPpkzv27NB2Oh7JbBGAYt0TdBq67CGexO
+	 W1YYT7GUNR3IHguyQch9a2OsclRL3Y4SiO5MS+D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbfL2R7o (ORCPT
+        id S2387500AbfL2R6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:59:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:58:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387528AbfL2R61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:58:27 -0500
+        id S2387455AbfL2R6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:58:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630E1208C4;
-        Sun, 29 Dec 2019 17:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE99A206DB;
+        Sun, 29 Dec 2019 17:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642306;
-        bh=irBTXJO5M41OcAwgoz9Wl6r8hqKKns6HU2jay+CD41M=;
+        s=default; t=1577642292;
+        bh=PnKKzkZ4//sevqYuJFeMTIRsdv9E8VxA6S6lrGh2OZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQVAn8i7/q4Om/Txl2EtrgiUFOPBHEh0pFoCpzqRgL96xU2VfuyDoOoA77Kc8ZYUd
-         6rgTfEVvLwE50842kuDoxaTHynCd+Crm6Sv1ajKhr3OkjNWgkcgHo7xp1DavwhEfER
-         ueK4pM5eaPm4oN705AIUdZRJvrizkWRtozCEXwVg=
+        b=tz+ljKTvXHM/2db6jobVVqXRg74mMjAHWAq4or64XSlLEunxRiR/ECzP6+otsNSEN
+         n30p66wglhbjtNsrCeKO9Ml1L5q22d6vPnuEU7WQuMf0e2Kyegk30ozF+Iqew1pg77
+         Ha3iMllOq46x4yypyOahVt4pMMaAqklv4Pqb6XLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 429/434] mmc: sdhci: Update the tuning failed messages to pr_debug level
-Date:   Sun, 29 Dec 2019 18:28:02 +0100
-Message-Id: <20191229172731.819065335@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 379/434] spi: dw: Correct handling of native chipselect
+Date:   Sun, 29 Dec 2019 18:27:12 +0100
+Message-Id: <20191229172727.288496293@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,43 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-commit 2c92dd20304f505b6ef43d206fff21bda8f1f0ae upstream.
+[ Upstream commit ada9e3fcc175db4538f5b5e05abf5dedf626e550 ]
 
-Tuning support in DDR50 speed mode was added in SD Specifications Part1
-Physical Layer Specification v3.01. Its not possible to distinguish
-between v3.00 and v3.01 from the SCR and that is why since
-commit 4324f6de6d2e ("mmc: core: enable CMD19 tuning for DDR50 mode")
-tuning failures are ignored in DDR50 speed mode.
+This patch reverts commit 6e0a32d6f376 ("spi: dw: Fix default polarity
+of native chipselect").
 
-Cards compatible with v3.00 don't respond to CMD19 in DDR50 and this
-error gets printed during enumeration and also if retune is triggered at
-any time during operation. Update the printk level to pr_debug so that
-these errors don't lead to false error reports.
+The SPI framework always called the set_cs callback with the logic
+level it desired on the chip select line, which is what the drivers
+original handling supported. commit f3186dd87669 ("spi: Optionally
+use GPIO descriptors for CS GPIOs") changed these symantics, but only
+in the case of drivers that also support GPIO chip selects, to true
+meaning apply slave select rather than logic high. This left things in
+an odd state where a driver that only supports hardware chip selects,
+the core would handle polarity but if the driver supported GPIOs as
+well the driver should handle polarity.  At this point the reverted
+change was applied to change the logic in the driver to match new
+system.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Cc: stable@vger.kernel.org # v4.4+
-Link: https://lore.kernel.org/r/20191206114326.15856-1-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This was then broken by commit 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH
+setting when using native and GPIO CS") which reverted the core back
+to consistently calling set_cs with a logic level.
 
+This fix reverts the driver code back to its original state to match
+the current core code. This is probably a better fix as a) the set_cs
+callback is always called with consistent symantics and b) the
+inversion for SPI_CS_HIGH can be handled in the core and doesn't need
+to be coded in each driver supporting it.
+
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191127153936.29719-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-dw.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -2406,8 +2406,8 @@ static int __sdhci_execute_tuning(struct
- 		sdhci_send_tuning(host, opcode);
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 076652d3d051..45972056ed8c 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -129,10 +129,11 @@ void dw_spi_set_cs(struct spi_device *spi, bool enable)
+ 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
+ 	struct chip_data *chip = spi_get_ctldata(spi);
  
- 		if (!host->tuning_done) {
--			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
--				mmc_hostname(host->mmc));
-+			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
-+				 mmc_hostname(host->mmc));
- 			sdhci_abort_tuning(host, opcode);
- 			return -ETIMEDOUT;
- 		}
++	/* Chip select logic is inverted from spi_set_cs() */
+ 	if (chip && chip->cs_control)
+-		chip->cs_control(enable);
++		chip->cs_control(!enable);
+ 
+-	if (enable)
++	if (!enable)
+ 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
+ 	else if (dws->cs_override)
+ 		dw_writel(dws, DW_SPI_SER, 0);
+-- 
+2.20.1
+
 
 
