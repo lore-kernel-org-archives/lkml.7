@@ -2,215 +2,132 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0793C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4BC2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC65B20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46525208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 06:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="xUCEkKCS"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="qDEKzvfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfL2GOK (ORCPT
+        id S1726400AbfL2Gma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 01:14:10 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35124 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfL2GOK (ORCPT
+        Sun, 29 Dec 2019 01:42:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38311 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfL2Gma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 01:14:10 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k16so37510211otb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:14:09 -0800 (PST)
+        Sun, 29 Dec 2019 01:42:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id v3so29054059ioj.5
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 22:42:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NnO+Vz89RyAqBUQNFzWAU5ax1hd+sZfi+vzEk0a2/qU=;
-        b=xUCEkKCSlmZTLinjacI/ef5Yg+vjWFf1Whe8LZ4mckgXjMHt89r3++zhOcHWmm6+eU
-         PozEihiircxlptcyoYngItGLkRV+xHYguUYLYiIIUoiTPacYERMJ9cNd42aeTzKRbNqT
-         06RY+egAx1VSCoSxHveg37DU6g01igNUujATTlp5K7QPrgCRQ02CoNYXMH30NE1b+Yh0
-         nevdEDZUgEcZi8lxy+1pxWV96mLjIuPPTx3WZDBLFSFkjFv6zyiQq75ESx2xn3ZHlN/4
-         K5B83L9moq8B+bX9Hrm+qXTrWHi04OwUpRre1E79AUrExpevej0nli3dg+xK9ek4s8lq
-         JMGw==
+        d=sargun.me; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0Z0dzWXfYmv1MZISl995szlypcV1JN5XmeCvDe3UI4=;
+        b=qDEKzvfwEtvUK1sZj0kol39+WvM1y4QJiY6qATq9nnFWKEdLrqBWOLergWtnox4apg
+         7VFa3MBZVBLaTy0z+PahHElPhxHTlr+SQuF/KCafBoV6icyAkB5+MRcoMOwkjfG7/xSW
+         lzpqXEfbcRFi1TgEduRi7/jyz89okZaPd0lBY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NnO+Vz89RyAqBUQNFzWAU5ax1hd+sZfi+vzEk0a2/qU=;
-        b=KhfmxhmkGj8GmRaEA+nccg/e2awrp4zsLxudISZ8JEyOJO26RTHEshLQus4xERKaSN
-         aS5+grv/iJfFTWl1h2O9d+ORXBM+x9Tu0G+2MWNdrXf+wwI19gI57kxHYb7a3Y9/+3dQ
-         6FeYK/CM2KVam2Bf2OLhcnaqE9AWedMdquNOWlYdayjU0RVVIFqp2LWBFgWrKMzbZDoA
-         n0wk6mTwZhclJi/KmtAdTUQF6yRh4Vz/G6KOe9RPCVe9UyaKwM+gfMoLwNqTVTMjr/dz
-         F9b765JiMp5dR3Pouvyms7ygvJ9oLqL2bOkfzS+PvIerv3ZQMAzouh/XwmNBEZ/ONEEC
-         6cQQ==
-X-Gm-Message-State: APjAAAXslT94UJbYF/OJTetSh8RjRp/Q5hy1LRZ+D9o5h+v0PKtaDMM1
-        54hqmq+2w5ypL30oOjWagxbIsyMhcwkESJG75Ql6oQ==
-X-Google-Smtp-Source: APXvYqylXJqmTwB20sKm/0rWy8VEqOIwnRDprMjueOyxNvJGvJhVtnDBPxTPA9BnR6q1JtjrAXrrEcGRFLYL/rnyQAA=
-X-Received: by 2002:a9d:4e99:: with SMTP id v25mr68590801otk.363.1577600049062;
- Sat, 28 Dec 2019 22:14:09 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0Z0dzWXfYmv1MZISl995szlypcV1JN5XmeCvDe3UI4=;
+        b=YLyxhK1cw/6+keB/4Q1qhjsayjk6wqb45xvVkTaSYCcVfew1QzguDSXODMomzSz32U
+         yS6xSAjFt8hS5TBQ8ys100oIcE6IZm75OtPkFRysF+pZJ7ec2voOtf7WWrMks74skUrB
+         vSR5kn2ONOCdr0U8Akuf8SrwOAAfklcIOikAQ5VQL96nz2a10wuu8TYhlSX4OMvyRQVH
+         eIJ5YPR3vBPHRyF4fcxIcbcXC9az/otZQSY7tcXxF/081UFRoTxhG8d9oPJ5BaSQCqXq
+         71UUJedDBBhzYVUErKIJai62+WhdGWoD8qJoWX/OiGPsTE9+gGexCe/ZsMcZOXcAoZ50
+         dQWQ==
+X-Gm-Message-State: APjAAAWYc6PyLAgi/EE20MjypETUxAyJygn4ZCzoNYab+VbCIykU7m4/
+        QiW4V9XQ6dKIH/s4eKGwuYM5hfcPB3/yTw==
+X-Google-Smtp-Source: APXvYqyrvzDtn4z6wePqUb6+sIbFSYCnxY7w57QNc0seB6BT9Oezi+8gsVtIaVBAbxTx3+58YhxWCQ==
+X-Received: by 2002:a5d:97c3:: with SMTP id k3mr23684707ios.38.1577601749431;
+        Sat, 28 Dec 2019 22:42:29 -0800 (PST)
+Received: from ubuntu.netflix.com ([75.104.68.239])
+        by smtp.gmail.com with ESMTPSA id y11sm15112053ilp.46.2019.12.28.22.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Dec 2019 22:42:28 -0800 (PST)
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Cc:     Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Sargun Dhillon <sargun@sargun.me>
+Subject: [PATCH v3 1/3] samples, selftests/seccomp: Zero out seccomp_notif
+Date:   Sat, 28 Dec 2019 22:24:49 -0800
+Message-Id: <20191229062451.9467-1-sargun@sargun.me>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com> <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
-In-Reply-To: <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Sat, 28 Dec 2019 22:13:58 -0800
-Message-ID: <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-To:     Dan Williams <dan.j.williams.korg@gmail.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
-<dan.j.williams.korg@gmail.com> wrote:
->
-> On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
-> >
-> > Michael Weiser reported he got below error during a kexec rebooting:
-> > esrt: Unsupported ESRT version 2904149718861218184.
-> >
-> > The ESRT memory stays in EFI boot services data, and it was reserved
-> > in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> > is to reuse the EFI boot services data across kexec reboot. For example
-> > the BGRT image data and some ESRT memory like Michael reported.
-> >
-> > But although the memory is reserved it is not updated in X86 e820 table.
-> > And kexec_file_load iterate system ram in io resource list to find places
-> > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> > initramfs overwritten the ESRT memory and then the failure happened.
-> >
-> > Since kexec_file_load depends on the e820 to be updated, just fix this
-> > by updating the reserved EFI boot services memory as reserved type in e820.
-> >
-> > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-> > bypassed in the reservation code path because they are assumed as reserved.
-> > But the reservation is still needed for multiple kexec reboot.
-> > And it is the only possible case we come here thus just drop the code
-> > chunk then everything works without side effects.
-> >
-> > On my machine the ESRT memory sits in an EFI runtime data range, it does
-> > not trigger the problem, but I successfully tested with BGRT instead.
-> > both kexec_load and kexec_file_load work and kdump works as well.
-> >
-> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > ---
-> >  arch/x86/platform/efi/quirks.c |    6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
-> > +++ linux-x86/arch/x86/platform/efi/quirks.c
-> > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
-> >                 return;
-> >         }
-> >
-> > -       /* No need to reserve regions that will never be freed. */
-> > -       if (md.attribute & EFI_MEMORY_RUNTIME)
-> > -               return;
-> > -
-> >         size += addr % EFI_PAGE_SIZE;
-> >         size = round_up(size, EFI_PAGE_SIZE);
-> >         addr = round_down(addr, EFI_PAGE_SIZE);
-> > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
-> >         early_memunmap(new, new_size);
-> >
-> >         efi_memmap_install(new_phys, num_entries);
-> > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-> > +       e820__update_table(e820_table);
-> >  }
-> >
-> >  /*
-> >
->
-> Bisect says this change (commit af1648984828) is triggering a
-> regression, likely not urgent, in my testing of the new efi_fake_mem=
-> facility to allow memory to be marked "soft reserved" via the kernel
-> command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
-> for EFI_MEMORY_SP). The following command line triggers the crash
-> signature below:
->
->     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
->
-> However, this command line works ok:
->
->     efi_fake_mem=8G@9G:0x40000
->
-> So, something about multiple efi_fake_mem statements interacts badly
-> with this change. Nothing obvious occurs to me at the moment, I'll
-> keep debugging, but wanted to highlight this in the meantime in case
-> someone else sees a deeper issue or the root cause.
+The seccomp_notif structure should be zeroed out prior to calling the
+SECCOMP_IOCTL_NOTIF_RECV ioctl. Previously, the kernel did not check
+whether these structures were zeroed out or not, so these worked.
 
-Still looking, but this failure does not seem to be specific to the
-"soft reservation" changes. Any update to the efi memmap that pushes
-it over a page boundary triggers this failure. I.e. I can fix the
-problem by over-allocating the efi memmap and then page aligning the
-result. __early_ioremap "should" be handling this case, but it appears
-something else is messing this up.
+This patch zeroes out the seccomp_notif data structure prior to calling
+the ioctl.
 
->
-> BUG: unable to handle page fault for address: ffffffffff281000
-> #PF: supervisor write access in kernel mode
-> #PF: error_code(0x0002) - not-present page
-> PGD 188615067 P4D 188615067 PUD 188617067 PMD 188e4d067 PTE 0
-> Oops: 0002 [#1] SMP PTI
-> CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0+ #154
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> RIP: 0010:efi_memmap_insert+0xed/0x14b
-> Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
-> 4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
-> 49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
-> RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
-> RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
-> RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
-> RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
-> R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
-> R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
-> FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
-> Call Trace:
->  ? efi_arch_mem_reserve+0x149/0x1a6
->  ? bgrt_init+0xbe/0xbe
->  ? bgrt_init+0xbe/0xbe
->  ? acpi_parse_bgrt+0xa/0xd
->  ? acpi_table_parse+0x86/0xb8
->  ? acpi_boot_init+0x494/0x4e3
->  ? acpi_parse_x2apic+0x87/0x87
->  ? setup_acpi_sci+0xa2/0xa2
->  ? setup_arch+0x8db/0x9e1
->  ? start_kernel+0x6a/0x547
->  ? secondary_startup_64+0xb6/0xc0
-> Modules linked in:
-> CR2: ffffffffff281000
-> random: get_random_bytes called from print_oops_end_marker+0x26/0x40
-> with crng_init=0
-> ---[ end trace 2acc14aa0990ee9d ]---
-> RIP: 0010:efi_memmap_insert+0xed/0x14b
-> Code: 48 89 48 18 49 39 d9 76 67 49 39 d1 73 62 4c 89 c9 48 2b 48 08
-> 4c 89 c6 48 c1 e9 0c 48 89 48 18 49 8b 4a 28 48 01 c8 48 89 c7 <f3> a4
-> 49 39 d3 73 2c 4c 89 48 08 4c 29 da 4c 89 c6 4c 89 68 18 48
-> RSP: 0000:ffffffffb7603d70 EFLAGS: 00010086
-> RAX: ffffffffff280ff0 RBX: 0000000000000000 RCX: 0000000000000020
-> RDX: ffffffffffffffff RSI: ffffffffff200fe0 RDI: ffffffffff281000
-> RBP: 00000000bea2d000 R08: ffffffffff200fd0 R09: 00000000bea06000
-> R10: ffffffffb77e1718 R11: 00000000bea2cfff R12: 800000000000000f
-> R13: 0000000000000027 R14: ffffffff415fa001 R15: 0000000000000ab0
-> FS:  0000000000000000(0000) GS:ffffffffb7c31000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffffffff281000 CR3: 0000000188610000 CR4: 00000000000606b0
-> Kernel panic - not syncing: Fatal exception
-> ---[ end Kernel panic - not syncing: Fatal exception ]---
+Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ samples/seccomp/user-trap.c                   | 2 +-
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
+index 6d0125ca8af7..3e31ec0cf4a5 100644
+--- a/samples/seccomp/user-trap.c
++++ b/samples/seccomp/user-trap.c
+@@ -298,7 +298,6 @@ int main(void)
+ 		req = malloc(sizes.seccomp_notif);
+ 		if (!req)
+ 			goto out_close;
+-		memset(req, 0, sizeof(*req));
+ 
+ 		resp = malloc(sizes.seccomp_notif_resp);
+ 		if (!resp)
+@@ -306,6 +305,7 @@ int main(void)
+ 		memset(resp, 0, sizeof(*resp));
+ 
+ 		while (1) {
++			memset(req, 0, sizeof(*req));
+ 			if (ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, req)) {
+ 				perror("ioctl recv");
+ 				goto out_resp;
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 6944b898bb53..f53f14971bff 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -3278,6 +3278,7 @@ TEST(user_notification_signal)
+ 
+ 	close(sk_pair[1]);
+ 
++	memset(&req, 0, sizeof(req));
+ 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
+ 
+ 	EXPECT_EQ(kill(pid, SIGUSR1), 0);
+@@ -3296,6 +3297,7 @@ TEST(user_notification_signal)
+ 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
+ 	EXPECT_EQ(errno, ENOENT);
+ 
++	memset(&req, 0, sizeof(req));
+ 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
+ 
+ 	resp.id = req.id;
+-- 
+2.20.1
+
