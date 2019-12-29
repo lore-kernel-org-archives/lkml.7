@@ -2,170 +2,112 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BA8C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503E0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592A821744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276C32071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 22:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfL2Wh6 (ORCPT
+        id S1726730AbfL2Wia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 17:37:58 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:62237 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbfL2Wh6 (ORCPT
+        Sun, 29 Dec 2019 17:38:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37974 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726596AbfL2Wia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 17:37:58 -0500
-Received: from 79.184.253.116.ipv4.supernova.orange.pl (79.184.253.116) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id fd89ba99d30803d6; Sun, 29 Dec 2019 23:37:55 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge isn't bound to driver
-Date:   Sun, 29 Dec 2019 23:37:55 +0100
-Message-ID: <4466650.2HG2iOLVKt@kreacher>
-In-Reply-To: <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
-References: <20191227092405.29588-1-kai.heng.feng@canonical.com> <1948783.ToaVGCCZch@kreacher> <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
+        Sun, 29 Dec 2019 17:38:30 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBTMbrsC116588
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 17:38:29 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x6ndk0vav-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 17:38:28 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Sun, 29 Dec 2019 22:38:26 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 29 Dec 2019 22:38:23 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBTMbbiI49676742
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 29 Dec 2019 22:37:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C72BA405B;
+        Sun, 29 Dec 2019 22:38:22 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D1B7A4057;
+        Sun, 29 Dec 2019 22:38:22 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 29 Dec 2019 22:38:22 +0000 (GMT)
+Received: from [9.81.216.204] (unknown [9.81.216.204])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B990CA0204;
+        Mon, 30 Dec 2019 09:38:18 +1100 (AEDT)
+Subject: Re: [PATCH 1/4] misc: cxl: use mmgrab
+To:     Julia Lawall <Julia.Lawall@inria.fr>,
+        Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     kernel-janitors@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1577634178-22530-1-git-send-email-Julia.Lawall@inria.fr>
+ <1577634178-22530-2-git-send-email-Julia.Lawall@inria.fr>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Mon, 30 Dec 2019 09:38:19 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1577634178-22530-2-git-send-email-Julia.Lawall@inria.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19122922-0012-0000-0000-0000037905B0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122922-0013-0000-0000-000021B50E18
+Message-Id: <1d992f7f-25df-7195-14f3-a13c2dccbc96@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-29_06:2019-12-27,2019-12-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=715 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
+ suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912290214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, December 27, 2019 6:15:26 PM CET Kai-Heng Feng wrote:
+On 30/12/19 2:42 am, Julia Lawall wrote:
+> Mmgrab was introduced in commit f1f1007644ff ("mm: add new mmgrab()
+> helper") and most of the kernel was updated to use it. Update a
+> remaining file.
 > 
-> > On Dec 27, 2019, at 18:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > 
-> > On Friday, December 27, 2019 10:24:05 AM CET Kai-Heng Feng wrote:
-> >> We have a Pericom USB add-on card that has three USB controller
-> >> functions 06:00.[0-2], connected to bridge device 05:03.0, which is
-> >> connected to another bridge device 04:00.0:
-> >> 
-> >> -[0000:00]-+-00.0
-> >>           +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
-> >>           |                                            +-00.1
-> >>           |                                            \-00.2
-> >> 
-> >> When bridge device (05:03.0) and all three USB controller functions
-> >> (06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
-> >> USB devices into the add-on card.
-> >> 
-> >> This is because the pcieport driver failed to probe on 04:00.0, since
-> >> the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
-> >> there's no native PCIe PME can work for devices connected to it.
-> > 
-> > But in that case the PME driver (drivers/pci/pcie/pme.c) should not bind
-> > to the port in question, so the "can_wakeup" flag should not be set for
-> > the devices under that port.
+> The semantic patch that makes this change is as follows:
+> (http://coccinelle.lip6.fr/)
 > 
-> We can remove the can_wakeup flag for all its child devices once pcieport probe fails, but I think it's not intuitive.
+> <smpl>
+> @@ expression e; @@
+> - atomic_inc(&e->mm_count);
+> + mmgrab(e);
+> </smpl>
 > 
-> > 
-> >> So let's correctly report runtime wakeup isn't supported when any of
-> >> PCIe bridges isn't bound to pcieport driver.
-> >> 
-> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> drivers/pci/pci.c | 12 ++++++++++++
-> >> 1 file changed, 12 insertions(+)
-> >> 
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index 951099279192..ca686cfbd65e 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
-> >> @@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
-> >> 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
-> >> 		return false;
-> >> 
-> >> +	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
-> >> +	 * no IRQ for PME.
-> >> +	 */
-> >> +	if (pci_is_pcie(dev)) {
-> >> +		while (bus->parent) {
-> >> +			if (!bus->self->driver)
-> >> +				return false;
-> >> +
-> >> +			bus = bus->parent;
-> >> +		}
-> >> +	}
-> >> +
-> > 
-> > So it looks like device_can_wakeup() returns 'true' for this device, but it
-> > should return 'false'.
-> 
-> The USB controllers can assert PME#, so it actually can wakeup, in a way.
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Well, that's questionable.
+Thanks!
 
-If there is no known way for the PME to be signaled, we may as well mark the
-device as wakeup-incapable.
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-> I think the logical distinction between pci_dev_run_wake() and device_can_wakeup() is that,
-> pci_dev_run_wake() means it can actually do runtime wakeup, while device_can_wakeup()
-> only means it has the capability to wakeup. Am I correct here?
-
-Kind of, but the "capability" part is not well defined, so to speak, because
-if the device happens to be located below a PCIe port in a low-power state
-(say D3hot), the PME "support" declared in the config space is clearly
-insufficient.
-
-> > 
-> > Do you know why the "can_wakeup" flag is set for it?
-> 
-> All PCI devices with PME cap calls device_set_wakeup_capable() in pci_pm_init().
-
-Right, I forgot about that thing.
-
-It is inconsistent with the rest of the code, particularly with
-pci_dev_run_wake(), so I'd try to drop it.
-
-IIRC that would require some other pieces of code to be reworked to avoid
-regressions, though.
-
-> > 
-> >> 	if (device_can_wakeup(&dev->dev))
-> >> 		return true;
-> >> 
-> >> 
-> > 
-> > Moreover, even if the native PME is not supported, there can be an ACPI GPE (or
-> > equivalent) that triggers when WAKE# is asserted by one of the PCIe devices
-> > connected to it, so the test added by this patch cannot be used in general.
-> 
-> Ok. So how to know when both native PME isn't supported and it doesn't use ACPI GPE?
-
-If the PME driver doesn't bind to the device's root port, the native PME cannot
-work.
-
-If there is no wakeup GPE, pci_acpi_setup() will not call
-device_set_wakeup_capable() for the device.
-
-> I thought ACPI GPE only works for devices directly connect to Root Complex, but I can't find the reference now.
-
-No, that's not the case.
-
-It can work for any devices (even old-style PCI, non-PCIe) with PME# connected
-to a dedicated WAKE# pin on the board (which then is represented as an ACPI GPE
-or a GPIO IRQ).
-
-> 
-> Another short-term workaround is to make pci_pme_list_scan() not skip bridge when it's in D3hot:
-
-No, that would not be safe in general.
-
-Basically, pci_finish_runtime_suspend() needs to enable wakeup for devices
-that can do PME even though can_wakeup is not set for them, as long as
-pci_pme_list_scan() can reach them.  That should be sufficient to cover
-all of the practically relevant cases.
-
-
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
