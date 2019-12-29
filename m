@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF95C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08665C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484B8206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED56206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642615;
-	bh=nSXKaU5SQpSfrM9QlvZlXIaLKQ6xDYxaul8vUU6sXKg=;
+	s=default; t=1577642623;
+	bh=7XSxXNR8SCjdUJZyDepqmuLB+4LFyNAlxBF9TvCeyGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08E0m2Ubk28JbbKD39T+DJLY9qqGFbdFd88KdkGGzf+pMN7nMmXy612V6YCsSexyp
-	 m6bNgv8TKp1+XOp7L0pt/w3j+ksU+1BEgRQfUb/JBx8QlTqcu3KaltkiMfVln72oEt
-	 EbZHmLIqrKgny0SeLAjhzJHLxOYz2Rx57DI2ifjU=
+	b=pb7NeFxSbXfTfv4hnT12w8dJYGND8wkhU29BDShpq5DTTyg3rgGG7ZCGmfFPHZdt3
+	 b3udJ2neyq+86ETjHzALUiRv3i99FzzUB7Y4Wl3fCjaG5IA6NdxDxPdaEBkdRPhePE
+	 LDz0AL1L/tLZ+ng/KUBcA4xXsgyvFccSx/YKwlfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfL2Rx2 (ORCPT
+        id S1732674AbfL2SDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:03:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732082AbfL2RxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:23 -0500
+        id S1731949AbfL2RxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E492206A4;
-        Sun, 29 Dec 2019 17:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F54208C4;
+        Sun, 29 Dec 2019 17:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642002;
-        bh=nSXKaU5SQpSfrM9QlvZlXIaLKQ6xDYxaul8vUU6sXKg=;
+        s=default; t=1577641992;
+        bh=7XSxXNR8SCjdUJZyDepqmuLB+4LFyNAlxBF9TvCeyGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z5rd0wAL4ORUTrew6qlzrVkIzf+t69Rx8GE7PV5a68rDz8fPuEjIaxRGC/tDgblEw
-         2PIhcew3UJeLceqEpPFTHJcE5YeUYvZapaLSgXC0heb/WST97vBEgW2uZ/sVaekJOA
-         imSFTTsMPtqKbCo5NWtpMD82tQbMElGO+TPoqXHE=
+        b=0i1RU+CvSqRuDPRCXdGOcFJjOmdpZ9xkHYP4XuY6jnjbNsQZlnWDcjle6RFrqxZA1
+         ZdGnyvrI+N1+7qZE1wpbfnI4jtYcViQmGRC6dQ3mPPqzlq87txKUhs7WSIpUtyHy10
+         RtlING5zn6ZHhnChU4XzPwuHh954LgeRklj2paNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 301/434] qtnfmac: fix invalid channel information output
-Date:   Sun, 29 Dec 2019 18:25:54 +0100
-Message-Id: <20191229172721.946537402@linuxfoundation.org>
+Subject: [PATCH 5.4 280/434] media: si470x-i2c: add missed operations in remove
+Date:   Sun, 29 Dec 2019 18:25:33 +0100
+Message-Id: <20191229172720.542217417@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,45 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 24227a9e956a7c9913a7e6e7199a9ae3f540fe88 ]
+[ Upstream commit 2df200ab234a86836a8879a05a8007d6b884eb14 ]
 
-Do not attempt to print frequency for an invalid channel
-provided by firmware. That channel may simply not exist.
+The driver misses calling v4l2_ctrl_handler_free and
+v4l2_device_unregister in remove like what is done in probe failure.
+Add the calls to fix it.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/quantenna/qtnfmac/event.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/radio/si470x/radio-si470x-i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/event.c b/drivers/net/wireless/quantenna/qtnfmac/event.c
-index b57c8c18a8d0..7846383c8828 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/event.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/event.c
-@@ -171,8 +171,9 @@ qtnf_event_handle_bss_join(struct qtnf_vif *vif,
- 		return -EPROTO;
- 	}
+diff --git a/drivers/media/radio/si470x/radio-si470x-i2c.c b/drivers/media/radio/si470x/radio-si470x-i2c.c
+index 7541698a0be1..f491420d7b53 100644
+--- a/drivers/media/radio/si470x/radio-si470x-i2c.c
++++ b/drivers/media/radio/si470x/radio-si470x-i2c.c
+@@ -482,6 +482,8 @@ static int si470x_i2c_remove(struct i2c_client *client)
+ 	if (radio->gpio_reset)
+ 		gpiod_set_value(radio->gpio_reset, 0);
  
--	pr_debug("VIF%u.%u: BSSID:%pM status:%u\n",
--		 vif->mac->macid, vif->vifid, join_info->bssid, status);
-+	pr_debug("VIF%u.%u: BSSID:%pM chan:%u status:%u\n",
-+		 vif->mac->macid, vif->vifid, join_info->bssid,
-+		 le16_to_cpu(join_info->chan.chan.center_freq), status);
++	v4l2_ctrl_handler_free(&radio->hdl);
++	v4l2_device_unregister(&radio->v4l2_dev);
+ 	return 0;
+ }
  
- 	if (status != WLAN_STATUS_SUCCESS)
- 		goto done;
-@@ -181,7 +182,7 @@ qtnf_event_handle_bss_join(struct qtnf_vif *vif,
- 	if (!cfg80211_chandef_valid(&chandef)) {
- 		pr_warn("MAC%u.%u: bad channel freq=%u cf1=%u cf2=%u bw=%u\n",
- 			vif->mac->macid, vif->vifid,
--			chandef.chan->center_freq,
-+			chandef.chan ? chandef.chan->center_freq : 0,
- 			chandef.center_freq1,
- 			chandef.center_freq2,
- 			chandef.width);
 -- 
 2.20.1
 
