@@ -7,50 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D377DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8DFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5BF207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A181207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640782;
-	bh=f+oyQdJV2mvKWAwexwUt8dcxFVa+jkYNOVD3dekVTwE=;
+	s=default; t=1577640786;
+	bh=1u3chDRibC6IUIfpSJQ4eqliyQuIjrD7HqX5Hcdi72M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAEz8hT8wMxQhiM0uveygaNMUEgukz6yA8q3mRjDkeVSFmdfulZ9+mzFtrfCQ6Jv8
-	 qIUJc7L7wBeAlTpsQ0MARcSru//cg6AVxPcOrMXFMnwW6/Md0BFAB+VILcwc/vObCa
-	 ES6zNnSfA6v1HqiOxCn+DiTQzzDAuwk+YQg4mPyk=
+	b=OIMVwSK4msUZtZIDxlVXSugahOCnB39tNUwyGUSJDnqMWH+qRScFMeX70awryVuhU
+	 O372BTjeRJY3WN0sMi8198bwicGVSkhr+5EhC8mmbDGzREdM+xDMtsihkWsV/BUivN
+	 U4ynStm9EEP8PJr8YaCuUzZm/nDP3i+aO1FjAovo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfL2RdB (ORCPT
+        id S1729389AbfL2RdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:33:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:33:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbfL2Rc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:57 -0500
+        id S1727452AbfL2RdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E98207FD;
-        Sun, 29 Dec 2019 17:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7EC720409;
+        Sun, 29 Dec 2019 17:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640777;
-        bh=f+oyQdJV2mvKWAwexwUt8dcxFVa+jkYNOVD3dekVTwE=;
+        s=default; t=1577640779;
+        bh=1u3chDRibC6IUIfpSJQ4eqliyQuIjrD7HqX5Hcdi72M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/aJxpT9XCP6XPLxiwKVOOVKubtG6+8M10T2nRM48pGYdBmKufBQVrnd7jtywI5tB
-         zE5BUKn8ezWYPzBH/YihwQgPLdJWIeAAIkD7IwHQMwM7HFE/fAngiSHqFpuYij5T2t
-         93J6/P7K1gzaIfcPj0vpAUdE2kWC9oDBYb8mwlDQ=
+        b=KNFEQ92hjCedqTqm3uwnvEwrGCJfMfLfFHhohtvgLZxAZRqIvBEPmbqQsOeMKmfUD
+         vOBbMDy/AzHcMseD6TLntRVUdB/8qZ3OVGw4saustjDOypzS+7IT3gKU9kmrIepOk2
+         POa0lqk7YsmjFiOqTL9CRN9y78oZODBGfqDclA58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/219] net: phy: dp83867: enable robust auto-mdix
-Date:   Sun, 29 Dec 2019 18:18:17 +0100
-Message-Id: <20191229162521.892610959@linuxfoundation.org>
+Subject: [PATCH 4.19 086/219] perf tests: Disable bp_signal testing for arm64
+Date:   Sun, 29 Dec 2019 18:18:08 +0100
+Message-Id: <20191229162518.590431950@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -63,67 +72,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-[ Upstream commit 5a7f08c2abb0efc9d17aff2fc75d6d3b85e622e4 ]
+[ Upstream commit 6a5f3d94cb69a185b921cb92c39888dc31009acb ]
 
-The link detection timeouts can be observed (or link might not be detected
-at all) when dp83867 PHY is configured in manual mode (speed/duplex).
+As there are several discussions for enabling perf breakpoint signal
+testing on arm64 platform: arm64 needs to rely on single-step to execute
+the breakpointed instruction and then reinstall the breakpoint exception
+handler.  But if we hook the breakpoint with a signal, the signal
+handler will do the stepping rather than the breakpointed instruction,
+this causes infinite loops as below:
 
-CFG3[9] Robust Auto-MDIX option allows to significantly improve link detection
-in case dp83867 is configured in manual mode and reduce link detection
-time.
-As per DM: "If link partners are configured to operational modes that are
-not supported by normal Auto MDI/MDIX mode (like Auto-Neg versus Force
-100Base-TX or Force 100Base-TX versus Force 100Base-TX), this Robust Auto
-MDI/MDIX mode allows MDI/MDIX resolution and prevents deadlock."
+         Kernel space              |            Userspace
+  ---------------------------------|--------------------------------
+                                   |  __test_function() -> hit
+				   |                       breakpoint
+  breakpoint_handler()             |
+    `-> user_enable_single_step()  |
+  do_signal()                      |
+                                   |  sig_handler() -> Step one
+				   |                instruction and
+				   |                trap to kernel
+  single_step_handler()            |
+    `-> reinstall_suspended_bps()  |
+                                   |  __test_function() -> hit
+				   |     breakpoint again and
+				   |     repeat up flow infinitely
 
-Hence, enable this option by default as there are no known reasons
-not to do so.
+As Will Deacon mentioned [1]: "that we require the overflow handler to
+do the stepping on arm/arm64, which is relied upon by GDB/ptrace. The
+hw_breakpoint code is a complete disaster so my preference would be to
+rip out the perf part and just implement something directly in ptrace,
+but it's a pretty horrible job".  Though Will commented this on arm
+architecture, but the comment also can apply on arm64 architecture.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For complete information, I searched online and found a few years back,
+Wang Nan sent one patch 'arm64: Store breakpoint single step state into
+pstate' [2]; the patch tried to resolve this issue by avoiding single
+stepping in signal handler and defer to enable the signal stepping when
+return to __test_function().  The fixing was not merged due to the
+concern for missing to handle different usage cases.
+
+Based on the info, the most feasible way is to skip Perf breakpoint
+signal testing for arm64 and this could avoid the duplicate
+investigation efforts when people see the failure.  This patch skips
+this case on arm64 platform, which is same with arm architecture.
+
+[1] https://lkml.org/lkml/2018/11/15/205
+[2] https://lkml.org/lkml/2015/12/23/477
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Brajeswar Ghosh <brajeswar.linux@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Will Deacon <will@kernel.org>
+Link: http://lore.kernel.org/lkml/20191018085531.6348-3-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/perf/tests/bp_signal.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index eeadfde15940..879096d3ff41 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -86,6 +86,10 @@
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
- #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
- 
-+/* CFG3 bits */
-+#define DP83867_CFG3_INT_OE			BIT(7)
-+#define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
-+
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-@@ -331,12 +335,13 @@ static int dp83867_config_init(struct phy_device *phydev)
- 			return ret;
- 	}
- 
-+	val = phy_read(phydev, DP83867_CFG3);
- 	/* Enable Interrupt output INT_OE in CFG3 register */
--	if (phy_interrupt_is_valid(phydev)) {
--		val = phy_read(phydev, DP83867_CFG3);
--		val |= BIT(7);
--		phy_write(phydev, DP83867_CFG3, val);
--	}
-+	if (phy_interrupt_is_valid(phydev))
-+		val |= DP83867_CFG3_INT_OE;
-+
-+	val |= DP83867_CFG3_ROBUST_AUTO_MDIX;
-+	phy_write(phydev, DP83867_CFG3, val);
- 
- 	if (dp83867->port_mirroring != DP83867_PORT_MIRROING_KEEP)
- 		dp83867_config_port_mirroring(phydev);
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 910e25e64188..6cf00650602e 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -48,14 +48,6 @@ asm (
+ 	"__test_function:\n"
+ 	"incq (%rdi)\n"
+ 	"ret\n");
+-#elif defined (__aarch64__)
+-extern void __test_function(volatile long *ptr);
+-asm (
+-	".globl __test_function\n"
+-	"__test_function:\n"
+-	"str x30, [x0]\n"
+-	"ret\n");
+-
+ #else
+ static void __test_function(volatile long *ptr)
+ {
+@@ -301,10 +293,15 @@ bool test__bp_signal_is_supported(void)
+ 	 * stepping into the SIGIO handler and getting stuck on the
+ 	 * breakpointed instruction.
+ 	 *
++	 * Since arm64 has the same issue with arm for the single-step
++	 * handling, this case also gets suck on the breakpointed
++	 * instruction.
++	 *
+ 	 * Just disable the test for these architectures until these
+ 	 * issues are resolved.
+ 	 */
+-#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__)
++#if defined(__powerpc__) || defined(__s390x__) || defined(__arm__) || \
++    defined(__aarch64__)
+ 	return false;
+ #else
+ 	return true;
 -- 
 2.20.1
 
