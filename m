@@ -2,118 +2,120 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B007C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1164820718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641164;
-	bh=QiEcSKWtt9/YX+Rd2TW93R6G0pJTiBxnRk1De19FmmU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5X5dSRYJQ4Qpx956wvuNSdeOG3EEr7REyiFDLT9qG0TvNDvU90YMakqY3ArmExzS
-	 tkdVdDtGx2W68Y4VDUdu/Hpbl5lpJZ583nGJYAY+0Gu5SXBsfmHzL+UQnV/uTUaXNz
-	 p/s5nCa+AYuOD1iiTyGzBqUUOAzzeE2ofjHs9lAM=
+	by mail.kernel.org (Postfix) with ESMTP id 23036208C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wf71Wq0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfL2RjX (ORCPT
+        id S1729930AbfL2RjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:39:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfL2RdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:33:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F35C24125;
-        Sun, 29 Dec 2019 17:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640798;
-        bh=QiEcSKWtt9/YX+Rd2TW93R6G0pJTiBxnRk1De19FmmU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BblYJVIaJ1RDIL+ind1Gzdz5k0L1R4TfAU+yI9QbrNuc8wna/3dFawkIsuzhCZz0q
-         FbiKzSVoFLdbnHHmFeChUwmgOGaRVWFy5iKxqNMdHekSvJxCIERuCRQKdgQCF7f/ZR
-         zVe+w+QyOAGIoFtZ2RvGH7E7hnFRGyC7PmFP8Ics=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Isely <isely@pobox.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 144/219] media: pvrusb2: Fix oops on tear-down when radio support is not present
-Date:   Sun, 29 Dec 2019 18:19:06 +0100
-Message-Id: <20191229162530.188135670@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
-References: <20191229162508.458551679@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sun, 29 Dec 2019 12:39:20 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33380 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbfL2RdS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:33:18 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so30447764edq.0
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 09:33:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g+ZqxN5m5gAkIByhRJf04aggcuX7J+K/cyMPSK2p+QA=;
+        b=wf71Wq0yMOB58FsNbi2p888B5RLQ+mTavSy4HA7XvUnu6YC98zDS1ey+qK1HxpzbCz
+         6L2tloRWFY4Q7RvQIsEA9ZbK5V1v4V5avPP+9GCeSHiPIbf7Tpmorx0qZXXba7X2DB5W
+         kwmNwUUsBAk2CmQxiD6T2LL+e7bhOpjNvW2pbsPNyLF+/+jQlCa1UL01REnyBo48MJuh
+         JumoHJbyuy81K+RyvAR81dhk9zZwR/fTiDARReOxK4iG/D7vF0f+jbXECX1btRxqyckv
+         0ABHpABgoZ4jGMtVfG/I5hdTjow6AKldsBt3vO0+5UKn1ClaUEw6AKa9x3tu06mRS6wa
+         JArw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g+ZqxN5m5gAkIByhRJf04aggcuX7J+K/cyMPSK2p+QA=;
+        b=CMnGkfJA0A1M0AHbbrQPxzJrWlpzQbRt4gldEsCKrEG/S2Yf9QY+xOZEomHoJlZOba
+         D8Ug1KUmn7vzVKjTw5aXDOFnifxsmZesNdT71d27EQJWgaHUtrM9fwCoDisS/gBeZdKH
+         i4nkIhwg+pCe/6+XSzRHO06DICugHFpxtYV5seN2usW8ZXdrh+QjsL1Q8uGGlUXnJ33F
+         7CAx487/xh1Zj0DtA8Fqgm0437UhXnHdcVQ4aa2p6kT/7TTRRnZSh/P9TFAozdcOqPG2
+         YwyCfVT0AmO/609cgXAJMJI1nor1aCaCh1M7o1R9g6CH8ZBJqEL1RcJp3cwS7blKT2iE
+         L9UA==
+X-Gm-Message-State: APjAAAVSEO7BMo2jx2o/KW14ckb0AS3IqH/g2LVpRN8xzI97cI5B4a43
+        4wBb4HOUkSvHbXScZc5rSfA12Q==
+X-Google-Smtp-Source: APXvYqxl8lf/vPqrZynpCjFh+E2DeE1Gmv+uphj+YiOjk0n+Mhaq4H+8GfqCzbvQgw4NmnTE2TrGcg==
+X-Received: by 2002:a17:906:7b96:: with SMTP id s22mr65320610ejo.213.1577640796290;
+        Sun, 29 Dec 2019 09:33:16 -0800 (PST)
+Received: from [192.168.0.104] ([91.139.216.39])
+        by smtp.googlemail.com with ESMTPSA id c19sm5162660edu.76.2019.12.29.09.33.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Dec 2019 09:33:15 -0800 (PST)
+Subject: Re: [PATCH v3 6/6] clk: qcom: Add video clock controller driver for
+ SC7180
+To:     Taniya Das <tdas@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org
+References: <1577428714-17766-1-git-send-email-tdas@codeaurora.org>
+ <1577428714-17766-7-git-send-email-tdas@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <8f744444-428c-56e2-2565-35b55f1e4aae@linaro.org>
+Date:   Sun, 29 Dec 2019 19:33:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1577428714-17766-7-git-send-email-tdas@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Isely <isely@pobox.com>
+Hi Taniya,
 
-[ Upstream commit 7f404ae9cf2a285f73b3c18ab9303d54b7a3d8e1 ]
+On 12/27/19 8:38 AM, Taniya Das wrote:
+> Add support for the video clock controller found on SC7180
+> based devices. This would allow video drivers to probe
+> and control their clocks.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/clk/qcom/Kconfig          |   8 ++
+>  drivers/clk/qcom/Makefile         |   1 +
+>  drivers/clk/qcom/videocc-sc7180.c | 259 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 268 insertions(+)
+>  create mode 100644 drivers/clk/qcom/videocc-sc7180.c
+> 
 
-In some device configurations there's no radio or radio support in the
-driver.  That's OK, as the driver sets itself up accordingly.  However
-on tear-down in these caes it's still trying to tear down radio
-related context when there isn't anything there, leading to
-dereferences through a null pointer and chaos follows.
+<cut>
 
-How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-mystery to me.
+> +static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
+> +	F(19200000, P_BI_TCXO, 1, 0, 0),
 
-[hverkuil: fix two checkpatch warnings]
+Do you know is this frequency (19.2MHz) has real usage? The lower freq
+I've seen for Venus was 75MHz.
 
-Signed-off-by: Mike Isely <isely@pobox.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index e53a80b589a1..04d334152eae 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -916,8 +916,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
- 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
--	    !list_empty(&vp->dev_radio->devbase.fh_list))
-+	    (vp->dev_radio &&
-+	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-+		pvr2_trace(PVR2_TRACE_STRUCT,
-+			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
- 		return;
-+	}
- 	pvr2_v4l2_destroy_no_lock(vp);
- }
- 
-@@ -953,7 +957,8 @@ static int pvr2_v4l2_release(struct file *file)
- 	kfree(fhp);
- 	if (vp->channel.mc_head->disconnect_flag &&
- 	    list_empty(&vp->dev_video->devbase.fh_list) &&
--	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-+	    (!vp->dev_radio ||
-+	     list_empty(&vp->dev_radio->devbase.fh_list))) {
- 		pvr2_v4l2_destroy_no_lock(vp);
- 	}
- 	return 0;
+> +	F(150000000, P_VIDEO_PLL0_OUT_MAIN, 4, 0, 0),
+> +	F(270000000, P_VIDEO_PLL0_OUT_MAIN, 2.5, 0, 0),
+> +	F(340000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
+> +	F(434000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
+> +	F(500000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
+> +	{ }
+> +};
+> +
 -- 
-2.20.1
-
-
-
+regards,
+Stan
