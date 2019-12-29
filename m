@@ -2,92 +2,138 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF668C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B4EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B0520718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BAD20CC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHim8yTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfL2OuN (ORCPT
+        id S1726654AbfL2OyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 09:50:13 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45667 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726230AbfL2OuM (ORCPT
+        Sun, 29 Dec 2019 09:54:14 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45957 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfL2OyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 09:50:12 -0500
-Received: from callcc.thunk.org (96-72-102-169-static.hfc.comcastbusiness.net [96.72.102.169] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBTEn4GM024237
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 29 Dec 2019 09:49:05 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 83EFA420485; Sun, 29 Dec 2019 09:49:04 -0500 (EST)
-Date:   Sun, 29 Dec 2019 09:49:04 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephan Mueller <smueller@chronox.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Message-ID: <20191229144904.GB7177@mit.edu>
-References: <20191226140423.GB3158@mit.edu>
- <4048434.Q8HajmOrkZ@tauon.chronox.de>
- <20191227130436.GC70060@mit.edu>
- <15817620.rmTN4T87Wr@tauon.chronox.de>
- <20191227220857.GD70060@mit.edu>
- <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
+        Sun, 29 Dec 2019 09:54:14 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so31070530ljc.12;
+        Sun, 29 Dec 2019 06:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6XH/Q/b5MM1bx9nTyprJ5TouNRSVpMkUv4S5whbl8F4=;
+        b=gHim8yTjp2XkdL33dtLSkq/vW4ANMn8+UtNmRQQjcmdXB4UMnqqL6XaBvqygg2SDDM
+         vTeNWZFUwSOR9bttwuYxy0YpvyijFjWpNU6SNY1WMAUqYnMCXM1oVVBlJO7hydqhbefg
+         5vpgBs5aAFoJq/8TS/rDnIWqyEQ0R9TEnRpS4QfLY5FvNdeXrS2qsDI9id9AGqfZLYvU
+         QQF+jdLIDE+YqA8q6hv+FrLx1eU950/SrvoqTv3xAbRdwuzplfFpyNu9BQVLDxoYf/HP
+         NJD1aGs0zEuggl9iGtncMmGOnt3C3L99H7boonPjOX4SPvlY0gjhdwcVOifIxGUZrVYi
+         6XnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6XH/Q/b5MM1bx9nTyprJ5TouNRSVpMkUv4S5whbl8F4=;
+        b=ICrImsVWPbUybzBZXNSE1MvPrVdNYJL2Vgwm6YPbRZDa7qr9zWMyLHQm4YE5t0eReK
+         mcNpwsgrzGj/7fZafLVFN/DEAuO9tPN5EUlEXzpqSX5JyCZHt9k7zDcQ11MDoJf088IT
+         otw7/lnag5Ic9brHGgI7H2IQlnkaXivY/GJtlcYA3JdztwviXxhMZfv/QjEUJUm8yXCO
+         eKcBQUuudA4RfOo7PM0PAnORIUY68p9ssxngvvt+cUfNi98cYKS/f7h8Nl0ZJCcmKgNy
+         YIMq9UQ5z3jWZkQMK6Pztj2JAe5Gvx1izTccUrUwX7bJLcJZH9A+em2eKtsAB9sp26MN
+         S1fQ==
+X-Gm-Message-State: APjAAAWNjaJmWpfh/A6xuvFIOpciHzN/BtBLxY/BET+ZSZYvdlS1wdj8
+        XYZTFfO+bHlfHlf/THmjIvU=
+X-Google-Smtp-Source: APXvYqxKM248FrkgwBtcGlZgQFCHgbTZ+zzGppEiCj5B92N7tgdOJt9aJ8JddY3M4zdIabhjoggsWg==
+X-Received: by 2002:a2e:a408:: with SMTP id p8mr34378652ljn.145.1577631251784;
+        Sun, 29 Dec 2019 06:54:11 -0800 (PST)
+Received: from localhost.localdomain ([194.29.183.39])
+        by smtp.googlemail.com with ESMTPSA id q186sm16312910ljq.14.2019.12.29.06.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Dec 2019 06:54:11 -0800 (PST)
+From:   Tomasz Maciej Nowak <tmn505@gmail.com>
+To:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb: add support for TerraTec TC2 Stick (193534)
+Date:   Sun, 29 Dec 2019 15:53:55 +0100
+Message-Id: <20191229145355.6941-1-tmn505@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUyVx_qb2yYH8D_z1T2bVu5RAEr71G0MTzEksBKKM1QsA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 06:06:56PM -0800, Andy Lutomirski wrote:
-> 
-> I'm thinking of having a real class device and chardev for each hwrng
-> device.  Authentication is entirely in userspace: whatever user code
-> is involved can look at the sysfs hierarchy and decide to what extent
-> it trusts a given source.  This could be done based on bus topology or
-> based on anything else.
+Seems to be a clone of Logilink VG0022A. Supports DVB-C, DVB-T and
+DVB-T2. Only terrestrial reception was tested on Polish and Czech
+multiplexes.
 
-Yes, that's what I was thinking.  Another project on my "when I can
-get a round tuit" list is to change how drivers/char/random.c taps
-into the hwrng devices, mixing in a bit from each of these devies in a
-round-robin fashion, instead of just feeding from a single hwrng.
+Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+---
+ drivers/media/usb/dvb-usb-v2/af9035.c | 15 ++++++++++-----
+ include/media/dvb-usb-ids.h           |  1 +
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-> The kernel could also separately expose various noise sources, and the
-> user code can do whatever it wants with them.  But these should be
-> explicitly unconditioned, un-entropy-extracted sources -- user code
-> can run its favorite algorithm to extract something it believes to be
-> useful.  The only conceptually tricky bit is keeping user code like
-> this from interfering with the in-kernel RNG.
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 792667ee5ebc..e1df2e7f7842 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -1621,9 +1621,10 @@ static int it930x_tuner_attach(struct dvb_usb_adapter *adap)
+ 	si2157_config.fe = adap->fe[0];
+ 
+ 	/*
+-	 * HACK: The Logilink VG0022A has a bug: when the si2157
+-	 * firmware that came with the device is replaced by a new
+-	 * one, the I2C transfers to the tuner will return just 0xff.
++	 * HACK: The Logilink VG0022A and TerraTec TC2 Stick have
++	 * a bug: when the si2157 firmware that came with the device
++	 * is replaced by a new one, the I2C transfers to the tuner
++	 * will return just 0xff.
+ 	 *
+ 	 * Probably, the vendor firmware has some patch specifically
+ 	 * designed for this device. So, we can't replace by the
+@@ -1633,8 +1634,10 @@ static int it930x_tuner_attach(struct dvb_usb_adapter *adap)
+ 	 * while we don't have that, the next best solution is to just
+ 	 * keep the original firmware at the device.
+ 	 */
+-	if (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
+-	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100)
++	if ((le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_DEXATEK &&
++	    le16_to_cpu(d->udev->descriptor.idProduct) == 0x0100) ||
++	    (le16_to_cpu(d->udev->descriptor.idVendor) == USB_VID_TERRATEC &&
++	    le16_to_cpu(d->udev->descriptor.idProduct) == USB_PID_TERRATEC_CINERGY_TC2_STICK))
+ 		si2157_config.dont_load_firmware = true;
+ 
+ 	si2157_config.if_port = it930x_addresses_table[state->it930x_addresses].tuner_if_port;
+@@ -2150,6 +2153,8 @@ static const struct usb_device_id af9035_id_table[] = {
+ 		&it930x_props, "AVerMedia TD310 DVB-T2", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_DEXATEK, 0x0100,
+ 		&it930x_props, "Logilink VG0022A", NULL) },
++	{ DVB_USB_DEVICE(USB_VID_TERRATEC, USB_PID_TERRATEC_CINERGY_TC2_STICK,
++		&it930x_props, "TerraTec Cinergy TC2 Stick", NULL) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(usb, af9035_id_table);
+diff --git a/include/media/dvb-usb-ids.h b/include/media/dvb-usb-ids.h
+index 1409230ad3a4..0ccb78a840d8 100644
+--- a/include/media/dvb-usb-ids.h
++++ b/include/media/dvb-usb-ids.h
+@@ -180,6 +180,7 @@
+ #define USB_PID_TERRATEC_CINERGY_T_STICK_RC		0x0097
+ #define USB_PID_TERRATEC_CINERGY_T_STICK_DUAL_RC	0x0099
+ #define USB_PID_TERRATEC_CINERGY_T_STICK_BLACK_REV1	0x00a9
++#define USB_PID_TERRATEC_CINERGY_TC2_STICK		0x10b2
+ #define USB_PID_TWINHAN_VP7041_COLD			0x3201
+ #define USB_PID_TWINHAN_VP7041_WARM			0x3202
+ #define USB_PID_TWINHAN_VP7020_COLD			0x3203
+-- 
+2.24.1
 
-The other problem is the unconditioned values of the noise sources may
-leak unacceptable amounts of information about system operation.  The
-most obvious example of this would be keyboard and mouse sources,
-where today we mix in not only the timing information, but the actual
-input values (e.g., the keyboard scancodes) into the entropy pool.
-Exposing this to userspace, even if it is via a privileged system
-call, would be... unwise.
-
-						- Ted
