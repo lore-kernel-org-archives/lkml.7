@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D924C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AE2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C6F206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B26B206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642686;
-	bh=eiQoaAG1UtVvrQCdtJnOxOv5TEzyQpxYqxhh6IVh+c8=;
+	s=default; t=1577642691;
+	bh=jU+bs6JHKUBkA3CAVzOZSRkySZdaooYcCs0khCtU7R0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YkV4U1xPbbdsHL15N0k+zKrKAHh/gb37Lp9ifRqGGp14qCYZAPxdpWbCATxsjIkcb
-	 3p4p9/jiQ0PzE3y+SbkilMZxij2Zdt5uc7/ADQ1OUMhCCfn/C9iz1NkmMfh8O8llbf
-	 3Av5tP3uuGV8SgFA3y1cevRQDK8D/w90M32NWRec=
+	b=khg9dulzk99hZE24WsHUzh0jwc9h7sA+WCZEARYI1yscyjZ5uJOJbBk9Nm16DTv1q
+	 FMrihwdUci7EL+SLzDAE+3nRAayEWbEcLM+D5a2SVLmf8pxDSOOC97XSVavKocx0vl
+	 U8q8Cwte1/Q6T6klH6K9pJ2puuhBJ6Tv/8XLCxDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfL2SEp (ORCPT
+        id S1731748AbfL2Rv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:04:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37822 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732164AbfL2Rv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:51:59 -0500
+        id S1731640AbfL2Rvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:51:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BCE20748;
-        Sun, 29 Dec 2019 17:51:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DAAC208C4;
+        Sun, 29 Dec 2019 17:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641918;
-        bh=eiQoaAG1UtVvrQCdtJnOxOv5TEzyQpxYqxhh6IVh+c8=;
+        s=default; t=1577641906;
+        bh=jU+bs6JHKUBkA3CAVzOZSRkySZdaooYcCs0khCtU7R0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d4UnerEHvIt/aay4Ip8bnJdihEOyGCTEqeZ8rSIjY7ujUhC/ArBKfmu3uTaVJQNv0
-         R7gyzNP59xavTnNi0zyrVKiBtH3Kxih9lMLdOJwtUA/vmEvsB8RzXR1+o5JpHl1eET
-         Cbu5cBRKS05zF6VroeTtaKPkR+kff45byh5Pru+s=
+        b=eF4Opo+cIQPDbrVfLY4atuRVvIlpA96KUn4xLKAv+VjfRbEW7pLBy8I0UNUrikyUe
+         gmAn8/giMTplJZqIvGuA6Y5Ip4KlHp626buWZEwBIyTkUc+8sp+KlZspJnGfbLYp2n
+         8Ym5siER3dcGLP8uz6atLRB129Y5NfrCuYW/rrpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 265/434] perf probe: Skip end-of-sequence and non statement lines
-Date:   Sun, 29 Dec 2019 18:25:18 +0100
-Message-Id: <20191229172719.539395649@linuxfoundation.org>
+Subject: [PATCH 5.4 261/434] perf probe: Skip overlapped location on searching variables
+Date:   Sun, 29 Dec 2019 18:25:14 +0100
+Message-Id: <20191229172719.272992173@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -64,138 +64,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
+[ Upstream commit dee36a2abb67c175265d49b9a8c7dfa564463d9a ]
 
-Skip end-of-sequence and non-statement lines while walking through lines
-list.
+Since debuginfo__find_probes() callback function can be called with  the
+location which already passed, the callback function must filter out
+such overlapped locations.
 
-The "end-of-sequence" line information means:
+add_probe_trace_event() has already done it by commit 1a375ae7659a
+("perf probe: Skip same probe address for a given line"), but
+add_available_vars() doesn't. Thus perf probe -v shows same address
+repeatedly as below:
 
- "the current address is that of the first byte after the
-  end of a sequence of target machine instructions."
- (DWARF version 4 spec 6.2.2)
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
 
-This actually means out of scope and we can not probe on it.
+With this fix, perf probe -V shows it correctly:
 
-On the other hand, the statement lines (is_stmt) means:
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
 
- "the current instruction is a recommended breakpoint location.
-  A recommended breakpoint location is intended to “represent”
-  a line, a statement and/or a semantically distinct subpart
-  of a statement."
-
- (DWARF version 4 spec 6.2.2)
-
-So, non-statement line info also should be skipped.
-
-These can reduce unneeded probe points and also avoid an error.
-
-E.g. without this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
-
-  #
-
-This puts 5 probes on one line, but acutally it's not inlined function.
-This is because there are many non statement instructions at the
-function prologue.
-
-With this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  #
-
-Now perf-probe skips unneeded addresses.
-
-Committer testing:
-
-Slightly different results, but similar:
-
-Before:
-
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
-
-  #
-
-After:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  #
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 2b718cfd62d9..0b604f8ab7c8 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -760,6 +760,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
- 	size_t nlines, i;
-+	bool flag;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 4079ed617f53..e4ef8f4935b2 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1425,6 +1425,18 @@ error:
+ 	return DIE_FIND_CB_END;
+ }
  
- 	/* Get the CU die */
- 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
-@@ -790,6 +791,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 				  "Possible error in debuginfo.\n");
- 			continue;
- 		}
-+		/* Skip end-of-sequence */
-+		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
-+			continue;
-+		/* Skip Non statement line-info */
-+		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
-+			continue;
- 		/* Filter lines based on address */
- 		if (rt_die != cu_die) {
- 			/*
++static bool available_var_finder_overlap(struct available_var_finder *af)
++{
++	int i;
++
++	for (i = 0; i < af->nvls; i++) {
++		if (af->pf.addr == af->vls[i].point.address)
++			return true;
++	}
++	return false;
++
++}
++
+ /* Add a found vars into available variables list */
+ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ {
+@@ -1435,6 +1447,14 @@ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 	Dwarf_Die die_mem;
+ 	int ret;
+ 
++	/*
++	 * For some reason (e.g. different column assigned to same address),
++	 * this callback can be called with the address which already passed.
++	 * Ignore it first.
++	 */
++	if (available_var_finder_overlap(af))
++		return 0;
++
+ 	/* Check number of tevs */
+ 	if (af->nvls == af->max_vls) {
+ 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
 -- 
 2.20.1
 
