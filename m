@@ -4,67 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1471DC2D0CE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF618C2D0DA
 	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50EC207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6395207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1577640867;
-	bh=OrYIig8dP4ppL3UK+OMTrtPbODAkZQUMfRytpXlRnhQ=;
+	bh=4rsoipGXawQONmt1D/Uds6L9v69++EBc9QhC0gk524g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hnMmUpqpzR+2Tf825wzhj9xKzUSwzwixRneUtPq5dIWo8FvWyfWhZMGKhrpmd6dkM
-	 Kd6ufTMgQe0KQL5Rs67zHb8Vlc5UYlq4EdyODcreMFQM/02kqD9j0lJHeelnolOUJ7
-	 N4Uy6fqbB9eqPvFtpO1YoyWsXa8YdUClJ9KthW94=
+	b=oiTUtTOPxtT7IVeYBbjqp0/54JKS840G8p2G+NtdaIs1iepqPGeD1v2JPFGmO+vfU
+	 P2HQ00qE3Ul/W3/+ooCqMgITeycMPlvjywkWYCxxy/yC3HJ9b03wadWoL2C98vEAE6
+	 DPkv1tWvvHZbekLimbS8eXR144yDYn0h4FPr5leQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfL2ReZ (ORCPT
+        id S1729655AbfL2Re0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37434 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbfL2ReX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:23 -0500
+        id S1728869AbfL2ReY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E880207FD;
-        Sun, 29 Dec 2019 17:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FA86207FF;
+        Sun, 29 Dec 2019 17:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640861;
-        bh=OrYIig8dP4ppL3UK+OMTrtPbODAkZQUMfRytpXlRnhQ=;
+        s=default; t=1577640864;
+        bh=4rsoipGXawQONmt1D/Uds6L9v69++EBc9QhC0gk524g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmZ26Gw3SZcuY60Rk9ckRU2i8XKOWVd9UaFkFjrFj+brHIzUwifY61kYzmoTgkkpT
-         5R43oB4opO1mosmeOQDoFaH8UihFj0m1U18ZFapea432IdAlGA3CYX5XdHMnST3TOc
-         fzDpKagU2szRXfiwHo746pk1LzIGPD309khr9j1A=
+        b=MAfQ4hoe5kCA5Z5sqll6zhq/q5BxWO8/wCrI91Z3KXacRE03eJ7ckJU9jbbwHKyUs
+         nnf8B2gOweAYCCDg5HsSJL5M4Ji4fMuScdAjS6hxcJIDtrvHVdedS72JPWcKqmDVW9
+         q9ygagcPPom3f1sfq1zso8eoetZEJxw1RvfZZra8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, netdev@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/219] perf tools: Splice events onto evlist even on error
-Date:   Sun, 29 Dec 2019 18:18:54 +0100
-Message-Id: <20191229162528.519923158@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Harish Jenny K N <harish_kandiga@mentor.com>
+Subject: [PATCH 4.19 168/219] mmc: tmio: Add MMC_CAP_ERASE to allow erase/discard/trim requests
+Date:   Sun, 29 Dec 2019 18:19:30 +0100
+Message-Id: <20191229162534.365683263@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -77,74 +65,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-[ Upstream commit 8e8714c3d157568b7a769917a5e05573bbaf5af0 ]
+[ Upstream commit c91843463e9e821dc3b48fe37e3155fa38299f6e ]
 
-If event parsing fails the event list is leaked, instead splice the list
-onto the out result and let the caller cleanup.
+Isolated initially to renesas_sdhi_internal_dmac [1], Ulf suggested
+adding MMC_CAP_ERASE to the TMIO mmc core:
 
-An example input for parse_events found by libFuzzer that reproduces
-this memory leak is 'm{'.
+On Fri, Nov 15, 2019 at 10:27:25AM +0100, Ulf Hansson wrote:
+ -- snip --
+ This test and due to the discussions with Wolfram and you in this
+ thread, I would actually suggest that you enable MMC_CAP_ERASE for all
+ tmio variants, rather than just for this particular one.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191025180827.191916-5-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+ In other words, set the cap in tmio_mmc_host_probe() should be fine,
+ as it seems none of the tmio variants supports HW busy detection at
+ this point.
+ -- snip --
+
+Testing on R-Car H3ULCB-KF doesn't reveal any issues (v5.4-rc7):
+
+root@rcar-gen3:~# lsblk
+NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mmcblk0      179:0    0 59.2G  0 disk  <--- eMMC
+mmcblk0boot0 179:8    0    4M  1 disk
+mmcblk0boot1 179:16   0    4M  1 disk
+mmcblk1      179:24   0   30G  0 disk  <--- SD card
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk0
+real    0m8.659s
+user    0m0.001s
+sys     0m1.920s
+
+root@rcar-gen3:~# time blkdiscard /dev/mmcblk1
+real    0m1.176s
+user    0m0.001s
+sys     0m0.124s
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191112134808.23546-1-erosca@de.adit-jv.com/
+
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Originally-by: Harish Jenny K N <harish_kandiga@mentor.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/parse-events.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 1a7c76d2baa8..7ea1a230e89d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1843,15 +1843,20 @@ int parse_events(struct perf_evlist *evlist, const char *str,
+diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
+index 35630ccbe9e5..33c9ca8f14a9 100644
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -1267,7 +1267,7 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host)
+ 			return ret;
+ 	}
  
- 	ret = parse_events__scanner(str, &parse_state, PE_START_EVENTS);
- 	perf_pmu__parse_cleanup();
-+
-+	if (!ret && list_empty(&parse_state.list)) {
-+		WARN_ONCE(true, "WARNING: event parser found nothing\n");
-+		return -1;
-+	}
-+
-+	/*
-+	 * Add list to the evlist even with errors to allow callers to clean up.
-+	 */
-+	perf_evlist__splice_list_tail(evlist, &parse_state.list);
-+
- 	if (!ret) {
- 		struct perf_evsel *last;
- 
--		if (list_empty(&parse_state.list)) {
--			WARN_ONCE(true, "WARNING: event parser found nothing\n");
--			return -1;
--		}
--
--		perf_evlist__splice_list_tail(evlist, &parse_state.list);
- 		evlist->nr_groups += parse_state.nr_groups;
- 		last = perf_evlist__last(evlist);
- 		last->cmdline_group_boundary = true;
+-	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
++	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+ 	mmc->caps2 |= pdata->capabilities2;
+ 	mmc->max_segs = pdata->max_segs ? : 32;
+ 	mmc->max_blk_size = 512;
 -- 
 2.20.1
 
