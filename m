@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1116C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23610C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAAF208C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE92B2253D
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641555;
-	bh=mIdzJkIw2OYgLtqSIPrHvNBRvba93PhJp+islfrOncg=;
+	s=default; t=1577641560;
+	bh=cQKQEIL4h1OMi/WgToUi1jM7to2vQzP926WSOjjcE1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1lYZdkWRErKTWGBTJCrCOp7QZxONm5jJ4FgbidnW4yO9EztheEQykqFUJlPcT8gg
-	 zru0dvdDt22USTr3PSHYACre9Bh+7glxmyrd/uuXE3SUZmtbmeVdBH6hWj8xRmAfMV
-	 sj9wKy7T0VyxANq7RpHiHyEFerbtk14k1VAH+PXY=
+	b=rvQoxRSkBtBI48nDZHnS06/AoO6bAWMF/jpPUvenowXUIurh/S05P5A2phqkKafjY
+	 HZh3kh9l9ygEMfczuRBs0J5T9IV2ME7BEuMSNaudEnNqoSQGSbCjcKC4ayUiMJAPb4
+	 uwfeJH6Q3m6rnOXnAY9VOw6bQ//c3QQZz32pIsFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfL2Rpz (ORCPT
+        id S1730789AbfL2Rp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55248 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730680AbfL2Rpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:53 -0500
+        id S1730783AbfL2Rpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26CBD207FF;
-        Sun, 29 Dec 2019 17:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 861C2206A4;
+        Sun, 29 Dec 2019 17:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641552;
-        bh=mIdzJkIw2OYgLtqSIPrHvNBRvba93PhJp+islfrOncg=;
+        s=default; t=1577641555;
+        bh=cQKQEIL4h1OMi/WgToUi1jM7to2vQzP926WSOjjcE1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIKoP9YSLbeL5B5LRrdlsNYbq4IU7O1+Oj2m3pJsSuc3cQg+sOuzqhXbJUwAJAr3g
-         rWmcTn86o1Y4LMYNJD08a9EWUNt1udkSBMAyNU9/vU4PM6+FRVMBdrAjEZpqN10BaJ
-         Wwv/9nmkebkiUeo6hUO5PFxoJ2hZmxQH2DJPN3Ag=
+        b=h5p5LtnmYzgcIMvrjwowxZNtz3QZonTCnzrcNmCFG9dAKwVQnceQaFGGr9ED4eK9R
+         x/9GM1aTqGbqu97QmiuwXHLgy2ocJUJ66rAW/i833P1XvxaiweHe/20I8TzmRV7w32
+         UDbLHdISidzevC9lPlaoRaRcpJaHfmZPDLyDtaVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/434] MIPS: futex: Emit Loongson3 sync workarounds within asm
-Date:   Sun, 29 Dec 2019 18:22:47 +0100
-Message-Id: <20191229172709.236339830@linuxfoundation.org>
+Subject: [PATCH 5.4 115/434] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
+Date:   Sun, 29 Dec 2019 18:22:48 +0100
+Message-Id: <20191229172709.320620663@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,136 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 3c1d3f0979721a39dd2980c97466127ce65aa130 ]
+[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
 
-Generate the sync instructions required to workaround Loongson3 LL/SC
-errata within inline asm blocks, which feels a little safer than doing
-it from C where strictly speaking the compiler would be well within its
-rights to insert a memory access between the separate asm statements we
-previously had, containing sync & ll instructions respectively.
+In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
+released if mwifiex_map_pci_memory() fails. The release for skb and
+card->evtbd_ring_vbase is added.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-kernel@vger.kernel.org
+Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/barrier.h | 13 +++++++------
- arch/mips/include/asm/futex.h   | 15 +++++++--------
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrier.h
-index 9228f7386220..fb842965d541 100644
---- a/arch/mips/include/asm/barrier.h
-+++ b/arch/mips/include/asm/barrier.h
-@@ -218,13 +218,14 @@
-  * ordering will be done by smp_llsc_mb() and friends.
-  */
- #if defined(CONFIG_WEAK_REORDERING_BEYOND_LLSC) && defined(CONFIG_SMP)
--#define __WEAK_LLSC_MB		"	sync	\n"
--#define smp_llsc_mb()		__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
--#define __LLSC_CLOBBER
-+# define __WEAK_LLSC_MB		sync
-+# define smp_llsc_mb() \
-+	__asm__ __volatile__(__stringify(__WEAK_LLSC_MB) : : :"memory")
-+# define __LLSC_CLOBBER
- #else
--#define __WEAK_LLSC_MB		"		\n"
--#define smp_llsc_mb()		do { } while (0)
--#define __LLSC_CLOBBER		"memory"
-+# define __WEAK_LLSC_MB
-+# define smp_llsc_mb()		do { } while (0)
-+# define __LLSC_CLOBBER		"memory"
- #endif
+diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
+index eff06d59e9df..096334e941a1 100644
+--- a/drivers/net/wireless/marvell/mwifiex/pcie.c
++++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
+@@ -687,8 +687,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
+ 		skb_put(skb, MAX_EVENT_SIZE);
  
- #ifdef CONFIG_CPU_CAVIUM_OCTEON
-diff --git a/arch/mips/include/asm/futex.h b/arch/mips/include/asm/futex.h
-index b83b0397462d..54cf20530931 100644
---- a/arch/mips/include/asm/futex.h
-+++ b/arch/mips/include/asm/futex.h
-@@ -16,6 +16,7 @@
- #include <asm/barrier.h>
- #include <asm/compiler.h>
- #include <asm/errno.h>
-+#include <asm/sync.h>
- #include <asm/war.h>
+ 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
+-					   PCI_DMA_FROMDEVICE))
++					   PCI_DMA_FROMDEVICE)) {
++			kfree_skb(skb);
++			kfree(card->evtbd_ring_vbase);
+ 			return -1;
++		}
  
- #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg)		\
-@@ -32,7 +33,7 @@
- 		"	.set	arch=r4000			\n"	\
- 		"2:	sc	$1, %2				\n"	\
- 		"	beqzl	$1, 1b				\n"	\
--		__WEAK_LLSC_MB						\
-+		__stringify(__WEAK_LLSC_MB)				\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -50,19 +51,19 @@
- 		  "i" (-EFAULT)						\
- 		: "memory");						\
- 	} else if (cpu_has_llsc) {					\
--		loongson_llsc_mb();					\
- 		__asm__ __volatile__(					\
- 		"	.set	push				\n"	\
- 		"	.set	noat				\n"	\
- 		"	.set	push				\n"	\
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
-+		"	" __SYNC(full, loongson3_war) "		\n"	\
- 		"1:	"user_ll("%1", "%4")" # __futex_atomic_op\n"	\
- 		"	.set	pop				\n"	\
- 		"	" insn	"				\n"	\
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"	\
- 		"2:	"user_sc("$1", "%2")"			\n"	\
- 		"	beqz	$1, 1b				\n"	\
--		__WEAK_LLSC_MB						\
-+		__stringify(__WEAK_LLSC_MB)				\
- 		"3:						\n"	\
- 		"	.insn					\n"	\
- 		"	.set	pop				\n"	\
-@@ -147,7 +148,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 		"	.set	arch=r4000				\n"
- 		"2:	sc	$1, %2					\n"
- 		"	beqzl	$1, 1b					\n"
--		__WEAK_LLSC_MB
-+		__stringify(__WEAK_LLSC_MB)
- 		"3:							\n"
- 		"	.insn						\n"
- 		"	.set	pop					\n"
-@@ -164,13 +165,13 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 		  "i" (-EFAULT)
- 		: "memory");
- 	} else if (cpu_has_llsc) {
--		loongson_llsc_mb();
- 		__asm__ __volatile__(
- 		"# futex_atomic_cmpxchg_inatomic			\n"
- 		"	.set	push					\n"
- 		"	.set	noat					\n"
- 		"	.set	push					\n"
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
-+		"	" __SYNC(full, loongson3_war) "			\n"
- 		"1:	"user_ll("%1", "%3")"				\n"
- 		"	bne	%1, %z4, 3f				\n"
- 		"	.set	pop					\n"
-@@ -178,8 +179,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
- 		"2:	"user_sc("$1", "%2")"				\n"
- 		"	beqz	$1, 1b					\n"
--		__WEAK_LLSC_MB
--		"3:							\n"
-+		"3:	" __SYNC_ELSE(full, loongson3_war, __WEAK_LLSC_MB) "\n"
- 		"	.insn						\n"
- 		"	.set	pop					\n"
- 		"	.section .fixup,\"ax\"				\n"
-@@ -194,7 +194,6 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 		: GCC_OFF_SMALL_ASM() (*uaddr), "Jr" (oldval), "Jr" (newval),
- 		  "i" (-EFAULT)
- 		: "memory");
--		loongson_llsc_mb();
- 	} else
- 		return -ENOSYS;
+ 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
  
 -- 
 2.20.1
