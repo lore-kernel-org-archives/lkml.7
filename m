@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB1EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A61C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A32206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3683421744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642129;
-	bh=7IhDB8fZo0VwcPlFw0jdycofdMzvRlQYJC6mVeFH3Xs=;
+	s=default; t=1577642132;
+	bh=G7t/WeT4GtFQazJhgcamZZ+TPFgjsgDlQCleZbc2HnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsrP9D9AWzFdaCaI8vCMDwfKcMhGJMHbIjp/4iDLN55FqORhb+FHM17W7f3Qzhe4H
-	 iQHJYWxj6ljf0g8VU5Oq0Cg9NjML7YG0godzDUyo0tGw3RsyYUj3rZW6DmgJNEbh01
-	 JsHiIQ8vY9ZVYbS//0QW1xeM0OFC4Oam9/s8Obu0=
+	b=DBiMlwjbcyncuRcnzk5801TtSq8muIw7nkIZ2UER+FW//87WaeMbgAaOyPPibQVsE
+	 QemYFYTldSGijq71k3ZfkXIqC4WU+AZY1vj8xzmAs7FKpZL6GwuMl2ONef792MIsJu
+	 MVtjgHRuGxK356Ju6t0WD0CGgWHQb9QxoXMO2M08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732921AbfL2Rz2 (ORCPT
+        id S1732929AbfL2Rzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:55:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732908AbfL2RzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:25 -0500
+        id S1732916AbfL2Rz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76045206A4;
-        Sun, 29 Dec 2019 17:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D22B2206DB;
+        Sun, 29 Dec 2019 17:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642124;
-        bh=7IhDB8fZo0VwcPlFw0jdycofdMzvRlQYJC6mVeFH3Xs=;
+        s=default; t=1577642127;
+        bh=G7t/WeT4GtFQazJhgcamZZ+TPFgjsgDlQCleZbc2HnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tS0KLbI1R8mTtI60+lQpboTx78rUKv0+XD/4fwn8Qeg7HED4n67d+02Zz5urJoyAN
-         9gtoyUVvCPj/GhLhO3RpeM2V7Cf65nWJULowDeTkJ/mSm/qbOJFHCwoFXqMd59J32s
-         gmPVTOgMnvFFH4b+zY2OkzqSLDRLAFgMWjNsJWA8=
+        b=ZfKDosWvxvtmexSQfRw1OBct8WG8YaeX7qZDqIZcNsSWlLBfVTT8hLKsbsPcPdS7B
+         F+UAhULCWcrppieqVslZFECjqAxCfIjqhVmUnWF8+wj1aR1ZR9zHJn8O9D2xEQf7dR
+         X0q+2COgXYahlEiFVpnwkA2KE16BbTso+nSWlQjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 352/434] net: phy: initialise phydev speed and duplex sanely
-Date:   Sun, 29 Dec 2019 18:26:45 +0100
-Message-Id: <20191229172725.352306708@linuxfoundation.org>
+Subject: [PATCH 5.4 353/434] tools, bpf: Fix build for make -s tools/bpf O=<dir>
+Date:   Sun, 29 Dec 2019 18:26:46 +0100
+Message-Id: <20191229172725.418699596@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,44 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit a5d66f810061e2dd70fb7a108dcd14e535bc639f ]
+[ Upstream commit a89b2cbf71d64b61e79bbe5cb7ff4664797eeaaf ]
 
-When a phydev is created, the speed and duplex are set to zero and
--1 respectively, rather than using the predefined SPEED_UNKNOWN and
-DUPLEX_UNKNOWN constants.
+Building selftests with 'make TARGETS=bpf kselftest' was fixed in commit
+55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine
+srctree"). However, by updating $(srctree) in tools/bpf/Makefile for
+in-tree builds only, we leave out the case where we pass an output
+directory to build BPF tools, but $(srctree) is not set. This
+typically happens for:
 
-There is a window at initialisation time where we may report link
-down using the 0/-1 values.  Tidy this up and use the predefined
-constants, so debug doesn't complain with:
+    $ make -s tools/bpf O=/tmp/foo
+    Makefile:40: /tools/build/Makefile.feature: No such file or directory
 
-"Unsupported (update phy-core.c)/Unsupported (update phy-core.c)"
+Fix it by updating $(srctree) in the Makefile not only for out-of-tree
+builds, but also if $(srctree) is empty.
 
-when the speed and duplex settings are printed.
+Detected with test_bpftool_build.sh.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 55d554f5d140 ("tools: bpf: Use !building_out_of_srctree to determine srctree")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Link: https://lore.kernel.org/bpf/20191119105626.21453-1-quentin.monnet@netronome.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/bpf/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 14c6b7597b06..cee8724caf2d 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -596,8 +596,8 @@ struct phy_device *phy_device_create(struct mii_bus *bus, int addr, int phy_id,
- 	mdiodev->device_free = phy_mdio_device_free;
- 	mdiodev->device_remove = phy_mdio_device_remove;
- 
--	dev->speed = 0;
--	dev->duplex = -1;
-+	dev->speed = SPEED_UNKNOWN;
-+	dev->duplex = DUPLEX_UNKNOWN;
- 	dev->pause = 0;
- 	dev->asym_pause = 0;
- 	dev->link = 0;
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index 5d1995fd369c..5535650800ab 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -16,7 +16,13 @@ CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
+ # isn't set and when invoked from selftests build, where srctree
+ # is set to ".". building_out_of_srctree is undefined for in srctree
+ # builds
++ifeq ($(srctree),)
++update_srctree := 1
++endif
+ ifndef building_out_of_srctree
++update_srctree := 1
++endif
++ifeq ($(update_srctree),1)
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
 -- 
 2.20.1
 
