@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B50CC2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3102E206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BB9206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642039;
-	bh=oYXQTWvyH4yBWYkoSSVx9Y69YbQsbQ3yP4IUKIK1D8w=;
+	s=default; t=1577642043;
+	bh=doqTYewzucexqNabndyd7CtBHmYOg0GVCojdAimXsII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NbrMmTh0t8WvTBwLAfL7ykt/GTdQXu7kievzVnlY0UTIuANUaFUiB8XvWfDlUeolF
-	 DLZ2twEnGOf459vfIwJYFZs+2bBHd761tXUGaYsAKm75K0TTxSejt9Ja6v/IxJ2qYr
-	 8yC3QnIwhrOGX54ivn239RTlNOPp4j0cr10vM8do=
+	b=eu9NVf7kH+gQ8cwDmQbwJTmMQ5E0jOBxG6s996wljeN2MCJajHqes13s0OwEJzgHS
+	 dT6fz5fz2YX6ov55uc2kfj2eAlBi/VCy+c8P07NjRuztvX3rWF2Bl8ajpwi2FX49aO
+	 +rFqFNq/S3MiLZrc3CEHGjIOCeAgO3bowxQ0Em48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732583AbfL2Rx6 (ORCPT
+        id S1732598AbfL2RyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732572AbfL2Rx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:56 -0500
+        id S1732585AbfL2Rx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA097206DB;
-        Sun, 29 Dec 2019 17:53:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5881A20718;
+        Sun, 29 Dec 2019 17:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642036;
-        bh=oYXQTWvyH4yBWYkoSSVx9Y69YbQsbQ3yP4IUKIK1D8w=;
+        s=default; t=1577642038;
+        bh=doqTYewzucexqNabndyd7CtBHmYOg0GVCojdAimXsII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYZ06k4Ho+P0mAo7CPXNHu3annACHMHB029TIGJG9uezmAO6sainkHjRpBW28upGa
-         X9/w2q0Ul8fDM+C9Hrttu87Gb03ICIaSisM2nO/mfP6njjzZVs5sOWDkU4CY+LAJi4
-         nf3g2v8NkF8RkhaxNwuv0NdNLM8Mdfc1PfXfSfmo=
+        b=IjRzeFiiu0qksp8Yr4uCiKbXTZ01kAbeLLLmVH3UKdWrK+A8n5a0uL2Eck5qGV1jW
+         rwy8LTxOPaOYff5MA4nH0qFMtr9UD/RRT8QRGuwilhu+skEqjtZRVkfVT/j1d7g0Oe
+         s3TmzjiXtThtdtBPYyrUB9C0OUXQcMaWl3uAb638=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Gonglei <arei.gonglei@huawei.com>,
+        virtualization@lists.linux-foundation.org,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 314/434] xhci-pci: Allow host runtime PM as default also for Intel Ice Lake xHCI
-Date:   Sun, 29 Dec 2019 18:26:07 +0100
-Message-Id: <20191229172722.812454048@linuxfoundation.org>
+Subject: [PATCH 5.4 315/434] crypto: virtio - deal with unsupported input sizes
+Date:   Sun, 29 Dec 2019 18:26:08 +0100
+Message-Id: <20191229172722.878348386@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,50 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 07a594f353655b1628f598add352e7e754f44869 ]
+[ Upstream commit 19c5da7d4a2662e85ea67d2d81df57e038fde3ab ]
 
-Intel Ice Lake has two xHCI controllers one on PCH and the other as part
-of the CPU itself. The latter is also part of the so called Type C
-Subsystem (TCSS) sharing ACPI power resources with the PCIe root ports
-and the Thunderbolt controllers. In order to put the whole TCSS block
-into D3cold the xHCI needs to be runtime suspended as well when idle.
+Return -EINVAL for input sizes that are not a multiple of the AES
+block size, since they are not supported by our CBC chaining mode.
 
-For this reason allow runtime PM as default for Ice Lake TCSS xHCI
-controller.
+While at it, remove the pr_err() that reports unsupported key sizes
+being used: we shouldn't spam the kernel log with that.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1573836603-10871-5-git-send-email-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Gonglei <arei.gonglei@huawei.com>
+Cc: virtualization@lists.linux-foundation.org
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/virtio/virtio_crypto_algs.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 1904ef56f61c..2907fe4d78dd 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -48,6 +48,7 @@
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI		0x15e9
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI		0x15ec
- #define PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI		0x15f0
-+#define PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI		0x8a13
+diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c b/drivers/crypto/virtio/virtio_crypto_algs.c
+index 42d19205166b..673fb29fda53 100644
+--- a/drivers/crypto/virtio/virtio_crypto_algs.c
++++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+@@ -105,8 +105,6 @@ virtio_crypto_alg_validate_key(int key_len, uint32_t *alg)
+ 		*alg = VIRTIO_CRYPTO_CIPHER_AES_CBC;
+ 		break;
+ 	default:
+-		pr_err("virtio_crypto: Unsupported key length: %d\n",
+-			key_len);
+ 		return -EINVAL;
+ 	}
+ 	return 0;
+@@ -484,6 +482,11 @@ static int virtio_crypto_ablkcipher_encrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_4			0x43b9
- #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
-@@ -212,7 +213,8 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	     pdev->device == PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_XHCI ||
- 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_XHCI ||
- 	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_XHCI ||
--	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI))
-+	     pdev->device == PCI_DEVICE_ID_INTEL_TITAN_RIDGE_DD_XHCI ||
-+	     pdev->device == PCI_DEVICE_ID_INTEL_ICE_LAKE_XHCI))
- 		xhci->quirks |= XHCI_DEFAULT_PM_RUNTIME_ALLOW;
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
+@@ -504,6 +507,11 @@ static int virtio_crypto_ablkcipher_decrypt(struct ablkcipher_request *req)
+ 	/* Use the first data virtqueue as default */
+ 	struct data_queue *data_vq = &vcrypto->data_vq[0];
  
- 	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
++	if (!req->nbytes)
++		return 0;
++	if (req->nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	vc_req->dataq = data_vq;
+ 	vc_req->alg_cb = virtio_crypto_dataq_sym_callback;
+ 	vc_sym_req->ablkcipher_ctx = ctx;
 -- 
 2.20.1
 
