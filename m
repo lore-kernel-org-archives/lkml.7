@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736FAC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC5C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB7A20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA88520748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643153;
-	bh=QozURXCJBPVksqCydUnS/f/GwhWTAa4O786kDQPZHIs=;
+	s=default; t=1577643157;
+	bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Key4JYRZx+euxip0ltQvVPyS7dl/Qstj0yTTXtQxfVqNLaHLHzByKFLkXKAZZWnWk
-	 PsGJjnInYujbSBg3Lkgy4bQPff2JVrMfLlpG7HAvo3YdyOGTbEI/VauvazOb2FVc/k
-	 T/OxtvlOEuQh6pgYIUgBKl0XMPHD8ilcUfUxMfCM=
+	b=DO/r+8Vw9LBaHBqek2+A0YzdNfbZYp1aJToqSADIwULgmYYPhQ/3/fNt7PJ9yhD4w
+	 OQYlma6CuuU5/XvY5eqvdTSEwUCbyd2i0E3ivWuey46qtSEL1aSkF0piS1uv2kcC/r
+	 BoPJlDgH26ZiDglf407yzHV/anEsx8bx1XgLgSi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfL2R3q (ORCPT
+        id S1728880AbfL2SMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54530 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:12:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbfL2R3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:39 -0500
+        id S1728804AbfL2R3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A67620409;
-        Sun, 29 Dec 2019 17:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2174C20409;
+        Sun, 29 Dec 2019 17:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640578;
-        bh=QozURXCJBPVksqCydUnS/f/GwhWTAa4O786kDQPZHIs=;
+        s=default; t=1577640583;
+        bh=JQavVVK4m8ATRA49WjZPbeYlVPVpntoS23ebp+Y/E8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zk/1mbpZwuhIHmCjpn9Q3Stfp0A6n8kQ81UoI89GGcYmtC5XcAxwfY4P28uoqizZQ
-         Dk6T3KSCM2teP1t/WxyDCzPIopRr1L/44n65uU+xUrrMUFizXb9eEvV6lhQ8N9ga+g
-         P8+Ndad1quFq7RM8g7GHdMuzkBs38hur6J6t+0MM=
+        b=RYBD0G1cwZ0s7XmaKmtxtozNePCwPS9SJyTTk2p7Fx5MpNoouc+hwh810v0lDY1tk
+         hDlyOsh/1sBnK1eEWVIdwLEzTU5fSY47LEwRNpFUHmRv7UzHVd8ypja+r3hstqI3JE
+         ZUfHx9Mzya7IztLEAK3EkMaA6EvLELwAPzv9T1tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/219] regulator: max8907: Fix the usage of uninitialized variable in max8907_regulator_probe()
-Date:   Sun, 29 Dec 2019 18:17:36 +0100
-Message-Id: <20191229162515.375843539@linuxfoundation.org>
+Subject: [PATCH 4.19 056/219] media: cec-funcs.h: add status_req checks
+Date:   Sun, 29 Dec 2019 18:17:38 +0100
+Message-Id: <20191229162515.579611996@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,62 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 472b39c3d1bba0616eb0e9a8fa3ad0f56927c7d7 ]
+[ Upstream commit 9b211f9c5a0b67afc435b86f75d78273b97db1c5 ]
 
-Inside function max8907_regulator_probe(), variable val could
-be uninitialized if regmap_read() fails. However, val is used
-later in the if statement to decide the content written to
-"pmic", which is potentially unsafe.
+The CEC_MSG_GIVE_DECK_STATUS and CEC_MSG_GIVE_TUNER_DEVICE_STATUS commands
+both have a status_req argument: ON, OFF, ONCE. If ON or ONCE, then the
+follower will reply with a STATUS message. Either once or whenever the
+status changes (status_req == ON).
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Link: https://lore.kernel.org/r/20191003175813.16415-1-yzhai003@ucr.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+If status_req == OFF, then it will stop sending continuous status updates,
+but the follower will *not* send a STATUS message in that case.
+
+This means that if status_req == OFF, then msg->reply should be 0 as well
+since no reply is expected in that case.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/max8907-regulator.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ include/uapi/linux/cec-funcs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
-index 860400d2cd85..a8f2f07239fb 100644
---- a/drivers/regulator/max8907-regulator.c
-+++ b/drivers/regulator/max8907-regulator.c
-@@ -299,7 +299,10 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 	memcpy(pmic->desc, max8907_regulators, sizeof(pmic->desc));
+diff --git a/include/uapi/linux/cec-funcs.h b/include/uapi/linux/cec-funcs.h
+index 8997d5068c08..4511b85c84df 100644
+--- a/include/uapi/linux/cec-funcs.h
++++ b/include/uapi/linux/cec-funcs.h
+@@ -923,7 +923,8 @@ static inline void cec_msg_give_deck_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_DECK_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_DECK_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_DECK_STATUS : 0;
+ }
  
- 	/* Backwards compatibility with MAX8907B; SD1 uses different voltages */
--	regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	ret = regmap_read(max8907->regmap_gen, MAX8907_REG_II2RR, &val);
-+	if (ret)
-+		return ret;
-+
- 	if ((val & MAX8907_II2RR_VERSION_MASK) ==
- 	    MAX8907_II2RR_VERSION_REV_B) {
- 		pmic->desc[MAX8907_SD1].min_uV = 637500;
-@@ -336,14 +339,20 @@ static int max8907_regulator_probe(struct platform_device *pdev)
- 		}
+ static inline void cec_ops_give_deck_status(const struct cec_msg *msg,
+@@ -1027,7 +1028,8 @@ static inline void cec_msg_give_tuner_device_status(struct cec_msg *msg,
+ 	msg->len = 3;
+ 	msg->msg[1] = CEC_MSG_GIVE_TUNER_DEVICE_STATUS;
+ 	msg->msg[2] = status_req;
+-	msg->reply = reply ? CEC_MSG_TUNER_DEVICE_STATUS : 0;
++	msg->reply = (reply && status_req != CEC_OP_STATUS_REQ_OFF) ?
++				CEC_MSG_TUNER_DEVICE_STATUS : 0;
+ }
  
- 		if (pmic->desc[i].ops == &max8907_ldo_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & MAX8907_MASK_LDO_SEQ) !=
- 			    MAX8907_MASK_LDO_SEQ)
- 				pmic->desc[i].ops = &max8907_ldo_hwctl_ops;
- 		} else if (pmic->desc[i].ops == &max8907_out5v_ops) {
--			regmap_read(config.regmap, pmic->desc[i].enable_reg,
-+			ret = regmap_read(config.regmap, pmic->desc[i].enable_reg,
- 				    &val);
-+			if (ret)
-+				return ret;
-+
- 			if ((val & (MAX8907_MASK_OUT5V_VINEN |
- 						MAX8907_MASK_OUT5V_ENSRC)) !=
- 			    MAX8907_MASK_OUT5V_ENSRC)
+ static inline void cec_ops_give_tuner_device_status(const struct cec_msg *msg,
 -- 
 2.20.1
 
