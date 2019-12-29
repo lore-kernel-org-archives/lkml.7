@@ -2,57 +2,58 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD816C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97340C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91967207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7CA206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641301;
-	bh=rJ9T0NsU4NCiXEL3LAWvxfY7uGboWhRhsy19r41m7Ys=;
+	s=default; t=1577641305;
+	bh=08HdQwKZUvJ1oXyHSEscem+bEbXWhakOQFgYdODZJdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQpR4kQQk64RDHtaRH8hXRG4CmTjL5MoCfYkeCNvhcA2d+pHHhgSlVouLW5j3Kwir
-	 S424dXKwD6tYdTuIAxAXfhD72FPhMyiDF/t0D74KRKfikWoOYcyzJfljyPEw0TXnyq
-	 UXLC/qXZgu6YmB5Z1mDzxpiET23vNJ6xQG9RdSbA=
+	b=KDlqB/jzMPC5aWaJqCk1OIgGYc9+8qpm1gEFrlpOYG5Yep+Ns3xi2jd9Ug6CdfajZ
+	 E6o9s4Ci6pBQAF5MYwrDJ/W5ivUumB1ATQG6NGHmzKm0c0KCYFGHPrQtcGVCGgO+0e
+	 Ay7bPiT6Wt3+vKXqlxEaYgBjQ/yE/yeGDASWaZWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfL2Rlk (ORCPT
+        id S1730209AbfL2Rlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55186 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:41:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbfL2R34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:56 -0500
+        id S1730198AbfL2Rlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:41:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81F3620409;
-        Sun, 29 Dec 2019 17:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6F524654;
+        Sun, 29 Dec 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640596;
-        bh=rJ9T0NsU4NCiXEL3LAWvxfY7uGboWhRhsy19r41m7Ys=;
+        s=default; t=1577641302;
+        bh=08HdQwKZUvJ1oXyHSEscem+bEbXWhakOQFgYdODZJdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g3kwcEtaT99Q6oeZrz4vK41igR08alhjjA7s7cA8vXX7suN/F3lwdbONCDd9AdSm5
-         4aMl+EGWFxyCmayGwaM2YcTBtRmY2/JI+rP3E+AnDKvog4GESaNd6QTiwxevD1f2la
-         v29ZbybXMopcu0iR1azEZUWk3bgY7qzRfNSuvlss=
+        b=xaqH4RIu7OGQPiA2ibpWswE8bMabCYyG4OKDDudwO2lWjBoyJcULsF+kD13CVab2M
+         xq9XeMAB3EAMWxsdsUj1zrm7FI/gNcORgPrzjav87H+8/bttN3UzqDjGMqA2BfP4/l
+         KCoPS37kP3QRN2av/u2jKgDr6H/CRKCQtAxKxJ5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/219] mwifiex: pcie: Fix memory leak in mwifiex_pcie_init_evt_ring
-Date:   Sun, 29 Dec 2019 18:17:43 +0100
-Message-Id: <20191229162515.953663409@linuxfoundation.org>
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        David Miller <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+Subject: [PATCH 5.4 010/434] net-sysfs: Call dev_hold always in rx_queue_add_kobject
+Date:   Sun, 29 Dec 2019 18:21:03 +0100
+Message-Id: <20191229172702.962912129@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
-References: <20191229162508.458551679@linuxfoundation.org>
+In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+References: <20191229172702.393141737@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,42 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit d10dcb615c8e29d403a24d35f8310a7a53e3050c ]
+[ Upstream commit ddd9b5e3e765d8ed5a35786a6cb00111713fe161 ]
 
-In mwifiex_pcie_init_evt_ring, a new skb is allocated which should be
-released if mwifiex_map_pci_memory() fails. The release for skb and
-card->evtbd_ring_vbase is added.
+Dev_hold has to be called always in rx_queue_add_kobject.
+Otherwise usage count drops below 0 in case of failure in
+kobject_init_and_add.
 
-Fixes: 0732484b47b5 ("mwifiex: separate ring initialization and ring creation routines")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b8eb718348b8 ("net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject")
+Reported-by: syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: David Miller <davem@davemloft.net>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/marvell/mwifiex/pcie.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/core/net-sysfs.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 3fe81b2a929a..918c69936540 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -691,8 +691,11 @@ static int mwifiex_pcie_init_evt_ring(struct mwifiex_adapter *adapter)
- 		skb_put(skb, MAX_EVENT_SIZE);
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -919,14 +919,17 @@ static int rx_queue_add_kobject(struct n
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
- 		if (mwifiex_map_pci_memory(adapter, skb, MAX_EVENT_SIZE,
--					   PCI_DMA_FROMDEVICE))
-+					   PCI_DMA_FROMDEVICE)) {
-+			kfree_skb(skb);
-+			kfree(card->evtbd_ring_vbase);
- 			return -1;
-+		}
++	/* Kobject_put later will trigger rx_queue_release call which
++	 * decreases dev refcount: Take that reference here
++	 */
++	dev_hold(queue->dev);
++
+ 	kobj->kset = dev->queues_kset;
+ 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
+ 				     "rx-%u", index);
+ 	if (error)
+ 		goto err;
  
- 		buf_pa = MWIFIEX_SKB_DMA_ADDR(skb);
- 
--- 
-2.20.1
-
+-	dev_hold(queue->dev);
+-
+ 	if (dev->sysfs_rx_queue_group) {
+ 		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
+ 		if (error)
 
 
