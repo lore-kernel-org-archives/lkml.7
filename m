@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87132C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C50C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E087206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9C3206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643186;
-	bh=bnwaV+APOXVAf6E6I0r67RmxP57wiQx1xRomaYSLgvg=;
+	s=default; t=1577643188;
+	bh=c8VA29kpQK77/jSY84rqarJeqdOOpBrues7PCqSBh8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTAzJDP8emROFVr4ZKc32ugcK1ZHtVrza78xJC7t7YtdVc7OY7S9MAkVDjZShLSbN
-	 4wowaEeQiSM+FVbh3Tg2PAeXpbDsiLdjBUK2nHuQ9dykuEYUUWoNQmJ06eciuxhsUq
-	 9EqdN6a4ZZdt1VOSmiWQvyTAQ9AHlOac524Bvmj8=
+	b=m2c0d+0qsLXdRnN26E1NsHJLcVOVs82C7FkMTQm4KQyrKz6C+8U0yoAXw/4BgYjbQ
+	 lgo2T/p427E6a19DJBYrmbZ8kL9LXIAd8eAOuZ3c2ADFaHYQHH3WVaTod1hZTvsog6
+	 32GJ0UvFTFrT+NnNYVxIxyJXBssuUZP2+zU/aaRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733131AbfL2SNE (ORCPT
+        id S1728099AbfL2R2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:13:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:28:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbfL2R2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:28:48 -0500
+        id S1728362AbfL2R2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:28:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 717E4222D9;
-        Sun, 29 Dec 2019 17:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0903F222C3;
+        Sun, 29 Dec 2019 17:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640527;
-        bh=bnwaV+APOXVAf6E6I0r67RmxP57wiQx1xRomaYSLgvg=;
+        s=default; t=1577640520;
+        bh=c8VA29kpQK77/jSY84rqarJeqdOOpBrues7PCqSBh8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpdyGQ7cWUO6qtOBTCv/GLjRNv5Hpec9XOki6pgIEazCVDnRwgmf0gKJfE9zjTspd
-         L7IVRDd9hb9axCb+En/MVBqpAb+W8my+R2NBLzpIslHUNJBFw+1eHovPzK53Qpgq/v
-         WI8cX+OvytWW/dqUBmzDwJ3lBXN3xfOreBfH0SME=
+        b=qVooE5QeNiPL7zQbOTqo4kNAi7SpxIZM6ytUx/vs0x0jgw/M3TBSEFfIywQCczkx5
+         EE/IHyKYFdltfP6goIVcGUP63ypmf6fweHI8qOAIs4GhLGFWRrZEMkWcNVJE+M6vnb
+         VRtFJMIj40rP2TF6bd+oPjI8uTnudGHnMsuBsYrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/219] drm/amdgpu: grab the id mgr lock while accessing passid_mapping
-Date:   Sun, 29 Dec 2019 18:17:13 +0100
-Message-Id: <20191229162513.096198571@linuxfoundation.org>
+Subject: [PATCH 4.19 029/219] drm/bridge: analogix-anx78xx: silence -EPROBE_DEFER warnings
+Date:   Sun, 29 Dec 2019 18:17:11 +0100
+Message-Id: <20191229162512.956683201@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,61 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 6817bf283b2b851095825ec7f0e9f10398e09125 ]
+[ Upstream commit 2708e876272d89bbbff811d12834adbeef85f022 ]
 
-Need to make sure that we actually dropping the right fence.
-Could be done with RCU as well, but to complicated for a fix.
+Silence two warning messages that occur due to -EPROBE_DEFER errors to
+help cleanup the system boot log.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190815004854.19860-4-masneyb@onstation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/analogix-anx78xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 49fe5084c53d..69fb90d9c485 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -700,10 +700,8 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
- 		id->oa_base != job->oa_base ||
- 		id->oa_size != job->oa_size);
- 	bool vm_flush_needed = job->vm_needs_flush;
--	bool pasid_mapping_needed = id->pasid != job->pasid ||
--		!id->pasid_mapping ||
--		!dma_fence_is_signaled(id->pasid_mapping);
- 	struct dma_fence *fence = NULL;
-+	bool pasid_mapping_needed;
- 	unsigned patch_offset = 0;
- 	int r;
- 
-@@ -713,6 +711,12 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
- 		pasid_mapping_needed = true;
- 	}
- 
-+	mutex_lock(&id_mgr->lock);
-+	if (id->pasid != job->pasid || !id->pasid_mapping ||
-+	    !dma_fence_is_signaled(id->pasid_mapping))
-+		pasid_mapping_needed = true;
-+	mutex_unlock(&id_mgr->lock);
+diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+index f8433c93f463..cc820e9aea1d 100644
+--- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
++++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
+@@ -725,7 +725,9 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
+ 	/* 1.0V digital core power regulator  */
+ 	pdata->dvdd10 = devm_regulator_get(dev, "dvdd10");
+ 	if (IS_ERR(pdata->dvdd10)) {
+-		DRM_ERROR("DVDD10 regulator not found\n");
++		if (PTR_ERR(pdata->dvdd10) != -EPROBE_DEFER)
++			DRM_ERROR("DVDD10 regulator not found\n");
 +
- 	gds_switch_needed &= !!ring->funcs->emit_gds_switch;
- 	vm_flush_needed &= !!ring->funcs->emit_vm_flush  &&
- 			job->vm_pd_addr != AMDGPU_BO_INVALID_OFFSET;
-@@ -752,9 +756,11 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
+ 		return PTR_ERR(pdata->dvdd10);
  	}
  
- 	if (pasid_mapping_needed) {
-+		mutex_lock(&id_mgr->lock);
- 		id->pasid = job->pasid;
- 		dma_fence_put(id->pasid_mapping);
- 		id->pasid_mapping = dma_fence_get(fence);
-+		mutex_unlock(&id_mgr->lock);
+@@ -1341,7 +1343,9 @@ static int anx78xx_i2c_probe(struct i2c_client *client,
+ 
+ 	err = anx78xx_init_pdata(anx78xx);
+ 	if (err) {
+-		DRM_ERROR("Failed to initialize pdata: %d\n", err);
++		if (err != -EPROBE_DEFER)
++			DRM_ERROR("Failed to initialize pdata: %d\n", err);
++
+ 		return err;
  	}
- 	dma_fence_put(fence);
  
 -- 
 2.20.1
