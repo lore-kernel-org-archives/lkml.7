@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441D4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070BFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200F820718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E7E222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641816;
-	bh=LmHqfFxiheRtiU4eLA/bg/3osjTRGv2BZcCh/NmvOto=;
+	s=default; t=1577641820;
+	bh=qjpoMGgXjcNmi4j8T+3Fy+8TjF0hWqMvbn2ZLk8QUQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ve0NpPetFRvSOQAoR6q6esA7sHDBIEIu0r26IRhxwtilXseoy+qCvSxcwRgly9quJ
-	 5+g+Ap3+HieXlQDac8XfrrE9cK/e2Z2KzeKWBfQNvcWPfaAc1RLp5/Xiqfia8bqSgZ
-	 UY1jEaPgoOLIPbheoM00S9uPCFz4MaVtWTtQojJk=
+	b=iEMbJTvMcRmtDFqFt93pqToCKwH6A8LXLfYTM6eDOlm9H+VMBZWykLtIjctxIbFby
+	 8AQfl+cP4ZngJts1FtLjDK+cl80vPRTSz9QTxOr6YZPU20QxUOqNg/jCbeOuyuKWBL
+	 iUu3hifnrG+Ao/BDqWCZwUVXmrUb1uhyELW7bdUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfL2RuP (ORCPT
+        id S1731849AbfL2RuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34306 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731792AbfL2RuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:07 -0500
+        id S1731818AbfL2RuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6966A21744;
-        Sun, 29 Dec 2019 17:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9817820718;
+        Sun, 29 Dec 2019 17:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641806;
-        bh=LmHqfFxiheRtiU4eLA/bg/3osjTRGv2BZcCh/NmvOto=;
+        s=default; t=1577641814;
+        bh=qjpoMGgXjcNmi4j8T+3Fy+8TjF0hWqMvbn2ZLk8QUQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mOE9gJ3kwIOJ+b8zohGUmJCwCRU3CkqJuq8pPZsRLOWZEF0XFc2DXq+lsEoPkCu3Y
-         OlRsuJOV4HZmlmujY/bz/8HVCm5NVvuu15V4LHfMePETKP9ioqHjM3D1yYom6VaPmx
-         0e0pRftWy5uIA8XmgC+fh9VubCDw8EvPuUdSwJQs=
+        b=Umy12WIB1vqpMXXtyzoiTFytY0Fbc5fbIhrLIQo4wxQyODleaIYGVfjeGjmY4iZDe
+         UxdswukpDFwBJ/pLMGGD7oztYo6TQoH6vB8NBgQ2b+qiwWu0fepvl1wS1oKC4AJWfy
+         obb0lZ0EJX8dSoQx/OnHfkGvIj+4tY8vCrgSs6E0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 218/434] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
-Date:   Sun, 29 Dec 2019 18:24:31 +0100
-Message-Id: <20191229172716.317844159@linuxfoundation.org>
+Subject: [PATCH 5.4 221/434] ALSA: pcm: Fix missing check of the new non-cached buffer type
+Date:   Sun, 29 Dec 2019 18:24:34 +0100
+Message-Id: <20191229172716.523417491@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,93 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
+[ Upstream commit 6111fd2370eecae9f11bfdc08ba097e0b51fcfd3 ]
 
-The iio_triggered_buffer_postenable() hook should be called first to
-attach the poll function. The iio_triggered_buffer_predisable() hook is
-called last (as is it should).
+The check for the mmap support via hw_support_mmap() function misses
+the case where the device is with SNDRV_DMA_TYPE_DEV_UC, which should
+have been treated equally as SNDRV_DMA_TYPE_DEV.  Let's fix it.
 
-This change moves iio_triggered_buffer_postenable() to be called first. It
-adds iio_triggered_buffer_predisable() on the error paths of the postenable
-hook.
-For the predisable hook, some code-paths have been changed to make sure
-that the iio_triggered_buffer_predisable() hook gets called in case there
-is an error before it.
+Note that this bug doesn't hit any practical problem, because
+SNDRV_DMA_TYPE_DEV_UC is used only for x86-specific drivers
+(snd-hda-intel and snd-intel8x0) for the specific platforms that need
+the non-cached buffers.  And, on such platforms, hw_support_mmap()
+already returns true in anyway.  That's the reason I didn't put
+Cc-to-stable mark here.  This is only for any theoretical future
+extension.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 425da159707b ("ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*")
+Fixes: 42e748a0b325 ("ALSA: memalloc: Add non-cached buffer type")
+Link: https://lore.kernel.org/r/20191104101115.27311-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ sound/core/pcm_native.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
-index 5fa78c273a25..65c7c9329b1c 100644
---- a/drivers/iio/adc/dln2-adc.c
-+++ b/drivers/iio/adc/dln2-adc.c
-@@ -524,6 +524,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 	u16 conflict;
- 	unsigned int trigger_chan;
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 91c6ad58729f..c3a139436ac2 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -222,7 +222,8 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
+ 		return false;
  
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
-+		return ret;
-+
- 	mutex_lock(&dln2->mutex);
+ 	if (substream->ops->mmap ||
+-	    substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV)
++	    (substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV &&
++	     substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV_UC))
+ 		return true;
  
- 	/* Enable ADC */
-@@ -537,6 +541,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 				(int)conflict);
- 			ret = -EBUSY;
- 		}
-+		iio_triggered_buffer_predisable(indio_dev);
- 		return ret;
- 	}
- 
-@@ -550,6 +555,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 		if (ret < 0) {
- 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
-+			iio_triggered_buffer_predisable(indio_dev);
- 			return ret;
- 		}
- 	} else {
-@@ -557,12 +563,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
- 		mutex_unlock(&dln2->mutex);
- 	}
- 
--	return iio_triggered_buffer_postenable(indio_dev);
-+	return 0;
- }
- 
- static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
- {
--	int ret;
-+	int ret, ret2;
- 	struct dln2_adc *dln2 = iio_priv(indio_dev);
- 
- 	mutex_lock(&dln2->mutex);
-@@ -577,12 +583,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
- 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
- 
- 	mutex_unlock(&dln2->mutex);
--	if (ret < 0) {
-+	if (ret < 0)
- 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
--		return ret;
--	}
- 
--	return iio_triggered_buffer_predisable(indio_dev);
-+	ret2 = iio_triggered_buffer_predisable(indio_dev);
-+	if (ret == 0)
-+		ret = ret2;
-+
-+	return ret;
- }
- 
- static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
+ 	return dma_can_mmap(substream->dma_buffer.dev.dev);
 -- 
 2.20.1
 
