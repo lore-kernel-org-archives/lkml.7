@@ -2,449 +2,170 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9942C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8CEC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4912071E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA58D2071E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 14:25:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF5NfOQk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEJSrD30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfL2OXq (ORCPT
+        id S1726654AbfL2OZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 09:23:46 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41620 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfL2OXq (ORCPT
+        Sun, 29 Dec 2019 09:25:12 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51434 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726607AbfL2OZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 09:23:46 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so30560823wrw.8;
-        Sun, 29 Dec 2019 06:23:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bj/J9P1iJdIXwAGXkzHeKD11e8YZ+5BjC8WtOsMhzT4=;
-        b=fF5NfOQkRUYu9fS/4m+c645CvdTnbCI6Ye1k9k1IAOtP4OrrlirdyuXnBGmCyvVLTe
-         LoxJFna6Z0sqwDCg+QV7z2K41kssBKHJIy7z7WafNqfhlnPhTiw8GZhDhxUNTr8Cfm36
-         +M0vVlvSsblQJuvDP5KQZMfHIxJDxW86tEKZ3QDT8CJQxN1ZkWhj6gcV5m+5N+j+jCN0
-         B1twWsYIV3PAcoK2pMtXFT6vtV+2BgfHrv3qQOPEIu/J9VcmYYlw7pWlR6NIeNHH3/M2
-         10Ag7Rx5JZwpvroigHy4guP9+U6pWAqV/AdAcQ/qjc3FDH9J913QLYqnryK2icskZv8s
-         8QoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bj/J9P1iJdIXwAGXkzHeKD11e8YZ+5BjC8WtOsMhzT4=;
-        b=KlgE0VLg596pJ6kLO8gkSsOkpve67jcFoDga9HjLJjR41Ov5dyYgHUg8fNeKZEE9l0
-         rS0HXKCaniMbkI5YiAXYOLwKbT98DthZwCua66VXGhBT5I5uXAHt7zO/hMqx3Cy+8IzH
-         toUr6ep1O1BvSrIdJiHJrGTuwFgpEOMJ0s6iDTzYlmOMks4L0zd+6xLsirydqge8U2Is
-         UvKW8ducIuUOz5UQO+78oDiVjHApUp43GYk5WxxKTPjuYA5GpsmDNPB0IhrsS/1pGApl
-         zmfUqPqUxdsga2noUmPsuPGQiZNumM6GmqRO/xC/EpPTH964w8mz/xIcpF1tnS7XUFKt
-         knQg==
-X-Gm-Message-State: APjAAAXvKKhA9KvEQUDXXIUn8koYE4wOyEtGkfyCuPCQrMNPm2vyTZJy
-        FG0D5NVKD1rMxIgpUgr8hTQ=
-X-Google-Smtp-Source: APXvYqzW6756p5ZqVOCm/dfkUH//itMOLKqIGdv/scXTVrG+Zrg8ZpxHu5SQfZ/vxMW6UPqTsgHQfQ==
-X-Received: by 2002:adf:814c:: with SMTP id 70mr59092629wrm.157.1577629422572;
-        Sun, 29 Dec 2019 06:23:42 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id y20sm17339399wmi.25.2019.12.29.06.23.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 06:23:41 -0800 (PST)
-Date:   Sun, 29 Dec 2019 15:23:40 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com
-Subject: Re: [PATCH v8 08/13] exfat: add exfat cache
-Message-ID: <20191229142340.sr2xbmwlczb2ytjj@pali>
-References: <20191220062419.23516-1-namjae.jeon@samsung.com>
- <CGME20191220062736epcas1p3c58bf86018ba9caef90b3a6476b4b925@epcas1p3.samsung.com>
- <20191220062419.23516-9-namjae.jeon@samsung.com>
+        Sun, 29 Dec 2019 09:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577629509;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RfWTGUOufJ9bQ4pR2PaE/6zDr2zhuJs0ed/uUQTcRSM=;
+        b=bEJSrD304ZNCC5+kUdwg9pxVc83BpdJYnOMk0h3VZM1/Dvjqfhy9OCuNLAIjMMVPojoxmK
+        XamyQkV26h7Dawe2NTL2pwl4YdElydmEUTOMHX2S2wacmiuSd4lb7Cz1rvND1GdX4rJdTI
+        F03fEpcJb7zgQEpGj+XXGWR9lNp0teo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-vKIOHU98MjaBghCgwbmzGQ-1; Sun, 29 Dec 2019 09:25:05 -0500
+X-MC-Unique: vKIOHU98MjaBghCgwbmzGQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E442310054E3;
+        Sun, 29 Dec 2019 14:25:02 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-73.pek2.redhat.com [10.72.12.73])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 566EA1A7E4;
+        Sun, 29 Dec 2019 14:24:57 +0000 (UTC)
+Date:   Sun, 29 Dec 2019 22:24:53 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dan Williams <dan.j.williams.korg@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+Message-ID: <20191229142453.GA18486@dhcp-128-65.nay.redhat.com>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+ <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oz3thgrwz46oq5d4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191220062419.23516-9-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dan,
+On 12/28/19 at 10:13pm, Dan Williams wrote:
+> On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
+> <dan.j.williams.korg@gmail.com> wrote:
+> >
+> > On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > Michael Weiser reported he got below error during a kexec rebooting:
+> > > esrt: Unsupported ESRT version 2904149718861218184.
+> > >
+> > > The ESRT memory stays in EFI boot services data, and it was reserved
+> > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > > is to reuse the EFI boot services data across kexec reboot. For example
+> > > the BGRT image data and some ESRT memory like Michael reported.
+> > >
+> > > But although the memory is reserved it is not updated in X86 e820 table.
+> > > And kexec_file_load iterate system ram in io resource list to find places
+> > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > > initramfs overwritten the ESRT memory and then the failure happened.
+> > >
+> > > Since kexec_file_load depends on the e820 to be updated, just fix this
+> > > by updating the reserved EFI boot services memory as reserved type in e820.
+> > >
+> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> > > bypassed in the reservation code path because they are assumed as reserved.
+> > > But the reservation is still needed for multiple kexec reboot.
+> > > And it is the only possible case we come here thus just drop the code
+> > > chunk then everything works without side effects.
+> > >
+> > > On my machine the ESRT memory sits in an EFI runtime data range, it does
+> > > not trigger the problem, but I successfully tested with BGRT instead.
+> > > both kexec_load and kexec_file_load work and kdump works as well.
+> > >
+> > > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > > ---
+> > >  arch/x86/platform/efi/quirks.c |    6 ++----
+> > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > >
+> > > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> > > +++ linux-x86/arch/x86/platform/efi/quirks.c
+> > > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+> > >                 return;
+> > >         }
+> > >
+> > > -       /* No need to reserve regions that will never be freed. */
+> > > -       if (md.attribute & EFI_MEMORY_RUNTIME)
+> > > -               return;
+> > > -
+> > >         size += addr % EFI_PAGE_SIZE;
+> > >         size = round_up(size, EFI_PAGE_SIZE);
+> > >         addr = round_down(addr, EFI_PAGE_SIZE);
+> > > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+> > >         early_memunmap(new, new_size);
+> > >
+> > >         efi_memmap_install(new_phys, num_entries);
+> > > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> > > +       e820__update_table(e820_table);
+> > >  }
+> > >
+> > >  /*
+> > >
+> >
+> > Bisect says this change (commit af1648984828) is triggering a
+> > regression, likely not urgent, in my testing of the new efi_fake_mem=
+> > facility to allow memory to be marked "soft reserved" via the kernel
+> > command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
+> > for EFI_MEMORY_SP). The following command line triggers the crash
+> > signature below:
+> >
+> >     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+> >
+> > However, this command line works ok:
+> >
+> >     efi_fake_mem=8G@9G:0x40000
+> >
+> > So, something about multiple efi_fake_mem statements interacts badly
+> > with this change. Nothing obvious occurs to me at the moment, I'll
+> > keep debugging, but wanted to highlight this in the meantime in case
+> > someone else sees a deeper issue or the root cause.
+> 
+> Still looking, but this failure does not seem to be specific to the
+> "soft reservation" changes. Any update to the efi memmap that pushes
+> it over a page boundary triggers this failure. I.e. I can fix the
+> problem by over-allocating the efi memmap and then page aligning the
+> result. __early_ioremap "should" be handling this case, but it appears
+> something else is messing this up.
 
---oz3thgrwz46oq5d4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I seems can not reproduce the bug, but maybe my vm setup is different.
+Can you do some debugging about the efi_memmap_insert function see if
+something wrong happened, maybe happens when memcpy to some new allocated buffer via
+memblock_alloc, just some guess.
 
-Hello! This patch looks like a copy-pase of fat cache implementation.
-It is possible to avoid duplicating code?
+Thanks
+Dave
 
-On Friday 20 December 2019 01:24:14 Namjae Jeon wrote:
-> This adds the implementation of exfat cache.
->=20
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/cache.c | 325 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 325 insertions(+)
->  create mode 100644 fs/exfat/cache.c
->=20
-> diff --git a/fs/exfat/cache.c b/fs/exfat/cache.c
-> new file mode 100644
-> index 000000000000..03d0824fc368
-> --- /dev/null
-> +++ b/fs/exfat/cache.c
-> @@ -0,0 +1,325 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  linux/fs/fat/cache.c
-> + *
-> + *  Written 1992,1993 by Werner Almesberger
-> + *
-> + *  Mar 1999. AV. Changed cache, so that it uses the starting cluster in=
-stead
-> + *	of inode number.
-> + *  May 1999. AV. Fixed the bogosity with FAT32 (read "FAT28"). Fscking =
-lusers.
-> + *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <asm/unaligned.h>
-> +#include <linux/buffer_head.h>
-> +
-> +#include "exfat_raw.h"
-> +#include "exfat_fs.h"
-> +
-> +#define EXFAT_CACHE_VALID	0
-> +#define EXFAT_MAX_CACHE		16
-> +
-> +struct exfat_cache {
-> +	struct list_head cache_list;
-> +	unsigned int nr_contig;	/* number of contiguous clusters */
-> +	unsigned int fcluster;	/* cluster number in the file. */
-> +	unsigned int dcluster;	/* cluster number on disk. */
-> +};
-> +
-> +struct exfat_cache_id {
-> +	unsigned int id;
-> +	unsigned int nr_contig;
-> +	unsigned int fcluster;
-> +	unsigned int dcluster;
-> +};
-> +
-> +static struct kmem_cache *exfat_cachep;
-> +
-> +static void exfat_cache_init_once(void *c)
-> +{
-> +	struct exfat_cache *cache =3D (struct exfat_cache *)c;
-> +
-> +	INIT_LIST_HEAD(&cache->cache_list);
-> +}
-> +
-> +int exfat_cache_init(void)
-> +{
-> +	exfat_cachep =3D kmem_cache_create("exfat_cache",
-> +				sizeof(struct exfat_cache),
-> +				0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD,
-> +				exfat_cache_init_once);
-> +	if (!exfat_cachep)
-> +		return -ENOMEM;
-> +	return 0;
-> +}
-> +
-> +void exfat_cache_shutdown(void)
-> +{
-> +	if (!exfat_cachep)
-> +		return;
-> +	kmem_cache_destroy(exfat_cachep);
-> +}
-> +
-> +void exfat_cache_init_inode(struct inode *inode)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +
-> +	spin_lock_init(&ei->cache_lru_lock);
-> +	ei->nr_caches =3D 0;
-> +	ei->cache_valid_id =3D EXFAT_CACHE_VALID + 1;
-> +	INIT_LIST_HEAD(&ei->cache_lru);
-> +}
-> +
-> +static inline struct exfat_cache *exfat_cache_alloc(void)
-> +{
-> +	return kmem_cache_alloc(exfat_cachep, GFP_NOFS);
-> +}
-> +
-> +static inline void exfat_cache_free(struct exfat_cache *cache)
-> +{
-> +	WARN_ON(!list_empty(&cache->cache_list));
-> +	kmem_cache_free(exfat_cachep, cache);
-> +}
-> +
-> +static inline void exfat_cache_update_lru(struct inode *inode,
-> +		struct exfat_cache *cache)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +
-> +	if (ei->cache_lru.next !=3D &cache->cache_list)
-> +		list_move(&cache->cache_list, &ei->cache_lru);
-> +}
-> +
-> +static unsigned int exfat_cache_lookup(struct inode *inode,
-> +		unsigned int fclus, struct exfat_cache_id *cid,
-> +		unsigned int *cached_fclus, unsigned int *cached_dclus)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +	static struct exfat_cache nohit =3D { .fcluster =3D 0, };
-> +	struct exfat_cache *hit =3D &nohit, *p;
-> +	unsigned int offset =3D EXFAT_EOF_CLUSTER;
-> +
-> +	spin_lock(&ei->cache_lru_lock);
-> +	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-> +		/* Find the cache of "fclus" or nearest cache. */
-> +		if (p->fcluster <=3D fclus && hit->fcluster < p->fcluster) {
-> +			hit =3D p;
-> +			if (hit->fcluster + hit->nr_contig < fclus) {
-> +				offset =3D hit->nr_contig;
-> +			} else {
-> +				offset =3D fclus - hit->fcluster;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +	if (hit !=3D &nohit) {
-> +		exfat_cache_update_lru(inode, hit);
-> +
-> +		cid->id =3D ei->cache_valid_id;
-> +		cid->nr_contig =3D hit->nr_contig;
-> +		cid->fcluster =3D hit->fcluster;
-> +		cid->dcluster =3D hit->dcluster;
-> +		*cached_fclus =3D cid->fcluster + offset;
-> +		*cached_dclus =3D cid->dcluster + offset;
-> +	}
-> +	spin_unlock(&ei->cache_lru_lock);
-> +
-> +	return offset;
-> +}
-> +
-> +static struct exfat_cache *exfat_cache_merge(struct inode *inode,
-> +		struct exfat_cache_id *new)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +	struct exfat_cache *p;
-> +
-> +	list_for_each_entry(p, &ei->cache_lru, cache_list) {
-> +		/* Find the same part as "new" in cluster-chain. */
-> +		if (p->fcluster =3D=3D new->fcluster) {
-> +			if (new->nr_contig > p->nr_contig)
-> +				p->nr_contig =3D new->nr_contig;
-> +			return p;
-> +		}
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static void exfat_cache_add(struct inode *inode,
-> +		struct exfat_cache_id *new)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +	struct exfat_cache *cache, *tmp;
-> +
-> +	if (new->fcluster =3D=3D EXFAT_EOF_CLUSTER) /* dummy cache */
-> +		return;
-> +
-> +	spin_lock(&ei->cache_lru_lock);
-> +	if (new->id !=3D EXFAT_CACHE_VALID &&
-> +	    new->id !=3D ei->cache_valid_id)
-> +		goto unlock;	/* this cache was invalidated */
-> +
-> +	cache =3D exfat_cache_merge(inode, new);
-> +	if (cache =3D=3D NULL) {
-> +		if (ei->nr_caches < EXFAT_MAX_CACHE) {
-> +			ei->nr_caches++;
-> +			spin_unlock(&ei->cache_lru_lock);
-> +
-> +			tmp =3D exfat_cache_alloc();
-> +			if (!tmp) {
-> +				spin_lock(&ei->cache_lru_lock);
-> +				ei->nr_caches--;
-> +				spin_unlock(&ei->cache_lru_lock);
-> +				return;
-> +			}
-> +
-> +			spin_lock(&ei->cache_lru_lock);
-> +			cache =3D exfat_cache_merge(inode, new);
-> +			if (cache !=3D NULL) {
-> +				ei->nr_caches--;
-> +				exfat_cache_free(tmp);
-> +				goto out_update_lru;
-> +			}
-> +			cache =3D tmp;
-> +		} else {
-> +			struct list_head *p =3D ei->cache_lru.prev;
-> +
-> +			cache =3D list_entry(p,
-> +					struct exfat_cache, cache_list);
-> +		}
-> +		cache->fcluster =3D new->fcluster;
-> +		cache->dcluster =3D new->dcluster;
-> +		cache->nr_contig =3D new->nr_contig;
-> +	}
-> +out_update_lru:
-> +	exfat_cache_update_lru(inode, cache);
-> +unlock:
-> +	spin_unlock(&ei->cache_lru_lock);
-> +}
-> +
-> +/*
-> + * Cache invalidation occurs rarely, thus the LRU chain is not updated. =
-It
-> + * fixes itself after a while.
-> + */
-> +static void __exfat_cache_inval_inode(struct inode *inode)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +	struct exfat_cache *cache;
-> +
-> +	while (!list_empty(&ei->cache_lru)) {
-> +		cache =3D list_entry(ei->cache_lru.next,
-> +				   struct exfat_cache, cache_list);
-> +		list_del_init(&cache->cache_list);
-> +		ei->nr_caches--;
-> +		exfat_cache_free(cache);
-> +	}
-> +	/* Update. The copy of caches before this id is discarded. */
-> +	ei->cache_valid_id++;
-> +	if (ei->cache_valid_id =3D=3D EXFAT_CACHE_VALID)
-> +		ei->cache_valid_id++;
-> +}
-> +
-> +void exfat_cache_inval_inode(struct inode *inode)
-> +{
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +
-> +	spin_lock(&ei->cache_lru_lock);
-> +	__exfat_cache_inval_inode(inode);
-> +	spin_unlock(&ei->cache_lru_lock);
-> +}
-> +
-> +static inline int cache_contiguous(struct exfat_cache_id *cid,
-> +		unsigned int dclus)
-> +{
-> +	cid->nr_contig++;
-> +	return cid->dcluster + cid->nr_contig =3D=3D dclus;
-> +}
-> +
-> +static inline void cache_init(struct exfat_cache_id *cid,
-> +		unsigned int fclus, unsigned int dclus)
-> +{
-> +	cid->id =3D EXFAT_CACHE_VALID;
-> +	cid->fcluster =3D fclus;
-> +	cid->dcluster =3D dclus;
-> +	cid->nr_contig =3D 0;
-> +}
-> +
-> +int exfat_get_cluster(struct inode *inode, unsigned int cluster,
-> +		unsigned int *fclus, unsigned int *dclus,
-> +		unsigned int *last_dclus, int allow_eof)
-> +{
-> +	struct super_block *sb =3D inode->i_sb;
-> +	struct exfat_sb_info *sbi =3D EXFAT_SB(sb);
-> +	unsigned int limit =3D sbi->num_clusters;
-> +	struct exfat_inode_info *ei =3D EXFAT_I(inode);
-> +	struct exfat_cache_id cid;
-> +	unsigned int content;
-> +
-> +	if (ei->start_clu =3D=3D EXFAT_FREE_CLUSTER) {
-> +		exfat_fs_error(sb,
-> +			"invalid access to exfat cache (entry 0x%08x)",
-> +			ei->start_clu);
-> +		return -EIO;
-> +	}
-> +
-> +	*fclus =3D 0;
-> +	*dclus =3D ei->start_clu;
-> +	*last_dclus =3D *dclus;
-> +
-> +	/*
-> +	 * Don`t use exfat_cache if zero offset or non-cluster allocation
-> +	 */
-> +	if (cluster =3D=3D 0 || *dclus =3D=3D EXFAT_EOF_CLUSTER)
-> +		return 0;
-> +
-> +	cache_init(&cid, EXFAT_EOF_CLUSTER, EXFAT_EOF_CLUSTER);
-> +
-> +	if (exfat_cache_lookup(inode, cluster, &cid, fclus, dclus) =3D=3D
-> +			EXFAT_EOF_CLUSTER) {
-> +		/*
-> +		 * dummy, always not contiguous
-> +		 * This is reinitialized by cache_init(), later.
-> +		 */
-> +		WARN_ON(cid.id !=3D EXFAT_CACHE_VALID ||
-> +			cid.fcluster !=3D EXFAT_EOF_CLUSTER ||
-> +			cid.dcluster !=3D EXFAT_EOF_CLUSTER ||
-> +			cid.nr_contig !=3D 0);
-> +	}
-> +
-> +	if (*fclus =3D=3D cluster)
-> +		return 0;
-> +
-> +	while (*fclus < cluster) {
-> +		/* prevent the infinite loop of cluster chain */
-> +		if (*fclus > limit) {
-> +			exfat_fs_error(sb,
-> +				"detected the cluster chain loop (i_pos %u)",
-> +				(*fclus));
-> +			return -EIO;
-> +		}
-> +
-> +		if (exfat_ent_get(sb, *dclus, &content))
-> +			return -EIO;
-> +
-> +		*last_dclus =3D *dclus;
-> +		*dclus =3D content;
-> +		(*fclus)++;
-> +
-> +		if (content =3D=3D EXFAT_EOF_CLUSTER) {
-> +			if (!allow_eof) {
-> +				exfat_fs_error(sb,
-> +				       "invalid cluster chain (i_pos %u, last_clus 0x%08x is EOF)",
-> +				       *fclus, (*last_dclus));
-> +				return -EIO;
-> +			}
-> +
-> +			break;
-> +		}
-> +
-> +		if (!cache_contiguous(&cid, *dclus))
-> +			cache_init(&cid, *fclus, *dclus);
-> +	}
-> +
-> +	exfat_cache_add(inode, &cid);
-> +	return 0;
-> +}
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---oz3thgrwz46oq5d4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgi26gAKCRCL8Mk9A+RD
-UmBiAJ0TZEPiG5ILPdHWbRKz40OWYyN6KgCgwrpmMgDi5wOhqTDc9tqlJYR2YpA=
-=Socp
------END PGP SIGNATURE-----
-
---oz3thgrwz46oq5d4--
