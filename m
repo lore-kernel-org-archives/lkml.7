@@ -2,97 +2,154 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECC6C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3109CC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604A720718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07ECC207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 13:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7ftxb3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbfL2Njc convert rfc822-to-8bit (ORCPT
+        id S1726597AbfL2Nk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 08:39:32 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:39894 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726160AbfL2Njb (ORCPT
+        Sun, 29 Dec 2019 08:40:29 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35628 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfL2Nk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 08:39:31 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TmAx.Hp_1577626765;
-Received: from 30.39.3.192(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TmAx.Hp_1577626765)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 29 Dec 2019 21:39:26 +0800
-Content-Type: text/plain;
-        charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <20191219112618.GA72828@chrisdown.name>
-Date:   Sun, 29 Dec 2019 21:38:00 +0800
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <1E6A7BC4-A983-4C65-9DA9-4D3A26D4D31D@linux.alibaba.com>
-References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
- <20191218140952.GA255739@chrisdown.name>
- <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
- <20191219112618.GA72828@chrisdown.name>
-To:     Chris Down <chris@chrisdown.name>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sun, 29 Dec 2019 08:40:29 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so30489432wro.2;
+        Sun, 29 Dec 2019 05:40:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ehUt6YUmkM/nA5AliofRzO8ZYUG51ztpo1WmqMNWyy8=;
+        b=h7ftxb3r5KXuKF0AI1wYbmGcwrpA/cR10DohrK9NaafhVoyKuWxGiPzQTwxYWLdss5
+         lTlSHEsexE/mGFxzdG9z/QL0CSnQFxFpyO7seWP91MZHyuD2or5oCXp6mJXz+6Z39eno
+         VGCQAq4EhxFcnpz0F6GpJ1jifWIseqj8npyYkqH+onHb0G5EZLeQH0M3at8kZlt27ZH7
+         Ju8vHK+9MrZCSiQ2x8n9EOMsUrww/b3lOv7Ekherm6Ymyt8B6t2c6LvDxnURANdPd/u7
+         S/hGnV23Uxp+g9Vb21YLUa1Id0LYBVwBBE2SiAs2kuUgz/YT3q13kV9yU+Z2pejr6IXT
+         E14Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ehUt6YUmkM/nA5AliofRzO8ZYUG51ztpo1WmqMNWyy8=;
+        b=Ukw7ylyrdNN/EcacS2I8sf+anEjhacP4KGP6mcbdrOknlunqQEOUXr3MpAGyrSVJqJ
+         HeUl4MliiiiwSC8kWQovALHBwCyPIuUJLYGh40gzxmpilqKA0s19HNUGANso2E9KQdaB
+         sefAY5dRc5bY/p2rDuyvUPsD08Uwkt3iqA0EVPbc+jB2Vlc/MiodiTYPvejvQ3iSNMBP
+         wVqMUZIrmzVDb8hyje8EzYuGclS6j6SKS2kFW5D3BLn/KC76Zdis2J8OYVLmshV5LeVv
+         GgNHKn8+q3HCg0cy0A0cEnoKxPH6/eG+Pe5kut0lRwG8pmCQ2jboSKdE6wWzxAixDLuv
+         2+KA==
+X-Gm-Message-State: APjAAAV8Et18rCLm+3a4EffMAid1A0OeRI16DxwhEDMDCazt59C0aVGw
+        D8Kp8WQ6B1oyWpmJy48MXRE=
+X-Google-Smtp-Source: APXvYqw9aWN6l4wsQ2nvfgY2Sv+Do01GwMwYq5p+l6Iv2ApCS5M1YaVotZW2ODLZONPrbQ+jsB8I6Q==
+X-Received: by 2002:adf:f288:: with SMTP id k8mr64899732wro.301.1577626827311;
+        Sun, 29 Dec 2019 05:40:27 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b10sm43285857wrt.90.2019.12.29.05.40.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Dec 2019 05:40:26 -0800 (PST)
+Date:   Sun, 29 Dec 2019 14:40:25 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com
+Subject: Re: [PATCH v8 02/13] exfat: add super block operations
+Message-ID: <20191229134025.qb3mmqatsn5c4gao@pali>
+References: <20191220062419.23516-1-namjae.jeon@samsung.com>
+ <CGME20191220062733epcas1p31665a3ae968ab8c70d91a3cddf529e73@epcas1p3.samsung.com>
+ <20191220062419.23516-3-namjae.jeon@samsung.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7obuds6vfn3nabjb"
+Content-Disposition: inline
+In-Reply-To: <20191220062419.23516-3-namjae.jeon@samsung.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--7obuds6vfn3nabjb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 在 2019年12月19日，19:26，Chris Down <chris@chrisdown.name> 写道：
-> 
-> Hi Hui,
-> 
-> teawater writes:
->> Memory.min, low, high can affect the global shrink behavior.  They can help task keep some pages to help protect performance.
->> 
->> But what I want is the low priority tasks (the tasks that performance is not very important) do more shrink first.  And when low priority tasks doesn’t have enough pages to be dropped and system need more free page, shrink the high priority task’s pages.  Because at this time, system’s stable is more important than the performance of priority task.
->> With memory.min and memory.low, I have no idea to config them to support this.  That is why I add global shrink priority.
-> 
-> For sure, that's what I'm suggesting you use memory.{min,low} for -- you define some subset of the cgroup hierarchy as "protected", and then you bias reclaim away from protected cgroups (and thus *towards* unprotected cgroups) by biasing the size of LRU scanning. See my patch that went into 5.4 and the examples in the commit message:
-> 
->    commit 9783aa9917f8ae24759e67bf882f1aba32fe4ea1
->    Author: Chris Down <chris@chrisdown.name>
->    Date:   Sun Oct 6 17:58:32 2019 -0700
-> 
->        mm, memcg: proportional memory.{low,min} reclaim
-> 
-> You can see how we're using memory.{low,min} to achieve this in this case study[0]. It's not exactly equivalent technically to your solution, but the end goals are similar.
-> 
-> Thanks,
-> 
-> Chris
-> 
-> 0: https://facebookmicrosites.github.io/cgroup2/docs/overview.html#case-study-the-fbtax2-project
+On Friday 20 December 2019 01:24:08 Namjae Jeon wrote:
+> This adds the implementation of superblock operations for exfat.
+>=20
+> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> ---
+>  fs/exfat/super.c | 732 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 732 insertions(+)
+>  create mode 100644 fs/exfat/super.c
+>=20
+> diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+> new file mode 100644
+> index 000000000000..07687997c7f8
+> --- /dev/null
+> +++ b/fs/exfat/super.c
 
-Hi Chris,
+=2E..
 
-I have another idea about global shrink priority.
+> +enum {
+> +	Opt_uid,
+> +	Opt_gid,
+> +	Opt_umask,
+> +	Opt_dmask,
+> +	Opt_fmask,
+> +	Opt_allow_utime,
+> +	Opt_charset,
+> +	Opt_utf8,
+> +	Opt_case_sensitive,
+> +	Opt_tz,
+> +	Opt_errors,
+> +	Opt_discard,
+> +};
+> +
+> +static const struct fs_parameter_spec exfat_param_specs[] =3D {
+> +	fsparam_u32("uid",			Opt_uid),
+> +	fsparam_u32("gid",			Opt_gid),
+> +	fsparam_u32oct("umask",			Opt_umask),
+> +	fsparam_u32oct("dmask",			Opt_dmask),
+> +	fsparam_u32oct("fmask",			Opt_fmask),
+> +	fsparam_u32oct("allow_utime",		Opt_allow_utime),
+> +	fsparam_string("iocharset",		Opt_charset),
+> +	fsparam_flag("utf8",			Opt_utf8),
 
-In the memory-constrained and complex multitasking environment such as an Android system may require more complex performance priority.
-For example, the tasks of app in the font, they need high priority because low priority will affect the user experience at once.
-The tasks of app in background should have lower priority than the first one.  And sometime, each app should have different priority.  Because some apps are frequently used.  They should have high priority than other background apps.
-The daemons should have lower priority than background apps.  Because most of them will not affect the user experience.
+Hello! What is the purpose of having extra special "utf8" mount option?
+Is not one "iocharset=3Dutf8" option enough?
 
-Do you think this environment is suitable for global shrink priority.
+> +	fsparam_flag("case_sensitive",		Opt_case_sensitive),
+> +	fsparam_string("tz",			Opt_tz),
+> +	fsparam_enum("errors",			Opt_errors),
+> +	fsparam_flag("discard",			Opt_discard),
+> +	{}
+> +};
 
-Best,
-Hui
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--7obuds6vfn3nabjb
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXgisxgAKCRCL8Mk9A+RD
+UktUAKDDJ8TMLpk5SiyjSTFBxLJKQqceigCdEQWkzJ9WOXV0Hzn/Hx1wPl1r3go=
+=Lgqp
+-----END PGP SIGNATURE-----
+
+--7obuds6vfn3nabjb--
