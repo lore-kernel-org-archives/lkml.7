@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E555C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B8FC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0274222C2
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F57320722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640296;
-	bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
+	s=default; t=1577640300;
+	bh=kxPhtLQM8W4gUuSv5GGrc2F35c0v3VKCTn2bvwpnJPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wk9NADhnTb/aFG5n7UzNjfuFaPs3S1jRvu+0w9vxpcV7On3klUVxvCJA3EkDbXPJH
-	 5A3ZgceQUMrOYZTxJK0n2igOcxFE2KxoqKiHuLqBH8P/S9NfcrXXjeeOBNrqPjl0Wn
-	 CprIFK2ZFBwti37tFp5IJaFp110j+eW8C8Q3ughU=
+	b=zj0MgaE8NWD9dafwC669h/ai+jTnGWHtEV/pmuMAZKEjxrdj8ciYQefLOmWAAQXTQ
+	 S1PsnO7PVBXCbQl6ASKz/y/CiQKIpxfPTOCjOSHSwsMOjxQWpcjhTeSXka7vCB98MY
+	 tMhsh6DsoONGZ9CbchtcWw7bAGqfAH/5bF7xhxM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfL2RY4 (ORCPT
+        id S1727843AbfL2RY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44004 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfL2RYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:24:52 -0500
+        id S1727827AbfL2RYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:24:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF07D20722;
-        Sun, 29 Dec 2019 17:24:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B48D222D9;
+        Sun, 29 Dec 2019 17:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640291;
-        bh=ZCMHAaOSkNrzJ6fpbCd+rm7Im/wppjlfjKJwI1hVsCE=;
+        s=default; t=1577640294;
+        bh=kxPhtLQM8W4gUuSv5GGrc2F35c0v3VKCTn2bvwpnJPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a3/8yAcfqZSCRqDU3srC/OJxhWgqSTARnLuyK+Lql21MwU2oZPMfPdWnV8JYu/vXY
-         /PhCKo1LBItY3sHxSnzxP/Pdz03w3iAXLfdLcVJt59ez4zj/HhAfafhlbguv+GpWrU
-         ec5Vc0jsgwjJ2BaFa7MC9zW/J3Bq1O4SrD1pCwjY=
+        b=wIbP+WN/DyADqtmg5I39+2r5e0zkFkpE+UGic8Z6WU4XyGD9zUtSoMmcT4aY7Afo/
+         4qfj9ONR8ZkbR0OHj8KZMT8Au00F6FMMprXZcoYoXo/BO9XGaUT+QMefjYg9St3MoM
+         9CHt+k/zNgEyk4kR8a2BPlTOwa7lac1t+tRg0644=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, nd <nd@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/161] libsubcmd: Use -O0 with DEBUG=1
-Date:   Sun, 29 Dec 2019 18:19:06 +0100
-Message-Id: <20191229162426.732486117@linuxfoundation.org>
+Subject: [PATCH 4.14 081/161] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
+Date:   Sun, 29 Dec 2019 18:18:49 +0100
+Message-Id: <20191229162424.250180512@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -64,44 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Clark <James.Clark@arm.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 22bd8f1b5a1dd168ba4eba27cb17643a11012f5d ]
+[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
 
-When a 'make DEBUG=1' build is done, the command parser is still built
-with -O6 and is hard to step through, fix it making it use -O0 in that
-case.
+The iio_triggered_buffer_postenable() hook should be called first to
+attach the poll function. The iio_triggered_buffer_predisable() hook is
+called last (as is it should).
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: nd <nd@arm.com>
-Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
-[ split from a larger patch ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This change moves iio_triggered_buffer_postenable() to be called first. It
+adds iio_triggered_buffer_predisable() on the error paths of the postenable
+hook.
+For the predisable hook, some code-paths have been changed to make sure
+that the iio_triggered_buffer_predisable() hook gets called in case there
+is an error before it.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index 5b2cd5e58df0..5dbb0dde208c 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -28,7 +28,9 @@ ifeq ($(DEBUG),0)
-   endif
- endif
+diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
+index ab8d6aed5085..2a299bbd6acf 100644
+--- a/drivers/iio/adc/dln2-adc.c
++++ b/drivers/iio/adc/dln2-adc.c
+@@ -528,6 +528,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 	u16 conflict;
+ 	unsigned int trigger_chan;
  
--ifeq ($(CC_NO_CLANG), 0)
-+ifeq ($(DEBUG),1)
-+  CFLAGS += -O0
-+else ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
- else
-   CFLAGS += -O6
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
++
+ 	mutex_lock(&dln2->mutex);
+ 
+ 	/* Enable ADC */
+@@ -541,6 +545,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 				(int)conflict);
+ 			ret = -EBUSY;
+ 		}
++		iio_triggered_buffer_predisable(indio_dev);
+ 		return ret;
+ 	}
+ 
+@@ -554,6 +559,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 		if (ret < 0) {
+ 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
++			iio_triggered_buffer_predisable(indio_dev);
+ 			return ret;
+ 		}
+ 	} else {
+@@ -561,12 +567,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 	}
+ 
+-	return iio_triggered_buffer_postenable(indio_dev);
++	return 0;
+ }
+ 
+ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ {
+-	int ret;
++	int ret, ret2;
+ 	struct dln2_adc *dln2 = iio_priv(indio_dev);
+ 
+ 	mutex_lock(&dln2->mutex);
+@@ -581,12 +587,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
+ 
+ 	mutex_unlock(&dln2->mutex);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
+-		return ret;
+-	}
+ 
+-	return iio_triggered_buffer_predisable(indio_dev);
++	ret2 = iio_triggered_buffer_predisable(indio_dev);
++	if (ret == 0)
++		ret = ret2;
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
 -- 
 2.20.1
 
