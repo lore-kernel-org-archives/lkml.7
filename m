@@ -2,52 +2,52 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813AEC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF870C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526DE206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB0920748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643281;
-	bh=THYdH20xi2zZdRYjzPnZZrm2s1TXvlBcyPXfCrnljyU=;
+	s=default; t=1577643287;
+	bh=9Q1KOpc9Gr9mqP8t/Q9Bi0RQNfaCGH6IfPJ4qLdMIvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/O1R35HJ2b8t/4MPUb/4BmM+fsumwagPONT8DKtQwjme7jGj13tzi8mUBHZcYc/i
-	 RQdPIlRSpPjQ7vbn1lbHVXTNfk/lY0FS34C8HUugAVFsFm76Owsqazs8ZIq3jBc4Qd
-	 SKls73vscDWNxmu41OrpCBh0K72ArMAMwZjJURUg=
+	b=mYAfucTVXxRkYW29v1ASxFNAxIzjK0L8/fBwBXPRAByJbK85Bm8Fv8oWe9pqVjZIr
+	 Unjenv3DsZh2S9jPNgBWiZF7nU869WVjnuongTIfu5BbAKJlSwPf3hg3f3MYASJgIl
+	 L0oVm4a5GANS3x0HgCepZYQPfe5YSGQY4BdnOeMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfL2R0b (ORCPT
+        id S1728172AbfL2R0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47540 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:26:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbfL2R02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:28 -0500
+        id S1727734AbfL2R0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DAAD22525;
-        Sun, 29 Dec 2019 17:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46D9420409;
+        Sun, 29 Dec 2019 17:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640387;
-        bh=THYdH20xi2zZdRYjzPnZZrm2s1TXvlBcyPXfCrnljyU=;
+        s=default; t=1577640370;
+        bh=9Q1KOpc9Gr9mqP8t/Q9Bi0RQNfaCGH6IfPJ4qLdMIvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SHVD1XJDrgKBeA8fy7Yj5I7WYnuseMbv8p2LklUwszyydwbdphOsltHhnu1TaoxGL
-         zvR3ib7LkokI4okiTrvdDRplhMAepdCuibE1mz2sk+rxCjqoezpvPfv2aCY0PZPO59
-         BSYGEGNREZ0w33LPVtbxTCUGMQQhIwm2GwqwAVME=
+        b=cbsHl3Uuy8Qm+3+qqrwRN0/cutP8z2kqpCh4IwvMNlz9k2zXTkR5GR6GRoRXeDI4Z
+         7O7rp8pukC8g1RnQO1GjY9Sl6ohnGNxyAcIhmCavVUONzzeZcTCGUQNX+NZlJXXhn0
+         I2afu6KlM78sYwGM3db+rbI9nrnOUM4HitFGsjaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 138/161] Revert "mmc: sdhci: Fix incorrect switch to HS mode"
-Date:   Sun, 29 Dec 2019 18:19:46 +0100
-Message-Id: <20191229162440.872158709@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 131/161] mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED
+Date:   Sun, 29 Dec 2019 18:19:39 +0100
+Message-Id: <20191229162438.526610307@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,42 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+From: Thomas Pedersen <thomas@adapt-ip.com>
 
-commit 07bcc411567cb96f9d1fc84fff8d387118a2920d upstream.
+[ Upstream commit 08a5bdde3812993cb8eb7aa9124703df0de28e4b ]
 
-This reverts commit c894e33ddc1910e14d6f2a2016f60ab613fd8b37.
+Commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
+let STAs send QoS Null frames as PS triggers if the AP was
+a QoS STA.  However, the mac80211 PS stack relies on an
+interface flag IEEE80211_STA_NULLFUNC_ACKED for
+determining trigger frame ACK, which was not being set for
+acked non-QoS Null frames. The effect is an inability to
+trigger hardware sleep via IEEE80211_CONF_PS since the QoS
+Null frame was seemingly never acked.
 
-This commit aims to treat SD High speed and SDR25 as the same while
-setting UHS Timings in HOST_CONTROL2 which leads to failures with some
-SD cards in AM65x. Revert this commit.
+This bug only applies to drivers which set both
+IEEE80211_HW_REPORTS_TX_ACK_STATUS and
+IEEE80211_HW_PS_NULLFUNC_STACK.
 
-The issue this commit was trying to fix can be implemented in a platform
-specific callback instead of common sdhci code.
+Detect the acked QoS Null frame to restore STA power save.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20191128110422.25917-1-faiz_abbas@ti.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
+Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
+Link: https://lore.kernel.org/r/20191119053538.25979-4-thomas@adapt-ip.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/mac80211/status.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1635,9 +1635,7 @@ void sdhci_set_uhs_signaling(struct sdhc
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_SD_HS ||
--		 timing == MMC_TIMING_MMC_HS ||
--		 timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
+diff --git a/net/mac80211/status.c b/net/mac80211/status.c
+index b18466cf466c..fbe7354aeac7 100644
+--- a/net/mac80211/status.c
++++ b/net/mac80211/status.c
+@@ -856,7 +856,8 @@ static void __ieee80211_tx_status(struct ieee80211_hw *hw,
+ 			I802_DEBUG_INC(local->dot11FailedCount);
+ 	}
+ 
+-	if (ieee80211_is_nullfunc(fc) && ieee80211_has_pm(fc) &&
++	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
++	    ieee80211_has_pm(fc) &&
+ 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
+ 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
+ 	    local->ps_sdata && !(local->scanning)) {
+-- 
+2.20.1
+
 
 
