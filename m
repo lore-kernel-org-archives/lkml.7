@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CD7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55140C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018F7206CB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23005206CB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641003;
-	bh=F5EBHiBNJQ7dqwdk87xUNn4kv1JHaLOhk5LxSD3uTkc=;
+	s=default; t=1577641006;
+	bh=AFjYPlIpzkEGggRVPirwZCBV545+xTXlx6K9jP/SMws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgoJwW4G9jLVhPE01eBFigIGeYRVYlH0XbWn6htdBrItgUZGKORxpivhdenesRwTe
-	 CsmgAhItx1urD2iX9V+3vOuf+UiDxMUDa0AU8KphuZYkbhElv1CvTe1uEZmucq9eFj
-	 zwvEl2hZjWAbgCsvnb+C8d68bWTxWQDu/mYSOjiA=
+	b=MNEPnT+32G77bXgpJbmcch6qAanwEvy0mlvwG788YHYHbNr4Se1EEk/3fMwxCqioo
+	 Hv2ZodpDvORoQBr/QWiAHLXJgaNcgeadYDFACidXHSQDQqGAl6Uc6xZTRYk2Gpuo0K
+	 BKXnGhUjhrFSbTxx2lEh6RoQCPWy7vMwK9qn9RoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfL2Rgl (ORCPT
+        id S1729814AbfL2Rgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:36:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:36:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730074AbfL2Rgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:36:37 -0500
+        id S1730088AbfL2Rgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:36:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F636206CB;
-        Sun, 29 Dec 2019 17:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BA0A208C4;
+        Sun, 29 Dec 2019 17:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640996;
-        bh=F5EBHiBNJQ7dqwdk87xUNn4kv1JHaLOhk5LxSD3uTkc=;
+        s=default; t=1577641001;
+        bh=AFjYPlIpzkEGggRVPirwZCBV545+xTXlx6K9jP/SMws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o77kjp9wF4Yj/g1vE46vnn9JwPOQp8CC63dUAD/A1HAYgzMvqny9DKwfNuqWGJEkM
-         +q4Iiuk5PWS9EgbRBLnq7X4gAQParmR6JjRY/iM/y89gyY/C/Wmwlu+04XzcsCwr7J
-         3kzgZudZJjC12z0tMsGFrtRJ9ZV/G06f8pIce+NQ=
+        b=ZapntQKQQDzTXLtohi+vXmif3HBc/fV8uHnhmd9JY0K1UCsK7qd3TZHBeCMPk5J4k
+         cM4J7LA00M4swlJhpa0xocSp8JqKJRPK5uNmq7ZhqEB/kDEFEpNdKv/bVqPdnTR8mb
+         R0EDeIs5y5QOvw131mrKH+6m4syxHqb3xH8pO8j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 218/219] mmc: sdhci: Add a quirk for broken command queuing
-Date:   Sun, 29 Dec 2019 18:20:20 +0100
-Message-Id: <20191229162543.254151435@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 212/219] powerpc/irq: fix stack overflow verification
+Date:   Sun, 29 Dec 2019 18:20:14 +0100
+Message-Id: <20191229162542.397199524@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -59,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 75d27ea1abf7af3cc2cdec3513e74f52191605c8 upstream.
+commit 099bc4812f09155da77eeb960a983470249c9ce1 upstream.
 
-Command queuing has been reported broken on some systems based on Intel
-GLK. A separate patch disables command queuing in some cases.
+Before commit 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of
+the irq stack"), check_stack_overflow() was called by do_IRQ(), before
+switching to the irq stack.
+In that commit, do_IRQ() was renamed __do_irq(), and is now executing
+on the irq stack, so check_stack_overflow() has just become almost
+useless.
 
-This patch adds a quirk for broken command queuing, which enables users
-with problems to disable command queuing using sdhci module parameters for
-quirks.
+Move check_stack_overflow() call in do_IRQ() to do the check while
+still on the current stack.
 
-Fixes: 8ee82bda230f ("mmc: sdhci-pci: Add CQHCI support for Intel GLK")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of the irq stack")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191217095349.14592-2-adrian.hunter@intel.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/e033aa8116ab12b7ca9a9c75189ad0741e3b9b5f.1575872340.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci.c |    3 +++
- drivers/mmc/host/sdhci.h |    2 ++
- 2 files changed, 5 insertions(+)
+ arch/powerpc/kernel/irq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3549,6 +3549,9 @@ int sdhci_setup_host(struct sdhci_host *
- 		       mmc_hostname(mmc), host->version);
- 	}
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -634,8 +634,6 @@ void __do_irq(struct pt_regs *regs)
  
-+	if (host->quirks & SDHCI_QUIRK_BROKEN_CQE)
-+		mmc->caps2 &= ~MMC_CAP2_CQE;
+ 	trace_irq_entry(regs);
+ 
+-	check_stack_overflow();
+-
+ 	/*
+ 	 * Query the platform PIC for the interrupt & ack it.
+ 	 *
+@@ -667,6 +665,8 @@ void do_IRQ(struct pt_regs *regs)
+ 	irqtp = hardirq_ctx[raw_smp_processor_id()];
+ 	sirqtp = softirq_ctx[raw_smp_processor_id()];
+ 
++	check_stack_overflow();
 +
- 	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
- 		host->flags |= SDHCI_USE_SDMA;
- 	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -391,6 +391,8 @@ struct sdhci_host {
- #define SDHCI_QUIRK_BROKEN_CARD_DETECTION		(1<<15)
- /* Controller reports inverted write-protect state */
- #define SDHCI_QUIRK_INVERTED_WRITE_PROTECT		(1<<16)
-+/* Controller has unusable command queue engine */
-+#define SDHCI_QUIRK_BROKEN_CQE				(1<<17)
- /* Controller does not like fast PIO transfers */
- #define SDHCI_QUIRK_PIO_NEEDS_DELAY			(1<<18)
- /* Controller has to be forced to use block size of 2048 bytes */
+ 	/* Already there ? */
+ 	if (unlikely(curtp == irqtp || curtp == sirqtp)) {
+ 		__do_irq(regs);
 
 
