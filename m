@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E0AC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF9EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB75206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E677C206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640893;
-	bh=8pxzieCgI+tA0pQaNOHwARrjHhW9WxTRdxKBRkyU30w=;
+	s=default; t=1577640897;
+	bh=aai5ilbyK01aPMcM1RzUPG+VItremKQRclN3Rtnusxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKrefYyzx4FsWkEVe5a9skXIXdUAxQ4aa2gs6Qgk1gllW/rLpkh3Z5UqPFtB30Yuk
-	 sFGYVbZNGrBaGfg+rCZu2x5LDYtMsEav6WqIcB8tu+FfrVLrughXj2dv9Qu6puea6m
-	 1J+PmeaHwktVJvNcibxHav14WNEbunHpLYbYLdwM=
+	b=QznNcTcwc9Lo85A/H4NpgMsUACUif04NsjzUJPHcDbLSweR3AMcU/pvok30v8fRWM
+	 CXFyLt9Nz9kRC3x9lpgQLHbYFRSkk87HiKp6SnNf37fJRiXjWxfAqeMLj45pzAzIku
+	 XlzmJp+jsk3ocyyziosHTlfkdk0ymsRumMqRSr1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfL2Rew (ORCPT
+        id S1728771AbfL2Re4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbfL2Req (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:46 -0500
+        id S1729166AbfL2Rex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2956D206DB;
-        Sun, 29 Dec 2019 17:34:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F6620409;
+        Sun, 29 Dec 2019 17:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640885;
-        bh=8pxzieCgI+tA0pQaNOHwARrjHhW9WxTRdxKBRkyU30w=;
+        s=default; t=1577640893;
+        bh=aai5ilbyK01aPMcM1RzUPG+VItremKQRclN3Rtnusxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=daDGsU420ZNhVATFoCA9WO7edtIyA9uGoZyzm1tjNtz6CQNezTnpPDiwBYJWZYiBZ
-         zb1j3cpcqUHV18fTHaIf3hYjgqo03fXsVlhFz8armUfl0sR1+APdzXwhFks5jPgGmo
-         JR02zEW1U4pPeR7l8zoXQ7kZZI/EiI1yZ0Pt4+kQ=
+        b=PlVJkuki/Vh016YbuOb27aH+0VtEk1fajWjgv14e/R3kIWTe9QNhjUfokk+Be5+8C
+         TV5ydXX2eHnN/3p/LXpQmFJ+o/FjI6RBV/qIvt95/8SJ3AUeBleiNQhTQoSe1lfLnG
+         Sken+SCZO3wSUjMN9Tbt3+UaOsERhVJHi48HscKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/219] crypto: sun4i-ss - Fix 64-bit size_t warnings
-Date:   Sun, 29 Dec 2019 18:19:42 +0100
-Message-Id: <20191229162536.066360664@linuxfoundation.org>
+Subject: [PATCH 4.19 183/219] crypto: vmx - Avoid weird build failures
+Date:   Sun, 29 Dec 2019 18:19:45 +0100
+Message-Id: <20191229162536.709177179@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,100 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit d6e9da21ee8246b5e556b3b153401ab045adb986 ]
+[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
 
-If you try to compile this driver on a 64-bit platform then you
-will get warnings because it mixes size_t with unsigned int which
-only works on 32-bit.
+In the vmx crypto Makefile we assign to a variable called TARGET and
+pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
 
-This patch fixes all of the warnings.
+The variable is meant to describe what flavour of powerpc we're
+building for, eg. either 32 or 64-bit, and big or little endian.
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Unfortunately TARGET is a fairly common name for a make variable, and
+if it happens that TARGET is specified as a command line parameter to
+make, the value specified on the command line will override our value.
+
+In particular this can happen if the kernel Makefile is driven by an
+external Makefile that uses TARGET for something.
+
+This leads to weird build failures, eg:
+  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
+  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+
+Which shows that we passed an empty value for $(TARGET) to the perl
+script, confirmed with make V=1:
+
+  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
+
+We can avoid this confusion by using override, to tell make that we
+don't want anything to override our variable, even a value specified
+on the command line. We can also use a less common name, given the
+script calls it "flavour", let's use that.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/crypto/vmx/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-index 5cf64746731a..22e491857925 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
-@@ -81,7 +81,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
- 	oi = 0;
- 	oo = 0;
- 	do {
--		todo = min3(rx_cnt, ileft, (mi.length - oi) / 4);
-+		todo = min(rx_cnt, ileft);
-+		todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 		if (todo) {
- 			ileft -= todo;
- 			writesl(ss->base + SS_RXFIFO, mi.addr + oi, todo);
-@@ -96,7 +97,8 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
+diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
+index cab32cfec9c4..709670d2b553 100644
+--- a/drivers/crypto/vmx/Makefile
++++ b/drivers/crypto/vmx/Makefile
+@@ -3,13 +3,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
+ vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
  
--		todo = min3(tx_cnt, oleft, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			oleft -= todo;
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
-@@ -220,7 +222,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 			 * todo is the number of consecutive 4byte word that we
- 			 * can read from current SG
- 			 */
--			todo = min3(rx_cnt, ileft / 4, (mi.length - oi) / 4);
-+			todo = min(rx_cnt, ileft / 4);
-+			todo = min_t(size_t, todo, (mi.length - oi) / 4);
- 			if (todo && !ob) {
- 				writesl(ss->base + SS_RXFIFO, mi.addr + oi,
- 					todo);
-@@ -234,8 +237,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * we need to be able to write all buf in one
- 				 * pass, so it is why we min() with rx_cnt
- 				 */
--				todo = min3(rx_cnt * 4 - ob, ileft,
--					    mi.length - oi);
-+				todo = min(rx_cnt * 4 - ob, ileft);
-+				todo = min_t(size_t, todo, mi.length - oi);
- 				memcpy(buf + ob, mi.addr + oi, todo);
- 				ileft -= todo;
- 				oi += todo;
-@@ -255,7 +258,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		spaces = readl(ss->base + SS_FCSR);
- 		rx_cnt = SS_RXFIFO_SPACES(spaces);
- 		tx_cnt = SS_TXFIFO_SPACES(spaces);
--		dev_dbg(ss->dev, "%x %u/%u %u/%u cnt=%u %u/%u %u/%u cnt=%u %u\n",
-+		dev_dbg(ss->dev,
-+			"%x %u/%zu %u/%u cnt=%u %u/%zu %u/%u cnt=%u %u\n",
- 			mode,
- 			oi, mi.length, ileft, areq->cryptlen, rx_cnt,
- 			oo, mo.length, oleft, areq->cryptlen, tx_cnt, ob);
-@@ -263,7 +267,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 		if (!tx_cnt)
- 			continue;
- 		/* todo in 4bytes word */
--		todo = min3(tx_cnt, oleft / 4, (mo.length - oo) / 4);
-+		todo = min(tx_cnt, oleft / 4);
-+		todo = min_t(size_t, todo, (mo.length - oo) / 4);
- 		if (todo) {
- 			readsl(ss->base + SS_TXFIFO, mo.addr + oo, todo);
- 			oleft -= todo * 4;
-@@ -287,7 +292,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
- 				 * no more than remaining buffer
- 				 * no need to test against oleft
- 				 */
--				todo = min(mo.length - oo, obl - obo);
-+				todo = min_t(size_t,
-+					     mo.length - oo, obl - obo);
- 				memcpy(mo.addr + oo, bufo + obo, todo);
- 				oleft -= todo;
- 				obo += todo;
+ ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
+-TARGET := linux-ppc64le
++override flavour := linux-ppc64le
+ else
+-TARGET := linux-ppc64
++override flavour := linux-ppc64
+ endif
+ 
+ quiet_cmd_perl = PERL $@
+-      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
++      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
+ 
+ targets += aesp8-ppc.S ghashp8-ppc.S
+ 
 -- 
 2.20.1
 
