@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB38DC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2286C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83035207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4AA207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641339;
-	bh=S3u3r0lJS4qlq716Tt6089G7db8OEb+ScTHmS4I8jj0=;
+	s=default; t=1577641343;
+	bh=zHIFrSwZR8EIE5Mo20V+kC+daYYYejuSBO4JhINZu0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YM4ItJO/+v6dG/LhFOyjFDfnwXOMtUI/zN5KiC+WRWP1A4bxAeuUKVjD6mAxzWAPD
-	 JWVu5FxXDZuLkaq3waRYO1aU4O2oNEodE6vKMFRocliUW4mkhbqsPSPmyzNLXOrkW4
-	 x98GjUv/mu57n7AocjSAhq5VNHsdXpL5hhTI0Qmg=
+	b=uvQdw48eqPxBiJ/2EtXAy19V5pBK3zOOTLr2Q3p4IBVcYIEDuZcqfG6cRP6DdSXsI
+	 FXezHZd8BNAbAgRGoXbl+Kf+vo39kcb0YBgUkzeDuK/SCkZ1rkQigeJ4t7zQQSQ5qE
+	 zFMnlfGcMshkK3vkBWk/cUgPOnnfWQgfZeq54YWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfL2RmS (ORCPT
+        id S1730280AbfL2RmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:42:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48122 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:42:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbfL2RmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:42:06 -0500
+        id S1730255AbfL2RmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:42:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B88222D9;
-        Sun, 29 Dec 2019 17:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1EC521744;
+        Sun, 29 Dec 2019 17:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641326;
-        bh=S3u3r0lJS4qlq716Tt6089G7db8OEb+ScTHmS4I8jj0=;
+        s=default; t=1577641331;
+        bh=zHIFrSwZR8EIE5Mo20V+kC+daYYYejuSBO4JhINZu0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0iZ1kZl3aVEfJWjGcq5adcr8Jn14HBy0uneQbY4F4Jfi3mc4jYxJpJrCIAFrQCep
-         9hiYU9A45JSMB1ZI29clq2XjuVf5tqpgSSKofyERniJGm57EmYUs7F3WJvrCFe5Wb4
-         OIDAMguMCw0WP70IYnCgkaf2Kq4pWRviE9KKxmY8=
+        b=gAFd3/fi8bsmWeN6KFZBZVthnV2xikukrdlKwxrfxXqa/ayZa2mad63wAnzqwnS+f
+         2GvU4AYOuSmOBzwtUuILVbokLFs72Eg7vNcZ9zSYB42hgSv8WsQgFYRu3pI2EZi02w
+         krgBU9GEdPSF7sDbBqbc4S/LxxUMBLkmhRJnKUxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 005/434] net: gemini: Fix memory leak in gmac_setup_txqs
-Date:   Sun, 29 Dec 2019 18:20:58 +0100
-Message-Id: <20191229172702.698171960@linuxfoundation.org>
+Subject: [PATCH 5.4 007/434] net: nfc: nci: fix a possible sleep-in-atomic-context bug in nci_uart_tty_receive()
+Date:   Sun, 29 Dec 2019 18:21:00 +0100
+Message-Id: <20191229172702.803074969@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,33 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit f37f710353677639bc5d37ee785335994adf2529 ]
+[ Upstream commit b7ac893652cafadcf669f78452329727e4e255cc ]
 
-In the implementation of gmac_setup_txqs() the allocated desc_ring is
-leaked if TX queue base is not aligned. Release it via
-dma_free_coherent.
+The kernel may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+net/nfc/nci/uart.c, 349:
+	nci_skb_alloc in nci_uart_default_recv_buf
+net/nfc/nci/uart.c, 255:
+	(FUNC_PTR)nci_uart_default_recv_buf in nci_uart_tty_receive
+net/nfc/nci/uart.c, 254:
+	spin_lock in nci_uart_tty_receive
+
+nci_skb_alloc(GFP_KERNEL) can sleep at runtime.
+(FUNC_PTR) means a function pointer is called.
+
+To fix this bug, GFP_KERNEL is replaced with GFP_ATOMIC for
+nci_skb_alloc().
+
+This bug is found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cortina/gemini.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/nfc/nci/uart.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -576,6 +576,8 @@ static int gmac_setup_txqs(struct net_de
- 
- 	if (port->txq_dma_base & ~DMA_Q_BASE_MASK) {
- 		dev_warn(geth->dev, "TX queue base is not aligned\n");
-+		dma_free_coherent(geth->dev, len * sizeof(*desc_ring),
-+				  desc_ring, port->txq_dma_base);
- 		kfree(skb_tab);
- 		return -ENOMEM;
- 	}
+--- a/net/nfc/nci/uart.c
++++ b/net/nfc/nci/uart.c
+@@ -346,7 +346,7 @@ static int nci_uart_default_recv_buf(str
+ 			nu->rx_packet_len = -1;
+ 			nu->rx_skb = nci_skb_alloc(nu->ndev,
+ 						   NCI_MAX_PACKET_SIZE,
+-						   GFP_KERNEL);
++						   GFP_ATOMIC);
+ 			if (!nu->rx_skb)
+ 				return -ENOMEM;
+ 		}
 
 
