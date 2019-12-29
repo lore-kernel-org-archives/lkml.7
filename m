@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91326C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8024C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE9A20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F88320722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642838;
-	bh=8p3wRkn4txEMO5tMoKe/eRQ5t6aioeCyxRRMj5b4kzM=;
+	s=default; t=1577642846;
+	bh=u9R7HTgwarOv0wUlUwQOwWhPK9d/LWi/IGgzsfiya6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RdI0Vt2m37RQsAvKhwO0/ra8cXS8dlVTDxnSjsHOf1mGsvmrngw4CXiUvDEetU5bX
-	 rt1rrjaLlmkNUmFs5prWB74MHcPBFf7rLtkLuBGs/gyQ3HCaBRBVtRtVSY2rL7SmNw
-	 rfGBb8tB8daGq191vE40V/5JxHbSWRODguTRO3Nk=
+	b=NauneK2RDCIIMIYBbwP5DyjgweC0GAj0+JqgZtEGyrMCivAIf8Wm79clQ0YczcKZW
+	 mukeGVLWjxGQGOrZAkxASc6zsjEuuow+Ckuzpr5GxhMJNCDf4UvTMoP+Ozays9BQgu
+	 toFxpPU9Jxy/AvKlA3/RKZKxMVzV6GwlLQokmrXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732306AbfL2SHR (ORCPT
+        id S1732390AbfL2SH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:07:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731482AbfL2Rsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:39 -0500
+        id S1731431AbfL2RsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:48:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE46D207FD;
-        Sun, 29 Dec 2019 17:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB33E206DB;
+        Sun, 29 Dec 2019 17:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641718;
-        bh=8p3wRkn4txEMO5tMoKe/eRQ5t6aioeCyxRRMj5b4kzM=;
+        s=default; t=1577641699;
+        bh=u9R7HTgwarOv0wUlUwQOwWhPK9d/LWi/IGgzsfiya6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcXFjUg562rFcJL6XRZWrk3fg7SPQewycaqevJLAhfTtB56vLjGpIWsbe/v5b3X9g
-         ceQSH57m3axr0FBcegI3xvY8weJ2dUhY+Gi47MmMJ2MCVpqLFTa7wghFWpeJFeqVPi
-         YYzo/t8O637xaab/qedS0jZ0Mm6pOUaBHlp44zHI=
+        b=RNX2/lPAZGYwwQc+2znVqD5afMn9P70TV77g9ZNSTZvnEa+9slqbuykDy28Up8c4R
+         egbOR624AqUWCStwHLMKMtWNFpD3/NjexWi1Ay2+/HDq1yBtWEyI91nyVi2Gs2q61x
+         Bv7Pmsu06vwk2KrPCvs3SM980t7MXYxXzkowolIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jae Hyun Yoo <jae.hyun.yoo@intel.com>,
-        Eddie James <eajames@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 181/434] media: aspeed: clear garbage interrupts
-Date:   Sun, 29 Dec 2019 18:23:54 +0100
-Message-Id: <20191229172713.839949368@linuxfoundation.org>
+Subject: [PATCH 5.4 173/434] media: cedrus: Fix undefined shift with a SHIFT_AND_MASK_BITS macro
+Date:   Sun, 29 Dec 2019 18:23:46 +0100
+Message-Id: <20191229172713.300684530@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,80 +62,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jae Hyun Yoo <jae.hyun.yoo@intel.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 65d270acb2d662c3346793663ac3a759eb4491b8 ]
+[ Upstream commit 06eff2150d4db991ca236f3d05a9dc0101475aea ]
 
-CAPTURE_COMPLETE and FRAME_COMPLETE interrupts come even when these
-are disabled in the VE_INTERRUPT_CTRL register and eventually this
-behavior causes disabling irq itself like below:
+We need to shift and mask values at different occasions to fill up
+cedrus registers. This was done using macros that don't explicitly
+treat arguments as unsigned, leading to possibly undefined behavior.
 
-[10055.108784] irq 23: nobody cared (try booting with the "irqpoll" option)
-[10055.115525] CPU: 0 PID: 331 Comm: swampd Tainted: G        W         5.3.0-4fde000-dirty-d683e2e #1
-[10055.124565] Hardware name: Generic DT based system
-[10055.129355] Backtrace:
-[10055.131854] [<80107d7c>] (dump_backtrace) from [<80107fb0>] (show_stack+0x20/0x24)
-[10055.139431]  r7:00000017 r6:00000001 r5:00000000 r4:9d51dc00
-[10055.145120] [<80107f90>] (show_stack) from [<8074bf50>] (dump_stack+0x20/0x28)
-[10055.152361] [<8074bf30>] (dump_stack) from [<80150ffc>] (__report_bad_irq+0x40/0xc0)
-[10055.160109] [<80150fbc>] (__report_bad_irq) from [<80150f2c>] (note_interrupt+0x23c/0x294)
-[10055.168374]  r9:015b6e60 r8:00000000 r7:00000017 r6:00000001 r5:00000000 r4:9d51dc00
-[10055.176136] [<80150cf0>] (note_interrupt) from [<8014df1c>] (handle_irq_event_percpu+0x88/0x98)
-[10055.184835]  r10:7eff7910 r9:015b6e60 r8:00000000 r7:9d417600 r6:00000001 r5:00000002
-[10055.192657]  r4:9d51dc00 r3:00000000
-[10055.196248] [<8014de94>] (handle_irq_event_percpu) from [<8014df64>] (handle_irq_event+0x38/0x4c)
-[10055.205113]  r5:80b56d50 r4:9d51dc00
-[10055.208697] [<8014df2c>] (handle_irq_event) from [<80151f1c>] (handle_level_irq+0xbc/0x12c)
-[10055.217037]  r5:80b56d50 r4:9d51dc00
-[10055.220623] [<80151e60>] (handle_level_irq) from [<8014d4b8>] (generic_handle_irq+0x30/0x44)
-[10055.229052]  r5:80b56d50 r4:00000017
-[10055.232648] [<8014d488>] (generic_handle_irq) from [<8014d524>] (__handle_domain_irq+0x58/0xb4)
-[10055.241356] [<8014d4cc>] (__handle_domain_irq) from [<801021e4>] (avic_handle_irq+0x68/0x70)
-[10055.249797]  r9:015b6e60 r8:00c5387d r7:00c5387d r6:ffffffff r5:9dd33fb0 r4:9d402380
-[10055.257539] [<8010217c>] (avic_handle_irq) from [<80101e34>] (__irq_usr+0x54/0x80)
-[10055.265105] Exception stack(0x9dd33fb0 to 0x9dd33ff8)
-[10055.270152] 3fa0:                                     015d0530 00000000 00000000 015d0538
-[10055.278328] 3fc0: 015d0530 015b6e60 00000000 00000000 0052c5d0 015b6e60 7eff7910 7eff7918
-[10055.286496] 3fe0: 76ce5614 7eff7908 0050e2f4 76a3a08c 20000010 ffffffff
-[10055.293104]  r5:20000010 r4:76a3a08c
-[10055.296673] handlers:
-[10055.298967] [<79f218a5>] irq_default_primary_handler threaded [<1de88514>] aspeed_video_irq
-[10055.307344] Disabling IRQ #23
+Introduce the SHIFT_AND_MASK_BITS macro and use it where possible.
+In cases where it doesn't apply as-is, explicitly cast to unsigned
+instead.
 
-To fix this issue, this commit makes the interrupt handler clear
-these garbage interrupts. This driver enables and uses only
-COMP_COMPLETE interrupt instead for frame handling.
+This macro should be moved to include/linux/bits.h eventually.
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@intel.com>
-Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/aspeed-video.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  | 31 ++++++++++---------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 84e0650106f5..096a7c9a8963 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -606,6 +606,16 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
- 			aspeed_video_start_frame(video);
- 	}
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+index ddd29788d685..f9dd8cbf3458 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+@@ -10,6 +10,9 @@
+ #ifndef _CEDRUS_REGS_H_
+ #define _CEDRUS_REGS_H_
  
-+	/*
-+	 * CAPTURE_COMPLETE and FRAME_COMPLETE interrupts come even when these
-+	 * are disabled in the VE_INTERRUPT_CTRL register so clear them to
-+	 * prevent unnecessary interrupt calls.
-+	 */
-+	if (sts & VE_INTERRUPT_CAPTURE_COMPLETE)
-+		sts &= ~VE_INTERRUPT_CAPTURE_COMPLETE;
-+	if (sts & VE_INTERRUPT_FRAME_COMPLETE)
-+		sts &= ~VE_INTERRUPT_FRAME_COMPLETE;
++#define SHIFT_AND_MASK_BITS(v, h, l) \
++	(((unsigned long)(v) << (l)) & GENMASK(h, l))
 +
- 	return sts ? IRQ_NONE : IRQ_HANDLED;
- }
+ /*
+  * Common acronyms and contractions used in register descriptions:
+  * * VLD : Variable-Length Decoder
+@@ -37,8 +40,8 @@
+ #define VE_PRIMARY_CHROMA_BUF_LEN		0xc4
+ #define VE_PRIMARY_FB_LINE_STRIDE		0xc8
  
+-#define VE_PRIMARY_FB_LINE_STRIDE_CHROMA(s)	(((s) << 16) & GENMASK(31, 16))
+-#define VE_PRIMARY_FB_LINE_STRIDE_LUMA(s)	(((s) << 0) & GENMASK(15, 0))
++#define VE_PRIMARY_FB_LINE_STRIDE_CHROMA(s)	SHIFT_AND_MASK_BITS(s, 31, 16)
++#define VE_PRIMARY_FB_LINE_STRIDE_LUMA(s)	SHIFT_AND_MASK_BITS(s, 15, 0)
+ 
+ #define VE_CHROMA_BUF_LEN			0xe8
+ 
+@@ -46,7 +49,7 @@
+ #define VE_SECONDARY_OUT_FMT_EXT		(0x01 << 30)
+ #define VE_SECONDARY_OUT_FMT_YU12		(0x02 << 30)
+ #define VE_SECONDARY_OUT_FMT_YV12		(0x03 << 30)
+-#define VE_CHROMA_BUF_LEN_SDRT(l)		((l) & GENMASK(27, 0))
++#define VE_CHROMA_BUF_LEN_SDRT(l)		SHIFT_AND_MASK_BITS(l, 27, 0)
+ 
+ #define VE_PRIMARY_OUT_FMT			0xec
+ 
+@@ -69,15 +72,15 @@
+ 
+ #define VE_DEC_MPEG_MP12HDR			(VE_ENGINE_DEC_MPEG + 0x00)
+ 
+-#define VE_DEC_MPEG_MP12HDR_SLICE_TYPE(t)	(((t) << 28) & GENMASK(30, 28))
++#define VE_DEC_MPEG_MP12HDR_SLICE_TYPE(t)	SHIFT_AND_MASK_BITS(t, 30, 28)
+ #define VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y)	(24 - 4 * (y) - 8 * (x))
+ #define VE_DEC_MPEG_MP12HDR_F_CODE(__x, __y, __v) \
+-	(((__v) & GENMASK(3, 0)) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(__x, __y))
++	(((unsigned long)(__v) & GENMASK(3, 0)) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(__x, __y))
+ 
+ #define VE_DEC_MPEG_MP12HDR_INTRA_DC_PRECISION(p) \
+-	(((p) << 10) & GENMASK(11, 10))
++	SHIFT_AND_MASK_BITS(p, 11, 10)
+ #define VE_DEC_MPEG_MP12HDR_INTRA_PICTURE_STRUCTURE(s) \
+-	(((s) << 8) & GENMASK(9, 8))
++	SHIFT_AND_MASK_BITS(s, 9, 8)
+ #define VE_DEC_MPEG_MP12HDR_TOP_FIELD_FIRST(v) \
+ 	((v) ? BIT(7) : 0)
+ #define VE_DEC_MPEG_MP12HDR_FRAME_PRED_FRAME_DCT(v) \
+@@ -98,19 +101,19 @@
+ #define VE_DEC_MPEG_PICCODEDSIZE		(VE_ENGINE_DEC_MPEG + 0x08)
+ 
+ #define VE_DEC_MPEG_PICCODEDSIZE_WIDTH(w) \
+-	((DIV_ROUND_UP((w), 16) << 8) & GENMASK(15, 8))
++	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((w), 16), 15, 8)
+ #define VE_DEC_MPEG_PICCODEDSIZE_HEIGHT(h) \
+-	((DIV_ROUND_UP((h), 16) << 0) & GENMASK(7, 0))
++	SHIFT_AND_MASK_BITS(DIV_ROUND_UP((h), 16), 7, 0)
+ 
+ #define VE_DEC_MPEG_PICBOUNDSIZE		(VE_ENGINE_DEC_MPEG + 0x0c)
+ 
+-#define VE_DEC_MPEG_PICBOUNDSIZE_WIDTH(w)	(((w) << 16) & GENMASK(27, 16))
+-#define VE_DEC_MPEG_PICBOUNDSIZE_HEIGHT(h)	(((h) << 0) & GENMASK(11, 0))
++#define VE_DEC_MPEG_PICBOUNDSIZE_WIDTH(w)	SHIFT_AND_MASK_BITS(w, 27, 16)
++#define VE_DEC_MPEG_PICBOUNDSIZE_HEIGHT(h)	SHIFT_AND_MASK_BITS(h, 11, 0)
+ 
+ #define VE_DEC_MPEG_MBADDR			(VE_ENGINE_DEC_MPEG + 0x10)
+ 
+-#define VE_DEC_MPEG_MBADDR_X(w)			(((w) << 8) & GENMASK(15, 8))
+-#define VE_DEC_MPEG_MBADDR_Y(h)			(((h) << 0) & GENMASK(7, 0))
++#define VE_DEC_MPEG_MBADDR_X(w)			SHIFT_AND_MASK_BITS(w, 15, 8)
++#define VE_DEC_MPEG_MBADDR_Y(h)			SHIFT_AND_MASK_BITS(h, 7, 0)
+ 
+ #define VE_DEC_MPEG_CTRL			(VE_ENGINE_DEC_MPEG + 0x14)
+ 
+@@ -225,7 +228,7 @@
+ #define VE_DEC_MPEG_IQMINPUT_FLAG_INTRA		(0x01 << 14)
+ #define VE_DEC_MPEG_IQMINPUT_FLAG_NON_INTRA	(0x00 << 14)
+ #define VE_DEC_MPEG_IQMINPUT_WEIGHT(i, v) \
+-	(((v) & GENMASK(7, 0)) | (((i) << 8) & GENMASK(13, 8)))
++	(SHIFT_AND_MASK_BITS(i, 13, 8) | SHIFT_AND_MASK_BITS(v, 7, 0))
+ 
+ #define VE_DEC_MPEG_ERROR			(VE_ENGINE_DEC_MPEG + 0xc4)
+ #define VE_DEC_MPEG_CRTMBADDR			(VE_ENGINE_DEC_MPEG + 0xc8)
 -- 
 2.20.1
 
