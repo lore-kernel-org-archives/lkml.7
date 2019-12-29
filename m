@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA82C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA8EC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CE320722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B269F20748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642892;
-	bh=FdOW9nhUOiOhXDhSZoJ+hTEXhwDSDMagTd1K+T1DgUc=;
+	s=default; t=1577642895;
+	bh=Kz5HlZjaUT9tX8Eyv4AqnpRGD+ixkkCCZAFsG9IcSD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLi69kMl4CQClPBOdVBjwqPh3R9tecNGb81sXgv0AjrQzYf++DJh9UzxFFS/gIj/8
-	 JRunXc7vur2LoCfj5/WLDsz5hsJqdKQOIT4yjtLNXCSZ5BpUZEa9Hailh+SSrL1Pro
-	 pcO7CR3c8NUtjgLdZN8KOhQsrRwHYOT1+S4F86M8=
+	b=tqnyI30VaZRqtm6Tp0W2DPRbQQNyhW8aqNxEvcUwjxnkYSMgbHEz7/jPdg0BFfbA3
+	 EYhlutWRQP9g2rEtW2aobPgM4k4gf7qtNwEif7fVvGWDeUaw+2m8RbrQT+C5dZxjqC
+	 KLK3HQcgGvDEzT9928FTfrtocPe7uCNXB9KMY4mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfL2RrW (ORCPT
+        id S1731641AbfL2SIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:08:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731228AbfL2RrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:15 -0500
+        id S1730985AbfL2RrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA202207FD;
-        Sun, 29 Dec 2019 17:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D203C20718;
+        Sun, 29 Dec 2019 17:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641634;
-        bh=FdOW9nhUOiOhXDhSZoJ+hTEXhwDSDMagTd1K+T1DgUc=;
+        s=default; t=1577641641;
+        bh=Kz5HlZjaUT9tX8Eyv4AqnpRGD+ixkkCCZAFsG9IcSD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mC7nRiLHMlyu5LMPt0+ZVIkGdnae2uRZC7tji9x9gdHPXuSRvpbiQnQkTj0TIkqtw
-         ur5uIo6m06+d95JRD91oUlDVR80RLkAvn8DFgH5nrc8YpyjVEFv4jbhWDZSAb6vdXu
-         bRMnGmymqUgdrE3XFn9TZ8w3mtiqNpucb4N4N7FE=
+        b=SLtB6fRNMqs+KGXxXGOBeiWL2FjcfGXEunAbn1S+Osbj2DW43zckr/hcxuc7vsFAn
+         cJUljm1f2AKlRetFWHpBkgB0DGS0c4cWX5SgnvQRsIAy33S82n87j1rzXS5yIikEhB
+         yALPv42B3GRkOaFXWXIyjNpDp+cNS/QBbbjWZsA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 108/434] media: meson/ao-cec: move cec_notifier_cec_adap_register after hw setup
-Date:   Sun, 29 Dec 2019 18:22:41 +0100
-Message-Id: <20191229172708.805039493@linuxfoundation.org>
+Subject: [PATCH 5.4 101/434] usb: renesas_usbhs: add suspend event support in gadget mode
+Date:   Sun, 29 Dec 2019 18:22:34 +0100
+Message-Id: <20191229172708.307687529@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,235 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
 
-[ Upstream commit 3e84a18a259e1df35e5b549ab92ec3baf82ff010 ]
+[ Upstream commit 39abcc84846bbc0538f13c190b6a9c7e36890cd2 ]
 
-When probed after the HDMI notifier, calling cec_notifier_cec_adap_register()
-calls the enable() adapter callback, but the HW is not yet set up.
+When R-Car Gen3 USB 2.0 is in Gadget mode, if host is detached an interrupt
+will be generated and Suspended state bit is set in interrupt status
+register. Interrupt handler will call driver->suspend(composite_suspend)
+if suspended state bit is set. composite_suspend will call
+ffs_func_suspend which will post FUNCTIONFS_SUSPEND and will be consumed
+by user space application via /dev/ep0.
 
-Moving cec_notifier_cec_adap_register() right before cec_register_adapter()
-fixes the following crash:
-Ignoring spurious kernel translation fault at virtual address 0000000000000008
-[...]
-Hardware name: Khadas VIM (DT)
-[...]
-pc : __do_kernel_fault+0xdc/0x120
-lr : __do_kernel_fault+0xdc/0x120
-[...]
-Call trace:
- __do_kernel_fault+0xdc/0x120
- do_page_fault+0x180/0x458
- do_translation_fault+0x64/0x70
- do_mem_abort+0x3c/0x98
- el1_da+0x20/0x94
- meson_ao_cec_adap_enable+0x30/0x218 [ao_cec]
- __cec_s_phys_addr+0x184/0x270
- cec_s_phys_addr+0x44/0x60
- cec_notifier_cec_adap_register+0x68/0x90
- meson_ao_cec_probe+0xb0/0x288 [ao_cec]
-[...]
- el0_svc_compat+0x8/0x10
+To be able to detect host detach, extend the DVSQ_MASK to cover the
+Suspended bit of the DVSQ[2:0] bitfield from the Interrupt Status
+Register 0 (INTSTS0) register and perform appropriate action in the
+DVST interrupt handler (usbhsg_irq_dev_state).
 
-Reported-by: Christian Hewitt <christianshewitt@gmail.com>
-Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Fixes: 20958f9d5c48 ("media: meson/ao-cec: use cec_notifier_cec_adap_(un)register")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Without this commit, disconnection of the phone from R-Car-H3 ES2.0
+Salvator-X CN9 port is not recognized and reverse role switch does
+not happen. If phone is connected again it does not enumerate.
+
+With this commit, disconnection will be recognized and reverse role
+switch will happen by a user space application. If phone is connected
+again it will enumerate properly and will become visible in the output
+of 'lsusb'.
+
+Signed-off-by: Veeraiyan Chidambaram <veeraiyan.chidambaram@in.bosch.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/1568207756-22325-3-git-send-email-external.veeraiyan.c@de.adit-jv.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/meson/ao-cec-g12a.c | 36 +++++++++++-----------
- drivers/media/platform/meson/ao-cec.c      | 30 +++++++++---------
- 2 files changed, 33 insertions(+), 33 deletions(-)
+ drivers/usb/renesas_usbhs/common.h     |  3 ++-
+ drivers/usb/renesas_usbhs/mod_gadget.c | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
-index 3b39e875292e..3d8fe854feb0 100644
---- a/drivers/media/platform/meson/ao-cec-g12a.c
-+++ b/drivers/media/platform/meson/ao-cec-g12a.c
-@@ -662,34 +662,27 @@ static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
- 	if (IS_ERR(ao_cec->adap))
- 		return PTR_ERR(ao_cec->adap);
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index 0824099b905e..ef1735d014da 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -161,11 +161,12 @@ struct usbhs_priv;
+ #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
+ #define VALID	(1 << 3)	/* USB Request Receive */
  
--	ao_cec->notify = cec_notifier_cec_adap_register(hdmi_dev, NULL,
--							ao_cec->adap);
--	if (!ao_cec->notify) {
--		ret = -ENOMEM;
--		goto out_probe_adapter;
--	}
--
- 	ao_cec->adap->owner = THIS_MODULE;
+-#define DVSQ_MASK		(0x3 << 4)	/* Device State */
++#define DVSQ_MASK		(0x7 << 4)	/* Device State */
+ #define  POWER_STATE		(0 << 4)
+ #define  DEFAULT_STATE		(1 << 4)
+ #define  ADDRESS_STATE		(2 << 4)
+ #define  CONFIGURATION_STATE	(3 << 4)
++#define  SUSPENDED_STATE	(4 << 4)
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base)) {
- 		ret = PTR_ERR(base);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
+ #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
+ #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */
+diff --git a/drivers/usb/renesas_usbhs/mod_gadget.c b/drivers/usb/renesas_usbhs/mod_gadget.c
+index cd38d74b3223..53489cafecc1 100644
+--- a/drivers/usb/renesas_usbhs/mod_gadget.c
++++ b/drivers/usb/renesas_usbhs/mod_gadget.c
+@@ -457,12 +457,18 @@ static int usbhsg_irq_dev_state(struct usbhs_priv *priv,
+ {
+ 	struct usbhsg_gpriv *gpriv = usbhsg_priv_to_gpriv(priv);
+ 	struct device *dev = usbhsg_gpriv_to_dev(gpriv);
++	int state = usbhs_status_get_device_state(irq_state);
  
- 	ao_cec->regmap = devm_regmap_init_mmio(&pdev->dev, base,
- 					       &meson_ao_cec_g12a_regmap_conf);
- 	if (IS_ERR(ao_cec->regmap)) {
- 		ret = PTR_ERR(ao_cec->regmap);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
+ 	gpriv->gadget.speed = usbhs_bus_get_speed(priv);
  
- 	ao_cec->regmap_cec = devm_regmap_init(&pdev->dev, NULL, ao_cec,
- 					   &meson_ao_cec_g12a_cec_regmap_conf);
- 	if (IS_ERR(ao_cec->regmap_cec)) {
- 		ret = PTR_ERR(ao_cec->regmap_cec);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -699,45 +692,52 @@ static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
- 					0, NULL, ao_cec);
- 	if (ret) {
- 		dev_err(&pdev->dev, "irq request failed\n");
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	ao_cec->oscin = devm_clk_get(&pdev->dev, "oscin");
- 	if (IS_ERR(ao_cec->oscin)) {
- 		dev_err(&pdev->dev, "oscin clock request failed\n");
- 		ret = PTR_ERR(ao_cec->oscin);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	ret = meson_ao_cec_g12a_setup_clk(ao_cec);
- 	if (ret)
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 
- 	ret = clk_prepare_enable(ao_cec->core);
- 	if (ret) {
- 		dev_err(&pdev->dev, "core clock enable failed\n");
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	device_reset_optional(&pdev->dev);
- 
- 	platform_set_drvdata(pdev, ao_cec);
- 
-+	ao_cec->notify = cec_notifier_cec_adap_register(hdmi_dev, NULL,
-+							ao_cec->adap);
-+	if (!ao_cec->notify) {
-+		ret = -ENOMEM;
-+		goto out_probe_core_clk;
-+	}
+-	dev_dbg(dev, "state = %x : speed : %d\n",
+-		usbhs_status_get_device_state(irq_state),
+-		gpriv->gadget.speed);
++	dev_dbg(dev, "state = %x : speed : %d\n", state, gpriv->gadget.speed);
 +
- 	ret = cec_register_adapter(ao_cec->adap, &pdev->dev);
- 	if (ret < 0)
--		goto out_probe_core_clk;
-+		goto out_probe_notify;
- 
- 	/* Setup Hardware */
- 	regmap_write(ao_cec->regmap, CECB_GEN_CNTL_REG, CECB_GEN_CNTL_RESET);
++	if (gpriv->gadget.speed != USB_SPEED_UNKNOWN &&
++	    (state & SUSPENDED_STATE)) {
++		if (gpriv->driver && gpriv->driver->suspend)
++			gpriv->driver->suspend(&gpriv->gadget);
++		usb_gadget_set_state(&gpriv->gadget, USB_STATE_SUSPENDED);
++	}
  
  	return 0;
- 
--out_probe_core_clk:
--	clk_disable_unprepare(ao_cec->core);
--
- out_probe_notify:
- 	cec_notifier_cec_adap_unregister(ao_cec->notify);
- 
-+out_probe_core_clk:
-+	clk_disable_unprepare(ao_cec->core);
-+
- out_probe_adapter:
- 	cec_delete_adapter(ao_cec->adap);
- 
-diff --git a/drivers/media/platform/meson/ao-cec.c b/drivers/media/platform/meson/ao-cec.c
-index 64ed549bf012..03600e8b3ef0 100644
---- a/drivers/media/platform/meson/ao-cec.c
-+++ b/drivers/media/platform/meson/ao-cec.c
-@@ -624,20 +624,13 @@ static int meson_ao_cec_probe(struct platform_device *pdev)
- 	if (IS_ERR(ao_cec->adap))
- 		return PTR_ERR(ao_cec->adap);
- 
--	ao_cec->notify = cec_notifier_cec_adap_register(hdmi_dev, NULL,
--							ao_cec->adap);
--	if (!ao_cec->notify) {
--		ret = -ENOMEM;
--		goto out_probe_adapter;
--	}
--
- 	ao_cec->adap->owner = THIS_MODULE;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ao_cec->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(ao_cec->base)) {
- 		ret = PTR_ERR(ao_cec->base);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -647,20 +640,20 @@ static int meson_ao_cec_probe(struct platform_device *pdev)
- 					0, NULL, ao_cec);
- 	if (ret) {
- 		dev_err(&pdev->dev, "irq request failed\n");
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	ao_cec->core = devm_clk_get(&pdev->dev, "core");
- 	if (IS_ERR(ao_cec->core)) {
- 		dev_err(&pdev->dev, "core clock request failed\n");
- 		ret = PTR_ERR(ao_cec->core);
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	ret = clk_prepare_enable(ao_cec->core);
- 	if (ret) {
- 		dev_err(&pdev->dev, "core clock enable failed\n");
--		goto out_probe_notify;
-+		goto out_probe_adapter;
- 	}
- 
- 	ret = clk_set_rate(ao_cec->core, CEC_CLK_RATE);
-@@ -674,9 +667,16 @@ static int meson_ao_cec_probe(struct platform_device *pdev)
- 	ao_cec->pdev = pdev;
- 	platform_set_drvdata(pdev, ao_cec);
- 
-+	ao_cec->notify = cec_notifier_cec_adap_register(hdmi_dev, NULL,
-+							ao_cec->adap);
-+	if (!ao_cec->notify) {
-+		ret = -ENOMEM;
-+		goto out_probe_clk;
-+	}
-+
- 	ret = cec_register_adapter(ao_cec->adap, &pdev->dev);
- 	if (ret < 0)
--		goto out_probe_clk;
-+		goto out_probe_notify;
- 
- 	/* Setup Hardware */
- 	writel_relaxed(CEC_GEN_CNTL_RESET,
-@@ -684,12 +684,12 @@ static int meson_ao_cec_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--out_probe_clk:
--	clk_disable_unprepare(ao_cec->core);
--
- out_probe_notify:
- 	cec_notifier_cec_adap_unregister(ao_cec->notify);
- 
-+out_probe_clk:
-+	clk_disable_unprepare(ao_cec->core);
-+
- out_probe_adapter:
- 	cec_delete_adapter(ao_cec->adap);
- 
+ }
 -- 
 2.20.1
 
