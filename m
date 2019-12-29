@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E03EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECC9C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C8F207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C874F222C2
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640377;
-	bh=aai5ilbyK01aPMcM1RzUPG+VItremKQRclN3Rtnusxo=;
+	s=default; t=1577640382;
+	bh=siKNwuh2zRW0dKAyJxEQER2/TqmLDXbV0rH2BnzudpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZwiKuEEBtUe8A/zpqLCO/WA7DXaEtiO1Kw3aFOkFGTlJNyYqUeZcbfv4Z2do5qa7
-	 JfP6hR1fVlxlhUuftzhs6hJRYOb1y6CAfWtf7DAa/IaKbkf6nQS30PLsQx0TsXwKOP
-	 Q8Qm/ECkbOyDLTu90fw24bX2OezOb5B+3SegAgNg=
+	b=xSFvc/dv2Eh74VAiH6keknZg+pvGjZteMKSW0kDQGPGjl/qf5zFyCNgRXLcc+M3Zn
+	 AOA7uYyVAjTd3673uTfwLyp5GfcNNmTaCw4YtotdtmVYDngBmYmGXxCDxlvpgRIt2j
+	 bzRWRbmwE0SHewCr1cyb2S0AVKF/53Muj8HRPXiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfL2R0Q (ORCPT
+        id S1728183AbfL2R0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46994 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:26:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfL2R0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:13 -0500
+        id S1728165AbfL2R0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B67A220409;
-        Sun, 29 Dec 2019 17:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8390721744;
+        Sun, 29 Dec 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640373;
-        bh=aai5ilbyK01aPMcM1RzUPG+VItremKQRclN3Rtnusxo=;
+        s=default; t=1577640378;
+        bh=siKNwuh2zRW0dKAyJxEQER2/TqmLDXbV0rH2BnzudpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WAlaKBx+m04jwShOc2Bb1Jk+dvcr6qd0dHVZShIAtDova2UMz1zy1dDZqmkO1riWo
-         AN9ANzKza+1J1rVpxZFka61VNQXsmDqxwu19kIkBiaAB4oZJ/psktp21/bXaP6KNKL
-         wjwjHVZeee4Vi6jvpW78BgCcYnl5s81SYbf0RB5E=
+        b=RYaXYrykyxp72E+Kqdwfr9O9VwClc5Iuc92swMvEKp1Nl3aXTfYATuswx6uIoEsuX
+         moFvRS0pKOtmffn6b4HpPrUAR1am1NAbPFOKGODV2TwZtx9J8Hp3F2PrSD/x/QUPas
+         QVtoqJmDCulzupDmikCmEGMGOwGguXyia1nbjIrI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 132/161] crypto: vmx - Avoid weird build failures
-Date:   Sun, 29 Dec 2019 18:19:40 +0100
-Message-Id: <20191229162439.074609743@linuxfoundation.org>
+Subject: [PATCH 4.14 134/161] mips: fix build when "48 bits virtual memory" is enabled
+Date:   Sun, 29 Dec 2019 18:19:42 +0100
+Message-Id: <20191229162439.416974712@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,65 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 4ee812f6143d78d8ba1399671d78c8d78bf2817c ]
+[ Upstream commit 3ed6751bb8fa89c3014399bb0414348499ee202a ]
 
-In the vmx crypto Makefile we assign to a variable called TARGET and
-pass that to the aesp8-ppc.pl and ghashp8-ppc.pl scripts.
+With CONFIG_MIPS_VA_BITS_48=y the build fails miserably:
 
-The variable is meant to describe what flavour of powerpc we're
-building for, eg. either 32 or 64-bit, and big or little endian.
+  CC      arch/mips/kernel/asm-offsets.s
+In file included from arch/mips/include/asm/pgtable.h:644,
+                 from include/linux/mm.h:99,
+                 from arch/mips/kernel/asm-offsets.c:15:
+include/asm-generic/pgtable.h:16:2: error: #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+ #error CONFIG_PGTABLE_LEVELS is not consistent with __PAGETABLE_{P4D,PUD,PMD}_FOLDED
+  ^~~~~
+include/asm-generic/pgtable.h:390:28: error: unknown type name 'p4d_t'; did you mean 'pmd_t'?
+ static inline int p4d_same(p4d_t p4d_a, p4d_t p4d_b)
+                            ^~~~~
+                            pmd_t
 
-Unfortunately TARGET is a fairly common name for a make variable, and
-if it happens that TARGET is specified as a command line parameter to
-make, the value specified on the command line will override our value.
+[ ... more such errors ... ]
 
-In particular this can happen if the kernel Makefile is driven by an
-external Makefile that uses TARGET for something.
+scripts/Makefile.build:99: recipe for target 'arch/mips/kernel/asm-offsets.s' failed
+make[2]: *** [arch/mips/kernel/asm-offsets.s] Error 1
 
-This leads to weird build failures, eg:
-  nonsense  at /build/linux/drivers/crypto/vmx/ghashp8-ppc.pl line 45.
-  /linux/drivers/crypto/vmx/Makefile:20: recipe for target 'drivers/crypto/vmx/ghashp8-ppc.S' failed
+This happens because when CONFIG_MIPS_VA_BITS_48 enables 4th level of the
+page tables, but neither pgtable-nop4d.h nor 5level-fixup.h are included to
+cope with the 5th level.
 
-Which shows that we passed an empty value for $(TARGET) to the perl
-script, confirmed with make V=1:
+Replace #ifdef conditions around includes of the pgtable-nop{m,u}d.h with
+explicit CONFIG_PGTABLE_LEVELS and add include of 5level-fixup.h for the
+case when CONFIG_PGTABLE_LEVELS==4
 
-  perl /linux/drivers/crypto/vmx/ghashp8-ppc.pl  > drivers/crypto/vmx/ghashp8-ppc.S
-
-We can avoid this confusion by using override, to tell make that we
-don't want anything to override our variable, even a value specified
-on the command line. We can also use a less common name, given the
-script calls it "flavour", let's use that.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/vmx/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/include/asm/pgtable-64.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/vmx/Makefile b/drivers/crypto/vmx/Makefile
-index cab32cfec9c4..709670d2b553 100644
---- a/drivers/crypto/vmx/Makefile
-+++ b/drivers/crypto/vmx/Makefile
-@@ -3,13 +3,13 @@ obj-$(CONFIG_CRYPTO_DEV_VMX_ENCRYPT) += vmx-crypto.o
- vmx-crypto-objs := vmx.o aesp8-ppc.o ghashp8-ppc.o aes.o aes_cbc.o aes_ctr.o aes_xts.o ghash.o
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index a2252c2a9ded..d0b9912fb63f 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -18,10 +18,12 @@
+ #include <asm/fixmap.h>
  
- ifeq ($(CONFIG_CPU_LITTLE_ENDIAN),y)
--TARGET := linux-ppc64le
-+override flavour := linux-ppc64le
- else
--TARGET := linux-ppc64
-+override flavour := linux-ppc64
- endif
+ #define __ARCH_USE_5LEVEL_HACK
+-#if defined(CONFIG_PAGE_SIZE_64KB) && !defined(CONFIG_MIPS_VA_BITS_48)
++#if CONFIG_PGTABLE_LEVELS == 2
+ #include <asm-generic/pgtable-nopmd.h>
+-#elif !(defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_MIPS_VA_BITS_48))
++#elif CONFIG_PGTABLE_LEVELS == 3
+ #include <asm-generic/pgtable-nopud.h>
++#else
++#include <asm-generic/5level-fixup.h>
+ #endif
  
- quiet_cmd_perl = PERL $@
--      cmd_perl = $(PERL) $(<) $(TARGET) > $(@)
-+      cmd_perl = $(PERL) $(<) $(flavour) > $(@)
+ /*
+@@ -222,6 +224,9 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
+ 	return pgd_val(pgd);
+ }
  
- targets += aesp8-ppc.S ghashp8-ppc.S
- 
++#define pgd_phys(pgd)		virt_to_phys((void *)pgd_val(pgd))
++#define pgd_page(pgd)		(pfn_to_page(pgd_phys(pgd) >> PAGE_SHIFT))
++
+ static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
+ {
+ 	return (pud_t *)pgd_page_vaddr(*pgd) + pud_index(address);
 -- 
 2.20.1
 
