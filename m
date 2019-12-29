@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB750C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B55C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2820722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E01F207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640092;
-	bh=OrkQOZpDRa52M6U8AYfUWpsmNojdEtm5LqqQWhNH2So=;
+	s=default; t=1577640095;
+	bh=+P5hGw8cJyh8DZsMU4pPbmDUkjJN+6i5ZV9dyTSHEZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kHtaT7uUqHb7V0OUBE4TJ0vkWhm+kgjwCm8rkKbMFwVRvvbzA3aVwHFpi/RGRl+xO
-	 hmK0eAjf+AK4ETXFy2mg5BCEpVnsj+TYZGPnsiBWT0q1cTnWO+ffRfHuWD1vNTHlNP
-	 +2fhP4JvYW7r2SOM6On0hY16p7PlJxNzUW2Y7XCM=
+	b=XMEo/qF6i4Hr2s6LSNTrutljSXIvS6ErUlqCU1EKWGswvdxVY8sxqQ3ZxtVRmUJS4
+	 fkdHujSgHBc+4LyHI0PzpVYFSH1wmDcXz8dfQo7Egk2nSfUvbbixPtNVJq+6yLBmYV
+	 uhS5VKuAyzjByuCIwPoAuTJzdr+OjsMMovE3zSEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfL2RVb (ORCPT
+        id S1726920AbfL2RVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36640 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbfL2RV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:29 -0500
+        id S1726889AbfL2RVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69632207FF;
-        Sun, 29 Dec 2019 17:21:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0EE5208E4;
+        Sun, 29 Dec 2019 17:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640088;
-        bh=OrkQOZpDRa52M6U8AYfUWpsmNojdEtm5LqqQWhNH2So=;
+        s=default; t=1577640091;
+        bh=+P5hGw8cJyh8DZsMU4pPbmDUkjJN+6i5ZV9dyTSHEZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aU9pDDRja3vmHXZnRkvdpkgoGaRn9Nut6i5iTm/VKbgxPSj4Faz8kVtK+82Qc0eXm
-         ITbu9evkXLEl122FUPekSEK1wQy45P4kyfvPMruG30XIDeZsEgoTMem83kGw55OUZ6
-         xat1n3+7e47ibfoeg/jHegWN2oWOujKz718EIEWE=
+        b=Z3rxejMBfjPOsQRNP59JcWIzNcbimE9xCBFDe3/8ui7qALDDT8FplUMk88Ec28B1e
+         fTxXoyKpkiDqbV+7dKEquDVCIfiUhVodi7cgnoXN59aEm+Yrh1o7aR+nnchI+oqO5j
+         GMhgXLvGGKugNf1mj4Af6Ol91E9yfAOmmzlFwUUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Johannes Thumshirn <jthumshirn@suse.de>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 014/161] btrfs: do not leak reloc root if we fail to read the fs root
-Date:   Sun, 29 Dec 2019 18:17:42 +0100
-Message-Id: <20191229162400.705361749@linuxfoundation.org>
+Subject: [PATCH 4.14 015/161] btrfs: handle ENOENT in btrfs_uuid_tree_iterate
+Date:   Sun, 29 Dec 2019 18:17:43 +0100
+Message-Id: <20191229162400.947473517@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -63,13 +63,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit ca1aa2818a53875cfdd175fb5e9a2984e997cce9 upstream.
+commit 714cd3e8cba6841220dce9063a7388a81de03825 upstream.
 
-If we fail to read the fs root corresponding with a reloc root we'll
-just break out and free the reloc roots.  But we remove our current
-reloc_root from this list higher up, which means we'll leak this
-reloc_root.  Fix this by adding ourselves back to the reloc_roots list
-so we are properly cleaned up.
+If we get an -ENOENT back from btrfs_uuid_iter_rem when iterating the
+uuid tree we'll just continue and do btrfs_next_item().  However we've
+done a btrfs_release_path() at this point and no longer have a valid
+path.  So increment the key and go back and do a normal search.
 
 CC: stable@vger.kernel.org # 4.4+
 Reviewed-by: Filipe Manana <fdmanana@suse.com>
@@ -80,18 +79,19 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/uuid-tree.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4587,6 +4587,7 @@ int btrfs_recover_relocation(struct btrf
- 		fs_root = read_fs_root(fs_info, reloc_root->root_key.offset);
- 		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
-+			list_add_tail(&reloc_root->root_list, &reloc_roots);
- 			goto out_free;
- 		}
- 
+--- a/fs/btrfs/uuid-tree.c
++++ b/fs/btrfs/uuid-tree.c
+@@ -336,6 +336,8 @@ again_search_slot:
+ 				}
+ 				if (ret < 0 && ret != -ENOENT)
+ 					goto out;
++				key.offset++;
++				goto again_search_slot;
+ 			}
+ 			item_size -= sizeof(subid_le);
+ 			offset += sizeof(subid_le);
 
 
