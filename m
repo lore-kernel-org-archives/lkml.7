@@ -2,52 +2,51 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3F8C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82CEC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801BA206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2AE207E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643235;
-	bh=ErSN2XeBm930ThUzSOLtw9CrlGzqk9HcCu7NpCdJGeU=;
+	s=default; t=1577643239;
+	bh=OORXKoTj2jb5eERyHJvdewqHrX+uXcuvpVT8e1gscLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaCGx04o1157S3b8PezqLEFpvDTdRUdCxHHdAj+GjRB8fZ1H+CY0gDdCTG+HheHQF
-	 lW6fhrYdj+nWET36ZU2cHs0OcI5/01hTnDDUmp/bbxrNA5cL+NJ3tDxpqUpGfUo3BN
-	 LSW/5P1qlflST8spk3+lXaq26Ad4rIvsBTOzbzKY=
+	b=A79WPqS/sBNaME19wbJHBBBK3W+Xgamh6y83Wa8199VcFJOMxPXKCw0s8Hp9pg3za
+	 VYgWbMh5jhjxT8qteGbRtOx1G5dmtc8GiUeACwYuzlJI3IpI3o9advo7tGZ1a+WUD7
+	 v4tvwQ31vqc+3uN75HFx7Zt9zhYO9Oh5l1Mea0bI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbfL2SNy (ORCPT
+        id S1728435AbfL2R1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:13:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50132 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:27:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbfL2R1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:38 -0500
+        id S1728407AbfL2R1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 212FB207FD;
-        Sun, 29 Dec 2019 17:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97AF320409;
+        Sun, 29 Dec 2019 17:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640457;
-        bh=ErSN2XeBm930ThUzSOLtw9CrlGzqk9HcCu7NpCdJGeU=;
+        s=default; t=1577640443;
+        bh=OORXKoTj2jb5eERyHJvdewqHrX+uXcuvpVT8e1gscLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDXDPETlDznTles8iOsU+KiCg7xZUsJhiQ3BHNZNbcLqj1fjDvP2PNivho3Kr3DmF
-         mWPPpduv2v30g42CRyfWM+icL5WeVXVPcK/MaKdqDfVvsfpnKS8MexwHlJEGCeC1MC
-         OaMsctjHShzjQeoxURsdLggI6uMOzzk0fPw1vq7Y=
+        b=You3DEEhvXRf58/J0W5JmFfV6ZxNKYfIwM6+8+H2IQwft883fpZytUE8YZtwYdQmx
+         Fp1f7V77sr+ZlARk+0+YzsuiEWab5jKWdT8nYyHpQFJLXfPkpuzriaGj1EJos8Fz0Y
+         bXq7zUqMeYFqGn8dP47Nx/sENLS3B5w3aBOUfHs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/161] iwlwifi: check kasprintf() return value
-Date:   Sun, 29 Dec 2019 18:19:35 +0100
-Message-Id: <20191229162437.413487630@linuxfoundation.org>
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 159/161] mmc: sdhci: Update the tuning failed messages to pr_debug level
+Date:   Sun, 29 Dec 2019 18:20:07 +0100
+Message-Id: <20191229162449.951014721@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,52 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 ]
+commit 2c92dd20304f505b6ef43d206fff21bda8f1f0ae upstream.
 
-kasprintf() can fail, we should check the return value.
+Tuning support in DDR50 speed mode was added in SD Specifications Part1
+Physical Layer Specification v3.01. Its not possible to distinguish
+between v3.00 and v3.01 from the SCR and that is why since
+commit 4324f6de6d2e ("mmc: core: enable CMD19 tuning for DDR50 mode")
+tuning failures are ignored in DDR50 speed mode.
 
-Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
-Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cards compatible with v3.00 don't respond to CMD19 in DDR50 and this
+error gets printed during enumeration and also if retune is triggered at
+any time during operation. Update the printk level to pr_debug so that
+these errors don't lead to false error reports.
+
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Cc: stable@vger.kernel.org # v4.4+
+Link: https://lore.kernel.org/r/20191206114326.15856-1-faiz_abbas@ti.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/led.c | 3 +++
- drivers/net/wireless/intel/iwlwifi/mvm/led.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/mmc/host/sdhci.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/led.c b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-index 1bbd17ada974..20e16c423990 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/led.c
-@@ -185,6 +185,9 @@ void iwl_leds_init(struct iwl_priv *priv)
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2162,8 +2162,8 @@ static void __sdhci_execute_tuning(struc
+ 		sdhci_send_tuning(host, opcode);
  
- 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(priv->hw->wiphy));
-+	if (!priv->led.name)
-+		return;
-+
- 	priv->led.brightness_set = iwl_led_brightness_set;
- 	priv->led.blink_set = iwl_led_blink_set;
- 	priv->led.max_brightness = 1;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/led.c b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-index b27269504a62..072f80c90ce4 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/led.c
-@@ -131,6 +131,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mvm)
- 
- 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
- 				   wiphy_name(mvm->hw->wiphy));
-+	if (!mvm->led.name)
-+		return -ENOMEM;
-+
- 	mvm->led.brightness_set = iwl_led_brightness_set;
- 	mvm->led.max_brightness = 1;
- 
--- 
-2.20.1
-
+ 		if (!host->tuning_done) {
+-			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
+-				mmc_hostname(host->mmc));
++			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
++				 mmc_hostname(host->mmc));
+ 			sdhci_abort_tuning(host, opcode);
+ 			return;
+ 		}
 
 
