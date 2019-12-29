@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CB8C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5D7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62ECA207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6B020409
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640447;
-	bh=NXKgy41tAGRp9sEKiUiDZzci+nRhDZkq+Sk5LQzhINQ=;
+	s=default; t=1577640449;
+	bh=VY80hTtja85SkMaqS467ItajsdXs54ZTgnddma92D2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aE026i4qBQbo83NrwjEC34SeWsikLFWf/xw40J5vE7AqExk1FY+zRfYIwLY0nNw2A
-	 ybDDcsg9NIJUnaK4eqOzWS2OGO0rL61aVb3JdUwpNB2d4eYpNkxBZFigFOq3y5OKBP
-	 qnu+u8jw5AJ3vdzany/IspjPckLp5tm6nxu6wilQ=
+	b=nBvMQt2d9/0uGt2UiggW1mHey9F8GZw6o39VZyPattz/Lu3gEgKLBubLfCsjJ9Ym0
+	 knHJCnd3pFFcntFafOycVMeP8lFKerYo/8Uzo++hVi5t4zs+B2KFThTvQkvOiNF15c
+	 MUj6tywy/LzZVzm/4NXlCoaXnssD0iEauIvroi3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfL2R1Y (ORCPT
+        id S1727907AbfL2R13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:27:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:27:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbfL2R1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:18 -0500
+        id S1728401AbfL2R1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A0221744;
-        Sun, 29 Dec 2019 17:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC26222C2;
+        Sun, 29 Dec 2019 17:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640438;
-        bh=NXKgy41tAGRp9sEKiUiDZzci+nRhDZkq+Sk5LQzhINQ=;
+        s=default; t=1577640440;
+        bh=VY80hTtja85SkMaqS467ItajsdXs54ZTgnddma92D2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lQl0VR579ayJtKKfSzNQpQr9xnEb7qrmlNcHkKnB6N4nJVaC8T8WpC/KkMyg7xuU9
-         PkRpwqYgKro5V77bwaD6hTVTQXBE9THMMo04L3xRfwgFPnN664LrqmY6bqd12w72pK
-         gvdWUVP06va3Q0Ty6o255zjZg+rgR5maOOL9naGY=
+        b=D1f6RoX5kMJQyd7qumA+HbnC/QzNMGvnYyd1rxR9rtLJVhkbh3IEjSRWuidXw3/Dq
+         nV40WIYr+ZhSzuvEUgobdh99tS0ORIGBeavFEvSov8eycOZHcyXqY2YBlNLFNhz4gi
+         j4hRz2rf5DEBW7HSMSaO01TzVonfUjRP+hdOVf8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.14 157/161] powerpc/irq: fix stack overflow verification
-Date:   Sun, 29 Dec 2019 18:20:05 +0100
-Message-Id: <20191229162449.457576366@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 158/161] mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add erratum A-009204 support"
+Date:   Sun, 29 Dec 2019 18:20:06 +0100
+Message-Id: <20191229162449.884427203@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,50 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit 099bc4812f09155da77eeb960a983470249c9ce1 upstream.
+commit 8b6dc6b2d60221e90703babbc141f063b8a07e72 upstream.
 
-Before commit 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of
-the irq stack"), check_stack_overflow() was called by do_IRQ(), before
-switching to the irq stack.
-In that commit, do_IRQ() was renamed __do_irq(), and is now executing
-on the irq stack, so check_stack_overflow() has just become almost
-useless.
+This reverts commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c.
 
-Move check_stack_overflow() call in do_IRQ() to do the check while
-still on the current stack.
+First, the fix seems to be plain wrong, since the erratum suggests
+waiting 5ms before setting setting SYSCTL[RSTD], but this msleep()
+happens after the call of sdhci_reset() which is where that bit gets
+set (if SDHCI_RESET_DATA is in mask).
 
-Fixes: 0366a1c70b89 ("powerpc/irq: Run softirqs off the top of the irq stack")
+Second, walking the whole device tree to figure out if some node has a
+"fsl,p2020-esdhc" compatible string is hugely expensive - about 70 to
+100 us on our mpc8309 board. Walking the device tree is done under a
+raw_spin_lock, so this is obviously really bad on an -rt system, and a
+waste of time on all.
+
+In fact, since esdhc_reset() seems to get called around 100 times per
+second, that mpc8309 now spends 0.8% of its time determining that
+it is not a p2020. Whether those 100 calls/s are normal or due to some
+other bug or misconfiguration, regularly hitting a 100 us
+non-preemptible window is unacceptable.
+
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/e033aa8116ab12b7ca9a9c75189ad0741e3b9b5f.1575872340.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/20191204085447.27491-1-linux@rasmusvillemoes.dk
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/irq.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-of-esdhc.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/arch/powerpc/kernel/irq.c
-+++ b/arch/powerpc/kernel/irq.c
-@@ -561,8 +561,6 @@ void __do_irq(struct pt_regs *regs)
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -615,9 +615,6 @@ static void esdhc_reset(struct sdhci_hos
+ 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
  
- 	trace_irq_entry(regs);
- 
--	check_stack_overflow();
+-	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
+-		mdelay(5);
 -
- 	/*
- 	 * Query the platform PIC for the interrupt & ack it.
- 	 *
-@@ -594,6 +592,8 @@ void do_IRQ(struct pt_regs *regs)
- 	irqtp = hardirq_ctx[raw_smp_processor_id()];
- 	sirqtp = softirq_ctx[raw_smp_processor_id()];
- 
-+	check_stack_overflow();
-+
- 	/* Already there ? */
- 	if (unlikely(curtp == irqtp || curtp == sirqtp)) {
- 		__do_irq(regs);
+ 	if (mask & SDHCI_RESET_ALL) {
+ 		val = sdhci_readl(host, ESDHC_TBCTL);
+ 		val &= ~ESDHC_TB_EN;
 
 
