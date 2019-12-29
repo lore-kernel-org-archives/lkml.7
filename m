@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E898C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2218BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AA820748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F044621744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641971;
-	bh=DEZkljZFzwxiwPGfqOja9OmDX5YI3wAlVDzUyPwZqIU=;
+	s=default; t=1577641974;
+	bh=ny3FOPKwe+oyzpG9YmcV/3mbjPsP6yMi/PFrkWTyqvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kB+widZT49UeZznlNlnmPG0oFZAcBoLDcokH2Hzfr8VnkwZMYAQ3hXN2cFSMCWdo3
-	 j0oobJvUdGi5bYyJwk0fmxBRsL32s8vnuyRZ+9R0ZNONsqKIDnigVSfhfRJNTzWf28
-	 Le0dvQWsmC4vENvApImpRr4PyhTICBaB2alPKiS8=
+	b=0XyVjxwIRyHcC4CUkw6JofONlxUR+xY5iRc/arf9g6YzQMiud/2d0BoJ4N3/xnSEc
+	 R5Zt0FaLbSsVHTxbkQ/5m5QBrUOl6+KM8xKptKqtw6TP1YApXzlQuhXP0RcR+WCTZv
+	 fi5v+iHr1N7+Nh9QMq+mf9qonjokQC4h+PZaaUo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbfL2Rwu (ORCPT
+        id S1732358AbfL2Rww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:52:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:52:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732333AbfL2Rwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:52:44 -0500
+        id S1731770AbfL2Rwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:52:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D114720718;
-        Sun, 29 Dec 2019 17:52:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4434020748;
+        Sun, 29 Dec 2019 17:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641964;
-        bh=DEZkljZFzwxiwPGfqOja9OmDX5YI3wAlVDzUyPwZqIU=;
+        s=default; t=1577641966;
+        bh=ny3FOPKwe+oyzpG9YmcV/3mbjPsP6yMi/PFrkWTyqvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAqF9e44fEa+kcYDenoGmqm9WH+ZjrwN2xYDV5lIezRNY77NS/QU/6nymc4/nCWoB
-         yNi94Blu6/QogTeGJB3VU+wwBPmZBbChJ5PVjYBpuVhOBJF/NoYSroGm1eHEUkuM8X
-         a8kgVDLhIgJnt9MfMKlGXiqsPgtNWhKiCQad0DSw=
+        b=iD/C9x0C63kjTEmdY3TtVkNH7C2aV2OtUwjCP83WJTkMBx9IKQEZ51Gt6+DuT70vv
+         DL8mm2qWpvr3QTDtRV+DDLKrhGqpSL6dR6MNQMB1zGfaBabaYSXjDo/UEWgU/qEFQT
+         BKv0uknXnppEWKwknVNNgiDNNY6QxJz+6nCHnbUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Han Nandor <nandor.han@vaisala.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 233/434] nvmem: core: fix nvmem_cell_write inline function
-Date:   Sun, 29 Dec 2019 18:24:46 +0100
-Message-Id: <20191229172717.352642814@linuxfoundation.org>
+Subject: [PATCH 5.4 279/434] ice: delay less
+Date:   Sun, 29 Dec 2019 18:25:32 +0100
+Message-Id: <20191229172720.475752151@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,44 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-[ Upstream commit 9b8303fc6efa724bd6a90656434fbde2cc6ceb2c ]
+[ Upstream commit 88bb432a55de8ae62106305083a8bfbb23b01ad2 ]
 
-nvmem_cell_write's buf argument uses different types based on
-the configuration of CONFIG_NVMEM. The function prototype for
-enabled NVMEM uses 'void *' type, but the static dummy function
-for disabled NVMEM uses 'const char *' instead. Fix the different
-behaviour by always expecting a 'void *' typed buf argument.
+Shorten the delay for SQ responses, but increase the number of loops.
+Max delay time is unchanged, but some operations complete much more
+quickly.
 
-Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Han Nandor <nandor.han@vaisala.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Reviewed-By: Han Nandor <nandor.han@vaisala.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20191029114240.14905-2-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In the process, add a new define to make the delay count and delay time
+more explicit. Add comments to make things more explicit.
+
+This fixes a problem with VF resets failing on with many VFs.
+
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/nvmem-consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_controlq.c | 2 +-
+ drivers/net/ethernet/intel/ice/ice_controlq.h | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 8f8be5b00060..5c17cb733224 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -118,7 +118,7 @@ static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
- }
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.c b/drivers/net/ethernet/intel/ice/ice_controlq.c
+index 2353166c654e..c68709c7ef81 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.c
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.c
+@@ -948,7 +948,7 @@ ice_sq_send_cmd(struct ice_hw *hw, struct ice_ctl_q_info *cq,
+ 		if (ice_sq_done(hw, cq))
+ 			break;
  
- static inline int nvmem_cell_write(struct nvmem_cell *cell,
--				    const char *buf, size_t len)
-+				   void *buf, size_t len)
- {
- 	return -EOPNOTSUPP;
- }
+-		mdelay(1);
++		udelay(ICE_CTL_Q_SQ_CMD_USEC);
+ 		total_delay++;
+ 	} while (total_delay < cq->sq_cmd_timeout);
+ 
+diff --git a/drivers/net/ethernet/intel/ice/ice_controlq.h b/drivers/net/ethernet/intel/ice/ice_controlq.h
+index 44945c2165d8..4df9da359135 100644
+--- a/drivers/net/ethernet/intel/ice/ice_controlq.h
++++ b/drivers/net/ethernet/intel/ice/ice_controlq.h
+@@ -31,8 +31,9 @@ enum ice_ctl_q {
+ 	ICE_CTL_Q_MAILBOX,
+ };
+ 
+-/* Control Queue default settings */
+-#define ICE_CTL_Q_SQ_CMD_TIMEOUT	250  /* msecs */
++/* Control Queue timeout settings - max delay 250ms */
++#define ICE_CTL_Q_SQ_CMD_TIMEOUT	2500  /* Count 2500 times */
++#define ICE_CTL_Q_SQ_CMD_USEC		100   /* Check every 100usec */
+ 
+ struct ice_ctl_q_ring {
+ 	void *dma_head;			/* Virtual address to DMA head */
 -- 
 2.20.1
 
