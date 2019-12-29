@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E621BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B7CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBD721744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E5021744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642157;
-	bh=qGO+dJN8DQLA7z0WHQvmHEjfA8N94jz8uE3u4QqCzRU=;
+	s=default; t=1577642161;
+	bh=u9A/2TLMZQ8DdEHh04gD6YE8RFGrBOOudAH5jdn0k5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8sqPBHHX0IUjJGigbh7pup2N65VrMSPaUYgMX5tK4i91VusIyOVq1CFCbOVWZA3n
-	 wW7WH48xwFLLbhr50mDm+SIdd+qR7isXedl73QkorO7vTbeWumQoiA4+elp9KZv4NW
-	 sEiWQahNUfCDyD2ZjESAs1wh/PhvGZqQ4wQhyD5M=
+	b=vmh2zr5BW9f0kiIr1ro/8tHOJnoR4Z2wF+6jjwUSSK2+JofOSnX9yuajHU7XBGHH0
+	 xdlrELY8IYeUBiQ0CrI417HMjShHLsVQ6Ag4DKK3YtaiIFrXhIu+eqgK7ci1t8Dulc
+	 Fks40N8D9mTiB3J78yJhVXWNPsJD/ZLTBKioWGpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbfL2Rz4 (ORCPT
+        id S1732772AbfL2R4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:55:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732995AbfL2Rzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:55:49 -0500
+        id S1733005AbfL2Rzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:55:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599DC21744;
-        Sun, 29 Dec 2019 17:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDB1206DB;
+        Sun, 29 Dec 2019 17:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642148;
-        bh=qGO+dJN8DQLA7z0WHQvmHEjfA8N94jz8uE3u4QqCzRU=;
+        s=default; t=1577642151;
+        bh=u9A/2TLMZQ8DdEHh04gD6YE8RFGrBOOudAH5jdn0k5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXG5wu5m8dlBPPHk/PX2Ngerj2WaCO93HWG77BbTN5kDK2B78ccslFm+imuLYYRoU
-         bKn3+eX/Ij4+lyldY420BlwpBJa2jPXlRCKwUG841aqPRfzSiOhpVa6UmHcI5LUjB1
-         Wexmj1qHIuvDliKZxBGeJl8VSTdeynd08sCZ+jwo=
+        b=D473GNGf/AHLsk3T9omXtgcAZCgjo3prJmYTZjEyus+EhxQkcWVWKsEZRgGvOKkgx
+         bMJq6TRyKULqwDx1LI0hhrqksU2QC/EjjAl/XOcPl902wkjUIsAYF2tZyUuAcfIX4H
+         7RxYNpQGILivn2C28qValVi9kcvyIwv0pAfKBCJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Omar Sandoval <osandov@fb.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 361/434] btrfs: dont prematurely free work in reada_start_machine_worker()
-Date:   Sun, 29 Dec 2019 18:26:54 +0100
-Message-Id: <20191229172725.951305544@linuxfoundation.org>
+Subject: [PATCH 5.4 362/434] btrfs: dont prematurely free work in scrub_missing_raid56_worker()
+Date:   Sun, 29 Dec 2019 18:26:55 +0100
+Message-Id: <20191229172726.017909858@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -63,22 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit e732fe95e4cad35fc1df278c23a32903341b08b3 ]
+[ Upstream commit 57d4f0b863272ba04ba85f86bfdc0f976f0af91c ]
 
-Currently, reada_start_machine_worker() frees the reada_machine_work and
-then calls __reada_start_machine() to do readahead. This is another
-potential instance of the bug in "btrfs: don't prematurely free work in
-run_ordered_work()".
-
-There _might_ already be a deadlock here: reada_start_machine_worker()
-can depend on itself through stacked filesystems (__read_start_machine()
--> reada_start_machine_dev() -> reada_tree_block_flagged() ->
-read_extent_buffer_pages() -> submit_one_bio() ->
-btree_submit_bio_hook() -> btrfs_map_bio() -> submit_stripe_bio() ->
-submit_bio() onto a loop device can trigger readahead on the lower
-filesystem).
-
-Either way, let's fix it by freeing the work at the end.
+Currently, scrub_missing_raid56_worker() puts and potentially frees
+sblock (which embeds the work item) and then submits a bio through
+scrub_wr_submit(). This is another potential instance of the bug in
+"btrfs: don't prematurely free work in run_ordered_work()". Fix it by
+dropping the reference after we submit the bio.
 
 Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
 Signed-off-by: Omar Sandoval <osandov@fb.com>
@@ -86,39 +77,29 @@ Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/reada.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ fs/btrfs/scrub.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/reada.c b/fs/btrfs/reada.c
-index ee6f60547a8d..dd4f9c2b7107 100644
---- a/fs/btrfs/reada.c
-+++ b/fs/btrfs/reada.c
-@@ -752,21 +752,19 @@ static int reada_start_machine_dev(struct btrfs_device *dev)
- static void reada_start_machine_worker(struct btrfs_work *work)
- {
- 	struct reada_machine_work *rmw;
--	struct btrfs_fs_info *fs_info;
- 	int old_ioprio;
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index f7d4e03f4c5d..a0770a6aee00 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -2149,14 +2149,13 @@ static void scrub_missing_raid56_worker(struct btrfs_work *work)
+ 		scrub_write_block_to_dev_replace(sblock);
+ 	}
  
- 	rmw = container_of(work, struct reada_machine_work, work);
--	fs_info = rmw->fs_info;
+-	scrub_block_put(sblock);
 -
--	kfree(rmw);
+ 	if (sctx->is_dev_replace && sctx->flush_all_writes) {
+ 		mutex_lock(&sctx->wr_lock);
+ 		scrub_wr_submit(sctx);
+ 		mutex_unlock(&sctx->wr_lock);
+ 	}
  
- 	old_ioprio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
- 				       task_nice_ioprio(current));
- 	set_task_ioprio(current, BTRFS_IOPRIO_READA);
--	__reada_start_machine(fs_info);
-+	__reada_start_machine(rmw->fs_info);
- 	set_task_ioprio(current, old_ioprio);
- 
--	atomic_dec(&fs_info->reada_works_cnt);
-+	atomic_dec(&rmw->fs_info->reada_works_cnt);
-+
-+	kfree(rmw);
++	scrub_block_put(sblock);
+ 	scrub_pending_bio_dec(sctx);
  }
  
- static void __reada_start_machine(struct btrfs_fs_info *fs_info)
 -- 
 2.20.1
 
