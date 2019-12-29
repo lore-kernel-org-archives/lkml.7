@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B55C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE06C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E01F207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6DC207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640095;
-	bh=+P5hGw8cJyh8DZsMU4pPbmDUkjJN+6i5ZV9dyTSHEZA=;
+	s=default; t=1577640097;
+	bh=egura3W0Km2WspCMRj8/4KQxsCQZDkNcc7D2dZgSH2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XMEo/qF6i4Hr2s6LSNTrutljSXIvS6ErUlqCU1EKWGswvdxVY8sxqQ3ZxtVRmUJS4
-	 fkdHujSgHBc+4LyHI0PzpVYFSH1wmDcXz8dfQo7Egk2nSfUvbbixPtNVJq+6yLBmYV
-	 uhS5VKuAyzjByuCIwPoAuTJzdr+OjsMMovE3zSEQ=
+	b=IUqkIBoYBcKwRooMd/WbwT4zji1ryMqaIsnM2OgDNhK8PapX99Syd261+tf5C1JOK
+	 nme+VWZjTpDmfTus4dM7Ng5pAPr7GB/97wBZlO9rZOm0MDP3zG4b3QyQXuJheP8TiQ
+	 4OSdvLpjmJ6ts0NnvDx+H3vrClJU++B6NscuLijQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfL2RVd (ORCPT
+        id S1726857AbfL2RVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36718 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:21:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbfL2RVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:21:31 -0500
+        id S1726798AbfL2RV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:21:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0EE5208E4;
-        Sun, 29 Dec 2019 17:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFF4A20748;
+        Sun, 29 Dec 2019 17:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640091;
-        bh=+P5hGw8cJyh8DZsMU4pPbmDUkjJN+6i5ZV9dyTSHEZA=;
+        s=default; t=1577640086;
+        bh=egura3W0Km2WspCMRj8/4KQxsCQZDkNcc7D2dZgSH2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3rxejMBfjPOsQRNP59JcWIzNcbimE9xCBFDe3/8ui7qALDDT8FplUMk88Ec28B1e
-         fTxXoyKpkiDqbV+7dKEquDVCIfiUhVodi7cgnoXN59aEm+Yrh1o7aR+nnchI+oqO5j
-         GMhgXLvGGKugNf1mj4Af6Ol91E9yfAOmmzlFwUUY=
+        b=dgruRFLOuDwgW4Bjg/WnE0yuN9i1MxTj3kHH+ebokLJu4bL0KMesF7EoZ75kN/Yww
+         /DZKtu/d/ket6iNUfYCy0wMHssagts0ny6jU5WDKWqb4KnuisjFH3eI+msWAWCkIWJ
+         f6To4CnYHANwY5vfCe2sZTQYRkXVFyFVSP6uouiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 015/161] btrfs: handle ENOENT in btrfs_uuid_tree_iterate
-Date:   Sun, 29 Dec 2019 18:17:43 +0100
-Message-Id: <20191229162400.947473517@linuxfoundation.org>
+Subject: [PATCH 4.14 013/161] btrfs: skip log replay on orphaned roots
+Date:   Sun, 29 Dec 2019 18:17:41 +0100
+Message-Id: <20191229162400.108225027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -63,35 +62,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josef Bacik <josef@toxicpanda.com>
 
-commit 714cd3e8cba6841220dce9063a7388a81de03825 upstream.
+commit 9bc574de590510eff899c3ca8dbaf013566b5efe upstream.
 
-If we get an -ENOENT back from btrfs_uuid_iter_rem when iterating the
-uuid tree we'll just continue and do btrfs_next_item().  However we've
-done a btrfs_release_path() at this point and no longer have a valid
-path.  So increment the key and go back and do a normal search.
+My fsstress modifications coupled with generic/475 uncovered a failure
+to mount and replay the log if we hit a orphaned root.  We do not want
+to replay the log for an orphan root, but it's completely legitimate to
+have an orphaned root with a log attached.  Fix this by simply skipping
+replaying the log.  We still need to pin it's root node so that we do
+not overwrite it while replaying other logs, as we re-read the log root
+at every stage of the replay.
 
 CC: stable@vger.kernel.org # 4.4+
 Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/uuid-tree.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/btrfs/tree-log.c |   23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/uuid-tree.c
-+++ b/fs/btrfs/uuid-tree.c
-@@ -336,6 +336,8 @@ again_search_slot:
- 				}
- 				if (ret < 0 && ret != -ENOENT)
- 					goto out;
-+				key.offset++;
-+				goto again_search_slot;
- 			}
- 			item_size -= sizeof(subid_le);
- 			offset += sizeof(subid_le);
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -6018,9 +6018,28 @@ again:
+ 		wc.replay_dest = btrfs_read_fs_root_no_name(fs_info, &tmp_key);
+ 		if (IS_ERR(wc.replay_dest)) {
+ 			ret = PTR_ERR(wc.replay_dest);
++
++			/*
++			 * We didn't find the subvol, likely because it was
++			 * deleted.  This is ok, simply skip this log and go to
++			 * the next one.
++			 *
++			 * We need to exclude the root because we can't have
++			 * other log replays overwriting this log as we'll read
++			 * it back in a few more times.  This will keep our
++			 * block from being modified, and we'll just bail for
++			 * each subsequent pass.
++			 */
++			if (ret == -ENOENT)
++				ret = btrfs_pin_extent_for_log_replay(fs_info,
++							log->node->start,
++							log->node->len);
+ 			free_extent_buffer(log->node);
+ 			free_extent_buffer(log->commit_root);
+ 			kfree(log);
++
++			if (!ret)
++				goto next;
+ 			btrfs_handle_fs_error(fs_info, ret,
+ 				"Couldn't read target root for tree log recovery.");
+ 			goto error;
+@@ -6052,7 +6071,6 @@ again:
+ 						  &root->highest_objectid);
+ 		}
+ 
+-		key.offset = found_key.offset - 1;
+ 		wc.replay_dest->log_root = NULL;
+ 		free_extent_buffer(log->node);
+ 		free_extent_buffer(log->commit_root);
+@@ -6060,9 +6078,10 @@ again:
+ 
+ 		if (ret)
+ 			goto error;
+-
++next:
+ 		if (found_key.offset == 0)
+ 			break;
++		key.offset = found_key.offset - 1;
+ 	}
+ 	btrfs_release_path(path);
+ 
 
 
