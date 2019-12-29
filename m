@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FACC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B5920409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BB620722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640595;
-	bh=ufOD0zut50l7qEjz3ehKvPv2iU4SkU5G21+uEke8yGI=;
+	s=default; t=1577640597;
+	bh=K9QFq+c8GqpHyIIbuhqi4vkeOg9dl6bOL2jocsocoCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSCPQJBf94EKU4F1HNgEVdDiQJcop7LmejKPManWU9vdmXqPcFs6RIK0SLZyY82gb
-	 Yy+D3ZlatYTgLnZy9YczQ6cBRQoQlP5Jw7odPAU2LApuZa0fou737h5YaqbuHu5uh8
-	 KLLsXMvVIQt8/ezqthPGCvBSJAvfOoWto79k7/II=
+	b=AYoyLtZfUd2QXZhAoNXSdrcNTm2b2XNgWJf/+yPUggSGlhJ1urAp1N4A+da2PqRb+
+	 doG/dTAMFGwnzvBTrdFCZGRqCMNsHT4cOE+QWWAoTONl4S/Fh0EsHdnEaEQPedJUVq
+	 Rj/hzV4mx7cAwdPZbCBk7rBNrNpeZ1FPcWLzGWpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfL2R3y (ORCPT
+        id S1728904AbfL2R34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:29:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54908 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:29:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbfL2R3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:49 -0500
+        id S1728576AbfL2R3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:29:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3658120722;
-        Sun, 29 Dec 2019 17:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7E820409;
+        Sun, 29 Dec 2019 17:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640588;
-        bh=ufOD0zut50l7qEjz3ehKvPv2iU4SkU5G21+uEke8yGI=;
+        s=default; t=1577640591;
+        bh=K9QFq+c8GqpHyIIbuhqi4vkeOg9dl6bOL2jocsocoCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0R3PNYmPL9tcmLM3p6SQxWilnPpI3UnPOQIE/zGkfqMd0yfSjLFxBdL6ilV7yHii6
-         net8bzWazgMhdt17FLQPuwZH19UHiJAEVKcrJkUZaTql0AtsqJbGjStz+wHoyZGIJM
-         UluaaX5CogHTJDAA2DC+LU6ey6brlAHT036GdnhU=
+        b=mtR2gvdI9JHW4zE9Nj3u/+3KxUAusDQD+mQnAKw7Z5vWAwtjYjlkHv65UWDk8acic
+         5FOd9wI6Cfuh1XtAFxAz5Mv+2dtE/9aocUb2exI7D+AwKihnAL8OydlrLVasHf3aqp
+         y6tXTwUN0BlmV+5Uc5YdCeqzx78QEhsvRfWzWnAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/219] samples: pktgen: fix proc_cmd command result check logic
-Date:   Sun, 29 Dec 2019 18:17:40 +0100
-Message-Id: <20191229162515.759492926@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 059/219] block: Fix writeback throttling W=1 compiler warnings
+Date:   Sun, 29 Dec 2019 18:17:41 +0100
+Message-Id: <20191229162515.825997343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,80 +63,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel T. Lee <danieltimlee@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+[ Upstream commit 1d200e9d6f635ae894993a7d0f1b9e0b6e522e3b ]
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+Fix the following compiler warnings:
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
+In file included from ./include/linux/bitmap.h:9,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/cpumask.h:5,
+                 from ./arch/x86/include/asm/msr.h:11,
+                 from ./arch/x86/include/asm/processor.h:21,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:38,
+                 from ./arch/x86/include/asm/preempt.h:7,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/gfp.h:6,
+                 from ./include/linux/mm.h:10,
+                 from ./include/linux/bvec.h:13,
+                 from ./include/linux/blk_types.h:10,
+                 from block/blk-wbt.c:23:
+In function 'strncpy',
+    inlined from 'perf_trace_wbt_stat' at ./include/trace/events/wbt.h:15:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'perf_trace_wbt_lat' at ./include/trace/events/wbt.h:58:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'perf_trace_wbt_step' at ./include/trace/events/wbt.h:87:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'perf_trace_wbt_timer' at ./include/trace/events/wbt.h:126:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'trace_event_raw_event_wbt_stat' at ./include/trace/events/wbt.h:15:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'trace_event_raw_event_wbt_lat' at ./include/trace/events/wbt.h:58:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'trace_event_raw_event_wbt_timer' at ./include/trace/events/wbt.h:126:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'strncpy',
+    inlined from 'trace_event_raw_event_wbt_step' at ./include/trace/events/wbt.h:87:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For clarity of an execution flow, 'errexit' flag has been set.
-
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Fixes: e34cbd307477 ("blk-wbt: add general throttling mechanism"; v4.10).
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ include/trace/events/wbt.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index f8bb3cd0f4ce..7d928571b25c 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
+diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
+index b048694070e2..37342a13c9cb 100644
+--- a/include/trace/events/wbt.h
++++ b/include/trace/events/wbt.h
+@@ -33,7 +33,8 @@ TRACE_EVENT(wbt_stat,
+ 	),
  
-+set -o errexit
-+
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strlcpy(__entry->name, dev_name(bdi->dev),
++			ARRAY_SIZE(__entry->name));
+ 		__entry->rmean		= stat[0].mean;
+ 		__entry->rmin		= stat[0].min;
+ 		__entry->rmax		= stat[0].max;
+@@ -67,7 +68,8 @@ TRACE_EVENT(wbt_lat,
+ 	),
  
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strlcpy(__entry->name, dev_name(bdi->dev),
++			ARRAY_SIZE(__entry->name));
+ 		__entry->lat = div_u64(lat, 1000);
+ 	),
  
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
-+
- ## -- General shell tricks --
+@@ -103,7 +105,8 @@ TRACE_EVENT(wbt_step,
+ 	),
  
- function root_check_run_with_sudo() {
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strlcpy(__entry->name, dev_name(bdi->dev),
++			ARRAY_SIZE(__entry->name));
+ 		__entry->msg	= msg;
+ 		__entry->step	= step;
+ 		__entry->window	= div_u64(window, 1000);
+@@ -138,7 +141,8 @@ TRACE_EVENT(wbt_timer,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strlcpy(__entry->name, dev_name(bdi->dev),
++			ARRAY_SIZE(__entry->name));
+ 		__entry->status		= status;
+ 		__entry->step		= step;
+ 		__entry->inflight	= inflight;
 -- 
 2.20.1
 
