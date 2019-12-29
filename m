@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15614C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EFBC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E126E207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12E4207FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641447;
-	bh=tIVi2pHfOezUp/y8Sz3RUPHHlYUhRouaMh1e4UmHkB8=;
+	s=default; t=1577641449;
+	bh=Q3GiEGZ0mH3KSkO9/ZXkZcYlv8Yo5tC10uubORMJ4WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TER19q+6H1n45rV6H+IRlui/8idksVhmgc59GhqeJzABkFG2Dxk+AquwY+AUxri4O
-	 rya4+78Gi7nVKFFUIGLn4AWi1fyfvWP2gHruYsOTDrDe8KRRIshXHoTpUcmTmCXa8v
-	 Bq85VVP38knrMR4sjml+bSc6HingfkvLYlaDm5n8=
+	b=sUp6OVV1NcnEUt4qvGUJ5om3h6nUp8mQYyEy0sso1EniRDfInmGcgYoVydVfZ1fJX
+	 SbfDs+7/eBWSklJy7Ph23f9JKVw3vQaz95Hk5muCS56QR5ieXByj38++6GXMXtAm3B
+	 QeN4Se8mPlY2rz3d/vUSR8IT2IPQKNH3aHX+5hP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfL2RoF (ORCPT
+        id S1730628AbfL2RoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:44:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:44:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbfL2RoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:44:03 -0500
+        id S1730616AbfL2RoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:44:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F3320718;
-        Sun, 29 Dec 2019 17:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FDAB20718;
+        Sun, 29 Dec 2019 17:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641442;
-        bh=tIVi2pHfOezUp/y8Sz3RUPHHlYUhRouaMh1e4UmHkB8=;
+        s=default; t=1577641445;
+        bh=Q3GiEGZ0mH3KSkO9/ZXkZcYlv8Yo5tC10uubORMJ4WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7Oez4FvdOazaH9C2zKRzHNrnbTP5ZP/ixbrfYGm20ukHukrLiSyDK0bfHfV2m+tO
-         xB1w1dR6ugFxyUKxt4EZyxPlvgLdgybBNdkU5sj0ORpSGNtBSmEviCl1t5840mKQSZ
-         Vm1NVym6ZJfGdlq+mWvN2kzCFtL4XtS45k867Py0=
+        b=ILY260eTsSz/hi8kE3Cuij5HHjF83R8UzJbXwOwrQfidd1AYJOQqdUSS/6ODxO/lL
+         Liw3eV1UOMfAHb+HU9Ft2EzdL46wWw6KcfKG3GoU4nc6VxsPivAg/NGfzyOXO02mfo
+         Aczbtxhpl0Ne9Bg6Amlzp6Dm2qJPymz8HUPCO6Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Tsai <martin.tsai@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/434] drm/amd/display: Handle virtual signal type in disable_link()
-Date:   Sun, 29 Dec 2019 18:21:53 +0100
-Message-Id: <20191229172705.811086209@linuxfoundation.org>
+Subject: [PATCH 5.4 069/434] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
+Date:   Sun, 29 Dec 2019 18:22:02 +0100
+Message-Id: <20191229172706.294233611@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,47 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Tsai <martin.tsai@amd.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 616f5b65f1c02d3d6ae370644670d14c57de2fd8 ]
+[ Upstream commit 7666dfd533d4c55733037775d47a8e3551b341a2 ]
 
-[Why]
-The new implementation changed the behavior to allow process setMode
-to DAL when DAL returns empty mode query for unplugged display.
-This will trigger additional disable_link().
-When unplug HDMI from MST dock, driver will update stream->signal to
-"Virtual". disable_link() will call disable_output() if the signal type
-is not DP and induce other displays on MST dock show black screen.
+This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
 
-[How]
-Don't need to process disable_output() if the signal type is virtual.
+According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
+24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
+this errata merely fixed an accidental double definition in the Hardware
+User's Manual Rev. 1.00.  The real definition is still present in later
+revisions of the manual (Rev. 1.50 and Rev. 2.00).
 
-Signed-off-by: Martin Tsai <martin.tsai@amd.com>
-Reviewed-by: Charlene Liu <Charlene.Liu@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Hence revert the commit to recover the definition.
+
+Based on a patch in the BSP by Takeshi Kihara
+<takeshi.kihara.df@renesas.com>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190904121658.2617-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index ca20b150afcc..de1b61595ffb 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2169,8 +2169,10 @@ static void disable_link(struct dc_link *link, enum signal_type signal)
- 			dp_set_fec_ready(link, false);
- 		}
- #endif
--	} else
--		link->link_enc->funcs->disable_output(link->link_enc, signal);
-+	} else {
-+		if (signal != SIGNAL_TYPE_VIRTUAL)
-+			link->link_enc->funcs->disable_output(link->link_enc, signal);
-+	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+index 3808409cab38..5200dadd6b3e 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
  
- 	if (signal == SIGNAL_TYPE_DISPLAY_PORT_MST) {
- 		/* MST disable link only when no stream use the link */
+ /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
++#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
+ #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
+ #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
+ #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
+@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ 
+ #define PINMUX_MOD_SELS	\
+ \
++			MOD_SEL1_31 \
+ MOD_SEL0_30_29		MOD_SEL1_30 \
+ 			MOD_SEL1_29 \
+ MOD_SEL0_28		MOD_SEL1_28 \
+@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
+ 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
+-	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
++	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
+ 
+ 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
+ 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
+@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
+ 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
+-	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
++	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
+ 
+ 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
+ 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
+@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
+ 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
+ 			     GROUP(
+-		/* RESERVED 31 */
+-		0, 0,
++		MOD_SEL1_31
+ 		MOD_SEL1_30
+ 		MOD_SEL1_29
+ 		MOD_SEL1_28
 -- 
 2.20.1
 
