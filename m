@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59984C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9349CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D22206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD4F207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642453;
-	bh=c1FQrMMv8I7o3y+VLYP45P+pAFjvh2uqwH/WJErZ/Eo=;
+	s=default; t=1577642455;
+	bh=/2cofFv4jiQcCenMb/O5CQ05iDJ500lxRiBNuVyfjP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eu0RIzKvPhDGzNuw5DXd74OcZnYgfR+T6XJ5wduns0v1qis4WK2HGI3hbaTJN1S5D
-	 7rRdwm2SQUiw5Ij3I0JGRkXfPWT1iAu38D4U78piLoQoH/T7iQZMjAxasWq9A5wpYS
-	 Pu0e9bAGiA7g4Iw146G6fGZ2hixOOOWGx/yO/6uA=
+	b=OeWSyKRw5qPQzu5IYB8NMVUieki5JS2OdFznx0GN91tuZVODlCr3TKvZYgCaef8yz
+	 U255Wafl2u4RixDQz1cSsU+nWyVM1ofe2iV9KKYj80wW/7EACDChrTP0txsQEW7NvD
+	 vYB8eWQb3tvfAfmK9aknpEw4NRnsiK9VriQEVqJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbfL2R4y (ORCPT
+        id S1733134AbfL2R4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:56:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46784 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:56:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733123AbfL2R4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:56:49 -0500
+        id S1733116AbfL2R4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:56:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF04222C3;
-        Sun, 29 Dec 2019 17:56:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6638B206DB;
+        Sun, 29 Dec 2019 17:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642208;
-        bh=c1FQrMMv8I7o3y+VLYP45P+pAFjvh2uqwH/WJErZ/Eo=;
+        s=default; t=1577642203;
+        bh=/2cofFv4jiQcCenMb/O5CQ05iDJ500lxRiBNuVyfjP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lzivx37GoMPZxbE83qMDm7WyhL7NbjTleRsm+YdflGjUscCQcEM3KAHystoRcyP7q
-         HA5QVrZwl7YqFknwPOQ+l2vdpYXhkqFk41S0oikhgaCxxMwBzWKqKjBhkD/W0irq16
-         HRwoNwJIubQGTBMYL1wAiLceQuaE2ftaCkCG0hwI=
+        b=pwa+dyV1VOf8vhYlik9FrdgO1SAXWFKMhjGKWsWrCRr4Vrpcepvn9cQkFimmGTAi2
+         QPMnJih1MwbTKCCbGdltwAh9v/togH2Dk704nIb1A0FhZqqUlUPgxQq8SstfxNORyd
+         ZRvx0p78nXrML9iVMS2GS4JR+rLRBM2KbJybNqAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 388/434] can: flexcan: add low power enter/exit acknowledgment helper
-Date:   Sun, 29 Dec 2019 18:27:21 +0100
-Message-Id: <20191229172728.013499830@linuxfoundation.org>
+Subject: [PATCH 5.4 386/434] s390/ftrace: fix endless recursion in function_graph tracer
+Date:   Sun, 29 Dec 2019 18:27:19 +0100
+Message-Id: <20191229172727.853730954@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,106 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit b7603d080ffcf8689ec91ca300caf84d8dbed317 ]
+[ Upstream commit 6feeee8efc53035c3195b02068b58ae947538aa4 ]
 
-The MCR[LPMACK] read-only bit indicates that FlexCAN is in a lower-power
-mode (Disabled mode, Doze mode, Stop mode).
+The following sequence triggers a kernel stack overflow on s390x:
 
-The CPU can poll this bit to know when FlexCAN has actually entered low
-power mode. The low power enter/exit acknowledgment helper will reduce
-code duplication for disabled mode, doze mode and stop mode.
+mount -t tracefs tracefs /sys/kernel/tracing
+cd /sys/kernel/tracing
+echo function_graph > current_tracer
+[crash]
 
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+This is because preempt_count_{add,sub} are in the list of traced
+functions, which can be demonstrated by:
+
+echo preempt_count_add >set_ftrace_filter
+echo function_graph > current_tracer
+[crash]
+
+The stack overflow happens because get_tod_clock_monotonic() gets called
+by ftrace but itself calls preempt_{disable,enable}(), which leads to a
+endless recursion. Fix this by using preempt_{disable,enable}_notrace().
+
+Fixes: 011620688a71 ("s390/time: ensure get_clock_monotonic() returns monotonic values")
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/flexcan.c | 46 +++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 16 deletions(-)
+ arch/s390/include/asm/timex.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-index 99b3492ea130..e5c207ad3c77 100644
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -389,6 +389,34 @@ static struct flexcan_mb __iomem *flexcan_get_mb(const struct flexcan_priv *priv
- 		(&priv->regs->mb[bank][priv->mb_size * mb_index]);
+diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+index 0f12a3f91282..2dc9eb4e1acc 100644
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -195,9 +195,9 @@ static inline unsigned long long get_tod_clock_monotonic(void)
+ {
+ 	unsigned long long tod;
+ 
+-	preempt_disable();
++	preempt_disable_notrace();
+ 	tod = get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
+-	preempt_enable();
++	preempt_enable_notrace();
+ 	return tod;
  }
  
-+static int flexcan_low_power_enter_ack(struct flexcan_priv *priv)
-+{
-+	struct flexcan_regs __iomem *regs = priv->regs;
-+	unsigned int timeout = FLEXCAN_TIMEOUT_US / 10;
-+
-+	while (timeout-- && !(priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
-+		udelay(10);
-+
-+	if (!(priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static int flexcan_low_power_exit_ack(struct flexcan_priv *priv)
-+{
-+	struct flexcan_regs __iomem *regs = priv->regs;
-+	unsigned int timeout = FLEXCAN_TIMEOUT_US / 10;
-+
-+	while (timeout-- && (priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
-+		udelay(10);
-+
-+	if (priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK)
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
- static void flexcan_enable_wakeup_irq(struct flexcan_priv *priv, bool enable)
- {
- 	struct flexcan_regs __iomem *regs = priv->regs;
-@@ -493,39 +521,25 @@ static inline int flexcan_transceiver_disable(const struct flexcan_priv *priv)
- static int flexcan_chip_enable(struct flexcan_priv *priv)
- {
- 	struct flexcan_regs __iomem *regs = priv->regs;
--	unsigned int timeout = FLEXCAN_TIMEOUT_US / 10;
- 	u32 reg;
- 
- 	reg = priv->read(&regs->mcr);
- 	reg &= ~FLEXCAN_MCR_MDIS;
- 	priv->write(reg, &regs->mcr);
- 
--	while (timeout-- && (priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
--		udelay(10);
--
--	if (priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK)
--		return -ETIMEDOUT;
--
--	return 0;
-+	return flexcan_low_power_exit_ack(priv);
- }
- 
- static int flexcan_chip_disable(struct flexcan_priv *priv)
- {
- 	struct flexcan_regs __iomem *regs = priv->regs;
--	unsigned int timeout = FLEXCAN_TIMEOUT_US / 10;
- 	u32 reg;
- 
- 	reg = priv->read(&regs->mcr);
- 	reg |= FLEXCAN_MCR_MDIS;
- 	priv->write(reg, &regs->mcr);
- 
--	while (timeout-- && !(priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
--		udelay(10);
--
--	if (!(priv->read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
--		return -ETIMEDOUT;
--
--	return 0;
-+	return flexcan_low_power_enter_ack(priv);
- }
- 
- static int flexcan_chip_freeze(struct flexcan_priv *priv)
 -- 
 2.20.1
 
