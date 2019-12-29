@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF870C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB0920748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA59C206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643287;
-	bh=9Q1KOpc9Gr9mqP8t/Q9Bi0RQNfaCGH6IfPJ4qLdMIvk=;
+	s=default; t=1577643292;
+	bh=/+5JrkK3SiQ39LuK5HGutSzDx7JeNEG9a8pMfJQBUuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYAfucTVXxRkYW29v1ASxFNAxIzjK0L8/fBwBXPRAByJbK85Bm8Fv8oWe9pqVjZIr
-	 Unjenv3DsZh2S9jPNgBWiZF7nU869WVjnuongTIfu5BbAKJlSwPf3hg3f3MYASJgIl
-	 L0oVm4a5GANS3x0HgCepZYQPfe5YSGQY4BdnOeMg=
+	b=IjKWS7xhaHcs+2WkOgvcQ37qIS0a7PX5wawRlvkwnyvHyN/zQobh1BjoON/BWTwfL
+	 p4z/tHAggng2VhmCsGRT+1Aqc0XMmUcWabR7iMmxekGVJF9iYnUPwDoCcSWVLyubdJ
+	 pXro7MK7Jnlmw8lMUPrqZoumD+2BYPYIsRmMl80g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfL2R0T (ORCPT
+        id S1733013AbfL2SOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:26:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:14:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727734AbfL2R0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:11 -0500
+        id S1726923AbfL2R0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:26:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D9420409;
-        Sun, 29 Dec 2019 17:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D3B221D7E;
+        Sun, 29 Dec 2019 17:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640370;
-        bh=9Q1KOpc9Gr9mqP8t/Q9Bi0RQNfaCGH6IfPJ4qLdMIvk=;
+        s=default; t=1577640382;
+        bh=/+5JrkK3SiQ39LuK5HGutSzDx7JeNEG9a8pMfJQBUuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbsHl3Uuy8Qm+3+qqrwRN0/cutP8z2kqpCh4IwvMNlz9k2zXTkR5GR6GRoRXeDI4Z
-         7O7rp8pukC8g1RnQO1GjY9Sl6ohnGNxyAcIhmCavVUONzzeZcTCGUQNX+NZlJXXhn0
-         I2afu6KlM78sYwGM3db+rbI9nrnOUM4HitFGsjaI=
+        b=2GC865KySFXKGxmohvYSPYIKSxHcwxe6ojvJ+qI1NF6eP1YW1JArJj8d1x4BjOoLU
+         5CgV1XiAogitNmmopr/8NVkf9MoQqRaKvtVqZhaHcWkW1Wa+nJFYwFdFsRyV8ruUD7
+         tHRVCi1rQdrf+/PyYFMomAhUhgTM7cjJV5EuQDEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Pedersen <thomas@adapt-ip.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 131/161] mac80211: consider QoS Null frames for STA_NULLFUNC_ACKED
-Date:   Sun, 29 Dec 2019 18:19:39 +0100
-Message-Id: <20191229162438.526610307@linuxfoundation.org>
+Subject: [PATCH 4.14 136/161] btrfs: dont prematurely free work in reada_start_machine_worker()
+Date:   Sun, 29 Dec 2019 18:19:44 +0100
+Message-Id: <20191229162439.749192017@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,48 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@adapt-ip.com>
+From: Omar Sandoval <osandov@fb.com>
 
-[ Upstream commit 08a5bdde3812993cb8eb7aa9124703df0de28e4b ]
+[ Upstream commit e732fe95e4cad35fc1df278c23a32903341b08b3 ]
 
-Commit 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
-let STAs send QoS Null frames as PS triggers if the AP was
-a QoS STA.  However, the mac80211 PS stack relies on an
-interface flag IEEE80211_STA_NULLFUNC_ACKED for
-determining trigger frame ACK, which was not being set for
-acked non-QoS Null frames. The effect is an inability to
-trigger hardware sleep via IEEE80211_CONF_PS since the QoS
-Null frame was seemingly never acked.
+Currently, reada_start_machine_worker() frees the reada_machine_work and
+then calls __reada_start_machine() to do readahead. This is another
+potential instance of the bug in "btrfs: don't prematurely free work in
+run_ordered_work()".
 
-This bug only applies to drivers which set both
-IEEE80211_HW_REPORTS_TX_ACK_STATUS and
-IEEE80211_HW_PS_NULLFUNC_STACK.
+There _might_ already be a deadlock here: reada_start_machine_worker()
+can depend on itself through stacked filesystems (__read_start_machine()
+-> reada_start_machine_dev() -> reada_tree_block_flagged() ->
+read_extent_buffer_pages() -> submit_one_bio() ->
+btree_submit_bio_hook() -> btrfs_map_bio() -> submit_stripe_bio() ->
+submit_bio() onto a loop device can trigger readahead on the lower
+filesystem).
 
-Detect the acked QoS Null frame to restore STA power save.
+Either way, let's fix it by freeing the work at the end.
 
-Fixes: 7b6ddeaf27ec ("mac80211: use QoS NDP for AP probing")
-Signed-off-by: Thomas Pedersen <thomas@adapt-ip.com>
-Link: https://lore.kernel.org/r/20191119053538.25979-4-thomas@adapt-ip.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/status.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/reada.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/net/mac80211/status.c b/net/mac80211/status.c
-index b18466cf466c..fbe7354aeac7 100644
---- a/net/mac80211/status.c
-+++ b/net/mac80211/status.c
-@@ -856,7 +856,8 @@ static void __ieee80211_tx_status(struct ieee80211_hw *hw,
- 			I802_DEBUG_INC(local->dot11FailedCount);
- 	}
+diff --git a/fs/btrfs/reada.c b/fs/btrfs/reada.c
+index 3a4e15b39cc1..440c0d5d2050 100644
+--- a/fs/btrfs/reada.c
++++ b/fs/btrfs/reada.c
+@@ -734,21 +734,19 @@ static int reada_start_machine_dev(struct btrfs_device *dev)
+ static void reada_start_machine_worker(struct btrfs_work *work)
+ {
+ 	struct reada_machine_work *rmw;
+-	struct btrfs_fs_info *fs_info;
+ 	int old_ioprio;
  
--	if (ieee80211_is_nullfunc(fc) && ieee80211_has_pm(fc) &&
-+	if ((ieee80211_is_nullfunc(fc) || ieee80211_is_qos_nullfunc(fc)) &&
-+	    ieee80211_has_pm(fc) &&
- 	    ieee80211_hw_check(&local->hw, REPORTS_TX_ACK_STATUS) &&
- 	    !(info->flags & IEEE80211_TX_CTL_INJECTED) &&
- 	    local->ps_sdata && !(local->scanning)) {
+ 	rmw = container_of(work, struct reada_machine_work, work);
+-	fs_info = rmw->fs_info;
+-
+-	kfree(rmw);
+ 
+ 	old_ioprio = IOPRIO_PRIO_VALUE(task_nice_ioclass(current),
+ 				       task_nice_ioprio(current));
+ 	set_task_ioprio(current, BTRFS_IOPRIO_READA);
+-	__reada_start_machine(fs_info);
++	__reada_start_machine(rmw->fs_info);
+ 	set_task_ioprio(current, old_ioprio);
+ 
+-	atomic_dec(&fs_info->reada_works_cnt);
++	atomic_dec(&rmw->fs_info->reada_works_cnt);
++
++	kfree(rmw);
+ }
+ 
+ static void __reada_start_machine(struct btrfs_fs_info *fs_info)
 -- 
 2.20.1
 
