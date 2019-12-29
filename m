@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAFFC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CBEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FE5206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA009206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641256;
-	bh=ABkLrZKoElGRtWFppwkvdptsazTThG4UmudwIkKFSsc=;
+	s=default; t=1577641261;
+	bh=jnlXGHJarNhgCCIlGpMbq+ekRLFn7DyckUxYb1beU54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k1RtNguumSh56692udmy75v3uFPLxWsd0Eg8ca/sxoakwqF81wtm2vRj7QsuHpbmr
-	 m7IyvP4AclDyqurrJoeg1zI5Q/VbsuyAwYr9uUSKOmIaBwmy8DnZ5wgKtxTyWf/W0s
-	 DxmtVZImH8CuxTj9MR9qTXAurKcMh8Sx0uZA7w9A=
+	b=bmGKHD5yOwJKSLdmcUQu6Ts0nuDRJ5srMi3E6WsxhIfmaAywpJlxNK4eD+QMGy3tq
+	 McFmcTMANBpiQeCQGKJA6z1voEWxz4R7B7+dLB/hyvg2qFwCs5b8q6QDNYvnZKH5RR
+	 dKH8YoZenevXhAE2r1raqmXt722lZ05DkhAYMOAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbfL2RbF (ORCPT
+        id S1729054AbfL2Ra5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:31:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:30:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbfL2RbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:31:03 -0500
+        id S1729039AbfL2Rav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C9F0207FD;
-        Sun, 29 Dec 2019 17:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25B3D207FD;
+        Sun, 29 Dec 2019 17:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640662;
-        bh=ABkLrZKoElGRtWFppwkvdptsazTThG4UmudwIkKFSsc=;
+        s=default; t=1577640650;
+        bh=jnlXGHJarNhgCCIlGpMbq+ekRLFn7DyckUxYb1beU54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Ulz6EKdIn59ABN6hSXkecVjY2glMeg3mMMvU8rHnvmZIKwv6LWyY5vC3XIgJvlCK
-         307qFc3a0K3TGtAMib68ILiLaFJ2y4buqCKLJ7hdaCMglPM/rvIG2Ey2Y4foyPJ9px
-         RSX9twpThS9PpG7koZ0djY08cMAdKFbQKNuASe/M=
+        b=2ldP9uPjTRfpH6LBEQEi7Zu2eTDvGc6d1ZpvPgetI0rJCZAPdYPjh91Z8aeSgQBzy
+         fI3/3DA1xG6yqbpGg5yDLDSPM9gE98mUrPJznCSf0ZM6pww3I2ZTSrQMxA1ggwEqar
+         7VywO6+3i2sO0l8XIuK1Oi5wLVwpJJ6TLiFaN2UI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Berg <bberg@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 085/219] x86/mce: Lower throttling MCE messages priority to warning
-Date:   Sun, 29 Dec 2019 18:18:07 +0100
-Message-Id: <20191229162518.333245399@linuxfoundation.org>
+Subject: [PATCH 4.19 081/219] Bluetooth: missed cpu_to_le16 conversion in hci_init4_req
+Date:   Sun, 29 Dec 2019 18:18:03 +0100
+Message-Id: <20191229162517.892728927@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -68,65 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Berg <bberg@redhat.com>
+From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-[ Upstream commit 9c3bafaa1fd88e4dd2dba3735a1f1abb0f2c7bb7 ]
+[ Upstream commit 727ea61a5028f8ac96f75ab34cb1b56e63fd9227 ]
 
-On modern CPUs it is quite normal that the temperature limits are
-reached and the CPU is throttled. In fact, often the thermal design is
-not sufficient to cool the CPU at full load and limits can quickly be
-reached when a burst in load happens. This will even happen with
-technologies like RAPL limitting the long term power consumption of
-the package.
+It looks like in hci_init4_req() the request is being
+initialised from cpu-endian data but the packet is specified
+to be little-endian. This causes an warning from sparse due
+to __le16 to u16 conversion.
 
-Also, these limits are "softer", as Srinivas explains:
+Fix this by using cpu_to_le16() on the two fields in the packet.
 
-"CPU temperature doesn't have to hit max(TjMax) to get these warnings.
-OEMs ha[ve] an ability to program a threshold where a thermal interrupt
-can be generated. In some systems the offset is 20C+ (Read only value).
+net/bluetooth/hci_core.c:845:27: warning: incorrect type in assignment (different base types)
+net/bluetooth/hci_core.c:845:27:    expected restricted __le16 [usertype] tx_len
+net/bluetooth/hci_core.c:845:27:    got unsigned short [usertype] le_max_tx_len
+net/bluetooth/hci_core.c:846:28: warning: incorrect type in assignment (different base types)
+net/bluetooth/hci_core.c:846:28:    expected restricted __le16 [usertype] tx_time
+net/bluetooth/hci_core.c:846:28:    got unsigned short [usertype] le_max_tx_time
 
-In recent systems, there is another offset on top of it which can be
-programmed by OS, once some agent can adjust power limits dynamically.
-By default this is set to low by the firmware, which I guess the
-prime motivation of Benjamin to submit the patch."
-
-So these messages do not usually indicate a hardware issue (e.g.
-insufficient cooling). Log them as warnings to avoid confusion about
-their severity.
-
- [ bp: Massage commit mesage. ]
-
-Signed-off-by: Benjamin Berg <bberg@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Tested-by: Christian Kellner <ckellner@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191009155424.249277-1-bberg@redhat.com
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/therm_throt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hci_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/therm_throt.c b/arch/x86/kernel/cpu/mcheck/therm_throt.c
-index ee229ceee745..ec6a07b04fdb 100644
---- a/arch/x86/kernel/cpu/mcheck/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mcheck/therm_throt.c
-@@ -185,7 +185,7 @@ static void therm_throt_process(bool new_event, int event, int level)
- 	/* if we just entered the thermal event */
- 	if (new_event) {
- 		if (event == THERMAL_THROTTLING_EVENT)
--			pr_crit("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
-+			pr_warn("CPU%d: %s temperature above threshold, cpu clock throttled (total events = %lu)\n",
- 				this_cpu,
- 				level == CORE_LEVEL ? "Core" : "Package",
- 				state->count);
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 5afd67ef797a..e0de9a609265 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -841,8 +841,8 @@ static int hci_init4_req(struct hci_request *req, unsigned long opt)
+ 	if (hdev->le_features[0] & HCI_LE_DATA_LEN_EXT) {
+ 		struct hci_cp_le_write_def_data_len cp;
+ 
+-		cp.tx_len = hdev->le_max_tx_len;
+-		cp.tx_time = hdev->le_max_tx_time;
++		cp.tx_len = cpu_to_le16(hdev->le_max_tx_len);
++		cp.tx_time = cpu_to_le16(hdev->le_max_tx_time);
+ 		hci_req_add(req, HCI_OP_LE_WRITE_DEF_DATA_LEN, sizeof(cp), &cp);
+ 	}
+ 
 -- 
 2.20.1
 
