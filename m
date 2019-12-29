@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB00BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA532C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6314206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F017206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642083;
-	bh=OSw2OidlEAr8cvvBNF4Jmh30draQsb4AfRlRw2pxhbE=;
+	s=default; t=1577642090;
+	bh=kRdKq7uCA72m1K+GKFvonx8KbbCs1gZwLyCH7jaiwDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwVRmw3DPPxLwN7Iq8UiYvJnD0Q4+TKXi88XyeozCg3RKPKgDI8Qx8iDt3r35+Aqs
-	 oiEuOg7LxI3TB6P4RwYn94fuSsWmr6P+FegkwUPDlk145nVoXDv/U6B+AkRncnoL9g
-	 AFTVhhYsYByhGK/LWhqjeDZ8oRuK54yDA2zz2VOU=
+	b=FFsGOAHFDwh4IB+wQP7fe5JV6Tnatw/ButyJJUSks/8Nkd74e3zlwW/RS98qvwLNK
+	 koMOyUA/oOxtdoTAAeOOpmdFyRnuGevj0yu9SCg0frCFGmSAe0vEqlZr5JR4rnJ75y
+	 01jQzIjag/VEzwTb4WCuU5FUN5WDjQa05yz5HIvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbfL2Ryn (ORCPT
+        id S1732757AbfL2Ryr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfL2Ryi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:38 -0500
+        id S1732448AbfL2Ryp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:54:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9178B21D7E;
-        Sun, 29 Dec 2019 17:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC80E20718;
+        Sun, 29 Dec 2019 17:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642077;
-        bh=OSw2OidlEAr8cvvBNF4Jmh30draQsb4AfRlRw2pxhbE=;
+        s=default; t=1577642084;
+        bh=kRdKq7uCA72m1K+GKFvonx8KbbCs1gZwLyCH7jaiwDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGKoUo53l1Wk5uqvBF3aNP5wwwrOrg64qJ2p6GckCVqhYM7ax9mmxSjTacUEbXnQt
-         VuWyosEM2drqLBBiBuP6e1tMMnDoxJKNM7pPu+A3SFCfKYv/uIeyCPc16I+QpBdW4J
-         tJp5+YR+nXB/JEu2YcIPUcnSXt/dL7nZXPdK7DoY=
+        b=yTyX6ULrIQMKmrKaFsF/WT/0V3aP56ewABRR68Sn6iD0wzmpVbfoKumTiiM3Caud3
+         z+ZfMHY2agloMZrdQIRcP8wbNBzYkdypaq9ElGmoJrTVNBgEMJddEJOj2NbYXRRgRz
+         pq3bb6iVxVrZbuvy8HBVZTrHL6iOzXWjDEIKPZRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 325/434] selftests, bpf: Workaround an alu32 sub-register spilling issue
-Date:   Sun, 29 Dec 2019 18:26:18 +0100
-Message-Id: <20191229172723.557643742@linuxfoundation.org>
+Subject: [PATCH 5.4 336/434] bnxt_en: Improve RX buffer error handling.
+Date:   Sun, 29 Dec 2019 18:26:29 +0100
+Message-Id: <20191229172724.286405221@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,80 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 2ea2612b987ad703235c92be21d4e98ee9c2c67c ]
+[ Upstream commit 19b3751ffa713d04290effb26fe01009010f2206 ]
 
-Currently, with latest llvm trunk, selftest test_progs failed obj
-file test_seg6_loop.o with the following error in verifier:
+When hardware reports RX buffer errors, the latest 57500 chips do not
+require reset.  The packet is discarded by the hardware and the
+ring will continue to operate.
 
-  infinite loop detected at insn 76
+Also, add an rx_buf_errors counter for this type of error.  It can help
+the user to identify if the aggregation ring is too small.
 
-The byte code sequence looks like below, and noted that alu32 has been
-turned off by default for better generated codes in general:
-
-      48:       w3 = 100
-      49:       *(u32 *)(r10 - 68) = r3
-      ...
-  ;             if (tlv.type == SR6_TLV_PADDING) {
-      76:       if w3 == 5 goto -18 <LBB0_19>
-      ...
-      85:       r1 = *(u32 *)(r10 - 68)
-  ;     for (int i = 0; i < 100; i++) {
-      86:       w1 += -1
-      87:       if w1 == 0 goto +5 <LBB0_20>
-      88:       *(u32 *)(r10 - 68) = r1
-
-The main reason for verification failure is due to partial spills at
-r10 - 68 for induction variable "i".
-
-Current verifier only handles spills with 8-byte values. The above 4-byte
-value spill to stack is treated to STACK_MISC and its content is not
-saved. For the above example:
-
-    w3 = 100
-      R3_w=inv100 fp-64_w=inv1086626730498
-    *(u32 *)(r10 - 68) = r3
-      R3_w=inv100 fp-64_w=inv1086626730498
-    ...
-    r1 = *(u32 *)(r10 - 68)
-      R1_w=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff))
-      fp-64=inv1086626730498
-
-To resolve this issue, verifier needs to be extended to track sub-registers
-in spilling, or llvm needs to enhanced to prevent sub-register spilling
-in register allocation phase. The former will increase verifier complexity
-and the latter will need some llvm "hacking".
-
-Let us workaround this issue by declaring the induction variable as "long"
-type so spilling will happen at non sub-register level. We can revisit this
-later if sub-register spilling causes similar or other verification issues.
-
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20191117214036.1309510-1-yhs@fb.com
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/progs/test_seg6_loop.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         | 8 ++++++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h         | 1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 ++
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/test_seg6_loop.c b/tools/testing/selftests/bpf/progs/test_seg6_loop.c
-index c4d104428643..69880c1e7700 100644
---- a/tools/testing/selftests/bpf/progs/test_seg6_loop.c
-+++ b/tools/testing/selftests/bpf/progs/test_seg6_loop.c
-@@ -132,8 +132,10 @@ static __always_inline int is_valid_tlv_boundary(struct __sk_buff *skb,
- 	*pad_off = 0;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 04ec909e06df..527e1bf93116 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1767,8 +1767,12 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
  
- 	// we can only go as far as ~10 TLVs due to the BPF max stack size
-+	// workaround: define induction variable "i" as "long" instead
-+	// of "int" to prevent alu32 sub-register spilling.
- 	#pragma clang loop unroll(disable)
--	for (int i = 0; i < 100; i++) {
-+	for (long i = 0; i < 100; i++) {
- 		struct sr6_tlv_t tlv;
+ 		rc = -EIO;
+ 		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
+-			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
+-			bnxt_sched_reset(bp, rxr);
++			bnapi->cp_ring.rx_buf_errors++;
++			if (!(bp->flags & BNXT_FLAG_CHIP_P5)) {
++				netdev_warn(bp->dev, "RX buffer error %x\n",
++					    rx_err);
++				bnxt_sched_reset(bp, rxr);
++			}
+ 		}
+ 		goto next_rx_no_len;
+ 	}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+index d333589811a5..5163bb848618 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -927,6 +927,7 @@ struct bnxt_cp_ring_info {
+ 	dma_addr_t		hw_stats_map;
+ 	u32			hw_stats_ctx_id;
+ 	u64			rx_l4_csum_errors;
++	u64			rx_buf_errors;
+ 	u64			missed_irqs;
  
- 		if (cur_off == *tlv_off)
+ 	struct bnxt_ring_struct	cp_ring_struct;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 51c140476717..89f95428556e 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -173,6 +173,7 @@ static const char * const bnxt_ring_tpa2_stats_str[] = {
+ 
+ static const char * const bnxt_ring_sw_stats_str[] = {
+ 	"rx_l4_csum_errors",
++	"rx_buf_errors",
+ 	"missed_irqs",
+ };
+ 
+@@ -552,6 +553,7 @@ static void bnxt_get_ethtool_stats(struct net_device *dev,
+ 		for (k = 0; k < stat_fields; j++, k++)
+ 			buf[j] = le64_to_cpu(hw_stats[k]);
+ 		buf[j++] = cpr->rx_l4_csum_errors;
++		buf[j++] = cpr->rx_buf_errors;
+ 		buf[j++] = cpr->missed_irqs;
+ 
+ 		bnxt_sw_func_stats[RX_TOTAL_DISCARDS].counter +=
 -- 
 2.20.1
 
