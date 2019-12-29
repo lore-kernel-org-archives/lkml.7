@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B40EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244EEC2D0DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B6321744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95FC20722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640715;
-	bh=sUHRHzPO70Of0Yb6kvch7mMfdXaxw8Ah8Y+KSfMKx1I=;
+	s=default; t=1577640717;
+	bh=Zdm2lWzGzdb9q+A3Dpzyyy8VkTXq2OqbnjRt4PXS9UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sqSh8Ux5PHedodqfk98JmD55D2tCwuTw6i3+mtKaixC0lzglFL3Xaugr1LnnVSR99
-	 t2J2KmGJvFSUFv/ZDoEtuOROz/lDpMMHBaKJnmUjJP1c+cHr7dQqhyWGDjTxAqoNP0
-	 7HzGPmJmHvw+/dOPxB+TxAek9ovzo+SWnhixyRT0=
+	b=E0H9/BgRRTA2dlRanmLGJn9pb6NoFydHgyGqrVCdVVeTWXEJNon49D4Ck8k4QluKw
+	 63nE/mrGwjmw4qs9gVI6we9HOZIhE9/TX2MGbZEbwwqpIDe4iymgU+9RoMBfV2SWSQ
+	 CKHftcmhI6eEefyZT3mCeInXI9TG4JGBVe6OWTGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfL2Rby (ORCPT
+        id S1728990AbfL2Rb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:31:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:31:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbfL2R3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:29:46 -0500
+        id S1729231AbfL2Rbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8105222C3;
-        Sun, 29 Dec 2019 17:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A66920722;
+        Sun, 29 Dec 2019 17:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640586;
-        bh=sUHRHzPO70Of0Yb6kvch7mMfdXaxw8Ah8Y+KSfMKx1I=;
+        s=default; t=1577640709;
+        bh=Zdm2lWzGzdb9q+A3Dpzyyy8VkTXq2OqbnjRt4PXS9UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0B62LE5ScD2y7PmEy/FdyuFBGBMsNtu5FfggKQP9jiJLh0hKL3PzWuGGSAKrGFzR/
-         JJ0TAW3Z2dzwuCY3a5KdJ8NFYr7nP3u+uguNTR2drUOUdh9UHOMH8HsY0giuqp72ES
-         MSK/0/tI6kz/I3i6W2ylrfNg1oL662xuMBtyl7HA=
+        b=RVSWndvz0fwzGDrT++2AVBJC5WHRrd2aee2Y8nT/2QDOHQwXB/yQ4Rtqr+SgNxvZ3
+         F0dA+ftVY73Af5hmZegSahYQvM5kv1tIB4hgFeGz/KUmWGBCHGHRglKFR9OaIYb5lZ
+         Tc5S4MmH9D6vCEqQLO1DTKF3+VPkKdE3bg9DGP1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <sean@poorly.run>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/219] drm/bridge: dw-hdmi: Refuse DDC/CI transfers on the internal I2C controller
-Date:   Sun, 29 Dec 2019 18:17:39 +0100
-Message-Id: <20191229162515.640680345@linuxfoundation.org>
+Subject: [PATCH 4.19 106/219] net: hns3: add struct netdev_queue debug info for TX timeout
+Date:   Sun, 29 Dec 2019 18:18:28 +0100
+Message-Id: <20191229162524.709507582@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -62,58 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit bee447e224b2645911c5d06e35dc90d8433fcef6 ]
+[ Upstream commit 647522a5ef6401dcdb8ec417421e43fb21910167 ]
 
-The DDC/CI protocol involves sending a multi-byte request to the
-display via I2C, which is typically followed by a multi-byte
-response. The internal I2C controller only allows single byte
-reads/writes or reads of 8 sequential bytes, hence DDC/CI is not
-supported when the internal I2C controller is used. The I2C
-transfers complete without errors, however the data in the response
-is garbage. Abort transfers to/from slave address 0x37 (DDC) with
--EOPNOTSUPP, to make it evident that the communication is failing.
+When there is a TX timeout, we can tell if the driver or stack
+has stopped the queue by looking at state field, and when has
+the last packet transmited by looking at trans_start field.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191002124354.v2.1.I709dfec496f5f0b44a7b61dcd4937924da8d8382@changeid
+So this patch prints these two field in the
+hns3_get_tx_timeo_queue_info().
+
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 5971976284bf..fb396d550275 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -39,6 +39,7 @@
- 
- #include <media/cec-notifier.h>
- 
-+#define DDC_CI_ADDR		0x37
- #define DDC_SEGMENT_ADDR	0x30
- 
- #define HDMI_EDID_LEN		512
-@@ -320,6 +321,15 @@ static int dw_hdmi_i2c_xfer(struct i2c_adapter *adap,
- 	u8 addr = msgs[0].addr;
- 	int i, ret = 0;
- 
-+	if (addr == DDC_CI_ADDR)
-+		/*
-+		 * The internal I2C controller does not support the multi-byte
-+		 * read and write operations needed for DDC/CI.
-+		 * TOFIX: Blacklist the DDC/CI address until we filter out
-+		 * unsupported I2C operations.
-+		 */
-+		return -EOPNOTSUPP;
-+
- 	dev_dbg(hdmi->dev, "xfer: num: %d, addr: %#x\n", num, addr);
- 
- 	for (i = 0; i < num; i++) {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0788e78747d9..1aaf6e2a3b39 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1474,6 +1474,9 @@ static bool hns3_get_tx_timeo_queue_info(struct net_device *ndev)
+ 		    time_after(jiffies,
+ 			       (trans_start + ndev->watchdog_timeo))) {
+ 			timeout_queue = i;
++			netdev_info(ndev, "queue state: 0x%lx, delta msecs: %u\n",
++				    q->state,
++				    jiffies_to_msecs(jiffies - trans_start));
+ 			break;
+ 		}
+ 	}
 -- 
 2.20.1
 
