@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0CBC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B244BC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C356206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A05021744
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641320;
-	bh=NIuAt9TT1IE3oNLvGLjJPZdiQtuJ4SGu65HGioD9l0c=;
+	s=default; t=1577641322;
+	bh=9Uscurcp0QS/9iA8zNoh510DN/1JUqTe7FKu62mgQbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1nwL1t9uw8X39WkZNRXMXPQQStoI1z/QMY/IE+EwwG0X6VEGwUq0Y/iTfrEkZO+G
-	 MC3zCiBEeFL/9d5PX9lmmecQfOhI4Gz/H3pzLLPkb8XBIaE+YcZUBvFsATkivNb0PL
-	 S4adnwzAUAoubPGVYoFAjhxWb3hLoyJ8cSpSM/fA=
+	b=qN729E1kdLNdwCGi57k1iI8VGx9aEi+f/Ob2ImaJFCvLOWh3TBrxy0XshU+KyaYud
+	 7JOVLi1dQH2fWToUXR9jDaUubRr2QPpGJ4goqtsSIF7AHRBJnXra3MprJOcqw8UWpY
+	 i/RQxG5fwdxJKmbsAG3y0D6SJdHptjGzbhBE5NmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfL2Rl7 (ORCPT
+        id S1730121AbfL2RmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:41:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730230AbfL2Rly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:41:54 -0500
+        id S1729235AbfL2Rl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:41:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5A6206A4;
-        Sun, 29 Dec 2019 17:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E34B206DB;
+        Sun, 29 Dec 2019 17:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641314;
-        bh=NIuAt9TT1IE3oNLvGLjJPZdiQtuJ4SGu65HGioD9l0c=;
+        s=default; t=1577641316;
+        bh=9Uscurcp0QS/9iA8zNoh510DN/1JUqTe7FKu62mgQbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ow8jfSuRQnMVj4uiiUfkYpydeHBclJPz8xmYc7fGbmSCuZPQIRspwfxutTRvKshp7
-         cGKYiwu5f11u+f2WrfO6H9s2P3uFyDKtrdFKojNtlQbfWJ5ar7ZczcpJm4Ey7OytrJ
-         T8dkS8k3m93yaeQp4KBBzxJcf+5rR9VOYLZj4y/M=
+        b=m7AvOC8FUlalMCMizXAL/UXIpuCqOkXzAGBf5APr2SCHDA1nGhGhBVUqSDPPjPaFX
+         jtU9Ru6XM266PMGqrD3Vwe6LhxvYs0NDVQtdufTe/JnvQNFFPC+NxEAPgXNK72NUdN
+         cSx10u/ijFsynR8y6C92gioqv5OdoaHQtJZ6jdE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com,
         Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 015/434] sctp: fix memleak on err handling of stream initialization
-Date:   Sun, 29 Dec 2019 18:21:08 +0100
-Message-Id: <20191229172703.230497527@linuxfoundation.org>
+Subject: [PATCH 5.4 016/434] sctp: fully initialize v4 addr in some functions
+Date:   Sun, 29 Dec 2019 18:21:09 +0100
+Message-Id: <20191229172703.283517764@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,55 +62,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 951c6db954a1adefab492f6da805decacabbd1a7 ]
+[ Upstream commit b6f3320b1d5267e7b583a6d0c88dda518101740c ]
 
-syzbot reported a memory leak when an allocation fails within
-genradix_prealloc() for output streams. That's because
-genradix_prealloc() leaves initialized members initialized when the
-issue happens and SCTP stack will abort the current initialization but
-without cleaning up such members.
+Syzbot found a crash:
 
-The fix here is to always call genradix_free() when genradix_prealloc()
-fails, for output and also input streams, as it suffers from the same
-issue.
+  BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:112 [inline]
+  BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
+  BUG: KMSAN: uninit-value in __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+  Call Trace:
+    crc32_body lib/crc32.c:112 [inline]
+    crc32_le_generic lib/crc32.c:179 [inline]
+    __crc32c_le_base+0x4fa/0xd30 lib/crc32.c:202
+    chksum_update+0xb2/0x110 crypto/crc32c_generic.c:90
+    crypto_shash_update+0x4c5/0x530 crypto/shash.c:107
+    crc32c+0x150/0x220 lib/libcrc32c.c:47
+    sctp_csum_update+0x89/0xa0 include/net/sctp/checksum.h:36
+    __skb_checksum+0x1297/0x12a0 net/core/skbuff.c:2640
+    sctp_compute_cksum include/net/sctp/checksum.h:59 [inline]
+    sctp_packet_pack net/sctp/output.c:528 [inline]
+    sctp_packet_transmit+0x40fb/0x4250 net/sctp/output.c:597
+    sctp_outq_flush_transports net/sctp/outqueue.c:1146 [inline]
+    sctp_outq_flush+0x1823/0x5d80 net/sctp/outqueue.c:1194
+    sctp_outq_uncork+0xd0/0xf0 net/sctp/outqueue.c:757
+    sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1781 [inline]
+    sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
+    sctp_do_sm+0x8fe1/0x9720 net/sctp/sm_sideeffect.c:1155
+    sctp_primitive_REQUESTHEARTBEAT+0x175/0x1a0 net/sctp/primitive.c:185
+    sctp_apply_peer_addr_params+0x212/0x1d40 net/sctp/socket.c:2433
+    sctp_setsockopt_peer_addr_params net/sctp/socket.c:2686 [inline]
+    sctp_setsockopt+0x189bb/0x19090 net/sctp/socket.c:4672
 
-Reported-by: syzbot+772d9e36c490b18d51d1@syzkaller.appspotmail.com
-Fixes: 2075e50caf5e ("sctp: convert to genradix")
-Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Tested-by: Xin Long <lucien.xin@gmail.com>
+The issue was caused by transport->ipaddr set with uninit addr param, which
+was passed by:
+
+  sctp_transport_init net/sctp/transport.c:47 [inline]
+  sctp_transport_new+0x248/0xa00 net/sctp/transport.c:100
+  sctp_assoc_add_peer+0x5ba/0x2030 net/sctp/associola.c:611
+  sctp_process_param net/sctp/sm_make_chunk.c:2524 [inline]
+
+where 'addr' is set by sctp_v4_from_addr_param(), and it doesn't initialize
+the padding of addr->v4.
+
+Later when calling sctp_make_heartbeat(), hbinfo.daddr(=transport->ipaddr)
+will become the part of skb, and the issue occurs.
+
+This patch is to fix it by initializing the padding of addr->v4 in
+sctp_v4_from_addr_param(), as well as other functions that do the similar
+thing, and these functions shouldn't trust that the caller initializes the
+memory, as Marcelo suggested.
+
+Reported-by: syzbot+6dcbfea81cd3d4dd0b02@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/stream.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/sctp/protocol.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -84,8 +84,10 @@ static int sctp_stream_alloc_out(struct
- 		return 0;
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -227,6 +227,7 @@ static void sctp_v4_from_skb(union sctp_
+ 		sa->sin_port = sh->dest;
+ 		sa->sin_addr.s_addr = ip_hdr(skb)->daddr;
+ 	}
++	memset(sa->sin_zero, 0, sizeof(sa->sin_zero));
+ }
  
- 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
--	if (ret)
-+	if (ret) {
-+		genradix_free(&stream->out);
- 		return ret;
-+	}
+ /* Initialize an sctp_addr from a socket. */
+@@ -235,6 +236,7 @@ static void sctp_v4_from_sk(union sctp_a
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = 0;
+ 	addr->v4.sin_addr.s_addr = inet_sk(sk)->inet_rcv_saddr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
  
- 	stream->outcnt = outcnt;
- 	return 0;
-@@ -100,8 +102,10 @@ static int sctp_stream_alloc_in(struct s
- 		return 0;
+ /* Initialize sk->sk_rcv_saddr from sctp_addr. */
+@@ -257,6 +259,7 @@ static void sctp_v4_from_addr_param(unio
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_port = port;
+ 	addr->v4.sin_addr.s_addr = param->v4.addr.s_addr;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
  
- 	ret = genradix_prealloc(&stream->in, incnt, gfp);
--	if (ret)
-+	if (ret) {
-+		genradix_free(&stream->in);
- 		return ret;
-+	}
+ /* Initialize an address parameter from a sctp_addr and return the length
+@@ -281,6 +284,7 @@ static void sctp_v4_dst_saddr(union sctp
+ 	saddr->v4.sin_family = AF_INET;
+ 	saddr->v4.sin_port = port;
+ 	saddr->v4.sin_addr.s_addr = fl4->saddr;
++	memset(saddr->v4.sin_zero, 0, sizeof(saddr->v4.sin_zero));
+ }
  
- 	stream->incnt = incnt;
- 	return 0;
+ /* Compare two addresses exactly. */
+@@ -303,6 +307,7 @@ static void sctp_v4_inaddr_any(union sct
+ 	addr->v4.sin_family = AF_INET;
+ 	addr->v4.sin_addr.s_addr = htonl(INADDR_ANY);
+ 	addr->v4.sin_port = port;
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ }
+ 
+ /* Is this a wildcard address? */
 
 
