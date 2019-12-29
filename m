@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0BFC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A299C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3E5206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE4720722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642784;
-	bh=HrMe3ZXnXErzjDN33eld/efIaO1w3g7H5ALJT7FOOQg=;
+	s=default; t=1577642795;
+	bh=x2r+e3JdB2qUFXvnUBjJV4lqIGf/0i+xV8Ab4Od/bOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s7wbqWXndTpzwPmVINcpnVMv+80GrdixN+e3cKv1PypyPkxssVULHvwKPPb2sL9ti
-	 p//mj4BmUvPFSrblLI4OQcTysLx7BaxesKbzpsNOL1mAeBXTLkiWSxfo45ACUEiHlc
-	 a/9g8T5D+lqWlxqAah7Iy/BANE689CqrYu9Rth9o=
+	b=n4BGClRBDtptPh9I+wjALP4LkoZXJ3giG58JGp4kfDLPCpjvtpstgzJRFZbyxlGPQ
+	 W5o4l19ns1AVdRZEiqin/UsKPTPaUzQN6eyn3dmCAAGLJ3Rqn6A5Nth8RjPyIOxugc
+	 pvqgjB7Bnf7R0iUSuBaCG5YMLwl86ZwpLe5AkXZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbfL2RuC (ORCPT
+        id S1732173AbfL2SGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:06:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731436AbfL2Rt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:49:57 -0500
+        id S1731665AbfL2Rti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:49:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2723206A4;
-        Sun, 29 Dec 2019 17:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6608C206DB;
+        Sun, 29 Dec 2019 17:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641797;
-        bh=HrMe3ZXnXErzjDN33eld/efIaO1w3g7H5ALJT7FOOQg=;
+        s=default; t=1577641777;
+        bh=x2r+e3JdB2qUFXvnUBjJV4lqIGf/0i+xV8Ab4Od/bOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNIUe3AZOEN1wqkqQdJwMmR/ZaXXMbYpO5MQQ16vb6X+ZGbZ4hOb63HRFY3WCmOr6
-         OIfEZ1A3EBsgBrHHzjp/AnxLKWcHzJGvXg+IXM6PSKxS0u09Wvr+uHg4Udv6py3Fjg
-         an1Vjva30ctG4nwKQTKYQHK9ZjllUIRkE3KZAGQo=
+        b=WPfCmMnAczddwlyYiS38QPeiC03BPnHNuX4lD7wVQc14ReQc2uNLW+d+J7B+w0EQg
+         ubs8Co5hP6xZND6eEtZJTa0r7hZ4p7cxh5lAFQDsuBax0osMUDnYgSOWFEGpPqu9+1
+         kb6/fcVumTQjhcdTAUG1wtZV223AijazH/pF1vxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vlad Buslov <vladbu@mellanox.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 215/434] net/mlx5e: Verify that rule has at least one fwd/drop action
-Date:   Sun, 29 Dec 2019 18:24:28 +0100
-Message-Id: <20191229172716.113297722@linuxfoundation.org>
+Subject: [PATCH 5.4 207/434] phy: renesas: phy-rcar-gen2: Fix the array off by one warning
+Date:   Sun, 29 Dec 2019 18:24:20 +0100
+Message-Id: <20191229172715.577487969@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,45 +65,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlad Buslov <vladbu@mellanox.com>
+From: Biju Das <biju.das@bp.renesas.com>
 
-[ Upstream commit ae2741e2b6ce2bf1b656b1152c4ef147ff35b096 ]
+[ Upstream commit c9baab38fe0e28762d0d67611cbe2aef0fb3fc72 ]
 
-Currently, mlx5 tc layer doesn't verify that rule has at least one forward
-or drop action which leads to following firmware syndrome when user tries
-to offload such action:
+Fix the below smatch warning by adding variable check rather than the
+hardcoded value.
+warn: array off by one? 'data->select_value[channel_num]'
 
-[ 1824.860501] mlx5_core 0000:81:00.0: mlx5_cmd_check:753:(pid 29458): SET_FLOW_TABLE_ENTRY(0x936) op_mod(0x0) failed, status bad parameter(0x3), syndrome (0x144b7a)
-
-Add check at the end of parse_tc_fdb_actions() that verifies that resulting
-attribute has action fwd or drop flag set.
-
-Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Paul Blakey <paulb@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/phy/renesas/phy-rcar-gen2.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index c2c7f214a56a..814a4ba4e7fa 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -3443,6 +3443,12 @@ static int parse_tc_fdb_actions(struct mlx5e_priv *priv,
- 		attr->action |= MLX5_FLOW_CONTEXT_ACTION_FWD_DEST;
- 	}
+diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
+index 2926e4937301..2e279ac0fa4d 100644
+--- a/drivers/phy/renesas/phy-rcar-gen2.c
++++ b/drivers/phy/renesas/phy-rcar-gen2.c
+@@ -71,6 +71,7 @@ struct rcar_gen2_phy_driver {
+ struct rcar_gen2_phy_data {
+ 	const struct phy_ops *gen2_phy_ops;
+ 	const u32 (*select_value)[PHYS_PER_CHANNEL];
++	const u32 num_channels;
+ };
  
-+	if (!(attr->action &
-+	      (MLX5_FLOW_CONTEXT_ACTION_FWD_DEST | MLX5_FLOW_CONTEXT_ACTION_DROP))) {
-+		NL_SET_ERR_MSG(extack, "Rule must have at least one forward/drop action");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	if (attr->split_count > 0 && !mlx5_esw_has_fwd_fdb(priv->mdev)) {
- 		NL_SET_ERR_MSG_MOD(extack,
- 				   "current firmware doesn't support split rule for port mirroring");
+ static int rcar_gen2_phy_init(struct phy *p)
+@@ -271,11 +272,13 @@ static const u32 usb20_select_value[][PHYS_PER_CHANNEL] = {
+ static const struct rcar_gen2_phy_data rcar_gen2_usb_phy_data = {
+ 	.gen2_phy_ops = &rcar_gen2_phy_ops,
+ 	.select_value = pci_select_value,
++	.num_channels = ARRAY_SIZE(pci_select_value),
+ };
+ 
+ static const struct rcar_gen2_phy_data rz_g1c_usb_phy_data = {
+ 	.gen2_phy_ops = &rz_g1c_phy_ops,
+ 	.select_value = usb20_select_value,
++	.num_channels = ARRAY_SIZE(usb20_select_value),
+ };
+ 
+ static const struct of_device_id rcar_gen2_phy_match_table[] = {
+@@ -389,7 +392,7 @@ static int rcar_gen2_phy_probe(struct platform_device *pdev)
+ 		channel->selected_phy = -1;
+ 
+ 		error = of_property_read_u32(np, "reg", &channel_num);
+-		if (error || channel_num > 2) {
++		if (error || channel_num >= data->num_channels) {
+ 			dev_err(dev, "Invalid \"reg\" property\n");
+ 			of_node_put(np);
+ 			return error;
 -- 
 2.20.1
 
