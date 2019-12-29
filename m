@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7D9C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9BFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875C7207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12616222C3
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641830;
-	bh=gfSALEUHUa4F+UvrgoGKUO4nrpRkAK4YflnBkaBu4mk=;
+	s=default; t=1577641833;
+	bh=LPi1426rsVbv0B6jQmiHlJRqJnNTlgPmM7p/7ONp2Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KhhV+tUy3GgV0w/XtQ61T4o72D2dBeoc4WXplz5rz+KbPVkzwjRaNmGJBRIJxX5pe
-	 1TIUtJfmAZA/jDo03MkvslwwtRHqF0j5SKxRnLcSTpbNQExm2rh27+e+Bp7gx8vNEt
-	 oWy6dGB8PP6hM6Bz4Mx7owkvbSQPjjKCEWyAzPAI=
+	b=kKP3wh1h8msANXCq1tQgbtQgabeM3D+IGLm0exo2hHcjqPs3MzKGIk3PuZxncMpDF
+	 vq5F0lhWfhsAhqkJc8tpP0z52iyoPM6Kuy0htvmMZZSHcmA+QJSSj2CDhwR9EFLTJK
+	 RPj67uaFF15s7T4SRSeHPMJ0rzkdMrWno/hc2JRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbfL2Ru3 (ORCPT
+        id S1731890AbfL2Rub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731870AbfL2Ru0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:26 -0500
+        id S1731882AbfL2Ru3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C899421744;
-        Sun, 29 Dec 2019 17:50:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37E20222C3;
+        Sun, 29 Dec 2019 17:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641826;
-        bh=gfSALEUHUa4F+UvrgoGKUO4nrpRkAK4YflnBkaBu4mk=;
+        s=default; t=1577641828;
+        bh=LPi1426rsVbv0B6jQmiHlJRqJnNTlgPmM7p/7ONp2Lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2jNXXiy5PAvuuw1DLX/QUAhv1D3zGBotPSCzGIx2M+8I78p/SDpCUXVpLZki8P4M7
-         CX0bybq73RhsU7/J7zT5fhxZMx7qi2r6ymokkUc+kWcOh8VOuJteDSpBy2+sJVJIqR
-         VStZTNe2pvdLxXL+iP6r8Gu6bcMr0rJ308VHcRvI=
+        b=qdli3PaVTf5TmqA2hTNDBWt0NimAVUhHFdguZ1IU5+Rf1Z7UHzlNSSpNdqKLs7Ttd
+         KdFHqvkoz0pds2ZrQBc/rcq+IHs/NTlOOwjZi90XUScIOffscZKKHWepLmSFNz88Q8
+         ncwL8Gxiv0zcd/CjxCw3v4+uuF6cVAuENUSkiD9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manjunath Patil <manjunath.b.patil@oracle.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 226/434] ixgbe: protect TX timestamping from API misuse
-Date:   Sun, 29 Dec 2019 18:24:39 +0100
-Message-Id: <20191229172716.871028160@linuxfoundation.org>
+Subject: [PATCH 5.4 191/434] drm/amd/display: correctly populate dpp refclk in fpga
+Date:   Sun, 29 Dec 2019 18:24:04 +0100
+Message-Id: <20191229172714.509042266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,44 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manjunath Patil <manjunath.b.patil@oracle.com>
+From: Anthony Koo <Anthony.Koo@amd.com>
 
-[ Upstream commit 07066d9dc3d2326fbad8f7b0cb0120cff7b7dedb ]
+[ Upstream commit 952f6c4b5d72d40f93f3deb61239290b357d434e ]
 
-HW timestamping can only be requested for a packet if the NIC is first
-setup via ioctl(SIOCSHWTSTAMP). If this step was skipped, then the ixgbe
-driver still allowed TX packets to request HW timestamping. In this
-situation, we see 'clearing Tx Timestamp hang' noise in the log.
+[Why]
+In diags environment we are not programming the DPP DTO
+correctly.
 
-Fix this by checking that the NIC is configured for HW TX timestamping
-before accepting a HW TX timestamping request.
+[How]
+Populate the dpp refclk in dccg so it can be used to correctly
+program DPP DTO.
 
-Similar-to:
-   commit 26bd4e2db06b ("igb: protect TX timestamping from API misuse")
-   commit 0a6f2f05a2f5 ("igb: Fix a test with HWTSTAMP_TX_ON")
-
-Signed-off-by: Manjunath Patil <manjunath.b.patil@oracle.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c   | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 91b3780ddb04..1a7203fede12 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -8639,7 +8639,8 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct sk_buff *skb,
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
+index 3e8ac303bd52..23ec283eb07b 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn20/dcn20_clk_mgr.c
+@@ -320,6 +320,8 @@ void dcn2_update_clocks_fpga(struct clk_mgr *clk_mgr,
+ 		struct dc_state *context,
+ 		bool safe_to_lower)
+ {
++	struct clk_mgr_internal *clk_mgr_int = TO_CLK_MGR_INTERNAL(clk_mgr);
++
+ 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
+ 	/* Min fclk = 1.2GHz since all the extra scemi logic seems to run off of it */
+ 	int fclk_adj = new_clocks->fclk_khz > 1200000 ? new_clocks->fclk_khz : 1200000;
+@@ -357,14 +359,18 @@ void dcn2_update_clocks_fpga(struct clk_mgr *clk_mgr,
+ 		clk_mgr->clks.dispclk_khz = new_clocks->dispclk_khz;
+ 	}
  
- 	if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
- 	    adapter->ptp_clock) {
--		if (!test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
-+		if (adapter->tstamp_config.tx_type == HWTSTAMP_TX_ON &&
-+		    !test_and_set_bit_lock(__IXGBE_PTP_TX_IN_PROGRESS,
- 					   &adapter->state)) {
- 			skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 			tx_flags |= IXGBE_TX_FLAGS_TSTAMP;
+-	/* Both fclk and dppclk ref are run on the same scemi clock so we
+-	 * need to keep the same value for both
++	/* Both fclk and ref_dppclk run on the same scemi clock.
++	 * So take the higher value since the DPP DTO is typically programmed
++	 * such that max dppclk is 1:1 with ref_dppclk.
+ 	 */
+ 	if (clk_mgr->clks.fclk_khz > clk_mgr->clks.dppclk_khz)
+ 		clk_mgr->clks.dppclk_khz = clk_mgr->clks.fclk_khz;
+ 	if (clk_mgr->clks.dppclk_khz > clk_mgr->clks.fclk_khz)
+ 		clk_mgr->clks.fclk_khz = clk_mgr->clks.dppclk_khz;
+ 
++	// Both fclk and ref_dppclk run on the same scemi clock.
++	clk_mgr_int->dccg->ref_dppclk = clk_mgr->clks.fclk_khz;
++
+ 	dm_set_dcn_clocks(clk_mgr->ctx, &clk_mgr->clks);
+ }
+ 
 -- 
 2.20.1
 
