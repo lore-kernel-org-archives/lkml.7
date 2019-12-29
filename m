@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F32C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4BB206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC32F20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641702;
-	bh=oU/WGYFECuodx4Pion/XozfB0+l4f/57ZrurNF6ZRYg=;
+	s=default; t=1577641704;
+	bh=sWxcGHqOrDoTi7lo4W9hY8bqe4UbX9jkOhSIy8FHHjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=De8C/iLxYRnXIZTcQQq2O6gydZyQBUi+Mv256hQcTcBIXZAX57lhbb9YLFON9Tejr
-	 2aS+VzMQWAwqNlr6Zh7G+XfTvJcVW3KFDStHs9vHf/LODC9tyczcVnfVbeYemGfEhJ
-	 fle2hJjn9jC2vuIQDxu0RdfQ+zxiA300Hby255Ss=
+	b=GqJ5PTzZM/6c5ZTfUsA2y7ryq7lfUIjKB1u7D6rwsqctaXM4K4rmgmtvqOWJaOzdk
+	 gHX2+IZjCphuNpQz+boLb7kVzRcLDk9L3NAPApiTt4AqLfPLr5MLIAoWba+2g9+igX
+	 WryIJ6zuZk6PqspJXBF49PrEYvldbIW5StKSM6yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbfL2RsW (ORCPT
+        id S1731068AbfL2RsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:48:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59436 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:48:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731424AbfL2RsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:48:17 -0500
+        id S1731438AbfL2RsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:48:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE27206A4;
-        Sun, 29 Dec 2019 17:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19ED0207FD;
+        Sun, 29 Dec 2019 17:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641696;
-        bh=oU/WGYFECuodx4Pion/XozfB0+l4f/57ZrurNF6ZRYg=;
+        s=default; t=1577641701;
+        bh=sWxcGHqOrDoTi7lo4W9hY8bqe4UbX9jkOhSIy8FHHjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXloYdIAQxyyDR3dwKGhtRah8LLDLphmsaw6gfqftC7foeEU3r1fY0qOeqLlO0eOk
-         7gFHrpTvWpgAYjSaN9Yi36n7SowdRfToRyJShiiBbbE2QVzVrcJ7M6GjYFbplvaChU
-         ljz1o0sR7LyN885XqhUkJi1Vl+ORBKGjFB4uxSOU=
+        b=zCGdqq1aVai3uIz32+KJdfGsD0ZwEMY1XmpAlO9JRFDEWrc0zM0MgdXe1wDI2+gX3
+         /YFurp6taxH0pLQmHuO70rSMpXtPo037t2nXcRYnSV2iyzYHwpjLmvuXDbbl1ry+Kc
+         cAtTsYRynKc1e4lxb79fmr1e+Cm97GPXnAIkh2Rg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 146/434] perf report: Add warning when libunwind not compiled in
-Date:   Sun, 29 Dec 2019 18:23:19 +0100
-Message-Id: <20191229172711.446001924@linuxfoundation.org>
+Subject: [PATCH 5.4 174/434] media: aspeed: set hsync and vsync polarities to normal before starting mode detection
+Date:   Sun, 29 Dec 2019 18:23:47 +0100
+Message-Id: <20191229172713.369062011@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -64,56 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 
-[ Upstream commit 800d3f561659b5436f8c57e7c26dd1f6928b5615 ]
+[ Upstream commit 5b3f3c41c5c791c1c22cd91655e7ef4b2a1dff7c ]
 
-We received a user report that call-graph DWARF mode was enabled in
-'perf record' but 'perf report' didn't unwind the callstack correctly.
-The reason was, libunwind was not compiled in.
+Sometimes it detects a weird resolution such as 1024x287 when the
+actual resolution is 1024x768. To resolve such an issue, this
+commit adds clearing for hsync and vsync polarity register bits
+at the beginning of the first mode detection. This is recommended
+in the datasheet.
 
-We can use 'perf -vv' to check the compiled libraries but it would be
-valuable to report a warning to user directly (especially valuable for
-a perf newbie).
-
-The warning is:
-
-Warning:
-Please install libunwind development packages during the perf build.
-
-Both TUI and stdio are supported.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191011022122.26369-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/media/platform/aspeed-video.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index aae0e57c60fb..7accaf8ef689 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -399,6 +399,13 @@ static int report__setup_sample_type(struct report *rep)
- 				PERF_SAMPLE_BRANCH_ANY))
- 		rep->nonany_branch_mode = true;
+diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
+index eb12f3793062..84e0650106f5 100644
+--- a/drivers/media/platform/aspeed-video.c
++++ b/drivers/media/platform/aspeed-video.c
+@@ -741,6 +741,8 @@ static void aspeed_video_get_resolution(struct aspeed_video *video)
+ 		}
  
-+#ifndef HAVE_LIBUNWIND_SUPPORT
-+	if (dwarf_callchain_users) {
-+		ui__warning("Please install libunwind development packages "
-+			    "during the perf build.\n");
-+	}
-+#endif
-+
- 	return 0;
- }
+ 		set_bit(VIDEO_RES_DETECT, &video->flags);
++		aspeed_video_update(video, VE_CTRL,
++				    VE_CTRL_VSYNC_POL | VE_CTRL_HSYNC_POL, 0);
+ 		aspeed_video_enable_mode_detect(video);
  
+ 		rc = wait_event_interruptible_timeout(video->wait,
 -- 
 2.20.1
 
