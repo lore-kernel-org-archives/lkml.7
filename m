@@ -2,52 +2,54 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5D7C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AAFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6B020409
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AD920722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640449;
-	bh=VY80hTtja85SkMaqS467ItajsdXs54ZTgnddma92D2w=;
+	s=default; t=1577640456;
+	bh=ppu/jxCIY9aPqj1mE1YypxmXrF99X1+OVGlMFo6tRcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBvMQt2d9/0uGt2UiggW1mHey9F8GZw6o39VZyPattz/Lu3gEgKLBubLfCsjJ9Ym0
-	 knHJCnd3pFFcntFafOycVMeP8lFKerYo/8Uzo++hVi5t4zs+B2KFThTvQkvOiNF15c
-	 MUj6tywy/LzZVzm/4NXlCoaXnssD0iEauIvroi3w=
+	b=wlXbpmha1+yFr7V9BXwtQysl53qWt6E82ZiHucZsla7SGay93bH4cOY7I/7R6oNhN
+	 CVmc/Whqqn8uISIT/22XuZNpPHlXHZ4HKmilDgLyfua6nThciKhd0Iznj9SJKXi6fu
+	 Ugyz1wY4Fz6PqcF9NatQfKNI3PGzr0I52qgi3FiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfL2R13 (ORCPT
+        id S1727896AbfL2R1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:27:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49510 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:27:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbfL2R1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:27:21 -0500
+        id S1728416AbfL2R10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:27:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC26222C2;
-        Sun, 29 Dec 2019 17:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01C0420409;
+        Sun, 29 Dec 2019 17:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640440;
-        bh=VY80hTtja85SkMaqS467ItajsdXs54ZTgnddma92D2w=;
+        s=default; t=1577640445;
+        bh=ppu/jxCIY9aPqj1mE1YypxmXrF99X1+OVGlMFo6tRcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1f6RoX5kMJQyd7qumA+HbnC/QzNMGvnYyd1rxR9rtLJVhkbh3IEjSRWuidXw3/Dq
-         nV40WIYr+ZhSzuvEUgobdh99tS0ORIGBeavFEvSov8eycOZHcyXqY2YBlNLFNhz4gi
-         j4hRz2rf5DEBW7HSMSaO01TzVonfUjRP+hdOVf8c=
+        b=aKmJQCDQAuTNr6TEqCjWYfLbwFFT8Ld74c6PScL1RGo0cNDLSriPlHm9/Ny4eufsz
+         lUeRRB8p7QXNUBoiaONrSHsRVBMcSkZZ4mnMUMq/8+afINvt6HeZy5lo/ifpCfHnH9
+         SlPVjBGvpyKnSP0grWxCbFlFj5kqGm5KJ296A0Yo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 158/161] mmc: sdhci-of-esdhc: Revert "mmc: sdhci-of-esdhc: add erratum A-009204 support"
-Date:   Sun, 29 Dec 2019 18:20:06 +0100
-Message-Id: <20191229162449.884427203@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 124/161] btrfs: dont prematurely free work in run_ordered_work()
+Date:   Sun, 29 Dec 2019 18:19:32 +0100
+Message-Id: <20191229162436.300687958@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -60,50 +62,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Omar Sandoval <osandov@fb.com>
 
-commit 8b6dc6b2d60221e90703babbc141f063b8a07e72 upstream.
+[ Upstream commit c495dcd6fbe1dce51811a76bb85b4675f6494938 ]
 
-This reverts commit 5dd195522562542bc6ebe6e7bd47890d8b7ca93c.
+We hit the following very strange deadlock on a system with Btrfs on a
+loop device backed by another Btrfs filesystem:
 
-First, the fix seems to be plain wrong, since the erratum suggests
-waiting 5ms before setting setting SYSCTL[RSTD], but this msleep()
-happens after the call of sdhci_reset() which is where that bit gets
-set (if SDHCI_RESET_DATA is in mask).
+1. The top (loop device) filesystem queues an async_cow work item from
+   cow_file_range_async(). We'll call this work X.
+2. Worker thread A starts work X (normal_work_helper()).
+3. Worker thread A executes the ordered work for the top filesystem
+   (run_ordered_work()).
+4. Worker thread A finishes the ordered work for work X and frees X
+   (work->ordered_free()).
+5. Worker thread A executes another ordered work and gets blocked on I/O
+   to the bottom filesystem (still in run_ordered_work()).
+6. Meanwhile, the bottom filesystem allocates and queues an async_cow
+   work item which happens to be the recently-freed X.
+7. The workqueue code sees that X is already being executed by worker
+   thread A, so it schedules X to be executed _after_ worker thread A
+   finishes (see the find_worker_executing_work() call in
+   process_one_work()).
 
-Second, walking the whole device tree to figure out if some node has a
-"fsl,p2020-esdhc" compatible string is hugely expensive - about 70 to
-100 us on our mpc8309 board. Walking the device tree is done under a
-raw_spin_lock, so this is obviously really bad on an -rt system, and a
-waste of time on all.
+Now, the top filesystem is waiting for I/O on the bottom filesystem, but
+the bottom filesystem is waiting for the top filesystem to finish, so we
+deadlock.
 
-In fact, since esdhc_reset() seems to get called around 100 times per
-second, that mpc8309 now spends 0.8% of its time determining that
-it is not a p2020. Whether those 100 calls/s are normal or due to some
-other bug or misconfiguration, regularly hitting a 100 us
-non-preemptible window is unacceptable.
+This happens because we are breaking the workqueue assumption that a
+work item cannot be recycled while it still depends on other work. Fix
+it by waiting to free the work item until we are done with all of the
+related ordered work.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191204085447.27491-1-linux@rasmusvillemoes.dk
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+P.S.:
 
+One might ask why the workqueue code doesn't try to detect a recycled
+work item. It actually does try by checking whether the work item has
+the same work function (find_worker_executing_work()), but in our case
+the function is the same. This is the only key that the workqueue code
+has available to compare, short of adding an additional, layer-violating
+"custom key". Considering that we're the only ones that have ever hit
+this, we should just play by the rules.
+
+Unfortunately, we haven't been able to create a minimal reproducer other
+than our full container setup using a compress-force=zstd filesystem on
+top of another compress-force=zstd filesystem.
+
+Suggested-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-esdhc.c |    3 ---
- 1 file changed, 3 deletions(-)
+ fs/btrfs/async-thread.c | 56 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 44 insertions(+), 12 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -615,9 +615,6 @@ static void esdhc_reset(struct sdhci_hos
- 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+diff --git a/fs/btrfs/async-thread.c b/fs/btrfs/async-thread.c
+index e00c8a9fd5bb..72d7589072f5 100644
+--- a/fs/btrfs/async-thread.c
++++ b/fs/btrfs/async-thread.c
+@@ -265,16 +265,17 @@ out:
+ 	}
+ }
  
--	if (of_find_compatible_node(NULL, NULL, "fsl,p2020-esdhc"))
--		mdelay(5);
+-static void run_ordered_work(struct __btrfs_workqueue *wq)
++static void run_ordered_work(struct __btrfs_workqueue *wq,
++			     struct btrfs_work *self)
+ {
+ 	struct list_head *list = &wq->ordered_list;
+ 	struct btrfs_work *work;
+ 	spinlock_t *lock = &wq->list_lock;
+ 	unsigned long flags;
++	void *wtag;
++	bool free_self = false;
+ 
+ 	while (1) {
+-		void *wtag;
 -
- 	if (mask & SDHCI_RESET_ALL) {
- 		val = sdhci_readl(host, ESDHC_TBCTL);
- 		val &= ~ESDHC_TB_EN;
+ 		spin_lock_irqsave(lock, flags);
+ 		if (list_empty(list))
+ 			break;
+@@ -300,16 +301,47 @@ static void run_ordered_work(struct __btrfs_workqueue *wq)
+ 		list_del(&work->ordered_list);
+ 		spin_unlock_irqrestore(lock, flags);
+ 
+-		/*
+-		 * We don't want to call the ordered free functions with the
+-		 * lock held though. Save the work as tag for the trace event,
+-		 * because the callback could free the structure.
+-		 */
+-		wtag = work;
+-		work->ordered_free(work);
+-		trace_btrfs_all_work_done(wq->fs_info, wtag);
++		if (work == self) {
++			/*
++			 * This is the work item that the worker is currently
++			 * executing.
++			 *
++			 * The kernel workqueue code guarantees non-reentrancy
++			 * of work items. I.e., if a work item with the same
++			 * address and work function is queued twice, the second
++			 * execution is blocked until the first one finishes. A
++			 * work item may be freed and recycled with the same
++			 * work function; the workqueue code assumes that the
++			 * original work item cannot depend on the recycled work
++			 * item in that case (see find_worker_executing_work()).
++			 *
++			 * Note that the work of one Btrfs filesystem may depend
++			 * on the work of another Btrfs filesystem via, e.g., a
++			 * loop device. Therefore, we must not allow the current
++			 * work item to be recycled until we are really done,
++			 * otherwise we break the above assumption and can
++			 * deadlock.
++			 */
++			free_self = true;
++		} else {
++			/*
++			 * We don't want to call the ordered free functions with
++			 * the lock held though. Save the work as tag for the
++			 * trace event, because the callback could free the
++			 * structure.
++			 */
++			wtag = work;
++			work->ordered_free(work);
++			trace_btrfs_all_work_done(wq->fs_info, wtag);
++		}
+ 	}
+ 	spin_unlock_irqrestore(lock, flags);
++
++	if (free_self) {
++		wtag = self;
++		self->ordered_free(self);
++		trace_btrfs_all_work_done(wq->fs_info, wtag);
++	}
+ }
+ 
+ static void normal_work_helper(struct btrfs_work *work)
+@@ -337,7 +369,7 @@ static void normal_work_helper(struct btrfs_work *work)
+ 	work->func(work);
+ 	if (need_order) {
+ 		set_bit(WORK_DONE_BIT, &work->flags);
+-		run_ordered_work(wq);
++		run_ordered_work(wq, work);
+ 	}
+ 	if (!need_order)
+ 		trace_btrfs_all_work_done(wq->fs_info, wtag);
+-- 
+2.20.1
+
 
 
