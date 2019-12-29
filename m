@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEE2C2D0DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99D8C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06ECE20748
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DE920748
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642907;
-	bh=gh4zcnNIyWIMJrFu26zdLw3eaIby5AewDYGnPymTE7g=;
+	s=default; t=1577642909;
+	bh=FV/Pmj9ObJekWwE3LH4eF9xL+9DjPRKOWUrNL6WwKPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjCxrYcRExAZXtbD1DPuFFby4gmGRr63nI58E5WKwQxujwFBqlOvVVWFiySK+4EHj
-	 JAmG83nbT34yQhiXDvYlIslAuT5aulxzbImI+SevHg2i2ojDCS7HWw+8Y83NiImGIr
-	 eOU0H59WB6pzIUqd6Cw0qIomPM7gKcGHgxqMx00g=
+	b=WkIfJiHrdgeYCrWBHrA2rkfe84SyX7Azy83RuofNkfA5YWnkal+J8vtc622sukyMc
+	 cEaVw4HeRDc/I75DWEZKU1lk3mNKM1C2jgONCLS0g19Z6MfRrpajM5+ySOjBWv0Do2
+	 C/Cn4VUteJ3T1DPXSnnKxFVR2caYPrYlsVm58xtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfL2RrL (ORCPT
+        id S1731996AbfL2SI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:47:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57128 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 13:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbfL2Rqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:46:55 -0500
+        id S1731204AbfL2RrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:47:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6DC20718;
-        Sun, 29 Dec 2019 17:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF764206A4;
+        Sun, 29 Dec 2019 17:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641615;
-        bh=gh4zcnNIyWIMJrFu26zdLw3eaIby5AewDYGnPymTE7g=;
+        s=default; t=1577641629;
+        bh=FV/Pmj9ObJekWwE3LH4eF9xL+9DjPRKOWUrNL6WwKPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=II7W7afVXFVTBtc+KYMU0G070A/IEd9A0E1W4xI44EFqEnW3mZ5LBAJovLd6id3j1
-         1P5Vr86qjiHdQrWQKrc9jOsRR2Uqlu6g/CLiryHNwa7De5qw+szsRzKHf3buF7Cdit
-         0NCEvaH4MhlJObsAPDrw57aeMnbo2124ShIBj324=
+        b=18F5hFlcUAYwM91MOkBpnF6BzSYAHF6BBGG0s6OfyqlZg8hOjjvhCQJQqImSGXKRl
+         wnPP7s8h9eheSTEwioogeFDvfn3LSIosuZiQZPnQyZqjIhj7hGNl+VeYlhi+TUY7wZ
+         cc1mUgyTgYTQ+egKrcdvwXPHgwYVTTY/hi7ntM6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Galiffi <david.galiffi@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 138/434] drm/amd/display: Fix dongle_caps containing stale information.
-Date:   Sun, 29 Dec 2019 18:23:11 +0100
-Message-Id: <20191229172710.891593989@linuxfoundation.org>
+Subject: [PATCH 5.4 106/434] media: flexcop-usb: fix NULL-ptr deref in flexcop_usb_transfer_init()
+Date:   Sun, 29 Dec 2019 18:22:39 +0100
+Message-Id: <20191229172708.658173957@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,63 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Galiffi <david.galiffi@amd.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit dd998291dbe92106d8c4a7581c409b356928d711 ]
+[ Upstream commit 649cd16c438f51d4cd777e71ca1f47f6e0c5e65d ]
 
-[WHY]
+If usb_set_interface() failed, iface->cur_altsetting will
+not be assigned and it will be used in flexcop_usb_transfer_init()
+It may lead a NULL pointer dereference.
 
-During detection:
-function: get_active_converter_info populates link->dpcd_caps.dongle_caps
-only when dpcd_rev >= DPCD_REV_11 and DWN_STRM_PORTX_TYPE is
-DOWN_STREAM_DETAILED_HDMI or DOWN_STREAM_DETAILED_DP_PLUS_PLUS.
-Otherwise, it is not cleared, and stale information remains.
+Check usb_set_interface() return value in flexcop_usb_init()
+and return failed to avoid using this NULL pointer.
 
-During mode validation:
-function: dp_active_dongle_validate_timing reads
-link->dpcd_caps.dongle_caps->dongle_type to determine the maximum
-pixel clock to support. This information is now stale and no longer
-valid.
-
-[HOW]
-dp_active_dongle_validate_timing should be using
-link->dpcd_caps->dongle_type instead.
-
-Signed-off-by: David Galiffi <david.galiffi@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link.c    | 2 +-
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index de1b61595ffb..efc1d30544bb 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -2219,7 +2219,7 @@ static bool dp_active_dongle_validate_timing(
- 		break;
- 	}
- 
--	if (dongle_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
-+	if (dpcd_caps->dongle_type != DISPLAY_DONGLE_DP_HDMI_CONVERTER ||
- 		dongle_caps->extendedCapValid == false)
- 		return true;
- 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 9e261dbf2e49..5a583707d198 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2545,6 +2545,7 @@ static void get_active_converter_info(
- 	uint8_t data, struct dc_link *link)
+diff --git a/drivers/media/usb/b2c2/flexcop-usb.c b/drivers/media/usb/b2c2/flexcop-usb.c
+index 1a801dc286f8..d1331f828108 100644
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -504,7 +504,13 @@ urb_error:
+ static int flexcop_usb_init(struct flexcop_usb *fc_usb)
  {
- 	union dp_downstream_port_present ds_port = { .byte = data };
-+	memset(&link->dpcd_caps.dongle_caps, 0, sizeof(link->dpcd_caps.dongle_caps));
- 
- 	/* decode converter info*/
- 	if (!ds_port.fields.PORT_PRESENT) {
+ 	/* use the alternate setting with the larges buffer */
+-	usb_set_interface(fc_usb->udev,0,1);
++	int ret = usb_set_interface(fc_usb->udev, 0, 1);
++
++	if (ret) {
++		err("set interface failed.");
++		return ret;
++	}
++
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
 -- 
 2.20.1
 
