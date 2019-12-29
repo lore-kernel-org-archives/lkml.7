@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05604C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB71C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EF1222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CC720722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640873;
-	bh=0uIBBGWugDnYEAcXZq1W7yPfBYR4A4GTFNtN/6NmIBk=;
+	s=default; t=1577640879;
+	bh=TIF/9YV50EYEwGz2BonF9AsnNyGlH2YFHzvddhM6kbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGpfqzN1dxx305GGkNJQceZUi+SABla1oq9UU/u4kF3c/erAmfSSaA9TNVvlVTp11
-	 hh7Pkb0MA5Js4ecQkTKgI4ZRfTmi6L4BwP/pfm1vVzEFfkZBrUpvekvdF8VxrVNhM9
-	 fAfB5+JmV0jUJOthl/9/1u1kA1Q84Uwx6da4AQIQ=
+	b=QkI07DHLYvBVRrFZwPeQ2HTVDGN2DH2dOcA8IAp8I+q8C9909gM4seg3lOn93aBgN
+	 WV8C5oo6GRGT78Z2hDV0Co4GDvLUbVyP+8+bVlJbk/E0Db/SLz80t/qqxr3fqwGX1W
+	 5352Ut3FnJBWz7+tcl/y/xck6Rlh0aUv4SMc67GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbfL2Rec (ORCPT
+        id S1729690AbfL2Reh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:34:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:34:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbfL2Re3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:34:29 -0500
+        id S1729674AbfL2Ree (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:34:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 588F121D7E;
-        Sun, 29 Dec 2019 17:34:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41263207FF;
+        Sun, 29 Dec 2019 17:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640868;
-        bh=0uIBBGWugDnYEAcXZq1W7yPfBYR4A4GTFNtN/6NmIBk=;
+        s=default; t=1577640873;
+        bh=TIF/9YV50EYEwGz2BonF9AsnNyGlH2YFHzvddhM6kbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhVWkwWI0rFLIW419whgGFRyTgSoJ+beaCRRvhAK3K/QW+9AomWcky42kEIJQNYWv
-         ERVLpVE9TpdjgdDnzCyQnE4DWbj49cwuwuOCX7ffU3dsORQGRQizRmbD/jmM2JfE3x
-         S01wca6/nBpjjvtJK3bv7gV8cYBv5qudNohcweco=
+        b=qpfx8eQvvtXnYnK0vdg+ybvCd+QMvEZAb2U/DdkPYdgz6sG0ssOM+tEauqQFNx+8J
+         mdUUPg7/7eitTDcW3uNa+YiE7FRQpF9C8BOrdcw6lB9x46PpV7/fXkYFbckYfRpQJ+
+         cWPfneCQwo9bqFuEurviaQiyC6pGkHux9V6FhCI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
-        Candice Li <Candice.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 133/219] drm/amdgpu: disallow direct upload save restore list from gfx driver
-Date:   Sun, 29 Dec 2019 18:18:55 +0100
-Message-Id: <20191229162528.855860294@linuxfoundation.org>
+Subject: [PATCH 4.19 135/219] xen/gntdev: Use select for DMA_SHARED_BUFFER
+Date:   Sun, 29 Dec 2019 18:18:57 +0100
+Message-Id: <20191229162529.059565954@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,43 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hawking Zhang <Hawking.Zhang@amd.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 58f46d4b65021083ef4b4d49c6e2c58e5783f626 ]
+[ Upstream commit fa6614d8ef13c63aac52ad7c07c5e69ce4aba3dd ]
 
-Direct uploading save/restore list via mmio register writes breaks the security
-policy. Instead, the driver should pass s&r list to psp.
+DMA_SHARED_BUFFER can not be enabled by the user (it represents a library
+set in the kernel). The kconfig convention is to use select for such
+symbols so they are turned on implicitly when the user enables a kconfig
+that needs them.
 
-For all the ASICs that use rlc v2_1 headers, the driver actually upload s&r list
-twice, in non-psp ucode front door loading phase and gfx pg initialization phase.
-The latter is not allowed.
+Otherwise the XEN_GNTDEV_DMABUF kconfig is overly difficult to enable.
 
-VG12 is the only exception where the driver still keeps legacy approach for S&R
-list uploading. In theory, this can be elimnated if we have valid srcntl ucode
-for VG12.
-
-Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Reviewed-by: Candice Li <Candice.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 932d6562179e ("xen/gntdev: Add initial support for dma-buf UAPI")
+Cc: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 3 ++-
+ drivers/xen/Kconfig | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 782411649816..28794b1b15c1 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -2187,7 +2187,8 @@ static void gfx_v9_0_init_pg(struct amdgpu_device *adev)
- 	 * And it's needed by gfxoff feature.
- 	 */
- 	if (adev->gfx.rlc.is_rlc_v2_1) {
--		gfx_v9_1_init_rlc_save_restore_list(adev);
-+		if (adev->asic_type == CHIP_VEGA12)
-+			gfx_v9_1_init_rlc_save_restore_list(adev);
- 		gfx_v9_0_enable_save_restore_machine(adev);
- 	}
+diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+index 90d387b50ab7..0505eeb593b5 100644
+--- a/drivers/xen/Kconfig
++++ b/drivers/xen/Kconfig
+@@ -158,7 +158,8 @@ config XEN_GNTDEV
  
+ config XEN_GNTDEV_DMABUF
+ 	bool "Add support for dma-buf grant access device driver extension"
+-	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC && DMA_SHARED_BUFFER
++	depends on XEN_GNTDEV && XEN_GRANT_DMA_ALLOC
++	select DMA_SHARED_BUFFER
+ 	help
+ 	  Allows userspace processes and kernel modules to use Xen backed
+ 	  dma-buf implementation. With this extension grant references to
 -- 
 2.20.1
 
