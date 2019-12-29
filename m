@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070BFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CA2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E7E222C3
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D49206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641820;
-	bh=qjpoMGgXjcNmi4j8T+3Fy+8TjF0hWqMvbn2ZLk8QUQM=;
+	s=default; t=1577641822;
+	bh=FmcKULmvubKzpyFssXEJhR9jlH3zBABRcOFRVNTB0lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iEMbJTvMcRmtDFqFt93pqToCKwH6A8LXLfYTM6eDOlm9H+VMBZWykLtIjctxIbFby
-	 8AQfl+cP4ZngJts1FtLjDK+cl80vPRTSz9QTxOr6YZPU20QxUOqNg/jCbeOuyuKWBL
-	 iUu3hifnrG+Ao/BDqWCZwUVXmrUb1uhyELW7bdUc=
+	b=uJHan5yc7Mj6MrZs67zTbD0HHQjNlUjLm9fvZbZNHho+S4N61WOWd3mnewlWAsMEj
+	 hAGNGHizQOigAyVDymfIktHVaAMmIoBzoigfw1fcgrZuHvjfximEi/i/szwaS4mxJV
+	 HHpdoFUlS+coOBUoe8NyPjtgbnHxrAJEaZgKDXHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731849AbfL2RuU (ORCPT
+        id S1731857AbfL2RuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:50:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbfL2RuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:50:14 -0500
+        id S1731524AbfL2RuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:50:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9817820718;
-        Sun, 29 Dec 2019 17:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 070AA206A4;
+        Sun, 29 Dec 2019 17:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641814;
-        bh=qjpoMGgXjcNmi4j8T+3Fy+8TjF0hWqMvbn2ZLk8QUQM=;
+        s=default; t=1577641816;
+        bh=FmcKULmvubKzpyFssXEJhR9jlH3zBABRcOFRVNTB0lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Umy12WIB1vqpMXXtyzoiTFytY0Fbc5fbIhrLIQo4wxQyODleaIYGVfjeGjmY4iZDe
-         UxdswukpDFwBJ/pLMGGD7oztYo6TQoH6vB8NBgQ2b+qiwWu0fepvl1wS1oKC4AJWfy
-         obb0lZ0EJX8dSoQx/OnHfkGvIj+4tY8vCrgSs6E0=
+        b=WF8G199Urc3Uqj2yduQ8IXPdifqwE8eQ9FrcpZiV/7RIuCRR7/CgD2i9QJ31Et68O
+         tG4Y2+f6ZMYm0wFxLK3Zf8EovC9SA0LPEdMctV9IN7foxaCgMbpOawQRcetMirShfj
+         2qAPSH4J53uf6EC068qtkPRDYvv9orkzevqN1sPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 221/434] ALSA: pcm: Fix missing check of the new non-cached buffer type
-Date:   Sun, 29 Dec 2019 18:24:34 +0100
-Message-Id: <20191229172716.523417491@linuxfoundation.org>
+Subject: [PATCH 5.4 222/434] spi: sifive: disable clk when probe fails and remove
+Date:   Sun, 29 Dec 2019 18:24:35 +0100
+Message-Id: <20191229172716.592655591@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -59,45 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 6111fd2370eecae9f11bfdc08ba097e0b51fcfd3 ]
+[ Upstream commit a725272bda77e61c1b4de85c7b0c875b2ea639b6 ]
 
-The check for the mmap support via hw_support_mmap() function misses
-the case where the device is with SNDRV_DMA_TYPE_DEV_UC, which should
-have been treated equally as SNDRV_DMA_TYPE_DEV.  Let's fix it.
+The driver forgets to disable and unprepare clk when probe fails and
+remove.
+Add the calls to fix the problem.
 
-Note that this bug doesn't hit any practical problem, because
-SNDRV_DMA_TYPE_DEV_UC is used only for x86-specific drivers
-(snd-hda-intel and snd-intel8x0) for the specific platforms that need
-the non-cached buffers.  And, on such platforms, hw_support_mmap()
-already returns true in anyway.  That's the reason I didn't put
-Cc-to-stable mark here.  This is only for any theoretical future
-extension.
-
-Fixes: 425da159707b ("ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*")
-Fixes: 42e748a0b325 ("ALSA: memalloc: Add non-cached buffer type")
-Link: https://lore.kernel.org/r/20191104101115.27311-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
+Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_native.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-sifive.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 91c6ad58729f..c3a139436ac2 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -222,7 +222,8 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
- 		return false;
+diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
+index 35254bdc42c4..f7c1e20432e0 100644
+--- a/drivers/spi/spi-sifive.c
++++ b/drivers/spi/spi-sifive.c
+@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	if (!cs_bits) {
+ 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
  
- 	if (substream->ops->mmap ||
--	    substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV)
-+	    (substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV &&
-+	     substream->dma_buffer.dev.type != SNDRV_DMA_TYPE_DEV_UC))
- 		return true;
+ 	num_cs = ilog2(cs_bits) + 1;
+ 	if (num_cs > SIFIVE_SPI_MAX_CS) {
+ 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
  
- 	return dma_can_mmap(substream->dma_buffer.dev.dev);
+ 	/* Define our master */
+@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 			       dev_name(&pdev->dev), spi);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
+@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "spi_register_master failed\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	return 0;
+ 
++disable_clk:
++	clk_disable_unprepare(spi->clk);
+ put_master:
+ 	spi_master_put(master);
+ 
+@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
+ 
+ 	/* Disable all the interrupts just in case */
+ 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
++	clk_disable_unprepare(spi->clk);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
