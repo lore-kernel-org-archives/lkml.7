@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FDFC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6132C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166D6206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903EF206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642638;
-	bh=ki5lz75lp15VMkWCPZERY0m87G7OQ8uLibNz4VhQzVE=;
+	s=default; t=1577642646;
+	bh=ciSyz37F9cQweIjG5Hnz7Ev1ADzeKgeCzPX7574Wwg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hkadVSFbYycXc6Dp6o+Y0ryIXL96lQhaEPb8YNHr4UHuUadbLf2v0pJ53OzR2Ftz6
-	 tYT7JoL2gfvGZEOU6MWAvCK3CLq39swcuIKWFTxtDoORLcjGqiscutx+15c/CSFocX
-	 ttnFce++r9vlq/MOmYdTQRXrbZHn+IrsD+L3Sd20=
+	b=oYdmvZyL/NBK+apRTsrgtDECJnB2TmpFaKVkx1jboB38i2kKOxVXAJaHBrhiSv8Fs
+	 RCb1r65dEG077GnmuJnjWN9UvRbT4sNseDKhcG2bPbmFl9vBOUzyyT6OTF8D5rBrvp
+	 xKROc2Cf1CXArG1YE3Zp3YOG09MZ99qMVq+3RJaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732997AbfL2SD5 (ORCPT
+        id S1732317AbfL2Rwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:03:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39356 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:52:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732353AbfL2Rww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:52:52 -0500
+        id S1731959AbfL2Rwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:52:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172C120718;
-        Sun, 29 Dec 2019 17:52:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40316207FF;
+        Sun, 29 Dec 2019 17:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641971;
-        bh=ki5lz75lp15VMkWCPZERY0m87G7OQ8uLibNz4VhQzVE=;
+        s=default; t=1577641954;
+        bh=ciSyz37F9cQweIjG5Hnz7Ev1ADzeKgeCzPX7574Wwg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPhny2qs1drcV2riGeZnPbrWOMgWMNeWzWxLpvOhAlMutIc7WbBEUkEgzzWjze71P
-         o3fpWeVKKK/IaDmKPCIqmdvAXOlL6GsLMWsq5NdLj1apdVcpuQrVlKR/ayg80q1HpY
-         g+QuAEA0pA4egvKw6cmmPmRzeKIRQMVDCjvbQqbo=
+        b=Tg4ugp1Wg+i9mj+REKlcgXdM73nONt3Lg568BUErDlSq9o8fafmGewyYfFu5R+spN
+         OzuuanPHjzQ27RaFdxUJME+rVEIGVmBnk7Dl/06kJ7vvPSgx6kp2mm8d0vRAETf/1U
+         l3IvzjAxYHnXPxY0Bh7lonx9hnxKovpt1szEk2/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Popa <stefan.popa@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 289/434] iio: dac: ad5446: Add support for new AD5600 DAC
-Date:   Sun, 29 Dec 2019 18:25:42 +0100
-Message-Id: <20191229172721.145867540@linuxfoundation.org>
+Subject: [PATCH 5.4 239/434] ALSA: timer: Limit max amount of slave instances
+Date:   Sun, 29 Dec 2019 18:24:52 +0100
+Message-Id: <20191229172717.757705858@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,74 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Popa <stefan.popa@analog.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 6376cbe549fffb378403cee78efd26b8a2c8e450 ]
+[ Upstream commit fdea53fe5de532969a332d6e5e727f2ad8bf084d ]
 
-The AD5600 is a single channel, 16-bit resolution, voltage output digital
-to analog converter (DAC). The AD5600 uses a 3-wire SPI interface. It is
-part of the AD5541 family of DACs.
+The fuzzer tries to open the timer instances as much as possible, and
+this may cause a system hiccup easily.  We've already introduced the
+cap for the max number of available instances for the h/w timers, and
+we should put such a limit also to the slave timers, too.
 
-The ad5446 IIO driver implements support for some of these DACs (in the
-AD5441 family), so the change is a simple entry in this driver.
+This patch introduces the limit to the multiple opened slave timers.
+The upper limit is hard-coded to 1000 for now, which should suffice
+for any practical usages up to now.
 
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD5600.pdf
-
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/r/20191106154257.5853-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/Kconfig  | 4 ++--
- drivers/iio/dac/ad5446.c | 6 ++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ sound/core/timer.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index cc42219a64f7..979070196da9 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -60,8 +60,8 @@ config AD5446
- 	help
- 	  Say yes here to build support for Analog Devices AD5300, AD5301, AD5310,
- 	  AD5311, AD5320, AD5321, AD5444, AD5446, AD5450, AD5451, AD5452, AD5453,
--	  AD5512A, AD5541A, AD5542A, AD5543, AD5553, AD5601, AD5602, AD5611, AD5612,
--	  AD5620, AD5621, AD5622, AD5640, AD5641, AD5660, AD5662 DACs
-+	  AD5512A, AD5541A, AD5542A, AD5543, AD5553, AD5600, AD5601, AD5602, AD5611,
-+	  AD5612, AD5620, AD5621, AD5622, AD5640, AD5641, AD5660, AD5662 DACs
- 	  as well as Texas Instruments DAC081S101, DAC101S101, DAC121S101.
+diff --git a/sound/core/timer.c b/sound/core/timer.c
+index 59ae21b0bb93..013f0e69ff0f 100644
+--- a/sound/core/timer.c
++++ b/sound/core/timer.c
+@@ -74,6 +74,9 @@ static LIST_HEAD(snd_timer_slave_list);
+ /* lock for slave active lists */
+ static DEFINE_SPINLOCK(slave_active_lock);
  
- 	  To compile this driver as a module, choose M here: the
-diff --git a/drivers/iio/dac/ad5446.c b/drivers/iio/dac/ad5446.c
-index 7df8b4cc295d..61c670f7fc5f 100644
---- a/drivers/iio/dac/ad5446.c
-+++ b/drivers/iio/dac/ad5446.c
-@@ -327,6 +327,7 @@ enum ad5446_supported_spi_device_ids {
- 	ID_AD5541A,
- 	ID_AD5512A,
- 	ID_AD5553,
-+	ID_AD5600,
- 	ID_AD5601,
- 	ID_AD5611,
- 	ID_AD5621,
-@@ -381,6 +382,10 @@ static const struct ad5446_chip_info ad5446_spi_chip_info[] = {
- 		.channel = AD5446_CHANNEL(14, 16, 0),
- 		.write = ad5446_write,
- 	},
-+	[ID_AD5600] = {
-+		.channel = AD5446_CHANNEL(16, 16, 0),
-+		.write = ad5446_write,
-+	},
- 	[ID_AD5601] = {
- 		.channel = AD5446_CHANNEL_POWERDOWN(8, 16, 6),
- 		.write = ad5446_write,
-@@ -448,6 +453,7 @@ static const struct spi_device_id ad5446_spi_ids[] = {
- 	{"ad5542a", ID_AD5541A}, /* ad5541a and ad5542a are compatible */
- 	{"ad5543", ID_AD5541A}, /* ad5541a and ad5543 are compatible */
- 	{"ad5553", ID_AD5553},
-+	{"ad5600", ID_AD5600},
- 	{"ad5601", ID_AD5601},
- 	{"ad5611", ID_AD5611},
- 	{"ad5621", ID_AD5621},
++#define MAX_SLAVE_INSTANCES	1000
++static int num_slaves;
++
+ static DEFINE_MUTEX(register_mutex);
+ 
+ static int snd_timer_free(struct snd_timer *timer);
+@@ -252,6 +255,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			err = -EINVAL;
+ 			goto unlock;
+ 		}
++		if (num_slaves >= MAX_SLAVE_INSTANCES) {
++			err = -EBUSY;
++			goto unlock;
++		}
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+ 			err = -ENOMEM;
+@@ -261,6 +268,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		timeri->slave_id = tid->device;
+ 		timeri->flags |= SNDRV_TIMER_IFLG_SLAVE;
+ 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
++		num_slaves++;
+ 		err = snd_timer_check_slave(timeri);
+ 		if (err < 0) {
+ 			snd_timer_close_locked(timeri, &card_dev_to_put);
+@@ -356,6 +364,8 @@ static int snd_timer_close_locked(struct snd_timer_instance *timeri,
+ 	}
+ 
+ 	list_del(&timeri->open_list);
++	if (timeri->flags & SNDRV_TIMER_IFLG_SLAVE)
++		num_slaves--;
+ 
+ 	/* force to stop the timer */
+ 	snd_timer_stop(timeri);
 -- 
 2.20.1
 
