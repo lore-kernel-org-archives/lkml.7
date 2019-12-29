@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6601BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55179C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F99206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301D6206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642583;
-	bh=JOniUsv3Gej99Vz5T5nn1ZXI15VMpf3SQW7kWPoUzVU=;
+	s=default; t=1577642592;
+	bh=rloNvJ1sp6nkRYsCpfljBrPrcFA3N1iM3tF9KZ+ySL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDM+bHZMsXNIDUEthhcBwW2a+aUfOi49pqjIfabcg8FgY3EZMPNbaYhTKW6vyMB7l
-	 AyP59PY2LodegkI7f6HhVa2ieYUJMcNh3b21Z6uV57szhjWhg4JjKttjQw1fdUi5Uc
-	 8t2Nd9QitfjVLSJbQ70gW7TacswdwQtL9fHGvRcI=
+	b=AJmZFa7z932AKmsJJrKaxP+kH6R6J/uV2KczmLHfckXVpTrLaqk9EinqOHdM3noZR
+	 09MJdq80HQcIwh7LwWJRt7RdqreI0RvjoL+kZDGgLwvR43QOU0cZ4ibTbNBQmPeUDm
+	 fRmmkfvMkp+CLi3KMXAbj64/9HYsXXyvKEpbpPtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbfL2RyR (ORCPT
+        id S1732591AbfL2RyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:54:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:54:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732643AbfL2RyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:54:13 -0500
+        id S1732566AbfL2Rxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B83E208C4;
-        Sun, 29 Dec 2019 17:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69339206A4;
+        Sun, 29 Dec 2019 17:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642053;
-        bh=JOniUsv3Gej99Vz5T5nn1ZXI15VMpf3SQW7kWPoUzVU=;
+        s=default; t=1577642033;
+        bh=rloNvJ1sp6nkRYsCpfljBrPrcFA3N1iM3tF9KZ+ySL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ljQqlpIIR2eujksDNd9J+1Fnb3+ncs8/f6ZVeKb8q3Pjkq0zLKP7dM9g9zUKIappN
-         0pP4GUaPnQLxxUTr94tI/9u9mkZS5KTPDK5zwR2F9ZxLwPC477CFXLa884ThhrYR3Z
-         QEs/zgYxg1vzb6IANUKzxafp5Sirk7YrgsEtVlC4=
+        b=rU8P+ejaug4gSRC0M5QC8waAYPfgdGYmp42X4S26GApMyQ7HUMlAWsA1pYevOV7hP
+         IMzKS93JWsubHxfhgE3aeDQp/oqkJrNbPXzHAK5nCC0tswbbfLIH7Wog/CpAxd+0Pi
+         0XoFL3x9ok0cjs9SRHPFUuauY7dae72uVa7/t4xU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Petar Penkov <ppenkov@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 320/434] ASoC: wm2200: add missed operations in remove and probe failure
-Date:   Sun, 29 Dec 2019 18:26:13 +0100
-Message-Id: <20191229172723.212689416@linuxfoundation.org>
+Subject: [PATCH 5.4 313/434] tun: fix data-race in gro_normal_list()
+Date:   Sun, 29 Dec 2019 18:26:06 +0100
+Message-Id: <20191229172722.746198342@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,50 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Petar Penkov <ppenkov@google.com>
 
-[ Upstream commit 2dab09be49a1e7a4dd13cb47d3a1441a2ef33a87 ]
+[ Upstream commit c39e342a050a4425348e6fe7f75827c0a1a7ebc5 ]
 
-This driver misses calls to pm_runtime_disable and regulator_bulk_disable
-in remove and a call to free_irq in probe failure.
-Add the calls to fix it.
+There is a race in the TUN driver between napi_busy_loop and
+napi_gro_frags. This commit resolves the race by adding the NAPI struct
+via netif_tx_napi_add, instead of netif_napi_add, which disables polling
+for the NAPI struct.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118073633.28237-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+KCSAN reported:
+BUG: KCSAN: data-race in gro_normal_list.part.0 / napi_busy_loop
+
+write to 0xffff8880b5d474b0 of 4 bytes by task 11205 on cpu 0:
+ gro_normal_list.part.0+0x77/0xb0 net/core/dev.c:5682
+ gro_normal_list net/core/dev.c:5678 [inline]
+ gro_normal_one net/core/dev.c:5692 [inline]
+ napi_frags_finish net/core/dev.c:5705 [inline]
+ napi_gro_frags+0x625/0x770 net/core/dev.c:5778
+ tun_get_user+0x2150/0x26a0 drivers/net/tun.c:1976
+ tun_chr_write_iter+0x79/0xd0 drivers/net/tun.c:2022
+ call_write_iter include/linux/fs.h:1895 [inline]
+ do_iter_readv_writev+0x487/0x5b0 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x13b/0x3c0 fs/read_write.c:951
+ vfs_writev+0x118/0x1c0 fs/read_write.c:1015
+ do_writev+0xe3/0x250 fs/read_write.c:1058
+ __do_sys_writev fs/read_write.c:1131 [inline]
+ __se_sys_writev fs/read_write.c:1128 [inline]
+ __x64_sys_writev+0x4e/0x60 fs/read_write.c:1128
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffff8880b5d474b0 of 4 bytes by task 11168 on cpu 1:
+ gro_normal_list net/core/dev.c:5678 [inline]
+ napi_busy_loop+0xda/0x4f0 net/core/dev.c:6126
+ sk_busy_loop include/net/busy_poll.h:108 [inline]
+ __skb_recv_udp+0x4ad/0x560 net/ipv4/udp.c:1689
+ udpv6_recvmsg+0x29e/0xe90 net/ipv6/udp.c:288
+ inet6_recvmsg+0xbb/0x240 net/ipv6/af_inet6.c:592
+ sock_recvmsg_nosec net/socket.c:871 [inline]
+ sock_recvmsg net/socket.c:889 [inline]
+ sock_recvmsg+0x92/0xb0 net/socket.c:885
+ sock_read_iter+0x15f/0x1e0 net/socket.c:967
+ call_read_iter include/linux/fs.h:1889 [inline]
+ new_sync_read+0x389/0x4f0 fs/read_write.c:414
+ __vfs_read+0xb1/0xc0 fs/read_write.c:427
+ vfs_read fs/read_write.c:461 [inline]
+ vfs_read+0x143/0x2c0 fs/read_write.c:446
+ ksys_read+0xd5/0x1b0 fs/read_write.c:587
+ __do_sys_read fs/read_write.c:597 [inline]
+ __se_sys_read fs/read_write.c:595 [inline]
+ __x64_sys_read+0x4c/0x60 fs/read_write.c:595
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 11168 Comm: syz-executor.0 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 943170998b20 ("tun: enable NAPI for TUN/TAP driver")
+Signed-off-by: Petar Penkov <ppenkov@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm2200.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/tun.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/wm2200.c b/sound/soc/codecs/wm2200.c
-index cf64e109c658..7b087d94141b 100644
---- a/sound/soc/codecs/wm2200.c
-+++ b/sound/soc/codecs/wm2200.c
-@@ -2410,6 +2410,8 @@ static int wm2200_i2c_probe(struct i2c_client *i2c,
- 
- err_pm_runtime:
- 	pm_runtime_disable(&i2c->dev);
-+	if (i2c->irq)
-+		free_irq(i2c->irq, wm2200);
- err_reset:
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
-@@ -2426,12 +2428,15 @@ static int wm2200_i2c_remove(struct i2c_client *i2c)
- {
- 	struct wm2200_priv *wm2200 = i2c_get_clientdata(i2c);
- 
-+	pm_runtime_disable(&i2c->dev);
- 	if (i2c->irq)
- 		free_irq(i2c->irq, wm2200);
- 	if (wm2200->pdata.reset)
- 		gpio_set_value_cansleep(wm2200->pdata.reset, 0);
- 	if (wm2200->pdata.ldo_ena)
- 		gpio_set_value_cansleep(wm2200->pdata.ldo_ena, 0);
-+	regulator_bulk_disable(ARRAY_SIZE(wm2200->core_supplies),
-+			       wm2200->core_supplies);
- 
- 	return 0;
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index a8d3141582a5..16564ebcde50 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -313,8 +313,8 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
+ 	tfile->napi_enabled = napi_en;
+ 	tfile->napi_frags_enabled = napi_en && napi_frags;
+ 	if (napi_en) {
+-		netif_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
+-			       NAPI_POLL_WEIGHT);
++		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
++				  NAPI_POLL_WEIGHT);
+ 		napi_enable(&tfile->napi);
+ 	}
  }
 -- 
 2.20.1
