@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B893C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A27C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D44207FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76072206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643341;
-	bh=CcqVOzCJUCjmArfNzVBqeAf0Sqnu5j4gjsL2BCfwo10=;
+	s=default; t=1577643346;
+	bh=hCqjKv4rt0Sl6CUHUt0sISqRLv1CwQ+3nWjUB7KQUxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCxLqZQqreMr74lOxdQI/Bw1yN8dep3z0gBU/burbRfJSXViyM2T5OPMqf4vOxEPF
-	 9uZGoCjUhc/O1dw+mVNRidiZNWb8E22L2PQ3oEorq5CnUONFqkG0kn2Jyh2kFdsgjy
-	 1ZGqhcFCXE0Bd7ErQwDhcabP8Jmwt/nCY76/XoWw=
+	b=qTmYT6uGo0/rmnHJuYUy8NY3czU1s0qXw5hSinlzx4TyitSRGonobkqup0+eAxPPv
+	 /3jlc8EqxSJza95+r6bG1TwzomcPZRqMBh6HxQYbpHIGFxrAlimgHts5U9rKz2Pgj0
+	 sbUOKiTh/nGZvi7omketzLuX1edv7fk9/EOAZ8gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfL2RZV (ORCPT
+        id S1727903AbfL2RZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:25:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44976 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbfL2RZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:25:18 -0500
+        id S1727168AbfL2RZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9468E207FD;
-        Sun, 29 Dec 2019 17:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41DD521744;
+        Sun, 29 Dec 2019 17:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640318;
-        bh=CcqVOzCJUCjmArfNzVBqeAf0Sqnu5j4gjsL2BCfwo10=;
+        s=default; t=1577640310;
+        bh=hCqjKv4rt0Sl6CUHUt0sISqRLv1CwQ+3nWjUB7KQUxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/rYRTn8qXQIv6uDM3V2e3ZPn8NdydAT7PjqVZPSnx45v9H6Kd0XK0B/DUTbvKt67
-         bOqVy3Rjg5R44kNoCLqXGeDD/tQDuGKvUuq1EIFgOI0ny/LO1sX9B4MFLEqvSAarnW
-         pwX0xvgSOYltdnlE4pIpdoYzvRfnDdEGCPFPemt4=
+        b=Nny48fn2BCoyK3vULJL6ccqR9Ku+b0/FQiQg0fncBwQgh3q6MaSvn9QIuKmTp8a8R
+         OsPXGQX6U3hft6goHwUbAyTtU1f12SOIyfzUSsHHGe2qW0yLj08D+YDhspGp60s0Vm
+         TiANU3dPW6HffIQpXGacwGwrtVydzyIEpdvYKWzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 108/161] fsi: core: Fix small accesses and unaligned offsets via sysfs
-Date:   Sun, 29 Dec 2019 18:19:16 +0100
-Message-Id: <20191229162429.484622923@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/161] perf probe: Skip end-of-sequence and non statement lines
+Date:   Sun, 29 Dec 2019 18:19:13 +0100
+Message-Id: <20191229162428.598950715@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -59,108 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 9f4c2b516b4f031e3cd0e45957f4150b3c1a083d ]
+[ Upstream commit f4d99bdfd124823a81878b44b5e8750b97f73902 ]
 
-Subtracting the offset delta from four-byte alignment lead to wrapping
-of the requested length where `count` is less than `off`. Generalise the
-length handling to enable and optimise aligned access sizes for all
-offset and size combinations. The new formula produces the following
-results for given offset and count values:
+Skip end-of-sequence and non-statement lines while walking through lines
+list.
 
-    offset  count | length
-    --------------+-------
-    0       1     | 1
-    0       2     | 2
-    0       3     | 2
-    0       4     | 4
-    0       5     | 4
-    1       1     | 1
-    1       2     | 1
-    1       3     | 1
-    1       4     | 1
-    1       5     | 1
-    2       1     | 1
-    2       2     | 2
-    2       3     | 2
-    2       4     | 2
-    2       5     | 2
-    3       1     | 1
-    3       2     | 1
-    3       3     | 1
-    3       4     | 1
-    3       5     | 1
+The "end-of-sequence" line information means:
 
-We might need something like this for the cfam chardevs as well, for
-example we don't currently implement any alignment restrictions /
-handling in the hardware master driver.
+ "the current address is that of the first byte after the
+  end of a sequence of target machine instructions."
+ (DWARF version 4 spec 6.2.2)
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20191108051945.7109-6-joel@jms.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This actually means out of scope and we can not probe on it.
+
+On the other hand, the statement lines (is_stmt) means:
+
+ "the current instruction is a recommended breakpoint location.
+  A recommended breakpoint location is intended to “represent”
+  a line, a statement and/or a semantically distinct subpart
+  of a statement."
+
+ (DWARF version 4 spec 6.2.2)
+
+So, non-statement line info also should be skipped.
+
+These can reduce unneeded probe points and also avoid an error.
+
+E.g. without this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
+
+  #
+
+This puts 5 probes on one line, but acutally it's not inlined function.
+This is because there are many non statement instructions at the
+function prologue.
+
+With this patch:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  #
+
+Now perf-probe skips unneeded addresses.
+
+Committer testing:
+
+Slightly different results, but similar:
+
+Before:
+
+  # uname -a
+  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+  #
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new events:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
+    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
+
+  #
+
+After:
+
+  # perf probe -a "clear_tasks_mm_cpumask:1"
+  Added new event:
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
+
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  #
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-core.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ tools/perf/util/dwarf-aux.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 4ea63d9bd131..8feca59c1f6b 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -419,6 +419,31 @@ static int fsi_slave_scan(struct fsi_slave *slave)
- 	return 0;
- }
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 49f9c65f1a9c..d48bd5eaa0f2 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -773,6 +773,7 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+ 	size_t nlines, i;
++	bool flag;
  
-+static unsigned long aligned_access_size(size_t offset, size_t count)
-+{
-+	unsigned long offset_unit, count_unit;
-+
-+	/* Criteria:
-+	 *
-+	 * 1. Access size must be less than or equal to the maximum access
-+	 *    width or the highest power-of-two factor of offset
-+	 * 2. Access size must be less than or equal to the amount specified by
-+	 *    count
-+	 *
-+	 * The access width is optimal if we can calculate 1 to be strictly
-+	 * equal while still satisfying 2.
-+	 */
-+
-+	/* Find 1 by the bottom bit of offset (with a 4 byte access cap) */
-+	offset_unit = BIT(__builtin_ctzl(offset | 4));
-+
-+	/* Find 2 by the top bit of count */
-+	count_unit = BIT(8 * sizeof(unsigned long) - 1 - __builtin_clzl(count));
-+
-+	/* Constrain the maximum access width to the minimum of both criteria */
-+	return BIT(__builtin_ctzl(offset_unit | count_unit));
-+}
-+
- static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		struct kobject *kobj, struct bin_attribute *attr, char *buf,
- 		loff_t off, size_t count)
-@@ -434,8 +459,7 @@ static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += read_len) {
--		read_len = min_t(size_t, count, 4);
--		read_len -= off & 0x3;
-+		read_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
- 		if (rc)
-@@ -462,8 +486,7 @@ static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
- 		return -EINVAL;
- 
- 	for (total_len = 0; total_len < count; total_len += write_len) {
--		write_len = min_t(size_t, count, 4);
--		write_len -= off & 0x3;
-+		write_len = aligned_access_size(off, count - total_len);
- 
- 		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
- 		if (rc)
+ 	/* Get the CU die */
+ 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
+@@ -803,6 +804,12 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
+ 				  "Possible error in debuginfo.\n");
+ 			continue;
+ 		}
++		/* Skip end-of-sequence */
++		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
++			continue;
++		/* Skip Non statement line-info */
++		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
++			continue;
+ 		/* Filter lines based on address */
+ 		if (rt_die != cu_die) {
+ 			/*
 -- 
 2.20.1
 
