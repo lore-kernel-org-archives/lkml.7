@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF5BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB22C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AA220722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E837B21D7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640633;
-	bh=QpltaeYl4GMIrtXvGy7EcFg673TxDOHFaguGPkry+O0=;
+	s=default; t=1577640638;
+	bh=/rNfLlDFEPFbNB7FdvvEFbv5GRkGT8o2JvNT5raz0t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpyCrDe/Qld+cFqc5u+Q2Xngbl7AW6I7YjFtEMybAwhNIXzgfSf0z5zkQj3jy5qEK
-	 C4O7ABX+CTdZ9x9BDrD7X79Buxg3sdBXtMch/5rOKqD3Yeb7/5Sv/S++Ghq8IE5DC/
-	 //BBKXIeKzRfVcdimYgsRB9EcSx0NMjbRbnL5KqU=
+	b=LJ9wCwrIstUFH/+E3Hx58DeynViBmNMDvRB6WhXp5POGykoqka8tubQNjNhVFcVM7
+	 YL9Zzvi9V+Xs4ytA3p6wOyVuvv4AXmRH0NhwNb2QbWCYuQ0XqQshePwSMzh1auKlPN
+	 DHbKXjH4y982+zMmrIYvp+SIb03x9LJxfMOMgoDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfL2Rac (ORCPT
+        id S1728559AbfL2Rah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:30:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:30:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbfL2Ra2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:30:28 -0500
+        id S1728986AbfL2Rab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:30:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801D020722;
-        Sun, 29 Dec 2019 17:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC5D2208E4;
+        Sun, 29 Dec 2019 17:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640628;
-        bh=QpltaeYl4GMIrtXvGy7EcFg673TxDOHFaguGPkry+O0=;
+        s=default; t=1577640630;
+        bh=/rNfLlDFEPFbNB7FdvvEFbv5GRkGT8o2JvNT5raz0t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zyOy4wEsf2KgvwwJuG0wojle5rcdYUl3BuPa5jdNEsW6yyWz/I8igTxaR+S6RfVEL
-         6+RnbtbkeWP6oaD23JgXFSJj3Ptr6vlBQn1t93V3321J9/AQ6clJty/Wp25dOb7oPW
-         IVINbge9DIE2uMg73CNw2v6JKjq/HOyHl0Fpyc9Y=
+        b=wx4EfnaUxFN9gC8/gX2T5PI3wKG+6nHtO+i+9MAxaXFoInCakVRTjoYF/4iTRTKWJ
+         N212/cUE47vPtEH6B11pA8nh0TXayzcP6YsRgF+/pO7sAvL7uC5QpoLytAqOhVIZmA
+         XoZXv5gn3RVRKPt3c2z2c715B2Iy4evlyBrWNYnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Antonio Quartulli <antonio.quartulli@kaiwoo.ai>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/219] extcon: sm5502: Reset registers during initialization
-Date:   Sun, 29 Dec 2019 18:17:55 +0100
-Message-Id: <20191229162517.242288711@linuxfoundation.org>
+Subject: [PATCH 4.19 047/219] ath10k: fix offchannel tx failure when no ath10k_mac_tx_frm_has_freq
+Date:   Sun, 29 Dec 2019 18:17:29 +0100
+Message-Id: <20191229162514.816153306@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,61 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Ben Greear <greearb@candelatech.com>
 
-[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
+[ Upstream commit cc6df017e55764ffef9819dd9554053182535ffd ]
 
-On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
-seems to keep interrupts enabled for SM5502 when booting Linux.
-Changing the cable state (i.e. plugging in a cable) - until the driver
-is loaded - will therefore produce an interrupt that is never read.
+Offchannel management frames were failing:
 
-In this situation, the cable state will be stuck forever on the
-initial state because SM5502 stops sending interrupts.
-This can be avoided by clearing those pending interrupts after
-the driver has been loaded.
+[18099.253732] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18102.293686] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18105.333653] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18108.373712] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3780
+[18111.413687] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
+[18114.453726] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
+[18117.493773] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e36c0
+[18120.533631] ath10k_pci 0000:01:00.0: timed out waiting for offchannel skb cf0e3f00
 
-One way to do this is to reset all registers to default state
-by writing to SM5502_REG_RESET. This ensures that we start from
-a clean state, with all interrupts disabled.
+This bug appears to have been added between 4.0 (which works for us),
+and 4.4, which does not work.
 
-Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+I think this is because the tx-offchannel logic gets in a loop when
+ath10k_mac_tx_frm_has_freq(ar) is false, so pkt is never actually
+sent to the firmware for transmit.
+
+This patch fixes the problem on 4.9 for me, and now HS20 clients
+can work again with my firmware.
+
+Antonio: tested with 10.4-3.5.3-00057 on QCA4019 and QCA9888
+
+Signed-off-by: Ben Greear <greearb@candelatech.com>
+Tested-by: Antonio Quartulli <antonio.quartulli@kaiwoo.ai>
+[kvalo@codeaurora.org: improve commit log, remove unneeded parenthesis]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-sm5502.c | 4 ++++
- drivers/extcon/extcon-sm5502.h | 2 ++
- 2 files changed, 6 insertions(+)
+ drivers/net/wireless/ath/ath10k/mac.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
-index 0cfb5a3efdf6..2efcd94f74fc 100644
---- a/drivers/extcon/extcon-sm5502.c
-+++ b/drivers/extcon/extcon-sm5502.c
-@@ -69,6 +69,10 @@ struct sm5502_muic_info {
- /* Default value of SM5502 register to bring up MUIC device. */
- static struct reg_data sm5502_reg_data[] = {
- 	{
-+		.reg = SM5502_REG_RESET,
-+		.val = SM5502_REG_RESET_MASK,
-+		.invert = true,
-+	}, {
- 		.reg = SM5502_REG_CONTROL,
- 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
- 		.invert = false,
-diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
-index 974b53222f56..12f8b01e5753 100644
---- a/drivers/extcon/extcon-sm5502.h
-+++ b/drivers/extcon/extcon-sm5502.h
-@@ -241,6 +241,8 @@ enum sm5502_reg {
- #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
- 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 613ca74f1b28..174e0ce31c42 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -3651,7 +3651,7 @@ static int ath10k_mac_tx(struct ath10k *ar,
+ 			 struct ieee80211_vif *vif,
+ 			 enum ath10k_hw_txrx_mode txmode,
+ 			 enum ath10k_mac_tx_path txpath,
+-			 struct sk_buff *skb)
++			 struct sk_buff *skb, bool noque_offchan)
+ {
+ 	struct ieee80211_hw *hw = ar->hw;
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+@@ -3679,10 +3679,10 @@ static int ath10k_mac_tx(struct ath10k *ar,
+ 		}
+ 	}
  
-+#define SM5502_REG_RESET_MASK			(0x1)
-+
- /* SM5502 Interrupts */
- enum sm5502_irq {
- 	/* INT1 */
+-	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
++	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
+ 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
+-			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
+-				   skb);
++			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
++				   skb, skb->len);
+ 
+ 			skb_queue_tail(&ar->offchan_tx_queue, skb);
+ 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
+@@ -3744,8 +3744,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+ 
+ 		mutex_lock(&ar->conf_mutex);
+ 
+-		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
+-			   skb);
++		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
++			   skb, skb->len);
+ 
+ 		hdr = (struct ieee80211_hdr *)skb->data;
+ 		peer_addr = ieee80211_get_DA(hdr);
+@@ -3791,7 +3791,7 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+ 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
+ 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
+ 
+-		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
+ 		if (ret) {
+ 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
+ 				    ret);
+@@ -3801,8 +3801,8 @@ void ath10k_offchan_tx_work(struct work_struct *work)
+ 		time_left =
+ 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
+ 		if (time_left == 0)
+-			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
+-				    skb);
++			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
++				    skb, skb->len);
+ 
+ 		if (!peer && tmp_peer_created) {
+ 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
+@@ -3998,7 +3998,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
+ 		spin_unlock_bh(&ar->htt.tx_lock);
+ 	}
+ 
+-	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+ 	if (unlikely(ret)) {
+ 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
+ 
+@@ -4280,7 +4280,7 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
+ 		spin_unlock_bh(&ar->htt.tx_lock);
+ 	}
+ 
+-	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
++	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
+ 		if (is_htt) {
 -- 
 2.20.1
 
