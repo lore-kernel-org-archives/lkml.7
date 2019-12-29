@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E03DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB2C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0BD20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC1920722
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642899;
-	bh=/S7NgkOJJuMHUX3GCVpWEEoT9IoElhjA2uIdrmQAJZ4=;
+	s=default; t=1577642905;
+	bh=2yZc04posTSVs0CwfNQ6Y3zi8VBEufXGYCSUmYmhmPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5VZgm4E2NGbgNBN3E2V++rPOl2eBRSI9FEptE8FLlDQKWQ2olCd+tfiNiUY9zqq0
-	 T8dd7L78XbEn05Eo/E8OTfK9EjM6YTfMdsrW7jJiQFwuHEFK6HzcjoyEgKTlsNp79L
-	 4vfAsCX4Y5YU3dWxJphr33z8kVO7wC3GfRPoiNmg=
+	b=S/6u5bQ7UGwUGP25z90U2cjtz0+kcXhrx3jllH10nYMR9QVWgXApYZSKiYIzSZBwi
+	 ZfiPSh0AO5LWl3Bg+/CxgVAu1Q5gVWHwYYKVIFRA28pKwQFGEWZMTi7Rcw7AFr5yOm
+	 PqZ0b7ilJs4VI182s+U6C3a/EYQwqKKOIGU/Ym2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfL2SIS (ORCPT
+        id S1731221AbfL2RrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:08:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:47:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731241AbfL2RrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:47:19 -0500
+        id S1731171AbfL2Rq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:46:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E7E9206A4;
-        Sun, 29 Dec 2019 17:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8513206A4;
+        Sun, 29 Dec 2019 17:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641638;
-        bh=/S7NgkOJJuMHUX3GCVpWEEoT9IoElhjA2uIdrmQAJZ4=;
+        s=default; t=1577641617;
+        bh=2yZc04posTSVs0CwfNQ6Y3zi8VBEufXGYCSUmYmhmPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTd4AcBwHuTtfcyxha7ob2HPnB/t+sLQKE6grybDOJbPtM5EsPXts0G/wgVmz1xt4
-         YpAUlCj55zJ82ITUg0/vUf9E2qLwriCf9OIwP8og9NC/JU+4d2egfDtYo5luqF9nJK
-         zOwBJsTZfehtFsvmtJXrbhYKFnrCq0Y/aokBgI3k=
+        b=W99hGXpvlu1lT2I/wffoY4MAOOiVoVfZROY4qEROMd8cPmOQMmlAWDmLZHGfDcyGL
+         BH0z2gnzmOHRS99mC5xwAyRBzkKFVOqGICvavRrAGacwrNSjyWto/zBpnaZukK4oJ1
+         XTTpV9/rbZ2LrUPln/4S0j2jhn1oBAMiDdaJHg0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 110/434] samples: pktgen: fix proc_cmd command result check logic
-Date:   Sun, 29 Dec 2019 18:22:43 +0100
-Message-Id: <20191229172708.955863444@linuxfoundation.org>
+Subject: [PATCH 5.4 139/434] extcon: sm5502: Reset registers during initialization
+Date:   Sun, 29 Dec 2019 18:23:12 +0100
+Message-Id: <20191229172710.959997760@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -61,80 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel T. Lee <danieltimlee@gmail.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 3cad8f911575191fb3b81d8ed0e061e30f922223 ]
+[ Upstream commit 6942635032cfd3e003e980d2dfa4e6323a3ce145 ]
 
-Currently, proc_cmd is used to dispatch command to 'pg_ctrl', 'pg_thread',
-'pg_set'. proc_cmd is designed to check command result with grep the
-"Result:", but this might fail since this string is only shown in
-'pg_thread' and 'pg_set'.
+On some devices (e.g. Samsung Galaxy A5 (2015)), the bootloader
+seems to keep interrupts enabled for SM5502 when booting Linux.
+Changing the cable state (i.e. plugging in a cable) - until the driver
+is loaded - will therefore produce an interrupt that is never read.
 
-This commit fixes this logic by grep-ing the "Result:" string only when
-the command is not for 'pg_ctrl'.
+In this situation, the cable state will be stuck forever on the
+initial state because SM5502 stops sending interrupts.
+This can be avoided by clearing those pending interrupts after
+the driver has been loaded.
 
-For clarity of an execution flow, 'errexit' flag has been set.
+One way to do this is to reset all registers to default state
+by writing to SM5502_REG_RESET. This ensures that we start from
+a clean state, with all interrupts disabled.
 
-To cleanup pktgen on exit, trap has been added for EXIT signal.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Suggested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/pktgen/functions.sh | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/extcon/extcon-sm5502.c | 4 ++++
+ drivers/extcon/extcon-sm5502.h | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/samples/pktgen/functions.sh b/samples/pktgen/functions.sh
-index 4af4046d71be..40873a5d1461 100644
---- a/samples/pktgen/functions.sh
-+++ b/samples/pktgen/functions.sh
-@@ -5,6 +5,8 @@
- # Author: Jesper Dangaaard Brouer
- # License: GPL
+diff --git a/drivers/extcon/extcon-sm5502.c b/drivers/extcon/extcon-sm5502.c
+index dc43847ad2b0..b3d93baf4fc5 100644
+--- a/drivers/extcon/extcon-sm5502.c
++++ b/drivers/extcon/extcon-sm5502.c
+@@ -65,6 +65,10 @@ struct sm5502_muic_info {
+ /* Default value of SM5502 register to bring up MUIC device. */
+ static struct reg_data sm5502_reg_data[] = {
+ 	{
++		.reg = SM5502_REG_RESET,
++		.val = SM5502_REG_RESET_MASK,
++		.invert = true,
++	}, {
+ 		.reg = SM5502_REG_CONTROL,
+ 		.val = SM5502_REG_CONTROL_MASK_INT_MASK,
+ 		.invert = false,
+diff --git a/drivers/extcon/extcon-sm5502.h b/drivers/extcon/extcon-sm5502.h
+index 9dbb634d213b..ce1f1ec310c4 100644
+--- a/drivers/extcon/extcon-sm5502.h
++++ b/drivers/extcon/extcon-sm5502.h
+@@ -237,6 +237,8 @@ enum sm5502_reg {
+ #define DM_DP_SWITCH_UART			((DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DP_SHIFT) \
+ 						| (DM_DP_CON_SWITCH_UART <<SM5502_REG_MANUAL_SW1_DM_SHIFT))
  
-+set -o errexit
++#define SM5502_REG_RESET_MASK			(0x1)
 +
- ## -- General shell logging cmds --
- function err() {
-     local exitcode=$1
-@@ -58,6 +60,7 @@ function pg_set() {
- function proc_cmd() {
-     local result
-     local proc_file=$1
-+    local status=0
-     # after shift, the remaining args are contained in $@
-     shift
-     local proc_ctrl=${PROC_DIR}/$proc_file
-@@ -73,13 +76,13 @@ function proc_cmd() {
- 	echo "cmd: $@ > $proc_ctrl"
-     fi
-     # Quoting of "$@" is important for space expansion
--    echo "$@" > "$proc_ctrl"
--    local status=$?
-+    echo "$@" > "$proc_ctrl" || status=$?
- 
--    result=$(grep "Result: OK:" $proc_ctrl)
--    # Due to pgctrl, cannot use exit code $? from grep
--    if [[ "$result" == "" ]]; then
--	grep "Result:" $proc_ctrl >&2
-+    if [[ "$proc_file" != "pgctrl" ]]; then
-+        result=$(grep "Result: OK:" $proc_ctrl) || true
-+        if [[ "$result" == "" ]]; then
-+            grep "Result:" $proc_ctrl >&2
-+        fi
-     fi
-     if (( $status != 0 )); then
- 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
-@@ -105,6 +108,8 @@ function pgset() {
-     fi
- }
- 
-+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
-+
- ## -- General shell tricks --
- 
- function root_check_run_with_sudo() {
+ /* SM5502 Interrupts */
+ enum sm5502_irq {
+ 	/* INT1 */
 -- 
 2.20.1
 
