@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A30C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDA7C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF16E206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E818C206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642607;
-	bh=D/u4B5LWGmIghCZb5lG0OvNphq9rWCBj2Uw1qGjZrmk=;
+	s=default; t=1577642610;
+	bh=75ksc0Fs5EbTGUWnXhGRT4NgnHpaPY6EdU+RtEKlmWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVlIiKAqQf3hjDziuKfEMIRfKLaz6j1DlcW1XhX3t+U1mnRlH461wBkOtnRjpz5+H
-	 Va8kzjr+Gisfz7KQtEF/soEomcfIrZ8ViqpoadNUUY+HSmHxs2UffOa0BxaDNE5Y6p
-	 jy4x2bbLAb5/YlGvNgsATKAdCVz5e/Zln+JkIwaA=
+	b=X8N0NU5hKeFNcael6vW6ht62YwwSDyuYLZxkC2lIXBRN1vu83cVdO7BthX3w10tEq
+	 4C1/gvPp07QvEY7On4S7wMGAdDZ2KElnuznw46KN9ZPhBGBm/hQ9xlGqdyWSqYpazt
+	 nJugRvnd44Pk73wfZ1EbbXwYCbP4h/wonIGfBJbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732493AbfL2Rxd (ORCPT
+        id S1732483AbfL2Rxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:53:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732476AbfL2Rxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:53:30 -0500
+        id S1732463AbfL2Rx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:53:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A347206DB;
-        Sun, 29 Dec 2019 17:53:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68FF206DB;
+        Sun, 29 Dec 2019 17:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642009;
-        bh=D/u4B5LWGmIghCZb5lG0OvNphq9rWCBj2Uw1qGjZrmk=;
+        s=default; t=1577642007;
+        bh=75ksc0Fs5EbTGUWnXhGRT4NgnHpaPY6EdU+RtEKlmWE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwL6z3CUVmTJCNekmhUAaSqUjKIjNuuZNQuP9uB/GYAdFanbraoJ4XZaVaP++Rs9M
-         o1z86l64lU1vK9BSMu3fPe8zvTxwpC9eSchBiAaoie/jAxZB0OZHkCV1twadHIN0gd
-         AHLUslBs3AoDNLSTp7CQvjviQ5AG0GDFlgC3dM8o=
+        b=Vbq4XKhwlGIXHv603r+sgEcUK63uFcXk54lkXELcBMQIMzqYr9Wgn/XROB2bpGp48
+         sIv5mWAL5gWpcplgizZ7LmdgtWXw86bJy1aioSVp1vw6UNtAmRd+brM0So7O3QWFyf
+         B6Ym4T3pjNDuEDyb+Wz0joBu/v83/hZU+s4EZvpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Kranzdorf <dkkranzd@amazon.com>,
-        Firas JahJah <firasj@amazon.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 304/434] RDMA/efa: Clear the admin command buffer prior to its submission
-Date:   Sun, 29 Dec 2019 18:25:57 +0100
-Message-Id: <20191229172722.145740585@linuxfoundation.org>
+Subject: [PATCH 5.4 303/434] qtnfmac: fix using skb after free
+Date:   Sun, 29 Dec 2019 18:25:56 +0100
+Message-Id: <20191229172722.079860912@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -62,52 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 64c264872b8879e2ab9017eefe9514d4c045c60e ]
+[ Upstream commit 4a33f21cef84b1b933958c99ed5dac1726214b35 ]
 
-We cannot rely on the entry memcpy as we only copy the actual size of the
-command, the rest of the bytes must be memset to zero.
+KASAN reported use-after-free error:
 
-Currently providing non-zero memory will not have any user visible impact.
-However, since admin commands are extendable (in a backwards compatible
-way) everything beyond the size of the command must be cleared to prevent
-issues in the future.
+[  995.220767] BUG: KASAN: use-after-free in qtnf_cmd_send_with_reply+0x169/0x3e0 [qtnfmac]
+[  995.221098] Read of size 2 at addr ffff888213d1ded0 by task kworker/1:1/71
 
-Fixes: 0420e542569b ("RDMA/efa: Implement functions that submit and complete admin commands")
-Link: https://lore.kernel.org/r/20191112092608.46964-1-galpress@amazon.com
-Reviewed-by: Daniel Kranzdorf <dkkranzd@amazon.com>
-Reviewed-by: Firas JahJah <firasj@amazon.com>
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The issue in qtnf_cmd_send_with_reply impacts all the commands that do
+not need response other then return code. For such commands, consume_skb
+is used for response skb and right after that return code in response
+skb is accessed.
+
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/efa/efa_com.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/quantenna/qtnfmac/commands.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/efa/efa_com.c b/drivers/infiniband/hw/efa/efa_com.c
-index 3c412bc5b94f..0778f4f7dccd 100644
---- a/drivers/infiniband/hw/efa/efa_com.c
-+++ b/drivers/infiniband/hw/efa/efa_com.c
-@@ -317,6 +317,7 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
- 						       struct efa_admin_acq_entry *comp,
- 						       size_t comp_size_in_bytes)
- {
-+	struct efa_admin_aq_entry *aqe;
- 	struct efa_comp_ctx *comp_ctx;
- 	u16 queue_size_mask;
+diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+index dc0c7244b60e..c0c32805fb8d 100644
+--- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
++++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
+@@ -83,6 +83,7 @@ static int qtnf_cmd_send_with_reply(struct qtnf_bus *bus,
+ 	struct qlink_cmd *cmd;
+ 	struct qlink_resp *resp = NULL;
+ 	struct sk_buff *resp_skb = NULL;
++	int resp_res = 0;
  	u16 cmd_id;
-@@ -350,7 +351,9 @@ static struct efa_comp_ctx *__efa_com_submit_admin_cmd(struct efa_com_admin_queu
+ 	u8 mac_id;
+ 	u8 vif_id;
+@@ -113,6 +114,7 @@ static int qtnf_cmd_send_with_reply(struct qtnf_bus *bus,
+ 	}
  
- 	reinit_completion(&comp_ctx->wait_event);
+ 	resp = (struct qlink_resp *)resp_skb->data;
++	resp_res = le16_to_cpu(resp->result);
+ 	ret = qtnf_cmd_check_reply_header(resp, cmd_id, mac_id, vif_id,
+ 					  const_resp_size);
+ 	if (ret)
+@@ -128,8 +130,8 @@ out:
+ 	else
+ 		consume_skb(resp_skb);
  
--	memcpy(&aq->sq.entries[pi], cmd, cmd_size_in_bytes);
-+	aqe = &aq->sq.entries[pi];
-+	memset(aqe, 0, sizeof(*aqe));
-+	memcpy(aqe, cmd, cmd_size_in_bytes);
+-	if (!ret && resp)
+-		return qtnf_cmd_resp_result_decode(le16_to_cpu(resp->result));
++	if (!ret)
++		return qtnf_cmd_resp_result_decode(resp_res);
  
- 	aq->sq.pc++;
- 	atomic64_inc(&aq->stats.submitted_cmd);
+ 	pr_warn("VIF%u.%u: cmd 0x%.4X failed: %d\n",
+ 		mac_id, vif_id, cmd_id, ret);
 -- 
 2.20.1
 
