@@ -2,136 +2,125 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B7FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 02:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DA0C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 02:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0946E21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 02:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959EA20838
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 02:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wP8/Z/fA"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="uFXDgE/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfL2Cpv (ORCPT
+        id S1726476AbfL2CqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Dec 2019 21:45:51 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33778 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfL2Cpu (ORCPT
+        Sat, 28 Dec 2019 21:46:22 -0500
+Received: from sonic303-50.consmr.mail.gq1.yahoo.com ([98.137.64.232]:42524
+        "EHLO sonic303-50.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726248AbfL2CqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Dec 2019 21:45:50 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so16425639pgk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Dec 2019 18:45:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6vQfMDnjAnyBecC4EFX4YToQU0vypJ/cCTtTTcCKPbQ=;
-        b=wP8/Z/fA9v6JoO3+Oqg8HNkYly6trwIiyQslwb8eMR0EJflqyY7kQ841eKvzL6t7Tu
-         NHjGwIdu5gfTyen+njsZyiefStSrCKSidxy23jGOx6WzdDsZjYUiqs3mR17+ZsCDOUfV
-         dTXLUe6Z+Mq31YgonJj1j/D6MKfLF6uov9FmqsMOBsCY+lEA7HJzJYHYaH5hRF3Q+wkm
-         i7RbBHkbJhoXMA+zHDVkAGfpmvIi+BBVwkBOOVdIN/mxpYrrANQ/KHdrgROr/CUv+ZFx
-         eURuoD7Zz9CTiwBZL/pM7UcE+qKqtUp5PNPg3OctGlT91iL/YiQ23JjiwqKBgPiEMpe4
-         Sizg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6vQfMDnjAnyBecC4EFX4YToQU0vypJ/cCTtTTcCKPbQ=;
-        b=njYTdRkwonw5qd4ay8MK1rfSrIF3Ab8qi+2wC/4g+Zi96tKhSsiCA9sbcHqUbUsH9S
-         5kRr4TuQ3HqeayFVrAVUBnGQUy01g3QNxSOg8EziSpe4VIhbX85b71rk2U2Yep8JCbit
-         ByLE+a/YOvDyA9djd4Ses9vsStt2CCsicFRusuFibQ5GtTQRv6hkuytCQepqidA3PCpD
-         FCSuOuizepto/fvCdBGP1bJaa79/1wA6OalcQcPJXAAr0JrKrBFG/XGHIiT7nVA2ZIiC
-         ljVoe5bLihrOeeIloy5AHjTSoEOPMiU7YcFUaT13prvQE7HMoeOIxszE5ZvdA/Vx+Sv0
-         EQJw==
-X-Gm-Message-State: APjAAAUh6jZSlnQC1ykmF1Tmy2ANq95mVLqkET5CdhGGckksLkyGmFmE
-        ZsIPwG7rhNwQ4VF+pZ33l2+26w==
-X-Google-Smtp-Source: APXvYqzUR77xdE839/m6l8S88LYUtA1Wd64x+Elee8gvNt2cGvGDlb/OXr1UQYYdYRdHMPZDl3i5Bw==
-X-Received: by 2002:a63:338e:: with SMTP id z136mr64204052pgz.60.1577587550101;
-        Sat, 28 Dec 2019 18:45:50 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p17sm44724028pfn.31.2019.12.28.18.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 18:45:49 -0800 (PST)
-Date:   Sat, 28 Dec 2019 18:45:47 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-Message-ID: <20191229024547.GH3755841@builder>
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
- <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
+        Sat, 28 Dec 2019 21:46:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1577587580; bh=6/Q6SNynxNQ8G8c617T7+WEqsKRr7oL+1YtlRaUeq+g=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=uFXDgE/66xF3EsVJ5mGL8atE1oRVvcYc6hPaDiBcac66mzEHDWyJ8RhU3AmPuSlOxO8e0TwAFolvxlm3CMZ/snPwUa5Rtrx06Z+y/Hi1e66j5CbsllR/gzCnrSe/Jja7OLU5BwLnGStWQJwhVccBDTfaHyPP8tbbHXXW3PpAvqZasMJ3gzDSYt50VVZuedsHjduwJlRWMATPZMUkO52QBn5rfUWP5bz+JLtXE0Tvw4xkt4ggyl7uu0Rn1b2MzFhbaCg1Nf31LxmP3tK6PqfTzJP71i+7vxQssSjipJ9lAndoXSxUf9zGNflDuEuh6/Kj9pZbm6rqVo3y+xJKwiogQA==
+X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Sun, 29 Dec 2019 02:46:20 +0000
+Received: by smtp424.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 9f863a345b562991edc35c48481656f9;
+          Sun, 29 Dec 2019 02:44:18 +0000 (UTC)
+Date:   Sun, 29 Dec 2019 10:44:08 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, linux-erofs@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Miao Xie <miaoxie@huawei.com>
+Subject: Re: [PATCH RESEND] erofs: convert to use the new mount fs_context api
+Message-ID: <20191229024406.GA2215@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20191226022519.53386-1-yuchao0@huawei.com>
+ <20191227035016.GA142350@architecture4>
+ <20191228212156.GU4203@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191228212156.GU4203@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
-
-> On 27/12/2019 09:51, Stanimir Varbanov wrote:
-> 
-> > On 12/27/19 3:27 AM, Bjorn Andersson wrote:
-> >
-> >> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> >> the fixup to only affect the relevant PCIe bridges.
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >> ---
-> >>
-> >> Stan, I picked up all the suggested device id's from the previous thread and
-> >> added 0x1000 for QCS404. I looked at creating platform specific defines in
-> >> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
-> >> prefer that I do this anyway.
+On Sat, Dec 28, 2019 at 09:21:56PM +0000, Al Viro wrote:
+> On Fri, Dec 27, 2019 at 11:50:16AM +0800, Gao Xiang wrote:
+> > Hi Al,
 > > 
-> > Looks good,
+> > Greeting, we plan to convert erofs to new mount api for 5.6
 > > 
-> > Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> > and I just notice your branch
+> > https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=untested.fs_parse
 > > 
-> >>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
-> >>  1 file changed, 7 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> >> index 5ea527a6bd9f..138e1a2d21cc 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> >> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
-> >>  {
-> >>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> >>  }
-> >> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> > do a lot further work on fs context (e.g. "get rid of ->enums",
+> > "remove fs_parameter_description name field" and switch to
+> > use XXXfc() instead of XXXf() with prefixed string).
+> > 
+> > Does it plan for 5.6 as well? If yes, we will update this patch
+> > based on the latest branch and maybe have chance to go though
+> > your tree if it can?
 > 
-> Hrmmm... still not CCed on the patch,
+> FWIW, I would add the following to what you've already mentioned:
 
-You are Cc'ed on the patch, but as usual your mail server responds "451
-too many errors from your ip" and throw my emails away.
+Thanks for your reply and confirmation.
 
-> and still don't think the fixup is required(?) for 0x106 and 0x107.
 > 
+> > > +static const struct fs_parameter_spec erofs_param_specs[] = {
+> > > +	fsparam_flag("user_xattr",	Opt_user_xattr),
+> > > +	fsparam_flag("nouser_xattr",	Opt_nouser_xattr),
+> > > +	fsparam_flag("acl",		Opt_acl),
+> > > +	fsparam_flag("noacl",		Opt_noacl),
+> better off as
+> 	fsparam_flag_no("user_xattr",	Opt_user_xattr),
+> 	fsparam_flag_no("acl",		Opt_acl),
 
-I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
-the fixup, so resumably only 0x101 needs the fixup?
+Got it. We didn't notice this new way. Will fix in the updated version.
 
-Regards,
-Bjorn
+> 
+> > > +	case Opt_user_xattr:
+> 		if (result.boolean)
+> 			set_opt(sbi, XATTR_USER);
+> 		else
+> 			clear_opt(sbi, XATTR_USER);
+> > > +		break;
+> ....
+> > > +	default:
+> 		return -ENOPARAM;
+
+Got it.
+
+> 
+> BTW, what's the point of using invalf() in contexts where
+> the return value is ignored?  Why not simply go for errorf()
+> (or errorfc(), for that matter)?
+
+OK, We will check all invalf()s soon.
+
+And may I ask one more question about this... I'm a bit confused,
+since we have erofs_err() which print sb->s_id as well, so which
+one (errorfc or erofs_err) is more perferred to choose in especially
+fill_super()?
+
+> 
+> I do plan that branch (or an equivalent, as far as filesystems
+> are concerned - there might be a bit of additional rework in
+> the beginning + currently missing modifications of docs) for
+> 5.6.  So updated patch would be welcome - I can do that myself,
+> but if you can rebase it on top of that branch it would save
+> time.
+
+Yes, we will update this patch based on the latest branch later
+for this convert.
+
+Thanks,
+Gao Xiang
+
+
