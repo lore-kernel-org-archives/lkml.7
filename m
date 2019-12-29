@@ -2,273 +2,99 @@ Return-Path: <SRS0=vISB=2T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F82EC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F00C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1456B206DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A7B20718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577641203;
+	bh=GtEqOnwyIEsSAXZSYt0Y94oiVIavuM0u3h1Nu09IQHw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tX8fDVyOO+VmL+409Xy0OaAHK0qUKg2uQ2QtiY6uFStBZx/Z38patrqOs2QrgzyDh
+	 4AM+HFIujNHVLyL6qHdVH3J0MfFAj7bX40BWI2KoHC1Yz/GvktleuBVeB71NDYkUxo
+	 Ui3p4Ll/T63nBFg6B4IobvrhL25vXhVW+CCmE3Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbfL2Rj7 (ORCPT
+        id S1730148AbfL2Rj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:39:59 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36592 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbfL2RcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:39:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729291AbfL2RcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Dec 2019 12:32:18 -0500
-Received: from [172.58.107.62] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ilcQI-0005a0-Au; Sun, 29 Dec 2019 17:32:15 +0000
-Date:   Sun, 29 Dec 2019 18:32:04 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        Emilio Cobos =?utf-8?Q?=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jed Davis <jld@mozilla.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 2/3] pid: Introduce pidfd_getfd syscall
-Message-ID: <20191229173202.55apy2dpv7qj7gov@wittgenstein>
-References: <20191226180334.GA29409@ircssh-2.c.rugged-nimbus-611.internal>
- <20191228100944.kh22bofbr5oe2kvk@wittgenstein>
- <CAMp4zn9LyGw=BNiLNRgZXAbFdi87pSjy1YmDXvFvwmA=u3yDyw@mail.gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B85207FF;
+        Sun, 29 Dec 2019 17:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577640738;
+        bh=GtEqOnwyIEsSAXZSYt0Y94oiVIavuM0u3h1Nu09IQHw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rAf6PNjIXBY7IGrEgjvvS9rYhuDvqgKKntQKoAb5Jh0bGd7UhDqndRAbtAqr+4cZ3
+         vx3F2QABXNYPIdfCzGG3CaSOEo1l5nFptqVLN6a9yvrFuLc5SaZUAxqGVSoH2w5kEs
+         0pxrHiHGfdtzeBsiVM2KKjkfEHuT+xCHhICr/hLo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 117/219] nvmem: imx-ocotp: reset error status on probe
+Date:   Sun, 29 Dec 2019 18:18:39 +0100
+Message-Id: <20191229162526.298007347@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
+References: <20191229162508.458551679@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMp4zn9LyGw=BNiLNRgZXAbFdi87pSjy1YmDXvFvwmA=u3yDyw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 08:03:23AM -0500, Sargun Dhillon wrote:
-> On Sat, Dec 28, 2019 at 5:12 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Thu, Dec 26, 2019 at 06:03:36PM +0000, Sargun Dhillon wrote:
-> > > This syscall allows for the retrieval of file descriptors from other
-> > > processes, based on their pidfd. This is possible using ptrace, and
-> > > injection of parasitic code to inject code which leverages SCM_RIGHTS
-> > > to move file descriptors between a tracee and a tracer. Unfortunately,
-> > > ptrace comes with a high cost of requiring the process to be stopped,
-> > > and breaks debuggers. This does not require stopping the process under
-> > > manipulation.
-> > >
-> > > One reason to use this is to allow sandboxers to take actions on file
-> > > descriptors on the behalf of another process. For example, this can be
-> > > combined with seccomp-bpf's user notification to do on-demand fd
-> > > extraction and take privileged actions. One such privileged action
-> > > is binding a socket to a privileged port.
-> > >
-> > > This also adds the syscall to all architectures at the same time.
-> > >
-> > > /* prototype */
-> > >   /* flags is currently reserved and should be set to 0 */
-> > >   int sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
-> > >
-> > > /* testing */
-> > > Ran self-test suite on x86_64
-> >
-> > Fyi, I'm likely going to rewrite/add parts of/to this once I apply.
-> >
-> > A few comments below.
-> >
-> > > diff --git a/kernel/pid.c b/kernel/pid.c
-> > > index 2278e249141d..4a551f947869 100644
-> > > --- a/kernel/pid.c
-> > > +++ b/kernel/pid.c
-> > > @@ -578,3 +578,106 @@ void __init pid_idr_init(void)
-> > >       init_pid_ns.pid_cachep = KMEM_CACHE(pid,
-> > >                       SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
-> > >  }
-> > > +
-> > > +static struct file *__pidfd_fget(struct task_struct *task, int fd)
-> > > +{
-> > > +     struct file *file;
-> > > +     int ret;
-> > > +
-> > > +     ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> > > +     if (ret)
-> > > +             return ERR_PTR(ret);
-> > > +
-> > > +     if (!ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS)) {
-> > > +             file = ERR_PTR(-EPERM);
-> > > +             goto out;
-> > > +     }
-> > > +
-> > > +     file = fget_task(task, fd);
-> > > +     if (!file)
-> > > +             file = ERR_PTR(-EBADF);
-> > > +
-> > > +out:
-> > > +     mutex_unlock(&task->signal->cred_guard_mutex);
-> > > +     return file;
-> > > +}
-> >
-> > Looking at this code now a bit closer, ptrace_may_access() and
-> > fget_task() both take task_lock(task) so this currently does:
-> >
-> > task_lock();
-> > /* check access */
-> > task_unlock();
-> >
-> > task_lock();
-> > /* get fd */
-> > task_unlock();
-> >
-> > which doesn't seem great.
-> >
-> > I would prefer if we could do:
-> > task_lock();
-> > /* check access */
-> > /* get fd */
-> > task_unlock();
-> >
-> > But ptrace_may_access() doesn't export an unlocked variant so _shrug_.
-> Right, it seems intentional that __ptrace_may_access isn't exported. We
-> can always change that later?
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Yeah, it's just something I noted and it's not a big deal in my book. It
-just would be nicer to only have to lock once. ptrace would need to
-expose an unlocked variant and fget_task() would need to be removed
-completely and then grabbing the file via fget or sm. But as I said it's
-ok to do it like this rn.
+[ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
 
-> 
-> >
-> > But we can write this a little cleaner without the goto as:
-> >
-> > static struct file *__pidfd_fget(struct task_struct *task, int fd)
-> > {
-> >         struct file *file;
-> >         int ret;
-> >
-> >         ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
-> >         if (ret)
-> >                 return ERR_PTR(ret);
-> >
-> >         if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
-> >                 file = fget_task(task, fd);
-> >         else
-> >                 file = ERR_PTR(-EPERM);
-> >         mutex_unlock(&task->signal->cred_guard_mutex);
-> >
-> >         return file ?: ERR_PTR(-EBADF);
-> > }
-> >
-> > If you don't like the ?: just do:
-> >
-> > if (!file)
-> >         return ERR_PTR(-EBADF);
-> >
-> > return file;
-> >
-> > though I prefer the shorter ?: syntax which is perfect for shortcutting
-> > returns.
-> >
-> > > +
-> > > +static int pidfd_getfd(struct pid *pid, int fd)
-> > > +{
-> > > +     struct task_struct *task;
-> > > +     struct file *file;
-> > > +     int ret, retfd;
-> > > +
-> > > +     task = get_pid_task(pid, PIDTYPE_PID);
-> > > +     if (!task)
-> > > +             return -ESRCH;
-> > > +
-> > > +     file = __pidfd_fget(task, fd);
-> > > +     put_task_struct(task);
-> > > +     if (IS_ERR(file))
-> > > +             return PTR_ERR(file);
-> > > +
-> > > +     retfd = get_unused_fd_flags(O_CLOEXEC);
-> > > +     if (retfd < 0) {
-> > > +             ret = retfd;
-> > > +             goto out;
-> > > +     }
-> > > +
-> > > +     /*
-> > > +      * security_file_receive must come last since it may have side effects
-> > > +      * and cannot be reversed.
-> > > +      */
-> > > +     ret = security_file_receive(file);
-> >
-> > So I don't understand the comment here. Can you explain what the side
-> > effects are?
-> The LSM can modify the LSM blob, or emit an (audit) event, even though
-> the operation as a whole failed. Smack will report that file_receive
-> successfully happened even though it could not have happened,
-> because we were unable to provision a file descriptor.
+If software running before the OCOTP driver is loaded left the
+controller with the error status pending, the driver will never
+be able to complete the read timing setup. Reset the error status
+on probe to make sure the controller is in usable state.
 
-So this either sounds like a bug in Smack or a design choice by the LSM
-framework in general and also that it might apply to a lot of other
-hooks too? But I'm not qualified to assess that.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvmem/imx-ocotp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Modifying an LSM blob, emitting an audit event may very well happen but
-there are places all over the kernel were security hooks are called and
-they are not the last point of failure (capable hooks come to mind
-right away). My point being just because an audit event that happened
-from an LSM indicating that e.g. a file receive event happened cannot be
-intended to be equivalent == "was successful". That is not reality right
-now when looking at net/* where security_file_receive() is called too
-and surely can only be guaranteed from the actual codepaths that does the
-file receive.
-So I'd argue let's just use the clean version where we call
-security_file_receive() before allocing the new fd just like net/* does
-and make the code simpler and easier to maintain.
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index afb429a417fe..926d9cc080cf 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -466,6 +466,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->clk))
+ 		return PTR_ERR(priv->clk);
+ 
++	clk_prepare_enable(priv->clk);
++	imx_ocotp_clr_err_if_set(priv->base);
++	clk_disable_unprepare(priv->clk);
++
+ 	priv->params = of_device_get_match_data(&pdev->dev);
+ 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
+ 	imx_ocotp_nvmem_config.dev = dev;
+-- 
+2.20.1
 
-> 
-> Apparmor does similar, and also manipulates the LSM blob,
-> although that is undone by closing the file.
-> 
-> 
-> > security_file_receive() is called in two places: net/core/scm.c and
-> > net/compat.c. In both places it is called _before_ get_unused_fd_flags()
-> > so I don't know what's special here that would prevent us from doing the
-> > same. If there's no actual reason, please rewrite this functions as:
-> >
-> > static int pidfd_getfd(struct pid *pid, int fd)
-> > {
-> >         int ret;
-> >         struct task_struct *task;
-> >         struct file *file;
-> >
-> >         task = get_pid_task(pid, PIDTYPE_PID);
-> >         if (!task)
-> >                 return -ESRCH;
-> >
-> >         file = __pidfd_fget(task, fd);
-> >         put_task_struct(task);
-> >         if (IS_ERR(file))
-> >                 return PTR_ERR(file);
-> >
-> >         ret = security_file_receive(file);
-> >         if (ret) {
-> >                 fput(file);
-> >                 return ret;
-> >         }
-> >
-> >         ret = get_unused_fd_flags(O_CLOEXEC);
-> >         if (ret < 0)
-> >                 fput(file);
-> >         else
-> >                 fd_install(ret, file);
-> >
-> >         return ret;
-> > }
+
+
