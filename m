@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74867C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A47C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5028A20718
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C94420718
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641542;
-	bh=dGcSCkEKLA/K0lOLlFsVXGgr732AN7g6bkG+QgG7JQs=;
+	s=default; t=1577641547;
+	bh=E7izfWPlwyhCF3cCpQ1/HKIJmhsp2mzd5B227t/0c1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmJQHEGmtIOTBHmBc9P2be1uBDcqYY8NN3f1wnlJ5MH7rikqpkUkkbYkS5srXUFNa
-	 ajBdZFAD/m5sgqwlYrZjWc35KH+UAXxeG+1VtKpnWRjM8Ls4W1DklcTYa9PQTnCZxY
-	 R2jvoVLJoOHLN6xJ+boYDiA9Kb7fA4KDeex0aZnI=
+	b=w7wLLC078cA+nucMKXqthzDguaAMAZlt2jUIoJYOCHNRCZQNybvqKYgr6hK5J+r64
+	 2n/aMHVpNE6Qzy2N/fX8qFMk8cYOFNDuEM3MLQKgHIVTrKvShGj8p0ET4AB1QbUOYp
+	 TVicfF12LaVvJl0WCR+uZSCr/q2H3ejzW8IOHHE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbfL2Rpl (ORCPT
+        id S1730962AbfL2Rpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54780 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:45:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730926AbfL2Rpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:45:36 -0500
+        id S1730948AbfL2Rpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:45:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5B9206A4;
-        Sun, 29 Dec 2019 17:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5771F207FF;
+        Sun, 29 Dec 2019 17:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577641535;
-        bh=dGcSCkEKLA/K0lOLlFsVXGgr732AN7g6bkG+QgG7JQs=;
+        s=default; t=1577641542;
+        bh=E7izfWPlwyhCF3cCpQ1/HKIJmhsp2mzd5B227t/0c1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hLkheIL+OnrwqlaDwNhyVy/zwYnOocCJ2U9uJAKDOUEb996CTRY4SV9dqBFQzJT27
-         AswAMi2ERLCA4mOB5Rj2dcXa9Q4ELV+5lzW4wE5WV4JkrqTkhd/1fYLUCyJb/bHr/i
-         j1RqSlLEOvPEANiyrgxlZGQamtZq5PLqsDriq6Q0=
+        b=FHk8xTuj60y05Xrh055uE67u2pwwylHvWy88f/g9Xv5WUojgoRX9p4n9/cKAeKzYt
+         sUy8dpH9VddB+91NkNombY7AgFltx48xxz8Wa8E7apxxc+HDO1hcPGXwEypjYOTkMB
+         jBMm6Bruwv6OCTtZj6eQs3ZMRsCQKEfOIY5oZxY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/434] libertas: fix a potential NULL pointer dereference
-Date:   Sun, 29 Dec 2019 18:22:00 +0100
-Message-Id: <20191229172706.182992792@linuxfoundation.org>
+Subject: [PATCH 5.4 102/434] crypto: aegis128-neon - use Clang compatible cflags for ARM
+Date:   Sun, 29 Dec 2019 18:22:35 +0100
+Message-Id: <20191229172708.377116281@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 References: <20191229172702.393141737@linuxfoundation.org>
@@ -60,43 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Allen Pais <allen.pais@oracle.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 7da413a18583baaf35dd4a8eb414fa410367d7f2 ]
+[ Upstream commit 2eb2d198bd6cd0083a5363ce66272fb34a19928f ]
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+The next version of Clang will start policing compiler command line
+options, and will reject combinations of -march and -mfpu that it
+thinks are incompatible.
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This results in errors like
+
+  clang-10: warning: ignoring extension 'crypto' because the 'armv7-a'
+  architecture does not support it [-Winvalid-command-line-argument]
+  /tmp/aegis128-neon-inner-5ee428.s: Assembler messages:
+            /tmp/aegis128-neon-inner-5ee428.s:73: Error: selected
+  processor does not support `aese.8 q2,q14' in ARM mode
+
+when buiding the SIMD aegis128 code for 32-bit ARM, given that the
+'armv7-a' -march argument is considered to be compatible with the
+ARM crypto extensions. Instead, we should use armv8-a, which does
+allow the crypto extensions to be enabled.
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ crypto/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
-index 242d8845da3f..30f1025ecb9b 100644
---- a/drivers/net/wireless/marvell/libertas/if_sdio.c
-+++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
-@@ -1179,6 +1179,10 @@ static int if_sdio_probe(struct sdio_func *func,
+diff --git a/crypto/Makefile b/crypto/Makefile
+index fcb1ee679782..aa740c8492b9 100644
+--- a/crypto/Makefile
++++ b/crypto/Makefile
+@@ -93,7 +93,7 @@ obj-$(CONFIG_CRYPTO_AEGIS128) += aegis128.o
+ aegis128-y := aegis128-core.o
  
- 	spin_lock_init(&card->lock);
- 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
-+	if (unlikely(!card->workqueue)) {
-+		ret = -ENOMEM;
-+		goto err_queue;
-+	}
- 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
- 	init_waitqueue_head(&card->pwron_waitq);
- 
-@@ -1230,6 +1234,7 @@ err_activate_card:
- 	lbs_remove_card(priv);
- free:
- 	destroy_workqueue(card->workqueue);
-+err_queue:
- 	while (card->packets) {
- 		packet = card->packets;
- 		card->packets = card->packets->next;
+ ifeq ($(ARCH),arm)
+-CFLAGS_aegis128-neon-inner.o += -ffreestanding -march=armv7-a -mfloat-abi=softfp
++CFLAGS_aegis128-neon-inner.o += -ffreestanding -march=armv8-a -mfloat-abi=softfp
+ CFLAGS_aegis128-neon-inner.o += -mfpu=crypto-neon-fp-armv8
+ aegis128-$(CONFIG_CRYPTO_AEGIS128_SIMD) += aegis128-neon.o aegis128-neon-inner.o
+ endif
 -- 
 2.20.1
 
