@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9DCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1BFC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0190021D7E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62947207FF
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577640738;
-	bh=L/byCmbk7ZaHYHTfMACnQugc5v7EjSd8LbO9F2snzSw=;
+	s=default; t=1577640742;
+	bh=zKupZsP3hwBkIV+DX9F2WhuhPMqFF5B4PJdUbkfqzxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXZkGVRZpoZbK9qfiNlE5XJMifZwhGUjzaVP0BOfE68glBezD8m68EsU2n3fGYrv0
-	 nkvkzbv30xqR248vJzrm0pJj02MpV/QUlCaQ8jVXirFgY3akvvJ33Nl6o4+NSk3ybF
-	 TEws13GHtmcGPSAgUGeK83N9gCs6DrmNwbw7aSIw=
+	b=QVlTzpgi36A6X15O6+YFY72oGIiSstvmiAc1Jf1RyPkqkfg1uTWjVB+iNeFC2y/xp
+	 Ek92OLAelQh5YUrdOEoOgukLvkD7entuFMUzg+gak1/jZfbxvB1v1USs/2bBIgiz39
+	 Qp0B7H2NUQmpAmZNJLurZR0XItLv1ph8a51as9U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbfL2RcQ (ORCPT
+        id S1729037AbfL2RcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:32:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:32:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729264AbfL2RcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:14 -0500
+        id S1729292AbfL2RcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:32:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E292F21744;
-        Sun, 29 Dec 2019 17:32:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5138D20409;
+        Sun, 29 Dec 2019 17:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640733;
-        bh=L/byCmbk7ZaHYHTfMACnQugc5v7EjSd8LbO9F2snzSw=;
+        s=default; t=1577640735;
+        bh=zKupZsP3hwBkIV+DX9F2WhuhPMqFF5B4PJdUbkfqzxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Udkz/1XNBbvFbW6LCYRAiEMrodRJgo/JFBWUzHse1c6PY9dF1cqvTTLRe2MgB7ucA
-         W0ySRVd2GK00WGaD25NsInZxrQnbXl4YwcpaYoJ+hFLKwtTpUhfSwDCQMpy74sszp5
-         kZ/gXsptyPl/4WeXVt5AydLXKp8LGZHmabj/EpVs=
+        b=rYJYvj7ugvVZAf/Ck9KfrisEKAcb0g8XBT6tGhp8RaYe++Wkm2Rti6EIXsRAQkNx0
+         8HZT6sesEpmzvwZytKQcZ73Oe9SDbeSxy/wDkT76YN94aWYbsVr4m5cYDnFMWcLGGC
+         fXIjd7hmHqz1KzGhhDSjl57r6Bc2Q1PDUOc2pSOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, tony camuso <tcamuso@redhat.com>,
-        Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Vandana BN <bnvandana@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/219] ipmi: Dont allow device module unload when in use
-Date:   Sun, 29 Dec 2019 18:18:11 +0100
-Message-Id: <20191229162520.260768030@linuxfoundation.org>
+Subject: [PATCH 4.19 116/219] media: v4l2-core: fix touch support in v4l_g_fmt
+Date:   Sun, 29 Dec 2019 18:18:38 +0100
+Message-Id: <20191229162526.206349119@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -60,134 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Vandana BN <bnvandana@gmail.com>
 
-[ Upstream commit cbb79863fc3175ed5ac506465948b02a893a8235 ]
+[ Upstream commit 545b618cfb5cadacd00c25066b9a36540e5ca9e9 ]
 
-If something has the IPMI driver open, don't allow the device
-module to be unloaded.  Before it would unload and the user would
-get errors on use.
+v4l_s_fmt, for VFL_TYPE_TOUCH, sets unneeded members of
+the v4l2_pix_format structure to default values.This was
+missing in v4l_g_fmt, which would lead to failures in
+v4l2-compliance tests.
 
-This change is made on user request, and it makes it consistent
-with the I2C driver, which has the same behavior.
-
-It does change things a little bit with respect to kernel users.
-If the ACPI or IPMI watchdog (or any other kernel user) has
-created a user, then the device module cannot be unloaded.  Before
-it could be unloaded,
-
-This does not affect hot-plug.  If the device goes away (it's on
-something removable that is removed or is hot-removed via sysfs)
-then it still behaves as it did before.
-
-Reported-by: tony camuso <tcamuso@redhat.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: tony camuso <tcamuso@redhat.com>
+Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 23 ++++++++++++++++-------
- include/linux/ipmi_smi.h            | 12 ++++++++----
- 2 files changed, 24 insertions(+), 11 deletions(-)
+ drivers/media/v4l2-core/v4l2-ioctl.c | 33 +++++++++++++++-------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 84c17f936c09..91f2d9219489 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -447,6 +447,8 @@ enum ipmi_stat_indexes {
- 
- #define IPMI_IPMB_NUM_SEQ	64
- struct ipmi_smi {
-+	struct module *owner;
-+
- 	/* What interface number are we? */
- 	int intf_num;
- 
-@@ -1139,6 +1141,11 @@ int ipmi_create_user(unsigned int          if_num,
- 	if (rv)
- 		goto out_kfree;
- 
-+	if (!try_module_get(intf->owner)) {
-+		rv = -ENODEV;
-+		goto out_kfree;
-+	}
-+
- 	/* Note that each existing user holds a refcount to the interface. */
- 	kref_get(&intf->refcount);
- 
-@@ -1269,6 +1276,7 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
- 	}
- 
- 	kref_put(&intf->refcount, intf_free);
-+	module_put(intf->owner);
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index a4d3e94a400c..7675b645db2e 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1415,10 +1415,26 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return ret;
  }
  
- int ipmi_destroy_user(struct ipmi_user *user)
-@@ -2384,7 +2392,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
-  * been recently fetched, this will just use the cached data.  Otherwise
-  * it will run a new fetch.
-  *
-- * Except for the first time this is called (in ipmi_register_smi()),
-+ * Except for the first time this is called (in ipmi_add_smi()),
-  * this will always return good data;
-  */
- static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
-@@ -3304,10 +3312,11 @@ static void redo_bmc_reg(struct work_struct *work)
- 	kref_put(&intf->refcount, intf_free);
- }
- 
--int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
--		      void		       *send_info,
--		      struct device            *si_dev,
--		      unsigned char            slave_addr)
-+int ipmi_add_smi(struct module         *owner,
-+		 const struct ipmi_smi_handlers *handlers,
-+		 void		       *send_info,
-+		 struct device         *si_dev,
-+		 unsigned char         slave_addr)
++static void v4l_pix_format_touch(struct v4l2_pix_format *p)
++{
++	/*
++	 * The v4l2_pix_format structure contains fields that make no sense for
++	 * touch. Set them to default values in this case.
++	 */
++
++	p->field = V4L2_FIELD_NONE;
++	p->colorspace = V4L2_COLORSPACE_RAW;
++	p->flags = 0;
++	p->ycbcr_enc = 0;
++	p->quantization = 0;
++	p->xfer_func = 0;
++}
++
+ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
  {
- 	int              i, j;
- 	int              rv;
-@@ -3333,7 +3342,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
- 		return rv;
- 	}
+ 	struct v4l2_format *p = arg;
++	struct video_device *vfd = video_devdata(file);
+ 	int ret = check_fmt(file, p->type);
  
--
-+	intf->owner = owner;
- 	intf->bmc = &intf->tmp_bmc;
- 	INIT_LIST_HEAD(&intf->bmc->intfs);
- 	mutex_init(&intf->bmc->dyn_mutex);
-@@ -3440,7 +3449,7 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
- 
- 	return rv;
+ 	if (ret)
+@@ -1456,6 +1472,8 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
+ 		/* just in case the driver zeroed it again */
+ 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
++		if (vfd->vfl_type == VFL_TYPE_TOUCH)
++			v4l_pix_format_touch(&p->fmt.pix);
+ 		return ret;
+ 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
+ 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
+@@ -1491,21 +1509,6 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
+ 	return -EINVAL;
  }
--EXPORT_SYMBOL(ipmi_register_smi);
-+EXPORT_SYMBOL(ipmi_add_smi);
  
- static void deliver_smi_err_response(struct ipmi_smi *intf,
- 				     struct ipmi_smi_msg *msg,
-diff --git a/include/linux/ipmi_smi.h b/include/linux/ipmi_smi.h
-index 7d5fd38d5282..1995ce146789 100644
---- a/include/linux/ipmi_smi.h
-+++ b/include/linux/ipmi_smi.h
-@@ -211,10 +211,14 @@ static inline int ipmi_demangle_device_id(uint8_t netfn, uint8_t cmd,
-  * is called, and the lower layer must get the interface from that
-  * call.
-  */
--int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
--		      void                     *send_info,
--		      struct device            *dev,
--		      unsigned char            slave_addr);
-+int ipmi_add_smi(struct module            *owner,
-+		 const struct ipmi_smi_handlers *handlers,
-+		 void                     *send_info,
-+		 struct device            *dev,
-+		 unsigned char            slave_addr);
-+
-+#define ipmi_register_smi(handlers, send_info, dev, slave_addr) \
-+	ipmi_add_smi(THIS_MODULE, handlers, send_info, dev, slave_addr)
- 
- /*
-  * Remove a low-level interface from the IPMI driver.  This will
+-static void v4l_pix_format_touch(struct v4l2_pix_format *p)
+-{
+-	/*
+-	 * The v4l2_pix_format structure contains fields that make no sense for
+-	 * touch. Set them to default values in this case.
+-	 */
+-
+-	p->field = V4L2_FIELD_NONE;
+-	p->colorspace = V4L2_COLORSPACE_RAW;
+-	p->flags = 0;
+-	p->ycbcr_enc = 0;
+-	p->quantization = 0;
+-	p->xfer_func = 0;
+-}
+-
+ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
 -- 
 2.20.1
 
