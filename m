@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EECC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D83C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18A3206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9784D206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577641213;
-	bh=p9hOrNf6ndXsGe6SBR4xfrSHCSiz+e033Ce3mV0k+2Q=;
+	s=default; t=1577641221;
+	bh=Bw3+aSuAoag2j3kzU+Ti1k3Yxe/htlhVQFUQABZt2Pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZR4vJ6N18Wjs2clOFjKo9d/oK1p+H+BiVzuhvM9glrtmS8m3mZxHnUZRGxOs/jyk
-	 WL3az+GeswFSLwsILkREJhtKX6AzBwgtbYuCCJFuWd2VR17KzNBnbBd6X4Ybi9f8FN
-	 vK+5naHfB+cmUd/s6GFSotL7bhpqQTz0Ah1Dp0vA=
+	b=kflOMOskeh77cTK6ZonjBU/PKh7/SoS+TjpojDqWqIOgfdyrdLimJL/LIC/V5nyVC
+	 SyFx9Era03djVaxbmsWMgSTCrbppdL59a0iPVvNxnCfmUBdm2M4p5SOUq71eC3tRGD
+	 p81r6IJIkj5uHGhAEcgElx2wuAEbOYmX9kXWeK7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbfL2RkL (ORCPT
+        id S1730129AbfL2RkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:40:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:40:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729254AbfL2RcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:32:06 -0500
+        id S1728801AbfL2Rb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:31:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46FA20409;
-        Sun, 29 Dec 2019 17:32:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DCAD21744;
+        Sun, 29 Dec 2019 17:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640726;
-        bh=p9hOrNf6ndXsGe6SBR4xfrSHCSiz+e033Ce3mV0k+2Q=;
+        s=default; t=1577640718;
+        bh=Bw3+aSuAoag2j3kzU+Ti1k3Yxe/htlhVQFUQABZt2Pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wYuK2tmfgOAchCpeYq6+3NkhO4cCuq9q+WabM0G+BSj1dROo4kx6yC4qQ/s9p7Te8
-         K5smEe0Rp1tQTQD/+x93F89+ckI75ZZsa7iZROvXlCVnWHpdJIdNzHQsLMur6fXMtk
-         Y73EHjlUYvliTl5kKDrgIPUgmmbvzwD4sukp1oIQ=
+        b=ToV17xg12DvIfjQ0fI2DwYQPXA1xE2WG3UsKodKYMg1gqoIvdxirTO1BlYi6/A8NU
+         5BUEZgDw+ZL0fiNbBOMX0fRP1nRwdiAE4uZ7cXYpjirAJvKg/EBagt5k6Zt5psYkRg
+         yQqxXlbjiVvw3ZUtKpS/MjsFpaGVcIAMgWwx53Cw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/219] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
-Date:   Sun, 29 Dec 2019 18:18:35 +0100
-Message-Id: <20191229162525.747306464@linuxfoundation.org>
+Subject: [PATCH 4.19 110/219] iio: dln2-adc: fix iio_triggered_buffer_postenable() position
+Date:   Sun, 29 Dec 2019 18:18:32 +0100
+Message-Id: <20191229162525.302479149@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
 References: <20191229162508.458551679@linuxfoundation.org>
@@ -61,48 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
+[ Upstream commit a7bddfe2dfce1d8859422124abe1964e0ecd386e ]
 
-The regs pointer in amd_gpio_irq_handler() should have __iomem
-on it, so add that to fix the following sparse warnings:
+The iio_triggered_buffer_postenable() hook should be called first to
+attach the poll function. The iio_triggered_buffer_predisable() hook is
+called last (as is it should).
 
-drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
-drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
-drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
+This change moves iio_triggered_buffer_postenable() to be called first. It
+adds iio_triggered_buffer_predisable() on the error paths of the postenable
+hook.
+For the predisable hook, some code-paths have been changed to make sure
+that the iio_triggered_buffer_predisable() hook gets called in case there
+is an error before it.
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/dln2-adc.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index cd7a5d95b499..b1ffdd3f6d07 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -544,7 +544,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
- 	irqreturn_t ret = IRQ_NONE;
- 	unsigned int i, irqnr;
- 	unsigned long flags;
--	u32 *regs, regval;
-+	u32 __iomem *regs;
-+	u32  regval;
- 	u64 status, mask;
+diff --git a/drivers/iio/adc/dln2-adc.c b/drivers/iio/adc/dln2-adc.c
+index c64c6675cae6..4ab052d76d9f 100644
+--- a/drivers/iio/adc/dln2-adc.c
++++ b/drivers/iio/adc/dln2-adc.c
+@@ -527,6 +527,10 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 	u16 conflict;
+ 	unsigned int trigger_chan;
  
- 	/* Read the wake status */
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret)
++		return ret;
++
+ 	mutex_lock(&dln2->mutex);
+ 
+ 	/* Enable ADC */
+@@ -540,6 +544,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 				(int)conflict);
+ 			ret = -EBUSY;
+ 		}
++		iio_triggered_buffer_predisable(indio_dev);
+ 		return ret;
+ 	}
+ 
+@@ -553,6 +558,7 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 		if (ret < 0) {
+ 			dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
++			iio_triggered_buffer_predisable(indio_dev);
+ 			return ret;
+ 		}
+ 	} else {
+@@ -560,12 +566,12 @@ static int dln2_adc_triggered_buffer_postenable(struct iio_dev *indio_dev)
+ 		mutex_unlock(&dln2->mutex);
+ 	}
+ 
+-	return iio_triggered_buffer_postenable(indio_dev);
++	return 0;
+ }
+ 
+ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ {
+-	int ret;
++	int ret, ret2;
+ 	struct dln2_adc *dln2 = iio_priv(indio_dev);
+ 
+ 	mutex_lock(&dln2->mutex);
+@@ -580,12 +586,14 @@ static int dln2_adc_triggered_buffer_predisable(struct iio_dev *indio_dev)
+ 	ret = dln2_adc_set_port_enabled(dln2, false, NULL);
+ 
+ 	mutex_unlock(&dln2->mutex);
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_dbg(&dln2->pdev->dev, "Problem in %s\n", __func__);
+-		return ret;
+-	}
+ 
+-	return iio_triggered_buffer_predisable(indio_dev);
++	ret2 = iio_triggered_buffer_predisable(indio_dev);
++	if (ret == 0)
++		ret = ret2;
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops dln2_adc_buffer_setup_ops = {
 -- 
 2.20.1
 
