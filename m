@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5705FC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19294C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D67E206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8277206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 18:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577643305;
-	bh=XktTSAd02PzNSs9Fr+ngFpJyUsg0zvuHqJMAgGXLKbU=;
+	s=default; t=1577643313;
+	bh=UdwgVejPLAN2IZCVCqScot8vtG7yZfQSDzRq6PQ1Wis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C16x+w5udKUq9ta/H2iPac6p9ZaKSKEJAMG4Qj63uT2ekbStMdrCRToAX87htYN7z
-	 FYTgyj6AEqLkY209b6Kh2dd8pLKKTv8/WrymY4Pfn5alPrb8PiyDfnobcw2KXY8JXh
-	 UQsqKtyc5CTV9/q5PkozX5pmRjtUfUCfLJBXpWQs=
+	b=iResr0sBY74g1zaEUuDD0uPc1tRt3ja0SPuEOEp4x7SLD6LnpMYYnv7ZO1Nr2ivWr
+	 4XdkiWymMLphbF7z9/ma5G1eisz9wmBcQ4hH66dJkrhn5g27BSZp7aM4U7pyxAhgR8
+	 MdAgatlvCPdH17kOo/4uenuo87yfMXkEgBYyqrnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387885AbfL2SPD (ORCPT
+        id S1728075AbfL2RZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 13:15:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46644 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:25:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbfL2R0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:26:04 -0500
+        id S1727541AbfL2RZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:25:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 199F720409;
-        Sun, 29 Dec 2019 17:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5827921744;
+        Sun, 29 Dec 2019 17:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577640363;
-        bh=XktTSAd02PzNSs9Fr+ngFpJyUsg0zvuHqJMAgGXLKbU=;
+        s=default; t=1577640346;
+        bh=UdwgVejPLAN2IZCVCqScot8vtG7yZfQSDzRq6PQ1Wis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TlnSVbJCrlNaBCUIUsEgcJu6L/ubsHcjBPJb/6NDFLapLrl8RbP5k5xQjjvyUfqop
-         pEstNE5KPb2a0RRKK2KDptGUL+NlXrC4hbc4PVoohygf3QfDFbbaJy1VcnOQx3/8Hv
-         q2sJ9vGy7MK9s7fNmVlrK19Am1aFRz8WZ7YxQ/Ps=
+        b=G9BSx83m0MaqXnXbjRELG6lmgVgCh1oLvwjsT8CtKmdajmwEG3X2tiR9gQUsMfVML
+         MdvxY+V5HbPAaXT6kY/r82dLeU54v885ALUxFgWOCmtaFK0nEXFM3BQ4cDPhl+Dy2N
+         IVhkOyo1rKVonkj2zX9ZCA7NI1JJiff37QRUaA/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/161] loop: fix no-unmap write-zeroes request behavior
-Date:   Sun, 29 Dec 2019 18:18:47 +0100
-Message-Id: <20191229162424.024626860@linuxfoundation.org>
+Subject: [PATCH 4.14 083/161] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
+Date:   Sun, 29 Dec 2019 18:18:51 +0100
+Message-Id: <20191229162424.423636490@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 References: <20191229162355.500086350@linuxfoundation.org>
@@ -61,81 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-[ Upstream commit efcfec579f6139528c9e6925eca2bc4a36da65c6 ]
+[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
 
-Currently, if the loop device receives a WRITE_ZEROES request, it asks
-the underlying filesystem to punch out the range.  This behavior is
-correct if unmapping is allowed.  However, a NOUNMAP request means that
-the caller doesn't want us to free the storage backing the range, so
-punching out the range is incorrect behavior.
+The regs pointer in amd_gpio_irq_handler() should have __iomem
+on it, so add that to fix the following sparse warnings:
 
-To satisfy a NOUNMAP | WRITE_ZEROES request, loop should ask the
-underlying filesystem to FALLOC_FL_ZERO_RANGE, which is (according to
-the fallocate documentation) required to ensure that the entire range is
-backed by real storage, which suffices for our purposes.
+drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
+drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
+drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
+drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
 
-Fixes: 19372e2769179dd ("loop: implement REQ_OP_WRITE_ZEROES")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ drivers/pinctrl/pinctrl-amd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ec61dd873c93..453e3728e657 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -414,18 +414,20 @@ out_free_page:
- 	return ret;
- }
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index b78f42abff2f..7385cd81498c 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -509,7 +509,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
+ 	irqreturn_t ret = IRQ_NONE;
+ 	unsigned int i, irqnr;
+ 	unsigned long flags;
+-	u32 *regs, regval;
++	u32 __iomem *regs;
++	u32  regval;
+ 	u64 status, mask;
  
--static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
-+static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
-+			int mode)
- {
- 	/*
--	 * We use punch hole to reclaim the free space used by the
--	 * image a.k.a. discard. However we do not support discard if
--	 * encryption is enabled, because it may give an attacker
--	 * useful information.
-+	 * We use fallocate to manipulate the space mappings used by the image
-+	 * a.k.a. discard/zerorange. However we do not support this if
-+	 * encryption is enabled, because it may give an attacker useful
-+	 * information.
- 	 */
- 	struct file *file = lo->lo_backing_file;
--	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
- 	int ret;
- 
-+	mode |= FALLOC_FL_KEEP_SIZE;
-+
- 	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
-@@ -565,9 +567,17 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	switch (req_op(rq)) {
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
--	case REQ_OP_DISCARD:
- 	case REQ_OP_WRITE_ZEROES:
--		return lo_discard(lo, rq, pos);
-+		/*
-+		 * If the caller doesn't want deallocation, call zeroout to
-+		 * write zeroes the range.  Otherwise, punch them out.
-+		 */
-+		return lo_fallocate(lo, rq, pos,
-+			(rq->cmd_flags & REQ_NOUNMAP) ?
-+				FALLOC_FL_ZERO_RANGE :
-+				FALLOC_FL_PUNCH_HOLE);
-+	case REQ_OP_DISCARD:
-+		return lo_fallocate(lo, rq, pos, FALLOC_FL_PUNCH_HOLE);
- 	case REQ_OP_WRITE:
- 		if (lo->transfer)
- 			return lo_write_transfer(lo, rq, pos);
+ 	/* Read the wake status */
 -- 
 2.20.1
 
