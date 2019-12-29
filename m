@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A2C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7769CC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A2421744
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D343206DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Dec 2019 17:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577642348;
-	bh=0q8c5ipVUwa36yOLxowJrJaNfF7tA69u9fVKLVZ7p2w=;
+	s=default; t=1577642353;
+	bh=IXQFGs49QTJBj4A+8b5pYvRSDZKzn6S19OIdWP+ZMVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUhbsOnK2fd6rvyPJVdyB0ejNBp+HZm5t1R1SqTFK5hnn0U4oPOZ/aYIBfApLmr5J
-	 48/gc6HI26e1uDOzie2bVAMlWADbOAXRHhq6OtHl0c5KsBsmDYJsx3Xbybx0GmxJWq
-	 FIMaLvpMlJ9kVS7TXaf28h9cLbGkgy15GFUgx2uA=
+	b=0bYfOQ4f0eyVvKgbjmBmhI9ZmYtOX02DHj3nITxf5+zYTE5KEzoKjVToYA3P+wONJ
+	 7bysuYdTKWSldoEBu1jlv3I+GPr3td3gK/MrkqsTGPMn1dsuY2KPIS1A7prd8sd4xR
+	 klSYWaXf6JsyLAg3VLC7xuf/jdNk+dmtRRWBzDxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387674AbfL2R7H (ORCPT
+        id S2387401AbfL2R7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 12:59:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50604 "EHLO mail.kernel.org"
+        Sun, 29 Dec 2019 12:59:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387665AbfL2R7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 12:59:05 -0500
+        id S2387665AbfL2R7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 12:59:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33854222C4;
-        Sun, 29 Dec 2019 17:59:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACC2206DB;
+        Sun, 29 Dec 2019 17:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577642344;
-        bh=0q8c5ipVUwa36yOLxowJrJaNfF7tA69u9fVKLVZ7p2w=;
+        s=default; t=1577642348;
+        bh=IXQFGs49QTJBj4A+8b5pYvRSDZKzn6S19OIdWP+ZMVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ldjUSQmryyK5FdzosQkMfU7stMgAvDL7Zv8IAElAHsl0XdaFIsMVYYn9jIhMwlwIi
-         Wyr7vqNE9Ek7xYMcNt+Dc/SaJlKhbf155OWqQ2fHXRizuYlyy7hnWHVsveON45dHsf
-         NHz6lvTVDl0TOy/byRDm/r6xytams6MUZF/UVJIc=
+        b=DKnX0kNzACRzfT23LGnsX6/JOkt32vq2mV5zcB69/8gLnhT3XFOUJxPTA4FFbo2dB
+         60pW9NYxah9PGn3ktc/oTEoZ8l4unVKNjqdidV716uYSV4i3Y61tMuKYVL0Irxtuna
+         UanOLcE0cNJtmA7jjlRNuMa2Sl2W8ZWfoxFkh/JY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,12 +47,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 032/161] media: i2c: ov2659: Fix missing 720p register config
-Date:   Sun, 29 Dec 2019 18:18:00 +0100
-Message-Id: <20191229162408.192311973@linuxfoundation.org>
+Subject: [PATCH 4.19 042/219] media: i2c: ov2659: Fix missing 720p register config
+Date:   Sun, 29 Dec 2019 18:17:24 +0100
+Message-Id: <20191229162514.491675746@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
-References: <20191229162355.500086350@linuxfoundation.org>
+In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
+References: <20191229162508.458551679@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -84,7 +84,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 04d493aea45e..44b0584eb8a6 100644
+index ca079996c7ce..4b6be3b0fd52 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
 @@ -419,10 +419,14 @@ static struct sensor_register ov2659_720p[] = {
