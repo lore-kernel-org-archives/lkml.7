@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC32C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A72C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA67B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB748208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="kZENiB83"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="hAmoq4Np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfL3CBI (ORCPT
+        id S1726845AbfL3CBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 21:01:08 -0500
-Received: from onstation.org ([52.200.56.107]:37594 "EHLO onstation.org"
+        Sun, 29 Dec 2019 21:01:12 -0500
+Received: from onstation.org ([52.200.56.107]:37582 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbfL3CBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 21:01:07 -0500
+        id S1726343AbfL3CBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:01:08 -0500
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id E0EE13F262;
+        by onstation.org (Postfix) with ESMTPSA id 80B7B3EE7A;
         Mon, 30 Dec 2019 02:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1577671267;
+        s=default; t=1577671266;
         bh=t0PObDLzsPhcqnRoun2t4cn7CK8IaaEUsOLL32hsp+A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZENiB83tEIEqiyvYfxpIm/AUe9rYXindPV5Wc6UPLe9ALgOWZg6dxrxcj10b/Mak
-         eUtBxlHssLnK5FzNqOCzVypYY11Ut1p0uiiTWL1rxxle/dCfv0tHipu1/ikpdbaqMz
-         NZJxJji08Tv2ZcOLQEp33HWAX9RDYlF5m3OousJA=
+        h=From:To:Cc:Subject:Date:From;
+        b=hAmoq4Npmz3/1IQcX+qOctett7tt7TPaPFnCTIYg2L4+yaM0wk7VV2rrH85EtNsy/
+         AlF/nGb/YkJxqKzRKxv+x14HYwOwENwdBDvGfrnT/xnO1FVuXzO3tNN8BoUvAFh83T
+         6pTNrklhEV5bUK409DI2L7LOlxWMvPDu18MuWTfU=
 From:   Brian Masney <masneyb@onstation.org>
 To:     jeffrey.l.hugo@gmail.com, robdclark@gmail.com
 Cc:     freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         sean@poorly.run
 Subject: [PATCH RFC v2] drm/msm/mdp5: enable autorefresh
-Date:   Sun, 29 Dec 2019 21:00:53 -0500
-Message-Id: <20191230020053.26016-2-masneyb@onstation.org>
+Date:   Sun, 29 Dec 2019 21:00:52 -0500
+Message-Id: <20191230020053.26016-1-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191230020053.26016-1-masneyb@onstation.org>
-References: <20191230020053.26016-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
