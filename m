@@ -2,98 +2,140 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA8C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83315C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5094C206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDB72071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577748603;
+	bh=hkEGClyK44JrT1UNYO0jbZ0tX8GcixfZ5o/++Rt06dA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=p06NTlAZ7vf0qXc3h/6UeY7y7AIykljeH462Z2GGc9c3c/cdXuUeW5iWtWGmj5SZ8
+	 acwSXvt2IJTvg0PHp6kJdw02iq2ShVRQY4LqnvWKRov0aWwUaRILXBSkDLtnWFr3NA
+	 ovafg8e6nls0/WvWznOw3eDy6PT5Bdk8ta24MzxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfL3X2m (ORCPT
+        id S1727793AbfL3XaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 18:28:42 -0500
-Received: from mga17.intel.com ([192.55.52.151]:56340 "EHLO mga17.intel.com"
+        Mon, 30 Dec 2019 18:30:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfL3X2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 18:28:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 15:28:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,376,1571727600"; 
-   d="scan'208";a="215899055"
-Received: from fjkilken-mobl.ger.corp.intel.com ([10.252.8.107])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Dec 2019 15:28:37 -0800
-Message-ID: <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
-Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
- has been added to the 5.4-stable tree
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 31 Dec 2019 01:28:36 +0200
-In-Reply-To: <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
-References: <1577122577157232@kroah.com>
-         <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
-         <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
-         <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
-         <20191228151526.GA6971@linux.intel.com>
-         <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
-         <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        id S1727740AbfL3XaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 18:30:02 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145242071E;
+        Mon, 30 Dec 2019 23:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577748601;
+        bh=hkEGClyK44JrT1UNYO0jbZ0tX8GcixfZ5o/++Rt06dA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ycs0qW//qZzwO1So3mRQruBvcezHM66js6X/8OZd6SToAPYp9m01psXAmsP6hHrJ7
+         EZTRcX1E33l/CHkNgCmtXrf5aCczPBaq0ipr5cdJkpTjegaevjTizea1HAV6pZ/B18
+         l5ZsU0wXWXfmtsrkC8WOfzzS/iqXBwfzm8z/FGNI=
+Received: by mail-qt1-f169.google.com with SMTP id d5so30664058qto.0;
+        Mon, 30 Dec 2019 15:30:01 -0800 (PST)
+X-Gm-Message-State: APjAAAUsKpXFIy/abzBCYHMB3pKOs646fmRUT/2KE0tor8BjT07qvVMP
+        w77cy9+JX2uruDlHf7ah4JUwiezaKLNXe1KmKg==
+X-Google-Smtp-Source: APXvYqzUYjO1rBL+O7ItgGLs1LEmveivzL2IGDBLwwnbea0alSFh/xQM2lhdiJtCRqsgvNgGZGkrlHwTkYsjRu3keSk=
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr50575941qtq.143.1577748600241;
+ Mon, 30 Dec 2019 15:30:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
+In-Reply-To: <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Dec 2019 16:29:48 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-12-29 at 23:41 -0800, Dan Williams wrote:
-> This looked like the wrong revert to me, and testing confirms that
-> this does not fix the problem.
-> 
-> As I mentioned in the original report [1] the commit that bisect flagged was:
-> 
->     5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
-> 
-> That commit moved tpm_chip_start() before irq probing. Commit
-> 21df4a8b6018 "tpm_tis: reserve chip for duration of tpm_tis_core_init"
-> does not appear to change anything in that regard.
-> 
-> Perhaps this hardware has always had broken interrupts and needs to be
-> quirked off? I'm trying an experiment with tpm_tis_core.interrupts=0
-> workaround.
-> 
-> 
-> [1]: https://lore.kernel.org/linux-integrity/CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com/
+On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > their compatible strings. The simplest way to convert those to
+> > schema is just add them into the common generic PCI host schema.
+> >
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Andrew Murray <andrew.murray@arm.com>
+> > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: David Daney <david.daney@cavium.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> > index 515b2f9542e5..000000000000
+> > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > +++ /dev/null
+>
+> > -Example:
+> > -
+> > -    pcie1: pcie@7f000000 {
+> > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > -        device_type = "pci";
+> > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > -        bus-range = <0x0 0xe>;
+> > -        #address-cells = <3>;
+> > -        #size-cells = <2>;
+> > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > -
+> > -        #interrupt-cells = <0x1>;
+> > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+>
+> An all-zeroes interrupt-map-mask seems to be very common on embedded
+> SoCs, where all devices are mapped to a single interrupt.
 
-I think for short term, yes, it is better to revert the commits
-that make things more broken.
+Indeed.
 
-for-linus-v5.5-rc5 branch contains three commits that exactly do
-this i.e. the reverts that Stefan sent and revert to Jerry's earlier
-commit.
+> However, schemas/pci/pci-bus.yaml says:
+>
+>   interrupt-map-mask:
+>     items:
+>       - description: PCI high address cell
+>         minimum: 0
+>         maximum: 0xf800
+>       - description: PCI mid address cell
+>         const: 0
+>       - description: PCI low address cell
+>         const: 0
+>       - description: PCI IRQ cell
+>         minimum: 1
+>         maximum: 7
+>
+> and thus complains about an all-zeroes mask, e.g.
+>
+>     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
 
-After that is out of the table it is easier to analyze how the code
-should be actually refactored. Like, I have no idea when I get
-local HW that can reproduce this and Jerry still seems to have the
-same issue. It'd be nice make the exactly right changes instead of
-reverts but situation is what it is.
+Now fixed.
 
-Please check the branch and ACK/NAK if I can add tested-by's (and
-other tags).
-
-/Jarkko
-
+Thanks,
+Rob
