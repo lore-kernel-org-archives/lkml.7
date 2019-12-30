@@ -2,91 +2,107 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A982DC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB2C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68EF420718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7934920718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xz4+oXhJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HOpxi7Be"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfL3Sh1 (ORCPT
+        id S1727632AbfL3Shf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:37:27 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42829 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfL3Sh1 (ORCPT
+        Mon, 30 Dec 2019 13:37:35 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:33424 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfL3Shf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:37:27 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so47206351otd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 10:37:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V5tjxV4Z5VBOgEtDpAINKYzqYZFdNdLpMM9QZ7NDW1w=;
-        b=Xz4+oXhJ+d4SiH2kiUJH6ZVUz4J+nRaBt1frOIR9LOTwNaQVh0jw0zehTlD3QJKreS
-         qpY+oGYucQ4NeolgDl9UNswiTnu9kGnwAbmWCVK2vyVN1aKkbFhm3XbBHuaxDLEHrVXg
-         gspturbBhW7JdcDedahXM21cE+3Rodlo0oozo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=V5tjxV4Z5VBOgEtDpAINKYzqYZFdNdLpMM9QZ7NDW1w=;
-        b=lr/g+tWrJTqmxaihLrgpsaKB2JhoJ0B6uzBY75VI8RhhsMHnsiH7cmNvFaVh2Wfh/j
-         jrfdUKqSsN3ktw4Xf8UJ5/vuGJzqNNda9uFpxq8qnFpZ0r1YZzdhWbc5AdC2WTd5cXxz
-         wl2oDaiISDfzEPEgIbpanVXR+UIBPUtkKdw4p0mBWeIOAT0cJLuYSZTA6wIb8AkAfG75
-         zAYBZV0OLuUNM6NmfQXDCq0UIKib1+MP2SLKxIM//856PnCiHyUMqNTnUv4fzHdCpWFb
-         /9NrfmoL26D2W7dsAn5v4c6BdUqWUVkcXh3uCGNCedFerJT1XQ9N1DN6mKt6B5q2AEv3
-         iLow==
-X-Gm-Message-State: APjAAAWwMBAFcsR2zXfnl9KnyurG7BgYt/zFFVq7cl3qIx7nokbLyu+H
-        cIIHp7QyrOyvk5THc6/aWoktBQ==
-X-Google-Smtp-Source: APXvYqzK3X1+bZ2XHxaA+UWG5GwZHOmNOsmqxOQeG9/UhUvBx5QTgxQ5zPcBhWZod30Abnds18G7SQ==
-X-Received: by 2002:a05:6830:12ce:: with SMTP id a14mr38961071otq.366.1577731046375;
-        Mon, 30 Dec 2019 10:37:26 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p83sm14001032oia.51.2019.12.30.10.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 10:37:25 -0800 (PST)
-Date:   Mon, 30 Dec 2019 10:37:24 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, notify@kernel.org
-Subject: Re: [PATCH v1 1/1] lkdtm/stackleak: Make the stack erasing test more
- verbose
-Message-ID: <201912301034.5C04DC89@keescook>
-References: <20191219145416.435508-1-alex.popov@linux.com>
+        Mon, 30 Dec 2019 13:37:35 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1BB6720B4798;
+        Mon, 30 Dec 2019 10:37:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1BB6720B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1577731054;
+        bh=poXSaoy0MgWUlq8+h6lljwkSbM6p9BtBLLhoUaT8cK8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=HOpxi7BeXrHZKEbX7P3vH8BAwscdv6zPC/2l5Ai+S5GSlTRHguLwZPPB3j6tg05Av
+         fJEYdEzaV/iUDwjs3WSQZrTHb2gOcJ8i2wwYiFp7e4mo5fCoN2uMOX2cjYrcmfAKi8
+         6jriM0oYxedpcSnZMUJSS8RsXEqu+7/R4tYtkprw=
+Subject: Re: [IMA] 11b771ffff:
+ BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        kernel test robot <rong.a.chen@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, lkp@lists.01.org
+References: <20191227142335.GE2760@shao2-debian>
+ <1577725301.5874.32.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <ee98e3a4-8664-ea20-dd9a-eff5edbe8a9e@linux.microsoft.com>
+Date:   Mon, 30 Dec 2019 10:37:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219145416.435508-1-alex.popov@linux.com>
+In-Reply-To: <1577725301.5874.32.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:54:16PM +0300, Alexander Popov wrote:
-> Make the stack erasing test more verbose about the errors that it
-> can detect. BUG() in case of test failure is useful when the test
-> is running in a loop.
+On 12/30/19 9:01 AM, Mimi Zohar wrote:
 
-Hi! I try to keep the "success" conditions for LKDTM tests to be a
-system exception, so doing "BUG" on a failure is actually against the
-design. So, really, a test harness needs to know to check dmesg for the
-results here. It almost looks like this check shouldn't live in LKDTM,
-but since it feels like other LKDTM tests, I'm happy to keep it there
-for now.
+Hi Mimi,
 
-I'll resend my selftests series that adds a real test harness for all
-the LKDTM tests and CC you.
+> Hi Lakshmi,
+> 
+> On Fri, 2019-12-27 at 22:23 +0800, kernel test robot wrote:
+>> [  333.455345] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:281
+>> [  333.457243] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12395, name: userfaultfd
+>> [  333.458888] CPU: 1 PID: 12395 Comm: userfaultfd Not tainted 5.5.0-rc1-00011-g11b771ffff8fc #1
+>> [  333.461096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+>> [  333.463893] Call Trace:
+>> [  333.465287]  <IRQ>
+>> [  333.466351]  dump_stack+0x66/0x8b
+>> [  333.467346]  ___might_sleep+0x102/0x120
+>> [  333.468385]  mutex_lock+0x1c/0x40
+>> [  333.469421]  ima_process_queued_keys+0x24/0x110
+>> [  333.470529]  ? ima_process_queued_keys+0x110/0x110
+>> [  333.471656]  call_timer_fn+0x2d/0x140
+>> [  333.472707]  run_timer_softirq+0x46f/0x4b0
+>> [  333.473752]  ? enqueue_hrtimer+0x39/0xa0
+>> [  333.474780]  __do_softirq+0xe3/0x2f8
+>> [  333.475768]  irq_exit+0xd5/0xe0
+>> [  333.476738]  smp_apic_timer_interrupt+0x74/0x140
+>> [  333.477834]  apic_timer_interrupt+0xf/0x20
+>> [  333.478858]  </IRQ>
+> 
+> I think this is an instance where defining timer_expired as atomic and
+> then testing it using atomic_dec_and_test() would help.  Either the
+> queued keys would be deleted in ima_timer_handler() or measured in
+> ima_process_queued_keys().
+> 
+> Mimi
 
--Kees
+Would it be better to use a spinlock (instead of a mutex) to synchronize 
+access to the queued keys list? That would work for timer callback 
+function also.
 
--- 
-Kees Cook
+Before submitting the patch for freeing the keys I had tested the case 
+where queued keys are freed in timer callback. But I did not hit the 
+above break.
+
+I will follow the steps given by Rong and validate the fix.
+
+thanks,
+  -lakshmi
+
+
