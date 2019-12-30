@@ -2,141 +2,94 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB74C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5850BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852E9206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577727343;
-	bh=YjZsLJP99nDwq2E3J4ovBTUTnTY/uRPMv60bV8MttJk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rS8T/7jWg3tPeNUlnZGC7wfS67J9lnXfrtbP5VlkLROcLHKc/wniR9i4G1dDgaMoQ
-	 FWpddmcicvzRJqY4K36Ncp39RUD1buWJfLilAyN2lSd9JRdv4xSfymb//JB/5TsuS/
-	 KefGL+CBIPBL5/Vcb1hClGRnGkP1AI4/Hc6VM4qA=
+	by mail.kernel.org (Postfix) with ESMTP id 3768920409
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfL3Rfm (ORCPT
+        id S1727479AbfL3RhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40700 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:37:03 -0500
+Received: from muru.com ([72.249.23.125]:49746 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3Rfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:35:42 -0500
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE832080A;
-        Mon, 30 Dec 2019 17:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577727340;
-        bh=YjZsLJP99nDwq2E3J4ovBTUTnTY/uRPMv60bV8MttJk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l2pi99460cTcBY4y9/wxHor/yeLmALERgqd9fiCZPcmgvFQXSUyw1EmP01I5vNlf2
-         3wR6zLvyb6oLzP79GH9JbBWEQggDkypZq1sLy3ZpRX4wBaYtDUAcWqGU1WCXgKxJPN
-         NqKRFP+WOci6rj6qPx03rD6Xog+rEYpJfYIlZmoo=
-Received: by mail-lj1-f170.google.com with SMTP id l2so34003132lja.6;
-        Mon, 30 Dec 2019 09:35:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUibNS1VuQZOP05QOsJMgXT9cX9Irl5M8wf9/hyjmitZn2Zxw0M
-        KLoGJeRe/zEaJwS5rX9UOb33SB+YB1pCykYMoj8=
-X-Google-Smtp-Source: APXvYqx7UTyUxh3G/Zh1ouhGolU28zgq58fP5O3EjtUGcFor7aORmjygYWFwL0U0IdRcWmbTP0VNKmbMEvWbVqGjvJs=
-X-Received: by 2002:a05:651c:106f:: with SMTP id y15mr13370428ljm.63.1577727338476;
- Mon, 30 Dec 2019 09:35:38 -0800 (PST)
+        id S1726602AbfL3RhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:37:03 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 678838027;
+        Mon, 30 Dec 2019 17:37:43 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 09:36:59 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] ARM: OMAP2+: Introduce check for OP-TEE in
+ omap_secure_init()
+Message-ID: <20191230173659.GN35479@atomide.com>
+References: <20191217234745.4434-1-afd@ti.com>
+ <20191217234745.4434-3-afd@ti.com>
+ <20191218005316.GG35479@atomide.com>
+ <f2efedb7-8050-2c16-02d0-a534c00a497e@ti.com>
 MIME-Version: 1.0
-References: <20191230084731.15776-1-yuehaibing@huawei.com>
-In-Reply-To: <20191230084731.15776-1-yuehaibing@huawei.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Tue, 31 Dec 2019 02:35:02 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
-Message-ID: <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
-Subject: Re: [PATCH -next] PM / devfreq: imx8m-ddrc: Fix inconsistent IS_ERR
- and PTR_ERR
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Shawn Guo <shawnguo@kernel.org>, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2efedb7-8050-2c16-02d0-a534c00a497e@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 5:58 PM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fix inconsistent IS_ERR and PTR_ERR in imx8m_ddrc_probe().
-> Detected using Coccinelle.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/devfreq/imx8m-ddrc.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/devfreq/imx8m-ddrc.c b/drivers/devfreq/imx8m-ddrc.c
-> index 53df792..bc82d36 100644
-> --- a/drivers/devfreq/imx8m-ddrc.c
-> +++ b/drivers/devfreq/imx8m-ddrc.c
-> @@ -395,15 +395,27 @@ static int imx8m_ddrc_probe(struct platform_device *pdev)
->         }
->
->         priv->dram_core = devm_clk_get(dev, "core");
-> +       if (IS_ERR(priv->dram_core)) {
-> +               ret = PTR_ERR(priv->dram_core);
-> +               dev_err(dev, "failed to fetch core clock: %d\n", ret);
+* Andrew F. Davis <afd@ti.com> [191218 01:01]:
+> On 12/17/19 7:53 PM, Tony Lindgren wrote:
+> > * Andrew F. Davis <afd@ti.com> [191217 23:48]:
+> >> --- a/arch/arm/mach-omap2/omap-secure.c
+> >> +++ b/arch/arm/mach-omap2/omap-secure.c
+> >> @@ -20,6 +21,18 @@
+> >>  
+> >>  static phys_addr_t omap_secure_memblock_base;
+> >>  
+> >> +bool optee_available;
+> > 
+> > The above can be static bool optee_available?
+> > 
+> >> --- a/arch/arm/mach-omap2/omap-secure.h
+> >> +++ b/arch/arm/mach-omap2/omap-secure.h
+> >> @@ -10,6 +10,8 @@
+> >>  #ifndef OMAP_ARCH_OMAP_SECURE_H
+> >>  #define OMAP_ARCH_OMAP_SECURE_H
+> >>  
+> >> +#include <linux/types.h>
+> >> +
+> >>  /* Monitor error code */
+> >>  #define  API_HAL_RET_VALUE_NS2S_CONVERSION_ERROR	0xFFFFFFFE
+> >>  #define  API_HAL_RET_VALUE_SERVICE_UNKNWON		0xFFFFFFFF
+> >> @@ -72,6 +74,7 @@ extern u32 rx51_secure_dispatcher(u32 idx, u32 process, u32 flag, u32 nargs,
+> >>  extern u32 rx51_secure_update_aux_cr(u32 set_bits, u32 clear_bits);
+> >>  extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
+> >>  
+> >> +extern bool optee_available;
+> >>  void omap_secure_init(void);
+> > 
+> > And then this change should not be needed, right?
+> > 
+> 
+> 
+> I have a staged change I'm about to post that makes use of this flag
+> from outside of omap-secure.c, otherwise I would have left it internal
+> to that file.
+> 
+> I could also have moved the flag in the patch that uses it, but it
+> seemed like an unnecessary change given I know it will be needed here soon.
 
-If there is no special reason, just use 'get' instead of ' fetch' word.
-s/fetch/get
+OK best to post all them together. Or initially just set it static
+as otherwise people reading the patches will wonder about it with
+no user. And all the automated test systems will start sending out
+patches :)
 
-> +               return ret;
-> +       }
->         priv->dram_pll = devm_clk_get(dev, "pll");
-> +       if (IS_ERR(priv->dram_pll)) {
-> +               ret = PTR_ERR(priv->dram_pll);
-> +               dev_err(dev, "failed to fetch pll clock: %d\n", ret);
+Regards,
 
-ditto.
-
-> +               return ret;
-> +       }
->         priv->dram_alt = devm_clk_get(dev, "alt");
-> +       if (IS_ERR(priv->dram_alt)) {
-> +               ret = PTR_ERR(priv->dram_alt);
-> +               dev_err(dev, "failed to fetch alt clock: %d\n", ret);
-
-ditto.
-
-> +               return ret;
-> +       }
->         priv->dram_apb = devm_clk_get(dev, "apb");
-> -       if (IS_ERR(priv->dram_core) ||
-> -               IS_ERR(priv->dram_pll) ||
-> -               IS_ERR(priv->dram_alt) ||
-> -               IS_ERR(priv->dram_apb)) {
-> -               ret = PTR_ERR(priv->devfreq);
-> -               dev_err(dev, "failed to fetch clocks: %d\n", ret);
-> +       if (IS_ERR(priv->dram_apb)) {
-> +               ret = PTR_ERR(priv->dram_apb);
-> +               dev_err(dev, "failed to fetch apb clock: %d\n", ret);
-
-ditto.
-
->                 return ret;
->         }
->
-> --
-> 2.7.4
->
->
-
-
--- 
-Best Regards,
-Chanwoo Choi
+Tony
