@@ -2,100 +2,112 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C49C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11B8C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2C720718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A844820722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bPkQ4RY2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8Al7iwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfL3RTY (ORCPT
+        id S1727426AbfL3RUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:19:24 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:43596 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727207AbfL3RTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:19:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=JZ9rQfX2tOmDDl9S4tJiNghTw2MpHUqrZGdgml1GwI4=; b=bPkQ4RY29qFPhW3hVPQ7pTfeeZ
-        e/mb8oNjSJweJZV+Ub1ilf2+dVnWwYXPL0qOEHlwXBq9fc1Hk1AlUL9qKYvt1JVSadUo4KC9Vapje
-        fgFfcuX/D6X8IPwBuA2QrigzOtSGgOMeshSRbgWOc3FT/4gg4IctjdmG8Hpg7Ge4nq7I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ilyh1-00049n-56; Mon, 30 Dec 2019 18:18:59 +0100
-Date:   Mon, 30 Dec 2019 18:18:59 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next 04/19] net: dsa: tag_ar9331: split out
- common tag accessors
-Message-ID: <20191230171859.GD13569@lunn.ch>
-References: <20191230143028.27313-1-alobakin@dlink.ru>
- <20191230143028.27313-5-alobakin@dlink.ru>
+        Mon, 30 Dec 2019 12:20:01 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40031 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfL3RUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:20:01 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so18546503pfh.7;
+        Mon, 30 Dec 2019 09:20:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UlFJJJhWjCpySX1i9YWrQ8Ne1oHUOP+wJBkv41An8Nk=;
+        b=Z8Al7iwGl5AH7ts4PvItQCjJYRcVryV0vkbSZo3Ydf9d4IN876i4ybRH4R36epAh3Y
+         mYKSSRUnPfO9YxsnBMyKLv0MXUFtp+q2W/i4ZmfYL+yl/dhnaqrnjkYJ/Fln6koFxjtL
+         wx+tLTriR+q3aUB3a8cL5OSih6W7giK/hq+k2U7Z83uZN/qL5tPtnl4rPqm7TUoJ30AT
+         wDz8r5YUOXZ85L/tlUJd4ShpimreLO7o/YA9+xgCr3joqVdWzVN0jSto4+Cem4TIDOjh
+         cBAGdl8rT/DlhUo15b2oY+hdNIDHp5AUgYIiCztw19LO+APRiJi4qjb2616vBsrSUbCc
+         NdMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=UlFJJJhWjCpySX1i9YWrQ8Ne1oHUOP+wJBkv41An8Nk=;
+        b=Boy9QcHB6vjgHwxXhLz2BBdFjvbN3y82i79muNf1iebBeqo+XT/hFkfd8K0IOtuJUU
+         zraF0J4z+8yD45UsEkRHQGfraKlE1QLpbnsVZxv2sJ4+r6M4Jj8ly9Zb+x1RZJumG5zb
+         SuI0yuRnK/X0DGf2y/sJPYqgVWVNvNWChYSRIhG0ylifNfH0yTovQrvn3U/bUBCBJhBn
+         ZLbJqiYP3vXR9NfCB93uEw3qJqPmk3b9a4qstCFzKAl+RoEvvdGoVqN0qVbOxGqFrKNm
+         BObDMW7Rfc0MOIiLvWx7rk9sAQ0gWeSi2jNu2aU8HSWAjxwBbp3Vpyh22Cg2cywFV0GB
+         uOGA==
+X-Gm-Message-State: APjAAAXbVndZoo3gLiupq8obnC0qPZ/MXIYc7KSTrBPKNm2ghBzsy8wd
+        CfKUAZtiyyizx0fQlcqsW84=
+X-Google-Smtp-Source: APXvYqxnoxKo9tL0zU4S+bwpIxmZwv92nH8/6Lj1NxdvBilpWtXC/g8PsKgB8YWJKye/5j6ixjFk/g==
+X-Received: by 2002:a63:2949:: with SMTP id p70mr35141492pgp.191.1577726400698;
+        Mon, 30 Dec 2019 09:20:00 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z29sm51411767pge.21.2019.12.30.09.20.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Dec 2019 09:20:00 -0800 (PST)
+Date:   Mon, 30 Dec 2019 09:19:59 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/219] 4.19.92-stable review
+Message-ID: <20191230171959.GC12958@roeck-us.net>
+References: <20191229162508.458551679@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191230143028.27313-5-alobakin@dlink.ru>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 05:30:12PM +0300, Alexander Lobakin wrote:
-> They will be reused in upcoming GRO callbacks.
-> (Almost) no functional changes except less informative error string.
+On Sun, Dec 29, 2019 at 06:16:42PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.92 release.
+> There are 219 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> ---
->  net/dsa/tag_ar9331.c | 46 +++++++++++++++++++++++++++-----------------
->  1 file changed, 28 insertions(+), 18 deletions(-)
+> Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
-> index 399ca21ec03b..c22c1b515e02 100644
-> --- a/net/dsa/tag_ar9331.c
-> +++ b/net/dsa/tag_ar9331.c
-> @@ -24,6 +24,25 @@
->  #define AR9331_HDR_RESERVED_MASK	GENMASK(5, 4)
->  #define AR9331_HDR_PORT_NUM_MASK	GENMASK(3, 0)
->  
-> +static inline bool ar9331_tag_sanity_check(const u8 *data)
+Build results:
+	total: 156 pass: 141 fail: 15
+Failed builds:
+	i386:tools/perf
+	<all mips>
+	x86_64:tools/perf
+Qemu test results:
+	total: 381 pass: 316 fail: 65
+Failed tests:
+	<all mips>
+	<all ppc64_book3s_defconfig>
 
-Hi Alexander
+perf as with v4.14.y.
 
-Please don't use inline in C files. Leave it to the compiler to
-decide.
+arch/mips/kernel/syscall.c:40:10: fatal error: asm/sync.h: No such file or directory
 
-	Thanks
-		Andrew
+arch/powerpc/include/asm/spinlock.h:56:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_KEY_FALSE’
+and similar errors.
+
+The powerpc build problem is inherited from mainline and has not been fixed
+there as far as I can see. I guess that makes 4.19.y bug-for-bug "compatible"
+with mainline in that regard.
+
+Guenter
