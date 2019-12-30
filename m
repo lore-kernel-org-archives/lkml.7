@@ -2,94 +2,186 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE23C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28805C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390282071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E760B2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EL9pLURo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hF+1q6+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfL3Kpq (ORCPT
+        id S1727395AbfL3Kti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 05:45:46 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:20128 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726196AbfL3Kpq (ORCPT
+        Mon, 30 Dec 2019 05:49:38 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41645 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727273AbfL3Kti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 05:45:46 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBUAiuYh031107;
-        Mon, 30 Dec 2019 04:44:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=VaGdZjmNiXn+e3fOnWQrXgYdyILFsmQJFn+WM/zYtm0=;
- b=EL9pLURoWu6MMb/eWLf4ZX5kFN6ry+j+qQpivxaRJZmWfVwKB7SYbu/+SDoD7CCYrI3u
- qy7MFjCKgsb/wb/oj3XzVlJD4nyyZ1KpT4xTGQrC7GjUFCibux0y0ujB7tfqjdxWH0F5
- 8uMCesle9JyUjxEM3T7yv4lfDCU9E8P23VAF3rJGVn2iiKSRxIhNnTv/87+rKnGfeBCh
- EdqamZxeUWsPo0vAew34N4mFrfM3Df/F4KTTNpVlgUxGYqJptoZyQ33JjABFphhAxsSp
- 1hPeFr00w3ndZLLc0Eu93X+U+UJDpHE2si4sqmqMEk87j34igfVez4i/J9J2pVC0S06w 0Q== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2x65b7a5sm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 30 Dec 2019 04:44:56 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 30 Dec
- 2019 10:44:54 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Mon, 30 Dec 2019 10:44:54 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 55B8E2A1;
-        Mon, 30 Dec 2019 10:44:53 +0000 (UTC)
-Date:   Mon, 30 Dec 2019 10:44:53 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-CC:     <brian.austin@cirrus.com>, <Paul.Handrigan@cirrus.com>,
-        <rf@opensource.cirrus.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: cs47l92: Simplify error handling code in
- 'cs47l92_probe()'
-Message-ID: <20191230104453.GG10451@ediswmail.ad.cirrus.com>
-References: <20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
+        Mon, 30 Dec 2019 05:49:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1577702976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hJa72CmFrQq4gAWpDR2+FRwRpYQu3hnMmC9EZDd2GoY=;
+        b=hF+1q6+3vxI0Q17MyLCmfQhORkqzB4jfKO5uo0TDETUD6YtNy/fLpdM74GweQ1WDLHw3jW
+        FGAmaz8jlln3iZQ4/1r1v62QjgpskQ0UI+CXoChN/5bpo94w1Aa4ObXD3tqp05ydUu8Erc
+        RQmqjcwzqHUTw62Rgu4vV8ePQoiIbpk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-UW4dviq2Pt-WxMvgbk182w-1; Mon, 30 Dec 2019 05:49:33 -0500
+X-MC-Unique: UW4dviq2Pt-WxMvgbk182w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1229F8024CD;
+        Mon, 30 Dec 2019 10:49:31 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-231.pek2.redhat.com [10.72.12.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B37095C1B5;
+        Mon, 30 Dec 2019 10:49:25 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 18:49:21 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dan Williams <dan.j.williams.korg@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+Message-ID: <20191230104921.GA16888@dhcp-128-65.nay.redhat.com>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+ <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+ <CAPcyv4hT9HXN2CqZw96zqgdNaapc=9oqSYvGrnEbeqSmx0t5xw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 clxscore=1011 phishscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912300099
+In-Reply-To: <CAPcyv4hT9HXN2CqZw96zqgdNaapc=9oqSYvGrnEbeqSmx0t5xw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 05:29:07PM +0100, Christophe JAILLET wrote:
-> If 'madera_init_bus_error_irq()' fails,
-> 'wm_adsp2_remove(&cs47l92->core.adsp[0])' will be called twice.
-> Once in the 'if' block, and once in the error handling path.
-> This is harmless, but one of this call can be axed.
+On 12/30/19 at 01:42am, Dan Williams wrote:
+> On Sat, Dec 28, 2019 at 10:13 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
+> > <dan.j.williams.korg@gmail.com> wrote:
+> > >
+> > > On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
+> > > >
+> > > > Michael Weiser reported he got below error during a kexec rebooting:
+> > > > esrt: Unsupported ESRT version 2904149718861218184.
+> > > >
+> > > > The ESRT memory stays in EFI boot services data, and it was reserved
+> > > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > > > is to reuse the EFI boot services data across kexec reboot. For example
+> > > > the BGRT image data and some ESRT memory like Michael reported.
+> > > >
+> > > > But although the memory is reserved it is not updated in X86 e820 table.
+> > > > And kexec_file_load iterate system ram in io resource list to find places
+> > > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > > > initramfs overwritten the ESRT memory and then the failure happened.
+> > > >
+> > > > Since kexec_file_load depends on the e820 to be updated, just fix this
+> > > > by updating the reserved EFI boot services memory as reserved type in e820.
+> > > >
+> > > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> > > > bypassed in the reservation code path because they are assumed as reserved.
+> > > > But the reservation is still needed for multiple kexec reboot.
+> > > > And it is the only possible case we come here thus just drop the code
+> > > > chunk then everything works without side effects.
+> > > >
+> > > > On my machine the ESRT memory sits in an EFI runtime data range, it does
+> > > > not trigger the problem, but I successfully tested with BGRT instead.
+> > > > both kexec_load and kexec_file_load work and kdump works as well.
+> > > >
+> > > > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > > > ---
+> > > >  arch/x86/platform/efi/quirks.c |    6 ++----
+> > > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > > >
+> > > > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> > > > +++ linux-x86/arch/x86/platform/efi/quirks.c
+> > > > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+> > > >                 return;
+> > > >         }
+> > > >
+> > > > -       /* No need to reserve regions that will never be freed. */
+> > > > -       if (md.attribute & EFI_MEMORY_RUNTIME)
+> > > > -               return;
+> > > > -
+> > > >         size += addr % EFI_PAGE_SIZE;
+> > > >         size = round_up(size, EFI_PAGE_SIZE);
+> > > >         addr = round_down(addr, EFI_PAGE_SIZE);
+> > > > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+> > > >         early_memunmap(new, new_size);
+> > > >
+> > > >         efi_memmap_install(new_phys, num_entries);
+> > > > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> > > > +       e820__update_table(e820_table);
+> > > >  }
+> > > >
+> > > >  /*
+> > > >
+> > >
+> > > Bisect says this change (commit af1648984828) is triggering a
+> > > regression, likely not urgent, in my testing of the new efi_fake_mem=
+> > > facility to allow memory to be marked "soft reserved" via the kernel
+> > > command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
+> > > for EFI_MEMORY_SP). The following command line triggers the crash
+> > > signature below:
+> > >
+> > >     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+> > >
+> > > However, this command line works ok:
+> > >
+> > >     efi_fake_mem=8G@9G:0x40000
+> > >
+> > > So, something about multiple efi_fake_mem statements interacts badly
+> > > with this change. Nothing obvious occurs to me at the moment, I'll
+> > > keep debugging, but wanted to highlight this in the meantime in case
+> > > someone else sees a deeper issue or the root cause.
+> >
+> > Still looking, but this failure does not seem to be specific to the
+> > "soft reservation" changes. Any update to the efi memmap that pushes
+> > it over a page boundary triggers this failure. I.e. I can fix the
+> > problem by over-allocating the efi memmap and then page aligning the
+> > result. __early_ioremap "should" be handling this case, but it appears
+> > something else is messing this up.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
+> Found it. Neither this patch nor the soft reservation changes are at
+> fault, they are just helping to trigger a long standing bug in
+> efi_fake_memmap(). Its usage of efi_memmap_split_count() can over
+> count the number of splits needed for new entries. Consider the case
+> of 2 contiguous fake entries intersecting the end of a single entry.
+> The first call to efi_memmap_split_count() determines the resulting
+> split will be (old1, new1, old2), the second call determines (old1,
+> new2). The result is 2 splits when only 1 is needed to get a result of
+> (old1, new1, new2) and the new map ends up with an empty entry.
+> efi_memmap_install() interprets an empty entry as start = 0 end =
+> 0xffffffffffffffff and attempts an extra split / copy past the end of
+> the new map.
+> 
+> I'll send a patch to fix up efi_fake_memmap().
+> 
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cool, I also noticed if two of fake mem used, we only get one md with
+"SP" attribute in print_efi_memmap, that is the root cause.
 
-Thanks,
-Charles
+Thanks
+Dave
+
