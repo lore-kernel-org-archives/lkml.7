@@ -2,333 +2,170 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D987FC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FDDC2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD574207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4899F222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZnJdLw8V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljUmIFIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfL3D07 (ORCPT
+        id S1727114AbfL3D2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 22:26:59 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42839 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfL3D07 (ORCPT
+        Sun, 29 Dec 2019 22:28:17 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46119 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfL3D2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 22:26:59 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so44570606otd.9;
-        Sun, 29 Dec 2019 19:26:58 -0800 (PST)
+        Sun, 29 Dec 2019 22:28:17 -0500
+Received: by mail-il1-f194.google.com with SMTP id t17so26845775ilm.13;
+        Sun, 29 Dec 2019 19:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gv0OLo3Ag/B/dHMfjPCdcXnTNQKEgoSIqR8n6vs8xDY=;
-        b=ZnJdLw8VW4okXcIkq4ESy8hwfHq4ecHya/4fKuK6XkftkXS+vZeNz8jzVKDuAjQgUd
-         2yLZSlugDjwLrUGW4ITrYIGidUsg7q9chApeWDMPJUHeOXBj3l3R64s5srJXrbGMXCHC
-         LcOVr+oHVg4kgxj5UYQh0WLK1EHY4pQo0PKCVmPsZQtQaXnhDKBdWGLwvbxu4bQCi5KI
-         onzBl2OhChp1o6Ifcm9vKoP8EGiXB5XMAEnAgMNZKfVOIOZciDXbkCGQQxZLSyEjDfno
-         rvYP412jZKShdvVPMIQy4ksCNglFOFSGNXWgH3wjkoDzIqd7kcffSpDIHl/0pfFmu52G
-         uC+A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/gSpV16gqUugWiREKjeRqrw8NqwpDXSNtuIvz7v7i9E=;
+        b=ljUmIFIw0TpKNbfOsZzPy0594sjYu/WDS2ogd7eV+SZZ16rOMs8kMTDMp6r6z/HcDC
+         gqeF9js1oULvAa9uPuKoajyItsjEtWIyVR5bWaYyUdJ6TJCtRwzq4+RZVsJAoLwTgmCe
+         ULropm0NWnpv5zpmOeO+HeH1QR+jfN9rvbHK1upIzD+IeCFoYPpaQIq080RnM95H2VwG
+         TqqF12ZBn8tHuciOJ2AXNUyop1HJqJacA0AgEg+pthBgH0U4qE8OnMLggownEhd75RHg
+         8ltU/kKIbQzSd85SF6xHDqt6XgBdTXu0malc/i+gHCoLM+Bkv2aHzp4g+/NbaLl2cqwE
+         2fyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gv0OLo3Ag/B/dHMfjPCdcXnTNQKEgoSIqR8n6vs8xDY=;
-        b=SpoOqrREKbqRNl9Kpaa3HoQ+wnTOIO0Dw55txpEvuaKJoVay5rr5/OEwiloBV1bKb2
-         cZbl1ECsBmBviZoQjF7uDXheq5+0ntJS/MpnanzTvY5ZU9oj8YiGBcAl3gt+yPfRtPT1
-         XcBrGMN0bSZefHVPIAfHDC6I6BOV9laiZ7TG19uRstRZZhiAf2BTwvviSK8uvxVcqa27
-         egNA4PPXeZ9oAqNSLvP/9OM28PTH622YaRSkuB1zBRcv8f5OvVTSU347OzVk8Fwp45D7
-         XbElNZ7Xwpz3YbIFOTzhCADV0QBf5X2xM1pfwZ4yqrfP0E4ih6mnkEUj+SCYztb+xQpv
-         NbXw==
-X-Gm-Message-State: APjAAAXUDaV5ZXWQ4JzNQ6NqcCgk1E8y37dHO1CG1z0b2PdF8X2As0Ss
-        H6xuyMKh1E/e0+fIkgxHVdo=
-X-Google-Smtp-Source: APXvYqzWNAn/97ZpzmT9RQDbeo9S3yjjl1kpH30S3gStTMaZFtgU4rLjI4cCCw+VwlQ1LJ25BWZk7Q==
-X-Received: by 2002:a9d:6481:: with SMTP id g1mr73581601otl.180.1577676417545;
-        Sun, 29 Dec 2019 19:26:57 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id q25sm15294943otf.45.2019.12.29.19.26.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 19:26:56 -0800 (PST)
-Date:   Sun, 29 Dec 2019 20:26:55 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] PM / devfreq: Add debugfs support with devfreq_summary
- file
-Message-ID: <20191230032655.GA40172@ubuntu-m2-xlarge-x86>
-References: <CGME20191226060101epcas1p11a225c00bb7ab2f6b7895b4cb00b9871@epcas1p1.samsung.com>
- <20191226060749.13881-1-cw00.choi@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/gSpV16gqUugWiREKjeRqrw8NqwpDXSNtuIvz7v7i9E=;
+        b=N1I9eg27O08XzFzVQ/o7vFqIKqDyPv8a+JG//EYzmkzl1GT/BStW5HsFjH9t/h/dvO
+         Ynr33qAXVCm2EkRx+7mFaIB4QunFHDZooKAaB2GRPLCwRZgEYabuD9/iDa6XAGD8jNOT
+         0CaAW2yrqgSQyB+pCqLSybuOKHk/dVOUaXv+TJz1ivPjsbODhI6q79fzg6+kN4TS+ZGd
+         9jNXDFS+UK/EzxlCq0kqEqqjhH8iZibpuL7hP1flwjtbBsKleCc+qINdJOmkGZG0xCjP
+         Ld9P8N75LGhLRyNXcMCG73X2BO9oqRTAof+Vr6mI3uVnFeFKbKThrCnBzKnMHB3018BA
+         amTw==
+X-Gm-Message-State: APjAAAWRDPcxlHNtL/BsTBtor7+HF6wsmRCeK7HmLp3NIg5MT/giGjr1
+        8fVy8sJDvXHvN1yGvIaCV1hJtS62TkW8AHumQ/c=
+X-Google-Smtp-Source: APXvYqyQZm4ZquKEMpBoMyD+GpdMoP23S7ymcucZjFHMEh+UdO/8w5BBcW4WhKQqF8cH3yxedUvYcOX8n0XBNCAgQNA=
+X-Received: by 2002:a92:84d1:: with SMTP id y78mr55495168ilk.69.1577676496461;
+ Sun, 29 Dec 2019 19:28:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191226060749.13881-1-cw00.choi@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191121072910.31665-1-bibby.hsieh@mediatek.com> <1575426135.31411.2.camel@mtksdaap41>
+In-Reply-To: <1575426135.31411.2.camel@mtksdaap41>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Sun, 29 Dec 2019 21:28:05 -0600
+Message-ID: <CABb+yY2w_h-weh15hFkGuC-b7XLYrvkT7QVkkj1u6uS99qOnrg@mail.gmail.com>
+Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+On Tue, Dec 3, 2019 at 8:22 PM CK Hu <ck.hu@mediatek.com> wrote:
+>
+> Hi, Jassi:
+>
+> Are mbox_send_message() and mbox_client_txdone() thread-safe? If these
+> two are thread-safe, this bug should be fixed in mailbox core not
+> client.
+>
+mbox_client_txdone should be called only when the client _knows_ the
+message has been sent.
+There is difference between knowing when tx is done, and assuming
+tx-done because there is no way of knowing it.
+Your issue arises because you immediately call mbox_client_txdone
+after mbox_send_message, which may be the only way to do it but that
+doesn't mean you shouldn't have to take any other precautions (like a
+mutex). So I think your patch is reasonable.
 
-On Thu, Dec 26, 2019 at 03:07:49PM +0900, Chanwoo Choi wrote:
-> Add debugfs interface to provide debugging information of devfreq device.
-> It contains 'devfreq_summary' entry to show the summary of registered
-> devfreq devices as following: And the additional debugfs file will be added.
-> - /sys/kernel/debug/devfreq/devfreq_summary
-> 
-> [For example on Exynos5422-based Odroid-XU3 board]
-> - In order to show the multiple governors on devfreq_summay result,
-> change the governor of devfreq0 from simple_ondemand to userspace.
-> 
-> $ cat /sys/kernel/debug/devfreq/devfreq_summary
-> dev name                       dev        parent dev governor        cur_freq     min_freq     max_freq
-> ------------------------------ ---------- ---------- --------------- ------------ ------------ ------------
-> 10c20000.memory-controller     devfreq0              userspace       165000000    165000000    825000000
-> soc:bus_wcore                  devfreq1              simple_ondemand 400000000    84000000     400000000
-> soc:bus_noc                    devfreq2   devfreq1   passive         100000000    67000000     100000000
-> soc:bus_fsys_apb               devfreq3   devfreq1   passive         200000000    100000000    200000000
-> soc:bus_fsys                   devfreq4   devfreq1   passive         200000000    100000000    200000000
-> soc:bus_fsys2                  devfreq5   devfreq1   passive         150000000    75000000     150000000
-> soc:bus_mfc                    devfreq6   devfreq1   passive         333000000    96000000     333000000
-> soc:bus_gen                    devfreq7   devfreq1   passive         267000000    89000000     267000000
-> soc:bus_peri                   devfreq8   devfreq1   passive         67000000     67000000     67000000
-> soc:bus_g2d                    devfreq9   devfreq1   passive         333000000    84000000     333000000
-> soc:bus_g2d_acp                devfreq10  devfreq1   passive         267000000    67000000     267000000
-> soc:bus_jpeg                   devfreq11  devfreq1   passive         300000000    75000000     300000000
-> soc:bus_jpeg_apb               devfreq12  devfreq1   passive         167000000    84000000     167000000
-> soc:bus_disp1_fimd             devfreq13  devfreq1   passive         200000000    120000000    200000000
-> soc:bus_disp1                  devfreq14  devfreq1   passive         300000000    120000000    300000000
-> soc:bus_gscl_scaler            devfreq15  devfreq1   passive         300000000    150000000    300000000
-> soc:bus_mscl                   devfreq16  devfreq1   passive         400000000    84000000     400000000
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/devfreq/devfreq.c | 65 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
-> 
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index acd21345a070..d7177cc0a914 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/kmod.h>
->  #include <linux/sched.h>
-> +#include <linux/debugfs.h>
->  #include <linux/errno.h>
->  #include <linux/err.h>
->  #include <linux/init.h>
-> @@ -33,6 +34,7 @@
->  #define HZ_PER_KHZ	1000
->  
->  static struct class *devfreq_class;
-> +static struct dentry *devfreq_debugfs;
->  
->  /*
->   * devfreq core provides delayed work based load monitoring helper
-> @@ -1670,6 +1672,62 @@ static struct attribute *devfreq_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(devfreq);
->  
-> +static int devfreq_summary_show(struct seq_file *s, void *data)
-> +{
-> +	struct devfreq *devfreq;
-> +	struct devfreq *parent_devfreq;
-> +	unsigned long cur_freq, min_freq, max_freq;
-> +
-> +	seq_printf(s, "%-30s %-10s %-10s %-15s %-12s %-12s %-12s\n",
-> +			"dev name",
-> +			"dev",
-> +			"parent dev",
-> +			"governor",
-> +			"cur_freq",
-> +			"min_freq",
-> +			"max_freq");
-> +	seq_printf(s, "%-30s %-10s %-10s %-15s %-12s %-12s %-12s\n",
-> +			"------------------------------",
-> +			"----------",
-> +			"----------",
-> +			"---------------",
-> +			"------------",
-> +			"------------",
-> +			"------------");
-> +
-> +	mutex_lock(&devfreq_list_lock);
-> +
+Cheers!
 
-The 0day team has been doing builds with Clang and it pointed out that
-when CONFIG_DEVFREQ_GOV_PASSIVE is unset, parent_devfreq is always
-uninitialized. The else branch should probably be eliminated, moving the
-parent_devfreq NULL initialization above the if preprocessor directive.
 
-The full report is below.
-
-> +	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
-> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
-> +		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
-> +							DEVFREQ_NAME_LEN)) {
-> +			struct devfreq_passive_data *data = devfreq->data;
-> +			parent_devfreq = data->parent;
-> +		} else {
-> +			parent_devfreq = NULL;
-> +		}
-> +#endif
-> +		mutex_lock(&devfreq->lock);
-> +		cur_freq = devfreq->previous_freq,
-> +		get_freq_range(devfreq, &min_freq, &max_freq);
-> +		mutex_unlock(&devfreq->lock);
-> +
-> +		seq_printf(s, "%-30s %-10s %-10s %-15s %-12ld %-12ld %-12ld\n",
-> +			dev_name(devfreq->dev.parent),
-> +			dev_name(&devfreq->dev),
-> +			parent_devfreq ? dev_name(&parent_devfreq->dev) : "",
-> +			devfreq->governor_name,
-> +			cur_freq,
-> +			min_freq,
-> +			max_freq);
-> +	}
-> +
-> +	mutex_unlock(&devfreq_list_lock);
-> +
-> +	return 0;
-> +}
-> +DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
-> +
->  static int __init devfreq_init(void)
->  {
->  	devfreq_class = class_create(THIS_MODULE, "devfreq");
-> @@ -1686,6 +1744,13 @@ static int __init devfreq_init(void)
->  	}
->  	devfreq_class->dev_groups = devfreq_groups;
->  
-> +	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
-> +	if (PTR_ERR(devfreq_debugfs) != -ENODEV && IS_ERR(devfreq_debugfs))
-> +		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
-> +
-> +	debugfs_create_file("devfreq_summary", 0444, devfreq_debugfs, NULL,
-> +			&devfreq_summary_fops);
-> +
->  	return 0;
->  }
->  subsys_initcall(devfreq_init);
-> -- 
-> 2.17.1
-> 
-
-Cheers,
-Nathan
-
-On Thu, Dec 26, 2019 at 11:47:26PM +0800, kbuild test robot wrote:
-> CC: kbuild-all@lists.01.org
-> In-Reply-To: <20191226060749.13881-1-cw00.choi@samsung.com>
-> References: <20191226060749.13881-1-cw00.choi@samsung.com>
-> TO: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-> Hi Chanwoo,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on linux/master]
-> [also build test WARNING on linus/master v5.5-rc3 next-20191220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Chanwoo-Choi/PM-devfreq-Add-debugfs-support-with-devfreq_summary-file/20191226-140227
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 1522d9da40bdfe502c91163e6d769332897201fa
-> config: arm64-defconfig (attached as .config)
-> compiler: clang version 10.0.0 (git://gitmirror/llvm_project c5b4a2386b51a18daad7e42040c685c2e9708c47)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> drivers/devfreq/devfreq.c:1653:4: warning: variable 'parent_devfreq' is uninitialized when used here [-Wuninitialized]
->                            parent_devfreq ? dev_name(&parent_devfreq->dev) : "",
->                            ^~~~~~~~~~~~~~
->    drivers/devfreq/devfreq.c:1613:32: note: initialize the variable 'parent_devfreq' to silence this warning
->            struct devfreq *parent_devfreq;
->                                          ^
->                                           = NULL
->    1 warning generated.
-> 
-> vim +/parent_devfreq +1653 drivers/devfreq/devfreq.c
-> 
->   1609	
->   1610	static int devfreq_summary_show(struct seq_file *s, void *data)
->   1611	{
->   1612		struct devfreq *devfreq;
->   1613		struct devfreq *parent_devfreq;
->   1614		unsigned long cur_freq, min_freq, max_freq;
->   1615	
->   1616		seq_printf(s, "%-30s %-10s %-10s %-15s %-12s %-12s %-12s\n",
->   1617				"dev name",
->   1618				"dev",
->   1619				"parent dev",
->   1620				"governor",
->   1621				"cur_freq",
->   1622				"min_freq",
->   1623				"max_freq");
->   1624		seq_printf(s, "%-30s %-10s %-10s %-15s %-12s %-12s %-12s\n",
->   1625				"------------------------------",
->   1626				"----------",
->   1627				"----------",
->   1628				"---------------",
->   1629				"------------",
->   1630				"------------",
->   1631				"------------");
->   1632	
->   1633		mutex_lock(&devfreq_list_lock);
->   1634	
->   1635		list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
->   1636	#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
->   1637			if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
->   1638								DEVFREQ_NAME_LEN)) {
->   1639				struct devfreq_passive_data *data = devfreq->data;
->   1640				parent_devfreq = data->parent;
->   1641			} else {
->   1642				parent_devfreq = NULL;
->   1643			}
->   1644	#endif
->   1645			mutex_lock(&devfreq->lock);
->   1646			cur_freq = devfreq->previous_freq,
->   1647			get_freq_range(devfreq, &min_freq, &max_freq);
->   1648			mutex_unlock(&devfreq->lock);
->   1649	
->   1650			seq_printf(s, "%-30s %-10s %-10s %-15s %-12ld %-12ld %-12ld\n",
->   1651				dev_name(devfreq->dev.parent),
->   1652				dev_name(&devfreq->dev),
-> > 1653				parent_devfreq ? dev_name(&parent_devfreq->dev) : "",
->   1654				devfreq->governor_name,
->   1655				cur_freq,
->   1656				min_freq,
->   1657				max_freq);
->   1658		}
->   1659	
->   1660		mutex_unlock(&devfreq_list_lock);
->   1661	
->   1662		return 0;
->   1663	}
->   1664	DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
->   1665	
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
-> 
+> Regards,
+> CK
+>
+> On Thu, 2019-11-21 at 15:29 +0800, Bibby Hsieh wrote:
+> > If cmdq client is multi thread user, racing will occur without mutex
+> > protection. It will make the C message queued in mailbox's queue
+> > always need D message's triggering.
+> >
+> > Thread A              Thread B                  Thread C              Thread D...
+> > -----------------------------------------------------------------------------------
+> > mbox_send_message()
+> >       send_data()
+> >                       mbox_send_message()
+> >                               *exit
+> >                                               mbox_send_message()
+> >                                                       *exit
+> > mbox_client_txdone()
+> >       tx_tick()
+> >                       mbox_client_txdone()
+> >                               tx_tick()
+> >                                               mbox_client_txdone()
+> >                                                       tx_tick()
+> > msg_submit()
+> >       send_data()
+> >                       msg_submit()
+> >                               *exit
+> >                                               msg_submit()
+> >                                                       *exit
+> > -----------------------------------------------------------------------------------
+> >
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-cmdq-helper.c | 3 +++
+> >  include/linux/soc/mediatek/mtk-cmdq.h  | 1 +
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > index 9add0fd5fa6c..9e35e0beffaa 100644
+> > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> > @@ -81,6 +81,7 @@ struct cmdq_client *cmdq_mbox_create(struct device *dev, int index, u32 timeout)
+> >       client->client.dev = dev;
+> >       client->client.tx_block = false;
+> >       client->chan = mbox_request_channel(&client->client, index);
+> > +     mutex_init(&client->mutex);
+> >
+> >       if (IS_ERR(client->chan)) {
+> >               long err;
+> > @@ -352,9 +353,11 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+> >               spin_unlock_irqrestore(&client->lock, flags);
+> >       }
+> >
+> > +     mutex_lock(&client->mutex);
+> >       mbox_send_message(client->chan, pkt);
+> >       /* We can send next packet immediately, so just call txdone. */
+> >       mbox_client_txdone(client->chan, 0);
+> > +     mutex_unlock(&client->mutex);
+> >
+> >       return 0;
+> >  }
+> > diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> > index a74c1d5acdf3..0f9071cd1bc7 100644
+> > --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> > +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> > @@ -28,6 +28,7 @@ struct cmdq_client {
+> >       struct mbox_chan *chan;
+> >       struct timer_list timer;
+> >       u32 timeout_ms; /* in unit of microsecond */
+> > +     struct mutex mutex;
+> >  };
+> >
+> >  /**
+>
