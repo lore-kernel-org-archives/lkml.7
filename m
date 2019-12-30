@@ -2,183 +2,138 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5040C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EA1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC95720748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577705713;
-	bh=QKU7xtg9IqCroRyvnlTaHMwmUkCBJh1IpUAaXTG61iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rq6+pD5r8egy1aFJSFibnxPQ4r0uOrDBeOKaVNl8ryPt3KXjl0Nj8BKiGGxglGuwT
-	 VrVpkxPAdrV8E+Pei+tsEsbBb3dtfGz9tqstNuYbCtAQl1Ue86oBsnQXPlDN8NW1zh
-	 Ld95ixKfE9DB5QlgkcrCy69j0AnC+5cQkXT7HVIc=
+	by mail.kernel.org (Postfix) with ESMTP id 7E2C02053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:38:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ns+rP4Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbfL3LfM (ORCPT
+        id S1727422AbfL3LiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:35:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727360AbfL3LfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:35:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D5A020730;
-        Mon, 30 Dec 2019 11:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577705711;
-        bh=QKU7xtg9IqCroRyvnlTaHMwmUkCBJh1IpUAaXTG61iQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xT10yX44m3TOmg1MwuSGFVwhbx4vye0AOu2P5QSDm9JRW1GQZ1AuPhXwdxzFcGE/O
-         OjxLlN+FFDBUAKZEo4fA8cjPHOK+dH9N2+Fm+2dpSZh2FW16O+1S3JMpDuhnxb1E1t
-         jkaKRtqlOcSwsKDTYXzmz3xl6V4N+X6gTMKjreCg=
-Date:   Mon, 30 Dec 2019 12:35:09 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 245/434] perf probe: Fix to list probe event with
- correct line number
-Message-ID: <20191230113509.GC884080@kroah.com>
-References: <20191229172702.393141737@linuxfoundation.org>
- <20191229172718.158972713@linuxfoundation.org>
- <689591f8-0798-af22-9a04-4a1e6e894a55@mageia.org>
- <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
+        Mon, 30 Dec 2019 06:38:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39069 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727360AbfL3LiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 06:38:12 -0500
+Received: by mail-pj1-f65.google.com with SMTP id t101so8002470pjb.4;
+        Mon, 30 Dec 2019 03:38:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7tN8NHVmrJCTvrrpZgXxHZpysazYrwt+KadAqQsHV5U=;
+        b=Ns+rP4IuNRUJAP762je65CGdKWLekPf4wnP889zHIQWMY9D6rth3sTzSgjYkpkKqqJ
+         eH+z64YldjNV5Qve5fGNAdTSABq5VwP3sAw5oNKlrZuwhLRK2kq8ZODtYEh7SHx6mKrF
+         gR6l/2bEoHm652gOgHbuXpVbhC1gpea5wAtnt1N/6bW2yOWpHgUXTYaKydBTlIG4RBAO
+         bEHBhqmZY8Q213jaapaJ4h872svMF2AG59ku/4fF4KfuJ+jYNP3f2JozL3OG5KnhDNyP
+         GDW2Ml567St1bDpcBjSTfli9D2BM1QGuG3vmbFglTWO0cqbe4h5N4VxwVOEMi4ubuAFh
+         9Vig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7tN8NHVmrJCTvrrpZgXxHZpysazYrwt+KadAqQsHV5U=;
+        b=B2f9wcilxuOrUmt4t54P+RKTxRHb2dPGflL1mglPrkXsR7oiH4Lk+7Zg+brUt6zzhA
+         7hUZEwsoppl5S23lYbDueGIDJqr4JZA0DY1SqEomAZq/BTWi2Cg5xEN3ABxIeG4R9grt
+         Ca895aX/G7BGw/JqdyzjEJ1PPOM69VjJnGmh8riGiLVlRf8kDKvP8Fsdj7c+JPYxb+JS
+         K1PpTEY4ew2Vj7cfEf6flbJx452KO+JHMQfcyn07TpjDfzHupSThMtyPJCknLXRiQ4eT
+         RR3ZwVYauxVzkLR7iQC8r4tEb+VQNrS4Gld/6/z/Q7A6CrqUxPgO0Dx089K+9U+MuXiT
+         Sy1g==
+X-Gm-Message-State: APjAAAW98wnF/lyrq8CrKInph24hJRwAMfdVL7A1D2J7Jqv3WgsiVySv
+        wyTvjM9WXg5zkqGNdZ49nAU=
+X-Google-Smtp-Source: APXvYqyTy2nruOpPgn+4FkAiKeFgIA4KffVM1veiTtjOzt1w4kBl8GC0nReV66pW9kkFuZwYv6cTEQ==
+X-Received: by 2002:a17:902:b498:: with SMTP id y24mr15742781plr.97.1577705891527;
+        Mon, 30 Dec 2019 03:38:11 -0800 (PST)
+Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
+        by smtp.gmail.com with ESMTPSA id t137sm47038069pgb.40.2019.12.30.03.38.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 03:38:11 -0800 (PST)
+From:   Ben Chuang <benchuanggli@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.chuang@genesyslogic.com.tw, greg.tu@genesyslogic.com.tw,
+        Ben Chuang <benchuanggli@gmail.com>
+Subject: [RFC,PATCH 0/6] Add support UHS-II for GL9755
+Date:   Mon, 30 Dec 2019 19:37:51 +0800
+Message-Id: <20191230113751.37852-1-benchuanggli@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 01:00:14AM +0200, Thomas Backlund wrote:
-> Den 29-12-2019 kl. 20:42, skrev Thomas Backlund:
-> > Den 29-12-2019 kl. 19:24, skrev Greg Kroah-Hartman:
-> > > From: Masami Hiramatsu <mhiramat@kernel.org>
-> > > 
-> > > [ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
-> > > 
-> > > Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-> > > entry address of the function on which a probe is, it will fail when the
-> > > function DIE has only ranges attribute.
-> > > 
-> > > To fix this issue, use die_entrypc() instead of dwarf_entrypc().
-> > > 
-> > > Without this fix, perf probe -l shows incorrect offset:
-> > > 
-> > >    # perf probe -l
-> > >      probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
-> > > 
-> > >      probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
-> > > 
-> > > 
-> > > With this:
-> > > 
-> > >    # perf probe -l
-> > >      probe:clear_tasks_mm_cpumask (on
-> > > clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-> > >      probe:clear_tasks_mm_cpumask_1 (on
-> > > clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-> > > 
-> > > Committer testing:
-> > > 
-> > > Before:
-> > > 
-> > >    [root@quaco ~]# perf probe -l
-> > >      probe:clear_tasks_mm_cpumask (on
-> > > clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-> > >    [root@quaco ~]#
-> > > 
-> > > After:
-> > > 
-> > >    [root@quaco ~]# perf probe -l
-> > >      probe:clear_tasks_mm_cpumask (on
-> > > clear_tasks_mm_cpumask@kernel/cpu.c)
-> > >    [root@quaco ~]#
-> > > 
-> > > Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number
-> > > with inline function")
-> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Cc: Jiri Olsa <jolsa@redhat.com>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
-> > > 
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > ---
-> > >   tools/perf/util/probe-finder.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/probe-finder.c
-> > > b/tools/perf/util/probe-finder.c
-> > > index cd9f95e5044e..7c8d30fb2b99 100644
-> > > --- a/tools/perf/util/probe-finder.c
-> > > +++ b/tools/perf/util/probe-finder.c
-> > > @@ -1578,7 +1578,7 @@ int debuginfo__find_probe_point(struct
-> > > debuginfo *dbg, unsigned long addr,
-> > >           /* Get function entry information */
-> > >           func = basefunc = dwarf_diename(&spdie);
-> > >           if (!func ||
-> > > -            dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-> > > +            die_entrypc(&spdie, &baseaddr) != 0 ||
-> > >               dwarf_decl_line(&spdie, &baseline) != 0) {
-> > >               lineno = 0;
-> > >               goto post;
-> > > @@ -1595,7 +1595,7 @@ int debuginfo__find_probe_point(struct
-> > > debuginfo *dbg, unsigned long addr,
-> > >           while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
-> > >                           &indie)) {
-> > >               /* There is an inline function */
-> > > -            if (dwarf_entrypc(&indie, &_addr) == 0 &&
-> > > +            if (die_entrypc(&indie, &_addr) == 0 &&
-> > >                   _addr == addr) {
-> > >                   /*
-> > >                    * addr is at an inline function entry.
-> > > 
-> > 
-> > 
-> > still broken
-> > 
-> > /usr/bin/ld: perf-in.o: in function `debuginfo__find_probe_point':
-> > /work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/probe-finder.c:1616:
-> > undefined reference to `die_entrypc'
-> > 
-> 
-> 
-> And the fix for the perf build errors I reported against:
-> [PATCH 5.4 245/434] perf probe: Fix to list probe event with correct line
-> number
-> [PATCH 5.4 248/434] perf probe: Fix to probe an inline function which has no
-> entry pc
-> [PATCH 5.4 249/434] perf probe: Fix to show ranges of variables in functions
-> without entry_pc
-> [PATCH 5.4 250/434] perf probe: Fix to show inlined function callsite
-> without entry_pc
-> [PATCH 5.4 252/434] perf probe: Fix to probe a function which has no entry
-> pc
-> 
-> is to add the missing:
-> 
-> From 91e2f539eeda26ab00bd03fae8dc434c128c85ed Mon Sep 17 00:00:00 2001
-> From: Masami Hiramatsu <mhiramat@kernel.org>
-> Date: Thu, 24 Oct 2019 18:12:54 +0900
-> Subject: [PATCH] perf probe: Fix to show function entry line as probe-able
+Hi Ulf and Adrian,
 
-Thanks for this, now queued up.
+These patches support UHS-II and fix GL9755 UHS-II compatibility.
 
-greg k-h
+The parts of UHS-II are based on [1][2] and porting to Linux 5.4 kernel.
+I have seen that Ulf comment that splitting the UHS-II parts into smaller
+patches. Other than splitting into small patches, could you give me some 
+suggestions for refactoring/splitting files?
+
+Best regards,
+Ben
+
+References:
+1. [RFC,1/2] mmc: core: support UHS-II in core stack.
+   (https://patchwork.kernel.org/patch/5544441/)
+2. [RFC,2/2] mmc: sdhci: support UHS-II in SDHCI host. 
+   (https://patchwork.kernel.org/patch/5544451/)
+
+Ben Chuang (6):
+  mmc: Add UHS-II support in public headers
+  mmc: core: Add UHS-II support in core layer
+  mmc: host: Add UHS-II support in host layer
+  mmc: uhs2: Introduce a uhs2_post_attach_sd function
+  mmc: sdhci-uhs2: Introduce a uhs2_pre_detec_init function
+  mmc: sdhci-pci-gli: Fix power/reset/ZC/timeout for GL9755 UHS-II mode
+
+ drivers/mmc/core/Makefile                  |   3 +-
+ drivers/mmc/core/block.c                   |   7 +-
+ drivers/mmc/core/bus.c                     |   5 +-
+ drivers/mmc/core/core.c                    |  65 +-
+ drivers/mmc/core/core.h                    |   3 +-
+ drivers/mmc/core/regulator.c               |  14 +
+ drivers/mmc/core/sd.c                      |  60 +-
+ drivers/mmc/core/sd_ops.c                  |  12 +
+ drivers/mmc/core/sdio_bus.c                |   2 +-
+ drivers/mmc/core/uhs2.c                    | 995 +++++++++++++++++++++
+ drivers/mmc/core/uhs2.h                    |  23 +
+ drivers/mmc/host/Makefile                  |   1 +
+ drivers/mmc/host/{sdhci.c => sdhci-core.c} | 285 +++++-
+ drivers/mmc/host/sdhci-of-arasan.c         |   4 +-
+ drivers/mmc/host/sdhci-of-at91.c           |   6 +-
+ drivers/mmc/host/sdhci-omap.c              |   2 +-
+ drivers/mmc/host/sdhci-pci-core.c          |   4 +-
+ drivers/mmc/host/sdhci-pci-gli.c           | 361 +++++++-
+ drivers/mmc/host/sdhci-pxav3.c             |   4 +-
+ drivers/mmc/host/sdhci-uhs2.c              | 754 ++++++++++++++++
+ drivers/mmc/host/sdhci-uhs2.h              |  34 +
+ drivers/mmc/host/sdhci-xenon.c             |   4 +-
+ drivers/mmc/host/sdhci.h                   | 286 +++++-
+ drivers/mmc/host/sdhci_am654.c             |   4 +-
+ include/linux/mmc/card.h                   |   2 +
+ include/linux/mmc/core.h                   |   6 +
+ include/linux/mmc/host.h                   |  31 +
+ include/linux/mmc/uhs2.h                   | 270 ++++++
+ 28 files changed, 3161 insertions(+), 86 deletions(-)
+ create mode 100644 drivers/mmc/core/uhs2.c
+ create mode 100644 drivers/mmc/core/uhs2.h
+ rename drivers/mmc/host/{sdhci.c => sdhci-core.c} (94%)
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.c
+ create mode 100644 drivers/mmc/host/sdhci-uhs2.h
+ create mode 100644 include/linux/mmc/uhs2.h
+
+-- 
+2.24.1
+
