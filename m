@@ -2,166 +2,116 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC35C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB1C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37D320718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z35wHsyi"
+	by mail.kernel.org (Postfix) with ESMTP id 3A1D220718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577724571;
+	bh=H+Xixm/5Bouk1S1r30r0nDOhxrKrI3dSi6dVwniIfPA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=etXzEim83fRkfWZABknMb8jFYV5oawebvdMI5l4UuXDIfucufno3VSEPbsf2fNWn0
+	 yge5X1UlFT6dL2rr7PRmZ5NtVMEeQonStkB+QZrRrA/1PvT8ad/CAf6u5/eDHCOTca
+	 MG29t767Zz6+T6seCrhuLLDNglN/q4RiCM4Aq6YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfL3Qek (ORCPT
+        id S1727236AbfL3Qta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:34:40 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:44617 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfL3Qek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 11:34:40 -0500
-Received: by mail-yb1-f193.google.com with SMTP id f136so11151293ybg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 08:34:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=SifrDRNuZI7FjGGbJzx9F32WU6UCkJPUxer3u46pdDA=;
-        b=Z35wHsyiNpP4RlEFRxabnN4fXuzsizFg+xlvkcOZWkAsXoTppdGT9xoMcEjd35huJZ
-         C+hvSJHTfqVcN2b9qaIV1hXlT4/TU+yvw9AUYGQZGO79zuSBnUZucz/PCzoXHgI/u+Gu
-         IJdQXOcSS6EqM4JMh5sqBPNcNtOVXjbgqOg++zxGi6CeTA8p3KtYcE4Flzmx7krRbxPm
-         PqI/5HdBPZWZgmE2lBdoKJHsWhfTAwKJgY+ys/KiEbJJmKtVL2TT3M0CaDYQGmRtMqmO
-         DdYf/Ll4VMGVqNemtm5z5+pe31O+TD+fX68R4GK253AQ1p1vvPrzLEz+CQx50ywHiovl
-         lcCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=SifrDRNuZI7FjGGbJzx9F32WU6UCkJPUxer3u46pdDA=;
-        b=Q4XOk6/3bruPQPV28s9VZzOKAtCFUbwXs4HoQGZhjP0TiisbVFTuDf4PyzZAMVU3+4
-         ngPRpAfrPwUmehVqLl/k6l3fkHhf99xQR2QlEaCQqz+K3IuHY1qGTFMwuxC82aEdJldc
-         rPINo6JQ/peks9fuOWwh9ra34qyz1sUqY2OXUu/PY/WKGYea61ditzOBUCGTm7C97OvG
-         mqaFtjImH9S4oyvLcQ/He9Tmq5n6UZmesk0pYlHllt0N/BYIot/YWuU/dQdUi8ubGuLS
-         fa5k7rTIQKvJwTe7DQ5D9WPQa/3JkZhJ8E1Nj/x19usEE03K+oYNQYGfJMj8no6liMEp
-         Wh+A==
-X-Gm-Message-State: APjAAAWjUJgkvdYINxknpe0VeP4RXsQGrrypf65AjkqGlFskdK8ODMv/
-        JnZtE/uAbexRjRZhO0vqMuwfA57Hvpg=
-X-Google-Smtp-Source: APXvYqwVL1AGDxGOv9b+LmFFMDFhX73etoc+MAkFLDhsbdHVxQtSeRdSsqK9QQx6kco1isCoQm4JnQ==
-X-Received: by 2002:a5b:38d:: with SMTP id k13mr23670721ybp.147.1577723679224;
-        Mon, 30 Dec 2019 08:34:39 -0800 (PST)
-Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
-        by smtp.gmail.com with ESMTPSA id a189sm18679079ywh.92.2019.12.30.08.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 08:34:38 -0800 (PST)
-Date:   Mon, 30 Dec 2019 10:34:37 -0600
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
-Message-ID: <20191230163437.sz4mb5gh7ed2htfa@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-References: <20191229172702.393141737@linuxfoundation.org>
+        Mon, 30 Dec 2019 11:49:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726675AbfL3Qt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 11:49:29 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764EE206DB;
+        Mon, 30 Dec 2019 16:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577724569;
+        bh=H+Xixm/5Bouk1S1r30r0nDOhxrKrI3dSi6dVwniIfPA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X2vKkENQGmNJ7gM4pmz1GLNmrsusKX4AjWYghZtheyg5mVfDKF42eR1lC+d3i82vZ
+         GeBZHw85LSJxrUTdVwSYWZaxg8FofUsTBJz/JiEuCAQ+Br7aH1yNCtf5EkIt0mb9Ea
+         bm/j858Q6l+eWAuF7MD8XoTHMU+KFzBFI87arGCI=
+Date:   Mon, 30 Dec 2019 16:49:24 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: light: vcnl4000: Fix scale for vcnl4040
+Message-ID: <20191230164924.42614610@archlinux>
+In-Reply-To: <6adc62445cac7d16e4688aea905dc1c9cc128488.1577442112.git.agx@sigxcpu.org>
+References: <6adc62445cac7d16e4688aea905dc1c9cc128488.1577442112.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 06:20:53PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.7 release.
-> There are 434 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, 27 Dec 2019 11:22:54 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> According to the data sheet the ambient sensor's scale is 0.12 lux/step
+> (not 0.024 lux/step as used by vcnl4200) when the integration time is
+> 80ms. The integration time is currently hardcoded in the driver to that
+> value.
+>=20
+> See p. 8 in https://www.vishay.com/docs/84307/designingvcnl4040.pdf
+>=20
+> Fixes: 5a441aade5b3 ("light: vcnl4000 add support for the VCNL4040 proxim=
+ity and light sensor")
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Applied to the fixes-togreg branch of iio.git.
 
-Summary
-------------------------------------------------------------------------
+Thanks,
 
-kernel: 5.4.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.4.y
-git commit: 6bc086f94af53b930b413d3cc85fe11061b4a0a2
-git describe: v5.4.6-436-g6bc086f94af5
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.6-436-g6bc086f94af5
+Jonathan
 
+> ---
+>  drivers/iio/light/vcnl4000.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 16dacea9eadf..b0e241aaefb4 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -163,7 +163,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	data->al_scale =3D 24000;
+>  	data->vcnl4200_al.reg =3D VCNL4200_AL_DATA;
+>  	data->vcnl4200_ps.reg =3D VCNL4200_PS_DATA;
+>  	switch (id) {
+> @@ -172,11 +171,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
+>  		/* show 54ms in total. */
+>  		data->vcnl4200_al.sampling_rate =3D ktime_set(0, 54000 * 1000);
+>  		data->vcnl4200_ps.sampling_rate =3D ktime_set(0, 4200 * 1000);
+> +		data->al_scale =3D 24000;
+>  		break;
+>  	case VCNL4040_PROD_ID:
+>  		/* Integration time is 80ms, add 10ms. */
+>  		data->vcnl4200_al.sampling_rate =3D ktime_set(0, 100000 * 1000);
+>  		data->vcnl4200_ps.sampling_rate =3D ktime_set(0, 100000 * 1000);
+> +		data->al_scale =3D 120000;
+>  		break;
+>  	}
+>  	data->vcnl4200_al.last_measurement =3D ktime_set(0, 0);
 
-No regressions (compared to build v5.4.6)
-
-No fixes (compared to build v5.4.6)
-
-Ran 22880 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
