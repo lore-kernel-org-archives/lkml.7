@@ -2,121 +2,184 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB2BC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE6C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F85207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:02:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Q2umEATI"
+	by mail.kernel.org (Postfix) with ESMTP id DB17420748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfL3CCp (ORCPT
+        id S1726729AbfL3CGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 21:02:45 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58322 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726343AbfL3CCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 21:02:45 -0500
-X-UUID: 631568d282b346eea7c344ff6a4ca3f7-20191230
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=zs3wqU0/rTaxSd+jOFQHg8yAjxKsG5qsZDhljNgTpew=;
-        b=Q2umEATIEYiHqozWXZcwK0YOuRDfKw2mUSzZs4rA/HI7fGWtJhA/xeiNU7BDRolk8Cp8JwVIVE5Tmpo1MZ3P3OLVSxAO8qT7ossqzs8D0W0iLTreYRsorvTl8iCNEu7GHRzr4JUD5FLMx47En8ecJ7TssN9/wjdG89XbgB2ws9g=;
-X-UUID: 631568d282b346eea7c344ff6a4ca3f7-20191230
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1006649543; Mon, 30 Dec 2019 10:02:42 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Dec 2019 10:02:18 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Dec 2019 10:03:03 +0800
-Message-ID: <1577671361.8160.2.camel@mtksdaap41>
-Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Date:   Mon, 30 Dec 2019 10:02:41 +0800
-In-Reply-To: <1575426135.31411.2.camel@mtksdaap41>
-References: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
-         <1575426135.31411.2.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 29 Dec 2019 21:06:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:50803 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726343AbfL3CGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:06:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Dec 2019 18:06:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,373,1571727600"; 
+   d="scan'208";a="213197253"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 29 Dec 2019 18:06:22 -0800
+Received: from [10.226.38.14] (unknown [10.226.38.14])
+        by linux.intel.com (Postfix) with ESMTP id 57AEB5803C5;
+        Sun, 29 Dec 2019 18:06:20 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] spi: cadence-quadpsi: Add support for the Cadence
+ QSPI controller
+To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
+Cc:     kbuild-all@lists.01.org, broonie@kernel.org, vigneshr@ti.com,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20191229174947.GB3889@kadam>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <f2531392-e0de-5f22-805e-5f46af30bef3@linux.intel.com>
+Date:   Mon, 30 Dec 2019 10:06:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191229174947.GB3889@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEphc3NpOg0KDQpQaW5nIGFnYWluLg0KDQpBcmUgbWJveF9zZW5kX21lc3NhZ2UoKSBhbmQg
-bWJveF9jbGllbnRfdHhkb25lKCkgdGhyZWFkLXNhZmU/IElmIHRoZXNlDQp0d28gYXJlIHRocmVh
-ZC1zYWZlLCB0aGlzIGJ1ZyBzaG91bGQgYmUgZml4ZWQgaW4gbWFpbGJveCBjb3JlIG5vdA0KY2xp
-ZW50Lg0KDQpSZWdhcmRzLA0KQ0sNCg0KT24gV2VkLCAyMDE5LTEyLTA0IGF0IDEwOjIyICswODAw
-LCBDSyBIdSB3cm90ZToNCj4gSGksIEphc3NpOg0KPiANCj4gQXJlIG1ib3hfc2VuZF9tZXNzYWdl
-KCkgYW5kIG1ib3hfY2xpZW50X3R4ZG9uZSgpIHRocmVhZC1zYWZlPyBJZiB0aGVzZQ0KPiB0d28g
-YXJlIHRocmVhZC1zYWZlLCB0aGlzIGJ1ZyBzaG91bGQgYmUgZml4ZWQgaW4gbWFpbGJveCBjb3Jl
-IG5vdA0KPiBjbGllbnQuDQo+IA0KPiBSZWdhcmRzLA0KPiBDSw0KPiANCj4gT24gVGh1LCAyMDE5
-LTExLTIxIGF0IDE1OjI5ICswODAwLCBCaWJieSBIc2llaCB3cm90ZToNCj4gPiBJZiBjbWRxIGNs
-aWVudCBpcyBtdWx0aSB0aHJlYWQgdXNlciwgcmFjaW5nIHdpbGwgb2NjdXIgd2l0aG91dCBtdXRl
-eA0KPiA+IHByb3RlY3Rpb24uIEl0IHdpbGwgbWFrZSB0aGUgQyBtZXNzYWdlIHF1ZXVlZCBpbiBt
-YWlsYm94J3MgcXVldWUNCj4gPiBhbHdheXMgbmVlZCBEIG1lc3NhZ2UncyB0cmlnZ2VyaW5nLg0K
-PiA+IA0KPiA+IFRocmVhZCBBCQlUaHJlYWQgQgkJICBUaHJlYWQgQwkJVGhyZWFkIEQuLi4NCj4g
-PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IG1ib3hfc2VuZF9tZXNzYWdlKCkNCj4g
-PiAJc2VuZF9kYXRhKCkNCj4gPiAJCQltYm94X3NlbmRfbWVzc2FnZSgpDQo+ID4gCQkJCSpleGl0
-DQo+ID4gCQkJCQkJbWJveF9zZW5kX21lc3NhZ2UoKQ0KPiA+IAkJCQkJCQkqZXhpdA0KPiA+IG1i
-b3hfY2xpZW50X3R4ZG9uZSgpDQo+ID4gCXR4X3RpY2soKQ0KPiA+IAkJCW1ib3hfY2xpZW50X3R4
-ZG9uZSgpDQo+ID4gCQkJCXR4X3RpY2soKQ0KPiA+IAkJCQkJCW1ib3hfY2xpZW50X3R4ZG9uZSgp
-DQo+ID4gCQkJCQkJCXR4X3RpY2soKQ0KPiA+IG1zZ19zdWJtaXQoKQ0KPiA+IAlzZW5kX2RhdGEo
-KQ0KPiA+IAkJCW1zZ19zdWJtaXQoKQ0KPiA+IAkJCQkqZXhpdA0KPiA+IAkJCQkJCW1zZ19zdWJt
-aXQoKQ0KPiA+IAkJCQkJCQkqZXhpdA0KPiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVr
-LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
-LmMgfCAzICsrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oICB8
-IDEgKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZl
-cnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gaW5kZXggOWFkZDBmZDVmYTZj
-Li45ZTM1ZTBiZWZmYWEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEtaGVscGVyLmMNCj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1o
-ZWxwZXIuYw0KPiA+IEBAIC04MSw2ICs4MSw3IEBAIHN0cnVjdCBjbWRxX2NsaWVudCAqY21kcV9t
-Ym94X2NyZWF0ZShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpbmRleCwgdTMyIHRpbWVvdXQpDQo+
-ID4gIAljbGllbnQtPmNsaWVudC5kZXYgPSBkZXY7DQo+ID4gIAljbGllbnQtPmNsaWVudC50eF9i
-bG9jayA9IGZhbHNlOw0KPiA+ICAJY2xpZW50LT5jaGFuID0gbWJveF9yZXF1ZXN0X2NoYW5uZWwo
-JmNsaWVudC0+Y2xpZW50LCBpbmRleCk7DQo+ID4gKwltdXRleF9pbml0KCZjbGllbnQtPm11dGV4
-KTsNCj4gPiAgDQo+ID4gIAlpZiAoSVNfRVJSKGNsaWVudC0+Y2hhbikpIHsNCj4gPiAgCQlsb25n
-IGVycjsNCj4gPiBAQCAtMzUyLDkgKzM1MywxMSBAQCBpbnQgY21kcV9wa3RfZmx1c2hfYXN5bmMo
-c3RydWN0IGNtZHFfcGt0ICpwa3QsIGNtZHFfYXN5bmNfZmx1c2hfY2IgY2IsDQo+ID4gIAkJc3Bp
-bl91bmxvY2tfaXJxcmVzdG9yZSgmY2xpZW50LT5sb2NrLCBmbGFncyk7DQo+ID4gIAl9DQo+ID4g
-IA0KPiA+ICsJbXV0ZXhfbG9jaygmY2xpZW50LT5tdXRleCk7DQo+ID4gIAltYm94X3NlbmRfbWVz
-c2FnZShjbGllbnQtPmNoYW4sIHBrdCk7DQo+ID4gIAkvKiBXZSBjYW4gc2VuZCBuZXh0IHBhY2tl
-dCBpbW1lZGlhdGVseSwgc28ganVzdCBjYWxsIHR4ZG9uZS4gKi8NCj4gPiAgCW1ib3hfY2xpZW50
-X3R4ZG9uZShjbGllbnQtPmNoYW4sIDApOw0KPiA+ICsJbXV0ZXhfdW5sb2NrKCZjbGllbnQtPm11
-dGV4KTsNCj4gPiAgDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oIGIvaW5jbHVkZS9saW51eC9zb2Mv
-bWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+IGluZGV4IGE3NGMxZDVhY2RmMy4uMGY5MDcxY2QxYmM3
-IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgN
-Cj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gQEAg
-LTI4LDYgKzI4LDcgQEAgc3RydWN0IGNtZHFfY2xpZW50IHsNCj4gPiAgCXN0cnVjdCBtYm94X2No
-YW4gKmNoYW47DQo+ID4gIAlzdHJ1Y3QgdGltZXJfbGlzdCB0aW1lcjsNCj4gPiAgCXUzMiB0aW1l
-b3V0X21zOyAvKiBpbiB1bml0IG9mIG1pY3Jvc2Vjb25kICovDQo+ID4gKwlzdHJ1Y3QgbXV0ZXgg
-bXV0ZXg7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICAvKioNCj4gDQoNCg==
+Hi,
 
+On 30/12/2019 1:49 AM, Dan Carpenter wrote:
+> Hi "Ramuthevar,Vadivel,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on spi/for-next]
+> [cannot apply to v5.5-rc3 next-20191219]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Ramuthevar-Vadivel-MuruganX/spi-cadence-quadpsi-Add-support-for-the-Cadence-QSPI-controller/20191226-152805
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Thanks for the review,  kernel base : 5.5-rc1 since the maintainer tree 
+also the same.
+> smatch warnings:
+> drivers/spi/spi-cadence-quadspi.c:412 cqspi_read_execute() warn: if statement not indented
+> drivers/spi/spi-cadence-quadspi.c:1015 cqspi_probe() error: we previously assumed 'pdata' could be null (see line 1004)
+sure, will fix it.
+---
+With Best Regards
+Vadivel Murugan
+> # https://github.com/0day-ci/linux/commit/7d7e98888a40e593dcd442db83b53d92980c036f
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout 7d7e98888a40e593dcd442db83b53d92980c036f
+> vim +412 drivers/spi/spi-cadence-quadspi.c
+>
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  381  static int cqspi_read_execute(struct struct_cqspi *cqspi,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  382  			      const struct spi_mem_op *op, u8 *rxbuf)
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  383  {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  384  	struct platform_device *pdev = cqspi->pdev;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  385  	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  386  	void *reg_base = cqspi->iobase;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  387  	void *ahb_base = cqspi->qspi_ahb_virt;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  388  	u32 rxlen = op->data.nbytes;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  389  	u8 *rxbuf_end = rxbuf + rxlen;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  390  	u32 mod_bytes = rxlen % 4;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  391  	u32 bytes_to_read = 0;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  392  	int remaining = op->data.nbytes;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  393  	unsigned long timeout;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  394  	int ret;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  395
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  396  	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  397
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  398  	mb();/* flush previous writes */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  399
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  400  	writel(pdata->fifo_depth - CQSPI_REG_SRAM_RESV_WORDS,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  401  	       reg_base + CQSPI_REG_SRAMPARTITION);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  402  	/* Clear all interrupts. */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  403  	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  404  	writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  405
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  406  	reinit_completion(&cqspi->transfer_complete);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  407  	writel(CQSPI_REG_INDIRECTRD_START_MASK,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  408  	       reg_base + CQSPI_REG_INDIRECTRD);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  409
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  410  	timeout = msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  411  	while (remaining > 0) {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26 @412  		if (!wait_for_completion_timeout(&cqspi->transfer_complete,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  413  						 timeout))
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  414  		ret = -ETIMEDOUT;
+>
+> This should be indented and "return -ETIMEDOUT;" or a break or
+> something?
+>
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  415
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  416  		bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  417
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  418  		while (bytes_to_read != 0) {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  419  			unsigned int word_remain = round_down(remaining, 4);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  420
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  421  			bytes_to_read *= CQSPI_FIFO_WIDTH;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  422  			bytes_to_read = bytes_to_read > remaining ?
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  423  						remaining : bytes_to_read;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  424  			bytes_to_read = round_down(bytes_to_read, 4);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  425  			if (bytes_to_read) {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  426  				ioread32_rep(ahb_base, rxbuf,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  427  					     (bytes_to_read / 4));
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  428  			} else if (!word_remain && mod_bytes) {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  429  				unsigned int temp = ioread32(ahb_base);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  430
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  431  				bytes_to_read = mod_bytes;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  432  				memcpy(rxbuf, &temp, min((unsigned int)
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  433  				       (rxbuf_end - rxbuf), bytes_to_read));
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  434  			}
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  435
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  436  			rxbuf += bytes_to_read;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  437  			remaining -= bytes_to_read;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  438  			bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  439  		}
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  440
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  441  		if (remaining < 0)
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  442  			reinit_completion(&cqspi->transfer_complete);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  443  	}
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  444
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  445  	/* Check indirect done status */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  446  	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  447  				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  448  	if (ret) {
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  449  		dev_err(&pdev->dev,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  450  			"Indirect read completion error (%i)\n", ret);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  451  		goto failrd;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  452  	}
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  453
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  454  	/* Disable interrupt */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  455  	writel(0, reg_base + CQSPI_REG_IRQMASK);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  456  	/* Clear indirect completion status */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  457  	writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base + CQSPI_REG_INDIRECTRD);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  458
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  459  	return 0;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  460  failrd:
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  461  	/* Disable interrupt */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  462  	writel(0, reg_base + CQSPI_REG_IRQMASK);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  463  	/* Cancel the indirect read */
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  464  	writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  465  	       reg_base + CQSPI_REG_INDIRECTRD);
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  466  	return ret;
+> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  467  }
+>
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
