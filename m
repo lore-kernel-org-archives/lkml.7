@@ -2,99 +2,269 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60B6C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD1CC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797A320722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37E920722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="miQbznhX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVOC/J42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbfL3SnX (ORCPT
+        id S1727650AbfL3SoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:43:23 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40943 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfL3SnX (ORCPT
+        Mon, 30 Dec 2019 13:44:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41522 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfL3SoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:43:23 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c77so10889590oib.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 10:43:22 -0800 (PST)
+        Mon, 30 Dec 2019 13:44:12 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so33468177wrw.8;
+        Mon, 30 Dec 2019 10:44:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0adwBdSRSa0FPlcHU/hDxd1UBJTeWDvsTu8kZ2SuRTE=;
-        b=miQbznhXk4hpJLs9TcBUiYHUMqvyBjkzSpnTZ/iMbNqkp3pk8S0SXEYs64hBCJ+Sr7
-         sXpKy0oPmtnQD08YMpJc3AdzAGrQ8OyyBzMVjAocsuaSrzYLGLgI63lFnojCFn7PhF76
-         GP6X/TpOvGbiKF8fUbGuazgouU5seKq+5aaRc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aEXa88L0kRuP5gotOzXyyrfFcAc/gBTFiuKfEoutSbA=;
+        b=jVOC/J42X6gqNNYzqn6CchuFXLSAJvvZYCAnKWiusvr2AjnN+RG4RIL9vzIeOO8yVL
+         bdQY04CeLVt5R4NPgpxBMgb3bsaIp/Mbb8NPvAX9fAgb8bGwbd8G8mRRWtTsCl/nVPfV
+         JWDPsLRIOgeBemIYZoXPTnXVPzq9hYbnKz+aB8FXYu55olH3y+o+VmQvuQubR7IQpMhk
+         OG5fBqYKoN1iXuRolm67s/VUp4IQaFuiWo/TtLEYT9KvDOfWc3LjrbPeSRj4JCBsFWzJ
+         xZdR8+oXaam1o6yevuW7mKbHcW0kXfbu+uJ98QC7+KMrJ35TWPDPHOkWFYlDjD2Dhqow
+         0GGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0adwBdSRSa0FPlcHU/hDxd1UBJTeWDvsTu8kZ2SuRTE=;
-        b=VsN8BH+N9Wz03mO2123q2E77W5aLJL4YN3lH4ePKY/57cJksL39eKHUjWghgjHNLCh
-         lBXzXPT4fKuwbSJWGknPJw3meEIra1N17uTmLOZlOKY9lJPHdEHIh2XBDyeS06RkDdbK
-         qxNlfzBiKvQ1/uLk3j7jLQRq/IJUdGCPvNWEapEVP1I9CjqeWsiZQ30lnc3DimNG15t0
-         Z2PWAqIN63qQ7CydQijRTYeELoOgZSLb/Hdxja2iOAUXXMVk/GHfjsq7ZicMERnt2XmS
-         iRhpMV5yihgmNYOOe4B2+BD3sImNDJwgwDrGGtt4uI6D2II2DXVJV920SNFelhicDg30
-         S32Q==
-X-Gm-Message-State: APjAAAW47h+0I9x4+kKfBsdoFmdZvSXtWtqxR1WTkGWkq7wnCP2lISFv
-        xWFvirgJQOavJa5RpNzp/JcVJ3erJxA=
-X-Google-Smtp-Source: APXvYqzRxZzmCKgfcf8udIzsEWn6j042rNmANRxWEQ+IbB9IZGOyjs3aXur4H2Y3DdUM9DtVY8FeVQ==
-X-Received: by 2002:aca:33d5:: with SMTP id z204mr233710oiz.120.1577731402330;
-        Mon, 30 Dec 2019 10:43:22 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 17sm15966152oty.48.2019.12.30.10.43.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aEXa88L0kRuP5gotOzXyyrfFcAc/gBTFiuKfEoutSbA=;
+        b=SX4abnawRRgpD8abXTtqYcmxgFhur3VSPv2DA49FTW7wKwDMbGle8hP54pOZ7aYour
+         780cftKdJkVTf7jgwheQrq9v6hzp179wYJvjKpSPTagTFVO0e++p34epCcBK6CzoYpfF
+         sVVcite6bE/T+rEGrXXgBtCLW8dZvj5Eq0mh1q2YaiOx7+0RPW5ifxWiIlWMTNwGKEh4
+         xKuyooqBvWmSQswDlx6JJ2quduus1FWtrhqwSPcvw2evYAlnKK0qSBf/MVst0w1TasMT
+         V7Ov4pLGcNHCc8hMnxUGN5xh5tsNiNbeyg4DNnFyiiUGArRAvADoNjP7wVo9FwdZtbLg
+         Fc5w==
+X-Gm-Message-State: APjAAAU6Mb0lNrmBrxc4OCfyoxxVvuqXKCs6pge0iC98/9leS0dt0Mvy
+        xKG2blqV1QcR37LtCZq21HnUWUFG
+X-Google-Smtp-Source: APXvYqzTveRQa/61w63Vzt39bwhFzs296eXFxp28ecmRDGkQUGGqMdlOb+0Ck7QADkwI2944QtMUPQ==
+X-Received: by 2002:a5d:6ac5:: with SMTP id u5mr68008926wrw.271.1577731450020;
+        Mon, 30 Dec 2019 10:44:10 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b137sm260692wme.26.2019.12.30.10.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 10:43:21 -0800 (PST)
-Date:   Mon, 30 Dec 2019 10:43:20 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
- functions
-Message-ID: <201912301042.FB806E1133@keescook>
-References: <20191226152922.2034-1-ebiggers@kernel.org>
- <20191228114918.GU2827@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191228114918.GU2827@hirez.programming.kicks-ass.net>
+        Mon, 30 Dec 2019 10:44:09 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     alobakin@dlink.ru, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support)
+Subject: [RFC net-next] net: dsa: Remove indirect function call for flow dissection
+Date:   Mon, 30 Dec 2019 10:44:00 -0800
+Message-Id: <20191230184402.9455-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 12:49:18PM +0100, Peter Zijlstra wrote:
-> On Thu, Dec 26, 2019 at 09:29:22AM -0600, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Wrap refcount_dec_and_lock() and refcount_dec_and_lock_irqsave() with
-> > macros using __cond_lock() so that 'sparse' doesn't report warnings
-> > about unbalanced locking when using them.
-> > 
-> > This is the same thing that's done for their atomic_t equivalents.
-> > 
-> > Don't annotate refcount_dec_and_mutex_lock(), because mutexes don't
-> > currently have sparse annotations.
-> 
-> I so f'ing hate that __cond_lock() crap. Previously I've suggested
-> fixing sparse instead of making such an atrocious trainwreck of the
-> code.
+We only need "static" information to be given for DSA flow dissection,
+replace the call to .flow_dissect() with an unsigned integer given us
+the offset into the packet that we must de-reference to obtain the
+protocol number.
 
-Ew, I never noticed these before. That is pretty ugly. Can't __acquire()
-be used directly in the functions instead of building the nasty
-wrappers?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Alexander,
 
+This should probably require us to fix all DSA taggers to provide a
+valid proto_off otherwise we would be incorrectly dissecting a flow, but
+that still sounds like an improvement to me.
+
+Thanks!
+
+ include/net/dsa.h         |  3 +--
+ net/core/flow_dissector.c | 13 ++++++++-----
+ net/dsa/tag_dsa.c         | 10 +---------
+ net/dsa/tag_edsa.c        | 10 +---------
+ net/dsa/tag_mtk.c         | 11 +----------
+ net/dsa/tag_qca.c         | 11 +----------
+ 6 files changed, 13 insertions(+), 45 deletions(-)
+
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 6767dc3f66c0..8e3e1fa06d75 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -70,14 +70,13 @@ struct dsa_device_ops {
+ 	struct sk_buff *(*xmit)(struct sk_buff *skb, struct net_device *dev);
+ 	struct sk_buff *(*rcv)(struct sk_buff *skb, struct net_device *dev,
+ 			       struct packet_type *pt);
+-	int (*flow_dissect)(const struct sk_buff *skb, __be16 *proto,
+-			    int *offset);
+ 	/* Used to determine which traffic should match the DSA filter in
+ 	 * eth_type_trans, and which, if any, should bypass it and be processed
+ 	 * as regular on the master net device.
+ 	 */
+ 	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
+ 	unsigned int overhead;
++	unsigned int proto_off;
+ 	const char *name;
+ 	enum dsa_tag_protocol proto;
+ };
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c
+index d524a693e00f..9037ebdddac1 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -972,13 +972,16 @@ bool __skb_flow_dissect(const struct net *net,
+ 		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev) &&
+ 			     proto == htons(ETH_P_XDSA))) {
+ 			const struct dsa_device_ops *ops;
+-			int offset = 0;
++			unsigned int overhead;
++			unsigned int proto_off;
+ 
+ 			ops = skb->dev->dsa_ptr->tag_ops;
+-			if (ops->flow_dissect &&
+-			    !ops->flow_dissect(skb, &proto, &offset)) {
+-				hlen -= offset;
+-				nhoff += offset;
++			overhead = ops->overhead;
++			proto_off = ops->proto_off;
++			if (overhead && likely(proto_off < skb->len)) {
++				hlen -= overhead;
++				nhoff += overhead;
++				proto = ((__be16 *)skb->data)[proto_off];
+ 			}
+ 		}
+ #endif
+diff --git a/net/dsa/tag_dsa.c b/net/dsa/tag_dsa.c
+index 7ddec9794477..4a970e959fef 100644
+--- a/net/dsa/tag_dsa.c
++++ b/net/dsa/tag_dsa.c
+@@ -142,21 +142,13 @@ static struct sk_buff *dsa_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	return skb;
+ }
+ 
+-static int dsa_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+-				int *offset)
+-{
+-	*offset = 4;
+-	*proto = ((__be16 *)skb->data)[1];
+-	return 0;
+-}
+-
+ static const struct dsa_device_ops dsa_netdev_ops = {
+ 	.name	= "dsa",
+ 	.proto	= DSA_TAG_PROTO_DSA,
+ 	.xmit	= dsa_xmit,
+ 	.rcv	= dsa_rcv,
+-	.flow_dissect   = dsa_tag_flow_dissect,
+ 	.overhead = DSA_HLEN,
++	.proto_off = 1,
+ };
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/net/dsa/tag_edsa.c b/net/dsa/tag_edsa.c
+index e8eaa804ccb9..c7cb0df17287 100644
+--- a/net/dsa/tag_edsa.c
++++ b/net/dsa/tag_edsa.c
+@@ -161,21 +161,13 @@ static struct sk_buff *edsa_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	return skb;
+ }
+ 
+-static int edsa_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+-				 int *offset)
+-{
+-	*offset = 8;
+-	*proto = ((__be16 *)skb->data)[3];
+-	return 0;
+-}
+-
+ static const struct dsa_device_ops edsa_netdev_ops = {
+ 	.name	= "edsa",
+ 	.proto	= DSA_TAG_PROTO_EDSA,
+ 	.xmit	= edsa_xmit,
+ 	.rcv	= edsa_rcv,
+-	.flow_dissect   = edsa_tag_flow_dissect,
+ 	.overhead = EDSA_HLEN,
++	.proto_off = 3,
+ };
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/net/dsa/tag_mtk.c b/net/dsa/tag_mtk.c
+index b5705cba8318..c96354f12317 100644
+--- a/net/dsa/tag_mtk.c
++++ b/net/dsa/tag_mtk.c
+@@ -89,22 +89,13 @@ static struct sk_buff *mtk_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	return skb;
+ }
+ 
+-static int mtk_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+-				int *offset)
+-{
+-	*offset = 4;
+-	*proto = ((__be16 *)skb->data)[1];
+-
+-	return 0;
+-}
+-
+ static const struct dsa_device_ops mtk_netdev_ops = {
+ 	.name		= "mtk",
+ 	.proto		= DSA_TAG_PROTO_MTK,
+ 	.xmit		= mtk_tag_xmit,
+ 	.rcv		= mtk_tag_rcv,
+-	.flow_dissect	= mtk_tag_flow_dissect,
+ 	.overhead	= MTK_HDR_LEN,
++	.proto_off	= 1,
+ };
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/net/dsa/tag_qca.c b/net/dsa/tag_qca.c
+index c95885215525..a88849d211f0 100644
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -90,22 +90,13 @@ static struct sk_buff *qca_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	return skb;
+ }
+ 
+-static int qca_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+-                                int *offset)
+-{
+-	*offset = QCA_HDR_LEN;
+-	*proto = ((__be16 *)skb->data)[0];
+-
+-	return 0;
+-}
+-
+ static const struct dsa_device_ops qca_netdev_ops = {
+ 	.name	= "qca",
+ 	.proto	= DSA_TAG_PROTO_QCA,
+ 	.xmit	= qca_tag_xmit,
+ 	.rcv	= qca_tag_rcv,
+-	.flow_dissect = qca_tag_flow_dissect,
+ 	.overhead = QCA_HDR_LEN,
++	.proto_offset = 0,
+ };
+ 
+ MODULE_LICENSE("GPL");
 -- 
-Kees Cook
+2.17.1
+
