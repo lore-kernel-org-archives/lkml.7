@@ -2,114 +2,99 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E9C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 00:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B140C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 00:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF262075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 00:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC1C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 00:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfL3ArK (ORCPT
+        id S1726744AbfL3AwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 19:47:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:51472 "EHLO foss.arm.com"
+        Sun, 29 Dec 2019 19:52:23 -0500
+Received: from mout.perfora.net ([74.208.4.197]:57029 "EHLO mout.perfora.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbfL3ArK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 19:47:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66B7A31B;
-        Sun, 29 Dec 2019 16:47:09 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E2E53F534;
-        Sun, 29 Dec 2019 16:47:07 -0800 (PST)
-Subject: Re: [RFC v2 1/1] drm/lima: Add optional devfreq support
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     yuq825@gmail.com, dri-devel@lists.freedesktop.org, robh@kernel.org,
-        tomeu.vizoso@collabora.com, airlied@linux.ie,
-        linux-kernel@vger.kernel.org, steven.price@arm.com,
-        linux-rockchip@lists.infradead.org, wens@csie.org,
-        alyssa.rosenzweig@collabora.com, daniel@ffwll.ch,
-        linux-amlogic@lists.infradead.org
-References: <20191227173707.20413-1-martin.blumenstingl@googlemail.com>
- <20191227173707.20413-2-martin.blumenstingl@googlemail.com>
- <dd38ff5c-6a14-bb6a-4df5-d706f99234e9@arm.com>
- <CAFBinCDs3a8TJcQKgHUkDvssMR6Y2Kys38p50P0q=2KOiDTNHg@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fe45f4f8-8c67-ded2-90bf-8d5fd6874876@arm.com>
-Date:   Mon, 30 Dec 2019 00:47:00 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1726315AbfL3AwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 19:52:22 -0500
+Received: from marcel-nb-toradex-int.cardiotech.int ([81.221.65.116]) by
+ mrelay.perfora.net (mreueus001 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0LrtWq-1jksBF3egw-013iAl; Mon, 30 Dec 2019 01:52:16 +0100
+From:   Marcel Ziswiler <marcel@ziswiler.com>
+To:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Marcel Ziswiler <marcel@ziswiler.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v1] pci: tegra: fix afi_pex2_ctrl reg offset for tegra30
+Date:   Mon, 30 Dec 2019 01:52:09 +0100
+Message-Id: <20191230005209.1546434-1-marcel@ziswiler.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCDs3a8TJcQKgHUkDvssMR6Y2Kys38p50P0q=2KOiDTNHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TEb6gkiuTbGtsFXArq0mNHHPPNNqCPrumd3IVTaSjf3yx/9vMhs
+ foswH6A01yTPu2rpApDjn9attuLrSJWu5bYuGc/tdTxU8uLUZQoCxFpXunQbhZIfdWMWLXM
+ lQralP2mUEflNoS03f1L46rnkc9/BGF9/IYRyteT6FeQLtq4xnQ/smb/6PYA0soO/CCJCgl
+ PPvBkYDEa1wRbEcCzkz5g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jzRK0YLa2yE=:1Cg0MiY8MhBFIdhwFDWIHb
+ IfRiGFudWId7q4f/flVCULIPWo4xKwaDlgV0uyPT/dKsjXPY7YSwq9pGu7WmiIq8WWDIesGxh
+ Cuasv7EjSoWrWzf1NFxFrXUXE2xFTzRixpY4rxfD78fnDGkUyEQ20VRTbrXG8i0MWPNGHgHEE
+ 7kXs6YlFV88smMJi1q8V/mCsJ2SWRgMxPVJZ7MhRaiQfTBp+UMhpbB/ogVjlstAxYaml7fx7c
+ JxpP/zLMM1J5YtQoZu8hlfjAFfSuY1f15s3nvgLEo735/73yBXz3jvszth4ZajFGvyXonik4A
+ TqL/aDyb+09PFPHX/fztcagq7Wo4ONC7PCd31kfH6lm+7bti9zcHTAq2pb+79FLd9nwrgrlTF
+ g3gdOrXsMaG2Zl+ychPxDHTbwZEm5apehtShy68XkIQdaZgYGVdt45Ln3SRxqi6g2qxKupLL8
+ uL+nyH/K3mJ+kHgREMRHSUHwecrPdMIcjjMSanKrII2wseYVF25TFy1jVkETn0ap6WdDXBCiJ
+ iNLCtNHmtaeKacAgal/e1ZFTXiuhwKYCyhQrHv9zipjBOa8RmmLxKYt6nd2weAGUfPVUmvxex
+ tzT2f6/FfyG2Kv1HQQQpLD0K1dMVY/oGM485xbFjINRZHMJGtG9sxDbqWIK9fvm3GY1IUuaaT
+ Um0ptmVg3yRuS+CjaGLXChUot24957QP7uf9VTMYO+lTHOUlfISywGqg0mkkRXz1KezxJHb8P
+ +tYKYuG7oLZs7hBdB/nhAO/CXiBDaDEhyAMwp3mgGcANMacdcM8NFxNbsNH3aV8AGPAgXac/f
+ TJ1vZkrFJk/P6PBH3Ig1cT0rCkFK5IS16InbMbYrIfLgv6b4yscooqIZKH4qgwoiw48mj+yRL
+ 1qx/eOY5AN/dxEBxyOfg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-29 11:19 pm, Martin Blumenstingl wrote:
-> Hi Robin,
-> 
-> On Sun, Dec 29, 2019 at 11:58 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> Hi Martin,
->>
->> On 2019-12-27 5:37 pm, Martin Blumenstingl wrote:
->>> Most platforms with a Mali-400 or Mali-450 GPU also have support for
->>> changing the GPU clock frequency. Add devfreq support so the GPU clock
->>> rate is updated based on the actual GPU usage when the
->>> "operating-points-v2" property is present in the board.dts.
->>>
->>> The actual devfreq code is taken from panfrost_devfreq.c and modified so
->>> it matches what the lima hardware needs:
->>> - a call to dev_pm_opp_set_clkname() during initialization because there
->>>     are two clocks on Mali-4x0 IPs. "core" is the one that actually clocks
->>>     the GPU so we need to control it using devfreq.
->>> - locking when reading or writing the devfreq statistics because (unlike
->>>     than panfrost) we have multiple PP and GP IRQs which may finish jobs
->>>     concurrently.
->>
->> I gave this a quick try on my RK3328, and the clock scaling indeed kicks
->> in nicely on the glmark2 scenes that struggle, however something appears
->> to be missing in terms of regulator association, as the appropriate OPP
->> voltages aren't reflected in the GPU supply (fortunately the initial
->> voltage seems close enough to that of the highest OPP not to cause major
->> problems, on my box at least). With panfrost on RK3399 I do see the
->> supply voltage scaling accordingly, but I don't know my way around
->> devfreq well enough to know what matters in the difference :/
-> first of all: thank you for trying this out! :-)
-> 
-> does your kernel include commit 221bc77914cbcc ("drm/panfrost: Use
-> generic code for devfreq") for your panfrost test?
-> if I understand the devfreq API correct then I suspect with that
-> commit panfrost also won't change the voltage anymore.
+Fix AFI_PEX2_CTRL reg offset for tegra30 by moving it from the tegra20
+SoC struct where it erroneously got added by commit adb2653b3d2e
+("PCI: tegra: Add AFI_PEX2_CTRL reg offset as part of SoC struct").
+This fixes the AFI_PEX2_CTRL reg offset being uninitialised
+subsequently failing to bring up the third PCIe port.
 
-Oh, you're quite right - I was already considering that change as 
-ancient history, but indeed it's only in 5.5-rc, while that board is 
-still on 5.4.y release kernels. No wonder I couldn't make sense of how 
-the (current) code could possibly be working :)
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
 
-I'll try the latest -rc kernel tomorrow to confirm (now that PCIe is 
-hopefully fixed), but I'm already fairly confident you've called it 
-correctly.
+---
 
-Cheers,
-Robin.
+ drivers/pci/controller/pci-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> this is probably due to a missing call to dev_pm_opp_set_regulators()
-> which is supposed to attach the regulator to the devfreq instance.
-> I didn't notice this yet because on Amlogic SoCs the voltage is the
-> same for all OPPs.
-> 
-> I'll debug this in the next days and send an updated patch (and drop
-> the RFC prefix if there are no more comments).
-> 
-> 
-> Regards
-> Martin
-> 
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 090b632965e2..ac93f5a0398e 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2499,7 +2499,6 @@ static const struct tegra_pcie_soc tegra20_pcie = {
+ 	.num_ports = 2,
+ 	.ports = tegra20_pcie_ports,
+ 	.msi_base_shift = 0,
+-	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA20,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_DIV10,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+@@ -2528,6 +2527,7 @@ static const struct tegra_pcie_soc tegra30_pcie = {
+ 	.num_ports = 3,
+ 	.ports = tegra30_pcie_ports,
+ 	.msi_base_shift = 8,
++	.afi_pex2_ctrl = 0x128,
+ 	.pads_pll_ctl = PADS_PLL_CTL_TEGRA30,
+ 	.tx_ref_sel = PADS_PLL_CTL_TXCLKREF_BUF_EN,
+ 	.pads_refclk_cfg0 = 0xfa5cfa5c,
+-- 
+2.24.1
+
