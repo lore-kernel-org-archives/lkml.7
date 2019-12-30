@@ -2,116 +2,166 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA67C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC35C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615FC206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37D320718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WG4La9s5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z35wHsyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfL3QNB (ORCPT
+        id S1727200AbfL3Qek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:13:01 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38484 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfL3QNB (ORCPT
+        Mon, 30 Dec 2019 11:34:40 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:44617 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfL3Qek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 11:13:01 -0500
-Received: by mail-ed1-f65.google.com with SMTP id i16so32998830edr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 08:13:00 -0800 (PST)
+        Mon, 30 Dec 2019 11:34:40 -0500
+Received: by mail-yb1-f193.google.com with SMTP id f136so11151293ybg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 08:34:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G+IpvNYDr1r8qiuEoCpZSYzbw36vNuYa2znw2miGrDA=;
-        b=WG4La9s5mhcbwYlQ2kAuW8nhMwm1/5+T0FR3m096MJaQPzYLHjRT7xh0wWL6r+JfG0
-         dqvqaKQ7/avtVROEZkFXTwLj+8qXpm+15l4CfZ5e2Qr7l2VziQaJcbx9VzNLbATaH2IN
-         CuaTn8d1qmh24SQEFALHaHPKdxjzpGEstOXDDVFhTZdzQj9li4/h871hduxDHhI66zDt
-         J2ZuN5HuFA1i3KgrEiF7KcbSAVoPqy741saZwRzvwB3kEI1EB7hYukmNVdiSYgpXAcow
-         qDR7oK+104ETHLRk/CrIyTx47c7LF9f2d/Vg9oVyPOFjkgp1Ek5iM58TGTXnsXLtImxF
-         CTxg==
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SifrDRNuZI7FjGGbJzx9F32WU6UCkJPUxer3u46pdDA=;
+        b=Z35wHsyiNpP4RlEFRxabnN4fXuzsizFg+xlvkcOZWkAsXoTppdGT9xoMcEjd35huJZ
+         C+hvSJHTfqVcN2b9qaIV1hXlT4/TU+yvw9AUYGQZGO79zuSBnUZucz/PCzoXHgI/u+Gu
+         IJdQXOcSS6EqM4JMh5sqBPNcNtOVXjbgqOg++zxGi6CeTA8p3KtYcE4Flzmx7krRbxPm
+         PqI/5HdBPZWZgmE2lBdoKJHsWhfTAwKJgY+ys/KiEbJJmKtVL2TT3M0CaDYQGmRtMqmO
+         DdYf/Ll4VMGVqNemtm5z5+pe31O+TD+fX68R4GK253AQ1p1vvPrzLEz+CQx50ywHiovl
+         lcCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G+IpvNYDr1r8qiuEoCpZSYzbw36vNuYa2znw2miGrDA=;
-        b=hC0JeoXXjIqN+40iwm7RCCCSVmh4XNg+hr+kdNrhxnPsAA0K7ibAkKWdPLT7ClqpVF
-         3/Cibj7eR291NqID8Vf4FTkG0Roe/tD1yb6fHxnOoK2Y37xKku5N3+qrWCtYhZsitxN9
-         g7lEB2dRaaB6pKXHosydh3lYxBk19Jtz5UCX0KdSjEmRG0q2AZJb+DtqJdfmKf3hsHhK
-         DpmYpcJGLAIRa5eKnuGhU7SVhj2y7Ai39lQ0BH5kzs5nqBpHvSDg+P+U0IwLEOeJBovS
-         qXvi0xDy8FSgbMrb8t4z7jRdm0DEJGcRzktc33X0UrN9yD6NJJJkLzbUcXDweu9RqqjE
-         Euzg==
-X-Gm-Message-State: APjAAAX+Aa/BEgvBhqqeTzlw6SNI8c88xc8Uq5fjozMAgHDqngJTuUDa
-        3JLwdlTbjTBkgSqVgjY0kZ5KCA==
-X-Google-Smtp-Source: APXvYqyQLdXcF5BunDhBXgm6EMm1xV9hVQs1TafRntsrA3F/atajI6uyS4ZbVKz9Z6UkPhnSuI5Jgg==
-X-Received: by 2002:a17:906:4d46:: with SMTP id b6mr69483027ejv.79.1577722379278;
-        Mon, 30 Dec 2019 08:12:59 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id dx7sm5624489ejb.81.2019.12.30.08.12.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=SifrDRNuZI7FjGGbJzx9F32WU6UCkJPUxer3u46pdDA=;
+        b=Q4XOk6/3bruPQPV28s9VZzOKAtCFUbwXs4HoQGZhjP0TiisbVFTuDf4PyzZAMVU3+4
+         ngPRpAfrPwUmehVqLl/k6l3fkHhf99xQR2QlEaCQqz+K3IuHY1qGTFMwuxC82aEdJldc
+         rPINo6JQ/peks9fuOWwh9ra34qyz1sUqY2OXUu/PY/WKGYea61ditzOBUCGTm7C97OvG
+         mqaFtjImH9S4oyvLcQ/He9Tmq5n6UZmesk0pYlHllt0N/BYIot/YWuU/dQdUi8ubGuLS
+         fa5k7rTIQKvJwTe7DQ5D9WPQa/3JkZhJ8E1Nj/x19usEE03K+oYNQYGfJMj8no6liMEp
+         Wh+A==
+X-Gm-Message-State: APjAAAWjUJgkvdYINxknpe0VeP4RXsQGrrypf65AjkqGlFskdK8ODMv/
+        JnZtE/uAbexRjRZhO0vqMuwfA57Hvpg=
+X-Google-Smtp-Source: APXvYqwVL1AGDxGOv9b+LmFFMDFhX73etoc+MAkFLDhsbdHVxQtSeRdSsqK9QQx6kco1isCoQm4JnQ==
+X-Received: by 2002:a5b:38d:: with SMTP id k13mr23670721ybp.147.1577723679224;
+        Mon, 30 Dec 2019 08:34:39 -0800 (PST)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id a189sm18679079ywh.92.2019.12.30.08.34.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 08:12:58 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH] usb: dwc3: gadget: Fix failure to detect end of transfer
-Date:   Mon, 30 Dec 2019 16:13:21 +0000
-Message-Id: <20191230161321.2738541-1-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Mon, 30 Dec 2019 08:34:38 -0800 (PST)
+Date:   Mon, 30 Dec 2019 10:34:37 -0600
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
+Message-ID: <20191230163437.sz4mb5gh7ed2htfa@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+References: <20191229172702.393141737@linuxfoundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent bugfix 8c7d4b7b3d43 ("usb: dwc3: gadget: Fix logical condition")
-correctly fixes a logical error in the gadget driver but, exposes a further
-bug in determining when a transfer has completed.
+On Sun, Dec 29, 2019 at 06:20:53PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.7 release.
+> There are 434 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Prior to 8c7d4b7b3d43 we were calling dwc3_gadget_giveback() when we
-shouldn't have been. Afer this change the below test fails to complete on
-my hardware.
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Host:
-echo "host" > /dev/ttyACM0
+Summary
+------------------------------------------------------------------------
 
-Device:
-cat < /dev/ttyGS0
+kernel: 5.4.7-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-5.4.y
+git commit: 6bc086f94af53b930b413d3cc85fe11061b4a0a2
+git describe: v5.4.6-436-g6bc086f94af5
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.6-436-g6bc086f94af5
 
-This is caused by the driver incorrectly detecting end of transfer, a
-problem that had previous been masked by the continuous calling of
-dwc3_gadget_giveback() prior to 8c7d4b7b3d43.
 
-Remediate by making the test <= instead of ==
+No regressions (compared to build v5.4.6)
 
-Fixes: e0c42ce590fe ("usb: dwc3: gadget: simplify IOC handling")
+No fixes (compared to build v5.4.6)
 
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- drivers/usb/dwc3/gadget.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ran 22880 total tests in the following environments and test suites.
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 0c960a97ea02..464c4d9961c7 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2467,7 +2467,7 @@ static int dwc3_gadget_ep_reclaim_trb_linear(struct dwc3_ep *dep,
- 
- static bool dwc3_gadget_ep_request_completed(struct dwc3_request *req)
- {
--	return req->request.actual == req->request.length;
-+	return req->request.actual <= req->request.length;
- }
- 
- static int dwc3_gadget_ep_cleanup_completed_request(struct dwc3_ep *dep,
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
 -- 
-2.24.0
-
+Linaro LKFT
+https://lkft.linaro.org
