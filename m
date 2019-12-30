@@ -2,111 +2,137 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006B9C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5044BC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C551720409
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2421F20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW06kpVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfL3RBt (ORCPT
+        id S1727310AbfL3RDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:01:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30494 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726675AbfL3RBt (ORCPT
+        Mon, 30 Dec 2019 12:03:44 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37526 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbfL3RDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:01:49 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBUH0B6u035515
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 12:01:48 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2x6n48abdr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 12:01:47 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 30 Dec 2019 17:01:46 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 30 Dec 2019 17:01:43 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBUH1hB123986282
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Dec 2019 17:01:43 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D566842041;
-        Mon, 30 Dec 2019 17:01:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C11842052;
-        Mon, 30 Dec 2019 17:01:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.184.68])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Dec 2019 17:01:41 +0000 (GMT)
-Subject: Re: [IMA] 11b771ffff:
- BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     kernel test robot <rong.a.chen@intel.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, lkp@lists.01.org
-Date:   Mon, 30 Dec 2019 12:01:41 -0500
-In-Reply-To: <20191227142335.GE2760@shao2-debian>
-References: <20191227142335.GE2760@shao2-debian>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19123017-0028-0000-0000-000003CCF55E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19123017-0029-0000-0000-000024905DBD
-Message-Id: <1577725301.5874.32.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-30_05:2019-12-27,2019-12-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- suspectscore=0 mlxscore=0 mlxlogscore=627 adultscore=0 lowpriorityscore=0
- phishscore=0 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912300154
+        Mon, 30 Dec 2019 12:03:43 -0500
+Received: by mail-qk1-f194.google.com with SMTP id 21so26700763qky.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 09:03:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Rka3ilO99bAcq48TNL+hlG2WYcFVK54JT4LskhtH/CE=;
+        b=IW06kpVxlvi/ChzeLckluKNsjgCEzeO+qgp6fUtwrfWPfH28vIGifK1gM26HKzHH5w
+         zOAkgqwTTvMo4/lDbW/j6esKSNbbYkpLTnT5DnybCbfhCD1GRQ9fESAAAqLkzcb3vxHb
+         dRvY7Lf3Fsas2ruCrepZ0zYnZ7lQl2XyTkWs1YEWF71YPet7vb3eEDvG5exd0W9IgEGc
+         Qvub15S+BpYk7M5xbA1+N0+XFvrPJegjqbGOLNIQ2H2g/YBkanRM+5kHF2G7qC5HvmbQ
+         ogUuUcl2nmqiug6EqHYswAXv1E6fSM671BbNRGvkzeRj/PPXBrissuJTxoU+iibrxQ+s
+         Om/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Rka3ilO99bAcq48TNL+hlG2WYcFVK54JT4LskhtH/CE=;
+        b=Tbi6G4YtdINBjBYJvZUFYXUkF+jimoKZF/dj18nEWo3zRbwl+xHEA+glo0Ky6ll1df
+         iF/SGLyhsQI5SlYmPJr5Y0Fg1q+gWCD3eJ8lfODcrnJArFBwAnsfSZSFczjnlGVIkO+o
+         LlWQkUMN1t7Uwe5egZcut2Q+CFCsVYvzBnkOKsjMzcCrVdOeJFXdAZCDNJaYJtL1f0k+
+         5KSBlWXT5gpf3yI5qPf+VNeFAvE8x/pPjYJb8N9YnTHJiaD3xXIkqrkVhrBF4eD048WI
+         u4LRjOlSMuw2KrCiP950P8irSbRd/ulaDeKv4aEduzFhlCq90tdQinIpaO8TCq0AkCDg
+         TUlg==
+X-Gm-Message-State: APjAAAUYpWNPhA8SL3dUD4vZBF/VYlxDo3+Umex9qr1Bg6l4wgkKZaEK
+        +dKmqouB6+uRmCCvbP4OmMk=
+X-Google-Smtp-Source: APXvYqyFJyPMZauoGwKvbX2Q7Bd2cHMdgP16tVanQ76mjfkh2RofRORjAK1g57turgw8N+YTk4lz8g==
+X-Received: by 2002:ae9:eb13:: with SMTP id b19mr54487398qkg.6.1577725422980;
+        Mon, 30 Dec 2019 09:03:42 -0800 (PST)
+Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
+        by smtp.gmail.com with ESMTPSA id w20sm14049424qtj.4.2019.12.30.09.03.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 09:03:42 -0800 (PST)
+Date:   Mon, 30 Dec 2019 12:03:40 -0500
+From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Konrad Rzeszutek Wilk <konrad@kernel.org>,
+        Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] iscsi_ibft: Don't limits Targets and NICs to two
+Message-ID: <20191230170340.GA23237@localhost.localdomain>
+References: <20191221070956.268321-1-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191221070956.268321-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lakshmi,
+On Sat, Dec 21, 2019 at 08:09:56AM +0100, Lubomir Rintel wrote:
+> According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
+> the control table is ">= 18", where the optional expansion structure
+> pointer follow the mandatory ones. This allows for more than two NICs
+> and Targets.
+> 
+> [1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_firmware_table_v1.03.pdf
+> 
+> Let's enforce the minimum length of the control structure instead
+> instead of limiting it to the smallest allowed size.
 
-On Fri, 2019-12-27 at 22:23 +0800, kernel test robot wrote:
-> [  333.455345] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:281
-> [  333.457243] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12395, name: userfaultfd
-> [  333.458888] CPU: 1 PID: 12395 Comm: userfaultfd Not tainted 5.5.0-rc1-00011-g11b771ffff8fc #1
-> [  333.461096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [  333.463893] Call Trace:
-> [  333.465287]  <IRQ>
-> [  333.466351]  dump_stack+0x66/0x8b
-> [  333.467346]  ___might_sleep+0x102/0x120
-> [  333.468385]  mutex_lock+0x1c/0x40
-> [  333.469421]  ima_process_queued_keys+0x24/0x110
-> [  333.470529]  ? ima_process_queued_keys+0x110/0x110
-> [  333.471656]  call_timer_fn+0x2d/0x140
-> [  333.472707]  run_timer_softirq+0x46f/0x4b0
-> [  333.473752]  ? enqueue_hrtimer+0x39/0xa0
-> [  333.474780]  __do_softirq+0xe3/0x2f8
-> [  333.475768]  irq_exit+0xd5/0xe0
-> [  333.476738]  smp_apic_timer_interrupt+0x74/0x140
-> [  333.477834]  apic_timer_interrupt+0xf/0x20
-> [  333.478858]  </IRQ>
+Hi!
 
-I think this is an instance where defining timer_expired as atomic and
-then testing it using atomic_dec_and_test() would help.  Either the
-queued keys would be deleted in ima_timer_handler() or measured in
-ima_process_queued_keys().
-
-Mimi
-
+Do you have an example of such iBFT table? Thanks
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  drivers/firmware/iscsi_ibft.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+> index 7e12cbdf957cc..96758b71a8db8 100644
+> --- a/drivers/firmware/iscsi_ibft.c
+> +++ b/drivers/firmware/iscsi_ibft.c
+> @@ -104,6 +104,7 @@ struct ibft_control {
+>  	u16 tgt0_off;
+>  	u16 nic1_off;
+>  	u16 tgt1_off;
+> +	u16 expansion[0];
+>  } __attribute__((__packed__));
+>  
+>  struct ibft_initiator {
+> @@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *hdr, int id, int length)
+>  				"found %d instead!\n", t, id, hdr->id);
+>  		return -ENODEV;
+>  	}
+> -	if (hdr->length != length) {
+> +	if (length && hdr->length != length) {
+>  		printk(KERN_ERR "iBFT error: We expected the %s " \
+>  				"field header.length to have %d but " \
+>  				"found %d instead!\n", t, length, hdr->length);
+> @@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acpi_table_ibft *header)
+>  	control = (void *)header + sizeof(*header);
+>  	end = (void *)control + control->hdr.length;
+>  	eot_offset = (void *)header + header->header.length - (void *)control;
+> -	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control,
+> -			     sizeof(*control));
+> +	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control, 0);
+>  
+>  	/* iBFT table safety checking */
+>  	rc |= ((control->hdr.index) ? -ENODEV : 0);
+> +	rc |= ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
+>  	if (rc) {
+>  		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
+>  		return rc;
+>  	}
+> -	for (ptr = &control->initiator_off; ptr < end; ptr += sizeof(u16)) {
+> +	for (ptr = &control->initiator_off; ptr + sizeof(u16) <= end; ptr += sizeof(u16)) {
+>  		offset = *(u16 *)ptr;
+>  		if (offset && offset < header->header.length &&
+>  						offset < eot_offset) {
+> -- 
+> 2.24.1
+> 
