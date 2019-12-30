@@ -2,101 +2,111 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91D6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC40C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA11E2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8A3206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvQsPTvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfL3PzN (ORCPT
+        id S1727696AbfL3Pz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:55:13 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42292 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbfL3PzM (ORCPT
+        Mon, 30 Dec 2019 10:55:28 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:42395 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfL3Pz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:55:12 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so10341270oin.9;
-        Mon, 30 Dec 2019 07:55:12 -0800 (PST)
+        Mon, 30 Dec 2019 10:55:27 -0500
+Received: by mail-yb1-f193.google.com with SMTP id z10so6888361ybr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 07:55:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=58VefUNI1Hj0F9zlhiCoQzCFKomrgTvZEEVdE1v+Dik=;
+        b=QvQsPTvFPAHEl8kd1fAlobXt7Yynz7ZVbroAE0f67rZRUxnllntgsohzrRVExGbpqB
+         FeK+cfAAPwJkyP8TF2x3VNv27DQ+mpYpCe/BvCtLb/8uz1+3oZWc2dvTNs1jNli9qTjs
+         okxHr8Boi6PmgUawTXoNacswcwGNos68qHRqQwMHs6FuSo4Nei7TeiWq9xT6s4z7Pr9S
+         FaGDW7f9yzkwQK8hZIt277cdlADpt8fQ53Ag2feILHT10cGI7h7/ZXS6MZiaa28Uz+0J
+         xa1f0on8LtbvPpzmrEizFHe8sBiEK7CcWeJkSrVYgEPfOPse0VlLTVUMBIEq208O3m/5
+         aS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sf6vo78JLTlvMjL1hj6XIcf5PnQuAN8BwxQfaCYDh50=;
-        b=TaeMT4IKLe4v2CzK/vuk0zyoZw1IGFc2SJH7mM3CUlS22R6D1WaoWNUbGZWHPO+uUU
-         oIlnEDX3C713H8LJsOir0XfS2930J84KZksFD9LSlnycFTHKYUECesggHphq3/3PJ76+
-         WAs+NnAIei7mN5O0SgxE5zd71amkcsJaQTFnC2ZalM7QbRe92rj3IUAPJt1Zc+vzVlVU
-         enYNiPMET9JZJ8sbhpAikLbSzrJpsxnXr1+foUMQ6tP/oP5NLSQhM/Bd9Blnhx3BMrSy
-         2SWFe+Jl78ZCPlLRRZY7FmVgiJG+EuM7MYcJLWUrC/9wHxwwfHUKXD3kNnKi70hRtLQB
-         +9LQ==
-X-Gm-Message-State: APjAAAXxN/WXE5sSytHbyTDJDLc33+fYP/moR3mJq+Jln+cdD768SHkb
-        n1mZR5unBBS8448f/qCz3eu8G0QYKTYPxdwOk4A=
-X-Google-Smtp-Source: APXvYqwwlyTdasHD7YCZcElAyw8HmZn06ATMyqVMXpwMkf6uUSdaYPiTkewmNlssDfiICA98zRbKTHXz8kNcI6h/RJ8=
-X-Received: by 2002:aca:5905:: with SMTP id n5mr478200oib.54.1577721311812;
- Mon, 30 Dec 2019 07:55:11 -0800 (PST)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=58VefUNI1Hj0F9zlhiCoQzCFKomrgTvZEEVdE1v+Dik=;
+        b=omyA831p6XhbjnIwwK4MdZTs9J8RvtG+ofMAvfgwTzwmu1KIdnhMyR54g22K6D/2Uh
+         l2RZz2qqfZys77kZf9SBiDbuum80/ng8UCL608YJZcltbnvZ70dLs2OoQs3oJSKg7sRP
+         NKolEAOUwblry1TjhzxrHLPBdo5gsIqVeESbDmHm53KztBUQEyKcHjBl12EZAE4ZYup6
+         alTK4Pa1egk6hclTGyovctdv/dhcdtAcJb61ZHZjTQyoa0rNLUGksLSjzukKxW0TYo/j
+         8WRzBwu1u9NrkM3sJ5t/Ou41FhcxuklBopusjf7IZjSj0UHpstNSpzeWhdnxcRu9tfzn
+         iz7w==
+X-Gm-Message-State: APjAAAUXYKx+klduHQ2KuDeHrlpvm1RNLk+oYqp1Jn1LOYYXLl3ZcDZz
+        zVDgXK8R4tb4+FeINSCr8J8=
+X-Google-Smtp-Source: APXvYqz7Wfq8q5/eX3xpAkHdK9OcfDn258qbUVwjItfx3qwK0uhs/97g2chZpHq8xEWL2dCVATtg5Q==
+X-Received: by 2002:a25:bfca:: with SMTP id q10mr46486462ybm.223.1577721326827;
+        Mon, 30 Dec 2019 07:55:26 -0800 (PST)
+Received: from user-ThinkPad-X230 ([2601:cd:4005:d680:598a:ed33:1bb1:b28a])
+        by smtp.gmail.com with ESMTPSA id m30sm18008899ywh.12.2019.12.30.07.55.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Dec 2019 07:55:26 -0800 (PST)
+Date:   Mon, 30 Dec 2019 10:55:20 -0500
+From:   Amir Mahdi Ghorbanian <indigoomega021@gmail.com>
+To:     "forest@alittletooquiet.net>" <gregkh@linuxfoundation.org>,
+        quentin.deslandes@itdev.co.uk, indigoomega021@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vt6656: remove unnecessary parenthesis
+Message-ID: <20191230155520.GA27072@user-ThinkPad-X230>
 MIME-Version: 1.0
-References: <20191230153238.29878-1-geert+renesas@glider.be>
-In-Reply-To: <20191230153238.29878-1-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 30 Dec 2019 16:55:00 +0100
-Message-ID: <CAMuHMdVexUY+SsC7R4-cm7Dj7U62moBUiOs9c2ZbUzvAsU36JQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC] nfs: NFS_SWAP should depend on SWAP
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Rik van Riel <riel@redhat.com>, Mel Gorman <mgorman@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 4:32 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> If CONFIG_SWAP=n, it does not make much sense to offer the user the
-> option to enable support for swapping over NFS, as that will still fail
-> at run time:
->
->     # swapon /swap
->     swapon: /swap: swapon failed: Function not implemented
->
-> Fix this by adding a dependency on CONFIG_SWAP.
->
-> Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Marked RFC, as this still doesn't seem to work.
-> When enabled, the kernel log is spammed with:
->
->     [  449.371536] __swap_writepage: 413288 callbacks suppressed
->     [  449.371577] Write error on dio swapfile (10047488)
->     [  449.382435] Write error on dio swapfile (14147584)
->     [  449.387320] Write error on dio swapfile (10919936)
->     [  449.392474] Write error on dio swapfile (8945664)
->     [  449.397263] Write error on dio swapfile (24256512)
->     [  449.402330] Write error on dio swapfile (14307328)
->     [  449.407195] Write error on dio swapfile (229376)
->     [  449.412031] Write error on dio swapfile (10293248)
->     [  449.416891] Write error on dio swapfile (2007040)
+Remove unnecessary parenthesis to abide by kernel
+coding-style.
 
-FWIW, swap over /dev/loop0 using a file on nfsroot also doesn't work: system
-hangs, but is still reponsive to ping.
+Signed-off-by: Amir Mahdi Ghorbanian <indigoomega021@gmail.com>
+---
+ drivers/staging/vt6656/baseband.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
+index 8d19ae71e7cc..25fb19fadc57 100644
+--- a/drivers/staging/vt6656/baseband.c
++++ b/drivers/staging/vt6656/baseband.c
+@@ -381,8 +381,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
+ 
+ 	dev_dbg(&priv->usb->dev, "RF Type %d\n", priv->rf_type);
+ 
+-	if ((priv->rf_type == RF_AL2230) ||
+-	    (priv->rf_type == RF_AL2230S)) {
++	if (priv->rf_type == RF_AL2230 ||
++	    priv->rf_type == RF_AL2230S) {
+ 		priv->bb_rx_conf = vnt_vt3184_al2230[10];
+ 		length = sizeof(vnt_vt3184_al2230);
+ 		addr = vnt_vt3184_al2230;
+@@ -461,8 +461,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
+ 	if (ret)
+ 		goto end;
+ 
+-	if ((priv->rf_type == RF_VT3226) ||
+-	    (priv->rf_type == RF_VT3342A0)) {
++	if (priv->rf_type == RF_VT3226 ||
++	    priv->rf_type == RF_VT3342A0) {
+ 		ret = vnt_control_out_u8(priv, MESSAGE_REQUEST_MACREG,
+ 					 MAC_REG_ITRTMSET, 0x23);
+ 		if (ret)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
