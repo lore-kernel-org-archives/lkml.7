@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F283C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27625C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B7820722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE19420863
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="PykzXFtx"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="jA3gEr2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfL3Ocq (ORCPT
+        id S1727750AbfL3Ocn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:32:46 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:41150 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:32:43 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:41168 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfL3Occ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:32:32 -0500
+        id S1727521AbfL3Ocd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:32:33 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id B21011B21931; Mon, 30 Dec 2019 17:32:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B21011B21931
+        id C21351B20B5F; Mon, 30 Dec 2019 17:32:30 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C21351B20B5F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716349; bh=4XferhwJ+noZjvLLF7PDu0hDkxQ/WpPucldtTtVh1Bc=;
+        t=1577716350; bh=n2vYVzB39mJzBIUNOizuSzaLB2BB0ciDP2ax+76PUW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=PykzXFtx1t2MEXrs0tIMdbOKfDad5VAkVNmSEhNoU7hTMF2ariiSNkR51nk8XGWBb
-         0ZeUAY4mo7vwrsDQCGm883y4QMaTB0NYT2zZobEU/qz+SzStGtVlHXAl7n50YuPPAp
-         JfGOKTdfb6MHZWruDWhCSvySdsn8LKsTWIu5FKc8=
+        b=jA3gEr2vjc7p0oigjAAeDuVdtxeVxX75vrLu9Dada3K7I9vZfK6wf5pvxKMFf7HHR
+         p3LFKgwXFlB+NnQz6phxK63YzEi5lO27AjBSnemdxjkj3ljxGzxuHMuRiYK1xxMq4C
+         eo60/8UgEF8Nim2FOCxr8mbg+QzyAY/1OdZS5o8Q=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id C096F1B20954;
-        Mon, 30 Dec 2019 17:31:41 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C096F1B20954
+        by fd.dlink.ru (Postfix) with ESMTP id 113301B20B5F;
+        Mon, 30 Dec 2019 17:31:13 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 113301B20B5F
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id D81481B229D0;
-        Mon, 30 Dec 2019 17:31:39 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id E5D7D1B229D0;
+        Mon, 30 Dec 2019 17:31:10 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:39 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:10 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 19/19] net: dsa: tag_qca: add GRO callbacks
-Date:   Mon, 30 Dec 2019 17:30:27 +0300
-Message-Id: <20191230143028.27313-20-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 05/19] net: dsa: tag_ar9331: add GRO callbacks
+Date:   Mon, 30 Dec 2019 17:30:13 +0300
+Message-Id: <20191230143028.27313-6-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,25 +79,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...so that frames tagged with this CPU tag type can be correctly
-processed by the GRO layer.
-Misc: fix qca_netdev_ops structure identation.
+Add GRO callbacks to the AR9331 tagger so GRO layer can now process
+such frames.
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- net/dsa/tag_qca.c | 88 +++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 82 insertions(+), 6 deletions(-)
+ net/dsa/tag_ar9331.c | 77 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-diff --git a/net/dsa/tag_qca.c b/net/dsa/tag_qca.c
-index bee2788e034d..d0cb2299cbe9 100644
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -106,13 +106,89 @@ static void qca_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
- 	*proto = qca_tag_encap_proto(skb->data);
+diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
+index c22c1b515e02..99cc7fd92d8e 100644
+--- a/net/dsa/tag_ar9331.c
++++ b/net/dsa/tag_ar9331.c
+@@ -100,12 +100,89 @@ static void ar9331_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+ 	*proto = ar9331_tag_encap_proto(skb->data);
  }
  
-+static struct sk_buff *qca_tag_gro_receive(struct list_head *head,
-+					   struct sk_buff *skb)
++static struct sk_buff *ar9331_tag_gro_receive(struct list_head *head,
++					      struct sk_buff *skb)
 +{
 +	const struct packet_offload *ptype;
 +	struct sk_buff *p, *pp = NULL;
@@ -106,7 +105,7 @@ index bee2788e034d..d0cb2299cbe9 100644
 +	int flush = 1;
 +
 +	data_off = skb_gro_offset(skb);
-+	data_end = data_off + QCA_HDR_LEN;
++	data_end = data_off + AR9331_HDR_LEN;
 +
 +	data = skb_gro_header_fast(skb, data_off);
 +	if (skb_gro_header_hard(skb, data_end)) {
@@ -115,15 +114,15 @@ index bee2788e034d..d0cb2299cbe9 100644
 +			goto out;
 +	}
 +
-+	/* Data that is to the left to the current position is already
++	/* Data that is to the left from the current position is already
 +	 * pulled to the head
 +	 */
-+	if (unlikely(!qca_tag_sanity_check(skb->data + data_off)))
++	if (unlikely(!ar9331_tag_sanity_check(skb->data + data_off)))
 +		goto out;
 +
 +	rcu_read_lock();
 +
-+	ptype = gro_find_receive_by_type(qca_tag_encap_proto(data));
++	ptype = gro_find_receive_by_type(ar9331_tag_encap_proto(data));
 +	if (!ptype)
 +		goto out_unlock;
 +
@@ -133,13 +132,13 @@ index bee2788e034d..d0cb2299cbe9 100644
 +		if (!NAPI_GRO_CB(p)->same_flow)
 +			continue;
 +
-+		if (qca_tag_source_port(skb->data + data_off) ^
-+		    qca_tag_source_port(p->data + data_off))
++		if (ar9331_tag_source_port(skb->data + data_off) ^
++		    ar9331_tag_source_port(p->data + data_off))
 +			NAPI_GRO_CB(p)->same_flow = 0;
 +	}
 +
-+	skb_gro_pull(skb, QCA_HDR_LEN);
-+	skb_gro_postpull_rcsum(skb, data, QCA_HDR_LEN);
++	skb_gro_pull(skb, AR9331_HDR_LEN);
++	skb_gro_postpull_rcsum(skb, data, AR9331_HDR_LEN);
 +
 +	pp = call_gro_receive(ptype->callbacks.gro_receive, head, skb);
 +
@@ -151,43 +150,37 @@ index bee2788e034d..d0cb2299cbe9 100644
 +	return pp;
 +}
 +
-+static int qca_tag_gro_complete(struct sk_buff *skb, int nhoff)
++static int ar9331_tag_gro_complete(struct sk_buff *skb, int nhoff)
 +{
 +	const struct packet_offload *ptype;
 +	int err = -ENOENT;
 +	__be16 proto;
 +
-+	proto = qca_tag_encap_proto(skb->data + nhoff);
++	proto = ar9331_tag_encap_proto(skb->data + nhoff);
++	nhoff += AR9331_HDR_LEN;
 +
 +	rcu_read_lock();
 +
 +	ptype = gro_find_complete_by_type(proto);
 +	if (ptype)
-+		err = ptype->callbacks.gro_complete(skb, nhoff + QCA_HDR_LEN);
++		err = ptype->callbacks.gro_complete(skb, nhoff);
 +
 +	rcu_read_unlock();
 +
 +	return err;
 +}
 +
- static const struct dsa_device_ops qca_netdev_ops = {
--	.name	= "qca",
--	.proto	= DSA_TAG_PROTO_QCA,
--	.xmit	= qca_tag_xmit,
--	.rcv	= qca_tag_rcv,
--	.flow_dissect = qca_tag_flow_dissect,
--	.overhead = QCA_HDR_LEN,
-+	.name		= "qca",
-+	.proto		= DSA_TAG_PROTO_QCA,
-+	.xmit		= qca_tag_xmit,
-+	.rcv		= qca_tag_rcv,
-+	.flow_dissect	= qca_tag_flow_dissect,
-+	.gro_receive	= qca_tag_gro_receive,
-+	.gro_complete	= qca_tag_gro_complete,
-+	.overhead	= QCA_HDR_LEN,
+ static const struct dsa_device_ops ar9331_netdev_ops = {
+ 	.name		= "ar9331",
+ 	.proto		= DSA_TAG_PROTO_AR9331,
+ 	.xmit		= ar9331_tag_xmit,
+ 	.rcv		= ar9331_tag_rcv,
+ 	.flow_dissect	= ar9331_tag_flow_dissect,
++	.gro_receive	= ar9331_tag_gro_receive,
++	.gro_complete	= ar9331_tag_gro_complete,
+ 	.overhead	= AR9331_HDR_LEN,
  };
  
- MODULE_LICENSE("GPL");
 -- 
 2.24.1
 
