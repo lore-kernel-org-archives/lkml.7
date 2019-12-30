@@ -2,93 +2,89 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD738C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C262071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA6F2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577714588;
-	bh=UbA6/PuTBbsHt9wqw7dTZSvhpL3gFygIhKmyKlBVCH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uTisbCU46rx1/VaT4PkXyBp11pY6um1yeqAd2qSRuj0BRX7HouIT6BaL6IrqZ18dt
-	 sMIJPSahDeVRX8zVSKYV0Za4iwxfaLhMglwrJfZV82SSdlNRnCpMKMtPwCZEhuPZN5
-	 1Gx6SpQGRa805wnaDyqWJ1wlbJ1NdTnnZxBWV0DE=
+	s=default; t=1577714875;
+	bh=MvsmnEK/EsYHdXv/PbjwSf38xojnu5xgv/tDp+2SprI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nsGgWrIm4tpgRM0y56+ZZhanusrEeTlKC9XBqlnjVBFvbcP6RusQBw5C5r0jJiJ3s
+	 zUoshJnSpsGZPVao9sm2IO+JHN10UlUYNVsrx37eL6IuKZBmp5H+yGYqqXLOwi34Bz
+	 Hzeg7ZbdYdWLDvXlsk8AKh7qLDEJ6LdkeRYoJOOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfL3ODH (ORCPT
+        id S1727521AbfL3OHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:03:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41370 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 09:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfL3ODH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:03:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727445AbfL3OHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:07:54 -0500
+Received: from localhost.localdomain (aaubervilliers-681-1-20-8.w90-88.abo.wanadoo.fr [90.88.140.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14DE720663;
-        Mon, 30 Dec 2019 14:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3962B20718;
+        Mon, 30 Dec 2019 14:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577714586;
-        bh=UbA6/PuTBbsHt9wqw7dTZSvhpL3gFygIhKmyKlBVCH8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X7yaMKxOr96DTRp+5xn753Zkf9aZCfgQm2QFW1FAig/p9lldbL4oAT/N+kGWfDMLw
-         v26se7mECJg/y63IUDLiGlH0oD8rZ97HVDfvmd3B+Ws7PbmnaRWNOpz5MIa2Tw6UsE
-         zMCZ3i16lwyNk9G617aAa8WWvM2+eDysZeSTbAZg=
-Date:   Mon, 30 Dec 2019 15:03:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc:     Pavel Machek <pavel@denx.de>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 102/219] ALSA: hda/hdmi - implement
- mst_no_extra_pcms flag
-Message-ID: <20191230140304.GB1054989@kroah.com>
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191229162523.844585380@linuxfoundation.org>
- <20191230113214.GB10304@amd>
- <alpine.DEB.2.21.1912301453150.16459@zeliteleevi>
- <20191230140152.GA1054989@kroah.com>
+        s=default; t=1577714873;
+        bh=MvsmnEK/EsYHdXv/PbjwSf38xojnu5xgv/tDp+2SprI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ouQVXQjCGLKwr552Y3Cc+86bpDQbEY5GO9CF00aJSaQfVLM3Zts8Ag8NTHT67vjI4
+         Ld/2GBxMn7nPqcJdJ/cl22CQpNfxwqTi5U/90xt1NhBK1bQ0k0XD/JR/9AW92wvCXg
+         LHAp+4xJJWYOJ1wALKP5Z0BEUaqxXdo75Vwy+yIc=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        michal.lkml@markovi.net, riku.voipio@linaro.org,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] kbuild/deb-pkg: annotate libelf-dev dependency as :native
+Date:   Mon, 30 Dec 2019 15:07:47 +0100
+Message-Id: <20191230140747.50415-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230140152.GA1054989@kroah.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 03:01:52PM +0100, Greg Kroah-Hartman wrote:
-> On Mon, Dec 30, 2019 at 02:58:25PM +0200, Kai Vehmanen wrote:
-> > Hi,
-> > 
-> > On Mon, 30 Dec 2019, Pavel Machek wrote:
-> > 
-> > > > From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> > > > 
-> > > > [ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
-> > > > 
-> > > > To support the DP-MST multiple streams via single connector feature,
-> > > > the HDMI driver was extended with the concept of backup PCMs. See
-> > > > commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
-> > [...]
-> > > This variable is not ever set in this patch, nor is it set elsewhere
-> > > in 4.19-stable. This means this patch is not suitable for stable.
-> > 
-> > ack on that. In upstream this flag is only used by SOF (sound/soc/sof)
-> > currently, but SOF is not part of 4.19, so there are no users for this 
-> > flag. Sorry for not catching this sooner.
-> 
-> Will go drop it from 4.19.y, thanks.  But is this ok also for 5.4.y?
+Cross compiling the x86 kernel on a non-x86 build machine produces
+the following error when CONFIG_UNWINDER_ORC is enabled, regardless
+of whether libelf-dev is installed or not.
 
-To answer my own question, no, it is not set there either, so I will
-drop it from there as well.
+  dpkg-checkbuilddeps: error: Unmet build dependencies: libelf-dev
+  dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
+  dpkg-buildpackage: warning: (Use -d flag to override.)
 
-thanks,
+Since this is a build time dependency for a build tool, we need to
+depend on the native version of libelf-dev so add the appropriate
+annotation.
 
-greg k-h
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ scripts/package/mkdebian | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index 7c230016b08d..357dc56bcf30 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -136,7 +136,7 @@ mkdir -p debian/source/
+ echo "1.0" > debian/source/format
+ 
+ echo $debarch > debian/arch
+-extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev)"
++extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev:native)"
+ extra_build_depends="$extra_build_depends, $(if_enabled_echo CONFIG_SYSTEM_TRUSTED_KEYRING libssl-dev:native)"
+ 
+ # Generate a simple changelog template
+-- 
+2.20.1
+
