@@ -2,195 +2,110 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BCCC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0305C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2C520748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577697268;
-	bh=Jtv2Oqg+19UNbmF4oyZbciqhWHNUAETFbeiuH1l/y9E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KzGz/KjfmjInBdWA4eq0yT6/ACLoA6Vaq0x2dXU0VahzsWgHGZUshTC0ktMx7Js66
-	 +jMZdu5yiiprEqiaP+XdeOwhnyryVOPZUpS9kU6syPiSjTlDe7Qt8fy1L/hoYXK/86
-	 qxBA1z6mh35kUnNS8EjWeoARHssdMEWGmPOmYJIY=
+	by mail.kernel.org (Postfix) with ESMTP id B7A9420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HD174iY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfL3JO1 (ORCPT
+        id S1727348AbfL3JWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfL3JO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:14:27 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8182072E;
-        Mon, 30 Dec 2019 09:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577697265;
-        bh=Jtv2Oqg+19UNbmF4oyZbciqhWHNUAETFbeiuH1l/y9E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JslN9Gb19kdZ+42Z11azLYVaEAVAZchT6BhvZS3hAKN4nh52HDcXDx0mkw+w2pzlZ
-         VAQRhMZJLLq0szxtHceSe9YoPzj7lMqfUeJRpAKzpG4L1jOCt6B5JYRx2dWXPhmReJ
-         wCMZbxfk6Hp0wDNeKUWolUhDFFCbjbDSUX6V2Crg=
-Date:   Mon, 30 Dec 2019 18:14:20 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.4 245/434] perf probe: Fix to list probe event with
- correct line number
-Message-Id: <20191230181420.737a4da2a8a3efd158f01b06@kernel.org>
-In-Reply-To: <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
-References: <20191229172702.393141737@linuxfoundation.org>
-        <20191229172718.158972713@linuxfoundation.org>
-        <689591f8-0798-af22-9a04-4a1e6e894a55@mageia.org>
-        <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 30 Dec 2019 04:22:37 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42192 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfL3JWg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 04:22:36 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBU9MTaE003658;
+        Mon, 30 Dec 2019 03:22:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577697749;
+        bh=OJA99jZBbljYKu/eIbyE5SJxvJXIQvpqRdw8rl7bW6M=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=HD174iY7G0vpuvI91CRG7pjKaNXMAvNZPYvSld6eMFuVv+pPIatYRh2UhQU0pj+EM
+         trJ4y3dnPrpINaKCzO6YEEdHEIRaUCMlO4YD+a7U8NcLfXHpVCSA1CBZsL9E8sFH0G
+         x5Whv3aqPci1p+rC0OgWQMap401VWV4lLdcD0AoA=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBU9MTdD130939
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Dec 2019 03:22:29 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 03:22:28 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 03:22:28 -0600
+Received: from a0230074-OptiPlex-7010.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBU9MOJj109856;
+        Mon, 30 Dec 2019 03:22:27 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <adrian.hunter@intel.com>,
+        <faiz_abbas@ti.com>, <shawn.lin@rock-chips.com>
+Subject: [PATCH 1/3] mmc: sdhci: Add Quirk to reset data lines after tuning
+Date:   Mon, 30 Dec 2019 14:53:41 +0530
+Message-ID: <20191230092343.30692-2-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20191230092343.30692-1-faiz_abbas@ti.com>
+References: <20191230092343.30692-1-faiz_abbas@ti.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019 01:00:14 +0200
-Thomas Backlund <tmb@mageia.org> wrote:
+Some arasan controllers have data leftover in the buffer after tuning
+procedure is complete which interferes with future data commands. Add a
+quirk to reset the data after tuning is finished.
 
-> Den 29-12-2019 kl. 20:42, skrev Thomas Backlund:
-> > Den 29-12-2019 kl. 19:24, skrev Greg Kroah-Hartman:
-> >> From: Masami Hiramatsu <mhiramat@kernel.org>
-> >>
-> >> [ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
-> >>
-> >> Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
-> >> entry address of the function on which a probe is, it will fail when the
-> >> function DIE has only ranges attribute.
-> >>
-> >> To fix this issue, use die_entrypc() instead of dwarf_entrypc().
-> >>
-> >> Without this fix, perf probe -l shows incorrect offset:
-> >>
-> >>    # perf probe -l
-> >>      probe:clear_tasks_mm_cpumask (on 
-> >> clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c) 
-> >>
-> >>      probe:clear_tasks_mm_cpumask_1 (on 
-> >> clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c) 
-> >>
-> >>
-> >> With this:
-> >>
-> >>    # perf probe -l
-> >>      probe:clear_tasks_mm_cpumask (on 
-> >> clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
-> >>      probe:clear_tasks_mm_cpumask_1 (on 
-> >> clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
-> >>
-> >> Committer testing:
-> >>
-> >> Before:
-> >>
-> >>    [root@quaco ~]# perf probe -l
-> >>      probe:clear_tasks_mm_cpumask (on 
-> >> clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
-> >>    [root@quaco ~]#
-> >>
-> >> After:
-> >>
-> >>    [root@quaco ~]# perf probe -l
-> >>      probe:clear_tasks_mm_cpumask (on 
-> >> clear_tasks_mm_cpumask@kernel/cpu.c)
-> >>    [root@quaco ~]#
-> >>
-> >> Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number 
-> >> with inline function")
-> >> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> >> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >> Cc: Jiri Olsa <jolsa@redhat.com>
-> >> Cc: Namhyung Kim <namhyung@kernel.org>
-> >> Link: 
-> >> http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2 
-> >>
-> >> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >> ---
-> >>   tools/perf/util/probe-finder.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/tools/perf/util/probe-finder.c 
-> >> b/tools/perf/util/probe-finder.c
-> >> index cd9f95e5044e..7c8d30fb2b99 100644
-> >> --- a/tools/perf/util/probe-finder.c
-> >> +++ b/tools/perf/util/probe-finder.c
-> >> @@ -1578,7 +1578,7 @@ int debuginfo__find_probe_point(struct debuginfo 
-> >> *dbg, unsigned long addr,
-> >>           /* Get function entry information */
-> >>           func = basefunc = dwarf_diename(&spdie);
-> >>           if (!func ||
-> >> -            dwarf_entrypc(&spdie, &baseaddr) != 0 ||
-> >> +            die_entrypc(&spdie, &baseaddr) != 0 ||
-> >>               dwarf_decl_line(&spdie, &baseline) != 0) {
-> >>               lineno = 0;
-> >>               goto post;
-> >> @@ -1595,7 +1595,7 @@ int debuginfo__find_probe_point(struct debuginfo 
-> >> *dbg, unsigned long addr,
-> >>           while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
-> >>                           &indie)) {
-> >>               /* There is an inline function */
-> >> -            if (dwarf_entrypc(&indie, &_addr) == 0 &&
-> >> +            if (die_entrypc(&indie, &_addr) == 0 &&
-> >>                   _addr == addr) {
-> >>                   /*
-> >>                    * addr is at an inline function entry.
-> >>
-> > 
-> > 
-> > still broken
-> > 
-> > /usr/bin/ld: perf-in.o: in function `debuginfo__find_probe_point':
-> > /work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/probe-finder.c:1616: 
-> > undefined reference to `die_entrypc'
-> > 
-> 
-> 
-> And the fix for the perf build errors I reported against:
-> [PATCH 5.4 245/434] perf probe: Fix to list probe event with correct 
-> line number
-> [PATCH 5.4 248/434] perf probe: Fix to probe an inline function which 
-> has no entry pc
-> [PATCH 5.4 249/434] perf probe: Fix to show ranges of variables in 
-> functions without entry_pc
-> [PATCH 5.4 250/434] perf probe: Fix to show inlined function callsite 
-> without entry_pc
-> [PATCH 5.4 252/434] perf probe: Fix to probe a function which has no 
-> entry pc
-> 
-> is to add the missing:
-> 
->  From 91e2f539eeda26ab00bd03fae8dc434c128c85ed Mon Sep 17 00:00:00 2001
-> From: Masami Hiramatsu <mhiramat@kernel.org>
-> Date: Thu, 24 Oct 2019 18:12:54 +0900
-> Subject: [PATCH] perf probe: Fix to show function entry line as probe-able
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ drivers/mmc/host/sdhci.c | 3 +++
+ drivers/mmc/host/sdhci.h | 4 ++++
+ 2 files changed, 7 insertions(+)
 
-Thanks Thomas, you're right.
-The die_entrypc() was newly added by that commit for finding correct
-entry PC of functions.
-
-Greg, could you please apply above fix too?
-
-Thank you,
-
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 1b1c26da3fe0..e4b478efb560 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2316,6 +2316,9 @@ EXPORT_SYMBOL_GPL(sdhci_start_tuning);
+ 
+ void sdhci_end_tuning(struct sdhci_host *host)
+ {
++	if (host->quirks2 & SDHCI_QUIRK2_RESET_DATA_POST_TUNING)
++		sdhci_reset(host, SDHCI_RESET_DATA);
++
+ 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+ }
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index fe83ece6965b..28826124f7c3 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -484,6 +484,10 @@ struct sdhci_host {
+  * block count.
+  */
+ #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
++/*
++ * Controller needs to reset data lines once tuning is complete
++ */
++#define SDHCI_QUIRK2_RESET_DATA_POST_TUNING		(1<<19)
+ 
+ 	int irq;		/* Device IRQ */
+ 	void __iomem *ioaddr;	/* Mapped address */
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.19.2
+
