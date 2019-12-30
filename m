@@ -2,76 +2,41 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61094C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA03AC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C36206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="fYhcqLol"
+	by mail.kernel.org (Postfix) with ESMTP id A95D12071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfL3OeJ (ORCPT
+        id S1727560AbfL3OhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:34:09 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:42950 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:37:03 -0500
+Received: from mga18.intel.com ([134.134.136.126]:39952 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727538AbfL3OeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:34:09 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 87E981B2182A; Mon, 30 Dec 2019 17:34:05 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 87E981B2182A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716445; bh=oIQhxpQSU+of0GS4enDiLZVDRRd/vUUBvg7EXVnvZnE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=fYhcqLolt1EhnpUopLGMSCLx9VpOQgXu/zRNEWuyCigv50pasfgr1/RzL2USUkerA
-         uu1BpXhpwBwAaVqvkPvnai4JOWLNZ+UsA6tVrJN5ixnmZ7t+7mFvNS2DY+9BNMU+0u
-         QfY1FbHU+6IyksnyTnh/Drtnk3DJOLt8ijzfnI4Y=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id AD2C11B20206;
-        Mon, 30 Dec 2019 17:31:43 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru AD2C11B20206
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id BE9641B229CB;
-        Mon, 30 Dec 2019 17:31:41 +0300 (MSK)
-Received: from localhost.localdomain (unknown [196.196.203.126])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:41 +0300 (MSK)
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 20/20] net: core: add (unlikely) DSA support in napi_gro_frags()
-Date:   Mon, 30 Dec 2019 17:30:28 +0300
-Message-Id: <20191230143028.27313-21-alobakin@dlink.ru>
+        id S1727445AbfL3OhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:37:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 06:37:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,375,1571727600"; 
+   d="scan'208";a="209027737"
+Received: from anhtuanb-mobl.ccr.corp.intel.com (HELO M5530.gar.corp.intel.com) ([10.255.175.157])
+  by orsmga007.jf.intel.com with ESMTP; 30 Dec 2019 06:36:59 -0800
+From:   Harry Pan <harry.pan@intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     gs0622@gmail.com, Harry Pan <harry.pan@intel.com>,
+        stable@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH] powercap/intel_rapl: refine RAPL error handling to respect initial CPU matching
+Date:   Mon, 30 Dec 2019 22:36:56 +0800
+Message-Id: <20191230223645.1.I79ea8bb1c5a70c04c810d8305f5f7dee4ebed577@changeid>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
-References: <20191230143028.27313-1-alobakin@dlink.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,59 +44,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make napi_gro_frags() available for DSA-enabled device drivers by adding
-the same condition for them as the one in eth_type_trans().
+RAPL MMIO support depends on RAPL common driver, in case a new generation
+of CPU is booting but not in the RAPL support list, the processor_thermal
+driver invokes CPU hotplug API to enforce RAPL common driver adding new
+RAPL domain which would cause kernel crash by null pointer dereference
+because the internal RAPL domain resource mapping is not initialized after
+the common init.
 
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Add error handling to detect non initialized RAPL domain resource mapping
+and return error code to the caller; such that, it avoids early crash for
+new CPU and leave error messages through processor_thermal driver.
+
+Before:
+[    4.188566] BUG: kernel NULL pointer dereference, address: 0000000000000020
+...snip...
+[    4.189555] RIP: 0010:rapl_add_package+0x223/0x574
+[    4.189555] Code: b5 a0 31 c0 49 8b 4d 78 48 01 d9 48 8b 0c c1 49 89 4c c6 10 48 ff c0 48 83 f8 05 75 e7 49 83 ff 03 75 15 48 8b 05 09 bc 18 01 <8b> 70 20 41 89 b6 0c 05 00 00 85 f6 75 1a 49 81 c6 18 9
+[    4.189555] RSP: 0000:ffffb3adc00b3d90 EFLAGS: 00010246
+[    4.189555] RAX: 0000000000000000 RBX: 0000000000000098 RCX: 0000000000000000
+[    4.267161] usb 1-1: New USB device found, idVendor=2109, idProduct=2812, bcdDevice= b.e0
+[    4.189555] RDX: 0000000000001000 RSI: 0000000000000000 RDI: ffff9340caafd000
+[    4.189555] RBP: ffffb3adc00b3df8 R08: ffffffffa0246e28 R09: ffff9340caafc000
+[    4.189555] R10: 000000000000024a R11: ffffffff9ff1f6f2 R12: 00000000ffffffed
+[    4.189555] R13: ffff9340caa94800 R14: ffff9340caafc518 R15: 0000000000000003
+[    4.189555] FS:  0000000000000000(0000) GS:ffff9340ce200000(0000) knlGS:0000000000000000
+[    4.189555] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    4.189555] CR2: 0000000000000020 CR3: 0000000302c14001 CR4: 00000000003606f0
+[    4.189555] Call Trace:
+[    4.189555]  ? __switch_to_asm+0x40/0x70
+[    4.189555]  rapl_mmio_cpu_online+0x47/0x64
+[    4.189555]  ? rapl_mmio_write_raw+0x33/0x33
+[    4.281059] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    4.189555]  cpuhp_invoke_callback+0x29f/0x66f
+[    4.189555]  ? __schedule+0x46d/0x6a0
+[    4.189555]  cpuhp_thread_fun+0xb9/0x11c
+[    4.189555]  smpboot_thread_fn+0x17d/0x22f
+[    4.297006] usb 1-1: Product: USB2.0 Hub
+[    4.189555]  ? cpu_report_death+0x43/0x43
+[    4.189555]  kthread+0x137/0x13f
+[    4.189555]  ? cpu_report_death+0x43/0x43
+[    4.189555]  ? kthread_blkcg+0x2e/0x2e
+[    4.312951] usb 1-1: Manufacturer: VIA Labs, Inc.
+[    4.189555]  ret_from_fork+0x1f/0x40
+[    4.189555] Modules linked in:
+[    4.189555] CR2: 0000000000000020
+[    4.189555] ---[ end trace 01bb812aabc791f4 ]---
+
+After:
+[    0.787125] intel_rapl_common: driver does not support CPU family 6 model 166
+...snip...
+[    4.245273] proc_thermal 0000:00:04.0: failed to add RAPL MMIO interface
+
+Note:
+This example above is on a v5.4 branch without below two CML commits yet:
+commit f84fdcbc8ec0 ("powercap/intel_rapl: add support for Cometlake desktop")
+commit cae478114fbe ("powercap/intel_rapl: add support for CometLake Mobile")
+
+Fixes: 555c45fe0d04 ("int340X/processor_thermal_device: add support for MMIO RAPL")
+
+Cc: <stable@vger.kernel.org> # v5.3+
+Signed-off-by: Harry Pan <harry.pan@intel.com>
+
 ---
- net/core/dev.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index f1b8afcfbc0f..923b930a4506 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -142,6 +142,7 @@
- #include <linux/net_namespace.h>
- #include <linux/indirect_call_wrapper.h>
- #include <net/devlink.h>
-+#include <net/dsa.h>
+ drivers/powercap/intel_rapl_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 318d023a6a11..aa0a8de413b1 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -1294,6 +1294,9 @@ struct rapl_package *rapl_add_package(int cpu, struct rapl_if_priv *priv)
+ 	struct cpuinfo_x86 *c = &cpu_data(cpu);
+ 	int ret;
  
- #include "net-sysfs.h"
- 
-@@ -5951,6 +5952,7 @@ static gro_result_t napi_frags_finish(struct napi_struct *napi,
-  */
- static struct sk_buff *napi_frags_skb(struct napi_struct *napi)
- {
-+	struct net_device *dev = napi->dev;
- 	struct sk_buff *skb = napi->skb;
- 	const struct ethhdr *eth;
- 	unsigned int hlen = sizeof(*eth);
-@@ -5964,7 +5966,7 @@ static struct sk_buff *napi_frags_skb(struct napi_struct *napi)
- 		eth = skb_gro_header_slow(skb, hlen, 0);
- 		if (unlikely(!eth)) {
- 			net_warn_ratelimited("%s: dropping impossible skb from %s\n",
--					     __func__, napi->dev->name);
-+					     __func__, dev->name);
- 			napi_reuse_skb(napi, skb);
- 			return NULL;
- 		}
-@@ -5978,10 +5980,13 @@ static struct sk_buff *napi_frags_skb(struct napi_struct *napi)
- 
- 	/*
- 	 * This works because the only protocols we care about don't require
--	 * special handling.
-+	 * special handling... except for DSA.
- 	 * We'll fix it up properly in napi_frags_finish()
- 	 */
--	skb->protocol = eth->h_proto;
-+	if (unlikely(netdev_uses_dsa(dev)) && dsa_can_decode(skb, dev))
-+		skb->protocol = htons(ETH_P_XDSA);
-+	else
-+		skb->protocol = eth->h_proto;
- 
- 	return skb;
- }
++	if (!rapl_defaults)
++		return ERR_PTR(-ENODEV);
++
+ 	rp = kzalloc(sizeof(struct rapl_package), GFP_KERNEL);
+ 	if (!rp)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.24.1
 
