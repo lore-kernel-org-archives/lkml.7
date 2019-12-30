@@ -2,113 +2,101 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B0FC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D4C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4C220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577720652;
-	bh=38eu/sesVAvr+TZjCpqkTZ3maQiy3tFyzcBfQPNaq04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g+rgIKMI6SZ1/TZll0wnEESSJOBsBq9f0hzZQKKLxwt49pvCfUAP35l4pHwmbA74A
-	 Rps83XWMEi+zmOD31m89l99JErwcNKd8SeNqXjUfiYH8bYAvR+hiCYzpyiWLhve/S1
-	 6LejFpIYFQn1KYhslhZByvgIQK5UHuBbE5eWBgn8=
+	by mail.kernel.org (Postfix) with ESMTP id 4CB4520718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfL3PoL convert rfc822-to-8bit (ORCPT
+        id S1727635AbfL3Pr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:44:11 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34938 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfL3PoL (ORCPT
+        Mon, 30 Dec 2019 10:47:56 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:37727 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfL3Prz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:44:11 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so32952131edv.2;
-        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BqjpB17I4FAVcCVel4kRRM5u2ZSN97epJBsAntRnbvo=;
-        b=BGn6eLF/ceEdI0HWKQ3q+meVBxDTd6TvXMlQzyPYeivJZclIvXpfkNIIqj+qDDzuYv
-         m6jGEvK4vVkZN1IKn1y9P/3Ru/yNsr1vaXaZcBXydbKN5lv4Bbbozaown/breSai8p9B
-         OBQjMa6c4axPG+fc+4XIhbcEcH6+hlVpAauTKwjTNYcP03AA0MMYVtSOv4tKWUmXWhAo
-         OmXBAqvc8Sw/DLIHQwLdxXpy/vYN2nOl2Q5xd96KZuvH03ps2tyY5dwQvBTt8WczcXpM
-         f+FbpO6CCK6USHKxGMpw8sgSWIqoqvdxJSZkL9a3Wn5Nu3/DFc+cOoHdjjc8NWalOQlq
-         siGg==
-X-Gm-Message-State: APjAAAVp6kz88B1Wr09Sb3FgDCDii+WVuf3rUYZhtbakI0kCSkawVJU3
-        LRhzkMXdl7ColV0t674FpG+L7LnN
-X-Google-Smtp-Source: APXvYqxzo56maTlSxQsNU5A2SyQb7P5FV8UkAKWQclUCoOB2bQNqmZBjZSuWqej4dQDiaLucch6EvA==
-X-Received: by 2002:a17:906:2649:: with SMTP id i9mr71611722ejc.120.1577720649214;
-        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
-Received: from pi3 ([194.230.155.138])
-        by smtp.googlemail.com with ESMTPSA id t1sm5651917ejg.32.2019.12.30.07.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 07:44:08 -0800 (PST)
-Date:   Mon, 30 Dec 2019 16:44:05 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
- for Exynos4412
-Message-ID: <20191230154405.GC4918@pi3>
-References: <20191220115653.6487-1-a.swigon@samsung.com>
- <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
- <20191220115653.6487-5-a.swigon@samsung.com>
+        Mon, 30 Dec 2019 10:47:55 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M58SY-1in3CY0kHk-0017mD; Mon, 30 Dec 2019 16:47:54 +0100
+Received: by mail-qt1-f172.google.com with SMTP id e5so29857594qtm.6;
+        Mon, 30 Dec 2019 07:47:53 -0800 (PST)
+X-Gm-Message-State: APjAAAWxHvcFVLv1Cs8FC/eIa2GG266m8Xis5ID6vHSqXu5Z4p9FpFIa
+        c+fl+Dknj+BkC7PFHSeEYqHfKCim6NBrEhAwzfM=
+X-Google-Smtp-Source: APXvYqzS9Daau4V6KdFtMzVDpaHEdaxphNfcAOGaF7CR6jf69NGaa3wFFDLjiwkZ+wtx1QS+13hvCMDyUD2ID479i1E=
+X-Received: by 2002:ac8:709a:: with SMTP id y26mr49110478qto.304.1577720873024;
+ Mon, 30 Dec 2019 07:47:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191220115653.6487-5-a.swigon@samsung.com>
+References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
+ <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+ <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
+ <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
+ <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
+ <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com> <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
+In-Reply-To: <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Dec 2019 16:47:37 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+Message-ID: <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:evaCvZk8IUe5DvZ2WF2ej/4JZiaCp6VDfXgAASc3StzTy+WWyux
+ 9q/Fe1VLxcTyurCjEbpHcvcGJiwvUYV582B9WHcgfaGRc/9SPpeqDlQuECyaylFN3lxXK66
+ 7WGy4AstLRmSndFk78TaiQZfLzQciuyELEZCvMZAr/YBJoZiBljgZYQKSdPWW/W89SY7qSk
+ 53MuPvPSxgt8bRz8Ium4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/oHvFZngoeg=:Xo2Ww0CgxaMTEALgxQtEFW
+ 3R2fS9honTvQy9E6Dlg+ok2VaaaCKbHQEagpbNtNX3ramhc+0FFM+MvLAR5hSlqDI3emjV13J
+ tnviOrVt9AzEZHayALsgC15Q2GpnPDNZ1CvWSQ8XMwlgACkGBJhYjaMWKGU8aQ+5dGVw3HbJq
+ TYyv/urUvyiOObm3Sed+/mCAPZzxemMPLZWw39TWY1oizXiMdXNh/giobItiwwLWSxG3LDZCn
+ M8OOCFgaLAJQoAr/BcdZ7HdADXpycgkX2W2mYBv1CwNkDf3Wtv5dcciyFByOQr/rs2kX4T7UW
+ UybFKrsmIVDBK8PowVMEZcDlVcrQ27JImyAQehm2CA8yVjgQMg2qdK4EtKSt9zb/kiILhNiZF
+ ulCs20ibaCs+qO1XGPcZedqB9TTmQrEA5mvAxj3CyBe60iNQZqzmiZ+2cbmTuJwuzAVfTk6jB
+ d5+AQI2EkDUN5VTzeyNpw5+Hjp/YQzczhuBhK9ak2ajOapb3bG+BFTnkJXsYBlposab5kwVKL
+ BagpAHwUdIjgcEDvwVrdc+U3YUG0zgn37dKZ7ZO9Ms+/KQLkIqDuZrZYL4pcB/5467IY1arOT
+ T5Qn58IMUbjIN98r1tvtxRDDBWe224mSIzXMlIjuukDa3X2WDGJB0CgrJgcms/2h7vMqEWQlr
+ mCwdhDAdPJWDr+05gFETuiubBNSrxbrKQafPZ36rVBxbssPCKl1Et6SSJCHbTsGizrVz1kGhM
+ e+VAlry16Fn7qRCSz5//EvdB4D6HfcfgTIb+F5LyO8QwfTZmfrEMJC6QcKxIg/ewkvtG4/ynd
+ hPqNmsymey24asg8Zft48oBfklJuqoVCTyy0BmEmACsGiXByRRIK8JyMMRwNwNcyvoQPXoUmv
+ zmLxS8ZhhSyS0+GDUf7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
-> This patch adds the following properties to the Exynos4412 DT:
->   - exynos,interconnect-parent-node: to declare connections between
->     nodes in order to guarantee PM QoS requirements between nodes;
->   - #interconnect-cells: required by the interconnect framework.
-> 
-> Note that #interconnect-cells is always zero and node IDs are not
-> hardcoded anywhere.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+On Mon, Dec 30, 2019 at 4:39 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Mon, Dec 30, 2019 at 4:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Dec 30, 2019 at 3:37 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > >
+> > > On Mon, Dec 30, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-The order of patches is confusing. Patches 4 and 6 are split - do the
-depend on 5? I doubt but...
+> > Returning success from clock_gettime() on a kernel with only
+> > time64 support and a libc with only time32 support (or vice
+> > versa) would be a bug.
+>
+> Ah, right, hence why the 32-bit compat code is behind a
+> still-on-by-default-but-not-for-long menu option.
 
-Adjust the title to match the contents - you are not adding bindings but
-properties to bus nodes. Also the prefix is ARM: (look at recent
-commits).
+I expect this to remain on-by-default for a rather long time, as we still
+to run old binaries well into 2030s. Making it configurable is done for
+two reasons:
 
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index 4ce3d77a6704..d9d70eacfcaf 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -90,6 +90,7 @@
->  &bus_dmc {
->  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->  	vdd-supply = <&buck1_reg>;
-> +	#interconnect-cells = <0>;
+- on embedded systems that have all user space built with time64,
+  turning this off can make the kernel slightly smaller
 
-This does not look like property of Odroid but Exynos4412 or Exynos4.
+- turning it off lets you check that no code relies on calling the old
+  interfaces internally, bypassing the C library, in a way that works
+  at the moment but may break after 2038.
 
-Best regards,
-Krzysztof
+         Arnd
