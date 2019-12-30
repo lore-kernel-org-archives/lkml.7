@@ -2,146 +2,146 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1963C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B9EC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8957320748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9113120722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfL3TLP (ORCPT
+        id S1727654AbfL3TM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 14:11:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39942 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfL3TLP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 14:11:15 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c77so10919082oib.7;
-        Mon, 30 Dec 2019 11:11:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FD0PHS0WJfyz6nKHt4il24Ip/Qej/LUf3rJZhnZB6i8=;
-        b=M/c67WBWJSTLf58k8EC2p23H0XbRlQArbKGvzXK0vTFhCtJ7NL9SXznOdU9ZEolVMp
-         j/qL+qSU2ueWFZe//MS4oEfVXd3Y3rOgLncC4iHEPsDMXHxmZGncxbkqnZvtCyL645+x
-         JBRhnH7ROxndezRYK2jPlSJXywwEQwjOkIE5/6YnnP4VNSpfpE9B9jS2nXcL8pIzPUlZ
-         RXuA+Z5U2I+vcuNFo+Oy1wCze84+QzVAe6GlkLA0+Oxrmsh2ien+DH2Qy22uXBcDVzWu
-         DMnFhBDKPKBY0K7fXv+6I2WR4PB0MYvWzW3jBTvHykHV3ZQVai4eXLcMBgxDyMRZsOHn
-         ihGg==
-X-Gm-Message-State: APjAAAU4aQX1H2HU+ug1+4XDjMpyzkFDqEJYVk/W0x8m2CHc6u6+XVQl
-        2ZzM8crq0F/MpyVjJgfpoAkg6nH1swvG0NQkHVQ=
-X-Google-Smtp-Source: APXvYqxVHb0i7kf7TiVi7M3YMSWRrzG8vxiPCoBQIAyDmz0C5Wbjsxn9J+D3vmqk2ELiRLzRo9UT2qwxOwdahqYZViI=
-X-Received: by 2002:aca:eb83:: with SMTP id j125mr236048oih.153.1577733074733;
- Mon, 30 Dec 2019 11:11:14 -0800 (PST)
+        Mon, 30 Dec 2019 14:12:27 -0500
+Received: from ms.lwn.net ([45.79.88.28]:60510 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727278AbfL3TM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 14:12:26 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 80B74536;
+        Mon, 30 Dec 2019 19:12:25 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 12:12:24 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     mchehab+samsung@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2 1/8] Documentation: convert nfs.txt to ReST
+Message-ID: <20191230121224.1d9e795a@lwn.net>
+In-Reply-To: <ddeb8a98f4c5c24df2f36e1ce1cc5ab4da6442a1.1577681164.git.dwlsalmeida@gmail.com>
+References: <cover.1577681164.git.dwlsalmeida@gmail.com>
+        <ddeb8a98f4c5c24df2f36e1ce1cc5ab4da6442a1.1577681164.git.dwlsalmeida@gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20191230172751.17985-1-krzk@kernel.org> <20191230172751.17985-5-krzk@kernel.org>
-In-Reply-To: <20191230172751.17985-5-krzk@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 30 Dec 2019 20:11:03 +0100
-Message-ID: <CAMuHMdUXJo3=x32xbfSUXs3O3JHaFpfxt0mHupEb+vzi=5+S4g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] i2c: Enable compile testing for some of drivers
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On Mon, 30 Dec 2019 01:55:55 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
 
-On Mon, Dec 30, 2019 at 6:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Some of the I2C bus drivers can be compile tested to increase build
-> coverage.  This requires also:
-> 1. Adding dependencies on COMMON_CLK for BCM2835 and Meson I2C
->    controllers,
-> 2. Adding 'if' conditional to 'default y' so they will not get enabled
->    by default on all other architectures,
-> 3. Limiting few compile test options to supported architectures (which
->    provide the readsX()/writesX() primitives).
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> This patch converts nfs.txt to RST. It also moves it to admin-guide.
+> The reason for moving it is because this document contains information
+> useful for system administrators, as noted on the following paragraph:
+> 
+> 'The purpose of this document is to provide information on some of the
+> special features of the NFS client that can be configured by system
+> administrators'.
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-Thanks for your patch!
+This generally looks good, I just have one request...
 
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -367,7 +367,7 @@ comment "I2C system bus drivers (mostly embedded / system-on-chip)"
->
->  config I2C_ALTERA
->         tristate "Altera Soft IP I2C"
-> -       depends on (ARCH_SOCFPGA || NIOS2) && OF
-> +       depends on (ARCH_SOCFPGA || NIOS2 || COMPILE_TEST) && OF
+>  Documentation/admin-guide/index.rst           |  1 +
+>  Documentation/admin-guide/nfs/index.rst       |  9 ++
+>  .../nfs/nfs-client.rst}                       | 91 ++++++++++---------
+>  3 files changed, 58 insertions(+), 43 deletions(-)
+>  create mode 100644 Documentation/admin-guide/nfs/index.rst
+>  rename Documentation/{filesystems/nfs/nfs.txt => admin-guide/nfs/nfs-client.rst} (72%)
+> 
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index 4405b7485312..4433f3929481 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -76,6 +76,7 @@ configure specific aspects of kernel behavior to your liking.
+>     device-mapper/index
+>     efi-stub
+>     ext4
+> +   nfs/index
+>     gpio/index
+>     highuid
+>     hw_random
+> diff --git a/Documentation/admin-guide/nfs/index.rst b/Documentation/admin-guide/nfs/index.rst
+> new file mode 100644
+> index 000000000000..f5c0180f4e5e
+> --- /dev/null
+> +++ b/Documentation/admin-guide/nfs/index.rst
+> @@ -0,0 +1,9 @@
+> +=============
+> +NFS
+> +=============
+> +
+> +.. toctree::
+> +    :maxdepth: 1
+> +
+> +    nfs-client
+> +
+> diff --git a/Documentation/filesystems/nfs/nfs.txt b/Documentation/admin-guide/nfs/nfs-client.rst
+> similarity index 72%
+> rename from Documentation/filesystems/nfs/nfs.txt
+> rename to Documentation/admin-guide/nfs/nfs-client.rst
+> index f2571c8bef74..f01bf6a6c207 100644
+> --- a/Documentation/filesystems/nfs/nfs.txt
+> +++ b/Documentation/admin-guide/nfs/nfs-client.rst
+> @@ -1,3 +1,6 @@
+> +==========
+> +NFS Client
+> +==========
+>  
+>  The NFS client
+>  ==============
+> @@ -59,10 +62,11 @@ The DNS resolver
+>  
+>  NFSv4 allows for one server to refer the NFS client to data that has been
+>  migrated onto another server by means of the special "fs_locations"
+> -attribute. See
+> -	http://tools.ietf.org/html/rfc3530#section-6
+> -and
+> -	http://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
+> +attribute. See `RFC3530 Section 6: Filesystem Migration and Replication`_ and
+> +`Implementation Guide for Referrals in NFSv4`_.
+> +
+> +.. _RFC3530 Section 6\: Filesystem Migration and Replication: http://tools.ietf.org/html/rfc3530#section-6
+> +.. _Implementation Guide for Referrals in NFSv4: http://tools.ietf.org/html/draft-ietf-nfsv4-referrals-00
+>  
+>  The fs_locations information can take the form of either an ip address and
+>  a path, or a DNS hostname and a path. The latter requires the NFS client to
+> @@ -72,16 +76,16 @@ upcall to allow userland to provide this service.
+>  Assuming that the user has the 'rpc_pipefs' filesystem mounted in the usual
+>  /var/lib/nfs/rpc_pipefs, the upcall consists of the following steps:
+>  
+> -   (1) The process checks the dns_resolve cache to see if it contains a
+> +   #.  The process checks the dns_resolve cache to see if it contains a
 
-Might be easier to read and maintain by splitting in "hard" and "useful"
-dependencies:
+It really only occurs to me now that we probaby shouldn't use the "#"
+notation.  If we truly need an *enumerated* list, meaning that the numbers
+are an important part of reading the list, then we should retain the
+numbers in the plain-text version, even if that means we occasionally have
+to change them if the list changes.  If, instead, the numbers aren't
+important, we should just use bullets instead.
 
-    depends on OF
-    depends on ARCH_SOCFPGA || NIOS2 || COMPILE_TEST
+In this case, we have an explicit sequence of events, so the numbers should
+probably remain.
 
-> @@ -611,8 +612,8 @@ config I2C_EMEV2
->
->  config I2C_EXYNOS5
->         tristate "Exynos5 high-speed I2C driver"
-> -       depends on ARCH_EXYNOS && OF
-> -       default y
-> +       depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
+Thanks,
 
-This means it is only useful on DT-based Exynos platforms, but compiles
-everywhere?
-
-Do you still have support for non-DT Exynos platforms?
-ARCH_EXYNOS depends on ARCH_MULTI_V7?
-(and its help text mentions Exynos 4/5 only, no 3?)
-
-> @@ -1055,15 +1057,15 @@ config I2C_SYNQUACER
->
->  config I2C_TEGRA
->         tristate "NVIDIA Tegra internal I2C controller"
-> -       depends on ARCH_TEGRA
-> +       depends on ARCH_TEGRA || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
-
-Perhaps
-
-    depends on ARCH_TEGRA || COMPILE_TEST
-    depends on ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC
-# needs <foo>
-
-to remember which <foo> feature is needed?
-
-> @@ -1403,8 +1405,8 @@ config I2C_OPAL
->
->  config I2C_ZX2967
->         tristate "ZTE ZX2967 I2C support"
-> -       depends on ARCH_ZX
-> -       default y
-> +       depends on ARCH_ZX || (COMPILE_TEST && (ARC || ARM || ARM64 || M68K || RISCV || SUPERH || SPARC))
-
-Same here/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+jon
