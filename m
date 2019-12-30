@@ -2,101 +2,188 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722D4C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A56C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB4520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC25206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="epJvuCq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfL3Pr4 (ORCPT
+        id S1727654AbfL3Pyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:47:56 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:37727 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfL3Prz (ORCPT
+        Mon, 30 Dec 2019 10:54:54 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53952 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727580AbfL3Pyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:47:55 -0500
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M58SY-1in3CY0kHk-0017mD; Mon, 30 Dec 2019 16:47:54 +0100
-Received: by mail-qt1-f172.google.com with SMTP id e5so29857594qtm.6;
-        Mon, 30 Dec 2019 07:47:53 -0800 (PST)
-X-Gm-Message-State: APjAAAWxHvcFVLv1Cs8FC/eIa2GG266m8Xis5ID6vHSqXu5Z4p9FpFIa
-        c+fl+Dknj+BkC7PFHSeEYqHfKCim6NBrEhAwzfM=
-X-Google-Smtp-Source: APXvYqzS9Daau4V6KdFtMzVDpaHEdaxphNfcAOGaF7CR6jf69NGaa3wFFDLjiwkZ+wtx1QS+13hvCMDyUD2ID479i1E=
-X-Received: by 2002:ac8:709a:: with SMTP id y26mr49110478qto.304.1577720873024;
- Mon, 30 Dec 2019 07:47:53 -0800 (PST)
+        Mon, 30 Dec 2019 10:54:54 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUFslYT107724;
+        Mon, 30 Dec 2019 09:54:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577721287;
+        bh=717YTbPxt9H6OLOqeAdytOQWGa7WnNOXnJX7AvQNYc0=;
+        h=From:To:CC:Subject:Date;
+        b=epJvuCq4AhWIKClnhqjqahRxF6Nl+jO/ft3fjmVY8Zta+yPzB1+Qom7zjDh7x6C8M
+         dxWnA/BxMYcchHx9MBx34fuDKdvNoNp/qvuE2m5KBqg0edKxuhgfdYloTuT3mCKWab
+         FnYk8voaE0zOhsb6/o1ZJfYHPeOUXkWV4EjPOYjc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUFslDp031569;
+        Mon, 30 Dec 2019 09:54:47 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 09:54:47 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 09:54:47 -0600
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUFsldo090087;
+        Mon, 30 Dec 2019 09:54:47 -0600
+Received: from localhost ([10.250.65.50])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xBUFsku26998;
+        Mon, 30 Dec 2019 09:54:46 -0600 (CST)
+From:   "Andrew F. Davis" <afd@ti.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: [PATCH v2] drm: Move radeon and amdgpu Kconfig options into their directories
+Date:   Mon, 30 Dec 2019 10:54:46 -0500
+Message-ID: <20191230155446.11345-1-afd@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
- <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
- <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
- <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
- <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
- <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com> <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
-In-Reply-To: <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 30 Dec 2019 16:47:37 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
-Message-ID: <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
-Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christian Brauner <christian.brauner@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:evaCvZk8IUe5DvZ2WF2ej/4JZiaCp6VDfXgAASc3StzTy+WWyux
- 9q/Fe1VLxcTyurCjEbpHcvcGJiwvUYV582B9WHcgfaGRc/9SPpeqDlQuECyaylFN3lxXK66
- 7WGy4AstLRmSndFk78TaiQZfLzQciuyELEZCvMZAr/YBJoZiBljgZYQKSdPWW/W89SY7qSk
- 53MuPvPSxgt8bRz8Ium4w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/oHvFZngoeg=:Xo2Ww0CgxaMTEALgxQtEFW
- 3R2fS9honTvQy9E6Dlg+ok2VaaaCKbHQEagpbNtNX3ramhc+0FFM+MvLAR5hSlqDI3emjV13J
- tnviOrVt9AzEZHayALsgC15Q2GpnPDNZ1CvWSQ8XMwlgACkGBJhYjaMWKGU8aQ+5dGVw3HbJq
- TYyv/urUvyiOObm3Sed+/mCAPZzxemMPLZWw39TWY1oizXiMdXNh/giobItiwwLWSxG3LDZCn
- M8OOCFgaLAJQoAr/BcdZ7HdADXpycgkX2W2mYBv1CwNkDf3Wtv5dcciyFByOQr/rs2kX4T7UW
- UybFKrsmIVDBK8PowVMEZcDlVcrQ27JImyAQehm2CA8yVjgQMg2qdK4EtKSt9zb/kiILhNiZF
- ulCs20ibaCs+qO1XGPcZedqB9TTmQrEA5mvAxj3CyBe60iNQZqzmiZ+2cbmTuJwuzAVfTk6jB
- d5+AQI2EkDUN5VTzeyNpw5+Hjp/YQzczhuBhK9ak2ajOapb3bG+BFTnkJXsYBlposab5kwVKL
- BagpAHwUdIjgcEDvwVrdc+U3YUG0zgn37dKZ7ZO9Ms+/KQLkIqDuZrZYL4pcB/5467IY1arOT
- T5Qn58IMUbjIN98r1tvtxRDDBWe224mSIzXMlIjuukDa3X2WDGJB0CgrJgcms/2h7vMqEWQlr
- mCwdhDAdPJWDr+05gFETuiubBNSrxbrKQafPZ36rVBxbssPCKl1Et6SSJCHbTsGizrVz1kGhM
- e+VAlry16Fn7qRCSz5//EvdB4D6HfcfgTIb+F5LyO8QwfTZmfrEMJC6QcKxIg/ewkvtG4/ynd
- hPqNmsymey24asg8Zft48oBfklJuqoVCTyy0BmEmACsGiXByRRIK8JyMMRwNwNcyvoQPXoUmv
- zmLxS8ZhhSyS0+GDUf7g==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 4:39 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Mon, Dec 30, 2019 at 4:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Mon, Dec 30, 2019 at 3:37 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> > >
-> > > On Mon, Dec 30, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Most Kconfig options to enable a driver are in the Kconfig file
+inside the relevant directory, move these two to the same.
 
-> > Returning success from clock_gettime() on a kernel with only
-> > time64 support and a libc with only time32 support (or vice
-> > versa) would be a bug.
->
-> Ah, right, hence why the 32-bit compat code is behind a
-> still-on-by-default-but-not-for-long menu option.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
 
-I expect this to remain on-by-default for a rather long time, as we still
-to run old binaries well into 2030s. Making it configurable is done for
-two reasons:
+Changes from v1:
+ - Rebased
 
-- on embedded systems that have all user space built with time64,
-  turning this off can make the kernel slightly smaller
+ drivers/gpu/drm/Kconfig            | 34 ------------------------------
+ drivers/gpu/drm/amd/amdgpu/Kconfig | 18 ++++++++++++++++
+ drivers/gpu/drm/radeon/Kconfig     | 18 ++++++++++++++++
+ 3 files changed, 36 insertions(+), 34 deletions(-)
 
-- turning it off lets you check that no code relies on calling the old
-  interfaces internally, bypassing the C library, in a way that works
-  at the moment but may break after 2038.
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index bfdadc3667e0..714ae842b7ce 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -231,42 +231,8 @@ source "drivers/gpu/drm/i2c/Kconfig"
+ 
+ source "drivers/gpu/drm/arm/Kconfig"
+ 
+-config DRM_RADEON
+-	tristate "ATI Radeon"
+-	depends on DRM && PCI && MMU
+-	select FW_LOADER
+-        select DRM_KMS_HELPER
+-        select DRM_TTM
+-	select POWER_SUPPLY
+-	select HWMON
+-	select BACKLIGHT_CLASS_DEVICE
+-	select INTERVAL_TREE
+-	help
+-	  Choose this option if you have an ATI Radeon graphics card.  There
+-	  are both PCI and AGP versions.  You don't need to choose this to
+-	  run the Radeon in plain VGA mode.
+-
+-	  If M is selected, the module will be called radeon.
+-
+ source "drivers/gpu/drm/radeon/Kconfig"
+ 
+-config DRM_AMDGPU
+-	tristate "AMD GPU"
+-	depends on DRM && PCI && MMU
+-	select FW_LOADER
+-	select DRM_KMS_HELPER
+-	select DRM_SCHED
+-	select DRM_TTM
+-	select POWER_SUPPLY
+-	select HWMON
+-	select BACKLIGHT_CLASS_DEVICE
+-	select INTERVAL_TREE
+-	select CHASH
+-	help
+-	  Choose this option if you have a recent AMD Radeon graphics card.
+-
+-	  If M is selected, the module will be called amdgpu.
+-
+ source "drivers/gpu/drm/amd/amdgpu/Kconfig"
+ 
+ source "drivers/gpu/drm/nouveau/Kconfig"
+diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
+index 9375e7f12420..f6100cb193fb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/Kconfig
++++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+@@ -1,4 +1,22 @@
+ # SPDX-License-Identifier: MIT
++
++config DRM_AMDGPU
++	tristate "AMD GPU"
++	depends on DRM && PCI && MMU
++	select FW_LOADER
++	select DRM_KMS_HELPER
++	select DRM_SCHED
++	select DRM_TTM
++	select POWER_SUPPLY
++	select HWMON
++	select BACKLIGHT_CLASS_DEVICE
++	select INTERVAL_TREE
++	select CHASH
++	help
++	  Choose this option if you have a recent AMD Radeon graphics card.
++
++	  If M is selected, the module will be called amdgpu.
++
+ config DRM_AMDGPU_SI
+ 	bool "Enable amdgpu support for SI parts"
+ 	depends on DRM_AMDGPU
+diff --git a/drivers/gpu/drm/radeon/Kconfig b/drivers/gpu/drm/radeon/Kconfig
+index 6f60f4840cc5..ba67b879d31d 100644
+--- a/drivers/gpu/drm/radeon/Kconfig
++++ b/drivers/gpu/drm/radeon/Kconfig
+@@ -1,4 +1,22 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++
++config DRM_RADEON
++	tristate "ATI Radeon"
++	depends on DRM && PCI && MMU
++	select FW_LOADER
++	select DRM_KMS_HELPER
++	select DRM_TTM
++	select POWER_SUPPLY
++	select HWMON
++	select BACKLIGHT_CLASS_DEVICE
++	select INTERVAL_TREE
++	help
++	  Choose this option if you have an ATI Radeon graphics card.  There
++	  are both PCI and AGP versions.  You don't need to choose this to
++	  run the Radeon in plain VGA mode.
++
++	  If M is selected, the module will be called radeon.
++
+ config DRM_RADEON_USERPTR
+ 	bool "Always enable userptr support"
+ 	depends on DRM_RADEON
+-- 
+2.17.1
 
-         Arnd
