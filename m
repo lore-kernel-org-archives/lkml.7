@@ -2,126 +2,210 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92889C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C2C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62F46222C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7AE2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HMOl0NfU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqxvn/cG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfL3NlC (ORCPT
+        id S1727524AbfL3Nlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 08:41:02 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34427 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbfL3NlB (ORCPT
+        Mon, 30 Dec 2019 08:41:45 -0500
+Received: from mail-lf1-f43.google.com ([209.85.167.43]:44096 "EHLO
+        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727445AbfL3Nlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 08:41:01 -0500
-Received: by mail-yw1-f68.google.com with SMTP id b186so14093502ywc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 05:41:01 -0800 (PST)
+        Mon, 30 Dec 2019 08:41:44 -0500
+Received: by mail-lf1-f43.google.com with SMTP id v201so25130164lfa.11;
+        Mon, 30 Dec 2019 05:41:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IGzPYKUVu3c/nY8lDHX/WpdNFa7rqqFtVUQ1GhvvgzI=;
-        b=HMOl0NfUe59KNPwN3rupWGM8NTgeAGnLbF8B+75zNeLMinYwPYyBGeTiOYeEfBVG8U
-         8bsaODv1BEVilvRyBhNKYAnUXCFYZzo/l1I+PHjKoQEex2+6LFdna+PwZT9Fweb4KlLs
-         KtJQMtABuZ6+SnNhJgkazDVzycJHeln59myv+yix7QHE8Du9dGXmylFtJEW0y4ok4TfY
-         TZ93Hat0NzifmKpnoP6A1XRxxrxzs2cTNi5Ha6jz9qGWQctBkTQ4n2Mxay5/sIMim2+B
-         bRaSX3R9XCtrQw7qoowBaiN7ma3GLoYhhQp7RaT/87JgHX4n0VkIFd/JNGtdfu4I4yjT
-         Cvog==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=nSnNuDmIxk9D1cWa2tIsDeJnMaH3k9bbBRnOjY8Xz2s=;
+        b=dqxvn/cGLpZqNffjzVAoJ+a2LLKoXGp3ryGHp3+2icbx3xI8lA2BKnenqenDRTTQnX
+         gylk8OI0NHpSF2Qqe0SB8tBqnzbp4Rkin3/Nf8MQdNJJhjCeSU4ZCXsmISYEgmm3svl0
+         PQ3iLLU7qW60y1v01KMgnWepSTezjDtnvr7dM23+8NZC7BN0KbsNKTh7Fjd1haGvnIz7
+         5iOlbE1mAMVr5XYVthyodV6Ibo+2iuZSMl30AbdeTpBiYKZXbJz7fmc8SNvltLD80/kt
+         I0ezVD1zZWHvsbeM8cRWCm2r3jvZVtPLGObJ58/euvv5/6/bbxRyeYztN29hj8/8rC1j
+         9jqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IGzPYKUVu3c/nY8lDHX/WpdNFa7rqqFtVUQ1GhvvgzI=;
-        b=qvM+ZaeUO4Di66qG46JnO8S4hpnSBxthkbno6yjNsMPfoU6GkYyLqoydySXK6MiI7V
-         9yRcOTYoOZYqEoN4WSY0uW3TH9rkkNPXU1K7aL1I74k4OR/V+9A6UQk6Q9IU5Cg7glaU
-         swLvpmAgYG+eebW2j3XVVPM5awOzw7mHJ8pZL2vZQQxOaKG7OaEpn3w857EVo5Y0lTQO
-         uF6TRSrrxN7YD5h2mMnS1RFD/BR9E/ic67aNRfihL2aPOUucQqS25PHARtPXZggKdQ8+
-         GPY+etFAN56UVh8h9GQDXiz3g3xTub13C3H4FTcj4z6S6RUhzTky9fklbctG0yCyiXX1
-         gpyA==
-X-Gm-Message-State: APjAAAVqvRVT5dcWe4q2j1ygB2rqTq4GbbGC0teEnP9caVsp9JEifxAM
-        dQp/N948BPsUvHASq7iR3MEUV/cnnDg+OJKD5jU3Rg==
-X-Google-Smtp-Source: APXvYqx6bOTVgBVKKmvRBKRsSSejeEIXGEv/OtIei+OyNv+ywEt+Y+J2w4HSX1ofnaDDNnritsQe2ng9xWOZbupLlWQ=
-X-Received: by 2002:a0d:dd56:: with SMTP id g83mr47756883ywe.174.1577713260439;
- Mon, 30 Dec 2019 05:41:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:thread-index
+         :content-language;
+        bh=nSnNuDmIxk9D1cWa2tIsDeJnMaH3k9bbBRnOjY8Xz2s=;
+        b=KVlG+56WHQx/wl+vhnCA+Zb76d7cg+paUAnpimhQqdA/BSRNU16+8DAj1lYPkF+6JD
+         VdUvmtPT8dIi2UkqKZJB+cwVlryGMJhJctRWycq7/J08giSBCBiRLxtWOcZwxiWpVcYr
+         SWDD+IGYTnkrkuN0uOkFzXYY3iAvos9DzbcAkTk35dElNzvDkKi56txKFEf+G1HQpdFC
+         QOKuSu3paOKJLxmHinmvHKaI7fU6M/AOx4BejthONXLVMmqAnNoS96/bs/14z4P1FXhf
+         0HyuBku5hNORFT196lwctKa/pzsXrxYpkNMFZcH9a2AsjZn5CXnwy06xYawdwBxiT0LQ
+         6dyw==
+X-Gm-Message-State: APjAAAWgyan6dMwo1/M62uJlWJs2pamtGJ+2OASYxC0dsLV3KCwiGMOw
+        pci4D6Z5/KWcKUhZyMEtHbk=
+X-Google-Smtp-Source: APXvYqwakLFSP2KDkJlY8c7Lc/vJIu6sxdzr4NpkkY5EvlqYoKuLkE0siKob4YzC2h7sofjxhhYPZg==
+X-Received: by 2002:a19:e011:: with SMTP id x17mr20848863lfg.59.1577713301391;
+        Mon, 30 Dec 2019 05:41:41 -0800 (PST)
+Received: from loulrmilkow1 (227.46-29-148.tkchopin.pl. [46.29.148.227])
+        by smtp.gmail.com with ESMTPSA id e17sm17636283ljg.101.2019.12.30.05.41.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Dec 2019 05:41:40 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     "'Chuck Lever'" <chuck.lever@oracle.com>
+Cc:     "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
+        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>
+References: <001901d5ba67$8954ede0$9bfec9a0$@gmail.com> <594E0E04-1253-4C0D-8A58-EB4AF883B7EC@oracle.com> <015901d5bce8$d6957010$83c05030$@gmail.com> <7BCC7682-CA85-4B97-BAD4-A6A1D1DD43D9@oracle.com>
+In-Reply-To: <7BCC7682-CA85-4B97-BAD4-A6A1D1DD43D9@oracle.com>
+Subject: RE: [PATCH v2] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
+Date:   Mon, 30 Dec 2019 13:41:39 -0000
+Message-ID: <022f01d5bf16$dda484b0$98ed8e10$@gmail.com>
 MIME-Version: 1.0
-References: <1577699681-14748-1-git-send-email-yangpc@wangsu.com>
-In-Reply-To: <1577699681-14748-1-git-send-email-yangpc@wangsu.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Mon, 30 Dec 2019 05:40:49 -0800
-Message-ID: <CANn89iLq6Tt5TZj9SXxK02y=3f35kRSsR2zGBL=1QmFmJBpvXQ@mail.gmail.com>
-Subject: Re: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-To:     Pengcheng Yang <yangpc@wangsu.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        andriin@fb.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFtSHQznciB4gB7iYqNNX8PSbx2NgLYPe2PAi6VNywCnAZKrqhma1gQ
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 1:55 AM Pengcheng Yang <yangpc@wangsu.com> wrote:
->
-> When we receive a D-SACK, where the sequence number satisfies:
->         undo_marker <= start_seq < end_seq <= prior_snd_una
-> we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-> returns true, then this D-SACK is discarded as "old stuff",
-> but the variable first_sack_index is not marked as negative
-> in tcp_sacktag_write_queue().
->
-> If this D-SACK also carries a SACK that needs to be processed
-> (for example, the previous SACK segment was lost),
+> 
+> Wrap at 72, but OK. Some prefer short descriptions, but I like to
+> have enough bread crumbs to find my way back to the purpose of a
+> commit when I've forgotten it 6 months from now.
+> 
+> A timing-related failure is obnoxious, so this explanation is going
+> to also help sustaining engineers locate this fix quickly if needed.
 
-What do you mean by ' previous sack segment was lost'  ?
-
- this SACK
-> will be treated as a D-SACK in the following processing of
-> tcp_sacktag_write_queue(), which will eventually lead to
-> incorrect updates of undo_retrans and reordering.
->
-> Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-> Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-> ---
->  net/ipv4/tcp_input.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 88b987c..0238b55 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -1727,8 +1727,11 @@ static int tcp_sack_cache_ok(const struct tcp_sock *tp, const struct tcp_sack_bl
->                 }
->
->                 /* Ignore very old stuff early */
-> -               if (!after(sp[used_sacks].end_seq, prior_snd_una))
-> +               if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-> +                       if (i == 0)
-> +                               first_sack_index = -1;
->                         continue;
-> +               }
->
->                 used_sacks++;
->         }
+Agree.
 
 
-Hi Pengcheng Yang
+> Interesting to test what happens if:
+> 
+> a) the server fails the COMPOUND before getting to the RENEW?
 
-This corner case deserves a packetdrill test so that we understand the
-issue, can you provide one ?
 
-Thanks.
+There is no change in behaviour in this case.
+The nfs4_xdr_dec_fsinfo() returns first error without decoding any further operations in the compound.
+Then depending on the error we might end up retrying in nfs4_do_fsinfo():
+ 
+...
+        do {
+                err = _nfs4_do_fsinfo(server, fhandle, fsinfo);
+                trace_nfs4_fsinfo(server, fhandle, fsinfo->fattr, err);
+                if (err == 0) {
+                        nfs4_set_lease_period(server->nfs_client,
+                                        fsinfo->lease_time * HZ,
+                                        now);
+                        break;
+                }
+                err = nfs4_handle_exception(server, err, &exception);
+        } while (exception.retry);
+        return err;
+...
+
+
+For example, currently it will retry with RENEW if it got NFS4ERR_STALE_CLIENTID from any operations in the compound op here.
+However, it won't do so for NFS4ERR_EXPIRED currently - this is another bug I'm addressing via a different patch (it affects not
+just RENEW but other operations like open(), etc.), see email: [PATCH] NFSv4: open() should try lease recovery on NFS4ERR_EXPIRED
+I will be sending updated patch there in coming days as well.
+
+In this specific case when mounting a sub-mount and NFS4ERR_EXPIRED is returned by server we fail to mount, with or without my
+patch.
+
+> 
+> b) the RENEW itself fails; does the client correctly perform state
+> recovery in that case?
+> 
+
+Same as above really, as we don't care in this case which operation in the compound returned an error - we start error handling on
+first operation which errored out without checking the others. I did check that we handle correctly NFS4ERR_STALE_CLIENTID for
+example (we re-issue RENEW), but we do not NFS4ERR_EXPIRED correctly here.
+I don't think it matters in regards to the patch discussed here, as if NFS4ERR_EXPIRERED is returned, without this patch we would
+end up mounting a sub-mount but erroring out on any file access (like open()), while with the patch we won't mount a sub-mount and
+still return same error to open().
+
+To fix it, we need the other mentioned patch, which is orthogonal here.
+
+However, there is an improvement here by having the patch discussed here for the nfs4_do_fsinfo() - without the patch we definitely
+do end up with expired lease situation as described which does result in NFS4ERR_EXPIRED returned by some nfs servers which
+currently translates to EIO returned by OPEN(), while with the patch this specific condition will not happen in the first place,
+therefor NFS4ERR_EXPIRED won't be returned here and we won't hit the other issue.
+
+
+
+> > Also, before the 83ca7f5ab31f, implicit lease renewal was only done in
+> nfs4_proc_setclientid_confirm(),
+> > but the function is not called when mounting a sub-mount, and it was not done in nfs4_do_fsinfo()
+> either.
+> > The implicit renewal in nfs4_do_fsinfo() when mounting each submount was introduced by the commit,
+> before it only happened on root
+> > mount.
+> > So this particular issue I'm trying to fix here did not occur before the change, I think.
+> 
+> Does that alter your explanation in the patch description?
+
+No, I don't think so.
+
+
+> Does 83ca7f5 make things worse?
+
+What I meant was that it is the 83ca7f5 commit which introduced the issue by assuming implicit renewal in a different code path
+which is called on every mount (sub-mount or not). Before the commit although there was an implicit renewal in
+nfs4_proc_setclientid_confirm(), I believe
+it was harmless as this one is essentially only called if clientid is not set yet, in which case a server would just set
+last_renewal as well.
+
+What the 83ca7f5 commit introduced is an implicit renew in do_fsinfo() which is called on every mount of a sub-mount, in which case
+both sides (client and server)
+already have clientid established, so what it does is it delays RENEW op being send by client which in turn means there is a short
+window during which lease actually expires from server but not client point of view. In extreme case when one mounts/unmounts a
+sub-mount RENEW operation is not being send at all.
+
+
+
+Let me describe the issue again with an example timeline.
+At some point /mnt/fs1 is mounted over nfsv4.0, then RENEW is issued every 60s by a client (assuming server has grace period set to
+90s and no other nfs operations are being send, in which case Linux sends RENEW every 2/3 of 90 = 60s). Let's pick up one such
+RENEW and assume time 0:
+
+0   RENEW
+60  RENEW
+120 RENEW
+178 stat /mnt/fs1/submount
+    Results in /mnt/fs1/submount being mounted
+    Linux client wrongly assumes implicit lease renewal in nfs4_do_fsinfo() (introduced by 83ca7f5), but server does not
+210 lease expires from server perspective (120 + 90)
+215 open(/mnt/fs1/submount/f1) results in NFS4ERR_EXPIRED returned by server and EIO returned to an application (due to the other
+bug mentioned above)
+238 next RENEW scheduled by client
+    Server returns NFS4ERR_EXPIRED
+    Client tries again and then recovers via SETCLIENTID
+
+So in the above case, there is a window of 28s (238-210) where all open() calls (and many other) will fail.
+
+The discussed patch here makes the implicit RENEW at 178 into an explicit one (or originally in v1 version of the patch I removed
+the implicit renewal here altogether), so now both server and client renew the lease and there won't be a window where we let the
+lease expire.
+
+At 215 the open() fails to recover due to bug in nfs4_do_handle_exception() as briefly discussed above and in more detail in the
+separate email/patch, while at 238 RENEW recovers from NFS4ERR_EXPIRED as error handling is done in nfs4_renew_done() which does
+the right thing by calling nfs4_schedule_lease_recovery().
+
+
+-- 
+Robert Milkowski
+
+
