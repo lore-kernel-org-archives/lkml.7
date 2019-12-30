@@ -2,79 +2,107 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A0C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C746EC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E56206E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1252071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbfL3MJr (ORCPT
+        id S1727430AbfL3MMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 07:09:47 -0500
-Received: from correo.us.es ([193.147.175.20]:57234 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727400AbfL3MJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 07:09:47 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id BF5751180F4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 13:09:44 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id B1C27DA707
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 13:09:44 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id A6389DA717; Mon, 30 Dec 2019 13:09:44 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 7631BDA701;
-        Mon, 30 Dec 2019 13:09:42 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 30 Dec 2019 13:09:42 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [185.124.28.61])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 257EB42EE38E;
-        Mon, 30 Dec 2019 13:09:42 +0100 (CET)
-Date:   Mon, 30 Dec 2019 13:09:40 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Florian Westphal <fw@strlen.de>
-Cc:     netfilter-devel@vger.kernel.org,
-        syzbot+d7358a458d8a81aee898@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH nf] netfilter: arp_tables: init netns pointer in
- xt_tgchk_param struct
-Message-ID: <20191230120940.5woilhfosyvk4krp@salvia>
-References: <00000000000057fd27059aa1dfca@google.com>
- <20191227003310.16061-1-fw@strlen.de>
+        Mon, 30 Dec 2019 07:12:50 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:50105 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfL3MMu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 07:12:50 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MYedH-1jGtAx3zRD-00Vgx9 for <linux-kernel@vger.kernel.org>; Mon, 30 Dec
+ 2019 13:12:49 +0100
+Received: by mail-qv1-f54.google.com with SMTP id z3so12299932qvn.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 04:12:48 -0800 (PST)
+X-Gm-Message-State: APjAAAXGnDArELTodPYK/RY1RLdo30HZ7Ubahjj/nVek6eLeyXjjBjJx
+        4wsPmsLjt9stJgIGyDWbh4X0mgbX8zkSX247hpA=
+X-Google-Smtp-Source: APXvYqz1e+cxV1mTZXrGmUG84/Xo9WQfecIQqRaFpkN1CSnq2nZarKOac0aTW/F0VJnT9fmYMtvxWM2bGA98gJcfKVU=
+X-Received: by 2002:a0c:ead1:: with SMTP id y17mr48048227qvp.210.1577707967870;
+ Mon, 30 Dec 2019 04:12:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227003310.16061-1-fw@strlen.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20191221151813.1573450-1-raj.khem@gmail.com> <20191223171043.g54secptjtqkhuve@box>
+ <CAMKF1sqvEH94Abv2Ptz3XTCg6hGk9tQ1Dr86RwYn+bpSLQVyxg@mail.gmail.com> <20191223230857.eafab52y5erfmgab@box>
+In-Reply-To: <20191223230857.eafab52y5erfmgab@box>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Dec 2019 13:12:31 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0rwQ6jyibZJ85N32UrrhBhyhesO24_6-66F07JMFYz+A@mail.gmail.com>
+Message-ID: <CAK8P3a0rwQ6jyibZJ85N32UrrhBhyhesO24_6-66F07JMFYz+A@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/compressed/64: Define __force_order only when
+ CONFIG_RANDOMIZE_BASE is unset
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Khem Raj <raj.khem@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yfG3rEOsgnCooNFoVGydWC/2tYS6ZUZVD0VMsbciMFhnOqu6W90
+ hW2VBVbDL/UuJSYrylZ64HTnfE3YyoHkKHit5OWRiyohF9RjN1sA1ismWG70Gs6X6kRrLLw
+ oGUWkQQGe2AnhVoBbXPgGAzlyrCsoZytlOnSby063L9jijtO12Ck9alO+RQ4Qq9IkwfiDAN
+ P9bThBb311lQx8NKy6McA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U73m9w9Hp7M=:5QMdNHd8jcQyxssHkFtwOH
+ IR9+kiHkK7VcBi8lEngZ3a/Dh8qIWg7m9oP1uUU7J3VoZSVaOZcrtQHhxmSXsUc1NYvr6M8Ls
+ xSDiQtxRF+Kre1hmfp182bFLI0rtpPe57MJR4IBJn1r7y4ArYWEK2aoA1usRJ3G59fwz7p8Ps
+ /ifTmjkKxlBZ0C0pRCV7QxgtyYs720MRM95iV2rAvF6XOQ1n32i0hkQvzypml8X0UD8GUQ21c
+ 4EV3kc28ijYQo7rfnyX2v9H5LKUIX/GeElL8Id1WxlJWBxRMwoG9W8ijiehoY4AAp6+o7KuaZ
+ bTTm2wkIDlTmBsQgbknmCUl7CEG2TdumSSCX+PhoVqXHjvhPDemXw/cReRfcG7oGtoVbzhrj1
+ vawr06p+dRn848EWYuCIrcqCvpwjwiT8R/j2rQ2dCJvXhapXMsBFHqw9BKOwyR5y5M3M+4X94
+ ip3jyq0c8yqBMjbpNkdPrbTI8FrRwx2/nuCGGKSgWSiTfnE3cGycAETHVbLe+d5CDQVyhMd0E
+ qtGFuYt9dsTgNEGkk+Bz/dTYvMYg/VYWf+JLh5+V+gRLtK1wkxI9eB5YX389MXBlmJtPWL+cb
+ exrRrQTvrJyTyevdiOBu3t5/4KmeMvUS/c8gpScxQWbiTIcIsDLwCCC0TdC7OnCbcdnK/EZpf
+ pLDyV/FQJxMiswe0YM4y18v8ilptjYoGjmMEug0Sx06uOA7gcGl5qtQqUlU4bFWoi2YyPxl9y
+ eblEIv1GGtefYl/n3tQTc6gh5G1lPwPsG8J3JfOvnX/yiCWmrTHEtoUW7iFaV1u1qEgIs1eQs
+ iC54xDsAdbDO06ZyQ462v2PVzehAG8693gk71sBE4pzeg6k+osY8zR6jnwlK4MVPuDfwLCE5d
+ IkmQneZspN1JdfRwVAsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 01:33:10AM +0100, Florian Westphal wrote:
-[...]
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> RIP: xt_rateest_tg_checkentry+0x11d/0xb40 net/netfilter/xt_RATEEST.c:109
-> [..]
->  xt_check_target+0x283/0x690 net/netfilter/x_tables.c:1019
->  check_target net/ipv4/netfilter/arp_tables.c:399 [inline]
->  find_check_entry net/ipv4/netfilter/arp_tables.c:422 [inline]
->  translate_table+0x1005/0x1d70 net/ipv4/netfilter/arp_tables.c:572
->  do_replace net/ipv4/netfilter/arp_tables.c:977 [inline]
->  do_arpt_set_ctl+0x310/0x640 net/ipv4/netfilter/arp_tables.c:1456
+On Tue, Dec 24, 2019 at 12:08 AM Kirill A. Shutemov
+<kirill@shutemov.name> wrote:
+> On Mon, Dec 23, 2019 at 02:25:02PM -0800, Khem Raj wrote:
+> > On Mon, Dec 23, 2019 at 9:10 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > >
+> > > On Sat, Dec 21, 2019 at 07:18:13AM -0800, Khem Raj wrote:
+> > > > Since arch/x86/boot/compressed/Makefile overrides global CFLAGS it loses
+> > > > -fno-common option which would have caught this
+> > >
+> > > If this doesn't cause any visible problems, why bother?
+> > >
+> >
+> > it does break builds with gcc trunk as of now e.g.
+> >
+> > > Hopefully, we will be able to drop it altogether once we ditch GCC 4.X
+> > > support.
+> > >
+> >
+> > gcc10 is switching defaults to -fno-common so we need to solve this one way or
+> > other, I am not sure if gcc 4.x will be dropped before gcc10 release
+> > which would be
+> > in mid of 2020
+>
+> Okay, it makes sense then. Please include this info into the commit
+> message.
+>
+> Also, I wounder if it would be cleaner to define both of them as __weak?
 
-Applied, thanks.
+Or maybe make the #ifdef check for gcc < 5 instead of checking for
+CONFIG_RANDOMIZE_BASE? That way it will be found by whoever
+cleans up the code when we increase the minimum compiler
+version to one that doesn't require the hack.
+
+        Arnd
