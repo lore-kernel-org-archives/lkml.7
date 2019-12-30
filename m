@@ -2,146 +2,102 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DF1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0AFC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C3320748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9080120718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQ4JfQxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfL3FVb (ORCPT
+        id S1727208AbfL3FVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 00:21:31 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:36768 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfL3FVa (ORCPT
+        Mon, 30 Dec 2019 00:21:45 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36296 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfL3FVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 00:21:30 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47mQlC1FMmzQlB6;
-        Mon, 30 Dec 2019 06:21:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id MLrvg9OPl8do; Mon, 30 Dec 2019 06:21:24 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 1/1] mount: universally disallow mounting over symlinks
-Date:   Mon, 30 Dec 2019 16:20:36 +1100
-Message-Id: <20191230052036.8765-2-cyphar@cyphar.com>
-In-Reply-To: <20191230052036.8765-1-cyphar@cyphar.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
+        Mon, 30 Dec 2019 00:21:45 -0500
+Received: by mail-qt1-f193.google.com with SMTP id q20so29004839qtp.3;
+        Sun, 29 Dec 2019 21:21:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2lNKxPvHxROHqhZ4QdqK3+zrQW02SHIbFmnsEL2JrlU=;
+        b=RQ4JfQxTot2k1DcBlQGLXvz3lkTQEP8nGiYdHpB4vbntl1utw5VeRDP8riMvM6u2zo
+         yr6JTTCyU3kvzBuEl2wh2J3vM6qdpLVbXs5vvho8cps/CgeCKlHXzVqzIeBXbxAFLWiM
+         L45uwGKtPZ+G5E7/Qu/X0pDbuzSIxD34SsDDztObllsVZSDaIFH5e8ZtvkEnQCMnSdlL
+         DPPTExnt2hOtdj0QeBI4O3YNSFfPMppcJ3GHPBNE6DOsv4tzRfy29dJQxPbgmhkMwN7y
+         K1gaKQoepQ5o3ncb/gPxrIcQSnaJ7zQzIh+rces5FwG7WjmJ2t7u3z17+l++f6KefIF5
+         ghrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2lNKxPvHxROHqhZ4QdqK3+zrQW02SHIbFmnsEL2JrlU=;
+        b=hiivRhRAclQMW3tklDyL6a+TTrcj6BiyBAM36Pmzg3Ia5hTAros2tPoJ/OOsIX0gvC
+         JWBsDp5kO3v5fFkF9n3Dpb0XiVB8/lpPI1PDKce5hlwVF0luoL5Y8/+1dgx6SYNl4hnc
+         /mitepjmoleprazvRxmOiYnmgK0FoeMP9AQWkcPEPvKXCwA4JOYCKThSSYhIT6SCGglT
+         kAjc8IXPHp5zCoeaze40foU83GCrevIYEjgG3mTZ5VGaVsYJAfHQwHntmQLBL5X3e/+S
+         Yq6lNjCE6CYMSSbJUdsP6MiLvVpYG7ooE876ENcAjSZrPQN9VMEkxxj3fuheduq/sPBC
+         vdyA==
+X-Gm-Message-State: APjAAAXTw2seR4mOBVhFlZ/s58M2VMMVNeHAiuDOm6/+wCbXu22mSps8
+        wnPaR67hFjt1jZnTfktHbkq6inxCyOc57oIqDDU=
+X-Google-Smtp-Source: APXvYqxDeNI60I9aNBcmjRlevGT/gLeQhWXzYEQUT+Su8gr56d6E8avrSOCWGMb+w2Xu/NgvvRBlqNHZe9SoV0Zqyr0=
+X-Received: by 2002:ac8:140c:: with SMTP id k12mr47339337qtj.117.1577683304111;
+ Sun, 29 Dec 2019 21:21:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191227024156.150419-1-shile.zhang@linux.alibaba.com>
+In-Reply-To: <20191227024156.150419-1-shile.zhang@linux.alibaba.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 29 Dec 2019 21:21:32 -0800
+Message-ID: <CAEf4BzaKz9CiJh5FVn8+Mg2K+nVJ5RBfZmz6X0C0LH_dcdt0bQ@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: Use $(SRCARCH) for include path
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An undocumented feature of the mount interface was that it was possible
-to mount over a symlink (even with the old mount API) by mounting over
-/proc/self/fd/$n -- where the corresponding file descrpitor was opened
-with (O_PATH|O_NOFOLLOW). This didn't work with traditional "new" mounts
-(for a variety of reasons), but MS_BIND worked without issue. With the
-new mount API it was even easier.
+On Thu, Dec 26, 2019 at 6:42 PM Shile Zhang
+<shile.zhang@linux.alibaba.com> wrote:
+>
+> To include right x86 centric include path for ARCH=x86_64.
+>
+> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> ---
+>  tools/lib/bpf/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index defae23a0169..197d96886303 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -59,7 +59,7 @@ FEATURE_USER = .libbpf
+>  FEATURE_TESTS = libelf libelf-mmap bpf reallocarray
+>  FEATURE_DISPLAY = libelf bpf
+>
+> -INCLUDES = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
+> +INCLUDES = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
 
-From userspace's perspective, this capability is only really useful as
-an attack vector. Until the introduction of openat2(RESOLVE_NO_XDEV),
-there was no trivial way to detect if a bind-mount was present. In the
-container runtime context (in a similar vein to CVE-2019-19921), this
-could result in a privileged process being unable to detect that a
-configuration resulted in magic-link usage operating on the wrong
-magic-links. Additionally, the API to use this feature was incredibly
-strange -- in order to umount, you would have go through
-/proc/self/fd/$n again (umounting the path would result in the
-*underlying* symlink being followed).
+Is this breaking anything at all right now? I just tried removing
+arch-specific include and everything still compiled successfully. So
+maybe instead let's just drop arch-specific include path?
 
-Which brings us to the issues on the kernel side. When umounting a mount
-on top of a symlink, several oopses (both NULL and garbage kernel
-address dereferences) and deadlocks could be triggered incredibly
-trivially. Note that because this works in user namespaces, an
-unprivileged user could trigger these oopses incredibly trivially. While
-these bugs could be fixed separately, it seems much cleaner to disable a
-"feature" which clearly was not intentional (and is not used --
-otherwise we would've seen bug reports about it breaking on umount).
-
-Note that because the linux-utils mount(1) helper will expand paths
-containing symlinks in user-space, only users which used the mount(2)
-syscall directly could possibly have seen this behaviour.
-
-Cc: stable@vger.kernel.org # pre-git
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- fs/namespace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index be601d3a8008..01a62bce105f 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2172,8 +2172,12 @@ static int graft_tree(struct mount *mnt, struct mount *p, struct mountpoint *mp)
- 	if (mnt->mnt.mnt_sb->s_flags & SB_NOUSER)
- 		return -EINVAL;
- 
-+	if (d_is_symlink(mp->m_dentry) ||
-+	    d_is_symlink(mnt->mnt.mnt_root))
-+		return -EINVAL;
-+
- 	if (d_is_dir(mp->m_dentry) !=
--	      d_is_dir(mnt->mnt.mnt_root))
-+	    d_is_dir(mnt->mnt.mnt_root))
- 		return -ENOTDIR;
- 
- 	return attach_recursive_mnt(mnt, p, mp, false);
-@@ -2251,6 +2255,9 @@ static struct mount *__do_loopback(struct path *old_path, int recurse)
- 	if (IS_MNT_UNBINDABLE(old))
- 		return mnt;
- 
-+	if (d_is_symlink(old_path->dentry))
-+		return mnt;
-+
- 	if (!check_mnt(old) && old_path->dentry->d_op != &ns_dentry_operations)
- 		return mnt;
- 
-@@ -2635,6 +2642,10 @@ static int do_move_mount(struct path *old_path, struct path *new_path)
- 	if (old_path->dentry != old_path->mnt->mnt_root)
- 		goto out;
- 
-+	if (d_is_symlink(new_path->dentry) ||
-+	    d_is_symlink(old_path->dentry))
-+		goto out;
-+
- 	if (d_is_dir(new_path->dentry) !=
- 	    d_is_dir(old_path->dentry))
- 		goto out;
-@@ -2726,10 +2737,6 @@ static int do_add_mount(struct mount *newmnt, struct path *path, int mnt_flags)
- 	    path->mnt->mnt_root == path->dentry)
- 		goto unlock;
- 
--	err = -EINVAL;
--	if (d_is_symlink(newmnt->mnt.mnt_root))
--		goto unlock;
--
- 	newmnt->mnt.mnt_flags = mnt_flags;
- 	err = graft_tree(newmnt, parent, mp);
- 
--- 
-2.24.1
-
+>  FEATURE_CHECK_CFLAGS-bpf = $(INCLUDES)
+>
+>  check_feat := 1
+> --
+> 2.24.0.rc2
+>
