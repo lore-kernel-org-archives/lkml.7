@@ -2,112 +2,95 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11B8C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E717C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A844820722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8Al7iwG"
+	by mail.kernel.org (Postfix) with ESMTP id 332F520730
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577726488;
+	bh=16Vm2+4bOHtwFPrZ/Vs4bLTz4LXA5yWYbJqpA0iY+e8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=O+A7h2aCJqxUyYI4cVfkHnR7mURBBSWe1vgg4TezEcZSK1ZvTW9Vy0UK2e7eFhqva
+	 07WGmH3hQoA5xfyNRVBIG9y+LcLEfPHKKEiRgmKMDGvvbu67QRvSdgqw9OjxpJPD+j
+	 KBEA8WE/XWrEHC3Vtpb2kSrhMx8EeVLYiZYtNiRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfL3RUB (ORCPT
+        id S1727404AbfL3RV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:20:01 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40031 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfL3RUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:20:01 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q8so18546503pfh.7;
-        Mon, 30 Dec 2019 09:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UlFJJJhWjCpySX1i9YWrQ8Ne1oHUOP+wJBkv41An8Nk=;
-        b=Z8Al7iwGl5AH7ts4PvItQCjJYRcVryV0vkbSZo3Ydf9d4IN876i4ybRH4R36epAh3Y
-         mYKSSRUnPfO9YxsnBMyKLv0MXUFtp+q2W/i4ZmfYL+yl/dhnaqrnjkYJ/Fln6koFxjtL
-         wx+tLTriR+q3aUB3a8cL5OSih6W7giK/hq+k2U7Z83uZN/qL5tPtnl4rPqm7TUoJ30AT
-         wDz8r5YUOXZ85L/tlUJd4ShpimreLO7o/YA9+xgCr3joqVdWzVN0jSto4+Cem4TIDOjh
-         cBAGdl8rT/DlhUo15b2oY+hdNIDHp5AUgYIiCztw19LO+APRiJi4qjb2616vBsrSUbCc
-         NdMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=UlFJJJhWjCpySX1i9YWrQ8Ne1oHUOP+wJBkv41An8Nk=;
-        b=Boy9QcHB6vjgHwxXhLz2BBdFjvbN3y82i79muNf1iebBeqo+XT/hFkfd8K0IOtuJUU
-         zraF0J4z+8yD45UsEkRHQGfraKlE1QLpbnsVZxv2sJ4+r6M4Jj8ly9Zb+x1RZJumG5zb
-         SuI0yuRnK/X0DGf2y/sJPYqgVWVNvNWChYSRIhG0ylifNfH0yTovQrvn3U/bUBCBJhBn
-         ZLbJqiYP3vXR9NfCB93uEw3qJqPmk3b9a4qstCFzKAl+RoEvvdGoVqN0qVbOxGqFrKNm
-         BObDMW7Rfc0MOIiLvWx7rk9sAQ0gWeSi2jNu2aU8HSWAjxwBbp3Vpyh22Cg2cywFV0GB
-         uOGA==
-X-Gm-Message-State: APjAAAXbVndZoo3gLiupq8obnC0qPZ/MXIYc7KSTrBPKNm2ghBzsy8wd
-        CfKUAZtiyyizx0fQlcqsW84=
-X-Google-Smtp-Source: APXvYqxnoxKo9tL0zU4S+bwpIxmZwv92nH8/6Lj1NxdvBilpWtXC/g8PsKgB8YWJKye/5j6ixjFk/g==
-X-Received: by 2002:a63:2949:: with SMTP id p70mr35141492pgp.191.1577726400698;
-        Mon, 30 Dec 2019 09:20:00 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z29sm51411767pge.21.2019.12.30.09.20.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Dec 2019 09:20:00 -0800 (PST)
-Date:   Mon, 30 Dec 2019 09:19:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/219] 4.19.92-stable review
-Message-ID: <20191230171959.GC12958@roeck-us.net>
-References: <20191229162508.458551679@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 30 Dec 2019 12:21:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727207AbfL3RV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:21:26 -0500
+Received: from localhost.localdomain (unknown [194.230.155.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2393420718;
+        Mon, 30 Dec 2019 17:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577726486;
+        bh=16Vm2+4bOHtwFPrZ/Vs4bLTz4LXA5yWYbJqpA0iY+e8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ga+N7QV2jpHzzuMqRwqfmYcncnpQgMfPYcpoG9EdfkQ6s37hUOof4OYzE08ndjlWv
+         aktqnm77s9ZkoefUY3VIVMFVfWZ5zriRi45vTDGWQkFHNQDKDuFtBub2CBw7vPzvUS
+         RKfsShogNTWooDzeVgbJkAuU0lk/y4Jq0m8wN8jE=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] pwm: Fix minor Kconfig whitespace issues
+Date:   Mon, 30 Dec 2019 18:21:12 +0100
+Message-Id: <20191230172113.17222-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 06:16:42PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.92 release.
-> There are 219 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 156 pass: 141 fail: 15
-Failed builds:
-	i386:tools/perf
-	<all mips>
-	x86_64:tools/perf
-Qemu test results:
-	total: 381 pass: 316 fail: 65
-Failed tests:
-	<all mips>
-	<all ppc64_book3s_defconfig>
+Remove double whitespace after "config" keyword.
 
-perf as with v4.14.y.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/pwm/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-arch/mips/kernel/syscall.c:40:10: fatal error: asm/sync.h: No such file or directory
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index bd21655c37a6..c865d688f6b4 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -490,7 +490,7 @@ config PWM_TEGRA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-tegra.
+ 
+-config  PWM_TIECAP
++config PWM_TIECAP
+ 	tristate "ECAP PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3
+ 	help
+@@ -499,7 +499,7 @@ config  PWM_TIECAP
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-tiecap.
+ 
+-config  PWM_TIEHRPWM
++config PWM_TIEHRPWM
+ 	tristate "EHRPWM PWM support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
+ 	help
+-- 
+2.17.1
 
-arch/powerpc/include/asm/spinlock.h:56:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_KEY_FALSE’
-and similar errors.
-
-The powerpc build problem is inherited from mainline and has not been fixed
-there as far as I can see. I guess that makes 4.19.y bug-for-bug "compatible"
-with mainline in that regard.
-
-Guenter
