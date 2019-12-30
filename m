@@ -2,186 +2,279 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A053DC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C63C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AEC20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Ygv8JhuI"
+	by mail.kernel.org (Postfix) with ESMTP id D0F44206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfL3Jig (ORCPT
+        id S1727434AbfL3Jiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:38:36 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35634 "EHLO
+        Mon, 30 Dec 2019 04:38:55 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39401 "EHLO
         mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfL3Jig (ORCPT
+        with ESMTP id S1727162AbfL3Jiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:38:36 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 15so24798875lfr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 01:38:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z0vdDOcQ8v/e5BOs7LEyb3P17yQ8hnJKwJziys7L6rQ=;
-        b=Ygv8JhuINbWLBhzkd3IlrKctEf1mAMdzzYF3we4UVT1cSJi50jRZ4MfyCoCfdKhgee
-         fEM5wKIN18hFiBSGoP3wNRwOsDfAyaOAGCfXPBCdr1u7aYGb6xroGI43ceDtO6bWdq9r
-         Og4U87PV4DBhC+OxqlCpRHDtJBdLfcyy+NJv1vZKw4HmOh4vj1x9AgQZJPEV9zRpmY+L
-         OAGkZdLmUhtdGh02PJKK1TWGgKEKU9gllNxDgjMDMEhsxA5ft8OD69GdhjBLFRxaefnL
-         xOR3w8Ggv5HNgBB6AkBi0jPbFeiIbf2FB4UH1kHJw37THervQ6/LjP6X2vJcKHfuCA+4
-         5pgw==
+        Mon, 30 Dec 2019 04:38:54 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y1so24766261lfb.6;
+        Mon, 30 Dec 2019 01:38:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Z0vdDOcQ8v/e5BOs7LEyb3P17yQ8hnJKwJziys7L6rQ=;
-        b=d4cRIQ9WL3N3dfl7PAZvZBkgFZOIRPrtMjJjokXsI94yLHEzBZOY+XKVm6oyspVxlP
-         hz54UgUWvXFt6GazKkxv+mNr6WEuP19VXsTCo1pgiGZVsTON9fYB43yPrD+7AeJZ5s6j
-         wXaqw+GglPHMTFlhLRK51AuxgvEdhlfdWV664bVDdEdMP5yMcjf3oT9IgbECK56XzhW0
-         vA9/1JvKR9uSWF1hYibDZHxXT2E6cJy51RlhPCaKIqqZQSJ1+R3+SzK5/rIcxLTDZbh2
-         DoThquGwb77SoRV7v2188n2UQcxpOyFTRpsGEqEbMc0REQRYv1U7vzcitPM++aDTfg+J
-         Lrow==
-X-Gm-Message-State: APjAAAW24WpdF1XquvgZr4Hn4DAeZAbJZvDBmr9g/L3GaTB8OAAaNOKs
-        IWijiOs1ZG/uM6jbBgpUmgEFuw==
-X-Google-Smtp-Source: APXvYqwvy+jwnOiLX19xtMYVXRbH7ItJEWyLKetcakwpxsGTkfxA+b08EXSS6xLAhjnIwSUmyUvZ/Q==
-X-Received: by 2002:a19:f716:: with SMTP id z22mr39561834lfe.14.1577698713777;
-        Mon, 30 Dec 2019 01:38:33 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id e8sm20764094ljb.45.2019.12.30.01.38.32
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6/Ift0oKlrYoqGAragjtBVPvTGh6XXJ8F5Cj4OhTv78=;
+        b=PGAZR60OA6HL8O2PcVwIXBpWG2Ffkp4J7d/wmAcm6DerrylazMtUcKguipYsUV3Ny9
+         kG7lQ617F9sgQp01fHkT0tgQYPGpwlYIhOsd+TRvAvCnG/aXEIeMJkDCckuQkpnM00vf
+         +CRspPQTJ+RaYuqPoDGk7KdjifLesIoWvnEiAR2RuPH5+/aINMg+faNvFZDJBJ+npKbM
+         BsR3FzM18TC3Rezgi58Hac6Lee7aU9lgZdbo6EtdVXaxs8BSe89Rn0LCJJ2QHy/WSQKF
+         6greXw176nV/0TkcwXZ7mXNOCJe+GyghQ9fRNpm1r3DUJSZSsF4cN9aSe6da7Cke6OJK
+         Mohw==
+X-Gm-Message-State: APjAAAXo3MZ1RiBIDTIlW45PfnPshI+46lF69/vknWp0r6Z/XpSzM88I
+        vhBOz+s3mrj3vnLdzfvhFF8=
+X-Google-Smtp-Source: APXvYqzF/627+mYLgGd4AAbpEgvWj1K/orHjvMxF5QKVJmmwAcJye0WLxEUNAKcSVox2GYducBldSg==
+X-Received: by 2002:a19:5201:: with SMTP id m1mr39486848lfb.114.1577698731056;
+        Mon, 30 Dec 2019 01:38:51 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id g15sm15248368ljn.32.2019.12.30.01.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 01:38:33 -0800 (PST)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id BD47610152C; Mon, 30 Dec 2019 12:38:34 +0300 (+03)
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
-        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH] mm/page_alloc: Skip non present sections on zone initialization
-Date:   Mon, 30 Dec 2019 12:38:28 +0300
-Message-Id: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 30 Dec 2019 01:38:50 -0800 (PST)
+Date:   Mon, 30 Dec 2019 11:38:42 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v8 07/12] clk: bd718x7: Support ROHM BD71828 clk block
+Message-ID: <c5e57a5957bd393014e62870ff10326279df2b88.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memmap_init_zone() can be called on the ranges with holes during the
-boot. It will skip any non-valid PFNs one-by-one. It works fine as long
-as holes are not too big.
+BD71828GW is a single-chip power management IC for battery-powered portable
+devices. Add support for controlling BD71828 clk using bd718x7 driver.
 
-But huge holes in the memory map causes a problem. It takes over 20
-seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
-larger holes in the memory map which would practically hang the system.
-
-Deferred struct page init doesn't help here. It only works on the
-present ranges.
-
-Skipping non-present sections would fix the issue.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
 
-The situation can be emulated using the following QEMU patch:
+Changes from v7 - no changes
 
-diff --git a/hw/i386/pc.c b/hw/i386/pc.c
-index ac08e6360437..f5f2258092e1 100644
---- a/hw/i386/pc.c
-+++ b/hw/i386/pc.c
-@@ -1159,13 +1159,14 @@ void pc_memory_init(PCMachineState *pcms,
-     memory_region_add_subregion(system_memory, 0, ram_below_4g);
-     e820_add_entry(0, x86ms->below_4g_mem_size, E820_RAM);
-     if (x86ms->above_4g_mem_size > 0) {
-+        int shift = 45;
-         ram_above_4g = g_malloc(sizeof(*ram_above_4g));
-         memory_region_init_alias(ram_above_4g, NULL, "ram-above-4g", ram,
-                                  x86ms->below_4g_mem_size,
-                                  x86ms->above_4g_mem_size);
--        memory_region_add_subregion(system_memory, 0x100000000ULL,
-+        memory_region_add_subregion(system_memory, 1ULL << shift,
-                                     ram_above_4g);
--        e820_add_entry(0x100000000ULL, x86ms->above_4g_mem_size, E820_RAM);
-+        e820_add_entry(1ULL << shift, x86ms->above_4g_mem_size, E820_RAM);
-     }
+ drivers/clk/Kconfig              |  6 ++---
+ drivers/clk/clk-bd718x7.c        | 38 +++++++++++++++++++++++---------
+ include/linux/mfd/rohm-bd70528.h |  6 -----
+ include/linux/mfd/rohm-bd71828.h |  4 ----
+ include/linux/mfd/rohm-bd718x7.h |  6 -----
+ 5 files changed, 31 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 45653a0e6ecd..ac5981ce2477 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -305,10 +305,10 @@ config COMMON_CLK_MMP2
+ 	  Support for Marvell MMP2 and MMP3 SoC clocks
  
-     if (!pcmc->has_reserved_memory &&
-diff --git a/target/i386/cpu.h b/target/i386/cpu.h
-index cde2a16b941a..694c26947bf6 100644
---- a/target/i386/cpu.h
-+++ b/target/i386/cpu.h
-@@ -1928,7 +1928,7 @@ uint64_t cpu_get_tsc(CPUX86State *env);
- /* XXX: This value should match the one returned by CPUID
-  * and in exec.c */
- # if defined(TARGET_X86_64)
--# define TCG_PHYS_ADDR_BITS 40
-+# define TCG_PHYS_ADDR_BITS 52
- # else
- # define TCG_PHYS_ADDR_BITS 36
- # endif
-
----
- mm/page_alloc.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index df62a49cd09e..442dc0244bb4 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5873,6 +5873,30 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
- 	return false;
+ config COMMON_CLK_BD718XX
+-	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
++	tristate "Clock driver for 32K clk gates on ROHM PMICs"
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528 || MFD_ROHM_BD71828
+ 	help
+-	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  This driver supports ROHM BD71837, ROHM BD71847, ROHM BD71828 and
+ 	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 33699ee1bdf3..b52e8d6f660c 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -7,12 +7,25 @@
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+-#include <linux/mfd/rohm-bd718x7.h>
+-#include <linux/mfd/rohm-bd70528.h>
++#include <linux/mfd/rohm-generic.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/regmap.h>
+ 
++/* clk control registers */
++/* BD70528 */
++#define BD70528_REG_OUT32K	0x2c
++/* BD71828 */
++#define BD71828_REG_OUT32K	0x4B
++/* BD71837 and BD71847 */
++#define BD718XX_REG_OUT32K	0x2E
++
++/*
++ * BD71837, BD71847, BD70528 and BD71828 all use bit [0] to clk output control
++ */
++#define CLK_OUT_EN_MASK		BIT(0)
++
++
+ struct bd718xx_clk {
+ 	struct clk_hw hw;
+ 	u8 reg;
+@@ -21,10 +34,8 @@ struct bd718xx_clk {
+ 	struct rohm_regmap_dev *mfd;
+ };
+ 
+-static int bd71837_clk_set(struct clk_hw *hw, int status)
++static int bd71837_clk_set(struct bd718xx_clk *c, unsigned int status)
+ {
+-	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+-
+ 	return regmap_update_bits(c->mfd->regmap, c->reg, c->mask, status);
  }
  
-+#ifdef CONFIG_SPARSEMEM
-+/* Skip PFNs that belong to non-present sections */
-+static inline __meminit unsigned long next_pfn(unsigned long pfn)
-+{
-+	unsigned long section_nr;
+@@ -33,14 +44,16 @@ static void bd71837_clk_disable(struct clk_hw *hw)
+ 	int rv;
+ 	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
+ 
+-	rv = bd71837_clk_set(hw, 0);
++	rv = bd71837_clk_set(c, 0);
+ 	if (rv)
+ 		dev_dbg(&c->pdev->dev, "Failed to disable 32K clk (%d)\n", rv);
+ }
+ 
+ static int bd71837_clk_enable(struct clk_hw *hw)
+ {
+-	return bd71837_clk_set(hw, 1);
++	struct bd718xx_clk *c = container_of(hw, struct bd718xx_clk, hw);
 +
-+	section_nr = pfn_to_section_nr(++pfn);
-+	if (present_section_nr(section_nr))
-+		return pfn;
-+
-+	while (++section_nr <= __highest_present_section_nr) {
-+		if (present_section_nr(section_nr))
-+			return section_nr_to_pfn(section_nr);
-+	}
-+
-+	return -1;
-+}
-+#else
-+static inline __meminit unsigned long next_pfn(unsigned long pfn)
-+{
-+	return pfn++;
-+}
-+#endif
-+
- /*
-  * Initially all pages are reserved - free ones are freed
-  * up by memblock_free_all() once the early boot process is
-@@ -5912,8 +5936,10 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 		 * function.  They do not exist on hotplugged memory.
- 		 */
- 		if (context == MEMMAP_EARLY) {
--			if (!early_pfn_valid(pfn))
-+			if (!early_pfn_valid(pfn)) {
-+				pfn = next_pfn(pfn) - 1;
- 				continue;
-+			}
- 			if (!early_pfn_in_nid(pfn, nid))
- 				continue;
- 			if (overlap_memmap_init(zone, &pfn))
++	return bd71837_clk_set(c, 0xffffffff);
+ }
+ 
+ static int bd71837_clk_is_enabled(struct clk_hw *hw)
+@@ -92,11 +105,15 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 	case ROHM_CHIP_TYPE_BD71837:
+ 	case ROHM_CHIP_TYPE_BD71847:
+ 		c->reg = BD718XX_REG_OUT32K;
+-		c->mask = BD718XX_OUT32K_EN;
++		c->mask = CLK_OUT_EN_MASK;
++		break;
++	case ROHM_CHIP_TYPE_BD71828:
++		c->reg = BD71828_REG_OUT32K;
++		c->mask = CLK_OUT_EN_MASK;
+ 		break;
+ 	case ROHM_CHIP_TYPE_BD70528:
+-		c->reg = BD70528_REG_CLK_OUT;
+-		c->mask = BD70528_CLK_OUT_EN_MASK;
++		c->reg = BD70528_REG_OUT32K;
++		c->mask = CLK_OUT_EN_MASK;
+ 		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unknown clk chip\n");
+@@ -126,6 +143,7 @@ static const struct platform_device_id bd718x7_clk_id[] = {
+ 	{ "bd71837-clk", ROHM_CHIP_TYPE_BD71837 },
+ 	{ "bd71847-clk", ROHM_CHIP_TYPE_BD71847 },
+ 	{ "bd70528-clk", ROHM_CHIP_TYPE_BD70528 },
++	{ "bd71828-clk", ROHM_CHIP_TYPE_BD71828 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(platform, bd718x7_clk_id);
+diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
+index 1013e60c5b25..2ad2320d0a96 100644
+--- a/include/linux/mfd/rohm-bd70528.h
++++ b/include/linux/mfd/rohm-bd70528.h
+@@ -89,10 +89,6 @@ struct bd70528_data {
+ #define BD70528_REG_GPIO3_OUT	0x52
+ #define BD70528_REG_GPIO4_OUT	0x54
+ 
+-/* clk control */
+-
+-#define BD70528_REG_CLK_OUT	0x2c
+-
+ /* RTC */
+ 
+ #define BD70528_REG_RTC_COUNT_H		0x2d
+@@ -309,8 +305,6 @@ enum {
+ 
+ #define BD70528_GPIO_IN_STATE_BASE 1
+ 
+-#define BD70528_CLK_OUT_EN_MASK 0x1
+-
+ /* RTC masks to mask out reserved bits */
+ 
+ #define BD70528_MASK_RTC_SEC		0x7f
+diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+index eb0557eb5314..d013e03f742d 100644
+--- a/include/linux/mfd/rohm-bd71828.h
++++ b/include/linux/mfd/rohm-bd71828.h
+@@ -183,9 +183,6 @@ enum {
+ #define BD71828_REG_CHG_STATE		0x65
+ #define BD71828_REG_CHG_FULL		0xd2
+ 
+-/* CLK */
+-#define BD71828_REG_OUT32K		0x4B
+-
+ /* LEDs */
+ #define BD71828_REG_LED_CTRL		0x4A
+ #define BD71828_MASK_LED_AMBER		0x80
+@@ -417,7 +414,6 @@ enum {
+ #define BD71828_INT_RTC1_MASK				0x2
+ #define BD71828_INT_RTC2_MASK				0x4
+ 
+-#define BD71828_OUT32K_EN				0x1
+ #define BD71828_OUT_TYPE_MASK				0x2
+ #define BD71828_OUT_TYPE_OPEN_DRAIN			0x0
+ #define BD71828_OUT_TYPE_CMOS				0x2
+diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
+index 7f2dbde402a1..bee2474a8f9f 100644
+--- a/include/linux/mfd/rohm-bd718x7.h
++++ b/include/linux/mfd/rohm-bd718x7.h
+@@ -191,12 +191,6 @@ enum {
+ #define IRQ_ON_REQ		0x02
+ #define IRQ_STBY_REQ		0x01
+ 
+-/* BD718XX_REG_OUT32K bits */
+-#define BD718XX_OUT32K_EN	0x01
+-
+-/* BD7183XX gated clock rate */
+-#define BD718XX_CLK_RATE 32768
+-
+ /* ROHM BD718XX irqs */
+ enum {
+ 	BD718XX_INT_STBY_REQ,
 -- 
-2.24.1
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
