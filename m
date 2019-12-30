@@ -7,285 +7,247 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE61C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E84AC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E2420730
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F55206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577726496;
-	bh=e/gvJO5s9HFPQBYMAs10A6ZLymzdOsgN0GewiWTGEzk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7UmhUqkM6gHV6SiKpb7TMd+zZauDB58bKrgKWt/3enkCSALaq6uL4Xk8j3c7BZTL
-	 OCNTog9GEKCV4fXBjflGbck1uPFpSufNpLUGRw7J8E9PKMI9GH0isbCugwiMfyqPyg
-	 9EG2ckqC2SRN1FXz2luMnWUJlI4S6x9LBHhZYvwY=
+	s=default; t=1577726545;
+	bh=+KQwNq1Y/RjQXnx3nXcDvZm9kdw7ojpjO2CwlX2HNgY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RMxQaBo+7RrWmzcQcWE4gi+3zeCPl+eEB70N3tBvd6IxYS5Q5OEVOqStDatv8bXHN
+	 VwgPgsN6PpdGPAR7ifeBOcz7tvZdcY7/EsgUX6vQ5rxfy+WUrQHK0DyN+U/QUTdNAC
+	 7s8PD5z7o+wkN9g79JXhmlMgMRrVFhqhhKMIKpQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfL3RVf (ORCPT
+        id S1727486AbfL3RWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56242 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:22:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727207AbfL3RVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:21:35 -0500
+        id S1727207AbfL3RWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:22:23 -0500
 Received: from localhost.localdomain (unknown [194.230.155.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA1A2071E;
-        Mon, 30 Dec 2019 17:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD423206DB;
+        Mon, 30 Dec 2019 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577726493;
-        bh=e/gvJO5s9HFPQBYMAs10A6ZLymzdOsgN0GewiWTGEzk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKqJvBpzzpOYneGnhs8+1kBprz2jBvn9qBcEnJWm6i9ypCO1aVp42ozM7U3ccQuZX
-         xMN1HY+mA9JNqWBU58Pk8fnRWNYWdf3Uv6QmOdgK++8ndBn9uGB5ubIA4eBXDUGKlu
-         Z5I+qeirfMdyB/IfeSN2xxeDnQeNODnX0SdxOZSQ=
+        s=default; t=1577726542;
+        bh=+KQwNq1Y/RjQXnx3nXcDvZm9kdw7ojpjO2CwlX2HNgY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BjPjsubFm5Hu4kug+I7rcHipqLO1Xe2NpQKmC6/IuFR5t9GwXfiICfH8HB/4rPbjm
+         3mJNlGzv29b+FL49Hw4Fi5ivuOY84DhnGdW+14YBrUC4GPAodwLVkiio7eeN6Px0sW
+         8OeYd6ENvR4MjbGXL4q4YVWYzf7fFqbuxjxBeURQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] pwm: Enable compile testing for some of drivers
-Date:   Mon, 30 Dec 2019 18:21:13 +0100
-Message-Id: <20191230172113.17222-2-krzk@kernel.org>
+Subject: [PATCH 1/2] usb: host: Enable compile testing for some of drivers
+Date:   Mon, 30 Dec 2019 18:22:14 +0100
+Message-Id: <20191230172215.17370-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191230172113.17222-1-krzk@kernel.org>
-References: <20191230172113.17222-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the PWM drivers can be compile tested to increase build
-coverage.
-
-The Meson PWM driver requires COMMON_CLK dependency.
+Some of the USB host drivers can be compile tested to increase build
+coverage.  Add 'if' conditional to 'default y' so they will not get
+enabled by default on all other architectures.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pwm/Kconfig | 48 +++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
+ drivers/usb/host/Kconfig | 54 ++++++++++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index c865d688f6b4..d5661a227321 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -44,7 +44,7 @@ config PWM_AB8500
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 8d730180db06..da14a3d16b57 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -186,7 +186,7 @@ config USB_EHCI_FSL
  
- config PWM_ATMEL
- 	tristate "Atmel PWM support"
--	depends on ARCH_AT91 && OF
-+	depends on (ARCH_AT91 || COMPILE_TEST) && OF
- 	help
- 	  Generic PWM framework driver for Atmel SoC.
- 
-@@ -100,7 +100,7 @@ config PWM_BCM_KONA
- 
- config PWM_BCM2835
- 	tristate "BCM2835 PWM support"
--	depends on ARCH_BCM2835
-+	depends on ARCH_BCM2835 || COMPILE_TEST
- 	help
- 	  PWM framework driver for BCM2835 controller (Raspberry Pi)
- 
-@@ -109,7 +109,7 @@ config PWM_BCM2835
- 
- config PWM_BERLIN
- 	tristate "Marvell Berlin PWM support"
--	depends on ARCH_BERLIN
-+	depends on ARCH_BERLIN || COMPILE_TEST
- 	help
- 	  PWM framework driver for Marvell Berlin SoCs.
- 
-@@ -118,7 +118,7 @@ config PWM_BERLIN
- 
- config PWM_BRCMSTB
- 	tristate "Broadcom STB PWM support"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the Broadcom Set-top-Box
- 	  SoCs (BCM7xxx).
-@@ -152,7 +152,7 @@ config PWM_CROS_EC
- 
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
--	depends on ARCH_EP93XX
-+	depends on ARCH_EP93XX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for Cirrus Logic EP93xx.
- 
-@@ -195,7 +195,7 @@ config PWM_IMG
- 
- config PWM_IMX1
- 	tristate "i.MX1 PWM support"
+ config USB_EHCI_MXC
+ 	tristate "Support for Freescale i.MX on-chip EHCI USB controller"
 -	depends on ARCH_MXC
 +	depends on ARCH_MXC || COMPILE_TEST
+ 	select USB_EHCI_ROOT_HUB_TT
+ 	---help---
+ 	  Variation of ARC USB block used in some Freescale chips.
+@@ -210,8 +210,8 @@ config USB_EHCI_HCD_OMAP
+ 
+ config USB_EHCI_HCD_ORION
+ 	tristate  "Support for Marvell EBU on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && (PLAT_ORION || ARCH_MVEBU)
+-	default y
++	depends on USB_EHCI_HCD && (PLAT_ORION || ARCH_MVEBU || COMPILE_TEST)
++	default y if (PLAT_ORION || ARCH_MVEBU)
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on Marvell's
+ 	  embedded ARM SoCs, including Orion, Kirkwood, Dove, Armada XP,
+@@ -221,15 +221,15 @@ config USB_EHCI_HCD_ORION
+ 
+ config USB_EHCI_HCD_SPEAR
+ 	tristate "Support for ST SPEAr on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && PLAT_SPEAR
+-	default y
++	depends on USB_EHCI_HCD && (PLAT_SPEAR || COMPILE_TEST)
++	default y if PLAT_SPEAR
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on
+ 	  ST SPEAr chips.
+ 
+ config USB_EHCI_HCD_STI
+ 	tristate "Support for ST STiHxxx on-chip EHCI USB controller"
+-	depends on ARCH_STI && OF
++	depends on (ARCH_STI || COMPILE_TEST) && OF
+ 	select GENERIC_PHY
+ 	select USB_EHCI_HCD_PLATFORM
  	help
- 	  Generic PWM framework driver for i.MX1 and i.MX21
+@@ -238,8 +238,8 @@ config USB_EHCI_HCD_STI
  
-@@ -204,7 +204,7 @@ config PWM_IMX1
+ config USB_EHCI_HCD_AT91
+ 	tristate  "Support for Atmel on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && ARCH_AT91
+-	default y
++	depends on USB_EHCI_HCD && (ARCH_AT91 || COMPILE_TEST)
++	default y if ARCH_AT91
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on
+ 	  Atmel chips.
+@@ -263,20 +263,20 @@ config USB_EHCI_HCD_PPC_OF
  
- config PWM_IMX27
- 	tristate "i.MX27 PWM support"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
+ config USB_EHCI_SH
+ 	bool "EHCI support for SuperH USB controller"
+-	depends on SUPERH
++	depends on SUPERH || COMPILE_TEST
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on the SuperH.
+ 	  If you use the PCI EHCI controller, this option is not necessary.
+ 
+ config USB_EHCI_EXYNOS
+ 	tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
+-	depends on ARCH_S5PV210 || ARCH_EXYNOS
++	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
  	help
- 	  Generic PWM framework driver for i.MX27 and later i.MX SoCs.
+ 	  Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
  
-@@ -244,7 +244,7 @@ config PWM_LP3943
+ config USB_EHCI_MV
+ 	tristate "EHCI support for Marvell PXA/MMP USB controller"
+-	depends on (ARCH_PXA || ARCH_MMP)
++	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
+ 	select USB_EHCI_ROOT_HUB_TT
+ 	---help---
+ 	  Enables support for Marvell (including PXA and MMP series) on-chip
+@@ -289,7 +289,7 @@ config USB_EHCI_MV
  
- config PWM_LPC18XX_SCT
- 	tristate "LPC18xx/43xx PWM/SCT support"
--	depends on ARCH_LPC18XX
-+	depends on ARCH_LPC18XX || COMPILE_TEST
+ config USB_CNS3XXX_EHCI
+ 	bool "Cavium CNS3XXX EHCI Module (DEPRECATED)"
+-	depends on ARCH_CNS3XXX
++	depends on ARCH_CNS3XXX || COMPILE_TEST
+ 	select USB_EHCI_HCD_PLATFORM
+ 	---help---
+ 	  This option is deprecated now and the driver was removed, use
+@@ -309,7 +309,7 @@ config USB_EHCI_HCD_PLATFORM
+ 
+ config USB_OCTEON_EHCI
+ 	bool "Octeon on-chip EHCI support (DEPRECATED)"
+-	depends on CAVIUM_OCTEON_SOC
++	depends on CAVIUM_OCTEON_SOC || COMPILE_TEST
+ 	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
+ 	select USB_EHCI_HCD_PLATFORM
  	help
- 	  Generic PWM framework driver for NXP LPC18xx PWM/SCT which
- 	  supports 16 channels.
-@@ -256,7 +256,7 @@ config PWM_LPC18XX_SCT
+@@ -410,15 +410,15 @@ config USB_OHCI_HCD_OMAP1
  
- config PWM_LPC32XX
- 	tristate "LPC32XX PWM support"
--	depends on ARCH_LPC32XX
-+	depends on ARCH_LPC32XX || COMPILE_TEST
+ config USB_OHCI_HCD_SPEAR
+ 	tristate "Support for ST SPEAr on-chip OHCI USB controller"
+-	depends on USB_OHCI_HCD && PLAT_SPEAR
+-	default y
++	depends on USB_OHCI_HCD && (PLAT_SPEAR || COMPILE_TEST)
++	default y if PLAT_SPEAR
+ 	---help---
+ 	  Enables support for the on-chip OHCI controller on
+ 	  ST SPEAr chips.
+ 
+ config USB_OHCI_HCD_STI
+ 	tristate "Support for ST STiHxxx on-chip OHCI USB controller"
+-	depends on ARCH_STI && OF
++	depends on (ARCH_STI || COMPILE_TEST) && OF
+ 	select GENERIC_PHY
+ 	select USB_OHCI_HCD_PLATFORM
  	help
- 	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
- 	  PWM controllers.
-@@ -289,7 +289,8 @@ config PWM_LPSS_PLATFORM
+@@ -427,8 +427,8 @@ config USB_OHCI_HCD_STI
  
- config PWM_MESON
- 	tristate "Amlogic Meson PWM driver"
--	depends on ARCH_MESON
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on COMMON_CLK
+ config USB_OHCI_HCD_S3C2410
+ 	tristate "OHCI support for Samsung S3C24xx/S3C64xx SoC series"
+-	depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX)
+-	default y
++	depends on USB_OHCI_HCD && (ARCH_S3C24XX || ARCH_S3C64XX || COMPILE_TEST)
++	default y if (ARCH_S3C24XX || ARCH_S3C64XX)
+ 	---help---
+ 	  Enables support for the on-chip OHCI controller on
+ 	  S3C24xx/S3C64xx chips.
+@@ -453,17 +453,17 @@ config USB_OHCI_HCD_PXA27X
+ 
+ config USB_OHCI_HCD_AT91
+ 	tristate "Support for Atmel on-chip OHCI USB controller"
+-	depends on USB_OHCI_HCD && ARCH_AT91 && OF
+-	default y
++	depends on USB_OHCI_HCD && (ARCH_AT91 || COMPILE_TEST) && OF
++	default y if ARCH_AT91
+ 	---help---
+ 	  Enables support for the on-chip OHCI controller on
+ 	  Atmel chips.
+ 
+ config USB_OHCI_HCD_OMAP3
+ 	tristate "OHCI support for OMAP3 and later chips"
+-	depends on (ARCH_OMAP3 || ARCH_OMAP4 || SOC_OMAP5)
++	depends on ARCH_OMAP3 || ARCH_OMAP4 || SOC_OMAP5 || COMPILE_TEST
+ 	select USB_OHCI_HCD_PLATFORM
+-	default y
++	default y if ARCH_OMAP3 || ARCH_OMAP4 || SOC_OMAP5
  	help
- 	  The platform driver for Amlogic Meson PWM controller.
+ 	  This option is deprecated now and the driver was removed, use
+ 	  USB_OHCI_HCD_PLATFORM instead.
+@@ -473,10 +473,10 @@ config USB_OHCI_HCD_OMAP3
  
-@@ -318,7 +319,7 @@ config PWM_MEDIATEK
- 
- config PWM_MXS
- 	tristate "Freescale MXS PWM support"
--	depends on ARCH_MXS && OF
-+	depends on (ARCH_MXS && OF) || COMPILE_TEST
- 	select STMP_DEVICE
+ config USB_OHCI_HCD_DAVINCI
+ 	tristate "OHCI support for TI DaVinci DA8xx"
+-	depends on ARCH_DAVINCI_DA8XX
++	depends on ARCH_DAVINCI_DA8XX || COMPILE_TEST
+ 	depends on USB_OHCI_HCD
+ 	select PHY_DA8XX_USB
+-	default y
++	default y if ARCH_DAVINCI_DA8XX
  	help
- 	  Generic PWM framework driver for Freescale MXS.
-@@ -328,7 +329,8 @@ config PWM_MXS
+ 	  Enables support for the DaVinci DA8xx integrated OHCI
+ 	  controller. This driver cannot currently be a loadable
+@@ -532,7 +532,7 @@ config USB_OHCI_HCD_SSB
  
- config PWM_OMAP_DMTIMER
- 	tristate "OMAP Dual-Mode Timer PWM support"
--	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-+	depends on (ARCH_OMAP && OMAP_DM_TIMER) || COMPILE_TEST
-+	depends on OF
+ config USB_OHCI_SH
+ 	bool "OHCI support for SuperH USB controller (DEPRECATED)"
+-	depends on SUPERH
++	depends on SUPERH || COMPILE_TEST
+ 	select USB_OHCI_HCD_PLATFORM
+ 	---help---
+ 	  This option is deprecated now and the driver was removed, use
+@@ -543,13 +543,13 @@ config USB_OHCI_SH
+ 
+ config USB_OHCI_EXYNOS
+ 	tristate "OHCI support for Samsung S5P/EXYNOS SoC Series"
+-	depends on ARCH_S5PV210 || ARCH_EXYNOS
++	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
  	help
- 	  Generic PWM framework driver for OMAP Dual-Mode Timer PWM output
+ 	  Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
  
-@@ -356,7 +358,7 @@ config PWM_PUV3
- 
- config PWM_PXA
- 	tristate "PXA PWM support"
--	depends on ARCH_PXA
-+	depends on ARCH_PXA || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for PXA.
- 
-@@ -387,14 +389,14 @@ config PWM_RENESAS_TPU
- 
- config PWM_ROCKCHIP
- 	tristate "Rockchip PWM support"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the PWM controller found on
- 	  Rockchip SoCs.
- 
- config PWM_SAMSUNG
- 	tristate "Samsung PWM support"
--	depends on PLAT_SAMSUNG || ARCH_EXYNOS
-+	depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for Samsung.
- 
-@@ -414,7 +416,7 @@ config PWM_SIFIVE
- 
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
--	depends on PLAT_SPEAR
-+	depends on PLAT_SPEAR || COMPILE_TEST
- 	depends on OF
- 	help
- 	  Generic PWM framework driver for the PWM controller on ST
-@@ -436,7 +438,7 @@ config PWM_SPRD
- 
- config PWM_STI
- 	tristate "STiH4xx PWM support"
--	depends on ARCH_STI
-+	depends on ARCH_STI || COMPILE_TEST
- 	depends on OF
- 	help
- 	  Generic PWM framework driver for STiH4xx SoCs.
-@@ -446,7 +448,7 @@ config PWM_STI
- 
- config PWM_STM32
- 	tristate "STMicroelectronics STM32 PWM"
--	depends on MFD_STM32_TIMERS
-+	depends on MFD_STM32_TIMERS || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for STM32 SoCs.
- 
-@@ -482,7 +484,7 @@ config PWM_SUN4I
- 
- config PWM_TEGRA
- 	tristate "NVIDIA Tegra PWM support"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the PWFM controller found on NVIDIA
- 	  Tegra SoCs.
-@@ -492,7 +494,7 @@ config PWM_TEGRA
- 
- config PWM_TIECAP
- 	tristate "ECAP PWM support"
--	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3
-+	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
- 	help
- 	  PWM driver support for the ECAP APWM controller found on TI SOCs
- 
-@@ -501,7 +503,7 @@ config PWM_TIECAP
- 
- config PWM_TIEHRPWM
- 	tristate "EHRPWM PWM support"
--	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
-+	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
- 	help
- 	  PWM driver support for the EHRPWM controller found on TI SOCs
- 
-@@ -528,7 +530,7 @@ config PWM_TWL_LED
- 
- config PWM_VT8500
- 	tristate "vt8500 PWM support"
--	depends on ARCH_VT8500
-+	depends on ARCH_VT8500 || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for vt8500.
- 
-@@ -537,7 +539,7 @@ config PWM_VT8500
- 
- config PWM_ZX
- 	tristate "ZTE ZX PWM support"
--	depends on ARCH_ZX
-+	depends on ARCH_ZX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for ZTE ZX family SoCs.
- 
+ config USB_CNS3XXX_OHCI
+ 	bool "Cavium CNS3XXX OHCI Module (DEPRECATED)"
+-	depends on ARCH_CNS3XXX
++	depends on ARCH_CNS3XXX || COMPILE_TEST
+ 	select USB_OHCI_HCD_PLATFORM
+ 	---help---
+ 	  This option is deprecated now and the driver was removed, use
 -- 
 2.17.1
 
