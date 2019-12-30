@@ -2,87 +2,179 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70499C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F4C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D00F2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F11420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TyjztaV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfL3JmA (ORCPT
+        id S1727397AbfL3JmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:42:00 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37368 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727162AbfL3JmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:42:00 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BC6A7B9F093DF35E5D34;
-        Mon, 30 Dec 2019 17:41:57 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 30 Dec 2019 17:41:51 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix memleak of kobject
-Date:   Mon, 30 Dec 2019 17:41:41 +0800
-Message-ID: <20191230094141.14141-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 30 Dec 2019 04:42:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40332 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfL3JmX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 04:42:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w21so37854498otj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 01:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7aJ1y7kojlezhXxwCAdzL2Cz1fpp5Mlwq/T9MyJ5Ytc=;
+        b=TyjztaV08AZvzV59Zdl0SvtbkaC827fqWnZXdmVUUkgIQIbcjIxa+85MPylZdoHwoD
+         aG6NlJEh5syG7O4b2m3q2Ue05RwU7M3fTzuLhRNNm8o9fT6kwWBeOZH7igbgIZbypV/9
+         TzMjIpuwu1AevS5HIURy7SeRvS+tHdQJfhlZeK2ZJlemKchV6LFMmw3r1W6M3HHpyUww
+         ZfUJ3X/6Ku0vmWSIwDPre0OycgeA+5o54gRpf/AhgLGSfuoc/c0xzHT6MVHdQiP6+tKZ
+         1OvDJnpMr6/nPpKAuWGDylu9LfRplJuzl5G4um8Pc2peacY/9D9UiUU/c/7aN3gav5Zl
+         P5+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7aJ1y7kojlezhXxwCAdzL2Cz1fpp5Mlwq/T9MyJ5Ytc=;
+        b=oOL9tXp0sXJ/Kb8ymMPRShmJRX9MFjSp6HEk1Hykatg583orbnZkOWGLJqkKXlko9t
+         m1EKX2wx1FnSBUBoYxmvbfUM6PHF1c7/H4CBZq3bHg58IidiKSD4+Hh5BLgbwhixyry8
+         IMJ2dsHB9IS5lM/CLCqNGPZJZ9ISa1P//wojks/Tp0c7keE00GVR0f28vXK84OuHVw5T
+         TarY0cMGreIT51UvJ4QLWyFf4ushrg/t2U6cz66Z6/AoGWpbTEKLEe/iaC22DzyCRreU
+         3iMIS+2Lnz+qq5ibXNQxcQhof7ZVnxutz12/0k2SPlL2/KNgGQaXsFk577gWJobSepWM
+         MMLQ==
+X-Gm-Message-State: APjAAAU+1WTYJrL4nmx1GVyiHRYbXIvoQwVgS41iLjJkDq0A+ZK3x0LJ
+        en3r7i0bXnBaAMCpp97CiiISs7Jvrk0mdPCOIu5rTg==
+X-Google-Smtp-Source: APXvYqzTYr6aV+rPI0Pmwpf+N298DKL88SZz9iyTWr2mhh+zFVppiuaocEDoNMW1GBuinPaNQ1q4OK5ewnpeCvMxXXs=
+X-Received: by 2002:a9d:68d3:: with SMTP id i19mr18735495oto.71.1577698941942;
+ Mon, 30 Dec 2019 01:42:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com> <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 30 Dec 2019 01:42:10 -0800
+Message-ID: <CAPcyv4hT9HXN2CqZw96zqgdNaapc=9oqSYvGrnEbeqSmx0t5xw@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+To:     Dan Williams <dan.j.williams.korg@gmail.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
+On Sat, Dec 28, 2019 at 10:13 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
+> <dan.j.williams.korg@gmail.com> wrote:
+> >
+> > On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > Michael Weiser reported he got below error during a kexec rebooting:
+> > > esrt: Unsupported ESRT version 2904149718861218184.
+> > >
+> > > The ESRT memory stays in EFI boot services data, and it was reserved
+> > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > > is to reuse the EFI boot services data across kexec reboot. For example
+> > > the BGRT image data and some ESRT memory like Michael reported.
+> > >
+> > > But although the memory is reserved it is not updated in X86 e820 table.
+> > > And kexec_file_load iterate system ram in io resource list to find places
+> > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > > initramfs overwritten the ESRT memory and then the failure happened.
+> > >
+> > > Since kexec_file_load depends on the e820 to be updated, just fix this
+> > > by updating the reserved EFI boot services memory as reserved type in e820.
+> > >
+> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> > > bypassed in the reservation code path because they are assumed as reserved.
+> > > But the reservation is still needed for multiple kexec reboot.
+> > > And it is the only possible case we come here thus just drop the code
+> > > chunk then everything works without side effects.
+> > >
+> > > On my machine the ESRT memory sits in an EFI runtime data range, it does
+> > > not trigger the problem, but I successfully tested with BGRT instead.
+> > > both kexec_load and kexec_file_load work and kdump works as well.
+> > >
+> > > Signed-off-by: Dave Young <dyoung@redhat.com>
+> > > ---
+> > >  arch/x86/platform/efi/quirks.c |    6 ++----
+> > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > >
+> > > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> > > +++ linux-x86/arch/x86/platform/efi/quirks.c
+> > > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
+> > >                 return;
+> > >         }
+> > >
+> > > -       /* No need to reserve regions that will never be freed. */
+> > > -       if (md.attribute & EFI_MEMORY_RUNTIME)
+> > > -               return;
+> > > -
+> > >         size += addr % EFI_PAGE_SIZE;
+> > >         size = round_up(size, EFI_PAGE_SIZE);
+> > >         addr = round_down(addr, EFI_PAGE_SIZE);
+> > > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
+> > >         early_memunmap(new, new_size);
+> > >
+> > >         efi_memmap_install(new_phys, num_entries);
+> > > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> > > +       e820__update_table(e820_table);
+> > >  }
+> > >
+> > >  /*
+> > >
+> >
+> > Bisect says this change (commit af1648984828) is triggering a
+> > regression, likely not urgent, in my testing of the new efi_fake_mem=
+> > facility to allow memory to be marked "soft reserved" via the kernel
+> > command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
+> > for EFI_MEMORY_SP). The following command line triggers the crash
+> > signature below:
+> >
+> >     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
+> >
+> > However, this command line works ok:
+> >
+> >     efi_fake_mem=8G@9G:0x40000
+> >
+> > So, something about multiple efi_fake_mem statements interacts badly
+> > with this change. Nothing obvious occurs to me at the moment, I'll
+> > keep debugging, but wanted to highlight this in the meantime in case
+> > someone else sees a deeper issue or the root cause.
+>
+> Still looking, but this failure does not seem to be specific to the
+> "soft reservation" changes. Any update to the efi memmap that pushes
+> it over a page boundary triggers this failure. I.e. I can fix the
+> problem by over-allocating the efi memmap and then page aligning the
+> result. __early_ioremap "should" be handling this case, but it appears
+> something else is messing this up.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Found it. Neither this patch nor the soft reservation changes are at
+fault, they are just helping to trigger a long standing bug in
+efi_fake_memmap(). Its usage of efi_memmap_split_count() can over
+count the number of splits needed for new entries. Consider the case
+of 2 contiguous fake entries intersecting the end of a single entry.
+The first call to efi_memmap_split_count() determines the resulting
+split will be (old1, new1, old2), the second call determines (old1,
+new2). The result is 2 splits when only 1 is needed to get a result of
+(old1, new1, new2) and the new map ends up with an empty entry.
+efi_memmap_install() interprets an empty entry as start = 0 end =
+0xffffffffffffffff and attempts an extra split / copy past the end of
+the new map.
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index f698ec883034..5152a7487335 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -740,10 +740,12 @@ int __init f2fs_init_sysfs(void)
- 
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
- 	return ret;
- }
- 
-@@ -764,8 +766,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
- 
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
--- 
-2.18.0.rc1
-
+I'll send a patch to fix up efi_fake_memmap().
