@@ -2,139 +2,204 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F2C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5085C20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F04E20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RVwMQBwN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfL3UO0 (ORCPT
+        id S1727751AbfL3UOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:14:26 -0500
-Received: from mga18.intel.com ([134.134.136.126]:61436 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfL3UOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:14:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 12:14:25 -0800
-X-IronPort-AV: E=Sophos;i="5.69,376,1571727600"; 
-   d="scan'208";a="213420200"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 12:14:25 -0800
-Subject: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem=
- entries
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     mingo@redhat.com
-Cc:     Taku Izumi <izumi.taku@jp.fujitsu.com>,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-efi@vger.kernel.org, kexec@lists.infradead.org
-Date:   Mon, 30 Dec 2019 11:58:23 -0800
-Message-ID: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Mon, 30 Dec 2019 15:14:35 -0500
+Received: from mail-eopbgr680093.outbound.protection.outlook.com ([40.107.68.93]:56482
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727667AbfL3UOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:14:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P+YKAGtfj5P/fKDv39udaZG1uHhHCaMaq8X0pphUfxaKYcu8qDdPSmrwG74s5oyf58Midh7T/E0tFePpAs019mf0lLUcssbI5C3KWmXf0iUyRbKU6wrDAD5XQbrt5tc4MYPLJnJzAhQ/HmxKJu1K6m12c8CraPtfL5iFTJih8kNK9w9GIV+FuD2CtX/dQvewQZm7m7A/0yEsGk3qzv5AcvjhmzmRXtd14+0fapHJJBxctMLnveCWegp+wxyiowohKmq8DAS2piQrc7cCA35y6uwJm2GUgIYez5BXJ/EiqJ2QArg/6dP0voFREjZ7txPIYxex5Lx4eTLRMaJkud575w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1xcV1VUH/R2r1nO5EGIlEovl+3pTTd7nojlHr+vd+VA=;
+ b=UVN+FxaB0YG13CkFnRjPIKdo2ka8jx3J58deGduNND6W9EXmsV0Ag/+uAztUaRnt2rv4Jz+I6ceRwU7irj6gc9cVzMH3hc1p9Ql3u009masjwKk8oBe4PyWS7seuwgTZZtl0D8JgfBkH5juDR134NzTj76alRRGkxFc+s9O75qXMH1ec/D/rxN6tuiWySiS54enngfVuUyRTgQmpUTsp6zlUsMW4U3DacYtPd+p1KQ1jPUAcVGXKluVahaU9Q7ldYBhhsWYYWoES0ddsI9iTnrIQyDM/MgLHNT62QEyRPUFbVxCbxo2YFuLlC6pKbLTXe52z5wHcmnlrEZGNWjxZMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1xcV1VUH/R2r1nO5EGIlEovl+3pTTd7nojlHr+vd+VA=;
+ b=RVwMQBwNw1FViZ1PNIDlwbcx5ZOs6veciW+ysfNFELbA8hgAHNKoYurwxgWWJ4JnCs1idBDeoihdFecTUjWl8EB1J4eB5CiTotdsQCnuc7T9DEDV/IIMsKRdCJUqjVlpC7NZwwV4g28I3ZVcVkhhYW3QEEx62Nm2/sRG5FhBpQA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB0936.namprd21.prod.outlook.com (52.132.131.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.8; Mon, 30 Dec 2019 20:14:19 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Mon, 30 Dec 2019
+ 20:14:19 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2,net-next, 1/3] Drivers: hv: vmbus: Add a dev_num variable based on channel offer sequence
+Date:   Mon, 30 Dec 2019 12:13:32 -0800
+Message-Id: <1577736814-21112-2-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
+References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34)
+ To DM5PR2101MB0901.namprd21.prod.outlook.com (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Mon, 30 Dec 2019 20:14:18 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fd4264d6-6864-41f3-b7d5-08d78d64da0c
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0936:|DM5PR2101MB0936:|DM5PR2101MB0936:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB09361C37407FEE039C7DE83AAC270@DM5PR2101MB0936.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:983;
+X-Forefront-PRVS: 0267E514F9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(376002)(366004)(189003)(199004)(5660300002)(52116002)(6506007)(66556008)(186003)(2616005)(956004)(6666004)(16526019)(26005)(66946007)(66476007)(478600001)(2906002)(10290500003)(8936002)(36756003)(316002)(6512007)(8676002)(6486002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0936;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ve95T7ylK+hMPlLtW4YFvNjQzOfE7mY2mssXSl6oC0HHqs3w2hwRJpoFzC4e3B7hJEVuD3rzxaUDy+ntRUIyLjOuDHopSeRGtbxEYtvkFxuZZdx2KeSZPWKmajJG6rCzSSEwqbUl6cE7LQUha5dLgXzPpRaRmo2vA2EKPqTWur2t70IvwjI+Tu9FURGzd1Xv1tEZUTZrD1Zpo/9Bh4pP/K7OcgqdUm6Q2ZE4jzDcJQ24UFpFnqbh4cUpBcXsQm8BLUZWtZnheTb9JowpgE3aaPQXh/wuaqEo1emXYm3D5yGAJtlN2IkH3FxvPnwkmBogF/mP+TZwORhfFH2mIjC0kiwGSwkfyC5kven8RMc4kb6V+9I7eUUSDN2a0PMfwX86F9mRbfWVAtPBE0J2LN5Ag8fx/S84EgJ4VPufDVrsnwsYzK5pygvOHApvDfHPnkIO
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd4264d6-6864-41f3-b7d5-08d78d64da0c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2019 20:14:19.2346
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fwdV2oENwypMpsfNA01CjZ86K1oCTfflJXxed+/Mn/t34MGmMm403J+g1ypumCU0B3o/eZTbD7vVMyyMmQebwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A recent test of efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000 crashed with
-a signature of:
+This number is set to the first available number, starting from zero,
+when a vmbus device’s primary channel is offered.
+It will be used for stable naming when Async probing is used.
 
-    BUG: unable to handle page fault for address: ffffffffff281000
-    [..]
-    RIP: 0010:efi_memmap_insert+0x11d/0x191
-    [..]
-    Call Trace:
-     ? bgrt_init+0xbe/0xbe
-     ? efi_arch_mem_reserve+0x1cb/0x228
-     ? acpi_parse_bgrt+0xa/0xd
-     ? acpi_table_parse+0x86/0xb8
-     ? acpi_boot_init+0x494/0x4e3
-     ? acpi_parse_x2apic+0x87/0x87
-     ? setup_acpi_sci+0xa2/0xa2
-     ? setup_arch+0x8db/0x9e1
-     ? start_kernel+0x6a/0x547
-     ? secondary_startup_64+0xb6/0xc0
-
-efi_memmap_insert() is attempting to insert entries past the end of the
-new map. This condition is setup by efi_fake_mem() leaking empty entries
-to the end of memory map, and then efi_arch_mem_reserve() trips over the
-bad entry when attempting an additional efi_memmap_insert(). The empty
-entry causes efi_memmap_insert() to attempt more memmap splits / copies
-than efi_memmap_split_count() accounted for when sizing the new map.
-
-Update efi_fake_memmap() to cleanup lagging empty entries.
-
-This change is related to commit af1648984828 "x86/efi: Update e820 with
-reserved EFI boot services data to fix kexec breakage" since that
-introduces more occurrences where efi_memmap_insert() is invoked after
-an efi_fake_mem= configuration has been parsed. Previously the side
-effects of vestigial empty entries were benign, but with commit
-af1648984828 that follow-on efi_memmap_insert() invocation triggers the
-above crash signature.
-
-Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: Michael Weiser <michael@weiser.dinsnail.net>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/firmware/efi/fake_mem.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+Changes
+V2:
+	Use nest loops in hv_set_devnum, instead of goto.
 
-diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-index bb9fc70d0cfa..6df51ba93ae8 100644
---- a/drivers/firmware/efi/fake_mem.c
-+++ b/drivers/firmware/efi/fake_mem.c
-@@ -67,13 +67,33 @@ void __init efi_fake_memmap(void)
- 		return;
+ drivers/hv/channel_mgmt.c | 38 ++++++++++++++++++++++++++++++++++++--
+ include/linux/hyperv.h    |  6 ++++++
+ 2 files changed, 42 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 8eb1675..00fa2db 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -315,6 +315,8 @@ static struct vmbus_channel *alloc_channel(void)
+ 	if (!channel)
+ 		return NULL;
+ 
++	channel->dev_num = HV_DEV_NUM_INVALID;
++
+ 	spin_lock_init(&channel->lock);
+ 	init_completion(&channel->rescind_event);
+ 
+@@ -541,6 +543,36 @@ static void vmbus_add_channel_work(struct work_struct *work)
+ }
+ 
+ /*
++ * Get the first available device number of its type, then
++ * record it in the channel structure.
++ */
++static void hv_set_devnum(struct vmbus_channel *newchannel)
++{
++	struct vmbus_channel *channel;
++	int i = -1;
++	bool found;
++
++	BUG_ON(!mutex_is_locked(&vmbus_connection.channel_mutex));
++
++	do {
++		i++;
++		found = false;
++
++		list_for_each_entry(channel, &vmbus_connection.chn_list,
++				    listentry) {
++			if (i == channel->dev_num &&
++			    guid_equal(&channel->offermsg.offer.if_type,
++				       &newchannel->offermsg.offer.if_type)) {
++				found = true;
++				break;
++			}
++		}
++	} while (found);
++
++	newchannel->dev_num = i;
++}
++
++/*
+  * vmbus_process_offer - Process the offer by creating a channel/device
+  * associated with this offer
+  */
+@@ -573,10 +605,12 @@ static void vmbus_process_offer(struct vmbus_channel *newchannel)
+ 		}
  	}
  
-+	memset(new_memmap, 0, efi.memmap.desc_size * new_nr_map);
- 	for (i = 0; i < nr_fake_mem; i++)
- 		efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
+-	if (fnew)
++	if (fnew) {
++		hv_set_devnum(newchannel);
++
+ 		list_add_tail(&newchannel->listentry,
+ 			      &vmbus_connection.chn_list);
+-	else {
++	} else {
+ 		/*
+ 		 * Check to see if this is a valid sub-channel.
+ 		 */
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 26f3aee..4f110c5 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -718,6 +718,8 @@ struct vmbus_device {
+ 	bool perf_device;
+ };
  
-+	/*
-+	 * efi_memmap_split_count() may over count the number of
-+	 * required splits in the case when contiguous fake entries are
-+	 * specified. Check that all new_nr_map entries were consumed.
++#define HV_DEV_NUM_INVALID (-1)
++
+ struct vmbus_channel {
+ 	struct list_head listentry;
+ 
+@@ -849,6 +851,10 @@ struct vmbus_channel {
+ 	 */
+ 	struct vmbus_channel *primary_channel;
+ 	/*
++	 * Used for device naming based on channel offer sequence.
 +	 */
-+	for (i = new_nr_map; i > 0; i--) {
-+		efi_memory_desc_t *md;
-+		u64 start, end;
-+
-+		md = new_memmap + efi.memmap.desc_size * (new_nr_map - i - 1);
-+		end = md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
-+		start = md->phys_addr;
-+
-+		if (start == 0 && end + 1 == 0)
-+			continue;
-+		break;
-+	}
-+
- 	/* swap into new EFI memmap */
- 	early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
- 
--	efi_memmap_install(new_memmap_phy, new_nr_map);
-+	/* install only the valid entries */
-+	efi_memmap_install(new_memmap_phy, i);
- 
- 	/* print new EFI memmap */
- 	efi_print_memmap();
++	int dev_num;
++	/*
+ 	 * Support per-channel state for use by vmbus drivers.
+ 	 */
+ 	void *per_channel_state;
+-- 
+1.8.3.1
 
