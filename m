@@ -2,169 +2,66 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F69C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A936C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96689206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:58:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIcOHgQE"
+	by mail.kernel.org (Postfix) with ESMTP id 35582206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfL3S6d (ORCPT
+        id S1727612AbfL3TBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:58:33 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39179 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfL3S6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:58:33 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e5so30209995qtm.6;
-        Mon, 30 Dec 2019 10:58:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5FEFjcDA8my2bZUcNbRJBtP3FywoOl3HIIG/fCfRCk8=;
-        b=qIcOHgQE/kFeG8KW1Bro9BqC2MpHkT38jV/nN2KAZKOlKu/8HJF6RN+2ph/7kT5+PC
-         1ShG3xUCBcWJIwdnc+MM2FVNhOoEIjmoaVtAimxNTr4bHkXhMJwOPLMqS3v5iek4o9JB
-         A9uEUtZZv0cN1+xBtp6jKlcCHHXF13TTradNTenhhtPjhkcf3ygy+YUyrAfJFf6qGoyu
-         FSQjbtnE9QEZ1QXADvxW9ThuFT/nfSwnoAMsLndWqAfzLqa0s6R7oYgkvU7/otjk/Am/
-         reGPr4gtJM5OMI3FoCSCgwUrFODtmbZUvp4u+sGMXm1nq+QZgHKzSxgoVtvG+/twM2Ic
-         shQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5FEFjcDA8my2bZUcNbRJBtP3FywoOl3HIIG/fCfRCk8=;
-        b=dNcQaYVajEAUakcnATlo/+OZoDekyDMgXMXrObH2zASGNY/JXX2InRfew7wTNWPDln
-         sXx7Qta+LVfyTVMIKrL5HqHufNiVo6AkEHTMnrtlhJsDv0vWsvpdV0kIImfc+A5Q1x/i
-         DSgOvEPWi5EmqkoWjZR25csFVL1a+jbGchaPWhAq7PcfG2JRU87ZOMgKmCZkdb+0pLdp
-         6ONXLr03ksjTEW1kd3grERP3oOihRyw5xF7g9lfbrKiGcENXbdQ20kyZfx1/RmzVeMhU
-         PC1dlpQ+ckW8Fbl2p9QlOtG+sdTZjnFwl6QOmBY6laCymnnnG3ncm6My+4k7zzLoOpwl
-         cEdg==
-X-Gm-Message-State: APjAAAXh8eabrpYThMIk40OGQFrqPTiC113etoF9rfqASP1pDAL1h2Xk
-        aSXBg8Dd/F2L/59smP2fNVy8gqosWSW5IQWv7FM=
-X-Google-Smtp-Source: APXvYqwDOsS9YHgxCCyXTdNdnNrfhZNvB4d4/wICLKJ0+mcEO1l7YflLkp1qWW8s03+qMMjRRC7UCvLeTeQvZ2v/pUk=
-X-Received: by 2002:ac8:7b29:: with SMTP id l9mr17344101qtu.141.1577732311882;
- Mon, 30 Dec 2019 10:58:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <CAEf4BzYiUZtSJKh-UBL0jwyo6d=Cne2YtEyGU8ONykmSUSsuNA@mail.gmail.com>
- <20191230150424.GB70684@google.com>
-In-Reply-To: <20191230150424.GB70684@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 30 Dec 2019 10:58:20 -0800
-Message-ID: <CAEf4Bzbi8sTvwOnRDDjfDLi7Qzw-=Wq=mqja01OKQW08k7TdFg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mon, 30 Dec 2019 14:01:08 -0500
+Received: from ms.lwn.net ([45.79.88.28]:60468 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727278AbfL3TBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 14:01:07 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 9AA9E536;
+        Mon, 30 Dec 2019 19:01:06 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 12:01:05 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Fengguang Wu <fengguang.wu@intel.com>, lizefan@huawei.com,
+        Harry Wei <harryxiyou@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+        Sasha Levin <sashal@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] docs/zh_CN: add Chinese version of embargoed
+ hardware issues
+Message-ID: <20191230120105.7776cbb4@lwn.net>
+In-Reply-To: <1576811085-30544-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1576811085-30544-1-git-send-email-alex.shi@linux.alibaba.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 7:04 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 23-Dec 22:51, Andrii Nakryiko wrote:
-> > On Fri, Dec 20, 2019 at 7:42 AM KP Singh <kpsingh@chromium.org> wrote:
-> > >
-> > > From: KP Singh <kpsingh@google.com>
-> > >
-> > > This patch series is a continuation of the KRSI RFC
-> > > (https://lore.kernel.org/bpf/20190910115527.5235-1-kpsingh@chromium.org/)
-> > >
-> >
-> > [...]
-> >
-> > > # Usage Examples
-> > >
-> > > A simple example and some documentation is included in the patchset.
-> > >
-> > > In order to better illustrate the capabilities of the framework some
-> > > more advanced prototype code has also been published separately:
-> > >
-> > > * Logging execution events (including environment variables and arguments):
-> > > https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
-> > > * Detecting deletion of running executables:
-> > > https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
-> > > * Detection of writes to /proc/<pid>/mem:
-> > > https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_audit_env.c
-> >
-> > Are you planning on submitting these examples for inclusion into
-> > samples/bpf or selftests/bpf? It would be great to have more examples
-> > and we can review and suggest nicer ways to go about writing them
-> > (e.g., BPF skeleton and global data Alexei mentioned earlier).
->
-> Eventually, yes and in selftest/bpf.
->
-> But these examples depend on using security blobs and some non-atomic
-> calls in the BPF helpers which are not handled as a part of the
-> initial patch-set.
->
-> Once we have the initial framework finalized, I will update the
-> examples and the helpers they are based on and send these separate
-> patch-sets on the list for review.
+On Fri, 20 Dec 2019 11:04:43 +0800
+Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-Great! The reason I was asking is that once they are in selftests, it
-would be nice to switch them to use all the latest BPF usability
-improvements to make code cleaner and have it as another good example
-of modern BPF program. Like use BTF-defined maps, BPF skeleton,
-vmlinux.h, etc. We can go over this when the time comes, though :)
+> Embargoed hardware issues is a necessary process guide, but leak of
+> Chinese version, since there is more Chinese hardware vendors in market.
+> We'd better have a Chinese version of this guide.
+> 
+> This patch translate the guide, add it into toctree. and also add a link
+> stub for the original doc.
 
+I've applied this (and the other two as well), thanks.
 
->
-> - KP
->
-> >
-> > >
-> > > We have updated Google's internal telemetry infrastructure and have
-> > > started deploying this LSM on our Linux Workstations. This gives us more
-> > > confidence in the real-world applications of such a system.
-> > >
-> > > KP Singh (13):
-> > >   bpf: Refactor BPF_EVENT context macros to its own header.
-> > >   bpf: lsm: Add a skeleton and config options
-> > >   bpf: lsm: Introduce types for eBPF based LSM
-> > >   bpf: lsm: Allow btf_id based attachment for LSM hooks
-> > >   tools/libbpf: Add support in libbpf for BPF_PROG_TYPE_LSM
-> > >   bpf: lsm: Init Hooks and create files in securityfs
-> > >   bpf: lsm: Implement attach, detach and execution.
-> > >   bpf: lsm: Show attached program names in hook read handler.
-> > >   bpf: lsm: Add a helper function bpf_lsm_event_output
-> > >   bpf: lsm: Handle attachment of the same program
-> > >   tools/libbpf: Add bpf_program__attach_lsm
-> > >   bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
-> > >   bpf: lsm: Add Documentation
-> > >
-> >
-> > [...]
+jon
