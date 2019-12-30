@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E52C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B56C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559BC206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC80206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="q7IfbC9g"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="Qftev2ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfL3OdI (ORCPT
+        id S1727825AbfL3OdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:33:08 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:41842 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:33:12 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:41874 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfL3OdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:33:07 -0500
+        id S1727789AbfL3OdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:33:09 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 55A1E1B2176F; Mon, 30 Dec 2019 17:33:03 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 55A1E1B2176F
+        id 6BCE91B217AA; Mon, 30 Dec 2019 17:33:05 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 6BCE91B217AA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716385; bh=NXl5VU/NmF4XHV2zVViXhu4aInL/BB6UJlu0+qQYx4Y=;
+        t=1577716387; bh=E3wS4CWwlylImJof0eomCAHaPV4aLBnqVAQ7xnSqdyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=q7IfbC9g1WsWcW3ct9wr1eTtowNwVWxCnUosrdhrbuK7bQeAYIVEJiScpiechbmcw
-         UAJ2liXVJUMxB7sgm+B2GhN/wHMhI8RrIuveFE87p4Pj9siYz90QIC1thEsZeenG6u
-         9zljbPGtqHgTtNeyFCrTOkqwT8QADsHn+fQCgr0E=
+        b=Qftev2ueaGIVY4zzEYCsME+eo1cGckqntBGIumT1i/W04+E3S6EimJDK3QKF8PxpU
+         hBufEmJZN3rih6dRIIzSX8nC0Zvwr+Jm+nx9SkQYTd/H41//GFItsicC8EcqrVuL4l
+         Qt6hZzuiYbVuymQdu8plQk79S1tZholmTCiR0eyk=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 1C4DF1B217AA;
-        Mon, 30 Dec 2019 17:31:19 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 1C4DF1B217AA
+        by fd.dlink.ru (Postfix) with ESMTP id 70CB51B21845;
+        Mon, 30 Dec 2019 17:31:37 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 70CB51B21845
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id DF39D1B229D0;
-        Mon, 30 Dec 2019 17:31:16 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 4683B1B229D0;
+        Mon, 30 Dec 2019 17:31:35 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:16 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:35 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 08/19] net: dsa: tag_gswip: add .flow_dissect() callback
-Date:   Mon, 30 Dec 2019 17:30:16 +0300
-Message-Id: <20191230143028.27313-9-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 17/19] net: dsa: tag_qca: switch to bitfield helpers
+Date:   Mon, 30 Dec 2019 17:30:25 +0300
+Message-Id: <20191230143028.27313-18-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,44 +79,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case user would like to configure RPS on such systems.
-Misc: fix identation of gswip_netdev_ops structure.
+Make code look cleaner and more readable by using bitfield macros.
+Misc: fix several macro identation and phdr type in qca_tag_xmit().
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- net/dsa/tag_gswip.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ net/dsa/tag_qca.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/net/dsa/tag_gswip.c b/net/dsa/tag_gswip.c
-index de920f6aac5b..d37289540ef3 100644
---- a/net/dsa/tag_gswip.c
-+++ b/net/dsa/tag_gswip.c
-@@ -97,12 +97,20 @@ static struct sk_buff *gswip_tag_rcv(struct sk_buff *skb,
- 	return skb;
- }
+diff --git a/net/dsa/tag_qca.c b/net/dsa/tag_qca.c
+index e1c4dd04734a..8939abce36d7 100644
+--- a/net/dsa/tag_qca.c
++++ b/net/dsa/tag_qca.c
+@@ -3,15 +3,15 @@
+  * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+  */
  
-+static void gswip_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
-+				   int *offset)
-+{
-+	*offset = GSWIP_RX_HEADER_LEN;
-+	*proto = *(__be16 *)(skb->data + 6);
-+}
-+
- static const struct dsa_device_ops gswip_netdev_ops = {
--	.name = "gswip",
--	.proto	= DSA_TAG_PROTO_GSWIP,
--	.xmit = gswip_tag_xmit,
--	.rcv = gswip_tag_rcv,
--	.overhead = GSWIP_RX_HEADER_LEN,
-+	.name		= "gswip",
-+	.proto		= DSA_TAG_PROTO_GSWIP,
-+	.xmit		= gswip_tag_xmit,
-+	.rcv		= gswip_tag_rcv,
-+	.flow_dissect	= gswip_tag_flow_dissect,
-+	.overhead	= GSWIP_RX_HEADER_LEN,
- };
++#include <linux/bitfield.h>
+ #include <linux/etherdevice.h>
  
- MODULE_LICENSE("GPL");
+ #include "dsa_priv.h"
+ 
+-#define QCA_HDR_LEN	2
+-#define QCA_HDR_VERSION	0x2
++#define QCA_HDR_LEN			2
++#define QCA_HDR_VERSION			0x2
+ 
+-#define QCA_HDR_RECV_VERSION_MASK	GENMASK(15, 14)
+-#define QCA_HDR_RECV_VERSION_S		14
++#define QCA_HDR_RECV_VERSION(tag)	FIELD_GET(GENMASK(15, 14), tag)
+ #define QCA_HDR_RECV_PRIORITY_MASK	GENMASK(13, 11)
+ #define QCA_HDR_RECV_PRIORITY_S		11
+ #define QCA_HDR_RECV_TYPE_MASK		GENMASK(10, 6)
+@@ -19,19 +19,20 @@
+ #define QCA_HDR_RECV_FRAME_IS_TAGGED	BIT(3)
+ #define QCA_HDR_RECV_SOURCE_PORT_MASK	GENMASK(2, 0)
+ 
+-#define QCA_HDR_XMIT_VERSION_MASK	GENMASK(15, 14)
+-#define QCA_HDR_XMIT_VERSION_S		14
++#define QCA_HDR_XMIT_VERSION		FIELD_PREP(GENMASK(15, 14), \
++						   QCA_HDR_VERSION)
+ #define QCA_HDR_XMIT_PRIORITY_MASK	GENMASK(13, 11)
+ #define QCA_HDR_XMIT_PRIORITY_S		11
+ #define QCA_HDR_XMIT_CONTROL_MASK	GENMASK(10, 8)
+ #define QCA_HDR_XMIT_CONTROL_S		8
+ #define QCA_HDR_XMIT_FROM_CPU		BIT(7)
+-#define QCA_HDR_XMIT_DP_BIT_MASK	GENMASK(6, 0)
++#define QCA_HDR_XMIT_DP(port)		FIELD_PREP(GENMASK(6, 0), BIT(port))
+ 
+ static struct sk_buff *qca_tag_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+-	struct dsa_port *dp = dsa_slave_to_port(dev);
+-	u16 *phdr, hdr;
++	const struct dsa_port *dp = dsa_slave_to_port(dev);
++	__be16 *phdr;
++	u16 hdr;
+ 
+ 	if (skb_cow_head(skb, 0) < 0)
+ 		return NULL;
+@@ -39,11 +40,11 @@ static struct sk_buff *qca_tag_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	skb_push(skb, QCA_HDR_LEN);
+ 
+ 	memmove(skb->data, skb->data + QCA_HDR_LEN, 2 * ETH_ALEN);
+-	phdr = (u16 *)(skb->data + 2 * ETH_ALEN);
++	phdr = (__be16 *)(skb->data + 2 * ETH_ALEN);
+ 
+ 	/* Set the version field, and set destination port information */
+-	hdr = QCA_HDR_VERSION << QCA_HDR_XMIT_VERSION_S |
+-		QCA_HDR_XMIT_FROM_CPU | BIT(dp->index);
++	hdr = QCA_HDR_XMIT_VERSION | QCA_HDR_XMIT_FROM_CPU |
++	      QCA_HDR_XMIT_DP(dp->index);
+ 
+ 	*phdr = htons(hdr);
+ 
+@@ -53,7 +54,6 @@ static struct sk_buff *qca_tag_xmit(struct sk_buff *skb, struct net_device *dev)
+ static struct sk_buff *qca_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 				   struct packet_type *pt)
+ {
+-	u8 ver;
+ 	int port;
+ 	__be16 *phdr, hdr;
+ 
+@@ -68,8 +68,7 @@ static struct sk_buff *qca_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	hdr = ntohs(*phdr);
+ 
+ 	/* Make sure the version is correct */
+-	ver = (hdr & QCA_HDR_RECV_VERSION_MASK) >> QCA_HDR_RECV_VERSION_S;
+-	if (unlikely(ver != QCA_HDR_VERSION))
++	if (unlikely(QCA_HDR_RECV_VERSION(hdr) != QCA_HDR_VERSION))
+ 		return NULL;
+ 
+ 	/* Remove QCA tag and recalculate checksum */
 -- 
 2.24.1
 
