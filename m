@@ -2,80 +2,127 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7F6C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63562C2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D498208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AB9920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uBTj8C8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfL3Dcr convert rfc822-to-8bit (ORCPT
+        id S1727145AbfL3DdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 22:32:47 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:54162 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727065AbfL3Dcr (ORCPT
+        Sun, 29 Dec 2019 22:33:25 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37627 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfL3DdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 22:32:47 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TmDf8Rf_1577676757;
-Received: from 127.0.0.1(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TmDf8Rf_1577676757)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 30 Dec 2019 11:32:43 +0800
-Content-Type: text/plain;
-        charset=gb2312
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] mm: vmscan: memcg: Add global shrink priority
-From:   teawater <teawaterz@linux.alibaba.com>
-In-Reply-To: <20191229140240.GB612003@chrisdown.name>
-Date:   Mon, 30 Dec 2019 11:32:36 +0800
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, tj@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <07AF5F95-23CB-4A7E-A9DA-8F67E22A7195@linux.alibaba.com>
-References: <1576662179-16861-1-git-send-email-teawaterz@linux.alibaba.com>
- <20191218140952.GA255739@chrisdown.name>
- <25AA9500-B249-42C2-B162-2B8D4EE83BB0@linux.alibaba.com>
- <20191219112618.GA72828@chrisdown.name>
- <1E6A7BC4-A983-4C65-9DA9-4D3A26D4D31D@linux.alibaba.com>
- <20191229140240.GB612003@chrisdown.name>
-To:     Chris Down <chris@chrisdown.name>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Sun, 29 Dec 2019 22:33:24 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so7555503pjb.2;
+        Sun, 29 Dec 2019 19:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dTiS/bb9/IUvx30njlXM5Xv38N7wkzS/VlkisOuoWMY=;
+        b=uBTj8C8TM2DJlBhULD6ZRwZiambfl6N5LgWATb8Yf64Ce7diTzA0G1woSQ5bEuA5ui
+         xPjWveLyg3uRk3Kks72zu2VZ3r6ImHz8d42Jz+1ws7z8/6I/nfBRX7/zfRNwe36W82T9
+         xWxC1Q0FOSAvwQS7cEd+RPHpZrRvtIg3jj0+b2I6BlHMMtyBAmDwuKVGN6NJwD8jKeV3
+         jEDcUPISakBYA60yi14uqEn9QqS3HB2BrijQlMt2CxTtp2vRPw+lMyp5kF5g825ZM2Aa
+         cCKwuB4TK6Ch8Tz7V8vjBulBABJo1pi20+W3r8feqxa1sedgM34w4iAIu+S6dTbJ9t1v
+         lDng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dTiS/bb9/IUvx30njlXM5Xv38N7wkzS/VlkisOuoWMY=;
+        b=fCaR0vkzQxexqsv99kBD+PbISmbzD+uF6C1Grumw0axaC1DlXfKsQSOb2lFiOpFOg8
+         4ha9wPDNYyuh8zMytP++1V6h3Bp8gJ7ZSLUu0d9sluZxMKT2BJezN4yx66egHX+rAXtY
+         Mu6O5zzM8cJ1IYkilAWwHuA14/aS6HAfg93eGyaYM8J7yh0SvnDvRfjfZUpnjuRQuhmo
+         B7iQrdfanyEEc9P7D3TrX6hkBbvL5iMmpBZeA9Qff6uQ6mLM9d6CAduWom/+4Md4F8Je
+         qFJGR1nFVb/7Pp3WOn0R3++lGr9iCO0OI/bTpjnFXhbw/L5zXBSFe7E9oNI1RrGzRD+e
+         8OZg==
+X-Gm-Message-State: APjAAAWkXeICaozP3q7W4MI0ubDVBGjGwewQs/GRuy2IqUu9YJRSY+sg
+        led5nwXviV0OYMMBOgO7g6Y=
+X-Google-Smtp-Source: APXvYqyQ3LT8HrcWP6ZAYpoYYT6nU+ur+WsnY+DzoF0GtcfyTDItr1NfI+OZRBiUKICBreJWu64dMw==
+X-Received: by 2002:a17:90b:258:: with SMTP id fz24mr41756743pjb.6.1577676803945;
+        Sun, 29 Dec 2019 19:33:23 -0800 (PST)
+Received: from lmao.redmond.corp.microsoft.com (c-24-143-123-17.customer.broadstripe.net. [24.143.123.17])
+        by smtp.gmail.com with ESMTPSA id j6sm12993266pjv.10.2019.12.29.19.33.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Dec 2019 19:33:23 -0800 (PST)
+Date:   Sun, 29 Dec 2019 19:33:22 -0800
+From:   Brian Gianforcaro <b.gianfo@gmail.com>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] io_uring: batch getting pcpu references
+Message-ID: <20191230033321.kg2e4ijj2w3ut36l@lmao.redmond.corp.microsoft.com>
+References: <cover.1577528535.git.asml.silence@gmail.com>
+ <1250dad37e9b73d39066a8b464f6d2cab26eef8a.1577528535.git.asml.silence@gmail.com>
+ <6facf552-924f-2af1-03e5-99957a90bfd0@gmail.com>
+ <e0c5f132-b916-4710-a0f3-036e4df07c69@kernel.dk>
+ <504de70b-f323-4ad1-6b40-4e73aa610643@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <504de70b-f323-4ad1-6b40-4e73aa610643@gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Dec 28, 2019 at 09:37:35PM +0300, Pavel Begunkov wrote:
+> On 28/12/2019 20:03, Jens Axboe wrote:
+> > On 12/28/19 4:15 AM, Pavel Begunkov wrote:
+> >> On 28/12/2019 14:13, Pavel Begunkov wrote:
+> >>> percpu_ref_tryget() has its own overhead. Instead getting a reference
+> >>> for each request, grab a bunch once per io_submit_sqes().
+> >>>
+> >>> ~5% throughput boost for a "submit and wait 128 nops" benchmark.
+> >>>
+> >>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> >>> ---
+> >>>  fs/io_uring.c | 26 +++++++++++++++++---------
+> >>>  1 file changed, 17 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> >>> index 7fc1158bf9a4..404946080e86 100644
+> >>> --- a/fs/io_uring.c
+> >>> +++ b/fs/io_uring.c
+> >>> @@ -1080,9 +1080,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+> >>>  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
+> >>>  	struct io_kiocb *req;
+> >>>  
+> >>> -	if (!percpu_ref_tryget(&ctx->refs))
+> >>> -		return NULL;
+> >>> -
+> >>>  	if (!state) {
+> >>>  		req = kmem_cache_alloc(req_cachep, gfp);
+> >>>  		if (unlikely(!req))
+> >>> @@ -1141,6 +1138,14 @@ static void io_free_req_many(struct io_ring_ctx *ctx, void **reqs, int *nr)
+> >>>  	}
+> >>>  }
+> >>>  
+> >>> +static void __io_req_free_empty(struct io_kiocb *req)
+> >>
+> >> If anybody have better naming (or a better approach at all), I'm all ears.
+> > 
+> > __io_req_do_free()?
+> 
+> Not quite clear what's the difference with __io_req_free() then
+> 
+> > 
+> > I think that's better than the empty, not quite sure what that means.
+> 
+> Probably, so. It was kind of "request without a bound sqe".
+> Does io_free_{hollow,empty}_req() sound better?
 
-
-> 在 2019年12月29日，22:02，Chris Down <chris@chrisdown.name> 写道：
-> 
-> Hi Hui,
-> 
-> teawater writes:
->> In the memory-constrained and complex multitasking environment such as an Android system may require more complex performance priority.
->> For example, the tasks of app in the font, they need high priority because low priority will affect the user experience at once.
->> The tasks of app in background should have lower priority than the first one.  And sometime, each app should have different priority.  Because some apps are frequently used.  They should have high priority than other background apps.
->> The daemons should have lower priority than background apps.  Because most of them will not affect the user experience.
-> 
-> In general I don't think it's meaningful to speculate about whether it would help or not without data and evidence gathering. It would really depend on how the system is composed overall. Is this a real problem you're seeing, or just something hypothetical?
-> 
-> If there is a real case to discuss, we can certainly discuss it. That said, at the very least I think the API needs to be easier to reason about rather than just exposing mm internals, and there needs to be a demonstration that it solves a real problem and existing controls are insufficient :-)
-> 
-> Thanks,
-> 
-> Chris
-
-Thanks!  Agree with you.
-
-Best,
-Hui
+Given your description, perhaps io_free_unbound_req() makes sense?
