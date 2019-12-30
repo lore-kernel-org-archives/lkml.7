@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152C7C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3A1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51FE206E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EDF20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/J3wKOK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg1kpMTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfL3FFA (ORCPT
+        id S1727178AbfL3FFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 00:05:00 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34813 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfL3FE7 (ORCPT
+        Mon, 30 Dec 2019 00:05:04 -0500
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:34055 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbfL3FFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 00:04:59 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x17so14189204pln.1;
-        Sun, 29 Dec 2019 21:04:58 -0800 (PST)
+        Mon, 30 Dec 2019 00:05:03 -0500
+Received: by mail-pg1-f173.google.com with SMTP id r11so17466717pgf.1;
+        Sun, 29 Dec 2019 21:05:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0bGFOBTnjumQZE2kID8F6RH3CwsaMKHdPP5Y224cXIg=;
-        b=A/J3wKOK3L5WTy8mt5B7Bn2RTq7etw1YqjFgPdqpMGjSc/oKafJ6pPosZdJK538zV0
-         ZvZZXULnpWdMnsa5Et6ZLWsEVggxGCkghGxcpvypkk4rHzlgeAJIE0d1OTiOD1QZeUi1
-         BtzDBu8Nnecvdt3IIXqMRXifQAhvj3VclAk7m+IKr/eaPWh1XSB/EJYIW+eNPZd88bO6
-         m0pn6yiGBRwGPKc41wJaggZ4ddi5afNFmayqyhTBp9S/9JFrEWuclWmkEaVVrinX7dLu
-         N2vQcZIZCe0j80NSnb9Jjf5ikWaqXvER/7Or/PRB/RM4EzBX0NKpeVj3HFPRMbgoR7Fu
-         S92A==
+        bh=tHyB/HrIPhnwvT/YxRviUgKQLDplshHlpTxW24GYsOc=;
+        b=eg1kpMTiQtomAdmgU5lC952uek2TGW/I8+IMpAxIrrRglNrp1ZWMiflPeCclKuJgT6
+         xvzoedRdqiTmlCh0k8FthuwOgwDqSMOjMIb8tCtrihnV3ZFyQtN8fkU5aB69I3a2D4ci
+         5WCvimMgWE9hPd7LUwolXxCSdtzy82KQKq3HX7TqhhNniByHeIXqGhT8eI2rX8GYl+R7
+         Yn+sgDPxm6QgChTdJcMrF3Q442wlaavD/NCoxHyOsBqwLQBYIDuKuXXzQKQFs7hxPJZ6
+         y3cIilpv+vGtP/igg8yuEmpgHMQZ8xu3O2U3UXSYDofgYxYe4QKfTg5fDgxvZSOKPKEY
+         5Cng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0bGFOBTnjumQZE2kID8F6RH3CwsaMKHdPP5Y224cXIg=;
-        b=ovczHdLdUmcPBBWnpsYJBvcJXPreKaBM0zBFFVlkAegDchNnyGgdQTDTb4TFyc7cm/
-         8dFszo/BNF+BjwxnbyBuw9mmanhMoZGNTwG+Wkjfc0ziTscRxU1PvWVj2ZVsbs11Gtre
-         e+STyPPSGC+kVPa7ytHkE10QmOe0rlwjNtaJlmQyUzzyY4zC2zkhCtLO56b9iJ6K7uBX
-         J/g6cwV0h3b7k5/BTn3RlG7VKUVIlWHwkZCWFWj9cVTOptahVBaEdUmgZ+0iqn0f00tO
-         OsLttQcFuc4p9pSc3asJj4wjYvApFt0Jakw9tgSzn0Cr/WMryewT9w5P6AlLEFIrxOkV
-         LgLQ==
-X-Gm-Message-State: APjAAAX2RUnPfKMWkRnNAWVkPntjSJVtxdKa8DAXxClvhj0EcXBxk/ZM
-        4mM5cXAsMxfqZpgRTlh0tbU=
-X-Google-Smtp-Source: APXvYqwyDvbObIx9HmuX7qwlep0GnZzAKgwzOP+Xd5qu3gfwnklrFxw2msL5DLrJBLXw9Vlr8p05qA==
-X-Received: by 2002:a17:902:8bc4:: with SMTP id r4mr66088386plo.291.1577682298168;
-        Sun, 29 Dec 2019 21:04:58 -0800 (PST)
+        bh=tHyB/HrIPhnwvT/YxRviUgKQLDplshHlpTxW24GYsOc=;
+        b=e1VN2cwDwGsB7D4HqZTDQQfDReIdkIsQMALZMZkGkIFoOMtvAzeyn0byMs0O590nH4
+         7/abUSNsqmGnCUn6cnzhHcqTTIjyHRYy/UtgFGxAKETUtO7ONt028czfygQpxqbaFV6C
+         63TlRfVS0BIOYniBpe6gvbcG2kOr59BOqMwNKC9JSEkq6DJjZjfy5CfFa3mMyHKnpOsU
+         3ParP7BpKXDEZrJqR8tlYQuteRsYVta8RUj2WFhFsRMJAo3faz0AAfbHD2VIPI4o7QGx
+         jao1loksJ3lSLC0ZR1mKBZM6pJNt8h+QCIZ5gDb3rGs5UfZzqPET58HxP6wYprGia4S/
+         olcw==
+X-Gm-Message-State: APjAAAX6jrWvaxXpqLOpcYYgP648q5qbGJdP3lVFDf/Vd9+XgBfcikaj
+        zAwnNbo8ma3SIoYJf+p5HjA=
+X-Google-Smtp-Source: APXvYqyDoFEYICpBPkmoWkTVOVUWZ2vWqjJoL7iQtPDixKVqGG86d1XkQ097MQL4+zQkLw/+3IMmKQ==
+X-Received: by 2002:a65:644b:: with SMTP id s11mr70339567pgv.332.1577682302353;
+        Sun, 29 Dec 2019 21:05:02 -0800 (PST)
 Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id r2sm45054727pgv.16.2019.12.29.21.04.55
+        by smtp.gmail.com with ESMTPSA id r2sm45054727pgv.16.2019.12.29.21.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 21:04:57 -0800 (PST)
+        Sun, 29 Dec 2019 21:05:02 -0800 (PST)
 From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 X-Google-Original-From: Daniel W. S. Almeida
 To:     corbet@lwn.net, mchehab+samsung@kernel.org
@@ -64,9 +64,9 @@ Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH 1/5] Documentation: nfs: convert pnfs.txt to ReST
-Date:   Mon, 30 Dec 2019 02:04:43 -0300
-Message-Id: <1523c9b99c383c789c3ae943987b2d700377b979.1577681894.git.dwlsalmeida@gmail.com>
+Subject: [PATCH 2/5] Documentation: nfs: rpc-cache: convert to ReST
+Date:   Mon, 30 Dec 2019 02:04:44 -0300
+Message-Id: <d156463868b83fb6f6eb5466b1012511bc582acf.1577681894.git.dwlsalmeida@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1577681894.git.dwlsalmeida@gmail.com>
 References: <cover.1577681894.git.dwlsalmeida@gmail.com>
@@ -79,119 +79,244 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Convert pnfs.txt to ReST. Content remains mostly unchanged.
+Convert rpc-cache.txt to ReST. Changes aim to improve presentation
+but the content itself remains mostly the same.
 
 Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- Documentation/filesystems/index.rst           |  1 +
- Documentation/filesystems/nfs/index.rst       |  9 +++++++
- .../filesystems/nfs/{pnfs.txt => pnfs.rst}    | 25 +++++++++++--------
- 3 files changed, 25 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/filesystems/nfs/index.rst
- rename Documentation/filesystems/nfs/{pnfs.txt => pnfs.rst} (87%)
+ Documentation/filesystems/nfs/index.rst       |   1 +
+ .../nfs/{rpc-cache.txt => rpc-cache.rst}      | 136 ++++++++++--------
+ 2 files changed, 78 insertions(+), 59 deletions(-)
+ rename Documentation/filesystems/nfs/{rpc-cache.txt => rpc-cache.rst} (66%)
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index ad6315a48d14..801d773a44b9 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -48,3 +48,4 @@ Documentation for filesystem implementations.
- 
-    autofs
-    virtiofs
-+   nfs/index
 diff --git a/Documentation/filesystems/nfs/index.rst b/Documentation/filesystems/nfs/index.rst
-new file mode 100644
-index 000000000000..d19ba592779a
---- /dev/null
+index d19ba592779a..52f4956e7770 100644
+--- a/Documentation/filesystems/nfs/index.rst
 +++ b/Documentation/filesystems/nfs/index.rst
-@@ -0,0 +1,9 @@
-+===============================
-+NFS
-+===============================
+@@ -7,3 +7,4 @@ NFS
+    :maxdepth: 1
+ 
+    pnfs
++   rpc-cache
+diff --git a/Documentation/filesystems/nfs/rpc-cache.txt b/Documentation/filesystems/nfs/rpc-cache.rst
+similarity index 66%
+rename from Documentation/filesystems/nfs/rpc-cache.txt
+rename to Documentation/filesystems/nfs/rpc-cache.rst
+index c4dac829db0f..fee430bcd31f 100644
+--- a/Documentation/filesystems/nfs/rpc-cache.txt
++++ b/Documentation/filesystems/nfs/rpc-cache.rst
+@@ -1,9 +1,14 @@
+-	This document gives a brief introduction to the caching
++=========
++RPC Cache
++=========
++
++This document gives a brief introduction to the caching
+ mechanisms in the sunrpc layer that is used, in particular,
+ for NFS authentication.
+ 
+-CACHES
++Caches
+ ======
++
+ The caching replaces the old exports table and allows for
+ a wide variety of values to be caches.
+ 
+@@ -12,6 +17,7 @@ quite possibly very different in content and use.  There is a corpus
+ of common code for managing these caches.
+ 
+ Examples of caches that are likely to be needed are:
++
+   - mapping from IP address to client name
+   - mapping from client name and filesystem to export options
+   - mapping from UID to list of GIDs, to work around NFS's limitation
+@@ -21,6 +27,7 @@ Examples of caches that are likely to be needed are:
+   - mapping from network identify to public key for crypto authentication.
+ 
+ The common code handles such things as:
++
+    - general cache lookup with correct locking
+    - supporting 'NEGATIVE' as well as positive entries
+    - allowing an EXPIRED time on cache items, and removing
+@@ -35,60 +42,66 @@ The common code handles such things as:
+ Creating a Cache
+ ----------------
+ 
+-1/ A cache needs a datum to store.  This is in the form of a
+-   structure definition that must contain a
+-     struct cache_head
++#. A cache needs a datum to store.  This is in the form of a
++   structure definition that must contain a struct cache_head
+    as an element, usually the first.
+    It will also contain a key and some content.
+    Each cache element is reference counted and contains
+    expiry and update times for use in cache management.
+-2/ A cache needs a "cache_detail" structure that
++#. A cache needs a "cache_detail" structure that
+    describes the cache.  This stores the hash table, some
+    parameters for cache management, and some operations detailing how
+    to work with particular cache items.
+-   The operations requires are:
+-   	struct cache_head *alloc(void)
+-		This simply allocates appropriate memory and returns
+-   		a pointer to the cache_detail embedded within the
+-		structure
+-	void cache_put(struct kref *)
+-		This is called when the last reference to an item is
+-		dropped.  The pointer passed is to the 'ref' field
+-		in the cache_head.  cache_put should release any
+-		references create by 'cache_init' and, if CACHE_VALID
+-		is set, any references created by cache_update.
+-		It should then release the memory allocated by
+-   		'alloc'.
+-        int match(struct cache_head *orig, struct cache_head *new)
+-		test if the keys in the two structures match.  Return
+-		1 if they do, 0 if they don't.
+-	void init(struct cache_head *orig, struct cache_head *new)
+-		Set the 'key' fields in 'new' from 'orig'.  This may
+-		include taking references to shared objects.
+-	void update(struct cache_head *orig, struct cache_head *new)
+-		Set the 'content' fileds in 'new' from 'orig'.
+-	int cache_show(struct seq_file *m, struct cache_detail *cd,
+-			struct cache_head *h)
+-		Optional.  Used to provide a /proc file that lists the
+-		contents of a cache.  This should show one item,
+-   		usually on just one line.
+-	int cache_request(struct cache_detail *cd, struct cache_head *h,
+-   		char **bpp, int *blen)
+-		Format a request to be send to user-space for an item
+-   		to be instantiated.  *bpp is a buffer of size *blen.
+-		bpp should be moved forward over the encoded message,
+-		and  *blen should be reduced to show how much free
+-		space remains.  Return 0 on success or <0 if not
+-		enough room or other problem.
+-	int cache_parse(struct cache_detail *cd, char *buf, int len)
+-		A message from user space has arrived to fill out a
+-		cache entry.  It is in 'buf' of length 'len'.
+-		cache_parse should parse this, find the item in the
+-		cache with sunrpc_cache_lookup_rcu, and update the item
+-		with sunrpc_cache_update.
+-
+-
+-3/ A cache needs to be registered using cache_register().  This
++
++   The operations are:
++
++    struct cache_head \*alloc(void)
++      This simply allocates appropriate memory and returns
++      a pointer to the cache_detail embedded within the
++      structure
++
++    void cache_put(struct kref \*)
++      This is called when the last reference to an item is
++      dropped.  The pointer passed is to the 'ref' field
++      in the cache_head.  cache_put should release any
++      references create by 'cache_init' and, if CACHE_VALID
++      is set, any references created by cache_update.
++      It should then release the memory allocated by
++      'alloc'.
++
++    int match(struct cache_head \*orig, struct cache_head \*new)
++      test if the keys in the two structures match.  Return
++      1 if they do, 0 if they don't.
++
++    void init(struct cache_head \*orig, struct cache_head \*new)
++      Set the 'key' fields in 'new' from 'orig'.  This may
++      include taking references to shared objects.
++
++    void update(struct cache_head \*orig, struct cache_head \*new)
++      Set the 'content' fileds in 'new' from 'orig'.
++
++    int cache_show(struct seq_file \*m, struct cache_detail \*cd, struct cache_head \*h)
++      Optional.  Used to provide a /proc file that lists the
++      contents of a cache.  This should show one item,
++      usually on just one line.
++
++    int cache_request(struct cache_detail \*cd, struct cache_head \*h, char \*\*bpp, int \*blen)
++      Format a request to be send to user-space for an item
++      to be instantiated.  \*bpp is a buffer of size \*blen.
++      bpp should be moved forward over the encoded message,
++      and  \*blen should be reduced to show how much free
++      space remains.  Return 0 on success or <0 if not
++      enough room or other problem.
++
++    int cache_parse(struct cache_detail \*cd, char \*buf, int len)
++      A message from user space has arrived to fill out a
++      cache entry.  It is in 'buf' of length 'len'.
++      cache_parse should parse this, find the item in the
++      cache with sunrpc_cache_lookup_rcu, and update the item
++      with sunrpc_cache_update.
 +
 +
-+.. toctree::
-+   :maxdepth: 1
++#. A cache needs to be registered using cache_register().  This
+    includes it on a list of caches that will be regularly
+    cleaned to discard old data.
+ 
+@@ -107,7 +120,7 @@ cache_check will return -ENOENT in the entry is negative or if an up
+ call is needed but not possible, -EAGAIN if an upcall is pending,
+ or 0 if the data is valid;
+ 
+-cache_check can be passed a "struct cache_req *".  This structure is
++cache_check can be passed a "struct cache_req\*".  This structure is
+ typically embedded in the actual request and can be used to create a
+ deferred copy of the request (struct cache_deferred_req).  This is
+ done when the found cache item is not uptodate, but the is reason to
+@@ -139,9 +152,11 @@ The 'channel' works a bit like a datagram socket. Each 'write' is
+ passed as a whole to the cache for parsing and interpretation.
+ Each cache can treat the write requests differently, but it is
+ expected that a message written will contain:
 +
-+   pnfs
-diff --git a/Documentation/filesystems/nfs/pnfs.txt b/Documentation/filesystems/nfs/pnfs.rst
-similarity index 87%
-rename from Documentation/filesystems/nfs/pnfs.txt
-rename to Documentation/filesystems/nfs/pnfs.rst
-index 80dc0bdc302a..7c470ecdc3a9 100644
---- a/Documentation/filesystems/nfs/pnfs.txt
-+++ b/Documentation/filesystems/nfs/pnfs.rst
-@@ -1,15 +1,17 @@
--Reference counting in pnfs:
-+==========================
-+Reference counting in pnfs
- ==========================
- 
- The are several inter-related caches.  We have layouts which can
- reference multiple devices, each of which can reference multiple data servers.
- Each data server can be referenced by multiple devices.  Each device
--can be referenced by multiple layouts.  To keep all of this straight,
-+can be referenced by multiple layouts. To keep all of this straight,
- we need to reference count.
- 
- 
- struct pnfs_layout_hdr
------------------------
-+======================
+   - a key
+   - an expiry time
+   - a content.
 +
- The on-the-wire command LAYOUTGET corresponds to struct
- pnfs_layout_segment, usually referred to by the variable name lseg.
- Each nfs_inode may hold a pointer to a cache of these layout
-@@ -25,7 +27,8 @@ the reference count, as the layout is kept around by the lseg that
- keeps it in the list.
+ with the intention that an item in the cache with the give key
+ should be create or updated to have the given content, and the
+ expiry time should be set on that item.
+@@ -156,7 +171,8 @@ If there are no more requests to return, read will return EOF, but a
+ select or poll for read will block waiting for another request to be
+ added.
  
- deviceid_cache
----------------
-+==============
+-Thus a user-space helper is likely to:
++Thus a user-space helper is likely to::
 +
- lsegs reference device ids, which are resolved per nfs_client and
- layout driver type.  The device ids are held in a RCU cache (struct
- nfs4_deviceid_cache).  The cache itself is referenced across each
-@@ -38,24 +41,26 @@ justification, but seems reasonable given that we can have multiple
- deviceid's per filesystem, and multiple filesystems per nfs_client.
+   open the channel.
+     select for readable
+     read a request
+@@ -175,12 +191,13 @@ Each cache should also define a "cache_request" method which
+ takes a cache item and encodes a request into the buffer
+ provided.
  
- The hash code is copied from the nfsd code base.  A discussion of
--hashing and variations of this algorithm can be found at:
--http://groups.google.com/group/comp.lang.c/browse_thread/thread/9522965e2b8d3809
-+hashing and variations of this algorithm can be found `here.
-+<http://groups.google.com/group/comp.lang.c/browse_thread/thread/9522965e2b8d3809>`_
+-Note: If a cache has no active readers on the channel, and has had not
+-active readers for more than 60 seconds, further requests will not be
+-added to the channel but instead all lookups that do not find a valid
+-entry will fail.  This is partly for backward compatibility: The
+-previous nfs exports table was deemed to be authoritative and a
+-failed lookup meant a definite 'no'.
++.. note::
++  If a cache has no active readers on the channel, and has had not
++  active readers for more than 60 seconds, further requests will not be
++  added to the channel but instead all lookups that do not find a valid
++  entry will fail.  This is partly for backward compatibility: The
++  previous nfs exports table was deemed to be authoritative and a
++  failed lookup meant a definite 'no'.
  
- data server cache
-------------------
-+=================
+ request/response format
+ -----------------------
+@@ -193,10 +210,11 @@ with precisely one newline character which should be at the end.
+ Fields within the record should be separated by spaces, normally one.
+ If spaces, newlines, or nul characters are needed in a field they
+ much be quoted.  two mechanisms are available:
+-1/ If a field begins '\x' then it must contain an even number of
 +
- file driver devices refer to data servers, which are kept in a module
- level cache.  Its reference is held over the lifetime of the deviceid
- pointing to it.
- 
- lseg
------
-+====
-+
- lseg maintains an extra reference corresponding to the NFS_LSEG_VALID
- bit which holds it in the pnfs_layout_hdr's list.  When the final lseg
- is removed from the pnfs_layout_hdr's list, the NFS_LAYOUT_DESTROYED
- bit is set, preventing any new lsegs from being added.
- 
- layout drivers
----------------
-+==============
- 
- PNFS utilizes what is called layout drivers. The STD defines 4 basic
- layout types: "files", "objects", "blocks", and "flexfiles". For each
-@@ -68,6 +73,6 @@ Blocks-layout-driver code is in: fs/nfs/blocklayout/.. directory
- Flexfiles-layout-driver code is in: fs/nfs/flexfilelayout/.. directory
- 
- blocks-layout setup
---------------------
-+===================
- 
- TODO: Document the setup needs of the blocks layout driver
++#. If a field begins '\x' then it must contain an even number of
+    hex digits, and pairs of these digits provide the bytes in the
+    field.
+-2/ otherwise a \ in the field must be followed by 3 octal digits
++#. otherwise a \ in the field must be followed by 3 octal digits
+    which give the code for a byte.  Other characters are treated
+    as them selves.  At the very least, space, newline, nul, and
+    '\' must be quoted in this way.
 -- 
 2.24.1
 
