@@ -2,130 +2,130 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC7C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58E6206E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jR9I0GL7"
+	by mail.kernel.org (Postfix) with ESMTP id 89B6D20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfL3KIY (ORCPT
+        id S1727376AbfL3KOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 05:08:24 -0500
-Received: from mail-m974.mail.163.com ([123.126.97.4]:57994 "EHLO
-        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbfL3KIX (ORCPT
+        Mon, 30 Dec 2019 05:14:23 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57904 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfL3KOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 05:08:23 -0500
-X-Greylist: delayed 930 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Dec 2019 05:08:22 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=aF2Ah
-        cAK31BkXnWnmspWm3f0462KhUNDoHYlAluuscM=; b=jR9I0GL79tj3zOYyeMTS1
-        Rs/oM2VZfjGIcCCFZQKvSutaxCHigZFazJOFBLYPoqwbHrkbCaj4rFSMtC4MZaGg
-        w4PBuMbJ1CMglelV6oRZ4/GBd8MpbFtju7MNXdOK4/gmfUjkC5r5wUabNcNV5mZY
-        lR+u3HFqZOZ2/Ba5dQ3kAE=
-Received: from xilei-TM1604.mioffice.cn (unknown [114.247.175.223])
-        by smtp4 (Coremail) with SMTP id HNxpCgAH2uXYyAleR7gGBw--.32S4;
-        Mon, 30 Dec 2019 17:52:28 +0800 (CST)
-From:   Niu Xilei <niu_xilei@163.com>
-To:     davem@davemloft.net
-Cc:     petrm@mellanox.com, sbrivio@redhat.com, edumazet@google.com,
-        roopa@cumulusnetworks.com, ap420073@gmail.com,
-        jiaolitao@raisecom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Niu Xilei <niu_xilei@163.com>
-Subject: [PATCH] vxlan: Fix alignment and code style of vxlan.c
-Date:   Mon, 30 Dec 2019 17:52:22 +0800
-Message-Id: <20191230095222.21328-1-niu_xilei@163.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 30 Dec 2019 05:14:23 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0F6051C2604; Mon, 30 Dec 2019 11:14:21 +0100 (CET)
+Date:   Mon, 30 Dec 2019 11:14:20 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 162/434] power: supply: cpcap-battery: Check voltage
+ before orderly_poweroff
+Message-ID: <20191230101420.GA11922@amd>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191229172712.537510975@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: HNxpCgAH2uXYyAleR7gGBw--.32S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJw45XryDWr4rXw1Dtw4rAFb_yoW5Cr17pr
-        4xGFs5CFWDJ3yUJr4kZr4kZFyktry7CasruayDKF1FqryYk348Ca47CF4SgrZYkFW8Ca4U
-        GrnrWw1rCr1DAFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j96pPUUUUU=
-X-Originating-IP: [114.247.175.223]
-X-CM-SenderInfo: pqlxs5plohxqqrwthudrp/1tbiYxybgFaD+kOn2gAAs1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <20191229172712.537510975@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed Coding function and style issues
 
-Signed-off-by: Niu Xilei <niu_xilei@163.com>
----
- drivers/net/vxlan.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 3ec6b506033d..e95e6585ab82 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -1060,6 +1060,7 @@ static int vxlan_fdb_parse(struct nlattr *tb[], struct vxlan_dev *vxlan,
- 			return err;
- 	} else {
- 		union vxlan_addr *remote = &vxlan->default_dst.remote_ip;
-+
- 		if (remote->sa.sa_family == AF_INET) {
- 			ip->sin.sin_addr.s_addr = htonl(INADDR_ANY);
- 			ip->sa.sa_family = AF_INET;
-@@ -1696,7 +1697,7 @@ static int vxlan_rcv(struct sock *sk, struct sk_buff *skb)
- 
- 	if (__iptunnel_pull_header(skb, VXLAN_HLEN, protocol, raw_proto,
- 				   !net_eq(vxlan->net, dev_net(vxlan->dev))))
--			goto drop;
-+		goto drop;
- 
- 	if (vxlan_collect_metadata(vs)) {
- 		struct metadata_dst *tun_dst;
-@@ -4128,30 +4129,30 @@ static int vxlan_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 	    nla_put_u8(skb, IFLA_VXLAN_DF, vxlan->cfg.df) ||
- 	    nla_put_be32(skb, IFLA_VXLAN_LABEL, vxlan->cfg.label) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_LEARNING,
--			!!(vxlan->cfg.flags & VXLAN_F_LEARN)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_LEARN)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_PROXY,
--			!!(vxlan->cfg.flags & VXLAN_F_PROXY)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_PROXY)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_RSC,
- 		       !!(vxlan->cfg.flags & VXLAN_F_RSC)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_L2MISS,
--			!!(vxlan->cfg.flags & VXLAN_F_L2MISS)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_L2MISS)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_L3MISS,
--			!!(vxlan->cfg.flags & VXLAN_F_L3MISS)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_L3MISS)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_COLLECT_METADATA,
- 		       !!(vxlan->cfg.flags & VXLAN_F_COLLECT_METADATA)) ||
- 	    nla_put_u32(skb, IFLA_VXLAN_AGEING, vxlan->cfg.age_interval) ||
- 	    nla_put_u32(skb, IFLA_VXLAN_LIMIT, vxlan->cfg.addrmax) ||
- 	    nla_put_be16(skb, IFLA_VXLAN_PORT, vxlan->cfg.dst_port) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_UDP_CSUM,
--			!(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM_TX)) ||
-+		       !(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM_TX)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_UDP_ZERO_CSUM6_TX,
--			!!(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM6_TX)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM6_TX)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_UDP_ZERO_CSUM6_RX,
--			!!(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM6_RX)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_UDP_ZERO_CSUM6_RX)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_REMCSUM_TX,
--			!!(vxlan->cfg.flags & VXLAN_F_REMCSUM_TX)) ||
-+		       !!(vxlan->cfg.flags & VXLAN_F_REMCSUM_TX)) ||
- 	    nla_put_u8(skb, IFLA_VXLAN_REMCSUM_RX,
--			!!(vxlan->cfg.flags & VXLAN_F_REMCSUM_RX)))
-+		       !!(vxlan->cfg.flags & VXLAN_F_REMCSUM_RX)))
- 		goto nla_put_failure;
- 
- 	if (nla_put(skb, IFLA_VXLAN_PORT_RANGE, sizeof(ports), &ports))
--- 
-2.20.1
+On Sun 2019-12-29 18:23:35, Greg Kroah-Hartman wrote:
+> From: Tony Lindgren <tony@atomide.com>
+>=20
+> [ Upstream commit 639c1524da3b273d20c42ff2387d08eb4b12e903 ]
+>=20
+> We can get the low voltage interrupt trigger sometimes way too early,
+> maybe because of CPU load spikes. This causes orderly_poweroff() be
+> called too easily.
+>=20
+> Let's check the voltage before orderly_poweroff in case it was not
+> yet a permanent condition. We will be getting more interrupts anyways
+> if the condition persists.
+>=20
+> Let's also show the measured voltages for low battery and battery
+> empty warnings since we have them.
 
+I don't believe this is good idea for stable.
+
+Yes, it may be useful on older batteries, but may cause too late
+shutdowns on new batteries, or something like that. Certainly needs a
+lot more testing than it got.
+
+Best regards,
+							Pavel
+
+> Cc: Merlijn Wajer <merlijn@wizzup.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/power/supply/cpcap-battery.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/=
+cpcap-battery.c
+> index 61d6447d1966..00a96e4a1cdc 100644
+> --- a/drivers/power/supply/cpcap-battery.c
+> +++ b/drivers/power/supply/cpcap-battery.c
+> @@ -562,12 +562,14 @@ static irqreturn_t cpcap_battery_irq_thread(int irq=
+, void *data)
+>  	switch (d->action) {
+>  	case CPCAP_BATTERY_IRQ_ACTION_BATTERY_LOW:
+>  		if (latest->current_ua >=3D 0)
+> -			dev_warn(ddata->dev, "Battery low at 3.3V!\n");
+> +			dev_warn(ddata->dev, "Battery low at %imV!\n",
+> +				latest->voltage / 1000);
+>  		break;
+>  	case CPCAP_BATTERY_IRQ_ACTION_POWEROFF:
+> -		if (latest->current_ua >=3D 0) {
+> +		if (latest->current_ua >=3D 0 && latest->voltage <=3D 3200000) {
+>  			dev_emerg(ddata->dev,
+> -				  "Battery empty at 3.1V, powering off\n");
+> +				  "Battery empty at %imV, powering off\n",
+> +				  latest->voltage / 1000);
+>  			orderly_poweroff(true);
+>  		}
+>  		break;
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4JzfwACgkQMOfwapXb+vL56ACeLmgSqGAZlFg6JQS4nsWN1zLk
+PF8An1U/nOXr0XWkU1Ldtf54vlvlrl5z
+=PN0n
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
