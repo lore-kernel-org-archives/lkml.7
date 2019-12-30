@@ -2,103 +2,138 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56880C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C82C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32425206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21A8206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="egJE/xK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfL3N1p (ORCPT
+        id S1727482AbfL3Nam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 08:27:45 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:49052 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfL3N1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 08:27:45 -0500
-Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id kDTf2100A5USYZQ01DTf3m; Mon, 30 Dec 2019 14:27:42 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ilv59-0001Yv-B0; Mon, 30 Dec 2019 14:27:39 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ilv59-0001C0-8p; Mon, 30 Dec 2019 14:27:39 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Stefan Agner <stefan@agner.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] drm/fb-helper: Round up bits_per_pixel if possible
-Date:   Mon, 30 Dec 2019 14:27:34 +0100
-Message-Id: <20191230132734.4538-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 30 Dec 2019 08:30:42 -0500
+Received: from mout.web.de ([212.227.15.14]:48705 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727397AbfL3Nam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 08:30:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1577712616;
+        bh=sZdtUvNTDwfpY8AitIo7Yb6SiaGz0Pnr81mwDfMRMbQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=egJE/xK/2oSNJKqFJ2I/GkD/Itie1O4ZymgT2CMl8jlVbxgdqvEXiLH+fn5Lw+jBX
+         jdVbqMWV4I0xhZSpeqb/za7zS1bq7PWcLvVg1Z4xZw/qaSGtl8npPk/2CRejf3DeGS
+         zgB0NreshSFbhbfKVvGd1ByIKUQx51EbiVClJbNg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.81.76]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmQS2-1jLWn40OLC-00a0Fz; Mon, 30
+ Dec 2019 14:30:16 +0100
+Subject: Re: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer
+ dereference
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Yuan Zhang <yuanxzhang@fudan.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
+        Leon Romanovsky <leon@kernel.org>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Shannon Nelson <shannon.nelson@intel.com>,
+        Anjali Singhai Jain <anjali.singhai@intel.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b10552be-7b43-911e-a240-8a0ffb43d231@web.de>
+Date:   Mon, 30 Dec 2019 14:30:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rwjF5NVATm3VREfciWlhkDZTQ1E7shEPsnIKmJvb7cIQxZVIm7A
+ 7GHgR4TUK+O0iuE0KWKxnpdiIIwYi74Qp2aMikpYNYNm5Km6GnYsO4PXb07fPaTWttQkaR5
+ enqCfv+81RHxFVOS4XWyyoM5BBB037rOtosqjOlz8QfGY2nq7puiVmz3JIdnrykxriBB1k2
+ juVriHHKBQBEA087vMhUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:J26PKoR76JA=:vh819MzkTNCkiQKurwpINg
+ l+bYPLA9kjp+Mu6KGItKvXWHWjqVzBhWMQhTH6B6ovmFzc04Nw50XGWFMn6hyx6gbnY3E/Jya
+ j9V2/DzpERokv/zNJT6oc544FvSmpv09bP6e9rfEO8rhrh+iNADDI7MGqoF9Jnimyibp6VeNQ
+ KH3JRPbVwjzOQPcYkk8GJh2Yamb+wqprNzf2loNHEIorUT9D2/i/+CSDbnGnTwNhaGuh1077+
+ /FJLcgt2U5Mv+muB8Blms8wlw0uv30eFGXbpi6863QIR2GyjP48qdMIZgQKFkAERnexN4oJEz
+ /NJb0Lrx1bvm7MAPSRqhUSaicOpdLkmQ4pWazI06oBxLPpJg8bpLa0OxcfM/qUmYpRBJQKH/E
+ plywj5LQpxboqCvYbyTQ8AK/7S194BKH5qcmwfxqDuQYndmBY0DXnJ0W1ZUpA1ayer59fkw7l
+ mYP3qj9KenGYzXMBdhPMvR/YRfIPDwEFVynBk1Xm/mcgR1dN3Lpu1NhkhBO27u3FKccncGSgg
+ 8kmFCRPNtkQIY0By3/YS38UuETlWz2uicd8ZWNywzFKkeWPrUCjkh2aGLtJuGVhLUeotBKnje
+ elhyLlfzFxUIKg4LcOYZcrhmSaaS3HDtmp/A2rc1C2FXFqj8hNhVvaGGaKvVKTt3/QGV/kMVc
+ lwwo5Ra2L2tmx5w6raG5KY+/YS5GX8d5RdxJP0wcsupTYCB6cCzxejfyE6XdxySoeirvZ51l0
+ GvZ7CIfMi5O6zUgCXR+RItF9cHk7mWcqkAXwWx0t0Jls8BVxe1OSFCNoxz+kdHLkF8FNLna5U
+ OMrjkD41xzDMrRvlTv1rRANirj2k150wS0ddbrr3J98+FPY6Dk3re74UJimAs8i8vkK6Nzjd0
+ 4+My2zr8y4AZx8nNlpASmctpTX+fRG2LLRV/MITNK1i1utA+0fZHXLOZ4NMOw/Mv1wTBJ9qW7
+ kux48bdbukVfVYInHDEXGElwz/CRtYXeeIDcU+l8LCJT49emxr89lU0I3DeNHnCp3GSAsXsM/
+ XndGeCNXSt/qdXIj49LbNfYo08z+iBIcL1qEWAqnYTBedQYx7O857th0njZp2QbtQEV2cEYif
+ SWgOx9NF8M1+7e9cFwVKUAsBWCqa7HyEnMcBqX+oZIPIJFGNj0apAMmb2yVzrch7Ff+kMNV6P
+ Aw7kjL8zo0H53E+QZwKJQUcLU1PEbFI7GdcLijObILqXCIpSF1bkXRfKFHEFd1rroEPCytrA+
+ 6eaSQzYhwG3jtyJtNDiylVoO70ThlAN4Uiq/bP/UEU6j8W3KnErveq+J6dLU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When userspace requests a video mode parameter value that is not
-supported, frame buffer device drivers should round it up to a supported
-value, if possible, instead of just rejecting it.  This allows
-applications to quickly scan for supported video modes.
+I suggest to reconsider the distribution of mail addresses for subsequent =
+patches.
+I would find it more appropriate to put your address in the field =E2=80=
+=9CCc=E2=80=9D
+while others should probably be specified in the message field =E2=80=9CTo=
+=E2=80=9D.
 
-Currently this rule is not followed for the number of bits per pixel,
-causing e.g. "fbset -depth N" to fail, if N is smaller than the current
-number of bits per pixel.
-
-Fix this by returning an error only if bits per pixel is too large, and
-setting it to the current value otherwise.
-
-See also Documentation/fb/framebuffer.rst, Section 2 (Programmer's View
-of /dev/fb*").
-
-Fixes: 865afb11949e5bf4 ("drm/fb-helper: reject any changes to the fbdev")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Against drm-misc#for-linux-next.
-Applies with some fuzz against v5.5-rc4.
----
- drivers/gpu/drm/drm_fb_helper.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index f8e9051926083373..cae8fa74781c8db0 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1267,7 +1267,7 @@ int drm_fb_helper_check_var(struct fb_var_screeninfo *var,
- 	 * Changes struct fb_var_screeninfo are currently not pushed back
- 	 * to KMS, hence fail if different settings are requested.
- 	 */
--	if (var->bits_per_pixel != fb->format->cpp[0] * 8 ||
-+	if (var->bits_per_pixel > fb->format->cpp[0] * 8 ||
- 	    var->xres > fb->width || var->yres > fb->height ||
- 	    var->xres_virtual > fb->width || var->yres_virtual > fb->height) {
- 		drm_dbg_kms(dev, "fb requested width/height/bpp can't fit in current fb "
-@@ -1292,6 +1292,11 @@ int drm_fb_helper_check_var(struct fb_var_screeninfo *var,
- 		drm_fb_helper_fill_pixel_fmt(var, fb->format->depth);
- 	}
- 
-+	/*
-+	 * Likewise, bits_per_pixel should be rounded up to a supported value.
-+	 */
-+	var->bits_per_pixel = fb->format->cpp[0] * 8;
-+
- 	/*
- 	 * drm fbdev emulation doesn't support changing the pixel format at all,
- 	 * so reject all pixel format changing requests.
--- 
-2.17.1
-
+Regards,
+Markus
