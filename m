@@ -2,97 +2,94 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62052C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE23C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2C421D7D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390282071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EL9pLURo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfL3Kc1 (ORCPT
+        id S1727379AbfL3Kpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 05:32:27 -0500
-Received: from mail.wangsu.com ([123.103.51.227]:41779 "EHLO wangsu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbfL3Kc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 05:32:27 -0500
-X-Greylist: delayed 2179 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Dec 2019 05:32:23 EST
-Received: from 137.localdomain (unknown [59.61.78.232])
-        by app2 (Coremail) with SMTP id 4zNnewBnR8yiyQledHAHAA--.7S2;
-        Mon, 30 Dec 2019 17:55:47 +0800 (CST)
-From:   Pengcheng Yang <yangpc@wangsu.com>
-To:     edumazet@google.com
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-Date:   Mon, 30 Dec 2019 17:54:41 +0800
-Message-Id: <1577699681-14748-1-git-send-email-yangpc@wangsu.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: 4zNnewBnR8yiyQledHAHAA--.7S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KrW8Zw4Dtw18GFy7tr4xWFg_yoW8GrykpF
-        Z8Gr42gry8GFyIk34jqFykX3W8Kws5CF4agr4UCrnIkwnrGw4fWF1vga1a9r1xKrZ7Cr4S
-        vryj9rWDuFyUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9I1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
-        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lYx0Ec7CjxVAajcxG14v26r1j
-        6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI
-        8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAK
-        I48JMxAIw28IcVCjz48v1sIEY20_Gr4l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxV
-        AFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
-        WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-        IYCTnIWIevJa73UjIFyTuYvjfU4gAwDUUUU
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+        Mon, 30 Dec 2019 05:45:46 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:20128 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726196AbfL3Kpq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 05:45:46 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBUAiuYh031107;
+        Mon, 30 Dec 2019 04:44:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=VaGdZjmNiXn+e3fOnWQrXgYdyILFsmQJFn+WM/zYtm0=;
+ b=EL9pLURoWu6MMb/eWLf4ZX5kFN6ry+j+qQpivxaRJZmWfVwKB7SYbu/+SDoD7CCYrI3u
+ qy7MFjCKgsb/wb/oj3XzVlJD4nyyZ1KpT4xTGQrC7GjUFCibux0y0ujB7tfqjdxWH0F5
+ 8uMCesle9JyUjxEM3T7yv4lfDCU9E8P23VAF3rJGVn2iiKSRxIhNnTv/87+rKnGfeBCh
+ EdqamZxeUWsPo0vAew34N4mFrfM3Df/F4KTTNpVlgUxGYqJptoZyQ33JjABFphhAxsSp
+ 1hPeFr00w3ndZLLc0Eu93X+U+UJDpHE2si4sqmqMEk87j34igfVez4i/J9J2pVC0S06w 0Q== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([5.172.152.52])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2x65b7a5sm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 30 Dec 2019 04:44:56 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 30 Dec
+ 2019 10:44:54 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 30 Dec 2019 10:44:54 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 55B8E2A1;
+        Mon, 30 Dec 2019 10:44:53 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 10:44:53 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     <brian.austin@cirrus.com>, <Paul.Handrigan@cirrus.com>,
+        <rf@opensource.cirrus.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: cs47l92: Simplify error handling code in
+ 'cs47l92_probe()'
+Message-ID: <20191230104453.GG10451@ediswmail.ad.cirrus.com>
+References: <20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191226162907.9490-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 clxscore=1011 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912300099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we receive a D-SACK, where the sequence number satisfies:
-	undo_marker <= start_seq < end_seq <= prior_snd_una
-we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-returns true, then this D-SACK is discarded as "old stuff",
-but the variable first_sack_index is not marked as negative
-in tcp_sacktag_write_queue().
+On Thu, Dec 26, 2019 at 05:29:07PM +0100, Christophe JAILLET wrote:
+> If 'madera_init_bus_error_irq()' fails,
+> 'wm_adsp2_remove(&cs47l92->core.adsp[0])' will be called twice.
+> Once in the 'if' block, and once in the error handling path.
+> This is harmless, but one of this call can be axed.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
 
-If this D-SACK also carries a SACK that needs to be processed
-(for example, the previous SACK segment was lost), this SACK
-will be treated as a D-SACK in the following processing of
-tcp_sacktag_write_queue(), which will eventually lead to
-incorrect updates of undo_retrans and reordering.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
----
- net/ipv4/tcp_input.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 88b987c..0238b55 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1727,8 +1727,11 @@ static int tcp_sack_cache_ok(const struct tcp_sock *tp, const struct tcp_sack_bl
- 		}
- 
- 		/* Ignore very old stuff early */
--		if (!after(sp[used_sacks].end_seq, prior_snd_una))
-+		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-+			if (i == 0)
-+				first_sack_index = -1;
- 			continue;
-+		}
- 
- 		used_sacks++;
- 	}
--- 
-1.8.0
-
+Thanks,
+Charles
