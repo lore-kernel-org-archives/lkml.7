@@ -2,102 +2,195 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7248C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BCCC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9807B2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2C520748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577697268;
+	bh=Jtv2Oqg+19UNbmF4oyZbciqhWHNUAETFbeiuH1l/y9E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KzGz/KjfmjInBdWA4eq0yT6/ACLoA6Vaq0x2dXU0VahzsWgHGZUshTC0ktMx7Js66
+	 +jMZdu5yiiprEqiaP+XdeOwhnyryVOPZUpS9kU6syPiSjTlDe7Qt8fy1L/hoYXK/86
+	 qxBA1z6mh35kUnNS8EjWeoARHssdMEWGmPOmYJIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfL3JNx (ORCPT
+        id S1727349AbfL3JO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:13:53 -0500
-Received: from foss.arm.com ([217.140.110.172]:53560 "EHLO foss.arm.com"
+        Mon, 30 Dec 2019 04:14:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbfL3JNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:13:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 745A8328;
-        Mon, 30 Dec 2019 01:13:52 -0800 (PST)
-Received: from [10.37.12.68] (unknown [10.37.12.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F31233F703;
-        Mon, 30 Dec 2019 01:13:45 -0800 (PST)
-Subject: Re: [PATCH 7/9] memory: samsung: exynos5422-dmc: convert to
- devm_platform_ioremap_resource
-To:     Yangtao Li <tiny.windzz@gmail.com>, ssantosh@kernel.org,
-        paul@crapouillou.net, matthias.bgg@gmail.com, rogerq@ti.com,
-        tony@atomide.com, kgene@kernel.org, krzk@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        allison@lohutok.net, tglx@linutronix.de, yong.wu@mediatek.com,
-        jroedel@suse.de, evgreen@chromium.org, rfontana@redhat.com,
-        digetx@gmail.com, pdeschrijver@nvidia.com, john@phrozen.org,
-        alexios.zavras@intel.com, sboyd@kernel.org,
-        kstewart@linuxfoundation.org, info@metux.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-References: <20191222185034.4665-1-tiny.windzz@gmail.com>
- <20191222185034.4665-7-tiny.windzz@gmail.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <a331ae9c-ee2c-6c5e-3a61-a50c172359aa@arm.com>
-Date:   Mon, 30 Dec 2019 09:13:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191222185034.4665-7-tiny.windzz@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727243AbfL3JO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 04:14:27 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA8182072E;
+        Mon, 30 Dec 2019 09:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577697265;
+        bh=Jtv2Oqg+19UNbmF4oyZbciqhWHNUAETFbeiuH1l/y9E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JslN9Gb19kdZ+42Z11azLYVaEAVAZchT6BhvZS3hAKN4nh52HDcXDx0mkw+w2pzlZ
+         VAQRhMZJLLq0szxtHceSe9YoPzj7lMqfUeJRpAKzpG4L1jOCt6B5JYRx2dWXPhmReJ
+         wCMZbxfk6Hp0wDNeKUWolUhDFFCbjbDSUX6V2Crg=
+Date:   Mon, 30 Dec 2019 18:14:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Backlund <tmb@mageia.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.4 245/434] perf probe: Fix to list probe event with
+ correct line number
+Message-Id: <20191230181420.737a4da2a8a3efd158f01b06@kernel.org>
+In-Reply-To: <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
+References: <20191229172702.393141737@linuxfoundation.org>
+        <20191229172718.158972713@linuxfoundation.org>
+        <689591f8-0798-af22-9a04-4a1e6e894a55@mageia.org>
+        <f01f3d9a-8b09-7b49-2364-7308f3521d54@mageia.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 30 Dec 2019 01:00:14 +0200
+Thomas Backlund <tmb@mageia.org> wrote:
 
-On 12/22/19 6:50 PM, Yangtao Li wrote:
-> Use devm_platform_ioremap_resource() to simplify code.
+> Den 29-12-2019 kl. 20:42, skrev Thomas Backlund:
+> > Den 29-12-2019 kl. 19:24, skrev Greg Kroah-Hartman:
+> >> From: Masami Hiramatsu <mhiramat@kernel.org>
+> >>
+> >> [ Upstream commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e ]
+> >>
+> >> Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
+> >> entry address of the function on which a probe is, it will fail when the
+> >> function DIE has only ranges attribute.
+> >>
+> >> To fix this issue, use die_entrypc() instead of dwarf_entrypc().
+> >>
+> >> Without this fix, perf probe -l shows incorrect offset:
+> >>
+> >>    # perf probe -l
+> >>      probe:clear_tasks_mm_cpumask (on 
+> >> clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c) 
+> >>
+> >>      probe:clear_tasks_mm_cpumask_1 (on 
+> >> clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c) 
+> >>
+> >>
+> >> With this:
+> >>
+> >>    # perf probe -l
+> >>      probe:clear_tasks_mm_cpumask (on 
+> >> clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
+> >>      probe:clear_tasks_mm_cpumask_1 (on 
+> >> clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
+> >>
+> >> Committer testing:
+> >>
+> >> Before:
+> >>
+> >>    [root@quaco ~]# perf probe -l
+> >>      probe:clear_tasks_mm_cpumask (on 
+> >> clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
+> >>    [root@quaco ~]#
+> >>
+> >> After:
+> >>
+> >>    [root@quaco ~]# perf probe -l
+> >>      probe:clear_tasks_mm_cpumask (on 
+> >> clear_tasks_mm_cpumask@kernel/cpu.c)
+> >>    [root@quaco ~]#
+> >>
+> >> Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number 
+> >> with inline function")
+> >> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >> Cc: Jiri Olsa <jolsa@redhat.com>
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >> Link: 
+> >> http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2 
+> >>
+> >> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >> ---
+> >>   tools/perf/util/probe-finder.c | 4 ++--
+> >>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/probe-finder.c 
+> >> b/tools/perf/util/probe-finder.c
+> >> index cd9f95e5044e..7c8d30fb2b99 100644
+> >> --- a/tools/perf/util/probe-finder.c
+> >> +++ b/tools/perf/util/probe-finder.c
+> >> @@ -1578,7 +1578,7 @@ int debuginfo__find_probe_point(struct debuginfo 
+> >> *dbg, unsigned long addr,
+> >>           /* Get function entry information */
+> >>           func = basefunc = dwarf_diename(&spdie);
+> >>           if (!func ||
+> >> -            dwarf_entrypc(&spdie, &baseaddr) != 0 ||
+> >> +            die_entrypc(&spdie, &baseaddr) != 0 ||
+> >>               dwarf_decl_line(&spdie, &baseline) != 0) {
+> >>               lineno = 0;
+> >>               goto post;
+> >> @@ -1595,7 +1595,7 @@ int debuginfo__find_probe_point(struct debuginfo 
+> >> *dbg, unsigned long addr,
+> >>           while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
+> >>                           &indie)) {
+> >>               /* There is an inline function */
+> >> -            if (dwarf_entrypc(&indie, &_addr) == 0 &&
+> >> +            if (die_entrypc(&indie, &_addr) == 0 &&
+> >>                   _addr == addr) {
+> >>                   /*
+> >>                    * addr is at an inline function entry.
+> >>
+> > 
+> > 
+> > still broken
+> > 
+> > /usr/bin/ld: perf-in.o: in function `debuginfo__find_probe_point':
+> > /work/rpmbuild/BUILD/kernel-x86_64/linux-5.4/tools/perf/util/probe-finder.c:1616: 
+> > undefined reference to `die_entrypc'
+> > 
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->   drivers/memory/samsung/exynos5422-dmc.c | 7 ++-----
->   1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-> index 47dbf6d1789f..81a1b1d01683 100644
-> --- a/drivers/memory/samsung/exynos5422-dmc.c
-> +++ b/drivers/memory/samsung/exynos5422-dmc.c
-> @@ -1374,7 +1374,6 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
->   	struct device *dev = &pdev->dev;
->   	struct device_node *np = dev->of_node;
->   	struct exynos5_dmc *dmc;
-> -	struct resource *res;
->   	int irq[2];
->   
->   	dmc = devm_kzalloc(dev, sizeof(*dmc), GFP_KERNEL);
-> @@ -1386,13 +1385,11 @@ static int exynos5_dmc_probe(struct platform_device *pdev)
->   	dmc->dev = dev;
->   	platform_set_drvdata(pdev, dmc);
->   
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	dmc->base_drexi0 = devm_ioremap_resource(dev, res);
-> +	dmc->base_drexi0 = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(dmc->base_drexi0))
->   		return PTR_ERR(dmc->base_drexi0);
->   
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -	dmc->base_drexi1 = devm_ioremap_resource(dev, res);
-> +	dmc->base_drexi1 = devm_platform_ioremap_resource(pdev, 1);
->   	if (IS_ERR(dmc->base_drexi1))
->   		return PTR_ERR(dmc->base_drexi1);
->   
+> And the fix for the perf build errors I reported against:
+> [PATCH 5.4 245/434] perf probe: Fix to list probe event with correct 
+> line number
+> [PATCH 5.4 248/434] perf probe: Fix to probe an inline function which 
+> has no entry pc
+> [PATCH 5.4 249/434] perf probe: Fix to show ranges of variables in 
+> functions without entry_pc
+> [PATCH 5.4 250/434] perf probe: Fix to show inlined function callsite 
+> without entry_pc
+> [PATCH 5.4 252/434] perf probe: Fix to probe a function which has no 
+> entry pc
 > 
+> is to add the missing:
+> 
+>  From 91e2f539eeda26ab00bd03fae8dc434c128c85ed Mon Sep 17 00:00:00 2001
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Date: Thu, 24 Oct 2019 18:12:54 +0900
+> Subject: [PATCH] perf probe: Fix to show function entry line as probe-able
 
-Acked-by: Lukasz Luba <lukasz.luba@arm.com>
+Thanks Thomas, you're right.
+The die_entrypc() was newly added by that commit for finding correct
+entry PC of functions.
 
-Regards,
-Lukasz
+Greg, could you please apply above fix too?
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
