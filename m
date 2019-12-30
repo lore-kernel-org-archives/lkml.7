@@ -2,134 +2,138 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A86C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A226C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180BD20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M2g2Lpq5"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1722084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfL3SkK (ORCPT
+        id S1727619AbfL3SmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:40:10 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43304 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfL3SkJ (ORCPT
+        Mon, 30 Dec 2019 13:42:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48083 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfL3SmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:40:09 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUIe6N5030186;
-        Mon, 30 Dec 2019 12:40:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577731206;
-        bh=6k4RFRr+b3SXl10M3srQqX37C5m7+L9RJSizTiEPW4Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=M2g2Lpq5AJFSr5eCNVykqzJGxlkcNcPJoiEzfP2RRbWHMutbH2o5HXLc/LX0CXoc8
-         4k/vv94uqb3ADOtytRuHHLteztY7tlqM1Ezh1L0PCxZbTSDDHX83mRtERM/LdkLHn2
-         Cvsdu9Z4PSAlAE+RggcyWrD6OqT6Im5aR/WGMT3E=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBUIe6EK082730
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Dec 2019 12:40:06 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
- Dec 2019 12:40:06 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 30 Dec 2019 12:40:06 -0600
-Received: from [10.250.65.50] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUIe5Cr026099;
-        Mon, 30 Dec 2019 12:40:05 -0600
-Subject: Re: [PATCH v2 2/3] ARM: OMAP2+: Introduce check for OP-TEE in
- omap_secure_init()
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191217234745.4434-1-afd@ti.com>
- <20191217234745.4434-3-afd@ti.com> <20191218005316.GG35479@atomide.com>
- <f2efedb7-8050-2c16-02d0-a534c00a497e@ti.com>
- <20191230173659.GN35479@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <d8062353-47bb-b31f-a263-76ba1674b891@ti.com>
-Date:   Mon, 30 Dec 2019 13:40:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 30 Dec 2019 13:42:19 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ilzzO-0006Ji-I1; Mon, 30 Dec 2019 19:42:02 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F6851C0450;
+        Mon, 30 Dec 2019 19:42:01 +0100 (CET)
+Date:   Mon, 30 Dec 2019 18:42:01 -0000
+From:   "tip-bot2 for Qian Cai" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/resctrl: Fix an imbalance in domain_remove_cpu()
+Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        john.stultz@linaro.org, sboyd@kernel.org, <stable@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, tj@kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Vikas Shivappa <vikas.shivappa@linux.intel.com>,
+        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191211033042.2188-1-cai@lca.pw>
+References: <20191211033042.2188-1-cai@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20191230173659.GN35479@atomide.com>
+Message-ID: <157773132107.30329.13477468873808479241.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/30/19 12:36 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [191218 01:01]:
->> On 12/17/19 7:53 PM, Tony Lindgren wrote:
->>> * Andrew F. Davis <afd@ti.com> [191217 23:48]:
->>>> --- a/arch/arm/mach-omap2/omap-secure.c
->>>> +++ b/arch/arm/mach-omap2/omap-secure.c
->>>> @@ -20,6 +21,18 @@
->>>>  
->>>>  static phys_addr_t omap_secure_memblock_base;
->>>>  
->>>> +bool optee_available;
->>>
->>> The above can be static bool optee_available?
->>>
->>>> --- a/arch/arm/mach-omap2/omap-secure.h
->>>> +++ b/arch/arm/mach-omap2/omap-secure.h
->>>> @@ -10,6 +10,8 @@
->>>>  #ifndef OMAP_ARCH_OMAP_SECURE_H
->>>>  #define OMAP_ARCH_OMAP_SECURE_H
->>>>  
->>>> +#include <linux/types.h>
->>>> +
->>>>  /* Monitor error code */
->>>>  #define  API_HAL_RET_VALUE_NS2S_CONVERSION_ERROR	0xFFFFFFFE
->>>>  #define  API_HAL_RET_VALUE_SERVICE_UNKNWON		0xFFFFFFFF
->>>> @@ -72,6 +74,7 @@ extern u32 rx51_secure_dispatcher(u32 idx, u32 process, u32 flag, u32 nargs,
->>>>  extern u32 rx51_secure_update_aux_cr(u32 set_bits, u32 clear_bits);
->>>>  extern u32 rx51_secure_rng_call(u32 ptr, u32 count, u32 flag);
->>>>  
->>>> +extern bool optee_available;
->>>>  void omap_secure_init(void);
->>>
->>> And then this change should not be needed, right?
->>>
->>
->>
->> I have a staged change I'm about to post that makes use of this flag
->> from outside of omap-secure.c, otherwise I would have left it internal
->> to that file.
->>
->> I could also have moved the flag in the patch that uses it, but it
->> seemed like an unnecessary change given I know it will be needed here soon.
-> 
-> OK best to post all them together. Or initially just set it static
-> as otherwise people reading the patches will wonder about it with
-> no user. And all the automated test systems will start sending out
-> patches :)
-> 
+The following commit has been merged into the x86/urgent branch of tip:
 
+Commit-ID:     e278af89f1ba0a9ef20947db6afc2c9afa37e85b
+Gitweb:        https://git.kernel.org/tip/e278af89f1ba0a9ef20947db6afc2c9afa37e85b
+Author:        Qian Cai <cai@lca.pw>
+AuthorDate:    Tue, 10 Dec 2019 22:30:42 -05:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 30 Dec 2019 19:25:59 +01:00
 
-Okay, I'll post everything together, will add the extra patch for AM43xx
-HS suspend/resume that uses this to the end of this series.
+x86/resctrl: Fix an imbalance in domain_remove_cpu()
 
-Thanks,
-Andrew
+A system that supports resource monitoring may have multiple resources
+while not all of these resources are capable of monitoring. Monitoring
+related state is initialized only for resources that are capable of
+monitoring and correspondingly this state should subsequently only be
+removed from these resources that are capable of monitoring.
 
+domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
+is true where it will initialize d->mbm_over. However,
+domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
+checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
+all resources, even those that never initialized d->mbm_over because
+they are not capable of monitoring. Hence, it triggers a debugobjects
+warning when offlining CPUs because those timer debugobjects are never
+initialized:
 
-> Regards,
-> 
-> Tony
-> 
+  ODEBUG: assert_init not available (active state 0) object type:
+  timer_list hint: 0x0
+  WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
+  debug_print_object
+  Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS I40 05/23/2018
+  RIP: 0010:debug_print_object
+  Call Trace:
+  debug_object_assert_init
+  del_timer
+  try_to_grab_pending
+  cancel_delayed_work
+  resctrl_offline_cpu
+  cpuhp_invoke_callback
+  cpuhp_thread_fun
+  smpboot_thread_fn
+  kthread
+  ret_from_fork
+
+Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: john.stultz@linaro.org
+Cc: sboyd@kernel.org
+Cc: <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: tj@kernel.org
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vikas Shivappa <vikas.shivappa@linux.intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191211033042.2188-1-cai@lca.pw
+---
+ arch/x86/kernel/cpu/resctrl/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 03eb90d..89049b3 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -618,7 +618,7 @@ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
+ 		if (static_branch_unlikely(&rdt_mon_enable_key))
+ 			rmdir_mondata_subdir_allrdtgrp(r, d->id);
+ 		list_del(&d->list);
+-		if (is_mbm_enabled())
++		if (r->mon_capable && is_mbm_enabled())
+ 			cancel_delayed_work(&d->mbm_over);
+ 		if (is_llc_occupancy_enabled() &&  has_busy_rmid(r, d)) {
+ 			/*
