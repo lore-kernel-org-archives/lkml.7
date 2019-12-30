@@ -2,97 +2,113 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB347C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B0FC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FD520718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Ok+zhrab"
+	by mail.kernel.org (Postfix) with ESMTP id 6F4C220722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577720652;
+	bh=38eu/sesVAvr+TZjCpqkTZ3maQiy3tFyzcBfQPNaq04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g+rgIKMI6SZ1/TZll0wnEESSJOBsBq9f0hzZQKKLxwt49pvCfUAP35l4pHwmbA74A
+	 Rps83XWMEi+zmOD31m89l99JErwcNKd8SeNqXjUfiYH8bYAvR+hiCYzpyiWLhve/S1
+	 6LejFpIYFQn1KYhslhZByvgIQK5UHuBbE5eWBgn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfL3Pjz (ORCPT
+        id S1727640AbfL3PoL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:39:55 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:40331 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfL3Pjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:39:55 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 7d8bb28b;
-        Mon, 30 Dec 2019 14:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=9flgwsrX1/nkYcte0hox9LfJaiQ=; b=Ok+zhr
-        abdJ/E89MHYOIELdRxV37SfhkIa8drsZvxQBsHkeukgkxpKJjZMvHFuJ25xpKfw5
-        JJN2IzJRV3hPkntjeVa1TnX0nZFIn3SzCtPHv3lO842PGiTDbEesgG/aW7PmPbLk
-        JZCluwQ7f46HW5ckE7scgokneYGB7h4gLwCOmTuIvA5aJijiEFmwcNGivMAag+iT
-        pvSMPGaLVpnmHwFLRv8W+cslCh7TDR9B8l3WNCmj3dRtH/wCGWM8PMdFW9TM1Db0
-        F7tNOQTi9E25t8o5kEyzcGNglv7g0EaUeYLN2ir8AGah4Jx55qt9Wrrv8y0KZdvC
-        IC7LQoGYTPkdbOKg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 87a6a7bd (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 30 Dec 2019 14:41:45 +0000 (UTC)
-Received: by mail-oi1-f182.google.com with SMTP id a67so11036405oib.6;
-        Mon, 30 Dec 2019 07:39:53 -0800 (PST)
-X-Gm-Message-State: APjAAAXMtdq4uF9TF38vUfc/OmhSWq6YVP3XUhpS82DF85eNQefoW+It
-        wfJuzZIvbWdhFjkbg/xSBi2DRrpElbaL9uMHVXc=
-X-Google-Smtp-Source: APXvYqz00Y5xxUlBRLlVF07uxQyhREY+lSVr2laXmLUWheRJ+IA0sGSQB4Ghj8Hza1chgfztBPH2JBv0kohIYYtph2Q=
-X-Received: by 2002:aca:39d6:: with SMTP id g205mr5058827oia.122.1577720392421;
- Mon, 30 Dec 2019 07:39:52 -0800 (PST)
+        Mon, 30 Dec 2019 10:44:11 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34938 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfL3PoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 10:44:11 -0500
+Received: by mail-ed1-f65.google.com with SMTP id f8so32952131edv.2;
+        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BqjpB17I4FAVcCVel4kRRM5u2ZSN97epJBsAntRnbvo=;
+        b=BGn6eLF/ceEdI0HWKQ3q+meVBxDTd6TvXMlQzyPYeivJZclIvXpfkNIIqj+qDDzuYv
+         m6jGEvK4vVkZN1IKn1y9P/3Ru/yNsr1vaXaZcBXydbKN5lv4Bbbozaown/breSai8p9B
+         OBQjMa6c4axPG+fc+4XIhbcEcH6+hlVpAauTKwjTNYcP03AA0MMYVtSOv4tKWUmXWhAo
+         OmXBAqvc8Sw/DLIHQwLdxXpy/vYN2nOl2Q5xd96KZuvH03ps2tyY5dwQvBTt8WczcXpM
+         f+FbpO6CCK6USHKxGMpw8sgSWIqoqvdxJSZkL9a3Wn5Nu3/DFc+cOoHdjjc8NWalOQlq
+         siGg==
+X-Gm-Message-State: APjAAAVp6kz88B1Wr09Sb3FgDCDii+WVuf3rUYZhtbakI0kCSkawVJU3
+        LRhzkMXdl7ColV0t674FpG+L7LnN
+X-Google-Smtp-Source: APXvYqxzo56maTlSxQsNU5A2SyQb7P5FV8UkAKWQclUCoOB2bQNqmZBjZSuWqej4dQDiaLucch6EvA==
+X-Received: by 2002:a17:906:2649:: with SMTP id i9mr71611722ejc.120.1577720649214;
+        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id t1sm5651917ejg.32.2019.12.30.07.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 07:44:08 -0800 (PST)
+Date:   Mon, 30 Dec 2019 16:44:05 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
+ for Exynos4412
+Message-ID: <20191230154405.GC4918@pi3>
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+ <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
+ <20191220115653.6487-5-a.swigon@samsung.com>
 MIME-Version: 1.0
-References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
- <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
- <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
- <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
- <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com> <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
-In-Reply-To: <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 30 Dec 2019 16:39:41 +0100
-X-Gmail-Original-Message-ID: <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
-Message-ID: <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
-Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christian Brauner <christian.brauner@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191220115653.6487-5-a.swigon@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 4:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Dec 30, 2019 at 3:37 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > On Mon, Dec 30, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > - Why does it crash in the first place rather than returning -ENOSYS?
-> >
-> > There's a bit of speculation about this in the original thread that
-> > prompted this patch (you're CC'd).
-> >
-> > >
-> > > - How does it actually work if you run an application built against
-> > >   an old musl version on a kernel that tries to make this not work?
-> > >   Do you just get a random time (uninitialized user space stack) and
-> > >   work with that without checking the error code?
-> >
-> > Actually, your patch fails here. The ts struct remains as it was
-> > before, filled with garbage. No good. My original patch in this
-> > thread, though, does result in the correct value being written to ts.
->
-> Ok, that is the intended behavior then, clock_gettime() needs
-> to fail with -EINVAL or -ENOSYS here (depending on the libc
-> implementation), and of course the data is not updated.
->
-> Returning success from clock_gettime() on a kernel with only
-> time64 support and a libc with only time32 support (or vice
-> versa) would be a bug.
+On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
+> This patch adds the following properties to the Exynos4412 DT:
+>   - exynos,interconnect-parent-node: to declare connections between
+>     nodes in order to guarantee PM QoS requirements between nodes;
+>   - #interconnect-cells: required by the interconnect framework.
+> 
+> Note that #interconnect-cells is always zero and node IDs are not
+> hardcoded anywhere.
+> 
+> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Ah, right, hence why the 32-bit compat code is behind a
-still-on-by-default-but-not-for-long menu option.
+The order of patches is confusing. Patches 4 and 6 are split - do the
+depend on 5? I doubt but...
+
+Adjust the title to match the contents - you are not adding bindings but
+properties to bus nodes. Also the prefix is ARM: (look at recent
+commits).
+
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index 4ce3d77a6704..d9d70eacfcaf 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -90,6 +90,7 @@
+>  &bus_dmc {
+>  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+>  	vdd-supply = <&buck1_reg>;
+> +	#interconnect-cells = <0>;
+
+This does not look like property of Odroid but Exynos4412 or Exynos4.
+
+Best regards,
+Krzysztof
