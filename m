@@ -2,305 +2,235 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B1CC2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1073DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FB2206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9B4207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cCcn6fej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfL3JfS (ORCPT
+        id S1727392AbfL3Jf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:35:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36143 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727290AbfL3JfS (ORCPT
+        Mon, 30 Dec 2019 04:35:27 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47704 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727379AbfL3Jf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:35:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so32722237ljg.3;
-        Mon, 30 Dec 2019 01:35:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oHTld+4sAb9ktsz7vhZlRoh4i6U4QcMe1tkH9gCAaos=;
-        b=YTwgyUbG8kq2WjBX5Ea1hDN8R9pc9tyKMpSdMq+ri7gtDFbnO6Gd4z2IXJNSQ/aQXV
-         XXx1QPqKexrXppFAbFimmtb4OLknY+gDWO6T1OytLzPCNJph39pnKcQjW7Wb14pF46uI
-         EtAy7xMESO7gVonL/RF0g+nGc/kRlhsGCeEktxIX6ArU8MFMDsAHWeGbjsOhTD3HfDuF
-         IKviahNQ3dsxpwvbT1YejwXO1MV842ig3G5bXiXlYTFfjkuC0vBFJhWIszlh3Yu7Vafk
-         IGclxtDOdpGV1Kws0GGhuGLLvLtW2HgCs9iwlMpxCaBmI17+BQioBHUkx5YafDYjJloN
-         +73Q==
-X-Gm-Message-State: APjAAAX6v+z4riBlW9SR96vkSehwzkopkOgixoDVKAUmEJlXhecKVfjq
-        iL7WgrkezxThwdemrDlPlYY=
-X-Google-Smtp-Source: APXvYqxfCY2NXuHxNBEn2pwWRSa69COB4VwfxhgV+9gUWIb8sn2rQ5D6AB+sJPLXjMMxrn1wvYGO3A==
-X-Received: by 2002:a2e:e12:: with SMTP id 18mr28391805ljo.123.1577698513994;
-        Mon, 30 Dec 2019 01:35:13 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id r15sm4663771ljh.11.2019.12.30.01.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 01:35:13 -0800 (PST)
-Date:   Mon, 30 Dec 2019 11:35:05 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v8 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <b58952aedd1cce08aa4d7f346007a24923bb2b64.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Mon, 30 Dec 2019 04:35:27 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191230093525euoutp02b3dec400f22b2c83d4e4239186e5ef52~lHHMtgK2s1170811708euoutp02o
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 09:35:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191230093525euoutp02b3dec400f22b2c83d4e4239186e5ef52~lHHMtgK2s1170811708euoutp02o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1577698525;
+        bh=Xypm1AJvMupF3z7nKOYeVDuwvHXqOAOdFl7YrwTD918=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=cCcn6fejyXueb5UOEl5uzqv5Z2p0XgGZ0U8RwY4hNGAHFDvnetTQEoza6GiI9tgS3
+         p85hSIIszSwoOfodTyVToyGy+XRTnT5BoHNRpfKU9FOEgasBBvNsc6AZJpBEbgfYqE
+         +d6Aq2FeufUHHdeeNG2Z7pgMjImv5q0vVl2PVwnY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191230093525eucas1p27718806b19626b7b45579c53cd1f6948~lHHMWm6Uh2788427884eucas1p2H;
+        Mon, 30 Dec 2019 09:35:25 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 59.09.60679.CD4C90E5; Mon, 30
+        Dec 2019 09:35:25 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191230093524eucas1p171d0a5c805100c5cddc807a27c2f7657~lHHL8EVQj1988119881eucas1p1L;
+        Mon, 30 Dec 2019 09:35:24 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191230093524eusmtrp2235b15ad248353efa1cbe6e829e56c25~lHHL2J17s0819408194eusmtrp2u;
+        Mon, 30 Dec 2019 09:35:24 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-6f-5e09c4dc89c9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id ED.0F.08375.CD4C90E5; Mon, 30
+        Dec 2019 09:35:24 +0000 (GMT)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20191230093523eusmtip1975ed3256410df9f51c198561a7c2d7d~lHHLE1W_J1785117851eusmtip1g;
+        Mon, 30 Dec 2019 09:35:23 +0000 (GMT)
+Message-ID: <43b0e5d3fc28c48e139c5fbc2120903d678904a0.camel@samsung.com>
+Subject: Re: [RFC PATCH v3 7/7] drm: exynos: mixer: Add interconnect support
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, cw00.choi@samsung.com,
+        myungjoo.ham@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        b.zolnierkie@samsung.com, krzk@kernel.org
+Date:   Mon, 30 Dec 2019 10:35:21 +0100
+In-Reply-To: <6e8aa13a-c831-a7ee-70d3-f6b08fe6fbc3@samsung.com>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHObu7d3ejzesU/KG9HKgUpVaSBworCLqURAYRhForLyb5WLvq
+        1IJsgfQgG67StlCzUPHtWqXDXjKzLF2hqGlm0Qul15gJZWm73oX99z3f3+/z/Z4DhybUvWQw
+        nZaZzekztekaSiG9/ehn3+oxpzw52gy4tayZxENTn0hc4ewj8cCPbxQuvWujcMm4SYpdrhYZ
+        rh1zk9j2bpDE/Y6rFPacdyJc5ronwY3OMRkePVlL4TLzBLXZj7XVnaHYV4MdFDt+rlvC3rxx
+        gm392iZhi+11iPXYlu6S7VNsTOHS03I5fVTcAcXhopoBQucJzZu5/xYVIlPIWSSngYmBeuNr
+        maDVTC2C6X6/s0jh1VMIjD0vKPHgQWA22ch/hKvyGSkOahC8N13ybX1E0NjehIQtJcNCYZeD
+        EHQAEw9FxhapoClmE/SOTksEIJCZQPBh1jpPE8wIgo4LT+c7pEwYXHSfmaflXuLl8zmJ2L0K
+        vvQUe5Nob4M//GkLEGyCWQanblkJIQcYtwxmH/YT4v5W6DB3+XQATHbbZaJeDHPtFb5MHj60
+        j5MiXIjAVu30ARvgVd8vSigjmBXQ7IgS7S3w2dVKCjYwKhj+4i/eQQUlt0sJ0VbC6SK1KDXg
+        uKISQQBj/aAvm4WqxmKZCYVaFt5i+e8tloXWSkTUoSAuh89I5fi1mZwhktdm8DmZqZGHsjJs
+        yPvJns52T7Uhx++DnYihkWaRsqyUTlaT2lw+P6MTAU1oApUxifJktTJFm1/A6bP263PSOb4T
+        hdBSTZByXdVEkppJ1WZzRzhOx+n/TSW0PLgQRZYq8jzteLnlprFa9WQPvRPlTz+eGfme+ybc
+        PlESoTw+mRfWtTcpJetr9P5wyfo777NvLTJeDrLp3FV4ya+7caNV5epru10Gp/xHg2Eofq6O
+        m9I1jFDXF4dYuURrcGxRyIXtdNiW8m0bwppidxyd8S+I8xgiXqYdsz9IyEl4NqyR8oe1a1YS
+        el77F9SeV3VgAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xu7p3jnDGGeyfJGOxccZ6VovrX56z
+        Wsw/co7V4srX92wW0/duYrOYdH8Ci8X58xvYLVbc/chqsenxNVaLy7vmsFl87j3CaDHj/D4m
+        i7VH7rJb3G5cwWYxY/JLNgd+j02rOtk87lzbw+Zxv/s4k8fmJfUeG9/tYPLo27KK0ePzJrkA
+        9ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jLbl
+        V5gLPitW/N7/kLGBcYJ0FyMnh4SAicT5BWdYuxi5OIQEljJKnHu+ghUiISHxcf0NKFtY4s+1
+        LjYQW0jgCaPErSYwm1fAQ6Lh6C5mEFtYwEeirWkDC4jNJmAvcfb2NyaQoSICrxglWid8YgZx
+        mAXuMEo0fnwE1sEioCox5WMnmM0J1HHzwn8miDM+M0ocuLyeCSTBLKAp0br9NzvEGToSb0/1
+        Aa3gAFotKPF3hzBEibxE89bZzBMYBWch6ZiFUDULSdUCRuZVjCKppcW56bnFhnrFibnFpXnp
+        esn5uZsYgXG67djPzTsYL20MPsQowMGoxMM7YzpHnBBrYllxZe4hRgkOZiURXpMYzjgh3pTE
+        yqrUovz4otKc1OJDjKZA/0xklhJNzgemkLySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp
+        2ampBalFMH1MHJxSDYz5u11qb65Lln1++ym7vvzWlli1i10f3MvMNr1oXVRQ1j/ZfYXDozta
+        t9ZHF/1bpHpP2DXSZ2dHKfPVk6ufbT+Q3bPJpd41favihY2xl+N3b7vRoXjn5rWHO7c8jq34
+        t3Hdpj/3l7THGb37Vso6M/394/bYttjUtPS71+6eV1xWtPbK25oE9hXTlViKMxINtZiLihMB
+        yMmhb+kCAAA=
+X-CMS-MailID: 20191230093524eucas1p171d0a5c805100c5cddc807a27c2f7657
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+        <CGME20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7@eucas1p2.samsung.com>
+        <20191220115653.6487-8-a.swigon@samsung.com>
+        <6e8aa13a-c831-a7ee-70d3-f6b08fe6fbc3@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 Power management IC integrates 7 buck converters, 7 LDOs,
-a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-and a 32.768 kHz clock gate.
+Hi,
 
-Document the dt bindings drivers are using.
+On Tue, 2019-12-24 at 13:56 +0900, Inki Dae wrote:
+> Hi,
+> 
+> 19. 12. 20. 오후 8:56에 Artur Świgoń 이(가) 쓴 글:
+> > From: Marek Szyprowski <m.szyprowski@samsung.com>
+> > 
+> > This patch adds interconnect support to exynos-mixer. The mixer works
+> > the same as before when CONFIG_INTERCONNECT is 'n'.
+> > 
+> > Co-developed-by: Artur Świgoń <a.swigon@samsung.com>
+> > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >  drivers/gpu/drm/exynos/exynos_mixer.c | 71 +++++++++++++++++++++++++--
+> >  1 file changed, 66 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
+> > index 6cfdb95fef2f..a7e7240a055f 100644
+> > --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> > +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/component.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/i2c.h>
+> > +#include <linux/interconnect.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/kernel.h>
+> > @@ -97,6 +98,7 @@ struct mixer_context {
+> >  	struct exynos_drm_crtc	*crtc;
+> >  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
+> >  	unsigned long		flags;
+> > +	struct icc_path		*soc_path;
+> >  
+> >  	int			irq;
+> >  	void __iomem		*mixer_regs;
+> > @@ -931,6 +933,40 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
+> >  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
+> >  }
+> >  
+> > +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
+> > +{
+> > +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
+> > +	struct mixer_context *ctx = crtc->ctx;
+> > +	unsigned long bw, bandwidth = 0;
+> > +	int i, j, sub;
+> > +
+> > +	if (!ctx->soc_path)
+> > +		return;
+> > +
+> > +	for (i = 0; i < MIXER_WIN_NR; i++) {
+> > +		struct drm_plane *plane = &ctx->planes[i].base;
+> > +		const struct drm_format_info *format;
+> > +
+> > +		if (plane->state && plane->state->crtc && plane->state->fb) {
+> > +			format = plane->state->fb->format;
+> > +			bw = mode->hdisplay * mode->vdisplay *
+> > +							drm_mode_vrefresh(mode);
+> > +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
+> > +				bw /= 2;
+> > +			for (j = 0; j < format->num_planes; j++) {
+> > +				sub = j ? (format->vsub * format->hsub) : 1;
+> > +				bandwidth += format->cpp[j] * bw / sub;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	/* add 20% safety margin */
+> > +	bandwidth = bandwidth / 4 * 5;
+> > +
+> > +	dev_dbg(ctx->dev, "exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
+> > +	icc_set_bw(ctx->soc_path, Bps_to_icc(bandwidth), 0);
+> > +}
+> > +
+> >  static void mixer_atomic_begin(struct exynos_drm_crtc *crtc)
+> >  {
+> >  	struct mixer_context *ctx = crtc->ctx;
+> > @@ -982,6 +1018,7 @@ static void mixer_atomic_flush(struct exynos_drm_crtc *crtc)
+> >  	if (!test_bit(MXR_BIT_POWERED, &mixer_ctx->flags))
+> >  		return;
+> >  
+> > +	mixer_set_memory_bandwidth(crtc);
+> >  	mixer_enable_sync(mixer_ctx);
+> >  	exynos_crtc_handle_event(crtc);
+> >  }
+> > @@ -1029,6 +1066,7 @@ static void mixer_disable(struct exynos_drm_crtc *crtc)
+> >  	for (i = 0; i < MIXER_WIN_NR; i++)
+> >  		mixer_disable_plane(crtc, &ctx->planes[i]);
+> >  > +	mixer_set_memory_bandwidth(crtc);
+> 
+> Your intention is to set peak and average bandwidth to 0 at disabling mixer device?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+Yes. In general, setting the requested bandwidth to zero means "do not override
+the devfreq setting" because only constraints of type DEV_PM_QOS_MIN_FREQUENCY
+are used (cf. patch 05 of this series). I will make sure to reflect that in the
+commit message.
 
-Changes from v7 - no changes
+Moreover, this RFC does not really make use of the peak bandwidth (yet). It is
+set to zero in this patch and ignored in patch 05 (cf. exynos_bus_icc_set()).
+Only the average bandwidth is translated to a minimum frequency constraint,
+overriding devfreq if necessary.
 
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++++++++++++
- 1 file changed, 193 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+A possible modification to mixer_set_memory_bandwidth() could be:
+- bandwidth = bandwidth / 4 * 5;
++ peak_bandwidth = bandwidth / 4 * 5;
+in mixer_set_memory_bandwidth() plus some additional logic in exynos_bus_icc_set().
 
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-new file mode 100644
-index 000000000000..4fbb9e734284
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-@@ -0,0 +1,193 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd71828-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD71828 Power Management Integrated Circuit bindings
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description: |
-+  BD71828GW is a single-chip power management IC for battery-powered portable
-+  devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-+  single-cell linear charger. Also included is a Coulomb counter, a real-time
-+  clock (RTC), and a 32.768 kHz clock gate.
-+
-+properties:
-+  compatible:
-+    const: rohm,bd71828
-+
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description: |
-+      The first cell is the pin number and the second cell is used to specify
-+      flags. See ../gpio/gpio.txt for more information.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  rohm,charger-sense-resistor-ohms:
-+    minimum: 10000000
-+    maximum: 50000000
-+    description: |
-+      BD71827 and BD71828 have SAR ADC for measuring charging currents.
-+      External sense resistor (RSENSE in data sheet) should be used. If some
-+      other but 30MOhm resistor is used the resistance value should be given
-+      here in Ohms.
-+
-+  regulators:
-+    $ref: ../regulator/rohm,bd71828-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+  leds:
-+    $ref: ../leds/rohm,bd71828-leds.yaml
-+
-+  gpio-reserved-ranges:
-+    description: |
-+      Usage of BD71828 GPIO pins can be changed via OTP. This property can be
-+      used to mark the pins which should not be configured for GPIO. Please see
-+      the ../gpio/gpio.txt for more information.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - "#clock-cells"
-+  - regulators
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        pmic: pmic@4b {
-+            compatible = "rohm,bd71828";
-+            reg = <0x4b>;
-+
-+            interrupt-parent = <&gpio1>;
-+            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+
-+            clocks = <&osc 0>;
-+            #clock-cells = <0>;
-+            clock-output-names = "bd71828-32k-out";
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-reserved-ranges = <0 1>, <2 1>;
-+
-+            rohm,charger-sense-resistor-ohms = <10000000>;
-+
-+            regulators {
-+                buck1: BUCK1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck2: BUCK2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck3: BUCK3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <1200000>;
-+                    regulator-max-microvolt = <2000000>;
-+                };
-+                buck4: BUCK4 {
-+                    regulator-name = "buck4";
-+                    regulator-min-microvolt = <1000000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                buck5: BUCK5 {
-+                    regulator-name = "buck5";
-+                    regulator-min-microvolt = <2500000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                buck6: BUCK6 {
-+                    regulator-name = "buck6";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                buck7: BUCK7 {
-+                    regulator-name = "buck7";
-+                    regulator-min-microvolt = <500000>;
-+                    regulator-max-microvolt = <2000000>;
-+                    regulator-ramp-delay = <2500>;
-+                };
-+                ldo1: LDO1 {
-+                    regulator-name = "ldo1";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo2: LDO2 {
-+                    regulator-name = "ldo2";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo3: LDO3 {
-+                    regulator-name = "ldo3";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo4: LDO4 {
-+                    regulator-name = "ldo4";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo5: LDO5 {
-+                    regulator-name = "ldo5";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+                ldo6: LDO6 {
-+                    regulator-name = "ldo6";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                };
-+                ldo7_reg: LDO7 {
-+                    regulator-name = "ldo7";
-+                    regulator-min-microvolt = <800000>;
-+                    regulator-max-microvolt = <3300000>;
-+                };
-+            };
-+
-+            leds {
-+                compatible = "rohm,bd71828-leds";
-+
-+                led-1 {
-+                    rohm,led-compatible = "bd71828-grnled";
-+                    function = LED_FUNCTION_INDICATOR;
-+                    color = <LED_COLOR_ID_GREEN>;
-+                };
-+                led-2 {
-+                    rohm,led-compatible = "bd71828-ambled";
-+                    function = LED_FUNCTION_CHARGING;
-+                    color = <LED_COLOR_ID_AMBER>;
-+                };
-+            };
-+        };
-+    };
+Best regards,
 -- 
-2.21.0
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
