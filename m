@@ -2,74 +2,86 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD9C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0410C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F5820718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB4720663
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfL3M62 (ORCPT
+        id S1727470AbfL3NGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 07:58:28 -0500
-Received: from mga04.intel.com ([192.55.52.120]:52889 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfL3M62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 07:58:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 04:58:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,375,1571727600"; 
-   d="scan'208";a="221128271"
-Received: from zeliteleevi.tm.intel.com ([10.237.55.130])
-  by orsmga003.jf.intel.com with ESMTP; 30 Dec 2019 04:58:25 -0800
-Date:   Mon, 30 Dec 2019 14:58:25 +0200 (EET)
-From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
-X-X-Sender: kvehmane@zeliteleevi
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 102/219] ALSA: hda/hdmi - implement mst_no_extra_pcms
- flag
-In-Reply-To: <20191230113214.GB10304@amd>
-Message-ID: <alpine.DEB.2.21.1912301453150.16459@zeliteleevi>
-References: <20191229162508.458551679@linuxfoundation.org> <20191229162523.844585380@linuxfoundation.org> <20191230113214.GB10304@amd>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 30 Dec 2019 08:06:18 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:43980 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbfL3NGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 08:06:17 -0500
+Received: from ramsan ([84.195.182.253])
+        by albert.telenet-ops.be with bizsmtp
+        id kD6C2100g5USYZQ06D6CbD; Mon, 30 Dec 2019 14:06:16 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ilukO-0001EE-Og; Mon, 30 Dec 2019 14:06:12 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ilukO-000852-Lb; Mon, 30 Dec 2019 14:06:12 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] drm/mipi_dbi: Fix off-by-one bugs in mipi_dbi_blank()
+Date:   Mon, 30 Dec 2019 14:06:04 +0100
+Message-Id: <20191230130604.31006-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+When configuring the frame memory window, the last column and row
+numbers are written to the column resp. page address registers.  These
+numbers are thus one less than the actual window width resp. height.
 
-On Mon, 30 Dec 2019, Pavel Machek wrote:
+While this is handled correctly in mipi_dbi_fb_dirty() since commit
+03ceb1c8dfd1e293 ("drm/tinydrm: Fix setting of the column/page end
+addresses."), it is not in mipi_dbi_blank().  The latter still forgets
+to subtract one when calculating the most significant bytes of the
+column and row numbers, thus programming wrong values when the display
+width or height is a multiple of 256.
 
-> > From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> > 
-> > [ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
-> > 
-> > To support the DP-MST multiple streams via single connector feature,
-> > the HDMI driver was extended with the concept of backup PCMs. See
-> > commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
-[...]
-> This variable is not ever set in this patch, nor is it set elsewhere
-> in 4.19-stable. This means this patch is not suitable for stable.
+Fixes: 02dd95fe31693626 ("drm/tinydrm: Add MIPI DBI support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpu/drm/drm_mipi_dbi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-ack on that. In upstream this flag is only used by SOF (sound/soc/sof)
-currently, but SOF is not part of 4.19, so there are no users for this 
-flag. Sorry for not catching this sooner.
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index e34058c721becd6b..16bff1be4b8ac622 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -367,9 +367,9 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
+ 	memset(dbidev->tx_buf, 0, len);
+ 
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
+-			 (width >> 8) & 0xFF, (width - 1) & 0xFF);
++			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
+ 	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
+-			 (height >> 8) & 0xFF, (height - 1) & 0xFF);
++			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
+ 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
+ 			     (u8 *)dbidev->tx_buf, len);
+ 
+-- 
+2.17.1
 
-Br, Kai
