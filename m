@@ -2,137 +2,89 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3631C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045EAC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CB620863
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C286E20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577705673;
+	bh=ZF4QpeWMRzVNh/7YVGePhghEgMWqiWlwc6VbNwNqTFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LjqF3XbqPQ7HN4BHIq6IW8a8GBgRWxReeDOISGzFovzcqbVqg3mJcKdUUQ3Ac0Q3S
+	 YApi+PfLF0ObsA3OUUXLtBnGhuzQT6OeefOdVCgnya/UQXrTqrY8MMSaNAGsAUZ/e7
+	 a3wv/aG74UmjAFDXc7hM1Zjk5LBR4s7T2TuxGiig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfL3LcS (ORCPT
+        id S1727430AbfL3Led (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:32:18 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37904 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbfL3LcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:32:17 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BBBF21C2604; Mon, 30 Dec 2019 12:32:15 +0100 (CET)
-Date:   Mon, 30 Dec 2019 12:32:14 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 102/219] ALSA: hda/hdmi - implement
- mst_no_extra_pcms flag
-Message-ID: <20191230113214.GB10304@amd>
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191229162523.844585380@linuxfoundation.org>
+        Mon, 30 Dec 2019 06:34:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727360AbfL3Lec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 06:34:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B7AB206E4;
+        Mon, 30 Dec 2019 11:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577705671;
+        bh=ZF4QpeWMRzVNh/7YVGePhghEgMWqiWlwc6VbNwNqTFo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iDejW0Watpe54MljfLJtjmUxDSOm8qGIALDCJBuUPqBOFPA2MPo4/KZXVhiEo4d9Q
+         4dU1MbheR5qbe9OAtlUJ06v8AePEYByODwt7JGtu/0U15E1dY0AcVWtWf9krXrOanF
+         5Cinl6LiulKKrK2c7J+xiOBJ3Otq5ghCTjL0Hmr0=
+Date:   Mon, 30 Dec 2019 12:25:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Douglas Gilbert <dgilbert@interlog.com>
+Cc:     linux-usb@vger.kernel.org, linux@roeck-us.net,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB-PD tcpm: bad warning+size, PPS adapters
+Message-ID: <20191230112509.GA884080@kroah.com>
+References: <20191230033544.1809-1-dgilbert@interlog.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191229162523.844585380@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191230033544.1809-1-dgilbert@interlog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Dec 29, 2019 at 10:35:44PM -0500, Douglas Gilbert wrote:
+> Augmented Power Delivery Objects (A)PDO_s are used by USB-C
+> PD power adapters to advertize the voltages and currents
+> they support. There can be up to 7 PDO_s but before PPS
+> (programmable power supply) there were seldom more than 4
+> or 5. Recently Samsung released an optional PPS 45 Watt power
+> adapter (EP-TA485) that has 7 PDO_s. It is for the Galaxy 10+
+> tablet and charges it quicker than the adapter supplied at
+> purchase. The EP-TA485 causes an overzealous WARN_ON to soil
+> the log plus it miscalculates the number of bytes to read.
+> 
+> So this bug has been there for some time but goes
+> undetected for the majority of USB-C PD power adapters on
+> the market today that have 6 or less PDO_s. That may soon
+> change as more USB-C PD adapters with PPS come to market.
+> 
+> Tested on a EP-TA485 and an older Lenovo PN: SA10M13950
+> USB-C 65 Watt adapter (without PPS and has 4 PDO_s) plus
+> several other PD power adapters.
+> 
+> Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+> ---
+>  drivers/usb/typec/tcpm/tcpci.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
 
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<formletter>
 
-Hi!
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-> From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
->=20
-> [ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
->=20
-> To support the DP-MST multiple streams via single connector feature,
-> the HDMI driver was extended with the concept of backup PCMs. See
-> commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
-=2E..
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-This variable is not ever set in this patch, nor is it set elsewhere
-in 4.19-stable. This means this patch is not suitable for stable.
-
-Best regards,
-								Pavel
-
-> index 2003403ce1c8..199927694aef 100644
-> --- a/sound/pci/hda/hda_codec.h
-> +++ b/sound/pci/hda/hda_codec.h
-> @@ -262,6 +262,7 @@ struct hda_codec {
->  	unsigned int force_pin_prefix:1; /* Add location prefix */
->  	unsigned int link_down_at_suspend:1; /* link down at runtime suspend */
->  	unsigned int relaxed_resume:1;	/* don't resume forcibly for jack */
-> +	unsigned int mst_no_extra_pcms:1; /* no backup PCMs for DP-MST */
-> =20
->  #ifdef CONFIG_PM
->  	unsigned long power_on_acct;
-> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-> index c827a2a89cc3..9d5e3c8d62b9 100644
-> --- a/sound/pci/hda/patch_hdmi.c
-> +++ b/sound/pci/hda/patch_hdmi.c
-> @@ -2063,15 +2063,24 @@ static bool is_hdmi_pcm_attached(struct hdac_devi=
-ce *hdac, int pcm_idx)
->  static int generic_hdmi_build_pcms(struct hda_codec *codec)
->  {
->  	struct hdmi_spec *spec =3D codec->spec;
-> -	int idx;
-> +	int idx, pcm_num;
-> =20
->  	/*
->  	 * for non-mst mode, pcm number is the same as before
-> -	 * for DP MST mode, pcm number is (nid number + dev_num - 1)
-> -	 *  dev_num is the device entry number in a pin
-> -	 *
-> +	 * for DP MST mode without extra PCM, pcm number is same
-> +	 * for DP MST mode with extra PCMs, pcm number is
-> +	 *  (nid number + dev_num - 1)
-> +	 * dev_num is the device entry number in a pin
->  	 */
-> -	for (idx =3D 0; idx < spec->num_nids + spec->dev_num - 1; idx++) {
-> +
-> +	if (codec->mst_no_extra_pcms)
-> +		pcm_num =3D spec->num_nids;
-> +	else
-> +		pcm_num =3D spec->num_nids + spec->dev_num - 1;
-> +
-> +	codec_dbg(codec, "hdmi: pcm_num set to %d\n", pcm_num);
-> +
-> +	for (idx =3D 0; idx < pcm_num; idx++) {
->  		struct hda_pcm *info;
->  		struct hda_pcm_stream *pstr;
-> =20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4J4D4ACgkQMOfwapXb+vJXXgCeNDh4A40dM5KvH84pVurQdugK
-kUAAn3hedVY2L21yEaPLrk59oZ2eJyrx
-=BvHn
------END PGP SIGNATURE-----
-
---ADZbWkCsHQ7r3kzd--
+</formletter>
