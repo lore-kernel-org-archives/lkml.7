@@ -2,101 +2,141 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D96AC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB74C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2282071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852E9206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577727343;
+	bh=YjZsLJP99nDwq2E3J4ovBTUTnTY/uRPMv60bV8MttJk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rS8T/7jWg3tPeNUlnZGC7wfS67J9lnXfrtbP5VlkLROcLHKc/wniR9i4G1dDgaMoQ
+	 FWpddmcicvzRJqY4K36Ncp39RUD1buWJfLilAyN2lSd9JRdv4xSfymb//JB/5TsuS/
+	 KefGL+CBIPBL5/Vcb1hClGRnGkP1AI4/Hc6VM4qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfL3RfN (ORCPT
+        id S1727571AbfL3Rfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:35:13 -0500
-Received: from muru.com ([72.249.23.125]:49732 "EHLO muru.com"
+        Mon, 30 Dec 2019 12:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3RfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:35:12 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2EFF68027;
-        Mon, 30 Dec 2019 17:35:51 +0000 (UTC)
-Date:   Mon, 30 Dec 2019 09:35:07 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
-Subject: Re: Droid 4 on 5.5-rc3
-Message-ID: <20191230173507.GM35479@atomide.com>
-References: <20191228162929.GA29269@duo.ucw.cz>
- <20191228193622.GA13047@duo.ucw.cz>
+        id S1726602AbfL3Rfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:35:42 -0500
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE832080A;
+        Mon, 30 Dec 2019 17:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577727340;
+        bh=YjZsLJP99nDwq2E3J4ovBTUTnTY/uRPMv60bV8MttJk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l2pi99460cTcBY4y9/wxHor/yeLmALERgqd9fiCZPcmgvFQXSUyw1EmP01I5vNlf2
+         3wR6zLvyb6oLzP79GH9JbBWEQggDkypZq1sLy3ZpRX4wBaYtDUAcWqGU1WCXgKxJPN
+         NqKRFP+WOci6rj6qPx03rD6Xog+rEYpJfYIlZmoo=
+Received: by mail-lj1-f170.google.com with SMTP id l2so34003132lja.6;
+        Mon, 30 Dec 2019 09:35:40 -0800 (PST)
+X-Gm-Message-State: APjAAAUibNS1VuQZOP05QOsJMgXT9cX9Irl5M8wf9/hyjmitZn2Zxw0M
+        KLoGJeRe/zEaJwS5rX9UOb33SB+YB1pCykYMoj8=
+X-Google-Smtp-Source: APXvYqx7UTyUxh3G/Zh1ouhGolU28zgq58fP5O3EjtUGcFor7aORmjygYWFwL0U0IdRcWmbTP0VNKmbMEvWbVqGjvJs=
+X-Received: by 2002:a05:651c:106f:: with SMTP id y15mr13370428ljm.63.1577727338476;
+ Mon, 30 Dec 2019 09:35:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191228193622.GA13047@duo.ucw.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191230084731.15776-1-yuehaibing@huawei.com>
+In-Reply-To: <20191230084731.15776-1-yuehaibing@huawei.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Tue, 31 Dec 2019 02:35:02 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
+Message-ID: <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
+Subject: Re: [PATCH -next] PM / devfreq: imx8m-ddrc: Fix inconsistent IS_ERR
+ and PTR_ERR
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Shawn Guo <shawnguo@kernel.org>, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [191228 19:37]:
-> Hi!
-> 
-> > 5.4-based kernel works ok on my droid 4.
-> > 
-> > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
-> > 
-> > Vanilla 5.5-rc3 reboots, too.
-> > 
-> > If you have any ideas, let me know.
-> 
-> I managed to get partial serial dump. This should be 5.5-rc3: And then
-> a bit better serial dump (below). But it is silent for few seconds,
-> and then it restarts...
+On Mon, Dec 30, 2019 at 5:58 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fix inconsistent IS_ERR and PTR_ERR in imx8m_ddrc_probe().
+> Detected using Coccinelle.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/devfreq/imx8m-ddrc.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/devfreq/imx8m-ddrc.c b/drivers/devfreq/imx8m-ddrc.c
+> index 53df792..bc82d36 100644
+> --- a/drivers/devfreq/imx8m-ddrc.c
+> +++ b/drivers/devfreq/imx8m-ddrc.c
+> @@ -395,15 +395,27 @@ static int imx8m_ddrc_probe(struct platform_device *pdev)
+>         }
+>
+>         priv->dram_core = devm_clk_get(dev, "core");
+> +       if (IS_ERR(priv->dram_core)) {
+> +               ret = PTR_ERR(priv->dram_core);
+> +               dev_err(dev, "failed to fetch core clock: %d\n", ret);
 
-If spi or regulators have problems, nothing will really work..
+If there is no special reason, just use 'get' instead of ' fetch' word.
+s/fetch/get
 
-> 885955] ------------[ cut here ]------------                                    
-> [    1.890624] WARNING: CPU: 0 PID: 1 at /data/fast/l/k/drivers/regulator/core.c
-> [    1.900421] Modules linked in:                                               
-> [    1.903533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc3-00624-g46cf00
-> [    1.911651] Hardware name: Generic OMAP4 (Flattened Device Tree)             
-> [    1.917724] [<c010f1e4>] (unwind_backtrace) from [<c010b4b0>] (show_stack+0x)
-> [    1.925537] [<c010b4b0>] (show_stack) from [<c08ecd18>] (dump_stack+0xb4/0xd)
-> [    1.932800] [<c08ecd18>] (dump_stack) from [<c012db50>] (__warn+0xc8/0xf0)   
-> [    1.939727] [<c012db50>] (__warn) from [<c012dc04>] (warn_slowpath_fmt+0x8c/)
-> [    1.947235] [<c012dc04>] (warn_slowpath_fmt) from [<c0423b4c>] (_regulator_p)
-> [    1.955474] [<c0423b4c>] (_regulator_put) from [<c0423b74>] (regulator_put+0)
-> [    1.963348] [<c0423b74>] (regulator_put) from [<c04ddcbc>] (release_nodes+0x)
-> [    1.971313] [<c04ddcbc>] (release_nodes) from [<c04d9e0c>] (really_probe+0x1)
-> [    1.979187] [<c04d9e0c>] (really_probe) from [<c04da204>] (driver_probe_devi)
-> [    1.987518] [<c04da204>] (driver_probe_device) from [<c04d8490>] (bus_for_ea)
-> [    1.996093] [<c04d8490>] (bus_for_each_drv) from [<c04da11c>] (__device_atta)
-> [    2.004394] [<c04da11c>] (__device_attach) from [<c04d91b4>] (bus_probe_devi)
-> [    2.012634] [<c04d91b4>] (bus_probe_device) from [<c04d7370>] (device_add+0x)
-> [    2.020599] [<c04d7370>] (device_add) from [<c04dbb04>] (platform_device_add)
-> [    2.028747] [<c04dbb04>] (platform_device_add) from [<c0503a34>] (mfd_add_de)
-> [    2.037414] [<c0503a34>] (mfd_add_devices) from [<c0503b4c>] (devm_mfd_add_d)
-> [    2.045989] [<c0503b4c>] (devm_mfd_add_devices) from [<c0503f40>] (cpcap_pro)
-> [    2.054382] [<c0503f40>] (cpcap_probe) from [<c054b4ac>] (spi_drv_probe+0x80)
-> [    2.061981] [<c054b4ac>] (spi_drv_probe) from [<c04d9edc>] (really_probe+0x1)
-> [    2.069854] [<c04d9edc>] (really_probe) from [<c04da204>] (driver_probe_devi)
-> [    2.078186] [<c04da204>] (driver_probe_device) from [<c04d8490>] (bus_for_ea)
-> [    2.086761] [<c04d8490>] (bus_for_each_drv) from [<c04da11c>] (__device_atta)
-> [    2.095062] [<c04da11c>] (__device_attach) from [<c04d91b4>] (bus_probe_devi)
-> [    2.103302] [<c04d91b4>] (bus_probe_device) from [<c04d7370>] (device_add+0x)
-> [    2.111267] [<c04d7370>] (device_add) from [<c054c044>] (spi_add_device+0x8c)
-> [    2.118957] [<c054c044>] (spi_add_device) from [<c054caa8>] (spi_register_co)
-> [    2.127868] [<c054caa8>] (spi_register_controller) from [<c054ce10>] (devm_s)
-> [    2.137847] [<c054ce10>] (devm_spi_register_controller) from [<c0550ab8>] (o)
-> [    2.147460] [<c0550ab8>] (omap2_mcspi_probe) from [<c04db92c>] (platform_drv)
+> +               return ret;
+> +       }
+>         priv->dram_pll = devm_clk_get(dev, "pll");
+> +       if (IS_ERR(priv->dram_pll)) {
+> +               ret = PTR_ERR(priv->dram_pll);
+> +               dev_err(dev, "failed to fetch pll clock: %d\n", ret);
 
-I'm not seeing this with v5.5-rc4 though, maybe it already got fixed?
+ditto.
 
-Regards,
+> +               return ret;
+> +       }
+>         priv->dram_alt = devm_clk_get(dev, "alt");
+> +       if (IS_ERR(priv->dram_alt)) {
+> +               ret = PTR_ERR(priv->dram_alt);
+> +               dev_err(dev, "failed to fetch alt clock: %d\n", ret);
 
-Tony
+ditto.
+
+> +               return ret;
+> +       }
+>         priv->dram_apb = devm_clk_get(dev, "apb");
+> -       if (IS_ERR(priv->dram_core) ||
+> -               IS_ERR(priv->dram_pll) ||
+> -               IS_ERR(priv->dram_alt) ||
+> -               IS_ERR(priv->dram_apb)) {
+> -               ret = PTR_ERR(priv->devfreq);
+> -               dev_err(dev, "failed to fetch clocks: %d\n", ret);
+> +       if (IS_ERR(priv->dram_apb)) {
+> +               ret = PTR_ERR(priv->dram_apb);
+> +               dev_err(dev, "failed to fetch apb clock: %d\n", ret);
+
+ditto.
+
+>                 return ret;
+>         }
+>
+> --
+> 2.7.4
+>
+>
+
+
+-- 
+Best Regards,
+Chanwoo Choi
