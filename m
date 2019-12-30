@@ -2,198 +2,165 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A26C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA97C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4BC3206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6747B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaS0CJ3F"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ya0G7HI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfL3PUb (ORCPT
+        id S1727624AbfL3Pac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:20:31 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41595 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfL3PUb (ORCPT
+        Mon, 30 Dec 2019 10:30:32 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:44456 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfL3Pac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:20:31 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so33617215ljc.8;
-        Mon, 30 Dec 2019 07:20:29 -0800 (PST)
+        Mon, 30 Dec 2019 10:30:32 -0500
+Received: by mail-yb1-f195.google.com with SMTP id f136so11073126ybg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 07:30:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=FkOelivhlR8vsUum4XrcQmOy/XHM9k5BZJl+I/MmXUs=;
-        b=MaS0CJ3FaCeHMfRsMUuffIRYl9RTexnDxiOPNBRtFVT0c/Zv6H/e2F+scDg08zanjD
-         3hM7e3gFcrFM3/99Au/aHQn94sE0kAh9dx73ZRx17xRZaM4XNDP7u3DAlORywK5GpuyK
-         /+BTsUUPEfnrTG/OaeIUSFU6t4f9EAMHWoqr/+R5vRnGVrTa/FRLtx0ozXeM/+OkGTWb
-         xR/nxVkZYyqGp/uMfFtEB4Vy9938OBlgX/LlbfrGmzFUx16oza2+KKOw4QiFVBf8srJB
-         2RJMv2MUBBqLIdLyTp5+tokjzGs3ERvPVy/jchkLx5dkcDfvlyIA9VdQVVzIB59GIcqO
-         lYiw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PT5AYVBG8ze7MmJ0pij7dPQPT0MFfSk0Gv5539zJ7QE=;
+        b=Ya0G7HI6/8LYyGOiVw8D19AnkDkDjGVuSfiuguonUzsum1K8vD9q97Nu+fhEw+CGUe
+         Qzuqvup4Qe6FJzFjUXsVkEXaApLj2QRlKtKkEnqynAJg+uC7P7L4BMH9h+SsZoPh+fvL
+         6qqIY9CvYNngksuc1xyoJospbEfmisscnpjTYeMs6WK1f+0IfpTbY240FgtuNPIrJ1Xx
+         yfZxnVL70OCJpKZ3GdowNXvSHYfCeKSTcjSYqF8BQ71c9fVUckvXUtk9tSOmFCPdPoPz
+         TbCBnCAqe5WgZ2R9diVDLYGr2XUt8vRlPSpSymXEueFg9XiX6Ga0/eUXIdy/ySuAxyt1
+         YqsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding:thread-index:content-language;
-        bh=FkOelivhlR8vsUum4XrcQmOy/XHM9k5BZJl+I/MmXUs=;
-        b=RM8DgbQuO6mp61TRBHX6rU9aWJA97ghnwdSpBzRABPxNwOfEHCGeBOSQ5dyS/PZv3g
-         lkqAs9xJfZZg8OtiAmf28MhRSo+9JYhMZiMfUrFR8v6j3JB2W0uAghpxwlcSczXnAWze
-         HBV8YOSKDjZQ4P/KizMe3Q/H9AW8pcMbF8LkmXVB9sBspN04OFG24CUHiIcJd+DGxgHy
-         D87jdiD561yORg1uY7weD50zBp2EuT4EJGRzyvQQ/BTE2Pbbm6JYZd9uZZmuWzOFFjoq
-         OtANnEHDzFRrsZhyyogR5H/8m5pfTKtMDcyw2jQT8I8u3yXvpS7OohHPLO20V+eT3h2k
-         yLSQ==
-X-Gm-Message-State: APjAAAUf8Y2hKQCh2kZsQeM49e9LNUKPoJT3/58oej6kguQs0f931yj/
-        hXrpvCtlJ8xDEG2HnXGiYgd9ypBSRDX7lw==
-X-Google-Smtp-Source: APXvYqyepb4jHBm/pR+s3wWeEi1r57pjmUro1coUKO564ZHhaqKGAD7IZaluz0fCjdcF7JqKLOEfzQ==
-X-Received: by 2002:a2e:b044:: with SMTP id d4mr30453850ljl.158.1577719228230;
-        Mon, 30 Dec 2019 07:20:28 -0800 (PST)
-Received: from loulrmilkow1 (227.46-29-148.tkchopin.pl. [46.29.148.227])
-        by smtp.gmail.com with ESMTPSA id t9sm18623784lfl.51.2019.12.30.07.20.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Dec 2019 07:20:27 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>
-Cc:     "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
-Date:   Mon, 30 Dec 2019 15:20:25 -0000
-Message-ID: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=PT5AYVBG8ze7MmJ0pij7dPQPT0MFfSk0Gv5539zJ7QE=;
+        b=TYRrLu0MNmd8gdP7bEsreHKyAWABL6bWO2eLZ1UXe3tfu2U5PKMXN43SFVQ2DzRo43
+         c4Wm6Rs1LdOvhDE9CmV0LEndf6XLWsUywTOTPW0Za4zMxxVed4LbkIV78C4kdU8ol8KW
+         fQ6gOvnGtGP/y4pR8W5WVqBitWEBjZpphNUd0uHQUCPGpzlZ3SqcoB4qmdCXmMR4OVWS
+         bx+uNCz0ai8DIDH0mNDyrpxpY85SEnh3N+Nis5U2owC0yYDYf+Ch2L9uzniD+pe9Oknc
+         B1AbxSXpnvteakyoPozJ6W6+/MNjtVSgNRsAWtTN1j7kkqH8892/yYaFmqt4ckARfWQ5
+         OcZg==
+X-Gm-Message-State: APjAAAVUjskf3+1oLxgLQRevEkWzg5azcct2lMZaNffbmoDUsXt+sSJC
+        eZOn+FHrU/YqRhHOpclUN34reg==
+X-Google-Smtp-Source: APXvYqxYDsQ6lt+v/VGyEx984yXWB69Auykckie+ntmEC3fgXH0WDxGfF/51fE3I200mYbvzrxamUQ==
+X-Received: by 2002:a25:32d6:: with SMTP id y205mr45395971yby.457.1577719830948;
+        Mon, 30 Dec 2019 07:30:30 -0800 (PST)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id a23sm17626325ywa.32.2019.12.30.07.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 07:30:30 -0800 (PST)
+Date:   Mon, 30 Dec 2019 09:30:29 -0600
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/161] 4.14.161-stable review
+Message-ID: <20191230153029.35zasheymdjckips@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+References: <20191229162355.500086350@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdW/I2auAYB5hyQWQDmn+e9BiY7hDA==
-Content-Language: en-gb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+On Sun, Dec 29, 2019 at 06:17:28PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.161 release.
+> There are 161 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-NFS4 lease renewal, which is not compliant with the NFS4 specification.
-This can result in a lease being expired by an NFS server.
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-introduced implicit client lease renewal in nfs4_do_fsinfo(),
-which can result in the NFSv4.0 lease to expire on a server side,
-and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
+Summary
+------------------------------------------------------------------------
 
-This can easily be reproduced by frequently unmounting a sub-mount,
-then stat'ing it to get it mounted again, which will delay or even
-completely prevent client from sending RENEW operations if no other
-NFS operations are issued. Eventually nfs server will expire client's
-lease and return an error on file access or next RENEW.
+kernel: 4.14.161-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.14.y
+git commit: 9973cdd1885ac46b53c6db9f07b9e22003b8b1fd
+git describe: v4.14.160-162-g9973cdd1885a
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.160-162-g9973cdd1885a
 
-This can also happen when a sub-mount is automatically unmounted
-due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-mounted again via stat(). This can result in a short window during
-which client's lease will expire on a server but not on a client.
-This specific case was observed on production systems.
 
-This patch makes an explicit lease renewal instead of an implicit one,
-by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
-similarly to NFSv4.1 which adds SEQUENCE operation.
+No regressions (compared to build v4.14.160)
 
-Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
----
- fs/nfs/nfs4proc.c       |  4 ++++
- fs/nfs/nfs4xdr.c        | 13 +++++++++++--
- include/linux/nfs_xdr.h |  3 +++
- 3 files changed, 18 insertions(+), 2 deletions(-)
+No fixes (compared to build v4.14.160)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 76d3716..6d075f0 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4998,12 +4998,16 @@ static int nfs4_proc_statfs(struct nfs_server *server, struct nfs_fh *fhandle, s
- static int _nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh *fhandle,
- 		struct nfs_fsinfo *fsinfo)
- {
-+	struct nfs_client *clp = server->nfs_client;
- 	struct nfs4_fsinfo_arg args = {
- 		.fh = fhandle,
- 		.bitmask = server->attr_bitmask,
-+		.clientid = clp->cl_clientid,
-+		.renew = nfs4_has_session(clp) ? 0 : 1,		/* append RENEW */
- 	};
- 	struct nfs4_fsinfo_res res = {
- 		.fsinfo = fsinfo,
-+		.renew = nfs4_has_session(clp) ? 0 : 1,
- 	};
- 	struct rpc_message msg = {
- 		.rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_FSINFO],
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 936c577..0ce9a10 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -555,11 +555,13 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
- #define NFS4_enc_fsinfo_sz	(compound_encode_hdr_maxsz + \
- 				encode_sequence_maxsz + \
- 				encode_putfh_maxsz + \
--				encode_fsinfo_maxsz)
-+				encode_fsinfo_maxsz + \
-+				encode_renew_maxsz)
- #define NFS4_dec_fsinfo_sz	(compound_decode_hdr_maxsz + \
- 				decode_sequence_maxsz + \
- 				decode_putfh_maxsz + \
--				decode_fsinfo_maxsz)
-+				decode_fsinfo_maxsz + \
-+				decode_renew_maxsz)
- #define NFS4_enc_renew_sz	(compound_encode_hdr_maxsz + \
- 				encode_renew_maxsz)
- #define NFS4_dec_renew_sz	(compound_decode_hdr_maxsz + \
-@@ -2646,6 +2648,8 @@ static void nfs4_xdr_enc_fsinfo(struct rpc_rqst *req, struct xdr_stream *xdr,
- 	encode_sequence(xdr, &args->seq_args, &hdr);
- 	encode_putfh(xdr, args->fh, &hdr);
- 	encode_fsinfo(xdr, args->bitmask, &hdr);
-+	if (args->renew)
-+		encode_renew(xdr, args->clientid, &hdr);
- 	encode_nops(&hdr);
- }
- 
-@@ -6778,6 +6782,11 @@ static int nfs4_xdr_dec_fsinfo(struct rpc_rqst *req, struct xdr_stream *xdr,
- 		status = decode_putfh(xdr);
- 	if (!status)
- 		status = decode_fsinfo(xdr, res->fsinfo);
-+	if (status)
-+		goto out;
-+	if (res->renew)
-+		status = decode_renew(xdr);
-+out:
- 	return status;
- }
- 
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 72d5695..49bd673 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1025,11 +1025,14 @@ struct nfs4_fsinfo_arg {
- 	struct nfs4_sequence_args	seq_args;
- 	const struct nfs_fh *		fh;
- 	const u32 *			bitmask;
-+	clientid4			clientid;
-+	unsigned char			renew:1;
- };
- 
- struct nfs4_fsinfo_res {
- 	struct nfs4_sequence_res	seq_res;
- 	struct nfs_fsinfo	       *fsinfo;
-+	unsigned char			renew:1;
- };
- 
- struct nfs4_getattr_arg {
+Ran 24205 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-dio-tests
+* ltp-io-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
 -- 
-1.8.3.1
-
-
+Linaro LKFT
+https://lkft.linaro.org
