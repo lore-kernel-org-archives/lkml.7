@@ -2,147 +2,107 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9DCC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B85C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA02D20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF57C20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="EA7HTUbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfL3Icl (ORCPT
+        id S1727270AbfL3Icl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 30 Dec 2019 03:32:41 -0500
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:39240 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfL3Ick (ORCPT
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38519 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfL3Ick (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Dec 2019 03:32:40 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 47mVzn5sqlzQlBT;
-        Mon, 30 Dec 2019 09:32:37 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id w6FHZ5EZimpG; Mon, 30 Dec 2019 09:32:34 +0100 (CET)
-Date:   Mon, 30 Dec 2019 19:32:24 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20191230083224.sbk2jspqmup43obs@yavin.dot.cyphar.com>
-References: <20191230052036.8765-1-cyphar@cyphar.com>
- <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com>
- <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
+Received: by mail-pg1-f195.google.com with SMTP id a33so17655575pgm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 00:32:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3s7ohP3Z8i+XydTTvz21BD2f0Cry8Bo5p1LTlT19B4g=;
+        b=EA7HTUbqUnIitOM9hMwC5NmMDjt5Dl9ltD+1qxOpdpPIW9UHf7+tI7Qy/oQwAtA4vW
+         H6HG7HTUJCxGZnGuaxRKAwpEFnEbvqT/ImBccHuptDEIE4FQ9VW0q76DkR3wdHnkWOdi
+         1Pgp9zYBO+fenX2k0p4jKRuM1OBeVz2LRwwGeoZh7J9sFelNo3LBBSDQ14VzONb1FfRh
+         2ddpzvkaDCB/SjXaFrZ2MLI/tNWetR+/WwmDDHlplsZZwcA0P7zS4Q+TLTsk4HOh75sX
+         gdTGlErVdECuB1qagkgC+e6uynre1XT9kVuEnutUu31MJIq47pBHbO9ts8g2c1SV9taI
+         tcxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3s7ohP3Z8i+XydTTvz21BD2f0Cry8Bo5p1LTlT19B4g=;
+        b=DU+DklKJvlrKeCC98vkiyXb7y2/XrAyPQDuQ+caNErN8X4tSekhjwQoTZCcs3PuUlH
+         JSOiC9aaiflHE5iySW/EmJIV37n8KwBb3dMrLICyQCPRj4ioBcOnzQ+WoXMWGeTtW2go
+         q75/uTfPZ9KWhCFso5hAWLKXSe6TVP5RsMHlobLGbO4/PiYiY+nVRjEetkyc4OzdT637
+         1obfhAYWs81UvbbFS9EaLlEixR9SHdHqqfM/R8tuYXpPjHbWvg9yG3sBZ2DV1lzh+b9S
+         0tdf0KYECjJ/Zlpn3c1Bv2g4kjzDe+e4lPYlf/FrDdrXGstp3zMPzbKnR/91NbY71dEB
+         5Yeg==
+X-Gm-Message-State: APjAAAVSnyASrycYUy21vMvyFR3nxW5/FMm4OomoRZqV41SrJne5Hy78
+        K/gWmiHfy5p8/0hqj6yEjwcjaQ==
+X-Google-Smtp-Source: APXvYqxFKKazEmaMHoujQh5jNJgTodqHmA3KCyczG78X9j4EM0Vr0BNNLetv2mkg+9uwCmoNZ4gBDQ==
+X-Received: by 2002:aa7:979a:: with SMTP id o26mr70387114pfp.0.1577694760024;
+        Mon, 30 Dec 2019 00:32:40 -0800 (PST)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id 17sm51485268pfv.142.2019.12.30.00.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 00:32:39 -0800 (PST)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
+Date:   Mon, 30 Dec 2019 16:30:45 +0800
+Message-Id: <20191230083044.11582-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4jbwm72isg7wdcgm"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
+brightness 0. According to ASUS' information, the brightness should be
+0x80 ~ 0x83. This patch fixes it by following the logic.
 
---4jbwm72isg7wdcgm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ drivers/platform/x86/asus-wmi.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-On 2019-12-29, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Sun, Dec 29, 2019 at 11:30 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> >     BUG: kernel NULL pointer dereference, address: 0000000000000000
->=20
-> Would you mind building with debug info, and then running the oops through
->=20
->  scripts/decode_stacktrace.sh
->=20
-> which makes those addresses much more legible.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 821b08e01635..982f0cc8270c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -512,13 +512,7 @@ static void kbd_led_update(struct asus_wmi *asus)
+ {
+ 	int ctrl_param = 0;
+ 
+-	/*
+-	 * bits 0-2: level
+-	 * bit 7: light on/off
+-	 */
+-	if (asus->kbd_led_wk > 0)
+-		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+-
++	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+ }
+ 
+-- 
+2.20.1
 
-Will do.
-
-> >     #PF: supervisor instruction fetch in kernel mode
-> >     #PF: error_code(0x0010) - not-present page
->=20
-> Somebody jumped through a NULL pointer.
->=20
-> >     RAX: 0000000000000000 RBX: ffff906d0cc3bb40 RCX: 0000000000000abc
-> >     RDX: 0000000000000089 RSI: ffff906d74623cc0 RDI: ffff906d74475df0
-> >     RBP: ffff906d74475df0 R08: ffffd70b7fb24c20 R09: ffff906d066a5000
-> >     R10: 0000000000000000 R11: 8080807fffffffff R12: ffff906d74623cc0
-> >     R13: 0000000000000089 R14: ffffb70b82963dc0 R15: 0000000000000080
-> >     FS:  00007fbc2a8f0540(0000) GS:ffff906dcf500000(0000) knlGS:0000000=
-000000000
-> >     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >     CR2: ffffffffffffffd6 CR3: 00000003c68f8001 CR4: 00000000003606e0
-> >     Call Trace:
-> >      __lookup_slow+0x94/0x160
->=20
-> And "__lookup_slow()" has two indirect calls (they aren't obvious with
-> retpoline, but look for something  like
->=20
->         call __x86_indirect_thunk_rax
->=20
-> which is the modern sad way of doing "call *%rax"). One is for
-> revalidatinging an old dentry, but the one I _suspect_ you trigger is
-> this one:
->=20
->                 old =3D inode->i_op->lookup(inode, dentry, flags);
->=20
-> but I thought we only could get here if we know it's a directory.
->=20
-> How did we miss the "d_can_lookup()", which is what should check that
-> yes, we can call that ->lookup() routine.
-
-I'll try applying a trivial patch to add d_can_lookup() to see if it
-fixes the immediate issue.
-
-> This is why I have that suspicion that it's somehow that O_PATH fd
-> opened in another process without O_PATH causes confusion...
->=20
-> So what I think has happened is that because of the O_PATH thing,
-> we've ended up with an inode that has never been truly opened (because
-> O_PATH skips that part), but then with the /proc/<pid>/fd/xyz open, we
-> now have a file descriptor that _looks_ like it is valid, and we're
-> treating that inode as if it can be used.
-
-I'm not sure I agree -- as I mentioned in my other mail, re-opening
-through /proc/self/fd/$n works *very* well and has for a long time (in
-fact, both LXC and runc depend on this working).
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---4jbwm72isg7wdcgm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXgm2FQAKCRCdlLljIbnQ
-Es8nAQDVLlsiprSDBJzgPUIJzecdqNxCZqJKorIf34AfFNF2FgD/YY1dxfmAH2LS
-EX3M69u6T8mfTLPNWSZlIyF13X2S2w4=
-=JUfW
------END PGP SIGNATURE-----
-
---4jbwm72isg7wdcgm--
