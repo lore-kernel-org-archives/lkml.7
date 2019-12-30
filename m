@@ -2,184 +2,94 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFE6C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C60C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB17420748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E441206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfL3CGZ (ORCPT
+        id S1726748AbfL3CLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 21:06:25 -0500
-Received: from mga05.intel.com ([192.55.52.43]:50803 "EHLO mga05.intel.com"
+        Sun, 29 Dec 2019 21:11:49 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21642 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbfL3CGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 21:06:25 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726343AbfL3CLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:11:48 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Dec 2019 18:06:22 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Dec 2019 18:11:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,373,1571727600"; 
-   d="scan'208";a="213197253"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 29 Dec 2019 18:06:22 -0800
-Received: from [10.226.38.14] (unknown [10.226.38.14])
-        by linux.intel.com (Postfix) with ESMTP id 57AEB5803C5;
-        Sun, 29 Dec 2019 18:06:20 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] spi: cadence-quadpsi: Add support for the Cadence
- QSPI controller
-To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
-Cc:     kbuild-all@lists.01.org, broonie@kernel.org, vigneshr@ti.com,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20191229174947.GB3889@kadam>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <f2531392-e0de-5f22-805e-5f46af30bef3@linux.intel.com>
-Date:   Mon, 30 Dec 2019 10:06:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+   d="scan'208";a="213198292"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga008.jf.intel.com with ESMTP; 29 Dec 2019 18:11:46 -0800
+Date:   Mon, 30 Dec 2019 09:51:40 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawe.com,
+        zhengbin13@huawei.com
+Subject: Re: [PATCH] fpga: dfl: fme: remove set but not used variable 'fme'
+Message-ID: <20191230015140.GA6839@hao-dev>
+References: <20191226121638.10507-1-yukuai3@huawei.com>
+ <20191227225726.GA1643@archbook>
 MIME-Version: 1.0
-In-Reply-To: <20191229174947.GB3889@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20191227225726.GA1643@archbook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Dec 27, 2019 at 02:57:26PM -0800, Moritz Fischer wrote:
+> On Thu, Dec 26, 2019 at 08:16:38PM +0800, yu kuai wrote:
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> > 
+> > drivers/fpga/dfl-fme-main.c: In function ‘fme_dev_destroy’:
+> > drivers/fpga/dfl-fme-main.c:678:18: warning: variable ‘fme’ set but not
+> > used [-Wunused-but-set-variable]
+> > 
+> > It is never used and so can be removed.
+> > 
+> > Signed-off-by: yu kuai <yukuai3@huawei.com>
+> > ---
+> >  drivers/fpga/dfl-fme-main.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> > index 7c930e6b314d..1d4690c99268 100644
+> > --- a/drivers/fpga/dfl-fme-main.c
+> > +++ b/drivers/fpga/dfl-fme-main.c
+> > @@ -675,10 +675,8 @@ static int fme_dev_init(struct platform_device *pdev)
+> >  static void fme_dev_destroy(struct platform_device *pdev)
+> >  {
+> >  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> > -	struct dfl_fme *fme;
+> >  
+> >  	mutex_lock(&pdata->lock);
+> > -	fme = dfl_fpga_pdata_get_private(pdata);
+> >  	dfl_fpga_pdata_set_private(pdata, NULL);
+> >  	mutex_unlock(&pdata->lock);
+> >  }
+> > -- 
+> > 2.17.2
+> > 
+> Acked-by: Moritz Fischer <mdf@kernel.org>
 
-On 30/12/2019 1:49 AM, Dan Carpenter wrote:
-> Hi "Ramuthevar,Vadivel,
->
-> Thank you for the patch! Perhaps something to improve:
->
-> [auto build test WARNING on spi/for-next]
-> [cannot apply to v5.5-rc3 next-20191219]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
->
-> url:    https://github.com/0day-ci/linux/commits/Ramuthevar-Vadivel-MuruganX/spi-cadence-quadpsi-Add-support-for-the-Cadence-QSPI-controller/20191226-152805
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Thanks for the review,  kernel base : 5.5-rc1 since the maintainer tree 
-also the same.
-> smatch warnings:
-> drivers/spi/spi-cadence-quadspi.c:412 cqspi_read_execute() warn: if statement not indented
-> drivers/spi/spi-cadence-quadspi.c:1015 cqspi_probe() error: we previously assumed 'pdata' could be null (see line 1004)
-sure, will fix it.
----
-With Best Regards
-Vadivel Murugan
-> # https://github.com/0day-ci/linux/commit/7d7e98888a40e593dcd442db83b53d92980c036f
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 7d7e98888a40e593dcd442db83b53d92980c036f
-> vim +412 drivers/spi/spi-cadence-quadspi.c
->
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  381  static int cqspi_read_execute(struct struct_cqspi *cqspi,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  382  			      const struct spi_mem_op *op, u8 *rxbuf)
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  383  {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  384  	struct platform_device *pdev = cqspi->pdev;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  385  	struct cqspi_platform_data *pdata = pdev->dev.platform_data;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  386  	void *reg_base = cqspi->iobase;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  387  	void *ahb_base = cqspi->qspi_ahb_virt;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  388  	u32 rxlen = op->data.nbytes;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  389  	u8 *rxbuf_end = rxbuf + rxlen;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  390  	u32 mod_bytes = rxlen % 4;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  391  	u32 bytes_to_read = 0;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  392  	int remaining = op->data.nbytes;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  393  	unsigned long timeout;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  394  	int ret;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  395
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  396  	writel(remaining, reg_base + CQSPI_REG_INDIRECTRDBYTES);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  397
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  398  	mb();/* flush previous writes */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  399
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  400  	writel(pdata->fifo_depth - CQSPI_REG_SRAM_RESV_WORDS,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  401  	       reg_base + CQSPI_REG_SRAMPARTITION);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  402  	/* Clear all interrupts. */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  403  	writel(CQSPI_IRQ_STATUS_MASK, reg_base + CQSPI_REG_IRQSTATUS);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  404  	writel(CQSPI_IRQ_MASK_RD, reg_base + CQSPI_REG_IRQMASK);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  405
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  406  	reinit_completion(&cqspi->transfer_complete);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  407  	writel(CQSPI_REG_INDIRECTRD_START_MASK,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  408  	       reg_base + CQSPI_REG_INDIRECTRD);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  409
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  410  	timeout = msecs_to_jiffies(CQSPI_READ_TIMEOUT_MS);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  411  	while (remaining > 0) {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26 @412  		if (!wait_for_completion_timeout(&cqspi->transfer_complete,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  413  						 timeout))
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  414  		ret = -ETIMEDOUT;
->
-> This should be indented and "return -ETIMEDOUT;" or a break or
-> something?
->
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  415
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  416  		bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  417
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  418  		while (bytes_to_read != 0) {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  419  			unsigned int word_remain = round_down(remaining, 4);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  420
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  421  			bytes_to_read *= CQSPI_FIFO_WIDTH;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  422  			bytes_to_read = bytes_to_read > remaining ?
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  423  						remaining : bytes_to_read;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  424  			bytes_to_read = round_down(bytes_to_read, 4);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  425  			if (bytes_to_read) {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  426  				ioread32_rep(ahb_base, rxbuf,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  427  					     (bytes_to_read / 4));
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  428  			} else if (!word_remain && mod_bytes) {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  429  				unsigned int temp = ioread32(ahb_base);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  430
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  431  				bytes_to_read = mod_bytes;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  432  				memcpy(rxbuf, &temp, min((unsigned int)
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  433  				       (rxbuf_end - rxbuf), bytes_to_read));
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  434  			}
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  435
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  436  			rxbuf += bytes_to_read;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  437  			remaining -= bytes_to_read;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  438  			bytes_to_read = CQSPI_GET_RD_SRAM_LEVEL(reg_base);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  439  		}
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  440
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  441  		if (remaining < 0)
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  442  			reinit_completion(&cqspi->transfer_complete);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  443  	}
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  444
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  445  	/* Check indirect done status */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  446  	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  447  				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  448  	if (ret) {
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  449  		dev_err(&pdev->dev,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  450  			"Indirect read completion error (%i)\n", ret);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  451  		goto failrd;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  452  	}
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  453
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  454  	/* Disable interrupt */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  455  	writel(0, reg_base + CQSPI_REG_IRQMASK);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  456  	/* Clear indirect completion status */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  457  	writel(CQSPI_REG_INDIRECTRD_DONE_MASK, reg_base + CQSPI_REG_INDIRECTRD);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  458
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  459  	return 0;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  460  failrd:
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  461  	/* Disable interrupt */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  462  	writel(0, reg_base + CQSPI_REG_IRQMASK);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  463  	/* Cancel the indirect read */
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  464  	writel(CQSPI_REG_INDIRECTWR_CANCEL_MASK,
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  465  	       reg_base + CQSPI_REG_INDIRECTRD);
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  466  	return ret;
-> 7d7e98888a40e5 Ramuthevar Vadivel Murugan 2019-12-26  467  }
->
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Acked-by: Wu Hao <hao.wu@intel.com>
+
+Thanks
+Hao
+
+> 
+> Thanks,
+> Moritz
