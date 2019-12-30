@@ -2,140 +2,139 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83315C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D02C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDB72071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577748603;
-	bh=hkEGClyK44JrT1UNYO0jbZ0tX8GcixfZ5o/++Rt06dA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=p06NTlAZ7vf0qXc3h/6UeY7y7AIykljeH462Z2GGc9c3c/cdXuUeW5iWtWGmj5SZ8
-	 acwSXvt2IJTvg0PHp6kJdw02iq2ShVRQY4LqnvWKRov0aWwUaRILXBSkDLtnWFr3NA
-	 ovafg8e6nls0/WvWznOw3eDy6PT5Bdk8ta24MzxE=
+	by mail.kernel.org (Postfix) with ESMTP id 5E83C2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyYUCZR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfL3XaC (ORCPT
+        id S1727774AbfL3XiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 18:30:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfL3XaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 18:30:02 -0500
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145242071E;
-        Mon, 30 Dec 2019 23:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577748601;
-        bh=hkEGClyK44JrT1UNYO0jbZ0tX8GcixfZ5o/++Rt06dA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ycs0qW//qZzwO1So3mRQruBvcezHM66js6X/8OZd6SToAPYp9m01psXAmsP6hHrJ7
-         EZTRcX1E33l/CHkNgCmtXrf5aCczPBaq0ipr5cdJkpTjegaevjTizea1HAV6pZ/B18
-         l5ZsU0wXWXfmtsrkC8WOfzzS/iqXBwfzm8z/FGNI=
-Received: by mail-qt1-f169.google.com with SMTP id d5so30664058qto.0;
-        Mon, 30 Dec 2019 15:30:01 -0800 (PST)
-X-Gm-Message-State: APjAAAUsKpXFIy/abzBCYHMB3pKOs646fmRUT/2KE0tor8BjT07qvVMP
-        w77cy9+JX2uruDlHf7ah4JUwiezaKLNXe1KmKg==
-X-Google-Smtp-Source: APXvYqzUYjO1rBL+O7ItgGLs1LEmveivzL2IGDBLwwnbea0alSFh/xQM2lhdiJtCRqsgvNgGZGkrlHwTkYsjRu3keSk=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr50575941qtq.143.1577748600241;
- Mon, 30 Dec 2019 15:30:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
-In-Reply-To: <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 16:29:48 -0700
-X-Gmail-Original-Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
+        Mon, 30 Dec 2019 18:38:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40235 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727740AbfL3XiS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 18:38:18 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so33972932wrn.7;
+        Mon, 30 Dec 2019 15:38:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UV18QxzNw74OQEVccoyAS4yfxDD5XxdtiGTMxWiHN98=;
+        b=TyYUCZR+6kQ+HW3M7eGq7s6+mRivf7dpl+FJeiN1yA+jSfyGVT8m/j5965jlyhfsCi
+         f48uEv+M+ppfKoot4NPQyPbZVNtoJbTE2o2uu+Q0GucOYnkWcDiiFhEfsgWhd4i6ApQa
+         xm4Yo8tExN/cOp5J8mopXd2TxItbzEeGPRFqUzL6Gd3xOLxS/52pXDEZx97pWQPL+nTU
+         1dLDGJbuRXIxtm6PqBKmqNkQeg4CxWpXJPXk7BpD3C1tIgM4c5TOKi0ha6a32EqmbWYj
+         i72x32SE7N7dYTraesZiixd2SFlCV1h/+2SQPPjusC1GVS6qMVqlEOClyVQv9AdBF/My
+         30Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UV18QxzNw74OQEVccoyAS4yfxDD5XxdtiGTMxWiHN98=;
+        b=LpR82ZNPFHq5lq5Vc4Rzxik0JpS4RUGid/LAaE9biMPNEWSrx6iy5G9aS3LG0sYs7Y
+         O8JG+RTnDEQ3X2zgp8lOgtfzWvfAEZI3l5Qnmi8kGNbESxDU17uDZLlXEmHml8KGOpJb
+         0t5mMCHj80FfTx3cOLI/pcKkMyuSHGAyzhVkNrOXHWEjGpqI9HJnA+YTQ4JersRYcOzp
+         62d/nebfr0bfCSYo7PSZGd9V/rmnN/0ZdhjbMBN9eGcF0FAqWiP+pEb1bgNs/anHpr/x
+         M5gT4Rc+FDjiJh8SPO139TrhT8XcstmPLprqVYYJ33WugNKiO4PH8qNeucS0XRT4CgqR
+         DS2w==
+X-Gm-Message-State: APjAAAXpgnJkOgBoAIF1BGo8Baa4Mrp45j4N7ra0pxgT6vuoS3sz5NBM
+        aDP+E9FAZF2T8yKsfxIRRcaCWcR7
+X-Google-Smtp-Source: APXvYqyt79dnV1jAfTe4eyYl8+9aO/tZR+atpG6aB8OYE7AhaeLTfgb5r6rvjV6ac+QJN9UGb0HI3w==
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr1944547wrn.124.1577749096183;
+        Mon, 30 Dec 2019 15:38:16 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40c7:f800:7c46:7fac:a1c:a5b2])
+        by smtp.gmail.com with ESMTPSA id g21sm888287wmh.17.2019.12.30.15.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 15:38:15 -0800 (PST)
+Date:   Tue, 31 Dec 2019 00:38:14 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-sparse@vger.kernel.org
+Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
+ functions
+Message-ID: <20191230233814.2fgmsgtnhruhklnu@ltop.local>
+References: <20191226152922.2034-1-ebiggers@kernel.org>
+ <20191228114918.GU2827@hirez.programming.kicks-ass.net>
+ <201912301042.FB806E1133@keescook>
+ <20191230191547.GA1501@zzz.localdomain>
+ <201912301131.2C7C51E8C6@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201912301131.2C7C51E8C6@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Rob,
->
-> On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > their compatible strings. The simplest way to convert those to
-> > schema is just add them into the common generic PCI host schema.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Andrew Murray <andrew.murray@arm.com>
-> > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: David Daney <david.daney@cavium.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
->
-> > index 515b2f9542e5..000000000000
-> > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > +++ /dev/null
->
-> > -Example:
-> > -
-> > -    pcie1: pcie@7f000000 {
-> > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > -        device_type = "pci";
-> > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > -        bus-range = <0x0 0xe>;
-> > -        #address-cells = <3>;
-> > -        #size-cells = <2>;
-> > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > -
-> > -        #interrupt-cells = <0x1>;
-> > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
->
-> An all-zeroes interrupt-map-mask seems to be very common on embedded
-> SoCs, where all devices are mapped to a single interrupt.
+On Mon, Dec 30, 2019 at 11:32:31AM -0800, Kees Cook wrote:
+> On Mon, Dec 30, 2019 at 01:15:47PM -0600, Eric Biggers wrote:
+> > 
+> > The annotation needs to go in the .h file, not the .c file, because sparse only
+> > analyzes individual translation units.
+> > 
+> > It needs to be a wrapper macro because it needs to tie the acquisition of the
+> > lock to the return value being true.  I.e. there's no annotation you can apply
+> > directly to the function prototype that means "if this function returns true, it
+> > acquires the lock that was passed in parameter N".
+> 
+> Gotcha. Well, I guess I leave it to Will and Peter to hash out...
+> 
+> Is there a meaningful proposal anywhere for sparse to DTRT here? If
+> not, it seems best to use what you've proposed until sparse reaches the
+> point of being able to do this on its own.
 
-Indeed.
+What "Right Thing" are you thinking about?
+One of the simplest situation with these conditional locks is:
 
-> However, schemas/pci/pci-bus.yaml says:
->
->   interrupt-map-mask:
->     items:
->       - description: PCI high address cell
->         minimum: 0
->         maximum: 0xf800
->       - description: PCI mid address cell
->         const: 0
->       - description: PCI low address cell
->         const: 0
->       - description: PCI IRQ cell
->         minimum: 1
->         maximum: 7
->
-> and thus complains about an all-zeroes mask, e.g.
->
->     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+	if (test)
+		lock();
 
-Now fixed.
+	do_stuff();
 
-Thanks,
-Rob
+	if (test)
+		unlock();
+
+No program can check that the second test gives the same result than
+the first one, it's undecidable. I mean, it's undecidable even on
+if single threaded and without interrupts. The best you can do is
+to simulate the whole thing (and be sure your simulation will halt).
+
+As far as I understand, it was the intention behind Sparse's design
+regarding locking ("context in sparse's parlance) to discourage
+such code and instead encourage to write things like:
+
+	if (test) {
+		do_stuff_unlocked();
+	} else {
+		lock();
+		do_stuff_unlocked();
+		unlock();
+	}
+
+where it is easy to check localy that the lock/unlock are balanced.
+
+So, of course Sparse could be improved to prove that some of the
+conditional locks are equivalent to unconditional ones like here
+just above (it already does but only for very simple cases where
+everything is inlined) but I don't thing there is a RT.
+
+-- Luc Van Oostenryck
