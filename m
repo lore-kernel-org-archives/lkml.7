@@ -2,181 +2,94 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C668AC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC33C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B603206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN+ftY36"
+	by mail.kernel.org (Postfix) with ESMTP id 04E6320722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577732227;
+	bh=hlj2DHKkMM1q4pyzXt97/QRqhx0WP6RlTBooKDDKySg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gR7d1CN9gqlNKj/HKQ5DpRZscrHS41r/xXYv1QQWVhQ1HkYH3e1RrXa4X47Dny5b5
+	 CqV/RWiRto+55yu5i4vlaTZKladfvALqHEdGQpyZ3lYvV/8n4+vbbrrSUbZdjGfBqY
+	 qaQH9gWS/a0LudwVG28VLesobZRYHgW9LrMiS/+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfL3S4s (ORCPT
+        id S1727661AbfL3S5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:56:48 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42273 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfL3S4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:56:48 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z14so25631899qkg.9;
-        Mon, 30 Dec 2019 10:56:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TNO/Hk5SvlZUntSVYUXT/N6cNir5bvB5pW0khbEEdBg=;
-        b=TN+ftY369cQzd2rj90leoiCh82gVHdPl6rkfpEdvmGf/gQt5OGjjLSPVhracdpLchO
-         qkckrsFU7qc+FZ9hXLWDjdX8gE2HWzxDYiQhFRiJS3WdhNzwtvY0bw8+Svpnox1N8d4W
-         9m9s4u/b8P8Zm2Zhys9yWE40tKNOLX3qD1JPVKhtS/6MyPWduUwp8HdKZw2LJD6w+ODY
-         0Rr3Xg25LWIuwu82Ha3EYiKFvkKaKSv5D0xPFIViQMkIkIKRh6eE4Z7S9hzpdC5yUW2j
-         Pqe/C0QlbSqzfHzGM4Pm37706OyAT7GPWFWqWgODF0VlTdYzUEyym1KFBAq+PRYf6fbF
-         crXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TNO/Hk5SvlZUntSVYUXT/N6cNir5bvB5pW0khbEEdBg=;
-        b=XGdIl7vIpE+XGHS0ysFDU5e8oyhN/f7o0VQFdYASEesxinncIYozMM1mF5hVzVgBXR
-         1x1R6cJyL3TmycycYsk1wmoz0f1MxmTw22gBpX70RTLX3PTiO0MnfumGS2Vh5iQE4xPy
-         mt+M/c3JZEvXBcugO3+F1m6PmgGTnWgKTtdtJ6lP/3Mm6wfzY3p+vO8lez15tnZtqWEK
-         jEg6fyafhmeGzRWeQ+kcN19p4lbIJXz3ITaGGGkVr8+nVOblKwZwvlNR/IhFPH+cgoPL
-         1GD62CZfAPK/rVV7AzKk0DxNU2NwH+WMe+452oHNva9cjssDFI5MJJdCr4U2p+F3bVGK
-         +RYQ==
-X-Gm-Message-State: APjAAAVaqns1QSVhRsPDkHMJH0s7XJ2oWnMRC3wDNl/zzPz1o048e+Cs
-        tuWBhMUL1aznx85yF+mqANIfevn5vvAYrzQr238=
-X-Google-Smtp-Source: APXvYqxe+dIas1aZfaZPUYlz0AHLEVSoZ3Cf4l76RSzTnmKm6vgknRi8IUOmSVg8aVwzNiFKcqRiBViVgKBfYHxFCEo=
-X-Received: by 2002:a37:e408:: with SMTP id y8mr55475323qkf.39.1577732206986;
- Mon, 30 Dec 2019 10:56:46 -0800 (PST)
+        Mon, 30 Dec 2019 13:57:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727496AbfL3S5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 13:57:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CB8206DB;
+        Mon, 30 Dec 2019 18:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577732225;
+        bh=hlj2DHKkMM1q4pyzXt97/QRqhx0WP6RlTBooKDDKySg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=odisym+nfbCByfuS0MTZroIyHR7MQS9rXPJMVi/qsFjRiHwzE4ii03SC0cdFnuGNe
+         CVw7vRN54S3WZbYVKlQlEVOW8utkXYNLDA8jh1MWGGvUpfECe4kHG+rTOVaW46mJSs
+         oalcfe32y7VNMCFElpwbAQg+Ky4fcCiEhv++me90=
+Date:   Mon, 30 Dec 2019 19:57:03 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     balbi@kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc3: gadget: Fix failure to detect end of transfer
+Message-ID: <20191230185703.GA1763367@kroah.com>
+References: <20191230161321.2738541-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-10-kpsingh@chromium.org>
- <CAEf4BzYgcez2G1qJW9saJmzfeYirGdH58aAcUk-+YTJF6vyOuQ@mail.gmail.com> <20191230151135.GC70684@google.com>
-In-Reply-To: <20191230151135.GC70684@google.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 30 Dec 2019 10:56:35 -0800
-Message-ID: <CAEf4BzaXBLRYP=BZYzr3fmc7ZH=JZ9TY27_HnOxj3ut2RCnZjQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 09/13] bpf: lsm: Add a helper function bpf_lsm_event_output
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230161321.2738541-1-bryan.odonoghue@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 7:11 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 23-Dec 22:36, Andrii Nakryiko wrote:
-> > On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
-> > >
-> > > From: KP Singh <kpsingh@google.com>
-> > >
-> > > This helper is similar to bpf_perf_event_output except that
-> > > it does need a ctx argument which is more usable in the
-> > > BTF based LSM programs where the context is converted to
-> > > the signature of the attacthed BTF type.
-> > >
-> > > An example usage of this function would be:
-> > >
-> > > struct {
-> > >          __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-> > >          __uint(key_size, sizeof(int));
-> > >          __uint(value_size, sizeof(u32));
-> > > } perf_map SEC(".maps");
-> > >
-> > > BPF_TRACE_1(bpf_prog1, "lsm/bprm_check_security,
-> > >             struct linux_binprm *, bprm)
-> > > {
-> > >         char buf[BUF_SIZE];
-> > >         int len;
-> > >         u64 flags = BPF_F_CURRENT_CPU;
-> > >
-> > >         /* some logic that fills up buf with len data */
-> > >         len = fill_up_buf(buf);
-> > >         if (len < 0)
-> > >                 return len;
-> > >         if (len > BU)
-> > >                 return 0;
-> > >
-> > >         bpf_lsm_event_output(&perf_map, flags, buf, len);
-> >
-> > This seems to be generally useful and not LSM-specific, so maybe name
-> > it more generically as bpf_event_output instead?
->
-> Agreed, I am happy to rename this.
->
-> >
-> > I'm also curious why we needed both bpf_perf_event_output and
-> > bpf_perf_event_output_raw_tp, if it could be done as simply as you did
-> > it here. What's different between those three and why your
-> > bpf_lsm_event_output doesn't need pt_regs passed into them?
->
-> That's because my implementation uses the following function from
-> bpf_trace.c:
->
-> u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
->                      void *ctx, u64 ctx_size, bpf_ctx_copy_t ctx_copy)
->
-> This does not require a pt_regs argument and handles fetching them
-> internally:
->
->         regs = this_cpu_ptr(&bpf_pt_regs.regs[nest_level - 1]);
->
->         perf_fetch_caller_regs(regs);
->         perf_sample_data_init(sd, 0, 0);
->         sd->raw = &raw;
->
->         ret = __bpf_perf_event_output(regs, map, flags, sd);
->
-> - KP
+On Mon, Dec 30, 2019 at 04:13:21PM +0000, Bryan O'Donoghue wrote:
+> A recent bugfix 8c7d4b7b3d43 ("usb: dwc3: gadget: Fix logical condition")
+> correctly fixes a logical error in the gadget driver but, exposes a further
+> bug in determining when a transfer has completed.
+> 
+> Prior to 8c7d4b7b3d43 we were calling dwc3_gadget_giveback() when we
+> shouldn't have been. Afer this change the below test fails to complete on
+> my hardware.
+> 
+> Host:
+> echo "host" > /dev/ttyACM0
+> 
+> Device:
+> cat < /dev/ttyGS0
+> 
+> This is caused by the driver incorrectly detecting end of transfer, a
+> problem that had previous been masked by the continuous calling of
+> dwc3_gadget_giveback() prior to 8c7d4b7b3d43.
+> 
+> Remediate by making the test <= instead of ==
+> 
+> Fixes: e0c42ce590fe ("usb: dwc3: gadget: simplify IOC handling")
+> 
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  drivers/usb/dwc3/gadget.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, I saw that bit. I guess I'm confused why we couldn't do the same
-for, say, raw_tracepoint case. Now Jiri Olsa is adding another similar
-helper doing its own storage of pt_regs. If all of them can share the
-same (even if with bigger nest_level) array of pt_regs, that would
-great.
+I think this patch:
+	https://lore.kernel.org/linux-usb/ac5a3593a94fdaa3d92e6352356b5f7a01ccdc7c.1576291140.git.thinhn@synopsys.com/
 
->
-> >
-> > >         return 0;
-> > > }
-> > >
-> > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > ---
-> > >  include/uapi/linux/bpf.h       | 10 +++++++++-
-> > >  kernel/bpf/verifier.c          |  1 +
-> > >  security/bpf/ops.c             | 21 +++++++++++++++++++++
-> > >  tools/include/uapi/linux/bpf.h | 10 +++++++++-
-> > >  4 files changed, 40 insertions(+), 2 deletions(-)
-> > >
-> >
-> > [...]
+should fix this issue instead, right?
+
+If not, do I need to include both of these?
+
+thanks,
+
+greg k-h
