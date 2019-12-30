@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35159C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4F8C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0991320722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BC1206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577726882;
-	bh=cb2Iaj0ggf2QTwJp6dt00bYXbNkMmqHeppfae+zRfzo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZDdaNG9w62juSPSvsltsbsA4H52zdARlxt6SdXcVUbHyWsoGzIr2XYr2IhdeyOHw5
-	 xA3/r1ct7XZcQFsrz3idBzzs4SB+g12VRer47JRkO7cAWPXOnvRwoeTv3T8sPIJBcl
-	 M2JL3BE5iGiqTGEbM21ZV7ZAC6KcowOF2uxdfioQ=
+	s=default; t=1577726886;
+	bh=/hvbWvEUGKZyj8PDCsO8CkkPdQuyd4EzT3CfyjXqoBo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JigRveMwisP5P0iQyNbDTrOBHVaJJk71C+hLpZdew62VoxOJ5109VfvWaDkK99WpZ
+	 WkFYx40qbRV5JhSWUXPem+ZWioDTbJZlQ10t1rmWIQWkwlA41jtTrtQOPjA3/9SrvH
+	 hCgFYUR7eXP92lKDE0YGR2qO2g9yqdj1r//t5Cqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfL3R2A (ORCPT
+        id S1727520AbfL3R2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:28:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33386 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:28:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727207AbfL3R2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:28:00 -0500
+        id S1727207AbfL3R2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:28:04 -0500
 Received: from localhost.localdomain (unknown [194.230.155.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7651206DB;
-        Mon, 30 Dec 2019 17:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5763F2071E;
+        Mon, 30 Dec 2019 17:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577726879;
-        bh=cb2Iaj0ggf2QTwJp6dt00bYXbNkMmqHeppfae+zRfzo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MsZteBXw7tmqiQErptqpbJHbDpozN7LSBUww1chEtMr1gL6lCeCMe+xzboAzkt8pG
-         RjTgpmshR2e3cfqO6PUb0LUVJkX6hzaSRT6UDxsAacKcy1nyZIqKYavTQulwLNxjzw
-         5C8N3R1ZmDIcpixkqwll5nza7IYTakzHIzvxow5Q=
+        s=default; t=1577726883;
+        bh=/hvbWvEUGKZyj8PDCsO8CkkPdQuyd4EzT3CfyjXqoBo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sjUJkJlFlXc7qvNGfbINWcfoWAUNZ1YWnfr9t+TFRgHuztwl3+qJ+Q+KNg+JBm5FR
+         hnbj+8etvYUrjPYq8+o22doewO9DwZ7tLSUZ3wno8hLClGgguXfIvTUKQDu6S1fK67
+         +/5ilxp1f9xoF1Hc8cLVTdPNIprISgNCk/2l4ryk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Vladimir Zapolskiy <vz@mleia.com>,
         Sylvain Lemieux <slemieux.tyco@gmail.com>,
@@ -51,10 +51,12 @@ To:     Vladimir Zapolskiy <vz@mleia.com>,
         Elie Morisse <syniurge@gmail.com>, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/5] i2c: pmcmsp: Use proper printk format for resource_size_t
-Date:   Mon, 30 Dec 2019 18:27:47 +0100
-Message-Id: <20191230172751.17985-1-krzk@kernel.org>
+Subject: [PATCH 2/5] i2c: pnx: Use proper printk format for resource_size_t
+Date:   Mon, 30 Dec 2019 18:27:48 +0100
+Message-Id: <20191230172751.17985-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191230172751.17985-1-krzk@kernel.org>
+References: <20191230172751.17985-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,40 +69,31 @@ resource_size_t should be printed with its own size-independent format
 to fix warnings when compiling on 64-bit platform (e.g. with
 COMPILE_TEST):
 
-    drivers/i2c/busses/i2c-pmcmsp.c: In function ‘pmcmsptwi_probe’:
-    drivers/i2c/busses/i2c-pmcmsp.c:276:25: warning:
+    drivers/i2c/busses/i2c-pnx.c: In function ‘i2c_pnx_probe’:
+    drivers/i2c/busses/i2c-pnx.c:737:47: warning:
         format ‘%x’ expects argument of type ‘unsigned int’,
-        but argument 3 has type ‘resource_size_t {aka long long unsigned int}’ [-Wformat=]
+        but argument 5 has type ‘resource_size_t {aka long long unsigned int}’ [-Wformat=]
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/i2c/busses/i2c-pmcmsp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-pnx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pmcmsp.c b/drivers/i2c/busses/i2c-pmcmsp.c
-index 4fde74eb34a7..5d3a12bd420b 100644
---- a/drivers/i2c/busses/i2c-pmcmsp.c
-+++ b/drivers/i2c/busses/i2c-pmcmsp.c
-@@ -274,8 +274,8 @@ static int pmcmsptwi_probe(struct platform_device *pldev)
- 	if (!request_mem_region(res->start, resource_size(res),
- 				pldev->name)) {
- 		dev_err(&pldev->dev,
--			"Unable to get memory/io address region 0x%08x\n",
--			res->start);
-+			"Unable to get memory/io address region %pa[p]\n",
-+			&(res->start));
- 		rc = -EBUSY;
- 		goto ret_err;
- 	}
-@@ -285,7 +285,7 @@ static int pmcmsptwi_probe(struct platform_device *pldev)
- 						resource_size(res));
- 	if (!pmcmsptwi_data.iobase) {
- 		dev_err(&pldev->dev,
--			"Unable to ioremap address 0x%08x\n", res->start);
-+			"Unable to ioremap address %pa[p]\n", &(res->start));
- 		rc = -EIO;
- 		goto ret_unreserve;
- 	}
+diff --git a/drivers/i2c/busses/i2c-pnx.c b/drivers/i2c/busses/i2c-pnx.c
+index 6e0e546ef83f..053c35d99aad 100644
+--- a/drivers/i2c/busses/i2c-pnx.c
++++ b/drivers/i2c/busses/i2c-pnx.c
+@@ -734,8 +734,8 @@ static int i2c_pnx_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto out_clock;
+ 
+-	dev_dbg(&pdev->dev, "%s: Master at %#8x, irq %d.\n",
+-		alg_data->adapter.name, res->start, alg_data->irq);
++	dev_dbg(&pdev->dev, "%s: Master at %pa[p], irq %d.\n",
++		alg_data->adapter.name, &(res->start), alg_data->irq);
+ 
+ 	return 0;
+ 
 -- 
 2.17.1
 
