@@ -2,90 +2,156 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A512DC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93716C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC7E20730
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:26:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577715960;
-	bh=F3b85m/vpqlDIFab9PqhwIdF9cMEQxEYRRvy4W2Hhjc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=vBorl3hOHnIU5M0gCHA/NrEgopM13IExR+wa1RmYZS3fbaENQxLOomuedcdmvS4VN
-	 s8YiQr+UNJt0zSPrKFkL7SoItVLquIuEM4UC6mk1YyoeiYO5ubRishenQn3ctay8nY
-	 ePsF8XrY0ea47TBLeutqq5gFnv5b0+H8rUxcu74M=
+	by mail.kernel.org (Postfix) with ESMTP id 0EA93206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="AfD3z3gG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfL3OZ7 (ORCPT
+        id S1727531AbfL3Ob2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:25:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 09:31:28 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:39334 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfL3OZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:25:59 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCCB206DB;
-        Mon, 30 Dec 2019 14:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577715958;
-        bh=F3b85m/vpqlDIFab9PqhwIdF9cMEQxEYRRvy4W2Hhjc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iAF+UjrN4Xkt9xxgoKiTyr4ydAzMHqDcU8sNPfPwvDrWE7Sc+Uiivo85X3ry848+w
-         RUn86kZialLDvibCD648Ps41HkWP0eJBFp8jan3aGEBPRkuk8Lyk69BRaydNrRWWTB
-         6eWA2gUziHFD90GK23xl8ufhyejM1OrWD0YWAIp0=
-Date:   Mon, 30 Dec 2019 08:25:57 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     corbet@lwn.net, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.or, linux-kernel@vger.kernel.org,
-        wanghaibin.wang@huawei.com, Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2] Documentation: PCI: msi-howto.rst: Fix wrong function
- name
-Message-ID: <20191230142557.GA188380@google.com>
+        id S1727397AbfL3Ob1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:31:27 -0500
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id 07A8D1B205E4; Mon, 30 Dec 2019 17:31:22 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 07A8D1B205E4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1577716283; bh=RwOI8oAxd+fijp+Xuc6Oa+5EbKzjW8W4KCZUcnbzQOs=;
+        h=From:To:Cc:Subject:Date;
+        b=AfD3z3gGGkGDyB8iUL7HkxTbdGP3pnAL7i9Q9EwC2vC5GbqRF7bSN/0kB1+VO2nRB
+         JFg2AVQi0ZN9KLo4p2hwxgiIybR7VJR9YeSXtMtnGJC8Y7XUFG0qAKmAMKrSGeA0PY
+         /987XTEF+cxaPYxezYI+xaoBmTqXEKpVYb43fgO8=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id C75FB1B205E4;
+        Mon, 30 Dec 2019 17:31:03 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C75FB1B205E4
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id CA84D1B229CB;
+        Mon, 30 Dec 2019 17:31:01 +0300 (MSK)
+Received: from localhost.localdomain (unknown [196.196.203.126])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 30 Dec 2019 17:31:01 +0300 (MSK)
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH RFC net-next 00/20] net: dsa: add GRO support
+Date:   Mon, 30 Dec 2019 17:30:08 +0300
+Message-Id: <20191230143028.27313-1-alobakin@dlink.ru>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230131428.1200-1-yuzenghui@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:14:28PM +0800, Zenghui Yu wrote:
-> pci_irq_alloc_vectors() -> pci_alloc_irq_vectors().
-> 
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+As of now, napi_gro_receive() in cases where the corresponding
+device is installed as CPU port of DSA-driven switch is in fact
+an overheaded version of netif_receive_skb{,_list}() with no
+advantages over:
 
-Applied to pci/misc for v5.6, thanks!
+- dev_gro_receive() can't find packet_offload for ETH_P_XDSA type;
+- so it immediately returns GRO_NORMAL;
+- napi_skb_finish() passes skb to gro_normal_one() -> netstack.
 
-> ---
-> 
-> v1 -> v2:
-> 	Add Andrew's R-b tag.
-> 
->  Documentation/PCI/msi-howto.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
-> index 994cbb660ade..aa2046af69f7 100644
-> --- a/Documentation/PCI/msi-howto.rst
-> +++ b/Documentation/PCI/msi-howto.rst
-> @@ -283,5 +283,5 @@ or disabled (0).  If 0 is found in any of the msi_bus files belonging
->  to bridges between the PCI root and the device, MSIs are disabled.
->  
->  It is also worth checking the device driver to see whether it supports MSIs.
-> -For example, it may contain calls to pci_irq_alloc_vectors() with the
-> +For example, it may contain calls to pci_alloc_irq_vectors() with the
->  PCI_IRQ_MSI or PCI_IRQ_MSIX flags.
-> -- 
-> 2.19.1
-> 
-> 
+This series adds a basic infrastructure to allow DSA taggers to
+implement GRO callbacks and adds GRO support for 5 tagger drivers:
+* tag_ar9331
+* tag_gswip
+* tag_lan9303
+* tag_mtk
+* tag_qca
+
+I didn't make it for the rest because they are in fact way more
+complicated (e.g. combined DSA + 802.1q tag etc.) and require
+more familiarity with them and tests on the real hardware, which
+is inaccesible for me at the moment.
+
+This series also includes a bunch of random fixes in several tagger
+drivers and some cleanup. I left them all in one place as they depend
+on each other, but there's no problem for me to split this into
+different series.
+
+I mark this as RFC, and there are the key questions for maintainers,
+developers, users etc.:
+- Do we need GRO support for DSA at all?
+- Which tagger protocols really need it and which don't?
+- Are the actual changes correct in every single tagger code?
+- Does this series bring any performance improvements on the
+  affected systems?
+- Would anybody mind if we'd add DSA support to napi_gro_frags()?
+- Any code/other comments/notes.
+
+I also would like to see more taggers with GRO callbacks, such as
+DSA and EDSA, and the results of their addition.
+
+Alexander Lobakin (20):
+  net: dsa: make .flow_dissect() callback returning void
+  net: dsa: add GRO support infrastructure
+  net: dsa: tag_ar9331: add .flow_dissect() callback
+  net: dsa: tag_ar9331: split out common tag accessors
+  net: dsa: tag_ar9331: add GRO callbacks
+  net: dsa: tag_gswip: fix typo in tag name
+  net: dsa: tag_gswip: switch to bitfield helpers
+  net: dsa: tag_gswip: add .flow_dissect() callback
+  net: dsa: tag_gswip: split out common tag accessors
+  net: dsa: tag_gswip: add GRO callbacks
+  net: dsa: tag_lan9303: add .flow_dissect() callback
+  net: dsa: tag_lan9303: split out common tag accessors
+  net: dsa: tag_lan9303: add GRO callbacks
+  net: dsa: tag_mtk: split out common tag accessors
+  net: dsa: tag_mtk: add GRO callbacks
+  net: dsa: tag_qca: fix doubled Tx statistics
+  net: dsa: tag_qca: switch to bitfield helpers
+  net: dsa: tag_qca: split out common tag accessors
+  net: dsa: tag_qca: add GRO callbacks
+  net: core: add (unlikely) DSA support in napi_gro_frags()
+
+ include/net/dsa.h         |  10 ++-
+ net/core/dev.c            |  11 ++-
+ net/core/flow_dissector.c |   8 +-
+ net/dsa/dsa.c             |  43 +++++++++-
+ net/dsa/dsa2.c            |   1 +
+ net/dsa/tag_ar9331.c      | 139 ++++++++++++++++++++++++++-----
+ net/dsa/tag_dsa.c         |   5 +-
+ net/dsa/tag_edsa.c        |   5 +-
+ net/dsa/tag_gswip.c       | 126 +++++++++++++++++++++++-----
+ net/dsa/tag_lan9303.c     | 139 ++++++++++++++++++++++++++-----
+ net/dsa/tag_mtk.c         | 115 +++++++++++++++++++++-----
+ net/dsa/tag_qca.c         | 167 ++++++++++++++++++++++++++++----------
+ 12 files changed, 629 insertions(+), 140 deletions(-)
+
+-- 
+2.24.1
+
