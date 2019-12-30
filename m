@@ -2,56 +2,55 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86780C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7471C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1D6206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3024206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dQS4kODD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="laerQ0wc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfL3Txw (ORCPT
+        id S1727710AbfL3Txx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 14:53:52 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58780 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfL3Txv (ORCPT
+        Mon, 30 Dec 2019 14:53:53 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42748 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbfL3Txw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 14:53:51 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUJn8jx140757;
+        Mon, 30 Dec 2019 14:53:52 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUJnG2Q139032;
         Mon, 30 Dec 2019 19:52:48 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=q38WciEesnuRJRnd58/bcF+E8f7Yll8x5e78tHW7KKc=;
- b=dQS4kODD52nhn6IIkrqU9jLXPCHRyABE/SR/Y68eNu8jfTZHa8KQQKVhqMN+E2IIZnJf
- YmCy0iiTh2WJx512pTJ8nefrHbIQ5oS1FDhAUseV/FNtn3Zypb9f/2JqNsueNMl0TFyC
- FxCNjh3HH0Fwz81lDwFMIghuzusx+68ANNRms8HMmpzEBcohRI9Ek9SLowzqGt1plwM4
- qPtQ6LzVCAU5LEZBhFbz429aaQ7seygHdYAUYJHNDeOpfkycSfN+YuudNMpWAHZRPRrR
- r/yHTlvysx31iY4R2SJ34BkhLsvmXAi/qLxVq0uFDLNMS+OMIAAjJG298/WkPPumvxdh 3g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2x5y0pexke-1
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=6tNX/v2fnqChmL5AwO3FwDGjEomCixJM8gJZG+jJ9m8=;
+ b=laerQ0wcN+YnS8ARdZ7JDBGX4A5LqOToQjYUsa6/nB7XAt5fpNM4SyW58sa4QHQ90arl
+ LGew1UhB+ZVy1C3d6+GR6WTuTKWQUsK45gLmPDBsYNC/6MWsvbqgeNen3Y9YgfcbJILK
+ kEC/NOdwga1hc8QsTgo/Yg0gdHBzuEH14LvUV3vOVdWeP7cWZ/MxZ+syT/vrf7gwLBWJ
+ 8mborE5XKt/W6iKvRy73bmRafL9Qx7RabcAskaq9j/BvT4qtcAQCpQZiIZ7a5kizbQ8o
+ wAONrCAY9sEv0TIU+57VK9+PpPrJzvpkLItFck+5kHPo+Gx1yTAV6h7DnktXTPlSVqFl jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2x5ypqeuag-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 30 Dec 2019 19:52:48 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUJmRih115107;
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUJmOi1050740;
         Mon, 30 Dec 2019 19:52:47 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2x6gh94hdu-1
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2x6gk4pv3b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 30 Dec 2019 19:52:47 +0000
 Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBUJqZMi009978;
-        Mon, 30 Dec 2019 19:52:35 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBUJqTph021933;
+        Mon, 30 Dec 2019 19:52:29 GMT
 Received: from neelam.us.oracle.com (/10.152.128.16)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Dec 2019 11:52:34 -0800
+        with ESMTP ; Mon, 30 Dec 2019 11:52:29 -0800
 From:   Alex Kogan <alex.kogan@oracle.com>
 To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
         will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
@@ -61,12 +60,10 @@ To:     linux@armlinux.org.uk, peterz@infradead.org, mingo@redhat.com,
         jglauber@marvell.com
 Cc:     steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
         alex.kogan@oracle.com, dave.dice@oracle.com
-Subject: [PATCH v8 5/5] locking/qspinlock: Introduce the shuffle reduction optimization into CNA
-Date:   Mon, 30 Dec 2019 14:40:42 -0500
-Message-Id: <20191230194042.67789-6-alex.kogan@oracle.com>
+Subject: [PATCH v8 0/5] Add NUMA-awareness to qspinlock
+Date:   Mon, 30 Dec 2019 14:40:37 -0500
+Message-Id: <20191230194042.67789-1-alex.kogan@oracle.com>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191230194042.67789-1-alex.kogan@oracle.com>
-References: <20191230194042.67789-1-alex.kogan@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9486 signatures=668685
@@ -85,108 +82,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This performance optimization reduces the probability threads will be
-shuffled between the main and secondary queues when the secondary queue
-is empty. It is helpful when the lock is only lightly contended.
+Minor changes from v7 based on feedback from Longman:
+-----------------------------------------------------
 
-Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
----
- kernel/locking/qspinlock_cna.h | 46 ++++++++++++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 2 deletions(-)
+- Move __init functions from alternative.c to qspinlock_cna.h
 
-diff --git a/kernel/locking/qspinlock_cna.h b/kernel/locking/qspinlock_cna.h
-index 30feff02865d..f21056560104 100644
---- a/kernel/locking/qspinlock_cna.h
-+++ b/kernel/locking/qspinlock_cna.h
-@@ -4,6 +4,7 @@
- #endif
- 
- #include <linux/topology.h>
-+#include <linux/random.h>
- 
- /*
-  * Implement a NUMA-aware version of MCS (aka CNA, or compact NUMA-aware lock).
-@@ -57,6 +58,7 @@ struct cna_node {
- enum {
- 	LOCAL_WAITER_FOUND = 2,	/* 0 and 1 are reserved for @locked */
- 	FLUSH_SECONDARY_QUEUE = 3,
-+	PASS_LOCK_IMMEDIATELY = 4,
- 	MIN_ENCODED_TAIL
- };
- 
-@@ -70,6 +72,34 @@ enum {
-  */
- int intra_node_handoff_threshold __ro_after_init = 1 << 16;
- 
-+/*
-+ * Controls the probability for enabling the scan of the main queue when
-+ * the secondary queue is empty. The chosen value reduces the amount of
-+ * unnecessary shuffling of threads between the two waiting queues when
-+ * the contention is low, while responding fast enough and enabling
-+ * the shuffling when the contention is high.
-+ */
-+#define SHUFFLE_REDUCTION_PROB_ARG  (7)
-+
-+/* Per-CPU pseudo-random number seed */
-+static DEFINE_PER_CPU(u32, seed);
-+
-+/*
-+ * Return false with probability 1 / 2^@num_bits.
-+ * Intuitively, the larger @num_bits the less likely false is to be returned.
-+ * @num_bits must be a number between 0 and 31.
-+ */
-+static bool probably(unsigned int num_bits)
-+{
-+	u32 s;
-+
-+	s = this_cpu_read(seed);
-+	s = next_pseudo_random32(s);
-+	this_cpu_write(seed, s);
-+
-+	return s & ((1 << num_bits) - 1);
-+}
-+
- static void __init cna_init_nodes_per_cpu(unsigned int cpu)
- {
- 	struct mcs_spinlock *base = per_cpu_ptr(&qnodes[0].mcs, cpu);
-@@ -251,8 +281,11 @@ __always_inline u32 cna_pre_scan(struct qspinlock *lock,
- 	struct cna_node *cn = (struct cna_node *)node;
- 
- 	cn->pre_scan_result =
--		cn->intra_count == intra_node_handoff_threshold ?
--			FLUSH_SECONDARY_QUEUE : cna_scan_main_queue(node, node);
-+		(node->locked <= 1 && probably(SHUFFLE_REDUCTION_PROB_ARG)) ?
-+			PASS_LOCK_IMMEDIATELY :
-+			cn->intra_count == intra_node_handoff_threshold ?
-+				FLUSH_SECONDARY_QUEUE :
-+				cna_scan_main_queue(node, node);
- 
- 	return 0;
- }
-@@ -266,6 +299,14 @@ static inline void cna_pass_lock(struct mcs_spinlock *node,
- 
- 	u32 scan = cn->pre_scan_result;
- 
-+	/*
-+	 * perf. optimization - check if we can skip the logic of triaging
-+	 * through other possible values in @scan (helps under light lock
-+	 * contention)
-+	 */
-+	if (scan == PASS_LOCK_IMMEDIATELY)
-+		goto pass_lock;
-+
- 	/*
- 	 * check if a successor from the same numa node has not been found in
- 	 * pre-scan, and if so, try to find it in post-scan starting from the
-@@ -294,6 +335,7 @@ static inline void cna_pass_lock(struct mcs_spinlock *node,
- 		tail_2nd->next = next;
- 	}
- 
-+pass_lock:
- 	arch_mcs_pass_lock(&next_holder->locked, val);
- }
- 
+- Introduce enum for return values from cna_pre_scan(), for better
+readability.
+
+- Add/revise a few comments to improve readability.
+
+
+Summary
+-------
+
+Lock throughput can be increased by handing a lock to a waiter on the
+same NUMA node as the lock holder, provided care is taken to avoid
+starvation of waiters on other NUMA nodes. This patch introduces CNA
+(compact NUMA-aware lock) as the slow path for qspinlock. It is
+enabled through a configuration option (NUMA_AWARE_SPINLOCKS).
+
+CNA is a NUMA-aware version of the MCS lock. Spinning threads are
+organized in two queues, a main queue for threads running on the same
+node as the current lock holder, and a secondary queue for threads
+running on other nodes. Threads store the ID of the node on which
+they are running in their queue nodes. After acquiring the MCS lock and
+before acquiring the spinlock, the lock holder scans the main queue
+looking for a thread running on the same node (pre-scan). If found (call
+it thread T), all threads in the main queue between the current lock
+holder and T are moved to the end of the secondary queue.  If such T
+is not found, we make another scan of the main queue after acquiring 
+the spinlock when unlocking the MCS lock (post-scan), starting at the
+node where pre-scan stopped. If both scans fail to find such T, the
+MCS lock is passed to the first thread in the secondary queue. If the
+secondary queue is empty, the MCS lock is passed to the next thread in the
+main queue. To avoid starvation of threads in the secondary queue, those
+threads are moved back to the head of the main queue after a certain
+number of intra-node lock hand-offs.
+
+More details are available at https://arxiv.org/abs/1810.05600.
+
+The series applies on top of v5.5.0-rc2, commit ea200dec51.
+Performance numbers are available in previous revisions
+of the series.
+
+Further comments are welcome and appreciated.
+
+Alex Kogan (5):
+  locking/qspinlock: Rename mcs lock/unlock macros and make them more
+    generic
+  locking/qspinlock: Refactor the qspinlock slow path
+  locking/qspinlock: Introduce CNA into the slow path of qspinlock
+  locking/qspinlock: Introduce starvation avoidance into CNA
+  locking/qspinlock: Introduce the shuffle reduction optimization into
+    CNA
+
+ .../admin-guide/kernel-parameters.txt         |  18 +
+ arch/arm/include/asm/mcs_spinlock.h           |   6 +-
+ arch/x86/Kconfig                              |  20 +
+ arch/x86/include/asm/qspinlock.h              |   4 +
+ arch/x86/kernel/alternative.c                 |   4 +
+ include/asm-generic/mcs_spinlock.h            |   4 +-
+ kernel/locking/mcs_spinlock.h                 |  20 +-
+ kernel/locking/qspinlock.c                    |  82 +++-
+ kernel/locking/qspinlock_cna.h                | 400 ++++++++++++++++++
+ kernel/locking/qspinlock_paravirt.h           |   2 +-
+ 10 files changed, 537 insertions(+), 23 deletions(-)
+ create mode 100644 kernel/locking/qspinlock_cna.h
+
 -- 
 2.21.0 (Apple Git-122.2)
 
