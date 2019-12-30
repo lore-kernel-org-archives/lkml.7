@@ -2,494 +2,451 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DA2C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06ADAC2D0D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545E32053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71E52053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpRbcp4w"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gpgMpAGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfL3LkD (ORCPT
+        id S1727416AbfL3LrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:40:03 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35066 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727360AbfL3LkC (ORCPT
+        Mon, 30 Dec 2019 06:47:11 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14774 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727379AbfL3LrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:40:02 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i23so12709575pfo.2;
-        Mon, 30 Dec 2019 03:40:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bjB+w3YtZtgGJqlFQbtPuwYxWcy4pFRsF5rah4vEdVA=;
-        b=TpRbcp4w7UNdbBsAQU7bPur7O7zwaOt4ptiYcasw9K/GiDdTcdT1hhfjRSGy+ODPWj
-         O8kpxOFzHwXwfg1QxKqzRlqHvcyot8tQS8gGmVeWrYuNrTV4kvicimdvewVvM2x2DgLB
-         u1PBIEjJCGK5ZPtKcdt5+WGbEo7ZqOtuDJ0taytg0Qs6ewxgkjx7c24fzTPiU/8hnGFT
-         QLsLUKhU/TzfW09nOIlGrC7g9NtThpCj0f1yeWP/V0pOU0alXY6PcB6BMdj3ZFgtbqFH
-         rohafU20zDoCsl6vKSE/13OapHmeRVTn+pkSmN+wMWTKtZmfZAVl0nyiNuNJjot6AaLh
-         cgGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bjB+w3YtZtgGJqlFQbtPuwYxWcy4pFRsF5rah4vEdVA=;
-        b=TbOH8ubegghJ5PHEebpEwnsFLOgRCk23OY3KkiFjVteee00WqzfSWRotzqI7GniUTl
-         3/uuooBW8JxMFnMwD2N/2xF8a5K9/9QUi6AssiwNjj78s7c0FS4W/C8V/8r0OE620TyR
-         vL6lFTHAgpLcrcL77pDl7Hb9HMFZp2Pi9Kqqmlg2Ne9MWD6EA62Yi4OEx927lQMvn/fi
-         WMlMXfhzsoOyJvj5xql9q8Tkee1xMaGrZv98jVghs5/Vkqx5p9pI4gccaG2wNnsrxWiZ
-         VRAzcpxxU4cilc64DWmz29wY0/zOlb1PeJN3ZtMIIxeesNyyG0pcCNVvS1MlFP1tfSK6
-         zhzA==
-X-Gm-Message-State: APjAAAX6XDbs0qCqSVbtRsPXqBpxtqUFhTydSlKZZSSc/qzgww+8OnBD
-        RrH4lLa54X2pTzqVSKVzzxU=
-X-Google-Smtp-Source: APXvYqzf+LRDAO31DnGhcxDAKj4+qxo3UhOsQ34qJm52i+XDa06V38dMOEafyvVGQDdeGG2ht0aqjg==
-X-Received: by 2002:a65:5788:: with SMTP id b8mr70945575pgr.324.1577706000984;
-        Mon, 30 Dec 2019 03:40:00 -0800 (PST)
-Received: from gli-arch.genesyslogic.com.tw (60-251-58-169.HINET-IP.hinet.net. [60.251.58.169])
-        by smtp.gmail.com with ESMTPSA id w131sm52662585pfc.16.2019.12.30.03.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 03:40:00 -0800 (PST)
-From:   Ben Chuang <benchuanggli@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ben.chuang@genesyslogic.com.tw, greg.tu@genesyslogic.com.tw,
-        Ben Chuang <benchuanggli@gmail.com>
-Subject: [RFC,PATCH 6/6] mmc: sdhci-pci-gli: Fix power/reset/ZC/timeout for GL9755 UHS-II mode
-Date:   Mon, 30 Dec 2019 19:40:12 +0800
-Message-Id: <20191230114012.38202-1-benchuanggli@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 30 Dec 2019 06:47:10 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577706428; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=dGHIBy4/XdNceCKSzyT4MigXenSFJoLKxToQvsEoJqU=;
+ b=gpgMpAGQCVfLGrUe1cMQxV1XlXkSP/pbp4FRsQ7o0Iclsg7H8ML1Up1jmfyh9IsZlHiMlKZQ
+ dOUtvrfyMlsUXYzfWBwaHz88AgjTugZ+vl3YEISEIF6UVdYJ6aG2BFxqQ70MDUT313wysNi0
+ T2mUQSp44Xz+NgAusr4am9EKNR8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e09e3b7.7f6e52900500-smtp-out-n01;
+ Mon, 30 Dec 2019 11:47:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3C4B8C43383; Mon, 30 Dec 2019 11:47:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90D2DC43383;
+        Mon, 30 Dec 2019 11:47:01 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 30 Dec 2019 17:17:01 +0530
+From:   okukatla@codeaurora.org
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com, sboyd@kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V1 1/2] dt-bindings: interconnect: Add Qualcomm SC7180 DT
+ bindings
+In-Reply-To: <0101016eac183058-afcce911-d283-4748-b3ff-8455e076a313-000000@us-west-2.amazonses.com>
+References: <1574780408-21282-1-git-send-email-okukatla@codeaurora.org>
+ <0101016ea83b44e2-546fc9ff-6056-482b-a42d-231b9d908640-000000@us-west-2.amazonses.com>
+ <0101016eac183058-afcce911-d283-4748-b3ff-8455e076a313-000000@us-west-2.amazonses.com>
+Message-ID: <61e527c57ea22e197c0fcf06bb6bce57@codeaurora.org>
+X-Sender: okukatla@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-
-Disable GL9755 overcurrent interrupt when power on/off on UHS-II.
-Enable the internal clock when do reset on UHS-II mode.
-Set ZC to 0x0 for Sandisk cards and set ZC to 0xB for others.
-Increase timeout value before detecting UHS-II interface.
-Add vendor settings fro UHS-II mode.
-
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
----
- drivers/mmc/host/sdhci-pci-gli.c | 361 ++++++++++++++++++++++++++++++-
- 1 file changed, 360 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-index 5eea8d70a85d..1be78a609dc3 100644
---- a/drivers/mmc/host/sdhci-pci-gli.c
-+++ b/drivers/mmc/host/sdhci-pci-gli.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include "sdhci.h"
- #include "sdhci-pci.h"
-+#include "sdhci-uhs2.h"
- 
- /*  Genesys Logic extra registers */
- #define SDHCI_GLI_9750_WT         0x800
-@@ -60,6 +61,42 @@
- #define   SDHCI_GLI_9750_TUNING_PARAMETERS_RX_DLY    GENMASK(2, 0)
- #define   GLI_9750_TUNING_PARAMETERS_RX_DLY_VALUE    0x1
- 
-+#define PCI_GLI_9755_WT       0x800
-+#define   PCI_GLI_9755_WT_EN    BIT(0)
-+#define   GLI_9755_WT_EN_ON	0x1
-+#define   GLI_9755_WT_EN_OFF    0x0
-+
-+#define PCI_GLI_9755_PLLSSC                 0x68
-+#define   PCI_GLI_9755_PLLSSC_RTL             BIT(24)
-+#define   GLI_9755_PLLSSC_RTL_VALUE           0x1
-+#define   PCI_GLI_9755_PLLSSC_TRANS_PASS      BIT(27)
-+#define   GLI_9755_PLLSSC_TRANS_PASS_VALUE    0x1
-+#define   PCI_GLI_9755_PLLSSC_RECV            GENMASK(29, 28)
-+#define   GLI_9755_PLLSSC_RECV_VALUE          0x3
-+#define   PCI_GLI_9755_PLLSSC_TRAN            GENMASK(31, 30)
-+#define   GLI_9755_PLLSSC_TRAN_VALUE          0x3
-+
-+#define PCI_GLI_9755_UHS2_PLL            0x6C
-+#define   PCI_GLI_9755_UHS2_PLL_SSC        GENMASK(9, 8)
-+#define   GLI_9755_UHS2_PLL_SSC_VALUE      0x0
-+#define   PCI_GLI_9755_UHS2_PLL_DELAY      BIT(18)
-+#define   GLI_9755_UHS2_PLL_DELAY_VALUE    0x1
-+#define   PCI_GLI_9755_UHS2_PLL_PDRST      BIT(27)
-+#define   GLI_9755_UHS2_PLL_PDRST_VALUE    0x1
-+
-+#define PCI_GLI_9755_UHS2_SERDES	    0x70
-+#define   PCI_GLI_9755_UHS2_SERDES_INTR       GENMASK(2, 0)
-+#define   GLI_9755_UHS2_SERDES_INTR_VALUE     0x3
-+#define   PCI_GLI_9755_UHS2_SERDES_ZC1        BIT(3)
-+#define   GLI_9755_UHS2_SERDES_ZC1_VALUE      0x0
-+#define   PCI_GLI_9755_UHS2_SERDES_ZC2        GENMASK(7, 4)
-+#define   GLI_9755_UHS2_SERDES_ZC2_DEFAULT    0xB
-+#define   GLI_9755_UHS2_SERDES_ZC2_SANDISK    0x0
-+#define   PCI_GLI_9755_UHS2_SERDES_TRAN       GENMASK(27, 24)
-+#define   GLI_9755_UHS2_SERDES_TRAN_VALUE     0xC
-+#define   PCI_GLI_9755_UHS2_SERDES_RECV       GENMASK(31, 28)
-+#define   GLI_9755_UHS2_SERDES_RECV_VALUE     0xF
-+
- #define GLI_MAX_TUNING_LOOP 40
- 
- /* Genesys Logic chipset */
-@@ -262,6 +299,324 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
- 	return 0;
- }
- 
-+static inline void gl9755_wt_on(struct pci_dev *pdev)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
-+	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9755_WT_EN_ON)
-+		return;
-+
-+	wt_value &= ~PCI_GLI_9755_WT_EN;
-+	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_ON);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
-+}
-+
-+static inline void gl9755_wt_off(struct pci_dev *pdev)
-+{
-+	u32 wt_value;
-+	u32 wt_enable;
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_WT, &wt_value);
-+	wt_enable = FIELD_GET(PCI_GLI_9755_WT_EN, wt_value);
-+
-+	if (wt_enable == GLI_9755_WT_EN_OFF)
-+		return;
-+
-+	wt_value &= ~PCI_GLI_9755_WT_EN;
-+	wt_value |= FIELD_PREP(PCI_GLI_9755_WT_EN, GLI_9755_WT_EN_OFF);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_WT, wt_value);
-+}
-+
-+static void gl9755_vendor_init(struct sdhci_host *host)
-+{
-+	struct sdhci_pci_slot *slot = sdhci_priv(host);
-+	struct pci_dev *pdev = slot->chip->pdev;
-+	u32 serdes;
-+	u32 pllssc;
-+	u32 uhs2_pll;
-+
-+	gl9755_wt_on(pdev);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, &serdes);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_TRAN;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_TRAN,
-+			     GLI_9755_UHS2_SERDES_TRAN_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_RECV;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_RECV,
-+			     GLI_9755_UHS2_SERDES_RECV_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_INTR;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_INTR,
-+			     GLI_9755_UHS2_SERDES_INTR_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC1;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC1,
-+			     GLI_9755_UHS2_SERDES_ZC1_VALUE);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC2;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+			     GLI_9755_UHS2_SERDES_ZC2_DEFAULT);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, serdes);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_PLL, &uhs2_pll);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_SSC;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_SSC,
-+			  GLI_9755_UHS2_PLL_SSC_VALUE);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_DELAY;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_DELAY,
-+			  GLI_9755_UHS2_PLL_DELAY_VALUE);
-+	uhs2_pll &= ~PCI_GLI_9755_UHS2_PLL_PDRST;
-+	uhs2_pll |= FIELD_PREP(PCI_GLI_9755_UHS2_PLL_PDRST,
-+			  GLI_9755_UHS2_PLL_PDRST_VALUE);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_PLL, uhs2_pll);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_PLLSSC, &pllssc);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_RTL;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_RTL,
-+			  GLI_9755_PLLSSC_RTL_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_TRANS_PASS;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_TRANS_PASS,
-+			  GLI_9755_PLLSSC_TRANS_PASS_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_RECV;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_RECV,
-+			  GLI_9755_PLLSSC_RECV_VALUE);
-+	pllssc &= ~PCI_GLI_9755_PLLSSC_TRAN;
-+	pllssc |= FIELD_PREP(PCI_GLI_9755_PLLSSC_TRAN,
-+			  GLI_9755_PLLSSC_TRAN_VALUE);
-+	pci_write_config_dword(pdev, PCI_GLI_9755_PLLSSC, pllssc);
-+
-+	gl9755_wt_off(pdev);
-+}
-+
-+static void gl9755_pre_detect_init(struct sdhci_host *host)
-+{
-+	/* GL9755 need more time on UHS2 detect flow */
-+	sdhci_writeb(host, 0xA7, SDHCI_UHS2_TIMER_CTRL);
-+}
-+
-+static void gl9755_post_attach_sd(struct sdhci_host *host)
-+{
-+	struct pci_dev *pdev;
-+	struct sdhci_pci_chip *chip;
-+	struct sdhci_pci_slot *slot;
-+	u32 serdes;
-+
-+	slot = sdhci_priv(host);
-+	chip = slot->chip;
-+	pdev = chip->pdev;
-+
-+	gl9755_wt_on(pdev);
-+
-+	pci_read_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, &serdes);
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC1;
-+	serdes &= ~PCI_GLI_9755_UHS2_SERDES_ZC2;
-+	serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC1,
-+			     GLI_9755_UHS2_SERDES_ZC1_VALUE);
-+
-+	/* the manfid of sandisk card is 0x3 */
-+	if (host->mmc->card->cid.manfid == 0x3)
-+		serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+				     GLI_9755_UHS2_SERDES_ZC2_SANDISK);
-+	else
-+		serdes |= FIELD_PREP(PCI_GLI_9755_UHS2_SERDES_ZC2,
-+				     GLI_9755_UHS2_SERDES_ZC2_DEFAULT);
-+
-+	pci_write_config_dword(pdev, PCI_GLI_9755_UHS2_SERDES, serdes);
-+
-+	gl9755_wt_off(pdev);
-+}
-+
-+static void gl9755_overcurrent_event_enable(struct sdhci_host *host,
-+					    bool enable)
-+{
-+	u32 mask;
-+
-+	mask = sdhci_readl(host, SDHCI_SIGNAL_ENABLE);
-+	if (enable)
-+		mask |= SDHCI_INT_BUS_POWER;
-+	else
-+		mask &= ~SDHCI_INT_BUS_POWER;
-+
-+	sdhci_writel(host, mask, SDHCI_SIGNAL_ENABLE);
-+
-+	mask = sdhci_readl(host, SDHCI_INT_ENABLE);
-+	if (enable)
-+		mask |= SDHCI_INT_BUS_POWER;
-+	else
-+		mask &= ~SDHCI_INT_BUS_POWER;
-+
-+	sdhci_writel(host, mask, SDHCI_INT_ENABLE);
-+}
-+
-+static void gl9755_set_power(struct sdhci_host *host, unsigned char mode,
-+			     unsigned short vdd, unsigned short vdd2)
-+{
-+	u8 pwr = 0;
-+
-+	if (mode != MMC_POWER_OFF) {
-+		switch (1 << vdd) {
-+		case MMC_VDD_165_195:
-+		/*
-+		 * Without a regulator, SDHCI does not support 2.0v
-+		 * so we only get here if the driver deliberately
-+		 * added the 2.0v range to ocr_avail. Map it to 1.8v
-+		 * for the purpose of turning on the power.
-+		 */
-+		case MMC_VDD_20_21:
-+			pwr = SDHCI_POWER_180;
-+			break;
-+		case MMC_VDD_29_30:
-+		case MMC_VDD_30_31:
-+			pwr = SDHCI_POWER_300;
-+			break;
-+		case MMC_VDD_32_33:
-+		case MMC_VDD_33_34:
-+			pwr = SDHCI_POWER_330;
-+			break;
-+		default:
-+			WARN(1, "%s: Invalid vdd %#x\n",
-+			     mmc_hostname(host->mmc), vdd);
-+			break;
-+		}
-+	}
-+
-+	if (mode != MMC_POWER_OFF) {
-+		if (vdd2 != (unsigned short)-1) {
-+			switch (1 << vdd2) {
-+			case MMC_VDD2_165_195:
-+				pwr |= SDHCI_VDD2_POWER_180;
-+				break;
-+			default:
-+				WARN(1, "%s: Invalid vdd2 %#x\n",
-+				     mmc_hostname(host->mmc), vdd2);
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (host->pwr == pwr)
-+		return;
-+
-+	host->pwr = pwr;
-+
-+	if (pwr == 0) {
-+		gl9755_overcurrent_event_enable(host, false);
-+		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-+	} else {
-+		gl9755_overcurrent_event_enable(host, false);
-+		sdhci_writeb(host, 0, SDHCI_POWER_CONTROL);
-+
-+		pwr |= SDHCI_POWER_ON;
-+		if (vdd2 != (unsigned short)-1)
-+			pwr |= SDHCI_VDD2_POWER_ON;
-+
-+		sdhci_writeb(host, pwr&0xf, SDHCI_POWER_CONTROL);
-+		/* wait stable */
-+		mdelay(5);
-+		sdhci_writeb(host, pwr, SDHCI_POWER_CONTROL);
-+		/* wait stable */
-+		mdelay(5);
-+		gl9755_overcurrent_event_enable(host, true);
-+	}
-+}
-+
-+static bool sdhci_wait_clock_stable(struct sdhci_host *host)
-+{
-+	u16 clk = 0;
-+	ktime_t timeout;
-+
-+	/* Wait max 20 ms */
-+	timeout = ktime_add_ms(ktime_get(), 20);
-+	while (1) {
-+		bool timedout = ktime_after(ktime_get(), timeout);
-+
-+		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+		if (clk & SDHCI_CLOCK_INT_STABLE)
-+			break;
-+		if (timedout) {
-+			pr_err("%s: Internal clock never stabilised.\n",
-+				mmc_hostname(host->mmc));
-+			sdhci_dumpregs(host);
-+			return false;
-+		}
-+		udelay(10);
-+	}
-+	return true;
-+}
-+
-+static void gl9755_uhs2_reset_sd_tran(struct sdhci_host *host)
-+{
-+	/* do this on UHS2 mode */
-+	if (host->mmc->flags & MMC_UHS2_INITIALIZED) {
-+		sdhci_uhs2_reset(host, SDHCI_UHS2_SW_RESET_SD);
-+		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-+		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-+		sdhci_uhs2_clear_set_irqs(host,
-+					  SDHCI_INT_ALL_MASK,
-+					  SDHCI_UHS2_ERR_INT_STATUS_MASK);
-+	}
-+}
-+
-+static void sdhci_gl9755_reset(struct sdhci_host *host, u8 mask)
-+{
-+	ktime_t timeout;
-+	u16 ctrl2;
-+	u16 clk_ctrl;
-+
-+	/* need internal clock */
-+	if (mask & SDHCI_RESET_ALL) {
-+		ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+		clk_ctrl = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-+
-+		if ((ctrl2 & SDHCI_CTRL_V4_MODE) &&
-+		    (ctrl2 & SDHCI_CTRL_UHS2_INTERFACE_EN)) {
-+			sdhci_writew(host,
-+				     SDHCI_CLOCK_INT_EN,
-+				     SDHCI_CLOCK_CONTROL);
-+		} else {
-+			sdhci_writew(host,
-+				     SDHCI_CLOCK_INT_EN,
-+				     SDHCI_CLOCK_CONTROL);
-+			sdhci_wait_clock_stable(host);
-+			sdhci_writew(host,
-+				     SDHCI_CTRL_V4_MODE,
-+				     SDHCI_HOST_CONTROL2);
-+		}
-+	}
-+
-+	sdhci_writeb(host, mask, SDHCI_SOFTWARE_RESET);
-+
-+	/* reset sd-tran on UHS2 mode if need to reset cmd/data */
-+	if ((mask & SDHCI_RESET_CMD) | (mask & SDHCI_RESET_DATA))
-+		gl9755_uhs2_reset_sd_tran(host);
-+
-+	if (mask & SDHCI_RESET_ALL)
-+		host->clock = 0;
-+
-+	/* Wait max 100 ms */
-+	timeout = ktime_add_ms(ktime_get(), 100);
-+
-+	/* hw clears the bit when it's done */
-+	while (1) {
-+		bool timedout = ktime_after(ktime_get(), timeout);
-+
-+		if (!(sdhci_readb(host, SDHCI_SOFTWARE_RESET) & mask))
-+			break;
-+		if (timedout) {
-+			pr_err("%s: Reset 0x%x never completed.\n",
-+				mmc_hostname(host->mmc), (int)mask);
-+			sdhci_dumpregs(host);
-+			/* manual clear */
-+			sdhci_writeb(host, 0, SDHCI_SOFTWARE_RESET);
-+			return;
-+		}
-+		udelay(10);
-+	}
-+}
-+
- static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
- {
- 	struct sdhci_host *host = slot->host;
-@@ -278,6 +633,7 @@ static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
- 
- 	slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
- 	sdhci_enable_v4_mode(host);
-+	gl9755_vendor_init(host);
- 
- 	return 0;
- }
-@@ -319,11 +675,14 @@ static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
- 
- static const struct sdhci_ops sdhci_gl9755_ops = {
- 	.set_clock		= sdhci_set_clock,
-+	.set_power              = gl9755_set_power,
- 	.enable_dma		= sdhci_pci_enable_dma,
- 	.set_bus_width		= sdhci_set_bus_width,
--	.reset			= sdhci_reset,
-+	.reset			= sdhci_gl9755_reset,
- 	.set_uhs_signaling	= sdhci_set_uhs_signaling,
- 	.voltage_switch		= sdhci_gli_voltage_switch,
-+	.uhs2_pre_detect_init    = gl9755_pre_detect_init,
-+	.uhs2_post_attach_sd    = gl9755_post_attach_sd,
- };
- 
- const struct sdhci_pci_fixes sdhci_gl9755 = {
--- 
-2.24.1
-
+On 2019-11-27 14:31, Sibi Sankar wrote:
+> Hey Odelu,
+> 
+> On 2019-11-26 20:31, Odelu Kukatla wrote:
+>> The Qualcomm SC7180 platform has several bus fabrics that could be
+>> controlled and tuned dynamically according to the bandwidth demand.
+>> 
+>> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+>> ---
+>>  .../bindings/interconnect/qcom,bcm-voter.yaml      |   1 +
+>>  .../bindings/interconnect/qcom,sc7180.yaml         | 155 
+>> +++++++++++++++++++++
+>>  include/dt-bindings/interconnect/qcom,sc7180.h     | 149 
+>> ++++++++++++++++++++
+>>  3 files changed, 305 insertions(+)
+>>  create mode 100644
+>> Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>>  create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
+>> 
+>> diff --git
+>> a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>> b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>> index 74f0715..55c9f34 100644
+>> --- 
+>> a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>> +++ 
+>> b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+>> @@ -19,6 +19,7 @@ description: |
+>>  properties:
+>>    compatible:
+>>      enum:
+>> +      - qcom,sc7180-bcm-voter
+>>        - qcom,sdm845-bcm-voter
+>> 
+>>  required:
+>> diff --git
+>> a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>> b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>> new file mode 100644
+>> index 0000000..487da5e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+>> @@ -0,0 +1,155 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title:  Qualcomm SC7180 Network-On-Chip Interconnect
+>> +
+> 
+> seems to be same as the SDM845
+> icc description can't we just
+> re-use/add it to that?
+> 
+No, NoC topology is different b/w SDM845 and SC7180. we need to have 
+separate file for SC7180.
+>> +maintainers:
+>> +  - David Dai <daidavid1@codeaurora.org>
+>> +
+>> +description: |
+>> +   SC7180 interconnect providers support system bandwidth 
+>> requirements through
+>> +   RPMh hardware accelerators known as Bus Clock Manager (BCM). The 
+>> provider is
+>> +   able to communicate with the BCM through the Resource State
+>> Coordinator (RSC)
+>> +   associated with each execution environment. Provider nodes must 
+>> point to at
+>> +   least one RPMh device child node pertaining to their RSC and each 
+>> provider
+>> +   can map to multiple RPMh resources.
+>> +
+>> +properties:
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,sc7180-aggre1-noc
+>> +      - qcom,sc7180-aggre2-noc
+>> +      - qcom,sc7180-camnoc-virt
+>> +      - qcom,sc7180-compute-noc
+>> +      - qcom,sc7180-config-noc
+>> +      - qcom,sc7180-dc-noc
+>> +      - qcom,sc7180-gem-noc
+>> +      - qcom,sc7180-ipa-virt
+>> +      - qcom,sc7180-mc-virt
+>> +      - qcom,sc7180-mmss-noc
+>> +      - qcom,sc7180-npu-noc
+>> +      - qcom,sc7180-qup-virt
+>> +      - qcom,sc7180-system-noc
+>> +
+>> +  '#interconnect-cells':
+>> +    const: 1
+>> +
+>> +  qcom,bcm-voters:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      List of phandles to qcom,bcm-voter nodes that are required by
+>> +      this interconnect to send RPMh commands.
+>> +
+>> +  qcom,bcm-voter-names:
+>> +    $ref: /schemas/types.yaml#/definitions/string-array
+>> +    description: |
+>> +      Names for each of the qcom,bcm-voters specified.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#interconnect-cells'
+>> +  - qcom,bcm-voters
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +      #include <dt-bindings/interconnect/qcom,sc7180.h>
+>> +
+>> +      config_noc: interconnect@1500000 {
+>> +            compatible = "qcom,sc7180-config-noc";
+>> +            reg = <0 0x01500000 0 0x28000>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      system_noc: interconnect@1620000 {
+>> +            compatible = "qcom,sc7180-system-noc";
+>> +            reg = <0 0x01620000 0 0x17080>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      mc_virt: interconnect@1630000 {
+>> +            compatible = "qcom,sc7180-mc-virt";
+>> +            reg = <0 0x01630000 0 0x4000>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      qup_virt: interconnect@1650000 {
+>> +            compatible = "qcom,sc7180-qup-virt";
+>> +            reg = <0 0x01650000 0 0x4000>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      aggre1_noc: interconnect@16e0000 {
+>> +            compatible = "qcom,sc7180-aggre1-noc";
+>> +            reg = <0 0x016e0000 0 0x15080>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      aggre2_noc: interconnect@1700000 {
+>> +            compatible = "qcom,sc7180-aggre2-noc";
+>> +            reg = <0 0x01700000 0 0x1f880>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      compute_noc: interconnect@170e000 {
+>> +            compatible = "qcom,sc7180-compute-noc";
+>> +            reg = <0 0x0170e000 0 0x11880>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      mmss_noc: interconnect@1740000 {
+>> +            compatible = "qcom,sc7180-mmss-noc";
+>> +            reg = <0 0x01740000 0 0x1c100>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      ipa_virt: interconnect@1e00000 {
+>> +            compatible = "qcom,sc7180-ipa-virt";
+>> +            reg = <0 0x01e00000 0 0x4000>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      dc_noc: interconnect@9160000 {
+>> +            compatible = "qcom,sc7180-dc-noc";
+>> +            reg = <0 0x09160000 0 0x03200>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      gem_noc: interconnect@9680000 {
+>> +            compatible = "qcom,sc7180-gem-noc";
+>> +            reg = <0 0x09680000 0 0x3e200>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      npu_noc: interconnect@9990000 {
+>> +            compatible = "qcom,sc7180-npu-noc";
+>> +            reg = <0 0x09990000 0 0x1600>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> +
+>> +      camnoc_virt: interconnect@ac00000 {
+>> +            compatible = "qcom,sc7180-camnoc-virt";
+>> +            reg = <0 0x0ac00000 0 0x4000>;
+>> +            #interconnect-cells = <1>;
+>> +            qcom,bcm-voters = <&apps_bcm_voter>;
+>> +      };
+>> diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h
+>> b/include/dt-bindings/interconnect/qcom,sc7180.h
+>> new file mode 100644
+>> index 0000000..b762bc3
+>> --- /dev/null
+>> +++ b/include/dt-bindings/interconnect/qcom,sc7180.h
+>> @@ -0,0 +1,149 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Qualcomm SC7180 interconnect IDs
+>> + *
+>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
+>> +#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
+> 
+> Please use local ids instead, the
+> following way of defining nodes will
+> lead to unnecessarily large array
+> sizes.
+> 
+I will fix it. Thank you!
+>> +
+>> +#define MASTER_APPSS_PROC			0
+>> +#define MASTER_SYS_TCU				1
+>> +#define MASTER_NPU_SYS				2
+>> +#define MASTER_IPA_CORE				3
+>> +#define MASTER_LLCC				4
+>> +#define MASTER_A1NOC_CFG			5
+>> +#define MASTER_A2NOC_CFG			6
+>> +#define MASTER_CNOC_DC_NOC			7
+>> +#define MASTER_GEM_NOC_CFG			8
+>> +#define MASTER_CNOC_MNOC_CFG			9
+>> +#define MASTER_NPU_NOC_CFG			10
+>> +#define MASTER_QDSS_BAM				11
+>> +#define MASTER_QSPI				12
+>> +#define MASTER_QUP_0				13
+>> +#define MASTER_QUP_1				14
+>> +#define MASTER_SNOC_CFG				15
+>> +#define MASTER_A1NOC_SNOC			16
+>> +#define MASTER_A2NOC_SNOC			17
+>> +#define MASTER_COMPUTE_NOC			18
+>> +#define MASTER_GEM_NOC_SNOC			19
+>> +#define MASTER_MNOC_HF_MEM_NOC			20
+>> +#define MASTER_MNOC_SF_MEM_NOC			21
+>> +#define MASTER_NPU				22
+>> +#define MASTER_SNOC_CNOC			23
+>> +#define MASTER_SNOC_GC_MEM_NOC			24
+>> +#define MASTER_SNOC_SF_MEM_NOC			25
+>> +#define MASTER_QUP_CORE_0			26
+>> +#define MASTER_QUP_CORE_1			27
+>> +#define MASTER_CAMNOC_HF0			28
+>> +#define MASTER_CAMNOC_HF1			29
+>> +#define MASTER_CAMNOC_HF0_UNCOMP		30
+>> +#define MASTER_CAMNOC_HF1_UNCOMP		31
+>> +#define MASTER_CAMNOC_SF			32
+>> +#define MASTER_CAMNOC_SF_UNCOMP			33
+>> +#define MASTER_CRYPTO				34
+>> +#define MASTER_GFX3D				35
+>> +#define MASTER_IPA				36
+>> +#define MASTER_MDP0				37
+>> +#define MASTER_NPU_PROC				38
+>> +#define MASTER_PIMEM				39
+>> +#define MASTER_ROTATOR				40
+>> +#define MASTER_VIDEO_P0				41
+>> +#define MASTER_VIDEO_PROC			42
+>> +#define MASTER_QDSS_DAP				43
+>> +#define MASTER_QDSS_ETR				44
+>> +#define MASTER_SDCC_2				45
+>> +#define MASTER_UFS_MEM				46
+>> +#define MASTER_USB3				47
+>> +#define MASTER_EMMC				48
+>> +#define SLAVE_EBI1				512
+> 
+> Shouldn't the node ids be just
+> sequential?
+> 
+I will address  it.
+>> +#define SLAVE_IPA_CORE				513
+>> +#define SLAVE_A1NOC_CFG				514
+>> +#define SLAVE_A2NOC_CFG				515
+>> +#define SLAVE_AHB2PHY_SOUTH			516
+>> +#define SLAVE_AHB2PHY_CENTER			517
+>> +#define SLAVE_AOP				518
+>> +#define SLAVE_AOSS				519
+>> +#define SLAVE_APPSS				520
+>> +#define SLAVE_BOOT_ROM				521
+>> +#define SLAVE_NPU_CAL_DP0			522
+>> +#define SLAVE_CAMERA_CFG			523
+>> +#define SLAVE_CAMERA_NRT_THROTTLE_CFG		524
+>> +#define SLAVE_CAMERA_RT_THROTTLE_CFG		525
+>> +#define SLAVE_CLK_CTL				526
+>> +#define SLAVE_NPU_CP				527
+>> +#define SLAVE_RBCPR_CX_CFG			528
+>> +#define SLAVE_RBCPR_MX_CFG			529
+>> +#define SLAVE_CRYPTO_0_CFG			530
+>> +#define SLAVE_DCC_CFG				531
+>> +#define SLAVE_CNOC_DDRSS			532
+>> +#define SLAVE_DISPLAY_CFG			533
+>> +#define SLAVE_DISPLAY_RT_THROTTLE_CFG		534
+>> +#define SLAVE_DISPLAY_THROTTLE_CFG		535
+>> +#define SLAVE_NPU_INT_DMA_BWMON_CFG		536
+>> +#define SLAVE_NPU_DPM				537
+>> +#define SLAVE_EMMC_CFG				538
+>> +#define SLAVE_GEM_NOC_CFG			539
+>> +#define SLAVE_GLM				540
+>> +#define SLAVE_GFX3D_CFG				541
+>> +#define SLAVE_IMEM_CFG				542
+>> +#define SLAVE_IPA_CFG				543
+>> +#define SLAVE_ISENSE_CFG			544
+>> +#define SLAVE_LLCC_CFG				545
+>> +#define SLAVE_NPU_LLM_CFG			546
+>> +#define SLAVE_MSS_PROC_MS_MPU_CFG		547
+>> +#define SLAVE_CNOC_MNOC_CFG			548
+>> +#define SLAVE_CNOC_MSS				549
+>> +#define SLAVE_NPU_CFG				550
+>> +#define SLAVE_NPU_DMA_BWMON_CFG			551
+>> +#define SLAVE_NPU_PROC_BWMON_CFG		552
+>> +#define SLAVE_PDM				553
+>> +#define SLAVE_PIMEM_CFG				554
+>> +#define SLAVE_PRNG				555
+>> +#define SLAVE_QDSS_CFG				556
+>> +#define SLAVE_QM_CFG				557
+>> +#define SLAVE_QM_MPU_CFG			558
+>> +#define SLAVE_QSPI_0				559
+>> +#define SLAVE_QUP_0				560
+>> +#define SLAVE_QUP_1				561
+>> +#define SLAVE_SDCC_2				562
+>> +#define SLAVE_SECURITY				563
+>> +#define SLAVE_SNOC_CFG				564
+>> +#define SLAVE_NPU_TCM				565
+>> +#define SLAVE_TCSR				566
+>> +#define SLAVE_TLMM_WEST				567
+>> +#define SLAVE_TLMM_NORTH			568
+>> +#define SLAVE_TLMM_SOUTH			569
+>> +#define SLAVE_UFS_MEM_CFG			570
+>> +#define SLAVE_USB3				571
+>> +#define SLAVE_VENUS_CFG				572
+>> +#define SLAVE_VENUS_THROTTLE_CFG		573
+>> +#define SLAVE_VSENSE_CTRL_CFG			574
+>> +#define SLAVE_A1NOC_SNOC			575
+>> +#define SLAVE_A2NOC_SNOC			576
+>> +#define SLAVE_CAMNOC_UNCOMP			577
+>> +#define SLAVE_CDSP_GEM_NOC			578
+>> +#define SLAVE_SNOC_CNOC				579
+>> +#define SLAVE_GEM_NOC_SNOC			580
+>> +#define SLAVE_SNOC_GEM_NOC_GC			581
+>> +#define SLAVE_SNOC_GEM_NOC_SF			582
+>> +#define SLAVE_LLCC				583
+>> +#define SLAVE_MNOC_HF_MEM_NOC			584
+>> +#define SLAVE_MNOC_SF_MEM_NOC			585
+>> +#define SLAVE_NPU_COMPUTE_NOC			586
+>> +#define SLAVE_QUP_CORE_0			587
+>> +#define SLAVE_QUP_CORE_1			588
+>> +#define SLAVE_IMEM				589
+>> +#define SLAVE_PIMEM				590
+>> +#define SLAVE_SERVICE_A1NOC			591
+>> +#define SLAVE_SERVICE_A2NOC			592
+>> +#define SLAVE_SERVICE_CNOC			593
+>> +#define SLAVE_SERVICE_GEM_NOC			594
+>> +#define SLAVE_SERVICE_MNOC			595
+>> +#define SLAVE_SERVICE_NPU_NOC			596
+>> +#define SLAVE_SERVICE_SNOC			597
+>> +#define SLAVE_QDSS_STM				598
+>> +#define SLAVE_TCU				599
+>> +
+>> +#endif
