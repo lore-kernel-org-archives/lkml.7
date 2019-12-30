@@ -2,138 +2,99 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A226C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60B6C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1722084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797A320722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="miQbznhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfL3SmU (ORCPT
+        id S1727612AbfL3SnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:42:20 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48083 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfL3SmT (ORCPT
+        Mon, 30 Dec 2019 13:43:23 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40943 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfL3SnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:42:19 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ilzzO-0006Ji-I1; Mon, 30 Dec 2019 19:42:02 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F6851C0450;
-        Mon, 30 Dec 2019 19:42:01 +0100 (CET)
-Date:   Mon, 30 Dec 2019 18:42:01 -0000
-From:   "tip-bot2 for Qian Cai" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Fix an imbalance in domain_remove_cpu()
-Cc:     Qian Cai <cai@lca.pw>, Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        john.stultz@linaro.org, sboyd@kernel.org, <stable@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, tj@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Vikas Shivappa <vikas.shivappa@linux.intel.com>,
-        "x86-ml" <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191211033042.2188-1-cai@lca.pw>
-References: <20191211033042.2188-1-cai@lca.pw>
+        Mon, 30 Dec 2019 13:43:23 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c77so10889590oib.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 10:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0adwBdSRSa0FPlcHU/hDxd1UBJTeWDvsTu8kZ2SuRTE=;
+        b=miQbznhXk4hpJLs9TcBUiYHUMqvyBjkzSpnTZ/iMbNqkp3pk8S0SXEYs64hBCJ+Sr7
+         sXpKy0oPmtnQD08YMpJc3AdzAGrQ8OyyBzMVjAocsuaSrzYLGLgI63lFnojCFn7PhF76
+         GP6X/TpOvGbiKF8fUbGuazgouU5seKq+5aaRc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0adwBdSRSa0FPlcHU/hDxd1UBJTeWDvsTu8kZ2SuRTE=;
+        b=VsN8BH+N9Wz03mO2123q2E77W5aLJL4YN3lH4ePKY/57cJksL39eKHUjWghgjHNLCh
+         lBXzXPT4fKuwbSJWGknPJw3meEIra1N17uTmLOZlOKY9lJPHdEHIh2XBDyeS06RkDdbK
+         qxNlfzBiKvQ1/uLk3j7jLQRq/IJUdGCPvNWEapEVP1I9CjqeWsiZQ30lnc3DimNG15t0
+         Z2PWAqIN63qQ7CydQijRTYeELoOgZSLb/Hdxja2iOAUXXMVk/GHfjsq7ZicMERnt2XmS
+         iRhpMV5yihgmNYOOe4B2+BD3sImNDJwgwDrGGtt4uI6D2II2DXVJV920SNFelhicDg30
+         S32Q==
+X-Gm-Message-State: APjAAAW47h+0I9x4+kKfBsdoFmdZvSXtWtqxR1WTkGWkq7wnCP2lISFv
+        xWFvirgJQOavJa5RpNzp/JcVJ3erJxA=
+X-Google-Smtp-Source: APXvYqzRxZzmCKgfcf8udIzsEWn6j042rNmANRxWEQ+IbB9IZGOyjs3aXur4H2Y3DdUM9DtVY8FeVQ==
+X-Received: by 2002:aca:33d5:: with SMTP id z204mr233710oiz.120.1577731402330;
+        Mon, 30 Dec 2019 10:43:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 17sm15966152oty.48.2019.12.30.10.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 10:43:21 -0800 (PST)
+Date:   Mon, 30 Dec 2019 10:43:20 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
+ functions
+Message-ID: <201912301042.FB806E1133@keescook>
+References: <20191226152922.2034-1-ebiggers@kernel.org>
+ <20191228114918.GU2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <157773132107.30329.13477468873808479241.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191228114918.GU2827@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sat, Dec 28, 2019 at 12:49:18PM +0100, Peter Zijlstra wrote:
+> On Thu, Dec 26, 2019 at 09:29:22AM -0600, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Wrap refcount_dec_and_lock() and refcount_dec_and_lock_irqsave() with
+> > macros using __cond_lock() so that 'sparse' doesn't report warnings
+> > about unbalanced locking when using them.
+> > 
+> > This is the same thing that's done for their atomic_t equivalents.
+> > 
+> > Don't annotate refcount_dec_and_mutex_lock(), because mutexes don't
+> > currently have sparse annotations.
+> 
+> I so f'ing hate that __cond_lock() crap. Previously I've suggested
+> fixing sparse instead of making such an atrocious trainwreck of the
+> code.
 
-Commit-ID:     e278af89f1ba0a9ef20947db6afc2c9afa37e85b
-Gitweb:        https://git.kernel.org/tip/e278af89f1ba0a9ef20947db6afc2c9afa37e85b
-Author:        Qian Cai <cai@lca.pw>
-AuthorDate:    Tue, 10 Dec 2019 22:30:42 -05:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 30 Dec 2019 19:25:59 +01:00
+Ew, I never noticed these before. That is pretty ugly. Can't __acquire()
+be used directly in the functions instead of building the nasty
+wrappers?
 
-x86/resctrl: Fix an imbalance in domain_remove_cpu()
-
-A system that supports resource monitoring may have multiple resources
-while not all of these resources are capable of monitoring. Monitoring
-related state is initialized only for resources that are capable of
-monitoring and correspondingly this state should subsequently only be
-removed from these resources that are capable of monitoring.
-
-domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
-is true where it will initialize d->mbm_over. However,
-domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
-checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
-all resources, even those that never initialized d->mbm_over because
-they are not capable of monitoring. Hence, it triggers a debugobjects
-warning when offlining CPUs because those timer debugobjects are never
-initialized:
-
-  ODEBUG: assert_init not available (active state 0) object type:
-  timer_list hint: 0x0
-  WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-  debug_print_object
-  Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS I40 05/23/2018
-  RIP: 0010:debug_print_object
-  Call Trace:
-  debug_object_assert_init
-  del_timer
-  try_to_grab_pending
-  cancel_delayed_work
-  resctrl_offline_cpu
-  cpuhp_invoke_callback
-  cpuhp_thread_fun
-  smpboot_thread_fn
-  kthread
-  ret_from_fork
-
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: john.stultz@linaro.org
-Cc: sboyd@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: tj@kernel.org
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vikas Shivappa <vikas.shivappa@linux.intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191211033042.2188-1-cai@lca.pw
----
- arch/x86/kernel/cpu/resctrl/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 03eb90d..89049b3 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -618,7 +618,7 @@ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
- 		if (static_branch_unlikely(&rdt_mon_enable_key))
- 			rmdir_mondata_subdir_allrdtgrp(r, d->id);
- 		list_del(&d->list);
--		if (is_mbm_enabled())
-+		if (r->mon_capable && is_mbm_enabled())
- 			cancel_delayed_work(&d->mbm_over);
- 		if (is_llc_occupancy_enabled() &&  has_busy_rmid(r, d)) {
- 			/*
+-- 
+Kees Cook
