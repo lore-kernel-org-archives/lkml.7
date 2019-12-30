@@ -2,121 +2,76 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C0FC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F940C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A36B206E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CC520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 10:21:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfL3KUZ (ORCPT
+        id S1727386AbfL3KVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 05:20:25 -0500
-Received: from mga05.intel.com ([192.55.52.43]:5937 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfL3KUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 05:20:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 02:20:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,374,1571727600"; 
-   d="scan'208";a="224203949"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 30 Dec 2019 02:20:21 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 Dec 2019 12:20:21 +0200
-Date:   Mon, 30 Dec 2019 12:20:21 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20191230102021.GF2628@lahna.fi.intel.com>
-References: <20191229013059.495767-1-linus.walleij@linaro.org>
+        Mon, 30 Dec 2019 05:21:41 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:33837 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfL3KVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 05:21:41 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQvGz-1j9Bga1pVH-00Nyh9; Mon, 30 Dec 2019 11:21:39 +0100
+Received: by mail-qk1-f171.google.com with SMTP id r14so25901882qke.13;
+        Mon, 30 Dec 2019 02:21:39 -0800 (PST)
+X-Gm-Message-State: APjAAAUyA4e22vK4esaahomP1amX0iLHjiZSy6IE1RcmKcNQDInpwsEG
+        8hDV2gz+q8HCho9n37KLBqDVa02aMpMXpaX3vY0=
+X-Google-Smtp-Source: APXvYqzoX0OqCIDFL1Us7YAWuEEYxf5rBU2+XanWAU+CZlXKx2JHkQPiucY5FMII7XoOCHvdsvFPFmJKsXgHvGsBY5Y=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr54185045qka.286.1577701298243;
+ Mon, 30 Dec 2019 02:21:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229013059.495767-1-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191223110004.2157-1-rppt@kernel.org> <20191227110736.GA30363@rapoport-lnx>
+In-Reply-To: <20191227110736.GA30363@rapoport-lnx>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Dec 2019 11:21:22 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2ofBtooPi1ARCaHaJa9zRUVP_DKO1Td3WUgvO-0HnPSA@mail.gmail.com>
+Message-ID: <CAK8P3a2ofBtooPi1ARCaHaJa9zRUVP_DKO1Td3WUgvO-0HnPSA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] fix recent nds32 build breakage
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:OakknFVba80bLW7q5xxALsPjf5Jde0FegdpoRU/zsDbqqUStxZR
+ GjbYAX0Xmwv7iIHAyRlYFnE7Pd/W9lADl5Zp4xdYYQmx7FsyreGUgbFkpfa8qbTTln/Jx9m
+ 5Y5kPPzeDaOc8OtaGAiZVRODGR9uNN/IrW8R+tQWHWYHTe1cxQaqRSm6wxUE0D4TTqc6c3H
+ LKM0IH/UR6614wQJCleNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WdXzbd8/Mss=:0XBl1TMV7gsMoNl2Lt6gFj
+ y3q/HlJLuq0uC1DyihNlpR7SV3909d6Nl1Pl/EYa3cpjPTmGwxpqGsVajiXjqwrDSZIVKvmwN
+ kZwI280rRNKjPGmkiNyLbEMiVECS0AWm8J/g1aZ5Nq5yL+1h7dSJddIrPpduXrG89U2COcqgb
+ E+2e6N2POW/i4YkvcmVBdMGUR3hlWISb7Fn9ffd2fI0xU21dM3l2MdGzcBxdB6e7v4qfU1Ayw
+ u4LND2hkosr0q0d6k+pcNXDU0i5SgOuCJvUAQnIJR2A4DxPl1JWr0ZIrsPNnN3sNhhg8Z8F6r
+ 7SuCMPn1rv0xdSpWoWNKXF5Zs1o9UYC9OKjGnO7aRjYn3/Rue66eAyIRp9aY1089QwEnihwNG
+ mw77E9AKo/9ZbOKtlk01A6CKSx46DLuQKMoVFiiZIW4bQAalMqsBWKhFkOvv1sJIyWK5EzLcz
+ Jiz84dh3btBXJhsGcYBKl7KKQhGe7sPsMnjtM784mwI8dOWoou8K1UgX9MuW8zZ0Mp1Md/rmO
+ 0GSY+1JjjLl7zo4NpFtLeBokVznrA8wHyj6UVPc/1q07ahklklPfKQ7HcqsbsPX5Px31bDeXk
+ h9mBj7VzKD9ZlBYCnEeioXaXwNu1ubaTLwgs9ki/wsghh4JjYql9aM336tPouoaluLa4WRzkz
+ 5TZHQ8Szb9tVL4yXTgq0p4mVqJp/YJaw6+MkASao7R/cy9MKml/qpvePYQ6rJREDRZrQegoUM
+ Pg63sfWjoXyX1rJSZHsevl8tqYxF1JIMq+Ir97bfcWfc4miBuBJwTzO8FM9lyEAepiGV4rNra
+ 5c+h8Mzp6j91LOWaBkE6dCjclsBwUuyjiXKo4GeORoMfWZ7h9cNRPBlrWcsun7K5+JCecnsAO
+ JOJu4coMZyLGltlOOLqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
-> 
-> Set up the pin ranges using the new callback.
+On Fri, Dec 27, 2019 at 12:07 PM Mike Rapoport <rppt@kernel.org> wrote:
+> Can you please take these via asm-generic tree?
 
-Maybe have this one split as a separate patch? Same what we do for
-Baytrail and Cherryview.
+Merged into my asm-generic tree now, I'll send a pull request in a few days
+after the build bots have had a chance to check for remaining problems.
 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/intel/pinctrl-intel.c | 61 +++++++++++++++------------
->  1 file changed, 35 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-> index 4860bc9a4e48..ffacd77861f7 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -1160,8 +1160,8 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
->  	return ret;
->  }
->  
-> -static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
-> -				     const struct intel_community *community)
-> +static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
-> +				const struct intel_community *community)
->  {
->  	int ret = 0, i;
->  
-> @@ -1181,6 +1181,24 @@ static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
->  	return ret;
->  }
->  
-> +static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
-> +{
-> +	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	int ret, i;
-> +
-> +	for (i = 0; i < pctrl->ncommunities; i++) {
-> +		struct intel_community *community = &pctrl->communities[i];
-> +
-> +		ret = intel_gpio_add_community_ranges(pctrl, community);
-> +		if (ret) {
-> +			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
->  {
->  	const struct intel_community *community;
-> @@ -1205,7 +1223,8 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
->  
->  static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
->  {
-> -	int ret, i;
-> +	int ret;
-> +	struct gpio_irq_chip *girq;
-
-Nit:
-
-Can you order these in "reverse christmas tree" like,
-
-	struct gpio_irq_chip *girq;
-	int ret;
-
-Otherwise looks good to me, thanks!
+       Arnd
