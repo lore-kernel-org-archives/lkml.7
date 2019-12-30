@@ -2,80 +2,139 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC87C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8A6C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A5D206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0F4206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="HqCV+yaq"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R4GSPCV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfL3VJf (ORCPT
+        id S1727767AbfL3VOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 16:09:35 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:41445 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfL3VJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 16:09:34 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id cc421e35;
-        Mon, 30 Dec 2019 20:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=6bUp3Unh4J5ntgEcnJwDilbtlDo=; b=HqCV+y
-        aqge5F+06cKgztdUwKCaXLUh3/yblDQ4rDD3q3hZFy43Nw2+moMQGc5bLj1SkGgi
-        frZecd04k7WC5zWIpOPYTz7LwnMirenNoImVd4pgnY+1ZqClE5TYDIPTms//4EJ9
-        Qr2QYRh2w5e23TB2+AX6yvB+uIhHxYPld5NTC/kfyh1iX1GPqcEhWMtJSay9/TlQ
-        TRxAN24gygo5dRZPREc5R07+3xcoPDW9s1Km3CRZFyIBiJutNpK1Kiru5I7C74+I
-        G9nQCIVfdmzMgl87jVYNa/cSnP3LGUhQYorZsC7sdXL1UoDhuJy4KA7Rd/FF+rhA
-        uD+YZIoQJA+IfaIg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id fa0f9c9b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Mon, 30 Dec 2019 20:11:23 +0000 (UTC)
-Received: by mail-oi1-f170.google.com with SMTP id i1so11478210oie.8;
-        Mon, 30 Dec 2019 13:09:32 -0800 (PST)
-X-Gm-Message-State: APjAAAXV5b60Nw33JcRVh4nggeMk6YkAwguQndY3vvlrQf8uwZkuvNTq
-        C58EAPFFFnriJ1sSRUXJYPrXgR1lnBz7/glcr0s=
-X-Google-Smtp-Source: APXvYqyuMCRQ4VcLihFnxz8xJ9iUYopeGnYSqitkoalUwep0OXon+FupZMuh+YSXdCyEyaIgYPN8EeXmHxElcAyDLgE=
-X-Received: by 2002:aca:2109:: with SMTP id 9mr351507oiz.119.1577740171616;
- Mon, 30 Dec 2019 13:09:31 -0800 (PST)
+        Mon, 30 Dec 2019 16:14:19 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:33292 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfL3VOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 16:14:18 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 790912010C33;
+        Mon, 30 Dec 2019 13:14:17 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 790912010C33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1577740457;
+        bh=Bu/8zUbgFjbXS2yKm478+Ao0RnZWaeg5lkupjtP5E20=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=R4GSPCV4i4L3hSCC5v4j4e4C8mOPWZrG8yxCrzHNEwPiopgjoJL2unWPBawMxBfUN
+         J49aaMvARp4xbVFz3Dq7Oi8HAFLG7gLa+X6EgzM7Ej4Mzi+1TAOsbSoSwUPiZGOZxX
+         K26E9RmJyUlOYKa0LjstXcvvCFO8fYElxNX/jI3I=
+Subject: Re: [IMA] 11b771ffff:
+ BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, lkp@lists.01.org
+References: <20191227142335.GE2760@shao2-debian>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <2a831fe9-30e5-63b4-af10-a69f327f7fb7@linux.microsoft.com>
+Date:   Mon, 30 Dec 2019 13:14:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
- <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
- <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
- <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
- <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
- <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
- <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
- <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
- <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com> <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
-In-Reply-To: <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 30 Dec 2019 22:09:20 +0100
-X-Gmail-Original-Message-ID: <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
-Message-ID: <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
-Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Christian Brauner <christian.brauner@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191227142335.GE2760@shao2-debian>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote
-> Is this immediately before/after the syscall instruction or the
-> indirect function call?
+On 12/27/19 6:23 AM, kernel test robot wrote:
 
-It's immediately after/before the call to the VDSO function itself.
-Next I'll try to instrument the VDSO to get closer to that syscall.
+Hi Rong,
 
-I produced those reg dumps by hooking the page fault handler in the
-kernel to print them and then disabling aslr and sticking a
-`*(volatile int *)0 = 0;` in the code. Pretty gnarly.
+> 
+> 
+> To reproduce:
+> 
+>          # build kernel
+> 	cd linux
+> 	cp config-5.5.0-rc1-00011-g11b771ffff8fc .config
+> 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+> 
+>          git clone https://github.com/intel/lkp-tests.git
+>          cd lkp-tests
+>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> 
+> 
+> 
+> Thanks,
+> Rong Chen
+> 
+
+Thanks for reporting this issue.
+
+I built the kernel with the config you'd provided.
+
+When running lkp-tests using the command line given, I see the following 
+error and the test stops.
+
+	bin/lkp qemu -k ../linux-5.5/arch/x86/boot/bzImage job-script
+
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c/linux-headers.cgz 
+-N -P 
+/root/.lkp/cache/pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c
+
+Failed to download 
+pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c/linux-headers.cgz
+
+Please let me know what I am missing.
+
+Full output of the command is given below:
+
+bin/lkp qemu -k ../linux-5.5/arch/x86/boot/bzImage job-script
+
+result_root: 
+/root/.lkp//result/kernel_selftests/kselftests-03/vm-snb/debian-x86_64-2019-11-14.cgz/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c/8
+downloading initrds ...
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/debian/debian-x86_64-2019-11-14.cgz 
+-N -P /root/.lkp/cache/osimage/debian
+408859 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz 
+-N -P /root/.lkp/cache/osimage/deps/debian-x86_64-2018-04-03.cgz
+1414 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz 
+-N -P /root/.lkp/cache/osimage/deps/debian-x86_64-2018-04-03.cgz
+1670 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz 
+-N -P /root/.lkp/cache/osimage/deps/debian-x86_64-2018-04-03.cgz
+8268 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/deps/debian-x86_64-2018-04-03.cgz/kernel_selftests_2019-12-25.cgz 
+-N -P /root/.lkp/cache/osimage/deps/debian-x86_64-2018-04-03.cgz
+932372 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/osimage/pkg/debian-x86_64-2018-04-03.cgz/kernel_selftests-x86_64-0dcf36db-1_2019-12-25.cgz 
+-N -P /root/.lkp/cache/osimage/pkg/debian-x86_64-2018-04-03.cgz
+30125 blocks
+/usr/bin/wget -q --timeout=1800 --tries=1 --local-encoding=UTF-8 
+https://download.01.org/0day-ci/lkp-qemu/pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c/linux-headers.cgz 
+-N -P 
+/root/.lkp/cache/pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c
+Failed to download 
+pkg/linux/x86_64-rhel-7.6/gcc-7/11b771ffff8fc0bfc176b829d986896a7d97a44c/linux-headers.cgz
+
+
