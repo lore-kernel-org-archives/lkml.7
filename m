@@ -2,99 +2,101 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29848C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D96AC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD5720722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577727311;
-	bh=DNIHEwTzKQMR+/BqGXzilYZBBoagRC50oVuvJJO+oJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D1tl4ByMef0yBhPYMHLp+pdhwyz2Fov3bs819lOdFIt3aGFnFxX8ggEQoYOb04VXT
-	 r8B4FNEx0Ul9Rv39GX2AbsuVs6aoUkMoWM9strWpUGZ1/EL/IXJTNkIYL6Iq18ZIZv
-	 UCV8umdvkhL/e8ZLSEBJHZqQxbwWRZXknDxqSp34=
+	by mail.kernel.org (Postfix) with ESMTP id 7F2282071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfL3RfK (ORCPT
+        id S1727543AbfL3RfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:35:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39800 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:35:13 -0500
+Received: from muru.com ([72.249.23.125]:49732 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3RfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:35:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E84206DB;
-        Mon, 30 Dec 2019 17:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577727309;
-        bh=DNIHEwTzKQMR+/BqGXzilYZBBoagRC50oVuvJJO+oJw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sk4Eig8P9r+8hsVKzopf1lvkiEHzMWvfNA44gGly2mm/a4q4I+3GRKnb7aMHo4L4O
-         V+m0vBF2Hc1k3dmkO8BfGaJExjkkbVWFJwW3IMfODC5JWXSO80lr4RdqZw00TLmtMY
-         /HXdlxyZyWFC8Wby7nBiHlTtIe1hoHS6BAVb+iaE=
-Date:   Mon, 30 Dec 2019 18:35:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 000/219] 4.19.92-stable review
-Message-ID: <20191230173506.GB1350143@kroah.com>
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191230171959.GC12958@roeck-us.net>
+        id S1726602AbfL3RfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:35:12 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2EFF68027;
+        Mon, 30 Dec 2019 17:35:51 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 09:35:07 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: Re: Droid 4 on 5.5-rc3
+Message-ID: <20191230173507.GM35479@atomide.com>
+References: <20191228162929.GA29269@duo.ucw.cz>
+ <20191228193622.GA13047@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191230171959.GC12958@roeck-us.net>
+In-Reply-To: <20191228193622.GA13047@duo.ucw.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:19:59AM -0800, Guenter Roeck wrote:
-> On Sun, Dec 29, 2019 at 06:16:42PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.92 release.
-> > There are 219 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+* Pavel Machek <pavel@ucw.cz> [191228 19:37]:
+> Hi!
+> 
+> > 5.4-based kernel works ok on my droid 4.
 > > 
-> > Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
-> > Anything received after that time might be too late.
+> > 5.5-rc3 based kernel has problems; it reboots when I try to kexec it.
 > > 
-> Build results:
-> 	total: 156 pass: 141 fail: 15
-> Failed builds:
-> 	i386:tools/perf
-> 	<all mips>
-> 	x86_64:tools/perf
-> Qemu test results:
-> 	total: 381 pass: 316 fail: 65
-> Failed tests:
-> 	<all mips>
-> 	<all ppc64_book3s_defconfig>
+> > Vanilla 5.5-rc3 reboots, too.
+> > 
+> > If you have any ideas, let me know.
 > 
-> perf as with v4.14.y.
-> 
-> arch/mips/kernel/syscall.c:40:10: fatal error: asm/sync.h: No such file or directory
+> I managed to get partial serial dump. This should be 5.5-rc3: And then
+> a bit better serial dump (below). But it is silent for few seconds,
+> and then it restarts...
 
-Ah, will go drop the offending patch and push out a -rc2 with both of
-these issues fixed.
+If spi or regulators have problems, nothing will really work..
 
-> arch/powerpc/include/asm/spinlock.h:56:1: error: type defaults to ‘int’ in declaration of ‘DECLARE_STATIC_KEY_FALSE’
-> and similar errors.
-> 
-> The powerpc build problem is inherited from mainline and has not been fixed
-> there as far as I can see. I guess that makes 4.19.y bug-for-bug "compatible"
-> with mainline in that regard.
+> 885955] ------------[ cut here ]------------                                    
+> [    1.890624] WARNING: CPU: 0 PID: 1 at /data/fast/l/k/drivers/regulator/core.c
+> [    1.900421] Modules linked in:                                               
+> [    1.903533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc3-00624-g46cf00
+> [    1.911651] Hardware name: Generic OMAP4 (Flattened Device Tree)             
+> [    1.917724] [<c010f1e4>] (unwind_backtrace) from [<c010b4b0>] (show_stack+0x)
+> [    1.925537] [<c010b4b0>] (show_stack) from [<c08ecd18>] (dump_stack+0xb4/0xd)
+> [    1.932800] [<c08ecd18>] (dump_stack) from [<c012db50>] (__warn+0xc8/0xf0)   
+> [    1.939727] [<c012db50>] (__warn) from [<c012dc04>] (warn_slowpath_fmt+0x8c/)
+> [    1.947235] [<c012dc04>] (warn_slowpath_fmt) from [<c0423b4c>] (_regulator_p)
+> [    1.955474] [<c0423b4c>] (_regulator_put) from [<c0423b74>] (regulator_put+0)
+> [    1.963348] [<c0423b74>] (regulator_put) from [<c04ddcbc>] (release_nodes+0x)
+> [    1.971313] [<c04ddcbc>] (release_nodes) from [<c04d9e0c>] (really_probe+0x1)
+> [    1.979187] [<c04d9e0c>] (really_probe) from [<c04da204>] (driver_probe_devi)
+> [    1.987518] [<c04da204>] (driver_probe_device) from [<c04d8490>] (bus_for_ea)
+> [    1.996093] [<c04d8490>] (bus_for_each_drv) from [<c04da11c>] (__device_atta)
+> [    2.004394] [<c04da11c>] (__device_attach) from [<c04d91b4>] (bus_probe_devi)
+> [    2.012634] [<c04d91b4>] (bus_probe_device) from [<c04d7370>] (device_add+0x)
+> [    2.020599] [<c04d7370>] (device_add) from [<c04dbb04>] (platform_device_add)
+> [    2.028747] [<c04dbb04>] (platform_device_add) from [<c0503a34>] (mfd_add_de)
+> [    2.037414] [<c0503a34>] (mfd_add_devices) from [<c0503b4c>] (devm_mfd_add_d)
+> [    2.045989] [<c0503b4c>] (devm_mfd_add_devices) from [<c0503f40>] (cpcap_pro)
+> [    2.054382] [<c0503f40>] (cpcap_probe) from [<c054b4ac>] (spi_drv_probe+0x80)
+> [    2.061981] [<c054b4ac>] (spi_drv_probe) from [<c04d9edc>] (really_probe+0x1)
+> [    2.069854] [<c04d9edc>] (really_probe) from [<c04da204>] (driver_probe_devi)
+> [    2.078186] [<c04da204>] (driver_probe_device) from [<c04d8490>] (bus_for_ea)
+> [    2.086761] [<c04d8490>] (bus_for_each_drv) from [<c04da11c>] (__device_atta)
+> [    2.095062] [<c04da11c>] (__device_attach) from [<c04d91b4>] (bus_probe_devi)
+> [    2.103302] [<c04d91b4>] (bus_probe_device) from [<c04d7370>] (device_add+0x)
+> [    2.111267] [<c04d7370>] (device_add) from [<c054c044>] (spi_add_device+0x8c)
+> [    2.118957] [<c054c044>] (spi_add_device) from [<c054caa8>] (spi_register_co)
+> [    2.127868] [<c054caa8>] (spi_register_controller) from [<c054ce10>] (devm_s)
+> [    2.137847] [<c054ce10>] (devm_spi_register_controller) from [<c0550ab8>] (o)
+> [    2.147460] [<c0550ab8>] (omap2_mcspi_probe) from [<c04db92c>] (platform_drv)
 
-bug compatible is fun :(
+I'm not seeing this with v5.5-rc4 though, maybe it already got fixed?
 
-greg k-h
+Regards,
+
+Tony
