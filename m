@@ -2,123 +2,98 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44878C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA8C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193F1206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="f3cUoSm0"
+	by mail.kernel.org (Postfix) with ESMTP id 5094C206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 23:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfL3XY7 (ORCPT
+        id S1727788AbfL3X2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 18:24:59 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:64108 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727750AbfL3XY6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 18:24:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577748297; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=vBXvyWu/WmFpK3s/9QyjuCrueKEXWqV2Lek88cSNWSQ=;
- b=f3cUoSm0oeTnc+wYp/kPMhuVJ00VqBNQ1arvsjeTc1kuEtLatJiHPzk70Rad6h5uosE0O7tp
- oNGFq4LZHtQorAwRK0MjIWxIRM3/0NPJB/S2sQUTo5tvZ++O7JQ0rgbZVA+Y11ncUaZF5L1g
- iw2VJTxpNFhrCxTH8H7g58+9m5w=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0a8748.7fe87b388298-smtp-out-n02;
- Mon, 30 Dec 2019 23:24:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0007AC447A4; Mon, 30 Dec 2019 23:24:55 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A397C43383;
-        Mon, 30 Dec 2019 23:24:54 +0000 (UTC)
+        Mon, 30 Dec 2019 18:28:42 -0500
+Received: from mga17.intel.com ([192.55.52.151]:56340 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727740AbfL3X2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 18:28:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 15:28:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,376,1571727600"; 
+   d="scan'208";a="215899055"
+Received: from fjkilken-mobl.ger.corp.intel.com ([10.252.8.107])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Dec 2019 15:28:37 -0800
+Message-ID: <2c4a80e0d30bf1dfe89c6e3469d1dbfb008275fa.camel@linux.intel.com>
+Subject: Re: Patch "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+ has been added to the 5.4-stable tree
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable-commits@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 31 Dec 2019 01:28:36 +0200
+In-Reply-To: <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+References: <1577122577157232@kroah.com>
+         <CAPcyv4jfpOX85GWgNTyugWksU=e-j=RhU_fcrcHBo4GMZ8_bhw@mail.gmail.com>
+         <c6ce34b130210d2d1330fc4079d6d82bd74dcef1.camel@linux.intel.com>
+         <50217a688ffa56cf5f150ffd358daba2a88cad48.camel@linux.intel.com>
+         <20191228151526.GA6971@linux.intel.com>
+         <CAPcyv4i_frm8jZeknniPexp8AAmGsaq0_DHegmL4XZHQi1ThxA@mail.gmail.com>
+         <CAPcyv4iyQeXBWvp8V_UPBsOk29cfmTVZGYrrDgyYYqzsQvTjNA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 30 Dec 2019 15:24:54 -0800
-From:   asutoshd@codeaurora.org
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        subhashj@codeaurora.org, beanhuo@micron.com, cang@codeaurora.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        stable@vger.kernel.org, linux-scsi-owner@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] scsi: ufs: set device as default active power mode
- during initialization only
-In-Reply-To: <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
-References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
- <1577693546-7598-2-git-send-email-stanley.chu@mediatek.com>
-Message-ID: <fd129b859c013852bd80f60a36425757@codeaurora.org>
-X-Sender: asutoshd@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+On Sun, 2019-12-29 at 23:41 -0800, Dan Williams wrote:
+> This looked like the wrong revert to me, and testing confirms that
+> this does not fix the problem.
+> 
+> As I mentioned in the original report [1] the commit that bisect flagged was:
+> 
+>     5b359c7c4372 tpm_tis_core: Turn on the TPM before probing IRQ's
+> 
+> That commit moved tpm_chip_start() before irq probing. Commit
+> 21df4a8b6018 "tpm_tis: reserve chip for duration of tpm_tis_core_init"
+> does not appear to change anything in that regard.
+> 
+> Perhaps this hardware has always had broken interrupts and needs to be
+> quirked off? I'm trying an experiment with tpm_tis_core.interrupts=0
+> workaround.
+> 
+> 
+> [1]: https://lore.kernel.org/linux-integrity/CAA9_cmeLnHK4y+usQaWo72nUG3RNsripuZnS-koY4XTRC+mwJA@mail.gmail.com/
 
-On 2019-12-30 00:12, Stanley Chu wrote:
-> Currently ufshcd_probe_hba() always sets device status as "active".
-> This shall be by an assumption that device is already in active state
-> during the boot stage before kernel.
-> 
-> However, if link is configured as "off" state and device is requested
-> to enter "sleep" or "powerdown" power mode during suspend flow, device
-> will NOT be waken up to "active" power mode during resume flow because
-> device is already set as "active" power mode in ufhcd_probe_hba().
-> 
-> Fix it by setting device as default active power mode during
-> initialization only, and skipping changing mode during PM flow
-> in ufshcd_probe_hba().
-> 
-> Fixes: 7caf489b99a4 (scsi: ufs: issue link starup 2 times if device
-> isn't active)
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Avri Altman <avri.altman@wdc.com>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Bean Huo <beanhuo@micron.com>
-> Cc: Can Guo <cang@codeaurora.org>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Subhash Jadavani <subhashj@codeaurora.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index ed02a704c1c2..9abb7085a5d0 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6986,7 +6986,8 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
->  	ufshcd_tune_unipro_params(hba);
-> 
->  	/* UFS device is also active now */
-> -	ufshcd_set_ufs_dev_active(hba);
-> +	if (!hba->pm_op_in_progress)
-> +		ufshcd_set_ufs_dev_active(hba);
->  	ufshcd_force_reset_auto_bkops(hba);
->  	hba->wlun_dev_clr_ua = true;
+I think for short term, yes, it is better to revert the commits
+that make things more broken.
 
-I see that there's a get_sync done before.
-So, how would the suspend be triggered in that case?
+for-linus-v5.5-rc5 branch contains three commits that exactly do
+this i.e. the reverts that Stefan sent and revert to Jerry's earlier
+commit.
 
-Thanks,
-asd
+After that is out of the table it is easier to analyze how the code
+should be actually refactored. Like, I have no idea when I get
+local HW that can reproduce this and Jerry still seems to have the
+same issue. It'd be nice make the exactly right changes instead of
+reverts but situation is what it is.
+
+Please check the branch and ACK/NAK if I can add tested-by's (and
+other tags).
+
+/Jarkko
+
