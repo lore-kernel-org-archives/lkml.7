@@ -2,143 +2,151 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A792DC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EE0C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAD4206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:03:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEQfUB9B"
+	by mail.kernel.org (Postfix) with ESMTP id 0DB66206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfL3WDi (ORCPT
+        id S1727814AbfL3WUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 17:03:38 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38744 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfL3WDi (ORCPT
+        Mon, 30 Dec 2019 17:20:32 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33668 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfL3WUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 17:03:38 -0500
-Received: by mail-pl1-f195.google.com with SMTP id f20so15153662plj.5;
-        Mon, 30 Dec 2019 14:03:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=sWcIwqwAQVaMiL6AbIBVoLXwMM9wjsoCuHsXRphgo8Y=;
-        b=nEQfUB9BU7XTfjYvCMI6Yd/qByThVkk2PiHeRSy9HqRXeXx/ACLKilBsXAOBcCROWX
-         wuYYWc18pechAi8K+EkPH15KMlWyQ6nb0StYh3i01u248ouxra+l0YzVMzSbAIdPpj32
-         8IklPGgLy/ca2jvIWXCX+wjrXBcw+YhdM6dG2drTzpt9BJH4W/VMrXUHA7PFo1I1D0fp
-         bV/2HKq3EUqlQLAmrkiIYXp5l16qLryAJoIvQkBet0s7dkrKl35d2kNDuDe+cTkV6CtO
-         pdBNwQkWVWBXVmtsGPAeYKEJ7QDU9Bg9dcnJKVDvMxCHqk2OAX0edZ0X4oodFaH8Hq0U
-         10lw==
+        Mon, 30 Dec 2019 17:20:31 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d139so733021wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 14:20:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sWcIwqwAQVaMiL6AbIBVoLXwMM9wjsoCuHsXRphgo8Y=;
-        b=hVBUeYUlCs6CqAhqAz823TJP4I7aok2n7HhCS49Q+MIV6qlAPVj1aeV+ulYZh4yk0s
-         9thbKAY9G/bOcbFwXO045HrVI/GQUWdWsSQGx5IJpowDcnW+9wdcNN+rKbFwZJ6UMUEP
-         cMHMXE9g+qQlG4WCbCzEovuR1dvQsBNesfpeXWV1RnwZ4e0e1gqhPpcL//2xYoDIgVJZ
-         S427ewzNvTEb6irnPBgrnHdQlMnq3IoxpTr3b+WrtwlVONJrhIp6jzxOQSB0IGUwE5Gb
-         mFmqQ6Vhx8V+99kV7PKPHn89ECDfEt7iPt8XmspaARKoIyfLecDhmS5rJKrK+HKSig9o
-         pEQA==
-X-Gm-Message-State: APjAAAUy/YfQAqm4vm79o9LeA8YY6ValEGXJrOWrVcucn3aCP4B8SyK9
-        LDtSX2t+F8XF6zVLNJQmYxE=
-X-Google-Smtp-Source: APXvYqzCT9zC3ZgKpQpD5zdYtsdEacKle/p/witN0yVp/CLOmZS4R1vbOaH6CIUVFPPMG9wX2sUhEg==
-X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr1776310pja.78.1577743416953;
-        Mon, 30 Dec 2019 14:03:36 -0800 (PST)
-Received: from JF-EN-C02V905BHTDF.tld ([12.111.169.54])
-        by smtp.gmail.com with ESMTPSA id l8sm511900pjy.24.2019.12.30.14.03.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Dec 2019 14:03:36 -0800 (PST)
-Subject: Re: [PATCH v6 07/10] proc: flush task dcache entries from all procfs
- instances
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YmRB981p8JsUEIP5P7LyqCWtpnoG5uSiRb3N/avTgPs=;
+        b=PvVInXyJkg0mZ/Y5WQMDPIxi/uSt4STqgy9XB5T5KOnziMa2bsUsrNGvrSFZduSZUz
+         osuE4piPG+iYxqVz+mIx3EzeFhjqLZtjDbcKHT4gdAPeM+cmUw5/duYsavKcYUDx5hHZ
+         miWhAmW0ZYd2enNlSdFJfr4qTMgHa6A8wWr1Te0ed6PbfN14RgZYLq9r8oz6ktO+4kvk
+         4dMuoAkZ+UUeE5lgk/gCclS2+B2GHGuW+VTBPnRFztJIy7cwystwxe/aEEVpxgzkfLG7
+         zG0v4oQQOfTfTj+Z/abN2BT+mevrgS+b8meylZI727Qsd9+kpRhSco/ZD8YdwgiAiWoM
+         OLog==
+X-Gm-Message-State: APjAAAU6xbcHu/6ASJP+6LIkEDNRXe977f+NLpsg/irvi7fVfj9m9n8s
+        KXxj0nmxHC+rVaD2+McL9cw=
+X-Google-Smtp-Source: APXvYqxnLvsRAS1yKDGLvERyric4DCTqiMpVV4sFknExgYlKMj5dY8o3J0hXqeVNB4dOuppy76drAg==
+X-Received: by 2002:a1c:498a:: with SMTP id w132mr890764wma.10.1577744428615;
+        Mon, 30 Dec 2019 14:20:28 -0800 (PST)
+Received: from [10.9.0.26] ([46.166.128.205])
+        by smtp.gmail.com with ESMTPSA id x7sm46488669wrq.41.2019.12.30.14.20.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Dec 2019 14:20:27 -0800 (PST)
+Reply-To: alex.popov@linux.com
+Subject: Re: [PATCH v1 1/1] lkdtm/stackleak: Make the stack erasing test more
+ verbose
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20191225125151.1950142-1-gladkov.alexey@gmail.com>
- <20191225125151.1950142-8-gladkov.alexey@gmail.com>
-From:   J Freyensee <why2jjj.linux@gmail.com>
-Message-ID: <8d85ba43-0759-358e-137d-246107bac747@gmail.com>
-Date:   Mon, 30 Dec 2019 14:03:29 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        linux-kernel@vger.kernel.org, notify@kernel.org
+References: <20191219145416.435508-1-alex.popov@linux.com>
+ <201912301034.5C04DC89@keescook>
+From:   Alexander Popov <alex.popov@linux.com>
+Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
+ mQINBFX15q4BEADZartsIW3sQ9R+9TOuCFRIW+RDCoBWNHhqDLu+Tzf2mZevVSF0D5AMJW4f
+ UB1QigxOuGIeSngfmgLspdYe2Kl8+P8qyfrnBcS4hLFyLGjaP7UVGtpUl7CUxz2Hct3yhsPz
+ ID/rnCSd0Q+3thrJTq44b2kIKqM1swt/F2Er5Bl0B4o5WKx4J9k6Dz7bAMjKD8pHZJnScoP4
+ dzKPhrytN/iWM01eRZRc1TcIdVsRZC3hcVE6OtFoamaYmePDwWTRhmDtWYngbRDVGe3Tl8bT
+ 7BYN7gv7Ikt7Nq2T2TOfXEQqr9CtidxBNsqFEaajbFvpLDpUPw692+4lUbQ7FL0B1WYLvWkG
+ cVysClEyX3VBSMzIG5eTF0Dng9RqItUxpbD317ihKqYL95jk6eK6XyI8wVOCEa1V3MhtvzUo
+ WGZVkwm9eMVZ05GbhzmT7KHBEBbCkihS+TpVxOgzvuV+heCEaaxIDWY/k8u4tgbrVVk+tIVG
+ 99v1//kNLqd5KuwY1Y2/h2MhRrfxqGz+l/f/qghKh+1iptm6McN//1nNaIbzXQ2Ej34jeWDa
+ xAN1C1OANOyV7mYuYPNDl5c9QrbcNGg3D6gOeGeGiMn11NjbjHae3ipH8MkX7/k8pH5q4Lhh
+ Ra0vtJspeg77CS4b7+WC5jlK3UAKoUja3kGgkCrnfNkvKjrkEwARAQABtCZBbGV4YW5kZXIg
+ UG9wb3YgPGFsZXgucG9wb3ZAbGludXguY29tPokCVwQTAQgAQQIbIwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBAAIZARYhBLl2JLAkAVM0bVvWTo4Oneu8fo+qBQJdehKcBQkLRpLuAAoJEI4O
+ neu8fo+qrkgP/jS0EhDnWhIFBnWaUKYWeiwR69DPwCs/lNezOu63vg30O9BViEkWsWwXQA+c
+ SVVTz5f9eB9K2me7G06A3U5AblOJKdoZeNX5GWMdrrGNLVISsa0geXNT95TRnFqE1HOZJiHT
+ NFyw2nv+qQBUHBAKPlk3eL4/Yev/P8w990Aiiv6/RN3IoxqTfSu2tBKdQqdxTjEJ7KLBlQBm
+ 5oMpm/P2Y/gtBiXRvBd7xgv7Y3nShPUDymjBnc+efHFqARw84VQPIG4nqVhIei8gSWps49DX
+ kp6v4wUzUAqFo+eh/ErWmyBNETuufpxZnAljtnKpwmpFCcq9yfcMlyOO9/viKn14grabE7qE
+ 4j3/E60wraHu8uiXJlfXmt0vG16vXb8g5a25Ck09UKkXRGkNTylXsAmRbrBrA3Moqf8QzIk9
+ p+aVu/vFUs4ywQrFNvn7Qwt2hWctastQJcH3jrrLk7oGLvue5KOThip0SNicnOxVhCqstjYx
+ KEnzZxtna5+rYRg22Zbfg0sCAAEGOWFXjqg3hw400oRxTW7IhiE34Kz1wHQqNif0i5Eor+TS
+ 22r9iF4jUSnk1jaVeRKOXY89KxzxWhnA06m8IvW1VySHoY1ZG6xEZLmbp3OuuFCbleaW07OU
+ 9L8L1Gh1rkAz0Fc9eOR8a2HLVFnemmgAYTJqBks/sB/DD0SuuQINBFX15q4BEACtxRV/pF1P
+ XiGSbTNPlM9z/cElzo/ICCFX+IKg+byRvOMoEgrzQ28ah0N5RXQydBtfjSOMV1IjSb3oc23z
+ oW2J9DefC5b8G1Lx2Tz6VqRFXC5OAxuElaZeoowV1VEJuN3Ittlal0+KnRYY0PqnmLzTXGA9
+ GYjw/p7l7iME7gLHVOggXIk7MP+O+1tSEf23n+dopQZrkEP2BKSC6ihdU4W8928pApxrX1Lt
+ tv2HOPJKHrcfiqVuFSsb/skaFf4uveAPC4AausUhXQVpXIg8ZnxTZ+MsqlwELv+Vkm/SNEWl
+ n0KMd58gvG3s0bE8H2GTaIO3a0TqNKUY16WgNglRUi0WYb7+CLNrYqteYMQUqX7+bB+NEj/4
+ 8dHw+xxaIHtLXOGxW6zcPGFszaYArjGaYfiTTA1+AKWHRKvD3MJTYIonphy5EuL9EACLKjEF
+ v3CdK5BLkqTGhPfYtE3B/Ix3CUS1Aala0L+8EjXdclVpvHQ5qXHs229EJxfUVf2ucpWNIUdf
+ lgnjyF4B3R3BFWbM4Yv8QbLBvVv1Dc4hZ70QUXy2ZZX8keza2EzPj3apMcDmmbklSwdC5kYG
+ EFT4ap06R2QW+6Nw27jDtbK4QhMEUCHmoOIaS9j0VTU4fR9ZCpVT/ksc2LPMhg3YqNTrnb1v
+ RVNUZvh78zQeCXC2VamSl9DMcwARAQABiQI8BBgBCAAmAhsMFiEEuXYksCQBUzRtW9ZOjg6d
+ 67x+j6oFAl16ErcFCQtGkwkACgkQjg6d67x+j6q7zA/+IsjSKSJypgOImN9LYjeb++7wDjXp
+ qvEpq56oAn21CvtbGus3OcC0hrRtyZ/rC5Qc+S5SPaMRFUaK8S3j1vYC0wZJ99rrmQbcbYMh
+ C2o0k4pSejaINmgyCajVOhUhln4IuwvZke1CLfXe1i3ZtlaIUrxfXqfYpeijfM/JSmliPxwW
+ BRnQRcgS85xpC1pBUMrraxajaVPwu7hCTke03v6bu8zSZlgA1rd9E6KHu2VNS46VzUPjbR77
+ kO7u6H5PgQPKcuJwQQ+d3qa+5ZeKmoVkc2SuHVrCd1yKtAMmKBoJtSku1evXPwyBzqHFOInk
+ mLMtrWuUhj+wtcnOWxaP+n4ODgUwc/uvyuamo0L2Gp3V5ItdIUDO/7ZpZ/3JxvERF3Yc1md8
+ 5kfflpLzpxyl2fKaRdvxr48ZLv9XLUQ4qNuADDmJArq/+foORAX4BBFWvqZQKe8a9ZMAvGSh
+ uoGUVg4Ks0uC4IeG7iNtd+csmBj5dNf91C7zV4bsKt0JjiJ9a4D85dtCOPmOeNuusK7xaDZc
+ gzBW8J8RW+nUJcTpudX4TC2SGeAOyxnM5O4XJ8yZyDUY334seDRJWtS4wRHxpfYcHKTewR96
+ IsP1USE+9ndu6lrMXQ3aFsd1n1m1pfa/y8hiqsSYHy7JQ9Iuo9DxysOj22UNOmOE+OYPK48D
+ j3lCqPk=
+Message-ID: <5bde4de0-875c-536b-67ec-eafebb8b9ab1@linux.com>
+Date:   Tue, 31 Dec 2019 01:20:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191225125151.1950142-8-gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <201912301034.5C04DC89@keescook>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snip
+Hello Kees!
 
-.
+On 30.12.2019 21:37, Kees Cook wrote:
+> On Thu, Dec 19, 2019 at 05:54:16PM +0300, Alexander Popov wrote:
+>> Make the stack erasing test more verbose about the errors that it
+>> can detect. BUG() in case of test failure is useful when the test
+>> is running in a loop.
+> 
+> Hi! I try to keep the "success" conditions for LKDTM tests to be a
+> system exception, so doing "BUG" on a failure is actually against the
+> design. So, really, a test harness needs to know to check dmesg for the
+> results here. It almost looks like this check shouldn't live in LKDTM,
 
-.
+Hm, I see...
 
-.
+Let me explain why I've decided to use BUG() in case of a failure.
 
->   
-> +#ifdef CONFIG_PROC_FS
-> +static inline void pidns_proc_lock(struct pid_namespace *pid_ns)
-> +{
-> +	down_write(&pid_ns->rw_proc_mounts);
-> +}
-> +
-> +static inline void pidns_proc_unlock(struct pid_namespace *pid_ns)
-> +{
-> +	up_write(&pid_ns->rw_proc_mounts);
-> +}
-> +
-> +static inline void pidns_proc_lock_shared(struct pid_namespace *pid_ns)
-> +{
-> +	down_read(&pid_ns->rw_proc_mounts);
-> +}
-> +
-> +static inline void pidns_proc_unlock_shared(struct pid_namespace *pid_ns)
-> +{
-> +	up_read(&pid_ns->rw_proc_mounts);
-> +}
-> +#else /* !CONFIG_PROC_FS */
-> +
-Apologies for my newbie question. I couldn't help but notice all these 
-function calls are assuming that the parameter struct pid_namespace 
-*pid_ns will never be NULL.  Is that a good assumption?
+Once upon a time I noticed that the stack erasing test failed on a kernel with
+KASAN enabled. It happened only once, and all my numerous efforts to reproduce
+it failed. That's why I come with this patch. These changes provide additional
+information and allow easy detection of a failure when you run the test in a loop.
 
-I don't have the background in this code to answer on my own, but I 
-thought I'd raise the question.
+Is stackleak test the only exception of this kind in LKDTM?
 
-Thanks,
-Jay
+> but since it feels like other LKDTM tests, I'm happy to keep it there
+> for now.
 
+Do you mean that you will apply this patch?
+
+> I'll resend my selftests series that adds a real test harness for all
+> the LKDTM tests and CC you.
+
+Ok!
+
+Maybe you also see how to improve the LKDTM infrastructure and remove this
+inconsistency. Could you share your ideas?
+
+Best regards,
+Alexander
