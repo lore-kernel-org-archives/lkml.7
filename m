@@ -2,139 +2,181 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BFBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C668AC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7827C2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B603206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6AA3Yq/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN+ftY36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfL3SzL (ORCPT
+        id S1727624AbfL3S4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:55:11 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36457 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfL3SzK (ORCPT
+        Mon, 30 Dec 2019 13:56:48 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42273 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfL3S4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:55:10 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so18416989pgc.3;
-        Mon, 30 Dec 2019 10:55:10 -0800 (PST)
+        Mon, 30 Dec 2019 13:56:48 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z14so25631899qkg.9;
+        Mon, 30 Dec 2019 10:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JdJt+MkTze/hUL4TVQW3KhBaiLuTd3kBvUR3FwEU5Qw=;
-        b=T6AA3Yq/E4xHEiE7UOJsSe1KBwiqHKjsKD3ArwTMGiohKMNoVDMofdNq01gXlwH34r
-         T9XC5fOv6Nj+jsRWl/vRe/kOmd0Q0Hvlg7Iw6wUEh4xZsM1YHHt7FcJif9vPKTsV36jL
-         lYERwYnk3pfk12AySePtOfArgV+PUQjhBeFvtd1DLNfclobWTW4UxjK5UTJmy/toxQuw
-         oklCnQQ1j8Y9F/jrT/NEOS30MnrISV+pqYyzq6InronTrTowXdos+KxnZV9yKUWYJqOs
-         7eyOd6OceiJWsNOJs0j9EgZGZUAIaXhqZLmhmJAWmaPwleHjiMqHFV1Q1Rmpf3SpBsVR
-         kx4Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TNO/Hk5SvlZUntSVYUXT/N6cNir5bvB5pW0khbEEdBg=;
+        b=TN+ftY369cQzd2rj90leoiCh82gVHdPl6rkfpEdvmGf/gQt5OGjjLSPVhracdpLchO
+         qkckrsFU7qc+FZ9hXLWDjdX8gE2HWzxDYiQhFRiJS3WdhNzwtvY0bw8+Svpnox1N8d4W
+         9m9s4u/b8P8Zm2Zhys9yWE40tKNOLX3qD1JPVKhtS/6MyPWduUwp8HdKZw2LJD6w+ODY
+         0Rr3Xg25LWIuwu82Ha3EYiKFvkKaKSv5D0xPFIViQMkIkIKRh6eE4Z7S9hzpdC5yUW2j
+         Pqe/C0QlbSqzfHzGM4Pm37706OyAT7GPWFWqWgODF0VlTdYzUEyym1KFBAq+PRYf6fbF
+         crXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JdJt+MkTze/hUL4TVQW3KhBaiLuTd3kBvUR3FwEU5Qw=;
-        b=aHXSi4LEWjWLln9sFvFIf4XD3F6EZg2bHhRtb63DTQEm72R87NVdeUo5ZYzfmmluDv
-         wNRm1axUQ/p6R7CvocE+jHGTgtC377Lhxtt0QsA9+EeUYlJPih6v/sZTcSNcrLvxOoPx
-         SVSl+Pmns0aLx66e2hXtKaPrDyEy4BOwJ+mmKONRXz1zG9p14wVl7dKHFAQO+RUamPGI
-         uqOrCAwmX4aPuguqwEd32ZUpHOBfgkO1y0MZA5k0CGwu8YasZRdtfjyEUrw1qVpzJLfh
-         BIX7LygcpdT0yqU7zh83EIIJlmLocdqv9hhxqkrONMevw4mzyNPnO3XJfs5ADga4mdQi
-         pdZg==
-X-Gm-Message-State: APjAAAU6m23dxYWZSkEX/e1bPOcIaODzq9sfCPBM4SgKcIX2UiSwjS7k
-        xf5YaHr6SoiBlzQ4Tjhy+SU=
-X-Google-Smtp-Source: APXvYqw/u/vrkEjBsO4sYGwrIEsbNFY8YSrXJiBBJg43B8OEOUKe0HXjYIYafjiDENaioXycrkGe+A==
-X-Received: by 2002:a62:788a:: with SMTP id t132mr73222512pfc.134.1577732109926;
-        Mon, 30 Dec 2019 10:55:09 -0800 (PST)
-Received: from [192.168.178.94] ([121.98.29.40])
-        by smtp.gmail.com with ESMTPSA id y7sm44922524pfb.139.2019.12.30.10.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Dec 2019 10:55:08 -0800 (PST)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [PATCH] move_pages.2: remove ENOENT from the list of possible
- return values
-To:     John Hubbard <jhubbard@nvidia.com>
-References: <20191219051347.1278026-1-jhubbard@nvidia.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <56530a26-e5b4-1441-521b-8dc6580f90c7@gmail.com>
-Date:   Mon, 30 Dec 2019 19:55:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TNO/Hk5SvlZUntSVYUXT/N6cNir5bvB5pW0khbEEdBg=;
+        b=XGdIl7vIpE+XGHS0ysFDU5e8oyhN/f7o0VQFdYASEesxinncIYozMM1mF5hVzVgBXR
+         1x1R6cJyL3TmycycYsk1wmoz0f1MxmTw22gBpX70RTLX3PTiO0MnfumGS2Vh5iQE4xPy
+         mt+M/c3JZEvXBcugO3+F1m6PmgGTnWgKTtdtJ6lP/3Mm6wfzY3p+vO8lez15tnZtqWEK
+         jEg6fyafhmeGzRWeQ+kcN19p4lbIJXz3ITaGGGkVr8+nVOblKwZwvlNR/IhFPH+cgoPL
+         1GD62CZfAPK/rVV7AzKk0DxNU2NwH+WMe+452oHNva9cjssDFI5MJJdCr4U2p+F3bVGK
+         +RYQ==
+X-Gm-Message-State: APjAAAVaqns1QSVhRsPDkHMJH0s7XJ2oWnMRC3wDNl/zzPz1o048e+Cs
+        tuWBhMUL1aznx85yF+mqANIfevn5vvAYrzQr238=
+X-Google-Smtp-Source: APXvYqxe+dIas1aZfaZPUYlz0AHLEVSoZ3Cf4l76RSzTnmKm6vgknRi8IUOmSVg8aVwzNiFKcqRiBViVgKBfYHxFCEo=
+X-Received: by 2002:a37:e408:: with SMTP id y8mr55475323qkf.39.1577732206986;
+ Mon, 30 Dec 2019 10:56:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191219051347.1278026-1-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191220154208.15895-1-kpsingh@chromium.org> <20191220154208.15895-10-kpsingh@chromium.org>
+ <CAEf4BzYgcez2G1qJW9saJmzfeYirGdH58aAcUk-+YTJF6vyOuQ@mail.gmail.com> <20191230151135.GC70684@google.com>
+In-Reply-To: <20191230151135.GC70684@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 30 Dec 2019 10:56:35 -0800
+Message-ID: <CAEf4BzaXBLRYP=BZYzr3fmc7ZH=JZ9TY27_HnOxj3ut2RCnZjQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 09/13] bpf: lsm: Add a helper function bpf_lsm_event_output
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello John,
+On Mon, Dec 30, 2019 at 7:11 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> On 23-Dec 22:36, Andrii Nakryiko wrote:
+> > On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > This helper is similar to bpf_perf_event_output except that
+> > > it does need a ctx argument which is more usable in the
+> > > BTF based LSM programs where the context is converted to
+> > > the signature of the attacthed BTF type.
+> > >
+> > > An example usage of this function would be:
+> > >
+> > > struct {
+> > >          __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> > >          __uint(key_size, sizeof(int));
+> > >          __uint(value_size, sizeof(u32));
+> > > } perf_map SEC(".maps");
+> > >
+> > > BPF_TRACE_1(bpf_prog1, "lsm/bprm_check_security,
+> > >             struct linux_binprm *, bprm)
+> > > {
+> > >         char buf[BUF_SIZE];
+> > >         int len;
+> > >         u64 flags = BPF_F_CURRENT_CPU;
+> > >
+> > >         /* some logic that fills up buf with len data */
+> > >         len = fill_up_buf(buf);
+> > >         if (len < 0)
+> > >                 return len;
+> > >         if (len > BU)
+> > >                 return 0;
+> > >
+> > >         bpf_lsm_event_output(&perf_map, flags, buf, len);
+> >
+> > This seems to be generally useful and not LSM-specific, so maybe name
+> > it more generically as bpf_event_output instead?
+>
+> Agreed, I am happy to rename this.
+>
+> >
+> > I'm also curious why we needed both bpf_perf_event_output and
+> > bpf_perf_event_output_raw_tp, if it could be done as simply as you did
+> > it here. What's different between those three and why your
+> > bpf_lsm_event_output doesn't need pt_regs passed into them?
+>
+> That's because my implementation uses the following function from
+> bpf_trace.c:
+>
+> u64 bpf_event_output(struct bpf_map *map, u64 flags, void *meta, u64 meta_size,
+>                      void *ctx, u64 ctx_size, bpf_ctx_copy_t ctx_copy)
+>
+> This does not require a pt_regs argument and handles fetching them
+> internally:
+>
+>         regs = this_cpu_ptr(&bpf_pt_regs.regs[nest_level - 1]);
+>
+>         perf_fetch_caller_regs(regs);
+>         perf_sample_data_init(sd, 0, 0);
+>         sd->raw = &raw;
+>
+>         ret = __bpf_perf_event_output(regs, map, flags, sd);
+>
+> - KP
 
-On 12/19/19 6:13 AM, John Hubbard wrote:
-> Linux kernel commit e78bbfa82624 ("mm: stop returning -ENOENT from
-> sys_move_pages() if nothing got migrated") had the effect of *never*
-> returning -ENOENT, in any situation. So we need to update the man page
-> to reflect that ENOENT is not a possible return value.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Brice Goglin <Brice.Goglin@inria.fr>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> Hi,
-> 
-> This fix for the man page was ACK'd by Michal, here:
-> 
-> https://lore.kernel.org/r/20191218101711.GB21485@dhcp22.suse.cz
+Yeah, I saw that bit. I guess I'm confused why we couldn't do the same
+for, say, raw_tracepoint case. Now Jiri Olsa is adding another similar
+helper doing its own storage of pt_regs. If all of them can share the
+same (even if with bigger nest_level) array of pt_regs, that would
+great.
 
-Thanks. Patch applied.
-
-Cheers,
-
-Michael
-
->  man2/move_pages.2 | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 2d96468fa..1bf1053f2 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -191,12 +191,6 @@ was specified or an attempt was made to migrate pages of a kernel thread.
->  .B ENODEV
->  One of the target nodes is not online.
->  .TP
-> -.B ENOENT
-> -No pages were found that require moving.
-> -All pages are either already
-> -on the target node, not present, had an invalid address or could not be
-> -moved because they were mapped by multiple processes.
-> -.TP
->  .B EPERM
->  The caller specified
->  .B MPOL_MF_MOVE_ALL
-> 
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+>
+> >
+> > >         return 0;
+> > > }
+> > >
+> > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > ---
+> > >  include/uapi/linux/bpf.h       | 10 +++++++++-
+> > >  kernel/bpf/verifier.c          |  1 +
+> > >  security/bpf/ops.c             | 21 +++++++++++++++++++++
+> > >  tools/include/uapi/linux/bpf.h | 10 +++++++++-
+> > >  4 files changed, 40 insertions(+), 2 deletions(-)
+> > >
+> >
+> > [...]
