@@ -2,155 +2,86 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78907C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B76C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F5E20409
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DB520658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IO3XBgWm"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LOFA+mxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfL3UOp (ORCPT
+        id S1727729AbfL3UQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:14:45 -0500
-Received: from mail-eopbgr680093.outbound.protection.outlook.com ([40.107.68.93]:56482
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727752AbfL3UOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:14:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QTikffz4l/RHwZMvEzPqwmdkO252Jph/EzRFztspp12yxAig7l5I+qVZ6q56BAypM7u1XOf/1IgbnpSywWEYm8dtiaNWmcR2xno6FF3fzd/6eKYbRLDY3GWkul9CJQBQgnXdn8Wfd9ZASwYSLhqpZx333FHYMXlfdPRQV+YL0tQXyYXDXSRpoOrBIc540neXRz3TVEBPr/sXpzHQWAXDHfriHfEp9JEGM2X1qx+5vg14LoYI774U07pd0QCg+VC/3d4OFCNlzFq7ZZcEngf9vZXgYahscOy1466OCspGJyWlGCFHE9GSZGScqfrLKraO1rrEm27Qf0f6qSJjxrcJDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC1OJtV9c+6pbcT1qAqDjwkX3KsbzOKvcHWvlDdV9Lo=;
- b=l+bTp3WQuttqvP/3AK6ND9NStTEKBwWLiBCFwPnVc5xmtG2PH5sj/6bwJQ/htSkUm2xSaqaJwySIYZ9LF80/RJxgLPXbUc0S5tiHNqfb4bpFNSWVy0hH6D0DBYw7Vty5ScfXo5/+msmEXy7thou1KmvGlG9ilFC7uVcfe9rmaxADM2N2LcVQJNc3KHodlKrRQ4BjieqIUSwAukQenhI8Hcm5rnPzHjgFsvuDdXaHXLclR4zWqEWpJESolGmqkejW1cerNtMd+bXWJsnfYWk4NjiAnLpeIJ3E60FIYFFUJOXbKZUaGD2mVkZ+HBbs4L1Hkcu047GQ4sVs1k1khCgV3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SC1OJtV9c+6pbcT1qAqDjwkX3KsbzOKvcHWvlDdV9Lo=;
- b=IO3XBgWmrZB3VWjyrcE+MWHGlqjPJ45x4JlnNFMXkVj1yM4IinvMji57phcMLMhAjdf1icqg33rsR4R6MfFLJPW6ADewhnbgcZXt8JEexiQhvxU2hG/D2ZtDQrGNRJhmDerWH9LD7jLczVyEMDPUrR6lHMD5R2c9WIgzACmkkao=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB0936.namprd21.prod.outlook.com (52.132.131.166) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.8; Mon, 30 Dec 2019 20:14:24 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Mon, 30 Dec 2019
- 20:14:24 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2,net-next, 3/3] hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
-Date:   Mon, 30 Dec 2019 12:13:34 -0800
-Message-Id: <1577736814-21112-4-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
-References: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34)
- To DM5PR2101MB0901.namprd21.prod.outlook.com (2603:10b6:4:a7::30)
+        Mon, 30 Dec 2019 15:16:51 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46088 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbfL3UQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:16:50 -0500
+Received: by mail-oi1-f196.google.com with SMTP id p67so11425660oib.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 12:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vGoYHJkV2sBuC/EabEMn2jT6G42n0LQcEtNTThbzJvo=;
+        b=LOFA+mxlmd5oV8l+Ly2ITiGE7quCUFquXLsCfnDW9MllcsxJM+xgnpfdFKisb8BlW1
+         GsO5VONykMGvsC/iRi6Eid6vExDoXX/AGXk3RgaQSaV/KJstjudxFNuYhLaX/O/sRVgI
+         fCl75NApfe3sM2ibIn7p9xCxDkpU9lBZeIiHUmzhr+s8RGLjZMMlrnEOtoVPjzn7bz+8
+         qAXlEZ4WIdspGkErzVHHtXGP+qBfG7Ig0sNFiB5LEExIhOb0uo+rkIgNuo/eDxEcTcVA
+         mHuU2UpXe/KNqH19ffb+XBrtbUJmugSY6caSLnbRawTieig0KcwDS3330Y27EYSFO6nG
+         GO5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vGoYHJkV2sBuC/EabEMn2jT6G42n0LQcEtNTThbzJvo=;
+        b=dt3+j8LhxhxZ6ML4ZacuXD1umlURwAByQUKVtLCbiYVXySRo30gRb9EfH0xFjpOXSb
+         QQXp3AkNfStGiwZTSzcALFnkge8Vq4HriTLMCmNFjrP7Lw8IYJA+EWqKZQ5rvJO1MipQ
+         1bt4iBeYnK387H7U077fMAfgNPbX7+PtIRGNm9XcYHHriOTeGk0uuSPxNtZGHOWTaWFE
+         UHoI59xpqXkeDAsSuSPn5G0Z7nqYuEpm5UIhXGGHZ3VSNHWZ8IbBXKhGTcWXPENtzLSa
+         UuxN+nquEYg6ldSEsn68o8PzI2n+TztN+P2s8FuNdvujDULUbgHExVt+K7H701g40qqU
+         kpeA==
+X-Gm-Message-State: APjAAAXVBFnzsFIjdL1Nh0u1IXKXM/LyCwKhd1G4BHBtLWIlgpMIToCu
+        5OzbZIuMyddZdpdBNoJhRNHsOYkXcHc+IgCAeCPlTA==
+X-Google-Smtp-Source: APXvYqx3ceamtmJUChp1TLuDkDv4af0iLI+bwyDSS+upKsqsk+U0Ob0XHRDXqZ29dmIwB0CA1zn0kxN2oJlTNMRltC0=
+X-Received: by 2002:aca:3f54:: with SMTP id m81mr333228oia.73.1577737010159;
+ Mon, 30 Dec 2019 12:16:50 -0800 (PST)
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Mon, 30 Dec 2019 20:14:23 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 10d6b2df-24cd-4a6f-7be6-08d78d64dd02
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0936:|DM5PR2101MB0936:|DM5PR2101MB0936:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB0936EFCA4E469D469818AB80AC270@DM5PR2101MB0936.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0267E514F9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(376002)(366004)(189003)(199004)(5660300002)(52116002)(6506007)(66556008)(186003)(2616005)(956004)(6666004)(16526019)(26005)(66946007)(66476007)(478600001)(2906002)(10290500003)(8936002)(36756003)(316002)(6512007)(8676002)(6486002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0936;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AyFyOlzU1rgYfvWYyCs+BxBzNFRxTl+3c30xXeR8XxgBDmzKpuhiAFIQDlrFQnAJMEgFamUOBLmrxK+esZopGYPzjPVcewA0h0Sz2gCLFQZE1xaI+8vFDO3FNaCp9HpcRnsqzI0jTolIe6WywhBKqQZDKM0HO/IcJOmRtunGNn2HVKxg4fQuN106rQLaT0El3zEYhvrXR8lUcmIuEdxWbAiepu/6NBEce0pk2FdN7nMagiIa2P0QW67ofcRd6UBgl7vvQGX3mGQ0nm8jnTdZcd8s+pENz5lfBaEabUtKCbqIf+nU5Eud/KGQRS4jJZvSTg5jYfwj+4BvG81nS27N3oZIj6uSScqPV+YqNeVaZLx8L70gLycQgNUKBVfk3I3WkyaQqkixEAVSR5ZSAbS8zk+LVzkTkHNPZ94Vo2MxicoLMIVPnD6L5I/4caygDE+F
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10d6b2df-24cd-4a6f-7be6-08d78d64dd02
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2019 20:14:24.1567
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AnnSS/9BuyQjEo5AJJklOo2REP6TK5Rn+oFgSAUqUWyUoqC2A4KCESXXlrazOwSSrITXYP4QK8nqj+cc/aaYew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0936
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
+ <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com> <CAPcyv4hT9HXN2CqZw96zqgdNaapc=9oqSYvGrnEbeqSmx0t5xw@mail.gmail.com>
+In-Reply-To: <CAPcyv4hT9HXN2CqZw96zqgdNaapc=9oqSYvGrnEbeqSmx0t5xw@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 30 Dec 2019 12:16:39 -0800
+Message-ID: <CAPcyv4jLxqPaB22Ao9oV31Gm=b0+Phty+Uz33Snex4QchOUb0Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
+To:     Dan Williams <dan.j.williams.korg@gmail.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dev_num field in vmbus channel structure is assigned to the first
-available number when the channel is offered. So netvsc driver uses it
-for NIC naming based on channel offer sequence. Now re-enable the async
-probing mode for faster probing.
+On Mon, Dec 30, 2019 at 1:42 AM Dan Williams <dan.j.williams@intel.com> wrote:
+[..]
+> I'll send a patch to fix up efi_fake_memmap().
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/netvsc_drv.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+For others following this thread, that patch is here:
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index f3f9eb8..39c412f 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2267,10 +2267,14 @@ static int netvsc_probe(struct hv_device *dev,
- 	struct net_device_context *net_device_ctx;
- 	struct netvsc_device_info *device_info = NULL;
- 	struct netvsc_device *nvdev;
-+	char name[IFNAMSIZ];
- 	int ret = -ENOMEM;
- 
--	net = alloc_etherdev_mq(sizeof(struct net_device_context),
--				VRSS_CHANNEL_MAX);
-+	snprintf(name, IFNAMSIZ, "eth%d", dev->channel->dev_num);
-+	net = alloc_netdev_mqs(sizeof(struct net_device_context), name,
-+			       NET_NAME_ENUM, ether_setup,
-+			       VRSS_CHANNEL_MAX, VRSS_CHANNEL_MAX);
-+
- 	if (!net)
- 		goto no_net;
- 
-@@ -2355,6 +2359,14 @@ static int netvsc_probe(struct hv_device *dev,
- 		net->max_mtu = ETH_DATA_LEN;
- 
- 	ret = register_netdevice(net);
-+
-+	if (ret == -EEXIST) {
-+		pr_info("NIC name %s exists, request another name.\n",
-+			net->name);
-+		strlcpy(net->name, "eth%d", IFNAMSIZ);
-+		ret = register_netdevice(net);
-+	}
-+
- 	if (ret != 0) {
- 		pr_err("Unable to register netdev.\n");
- 		goto register_failed;
-@@ -2496,7 +2508,7 @@ static int netvsc_resume(struct hv_device *dev)
- 	.suspend = netvsc_suspend,
- 	.resume = netvsc_resume,
- 	.driver = {
--		.probe_type = PROBE_FORCE_SYNCHRONOUS,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
- 
--- 
-1.8.3.1
-
+http://lore.kernel.org/r/157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com
