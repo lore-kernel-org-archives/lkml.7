@@ -2,244 +2,227 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD305C2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 01:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC32C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE10320748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 01:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA67B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:01:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="kZENiB83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfL3B7d (ORCPT
+        id S1726785AbfL3CBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 20:59:33 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8643 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726343AbfL3B7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 20:59:33 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CFD9A8827B07CF6BB30F;
-        Mon, 30 Dec 2019 09:59:29 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
- 09:59:24 +0800
-Subject: Re: [net-next v6 PATCH 1/2] page_pool: handle page recycle for
- NUMA_NO_NODE condition
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        <netdev@vger.kernel.org>
-CC:     <lirongqing@baidu.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Saeed Mahameed <saeedm@mellanox.com>, <mhocko@kernel.org>,
-        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>
-References: <157746672570.257308.7385062978550192444.stgit@firesoul>
- <157746679893.257308.4995193590996029483.stgit@firesoul>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <b56069bd-ca8f-68bc-7e0b-bd0da423f891@huawei.com>
-Date:   Mon, 30 Dec 2019 09:59:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Sun, 29 Dec 2019 21:01:08 -0500
+Received: from onstation.org ([52.200.56.107]:37594 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726653AbfL3CBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:01:07 -0500
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id E0EE13F262;
+        Mon, 30 Dec 2019 02:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1577671267;
+        bh=t0PObDLzsPhcqnRoun2t4cn7CK8IaaEUsOLL32hsp+A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kZENiB83tEIEqiyvYfxpIm/AUe9rYXindPV5Wc6UPLe9ALgOWZg6dxrxcj10b/Mak
+         eUtBxlHssLnK5FzNqOCzVypYY11Ut1p0uiiTWL1rxxle/dCfv0tHipu1/ikpdbaqMz
+         NZJxJji08Tv2ZcOLQEp33HWAX9RDYlF5m3OousJA=
+From:   Brian Masney <masneyb@onstation.org>
+To:     jeffrey.l.hugo@gmail.com, robdclark@gmail.com
+Cc:     freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        sean@poorly.run
+Subject: [PATCH RFC v2] drm/msm/mdp5: enable autorefresh
+Date:   Sun, 29 Dec 2019 21:00:53 -0500
+Message-Id: <20191230020053.26016-2-masneyb@onstation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191230020053.26016-1-masneyb@onstation.org>
+References: <20191230020053.26016-1-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <157746679893.257308.4995193590996029483.stgit@firesoul>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/28 1:13, Jesper Dangaard Brouer wrote:
-> The check in pool_page_reusable (page_to_nid(page) == pool->p.nid) is
-> not valid if page_pool was configured with pool->p.nid = NUMA_NO_NODE.
-> 
-> The goal of the NUMA changes in commit d5394610b1ba ("page_pool: Don't
-> recycle non-reusable pages"), were to have RX-pages that belongs to the
-> same NUMA node as the CPU processing RX-packet during softirq/NAPI. As
-> illustrated by the performance measurements.
-> 
-> This patch moves the NAPI checks out of fast-path, and at the same time
-> solves the NUMA_NO_NODE issue.
+Since the introduction of commit 2d99ced787e3 ("drm/msm: async commit
+support"), command-mode panels began throwing the following errors:
 
-There seems to be a minor NUMA_NO_NODE case that has not been handled by
-this patch yet:
+    msm fd900000.mdss: pp done time out, lm=0
 
-1. When the page is always recycled to pool->alloc.cache.
-2. And page_pool_alloc_pages always return pages from pool->alloc.cache.
+Let's fix this by enabling the autorefresh feature that's available in
+the MDP starting at version 1.0. This will cause the MDP to
+automatically send a frame to the panel every time the panel invokes the
+TE signal, which will trigger the PP_DONE IRQ. This requires only
+sending a single START signal for command-mode panels.
 
-Then non-local page will be reused when the rx NAPI affinity changes.
+This gives us a counter for command-mode panels that we can use to
+implement async commit support for the MDP5 in a follow up patch.
 
-Of coure we can handle above by calling page_pool_update_nid(), which
-may require very user to call page_pool_update_nid() explicitly even
-the user has specify the pool->p.nid as NUMA_NO_NODE.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Suggested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Fixes: 2d99ced787e3 ("drm/msm: async commit support")
+---
+Changes since v1:
+- Send a single start command to kick off the pipeline.
 
-Any consideration for above case?
+The reason I marked this patch as a RFC is that the display during some
+small percentage of boots will stop updating after a minute or so, and
+the ping pong IRQs stop. Most of the time it works with no issues and I
+haven't been able to find a way to reproduce the issue. I tried
+suspending the phone by toggling /sys/power/state since I thought that
+the issue could potentially be related to power management.
 
-> 
-> First realize that alloc_pages_node() with pool->p.nid = NUMA_NO_NODE
-> will lookup current CPU nid (Numa ID) via numa_mem_id(), which is used
-> as the the preferred nid.  It is only in rare situations, where
-> e.g. NUMA zone runs dry, that page gets doesn't get allocated from
-> preferred nid.  The page_pool API allows drivers to control the nid
-> themselves via controlling pool->p.nid.
-> 
-> This patch moves the NAPI check to when alloc cache is refilled, via
-> dequeuing/consuming pages from the ptr_ring. Thus, we can allow placing
-> pages from remote NUMA into the ptr_ring, as the dequeue/consume step
-> will check the NUMA node. All current drivers using page_pool will
-> alloc/refill RX-ring from same CPU running softirq/NAPI process.
-> 
-> Drivers that control the nid explicitly, also use page_pool_update_nid
-> when changing nid runtime.  To speed up transision to new nid the alloc
-> cache is now flushed on nid changes.  This force pages to come from
-> ptr_ring, which does the appropate nid check.
-> 
-> For the NUMA_NO_NODE case, when a NIC IRQ is moved to another NUMA
-> node, we accept that transitioning the alloc cache doesn't happen
-> immediately. The preferred nid change runtime via consulting
-> numa_mem_id() based on the CPU processing RX-packets.
-> 
-> Notice, to avoid stressing the page buddy allocator and avoid doing too
-> much work under softirq with preempt disabled, the NUMA check at
-> ptr_ring dequeue will break the refill cycle, when detecting a NUMA
-> mismatch. This will cause a slower transition, but its done on purpose.
-> 
-> Fixes: d5394610b1ba ("page_pool: Don't recycle non-reusable pages")
-> Reported-by: Li RongQing <lirongqing@baidu.com>
-> Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> ---
->  net/core/page_pool.c |   80 ++++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 61 insertions(+), 19 deletions(-)
-> 
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index a6aefe989043..748f0d36f4be 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -96,10 +96,60 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
->  }
->  EXPORT_SYMBOL(page_pool_create);
->  
-> +static void __page_pool_return_page(struct page_pool *pool, struct page *page);
-> +
-> +noinline
-> +static struct page *page_pool_refill_alloc_cache(struct page_pool *pool,
-> +						 bool refill)
-> +{
-> +	struct ptr_ring *r = &pool->ring;
-> +	struct page *page;
-> +	int pref_nid; /* preferred NUMA node */
-> +
-> +	/* Quicker fallback, avoid locks when ring is empty */
-> +	if (__ptr_ring_empty(r))
-> +		return NULL;
-> +
-> +	/* Softirq guarantee CPU and thus NUMA node is stable. This,
-> +	 * assumes CPU refilling driver RX-ring will also run RX-NAPI.
-> +	 */
-> +	pref_nid = (pool->p.nid == NUMA_NO_NODE) ? numa_mem_id() : pool->p.nid;
-> +
-> +	/* Slower-path: Get pages from locked ring queue */
-> +	spin_lock(&r->consumer_lock);
-> +
-> +	/* Refill alloc array, but only if NUMA match */
-> +	do {
-> +		page = __ptr_ring_consume(r);
-> +		if (unlikely(!page))
-> +			break;
-> +
-> +		if (likely(page_to_nid(page) == pref_nid)) {
-> +			pool->alloc.cache[pool->alloc.count++] = page;
-> +		} else {
-> +			/* NUMA mismatch;
-> +			 * (1) release 1 page to page-allocator and
-> +			 * (2) break out to fallthough to alloc_pages_node.
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 17 ++++++++++++-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c  | 31 ++++++++++++++++++++---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.h  |  3 +--
+ 3 files changed, 44 insertions(+), 7 deletions(-)
 
-fallthough -> fallthrough ?
-
-> +			 * This limit stress on page buddy alloactor.
-> +			 */
-> +			__page_pool_return_page(pool, page);
-> +			page = NULL;
-> +			break;
-> +		}
-> +	} while (pool->alloc.count < PP_ALLOC_CACHE_REFILL &&
-> +		 refill);
-> +
-> +	/* Return last page */
-> +	if (likely(pool->alloc.count > 0))
-> +		page = pool->alloc.cache[--pool->alloc.count];
-> +
-> +	spin_unlock(&r->consumer_lock);
-> +	return page;
-> +}
-> +
->  /* fast path */
->  static struct page *__page_pool_get_cached(struct page_pool *pool)
->  {
-> -	struct ptr_ring *r = &pool->ring;
->  	bool refill = false;
->  	struct page *page;
->  
-> @@ -113,20 +163,7 @@ static struct page *__page_pool_get_cached(struct page_pool *pool)
->  		refill = true;
->  	}
->  
-> -	/* Quicker fallback, avoid locks when ring is empty */
-> -	if (__ptr_ring_empty(r))
-> -		return NULL;
-> -
-> -	/* Slow-path: Get page from locked ring queue,
-> -	 * refill alloc array if requested.
-> -	 */
-> -	spin_lock(&r->consumer_lock);
-> -	page = __ptr_ring_consume(r);
-> -	if (refill)
-> -		pool->alloc.count = __ptr_ring_consume_batched(r,
-> -							pool->alloc.cache,
-> -							PP_ALLOC_CACHE_REFILL);
-> -	spin_unlock(&r->consumer_lock);
-> +	page = page_pool_refill_alloc_cache(pool, refill);
->  	return page;
->  }
->  
-> @@ -311,13 +348,10 @@ static bool __page_pool_recycle_direct(struct page *page,
->  
->  /* page is NOT reusable when:
->   * 1) allocated when system is under some pressure. (page_is_pfmemalloc)
-> - * 2) belongs to a different NUMA node than pool->p.nid.
-> - *
-> - * To update pool->p.nid users must call page_pool_update_nid.
->   */
->  static bool pool_page_reusable(struct page_pool *pool, struct page *page)
->  {
-> -	return !page_is_pfmemalloc(page) && page_to_nid(page) == pool->p.nid;
-> +	return !page_is_pfmemalloc(page);
->  }
->  
->  void __page_pool_put_page(struct page_pool *pool, struct page *page,
-> @@ -484,7 +518,15 @@ EXPORT_SYMBOL(page_pool_destroy);
->  /* Caller must provide appropriate safe context, e.g. NAPI. */
->  void page_pool_update_nid(struct page_pool *pool, int new_nid)
->  {
-> +	struct page *page;
-> +
->  	trace_page_pool_update_nid(pool, new_nid);
->  	pool->p.nid = new_nid;
-> +
-> +	/* Flush pool alloc cache, as refill will check NUMA node */
-> +	while (pool->alloc.count) {
-> +		page = pool->alloc.cache[--pool->alloc.count];
-> +		__page_pool_return_page(pool, page);
-> +	}
->  }
->  EXPORT_SYMBOL(page_pool_update_nid);
-> 
-> 
-> 
-> .
-> 
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index 05cc04f729d6..39dd144295b3 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -436,6 +436,8 @@ static void mdp5_crtc_atomic_disable(struct drm_crtc *crtc,
+ 		spin_unlock_irqrestore(&mdp5_kms->dev->event_lock, flags);
+ 	}
+ 
++	mdp5_ctl_disable(mdp5_cstate->ctl, &mdp5_cstate->pipeline);
++
+ 	mdp5_crtc->enabled = false;
+ }
+ 
+@@ -456,6 +458,7 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+ {
+ 	struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+ 	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
++	struct mdp5_pipeline *pipeline = &mdp5_cstate->pipeline;
+ 	struct mdp5_kms *mdp5_kms = get_kms(crtc);
+ 	struct device *dev = &mdp5_kms->pdev->dev;
+ 
+@@ -493,9 +496,21 @@ static void mdp5_crtc_atomic_enable(struct drm_crtc *crtc,
+ 
+ 	mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->err);
+ 
+-	if (mdp5_cstate->cmd_mode)
++	if (mdp5_cstate->cmd_mode) {
+ 		mdp_irq_register(&mdp5_kms->base, &mdp5_crtc->pp_done);
+ 
++		/*
++		 * Enable autorefresh so we get regular ping/pong IRQs.
++		 * - Bit 31 is the enable bit
++		 * - Bits 0-15 represent the frame count, specifically how many
++		 *   TE events before the MDP sends a frame.
++		 */
++		mdp5_write(mdp5_kms,
++			   REG_MDP5_PP_AUTOREFRESH_CONFIG(pipeline->mixer->pp),
++			   BIT(31) | BIT(0));
++		crtc_flush_all(crtc);
++	}
++
+ 	mdp5_crtc->enabled = true;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+index 030279d7b64b..965757d4f356 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.c
+@@ -50,6 +50,13 @@ struct mdp5_ctl {
+ 	bool flush_pending;
+ 
+ 	struct mdp5_ctl *pair; /* Paired CTL to be flushed together */
++
++	/*
++	 * The command mode panels are ran with autorefresh enabled. Only a
++	 * single START command can be sent so keep track on a per ping pong
++	 * basis.
++	 */
++	bool start_sent_by_pp[4];
+ };
+ 
+ struct mdp5_ctl_manager {
+@@ -191,7 +198,8 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+ 	case INTF_WB:
+ 		return true;
+ 	case INTF_DSI:
+-		return intf->mode == MDP5_INTF_DSI_MODE_COMMAND;
++		return intf->mode == MDP5_INTF_DSI_MODE_COMMAND &&
++			!ctl->start_sent_by_pp[pipeline->mixer->pp];
+ 	default:
+ 		return false;
+ 	}
+@@ -204,13 +212,17 @@ static bool start_signal_needed(struct mdp5_ctl *ctl,
+  * executed in order to kick off operation and activate all layers.
+  * e.g.: DSI command mode, Writeback
+  */
+-static void send_start_signal(struct mdp5_ctl *ctl)
++static void send_start_signal(struct mdp5_ctl *ctl,
++			      struct mdp5_pipeline *pipeline)
+ {
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&ctl->hw_lock, flags);
+ 	ctl_write(ctl, REG_MDP5_CTL_START(ctl->id), 1);
+ 	spin_unlock_irqrestore(&ctl->hw_lock, flags);
++
++	if (pipeline->intf->mode == MDP5_INTF_DSI_MODE_COMMAND)
++		ctl->start_sent_by_pp[pipeline->mixer->pp] = true;
+ }
+ 
+ /**
+@@ -234,7 +246,7 @@ int mdp5_ctl_set_encoder_state(struct mdp5_ctl *ctl,
+ 	DBG("intf_%d: %s", intf->num, enabled ? "on" : "off");
+ 
+ 	if (start_signal_needed(ctl, pipeline)) {
+-		send_start_signal(ctl);
++		send_start_signal(ctl, pipeline);
+ 	}
+ 
+ 	return 0;
+@@ -562,7 +574,7 @@ u32 mdp5_ctl_commit(struct mdp5_ctl *ctl,
+ 	}
+ 
+ 	if (start_signal_needed(ctl, pipeline)) {
+-		send_start_signal(ctl);
++		send_start_signal(ctl, pipeline);
+ 	}
+ 
+ 	return curr_ctl_flush_mask;
+@@ -753,3 +765,14 @@ struct mdp5_ctl_manager *mdp5_ctlm_init(struct drm_device *dev,
+ 
+ 	return ERR_PTR(ret);
+ }
++
++void mdp5_ctl_disable(struct mdp5_ctl *ctl, struct mdp5_pipeline *pipeline)
++{
++	int i;
++
++	if (pipeline->intf->mode != MDP5_INTF_DSI_MODE_COMMAND)
++		return;
++
++	for (i = 0; i < ARRAY_SIZE(ctl->start_sent_by_pp); i++)
++		ctl->start_sent_by_pp[i] = false;
++}
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.h b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.h
+index c2af68aa77ae..f9bbf1295669 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.h
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_ctl.h
+@@ -72,7 +72,6 @@ u32 mdp_ctl_flush_mask_encoder(struct mdp5_interface *intf);
+ u32 mdp5_ctl_commit(struct mdp5_ctl *ctl, struct mdp5_pipeline *pipeline,
+ 		    u32 flush_mask, bool start);
+ u32 mdp5_ctl_get_commit_status(struct mdp5_ctl *ctl);
+-
+-
++void mdp5_ctl_disable(struct mdp5_ctl *ctl, struct mdp5_pipeline *pipeline);
+ 
+ #endif /* __MDP5_CTL_H__ */
+-- 
+2.21.0
 
