@@ -2,116 +2,97 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B5BC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07AAC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B2A206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB2820718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G6sDaIa4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfL3U3v (ORCPT
+        id S1727757AbfL3Ugp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:29:51 -0500
-Received: from smtp4-g21.free.fr ([212.27.42.4]:18254 "EHLO smtp4-g21.free.fr"
+        Mon, 30 Dec 2019 15:36:45 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:43844 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbfL3U3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:29:51 -0500
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 4F4BA19F5E6;
-        Mon, 30 Dec 2019 21:25:39 +0100 (CET)
-Subject: Re: [PATCH v2] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20191227012717.78965-1-bjorn.andersson@linaro.org>
- <9e5ee7e8-aa63-e82c-8135-acc77b476c87@mm-sol.com>
- <38acf5fc-85aa-7090-e666-97a1281e9905@free.fr>
- <20191229024547.GH3755841@builder>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <9c7d69cc-29e7-07c5-1e93-e9fdadf370a6@free.fr>
-Date:   Mon, 30 Dec 2019 21:25:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727667AbfL3Ugp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:36:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=SXdGQUakfHybtX0jGG9d+Xw/HkMyol+MPHYTh6dQ3U4=; b=G6sDaIa4Z25UB8aomFAcrsYCxZ
+        sHFxTi0i4H9s4qWhRn4C48sxjLww49Qqy7d0sMS3bqs9wzaNysXFjyhJJ1HsaMmC5d2mVBuQrMqCY
+        XMAh9tp2x8TJRQRtngzHnGf9Eu8UdH6/Xkq5/TXmMV21bzOFORXZO94hq7H1fSecWwj4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1im1lw-0006Vp-L5; Mon, 30 Dec 2019 21:36:16 +0100
+Date:   Mon, 30 Dec 2019 21:36:16 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Alexander Lobakin <alobakin@dlink.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH RFC net-next 05/19] net: dsa: tag_ar9331: add GRO
+ callbacks
+Message-ID: <20191230203616.GA24733@lunn.ch>
+References: <20191230143028.27313-1-alobakin@dlink.ru>
+ <20191230143028.27313-6-alobakin@dlink.ru>
+ <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191229024547.GH3755841@builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/12/2019 03:45, Bjorn Andersson wrote:
-
-> On Sat 28 Dec 07:41 PST 2019, Marc Gonzalez wrote:
+On Mon, Dec 30, 2019 at 10:20:50AM -0800, Florian Fainelli wrote:
+> On 12/30/19 6:30 AM, Alexander Lobakin wrote:
+> > Add GRO callbacks to the AR9331 tagger so GRO layer can now process
+> > such frames.
+> > 
+> > Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 > 
->> On 27/12/2019 09:51, Stanimir Varbanov wrote:
->>
->>> On 12/27/19 3:27 AM, Bjorn Andersson wrote:
->>>
->>>> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
->>>> the fixup to only affect the relevant PCIe bridges.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>> ---
->>>>
->>>> Stan, I picked up all the suggested device id's from the previous thread and
->>>> added 0x1000 for QCS404. I looked at creating platform specific defines in
->>>> pci_ids.h, but SDM845 has both 106 and 107... Please let me know if you would
->>>> prefer that I do this anyway.
->>>
->>> Looks good,
->>>
->>> Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>>
->>>>  drivers/pci/controller/dwc/pcie-qcom.c | 8 +++++++-
->>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> index 5ea527a6bd9f..138e1a2d21cc 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> @@ -1439,7 +1439,13 @@ static void qcom_fixup_class(struct pci_dev *dev)
->>>>  {
->>>>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->>>>  }
->>>> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0101, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0104, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0106, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0107, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
->>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
->>
->> Hrmmm... still not CCed on the patch,
-> 
-> You are Cc'ed on the patch, but as usual your mail server responds "451
-> too many errors from your ip" and throw my emails away.
-> 
->> and still don't think the fixup is required(?) for 0x106 and 0x107.
->>
-> 
-> I re-read your reply in my v1 thread. So we know that 0x104 doesn't need
-> the fixup, so presumably only 0x101 needs the fixup?
+> This is a good example and we should probably build a tagger abstraction
+> that is much simpler to fill in callbacks for (although indirect
+> function calls may end-up killing performance with retpoline and
+> friends), but let's consider this idea.
 
-I apologize for the tone of my reply. I did not mean to sound
-so snarky.
+Hi Florian
 
-All I can say is that, if I remember correctly, the fixup was
-not necessary on apq8098 (0x0105) and it was probably not
-required on msm8996 and sdm845. For older platforms, all bets
-are off.
+We really do need some numbers here. Does GRO really help? On an ARM
+or MIPS platform, i don't think retpoline is an issue? But x86 is, and
+we do have a few x86 boards with switches.
 
-Regards.
+Maybe we can do some macro magic instead of function pointers, if we
+can keep it all within one object file?
+
+    Andrew
