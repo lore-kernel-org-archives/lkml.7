@@ -2,151 +2,107 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EE0C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4CAC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB66206CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031482071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="oaVlu4ZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfL3WUc (ORCPT
+        id S1727764AbfL3Wl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 17:20:32 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33668 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfL3WUb (ORCPT
+        Mon, 30 Dec 2019 17:41:57 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55732 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727744AbfL3Wl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 17:20:31 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d139so733021wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 14:20:29 -0800 (PST)
+        Mon, 30 Dec 2019 17:41:57 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so386215pjz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 14:41:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xba8FIFzefmv0Pl2yIOHKi2YLMOHTYOjvq/MJDGzbZk=;
+        b=oaVlu4ZMb4nJbS8ZAIVbkqLg70LBaTIXwRgvcZZv9SZ248sYUojeDA7qhAd886zZac
+         rh9TzFPFxLxPtXU7prskTsr7rL+40M5oYvNuQKFkHgDq1RBNMlak+5SOCJSpFS7YClZY
+         c3MHo8ep6VHp9qeUWmCewR18X79OodEPTizuJvdhuUdB/jGBfRyKT/CLR0Kj449F9dSo
+         Awr5vHUv3bb8kLJVrFqN8VqLk90VYqZQrVorTvzh20YpKWxTOWEjo0VbAV1/WsozKxJW
+         M3WZo8273CPMcm+gw5Bx1T5jRiQnoHQP8MprR5YvRbcakf6ZfvOqfGSUQuPZgdOCAyLd
+         Ycrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=YmRB981p8JsUEIP5P7LyqCWtpnoG5uSiRb3N/avTgPs=;
-        b=PvVInXyJkg0mZ/Y5WQMDPIxi/uSt4STqgy9XB5T5KOnziMa2bsUsrNGvrSFZduSZUz
-         osuE4piPG+iYxqVz+mIx3EzeFhjqLZtjDbcKHT4gdAPeM+cmUw5/duYsavKcYUDx5hHZ
-         miWhAmW0ZYd2enNlSdFJfr4qTMgHa6A8wWr1Te0ed6PbfN14RgZYLq9r8oz6ktO+4kvk
-         4dMuoAkZ+UUeE5lgk/gCclS2+B2GHGuW+VTBPnRFztJIy7cwystwxe/aEEVpxgzkfLG7
-         zG0v4oQQOfTfTj+Z/abN2BT+mevrgS+b8meylZI727Qsd9+kpRhSco/ZD8YdwgiAiWoM
-         OLog==
-X-Gm-Message-State: APjAAAU6xbcHu/6ASJP+6LIkEDNRXe977f+NLpsg/irvi7fVfj9m9n8s
-        KXxj0nmxHC+rVaD2+McL9cw=
-X-Google-Smtp-Source: APXvYqxnLvsRAS1yKDGLvERyric4DCTqiMpVV4sFknExgYlKMj5dY8o3J0hXqeVNB4dOuppy76drAg==
-X-Received: by 2002:a1c:498a:: with SMTP id w132mr890764wma.10.1577744428615;
-        Mon, 30 Dec 2019 14:20:28 -0800 (PST)
-Received: from [10.9.0.26] ([46.166.128.205])
-        by smtp.gmail.com with ESMTPSA id x7sm46488669wrq.41.2019.12.30.14.20.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Dec 2019 14:20:27 -0800 (PST)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH v1 1/1] lkdtm/stackleak: Make the stack erasing test more
- verbose
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, notify@kernel.org
-References: <20191219145416.435508-1-alex.popov@linux.com>
- <201912301034.5C04DC89@keescook>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <5bde4de0-875c-536b-67ec-eafebb8b9ab1@linux.com>
-Date:   Tue, 31 Dec 2019 01:20:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xba8FIFzefmv0Pl2yIOHKi2YLMOHTYOjvq/MJDGzbZk=;
+        b=sv2PbyXoXDZUePcz2HseqxA1mSrszOQX5+QxcpZ86ENBK9n2FBxNQ3blhKfhwTKG80
+         pR/kyjTNfsz7CvBfa7qHXbaY1Hw8/lGVCB6zU4bFwDwLbn/mQxDeG9VO2zbfVYRNyBQ7
+         5/gRqrxkj58FFY3bmxLiweIjMNz6/MxNqhzt/RvYqX3BLFatzPPE//AcUwcvwPtfTNav
+         c/w8F15C3amQ1K+pA2MKHn04UaUIygmR5fP4ycmJiqHrzlMLegxZBZLPl5m237sGA0/z
+         59bDl3jyEJq1E4wjpkkBseqEtJmrfaVc2X8vpCZLZM7okySW18EEn+XyHTSVCn5B48dO
+         Qdrw==
+X-Gm-Message-State: APjAAAUUMwebbil4ObZ0uqVaRNUXTzJOLcxXQ83VasSBbqJkqM81hBcF
+        U5T5Qia0P0ogKTgZmSDmZU9P3s5m7Tg=
+X-Google-Smtp-Source: APXvYqxDJQOkw3IpX2MxSfODfbrqMn2AEST8zRa82EX9XuOmIXDLDrUxdaPdU89Cg2vVy5Y5+ZNBDw==
+X-Received: by 2002:a17:902:a5c1:: with SMTP id t1mr47250002plq.87.1577745716055;
+        Mon, 30 Dec 2019 14:41:56 -0800 (PST)
+Received: from debian ([122.164.19.238])
+        by smtp.gmail.com with ESMTPSA id z19sm49933366pfn.49.2019.12.30.14.41.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 14:41:55 -0800 (PST)
+Date:   Tue, 31 Dec 2019 04:11:43 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in
+Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
+Message-ID: <20191230224143.GA3074@debian>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191230174336.GA1498696@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <201912301034.5C04DC89@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230174336.GA1498696@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Kees!
-
-On 30.12.2019 21:37, Kees Cook wrote:
-> On Thu, Dec 19, 2019 at 05:54:16PM +0300, Alexander Popov wrote:
->> Make the stack erasing test more verbose about the errors that it
->> can detect. BUG() in case of test failure is useful when the test
->> is running in a loop.
+On Mon, Dec 30, 2019 at 06:43:36PM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Dec 29, 2019 at 06:20:53PM +0100, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.7 release.
+> > There are 434 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
 > 
-> Hi! I try to keep the "success" conditions for LKDTM tests to be a
-> system exception, so doing "BUG" on a failure is actually against the
-> design. So, really, a test harness needs to know to check dmesg for the
-> results here. It almost looks like this check shouldn't live in LKDTM,
+> I have pushed out -rc2:
+>  	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc2.gz
+> 
+> to resolve some reported issues.
+> 
+> greg k-h
 
-Hm, I see...
+i have compiled 5.4.7-rc2+ related and "dmesg -l err" has no new errors.
+"dmesg -l warn" all clean
 
-Let me explain why I've decided to use BUG() in case of a failure.
+--
+software engineer
+rajagiri school of engineering and technology
 
-Once upon a time I noticed that the stack erasing test failed on a kernel with
-KASAN enabled. It happened only once, and all my numerous efforts to reproduce
-it failed. That's why I come with this patch. These changes provide additional
-information and allow easy detection of a failure when you run the test in a loop.
-
-Is stackleak test the only exception of this kind in LKDTM?
-
-> but since it feels like other LKDTM tests, I'm happy to keep it there
-> for now.
-
-Do you mean that you will apply this patch?
-
-> I'll resend my selftests series that adds a real test harness for all
-> the LKDTM tests and CC you.
-
-Ok!
-
-Maybe you also see how to improve the LKDTM infrastructure and remove this
-inconsistency. Could you share your ideas?
-
-Best regards,
-Alexander
