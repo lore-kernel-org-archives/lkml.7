@@ -2,38 +2,43 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DCCC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B4EC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07F020718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAAE20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfL3HFd (ORCPT
+        id S1727190AbfL3HLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 02:05:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46302 "EHLO mx2.suse.de"
+        Mon, 30 Dec 2019 02:11:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48178 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfL3HFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 02:05:33 -0500
+        id S1727136AbfL3HLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 02:11:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 999F3ACEC;
-        Mon, 30 Dec 2019 07:05:31 +0000 (UTC)
-Date:   Mon, 30 Dec 2019 08:05:31 +0100
-Message-ID: <s5himly47k4.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 8B7B9B26D;
+        Mon, 30 Dec 2019 07:11:30 +0000 (UTC)
+Date:   Mon, 30 Dec 2019 08:11:30 +0100
+Message-ID: <s5hh81i47a5.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     perex@perex.cz, tiwai@suse.com, kailang@realtek.com,
-        hui.wang@canonical.com, tomas.espeleta@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: Re: [PATCH v3] ALSA: hda/realtek - Enable the bass speaker of ASUS UX431FLC
-In-Reply-To: <20191230031118.95076-1-chiu@endlessm.com>
-References: <20191230031118.95076-1-chiu@endlessm.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>, linux-tegra@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ASoC: rt5640: Fix NULL dereference on module unload
+In-Reply-To: <20191229150454.2127-1-digetx@gmail.com>
+References: <20191229150454.2127-1-digetx@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,20 +49,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Dec 2019 04:11:18 +0100,
-Chris Chiu wrote:
+On Sun, 29 Dec 2019 16:04:54 +0100,
+Dmitry Osipenko wrote:
 > 
-> ASUS reported that there's an bass speaker in addition to internal
-> speaker and it uses DAC 0x02. It was not enabled in the commit
-> 436e25505f34 ("ALSA: hda/realtek - Enable internal speaker of ASUS
-> UX431FLC") which only enables the amplifier and the front speaker.
-> This commit enables the bass speaker on top of the aforementioned
-> work to improve the acoustic experience.
+> The rt5640->jack is NULL if jack is already disabled at the time of
+> driver's module unloading.
 > 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+>  Unable to handle kernel NULL pointer dereference at virtual address 00000024
+>  ...
+>  (rt5640_set_jack [snd_soc_rt5640]) from [<bf86f7ed>] (snd_soc_component_set_jack+0x11/0x1c [snd_soc_core])
+>  (snd_soc_component_set_jack [snd_soc_core]) from [<bf8675cf>] (soc_remove_component+0x1b/0x54 [snd_soc_core])
+>  (soc_remove_component [snd_soc_core]) from [<bf868859>] (soc_cleanup_card_resources+0xad/0x1cc [snd_soc_core])
+>  (soc_cleanup_card_resources [snd_soc_core]) from [<bf86945f>] (snd_soc_unregister_card+0x47/0x78 [snd_soc_core])
+>  (snd_soc_unregister_card [snd_soc_core]) from [<bf8b4013>] (tegra_rt5640_remove+0x13/0x1c [snd_soc_tegra_rt5640])
+>  (tegra_rt5640_remove [snd_soc_tegra_rt5640]) from [<c0516d2f>] (platform_drv_remove+0x17/0x24)
+>  (platform_drv_remove) from [<c0515aed>] (device_release_driver_internal+0x95/0x114)
+>  (device_release_driver_internal) from [<c0515bd9>] (driver_detach+0x4d/0x90)
+>  (driver_detach) from [<c0514d59>] (bus_remove_driver+0x31/0x70)
+>  (bus_remove_driver) from [<bf8b4215>] (tegra_rt5640_driver_exit+0x9/0xdf4 [snd_soc_tegra_rt5640])
+>  (tegra_rt5640_driver_exit [snd_soc_tegra_rt5640]) from [<c019336f>] (sys_delete_module+0xe7/0x184)
+>  (sys_delete_module) from [<c0101001>] (ret_fast_syscall+0x1/0x28)
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  sound/soc/codecs/rt5640.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
+> index adbae1f36a8a..b245c44cafbc 100644
+> --- a/sound/soc/codecs/rt5640.c
+> +++ b/sound/soc/codecs/rt5640.c
+> @@ -2432,16 +2432,22 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
+>  {
+>  	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
+>  
+> -	disable_irq(rt5640->irq);
+> -	rt5640_cancel_work(rt5640);
+> +	/*
+> +	 * soc_remove_component() force-disables jack and thus rt5640->jack
+> +	 * could be NULL at the time of driver's module unloading.
+> +	 */
+> +	if (rt5640->jack) {
+> +		disable_irq(rt5640->irq);
+> +		rt5640_cancel_work(rt5640);
+>  
+> -	if (rt5640->jack->status & SND_JACK_MICROPHONE) {
+> -		rt5640_disable_micbias1_ovcd_irq(component);
+> -		rt5640_disable_micbias1_for_ovcd(component);
+> -		snd_soc_jack_report(rt5640->jack, 0, SND_JACK_BTN_0);
+> -	}
+> +		if (rt5640->jack->status & SND_JACK_MICROPHONE) {
+> +			rt5640_disable_micbias1_ovcd_irq(component);
+> +			rt5640_disable_micbias1_for_ovcd(component);
+> +			snd_soc_jack_report(rt5640->jack, 0, SND_JACK_BTN_0);
+> +		}
+>  
+> -	rt5640->jack = NULL;
+> +		rt5640->jack = NULL;
+> +	}
+>  }
 
-Applied now.  Thanks.
+I guess it's simpler just returning if rt5640->jack is already NULL.
 
+--- a/sound/soc/codecs/rt5640.c
++++ b/sound/soc/codecs/rt5640.c
+@@ -2432,6 +2432,10 @@ static void rt5640_disable_jack_detect(struct snd_soc_component *component)
+ {
+ 	struct rt5640_priv *rt5640 = snd_soc_component_get_drvdata(component);
+ 
++	/* already disabled? */
++	if (!rt5640->jack)
++		return;
++
+ 	disable_irq(rt5640->irq);
+ 	rt5640_cancel_work(rt5640);
+ 
+
+thanks,
 
 Takashi
