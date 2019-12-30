@@ -2,112 +2,80 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B51EC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC87C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F187120730
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A5D206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 21:09:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="nYqdilDu"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="HqCV+yaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfL3VDE (ORCPT
+        id S1727762AbfL3VJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 16:03:04 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:11540 "EHLO rere.qmqm.pl"
+        Mon, 30 Dec 2019 16:09:35 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:41445 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfL3VDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 16:03:03 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47mqdd0DMQz7N;
-        Mon, 30 Dec 2019 22:03:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1577739781; bh=NNyRepO9YhRpotCRnJnXy8pqk04Hj9WYZM8yTYKVSKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nYqdilDubgYoiO7q7ir4AhKr8ggJoA91XK6Sjk9p095YyYgl0RiFO1mK50hybP3yU
-         i6uDIqspV/CnmzP4Rs/3vCMbxydoTkFl4LJ55mWd+DSNfhB/05u3tRA7emehjh+MTm
-         wt8yx4Jrs0z8lekEuiNi2htVGxTd5cEMaIk2CKu7un8f2xxcNce5IiwvHiiLtrjRvU
-         LvGOZ/espqLCs4SVyMwZSTCqH3vDqU5ksVGBGuuBQiPYLvzVSh1HIwZU3bJvleqpM1
-         dFATpChED97WwmAWe74O/eAQJRARWfa4vfqr1v3mquGkuZkmJKqRZRjCrWvSdmmHZI
-         MOJ+GImum0JYg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 30 Dec 2019 22:02:59 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Peter Chen <peter.chen@nxp.com>, Rob Herring <robh-dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
- to driver's dependencies
-Message-ID: <20191230210259.GD24135@qmqm.qmqm.pl>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-11-digetx@gmail.com>
- <20191220035650.GC19921@b29397-desktop>
- <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
- <20191223213234.GA28786@qmqm.qmqm.pl>
- <7174833f-8325-7fb4-d190-78ba4bed0cbb@gmail.com>
+        id S1727691AbfL3VJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 16:09:34 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id cc421e35;
+        Mon, 30 Dec 2019 20:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=6bUp3Unh4J5ntgEcnJwDilbtlDo=; b=HqCV+y
+        aqge5F+06cKgztdUwKCaXLUh3/yblDQ4rDD3q3hZFy43Nw2+moMQGc5bLj1SkGgi
+        frZecd04k7WC5zWIpOPYTz7LwnMirenNoImVd4pgnY+1ZqClE5TYDIPTms//4EJ9
+        Qr2QYRh2w5e23TB2+AX6yvB+uIhHxYPld5NTC/kfyh1iX1GPqcEhWMtJSay9/TlQ
+        TRxAN24gygo5dRZPREc5R07+3xcoPDW9s1Km3CRZFyIBiJutNpK1Kiru5I7C74+I
+        G9nQCIVfdmzMgl87jVYNa/cSnP3LGUhQYorZsC7sdXL1UoDhuJy4KA7Rd/FF+rhA
+        uD+YZIoQJA+IfaIg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id fa0f9c9b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 30 Dec 2019 20:11:23 +0000 (UTC)
+Received: by mail-oi1-f170.google.com with SMTP id i1so11478210oie.8;
+        Mon, 30 Dec 2019 13:09:32 -0800 (PST)
+X-Gm-Message-State: APjAAAXV5b60Nw33JcRVh4nggeMk6YkAwguQndY3vvlrQf8uwZkuvNTq
+        C58EAPFFFnriJ1sSRUXJYPrXgR1lnBz7/glcr0s=
+X-Google-Smtp-Source: APXvYqyuMCRQ4VcLihFnxz8xJ9iUYopeGnYSqitkoalUwep0OXon+FupZMuh+YSXdCyEyaIgYPN8EeXmHxElcAyDLgE=
+X-Received: by 2002:aca:2109:: with SMTP id 9mr351507oiz.119.1577740171616;
+ Mon, 30 Dec 2019 13:09:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7174833f-8325-7fb4-d190-78ba4bed0cbb@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
+ <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+ <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
+ <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
+ <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
+ <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
+ <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
+ <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+ <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com> <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
+In-Reply-To: <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 30 Dec 2019 22:09:20 +0100
+X-Gmail-Original-Message-ID: <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
+Message-ID: <CAHmME9r2G4viiF4sYqpuYOnFCtjWpjugqenoEeUrsU6MGBeSuQ@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 07:21:05AM +0300, Dmitry Osipenko wrote:
-> 24.12.2019 00:32, Michał Mirosław пишет:
-> > On Fri, Dec 20, 2019 at 07:31:08AM +0300, Dmitry Osipenko wrote:
-> >> 20.12.2019 06:56, Peter Chen пишет:
-> >>> On 19-12-20 04:52:38, Dmitry Osipenko wrote:
-> > [...]
-> >>>> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >>>> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >>>> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
-> >>>>  	struct tegra_udc *udc;
-> >>>>  	int err;
-> >>>>  
-> >>>> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
-> >>>> +		err = request_module("phy_tegra_usb");
-> >>>> +		if (err)
-> >>>> +			return err;
-> >>>> +	}
-> >>>> +
-> >>>
-> >>> Why you do this dependency, if this controller driver can't
-> >>> get USB PHY, it should return error. What's the return value
-> >>> after calling below:
-> >>>
-> >>> 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
-> >>
-> >> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
-> > 
-> > How are other driver modules autoloaded? Isn't there an appropriate
-> > MODALIAS or MODULE_DEVICE_TABLE in there?
-> 
-> Hello Michał,
-> 
-> The phy_tegra_usb module is fine by itself, it's getting autoloaded.
-> 
-> The problem is that ci_hdrc_tegra module depends on the phy_tegra_usb
-> module and thus the PHY module should be loaded before the CI module,
-> otherwise CI driver fails with the EPROBE_DEFER.
+On Mon, Dec 30, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote
+> Is this immediately before/after the syscall instruction or the
+> indirect function call?
 
-Why, then, is CI driver not being probed again after PHY driver loads?
-EPROBE_DEFER is what should cause driver core to re-probe a device after
-other devices appear (PHY in this case).
+It's immediately after/before the call to the VDSO function itself.
+Next I'll try to instrument the VDSO to get closer to that syscall.
 
-Best Regards,
-Michał Mirosław
+I produced those reg dumps by hooking the page fault handler in the
+kernel to print them and then disabling aslr and sticking a
+`*(volatile int *)0 = 0;` in the code. Pretty gnarly.
