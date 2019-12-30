@@ -2,78 +2,121 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86309C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED11C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520C52071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D588E20718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HP9m2s6t"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DN3Iqa5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfL3Ug4 (ORCPT
+        id S1727801AbfL3UhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:36:56 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:60828 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbfL3Ugz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:36:55 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47mq3S30qFz7N;
-        Mon, 30 Dec 2019 21:36:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1577738212; bh=99TqEPrMZ5pkcNiavyKENCBAYULutWOYRq+K2R3BkDo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HP9m2s6t5HtwMgqxwN3J7/TDzMYETXRnzQ5iyTP3mbyNmpAMQFp16tZkepK4QiLoP
-         oTn7NNmuZh2N2NUiSuntCgACPqE/dVqDzqTwxwB/cemuXbGDb5HMxo6aCj4kqH/khO
-         GFuTt6IHLM8VlLhRmKkwk2And0G1JPkqymFggFsF5mSkeJnzb9TL/R/M7H9uQQ9BLu
-         gaTvgoAwuYMRHp92ia5yLqjue43QDU3GaMxbK5KGrTNzUCVOsgyyQTpd8YGr74Mktj
-         BHR7fcbG5kpLpxZ4iVdiNVJBwM1Vmg4e1+25gziuq7XKOAe4pyyub99T9KLoOd9Qbb
-         LPWqb8o+bBCwQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 30 Dec 2019 21:36:48 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/16] usb: phy: tegra: Keep CPU interrupts enabled
-Message-ID: <20191230203648.GA24135@qmqm.qmqm.pl>
-References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-14-digetx@gmail.com>
+        Mon, 30 Dec 2019 15:37:14 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40842 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbfL3UhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:37:13 -0500
+Received: by mail-ot1-f68.google.com with SMTP id w21so39869269otj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 12:37:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=N3dpJqjI0YwUjpo8var9eG+HiTs0fKSTa69wNvQw3Uk=;
+        b=DN3Iqa5QLHZZygBT0FzEe8PKs1W4q7EGbHG7W5tTg298ZVAUmmzEEcFue0zrFgJxvj
+         Ga0U28yoHfHefVfgMXSg4hoocDVsHjrhdCb19fMftsAhmyA61KA6iRPbAQvbf7PYFxP2
+         3AG2HuQM5hryHKsCSyUgbaXi3dWQY1+rEAgWM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=N3dpJqjI0YwUjpo8var9eG+HiTs0fKSTa69wNvQw3Uk=;
+        b=VmAflDvvtRSRNJD3gZOUon+f/anrZsoHKKKj6IMttU51T/nkzilOqcl82gp0CWdmtr
+         eCtLHFY5LbAkVk0xHKlMNjSUQxqsTJnnDV8XPkVgHwUwd8bFm9VFP1hRW/nJOIS70XTA
+         LqxM5qi0wI2xudtY4ZQnZSFPGhB2E832mDYzFgtke/3/jD/NBxHURH62rgIc9uin5gQ+
+         0haiveDIxB4qeynTjKC4U2TZ+ZUt03GFx5BceUcr9ektY0Hlg6tbUMV3I+SCui12WZiE
+         adBLyq3rZuZwhF2XwJXzJIADIm6wzUy0IhJgb3Xt+X7EM0boSFuaP7mNmZW3109niI84
+         JFQA==
+X-Gm-Message-State: APjAAAU/0D5C67rZZ3Yr+9uE/CePwZ7+XYSzpSj6imupsE8roBXnBANA
+        KAMB4t+ekkGY6dsIlsmrIQfoZw==
+X-Google-Smtp-Source: APXvYqzrX9H26dCG77JdRBA+uGbyVE9vWm06PPBlWMTzr5bFnHE/IcJebAYhczEaa2841osymtjqmA==
+X-Received: by 2002:a05:6830:22e3:: with SMTP id t3mr72285522otc.193.1577738232581;
+        Mon, 30 Dec 2019 12:37:12 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c7sm16202391otm.63.2019.12.30.12.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 12:37:11 -0800 (PST)
+Date:   Mon, 30 Dec 2019 12:37:10 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Nikolai Merinov <n.merinov@inango-systems.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
+        Ariel Gilman <a.gilman@inango-systems.com>
+Subject: Re: [PATCH] pstore/ram: fix for adding dumps to non-empty zone
+Message-ID: <201912301227.47AE22C61@keescook>
+References: <20191223133816.28155-1-n.merinov@inango-systems.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191228203358.23490-14-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191223133816.28155-1-n.merinov@inango-systems.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 11:33:55PM +0300, Dmitry Osipenko wrote:
-> There is no good reason for disabling of CPU interrupts in order to
-> protect the utmip_pad_count modification.
+On Mon, Dec 23, 2019 at 06:38:16PM +0500, Nikolai Merinov wrote:
+> From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+> 
+> The circle buffer in ramoops zones has a problem for adding a new
+> oops dump to already an existing one.
+> 
+> The solution to this problem is to reset the circle buffer state before
+> writing a new oops dump.
 
-Since there are sleeping functions called outside of the locked sections,
-this should be a mutex instead. OTOH if the spin_lock is to protect register
-write against IRQ handler, then the patch is wrong.
+Ah, I see it now. When the crashes wrap around, the header is written at
+the end of the (possibly incompletely filled) buffer, instead of at the
+start, since it wasn't explicitly zapped.
 
-[...]
-> -	spin_unlock_irqrestore(&utmip_pad_lock, flags);
-> +	spin_unlock(&utmip_pad_lock);
+Yes, this is important; thank you for tracking this down! This bug has
+existed for a very long time. I'll try to find the right Fixes tag for
+it...
+
+-Kees
+
+> Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+> Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
+> Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 8caff834f002..33fceadbf515 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -407,6 +407,13 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
 >  
->  	clk_disable_unprepare(phy->pad_clk);
+>  	prz = cxt->dprzs[cxt->dump_write_cnt];
+>  
+> +	/* Clean the buffer from old info.
+> +	 * `ramoops_read_kmsg_hdr' expects to find a header in the beginning of
+> +	 * buffer data, so we must to reset the buffer values, in order to
+> +	 * ensure that the header will be written to the beginning of the buffer
+> +	 */
+> +	persistent_ram_zap(prz);
+> +
+>  	/* Build header and append record contents. */
+>  	hlen = ramoops_write_kmsg_hdr(prz, record);
+>  	if (!hlen)
+> -- 
+> 2.17.1
+> 
 
-Best Regards,
-Micha³ Miros³aw
+-- 
+Kees Cook
