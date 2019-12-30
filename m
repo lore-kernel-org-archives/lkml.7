@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC76C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10FBC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502D420722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1F62080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="WgsGWKE1"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="etkoAoeM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfL3Oce (ORCPT
+        id S1727727AbfL3Ocd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:32:34 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:41126 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:32:33 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:41112 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbfL3Ocb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727661AbfL3Ocb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Dec 2019 09:32:31 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 05EB11B21941; Mon, 30 Dec 2019 17:32:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 05EB11B21941
+        id 41E721B218C1; Mon, 30 Dec 2019 17:32:28 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 41E721B218C1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716349; bh=7OSwCRil5bvUGDc9SU5jjL6pENQDuKNpW1Evf4I2LJc=;
+        t=1577716348; bh=5GU07UvxnF6CEe2vyJnNhi1kO3JmRqioFhLZDpggQ5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=WgsGWKE1FopPv6JqeCKM4JUz3cny8cfdZsDoWjlAyoXTeen9xXtdpOFQd2dosrWev
-         Qoo8rqVzNrcOjZu3ZekSV87RxDW1DRbcANXzEF+N0fQP5OJT47sXGZSkSzqTMeJRxr
-         vJtjBVaMeZL5tOktab75taS9+zEYXUyYINYVq0jo=
+        b=etkoAoeMZ4QFCwTkPyD0z0/BrASt2vw7HAbAVntgFLdRjv061NGWcmjGTKpD0eq1f
+         K6mOeBdTzWZ/gfldnq6Lk95zKUwbzpzp1Y6D5St10qcAqom78fTOIeA2QT++Cw2bSO
+         hDj1HAM1UvVydWMBEeunc5RT+xTny/YTVgmQU4To=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id CE9171B2085D;
-        Mon, 30 Dec 2019 17:31:14 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru CE9171B2085D
+        by fd.dlink.ru (Postfix) with ESMTP id 11B8D1B2184B;
+        Mon, 30 Dec 2019 17:31:33 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 11B8D1B2184B
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 02BE81B229D1;
-        Mon, 30 Dec 2019 17:31:13 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 24C671B229D0;
+        Mon, 30 Dec 2019 17:31:31 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:12 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:31 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 06/19] net: dsa: tag_gswip: fix typo in tag name
-Date:   Mon, 30 Dec 2019 17:30:14 +0300
-Message-Id: <20191230143028.27313-7-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 15/19] net: dsa: tag_mtk: add GRO callbacks
+Date:   Mon, 30 Dec 2019 17:30:23 +0300
+Message-Id: <20191230143028.27313-16-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,26 +79,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"gwsip" -> "gswip".
+Make GRO available for frames with MTK tag by adding the corresponding
+callbacks to MTK tagger.
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- net/dsa/tag_gswip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/dsa/tag_mtk.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/net/dsa/tag_gswip.c b/net/dsa/tag_gswip.c
-index b678160bbd66..408d4af390a0 100644
---- a/net/dsa/tag_gswip.c
-+++ b/net/dsa/tag_gswip.c
-@@ -104,7 +104,7 @@ static struct sk_buff *gswip_tag_rcv(struct sk_buff *skb,
+diff --git a/net/dsa/tag_mtk.c b/net/dsa/tag_mtk.c
+index b926ffdf5fb5..13d929160283 100644
+--- a/net/dsa/tag_mtk.c
++++ b/net/dsa/tag_mtk.c
+@@ -102,12 +102,85 @@ static void mtk_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+ 	*proto = mtk_tag_encap_proto(skb->data);
  }
  
- static const struct dsa_device_ops gswip_netdev_ops = {
--	.name = "gwsip",
-+	.name = "gswip",
- 	.proto	= DSA_TAG_PROTO_GSWIP,
- 	.xmit = gswip_tag_xmit,
- 	.rcv = gswip_tag_rcv,
++static struct sk_buff *mtk_tag_gro_receive(struct list_head *head,
++					   struct sk_buff *skb)
++{
++	const struct packet_offload *ptype;
++	struct sk_buff *p, *pp = NULL;
++	u32 data_off, data_end;
++	const u8 *data;
++	int flush = 1;
++
++	data_off = skb_gro_offset(skb);
++	data_end = data_off + MTK_HDR_LEN;
++
++	data = skb_gro_header_fast(skb, data_off);
++	if (skb_gro_header_hard(skb, data_end)) {
++		data = skb_gro_header_slow(skb, data_end, data_off);
++		if (unlikely(!data))
++			goto out;
++	}
++
++	rcu_read_lock();
++
++	ptype = gro_find_receive_by_type(mtk_tag_encap_proto(data));
++	if (!ptype)
++		goto out_unlock;
++
++	flush = 0;
++
++	list_for_each_entry(p, head, list) {
++		if (!NAPI_GRO_CB(p)->same_flow)
++			continue;
++
++		/* Data that is to the left to the current position is already
++		 * pulled to the head
++		 */
++		if (mtk_tag_source_port(skb->data + data_off) ^
++		    mtk_tag_source_port(p->data + data_off))
++			NAPI_GRO_CB(p)->same_flow = 0;
++	}
++
++	skb_gro_pull(skb, MTK_HDR_LEN);
++	skb_gro_postpull_rcsum(skb, data, MTK_HDR_LEN);
++
++	pp = call_gro_receive(ptype->callbacks.gro_receive, head, skb);
++
++out_unlock:
++	rcu_read_unlock();
++out:
++	skb_gro_flush_final(skb, pp, flush);
++
++	return pp;
++}
++
++static int mtk_tag_gro_complete(struct sk_buff *skb, int nhoff)
++{
++	const struct packet_offload *ptype;
++	int err = -ENOENT;
++	__be16 proto;
++
++	proto = mtk_tag_encap_proto(skb->data + nhoff);
++
++	rcu_read_lock();
++
++	ptype = gro_find_complete_by_type(proto);
++	if (ptype)
++		err = ptype->callbacks.gro_complete(skb, nhoff + MTK_HDR_LEN);
++
++	rcu_read_unlock();
++
++	return err;
++}
++
+ static const struct dsa_device_ops mtk_netdev_ops = {
+ 	.name		= "mtk",
+ 	.proto		= DSA_TAG_PROTO_MTK,
+ 	.xmit		= mtk_tag_xmit,
+ 	.rcv		= mtk_tag_rcv,
+ 	.flow_dissect	= mtk_tag_flow_dissect,
++	.gro_receive	= mtk_tag_gro_receive,
++	.gro_complete	= mtk_tag_gro_complete,
+ 	.overhead	= MTK_HDR_LEN,
+ };
+ 
 -- 
 2.24.1
 
