@@ -2,127 +2,112 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63562C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3998C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB9920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uBTj8C8T"
+	by mail.kernel.org (Postfix) with ESMTP id CA14C208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 03:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfL3DdZ (ORCPT
+        id S1727116AbfL3Df6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 22:33:25 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37627 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfL3DdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 22:33:24 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m13so7555503pjb.2;
-        Sun, 29 Dec 2019 19:33:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dTiS/bb9/IUvx30njlXM5Xv38N7wkzS/VlkisOuoWMY=;
-        b=uBTj8C8TM2DJlBhULD6ZRwZiambfl6N5LgWATb8Yf64Ce7diTzA0G1woSQ5bEuA5ui
-         xPjWveLyg3uRk3Kks72zu2VZ3r6ImHz8d42Jz+1ws7z8/6I/nfBRX7/zfRNwe36W82T9
-         xWxC1Q0FOSAvwQS7cEd+RPHpZrRvtIg3jj0+b2I6BlHMMtyBAmDwuKVGN6NJwD8jKeV3
-         jEDcUPISakBYA60yi14uqEn9QqS3HB2BrijQlMt2CxTtp2vRPw+lMyp5kF5g825ZM2Aa
-         cCKwuB4TK6Ch8Tz7V8vjBulBABJo1pi20+W3r8feqxa1sedgM34w4iAIu+S6dTbJ9t1v
-         lDng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dTiS/bb9/IUvx30njlXM5Xv38N7wkzS/VlkisOuoWMY=;
-        b=fCaR0vkzQxexqsv99kBD+PbISmbzD+uF6C1Grumw0axaC1DlXfKsQSOb2lFiOpFOg8
-         4ha9wPDNYyuh8zMytP++1V6h3Bp8gJ7ZSLUu0d9sluZxMKT2BJezN4yx66egHX+rAXtY
-         Mu6O5zzM8cJ1IYkilAWwHuA14/aS6HAfg93eGyaYM8J7yh0SvnDvRfjfZUpnjuRQuhmo
-         B7iQrdfanyEEc9P7D3TrX6hkBbvL5iMmpBZeA9Qff6uQ6mLM9d6CAduWom/+4Md4F8Je
-         qFJGR1nFVb/7Pp3WOn0R3++lGr9iCO0OI/bTpjnFXhbw/L5zXBSFe7E9oNI1RrGzRD+e
-         8OZg==
-X-Gm-Message-State: APjAAAWkXeICaozP3q7W4MI0ubDVBGjGwewQs/GRuy2IqUu9YJRSY+sg
-        led5nwXviV0OYMMBOgO7g6Y=
-X-Google-Smtp-Source: APXvYqyQ3LT8HrcWP6ZAYpoYYT6nU+ur+WsnY+DzoF0GtcfyTDItr1NfI+OZRBiUKICBreJWu64dMw==
-X-Received: by 2002:a17:90b:258:: with SMTP id fz24mr41756743pjb.6.1577676803945;
-        Sun, 29 Dec 2019 19:33:23 -0800 (PST)
-Received: from lmao.redmond.corp.microsoft.com (c-24-143-123-17.customer.broadstripe.net. [24.143.123.17])
-        by smtp.gmail.com with ESMTPSA id j6sm12993266pjv.10.2019.12.29.19.33.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Dec 2019 19:33:23 -0800 (PST)
-Date:   Sun, 29 Dec 2019 19:33:22 -0800
-From:   Brian Gianforcaro <b.gianfo@gmail.com>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Sun, 29 Dec 2019 22:35:58 -0500
+Received: from smtp.infotech.no ([82.134.31.41]:59458 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbfL3Df6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 22:35:58 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id C945B204247;
+        Mon, 30 Dec 2019 04:35:55 +0100 (CET)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0AVJGC7Mh64q; Mon, 30 Dec 2019 04:35:48 +0100 (CET)
+Received: from xtwo70.bingwo.ca (host-23-251-188-50.dyn.295.ca [23.251.188.50])
+        by smtp.infotech.no (Postfix) with ESMTPA id 00741204157;
+        Mon, 30 Dec 2019 04:35:47 +0100 (CET)
+From:   Douglas Gilbert <dgilbert@interlog.com>
+To:     linux-usb@vger.kernel.org
+Cc:     linux@roeck-us.net, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] io_uring: batch getting pcpu references
-Message-ID: <20191230033321.kg2e4ijj2w3ut36l@lmao.redmond.corp.microsoft.com>
-References: <cover.1577528535.git.asml.silence@gmail.com>
- <1250dad37e9b73d39066a8b464f6d2cab26eef8a.1577528535.git.asml.silence@gmail.com>
- <6facf552-924f-2af1-03e5-99957a90bfd0@gmail.com>
- <e0c5f132-b916-4710-a0f3-036e4df07c69@kernel.dk>
- <504de70b-f323-4ad1-6b40-4e73aa610643@gmail.com>
+Subject: [PATCH] USB-PD tcpm: bad warning+size, PPS adapters
+Date:   Sun, 29 Dec 2019 22:35:44 -0500
+Message-Id: <20191230033544.1809-1-dgilbert@interlog.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <504de70b-f323-4ad1-6b40-4e73aa610643@gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 28, 2019 at 09:37:35PM +0300, Pavel Begunkov wrote:
-> On 28/12/2019 20:03, Jens Axboe wrote:
-> > On 12/28/19 4:15 AM, Pavel Begunkov wrote:
-> >> On 28/12/2019 14:13, Pavel Begunkov wrote:
-> >>> percpu_ref_tryget() has its own overhead. Instead getting a reference
-> >>> for each request, grab a bunch once per io_submit_sqes().
-> >>>
-> >>> ~5% throughput boost for a "submit and wait 128 nops" benchmark.
-> >>>
-> >>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> >>> ---
-> >>>  fs/io_uring.c | 26 +++++++++++++++++---------
-> >>>  1 file changed, 17 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> >>> index 7fc1158bf9a4..404946080e86 100644
-> >>> --- a/fs/io_uring.c
-> >>> +++ b/fs/io_uring.c
-> >>> @@ -1080,9 +1080,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
-> >>>  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
-> >>>  	struct io_kiocb *req;
-> >>>  
-> >>> -	if (!percpu_ref_tryget(&ctx->refs))
-> >>> -		return NULL;
-> >>> -
-> >>>  	if (!state) {
-> >>>  		req = kmem_cache_alloc(req_cachep, gfp);
-> >>>  		if (unlikely(!req))
-> >>> @@ -1141,6 +1138,14 @@ static void io_free_req_many(struct io_ring_ctx *ctx, void **reqs, int *nr)
-> >>>  	}
-> >>>  }
-> >>>  
-> >>> +static void __io_req_free_empty(struct io_kiocb *req)
-> >>
-> >> If anybody have better naming (or a better approach at all), I'm all ears.
-> > 
-> > __io_req_do_free()?
-> 
-> Not quite clear what's the difference with __io_req_free() then
-> 
-> > 
-> > I think that's better than the empty, not quite sure what that means.
-> 
-> Probably, so. It was kind of "request without a bound sqe".
-> Does io_free_{hollow,empty}_req() sound better?
+Augmented Power Delivery Objects (A)PDO_s are used by USB-C
+PD power adapters to advertize the voltages and currents
+they support. There can be up to 7 PDO_s but before PPS
+(programmable power supply) there were seldom more than 4
+or 5. Recently Samsung released an optional PPS 45 Watt power
+adapter (EP-TA485) that has 7 PDO_s. It is for the Galaxy 10+
+tablet and charges it quicker than the adapter supplied at
+purchase. The EP-TA485 causes an overzealous WARN_ON to soil
+the log plus it miscalculates the number of bytes to read.
 
-Given your description, perhaps io_free_unbound_req() makes sense?
+So this bug has been there for some time but goes
+undetected for the majority of USB-C PD power adapters on
+the market today that have 6 or less PDO_s. That may soon
+change as more USB-C PD adapters with PPS come to market.
+
+Tested on a EP-TA485 and an older Lenovo PN: SA10M13950
+USB-C 65 Watt adapter (without PPS and has 4 PDO_s) plus
+several other PD power adapters.
+
+Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+---
+ drivers/usb/typec/tcpm/tcpci.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+index c1f7073a56de..8b4ff9fff340 100644
+--- a/drivers/usb/typec/tcpm/tcpci.c
++++ b/drivers/usb/typec/tcpm/tcpci.c
+@@ -432,20 +432,30 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
+ 
+ 	if (status & TCPC_ALERT_RX_STATUS) {
+ 		struct pd_message msg;
+-		unsigned int cnt;
++		unsigned int cnt, payload_cnt;
+ 		u16 header;
+ 
+ 		regmap_read(tcpci->regmap, TCPC_RX_BYTE_CNT, &cnt);
++		/*
++		 * 'cnt' corresponds to READABLE_BYTE_COUNT in section 4.4.14
++		 * of the TCPCI spec [Rev 2.0 Ver 1.0 October 2017] and is
++		 * defined in table 4-36 as one greater than the number of
++		 * bytes received. And that number includes the header. So:
++		 */
++		if (cnt > 3)
++			payload_cnt = cnt - (1 + sizeof(msg.header));
++		else
++			payload_cnt = 0;
+ 
+ 		tcpci_read16(tcpci, TCPC_RX_HDR, &header);
+ 		msg.header = cpu_to_le16(header);
+ 
+-		if (WARN_ON(cnt > sizeof(msg.payload)))
+-			cnt = sizeof(msg.payload);
++		if (WARN_ON(payload_cnt > sizeof(msg.payload)))
++			payload_cnt = sizeof(msg.payload);
+ 
+-		if (cnt > 0)
++		if (payload_cnt > 0)
+ 			regmap_raw_read(tcpci->regmap, TCPC_RX_DATA,
+-					&msg.payload, cnt);
++					&msg.payload, payload_cnt);
+ 
+ 		/* Read complete, clear RX status alert bit */
+ 		tcpci_write16(tcpci, TCPC_ALERT, TCPC_ALERT_RX_STATUS);
+-- 
+2.24.1
+
