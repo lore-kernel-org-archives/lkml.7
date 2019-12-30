@@ -2,219 +2,131 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1491C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EABC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABAD2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cnPlqgi+"
+	by mail.kernel.org (Postfix) with ESMTP id 4F1BD206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 11:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfL3Lzb (ORCPT
+        id S1727419AbfL3L6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:55:31 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36611 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfL3Lzb (ORCPT
+        Mon, 30 Dec 2019 06:58:19 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:46813 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfL3L6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:55:31 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n59so8025929pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 03:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QmvUyOThLKgIMmAYLq0yhUeeOF7gjd7fkLseJ1QqBz0=;
-        b=cnPlqgi+FQx6/QEMcrf8L3berGqTWJqZpi1LDYXdPHSFSKbij9MzBTZqYdNLXJeNeA
-         EEHPXp3J1dIz6iVi0+vzngX0t4bl144PzH3rElS1AOp9Tn81oLdwPeu+hUm0CKehq+0Q
-         mS5jKidKmcVa+UAWJpuZ4uKyeE+D0atLbPHaxdeoX6NvNRYfO6lf5btSY3GHeNWmSpjx
-         6D7CqXeaGTk3wzPbKkIP+A32DnRNRXjSqDEkkawAQMBURMnE2ANwDQzFlvdw3UY2Nk7q
-         UhsyGd9KMgttFpivz3Ic+CRnHNWicbfkuidoWK9B16W5Y0wqlPPBGDU/CRmpj4rCQuve
-         7UcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QmvUyOThLKgIMmAYLq0yhUeeOF7gjd7fkLseJ1QqBz0=;
-        b=KwmR3f52YXuM8dSwaATzpEYw5uC056wW/YdpkMoxziZd40ONL1CYQLhLnq80DSvNiU
-         S16vqFUXqR4A3NmaqWdB8nUDtqzmt60WBi8K0FM1AKLWz3mrm9td/dZTlA3lM3CvC74f
-         reqACdtHl5Hi/R8APTFG6YtCHXIoQjKlrrgKes+Y8WpKF9uU2tqinZ21PfvTq4NBY3rv
-         kX3oTgmUFCsUva8hHu4e0xXmzkoezjw5XxpEj7ei9YGrIuT9JCJhiEhu9uUR3zytSAER
-         Dv4bKw+EcUfxI9bgFmgR+Ne5gHWGWKVreXxxvRt1yOo+mUE5xfsbePW1XHG0azjBdakn
-         OkHg==
-X-Gm-Message-State: APjAAAUGOLRQQtfYFVcEhRaYfY7MdDIraBkR9KwEU7lBj7+WJSGBiVy4
-        4dFSbqLeug1y0dEEOhcpfho=
-X-Google-Smtp-Source: APXvYqwMc3BA+RXuQW9mKgvrslgYpCpOTZDjadt25dHNTHzW1D8P3wuDgx6NI5gOvt4aK3eqRGaLIg==
-X-Received: by 2002:a17:902:8207:: with SMTP id x7mr42684646pln.286.1577706930056;
-        Mon, 30 Dec 2019 03:55:30 -0800 (PST)
-Received: from localhost ([49.207.54.121])
-        by smtp.gmail.com with ESMTPSA id c19sm53990746pfc.144.2019.12.30.03.55.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Dec 2019 03:55:29 -0800 (PST)
-Date:   Mon, 30 Dec 2019 17:25:27 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [RFC PATCH 2/2] ARM: !MMU: v7-M: preemption support
-Message-ID: <c24f8d1c8e813eef62d642b5e620e0062c52c9a8.1577705829.git.afzal.mohd.ma@gmail.com>
-References: <cover.1577705829.git.afzal.mohd.ma@gmail.com>
+        Mon, 30 Dec 2019 06:58:18 -0500
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MLAAs-1j3yVH10x0-00IAEi; Mon, 30 Dec 2019 12:58:17 +0100
+Received: by mail-qk1-f172.google.com with SMTP id t129so26064714qke.10;
+        Mon, 30 Dec 2019 03:58:16 -0800 (PST)
+X-Gm-Message-State: APjAAAVMiyVtXV/+kbCMWFGoHfQnRzBjT9l92VEp+9YnGivmbWc1HQH5
+        teSn2LW2cHeUgkdSy+Xlw91eLAadFyXfFzKjc/U=
+X-Google-Smtp-Source: APXvYqwReU6KI+hEZNY1rvE7ncOKdyI/QwFC2pLA7OkGLJknUDKQqjXFuqpjgMyzRIXnVBzHyY0P2OQTFMUGAvc4FCU=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr54486692qka.286.1577707096044;
+ Mon, 30 Dec 2019 03:58:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1577705829.git.afzal.mohd.ma@gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
+In-Reply-To: <20191224135404.389039-1-Jason@zx2c4.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Dec 2019 12:57:59 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+Message-ID: <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9VNsB/0hV+uE9zUbhnqLZ6nurlkV2+Py0P0PFGmNrhG80WpHmRM
+ X77X2nwlZHYi/To/p16EOLRgfwnnqAnGvcMG/VZEHeXKRArVYQbC1hhx3cd2nvbeq6KOpQd
+ u73ajuKjYbjn2ONuh+c0xo49lcdBaFuws7Lp7hgZfpx5Mj0f4VYKeFeHsQO3lrsV23Mf523
+ RKuU1siU/zZrRLLKCB5Zw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Kso8zCSd2bA=:jMb7H0gBZZ4sMXVuHy6w9T
+ Lr6JTxyoKWk0SgMA2EJScqQoiA2ZFX8e4JY5BYQ5Po6b6w7AJTj48dZoVZRo1v5Bpl5rNKPoQ
+ AmzCEGoH7LcpphD6i1u9+Fn3l2xl0DHlhmo6MJIbyIa1OmubDodffmSmCslji+AdMx/fIJx37
+ gYj57dSYaGatpCulyfNvJVrf9BqjXfeEKZQhRdhsEU9P5eXIfIBaG6zAhyT+uPTbt4g7WfpE9
+ LXZ6qJIInFy6bPvMjkXyolibuCND42XmXRvsm1RyBPyo5t71KlrSWch2dTpMRwx5HlzcDkxfe
+ 7Qxx2b3iWm0iYhGXAeS7KryFPup3svVRxq9uReEBfFnyE54iSvTJPHJk4gPF26KGZUC8P7QRG
+ 8LtZCHia9xQHnvZi9YSjZfbp1qBen7EcRoKtLHgAe1zeh+PFuqk7NmuqjRa+n2vaApIaTY2Gw
+ JSQxibZ6fZjppy+SkEgtgUbvjNRne3oUogcATAGMo4E40VGV+wnXCu4n+sV6K/Xo3KhKYA6QD
+ yTOlDwOYpOUTQRyj058qETqz5WTSmCc9wzv+7U8IpvSd/JCJ2Rxdoknn+vQ8LPrbrmdFZyFQt
+ fth8nAg7OmKhVCpcLUaMl8EcDbh6xrFetTOS0iW0oDvfueMSvDSokrUxD5Ncs/kRyFhb5eGKe
+ k4QvZuxIxVLEsRkK1F5wP00fTjND2G9k5vaW2CZrKJitsf7JznJZRi2deMrMf84A893S0LipT
+ rDpEmEW4OgzHWsWLmwS8JwyhgHdOhw6lkf56NxRFnM9c+cHGcb02SNubkZs+NpUc+Nx2H3iDI
+ bvW/YdUxvsbgRMqb8RIZGG9m0jaing4rbcQTp5j5fZmMmoByWZNkPLjaSWODrHO8kMMJB9JDV
+ R3JehtGBI1ymV1mYOMMw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ICSR RETTOBASE bit indicates whether there is any active exception other
-than the exception indicated by current value of IPSR. Existing code
-already makes use of it to find whether interrupt occurred during
-user(thread) mode. Add preemption support in the code path that executes
-upon finding an active exception other than the current interrupt.
+On Tue, Dec 24, 2019 at 2:54 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> When the VDSO falls back to 32-bit time functions on kernels with
+> COMPAT_32BIT_TIME=n, userspace becomes corrupted and appears to crash
+> shortly after, with something like:
+>
+> [    0.359617] do_page_fault(): sending SIGSEGV to init for invalid read access from 000000007ff790d0
+> [    0.359843] epc = 0000000077e45df4 in libc.so[77da6000+de000]
+> [    0.360319] ra  = 0000000010000c50 in init[10000000+2000]
+> [    0.364456] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+>
+> This can be reproduced with simply calling `clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts)`,
+> since `CLOCK_PROCESS_CPUTIME_ID` is not exported to the VDSO, invoking
+> the syscall callback branch. This crash was observed with musl 1.20's
+> clock_gettime implementation:
 
-Having an active exception during interrupt exception indicates that
-the interrupt occurred during SVC or PendSV with current Linux exception
-setup. On PendSV, interrupts are disabled at exception entry (applicable
-to all) & enabled back just before returning from exception. Hence it
-has been assumed that active exception during interrupt is indicating
-SVC interruption. This would have to be revisited.
+Thanks for the bug report! I'm not completely sure why this fails in
+this particular
+way though. I assume you are using musl-1.1.20, not a musl-1.2.0 snapshot
+(the version 1.20 you list does not exist), so the combination you are testing
+is supposed to just return -ENOSYS here to match the behavior of hte
+system call.
 
-With this change, there is some effect, but not enough to make it
-usable, this is being debugged.
+> --- a/arch/mips/include/asm/vdso/gettimeofday.h
+> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
+> @@ -107,7 +107,7 @@ static __always_inline int clock_getres_fallback(
+>        return error ? -ret : ret;
+> }
+>
+> -#if _MIPS_SIM != _MIPS_SIM_ABI64
+> +#if _MIPS_SIM != _MIPS_SIM_ABI64 && defined(CONFIG_COMPAT_32BIT_TIME)
+>
+>  #define VDSO_HAS_32BIT_FALLBACK        1
+>
 
-A simple character driver that does infinite while loop during read was
-used to test it as follows (/dev/mymisc corresponds to the node for the
-character driver),
+I don't think this is the correct fix, it may actually make it worse
+by changing the vdso implementation for clock_gettime32()
+to fall back to clock_gettime64(), which would appear to work
+correctly before y2038 but fail afterwards.  How about this one:
 
-A. Before this change,
-
-A.1
-~ # cat /dev/mymisc
-[   28.099225] mymisc_open
-[   28.101625] mymisc_read: enter
-
-command prompt is not usable (expected), interrupts do happen during
-this time.
-
-A.2
-~ # cat /dev/mymisc &
-[1] 39 cat /dev/mymisc
-~ # [   11.699880] mymisc_open
-[   11.702274] mymisc_read: enter
-
-command prompt is not usable (expected as preemption not supported).
-
-B. After this change,
-
-B.1
-~ # cat /dev/mymisc
-[   27.374821] mymisc_open
-[   27.377349] mymisc_read: enter
-
-though user will not get control back (as expected as it is fg process),
-entering on prompt causes new line, doesn't know what to make out of
-this behaviour, this doesn't happen in the A.1 case. Interrupts happen
-here as well.
-
-B.2
-~ # cat /dev/mymisc &
-[1] 41 cat /dev/mymisc
-~ # [   44.836417] mymisc_open
-[   44.838814] mymisc_read: enter
-
-though prompt is available under the control of user, upon typing
-anything on the prompt (typed character doesn't get echoed), it crashes
-as follows,
-
-[   44.838814] mymisc_read: enter
-[   51.710314]
-[   51.710314] Unhandled exception: IPSR = 00000006 LR = fffffffd
-[   51.717576] CPU: 0 PID: 37 Comm: sh Not tainted 5.5.0-rc4-00004-g2328d01dbd85 #105
-[   51.725078] Hardware name: STM32 (Device Tree Support)
-[   51.730206] PC is at 0x90195958
-[   51.733329] LR is at 0x901c4df3
-[   51.736471] pc : [<90195958>]    lr : [<901c4df3>]    psr: 21000000
-[   51.742713] sp : 901e5a58  ip : 00000000  fp : 901d89fc
-[   51.747911] r10: 00000000  r9 : 00000000  r8 : 00000001
-[   51.753143] r7 : 000000a8  r6 : 901e5a58  r5 : 901e5b08  r4 : ffffffff
-[   51.759643] r3 : 000000a8  r2 : ffffffff  r1 : 00000001  r0 : 00000001
-[   51.766122] xPSR: 21000000
-[   51.768866] CPU: 0 PID: 37 Comm: sh Not tainted 5.5.0-rc4-00004-g2328d01dbd85 #105
-[   51.776369] Hardware name: STM32 (Device Tree Support)
-[   51.781594] [<0800c0c9>] (unwind_backtrace) from [<0800b25b>] (show_stack+0xb/0xc)
-[   51.789166] [<0800b25b>] (show_stack) from [<0800b9eb>] (__invalid_entry+0x4b/0x4c)
-
-It is a Usage Fault happening while in thread(user) mode. PC & LR in the
-dump is strange in the sense that they do not point to text section.
-
-The change here has been made based on how Cortex-A handles preemption.
-Since PAN is not applicable and since it seemed that saving & restoring
-thread_info::addr_limit does not make difference on the !MMU Cortex-M
-due to single address space being used, there was no additional save &
-restore of 'dacr' & 'addr_limit' as done in the case of interrupt during
-system call on Cortex-A. Also as DUT was UP Cortex-M4, it seemed that
-cache related would not affect in anyway w.r.t preemption, as currently
-cache is not enabled for M4 in Linux.
-
-As mentioned above, it was assumed that active exception during
-interrupt meant SVC was interrupted, though it could have been PendSV as
-well. To ensure that issue is not due to interrupt during PendSV, the
-PendSV handling of pending work was lifted & sticked onto __irq_entry
-and setting PendSV removed as well. Still the behaviour is same.
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
- arch/arm/kernel/entry-v7m.S | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
-index 581562dbecf3..e671115767d2 100644
---- a/arch/arm/kernel/entry-v7m.S
-+++ b/arch/arm/kernel/entry-v7m.S
-@@ -55,14 +55,29 @@ strerr:	.asciz	"\nUnhandled exception: IPSR = %08lx LR = %08lx\n"
- 	ldr	r1, =BASEADDR_V7M_SCB
- 	ldr	r0, [r1, V7M_SCB_ICSR]
- 	tst	r0, V7M_SCB_ICSR_RETTOBASE
--	beq	2f
-+	beq	101f
- 
- 	ldr	r2, [tsk, #TI_FLAGS]
- 	tst	r2, #_TIF_WORK_MASK
- 	beq	2f			@ no work pending
- 	mov	r0, #V7M_SCB_ICSR_PENDSVSET
- 	str	r0, [r1, V7M_SCB_ICSR]	@ raise PendSV
-+	b	2f
-+
-+101:
-+#ifdef CONFIG_PREEMPT
-+	ldr	r2, [tsk, #TI_PREEMPT]
-+	teq	r2, #0			@ preempt count != 0 ?
-+	bne	2f
- 
-+	ldr	r0, [tsk, #TI_FLAGS]
-+	tst	r0, #_TIF_NEED_RESCHED	@ __TIF_NEED_RESCHED set ?
-+	beq	2f
-+102:	bl	preempt_schedule_irq
-+	ldr	r0, [tsk, #TI_FLAGS]
-+	tst	r0, #_TIF_NEED_RESCHED	@ __TIF_NEED_RESCHED set ?
-+	bne	102b
+diff --git a/arch/mips/vdso/vdso.lds.S b/arch/mips/vdso/vdso.lds.S
+index da4627430aba..0bdc6a026be8 100644
+--- a/arch/mips/vdso/vdso.lds.S
++++ b/arch/mips/vdso/vdso.lds.S
+@@ -93,9 +93,11 @@ VERSION
+        LINUX_2.6 {
+ #ifndef DISABLE_MIPS_VDSO
+        global:
++#if (_MIPS_SIM == _MIPS_SIM_ABI64) || defined(CONFIG_COMPAT_32BIT_TIME)
+                __vdso_clock_gettime;
+                __vdso_gettimeofday;
+                __vdso_clock_getres;
 +#endif
- 2:
- 	pop	{lr}
- 
--- 
-2.24.1
+ #if _MIPS_SIM != _MIPS_SIM_ABI64
+                __vdso_clock_gettime64;
+ #endif
 
+That should ensure that no user space can call the old vdso
+functions on a kernel that intentionally breaks the actual
+syscalls.
+
+      Arnd
