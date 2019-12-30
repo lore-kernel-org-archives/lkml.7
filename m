@@ -2,111 +2,214 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512F2C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E25C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 257002071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E6D2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dbSY2EJ4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="niHpVfg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfL3UUs (ORCPT
+        id S1727757AbfL3UVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:20:48 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19156 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfL3UUr (ORCPT
+        Mon, 30 Dec 2019 15:21:24 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:26535 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfL3UVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:20:47 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0a5c100000>; Mon, 30 Dec 2019 12:20:32 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 30 Dec 2019 12:20:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 30 Dec 2019 12:20:46 -0800
-Received: from [10.26.11.89] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Dec
- 2019 20:20:43 +0000
-Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191229172702.393141737@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <43686be4-0ea2-472f-8b8f-2c69e16de96d@nvidia.com>
-Date:   Mon, 30 Dec 2019 20:20:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 30 Dec 2019 15:21:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577737279;
+        s=strato-dkim-0002; d=dawncrow.de;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=1fEvtm3yODCntar2DrEwrxk34L4DYJSOx40B0uTFp9g=;
+        b=niHpVfg0Pbdz3Ykxi5IS2wDFZ08LhM/foyiFmyGXRBq+UdluPJiMLl25+/ygbj0urC
+        JGUIwt04iLlfX3SNyY7zloat2KUI8zg2/d6ws73GEVRUsLj5zPRpAjnT5S9ULjMb/Mm5
+        +rnUtzs+B8n7Gdp8MGCDh/uvpIcNoz4GRVAVZHUz5Xh8RdTJoArhnTWgX/n9t3FSQYmX
+        xD7ymFstRb92V1vVX466mQUmjnAryR8DIBkx7a327ely54nlVnCd4Cy3j57wKyksTCqL
+        oWCdO028L2AbAdTOL2D38dm/rhfpOFcBvEylHhHfgHx7bpTxkf0dZZs69TT7p0qqTlBm
+        t/AA==
+X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
+X-RZG-CLASS-ID: mo00
+Received: from tesla.fritz.box
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id I099d1vBUKL4G7z
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 30 Dec 2019 21:21:04 +0100 (CET)
+From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
+To:     linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com,
+        bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] ARM: dts: Move interconnect target module for omap3 sgx to separate dtsi files
+Date:   Mon, 30 Dec 2019 21:20:36 +0100
+Message-Id: <20191230202037.28836-1-nerv@dawncrow.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577737233; bh=4J3AjDGbaRd2FIuCDBXpLUCpZxsj/G4VqfDKUXwDKCA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dbSY2EJ4aBgXmOgdSlC0q7lrbgSvKwiwHy/AameExHYO3vLwtzxWr0XmJm0kFaXYW
-         upWbnOBV4xcuNHYvdj75w9WEV0489RL2j5fHR6VlH+wB1EmX7RSHYt/3hiB3oE471V
-         mDZ1VdhWMtO19kkyzHYui7jsUMtCHHBEwIBROSbz83/F6asrzlboGq6MeWX2tvamgZ
-         yIbbGd9rNq59XFn5Udjfcl53fAO6DluDKPxs8bJpDChWSfkLBTmF6XHVjgvq1CUPV4
-         zA69aVKE2lCyiYMZFskAJLeLEP/phAX8oFUj24P16z0lSa3yPMOHBC30NUZnoS8Gcn
-         qdul5CE4Iai0g==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Only dm3730 and am3715 come with SGX support
 
-On 29/12/2019 17:20, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.7 release.
-> There are 434 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+Signed-off-by: André Hentschel <nerv@dawncrow.de>
+---
 
-All tests are passing for Tegra ...
+I changed some dtsi files where I could be sure it's dm3730
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+ arch/arm/boot/dts/am3715.dtsi            | 38 ++++++++++++++++++++++++
+ arch/arm/boot/dts/dm3730.dtsi            |  6 ++++
+ arch/arm/boot/dts/omap3-gta04.dtsi       |  2 +-
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi  |  2 +-
+ arch/arm/boot/dts/omap3-pandora-1ghz.dts |  2 +-
+ arch/arm/boot/dts/omap36xx.dtsi          | 28 -----------------
+ 6 files changed, 47 insertions(+), 31 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am3715.dtsi
+ create mode 100644 arch/arm/boot/dts/dm3730.dtsi
 
-Linux version:	5.4.7-rc1-g6bc086f94af5
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/arch/arm/boot/dts/am3715.dtsi b/arch/arm/boot/dts/am3715.dtsi
+new file mode 100644
+index 000000000000..f53d1f24dc53
+--- /dev/null
++++ b/arch/arm/boot/dts/am3715.dtsi
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
++ */
++
++#include "omap36xx.dtsi"
++
++/ {
++	ocp@68000000 {
++		/*
++		 * Note that the sysconfig register layout is a subset of the
++		 * "ti,sysc-omap4" type register with just sidle and midle bits
++		 * available while omap34xx has "ti,sysc-omap2" type sysconfig.
++		 */
++		sgx_module: target-module@50000000 {
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x5000fe00 0x4>,
++			      <0x5000fe10 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&sgx_fck>, <&sgx_ick>;
++			clock-names = "fck", "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x50000000 0x2000000>;
++
++			/*
++			 * Closed source PowerVR driver, no child device
++			 * binding or driver in mainline
++			 */
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/dm3730.dtsi b/arch/arm/boot/dts/dm3730.dtsi
+new file mode 100644
+index 000000000000..8d278499965b
+--- /dev/null
++++ b/arch/arm/boot/dts/dm3730.dtsi
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
++ */
++
++#include "am3715.dtsi"
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index b6ef1a7ac8a4..564bce9164f9 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -6,7 +6,7 @@
+  */
+ /dts-v1/;
+ 
+-#include "omap36xx.dtsi"
++#include "dm3730.dtsi"
+ #include <dt-bindings/input/input.h>
+ 
+ / {
+diff --git a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+index c22833d4e568..1086cde24ba5 100644
+--- a/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
++++ b/arch/arm/boot/dts/omap3-lilly-a83x.dtsi
+@@ -3,7 +3,7 @@
+  * Copyright (C) 2014 Christoph Fritz <chf.fritzc@googlemail.com>
+  */
+ 
+-#include "omap36xx.dtsi"
++#include "dm3730.dtsi"
+ 
+ / {
+ 	model = "INCOstartec LILLY-A83X module (DM3730)";
+diff --git a/arch/arm/boot/dts/omap3-pandora-1ghz.dts b/arch/arm/boot/dts/omap3-pandora-1ghz.dts
+index 81b957f33c9f..da71dd68a84a 100644
+--- a/arch/arm/boot/dts/omap3-pandora-1ghz.dts
++++ b/arch/arm/boot/dts/omap3-pandora-1ghz.dts
+@@ -10,7 +10,7 @@
+ 
+ /dts-v1/;
+ 
+-#include "omap36xx.dtsi"
++#include "dm3730.dtsi"
+ #include "omap3-pandora-common.dtsi"
+ 
+ / {
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index 1e552f08f120..6fb23ada1f64 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -139,34 +139,6 @@
+ 				interrupts = <18>;
+ 			};
+ 		};
+-
+-		/*
+-		 * Note that the sysconfig register layout is a subset of the
+-		 * "ti,sysc-omap4" type register with just sidle and midle bits
+-		 * available while omap34xx has "ti,sysc-omap2" type sysconfig.
+-		 */
+-		sgx_module: target-module@50000000 {
+-			compatible = "ti,sysc-omap4", "ti,sysc";
+-			reg = <0x5000fe00 0x4>,
+-			      <0x5000fe10 0x4>;
+-			reg-names = "rev", "sysc";
+-			ti,sysc-midle = <SYSC_IDLE_FORCE>,
+-					<SYSC_IDLE_NO>,
+-					<SYSC_IDLE_SMART>;
+-			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+-					<SYSC_IDLE_NO>,
+-					<SYSC_IDLE_SMART>;
+-			clocks = <&sgx_fck>, <&sgx_ick>;
+-			clock-names = "fck", "ick";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0 0x50000000 0x2000000>;
+-
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
+-		};
+ 	};
+ 
+ 	thermal_zones: thermal-zones {
 -- 
-nvpublic
+2.17.1
+
