@@ -2,173 +2,123 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782F0C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A296C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5899A20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBBC20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:29:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dIsjKUO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfL3SZY (ORCPT
+        id S1727555AbfL3S3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:25:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39256 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfL3SZY (ORCPT
+        Mon, 30 Dec 2019 13:29:16 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36821 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbfL3S3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:25:24 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 045A128DFAB
-Message-ID: <c6514f8e8bf49913e3cb907ba91c0a47de39e68c.camel@collabora.com>
-Subject: Re: [PATCH v12 01/11] media: staging: phy-rockchip-dphy: add
- Rockchip MIPI Synopsys DPHY driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        joacim.zetterling@gmail.com, kernel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 30 Dec 2019 15:25:10 -0300
-In-Reply-To: <20191227200116.2612137-2-helen.koike@collabora.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
-         <20191227200116.2612137-2-helen.koike@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 30 Dec 2019 13:29:16 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so11333516oic.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 10:29:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KiuU6QfyPfgeZowlNQTGQlJqj0W3IrWFK8NOM0+/Dbc=;
+        b=dIsjKUO8jwOYmjmzfRVZxYUSytqiMQYo3gJZWVHQtJFhn6N3ZSUv1kat9sE2i+i8mi
+         8KIKOpD5jtW5Cq99fKKyoELxhD7gEnG7pAyYoQJRieZuxjhOtyPFB3f6DyLb6fwn8qWk
+         0BOUKi1bu/3B0pT4CBLt1wVoq1E5G8I39Edio=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KiuU6QfyPfgeZowlNQTGQlJqj0W3IrWFK8NOM0+/Dbc=;
+        b=TvdMO1JrkDkfNMaTJ49w/3v43OW+bMRKgerzgQg810Vpi+N7f82x2o8WglIgVD+b1r
+         T4f/+WpF674Mf4rwgRY8or3ZLkVZNatIipyh+MmFq8g2q3UPvd1OkGov7BWSLcvJKv2c
+         igqMWD6Nr8ReaVasdXxvsn/SSZzoIWs0cVGmqditjfL0WO2M1hsHDUsPugBRJi3lgGBy
+         ko7ekR8zK9rjCIRERLvcaqGc8/IlCl+HlB0QYPBbKyTsirJoqtmOhn9sItcEsbwNerb8
+         t7vVdBRirbjvNTkfblXPUeRjmkDbWWH90V9LO8/1Q2W8lWu0GJEND9bPZK3YpZ3SX5Z4
+         OWEA==
+X-Gm-Message-State: APjAAAX4IztMjkrpgd+S6fsdHn+I9KbY7Rw0piICHVu9LJwosO3vDE2S
+        T7YUOPMza9Rd1auOzNDJrMJs8Q==
+X-Google-Smtp-Source: APXvYqz+h2+kkSRzzgvvCkbDGl3d8KnJ2jY/361guwVk3w9/RgiruB2G7mNEi3JrCu+UdHAk+m5cxw==
+X-Received: by 2002:aca:ba46:: with SMTP id k67mr209161oif.38.1577730555748;
+        Mon, 30 Dec 2019 10:29:15 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s24sm7749395oic.31.2019.12.30.10.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 10:29:14 -0800 (PST)
+Date:   Mon, 30 Dec 2019 10:29:13 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>, Aleksa Sarai <cyphar@cyphar.com>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v3 3/3] selftests/seccomp: Test kernel catches garbage on
+ SECCOMP_IOCTL_NOTIF_RECV
+Message-ID: <201912301023.CEBE3A5@keescook>
+References: <20191229062451.9467-1-sargun@sargun.me>
+ <20191229062451.9467-3-sargun@sargun.me>
+ <20191229171441.fxif7q32mv2hl3y4@wittgenstein>
+ <CAMp4zn_4dN+5U2RxkpYp+m4=X9w2Wef1TuLZ2hRW+g+nK1cXGA@mail.gmail.com>
+ <20191229194318.ogsqw5pbjppbtsf7@wittgenstein>
+ <CAMp4zn_39bsyZo6BeZ6b+c_EeAHdWmqcJus6qD2xYp84cEcZaA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMp4zn_39bsyZo6BeZ6b+c_EeAHdWmqcJus6qD2xYp84cEcZaA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+On Sun, Dec 29, 2019 at 03:42:17PM -0800, Sargun Dhillon wrote:
+> On Sun, Dec 29, 2019 at 11:43 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Sun, Dec 29, 2019 at 11:06:25AM -0800, Sargun Dhillon wrote:
+> > > On Sun, Dec 29, 2019 at 12:14 PM Christian Brauner
+> > > <christian.brauner@ubuntu.com> wrote:
+> > > > Does that even work if no dup() syscall has been made and trapped?
+> > > Yes, the first check that occurs is the check which checks if
+> > > seccom_notif has been
+> > > zeroed out. This happens before any of the other work.
+> >
+> > Ah, then sure I don't mind doing it this way. Though plumbing it
+> > directly into TEST(user_notification_basic) like I did below seems
+> > cleaner to me.
+> >
+> > >
+> > > > This looks like it would give you ENOENT...
+> > > This ioctl is a blocking ioctl. It'll block until there is a wakeup.
+> > > In this case, the wakeup
+> > > will never come, but that doesn't mean we get an ENOENT.
+> >
+> > Yeah, but that wold mean the test will hang weirdly if it bypasses the
+> > check. Sure it'll timeout but meh. I think I would prefer to have this
+> > done as part of the basic test where we know that there is an event but
+> > _shrug_.
 
-Thanks for taking care of this.
+I'd like to design the tests to not _depend_ on the timeout to catch bad
+behaviors. The timeout is there for us to not break a test runner when
+we forget weird corner cases.
 
-On Fri, 2019-12-27 at 17:01 -0300, Helen Koike wrote:
-> From: Ezequiel Garcia <ezequiel@collabora.com>
-> 
-> Add driver for Rockchip MIPI Synopsys DPHY driver
-> 
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
-> ---
-> 
-> Changes in v12:
-> - several cleanups
-> - remove "rx" from function names, as this driver only supports rx
-> 
-> Changes in v11:
-> - fix checkpatch errors
-> 
-> Changes in v10: None
-> Changes in v9:
-> - Move to staging
-> - replace memcpy by a directly assignment
-> - remove unecessary ret variable in rockchip_dphy_init
-> - s/0x1/1
-> - s/0x0/0
-> - coding style changes
-> - dphy_reg variable sizes
-> - variables from int to unsigned int
-> - rename functions to start with rk_
-> - rename dphy0 to rx
-> - fix hardcoded lane0 usage
-> - disable rx on power off
-> - general cleanups of unused variables
-> 
-> Changes in v8:
-> - Remove boiler plate license text
-> 
-> Changes in v7:
-> - Migrate dphy specific code from
-> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
-> to drivers/phy/rockchip/phy-rockchip-dphy.c
-> - Drop support for rk3288
-> - Drop support for dphy txrx
-> - code styling and checkpatch fixes
-> 
->  drivers/staging/media/Kconfig                 |   2 +
->  drivers/staging/media/Makefile                |   1 +
->  .../staging/media/phy-rockchip-dphy/Kconfig   |  11 +
->  .../staging/media/phy-rockchip-dphy/Makefile  |   2 +
->  drivers/staging/media/phy-rockchip-dphy/TODO  |   6 +
->  .../phy-rockchip-dphy/phy-rockchip-dphy.c     | 396 ++++++++++++++++++
->  6 files changed, 418 insertions(+)
->  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
->  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
->  create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
->  create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
-> 
-> diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
-> index 642adc4c24d2..a47484473883 100644
-> --- a/drivers/staging/media/Kconfig
-> +++ b/drivers/staging/media/Kconfig
-> @@ -38,4 +38,6 @@ source "drivers/staging/media/ipu3/Kconfig"
->  
->  source "drivers/staging/media/soc_camera/Kconfig"
->  
-> +source "drivers/staging/media/phy-rockchip-dphy/Kconfig"
-> +
->  endif
-> diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
-> index 2f1711a8aeed..b0eae3906208 100644
-> --- a/drivers/staging/media/Makefile
-> +++ b/drivers/staging/media/Makefile
-> @@ -8,3 +8,4 @@ obj-$(CONFIG_TEGRA_VDE)		+= tegra-vde/
->  obj-$(CONFIG_VIDEO_HANTRO)	+= hantro/
->  obj-$(CONFIG_VIDEO_IPU3_IMGU)	+= ipu3/
->  obj-$(CONFIG_SOC_CAMERA)	+= soc_camera/
-> +obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy/
-> diff --git a/drivers/staging/media/phy-rockchip-dphy/Kconfig b/drivers/staging/media/phy-rockchip-dphy/Kconfig
-> new file mode 100644
-> index 000000000000..7378bd75fa7c
-> --- /dev/null
+> My one worry about this is that the behaviour should be if the input
+> (seccomp_notif) is invalid, it should immediately bail out, whether
+> or not there is an event waiting. If we add it to basic_test, then
+> it would hide the erroneous behaviour if bailout isn't immediate.
 
-Seems I overlooked the Kconfig file for this driver,
-sorry about that!
+I'm not following this paragraph. The ioctl's zero check is immediate,
+so this test should fail the EXPECT (but continue to the next "correct"
+ioctl) -- it's not an ASSERT (which would stop the test). I think
+Christian's test might be a cleaner approach, unless I'm still missing
+something here?
 
-> +++ b/drivers/staging/media/phy-rockchip-dphy/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Phy drivers for Rockchip platforms
-> +#
-> +config PHY_ROCKCHIP_DPHY
-> +	tristate "Rockchip MIPI Synopsys DPHY driver"
-> +	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-> +	select GENERIC_PHY_MIPI_DPHY
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the Rockchip MIPI Synopsys DPHY.
-
-Following a more user-friendly convention, this should read
-more like:
-
-"""
-Enable this to support the Rockchip MIPI Synopsys DPHY
-associated to the Rockchip ISP module present in RK3399 SoCs.
-
-To compile this driver as a module, choose M here: the module
-will be called phy-rockchip-dphy. 
-"""
-
-And I believe the same improvement should be applied to the
-ISP driver Kconfig help.
-
-Thanks,
-Ezequiel
-
+-- 
+Kees Cook
