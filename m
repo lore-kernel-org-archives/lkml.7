@@ -2,229 +2,277 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 574E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A14C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E62207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20830208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfL3HVq convert rfc822-to-8bit (ORCPT
+        id S1727210AbfL3H0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 02:21:46 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50983 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfL3HVq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 02:21:46 -0500
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ilpN0-0003yV-Q8
-        for linux-kernel@vger.kernel.org; Mon, 30 Dec 2019 07:21:43 +0000
-Received: by mail-pf1-f199.google.com with SMTP id r17so24156718pfl.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 23:21:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=HqegK53KmgpbkNTeSmtl1L/hHmvokp76tL5l0PO1vVc=;
-        b=Eivb+ssvg4+3IOXbAhg1MRw5ERM0Hpx24RbB4w8fGnezyO3bGmL3zDI6u0eF1iMpha
-         yGaHqf3oU4FMyMHn80/ZnYJxYvXqmxtezT90CFGPcReC17/oIJioD7SPw83Pq8wFWpnD
-         S40CTpvmQYEpmLiTEA/x0pmIrOYSrzFeqzcHkcFDcaAjWRhps5FqjyyflA3OMY0GiSsb
-         CZtnukcex/ZgarFT6Vdf+nS7fIuU7yazusV7qXWpBoGJdmNSC8f+l3aP1hqi2tNAdaGK
-         5H5oqPnL+NYEKYURNHJ5TKNQSKfEcNZoTNVr8aAnmoRBq3Anip92jx/BG9eTi0ZWJmMf
-         0e9w==
-X-Gm-Message-State: APjAAAXn7mDcGOyFg3LR9hane1Fi9HdVrAdcJgMS5ILUq249FROTO7Zl
-        YvfDmIbyvUyYNDKx1xTYrnYkv4RsUOQ4BWcRubZMHcDzPc8VKw6fJZz5ayh8FeaCwskgKcZYYvt
-        9sMn56sNJLh5rNzYlJ8OSXNSXPDwWlywRRjL/actEBQ==
-X-Received: by 2002:a62:5447:: with SMTP id i68mr61034939pfb.44.1577690501260;
-        Sun, 29 Dec 2019 23:21:41 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyG+iv/I6m1eLM++Ak9f9iNh4BMB7TtS8mctbw+sl2pDxFVx2ofVWQX4ueIT8VP/LhETr+RBw==
-X-Received: by 2002:a62:5447:: with SMTP id i68mr61034920pfb.44.1577690500950;
-        Sun, 29 Dec 2019 23:21:40 -0800 (PST)
-Received: from 2001-b011-380f-35a3-6c61-6579-bbdc-0fed.dynamic-ip6.hinet.net (2001-b011-380f-35a3-6c61-6579-bbdc-0fed.dynamic-ip6.hinet.net. [2001:b011:380f:35a3:6c61:6579:bbdc:fed])
-        by smtp.gmail.com with ESMTPSA id f9sm48722093pfd.141.2019.12.29.23.21.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Dec 2019 23:21:40 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH] PCI/PM: Report runtime wakeup is not supported if bridge
- isn't bound to driver
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <4466650.2HG2iOLVKt@kreacher>
-Date:   Mon, 30 Dec 2019 15:21:38 +0800
-Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D6AE0854-D743-4E27-A764-50EB94A4ACC5@canonical.com>
-References: <20191227092405.29588-1-kai.heng.feng@canonical.com>
- <1948783.ToaVGCCZch@kreacher>
- <C9708CF1-9F01-47BF-A568-53A01725AF95@canonical.com>
- <4466650.2HG2iOLVKt@kreacher>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Mon, 30 Dec 2019 02:26:22 -0500
+Received: from mga06.intel.com ([134.134.136.31]:45925 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727140AbfL3H0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 02:26:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Dec 2019 23:26:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,374,1571727600"; 
+   d="scan'208";a="224176795"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Dec 2019 23:26:20 -0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v2] fpga: dfl: support multiple opens on feature device node.
+Date:   Mon, 30 Dec 2019 15:23:52 +0800
+Message-Id: <1577690632-30225-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
+(FPGA Management Engine), could implement more than one function within
+its region, but current driver only allows one user application to access
+it by exclusive open on device node. So this is not convenient and
+flexible for userspace applications, as they have to combine lots of
+different functions into one single application.
 
+This patch removes the limitation here to allow multiple opens to each
+feature device node for AFU and FME from userspace applications. If user
+still needs exclusive access to these device node, O_EXCL flag must be
+issued together with open.
 
-> On Dec 30, 2019, at 06:37, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> 
-> On Friday, December 27, 2019 6:15:26 PM CET Kai-Heng Feng wrote:
->> 
->>> On Dec 27, 2019, at 18:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>> 
->>> On Friday, December 27, 2019 10:24:05 AM CET Kai-Heng Feng wrote:
->>>> We have a Pericom USB add-on card that has three USB controller
->>>> functions 06:00.[0-2], connected to bridge device 05:03.0, which is
->>>> connected to another bridge device 04:00.0:
->>>> 
->>>> -[0000:00]-+-00.0
->>>>          +-1c.6-[04-06]----00.0-[05-06]----03.0-[06]--+-00.0
->>>>          |                                            +-00.1
->>>>          |                                            \-00.2
->>>> 
->>>> When bridge device (05:03.0) and all three USB controller functions
->>>> (06:00.[0-2]) are runtime suspended, they don't get woken up by plugging
->>>> USB devices into the add-on card.
->>>> 
->>>> This is because the pcieport driver failed to probe on 04:00.0, since
->>>> the device supports neither legacy IRQ, MSI nor MSI-X. Because of that,
->>>> there's no native PCIe PME can work for devices connected to it.
->>> 
->>> But in that case the PME driver (drivers/pci/pcie/pme.c) should not bind
->>> to the port in question, so the "can_wakeup" flag should not be set for
->>> the devices under that port.
->> 
->> We can remove the can_wakeup flag for all its child devices once pcieport probe fails, but I think it's not intuitive.
->> 
->>> 
->>>> So let's correctly report runtime wakeup isn't supported when any of
->>>> PCIe bridges isn't bound to pcieport driver.
->>>> 
->>>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205981
->>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>> ---
->>>> drivers/pci/pci.c | 12 ++++++++++++
->>>> 1 file changed, 12 insertions(+)
->>>> 
->>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>> index 951099279192..ca686cfbd65e 100644
->>>> --- a/drivers/pci/pci.c
->>>> +++ b/drivers/pci/pci.c
->>>> @@ -2493,6 +2493,18 @@ bool pci_dev_run_wake(struct pci_dev *dev)
->>>> 	if (!pci_pme_capable(dev, pci_target_state(dev, true)))
->>>> 		return false;
->>>> 
->>>> +	/* If any upstream PCIe bridge isn't bound to pcieport driver, there's
->>>> +	 * no IRQ for PME.
->>>> +	 */
->>>> +	if (pci_is_pcie(dev)) {
->>>> +		while (bus->parent) {
->>>> +			if (!bus->self->driver)
->>>> +				return false;
->>>> +
->>>> +			bus = bus->parent;
->>>> +		}
->>>> +	}
->>>> +
->>> 
->>> So it looks like device_can_wakeup() returns 'true' for this device, but it
->>> should return 'false'.
->> 
->> The USB controllers can assert PME#, so it actually can wakeup, in a way.
-> 
-> Well, that's questionable.
-> 
-> If there is no known way for the PME to be signaled, we may as well mark the
-> device as wakeup-incapable.
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+---
+v2: drop unnecessary inline prefix for dfl_feature_dev_use_count()
+---
+ drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
+ drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
+ drivers/fpga/dfl.c          | 15 +++++++++++++--
+ drivers/fpga/dfl.h          | 34 ++++++++++++++++++++++++++--------
+ 4 files changed, 66 insertions(+), 28 deletions(-)
 
-Ok. Reasonable.
-
-> 
->> I think the logical distinction between pci_dev_run_wake() and device_can_wakeup() is that,
->> pci_dev_run_wake() means it can actually do runtime wakeup, while device_can_wakeup()
->> only means it has the capability to wakeup. Am I correct here?
-> 
-> Kind of, but the "capability" part is not well defined, so to speak, because
-> if the device happens to be located below a PCIe port in a low-power state
-> (say D3hot), the PME "support" declared in the config space is clearly
-> insufficient.
-
-Ok.
-
-> 
->>> 
->>> Do you know why the "can_wakeup" flag is set for it?
->> 
->> All PCI devices with PME cap calls device_set_wakeup_capable() in pci_pm_init().
-> 
-> Right, I forgot about that thing.
-> 
-> It is inconsistent with the rest of the code, particularly with
-> pci_dev_run_wake(), so I'd try to drop it.
-> 
-> IIRC that would require some other pieces of code to be reworked to avoid
-> regressions, though.
-
-Ok. So I'll work on a v2 patch on top of your change.
-
-> 
->>> 
->>>> 	if (device_can_wakeup(&dev->dev))
->>>> 		return true;
->>>> 
->>>> 
->>> 
->>> Moreover, even if the native PME is not supported, there can be an ACPI GPE (or
->>> equivalent) that triggers when WAKE# is asserted by one of the PCIe devices
->>> connected to it, so the test added by this patch cannot be used in general.
->> 
->> Ok. So how to know when both native PME isn't supported and it doesn't use ACPI GPE?
-> 
-> If the PME driver doesn't bind to the device's root port, the native PME cannot
-> work.
-> 
-> If there is no wakeup GPE, pci_acpi_setup() will not call
-> device_set_wakeup_capable() for the device.
-
-Thanks for the info. Does adding a check on adev->wakeup.flags.valid sufficiently cover all cases for this patch?
-
-> 
->> I thought ACPI GPE only works for devices directly connect to Root Complex, but I can't find the reference now.
-> 
-> No, that's not the case.
-> 
-> It can work for any devices (even old-style PCI, non-PCIe) with PME# connected
-> to a dedicated WAKE# pin on the board (which then is represented as an ACPI GPE
-> or a GPIO IRQ).
-
-Ok, didn't know that.
-
-> 
->> 
->> Another short-term workaround is to make pci_pme_list_scan() not skip bridge when it's in D3hot:
-> 
-> No, that would not be safe in general.
-> 
-> Basically, pci_finish_runtime_suspend() needs to enable wakeup for devices
-> that can do PME even though can_wakeup is not set for them, as long as
-> pci_pme_list_scan() can reach them.  That should be sufficient to cover
-> all of the practically relevant cases.
-
-Understand.
-
-Kai-Heng
-
-> 
-> 
-> 
+diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+index e4a34dc..c6e0e07 100644
+--- a/drivers/fpga/dfl-afu-main.c
++++ b/drivers/fpga/dfl-afu-main.c
+@@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
+ 	if (WARN_ON(!pdata))
+ 		return -ENODEV;
+ 
+-	ret = dfl_feature_dev_use_begin(pdata);
+-	if (ret)
+-		return ret;
+-
+-	dev_dbg(&fdev->dev, "Device File Open\n");
+-	filp->private_data = fdev;
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
++	if (!ret) {
++		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
++			dfl_feature_dev_use_count(pdata));
++		filp->private_data = fdev;
++	}
++	mutex_unlock(&pdata->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int afu_release(struct inode *inode, struct file *filp)
+@@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
+ 	pdata = dev_get_platdata(&pdev->dev);
+ 
+ 	mutex_lock(&pdata->lock);
+-	__port_reset(pdev);
+-	afu_dma_region_destroy(pdata);
+-	mutex_unlock(&pdata->lock);
+-
+ 	dfl_feature_dev_use_end(pdata);
+ 
++	if (!dfl_feature_dev_use_count(pdata)) {
++		__port_reset(pdev);
++		afu_dma_region_destroy(pdata);
++	}
++	mutex_unlock(&pdata->lock);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+index 7c930e6..fda8623 100644
+--- a/drivers/fpga/dfl-fme-main.c
++++ b/drivers/fpga/dfl-fme-main.c
+@@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
+ 	if (WARN_ON(!pdata))
+ 		return -ENODEV;
+ 
+-	ret = dfl_feature_dev_use_begin(pdata);
+-	if (ret)
+-		return ret;
+-
+-	dev_dbg(&fdev->dev, "Device File Open\n");
+-	filp->private_data = pdata;
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
++	if (!ret) {
++		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
++			dfl_feature_dev_use_count(pdata));
++		filp->private_data = pdata;
++	}
++	mutex_unlock(&pdata->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int fme_release(struct inode *inode, struct file *filp)
+@@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
+ 	struct platform_device *pdev = pdata->dev;
+ 
+ 	dev_dbg(&pdev->dev, "Device File Release\n");
++
++	mutex_lock(&pdata->lock);
+ 	dfl_feature_dev_use_end(pdata);
++	mutex_unlock(&pdata->lock);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+index 96a2b82..9909948 100644
+--- a/drivers/fpga/dfl.c
++++ b/drivers/fpga/dfl.c
+@@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
+  */
+ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+ {
++	struct dfl_feature_platform_data *pdata;
+ 	struct platform_device *port_pdev;
+ 	int ret = -ENODEV;
+ 
+@@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
+ 		goto put_dev_exit;
+ 	}
+ 
+-	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
++	pdata = dev_get_platdata(&port_pdev->dev);
++
++	mutex_lock(&pdata->lock);
++	ret = dfl_feature_dev_use_begin(pdata, true);
++	mutex_unlock(&pdata->lock);
+ 	if (ret)
+ 		goto put_dev_exit;
+ 
+@@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
+  */
+ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+ {
++	struct dfl_feature_platform_data *pdata;
+ 	struct platform_device *port_pdev;
+ 	int ret = -ENODEV;
+ 
+@@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
+ 	if (ret)
+ 		goto put_dev_exit;
+ 
+-	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
++	pdata = dev_get_platdata(&port_pdev->dev);
++
++	mutex_lock(&pdata->lock);
++	dfl_feature_dev_use_end(pdata);
++	mutex_unlock(&pdata->lock);
++
+ 	cdev->released_port_num--;
+ put_dev_exit:
+ 	put_device(&port_pdev->dev);
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 9f0e656..da242e0 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -205,8 +205,6 @@ struct dfl_feature {
+ 	const struct dfl_feature_ops *ops;
+ };
+ 
+-#define DEV_STATUS_IN_USE	0
+-
+ #define FEATURE_DEV_ID_UNUSED	(-1)
+ 
+ /**
+@@ -219,8 +217,9 @@ struct dfl_feature {
+  * @dfl_cdev: ptr to container device.
+  * @id: id used for this feature device.
+  * @disable_count: count for port disable.
++ * @excl_open: set on feature device exclusive open.
++ * @open_count: count for feature device open.
+  * @num: number for sub features.
+- * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
+  * @private: ptr to feature dev private data.
+  * @features: sub features of this feature dev.
+  */
+@@ -232,26 +231,45 @@ struct dfl_feature_platform_data {
+ 	struct dfl_fpga_cdev *dfl_cdev;
+ 	int id;
+ 	unsigned int disable_count;
+-	unsigned long dev_status;
++	bool excl_open;
++	int open_count;
+ 	void *private;
+ 	int num;
+ 	struct dfl_feature features[0];
+ };
+ 
+ static inline
+-int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
++int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
++			      bool excl)
+ {
+-	/* Test and set IN_USE flags to ensure file is exclusively used */
+-	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
++	if (pdata->excl_open)
+ 		return -EBUSY;
+ 
++	if (excl) {
++		if (pdata->open_count)
++			return -EBUSY;
++
++		pdata->excl_open = true;
++	}
++	pdata->open_count++;
++
+ 	return 0;
+ }
+ 
+ static inline
+ void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
+ {
+-	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
++	pdata->excl_open = false;
++
++	if (WARN_ON(pdata->open_count <= 0))
++		return;
++
++	pdata->open_count--;
++}
++
++static int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
++{
++	return pdata->open_count;
+ }
+ 
+ static inline
+-- 
+2.7.4
 
