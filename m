@@ -2,328 +2,115 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4534AC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DAFC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C3520409
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1661620409
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/bIxziY"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TuYiaApt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfL3UK6 (ORCPT
+        id S1727723AbfL3UN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:10:58 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43202 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfL3UK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:10:57 -0500
-Received: by mail-ed1-f65.google.com with SMTP id dc19so33730001edb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 12:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OdWN2VZt7r/0qVQN2N6DJ853sCi1Y1JAuLy91U8S5nc=;
-        b=f/bIxziYW4bHwbJKkI3mYgpDYCheY5o5G1AhIkeyzeIzCYIvAVvViUZIhxZH1PlJYZ
-         fbA5BIPLD+iJ2AP4aQwMiwEBiHhgze8jrtw/oYpF4P1YOH3r2ewVOraSqxizhrC+D7HQ
-         uEsis8UJ66qjYy1mSEPGcuRM+hhsKSCbmMprNB8aCpeGkcu/tQrriK7VBvBArLl8K2G4
-         wxmhUoO6+895/1nxxKGmyQ6mafXkDKlwQzlCFM/rxfH/U1GOtnjO4lMpXpR2jERW1DvU
-         8HeOG+A9EcKFsR9f0KUhVr6fQ4PvqDyOXvzsngrYsRASIIDEeGdzpVzeM1rrhB0eNMxw
-         F8ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OdWN2VZt7r/0qVQN2N6DJ853sCi1Y1JAuLy91U8S5nc=;
-        b=fSz0Ia0gcTo+fh3JH78NrZGUf/T+W068ybsq1Lexea2TgsKIqcr2RlQ9AAYdMYbjlj
-         5R3hYTmpNQTeHC1luyqUXS+iA6ehxDIB4oVHqoAuToHk/m70B3aC5XGbmwNpMtZrHn8x
-         U+JI6qYqQLXRhKgH3aMHepdiOa9okpM4MlrejVRQrquj5c0rttEdN+aauGuOsmkm1aOr
-         jvv2nKyZtM3HsbTGOEGaa8LP5uUJdkCvkoM3CJIEtMbeRMpPZHCCmuOvolonvVA4GnN/
-         JWO4VG7H8u7D4ZQalQojQqZ9E5n7cMoA9Jdgl7LiGmpopUpXjiV8T8CQ/IZhqQcwqgvt
-         tdXA==
-X-Gm-Message-State: APjAAAUctiXamiXo/BcOISAZSXB9pjK9npYyOuZLm/O60xt6j7QgptPh
-        BoTQHHRLpv4ngJ8qIhI7R9bWeQ6Q
-X-Google-Smtp-Source: APXvYqz74/Q+DJr6TY1BdcXnQnWy3KCUxK5Sio3RUPWE2tI1MgZGjPwsjJccrL/ApXMb3hobajEIkg==
-X-Received: by 2002:a17:906:1117:: with SMTP id h23mr71761232eja.88.1577736655378;
-        Mon, 30 Dec 2019 12:10:55 -0800 (PST)
-Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 2sm5523277edv.87.2019.12.30.12.10.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Dec 2019 12:10:54 -0800 (PST)
-Subject: Re: [PATCH 2/2] phy: Enable compile testing for some of drivers
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20191230172449.17648-1-krzk@kernel.org>
- <20191230172449.17648-2-krzk@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <791d83ef-faee-d6e6-445e-a8088c5ac654@gmail.com>
-Date:   Mon, 30 Dec 2019 12:10:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 30 Dec 2019 15:13:59 -0500
+Received: from mail-eopbgr680109.outbound.protection.outlook.com ([40.107.68.109]:34285
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727667AbfL3UN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:13:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EVTEwuYcsoWhobQDgZHGvuP1dFpJy+22Z3qEQG09DJsMYxJVsNTH+7fALrU+kkc15mEwX91NxRexV5IaWhqrKWlpodKAbEnLVhXt/ShSMwhSqviLt0uXeXuIurOmvLcKxE1nAVJUD7WGmFe8wMqYJaV89Z06OVijnjZLqQYz+EHk32/FGi+Wik1mqfeB+TF6b3QBvyHNBdicQFCAofdHvNq4D91eZjTTyX6/pzLGY009oPN/yaGoJpZD1BNaTHhsDnmIY3aoiSPsFvaq/x09WT79zGeu1trankcCKsHDKnCLzsASEFSGzhKq+WszWadY6a2suWLNo3pVQNZdBC8LCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UgzFW3d4xFaTdzxuMn/y0TJwFzW6+RWghVCR3xZ3I/4=;
+ b=k/WvPp98f5bYu7c6YcDDvlY4B5pS1qvNgcB09PHhCBYEOwLW/0ZAhhshv0LOEPQw/zyptKO8eIW0QArUftCFqGQ0ouIEFd+tMZVaitbNIvDPt/cXhOI9MWW6xv2K2Lz4sjkvb8PTkTIS1OzCfqP863J7vpzO84MUrE4mdfXvEABG4fx1oOoGHTkSvfKv/nkCoqESATZ33G0MPW7kBTkRWZODf6WIJ/eqCaYolLRu6fDwA70ji4JJ5sKL3vmKPVpQwKLmLG7qC2kNOrB6afzt2WIHnl53gXMv7wBh4no6fOZfutanqkPnt59iJ1DlMTrB7dUd+XMyEqvIXnyEunLyaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UgzFW3d4xFaTdzxuMn/y0TJwFzW6+RWghVCR3xZ3I/4=;
+ b=TuYiaAptDM3S1kQoOHFykEqzVRT/KYxwG78V3It2pdfFfiiFF6XNCFdqLwwBNn/qMGQlXhHCGDeJfGRAuov1DJkJQa5awUY+JKbe/NwWD+9kcWG+DL1LzaNZFl2bQ1y3ZUVDzj2o9xaDYudK4wGyDF6Fo5OJQ3tZeiX0Dahzihc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
+ DM5PR2101MB0936.namprd21.prod.outlook.com (52.132.131.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.8; Mon, 30 Dec 2019 20:13:55 +0000
+Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
+ ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Mon, 30 Dec 2019
+ 20:13:55 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2,net-next, 0/3] Add vmbus dev_num and enable netvsc async probing
+Date:   Mon, 30 Dec 2019 12:13:31 -0800
+Message-Id: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34)
+ To DM5PR2101MB0901.namprd21.prod.outlook.com (2603:10b6:4:a7::30)
 MIME-Version: 1.0
-In-Reply-To: <20191230172449.17648-2-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Mon, 30 Dec 2019 20:13:54 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2ad1b826-c6f4-40ec-ff8e-08d78d64cb67
+X-MS-TrafficTypeDiagnostic: DM5PR2101MB0936:|DM5PR2101MB0936:|DM5PR2101MB0936:
+X-MS-Exchange-Transport-Forked: True
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR2101MB0936F2D0C02E5698F9061214AC270@DM5PR2101MB0936.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-Forefront-PRVS: 0267E514F9
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(376002)(366004)(189003)(199004)(5660300002)(52116002)(6506007)(66556008)(186003)(2616005)(956004)(6666004)(16526019)(4744005)(26005)(66946007)(66476007)(478600001)(2906002)(10290500003)(8936002)(36756003)(316002)(6512007)(8676002)(6486002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0936;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 721nPN76q1jge6wSCTze1ofIEHEtBY7wmVGXLj4nDNkZJkB0b6rjzmYlknHyw+mlzqYNQ3BCYM9fvV9eeXbu937vwC1dP5SCJuuAFv+E4z5oXB7R4qNvb37bmQyvTZ0PLhFmPXqMYM2PrDGXtKz/1/+ni3z71gTLxnJjgMHHChXtSR0hWoXSYO2574NlXQyxn3kqUjUDahq3gUFZ8Cz9kfMuMYQlCIbR5DHvyS2Eqbw2TA4/Cs0ruqSl4JocmRY9TkYCOd6hiiRCb0A6bndNq7sduYXY8twXf4lEHQE6JZvTA2nMcVmjeEtmrVphdsWlW6c6VnyQ8OCMqDDl81q9SKHG1khYlR9a3tZ2hkkZ4h5PJrF/WF+5m/lUDmGJRX96QwZ2ST1dMGQnPKb5kjGbkZQ0AoCmH8QbK9XJF1fNiYxaYsTAonVbWvEp07QalwjS
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad1b826-c6f4-40ec-ff8e-08d78d64cb67
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2019 20:13:54.9608
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6d6Hz75D50qJQ6JnJ/H+vluiTK92w9f4DgRn6tth62QtC8YnTr3lKeS/RaOY7Dxymgzsa2zhni6qv4TlCa2U9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Add dev_num for vmbus device based on channel offer sequence.
+Use this number for nic naming, and enable async probing.
 
-On 12/30/19 9:24 AM, Krzysztof Kozlowski wrote:
-> Some of the phy drivers can be compile tested to increase build
-> coverage.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Haiyang Zhang (3):
+  Drivers: hv: vmbus: Add a dev_num variable based on channel offer
+    sequence
+  Drivers: hv: vmbus: Add dev_num to sysfs
+  hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
 
-This looks fine, you could also consider adding a bunch of other
-Broadcom PHY drivers which are not currently under COMPILE_TEST, yet
-build fine:
-
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index d3d983c128ea..d56db6d375e1 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -50,7 +50,7 @@ config PHY_BCM_NS_USB3
-
- config PHY_NS2_PCIE
-        tristate "Broadcom Northstar2 PCIe PHY driver"
--       depends on OF && MDIO_BUS_MUX_BCM_IPROC
-+       depends on (OF && MDIO_BUS_MUX_BCM_IPROC) || COMPILE_TEST
-        select GENERIC_PHY
-        default ARCH_BCM_IPROC
-        help
-@@ -83,7 +83,7 @@ config PHY_BRCM_SATA
-
- config PHY_BRCM_USB
-        tristate "Broadcom STB USB PHY driver"
--       depends on ARCH_BRCMSTB
-+       depends on ARCH_BRCMSTB || COMPILE_TEST
-        depends on OF
-        select GENERIC_PHY
-        select SOC_BRCMSTB
-
-> ---
->  drivers/phy/allwinner/Kconfig | 3 ++-
->  drivers/phy/marvell/Kconfig   | 8 +++++---
->  drivers/phy/mediatek/Kconfig  | 9 ++++++---
->  drivers/phy/samsung/Kconfig   | 8 ++++----
->  drivers/phy/ti/Kconfig        | 4 ++--
->  5 files changed, 19 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
-> index 3dab79e9d52b..e760d89d3976 100644
-> --- a/drivers/phy/allwinner/Kconfig
-> +++ b/drivers/phy/allwinner/Kconfig
-> @@ -48,7 +48,8 @@ config PHY_SUN9I_USB
->  
->  config PHY_SUN50I_USB3
->  	tristate "Allwinner H6 SoC USB3 PHY driver"
-> -	depends on ARCH_SUNXI && HAS_IOMEM && OF
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	depends on HAS_IOMEM && OF
->  	depends on RESET_CONTROLLER
->  	select GENERIC_PHY
->  	help
-> diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-> index 005e02dd4a91..8f6273c837ec 100644
-> --- a/drivers/phy/marvell/Kconfig
-> +++ b/drivers/phy/marvell/Kconfig
-> @@ -10,14 +10,16 @@ config ARMADA375_USBCLUSTER_PHY
->  
->  config PHY_BERLIN_SATA
->  	tristate "Marvell Berlin SATA PHY driver"
-> -	depends on ARCH_BERLIN && HAS_IOMEM && OF
-> +	depends on ARCH_BERLIN || COMPILE_TEST
-> +	depends on OF && HAS_IOMEM
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the SATA PHY on Marvell Berlin SoCs.
->  
->  config PHY_BERLIN_USB
->  	tristate "Marvell Berlin USB PHY Driver"
-> -	depends on ARCH_BERLIN && RESET_CONTROLLER && HAS_IOMEM && OF
-> +	depends on ARCH_BERLIN || COMPILE_TEST
-> +	depends on OF && HAS_IOMEM && RESET_CONTROLLER
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the USB PHY on Marvell Berlin SoCs.
-> @@ -95,7 +97,7 @@ config PHY_PXA_28NM_USB2
->  
->  config PHY_PXA_USB
->  	tristate "Marvell PXA USB PHY Driver"
-> -	depends on ARCH_PXA || ARCH_MMP
-> +	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support Marvell PXA USB PHY driver for Marvell
-> diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-> index 7d19134c6b7c..dee757c957f2 100644
-> --- a/drivers/phy/mediatek/Kconfig
-> +++ b/drivers/phy/mediatek/Kconfig
-> @@ -4,7 +4,8 @@
->  #
->  config PHY_MTK_TPHY
->  	tristate "MediaTek T-PHY Driver"
-> -	depends on ARCH_MEDIATEK && OF
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	depends on OF
->  	select GENERIC_PHY
->  	help
->  	  Say 'Y' here to add support for MediaTek T-PHY driver,
-> @@ -16,7 +17,8 @@ config PHY_MTK_TPHY
->  
->  config PHY_MTK_UFS
->  	tristate "MediaTek UFS M-PHY driver"
-> -	depends on ARCH_MEDIATEK && OF
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	depends on OF
->  	select GENERIC_PHY
->  	help
->  	  Support for UFS M-PHY on MediaTek chipsets.
-> @@ -26,7 +28,8 @@ config PHY_MTK_UFS
->  
->  config PHY_MTK_XSPHY
->  	tristate "MediaTek XS-PHY Driver"
-> -	depends on ARCH_MEDIATEK && OF
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	depends on OF
->  	select GENERIC_PHY
->  	help
->  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
-> diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
-> index 290a6c70f570..349fcb23e5f3 100644
-> --- a/drivers/phy/samsung/Kconfig
-> +++ b/drivers/phy/samsung/Kconfig
-> @@ -32,7 +32,7 @@ config PHY_EXYNOS_PCIE
->  config PHY_SAMSUNG_USB2
->  	tristate "Samsung USB 2.0 PHY driver"
->  	depends on HAS_IOMEM
-> -	depends on USB_EHCI_EXYNOS || USB_OHCI_EXYNOS || USB_DWC2
-> +	depends on USB_EHCI_EXYNOS || USB_OHCI_EXYNOS || USB_DWC2 || COMPILE_TEST
->  	select GENERIC_PHY
->  	select MFD_SYSCON
->  	default ARCH_EXYNOS
-> @@ -60,7 +60,7 @@ config PHY_EXYNOS5250_USB2
->  config PHY_S5PV210_USB2
->  	bool "Support for S5PV210"
->  	depends on PHY_SAMSUNG_USB2
-> -	depends on ARCH_S5PV210
-> +	depends on ARCH_S5PV210 || COMPILE_TEST
->  	help
->  	  Enable USB PHY support for S5PV210. This option requires that Samsung
->  	  USB 2.0 PHY driver is enabled and means that support for this
-> @@ -69,7 +69,7 @@ config PHY_S5PV210_USB2
->  
->  config PHY_EXYNOS5_USBDRD
->  	tristate "Exynos5 SoC series USB DRD PHY driver"
-> -	depends on ARCH_EXYNOS && OF
-> +	depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
->  	depends on HAS_IOMEM
->  	depends on USB_DWC3_EXYNOS
->  	select GENERIC_PHY
-> @@ -82,7 +82,7 @@ config PHY_EXYNOS5_USBDRD
->  
->  config PHY_EXYNOS5250_SATA
->  	tristate "Exynos5250 Sata SerDes/PHY driver"
-> -	depends on SOC_EXYNOS5250
-> +	depends on SOC_EXYNOS5250 || COMPILE_TEST
->  	depends on HAS_IOMEM
->  	depends on OF
->  	select GENERIC_PHY
-> diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-> index 174888609779..e231c0e369c5 100644
-> --- a/drivers/phy/ti/Kconfig
-> +++ b/drivers/phy/ti/Kconfig
-> @@ -4,7 +4,7 @@
->  #
->  config PHY_DA8XX_USB
->  	tristate "TI DA8xx USB PHY Driver"
-> -	depends on ARCH_DAVINCI_DA8XX
-> +	depends on ARCH_DAVINCI_DA8XX || COMPILE_TEST
->  	select GENERIC_PHY
->  	select MFD_SYSCON
->  	help
-> @@ -14,7 +14,7 @@ config PHY_DA8XX_USB
->  
->  config PHY_DM816X_USB
->  	tristate "TI dm816x USB PHY driver"
-> -	depends on ARCH_OMAP2PLUS
-> +	depends on ARCH_OMAP2PLUS || COMPILE_TEST
->  	depends on USB_SUPPORT
->  	select GENERIC_PHY
->  	select USB_PHY
-> 
-
+ Documentation/ABI/stable/sysfs-bus-vmbus |  8 +++++++
+ drivers/hv/channel_mgmt.c                | 38 ++++++++++++++++++++++++++++++--
+ drivers/hv/vmbus_drv.c                   | 13 +++++++++++
+ drivers/net/hyperv/netvsc_drv.c          | 18 ++++++++++++---
+ include/linux/hyperv.h                   |  6 +++++
+ 5 files changed, 78 insertions(+), 5 deletions(-)
 
 -- 
-Florian
+1.8.3.1
+
