@@ -2,111 +2,105 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC40C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEE4C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8A3206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103AF206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QvQsPTvF"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KtCHhDGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfL3Pz2 (ORCPT
+        id S1727665AbfL3P6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:55:28 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42395 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727580AbfL3Pz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:55:27 -0500
-Received: by mail-yb1-f193.google.com with SMTP id z10so6888361ybr.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 07:55:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=58VefUNI1Hj0F9zlhiCoQzCFKomrgTvZEEVdE1v+Dik=;
-        b=QvQsPTvFPAHEl8kd1fAlobXt7Yynz7ZVbroAE0f67rZRUxnllntgsohzrRVExGbpqB
-         FeK+cfAAPwJkyP8TF2x3VNv27DQ+mpYpCe/BvCtLb/8uz1+3oZWc2dvTNs1jNli9qTjs
-         okxHr8Boi6PmgUawTXoNacswcwGNos68qHRqQwMHs6FuSo4Nei7TeiWq9xT6s4z7Pr9S
-         FaGDW7f9yzkwQK8hZIt277cdlADpt8fQ53Ag2feILHT10cGI7h7/ZXS6MZiaa28Uz+0J
-         xa1f0on8LtbvPpzmrEizFHe8sBiEK7CcWeJkSrVYgEPfOPse0VlLTVUMBIEq208O3m/5
-         aS4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=58VefUNI1Hj0F9zlhiCoQzCFKomrgTvZEEVdE1v+Dik=;
-        b=omyA831p6XhbjnIwwK4MdZTs9J8RvtG+ofMAvfgwTzwmu1KIdnhMyR54g22K6D/2Uh
-         l2RZz2qqfZys77kZf9SBiDbuum80/ng8UCL608YJZcltbnvZ70dLs2OoQs3oJSKg7sRP
-         NKolEAOUwblry1TjhzxrHLPBdo5gsIqVeESbDmHm53KztBUQEyKcHjBl12EZAE4ZYup6
-         alTK4Pa1egk6hclTGyovctdv/dhcdtAcJb61ZHZjTQyoa0rNLUGksLSjzukKxW0TYo/j
-         8WRzBwu1u9NrkM3sJ5t/Ou41FhcxuklBopusjf7IZjSj0UHpstNSpzeWhdnxcRu9tfzn
-         iz7w==
-X-Gm-Message-State: APjAAAUXYKx+klduHQ2KuDeHrlpvm1RNLk+oYqp1Jn1LOYYXLl3ZcDZz
-        zVDgXK8R4tb4+FeINSCr8J8=
-X-Google-Smtp-Source: APXvYqz7Wfq8q5/eX3xpAkHdK9OcfDn258qbUVwjItfx3qwK0uhs/97g2chZpHq8xEWL2dCVATtg5Q==
-X-Received: by 2002:a25:bfca:: with SMTP id q10mr46486462ybm.223.1577721326827;
-        Mon, 30 Dec 2019 07:55:26 -0800 (PST)
-Received: from user-ThinkPad-X230 ([2601:cd:4005:d680:598a:ed33:1bb1:b28a])
-        by smtp.gmail.com with ESMTPSA id m30sm18008899ywh.12.2019.12.30.07.55.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Dec 2019 07:55:26 -0800 (PST)
-Date:   Mon, 30 Dec 2019 10:55:20 -0500
-From:   Amir Mahdi Ghorbanian <indigoomega021@gmail.com>
-To:     "forest@alittletooquiet.net>" <gregkh@linuxfoundation.org>,
-        quentin.deslandes@itdev.co.uk, indigoomega021@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: remove unnecessary parenthesis
-Message-ID: <20191230155520.GA27072@user-ThinkPad-X230>
+        Mon, 30 Dec 2019 10:58:32 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:35709 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727565AbfL3P6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 10:58:31 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 32ec708b;
+        Mon, 30 Dec 2019 15:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=sfGSg1ph2K9yCG/ddlHTxH291Oc=; b=KtCHhD
+        GDRYs8AgWk7Gcyc4QT476Y3pSHGgVTKVGoloLFJDicO/xbVQpkTcE94ZJuPD9FWL
+        C4u1S+5j0j8pdp2GPHpMt1noUG0ZtKD3vXJkp+5M73+G2YvuBAJXOtlpqEe7zrpk
+        FuGIrEhVlEziz2ozhpN4nQJIg08OJt0sUQ68UNbxlDYGdEeUeTE5HNoAMfZb83Lg
+        tL1EmQZqq0PAecqjPPVRpLMAz/G5fPE5nhjN9oZvu3bXs30cm/yijljqe6zSL6Ln
+        s+cxuVp/ToYFlZRadEONtYpMP8ZiQZ9eLcnSNjArkVCjlvXB9br7ySY7TtSsX62j
+        DPZ4KVmY/7GHM/qA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ef9ae089 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Mon, 30 Dec 2019 15:00:22 +0000 (UTC)
+Received: by mail-oi1-f172.google.com with SMTP id c16so11083508oic.3;
+        Mon, 30 Dec 2019 07:58:29 -0800 (PST)
+X-Gm-Message-State: APjAAAVHfm9qMUvkXhmSHh67SaFbd2XADml3iWa2rU+UNMmDvqDcTqfT
+        W4BNVCVm+lGQCrL8p8LvzPuFWrM0wpdv7RhMmzY=
+X-Google-Smtp-Source: APXvYqx2Bgs+rMfJMj1kBfGo509i02hB+VENci6B2mCd7te+hTiAzBTfmOh5qSER2YqiLKf0XG8qj2PMjO90ib4sFHQ=
+X-Received: by 2002:aca:815:: with SMTP id 21mr5726820oii.52.1577721508987;
+ Mon, 30 Dec 2019 07:58:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
+ <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+ <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
+ <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
+ <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
+ <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
+ <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com> <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+In-Reply-To: <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 30 Dec 2019 16:58:17 +0100
+X-Gmail-Original-Message-ID: <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
+Message-ID: <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary parenthesis to abide by kernel
-coding-style.
+Makes sense w.r.t. time32 situation.
 
-Signed-off-by: Amir Mahdi Ghorbanian <indigoomega021@gmail.com>
----
- drivers/staging/vt6656/baseband.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I still think that in spite of that there's still something weird
+happening with the mips VDSO.
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
-index 8d19ae71e7cc..25fb19fadc57 100644
---- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -381,8 +381,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 
- 	dev_dbg(&priv->usb->dev, "RF Type %d\n", priv->rf_type);
- 
--	if ((priv->rf_type == RF_AL2230) ||
--	    (priv->rf_type == RF_AL2230S)) {
-+	if (priv->rf_type == RF_AL2230 ||
-+	    priv->rf_type == RF_AL2230S) {
- 		priv->bb_rx_conf = vnt_vt3184_al2230[10];
- 		length = sizeof(vnt_vt3184_al2230);
- 		addr = vnt_vt3184_al2230;
-@@ -461,8 +461,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 	if (ret)
- 		goto end;
- 
--	if ((priv->rf_type == RF_VT3226) ||
--	    (priv->rf_type == RF_VT3342A0)) {
-+	if (priv->rf_type == RF_VT3226 ||
-+	    priv->rf_type == RF_VT3342A0) {
- 		ret = vnt_control_out_u8(priv, MESSAGE_REQUEST_MACREG,
- 					 MAC_REG_ITRTMSET, 0x23);
- 		if (ret)
--- 
-2.17.1
+Here's a register dump before the call:
 
+ $ 0   : 0000000000000000 0000000000000001 0000000010000000 fffffffffffffffc
+ $ 4   : 0000000000000002 000000007fff2e40 0000000000000000 0000000000000001
+ $ 8   : 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ $12   : 0000000000000000 000000000000000a ffffffff80000000 000000007fffffda
+ $16   : 0000000010001ba8 0000005800000015 0000000010000000 0000000010000000
+ $20   : 0000000010000000 0000000010000000 0000000000000000 0000000077ff2ae8
+ $24   : 0000000000000005 0000000077fa1d18
+ $28   : 0000000010019cf0 000000007fff2e40 0000000000000000 0000000010000c30
+ Hi    : 0000000000000000
+ Lo    : 0000000000000000
+ epc   : 0000000077fa1d18 0x77fa1d18
+ ra    : 0000000010000c30 0x10000c30
+
+And here it is immediately after:
+
+ $ 0   : 0000000000000000 0000000000000001 ffffffffffffffa7 000000007fff5000
+ $ 4   : 0000000000000002 000000007fff2e40 0000000077ff2000 0000000000000001
+ $ 8   : 0000000000000006 0000000000000020 0000000000000002 0000000000000000
+ $12   : 0000000000000000 0000000000001852 ffffffff80156160 000000007fffffda
+ $16   : 0000000010001ba8 0000005800000015 0000000010000000 0000000010000000
+ $20   : 0000000010000000 0000000010000000 0000000000000000 0000000077ff2b00
+ $24   : 0000000000000005 0000000000000000
+ $28   : 000000007fff5000 000000007fff2e30 0000000000000000 0000000077fa1e00
+ Hi    : 0000000000000000
+ Lo    : 0000000000000000
+ epc   : 0000000077fa1e00 0x77fa1e00
+ ra    : 0000000077fa1e00 0x77fa1e00
+
+I wonder if a toolchain option or compiler bug or something is causing
+the vdso to not restore certain registers (gp? ra?).
