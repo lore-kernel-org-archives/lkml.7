@@ -2,175 +2,61 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442A2C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FA0C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258DA206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B7E206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfL3SN4 (ORCPT
+        id S1727532AbfL3SRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:13:56 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39130 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbfL3SN4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:13:56 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 5E5DD28DF09
-Message-ID: <f5e8afbbd46a25b752890880621be95971023f2e.camel@collabora.com>
-Subject: Re: [PATCH v12 02/11] media: staging: rkisp1: add Rockchip ISP1
- base driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
-        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
-        linux-kernel@vger.kernel.org, tfiga@chromium.org,
-        robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
-        joacim.zetterling@gmail.com, kernel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        linux-arm-kernel@lists.infradead.org,
-        Jacob Chen <jacob2.chen@rock-chips.com>,
-        Shunqian Zheng <zhengsq@rock-chips.com>,
-        Yichong Zhong <zyc@rock-chips.com>,
-        Jacob Chen <cc@rock-chips.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Date:   Mon, 30 Dec 2019 15:13:41 -0300
-In-Reply-To: <20191227200116.2612137-3-helen.koike@collabora.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
-         <20191227200116.2612137-3-helen.koike@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 30 Dec 2019 13:17:43 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29877 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbfL3SRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 13:17:42 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBUIH8fv018873;
+        Mon, 30 Dec 2019 19:17:08 +0100
+Date:   Mon, 30 Dec 2019 19:17:08 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
+Message-ID: <20191230181708.GB14939@1wt.eu>
+References: <20191229172702.393141737@linuxfoundation.org>
+ <20191230174336.GA1498696@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230174336.GA1498696@kroah.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
+Hi Greg,
 
-Just spotted a small thing.
+On Mon, Dec 30, 2019 at 06:43:36PM +0100, Greg Kroah-Hartman wrote:
+> I have pushed out -rc2:
+>  	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.7-rc2.gz
+> 
+> to resolve some reported issues.
 
-On Fri, 2019-12-27 at 17:01 -0300, Helen Koike wrote:
-[..]
-> +static int rkisp1_probe(struct platform_device *pdev)
-> +{
-> +       struct device_node *node = pdev->dev.of_node;
-> +       const struct rkisp1_match_data *clk_data;
-> +       const struct of_device_id *match;
-> +       struct device *dev = &pdev->dev;
-> +       struct rkisp1_device *rkisp1;
-> +       struct v4l2_device *v4l2_dev;
-> +       unsigned int i;
-> +       int ret, irq;
-> +
-> +       match = of_match_node(rkisp1_of_match, node);
-> +       rkisp1 = devm_kzalloc(dev, sizeof(*rkisp1), GFP_KERNEL);
-> +       if (!rkisp1)
-> +               return -ENOMEM;
-> +
-> +       dev_set_drvdata(dev, rkisp1);
-> +       rkisp1->dev = dev;
-> +
-> +       rkisp1_debug_init(rkisp1);
-> +
-> +       rkisp1->base_addr = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(rkisp1->base_addr))
-> +               return PTR_ERR(rkisp1->base_addr);
-> +
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq < 0)
-> +               return irq;
-> +
-> +       ret = devm_request_irq(dev, irq, rkisp1_isr, IRQF_SHARED,
-> +                              dev_driver_string(dev), dev);
-> +       if (ret) {
-> +               dev_err(dev, "request irq failed: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       rkisp1->irq = irq;
-> +       clk_data = match->data;
-> +
-> +       for (i = 0; i < clk_data->size; i++)
-> +               rkisp1->clks[i].id = clk_data->clks[i];
-> +       ret = devm_clk_bulk_get(dev, clk_data->size, rkisp1->clks);
-> +       if (ret)
-> +               return ret;
-> +       rkisp1->clk_size = clk_data->size;
-> +
-> +       pm_runtime_enable(&pdev->dev);
-> +
-> +       strscpy(rkisp1->media_dev.model, RKISP1_DRIVER_NAME,
-> +               sizeof(rkisp1->media_dev.model));
-> +       rkisp1->media_dev.dev = &pdev->dev;
-> +       strscpy(rkisp1->media_dev.bus_info,
-> +               "platform: " RKISP1_DRIVER_NAME,
-> +               sizeof(rkisp1->media_dev.bus_info));
-> +       media_device_init(&rkisp1->media_dev);
-> +
-> +       v4l2_dev = &rkisp1->v4l2_dev;
-> +       v4l2_dev->mdev = &rkisp1->media_dev;
-> +       strscpy(v4l2_dev->name, RKISP1_DRIVER_NAME, sizeof(v4l2_dev->name));
-> +
-> +       ret = v4l2_device_register(rkisp1->dev, &rkisp1->v4l2_dev);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = media_device_register(&rkisp1->media_dev);
-> +       if (ret) {
-> +               dev_err(dev, "Failed to register media device: %d\n", ret);
-> +               goto err_unreg_v4l2_dev;
-> +       }
-> +
-> +       ret = rkisp1_entities_register(rkisp1);
-> +       if (ret)
-> +               goto err_unreg_media_dev;
-> +
-> +       return 0;
-> +
-> +err_unreg_media_dev:
-> +       media_device_unregister(&rkisp1->media_dev);
-> +err_unreg_v4l2_dev:
-> +       v4l2_device_unregister(&rkisp1->v4l2_dev);
-> +       pm_runtime_disable(&pdev->dev);
+OK, running right now on my netbook. So far, so good:
 
-There's a missing call to debugfs_remove_recursive here.
+Linux eeepc 5.4.7-rc2-eeepc #1 SMP Mon Dec 30 18:55:14 CET 2019 i686 Intel(R) Atom(TM) CPU N2800   @ 1.86GHz GenuineIntel GNU/Linux
 
-> +       return ret;
-> +}
-> +
-> +static int rkisp1_remove(struct platform_device *pdev)
-> +{
-> +       struct rkisp1_device *rkisp1 = platform_get_drvdata(pdev);
-> +
-> +       v4l2_async_notifier_unregister(&rkisp1->notifier);
-> +       v4l2_async_notifier_cleanup(&rkisp1->notifier);
-> +
-> +       rkisp1_isp_unregister(rkisp1);
-> +
-> +       media_device_unregister(&rkisp1->media_dev);
-> +       v4l2_device_unregister(&rkisp1->v4l2_dev);
-> +
-> +       pm_runtime_disable(&pdev->dev);
-> +
-> +       debugfs_remove_recursive(rkisp1->debug.debugfs_dir);
-> +       return 0;
-> +}
-> +
+Also not sure what is supposed not to work with perf, but at least I've
+built it and it seems to work as expected at first glance.
 
-Thanks,
-Ezequiel
-
-
+Hoping this helps,
+Willy
