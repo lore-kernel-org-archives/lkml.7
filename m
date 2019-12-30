@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0731DC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841F5C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D129720730
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C05320722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577726789;
-	bh=m+ZsnKOEnT8GfyM0PUcj40hjdwjIfZjmIypDhpTq+ik=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ylSwHTXG2mu5WRHyvDWGU/kCYzkacW4hHN5CY6aR1xwcObCAAIPEeNIOPtXOoehg+
-	 d+GqIES4FZ5HjmTVDy51ddtjHfO/TR/3cqUtRvIVBDsvYWnQaOMsZ78/R3Nu3DSRlP
-	 f44X5pDO7x9HE3ftZJc3b2DrCofOVz8O0l4OpHmg=
+	s=default; t=1577726795;
+	bh=hpl/Co9KS2/LOKvrmlKkOwb9bVMQhrdELM9/mYvA0mA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1c270KQ0H3v8swtD62AxR0ZWUJVzCzqikBnniwl3thClNagZXmX0sT8nLuRpUOyEQ
+	 kLmgE8XkEYhBAfUkz5y300670eFojPAd2d5eJeetg4HhlPQ5K3b3KBoxjsMEiUly8d
+	 1eFahoJTdA+wjZ91hHHIlZnp8xtzvPAKqrsahehg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfL3R02 (ORCPT
+        id S1727498AbfL3R0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:26:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:26:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727296AbfL3R02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:26:28 -0500
+        id S1727296AbfL3R0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:26:31 -0500
 Received: from localhost.localdomain (unknown [194.230.155.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8489C206DB;
-        Mon, 30 Dec 2019 17:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 624E22071E;
+        Mon, 30 Dec 2019 17:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577726787;
-        bh=m+ZsnKOEnT8GfyM0PUcj40hjdwjIfZjmIypDhpTq+ik=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HRBqtPtNPOzb2L2x+3OSWikBP4FKNAVR42FB70Wcgjwn8mqRoHStWhLBmS1x0lTCC
-         ECT0BCbZ/ENrYxfL42XTGsOJsT7eVBoYviLfTVztjhFsNb8tneY6s4NVT7aB4OUt82
-         lThzmgV0913aszsJJYtsVNZAUyBSXq7KjUT251sc=
+        s=default; t=1577726790;
+        bh=hpl/Co9KS2/LOKvrmlKkOwb9bVMQhrdELM9/mYvA0mA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YljdSTY8qMLQXFtcQUD+tseAIbH85X09zfrYeOaKxNX76qV9rOa6XYOpMvzGcJfS1
+         6Bi6MvXfoL9Tzu0mtaINRfCGeXfaIBqHASTe4n4BlzG3Vvcy1TgB5Nq809XWxBdCUA
+         MgQhpM1Ty8oyJIrxW270k6WOqqtMG3MJJXunOIN4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Joerg Roedel <joro@8bytes.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -48,10 +48,12 @@ To:     Joerg Roedel <joro@8bytes.org>,
         Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] iommu: omap: Fix pointer cast -Wpointer-to-int-cast warnings on 64 bit
-Date:   Mon, 30 Dec 2019 18:26:17 +0100
-Message-Id: <20191230172619.17814-1-krzk@kernel.org>
+Subject: [PATCH 2/3] iommu: omap: Fix printing format for size_t on 64-bit
+Date:   Mon, 30 Dec 2019 18:26:18 +0100
+Message-Id: <20191230172619.17814-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191230172619.17814-1-krzk@kernel.org>
+References: <20191230172619.17814-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,34 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pointers should be casted to unsigned long to avoid
--Wpointer-to-int-cast warnings when compiling on 64-bit platform (e.g.
-with COMPILE_TEST):
+Print size_t as %zu or %zx to fix -Wformat warnings when compiling on
+64-bit platform (e.g. with COMPILE_TEST):
 
-    drivers/iommu/omap-iommu.c: In function ‘omap2_iommu_enable’:
-    drivers/iommu/omap-iommu.c:170:25: warning:
-        cast from pointer to integer of different size [-Wpointer-to-int-cast]
-      if (!obj->iopgd || !IS_ALIGNED((u32)obj->iopgd,  SZ_16K))
-                             ^
+    drivers/iommu/omap-iommu.c: In function ‘flush_iotlb_page’:
+    drivers/iommu/omap-iommu.c:437:47: warning:
+        format ‘%x’ expects argument of type ‘unsigned int’,
+        but argument 7 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/iommu/omap-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/omap-iommu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index be551cc34be4..50e8acf88ec4 100644
+index 50e8acf88ec4..887fefcb03b4 100644
 --- a/drivers/iommu/omap-iommu.c
 +++ b/drivers/iommu/omap-iommu.c
-@@ -167,7 +167,7 @@ static int omap2_iommu_enable(struct omap_iommu *obj)
- {
- 	u32 l, pa;
+@@ -434,7 +434,7 @@ static void flush_iotlb_page(struct omap_iommu *obj, u32 da)
+ 		bytes = iopgsz_to_bytes(cr.cam & 3);
  
--	if (!obj->iopgd || !IS_ALIGNED((u32)obj->iopgd,  SZ_16K))
-+	if (!obj->iopgd || !IS_ALIGNED((unsigned long)obj->iopgd,  SZ_16K))
+ 		if ((start <= da) && (da < start + bytes)) {
+-			dev_dbg(obj->dev, "%s: %08x<=%08x(%x)\n",
++			dev_dbg(obj->dev, "%s: %08x<=%08x(%zx)\n",
+ 				__func__, start, da, bytes);
+ 			iotlb_load_cr(obj, &cr);
+ 			iommu_write_reg(obj, 1, MMU_FLUSH_ENTRY);
+@@ -1352,11 +1352,11 @@ static int omap_iommu_map(struct iommu_domain *domain, unsigned long da,
+ 
+ 	omap_pgsz = bytes_to_iopgsz(bytes);
+ 	if (omap_pgsz < 0) {
+-		dev_err(dev, "invalid size to map: %d\n", bytes);
++		dev_err(dev, "invalid size to map: %zu\n", bytes);
  		return -EINVAL;
+ 	}
  
- 	pa = virt_to_phys(obj->iopgd);
+-	dev_dbg(dev, "mapping da 0x%lx to pa %pa size 0x%x\n", da, &pa, bytes);
++	dev_dbg(dev, "mapping da 0x%lx to pa %pa size 0x%zx\n", da, &pa, bytes);
+ 
+ 	iotlb_init_entry(&e, da, pa, omap_pgsz);
+ 
+@@ -1393,7 +1393,7 @@ static size_t omap_iommu_unmap(struct iommu_domain *domain, unsigned long da,
+ 	size_t bytes = 0;
+ 	int i;
+ 
+-	dev_dbg(dev, "unmapping da 0x%lx size %u\n", da, size);
++	dev_dbg(dev, "unmapping da 0x%lx size %zu\n", da, size);
+ 
+ 	iommu = omap_domain->iommus;
+ 	for (i = 0; i < omap_domain->num_iommus; i++, iommu++) {
 -- 
 2.17.1
 
