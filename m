@@ -2,115 +2,143 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D122DC2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A792DC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24C5206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CAD4206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 22:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJFfA9U5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEQfUB9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfL3WCt (ORCPT
+        id S1727781AbfL3WDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 17:02:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33444 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfL3WCs (ORCPT
+        Mon, 30 Dec 2019 17:03:38 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38744 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfL3WDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 17:02:48 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v140so11560904oie.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 14:02:48 -0800 (PST)
+        Mon, 30 Dec 2019 17:03:38 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f20so15153662plj.5;
+        Mon, 30 Dec 2019 14:03:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YzvK3lw7REm+d3DorChVuNUjGAEcBQeyAFoY/nT0KFA=;
-        b=YJFfA9U5/zxM8uThmIhHdSff5EiB/t7YyoTIqJWn5wxYA3R4rPc+kZvHhxX8JQ4rN/
-         T5NnBcELhpGtUOUlRB7O8ztldeHkExKTseZwZ6eqysvJjc2SjtELbKU8e3rpan47cBoL
-         2dISubjtDEISV3v9SvPG8msQa/SqVEyoXVvHc=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=sWcIwqwAQVaMiL6AbIBVoLXwMM9wjsoCuHsXRphgo8Y=;
+        b=nEQfUB9BU7XTfjYvCMI6Yd/qByThVkk2PiHeRSy9HqRXeXx/ACLKilBsXAOBcCROWX
+         wuYYWc18pechAi8K+EkPH15KMlWyQ6nb0StYh3i01u248ouxra+l0YzVMzSbAIdPpj32
+         8IklPGgLy/ca2jvIWXCX+wjrXBcw+YhdM6dG2drTzpt9BJH4W/VMrXUHA7PFo1I1D0fp
+         bV/2HKq3EUqlQLAmrkiIYXp5l16qLryAJoIvQkBet0s7dkrKl35d2kNDuDe+cTkV6CtO
+         pdBNwQkWVWBXVmtsGPAeYKEJ7QDU9Bg9dcnJKVDvMxCHqk2OAX0edZ0X4oodFaH8Hq0U
+         10lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YzvK3lw7REm+d3DorChVuNUjGAEcBQeyAFoY/nT0KFA=;
-        b=TSL5u4I7IDPSCi0c4g5N8heez/1DTrhubA0MnrlUxoxZpE+SK2JQPCDqqQmpJI2CAA
-         iBjyXtIQJQ+l+zVbUMhOMu1zeROD9AU4WaP9dY4Mx3jE8ukRUxgUPTe2FFYJsaQH9be8
-         B1S1QIPPsH6JSiuMh5uBd1NHAwvm7BlBLOmDlomCYXgNoOmARSlmcj2wpdN86qcVES12
-         7fQCCbvRojRQ1zlq5Lnt1a2tCx7ImZetJbi25ZxHubi6g4u5jgZBGAImlqY4gdvSciv2
-         O3OESJbZEdnUVvDc63jdX0uBMN1nllpBDXx86iBP2wBNGmh9U2ekZUMlS2SwO3HaDEVS
-         R77Q==
-X-Gm-Message-State: APjAAAX/GjITS2TYfwW4BMCTZlCZt6J0xI3/HqISQ3uB5hhv3jLH9Plg
-        4mEn38zY8rMQhTDu3C9pOakJww==
-X-Google-Smtp-Source: APXvYqxiJccOeI8SFgqfsRl/LUjBmX53WNU+d8QYDSZK+ad+wpwJQQomgih0frMU0aixKHRwat0GhA==
-X-Received: by 2002:a54:4602:: with SMTP id p2mr401583oip.138.1577743367953;
-        Mon, 30 Dec 2019 14:02:47 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k17sm14146392oic.45.2019.12.30.14.02.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 14:02:47 -0800 (PST)
-Date:   Mon, 30 Dec 2019 14:02:45 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH] selftests/seccomp: Test kernel catches garbage on
- SECCOMP_IOCTL_NOTIF_RECV
-Message-ID: <201912301402.DAA6ED9A0@keescook>
-References: <20191230203811.4996-1-sargun@sargun.me>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=sWcIwqwAQVaMiL6AbIBVoLXwMM9wjsoCuHsXRphgo8Y=;
+        b=hVBUeYUlCs6CqAhqAz823TJP4I7aok2n7HhCS49Q+MIV6qlAPVj1aeV+ulYZh4yk0s
+         9thbKAY9G/bOcbFwXO045HrVI/GQUWdWsSQGx5IJpowDcnW+9wdcNN+rKbFwZJ6UMUEP
+         cMHMXE9g+qQlG4WCbCzEovuR1dvQsBNesfpeXWV1RnwZ4e0e1gqhPpcL//2xYoDIgVJZ
+         S427ewzNvTEb6irnPBgrnHdQlMnq3IoxpTr3b+WrtwlVONJrhIp6jzxOQSB0IGUwE5Gb
+         mFmqQ6Vhx8V+99kV7PKPHn89ECDfEt7iPt8XmspaARKoIyfLecDhmS5rJKrK+HKSig9o
+         pEQA==
+X-Gm-Message-State: APjAAAUy/YfQAqm4vm79o9LeA8YY6ValEGXJrOWrVcucn3aCP4B8SyK9
+        LDtSX2t+F8XF6zVLNJQmYxE=
+X-Google-Smtp-Source: APXvYqzCT9zC3ZgKpQpD5zdYtsdEacKle/p/witN0yVp/CLOmZS4R1vbOaH6CIUVFPPMG9wX2sUhEg==
+X-Received: by 2002:a17:90a:1696:: with SMTP id o22mr1776310pja.78.1577743416953;
+        Mon, 30 Dec 2019 14:03:36 -0800 (PST)
+Received: from JF-EN-C02V905BHTDF.tld ([12.111.169.54])
+        by smtp.gmail.com with ESMTPSA id l8sm511900pjy.24.2019.12.30.14.03.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Dec 2019 14:03:36 -0800 (PST)
+Subject: Re: [PATCH v6 07/10] proc: flush task dcache entries from all procfs
+ instances
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20191225125151.1950142-1-gladkov.alexey@gmail.com>
+ <20191225125151.1950142-8-gladkov.alexey@gmail.com>
+From:   J Freyensee <why2jjj.linux@gmail.com>
+Message-ID: <8d85ba43-0759-358e-137d-246107bac747@gmail.com>
+Date:   Mon, 30 Dec 2019 14:03:29 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230203811.4996-1-sargun@sargun.me>
+In-Reply-To: <20191225125151.1950142-8-gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 12:38:11PM -0800, Sargun Dhillon wrote:
-> This adds to the user_notification_basic to set a field of seccomp_notif
-> to an invalid value to ensure that the kernel returns EINVAL if any of the
-> seccomp_notif fields are set to invalid values.
-> 
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Suggested-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Kees Cook <keescook@chromium.org>
+snip
 
-Thanks! Applied. :)
+.
 
--Kees
+.
 
-> ---
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index f53f14971bff..393578a78dbc 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -3158,6 +3158,13 @@ TEST(user_notification_basic)
->  	EXPECT_GT(poll(&pollfd, 1, -1), 0);
->  	EXPECT_EQ(pollfd.revents, POLLIN);
->  
-> +	/* Test that we can't pass garbage to the kernel. */
-> +	memset(&req, 0, sizeof(req));
-> +	req.pid = -1;
-> +	EXPECT_EQ(-1, ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req));
-> +	EXPECT_EQ(EINVAL, errno);
+.
+
+>   
+> +#ifdef CONFIG_PROC_FS
+> +static inline void pidns_proc_lock(struct pid_namespace *pid_ns)
+> +{
+> +	down_write(&pid_ns->rw_proc_mounts);
+> +}
 > +
-> +	req.pid = 0;
->  	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
->  
->  	pollfd.fd = listener;
-> -- 
-> 2.20.1
-> 
+> +static inline void pidns_proc_unlock(struct pid_namespace *pid_ns)
+> +{
+> +	up_write(&pid_ns->rw_proc_mounts);
+> +}
+> +
+> +static inline void pidns_proc_lock_shared(struct pid_namespace *pid_ns)
+> +{
+> +	down_read(&pid_ns->rw_proc_mounts);
+> +}
+> +
+> +static inline void pidns_proc_unlock_shared(struct pid_namespace *pid_ns)
+> +{
+> +	up_read(&pid_ns->rw_proc_mounts);
+> +}
+> +#else /* !CONFIG_PROC_FS */
+> +
+Apologies for my newbie question. I couldn't help but notice all these 
+function calls are assuming that the parameter struct pid_namespace 
+*pid_ns will never be NULL.  Is that a good assumption?
 
--- 
-Kees Cook
+I don't have the background in this code to answer on my own, but I 
+thought I'd raise the question.
+
+Thanks,
+Jay
+
