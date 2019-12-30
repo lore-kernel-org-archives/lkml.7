@@ -2,96 +2,87 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B7DC2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EACDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0217D20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EBC207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577672786;
+	bh=iiKV+RKqxqnXDNnnnoWIICdP8SMC0mH+QCvS24BGJeY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=e/OcVbaYRTTE9C43YWK9OJCf+cqVukkagxGMXPP5sVWfrBclRHIk6QODgS7+9i54R
+	 4M7/4Pu6kPE01/py8gCF2jYxj6Djogyauqm8h0j0gvUZUXWMhlzC6r7w3N+ddo+BqK
+	 tkeTD601ifZyH/59MAfcyyYbIWrpMPORqPtE173c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfL3CZh (ORCPT
+        id S1726944AbfL3C00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 21:25:37 -0500
-Received: from mail.fudan.edu.cn ([61.129.42.10]:35169 "EHLO fudan.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726726AbfL3CZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 21:25:37 -0500
-Received: from localhost.localdomain (unknown [10.222.182.212])
-        by app2 (Coremail) with SMTP id XQUFCgC3vJgGYAlejTybAA--.686S3;
-        Mon, 30 Dec 2019 10:25:10 +0800 (CST)
-From:   Xiyu Yang <xiyuyang19@fudan.edu.cn>
-To:     xiyuyang19@fudan.edu.cn
-Cc:     yuanxzhang@fudan.edu.cn, kjlu@umn.edu, leon@kernel.org,
-        Markus.Elfring@web.de, Xin Tan <tanxin.ctf@gmail.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Shannon Nelson <shannon.nelson@intel.com>,
-        Anjali Singhai Jain <anjali.singhai@intel.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] infiniband: i40iw: fix a potential NULL pointer dereference
-Date:   Mon, 30 Dec 2019 10:24:28 +0800
-Message-Id: <1577672668-46499-1-git-send-email-xiyuyang19@fudan.edu.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: XQUFCgC3vJgGYAlejTybAA--.686S3
-X-Coremail-Antispam: 1UD129KBjvJXoWrKF48tw47uw48CFWkur4fGrg_yoW8Jr1Dpw
-        48JF9FkrWrAF1UZa18Kw42vFyfJas8Jw1qvr1ktwn8urn8GFZrtryrKFnrWFW8ZrW5Cw4I
-        vFs0gF4kCF4rWw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzx
-        vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Xry5
-        Jr1UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5c
-        I20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVCm-wCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26ry5Xr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JjaSoXUUUUU=
-X-CM-SenderInfo: irzsiiysuqikmy6i3vldqovvfxof0/
+        Sun, 29 Dec 2019 21:26:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbfL3C0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:26:25 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B016020718;
+        Mon, 30 Dec 2019 02:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577672785;
+        bh=iiKV+RKqxqnXDNnnnoWIICdP8SMC0mH+QCvS24BGJeY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=J4zfldU5gd81fN8eAivxbQ3P7kK8XeCcVmVX2TWL9QjG2X+B3FtVLJEuPDJjBtTj8
+         b0zAvuBPqtN16VGzDkGnXx8t6gf8TsArW+bHdqk9FqlRDppaL6lXnuXcQRQJY/cbST
+         YvkMTb1lTUt7jTAyxpabgiALEJJ1O9Pg1eqCfNsI=
+Subject: Re: [PATCH 4.14 000/161] 4.14.161-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191229162355.500086350@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4a29a98b-d271-2489-1b27-e9654d369aba@kernel.org>
+Date:   Sun, 29 Dec 2019 19:26:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A NULL pointer can be returned by in_dev_get(). Thus add
-a corresponding check so that a NULL pointer dereference
-will be avoided at this place.
+On 12/29/19 10:17 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.161 release.
+> There are 161 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Tue, 31 Dec 2019 16:17:25 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.161-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Fixes: 8e06af711bf2 ("i40iw: add main, hdr, status")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
----
-Changes in v2:
-- Release rtnl lock when in_dev_get return NULL
-Changes in v3:
-- Continue the next loop when in_dev_get return NULL
-Changes in v4:
-- Change commit message
+Compiled and booted on my test system. No dmesg regressions.
 
- drivers/infiniband/hw/i40iw/i40iw_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
-index d44cf33df81a..238614370927 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-@@ -1225,6 +1225,8 @@ static void i40iw_add_ipv4_addr(struct i40iw_device *iwdev)
- 			const struct in_ifaddr *ifa;
- 
- 			idev = in_dev_get(dev);
-+			if (!idev)
-+				continue;
- 			in_dev_for_each_ifa_rtnl(ifa, idev) {
- 				i40iw_debug(&iwdev->sc_dev, I40IW_DEBUG_CM,
- 					    "IP=%pI4, vlan_id=%d, MAC=%pM\n", &ifa->ifa_address,
--- 
-2.7.4
-
+thanks,
+-- Shuah
