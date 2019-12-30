@@ -2,82 +2,99 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BEC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB03C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF66206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90C6206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iSv7ysfd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGg3wVFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfL3RWd (ORCPT
+        id S1727538AbfL3RW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:22:33 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:43638 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbfL3RWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:22:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LvLtlNVIraZ0K0BvAC5sz2iObsMdXa39MW+pknncAe8=; b=iSv7ysfdrw1VwJYAGLPPJNd9NM
-        KGau6p3kXLxDpdxTm2WplWp0/sl76MT0ivU7mdQUYlrjNbuWITalxN7VLliyisHVL8+sbLagNdeAf
-        UtYhMZd4l4+AJ0mq4Tx4L7TW6YbSLc1BMQlSgwA5uu+0sqrbrScaRXphYxfNFPyAhWKw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ilyk5-0004Ct-AJ; Mon, 30 Dec 2019 18:22:09 +0100
-Date:   Mon, 30 Dec 2019 18:22:09 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexander Lobakin <alobakin@dlink.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next 06/19] net: dsa: tag_gswip: fix typo in tag
- name
-Message-ID: <20191230172209.GE13569@lunn.ch>
-References: <20191230143028.27313-1-alobakin@dlink.ru>
- <20191230143028.27313-7-alobakin@dlink.ru>
+        Mon, 30 Dec 2019 12:22:56 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40730 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfL3RWz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:22:55 -0500
+Received: by mail-pj1-f66.google.com with SMTP id bg7so34352pjb.5;
+        Mon, 30 Dec 2019 09:22:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Dx/r3gFYWyu/BL+Nw/dLm9t2W9mKH25PlFJGzDLl3Xk=;
+        b=FGg3wVFusl9S0FEVJd+YH/99VSffQUFVb8LGpdl5LbTCe4Jm3a44EmbdB85YCSqyJH
+         SuSg/gjQFFSBPjBuCDqOiqwCFCnFUSgjt7nMrLr3K7vWud3gjBOQx+gOIAYJfm2AZeH1
+         ybKhfsNvGb+r8E7WQLOq/kdPoxra4pi1/UiS2KRKLShjkaE/9PdLcuWTGi2Kq16toQrJ
+         LhwjvvYqAC/ij9Z4ugV+oCyczYrx7qwWKcCV4CwUIKBVt3p+BohgNau9zUoeAiuOThdh
+         CQPaT0j51beUs+MDf3aOcq20If10C6uVI46btnFonUVMrK843pfFaKz9TeRriIwpIzBK
+         1j3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Dx/r3gFYWyu/BL+Nw/dLm9t2W9mKH25PlFJGzDLl3Xk=;
+        b=pZzarJKbeNUqMaXJG5CSLjJm/wKBx5L3IrJWii+6vq8pHaXzmmwEJy0dPa9uxUp8ly
+         VTrYIOaMCTsvmq76+walLZ8jjYZA+ln1J0jQkDd64qvBwF0dWeSpMOKAGde0zA4t8oZW
+         GPRNAeaBbozUFWc0Fy08OUFkOMe0jLL4iAQNJlnB4eoO8xt+uqdB1Tx1DIppopHwVkdx
+         pUZaROMIdtI+Ch1Kv66QY1TaGTCGu/+UYK/ugQO6k5v7n9f6P6bhzoP2c92ZjLeDO1E7
+         5z4bhBK1Ia2ni0/yjehxb4LfEveRGEVPmfK8QdKKTbfXWbYjw/apW4tmgM1IKVVdP2J4
+         5bAQ==
+X-Gm-Message-State: APjAAAVSThccmOrusMj/lyS2GmZfcBVljhWywNqywpZXFKqY/DUc1GUO
+        jCQHK+av4IcTkoT8RwoVPHw=
+X-Google-Smtp-Source: APXvYqzkegvJ+yuaA5wb2f8jhWMOv5qYgrnEImkTwhTm31b/1rKnVXoJbrBk6meeMfpanhSamnBlfQ==
+X-Received: by 2002:a17:902:8541:: with SMTP id d1mr70946852plo.57.1577726575048;
+        Mon, 30 Dec 2019 09:22:55 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k10sm48384pjs.13.2019.12.30.09.22.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Dec 2019 09:22:54 -0800 (PST)
+Date:   Mon, 30 Dec 2019 09:22:53 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/434] 5.4.7-stable review
+Message-ID: <20191230172253.GD12958@roeck-us.net>
+References: <20191229172702.393141737@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191230143028.27313-7-alobakin@dlink.ru>
+In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 05:30:14PM +0300, Alexander Lobakin wrote:
-> "gwsip" -> "gswip".
+On Sun, Dec 29, 2019 at 06:20:53PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.7 release.
+> There are 434 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> Responses should be made by Tue, 31 Dec 2019 17:25:52 +0000.
+> Anything received after that time might be too late.
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Build results:
+	total: 158 pass: 145 fail: 13
+Failed builds:
+	<all mips>
+Qemu test results:
+	total: 385 pass: 320 fail: 65
+Failed tests:
+	<all mips>
+	<all ppc64_book3s_defconfig>
 
-    Andrew
+mips and ppc64 failures are as with v4.19.y.
+
+Guenter
