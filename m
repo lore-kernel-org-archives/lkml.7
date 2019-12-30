@@ -2,108 +2,166 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDA5C2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32699C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04530206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577729374;
-	bh=CIxky4h0LVYFSbOfjb+Wx3SNAnNGLt1D4UQk5UmNk1c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zJ8LOO/d8cxcSSWcX7zP0Tr8Ko26cRFEeoGv8kNmoo7E+30fHC+URvtqbfPmyu2sL
-	 Ibv8H0h9nTx95AyPd4mO7J8bRSNp86joQKZk2SLIXqQV7NQ70vlDeuuYrPOlLlM73J
-	 9/QRJSrGgkGRqTxO6KVdA47cW5u9cgfIvQNOarkI=
+	by mail.kernel.org (Postfix) with ESMTP id F1F65206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 18:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSg1JcX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfL3SJd (ORCPT
+        id S1727569AbfL3SLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:09:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727318AbfL3SJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:09:32 -0500
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257D021D7D;
-        Mon, 30 Dec 2019 18:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577729372;
-        bh=CIxky4h0LVYFSbOfjb+Wx3SNAnNGLt1D4UQk5UmNk1c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vlN+7jezkIv4FXDqX/nz1VaDVfc0s34AOc7VRoXixFBvyBf2NS7UAvciKl5f4JrS2
-         COyw+4rmt4XdgJO7vLxLwTnzzegkh9+Of/s9YxdiQYIZmhvTVWwkokqMsc0fFhJJxn
-         v3XwBo0Id+PIVVPcAWYLHjWEznXovcBggYYfbJzU=
-Received: by mail-lj1-f169.google.com with SMTP id j26so34086104ljc.12;
-        Mon, 30 Dec 2019 10:09:32 -0800 (PST)
-X-Gm-Message-State: APjAAAX1r2MxcVz5HRDCf84rVfVONk6OlhIApDFY8J6k1TXsCV3Fbssq
-        p7RgpnjCLOe3l4+Nhme5x0PnztDLwNkgyIRrb7s=
-X-Google-Smtp-Source: APXvYqxAdJs6SJdFryPxW5wX+hRhHZJW2xGaMVjcJOAmu8Z8ylrrHPwlJUTmAdPyoyHqqnMnIhBmj+nLKuPGfSg7On4=
-X-Received: by 2002:a2e:a361:: with SMTP id i1mr37666609ljn.29.1577729370158;
- Mon, 30 Dec 2019 10:09:30 -0800 (PST)
+        Mon, 30 Dec 2019 13:11:41 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41722 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbfL3SLk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 13:11:40 -0500
+Received: by mail-ed1-f66.google.com with SMTP id c26so33386049eds.8;
+        Mon, 30 Dec 2019 10:11:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ksjb5gz0GjdJg/RQLO0udB8fLMCfHx4VmQ3hHn7V26w=;
+        b=bSg1JcX/Okg2NrEA5I4J+DrlVnswO0mkVgSB8cVMEOMhBpSm6pvYmtT2H6CV80b/08
+         EYI42piVzAA/AcVB23h1LknWaIv9yDyNqOGpOijh1pX0iPrWtvpC9eHMgxwOqtT5WjkG
+         JNa9OzQgr2TuVrlgMSI6LSIfVfwkGud0pFPFuub0g3P6q3vVzABaFy3HI4zp5OnOvHDU
+         89WuXflJM/WOQJPPcRjRtSJAjn5n1UJ/I4v2Hmu0tH8HU+J2kiCSNJQZlhSNDJkKpti0
+         myoxU61bVtiAjuXiqWQ5MwdbSbuPPnsgO5FszCfT/H+VBzaTCXGa+QCHlUEXA8SMc/vV
+         R4bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ksjb5gz0GjdJg/RQLO0udB8fLMCfHx4VmQ3hHn7V26w=;
+        b=WnmjFMN5iLrhRBQjtRLH2o7YeQ43W0B9P0E6ntgJHF+COzhls6Io5m5g71rT7BrTs4
+         nm2V/4vHSxRFS53xZEftkJNJprft9rogJ6X4FQb/FvsfrPHe0hIFwCVEAYeqedLsr6Fq
+         3/mB2OsFQ7wdXXB+TvpbuFGuLTVnw0eT14ueLoPvYbZ8M0bitx+8973TlDZrFddC2/Xo
+         LsKb7g40JFZ/CsY7HN12TwS2S5gMPR2AUrUJqpLa0VCkHgOIEmpiytyUT22JBr490id/
+         UQQFZuDCtM0aOabu+xifjacqTEn+FzFz+pE9ehE+KibUmEOlLLN7wKpT/+GeUPtC69Rl
+         ORlA==
+X-Gm-Message-State: APjAAAUF5CCHZM3T07JIU+Tvcb7V88C7cYc+TjJZyeKc+8ntVtnhXKfe
+        fFTZFgBFAeH7L4TBLrP+zE6VWe+5
+X-Google-Smtp-Source: APXvYqxuniQeq5M2j+lYM5DrPn+uy6hbytbWjqaT3Ycmwyfb0seOiaSHVV1nk4RoVbEB70FSbAPjtQ==
+X-Received: by 2002:a50:8326:: with SMTP id 35mr17297044edh.235.1577729498052;
+        Mon, 30 Dec 2019 10:11:38 -0800 (PST)
+Received: from [10.67.50.49] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id o9sm5711697ejj.25.2019.12.30.10.11.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Dec 2019 10:11:37 -0800 (PST)
+Subject: Re: [PATCH RFC net-next 01/19] net: dsa: make .flow_dissect()
+ callback returning void
+To:     Alexander Lobakin <alobakin@dlink.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20191230143028.27313-1-alobakin@dlink.ru>
+ <20191230143028.27313-2-alobakin@dlink.ru>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <b3be83dc-efe1-be40-583d-c70324aff879@gmail.com>
+Date:   Mon, 30 Dec 2019 10:11:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191230084731.15776-1-yuehaibing@huawei.com> <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
-In-Reply-To: <CAGTfZH36sbTn++gKq+cQOXAutXQbyjbzZ_0VeU2Y037hWnROqA@mail.gmail.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Tue, 31 Dec 2019 03:08:53 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH34ufvwco8w6GN8E=KUuSeCfjFk4bR7PnotbLso0UNzoA@mail.gmail.com>
-Message-ID: <CAGTfZH34ufvwco8w6GN8E=KUuSeCfjFk4bR7PnotbLso0UNzoA@mail.gmail.com>
-Subject: Re: [PATCH -next] PM / devfreq: imx8m-ddrc: Fix inconsistent IS_ERR
- and PTR_ERR
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Shawn Guo <shawnguo@kernel.org>, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191230143028.27313-2-alobakin@dlink.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 2:35 AM Chanwoo Choi <chanwoo@kernel.org> wrote:
->
-> On Mon, Dec 30, 2019 at 5:58 PM YueHaibing <yuehaibing@huawei.com> wrote:
-> >
-> > Fix inconsistent IS_ERR and PTR_ERR in imx8m_ddrc_probe().
-> > Detected using Coccinelle.
-> >
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> >  drivers/devfreq/imx8m-ddrc.c | 24 ++++++++++++++++++------
-> >  1 file changed, 18 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/devfreq/imx8m-ddrc.c b/drivers/devfreq/imx8m-ddrc.c
-> > index 53df792..bc82d36 100644
-> > --- a/drivers/devfreq/imx8m-ddrc.c
-> > +++ b/drivers/devfreq/imx8m-ddrc.c
-> > @@ -395,15 +395,27 @@ static int imx8m_ddrc_probe(struct platform_device *pdev)
-> >         }
-> >
-> >         priv->dram_core = devm_clk_get(dev, "core");
-> > +       if (IS_ERR(priv->dram_core)) {
-> > +               ret = PTR_ERR(priv->dram_core);
-> > +               dev_err(dev, "failed to fetch core clock: %d\n", ret);
->
-> If there is no special reason, just use 'get' instead of ' fetch' word.
-> s/fetch/get
+On 12/30/19 6:30 AM, Alexander Lobakin wrote:
+> There are no tag protocols which return non-zero values from
+> flow_dissect() callback. Remove it to simplify code and save some
+> object size.
+> If a particular tagger can't calculate offset and proto for some
+> reason, it can simply leave the original values untouched.
+> 
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 
-Usually, use 'verb' included in function name to show the debug message.
-But, Again thinking. the original comment used 'fetch' word. Please
-ignore my comment
-
-Applied it.
-
-(snip)
-
-Best Regards,
-Chanwoo Choi
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
