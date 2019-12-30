@@ -2,228 +2,293 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8B0C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F05C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF69A20718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5167720718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QK5Szyq5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GyWA8d6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfL3Pgo (ORCPT
+        id S1727646AbfL3PhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:36:44 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44762 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbfL3Pgo (ORCPT
+        Mon, 30 Dec 2019 10:37:17 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34192 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbfL3PhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:36:44 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUFU7Ts158654;
-        Mon, 30 Dec 2019 15:36:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=kA5hAjGvhdrdPyhKw+jVMovEgDJcqVvKwB7Xq32HdCM=;
- b=QK5Szyq5UXnHqytd1XHM36YAtcIs9hwe85Kb1FrQQaTaYKabf1M0hZG4lAFNUvjwxq30
- lyKLhF4EzkxRH8ImOJhJZghCTyBfrJP3suQakrVSzb7WipC0aYFYLoqEoKnDBD2LkfxM
- wZc13DAirKc+g/VhLc64L6Ha1fDv1jz5VjOlgnUBQ1PmiO3yaav0JEbKOr2ba2ogTUuS
- 1jjIjmU/fev3dbWjqr6Xre4m/VJx+LtBju+V+wKVnVAlxQvrH9aFSsW8ofwdF/tUzbyJ
- 7me1Dvki21YYM795QXRGtIqwgwobCFVhPicXgqb00EzcLfRjERxw1dfch1iSkSoUT8jp qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2x5ypqe3kt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Dec 2019 15:36:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBUFYI62181144;
-        Mon, 30 Dec 2019 15:36:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2x6h6vgsbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Dec 2019 15:36:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBUFaYiq017761;
-        Mon, 30 Dec 2019 15:36:34 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Dec 2019 07:36:34 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease
- renewals
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
-Date:   Mon, 30 Dec 2019 10:36:32 -0500
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D82A1590-FAA3-47C5-B198-937ED88EF71C@oracle.com>
-References: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
-To:     Robert Milkowski <rmilkowski@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9486 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912300141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9486 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912300141
+        Mon, 30 Dec 2019 10:37:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t2so33003955wrr.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 07:37:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tiCQCdakK6fDzgexzkvgBKYze7/iADTMOOF8ok0L44Q=;
+        b=GyWA8d6l1wSFYn+MXTH0j033hlQ6iyw/Lzss52IlF8YLd1QFxQZA9Sda+viMXfwcTA
+         PggMcMNSEE+xLPY/pCT+PmagRxk/VulDXWdUaSO4rgp0zs2C5CfGaRFVCKyRbX0l10ym
+         n+qk40Is4zLPZOjIGPqwrT5dbs+dEZSyaiYUA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tiCQCdakK6fDzgexzkvgBKYze7/iADTMOOF8ok0L44Q=;
+        b=Nk6Y+muwaAldJCLAFki4C5hDGlTaTGwckMwhlHN4O+rnUlQdP+GDkRLANQ3sMZz17x
+         bZT4JrlULslAp8hQMM97lx11TshiKoAb1tPMLG0KGoxjItMw693b65MjcI3V6TFfNv0d
+         V1DJOriFbaB9AKVjQkFuuRovB6iTFwb2qRiAFFsU5ph0TA2PCOIbSEOXqhTONtnJ8S0C
+         brA4jP9lIL5SYl1m7aK2V0iYQ6UBJiDJsyxXOFfpIctAQbXfEXHD1aMVqj9Kpvoa3rYA
+         1RI1FxpaaTMZJa6cD9mt8e7WLrUX9ec8hS1SRxlGq1c5NE8jEKcJSHdBYvMMG1egI6Fj
+         7L6w==
+X-Gm-Message-State: APjAAAX3P584FcLm8QW7zpar0lmEHcboslUc2enZNk/xKZRNsi4zmIk+
+        0PIf//5YjiHIFKeKCYSQhaH0wQ==
+X-Google-Smtp-Source: APXvYqyAbNjc9WooFzSxz1dE7NsCeFomKkKb2dBfao+ScDJ9PR4H//GCLBuhWCPjZnrj1YeC7CZ5Fw==
+X-Received: by 2002:adf:ef4e:: with SMTP id c14mr68738440wrp.142.1577720233670;
+        Mon, 30 Dec 2019 07:37:13 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id a9sm20487173wmm.15.2019.12.30.07.37.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 07:37:13 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Mon, 30 Dec 2019 16:37:11 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v1 06/13] bpf: lsm: Init Hooks and create files
+ in securityfs
+Message-ID: <20191230153711.GD70684@google.com>
+References: <20191220154208.15895-1-kpsingh@chromium.org>
+ <20191220154208.15895-7-kpsingh@chromium.org>
+ <CAEf4BzZ+wMTjghpr4=e5AY9xeFjvm-Rc+JooJzJstBW1r73z4A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZ+wMTjghpr4=e5AY9xeFjvm-Rc+JooJzJstBW1r73z4A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 23-Dec 22:28, Andrii Nakryiko wrote:
+> On Fri, Dec 20, 2019 at 7:43 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > The LSM creates files in securityfs for each hook registered with the
+> > LSM.
+> >
+> >     /sys/kernel/security/bpf/<h_name>
+> >
+> > The list of LSM hooks are maintained in an internal header "hooks.h"
+> > Eventually, this list should either be defined collectively in
+> > include/linux/lsm_hooks.h or auto-generated from it.
+> >
+> > * Creation of a file for the hook in the securityfs.
+> > * Allocation of a bpf_lsm_hook data structure which stores
+> >   a pointer to the dentry of the newly created file in securityfs.
+> > * Creation of a typedef for the hook so that BTF information
+> >   can be generated for the LSM hooks to:
+> >
+> >   - Make them "Compile Once, Run Everywhere".
+> >   - Pass the right arguments when the attached programs are run.
+> >   - Verify the accesses made by the program by using the BTF
+> >     information.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >  include/linux/bpf_lsm.h        |   12 +
+> >  security/bpf/Makefile          |    4 +-
+> >  security/bpf/include/bpf_lsm.h |   63 ++
+> >  security/bpf/include/fs.h      |   23 +
+> >  security/bpf/include/hooks.h   | 1015 ++++++++++++++++++++++++++++++++
+> >  security/bpf/lsm.c             |  138 ++++-
+> >  security/bpf/lsm_fs.c          |   82 +++
+> >  7 files changed, 1333 insertions(+), 4 deletions(-)
+> >  create mode 100644 include/linux/bpf_lsm.h
+> >  create mode 100644 security/bpf/include/bpf_lsm.h
+> >  create mode 100644 security/bpf/include/fs.h
+> >  create mode 100644 security/bpf/include/hooks.h
+> >  create mode 100644 security/bpf/lsm_fs.c
+> >
+> 
+> [...]
+> 
+> > +
+> > +/*
+> > + * The hooks can have an int or void return type, these macros allow having a
+> > + * single implementation of DEFINE_LSM_HOOK irrespective of the return type.
+> > + */
+> > +#define LSM_HOOK_RET(ret, x) LSM_HOOK_RET_##ret(x)
+> > +#define LSM_HOOK_RET_int(x) x
+> > +#define LSM_HOOK_RET_void(x)
+> > +
+> > +/*
+> > + * This macro defines the body of a LSM hook which runs the eBPF programs that
+> > + * are attached to the hook and returns the error code from the eBPF programs if
+> > + * the return type of the hook is int.
+> > + */
+> > +#define DEFINE_LSM_HOOK(hook, ret, proto, args)                                \
+> > +typedef ret (*lsm_btf_##hook)(proto);                                  \
+> > +static ret bpf_lsm_##hook(proto)                                       \
+> > +{                                                                      \
+> > +       return LSM_HOOK_RET(ret, LSM_RUN_PROGS(hook##_type, args));     \
+> >  }
+> 
+> I'm probably missing something, but according to LSM_HOOK_RET
+> definition for when ret==void, bpf_lsm_##hook will be a noop and won't
+> call any BPF program. Did I miss some additional macro magic?
+> 
 
+Good catch! You're right. These macros will not be there in v2 as
+we move to using trampolines based callbacks.
 
-> On Dec 30, 2019, at 10:20 AM, Robert Milkowski <rmilkowski@gmail.com> =
-wrote:
->=20
-> From: Robert Milkowski <rmilkowski@gmail.com>
->=20
-> Currently, each time nfs4_do_fsinfo() is called it will do an implicit
-> NFS4 lease renewal, which is not compliant with the NFS4 =
-specification.
-> This can result in a lease being expired by an NFS server.
->=20
-> Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> introduced implicit client lease renewal in nfs4_do_fsinfo(),
-> which can result in the NFSv4.0 lease to expire on a server side,
-> and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
->=20
-> This can easily be reproduced by frequently unmounting a sub-mount,
-> then stat'ing it to get it mounted again, which will delay or even
-> completely prevent client from sending RENEW operations if no other
-> NFS operations are issued. Eventually nfs server will expire client's
-> lease and return an error on file access or next RENEW.
->=20
-> This can also happen when a sub-mount is automatically unmounted
-> due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
-> mounted again via stat(). This can result in a short window during
-> which client's lease will expire on a server but not on a client.
-> This specific case was observed on production systems.
->=20
-> This patch makes an explicit lease renewal instead of an implicit one,
-> by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
-> similarly to NFSv4.1 which adds SEQUENCE operation.
->=20
-> Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
-> Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+> >
+> > +/*
+> > + * Define the body of each of the LSM hooks defined in hooks.h.
+> > + */
+> > +#define BPF_LSM_HOOK(hook, ret, args, proto) \
+> > +       DEFINE_LSM_HOOK(hook, ret, BPF_LSM_ARGS(args), BPF_LSM_ARGS(proto))
+> > +#include "hooks.h"
+> > +#undef BPF_LSM_HOOK
+> > +#undef DEFINE_LSM_HOOK
+> > +
+> > +/*
+> > + * Initialize the bpf_lsm_hooks_list for each of the hooks defined in hooks.h.
+> > + * The list contains information for each of the hook and can be indexed by the
+> > + * its type to initialize security FS, attach, detach and execute eBPF programs
+> > + * for the hook.
+> > + */
+> > +struct bpf_lsm_hook bpf_lsm_hooks_list[] = {
+> > +       #define BPF_LSM_HOOK(h, ...)                                    \
+> > +               [h##_type] = {                                          \
+> > +                       .h_type = h##_type,                             \
+> > +                       .mutex = __MUTEX_INITIALIZER(                   \
+> > +                               bpf_lsm_hooks_list[h##_type].mutex),    \
+> > +                       .name = #h,                                     \
+> > +                       .btf_hook_func =                                \
+> > +                               (void *)(lsm_btf_##h)(bpf_lsm_##h),     \
+> 
+> this btf_hook_func, is it assigned just so that type information for
+> bpf_lsm_xxx typedefs are preserved, is that right? It doesn't seem to
+> be ever called or read. If I'm not missing anything, check out
+> Martin's latest STRUCT_OPS patch set. He defines EMIT_TYPE_INFO(type)
+> macro, which will ensure that BTF for specified type is emitted into
+> vmlinux BTF, without actually using any extra space, defining extra
+> fields or static variables, etc. I suggest using the same for the
+> cleanest result.
+> 
+> One more thing regarding lsm_bpf_ typedefs. Currently you are defining
+> them as a pointer to func_proto, matching LSM hook. There is an
+> alternative approach, which has few benefits over using func_proto. If
+> instead you define a struct, where each argument of func prototype is
+> represented as 8-byte aligned field, this will contain all the
+> necessary information for BPF verifier to do its job (just like
+> func_proto). But in addition to that, when vmlinux.h is generated, it
+> will contain a nice struct bpf_lsm_<hook_name> with correct structure
+> to be used **directly** in BPF program, as a single context argument.
+> So with vmlinux.h, users won't have to re-define all the argument
+> types and names in their BPF_TRACE_x definition. Let me provide
+> concrete example from your cover letter. This is what you provide as
+> an example:
 
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+Is this also doable for the new approach suggsted by Alexei
+and prototyped in?
 
+https://lore.kernel.org/bpf/CAEf4BzYiUZtSJKh-UBL0jwyo6d=Cne2YtEyGU8ONykmSUSsuNA@mail.gmail.com/T/#m7c7ec0e7d8e803c6c357495d9eea59028a67cac6
 
-> ---
-> fs/nfs/nfs4proc.c       |  4 ++++
-> fs/nfs/nfs4xdr.c        | 13 +++++++++++--
-> include/linux/nfs_xdr.h |  3 +++
-> 3 files changed, 18 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 76d3716..6d075f0 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -4998,12 +4998,16 @@ static int nfs4_proc_statfs(struct nfs_server =
-*server, struct nfs_fh *fhandle, s
-> static int _nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh =
-*fhandle,
-> 		struct nfs_fsinfo *fsinfo)
+which uses trampolines. The new approach gets rid of any type
+generation and macros in security/bpf/lsm_hooks.h. Maybe the
+btf_vmlinux can be augmented at runtime to generate context struct
+upon attachment?
+
+> 
+> BPF_TRACE_3("lsm/file_mprotect", mprotect_audit,
+>             struct vm_area_struct *, vma,
+>             unsigned long, reqprot, unsigned long, prot) {...}
+> 
+> on kernel side, you'll have:
+> 
+> typedef int (*bpf_lsm_file_mprotect)(struct vm_area_struct *vma,
+>                                      unsigned long reqprot,
+>                                      unsigned long prot);
+> 
+> So you can see that user has to go and copy/paste all the arguments
+> and their types and paste them in this verbose BPF_TRACE_3 macro to
+> define correct BPF program.
+> 
+> Now, imagine that instead of typedef above, we define equivalent struct:
+> 
+> struct bpf_lsm_file_mprotect {
+>     struct vm_area_struct *vma;
+>     unsigned long reqprot;
+>     unsigned long prot;
+> };
+> 
+> This type will get dumped into vmlinux.h, which can be used from BPF
+> user code as such:
+> 
+> SEC("lsm/file_mprotect")
+> int mprotect_audito(struct bpf_lsm_file_mprotect *ctx)
 > {
-> +	struct nfs_client *clp =3D server->nfs_client;
-> 	struct nfs4_fsinfo_arg args =3D {
-> 		.fh =3D fhandle,
-> 		.bitmask =3D server->attr_bitmask,
-> +		.clientid =3D clp->cl_clientid,
-> +		.renew =3D nfs4_has_session(clp) ? 0 : 1,		=
-/* append RENEW */
-> 	};
-> 	struct nfs4_fsinfo_res res =3D {
-> 		.fsinfo =3D fsinfo,
-> +		.renew =3D nfs4_has_session(clp) ? 0 : 1,
-> 	};
-> 	struct rpc_message msg =3D {
-> 		.rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_FSINFO],
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index 936c577..0ce9a10 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -555,11 +555,13 @@ static int decode_layoutget(struct xdr_stream =
-*xdr, struct rpc_rqst *req,
-> #define NFS4_enc_fsinfo_sz	(compound_encode_hdr_maxsz + \
-> 				encode_sequence_maxsz + \
-> 				encode_putfh_maxsz + \
-> -				encode_fsinfo_maxsz)
-> +				encode_fsinfo_maxsz + \
-> +				encode_renew_maxsz)
-> #define NFS4_dec_fsinfo_sz	(compound_decode_hdr_maxsz + \
-> 				decode_sequence_maxsz + \
-> 				decode_putfh_maxsz + \
-> -				decode_fsinfo_maxsz)
-> +				decode_fsinfo_maxsz + \
-> +				decode_renew_maxsz)
-> #define NFS4_enc_renew_sz	(compound_encode_hdr_maxsz + \
-> 				encode_renew_maxsz)
-> #define NFS4_dec_renew_sz	(compound_decode_hdr_maxsz + \
-> @@ -2646,6 +2648,8 @@ static void nfs4_xdr_enc_fsinfo(struct rpc_rqst =
-*req, struct xdr_stream *xdr,
-> 	encode_sequence(xdr, &args->seq_args, &hdr);
-> 	encode_putfh(xdr, args->fh, &hdr);
-> 	encode_fsinfo(xdr, args->bitmask, &hdr);
-> +	if (args->renew)
-> +		encode_renew(xdr, args->clientid, &hdr);
-> 	encode_nops(&hdr);
+>     ... here you can use ctx->vma, ctx->reqprot, ctx->prot ...
 > }
->=20
-> @@ -6778,6 +6782,11 @@ static int nfs4_xdr_dec_fsinfo(struct rpc_rqst =
-*req, struct xdr_stream *xdr,
-> 		status =3D decode_putfh(xdr);
-> 	if (!status)
-> 		status =3D decode_fsinfo(xdr, res->fsinfo);
-> +	if (status)
-> +		goto out;
-> +	if (res->renew)
-> +		status =3D decode_renew(xdr);
-> +out:
-> 	return status;
-> }
->=20
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 72d5695..49bd673 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1025,11 +1025,14 @@ struct nfs4_fsinfo_arg {
-> 	struct nfs4_sequence_args	seq_args;
-> 	const struct nfs_fh *		fh;
-> 	const u32 *			bitmask;
-> +	clientid4			clientid;
-> +	unsigned char			renew:1;
-> };
->=20
-> struct nfs4_fsinfo_res {
-> 	struct nfs4_sequence_res	seq_res;
-> 	struct nfs_fsinfo	       *fsinfo;
-> +	unsigned char			renew:1;
-> };
->=20
-> struct nfs4_getattr_arg {
-> --=20
-> 1.8.3.1
->=20
->=20
+> 
+> 
+> Meanwhile, there will be just minimal changes to BPF verifier to use
+> such struct instead of func_proto for verification of LSM programs.
+> 
+> We currently have similar issue with raw_tp programs and I've been
+> thinking about switching that to structs instead of func_proto, so we
+> might as well coordinate that and reuse the same logic in BPF
+> verifier.
+> 
+> Thoughts?
 
---
-Chuck Lever
+Thanks for the explanation!
 
+Using structs is definitely better if we chose to go with static type
+generation.
 
+- KP
 
+> 
+> 
+> 
+> > +               },
+> > +       #include "hooks.h"
+> > +       #undef BPF_LSM_HOOK
+> > +};
+> > +
+> 
+> [...]
