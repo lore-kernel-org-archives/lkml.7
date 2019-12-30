@@ -2,228 +2,101 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB174C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A20C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB5820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2FB20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:31:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HoGPOyLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfL3M2A (ORCPT
+        id S1727445AbfL3Mb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 07:28:00 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:45289 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfL3M2A (ORCPT
+        Mon, 30 Dec 2019 07:31:29 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52584 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfL3Mb2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 07:28:00 -0500
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MORIm-1j7I5S1Nja-00Pvkq; Mon, 30 Dec 2019 13:27:56 +0100
-Received: by mail-qt1-f176.google.com with SMTP id n15so29534936qtp.5;
-        Mon, 30 Dec 2019 04:27:56 -0800 (PST)
-X-Gm-Message-State: APjAAAWyYzNHoAQvFyrXhRs0Zj7zHgBWluSFciuTDbD5Df4fZWga3ZGE
-        Loa2BDaIBs61tArHZxjRi5usEp/jmC/ljnOYZ2U=
-X-Google-Smtp-Source: APXvYqxPg18QcBCheXEg57bO676E88LDtMzW6UpknzYUThTzCz6Q+c1Pcfg/qqj52aosJr397+kYQUCE06+nF/bwaDM=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr47462525qtr.142.1577708875107;
- Mon, 30 Dec 2019 04:27:55 -0800 (PST)
+        Mon, 30 Dec 2019 07:31:28 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVIuN069300;
+        Mon, 30 Dec 2019 06:31:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577709078;
+        bh=h1bBuCCt5p3npXFEeqmlW/XTH5HMdwLY7PMMhaC3OJs=;
+        h=From:To:CC:Subject:Date;
+        b=HoGPOyLwSvSx+HCBFECvXbTkr33tTMtHlzCLGV63NjT6+YUxhx1TNDfwH0/EovR8U
+         60xPaSHbLnsUu1eVJhTawnA6sMvShK2FbwZfrN2mdlqXFmOk2/jAgueqrnZMgCv3+l
+         a+SojzeUQncMV35M6pL0fBCGfG/4zbxQxSFLg1hs=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBUCVITa058483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Dec 2019 06:31:18 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 06:31:17 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 06:31:17 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUCVEhM002491;
+        Mon, 30 Dec 2019 06:31:15 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/7] Improvements to pci_endpoint_test driver
+Date:   Mon, 30 Dec 2019 18:03:08 +0530
+Message-ID: <20191230123315.31037-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <cover.1577111363.git.christophe.leroy@c-s.fr> <47701b5fb73cf536db074031db8e6e3fa3695168.1577111365.git.christophe.leroy@c-s.fr>
-In-Reply-To: <47701b5fb73cf536db074031db8e6e3fa3695168.1577111365.git.christophe.leroy@c-s.fr>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 30 Dec 2019 13:27:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0QGtjygLJUWX_1-s1vfCzE6UoOzrb+OZWwjaBdh=RpVQ@mail.gmail.com>
-Message-ID: <CAK8P3a0QGtjygLJUWX_1-s1vfCzE6UoOzrb+OZWwjaBdh=RpVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 01/10] lib: vdso: ensure all arches have 32bit fallback
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:jOHMDkQLbBEOfg+4rjmnhRPt6FJ4ctoN2IimZLo9gAUXDFtD9C2
- 75QznJOJwR5UUrrNfkOcZaEg3WOrVX6dRRHBCN15LSpnoAO4a1DXM3dPPOF9fMCVZg1W08U
- +P5H9GFpkCMqD05HKyBHardYwDRQLtjZIMqJVcvMj1m5DqysTXavdXdwWn1/fDto8o4b2Su
- OQU8gXcYKQhlGQJlzPohw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:71Akjt8W24A=:PXGn17DWKzLuFP4vcJpLWp
- 6F7QXJChbrcNpMjxvg48EmTZUDNI2VAwov/bQzVFvSnS2FGMIoA189x5cp+m9KbSLQyVCnjtX
- wWbG4yx8cLaZpcXe6T5AzAwg93VUDvwU2ucHqNuUsqi8wtsaogy1zg95g/p9DUPnu9H7iwnfZ
- 8jsJa8IHhXne5CBS2Kahuk+i683IrM/G5/KultKGrG6p/DxEOnlIbntXbvJi/Kr3nrCProtNo
- +9YMoqD4ZLTogltmCpGIwGDWz+1IdHWWkTulz5nakoP1H29lJes7MG7yciCC0ajxhvvxBglTj
- j79etS3wzXmucVREnEV8dNnkCQ0pBGtO0bc1dIEDWYIDxzwiL9eY08115KLOed3GYyK2vG54v
- tgXTBJKgGX0NuwergkqwxaQtaImVic8oDwf+w9IBEOINy96Km4Nq/kFwm0MfnRsJ+Yg6l4OPa
- 5F3+VuvZm+ZIORPnvVLnc1yMPJEXtU5EaAd4Oo2qUq+wsi9qLMFLjG3clKefd+gn82FLFICBP
- iNeZW7APRpVtTZECe8jSbqAl0eK3WdhEHxrcYzgAzIwpvZEEFtZtKOvUmQud1DlQ+w7/WHcuO
- 5A30sotvNv7XD4Nyq87CLUpHcOaHWHGR6EZtNlxvDW8tvefLTIiuBPcwUZH0aVpNuP1B8x9QL
- hqOOuHngHCAPrzhGA+sUIW5E1/rkQPlPlKJjn5va7G/dWWND70mfO+eWmMbzkGryRhv3tnS8S
- 5+iIWWhWY/bj8rBvYvs39k2Ywyj+WlP25ZXl4aIHHMe4z1JL0SUerv4caOZ+IhKVf5VBmOYSb
- N0XtwkoK0hiRzWZmPTqPtPLZ9kvlerjFGkVZyC2gytjqDp6mDGYilKut4ZcxKEemb7GQy5x3+
- co0zwMAK3NXUxqXhjkqw==
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 3:31 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
->
-> In order to simplify next step which moves fallback call at arch
-> level, ensure all arches have a 32bit fallback instead of handling
-> the lack of 32bit fallback in the common code based
-> on VDSO_HAS_32BIT_FALLBACK
->
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+This series adds improvements and fixes to pci_endpoint_test driver
+mostly applicable when used with multi-function endpoint (or multiple
+endpoint instances using pci_epf_test).
 
-I like the idea of removing VDSO_HAS_32BIT_FALLBACK and ensuring
-that all 32-bit architectures implement them, but we really should *not*
-have any implementation calling the 64-bit syscalls.
+*) Using module parameter to determine irqtype would indicate all the
+   pci_endpoint_test device have the same irqtype. Fix it here.
+*) Add ioctl to clear irq so that "cat /proc/interrupts" only lists
+   the entries for the devices that is actually being used.
+*) Creating more than 10 pci-endpoint-test devices results in a kernel
+   error.
+*) Use full pci-endpoint-test name in request irq so that it's easy to
+   profile the interrupt details in "cat /proc/interrupts"
+*) Always enable legacy interrupt.
 
-> +static __always_inline
-> +long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +       struct __kernel_timespec ts;
-> +       int ret = clock_gettime_fallback(clock, &ts);
-> +
-> +       if (likely(!ret)) {
-> +               _ts->tv_sec = ts.tv_sec;
-> +               _ts->tv_nsec = ts.tv_nsec;
-> +       }
-> +       return ret;
-> +}
-> +
-> +static __always_inline
-> +long clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +       struct __kernel_timespec ts;
-> +       int ret = clock_getres_fallback(clock, &ts);
-> +
-> +       if (likely(!ret && _ts)) {
-> +               _ts->tv_sec = ts.tv_sec;
-> +               _ts->tv_nsec = ts.tv_nsec;
-> +       }
-> +       return ret;
-> +}
+Kishon Vijay Abraham I (7):
+  misc: pci_endpoint_test: Avoid using module parameter to determine
+    irqtype
+  misc: pci_endpoint_test: Do not request or allocate IRQs in probe
+  misc: pci_endpoint_test: Add ioctl to clear IRQ
+  tools: PCI: Add 'e' to clear IRQ
+  misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+  misc: pci_endpoint_test: Use full pci-endpoint-test name in request
+    irq
+  misc: pci_endpoint_test: Enable legacy interrupt
 
-Please change these to call __NR_clock_gettime and __NR_clock_getres_time
-instead of __NR_clock_gettime64/__NR_clock_getres_time64 for multiple reasons.
+ drivers/misc/pci_endpoint_test.c | 43 +++++++++++++++++++++++++-------
+ include/uapi/linux/pcitest.h     |  1 +
+ tools/pci/pcitest.c              | 16 +++++++++++-
+ 3 files changed, 50 insertions(+), 10 deletions(-)
 
-- When doing migration between containers, the vdso may get copied into
-  an application running on a kernel that does not support the time64
-  variants, and then the fallback fails.
+-- 
+2.17.1
 
-- When CONFIG_COMPAT_32BIT_TIME is disabled, the time32 syscalls
-  return -ENOSYS, and the vdso version should have the exact same behavior
-  to avoid surprises. In particular an application that checks clock_gettime()
-  to see if the time32 are in part of the kernel would get an incorrect result
-  here.
-
-arch/arm64/include/asm/vdso/compat_gettimeofday.h already does this,
-I think you can just copy the implementation or find a way to share it.
-
-> diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> index b08f476b72b4..c41c86a07423 100644
-> --- a/arch/arm64/include/asm/vdso/gettimeofday.h
-> +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> @@ -66,6 +66,32 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
->         return ret;
->  }
->
-> +static __always_inline
-> +long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +       struct __kernel_timespec ts;
-> +       int ret = clock_gettime_fallback(clock, &ts);
-> +
-> +       if (likely(!ret)) {
-> +               _ts->tv_sec = ts.tv_sec;
-> +               _ts->tv_nsec = ts.tv_nsec;
-> +       }
-> +       return ret;
-> +}
-
-As Andy said, this makes no sense at all, nothing should ever call this on a
-64-bit architecture.
-
-> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
-> index b08825531e9f..60608e930a5c 100644
-> --- a/arch/mips/include/asm/vdso/gettimeofday.h
-> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
-> @@ -109,8 +109,6 @@ static __always_inline int clock_getres_fallback(
->
->  #if _MIPS_SIM != _MIPS_SIM_ABI64
->
-> -#define VDSO_HAS_32BIT_FALLBACK        1
-> -
->  static __always_inline long clock_gettime32_fallback(
->                                         clockid_t _clkid,
->                                         struct old_timespec32 *_ts)
-> @@ -150,6 +148,32 @@ static __always_inline int clock_getres32_fallback(
->
->         return error ? -ret : ret;
->  }
-> +#else
-> +static __always_inline
-> +long clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-> +{
-> +       struct __kernel_timespec ts;
-> +       int ret = clock_gettime_fallback(clock, &ts);
-> +
-> +       if (likely(!ret)) {
-> +               _ts->tv_sec = ts.tv_sec;
-> +               _ts->tv_nsec = ts.tv_nsec;
-> +       }
-> +       return ret;
-> +}
-> +
-
-Same here.
-
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -125,13 +125,8 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
->
->         ret = __cvdso_clock_gettime_common(clock, &ts);
->
-> -#ifdef VDSO_HAS_32BIT_FALLBACK
->         if (unlikely(ret))
->                 return clock_gettime32_fallback(clock, res);
-> -#else
-> -       if (unlikely(ret))
-> -               ret = clock_gettime_fallback(clock, &ts);
-> -#endif
->
->         if (likely(!ret)) {
->                 res->tv_sec = ts.tv_sec;
-
-Removing the #ifdef and the fallback seems fine. I think this is actually
-required for correctness on arm32 as well. Maybe enclose the entire function in
-
-#ifdef VDSO_HAS_CLOCK_GETTIME32
-
-to only define it when it is called?
-
-> @@ -238,13 +233,8 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
->
->         ret = __cvdso_clock_getres_common(clock, &ts);
->
-> -#ifdef VDSO_HAS_32BIT_FALLBACK
->         if (unlikely(ret))
->                 return clock_getres32_fallback(clock, res);
-> -#else
-> -       if (unlikely(ret))
-> -               ret = clock_getres_fallback(clock, &ts);
-> -#endif
-
-The same applies to all the getres stuff of course.
-
-      Arnd
