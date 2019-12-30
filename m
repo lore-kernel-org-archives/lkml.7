@@ -2,89 +2,143 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD738C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B30AC2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6F2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A902071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577714875;
-	bh=MvsmnEK/EsYHdXv/PbjwSf38xojnu5xgv/tDp+2SprI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nsGgWrIm4tpgRM0y56+ZZhanusrEeTlKC9XBqlnjVBFvbcP6RusQBw5C5r0jJiJ3s
-	 zUoshJnSpsGZPVao9sm2IO+JHN10UlUYNVsrx37eL6IuKZBmp5H+yGYqqXLOwi34Bz
-	 Hzeg7ZbdYdWLDvXlsk8AKh7qLDEJ6LdkeRYoJOOw=
+	s=default; t=1577715600;
+	bh=dd6+tGCT8NlO6Dd8N+gs4yzTMQKMExjtYDjH4i21Tvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=pvxcymG6/COaZrvr9HJeQeS+yqbVCrdzB3FXL+WivGYtU2QS8zgCt3yE7RIXicU89
+	 Ddngu7mEcqyn/aDAomKTPCTp9yCSXQHfr0piAYkiCNjxsqumEVxM9jRvFiWa+cyuq+
+	 eMHq3cIVAQm2A9jr7cLEJN9tgdKQlrbsK02I3MpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfL3OHy (ORCPT
+        id S1727524AbfL3OT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:07:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43862 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 09:19:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfL3OHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:07:54 -0500
-Received: from localhost.localdomain (aaubervilliers-681-1-20-8.w90-88.abo.wanadoo.fr [90.88.140.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727445AbfL3OT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:19:58 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3962B20718;
-        Mon, 30 Dec 2019 14:07:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79EBC20718;
+        Mon, 30 Dec 2019 14:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577714873;
-        bh=MvsmnEK/EsYHdXv/PbjwSf38xojnu5xgv/tDp+2SprI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ouQVXQjCGLKwr552Y3Cc+86bpDQbEY5GO9CF00aJSaQfVLM3Zts8Ag8NTHT67vjI4
-         Ld/2GBxMn7nPqcJdJ/cl22CQpNfxwqTi5U/90xt1NhBK1bQ0k0XD/JR/9AW92wvCXg
-         LHAp+4xJJWYOJ1wALKP5Z0BEUaqxXdo75Vwy+yIc=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        michal.lkml@markovi.net, riku.voipio@linaro.org,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] kbuild/deb-pkg: annotate libelf-dev dependency as :native
-Date:   Mon, 30 Dec 2019 15:07:47 +0100
-Message-Id: <20191230140747.50415-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        s=default; t=1577715597;
+        bh=dd6+tGCT8NlO6Dd8N+gs4yzTMQKMExjtYDjH4i21Tvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hdWViqndKTgQwxb2ub7r+6S/ddxsjJ9/eIidx7On2Tg0zavkZbfj+0uLpgN5i3s/0
+         KNEx92FFsYLLvrNyc1nx9vphqSaOSLCB8YjB15U5wwLmd/3OenY0ArAQKfnaTUlADM
+         YV3XAeqvDBRWX7GrnWVt2ru9JVii3bBzEZQw4VUA=
+Date:   Mon, 30 Dec 2019 08:19:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     bjorn@helgaas.com, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        wangkefeng.wang@huawei.com, huawei.libin@huawei.com,
+        guohanjun@huawei.com
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+Message-ID: <20191230141956.GA186256@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <dfd3ad93-7c17-abb2-b620-99df5c984fd4@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cross compiling the x86 kernel on a non-x86 build machine produces
-the following error when CONFIG_UNWINDER_ORC is enabled, regardless
-of whether libelf-dev is installed or not.
+On Mon, Dec 30, 2019 at 04:11:50PM +0800, Xiongfeng Wang wrote:
+> Hi, Bjorn
+> 
+> On 2019/12/18 22:28, Bjorn Helgaas wrote:
+> > On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
+> >> On 2019/12/11 12:10, Bjorn Helgaas wrote:
+> >>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
+> >>> <wangxiongfeng2@huawei.com> wrote:
+> >>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
+> >>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+> >>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
+> >>>>>> class type as 'NOT_DEFINED', but it is actually a network
+> >>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
+> >>>>>> is actually unused.  This patch modify the class type to
+> >>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
+> > 
+> >>>>> The question is not whether the BAR is used by the driver; the
+> >>>>> question is whether the device responds to accesses to the
+> >>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
+> >>>>> on.
+> >>>>
+> >>>> I asked the hardware engineer. He said I can not write an address
+> >>>> into that BAR.
+> >>>
+> >>> If the BAR is not writable, I think sizing should fail, so I
+> >>> suspect some of the bits are actually writable.
+> >>
+> >> Sorry for the delayed response. It's not so convenient for me to get
+> >> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
+> >> access the registers and memory within 5896 devices. These three
+> >> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
+> >> used to access all the registers and memory within 5896 devices.
+> >> (BAR3 is writable. Sorry for the non-confirmed information before.)
+> >> But BAR3 is not used by the driver and the size is very
+> >> large（larger than 100G, still didn't get the precise size）.  So I
+> >> think maybe we can disable this BAR for now, otherwise the
+> >> unassigned resource will cause 'pci_enable_device()' returning
+> >> failure.
+> > 
+> > Here's the problem: the proposed patch (below) clears the struct
+> > resource corresponding to BAR 3, but that doesn't actually disable the
+> > BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
+> > exist, but it's still there in the hardware.
+> > 
+> > The hardware BAR 3 still contains some value (possibly zero), and if
+> > PCI_COMMAND_MEMORY is set (which you need to do if you want to use
+> > *any* memory BARs on the device), the device will respond to any
+> > transactions in the BAR 3 range.  Depending on the topology and all
+> > the other BAR and window assignments, this may cause address
+> > conflicts.
+> 
+> I have checked with the hardware engineer. He said the transactions
+> have some bits to indicate whether the address is 32-bit or 64-bit.
+> The device will respond only when the 64-bit address transactions is
+> in the BAR3 range.
+> 
+> So I think, if I clear the resource corresponding to BAR3, the
+> 64-bit window of the downport is empty. There will be no 64-bit
+> address transaction sent to the device.
 
-  dpkg-checkbuilddeps: error: Unmet build dependencies: libelf-dev
-  dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
-  dpkg-buildpackage: warning: (Use -d flag to override.)
+Sorry to repeat myself, but your patch only clears the struct
+resource, which is in memory.  It doesn't touch the BAR (the hardware
+register in the device) at all.  It does not disable the BAR.  It does
+not guarantee that the memory windows of the Downstream Port leading
+to the device will be disabled.  It does not prevent upper level
+software from generating transactions that will match BAR 3.
 
-Since this is a build time dependency for a build tool, we need to
-depend on the native version of libelf-dev so add the appropriate
-annotation.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- scripts/package/mkdebian | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 7c230016b08d..357dc56bcf30 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -136,7 +136,7 @@ mkdir -p debian/source/
- echo "1.0" > debian/source/format
- 
- echo $debarch > debian/arch
--extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev)"
-+extra_build_depends=", $(if_enabled_echo CONFIG_UNWINDER_ORC libelf-dev:native)"
- extra_build_depends="$extra_build_depends, $(if_enabled_echo CONFIG_SYSTEM_TRUSTED_KEYRING libssl-dev:native)"
- 
- # Generate a simple changelog template
--- 
-2.20.1
-
+> > + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> > + * when assigning the resources. But this BAR is actually unused by the driver,
+> > + * so let's disable it.
+> > + */
+> > +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> > +{
+> > +       struct resource *r = &pdev->resource[3];
+> > +
+> > +       r->start = 0;
+> > +       r->end = 0;
+> > +       r->flags = 0;
+> > +
+> > +       pci_info(pdev, "Disabling invalid BAR 3\n");
+> > 
+> > .
+> > 
+> 
