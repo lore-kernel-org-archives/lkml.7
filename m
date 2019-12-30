@@ -2,207 +2,161 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DF9C2D0DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E19CC2D0D1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2141A206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PawEK2Rc"
+	by mail.kernel.org (Postfix) with ESMTP id 3EF3B206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 09:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfL3JiA (ORCPT
+        id S1727419AbfL3JiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:38:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43940 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfL3JiA (ORCPT
+        Mon, 30 Dec 2019 04:38:16 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32991 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfL3JiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:38:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBU9btZ8008994;
-        Mon, 30 Dec 2019 03:37:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577698675;
-        bh=HEsmbipAwW0v5k2Dk4uWd1mq6oacihDpfL4YGD2Huys=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PawEK2Rc6yNXpkLSBV37uUbqNZekrvmCmwfpDrqguyY9rbm1EgSYY9vZ4yv7Ra7i7
-         To/lNH56sqSLuuqamMoBxWX2l6DW6+EzdXYrW3zEBhYCfsdjf9oR8Cbqejg4AIi3sm
-         yLidjSVu/zDDxMEaF8qfFOjZhl8/IGwzpvNWDquU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBU9btlr113518
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Dec 2019 03:37:55 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
- Dec 2019 03:37:54 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 30 Dec 2019 03:37:54 -0600
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBU9bqS2026637;
-        Mon, 30 Dec 2019 03:37:53 -0600
-Subject: Re: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ
- (SERDES wrapper)
-To:     Rob Herring <robh@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Yuti Amonkar <yamonkar@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Roger Quadros <rogerq@ti.com>
-References: <cover.1575906694.git.jsarha@ti.com>
- <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
- <20191219190833.GA16358@bogus> <3cf64e30-6b4d-a138-7164-54d1cdc8e05a@ti.com>
- <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <15d0bd42-5bb5-ee14-9e2a-7beb55671e8a@ti.com>
-Date:   Mon, 30 Dec 2019 11:37:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 30 Dec 2019 04:38:15 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y6so24714583lji.0;
+        Mon, 30 Dec 2019 01:38:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fz68UIxHEFOOwWIHPQ/I5rTtf+EX7gXl4UJyrGnB5kA=;
+        b=oJwJUtNmh4up+j+eBKEez5+d0LVCqbgm/yhQ9mvUSz/dH2DpCNxErKjzk1Dr1NP/9+
+         fE4Outo0FKFxQ6O8Jk93vp1QokZhfAMAONzFnSru5NgL30lt3VU8+jUij3jvrVNu1HFS
+         KP0qm3lxvPQVUGBzxeNAjlqwyFeLSbcwr2xnJE0k5m1BPLeyDuQH9EDa/H6uCDneP/os
+         u3jO3q/3JstoJe8j5TuxI5qSIVrIQpKZ8CDInHupiGlgAD9NhYlY6VvcWma06Y05O/du
+         sWzX+7GYw9Vx4v47QXvDn+iHk1n5auq4yDF3OYSxu1uezfpox4w0WWBMpGvCZGnkiO9n
+         cw3g==
+X-Gm-Message-State: APjAAAUiBKJschbxSU9cH1+VCNYo0l51WjdPIDia1Gvor4TnOHr5dr2X
+        orlxcwnWRlZvHt37YcG4qeQ=
+X-Google-Smtp-Source: APXvYqx8BII8n1BTnK1Zu+lgL9WfB/Ug9H9t6seZ8kueh6ngiscuc9ycHe+PgzjqJ8ADUTxbtRCBCQ==
+X-Received: by 2002:a2e:8145:: with SMTP id t5mr38393418ljg.144.1577698692836;
+        Mon, 30 Dec 2019 01:38:12 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id d4sm18173658lfn.42.2019.12.30.01.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 01:38:12 -0800 (PST)
+Date:   Mon, 30 Dec 2019 11:38:05 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v8 06/12] mfd: input: bd71828: Add power-key support
+Message-ID: <8bea0dfbee14a12833258e2fc95903a44c08faf3.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/12/2019 23:31, Rob Herring wrote:
-> On Fri, Dec 20, 2019 at 5:52 AM Jyri Sarha <jsarha@ti.com> wrote:
->>
->> On 19/12/2019 21:08, Rob Herring wrote:
->>> On Mon, Dec 09, 2019 at 06:22:11PM +0200, Jyri Sarha wrote:
->>>> Add property to indicate the usage of SERDES lane controlled by the
->>>> WIZ wrapper. The wrapper configuration has some variation depending on
->>>> how each lane is going to be used.
->>>>
->>>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->>>> ---
->>>>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
->>>>  1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->>>> index 94e3b4b5ed8e..399725f65278 100644
->>>> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->>>> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
->>>> @@ -97,6 +97,18 @@ patternProperties:
->>>>        Torrent SERDES should follow the bindings specified in
->>>>        Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
->>>>
->>>> +  "^lane[1-4]-mode$":
->>>> +    allOf:
->>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
->>>> +      - enum: [0, 1, 2, 3, 4, 5, 6]
->>>> +    description: |
->>>> +     Integer describing static lane usage for the lane indicated in
->>>> +     the property name. For Sierra there may be properties lane0 and
->>>> +     lane1, for Torrent all lane[1-4]-mode properties may be
->>>> +     there. The constants to indicate the lane usage are defined in
->>>> +     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
->>>> +     if its lane<n>-use property does not exist.
->>>
->>> The defines were intended to be in 'phys' cells. Does putting both lane
->>> and mode in the client 'phys' properties not work?
->>>
->>
->> Let me first check if I understood you. So you are suggesting something
->> like this:
->>
->> dp-phy {
->>         #phy-cells = <5>; /* 1 for phy-type and 4 for lanes = 5 */
->>         ...
->> };
->>
->> dp-bridge {
->>         ...
->>         phys = <&dp-phy PHY_TYPE_DP 1 1 0 0>; /* lanes 0 and 1 for DP */
-> 
-> Yes, but I think the lanes can be a single cell mask. And I'd probably
-> make that the first cell which is generally "which PHY" and make
-> type/mode the 2nd cell. I'd look for other users of PHY_TYPE_ defines
-> and match what they've done if possible.
-> 
+Use gpio_keys to send power input-event to user-space when power
+button (short) press is detected.
 
-I see. This will cause some head ache on the driver implementation side,
-as there is no way for the phy driver to peek the lane use or type from
-the phy client's device tree node. It also looks to me that the phy
-API[1] has to be extended quite a bit before the phy client can pass the
-lane usage information to the phy driver. It will cause some pain to
-implement the extension without breaking the phy API and causing a nasty
-cross dependency over all the phy client domains.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
 
-Also, there is not much point in putting the PHY_TYPE constant to the
-phy client's node, as normally the phy client driver will know quite
-well what PHY_TYPE to use. E.g. a SATA driver will always select
-PHY_TYPE_SATA and a PCIE driver will select PHY_TYPE_PCIE, etc.
+Changes from v7 - no changes
 
-Kishon, if we have to take this road it also starts to sound like we
-will have to move the phy client's phandle to point to the phy wrapper
-node, if we want to keep the actual phy driver wrapper agnostic. Then we
-can make the wrapper to act like a proxy that forwards the phy_ops calls
-to the actual phy driver. Luckily the per lane phy-type selection is not
-a blocker for our j721e DisplayPort functionality.
+ drivers/mfd/rohm-bd71828.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Best regards,
-Jyri
-
-[1] include/linux/phy/phy.h
+diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+index 0ec386c9f26b..210261d026f2 100644
+--- a/drivers/mfd/rohm-bd71828.c
++++ b/drivers/mfd/rohm-bd71828.c
+@@ -4,7 +4,9 @@
+ //
+ // ROHM BD71828 PMIC driver
+ 
++#include <linux/gpio_keys.h>
+ #include <linux/i2c.h>
++#include <linux/input.h>
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+@@ -15,6 +17,18 @@
+ #include <linux/regmap.h>
+ #include <linux/types.h>
+ 
++static struct gpio_keys_button button = {
++	.code = KEY_POWER,
++	.gpio = -1,
++	.type = EV_KEY,
++};
++
++static struct gpio_keys_platform_data bd71828_powerkey_data = {
++	.buttons = &button,
++	.nbuttons = 1,
++	.name = "bd71828-pwrkey",
++};
++
+ static const struct resource rtc_irqs[] = {
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
+@@ -35,6 +49,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
+ 		.name = "bd71828-rtc",
+ 		.resources = rtc_irqs,
+ 		.num_resources = ARRAY_SIZE(rtc_irqs),
++	}, {
++		.name = "gpio-keys",
++		.platform_data = &bd71828_powerkey_data,
++		.pdata_size = sizeof(bd71828_powerkey_data),
+ 	},
+ };
+ 
+@@ -288,6 +306,14 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
+ 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+ 		bd71828_irq_chip.num_irqs);
+ 
++	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
++		return ret;
++	}
++
++	button.irq = ret;
++
+ 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+ 				   bd71828_mfd_cells,
+ 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
+-- 
+2.21.0
 
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
