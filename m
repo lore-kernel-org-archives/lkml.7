@@ -2,115 +2,139 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DAFC2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151DC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1661620409
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TuYiaApt"
+	by mail.kernel.org (Postfix) with ESMTP id 5085C20409
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 20:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfL3UN7 (ORCPT
+        id S1727736AbfL3UO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 15:13:59 -0500
-Received: from mail-eopbgr680109.outbound.protection.outlook.com ([40.107.68.109]:34285
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727667AbfL3UN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 15:13:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EVTEwuYcsoWhobQDgZHGvuP1dFpJy+22Z3qEQG09DJsMYxJVsNTH+7fALrU+kkc15mEwX91NxRexV5IaWhqrKWlpodKAbEnLVhXt/ShSMwhSqviLt0uXeXuIurOmvLcKxE1nAVJUD7WGmFe8wMqYJaV89Z06OVijnjZLqQYz+EHk32/FGi+Wik1mqfeB+TF6b3QBvyHNBdicQFCAofdHvNq4D91eZjTTyX6/pzLGY009oPN/yaGoJpZD1BNaTHhsDnmIY3aoiSPsFvaq/x09WT79zGeu1trankcCKsHDKnCLzsASEFSGzhKq+WszWadY6a2suWLNo3pVQNZdBC8LCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UgzFW3d4xFaTdzxuMn/y0TJwFzW6+RWghVCR3xZ3I/4=;
- b=k/WvPp98f5bYu7c6YcDDvlY4B5pS1qvNgcB09PHhCBYEOwLW/0ZAhhshv0LOEPQw/zyptKO8eIW0QArUftCFqGQ0ouIEFd+tMZVaitbNIvDPt/cXhOI9MWW6xv2K2Lz4sjkvb8PTkTIS1OzCfqP863J7vpzO84MUrE4mdfXvEABG4fx1oOoGHTkSvfKv/nkCoqESATZ33G0MPW7kBTkRWZODf6WIJ/eqCaYolLRu6fDwA70ji4JJ5sKL3vmKPVpQwKLmLG7qC2kNOrB6afzt2WIHnl53gXMv7wBh4no6fOZfutanqkPnt59iJ1DlMTrB7dUd+XMyEqvIXnyEunLyaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UgzFW3d4xFaTdzxuMn/y0TJwFzW6+RWghVCR3xZ3I/4=;
- b=TuYiaAptDM3S1kQoOHFykEqzVRT/KYxwG78V3It2pdfFfiiFF6XNCFdqLwwBNn/qMGQlXhHCGDeJfGRAuov1DJkJQa5awUY+JKbe/NwWD+9kcWG+DL1LzaNZFl2bQ1y3ZUVDzj2o9xaDYudK4wGyDF6Fo5OJQ3tZeiX0Dahzihc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB0936.namprd21.prod.outlook.com (52.132.131.166) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.8; Mon, 30 Dec 2019 20:13:55 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6009:72e0:9d02:2f91%9]) with mapi id 15.20.2623.000; Mon, 30 Dec 2019
- 20:13:55 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2,net-next, 0/3] Add vmbus dev_num and enable netvsc async probing
-Date:   Mon, 30 Dec 2019 12:13:31 -0800
-Message-Id: <1577736814-21112-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34)
- To DM5PR2101MB0901.namprd21.prod.outlook.com (2603:10b6:4:a7::30)
+        Mon, 30 Dec 2019 15:14:26 -0500
+Received: from mga18.intel.com ([134.134.136.126]:61436 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727691AbfL3UOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:14:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 12:14:25 -0800
+X-IronPort-AV: E=Sophos;i="5.69,376,1571727600"; 
+   d="scan'208";a="213420200"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 12:14:25 -0800
+Subject: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem=
+ entries
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     mingo@redhat.com
+Cc:     Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Dave Young <dyoung@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org, kexec@lists.infradead.org
+Date:   Mon, 30 Dec 2019 11:58:23 -0800
+Message-ID: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by CO2PR07CA0066.namprd07.prod.outlook.com (2603:10b6:100::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Mon, 30 Dec 2019 20:13:54 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2ad1b826-c6f4-40ec-ff8e-08d78d64cb67
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0936:|DM5PR2101MB0936:|DM5PR2101MB0936:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB0936F2D0C02E5698F9061214AC270@DM5PR2101MB0936.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
-X-Forefront-PRVS: 0267E514F9
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(396003)(376002)(366004)(189003)(199004)(5660300002)(52116002)(6506007)(66556008)(186003)(2616005)(956004)(6666004)(16526019)(4744005)(26005)(66946007)(66476007)(478600001)(2906002)(10290500003)(8936002)(36756003)(316002)(6512007)(8676002)(6486002)(4326008)(81166006)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0936;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 721nPN76q1jge6wSCTze1ofIEHEtBY7wmVGXLj4nDNkZJkB0b6rjzmYlknHyw+mlzqYNQ3BCYM9fvV9eeXbu937vwC1dP5SCJuuAFv+E4z5oXB7R4qNvb37bmQyvTZ0PLhFmPXqMYM2PrDGXtKz/1/+ni3z71gTLxnJjgMHHChXtSR0hWoXSYO2574NlXQyxn3kqUjUDahq3gUFZ8Cz9kfMuMYQlCIbR5DHvyS2Eqbw2TA4/Cs0ruqSl4JocmRY9TkYCOd6hiiRCb0A6bndNq7sduYXY8twXf4lEHQE6JZvTA2nMcVmjeEtmrVphdsWlW6c6VnyQ8OCMqDDl81q9SKHG1khYlR9a3tZ2hkkZ4h5PJrF/WF+5m/lUDmGJRX96QwZ2ST1dMGQnPKb5kjGbkZQ0AoCmH8QbK9XJF1fNiYxaYsTAonVbWvEp07QalwjS
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad1b826-c6f4-40ec-ff8e-08d78d64cb67
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2019 20:13:54.9608
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6d6Hz75D50qJQ6JnJ/H+vluiTK92w9f4DgRn6tth62QtC8YnTr3lKeS/RaOY7Dxymgzsa2zhni6qv4TlCa2U9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0936
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dev_num for vmbus device based on channel offer sequence.
-Use this number for nic naming, and enable async probing.
+A recent test of efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000 crashed with
+a signature of:
 
-Haiyang Zhang (3):
-  Drivers: hv: vmbus: Add a dev_num variable based on channel offer
-    sequence
-  Drivers: hv: vmbus: Add dev_num to sysfs
-  hv_netvsc: Name NICs based on vmbus offer sequence and use async probe
+    BUG: unable to handle page fault for address: ffffffffff281000
+    [..]
+    RIP: 0010:efi_memmap_insert+0x11d/0x191
+    [..]
+    Call Trace:
+     ? bgrt_init+0xbe/0xbe
+     ? efi_arch_mem_reserve+0x1cb/0x228
+     ? acpi_parse_bgrt+0xa/0xd
+     ? acpi_table_parse+0x86/0xb8
+     ? acpi_boot_init+0x494/0x4e3
+     ? acpi_parse_x2apic+0x87/0x87
+     ? setup_acpi_sci+0xa2/0xa2
+     ? setup_arch+0x8db/0x9e1
+     ? start_kernel+0x6a/0x547
+     ? secondary_startup_64+0xb6/0xc0
 
- Documentation/ABI/stable/sysfs-bus-vmbus |  8 +++++++
- drivers/hv/channel_mgmt.c                | 38 ++++++++++++++++++++++++++++++--
- drivers/hv/vmbus_drv.c                   | 13 +++++++++++
- drivers/net/hyperv/netvsc_drv.c          | 18 ++++++++++++---
- include/linux/hyperv.h                   |  6 +++++
- 5 files changed, 78 insertions(+), 5 deletions(-)
+efi_memmap_insert() is attempting to insert entries past the end of the
+new map. This condition is setup by efi_fake_mem() leaking empty entries
+to the end of memory map, and then efi_arch_mem_reserve() trips over the
+bad entry when attempting an additional efi_memmap_insert(). The empty
+entry causes efi_memmap_insert() to attempt more memmap splits / copies
+than efi_memmap_split_count() accounted for when sizing the new map.
 
--- 
-1.8.3.1
+Update efi_fake_memmap() to cleanup lagging empty entries.
+
+This change is related to commit af1648984828 "x86/efi: Update e820 with
+reserved EFI boot services data to fix kexec breakage" since that
+introduces more occurrences where efi_memmap_insert() is invoked after
+an efi_fake_mem= configuration has been parsed. Previously the side
+effects of vestigial empty entries were benign, but with commit
+af1648984828 that follow-on efi_memmap_insert() invocation triggers the
+above crash signature.
+
+Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
+Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
+Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: Michael Weiser <michael@weiser.dinsnail.net>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/firmware/efi/fake_mem.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+index bb9fc70d0cfa..6df51ba93ae8 100644
+--- a/drivers/firmware/efi/fake_mem.c
++++ b/drivers/firmware/efi/fake_mem.c
+@@ -67,13 +67,33 @@ void __init efi_fake_memmap(void)
+ 		return;
+ 	}
+ 
++	memset(new_memmap, 0, efi.memmap.desc_size * new_nr_map);
+ 	for (i = 0; i < nr_fake_mem; i++)
+ 		efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
+ 
++	/*
++	 * efi_memmap_split_count() may over count the number of
++	 * required splits in the case when contiguous fake entries are
++	 * specified. Check that all new_nr_map entries were consumed.
++	 */
++	for (i = new_nr_map; i > 0; i--) {
++		efi_memory_desc_t *md;
++		u64 start, end;
++
++		md = new_memmap + efi.memmap.desc_size * (new_nr_map - i - 1);
++		end = md->phys_addr + (md->num_pages << EFI_PAGE_SHIFT) - 1;
++		start = md->phys_addr;
++
++		if (start == 0 && end + 1 == 0)
++			continue;
++		break;
++	}
++
+ 	/* swap into new EFI memmap */
+ 	early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
+ 
+-	efi_memmap_install(new_memmap_phy, new_nr_map);
++	/* install only the valid entries */
++	efi_memmap_install(new_memmap_phy, i);
+ 
+ 	/* print new EFI memmap */
+ 	efi_print_memmap();
 
