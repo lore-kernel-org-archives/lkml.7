@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCBEC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE976C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89DE206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D712071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="mqnQsIA+"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="iQLU0DZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfL3Obq (ORCPT
+        id S1727604AbfL3Obz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:31:46 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:39822 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:31:55 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:40070 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfL3Obq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:31:46 -0500
+        id S1727397AbfL3Obz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:31:55 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id 416111B2189B; Mon, 30 Dec 2019 17:31:43 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 416111B2189B
+        id EC3991B205DF; Mon, 30 Dec 2019 17:31:52 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru EC3991B205DF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716303; bh=GSv5uxS8JB5ZFL1df4FA5xdldqWieg3v4SkX8gUq2MY=;
+        t=1577716313; bh=18voDyGBMtcwId3z4bi4wS1wyOebnKJGhqqk04an6a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=mqnQsIA+caFid+jH4yK8H0odndwsP0uIaIt8YUT+ukX7t/jLzShPmdY9kPh98ogfG
-         rZDnSwhTDruv0lx/leNjumvsjn2gDn9WA1DtUHSzdXNW22oX1jfYoBadbs2zpLOjML
-         9jbuUhalzrWEC4jgmQpxwJsEEQTQkGcb9myd2l+A=
+        b=iQLU0DZfS2ARZJQSoCBYhABscHZQr0JgJNiEKhpGUuZBFdlf2/mzRHdDXeUsh8qbk
+         Jy7Q+RLhH+MN/jiJ2fTC4aoUW8UfsFiIe5JB75aFQZ3efdWXA1fwcSZbKJWxDvBCMi
+         blmJygWcLItkSbGCtLgIBcHq5eg1+Qf15PfC9Lh0=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id 286831B20805;
-        Mon, 30 Dec 2019 17:31:07 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 286831B20805
+        by fd.dlink.ru (Postfix) with ESMTP id D7C7E1B205DF;
+        Mon, 30 Dec 2019 17:31:08 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D7C7E1B205DF
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 71F111B229CB;
-        Mon, 30 Dec 2019 17:31:05 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 1E48A1B229D1;
+        Mon, 30 Dec 2019 17:31:07 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:05 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:07 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 02/19] net: dsa: add GRO support infrastructure
-Date:   Mon, 30 Dec 2019 17:30:10 +0300
-Message-Id: <20191230143028.27313-3-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 03/19] net: dsa: tag_ar9331: add .flow_dissect() callback
+Date:   Mon, 30 Dec 2019 17:30:11 +0300
+Message-Id: <20191230143028.27313-4-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,134 +79,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add .gro_receive() (with shortcut) and .gro_complete() callbacks to
-tagger ops and basic ETH_P_XDSA packet_offload with wrappers around
-them, so DSA-tagged frames can now be processed within GRO layer if
-the particular tagger implements this (will be added in subsequent
-patches).
-
-Note: no need to take RCU read locks in dsa_gro_receive() and
-dsa_gro_complete() as dev->cpu_dp is not RCU-protected, at least
-for now. The corresponding locks must be taken in the actual
-tagger callbacks.
+...to make RPS work correctly if user would like to configure it.
+Misc: fix identation of ar9331_netdev_ops structure.
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- include/net/dsa.h |  5 +++++
- net/dsa/dsa.c     | 43 +++++++++++++++++++++++++++++++++++++++++--
- net/dsa/dsa2.c    |  1 +
- 3 files changed, 47 insertions(+), 2 deletions(-)
+ net/dsa/tag_ar9331.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 633d9894ab87..8a7f80709d51 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -79,6 +79,9 @@ struct dsa_device_ops {
- 	 * as regular on the master net device.
- 	 */
- 	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
-+	struct sk_buff *(*gro_receive)(struct list_head *head,
-+				       struct sk_buff *skb);
-+	int (*gro_complete)(struct sk_buff *skb, int nhoff);
- 	unsigned int overhead;
- 	const char *name;
- 	enum dsa_tag_protocol proto;
-@@ -170,6 +173,8 @@ struct dsa_port {
- 	struct sk_buff *(*rcv)(struct sk_buff *skb, struct net_device *dev,
- 			       struct packet_type *pt);
- 	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
-+	struct sk_buff *(*gro_receive)(struct list_head *head,
-+				       struct sk_buff *skb);
- 
- 	enum {
- 		DSA_PORT_TYPE_UNUSED = 0,
-diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
-index 17281fec710c..9a8d8ce7473c 100644
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -243,6 +243,34 @@ static int dsa_switch_rcv(struct sk_buff *skb, struct net_device *dev,
- 	return 0;
+diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
+index 466ffa92a474..399ca21ec03b 100644
+--- a/net/dsa/tag_ar9331.c
++++ b/net/dsa/tag_ar9331.c
+@@ -83,12 +83,20 @@ static struct sk_buff *ar9331_tag_rcv(struct sk_buff *skb,
+ 	return skb;
  }
  
-+static struct sk_buff *dsa_gro_receive(struct list_head *head,
-+				       struct sk_buff *skb)
++static void ar9331_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
++				    int *offset)
 +{
-+	const struct dsa_port *cpu_dp = skb->dev->dsa_ptr;
-+	struct sk_buff *pp = NULL;
-+	int flush = 1;
-+
-+	if (unlikely(!cpu_dp) || !cpu_dp->gro_receive)
-+		goto flush;
-+
-+	pp = cpu_dp->gro_receive(head, skb);
-+	flush = 0;
-+
-+flush:
-+	skb_gro_flush_final(skb, pp, flush);
-+	return pp;
++	*offset = AR9331_HDR_LEN;
++	*proto = *(__be16 *)skb->data;
 +}
 +
-+static int dsa_gro_complete(struct sk_buff *skb, int nhoff)
-+{
-+	const struct dsa_port *cpu_dp = skb->dev->dsa_ptr;
-+
-+	if (likely(cpu_dp) && cpu_dp->tag_ops->gro_complete)
-+		return cpu_dp->tag_ops->gro_complete(skb, nhoff);
-+
-+	return -ENOENT;
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static bool dsa_is_port_initialized(struct dsa_switch *ds, int p)
- {
-@@ -298,8 +326,17 @@ EXPORT_SYMBOL_GPL(dsa_switch_resume);
- #endif
- 
- static struct packet_type dsa_pack_type __read_mostly = {
--	.type	= cpu_to_be16(ETH_P_XDSA),
--	.func	= dsa_switch_rcv,
-+	.type		= htons(ETH_P_XDSA),
-+	.func		= dsa_switch_rcv,
-+};
-+
-+static struct packet_offload dsa_pack_offload __read_mostly = {
-+	.type		= htons(ETH_P_XDSA),
-+	.priority	= 10,
-+	.callbacks	= {
-+		.gro_receive	= dsa_gro_receive,
-+		.gro_complete	= dsa_gro_complete,
-+	},
+ static const struct dsa_device_ops ar9331_netdev_ops = {
+-	.name	= "ar9331",
+-	.proto	= DSA_TAG_PROTO_AR9331,
+-	.xmit	= ar9331_tag_xmit,
+-	.rcv	= ar9331_tag_rcv,
+-	.overhead = AR9331_HDR_LEN,
++	.name		= "ar9331",
++	.proto		= DSA_TAG_PROTO_AR9331,
++	.xmit		= ar9331_tag_xmit,
++	.rcv		= ar9331_tag_rcv,
++	.flow_dissect	= ar9331_tag_flow_dissect,
++	.overhead	= AR9331_HDR_LEN,
  };
  
- static struct workqueue_struct *dsa_owq;
-@@ -430,6 +467,7 @@ static int __init dsa_init_module(void)
- 		goto register_notifier_fail;
- 
- 	dev_add_pack(&dsa_pack_type);
-+	dev_add_offload(&dsa_pack_offload);
- 
- 	dsa_tag_driver_register(&DSA_TAG_DRIVER_NAME(none_ops),
- 				THIS_MODULE);
-@@ -448,6 +486,7 @@ static void __exit dsa_cleanup_module(void)
- 	dsa_tag_driver_unregister(&DSA_TAG_DRIVER_NAME(none_ops));
- 
- 	dsa_slave_unregister_notifier();
-+	dev_remove_offload(&dsa_pack_offload);
- 	dev_remove_pack(&dsa_pack_type);
- 	destroy_workqueue(dsa_owq);
- }
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index c66abbed4daf..5f66e0280e8e 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -631,6 +631,7 @@ static int dsa_port_parse_cpu(struct dsa_port *dp, struct net_device *master)
- 	}
- 
- 	dp->type = DSA_PORT_TYPE_CPU;
-+	dp->gro_receive = tag_ops->gro_receive;
- 	dp->filter = tag_ops->filter;
- 	dp->rcv = tag_ops->rcv;
- 	dp->tag_ops = tag_ops;
+ MODULE_LICENSE("GPL v2");
 -- 
 2.24.1
 
