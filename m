@@ -2,143 +2,128 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DADC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A580C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E9020718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577692460;
-	bh=bJDNc7WOEOhsluiRkjaDLFSfHyP8p2sXkC1PCBhHw44=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e4x2QAE9OkO9TbplXQwe1+06OHmuJvoMb9IEaiQh1sXYSoaqcWdmgXIW/RBoKZev1
-	 PkusTKeDOhOjpxGU9yM9Grpj4FbVb5r1SkXlynyLmvCG8hRt6dU+KgVmoeJqs6xhQn
-	 zqddFsPKB8OCvJ7e+hS/jGruVVXSugxgqNkwhDvU=
+	by mail.kernel.org (Postfix) with ESMTP id DF55A2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfL3HyH (ORCPT
+        id S1727236AbfL3IMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 02:54:07 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37650 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfL3HyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 02:54:07 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o13so21075942ljg.4
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 23:54:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UPYZanyjmH24ggFQ0lPuYSWOsbulZsh973CIm+qG+bk=;
-        b=Cx3+XC85If9Oc3+SnG+zaiVL3sW0ltnO4/9ZE8Ra0eb06emSRYR1g1CetfkcslqRDu
-         zngUIRfNBEw2+zHB+1VIS6HcdT6io8j0lKAIdKyWkqzg0NCQXe4euoQAsTWtdle3aXn2
-         1oukdDy3yiimYe6rjVLG8s6wv0hhJ97hy/Dzw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UPYZanyjmH24ggFQ0lPuYSWOsbulZsh973CIm+qG+bk=;
-        b=Bmb6YJSyL6xDDfo+sPOgMBPVgfOo9EUUaKZi48LhkAAuTK/v4gCb6GSNriemKgoJXB
-         Ibb5W/Wio59bHPSIDp8SC9E60UuYKKJJpRIqpDaWnVUlT8H6eAFqI08D5Z1mQ30eSXA1
-         5eixyb+GKWCC+13I+aaCbRpfSVU7xBg7iIUJGoCzXZcpm9gWeAZxy3rf3/UK7jablqs3
-         7TGyI/eKA92JP+QrPedK+TfmlsNICK8PgfxJAxt2ikFCd50Y/Nay7/0/1XVOy202chxp
-         5fgYbcqJgOSdTifzInnrZ0K0N1AraFjCu1lWGY4Yf2XFYTkdTGYjFDJ4QlSuNlRuEieK
-         LKjA==
-X-Gm-Message-State: APjAAAXEBBXTK/+Vc+1Gy8XlalVRzlCQbls2qjEGxkXXsO0Gx0w5KahP
-        2vSkFgn9eP/GoAB3ro4gmgKX/FI20nc=
-X-Google-Smtp-Source: APXvYqyCWVz/U25mLDYyM311khmfXSQqDFjiyMVhwgZxZTnYN6gsxz+IiIAB48Fg9+//UE4lwWpJUQ==
-X-Received: by 2002:a2e:9806:: with SMTP id a6mr36877385ljj.178.1577692445057;
-        Sun, 29 Dec 2019 23:54:05 -0800 (PST)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id w9sm17051030ljh.106.2019.12.29.23.54.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Dec 2019 23:54:04 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id h23so32496716ljc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Dec 2019 23:54:03 -0800 (PST)
-X-Received: by 2002:a2e:9041:: with SMTP id n1mr37567234ljg.133.1577692443206;
- Sun, 29 Dec 2019 23:54:03 -0800 (PST)
+        Mon, 30 Dec 2019 03:12:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8205 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727158AbfL3IMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 03:12:06 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 692DD9AA0CF7A4652F84;
+        Mon, 30 Dec 2019 16:12:02 +0800 (CST)
+Received: from [127.0.0.1] (10.184.52.56) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
+ 16:11:51 +0800
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bjorn@helgaas.com>, <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <wangkefeng.wang@huawei.com>, <huawei.libin@huawei.com>,
+        <guohanjun@huawei.com>
+References: <20191218142831.GA101587@google.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <dfd3ad93-7c17-abb2-b620-99df5c984fd4@huawei.com>
+Date:   Mon, 30 Dec 2019 16:11:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-References: <20191230052036.8765-1-cyphar@cyphar.com> <20191230054413.GX4203@ZenIV.linux.org.uk>
- <20191230054913.c5avdjqbygtur2l7@yavin.dot.cyphar.com> <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
-In-Reply-To: <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 29 Dec 2019 23:53:47 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
-Message-ID: <CAHk-=whxNw7hYT6bJn9mVrB_a=7Y-irmpaPsp1R4xbHHkicv7g@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over symlinks
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191218142831.GA101587@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.52.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 11:30 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
->
->     BUG: kernel NULL pointer dereference, address: 0000000000000000
+Hi, Bjorn
 
-Would you mind building with debug info, and then running the oops through
+On 2019/12/18 22:28, Bjorn Helgaas wrote:
+> On Wed, Dec 18, 2019 at 05:16:03PM +0800, Xiongfeng Wang wrote:
+>> On 2019/12/11 12:10, Bjorn Helgaas wrote:
+>>> On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
+>>> <wangxiongfeng2@huawei.com> wrote:
+>>>> On 2019/12/7 2:10, Bjorn Helgaas wrote:
+>>>>> On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+>>>>>> HiSilicon PCI Network Processor 5896 devices misreport the
+>>>>>> class type as 'NOT_DEFINED', but it is actually a network
+>>>>>> device. Also the size of BAR3 is reported as 265T, but this BAR
+>>>>>> is actually unused.  This patch modify the class type to
+>>>>>> 'CLASS_NETWORK' and disable the unused BAR3.
+> 
+>>>>> The question is not whether the BAR is used by the driver; the
+>>>>> question is whether the device responds to accesses to the
+>>>>> region described by the BAR when PCI_COMMAND_MEMORY is turned
+>>>>> on.
+>>>>
+>>>> I asked the hardware engineer. He said I can not write an address
+>>>> into that BAR.
+>>>
+>>> If the BAR is not writable, I think sizing should fail, so I
+>>> suspect some of the bits are actually writable.
+>>
+>> Sorry for the delayed response. It's not so convenient for me to get
+>> to the hardware guys.  BAR0 BAR1 BAR2 are 32-bit and can be used to
+>> access the registers and memory within 5896 devices. These three
+>> BARs can meet the need for most scenario.  BAR3 is 64-bit and can be
+>> used to access all the registers and memory within 5896 devices.
+>> (BAR3 is writable. Sorry for the non-confirmed information before.)
+>> But BAR3 is not used by the driver and the size is very
+>> large（larger than 100G, still didn't get the precise size）.  So I
+>> think maybe we can disable this BAR for now, otherwise the
+>> unassigned resource will cause 'pci_enable_device()' returning
+>> failure.
+> 
+> Here's the problem: the proposed patch (below) clears the struct
+> resource corresponding to BAR 3, but that doesn't actually disable the
+> BAR.  It hides the BAR from Linux, so Linux will pretend it doesn't
+> exist, but it's still there in the hardware.
+> 
+> The hardware BAR 3 still contains some value (possibly zero), and if
+> PCI_COMMAND_MEMORY is set (which you need to do if you want to use
+> *any* memory BARs on the device), the device will respond to any
+> transactions in the BAR 3 range.  Depending on the topology and all
+> the other BAR and window assignments, this may cause address
+> conflicts.
 
- scripts/decode_stacktrace.sh
+I have checked with the hardware engineer. He said the transactions have some
+bits to indicate whether the address is 32-bit or 64-bit. The device will respond
+only when the 64-bit address transactions is in the BAR3 range.
 
-which makes those addresses much more legible.
+So I think, if I clear the resource corresponding to BAR3, the 64-bit window of the
+downport is empty. There will be no 64-bit address transaction sent to the device.
 
->     #PF: supervisor instruction fetch in kernel mode
->     #PF: error_code(0x0010) - not-present page
+Thanks,
+Xiongfeng
 
-Somebody jumped through a NULL pointer.
+> 
+> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> + * when assigning the resources. But this BAR is actually unused by the driver,
+> + * so let's disable it.
+> + */
+> +static void quirk_hisi_fixup_np_bar(struct pci_dev *pdev)
+> +{
+> +       struct resource *r = &pdev->resource[3];
+> +
+> +       r->start = 0;
+> +       r->end = 0;
+> +       r->flags = 0;
+> +
+> +       pci_info(pdev, "Disabling invalid BAR 3\n");
+> 
+> .
+> 
 
->     RAX: 0000000000000000 RBX: ffff906d0cc3bb40 RCX: 0000000000000abc
->     RDX: 0000000000000089 RSI: ffff906d74623cc0 RDI: ffff906d74475df0
->     RBP: ffff906d74475df0 R08: ffffd70b7fb24c20 R09: ffff906d066a5000
->     R10: 0000000000000000 R11: 8080807fffffffff R12: ffff906d74623cc0
->     R13: 0000000000000089 R14: ffffb70b82963dc0 R15: 0000000000000080
->     FS:  00007fbc2a8f0540(0000) GS:ffff906dcf500000(0000) knlGS:0000000000000000
->     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->     CR2: ffffffffffffffd6 CR3: 00000003c68f8001 CR4: 00000000003606e0
->     Call Trace:
->      __lookup_slow+0x94/0x160
-
-And "__lookup_slow()" has two indirect calls (they aren't obvious with
-retpoline, but look for something  like
-
-        call __x86_indirect_thunk_rax
-
-which is the modern sad way of doing "call *%rax"). One is for
-revalidatinging an old dentry, but the one I _suspect_ you trigger is
-this one:
-
-                old = inode->i_op->lookup(inode, dentry, flags);
-
-but I thought we only could get here if we know it's a directory.
-
-How did we miss the "d_can_lookup()", which is what should check that
-yes, we can call that ->lookup() routine.
-
-This is why I have that suspicion that it's somehow that O_PATH fd
-opened in another process without O_PATH causes confusion...
-
-So what I think has happened is that because of the O_PATH thing,
-we've ended up with an inode that has never been truly opened (because
-O_PATH skips that part), but then with the /proc/<pid>/fd/xyz open, we
-now have a file descriptor that _looks_ like it is valid, and we're
-treating that inode as if it can be used.
-
-But I'm handwaving.
-
-             Linus
