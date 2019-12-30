@@ -2,95 +2,97 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B5C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67ECC2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE72F2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577733351;
-	bh=Di7rnIR7c21+Vdrdl1E5rG0N/9TZyCG7j0ogQSbim70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2biB4ejLx/gjfwUN4zFmYIk5dI5SiX+Ipt/Shos40/blXEF7Zljk+qfJOxqHeLRjM
-	 35aJFv3B2Q1zbAOhc9K1ikEfB0az5U1v24h+KVkv/YIGiALVYhF2V8fZXN37UcU6yZ
-	 xHEbc15ATIgYzuOqXJpScSIMf07pdSEEjNDvjRak=
+	by mail.kernel.org (Postfix) with ESMTP id A76FF206CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 19:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCn54CQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfL3TPu (ORCPT
+        id S1727670AbfL3TQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 14:15:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727642AbfL3TPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 14:15:50 -0500
-Received: from zzz.localdomain (h75-100-12-111.burkwi.broadband.dynamic.tds.net [75.100.12.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6F3206CB;
-        Mon, 30 Dec 2019 19:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577733349;
-        bh=Di7rnIR7c21+Vdrdl1E5rG0N/9TZyCG7j0ogQSbim70=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gCA5m3JvAiuvkGK7SGTzVPxv3P3psUWpEKTm25af8SjUIDzgNI4CBysSlQskQ8bkL
-         CIvYLWMpYSq9yDLL2fkaDB6WWZkaQtLvs0cFeanutrsITQ7lmRkWIB8qaifb6FWAzD
-         DqjTgR6b1vDY6hvWhHkvt4ZGJMvwn25s5rMIWcqI=
-Date:   Mon, 30 Dec 2019 13:15:47 -0600
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] locking/refcount: add sparse annotations to dec-and-lock
- functions
-Message-ID: <20191230191547.GA1501@zzz.localdomain>
-References: <20191226152922.2034-1-ebiggers@kernel.org>
- <20191228114918.GU2827@hirez.programming.kicks-ass.net>
- <201912301042.FB806E1133@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201912301042.FB806E1133@keescook>
+        Mon, 30 Dec 2019 14:16:56 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34199 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfL3TQ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 14:16:56 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z22so29474405ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 11:16:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2D2t+eSg4QG+s4jK6O1pZ5X/RZmpvggD5itTQSAD5wU=;
+        b=lCn54CQu5YO9edKRzdlhiFDVb1Lu+wlktqN/uSZ1qzEUej2czty2dLQcP8wCNnfSXS
+         bearQKxSDyBVvOvT9orrboNag58xow+bTU6n1LxUfT19xkhwUU/tA/sFCGG5yekYuvc7
+         jQvWaOgtTGLJYiZcco9yCZuC0ZzCfA8aIJNtb918loeg4QuSBw0G8s5UzGEOvuGLsHTX
+         9w+a2/QMf3rO1lt8WboOy82jaBMo8DuJAjz7jBxKDh6Oh7vfS8oQAwWQpllG3tnW5gjk
+         ay+s/b69/5T1dHiLArN0CumJHu3IG/ZKB8Rs5MGGu7Oo0ExQlfIYwCXgKg+A0hX2aoKb
+         5XsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2D2t+eSg4QG+s4jK6O1pZ5X/RZmpvggD5itTQSAD5wU=;
+        b=tWzz0RzYyyzmPTARvWmirHnnn9VOyc74358d2N61qGnuwEmgMoY/6eJBVLGCHyv9Od
+         g+aMu+aaht2+4GARtcB8F0pU2L+ZayJ9zI+FdMjS74vmB4BQf+1suPqX6SB9H/Zl3b8O
+         E0cpLN8eeouVlyqplgLV/MVE0YpUZJbwxM4UV84xUr6eBrPaMle3rKE1B8ogdJVuRmQm
+         8EcRZNc2Br1QqLb8NnjK6zUsL758VBGE4Nj/EOODWQztNNeX5lOi4SyTBxDRCG2HuM+b
+         NVr+8jJKuWprN8LU9Pg1oenyYC3E/ho2ySE1PkcqPH2Mtmfc2x94jYRm6qtFUlVacXNI
+         fXoA==
+X-Gm-Message-State: APjAAAW3ir5byjZLY/qEyTvgIEE9nwb1onEHrrf32ffg18hZVj3fpHdf
+        Ej9hq7wu5LMF5WQQdzmeOKX4ADiSvvQ=
+X-Google-Smtp-Source: APXvYqwQbW7GM/1og1qFIYXhk9BYNhR5LXeP1g7+F+E3JS+BKC1EgNjYtGtzZISMqSiMtxeC3JixHw==
+X-Received: by 2002:a2e:854b:: with SMTP id u11mr23559034ljj.90.1577733414069;
+        Mon, 30 Dec 2019 11:16:54 -0800 (PST)
+Received: from localhost.localdomain (188.146.101.166.nat.umts.dynamic.t-mobile.pl. [188.146.101.166])
+        by smtp.gmail.com with ESMTPSA id b19sm13410788ljk.25.2019.12.30.11.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 11:16:53 -0800 (PST)
+From:   mateusznosek0@gmail.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>,
+        gregkh@linuxfoundation.org, tj@kernel.org
+Subject: [PATCH] fs/kernfs/dir.c: Clean code by removing always true condition
+Date:   Mon, 30 Dec 2019 20:16:28 +0100
+Message-Id: <20191230191628.21099-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 10:43:20AM -0800, Kees Cook wrote:
-> On Sat, Dec 28, 2019 at 12:49:18PM +0100, Peter Zijlstra wrote:
-> > On Thu, Dec 26, 2019 at 09:29:22AM -0600, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > > 
-> > > Wrap refcount_dec_and_lock() and refcount_dec_and_lock_irqsave() with
-> > > macros using __cond_lock() so that 'sparse' doesn't report warnings
-> > > about unbalanced locking when using them.
-> > > 
-> > > This is the same thing that's done for their atomic_t equivalents.
-> > > 
-> > > Don't annotate refcount_dec_and_mutex_lock(), because mutexes don't
-> > > currently have sparse annotations.
-> > 
-> > I so f'ing hate that __cond_lock() crap. Previously I've suggested
-> > fixing sparse instead of making such an atrocious trainwreck of the
-> > code.
-> 
-> Ew, I never noticed these before. That is pretty ugly. Can't __acquire()
-> be used directly in the functions instead of building the nasty
-> wrappers?
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-The annotation needs to go in the .h file, not the .c file, because sparse only
-analyzes individual translation units.
+Previously there was an additional check if variable pos is not null.
+However, this check happens after entering while loop and only then,
+which can happen only if pos is not null.
+Therefore the additional check is redundant and can be removed.
 
-It needs to be a wrapper macro because it needs to tie the acquisition of the
-lock to the return value being true.  I.e. there's no annotation you can apply
-directly to the function prototype that means "if this function returns true, it
-acquires the lock that was passed in parameter N".
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+---
+ fs/kernfs/dir.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Eric
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 9d96e6871e1a..9aec80b9d7c6 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -1266,7 +1266,7 @@ void kernfs_activate(struct kernfs_node *kn)
+ 
+ 	pos = NULL;
+ 	while ((pos = kernfs_next_descendant_post(pos, kn))) {
+-		if (!pos || (pos->flags & KERNFS_ACTIVATED))
++		if (pos->flags & KERNFS_ACTIVATED)
+ 			continue;
+ 
+ 		WARN_ON_ONCE(pos->parent && RB_EMPTY_NODE(&pos->rb));
+-- 
+2.17.1
+
