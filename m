@@ -2,137 +2,74 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89801C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD9C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616A120718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F5820718
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 12:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfL3M5L (ORCPT
+        id S1727473AbfL3M62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 07:57:11 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48084 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfL3M5K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 07:57:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id 13so21873196iof.14
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Dec 2019 04:57:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tnkYtrbdew+MN41IN97wTeyB1Jrg9T1wVOo2UqHaUeY=;
-        b=tlge+Sx1ydR3WxYg6Qf7q/SnVp53eJ2BPljyEn5vV+qg3D1KD7xMvw2aew4uvXjPb+
-         ZtoFxr64ipKR7XITEejSkHoFc97UMwFUj7JeOGyeBxNSopg4GUoZ/uDnV+DSgOoSZAqJ
-         e4zT/7mBXLP28h7ks8RZRzV18tu2MfpFFgiazL8RicOYxslkbu7FYuVn2TgeoCMQArv/
-         UPYu6cxy5Dd3/YYMafMCcSNWmCgS78iW/Fug6eel3oQh7Dy5cNBbHG0ViWAHT/mKxku6
-         a3Qq4fMhnxmE4DD/smqz6gneJTqWUMJLmI4StkoXY5CxP2Wk92G96GBIkPZzZCEgZf5j
-         cZ0w==
-X-Gm-Message-State: APjAAAWKcPB0KqyDqBn7KHjoLe36HGD7gH+vnjHGK3AC9SObySBgSnLK
-        VcqrXRAsXdAulkjMkKoxjxcJkuqb1MCxIUSes8G1xcTuhvV+
-X-Google-Smtp-Source: APXvYqy2Q5VkNJOxwSuSJV6v3bn4MTQHxuuQHj4AqBH+FxRx1N/r4quqH+cQlslaIsdmifjdLR4XqFQB11M0UDhmRSr/z3GMPRe1
+        Mon, 30 Dec 2019 07:58:28 -0500
+Received: from mga04.intel.com ([192.55.52.120]:52889 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727397AbfL3M62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 07:58:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 04:58:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,375,1571727600"; 
+   d="scan'208";a="221128271"
+Received: from zeliteleevi.tm.intel.com ([10.237.55.130])
+  by orsmga003.jf.intel.com with ESMTP; 30 Dec 2019 04:58:25 -0800
+Date:   Mon, 30 Dec 2019 14:58:25 +0200 (EET)
+From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@zeliteleevi
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 102/219] ALSA: hda/hdmi - implement mst_no_extra_pcms
+ flag
+In-Reply-To: <20191230113214.GB10304@amd>
+Message-ID: <alpine.DEB.2.21.1912301453150.16459@zeliteleevi>
+References: <20191229162508.458551679@linuxfoundation.org> <20191229162523.844585380@linuxfoundation.org> <20191230113214.GB10304@amd>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 MIME-Version: 1.0
-X-Received: by 2002:a02:c988:: with SMTP id b8mr52321758jap.122.1577710630038;
- Mon, 30 Dec 2019 04:57:10 -0800 (PST)
-Date:   Mon, 30 Dec 2019 04:57:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a976b0059aeb6199@google.com>
-Subject: WARNING in bpf_base_func_proto (2)
-From:   syzbot <syzbot+74c1db5d80df1fdaef0c@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        netdev@vger.kernel.org, rostedt@goodmis.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On Mon, 30 Dec 2019, Pavel Machek wrote:
 
-HEAD commit:    2bbc078f Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14cb1a56e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8eefa608be32ca37
-dashboard link: https://syzkaller.appspot.com/bug?extid=74c1db5d80df1fdaef0c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> > 
+> > [ Upstream commit 2a2edfbbfee47947dd05f5860c66c0e80ee5e09d ]
+> > 
+> > To support the DP-MST multiple streams via single connector feature,
+> > the HDMI driver was extended with the concept of backup PCMs. See
+> > commit 9152085defb6 ("ALSA: hda - add DP MST audio support").
+[...]
+> This variable is not ever set in this patch, nor is it set elsewhere
+> in 4.19-stable. This means this patch is not suitable for stable.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+ack on that. In upstream this flag is only used by SOF (sound/soc/sof)
+currently, but SOF is not part of 4.19, so there are no users for this 
+flag. Sorry for not catching this sooner.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+74c1db5d80df1fdaef0c@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-Could not allocate percpu trace_printk buffer
-WARNING: CPU: 0 PID: 9591 at kernel/trace/trace.c:3112  
-alloc_percpu_trace_buffer kernel/trace/trace.c:3112 [inline]
-WARNING: CPU: 0 PID: 9591 at kernel/trace/trace.c:3112  
-trace_printk_init_buffers+0x5b/0x60 kernel/trace/trace.c:3126
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9591 Comm: syz-executor.2 Not tainted 5.5.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:alloc_percpu_trace_buffer kernel/trace/trace.c:3112 [inline]
-RIP: 0010:trace_printk_init_buffers+0x5b/0x60 kernel/trace/trace.c:3126
-Code: ff be 04 00 00 00 bf 04 10 00 00 e8 ef 7f 24 00 48 85 c0 0f 85 e8 37  
-00 00 e8 31 58 fb ff 48 c7 c7 80 a9 2f 88 e8 94 ff cb ff <0f> 0b eb c2 90  
-55 48 89 e5 41 57 49 c7 c7 80 90 2f 88 41 56 49 89
-RSP: 0018:ffffc90001627500 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 000000000000701d RSI: ffffffff815e9606 RDI: fffff520002c4e92
-RBP: ffffc90001627510 R08: ffff8880a3ace3c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff8831d720
-R13: 0000000000000006 R14: 0000000000000006 R15: dffffc0000000000
-  bpf_get_trace_printk_proto+0xe/0x20 kernel/trace/bpf_trace.c:457
-  bpf_base_func_proto net/core/filter.c:5977 [inline]
-  bpf_base_func_proto+0x199/0x1b0 net/core/filter.c:5939
-  sk_filter_func_proto+0x84/0xa0 net/core/filter.c:6054
-  cg_skb_func_proto+0x8c/0x120 net/core/filter.c:6088
-  check_helper_call+0x143/0x4940 kernel/bpf/verifier.c:4195
-  do_check+0x6258/0x8b20 kernel/bpf/verifier.c:7972
-  bpf_check+0x73d9/0xa9ef kernel/bpf/verifier.c:9771
-  bpf_prog_load+0xe36/0x1960 kernel/bpf/syscall.c:1837
-  __do_sys_bpf+0xa4b/0x3610 kernel/bpf/syscall.c:3073
-  __se_sys_bpf kernel/bpf/syscall.c:3032 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3032
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a919
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fab38bdfc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a919
-RDX: 0000000000000048 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fab38be06d4
-R13: 00000000004c0f9d R14: 00000000004d4c28 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Br, Kai
