@@ -4,84 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0410C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41E2C2D0D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB4720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43AF20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 13:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfL3NGS (ORCPT
+        id S1727471AbfL3NPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 08:06:18 -0500
-Received: from albert.telenet-ops.be ([195.130.137.90]:43980 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbfL3NGR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 08:06:17 -0500
-Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id kD6C2100g5USYZQ06D6CbD; Mon, 30 Dec 2019 14:06:16 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ilukO-0001EE-Og; Mon, 30 Dec 2019 14:06:12 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ilukO-000852-Lb; Mon, 30 Dec 2019 14:06:12 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] drm/mipi_dbi: Fix off-by-one bugs in mipi_dbi_blank()
-Date:   Mon, 30 Dec 2019 14:06:04 +0100
-Message-Id: <20191230130604.31006-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 30 Dec 2019 08:15:01 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8649 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfL3NPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 08:15:01 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EE8631FFC469F65389ED;
+        Mon, 30 Dec 2019 21:14:57 +0800 (CST)
+Received: from DESKTOP-8RFUVS3.china.huawei.com (10.173.222.27) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 30 Dec 2019 21:14:47 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <bhelgaas@google.com>, <corbet@lwn.net>
+CC:     <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.or>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH v2] Documentation: PCI: msi-howto.rst: Fix wrong function name
+Date:   Mon, 30 Dec 2019 21:14:28 +0800
+Message-ID: <20191230131428.1200-1-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.23.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When configuring the frame memory window, the last column and row
-numbers are written to the column resp. page address registers.  These
-numbers are thus one less than the actual window width resp. height.
+pci_irq_alloc_vectors() -> pci_alloc_irq_vectors().
 
-While this is handled correctly in mipi_dbi_fb_dirty() since commit
-03ceb1c8dfd1e293 ("drm/tinydrm: Fix setting of the column/page end
-addresses."), it is not in mipi_dbi_blank().  The latter still forgets
-to subtract one when calculating the most significant bytes of the
-column and row numbers, thus programming wrong values when the display
-width or height is a multiple of 256.
-
-Fixes: 02dd95fe31693626 ("drm/tinydrm: Add MIPI DBI support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/gpu/drm/drm_mipi_dbi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index e34058c721becd6b..16bff1be4b8ac622 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -367,9 +367,9 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
- 	memset(dbidev->tx_buf, 0, len);
+v1 -> v2:
+	Add Andrew's R-b tag.
+
+ Documentation/PCI/msi-howto.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
+index 994cbb660ade..aa2046af69f7 100644
+--- a/Documentation/PCI/msi-howto.rst
++++ b/Documentation/PCI/msi-howto.rst
+@@ -283,5 +283,5 @@ or disabled (0).  If 0 is found in any of the msi_bus files belonging
+ to bridges between the PCI root and the device, MSIs are disabled.
  
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
--			 (width >> 8) & 0xFF, (width - 1) & 0xFF);
-+			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
--			 (height >> 8) & 0xFF, (height - 1) & 0xFF);
-+			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
- 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
- 			     (u8 *)dbidev->tx_buf, len);
- 
+ It is also worth checking the device driver to see whether it supports MSIs.
+-For example, it may contain calls to pci_irq_alloc_vectors() with the
++For example, it may contain calls to pci_alloc_irq_vectors() with the
+ PCI_IRQ_MSI or PCI_IRQ_MSIX flags.
 -- 
-2.17.1
+2.19.1
+
 
