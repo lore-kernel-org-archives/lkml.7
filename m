@@ -2,116 +2,357 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB1C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4092C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1D220718
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577724571;
-	bh=H+Xixm/5Bouk1S1r30r0nDOhxrKrI3dSi6dVwniIfPA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=etXzEim83fRkfWZABknMb8jFYV5oawebvdMI5l4UuXDIfucufno3VSEPbsf2fNWn0
-	 yge5X1UlFT6dL2rr7PRmZ5NtVMEeQonStkB+QZrRrA/1PvT8ad/CAf6u5/eDHCOTca
-	 MG29t767Zz6+T6seCrhuLLDNglN/q4RiCM4Aq6YY=
+	by mail.kernel.org (Postfix) with ESMTP id A2AFA20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 16:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jJUIFrAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfL3Qta (ORCPT
+        id S1727326AbfL3QvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:49:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfL3Qt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 11:49:29 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764EE206DB;
-        Mon, 30 Dec 2019 16:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577724569;
-        bh=H+Xixm/5Bouk1S1r30r0nDOhxrKrI3dSi6dVwniIfPA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X2vKkENQGmNJ7gM4pmz1GLNmrsusKX4AjWYghZtheyg5mVfDKF42eR1lC+d3i82vZ
-         GeBZHw85LSJxrUTdVwSYWZaxg8FofUsTBJz/JiEuCAQ+Br7aH1yNCtf5EkIt0mb9Ea
-         bm/j858Q6l+eWAuF7MD8XoTHMU+KFzBFI87arGCI=
-Date:   Mon, 30 Dec 2019 16:49:24 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: light: vcnl4000: Fix scale for vcnl4040
-Message-ID: <20191230164924.42614610@archlinux>
-In-Reply-To: <6adc62445cac7d16e4688aea905dc1c9cc128488.1577442112.git.agx@sigxcpu.org>
-References: <6adc62445cac7d16e4688aea905dc1c9cc128488.1577442112.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Dec 2019 11:51:19 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45744 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfL3QvT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 11:51:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUGoDto057943;
+        Mon, 30 Dec 2019 10:50:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577724613;
+        bh=y3ejdbcO06ztSrqG83DjXxIrb7+BUV7nRNT8h955s04=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jJUIFrAS+G9lq1cqC5lCsjlUaxFoTa8phca+8Wn7kVCZhzMR26EVkE7/E5cN8iKHg
+         aHBgJ0+F4TecQWK0f45s7Q7sIbydpw/UlpsWhwmjccEAuCN4QiPje35SQmtDHQsZ1O
+         Siw1ZphV65Nupj3gL9aW1KFMHUKY7uUfplqFl/6o=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBUGoCu8054701
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Dec 2019 10:50:12 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 10:50:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 10:50:12 -0600
+Received: from [158.218.113.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUGoA6F071921;
+        Mon, 30 Dec 2019 10:50:11 -0600
+Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
+ preemption of traffic classes
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+CC:     Po Liu <po.liu@nxp.com>,
+        Andre Guedes <andre.guedes@linux.intel.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
+References: <20191127094517.6255-1-Po.Liu@nxp.com>
+ <157603276975.18462.4638422874481955289@pipeline>
+ <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <87eex43pzm.fsf@linux.intel.com> <20191219004322.GA20146@khorivan>
+ <87lfr9axm8.fsf@linux.intel.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <2400f5bd-eb82-23ad-215f-bf4ae5eb66a8@ti.com>
+Date:   Mon, 30 Dec 2019 11:56:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87lfr9axm8.fsf@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Dec 2019 11:22:54 +0100
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+Hi Vinicius,
 
-> According to the data sheet the ambient sensor's scale is 0.12 lux/step
-> (not 0.024 lux/step as used by vcnl4200) when the integration time is
-> 80ms. The integration time is currently hardcoded in the driver to that
-> value.
->=20
-> See p. 8 in https://www.vishay.com/docs/84307/designingvcnl4040.pdf
->=20
-> Fixes: 5a441aade5b3 ("light: vcnl4000 add support for the VCNL4040 proxim=
-ity and light sensor")
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
-Applied to the fixes-togreg branch of iio.git.
+On 12/18/2019 08:54 PM, Vinicius Costa Gomes wrote:
+> Hi Ivan,
+> 
+> Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> writes:
+> 
+>>>>> Quoting Po Liu (2019-11-27 01:59:18)
+>>>>>> IEEE Std 802.1Qbu standard defined the frame preemption of port
+>>>>>> traffic classes. This patch introduce a method to set traffic classes
+>>>>>> preemption. Add a parameter 'preemption' in struct
+>>>>>> ethtool_link_settings. The value will be translated to a binary, each
+>>>>>> bit represent a traffic class. Bit "1" means preemptable traffic
+>>>>>> class. Bit "0" means express traffic class.  MSB represent high number
+>>>>>> traffic class.
+>>>>>>
+>>>>>> If hardware support the frame preemption, driver could set the
+>>>>>> ethernet device with hw_features and features with NETIF_F_PREEMPTION
+>>>>>> when initializing the port driver.
+>>>>>>
+>>>>>> User can check the feature 'tx-preemption' by command 'ethtool -k
+>>>>>> devname'. If hareware set preemption feature. The property would be a
+>>>>>> fixed value 'on' if hardware support the frame preemption.
+>>>>>> Feature would show a fixed value 'off' if hardware don't support the
+>>>>>> frame preemption.
+>>>
+>>> Having some knobs in ethtool to enable when/how Frame Preemption is
+>>> advertised on the wire makes sense. I also agree that it should be "on"
+>>> by default.
+>>>
+>>>>>>
+>>>>>> Command 'ethtool devname' and 'ethtool -s devname preemption N'
+>>>>>> would show/set which traffic classes are frame preemptable.
+>>>>>>
+>>>>>> Port driver would implement the frame preemption in the function
+>>>>>> get_link_ksettings() and set_link_ksettings() in the struct ethtool_ops.
+>>>>>
+>>>>> In an early RFC series [1], we proposed a way to support frame preemption. I'm
+>>>>> not sure if you have considered it before implementing this other proposal
+>>>>> based on ethtool interface so I thought it would be a good idea to bring that up
+>>>>> to your attention, just in case.
+>>>>
+>>>> Sorry, I didn't notice the RFC proposal. Using ethtool set the
+>>>> preemption just thinking about 8021Qbu as standalone. And not limit to
+>>>> the taprio if user won't set 802.1Qbv.
+>>>
+>>> I see your point of using frame-preemption "standalone", I have two
+>>> ideas:
+>>>
+>>> 1. add support in taprio to be configured without any schedule in the
+>>> "full offload" mode. In practice, allowing taprio to work somewhat
+>>> similar to (mqprio + frame-preemption), changes in the code should de
+>>> fairly small;
+>>
+>> +
+>>
+>> And if follow mqprio settings logic then preemption also can be enabled
+>> immediately while configuring taprio first time, and similarly new ADMIN
+>> can't change it and can be set w/o preemption option afterwards.
+>>
+>> So that following is correct:
+>>
+>> OPER
+>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>        base-time 10000000 \
+>>        num_tc 3 \
+>>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+>>        queues 1@0 1@1 2@2 \
+>>        preemption 0 1 1 1
+>>        flags 1
+>>
+>> then
+>> ADMIN
+>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>        base-time 12000000 \
+>>        num_tc 3 \
+>>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+>>        queues 1@0 1@1 2@2 \
+>>        preemption 0 1 1 1
+>>        sched-entry S 01 300000 \
+>>        sched-entry S 02 300000 \
+>>        flags 1
+>>
+>> then
+>> ADMIN
+>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>        base-time 13000000 \
+>>        sched-entry S 01 300000 \
+>>        sched-entry S 02 300000 \
+>>        flags 1
+>>
+>> BUT:
+>>
+>> 1) The question is only should it be in this way? I mean preemption to be
+>> enabled immediately? Also should include other parameters like
+>> fragment size.
+> 
+> We can decide what things are allowed/useful here. For example, it might
+> make sense to allow "preemption" to be changed. We can extend taprio to
+> support changing the fragment size, if that makes sense.
+> 
+The point is it make sense to configure pre-emption related parameters
+independently of taprio since they are not related. User may use just
+pre-emption to reduce latency in the communication path for their end
+application.. So there should be a way to configure it independently of
+taprio. Right??
 
-Thanks,
+>>
+>> 2) What if I want to use frame preemption with another "transmission selection
+>> algorithm"? Say another one "time sensitive" - CBS? How is it going to be
+>> stacked?
+> 
+> I am not seeing any (conceptual*) problems when plugging a cbs (for
+> example) qdisc into one of taprio children. Or, are you talking about a
+> more general problem?
+> 
 
-Jonathan
+If I understand it correctly problem is not stacking taprio with cbs,
+but rather pre-emption with other qdiscs and allow configuring
+the parameters such as frag size. How do I use frame pre-emption as
+an independent feature and configure frag size? Ethool appears to be
+better from this point of view as Ivan has mentioned below.
 
-> ---
->  drivers/iio/light/vcnl4000.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 16dacea9eadf..b0e241aaefb4 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -163,7 +163,6 @@ static int vcnl4200_init(struct vcnl4000_data *data)
->  	if (ret < 0)
->  		return ret;
-> =20
-> -	data->al_scale =3D 24000;
->  	data->vcnl4200_al.reg =3D VCNL4200_AL_DATA;
->  	data->vcnl4200_ps.reg =3D VCNL4200_PS_DATA;
->  	switch (id) {
-> @@ -172,11 +171,13 @@ static int vcnl4200_init(struct vcnl4000_data *data)
->  		/* show 54ms in total. */
->  		data->vcnl4200_al.sampling_rate =3D ktime_set(0, 54000 * 1000);
->  		data->vcnl4200_ps.sampling_rate =3D ktime_set(0, 4200 * 1000);
-> +		data->al_scale =3D 24000;
->  		break;
->  	case VCNL4040_PROD_ID:
->  		/* Integration time is 80ms, add 10ms. */
->  		data->vcnl4200_al.sampling_rate =3D ktime_set(0, 100000 * 1000);
->  		data->vcnl4200_ps.sampling_rate =3D ktime_set(0, 100000 * 1000);
-> +		data->al_scale =3D 120000;
->  		break;
->  	}
->  	data->vcnl4200_al.last_measurement =3D ktime_set(0, 0);
+Murali
 
+> * here I am considering that support for taprio without an schedule is
+>   added.
+> 
+>>
+>> In this case ethtool looks better, allowing this "MAC level" feature, to be
+>> configured separately.
+> 
+> My only issue with using ethtool is that then we would have two
+> different interfaces for "complementary" features. And it would make
+> things even harder to configure and debug. The fact that one talks about
+> traffic classes and the other transmission queues doesn't make me more
+> comfortable as well.
+> 
+> On the other hand, as there isn't a way to implement frame preemption in
+> software, I agree that it makes it kind of awkward to have it in the tc
+> subsystem.
+> 
+> At this point, I am slightly in favor of the taprio approach (yes, I am
+> biased :-), but I can be convinced otherwise. I will be only a little
+> sad if we choose to go with ethtool for now, and then add support up in
+> the stack, something similar to "ethtool -N" and "tc-flower".
+> 
+>>
+>>>
+>>> 2. extend mqprio to support frame-preemption;
+>>>
+>>>>
+>>>> As some feedback  also want to set the MAC merge minimal fragment size
+>>>> and get some more information of 802.3br.
+>>>
+>>> The minimal fragment size, I guess, also makes sense to be kept in
+>>> ethtool. That is we have a sane default, and allow the user to change
+>>> this setting for special cases.
+>>>
+>>>>
+>>>>>
+>>>>> In that initial proposal, Frame Preemption feature is configured via taprio qdisc.
+>>>>> For example:
+>>>>>
+>>>>> $ tc qdisc add dev IFACE parent root handle 100 taprio \
+>>>>>        num_tc 3 \
+>>>>>        map 2 2 1 0 2 2 2 2 2 2 2 2 2 2 2 2 \
+>>>>>        queues 1@0 1@1 2@2 \
+>>>>>        preemption 0 1 1 1 \
+>>>>>        base-time 10000000 \
+>>>>>        sched-entry S 01 300000 \
+>>>>>        sched-entry S 02 300000 \
+>>>>>        sched-entry S 04 400000 \
+>>>>>        clockid CLOCK_TAI
+>>>>>
+>>>>> It also aligns with the gate control operations Set-And-Hold-MAC and Set-And-
+>>>>> Release-MAC that can be set via 'sched-entry' (see Table 8.7 from
+>>>>> 802.1Q-2018 for further details.
+>>>>
+>>>> I am curious about Set-And-Hold-Mac via 'sched-entry'. Actually, it
+>>>> could be understand as guardband by hardware preemption. MAC should
+>>>> auto calculate the nano seconds before  express entry slot start to
+>>>> break to two fragments. Set-And-Hold-MAC should minimal larger than
+>>>> the fragment-size oct times.
+>>>
+>>> Another interesting point. My first idea is that when the schedule is
+>>> offloaded to the driver and the driver detects that the "entry" width is
+>>> smaller than the fragment side, the driver could reject that schedule
+>>> with a nice error message.
+>>
+>> Looks ok, if entry command is RELEASE or SET only, but not HOLD, and
+>> only if it contains express queues. And if for entry is expectable to have
+>> interval shorter, the entry has to be marked as HOLD then.
+>>
+>> But not every offload is able to support mac/hold per sched (there is
+>> no HOLD/RELEASE commands in this case). For this case seems like here can
+>> be 2 cases:
+> 
+> Yeah, the hw I have in hand also doesn't support the HOLD/RELEASE
+> commands.
+> 
+>>
+>> 1) there is no “gate close” event for the preemptible traffic
+>> 2) there is "gate close" event for the preemptable traffic
+>>
+>> And both can have the following impact, if assume the main reason to
+>> this guard check is to guarantee the express queue cannot be blocked while
+>> this "close to short" interval opening ofc:
+>>
+>> If a preemption fragment is started before "express" frame, then interval
+>> should allow to complete preemption fragment and has to have enough time
+>> to insert express frame. So here situation when maximum packet size per
+>> each queue can have place.
+>>
+>> In case of TI am65 this queue MTU is configurable per queue (for similar
+>> reasons and couple more (packet fill feature for instance)) and can be
+>> used for guard check also, but not clear where it should be. Seems like
+>> it should be done using ethtool also, but can be needed for taprio
+>> interface....
+> 
+> For now, at least for the hardware I am working on, something like this
+> is configurable, but I wasn't planning on exposing it, using the maximum
+> ethernet frame size seemed a good default.
+> 
+>>
+>>>>
+>>>>>
+>>>>> Please share your thoughts on this.
+>>>>
+>>>> I am good to see there is frame preemption proposal. Each way is ok
+>>>> for me but ethtool is more flexible. I've seen the RFC the code. The
+>>>> hardware offload is in the mainline, but preemption is not yet, I
+>>>> don't know why. Could you post it again?
+>>>
+>>> It's not mainline because this kind of stuff will not be accepted
+>>> upstream without in-tree users. And you are the first one to propose
+>>> such a thing :-)
+>>>
+>>> It's just now that I have something that supports frame-preemption, the
+>>> code I have is approaching RFC-like quality. I will send another RFC
+>>> this week hopefully, and we can see how things look in practice.
+>>>
+>>>
+>>> Cheers,
+>>> --
+>>> Vinicius
+>>
+>> -- 
+>> Regards,
+>> Ivan Khoronzhuk
+> 
+> Cheers,
+> --
+> Vinicius
+> 
+
+-- 
+Murali Karicheri
+Texas Instruments
