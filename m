@@ -2,277 +2,106 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A14C2D0C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87072C2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20830208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1A92071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 07:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="VD5hLato"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfL3H0W (ORCPT
+        id S1727198AbfL3H3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 02:26:22 -0500
-Received: from mga06.intel.com ([134.134.136.31]:45925 "EHLO mga06.intel.com"
+        Mon, 30 Dec 2019 02:29:46 -0500
+Received: from m15-112.126.com ([220.181.15.112]:49581 "EHLO m15-112.126.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfL3H0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 02:26:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Dec 2019 23:26:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,374,1571727600"; 
-   d="scan'208";a="224176795"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Dec 2019 23:26:20 -0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>
-Subject: [PATCH v2] fpga: dfl: support multiple opens on feature device node.
-Date:   Mon, 30 Dec 2019 15:23:52 +0800
-Message-Id: <1577690632-30225-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727140AbfL3H3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 02:29:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=vU+RIQU99tLLOuwhH/
+        qRLw9WA7dqokBIOu2WkzLFIto=; b=VD5hLato0ACBgrDwX1+zpd3lqPhlvDC3X+
+        090iFO+ua8DcuvpwwcEn5FRlm9RfQZOt1U2wdKWGdNFourdBDd7P+S4FvbLoRdq4
+        dMpHJa9nVnrCpDRQ5tVK+CNu4WxWEBgulgsVu5xww24PrKNsroWSChg9yFPTF20D
+        PkJQ0P/nQ=
+Received: from yingjieb-VirtualBox.int.nokia-sbell.com (unknown [114.87.110.56])
+        by smtp2 (Coremail) with SMTP id DMmowADX+Zmnpgle0BNJBA--.64926S3;
+        Mon, 30 Dec 2019 15:26:47 +0800 (CST)
+From:   yingjie_bai@126.com
+To:     Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>
+Cc:     Bai Yingjie <byj.tea@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] powerpc/mpc85xx: also write addr_h to spin table for 64bit boot entry
+Date:   Mon, 30 Dec 2019 15:26:20 +0800
+Message-Id: <20191230072623.25353-2-yingjie_bai@126.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191230072623.25353-1-yingjie_bai@126.com>
+References: <20191230072623.25353-1-yingjie_bai@126.com>
+X-CM-TRANSID: DMmowADX+Zmnpgle0BNJBA--.64926S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWfKr43Xr43ArW5JFy8AFb_yoW8Xry8pF
+        ykGrnxtrZ5Kr1rAa17JF4IgrZ0yFsIg3yUW347AasI93W3Xr9FyF4DZry3XF4kWrWqkFyr
+        Zr4ayF1qyrsrWa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jmiifUUUUU=
+X-Originating-IP: [114.87.110.56]
+X-CM-SenderInfo: p1lqwyxlhbutbl6rjloofrz/1tbigReb91pD-Gt1SwAAsK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each DFL functional block, e.g. AFU (Accelerated Function Unit) and FME
-(FPGA Management Engine), could implement more than one function within
-its region, but current driver only allows one user application to access
-it by exclusive open on device node. So this is not convenient and
-flexible for userspace applications, as they have to combine lots of
-different functions into one single application.
+From: Bai Yingjie <byj.tea@gmail.com>
 
-This patch removes the limitation here to allow multiple opens to each
-feature device node for AFU and FME from userspace applications. If user
-still needs exclusive access to these device node, O_EXCL flag must be
-issued together with open.
+CPU like P4080 has 36bit physical address, its DDR physical
+start address can be configured above 4G by LAW registers.
 
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+For such systems in which their physical memory start address was
+configured higher than 4G, we need also to write addr_h into the spin
+table of the target secondary CPU, so that addr_h and addr_l together
+represent a 64bit physical address.
+Otherwise the secondary core can not get correct entry to start from.
+
+This should do no harm for normal case where addr_h is all 0.
+
+Signed-off-by: Bai Yingjie <byj.tea@gmail.com>
 ---
-v2: drop unnecessary inline prefix for dfl_feature_dev_use_count()
----
- drivers/fpga/dfl-afu-main.c | 26 +++++++++++++++-----------
- drivers/fpga/dfl-fme-main.c | 19 ++++++++++++-------
- drivers/fpga/dfl.c          | 15 +++++++++++++--
- drivers/fpga/dfl.h          | 34 ++++++++++++++++++++++++++--------
- 4 files changed, 66 insertions(+), 28 deletions(-)
+ arch/powerpc/platforms/85xx/smp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-index e4a34dc..c6e0e07 100644
---- a/drivers/fpga/dfl-afu-main.c
-+++ b/drivers/fpga/dfl-afu-main.c
-@@ -561,14 +561,16 @@ static int afu_open(struct inode *inode, struct file *filp)
- 	if (WARN_ON(!pdata))
- 		return -ENODEV;
- 
--	ret = dfl_feature_dev_use_begin(pdata);
--	if (ret)
--		return ret;
--
--	dev_dbg(&fdev->dev, "Device File Open\n");
--	filp->private_data = fdev;
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-+	if (!ret) {
-+		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-+			dfl_feature_dev_use_count(pdata));
-+		filp->private_data = fdev;
-+	}
-+	mutex_unlock(&pdata->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int afu_release(struct inode *inode, struct file *filp)
-@@ -581,12 +583,14 @@ static int afu_release(struct inode *inode, struct file *filp)
- 	pdata = dev_get_platdata(&pdev->dev);
- 
- 	mutex_lock(&pdata->lock);
--	__port_reset(pdev);
--	afu_dma_region_destroy(pdata);
--	mutex_unlock(&pdata->lock);
--
- 	dfl_feature_dev_use_end(pdata);
- 
-+	if (!dfl_feature_dev_use_count(pdata)) {
-+		__port_reset(pdev);
-+		afu_dma_region_destroy(pdata);
-+	}
-+	mutex_unlock(&pdata->lock);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-index 7c930e6..fda8623 100644
---- a/drivers/fpga/dfl-fme-main.c
-+++ b/drivers/fpga/dfl-fme-main.c
-@@ -600,14 +600,16 @@ static int fme_open(struct inode *inode, struct file *filp)
- 	if (WARN_ON(!pdata))
- 		return -ENODEV;
- 
--	ret = dfl_feature_dev_use_begin(pdata);
--	if (ret)
--		return ret;
--
--	dev_dbg(&fdev->dev, "Device File Open\n");
--	filp->private_data = pdata;
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, filp->f_flags & O_EXCL);
-+	if (!ret) {
-+		dev_dbg(&fdev->dev, "Device File Opened %d Times\n",
-+			dfl_feature_dev_use_count(pdata));
-+		filp->private_data = pdata;
-+	}
-+	mutex_unlock(&pdata->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int fme_release(struct inode *inode, struct file *filp)
-@@ -616,7 +618,10 @@ static int fme_release(struct inode *inode, struct file *filp)
- 	struct platform_device *pdev = pdata->dev;
- 
- 	dev_dbg(&pdev->dev, "Device File Release\n");
-+
-+	mutex_lock(&pdata->lock);
- 	dfl_feature_dev_use_end(pdata);
-+	mutex_unlock(&pdata->lock);
- 
- 	return 0;
- }
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 96a2b82..9909948 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -1079,6 +1079,7 @@ static int __init dfl_fpga_init(void)
-  */
- int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
- {
-+	struct dfl_feature_platform_data *pdata;
- 	struct platform_device *port_pdev;
- 	int ret = -ENODEV;
- 
-@@ -1093,7 +1094,11 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id)
- 		goto put_dev_exit;
- 	}
- 
--	ret = dfl_feature_dev_use_begin(dev_get_platdata(&port_pdev->dev));
-+	pdata = dev_get_platdata(&port_pdev->dev);
-+
-+	mutex_lock(&pdata->lock);
-+	ret = dfl_feature_dev_use_begin(pdata, true);
-+	mutex_unlock(&pdata->lock);
- 	if (ret)
- 		goto put_dev_exit;
- 
-@@ -1120,6 +1125,7 @@ EXPORT_SYMBOL_GPL(dfl_fpga_cdev_release_port);
-  */
- int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
- {
-+	struct dfl_feature_platform_data *pdata;
- 	struct platform_device *port_pdev;
- 	int ret = -ENODEV;
- 
-@@ -1138,7 +1144,12 @@ int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id)
- 	if (ret)
- 		goto put_dev_exit;
- 
--	dfl_feature_dev_use_end(dev_get_platdata(&port_pdev->dev));
-+	pdata = dev_get_platdata(&port_pdev->dev);
-+
-+	mutex_lock(&pdata->lock);
-+	dfl_feature_dev_use_end(pdata);
-+	mutex_unlock(&pdata->lock);
-+
- 	cdev->released_port_num--;
- put_dev_exit:
- 	put_device(&port_pdev->dev);
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 9f0e656..da242e0 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -205,8 +205,6 @@ struct dfl_feature {
- 	const struct dfl_feature_ops *ops;
- };
- 
--#define DEV_STATUS_IN_USE	0
--
- #define FEATURE_DEV_ID_UNUSED	(-1)
- 
- /**
-@@ -219,8 +217,9 @@ struct dfl_feature {
-  * @dfl_cdev: ptr to container device.
-  * @id: id used for this feature device.
-  * @disable_count: count for port disable.
-+ * @excl_open: set on feature device exclusive open.
-+ * @open_count: count for feature device open.
-  * @num: number for sub features.
-- * @dev_status: dev status (e.g. DEV_STATUS_IN_USE).
-  * @private: ptr to feature dev private data.
-  * @features: sub features of this feature dev.
-  */
-@@ -232,26 +231,45 @@ struct dfl_feature_platform_data {
- 	struct dfl_fpga_cdev *dfl_cdev;
- 	int id;
- 	unsigned int disable_count;
--	unsigned long dev_status;
-+	bool excl_open;
-+	int open_count;
- 	void *private;
- 	int num;
- 	struct dfl_feature features[0];
- };
- 
- static inline
--int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata)
-+int dfl_feature_dev_use_begin(struct dfl_feature_platform_data *pdata,
-+			      bool excl)
- {
--	/* Test and set IN_USE flags to ensure file is exclusively used */
--	if (test_and_set_bit_lock(DEV_STATUS_IN_USE, &pdata->dev_status))
-+	if (pdata->excl_open)
- 		return -EBUSY;
- 
-+	if (excl) {
-+		if (pdata->open_count)
-+			return -EBUSY;
-+
-+		pdata->excl_open = true;
-+	}
-+	pdata->open_count++;
-+
- 	return 0;
- }
- 
- static inline
- void dfl_feature_dev_use_end(struct dfl_feature_platform_data *pdata)
- {
--	clear_bit_unlock(DEV_STATUS_IN_USE, &pdata->dev_status);
-+	pdata->excl_open = false;
-+
-+	if (WARN_ON(pdata->open_count <= 0))
-+		return;
-+
-+	pdata->open_count--;
-+}
-+
-+static int dfl_feature_dev_use_count(struct dfl_feature_platform_data *pdata)
-+{
-+	return pdata->open_count;
- }
- 
- static inline
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index 8c7ea2486bc0..e241516ae013 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -252,6 +252,13 @@ static int smp_85xx_start_cpu(int cpu)
+ 	out_be64((u64 *)(&spin_table->addr_h),
+ 		__pa(ppc_function_entry(generic_secondary_smp_init)));
+ #else
++	/*
++	 * We need also to write addr_h to spin table for systems
++	 * in which their physical memory start address was configured
++	 * to above 4G, otherwise the secondary core can not get
++	 * correct entry to start from.
++	 */
++	out_be32(&spin_table->addr_h, __pa(__early_start) >> 32);
+ 	out_be32(&spin_table->addr_l, __pa(__early_start));
+ #endif
+ 	flush_spin_table(spin_table);
 -- 
-2.7.4
+2.17.1
 
