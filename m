@@ -2,119 +2,203 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44B1C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 04:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E935AC2D0C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC86222C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 04:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40E3206E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 05:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I26Kt6BX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Te1hrzkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfL3E4s (ORCPT
+        id S1727116AbfL3FAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 23:56:48 -0500
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:51871 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfL3E4q (ORCPT
+        Mon, 30 Dec 2019 00:00:22 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:19022 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725379AbfL3FAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 23:56:46 -0500
-Received: by mail-pj1-f54.google.com with SMTP id j11so7335234pjs.1;
-        Sun, 29 Dec 2019 20:56:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rHonOFx9xvoaxw9VR4rjUajN0rQFPRRu1qbwdwLtluM=;
-        b=I26Kt6BXe/bs3RKdS7TvuPHoQLPP36DaaylbkeUGm07p/tsj6+xrKZ8EcqzLlX8S3T
-         XHtvjSnrV1miNibMIgdxH39rQN0WDy6XpwrnJnjcPStIayC3XCf/8E+ga0u7hwPvW86/
-         FoHQPUjKV9xrDq1ScZw/7f0TAV7x8GMg7GirZxEfZIgjlGGmIXvhUoPXM94Ao/lEhU1n
-         5lRRonDDEpCUJOZ9JJJizl1fiLsrQZLqLOHkZxLG3DRb/+LLxC7SG07jK/UKi6/Al+To
-         PjHHtBeWt3ycq3MQsVRyf1TDmzab7dXLHw3SIEm4dk8NdV3qZdPXb73lFb+dKQdv+k2C
-         ESNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rHonOFx9xvoaxw9VR4rjUajN0rQFPRRu1qbwdwLtluM=;
-        b=CosqAuiyT77rt1f0g+OGtvzcDdC/Rhr2er8oQdheIXl5m6N36c765+uwlZhlRl30Ys
-         //h6cwEuJOY5qvlU95Va7D2BoX0fiDHw6/R+Gj6Zeqj7FR7kql2JL/XAR4++L8VwRq4/
-         D3LXFPsx94LjUwTZW5u5CfNQTzxt4yXxdZojVymqk77YESO7hg2HBXQebTgcYGIrls67
-         NHcayvzpZiWC4Zh2tWvDNi0x1CeOSKfd1IvhXRmLnNPcfH6osyrGDVT/Mr56zfjKAG9p
-         c2VKHLCtCZuKapv7MaNiTwXPPESF4OejA7PmDeN3uIDQe757l2bj2mBS66KS3g3z0xaN
-         D2bA==
-X-Gm-Message-State: APjAAAW6ky21n/v0R4rCZLU2ReuQr7xT0c0JAYSaAjyQXJ1x+a48f6n3
-        tq3vfn+i0FfSzlcnWrC5WN0=
-X-Google-Smtp-Source: APXvYqw1++iHS5nGi4FAQv302tgaxvpsufWb8c0MrnMXtzyVHTs/XWuByUtQY2feaQbTHjYI56VjUg==
-X-Received: by 2002:a17:90a:fe02:: with SMTP id ck2mr43104676pjb.10.1577681805492;
-        Sun, 29 Dec 2019 20:56:45 -0800 (PST)
-Received: from localhost.localdomain ([2804:14d:72b1:8920:da15:c0bd:33c1:e2ad])
-        by smtp.gmail.com with ESMTPSA id b1sm22373189pjw.4.2019.12.29.20.56.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 20:56:45 -0800 (PST)
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-X-Google-Original-From: Daniel W. S. Almeida
-To:     corbet@lwn.net, mchehab+samsung@kernel.org
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v2 8/8] Documentation: nfs: fault_injection: convert to ReST
-Date:   Mon, 30 Dec 2019 01:56:02 -0300
-Message-Id: <5f2dfdb34ef391d63e126867937ae0216c31cf2e.1577681164.git.dwlsalmeida@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1577681164.git.dwlsalmeida@gmail.com>
-References: <cover.1577681164.git.dwlsalmeida@gmail.com>
+        Mon, 30 Dec 2019 00:00:22 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577682021; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=bq9GBo1exy5H5niGUOPp3ceZeVp8DhBy57oRJt6GY54=; b=Te1hrzkAmczDYfJiAYPzDFlRA3h0E58FG3Y2B7ap/h4rUC+HU3xLGeldBn9wT6ADwE/zgUxL
+ BgGJIUNFw/F6nzAyHqkTegR4YXyPaRaX1ipoNqpgxDeWn4Jz4cFoeCwrSJRpOVW92nB1C9T9
+ KntaMJ/v5z+zsgxPbOqpEimFcfA=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e09845e.7f4dc71b9f80-smtp-out-n02;
+ Mon, 30 Dec 2019 05:00:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1EE03C433A2; Mon, 30 Dec 2019 05:00:14 +0000 (UTC)
+Received: from Pillair (unknown [183.83.68.224])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53172C433CB;
+        Mon, 30 Dec 2019 05:00:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53172C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1577181575-25788-1-git-send-email-pillair@codeaurora.org> <20191229031416.GK3755841@builder>
+In-Reply-To: <20191229031416.GK3755841@builder>
+Subject: RE: [PATCH v3] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Mon, 30 Dec 2019 10:29:56 +0530
+Message-ID: <061701d5bece$044b6cd0$0ce24670$@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRwFJlApFoTZl1gTtUmtjwT7YanQH7LU55p0pBkhA=
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Hi Bjorn,
 
-Convert fault_injection.txt to ReST and move it to admin-guide.
+Thanks for the comments.
+I will post an updated patchset v4 after the patch bringing-in
+"qcom,msa-fixed-perm" is merged/approved.
+I will address all the comments together.
 
-Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
----
- .../nfs/fault_injection.rst}                                 | 5 +++--
- Documentation/admin-guide/nfs/index.rst                      | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
- rename Documentation/{filesystems/nfs/fault_injection.txt => admin-guide/nfs/fault_injection.rst} (98%)
+Thanks,
+Rakesh Pillai.
 
-diff --git a/Documentation/filesystems/nfs/fault_injection.txt b/Documentation/admin-guide/nfs/fault_injection.rst
-similarity index 98%
-rename from Documentation/filesystems/nfs/fault_injection.txt
-rename to Documentation/admin-guide/nfs/fault_injection.rst
-index f3a5b0a8ac05..eb029c0c15ce 100644
---- a/Documentation/filesystems/nfs/fault_injection.txt
-+++ b/Documentation/admin-guide/nfs/fault_injection.rst
-@@ -1,6 +1,7 @@
-+===================
-+NFS Fault Injection
-+===================
- 
--Fault Injection
--===============
- Fault injection is a method for forcing errors that may not normally occur, or
- may be difficult to reproduce.  Forcing these errors in a controlled environment
- can help the developer find and fix bugs before their code is shipped in a
-diff --git a/Documentation/admin-guide/nfs/index.rst b/Documentation/admin-guide/nfs/index.rst
-index c96e93b61744..410b8ccad11b 100644
---- a/Documentation/admin-guide/nfs/index.rst
-+++ b/Documentation/admin-guide/nfs/index.rst
-@@ -12,4 +12,5 @@ NFS
-     nfs-idmapper
-     pnfs-block-server
-     pnfs-scsi-server
-+    fault_injection
- 
--- 
-2.24.1
-
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Sunday, December 29, 2019 8:44 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Tue 24 Dec 01:59 PST 2019, Rakesh Pillai wrote:
+> 
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> > This change is dependent on the below set of changes
+> > arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+> (https://lore.kernel.org/patchwork/patch/1150367/)
+> 
+> It would be clearer if you linked to the series instead, but it doesn't
+> matter at this point, this is merged already.
+> 
+> What doesn't seem to be merged is the addition of the
+> qcom,msa_fixed_perm property, so I presume I need to hold off on merging
+> this?
+> 
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28
+> ++++++++++++++++++++++++++++
+> >  2 files changed, 33 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 189254f..b2ca143f 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -248,6 +248,11 @@
+> >  	status = "okay";
+> >  };
+> >
+> > +&wifi {
+> > +	status = "okay";
+> > +	qcom,msa_fixed_perm;
+> 
+> As remarked by Rob, properties should be using - instead of _.
+> 
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qup_i2c2_default {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 666e9b9..7efb97f 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -42,6 +42,12 @@
+> >  			compatible = "qcom,cmd-db";
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@93900000 {
+> > +			compatible = "removed-dma-pool";
+> > +			no-map;
+> > +			reg = <0 0x93900000 0 0x200000>;
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -1119,6 +1125,28 @@
+> >  				#clock-cells = <1>;
+> >  			};
+> >  		};
+> > +
+> > +		wifi: wifi@18800000 {
+> > +			compatible = "qcom,wcn3990-wifi";
+> > +			reg = <0 0x18800000 0 0x800000>;
+> > +			reg-names = "membase";
+> > +			iommus = <&apps_smmu 0xC0 0x1>;
+> 
+> Lowercase 'c' please.
+> 
+> Regards,
+> Bjorn
+> 
+> > +			interrupts =
+> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> */ >,
+> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> */ >,
+> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> */ >,
+> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> */ >,
+> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> */ >,
+> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> */ >,
+> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> */ >,
+> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> */ >,
+> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> */ >,
+> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> */ >,
+> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> */>,
+> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> */>;
+> > +			memory-region = <&wlan_fw_mem>;
+> > +			status = "disabled";
+> > +		};
+> >  	};
+> >
+> >  	timer {
+> > --
+> > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
