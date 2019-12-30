@@ -2,89 +2,82 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2EAC2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BEC2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EF52071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577726547;
-	bh=fW+t00riNY8kM3dJLh4bxka9+sII9/uVpWad+1AZ0Tw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wD2gPXyXOg4IZOtJwO6xoMaFMqHzqJuR1Gya5c/z6+rezsHgZiyzULWyO6AMtxAz3
-	 ygsq0RchYrBtzZvysmwwg1eUa01HL4jH92V/ZgPpYhZuqZBBjit/+GUPrr5TJ8hnV4
-	 njBWtVTYiT11Zg6ybbSsnSI6GM5KI7mqt7AzOrRQ=
+	by mail.kernel.org (Postfix) with ESMTP id EFF66206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:22:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iSv7ysfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfL3RW0 (ORCPT
+        id S1727529AbfL3RWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57130 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:22:33 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:43638 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfL3RWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:22:24 -0500
-Received: from localhost.localdomain (unknown [194.230.155.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81EF820730;
-        Mon, 30 Dec 2019 17:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577726544;
-        bh=fW+t00riNY8kM3dJLh4bxka9+sII9/uVpWad+1AZ0Tw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2aHzgfeUvO3iKsjryPcGZoQsMLKJG+87TluSTqLzcnjC1QjcM1ICo2Ev8twpdm5i
-         wUpRmEXSL2pLPWxWogcVHk0Sppn1clpcSnhFRayqIXyjDtB9zeuP3bnSlhwu8OaCP4
-         0ytFHjdnp3pjZhn5eTUQB/kl+CSG34nCH3b27i4M=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] usb: phy: Enable compile testing for some of drivers
-Date:   Mon, 30 Dec 2019 18:22:15 +0100
-Message-Id: <20191230172215.17370-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191230172215.17370-1-krzk@kernel.org>
-References: <20191230172215.17370-1-krzk@kernel.org>
+        id S1727299AbfL3RWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:22:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LvLtlNVIraZ0K0BvAC5sz2iObsMdXa39MW+pknncAe8=; b=iSv7ysfdrw1VwJYAGLPPJNd9NM
+        KGau6p3kXLxDpdxTm2WplWp0/sl76MT0ivU7mdQUYlrjNbuWITalxN7VLliyisHVL8+sbLagNdeAf
+        UtYhMZd4l4+AJ0mq4Tx4L7TW6YbSLc1BMQlSgwA5uu+0sqrbrScaRXphYxfNFPyAhWKw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ilyk5-0004Ct-AJ; Mon, 30 Dec 2019 18:22:09 +0100
+Date:   Mon, 30 Dec 2019 18:22:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexander Lobakin <alobakin@dlink.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH RFC net-next 06/19] net: dsa: tag_gswip: fix typo in tag
+ name
+Message-ID: <20191230172209.GE13569@lunn.ch>
+References: <20191230143028.27313-1-alobakin@dlink.ru>
+ <20191230143028.27313-7-alobakin@dlink.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191230143028.27313-7-alobakin@dlink.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the USB phy drivers can be compile tested to increase build
-coverage.
+On Mon, Dec 30, 2019 at 05:30:14PM +0300, Alexander Lobakin wrote:
+> "gwsip" -> "gswip".
+> 
+> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/usb/phy/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 24b4f091acb8..ff24fca0a2d9 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -162,7 +162,7 @@ config USB_MXS_PHY
- 
- config USB_TEGRA_PHY
- 	tristate "NVIDIA Tegra USB PHY Driver"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	select USB_COMMON
- 	select USB_PHY
- 	select USB_ULPI
-@@ -172,7 +172,7 @@ config USB_TEGRA_PHY
- 
- config USB_ULPI
- 	bool "Generic ULPI Transceiver Driver"
--	depends on ARM || ARM64
-+	depends on ARM || ARM64 || COMPILE_TEST
- 	select USB_ULPI_VIEWPORT
- 	help
- 	  Enable this to support ULPI connected USB OTG transceivers which
--- 
-2.17.1
-
+    Andrew
