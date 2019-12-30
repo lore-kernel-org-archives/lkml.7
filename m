@@ -2,100 +2,78 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91BBC2D0CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE78C2D0DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA2C2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sZXTbpNV"
+	by mail.kernel.org (Postfix) with ESMTP id 93A8D208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 08:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577694236;
+	bh=bxf8EZJDD9igkh37WLh+g0Si6gef3N0HX1lUMypoJt8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KiBnkZqjqY/zAgBGyn91g/+NUXVTvQqAc3yXshUNdR2a83aED8KSyF/W/3tupcZ+5
+	 1Q/Lig8jCCxNgx13Vtw5zO/EuTlMPzJWeHaeVsbSiwsmFt30wCwzUDu7LNB0fqxpb4
+	 XduSP2XhAmwWRYDBhFXnqWpozAkcZ+ioCXmlIpv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfL3IMo (ORCPT
+        id S1727234AbfL3IXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 03:12:44 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13156 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727273AbfL3IMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 03:12:42 -0500
-X-UUID: 343b846368e741b9832269576d6311ce-20191230
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0KIHktbzT0WK8dPIhtZ0AEWFT4vEf5OuB0GSMuDxVIM=;
-        b=sZXTbpNVSdNkJTgsrm3MuOLqChFWjl9HhNtgt/ON3EMwF+WKgfqlAZRFZzpB3gZvUrt07w0vSw1MZ8NivFWWcwkp0bhpms2CKD2S6LhMaDuRRc8ay1ZyU35k/6IViuCb6yEA79HoE3U9dK+mbqvAhG3L3CWnm/qHGrWt01r9qPA=;
-X-UUID: 343b846368e741b9832269576d6311ce-20191230
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 901626152; Mon, 30 Dec 2019 16:12:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Dec 2019 16:13:02 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Dec 2019 16:12:01 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <pedrom.sousa@synopsys.com>, <jejb@linux.ibm.com>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <subhashj@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v1 2/2] scsi: ufs: remove link_startup_again flow in ufshcd_link_startup
-Date:   Mon, 30 Dec 2019 16:12:26 +0800
-Message-ID: <1577693546-7598-3-git-send-email-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
-References: <1577693546-7598-1-git-send-email-stanley.chu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Mon, 30 Dec 2019 03:23:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727175AbfL3IXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 03:23:54 -0500
+Received: from localhost.localdomain (unknown [223.93.147.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C939220748;
+        Mon, 30 Dec 2019 08:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577694234;
+        bh=bxf8EZJDD9igkh37WLh+g0Si6gef3N0HX1lUMypoJt8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W+8GXso80Dwc/3pFcCMN0HfMHf1aM3LMavYJbUL8UziJS+fG0RxQevVHV9AG5kza1
+         wB3ArfXjh2mYXmaM+swivMWpI4CEpXYJfOVmhAIxRBM0ijXq3h/I7fe66vSvAaHiD1
+         AG17nFdPOMT3TsRjvVHzY2M38nTRhB5Nt3ooty+g=
+From:   guoren@kernel.org
+To:     linux-csky@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        arnd@arndb.de, Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH 1/5] MAINTAINERS: csky: Add mailing list for csky
+Date:   Mon, 30 Dec 2019 16:23:27 +0800
+Message-Id: <20191230082331.30976-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bGlua19zdGFydHVwX2FnYWluIGZsb3cgaW4gdWZzaGNkX2xpbmtfc3RhcnR1cCgpIGlzIG5vdCBu
-ZWNlc3NhcnkNCnNpbmNlIGN1cnJlbnRseSBkZXZpY2UgY2FuIGJlIG1vdmVkIHRvICJhY3RpdmUi
-IHBvd2VyIG1vZGUgZHVyaW5nDQpyZXN1bWUgZmxvdyBieSBjb21taXQgYXMgYmVsb3csDQoNCiJz
-Y3NpOiB1ZnM6IHNldCBkZXZpY2UgYXMgZGVmYXVsdCBhY3RpdmUgcG93ZXIgbW9kZSBkdXJpbmcN
-CmluaXRpYWxpemF0aW9uIG9ubHkiDQoNCkZpeGVzOiA3Y2FmNDg5Yjk5YTQgKHNjc2k6IHVmczog
-aXNzdWUgbGluayBzdGFydXAgMiB0aW1lcyBpZiBkZXZpY2UgaXNuJ3QgYWN0aXZlKQ0KQ2M6IEFs
-aW0gQWtodGFyIDxhbGltLmFraHRhckBzYW1zdW5nLmNvbT4NCkNjOiBBdnJpIEFsdG1hbiA8YXZy
-aS5hbHRtYW5Ad2RjLmNvbT4NCkNjOiBCYXJ0IFZhbiBBc3NjaGUgPGJ2YW5hc3NjaGVAYWNtLm9y
-Zz4NCkNjOiBCZWFuIEh1byA8YmVhbmh1b0BtaWNyb24uY29tPg0KQ2M6IENhbiBHdW8gPGNhbmdA
-Y29kZWF1cm9yYS5vcmc+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWls
-LmNvbT4NCkNjOiBTdWJoYXNoIEphZGF2YW5pIDxzdWJoYXNoakBjb2RlYXVyb3JhLm9yZz4NCkNj
-OiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3Rh
-bmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyB8
-IDE1IC0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxNSBkZWxldGlvbnMoLSkNCg0K
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZz
-L3Vmc2hjZC5jDQppbmRleCA5YWJiNzA4NWE1ZDAuLjE5MDBmODExMzk0YSAxMDA2NDQNCi0tLSBh
-L2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNk
-LmMNCkBAIC00MzY1LDE2ICs0MzY1LDcgQEAgc3RhdGljIGludCB1ZnNoY2RfbGlua19zdGFydHVw
-KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogew0KIAlpbnQgcmV0Ow0KIAlpbnQgcmV0cmllcyA9IERN
-RV9MSU5LU1RBUlRVUF9SRVRSSUVTOw0KLQlib29sIGxpbmtfc3RhcnR1cF9hZ2FpbiA9IGZhbHNl
-Ow0KIA0KLQkvKg0KLQkgKiBJZiBVRlMgZGV2aWNlIGlzbid0IGFjdGl2ZSB0aGVuIHdlIHdpbGwg
-aGF2ZSB0byBpc3N1ZSBsaW5rIHN0YXJ0dXANCi0JICogMiB0aW1lcyB0byBtYWtlIHN1cmUgdGhl
-IGRldmljZSBzdGF0ZSBtb3ZlIHRvIGFjdGl2ZS4NCi0JICovDQotCWlmICghdWZzaGNkX2lzX3Vm
-c19kZXZfYWN0aXZlKGhiYSkpDQotCQlsaW5rX3N0YXJ0dXBfYWdhaW4gPSB0cnVlOw0KLQ0KLWxp
-bmtfc3RhcnR1cDoNCiAJZG8gew0KIAkJdWZzaGNkX3ZvcHNfbGlua19zdGFydHVwX25vdGlmeSho
-YmEsIFBSRV9DSEFOR0UpOw0KIA0KQEAgLTQ0MDgsMTIgKzQzOTksNiBAQCBzdGF0aWMgaW50IHVm
-c2hjZF9saW5rX3N0YXJ0dXAoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJCWdvdG8gb3V0Ow0KIAl9
-DQogDQotCWlmIChsaW5rX3N0YXJ0dXBfYWdhaW4pIHsNCi0JCWxpbmtfc3RhcnR1cF9hZ2FpbiA9
-IGZhbHNlOw0KLQkJcmV0cmllcyA9IERNRV9MSU5LU1RBUlRVUF9SRVRSSUVTOw0KLQkJZ290byBs
-aW5rX3N0YXJ0dXA7DQotCX0NCi0NCiAJLyogTWFyayB0aGF0IGxpbmsgaXMgdXAgaW4gUFdNLUcx
-LCAxLWxhbmUsIFNMT1ctQVVUTyBtb2RlICovDQogCXVmc2hjZF9pbml0X3B3cl9pbmZvKGhiYSk7
-DQogCXVmc2hjZF9wcmludF9wd3JfaW5mbyhoYmEpOw0KLS0gDQoyLjE4LjANCg==
+From: Guo Ren <ren_guo@c-sky.com>
+
+Add mailing list and it's convenient for maintain C-SKY
+subsystem.
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4f170d8bc29..1b0e8dcefb94 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3553,6 +3553,7 @@ F:	sound/pci/oxygen/
+ 
+ C-SKY ARCHITECTURE
+ M:	Guo Ren <guoren@kernel.org>
++L:	linux-csky@vger.kernel.org
+ T:	git https://github.com/c-sky/csky-linux.git
+ S:	Supported
+ F:	arch/csky/
+-- 
+2.17.0
 
