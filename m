@@ -2,109 +2,185 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1692C2D0D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146B9C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BC720722
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1829206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 17:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfL3R3w (ORCPT
+        id S1727389AbfL3Rde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:29:52 -0500
-Received: from muru.com ([72.249.23.125]:49706 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbfL3R3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:29:52 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 87C948027;
-        Mon, 30 Dec 2019 17:30:31 +0000 (UTC)
-Date:   Mon, 30 Dec 2019 09:29:48 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     =?utf-8?B?QW5kcsOp?= Hentschel <nerv@dawncrow.de>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
-        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-Message-ID: <20191230172948.GL35479@atomide.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de>
- <20191224184503.GK35479@atomide.com>
- <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
- <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
+        Mon, 30 Dec 2019 12:33:34 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:37937 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726602AbfL3Rde (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:33:34 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MzkK9-1jhdsr0fD7-00vbkg; Mon, 30 Dec 2019 18:33:32 +0100
+Received: by mail-qk1-f178.google.com with SMTP id x129so26721548qke.8;
+        Mon, 30 Dec 2019 09:33:31 -0800 (PST)
+X-Gm-Message-State: APjAAAV2I5nNpjzrKpgBX0QEjGZNOJgwWCRvECvta8YIfAhOSm4seh9M
+        J2br8rxqUqO+0RYPHC+ao9XaajFRSUfP42YAHUQ=
+X-Google-Smtp-Source: APXvYqxKINRpkvRH6EBh/J+WeJ5uKpylQLt1tiUNftYq6EBCtEzFj+MnUdDIAwsWxMfIcfzkX2Wcqlxk6wiZkq2zM4Y=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr55775890qke.394.1577727210961;
+ Mon, 30 Dec 2019 09:33:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191223130834.GA102399@zx2c4.com> <20191224135404.389039-1-Jason@zx2c4.com>
+ <CAK8P3a1fVFDkHe=gLy55rHxwfZ8YKcUSYvnhSoMbcAgWy6Nm9w@mail.gmail.com>
+ <CAHmME9o07dQV_MmWmtBFCKp=sdsO-scC6-UbXNi=dpU6umCoPg@mail.gmail.com>
+ <CAK8P3a0sWObusG3xO_JE9CXCyNfFN0p6OgPjUyU2CHLBBZNpZw@mail.gmail.com>
+ <CAHmME9o==nBONywVgSjsmjs2H_A8itgmwibqzPmvivcSocKWRQ@mail.gmail.com>
+ <CAK8P3a11g-UXcYdudDtp0TWCQAfotpc-63BqYwn-a9LDxV-b+Q@mail.gmail.com>
+ <CAHmME9pnBtjJ86gsWgK8DCYKo_HFpyViHoGpJPTrYBONT01YVA@mail.gmail.com>
+ <CAK8P3a0NBuqDX63+920q7Q+yO2xCoSd0O7xUDJv6BBoco2kVOg@mail.gmail.com> <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
+In-Reply-To: <CAHmME9rnnoFwh=EHAgdQFM+c33D9mgCoVML_+d=Js=pXPnsxKQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Dec 2019 18:33:14 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
+Message-ID: <CAK8P3a1AYGbgf6mmL-863+PXPBQw3AAtp5wQPL5duLCONGhHuw@mail.gmail.com>
+Subject: Re: [PATCH] mips: vdso: conditionalize 32-bit time functions on COMPAT_32BIT_TIME
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Christian Brauner <christian.brauner@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8IM0V8Y/q3McjhFS/A8QrouIL0hpI1xLdp7oG2RXB93t/A6G+dW
+ sYHnNteRk5/tud1M6RbyXPIcIwxsE4Y+XxoSPEgpzybLlIq5bYA7oFgd4kHbRubIYLe42+A
+ bZTBrp3oQmleATCjUDkmPuhpr15D/trDhHS4ws1JaUbttN27rieCf1t8/C9FzThhYntYabQ
+ kOtgKDFEYtH4XwAwcPz/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F4k7UMF7Zo8=:5nID/7csWIqJEzalu1WUYl
+ OK8feV/XQ4YuVno2rabIIm+gUqio20YtDRtvgX3I68/1hyLfFUCOa1TDjPNUk0LFzxpEu0ZDa
+ ciVQZDT/w/BaG29XrfaihSMIxC63o9Vc+GgBPohXf7hbDPy+CZYvzeaEFurGRpVzXd4Sts6pr
+ 0Y7A3GpyCBdbZzz9eQeUd+kjx1F2VYTegDecdd5PWMC075g2jLKxsfYK9u5whWSH59PEEt9+j
+ ERJ580ubmpMGubM/YV/VrYWTC5J7MQGxK0tHOdqQrK0XS1ME0UWRMaXjCErrccv0XEhVbV7w8
+ lrcAeVqBJ9vkXNzPmfEc4EodfNjo2mkpCuOWZfXf5fyxXPoFqDIGF29wTLjRKOvZ/Sqp7XtZT
+ qqNU6BC+9XSIFta3bn+i+JN2yawypy0TKxaZulk3p/Pi6hI+BcL1hKM/hoTBh+W2y4GJyp/qC
+ 2lfCzqDjGS3VBuUcv9WuGsMhgvAweA3nNMTyESAnqywEid1SjRVhoTCUS8zifLc/AuDmaB+or
+ Oo8kYrIhiEnrXwE7j/xPMScO21r/WW9X5zExt7rRCciQTdHnsXoo8aA74MN02sHSI5Ppkm/Kk
+ CZRtZpeQsB+SMtn/z73U2yJGVfsydehliliGBTDjSlS1UZ88GCDC4Md1hkp8kUiqBMFsWXReC
+ gHVzbgniXMfn4RMh7s+/Kg42VhyhBspV+RTyU7/zpBT+0miq/qAQ7m4WZGhdOz0qYXW5KDZ+b
+ z13dDgCgBM+SNLYX8lRc1Si7Ra4HSvQPAZITv9MlCb2IU+lHrFSrO0mA7R940ND/dzGObXVLZ
+ SiaUXYJGJajKltY3QJH0bllmykNJo3xJqzvqDxXSsFaOMUxYfW3M0oIaSdN+Bm54D4E1ts4qW
+ v7r0kvPObZKfYi81LYuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* André Hentschel <nerv@dawncrow.de> [191227 14:29]:
-> Am 25.12.19 um 18:01 schrieb H. Nikolaus Schaller:
-> > I think the am3703 is a dm3730 (omap3630) where the SGX and the
-> > DSP have not passed production test and are "disabled" by eFuses.
-> > This is a common procedure in silicon production to increase yield.
-> > 
-> > Therefore, there is a register which allows to dynamically determine
-> > what components (SGX and DSP) are available on a specific SoC chip.
-> > See "Table 1-6. Chip Identification" in the common
-> > "AM/DM37x Multimedia Device TRM".
-> > 
-> > Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
-> > 
-> > That way there is no need to disable/enable sgx through device tree
-> > variations and introducing more complexity by introducing more and more
-> > DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, dm3730.dtsi?).
-> > 
-> > BTW: what about a board that is/was produced in either am3703 or dm3730
-> > variants? Can they still share an omap36xx.dtsi based DTB?
-> > 
-> > So IMHO if there is an issue with sgx enabled on am3703 but no SGX
-> > hardware available on a specific SoC, the sysc setup should somehow read
-> > the bits and effectively disable all SGX related setup if it is not
-> > available on the SoC. If I remember correctly, some older hwmods did
-> > such things by checking SoC variant bits.
-> 
-> I like the idea, but I'm not in the position to vote for it and I don't
-> understand the sysc code enough to implement that.
+On Mon, Dec 30, 2019 at 4:58 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Makes sense w.r.t. time32 situation.
+>
+> I still think that in spite of that there's still something weird
+> happening with the mips VDSO.
 
-We can easily do both. So no worries, I can easily add SoC capabilites
-support at some point.
+Agreed.
 
-> Am 25.12.19 um 13:53 schrieb Adam Ford:
-> > On Wed, Dec 25, 2019 at 6:05 AM André Hentschel <nerv@dawncrow.de> wrote:
-> >> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
-> > I can see value in having a 3703 base and including that in the 36xx
-> > with SGX and DSP nodes, but why not jus make SGX disabled by default.
-> > Those who want/need it can enable it on a per-board basis.
-> >> Or would it be better to have sgx support in a separate dtsi?
-> > 
-> > I am not sure how much DSP stuff is in there, but the DM3730 is the
-> > AM3703 + DSP and 3D.
-> 
-> For clarification this reduced table should help:
->      DM3730 | DM3725 | AM3715 | AM3703
-> DSP    X    |   X    |        |    
-> SGX    X    |        |   X    |    
-> 
-> Where X is "supported"
+> Here's a register dump before the call:
+>
+>  $ 0   : 0000000000000000 0000000000000001 0000000010000000 fffffffffffffffc
+>  $ 4   : 0000000000000002 000000007fff2e40 0000000000000000 0000000000000001
+>  $ 8   : 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+>  $12   : 0000000000000000 000000000000000a ffffffff80000000 000000007fffffda
+>  $16   : 0000000010001ba8 0000005800000015 0000000010000000 0000000010000000
+>  $20   : 0000000010000000 0000000010000000 0000000000000000 0000000077ff2ae8
+>  $24   : 0000000000000005 0000000077fa1d18
+>  $28   : 0000000010019cf0 000000007fff2e40 0000000000000000 0000000010000c30
+>  Hi    : 0000000000000000
+>  Lo    : 0000000000000000
+>  epc   : 0000000077fa1d18 0x77fa1d18
+>  ra    : 0000000010000c30 0x10000c30
+>
+> And here it is immediately after:
+>
+>  $ 0   : 0000000000000000 0000000000000001 ffffffffffffffa7 000000007fff5000
+>  $ 4   : 0000000000000002 000000007fff2e40 0000000077ff2000 0000000000000001
+>  $ 8   : 0000000000000006 0000000000000020 0000000000000002 0000000000000000
+>  $12   : 0000000000000000 0000000000001852 ffffffff80156160 000000007fffffda
+>  $16   : 0000000010001ba8 0000005800000015 0000000010000000 0000000010000000
+>  $20   : 0000000010000000 0000000010000000 0000000000000000 0000000077ff2b00
+>  $24   : 0000000000000005 0000000000000000
+>  $28   : 000000007fff5000 000000007fff2e30 0000000000000000 0000000077fa1e00
+>  Hi    : 0000000000000000
+>  Lo    : 0000000000000000
+>  epc   : 0000000077fa1e00 0x77fa1e00
+>  ra    : 0000000077fa1e00 0x77fa1e00
 
-And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
-to make things simple. The device tree is supposed to describe the
-hardware, and in most cases the SoC version is fixed and need no
-dynamic detection.
+Is this immediately before/after the syscall instruction or the
+indirect function call?
 
-André, can you please add those three dtsi files since you have at
-least one test case? :)
+> I wonder if a toolchain option or compiler bug or something is causing
+> the vdso to not restore certain registers (gp? ra?).
 
-Regards,
+Here is the assembler output I see for the o32 vdso, hopefully I got all
+the relevant bits:
 
-Tony
+ # /git/arm-soc/lib/vdso/gettimeofday.c:130:    if (unlikely(ret))
+        .set    noreorder
+        .set    nomacro
+        beqz    $2,$L86  #,,
+        lw      $28,16($sp)      #,
+        .set    macro
+        .set    reorder
+
+$L46:
+ # /git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h:118:
+register struct old_timespec32 *ts asm("a1") = _ts;
+        move    $5,$16   # ts, ts
+ # /git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h:119:
+register clockid_t clkid asm("a0") = _clkid;
+        move    $4,$17   # clkid, clock
+ # /git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h:121:
+register long nr asm("v0") = __NR_clock_gettime;
+        li      $2,4263                 # 0x10a7         # nr,
+ # /git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h:124:  asm volatile(
+#APP
+ # 124 "/git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h" 1
+               syscall
+
+ # 0 "" 2
+ # /git/arm-soc/arch/mips/vdso/vgettimeofday.c:18: }
+#NO_APP
+        lw      $31,60($sp)      #,
+        lw      $19,56($sp)      #,
+ # /git/arm-soc/arch/mips/include/asm/vdso/gettimeofday.h:131:  return
+error ? -ret : ret;
+        subu    $3,$0,$2         # <retval>, ret
+        selnez  $3,$3,$7         # tmp406, <retval>, error
+        seleqz  $2,$2,$7         # tmp407, ret, error
+        or      $3,$3,$2         # <retval>, tmp406, tmp407
+ # /git/arm-soc/arch/mips/vdso/vgettimeofday.c:18: }
+        lw      $18,52($sp)      #,
+        lw      $17,48($sp)      #,
+        lw      $16,44($sp)      #,
+        move    $2,$3    #, <retval>
+        .set    noreorder
+        .set    nomacro
+        jr      $31      #
+        addiu   $sp,$sp,64       #,,
+        .set    macro
+        .set    reorder
+
+gp ($28) and ra ($31) sound like good guesses to me,
+
+SP ($r29) changed from 000000007fff2e40
+to 000000007fff2e30, if that is not the intention, it would clearly explain why
+anything afterwards crashes, but that seems unlikely.
+
+r3 contains the error code -ENOSYS on mips, so that's good.
+
+$23 is supposed to be preserved across function calls and is
+consequently not part of the clobber list but is modified.
+
+$25 is part of the clobber list and is also modified, but there
+is no code to save/restore it in the assembler output.
+
+      Arnd
