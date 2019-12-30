@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B2AC2D0C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDE0C2D0C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D8A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BD9206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 02:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfL3Cse (ORCPT
+        id S1727075AbfL3CxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Dec 2019 21:48:34 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8645 "EHLO huawei.com"
+        Sun, 29 Dec 2019 21:53:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8203 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727048AbfL3Cse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Dec 2019 21:48:34 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2B288AE7A05B411EE62;
-        Mon, 30 Dec 2019 10:48:31 +0800 (CST)
+        id S1727048AbfL3CxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Dec 2019 21:53:07 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1B6937ABC077D7266686;
+        Mon, 30 Dec 2019 10:53:05 +0800 (CST)
 Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
  (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
- 10:48:20 +0800
+ 10:52:58 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <sam@ravnborg.org>, <alexander.deucher@amd.com>,
-        <jani.nikula@intel.com>, <harry.wentland@amd.com>,
-        <yuehaibing@huawei.com>
-CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] drm/nouveau/nv04: Use match_string() helper to simplify the code
-Date:   Mon, 30 Dec 2019 10:46:28 +0800
-Message-ID: <20191230024628.11820-1-yuehaibing@huawei.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <frieder.schrempf@kontron.de>, <masonccyang@mxic.com.tw>,
+        <allison@lohutok.net>, <yuehaibing@huawei.com>,
+        <tglx@linutronix.de>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] mtd: rawnand: macronix: Use match_string() helper to simplify the code
+Date:   Mon, 30 Dec 2019 10:52:17 +0800
+Message-ID: <20191230025217.30812-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -50,35 +49,29 @@ Use it instead of the open-coded implementation.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/mtd/nand/raw/nand_macronix.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-index 03466f0..3a9489e 100644
---- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-+++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-@@ -644,16 +644,13 @@ static int nv17_tv_create_resources(struct drm_encoder *encoder,
- 	int i;
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index 58511ae..5619289 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -80,12 +80,9 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+ 	if (!chip->parameters.supports_set_get_features)
+ 		return;
  
- 	if (nouveau_tv_norm) {
--		for (i = 0; i < num_tv_norms; i++) {
--			if (!strcmp(nv17_tv_norm_names[i], nouveau_tv_norm)) {
--				tv_enc->tv_norm = i;
--				break;
--			}
--		}
+-	for (i = 0; i < ARRAY_SIZE(broken_get_timings); i++) {
+-		if (!strcmp(broken_get_timings[i], chip->parameters.model))
+-			break;
+-	}
 -
--		if (i == num_tv_norms)
-+		i = match_string(nv17_tv_norm_names, num_tv_norms,
-+				 nouveau_tv_norm);
-+		if (i < 0)
- 			NV_WARN(drm, "Invalid TV norm setting \"%s\"\n",
- 				nouveau_tv_norm);
-+		else
-+			tv_enc->tv_norm = i;
- 	}
+-	if (i == ARRAY_SIZE(broken_get_timings))
++	i = match_string(broken_get_timings, ARRAY_SIZE(broken_get_timings),
++			 chip->parameters.model);
++	if (i < 0)
+ 		return;
  
- 	drm_mode_create_tv_properties(dev, num_tv_norms, nv17_tv_norm_names);
+ 	bitmap_clear(chip->parameters.get_feature_list,
 -- 
 2.7.4
 
