@@ -2,147 +2,198 @@ Return-Path: <SRS0=E66v=2U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BD0C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A26C2D0CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E826A206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BC3206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 15:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utyDhwUk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaS0CJ3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfL3PNZ (ORCPT
+        id S1727579AbfL3PUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:13:25 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39947 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbfL3PNY (ORCPT
+        Mon, 30 Dec 2019 10:20:31 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41595 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbfL3PUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 10:13:24 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c77so10533403oib.7;
-        Mon, 30 Dec 2019 07:13:24 -0800 (PST)
+        Mon, 30 Dec 2019 10:20:31 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so33617215ljc.8;
+        Mon, 30 Dec 2019 07:20:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4q+CEmiEu7tVhYU1eBAHqYL1aB2h2oHWvUZLEg1NZ+0=;
-        b=utyDhwUkDJRAY2idyKxKnXYVlGMi7efqSLt0it85sAFwenQWBQsDLp6CBKB6uKWGq7
-         4gSbTLToTM3d3OPfw6QJjQFuLlwst3/xgh7NDr4Fb1yPqvxEqLqxOxZGg3p6hZTBNxz3
-         8dfgff1tZIpiybUUkxCNVE3Wa4m+JSm4j9169Nli72p8BAjfXRMkQ383JQDMOhQRuoJl
-         rJx18apdyNEl78EwZIl34VBaW9PEKYwFBGnmPrfComrw9trFQbnHBkDc9STvn2wa5ybt
-         QLQ1K2uj7YCBvR3cTHa8bUX2hsNuCtNCIQ1FEFnNDv6w185Qpd4PRjUvKDUfnOz0r0eD
-         1JYQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=FkOelivhlR8vsUum4XrcQmOy/XHM9k5BZJl+I/MmXUs=;
+        b=MaS0CJ3FaCeHMfRsMUuffIRYl9RTexnDxiOPNBRtFVT0c/Zv6H/e2F+scDg08zanjD
+         3hM7e3gFcrFM3/99Au/aHQn94sE0kAh9dx73ZRx17xRZaM4XNDP7u3DAlORywK5GpuyK
+         /+BTsUUPEfnrTG/OaeIUSFU6t4f9EAMHWoqr/+R5vRnGVrTa/FRLtx0ozXeM/+OkGTWb
+         xR/nxVkZYyqGp/uMfFtEB4Vy9938OBlgX/LlbfrGmzFUx16oza2+KKOw4QiFVBf8srJB
+         2RJMv2MUBBqLIdLyTp5+tokjzGs3ERvPVy/jchkLx5dkcDfvlyIA9VdQVVzIB59GIcqO
+         lYiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4q+CEmiEu7tVhYU1eBAHqYL1aB2h2oHWvUZLEg1NZ+0=;
-        b=ec1ChZIZ6dSbFwC9Q+cDpccHbodHvwxmRFRIr1D6ETsEjgEXFiKzXMWcpJl9tGmDgq
-         QT02DjY3GGt0BdSSNIB/Q4U4DUaMDlVpScZ7vvMwudAOapgBbPeKxUlkB1inLesDz2FC
-         nG7VwJ/MM5WEEHtCsyYfHE3s2S+40iMi0UbuE+eJi3KSfhIEbMh1cZsMEgBN9/M08ovQ
-         3iatX5L6zJzEqIzg7EU6moMJFzSvQJmJZmc6lH0mmNwSkW4iVuRTbSPqoMck3bGgx3Dy
-         YzaUtGFykOgvpSiBP2P115pcu4ZZ72mqpt/JjIFIv2aX1wy7kEFf7LBhmPbwnbPsogy+
-         DQWg==
-X-Gm-Message-State: APjAAAW0csaiDLL+2oBmhBjuahDQZYZKnNnS97DLpQfl14ggWiV+jXrz
-        gs1kdJwLEnbaOXNwRrDRoL+8G3ryyQgZ5Tat2xQ=
-X-Google-Smtp-Source: APXvYqyn2YFl5zcMnOSPe3unj9Lho2H4sZOI0TJLgx65TTOo0bk/qxyeC7PECRb0LNdF36kX1ce0/ysjIERupuiHLfI=
-X-Received: by 2002:aca:ec4f:: with SMTP id k76mr5253287oih.156.1577718803555;
- Mon, 30 Dec 2019 07:13:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding:thread-index:content-language;
+        bh=FkOelivhlR8vsUum4XrcQmOy/XHM9k5BZJl+I/MmXUs=;
+        b=RM8DgbQuO6mp61TRBHX6rU9aWJA97ghnwdSpBzRABPxNwOfEHCGeBOSQ5dyS/PZv3g
+         lkqAs9xJfZZg8OtiAmf28MhRSo+9JYhMZiMfUrFR8v6j3JB2W0uAghpxwlcSczXnAWze
+         HBV8YOSKDjZQ4P/KizMe3Q/H9AW8pcMbF8LkmXVB9sBspN04OFG24CUHiIcJd+DGxgHy
+         D87jdiD561yORg1uY7weD50zBp2EuT4EJGRzyvQQ/BTE2Pbbm6JYZd9uZZmuWzOFFjoq
+         OtANnEHDzFRrsZhyyogR5H/8m5pfTKtMDcyw2jQT8I8u3yXvpS7OohHPLO20V+eT3h2k
+         yLSQ==
+X-Gm-Message-State: APjAAAUf8Y2hKQCh2kZsQeM49e9LNUKPoJT3/58oej6kguQs0f931yj/
+        hXrpvCtlJ8xDEG2HnXGiYgd9ypBSRDX7lw==
+X-Google-Smtp-Source: APXvYqyepb4jHBm/pR+s3wWeEi1r57pjmUro1coUKO564ZHhaqKGAD7IZaluz0fCjdcF7JqKLOEfzQ==
+X-Received: by 2002:a2e:b044:: with SMTP id d4mr30453850ljl.158.1577719228230;
+        Mon, 30 Dec 2019 07:20:28 -0800 (PST)
+Received: from loulrmilkow1 (227.46-29-148.tkchopin.pl. [46.29.148.227])
+        by smtp.gmail.com with ESMTPSA id t9sm18623784lfl.51.2019.12.30.07.20.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Dec 2019 07:20:27 -0800 (PST)
+From:   "Robert Milkowski" <rmilkowski@gmail.com>
+To:     <linux-nfs@vger.kernel.org>
+Cc:     "'Chuck Lever'" <chuck.lever@oracle.com>,
+        "'Trond Myklebust'" <trond.myklebust@hammerspace.com>,
+        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] NFSv4.0: nfs4_do_fsinfo() should not do implicit lease renewals
+Date:   Mon, 30 Dec 2019 15:20:25 -0000
+Message-ID: <025801d5bf24$aa242100$fe6c6300$@gmail.com>
 MIME-Version: 1.0
-References: <20191230132006.7401-1-masahiroy@kernel.org>
-In-Reply-To: <20191230132006.7401-1-masahiroy@kernel.org>
-From:   Justin Capella <justincapella@gmail.com>
-Date:   Mon, 30 Dec 2019 07:13:10 -0800
-Message-ID: <CAMrEMU_5XmUmKmF99gg-RBkBAvpAbnM6G=Y0cBajcE2HMUQssg@mail.gmail.com>
-Subject: Re: [PATCH] initramfs: fix 'bad variable name' error in gen_initramfs_list.sh
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        "Jory A . Pratt" <anarchy@gentoo.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdW/I2auAYB5hyQWQDmn+e9BiY7hDA==
+Content-Language: en-gb
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was looking at this, and in theory there are other problems that
-could arise from non-escaped characters, or things with leading
-hyphens... In general it isn't great to assume ls output will play
-nicely with the internal field separator / IFS. I think a better
-solution would be to use something like ${foo@Q} and instead of trying
-to scrape ls -l, maybe using stat, since it can be asked to print out
-the device number.
+From: Robert Milkowski <rmilkowski@gmail.com>
 
-But I don't think this patch fixes the problem mentioned at all-- I
-think the problem is initfs is not a variable name on line 61:
+Currently, each time nfs4_do_fsinfo() is called it will do an implicit
+NFS4 lease renewal, which is not compliant with the NFS4 specification.
+This can result in a lease being expired by an NFS server.
 
-$(call if_changed,initfs)
+Commit 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+introduced implicit client lease renewal in nfs4_do_fsinfo(),
+which can result in the NFSv4.0 lease to expire on a server side,
+and servers returning NFS4ERR_EXPIRED or NFS4ERR_STALE_CLIENTID.
 
-https://github.com/torvalds/linux/blob/351c8a09b00b5c51c8f58b016fffe51f87e2d820/usr/Makefile#L61
+This can easily be reproduced by frequently unmounting a sub-mount,
+then stat'ing it to get it mounted again, which will delay or even
+completely prevent client from sending RENEW operations if no other
+NFS operations are issued. Eventually nfs server will expire client's
+lease and return an error on file access or next RENEW.
 
-The Makefile and script look like more patches would be needed to fix
-mentioned issue, and I'm kind of wondering what the intent behind
-lines 31-32 is...
+This can also happen when a sub-mount is automatically unmounted
+due to inactivity (after nfs_mountpoint_expiry_timeout), then it is
+mounted again via stat(). This can result in a short window during
+which client's lease will expire on a server but not on a client.
+This specific case was observed on production systems.
 
-ramfs-input := $(if $(filter-out "",$(CONFIG_INITRAMFS_SOURCE)), \
-$(shell echo $(CONFIG_INITRAMFS_SOURCE)),-d)
+This patch makes an explicit lease renewal instead of an implicit one,
+by adding RENEW to a compound operation issued by nfs4_do_fsinfo(),
+similarly to NFSv4.1 which adds SEQUENCE operation.
 
-why filter nothing, why shell echo?
+Fixes: 83ca7f5ab31f ("NFS: Avoid PUTROOTFH when managing leases")
+Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
+---
+ fs/nfs/nfs4proc.c       |  4 ++++
+ fs/nfs/nfs4xdr.c        | 13 +++++++++++--
+ include/linux/nfs_xdr.h |  3 +++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-Quoting and/or proper escaping would be needed in many other places,
-and I suspect cpio input is always regenerated... The use of sed to
-manually escape things and suggesting using \ instead of using the
-argument terminator "--"... If weird paths with spaces and stuff are a
-requirement for the script needs some overhauling
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 76d3716..6d075f0 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4998,12 +4998,16 @@ static int nfs4_proc_statfs(struct nfs_server *server, struct nfs_fh *fhandle, s
+ static int _nfs4_do_fsinfo(struct nfs_server *server, struct nfs_fh *fhandle,
+ 		struct nfs_fsinfo *fsinfo)
+ {
++	struct nfs_client *clp = server->nfs_client;
+ 	struct nfs4_fsinfo_arg args = {
+ 		.fh = fhandle,
+ 		.bitmask = server->attr_bitmask,
++		.clientid = clp->cl_clientid,
++		.renew = nfs4_has_session(clp) ? 0 : 1,		/* append RENEW */
+ 	};
+ 	struct nfs4_fsinfo_res res = {
+ 		.fsinfo = fsinfo,
++		.renew = nfs4_has_session(clp) ? 0 : 1,
+ 	};
+ 	struct rpc_message msg = {
+ 		.rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_FSINFO],
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 936c577..0ce9a10 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -555,11 +555,13 @@ static int decode_layoutget(struct xdr_stream *xdr, struct rpc_rqst *req,
+ #define NFS4_enc_fsinfo_sz	(compound_encode_hdr_maxsz + \
+ 				encode_sequence_maxsz + \
+ 				encode_putfh_maxsz + \
+-				encode_fsinfo_maxsz)
++				encode_fsinfo_maxsz + \
++				encode_renew_maxsz)
+ #define NFS4_dec_fsinfo_sz	(compound_decode_hdr_maxsz + \
+ 				decode_sequence_maxsz + \
+ 				decode_putfh_maxsz + \
+-				decode_fsinfo_maxsz)
++				decode_fsinfo_maxsz + \
++				decode_renew_maxsz)
+ #define NFS4_enc_renew_sz	(compound_encode_hdr_maxsz + \
+ 				encode_renew_maxsz)
+ #define NFS4_dec_renew_sz	(compound_decode_hdr_maxsz + \
+@@ -2646,6 +2648,8 @@ static void nfs4_xdr_enc_fsinfo(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 	encode_sequence(xdr, &args->seq_args, &hdr);
+ 	encode_putfh(xdr, args->fh, &hdr);
+ 	encode_fsinfo(xdr, args->bitmask, &hdr);
++	if (args->renew)
++		encode_renew(xdr, args->clientid, &hdr);
+ 	encode_nops(&hdr);
+ }
+ 
+@@ -6778,6 +6782,11 @@ static int nfs4_xdr_dec_fsinfo(struct rpc_rqst *req, struct xdr_stream *xdr,
+ 		status = decode_putfh(xdr);
+ 	if (!status)
+ 		status = decode_fsinfo(xdr, res->fsinfo);
++	if (status)
++		goto out;
++	if (res->renew)
++		status = decode_renew(xdr);
++out:
+ 	return status;
+ }
+ 
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 72d5695..49bd673 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1025,11 +1025,14 @@ struct nfs4_fsinfo_arg {
+ 	struct nfs4_sequence_args	seq_args;
+ 	const struct nfs_fh *		fh;
+ 	const u32 *			bitmask;
++	clientid4			clientid;
++	unsigned char			renew:1;
+ };
+ 
+ struct nfs4_fsinfo_res {
+ 	struct nfs4_sequence_res	seq_res;
+ 	struct nfs_fsinfo	       *fsinfo;
++	unsigned char			renew:1;
+ };
+ 
+ struct nfs4_getattr_arg {
+-- 
+1.8.3.1
 
-On Mon, Dec 30, 2019 at 5:21 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Prior to commit 858805b336be ("kbuild: add $(BASH) to run scripts with
-> bash-extension"), this shell script was almost always run by bash since
-> bash is usually installed on the system by default.
->
-> Now, this script is run by sh, which might be a symlink to dash. On such
-> distros, the following code emits an error:
->
->   local dev=`LC_ALL=C ls -l "${location}"`
->
-> You can reproduce the build error, for example by setting
-> CONFIG_INITRAMFS_SOURCE="/dev".
->
->     GEN     usr/initramfs_data.cpio.gz
->   ./usr/gen_initramfs_list.sh: 131: local: 1: bad variable name
->   make[1]: *** [usr/Makefile:61: usr/initramfs_data.cpio.gz] Error 2
->
-> This is because `LC_ALL=C ls -l "${location}"` contains spaces.
-> Surrounding it with double-quotes fixes the error.
->
-> Fixes: 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
-> Reported-by: Jory A. Pratt <anarchy@gentoo.org>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  usr/gen_initramfs_list.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/usr/gen_initramfs_list.sh b/usr/gen_initramfs_list.sh
-> index 0aad760fcd8c..2bbac73e6477 100755
-> --- a/usr/gen_initramfs_list.sh
-> +++ b/usr/gen_initramfs_list.sh
-> @@ -128,7 +128,7 @@ parse() {
->                         str="${ftype} ${name} ${location} ${str}"
->                         ;;
->                 "nod")
-> -                       local dev=`LC_ALL=C ls -l "${location}"`
-> +                       local dev="`LC_ALL=C ls -l "${location}"`"
->                         local maj=`field 5 ${dev}`
->                         local min=`field 6 ${dev}`
->                         maj=${maj%,}
-> --
-> 2.17.1
->
+
