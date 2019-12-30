@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 000F7C2D0C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B73C2D0C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94D4206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D60206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Dec 2019 14:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="q+4eCZKX"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="HmP4J2AX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfL3OdH (ORCPT
+        id S1727605AbfL3Oda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:33:07 -0500
-Received: from mail.dlink.ru ([178.170.168.18]:41828 "EHLO fd.dlink.ru"
+        Mon, 30 Dec 2019 09:33:30 -0500
+Received: from mail.dlink.ru ([178.170.168.18]:42220 "EHLO fd.dlink.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfL3OdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Dec 2019 09:33:07 -0500
+        id S1727532AbfL3Od3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Dec 2019 09:33:29 -0500
 Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id D8C511B219B4; Mon, 30 Dec 2019 17:33:02 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D8C511B219B4
+        id A2EC81B219A8; Mon, 30 Dec 2019 17:33:26 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru A2EC81B219A8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1577716383; bh=vMMdZPRhhDCtnbuTLqLyjTW+Dv/ebEhvjE+SEn3R/dc=;
+        t=1577716406; bh=q7IufE7HIiHvycVJgjMYvuW6fyhlbqwjI/W5rJkX8G8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=q+4eCZKXbiwuHnSky7eu3NnhSbbj/By887r1ZTyr1ZBZG/H/YMJWL3FDkyz0wpoOm
-         HlC7hxvNbCiDhdIiK8GdyFqiIKpVw9fTFg5E3Qsv0wetzhbXuDH8HGZcGqFyEIuE7E
-         e0lWIr2TnhmhhHvxF02fhyDdiHn5T1yI9bLq8DbQ=
+        b=HmP4J2AXWwflkQBqL9lkLwAxd51UAeaYBqYNSxsH051hQOWJcgVqveKItTvnJ3oaq
+         2N1ctDN2jvAtQlLnRJKjcuI+KrO9KR0504lC2IJa9dLO8EoP/JF3WpCqFswJgOI58x
+         Cw5umkRIQ5F2hCYLJkKfdiWdatn2cadohbeXCe4Y=
 Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id DD1001B21836;
-        Mon, 30 Dec 2019 17:31:39 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru DD1001B21836
+        by fd.dlink.ru (Postfix) with ESMTP id 5AEF91B20B7B;
+        Mon, 30 Dec 2019 17:31:23 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru 5AEF91B20B7B
 Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 6D13F1B229CB;
-        Mon, 30 Dec 2019 17:31:37 +0300 (MSK)
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id 3BD431B229CB;
+        Mon, 30 Dec 2019 17:31:21 +0300 (MSK)
 Received: from localhost.localdomain (unknown [196.196.203.126])
         by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 30 Dec 2019 17:31:37 +0300 (MSK)
+        Mon, 30 Dec 2019 17:31:21 +0300 (MSK)
 From:   Alexander Lobakin <alobakin@dlink.ru>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -66,9 +66,9 @@ Cc:     Edward Cree <ecree@solarflare.com>, Andrew Lunn <andrew@lunn.ch>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH RFC net-next 18/19] net: dsa: tag_qca: split out common tag accessors
-Date:   Mon, 30 Dec 2019 17:30:26 +0300
-Message-Id: <20191230143028.27313-19-alobakin@dlink.ru>
+Subject: [PATCH RFC net-next 10/19] net: dsa: tag_gswip: add GRO callbacks
+Date:   Mon, 30 Dec 2019 17:30:18 +0300
+Message-Id: <20191230143028.27313-11-alobakin@dlink.ru>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191230143028.27313-1-alobakin@dlink.ru>
 References: <20191230143028.27313-1-alobakin@dlink.ru>
@@ -79,96 +79,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...to make them available for the upcoming GRO callbacks.
+...so that GRO layer can now correctly process GSWIP-tagged frames.
 
 Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
 ---
- net/dsa/tag_qca.c | 45 +++++++++++++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 16 deletions(-)
+ net/dsa/tag_gswip.c | 74 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-diff --git a/net/dsa/tag_qca.c b/net/dsa/tag_qca.c
-index 8939abce36d7..bee2788e034d 100644
---- a/net/dsa/tag_qca.c
-+++ b/net/dsa/tag_qca.c
-@@ -28,6 +28,27 @@
- #define QCA_HDR_XMIT_FROM_CPU		BIT(7)
- #define QCA_HDR_XMIT_DP(port)		FIELD_PREP(GENMASK(6, 0), BIT(port))
- 
-+static inline bool qca_tag_sanity_check(const u8 *data)
-+{
-+	/* The QCA header is added by the switch between src addr and Ethertype
-+	 * At this point, skb->data points to ethertype so header should be
-+	 * right before
-+	 */
-+	u16 hdr = ntohs(*(__be16 *)(data - 2));
-+
-+	return QCA_HDR_RECV_VERSION(hdr) == QCA_HDR_VERSION;
-+}
-+
-+static inline int qca_tag_source_port(const u8 *data)
-+{
-+	return *(data - 1) & QCA_HDR_RECV_SOURCE_PORT_MASK;
-+}
-+
-+static inline __be16 qca_tag_encap_proto(const u8 *data)
-+{
-+	return *(__be16 *)data;
-+}
-+
- static struct sk_buff *qca_tag_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	const struct dsa_port *dp = dsa_slave_to_port(dev);
-@@ -55,34 +76,26 @@ static struct sk_buff *qca_tag_rcv(struct sk_buff *skb, struct net_device *dev,
- 				   struct packet_type *pt)
- {
- 	int port;
--	__be16 *phdr, hdr;
- 
- 	if (unlikely(!pskb_may_pull(skb, QCA_HDR_LEN)))
- 		return NULL;
- 
--	/* The QCA header is added by the switch between src addr and Ethertype
--	 * At this point, skb->data points to ethertype so header should be
--	 * right before
--	 */
--	phdr = (__be16 *)(skb->data - 2);
--	hdr = ntohs(*phdr);
--
- 	/* Make sure the version is correct */
--	if (unlikely(QCA_HDR_RECV_VERSION(hdr) != QCA_HDR_VERSION))
-+	if (unlikely(!qca_tag_sanity_check(skb->data)))
- 		return NULL;
- 
--	/* Remove QCA tag and recalculate checksum */
--	skb_pull_rcsum(skb, QCA_HDR_LEN);
--	memmove(skb->data - ETH_HLEN, skb->data - ETH_HLEN - QCA_HDR_LEN,
--		ETH_HLEN - QCA_HDR_LEN);
--
- 	/* Get source port information */
--	port = (hdr & QCA_HDR_RECV_SOURCE_PORT_MASK);
-+	port = qca_tag_source_port(skb->data);
- 
- 	skb->dev = dsa_master_find_slave(dev, 0, port);
- 	if (!skb->dev)
- 		return NULL;
- 
-+	/* Remove QCA tag and recalculate checksum */
-+	skb_pull_rcsum(skb, QCA_HDR_LEN);
-+	memmove(skb->data - ETH_HLEN, skb->data - ETH_HLEN - QCA_HDR_LEN,
-+		ETH_HLEN - QCA_HDR_LEN);
-+
- 	return skb;
+diff --git a/net/dsa/tag_gswip.c b/net/dsa/tag_gswip.c
+index e7b36de27fd8..56e754bd434a 100644
+--- a/net/dsa/tag_gswip.c
++++ b/net/dsa/tag_gswip.c
+@@ -114,12 +114,86 @@ static void gswip_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
+ 	*proto = gswip_tag_encap_proto(skb->data);
  }
  
-@@ -90,7 +103,7 @@ static void qca_tag_flow_dissect(const struct sk_buff *skb, __be16 *proto,
- 				 int *offset)
- {
- 	*offset = QCA_HDR_LEN;
--	*proto = ((__be16 *)skb->data)[0];
-+	*proto = qca_tag_encap_proto(skb->data);
- }
++static struct sk_buff *gswip_tag_gro_receive(struct list_head *head,
++					     struct sk_buff *skb)
++{
++	const struct packet_offload *ptype;
++	struct sk_buff *p, *pp = NULL;
++	u32 data_off, data_end;
++	const u8 *data;
++	int flush = 1;
++
++	data_off = skb_gro_offset(skb);
++	data_end = data_off + GSWIP_RX_HEADER_LEN;
++
++	data = skb_gro_header_fast(skb, data_off);
++	if (skb_gro_header_hard(skb, data_end)) {
++		data = skb_gro_header_slow(skb, data_end, data_off);
++		if (unlikely(!data))
++			goto out;
++	}
++
++	rcu_read_lock();
++
++	ptype = gro_find_receive_by_type(gswip_tag_encap_proto(data));
++	if (!ptype)
++		goto out_unlock;
++
++	flush = 0;
++
++	list_for_each_entry(p, head, list) {
++		if (!NAPI_GRO_CB(p)->same_flow)
++			continue;
++
++		/* Data that is to the left to the current position is already
++		 * pulled to the head
++		 */
++		if (gswip_tag_source_port(skb->data + data_off) ^
++		    gswip_tag_source_port(p->data + data_off))
++			NAPI_GRO_CB(p)->same_flow = 0;
++	}
++
++	skb_gro_pull(skb, GSWIP_RX_HEADER_LEN);
++	skb_gro_postpull_rcsum(skb, data, GSWIP_RX_HEADER_LEN);
++
++	pp = call_gro_receive(ptype->callbacks.gro_receive, head, skb);
++
++out_unlock:
++	rcu_read_unlock();
++out:
++	skb_gro_flush_final(skb, pp, flush);
++
++	return pp;
++}
++
++static int gswip_tag_gro_complete(struct sk_buff *skb, int nhoff)
++{
++	const struct packet_offload *ptype;
++	int err = -ENOENT;
++	__be16 proto;
++
++	proto = gswip_tag_encap_proto(skb->data + nhoff);
++	nhoff += GSWIP_RX_HEADER_LEN;
++
++	rcu_read_lock();
++
++	ptype = gro_find_complete_by_type(proto);
++	if (ptype)
++		err = ptype->callbacks.gro_complete(skb, nhoff);
++
++	rcu_read_unlock();
++
++	return err;
++}
++
+ static const struct dsa_device_ops gswip_netdev_ops = {
+ 	.name		= "gswip",
+ 	.proto		= DSA_TAG_PROTO_GSWIP,
+ 	.xmit		= gswip_tag_xmit,
+ 	.rcv		= gswip_tag_rcv,
+ 	.flow_dissect	= gswip_tag_flow_dissect,
++	.gro_receive	= gswip_tag_gro_receive,
++	.gro_complete	= gswip_tag_gro_complete,
+ 	.overhead	= GSWIP_RX_HEADER_LEN,
+ };
  
- static const struct dsa_device_ops qca_netdev_ops = {
 -- 
 2.24.1
 
